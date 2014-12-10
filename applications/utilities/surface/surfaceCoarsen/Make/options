@@ -1,0 +1,7 @@
+EXE_INC = \
+    -Ibunnylod \
+    -I$(LIB_SRC)/triSurface/lnInclude
+
+EXE_LIBS = \
+    -ltriSurface \
+    -lmeshTools

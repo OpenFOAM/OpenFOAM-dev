@@ -1,0 +1,147 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamExec
+#
+# Description
+#     Usage: foamExec [-v foamVersion] <foamCommand> ...
+#
+#     Runs the <foamVersion> version of executable <foamCommand>
+#     with the rest of the arguments.
+#
+#     Can also be used for parallel runs. For example,
+#     \code
+#         mpirun -np <nProcs> \
+#             foamExec -version <foamVersion> <foamCommand> ... -parallel
+#     \endcode
+#
+# Note
+#     This script must exist in <foamInstall>/OpenFOAM-<VERSION>/bin/
+#     or <foamInstall>/openfoam<VERSION>/bin/ (for the debian version)
+#
+#     foamEtcFile must be found in the same directory as this script
+#
+# SeeAlso
+#    foamEtcFile
+#
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTION] <application> ...
+
+options:
+  -prefix <dir>     specify an alternative installation prefix
+                    pass through to foamEtcFile and set as FOAM_INST_DIR
+  -version <ver>    specify an alternative OpenFOAM version
+                    pass through to foamEtcFile
+  -help             print the usage
+
+* run a particular OpenFOAM version of <application>
+
+USAGE
+    exit 1
+}
+
+#-------------------------------------------------------------------------------
+
+# the bin dir:
+binDir="${0%/*}"
+
+# the project dir:
+projectDir="${binDir%/bin}"
+
+# the prefix dir (same as foamInstall):
+prefixDir="${projectDir%/*}"
+
+# # the name used for the project directory
+# projectDirName="${projectDir##*/}"
+
+
+unset etcOpts version
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -m | -mode)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
+        shift
+        ;;
+    -p | -prefix)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
+        prefixDir="$2"
+        shift
+        ;;
+    -v | -version)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
+        version="$2"
+        shift
+        ;;
+    --)
+        shift
+        break
+        ;;
+    -*)
+        usage "invalid option '$1'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+    shift
+done
+
+#
+# Find and source OpenFOAM settings (bashrc)
+# placed in function to preserve command-line arguments
+#
+sourceRc()
+{
+    foamDotFile="$($binDir/foamEtcFile $etcOpts bashrc)" || {
+        echo "Error : bashrc file could not be found for OpenFOAM-${version:-${WM_PROJECT_VERSION:-???}}" 1>&2
+        exit 1
+    }
+
+    # set to consistent value before sourcing the bashrc
+    export FOAM_INST_DIR="$prefixDir"
+
+    . $foamDotFile $FOAM_SETTINGS
+}
+
+
+[ "$#" -ge 1 ] || usage "no application specified"
+
+sourceRc
+exec "$@"
+
+#------------------------------------------------------------------------------

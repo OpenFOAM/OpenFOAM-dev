@@ -1,0 +1,3 @@
+c++DBUG     =
+c++OPT      = -O3
+# -fprefetch-loop-arrays

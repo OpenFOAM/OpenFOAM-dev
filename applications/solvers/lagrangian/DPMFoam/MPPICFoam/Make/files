@@ -1,0 +1,3 @@
+MPPICFoam.C
+
+EXE = $(FOAM_APPBIN)/MPPICFoam

@@ -1,0 +1,112 @@
+<ServerManagerConfiguration>
+  <ProxyGroup name="sources">
+  <SourceProxy
+    name="PV4blockMeshReader"
+    class="vtkPV4blockMeshReader">
+
+    <!-- File name - compulsory -->
+    <StringVectorProperty
+      name="FileName"
+      command="SetFileName"
+      number_of_elements="1"
+      animateable="0">
+      <FileListDomain name="files"/>
+      <Documentation>
+        Specifies the filename for the OpenFOAM blockMesh Reader.
+      </Documentation>
+    </StringVectorProperty>
+
+    <!-- Show Point Numbers check-box -->
+    <IntVectorProperty
+      name="UiShowPointNumbers"
+      command="SetShowPointNumbers"
+      number_of_elements="1"
+      default_values="1"
+      is_internal="1"
+      animateable="0">
+      <BooleanDomain name="bool"/>
+      <Documentation>
+        Show point numbers in render window.
+      </Documentation>
+    </IntVectorProperty>
+
+    <!-- Update GUI check box -->
+    <IntVectorProperty
+      name="UpdateGUI"
+      command="SetUpdateGUI"
+      number_of_elements="1"
+      default_values="0"
+      animateable="0">
+      <BooleanDomain name="bool"/>
+      <Documentation>
+        A simple way to cause a reader GUI modification.
+      </Documentation>
+    </IntVectorProperty>
+
+
+    <!--
+       | Selections
+       -->
+
+    <!-- Available Blocks array -->
+    <StringVectorProperty
+      name="BlockArrayStatus"
+      information_only="1">
+      <ArraySelectionInformationHelper attribute_name="Block"/>
+    </StringVectorProperty>
+    <StringVectorProperty
+      name="BlockStatus"
+      label="Blocks"
+      command="SetBlockArrayStatus"
+      number_of_elements="0"
+      repeat_command="1"
+      number_of_elements_per_command="2"
+      element_types="2 0"
+      information_property="BlockArrayStatus"
+      animateable="0">
+      <ArraySelectionDomain name="array_list">
+        <RequiredProperties>
+          <Property name="BlockArrayStatus" function="ArrayList"/>
+        </RequiredProperties>
+      </ArraySelectionDomain>
+      <Documentation>
+        This property contains a list of the blocks
+      </Documentation>
+    </StringVectorProperty>
+
+    <!-- Available CurvedEdges array -->
+    <StringVectorProperty
+      name="CurvedEdgesArrayStatus"
+      information_only="1">
+      <ArraySelectionInformationHelper attribute_name="CurvedEdges"/>
+    </StringVectorProperty>
+    <StringVectorProperty
+      name="CurvedEdgesStatus"
+      label="Curved Edges"
+      command="SetCurvedEdgesArrayStatus"
+      number_of_elements="0"
+      repeat_command="1"
+      number_of_elements_per_command="2"
+      element_types="2 0"
+      information_property="CurvedEdgesArrayStatus"
+      animateable="0">
+      <ArraySelectionDomain name="array_list">
+        <RequiredProperties>
+          <Property name="CurvedEdgesArrayStatus" function="ArrayList"/>
+        </RequiredProperties>
+      </ArraySelectionDomain>
+      <Documentation>
+        This property contains a list of the curved edges
+      </Documentation>
+    </StringVectorProperty>
+
+  <Hints>
+    <Property name="FileName" show="0"/>
+    <Property name="UiShowPointNumbers" show="0"/>
+    <ReaderFactory extensions="blockMesh"
+                   file_description="OpenFOAM blockMesh"/>
+  </Hints>
+
+  </SourceProxy>
+  </ProxyGroup>
+</ServerManagerConfiguration>

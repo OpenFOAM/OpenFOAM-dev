@@ -1,0 +1,69 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamCleanTutorials
+#
+# Description
+#     Run either Allwclean, Allclean or default cleanCase in current directory
+#     and all its subdirectories.
+#
+#------------------------------------------------------------------------------
+
+# Source tutorial clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+thisScript=$0
+if [ "/${thisScript#/}" != "$thisScript" ]
+then
+    thisScript="$PWD/$thisScript"
+fi
+
+# If an argument is supplied do not execute ./Allwclean or ./Allclean
+# (to avoid recursion)
+if [ $# -eq 0 -a -f Allwclean ]
+then
+    # Specialized script
+    ./Allwclean
+elif [ $# -eq 0 -a -f Allclean ]
+then
+    # Specialized script
+    ./Allclean
+elif [ -d system ]
+then
+    # Normal case
+    cleanCase
+elif [ -d Make ]
+then
+    # Normal application
+    cleanApplication
+else
+    # Recurse into subdirectories
+    for caseName in *
+    do
+        ( cd $caseName 2>/dev/null && $thisScript )
+    done
+fi
+
+#------------------------------------------------------------------------------

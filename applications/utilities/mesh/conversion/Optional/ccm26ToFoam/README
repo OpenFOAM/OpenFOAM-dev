@@ -1,0 +1,36 @@
+1. how to write mesh from prostar
+
+Type ngeom,[name].ngeom,star in the command line. This will create a
+.ngeom file of your Prostar model.
+
+If you have boundaries defined, these will be kept in the .ngeom file so
+you won't have to rename and redefine the boundaries in ccm+. However,
+the values (properties) are not exported.
+
+If you don't have boundaries you'll get a single wall patch in ccm+ that
+you'll have to split accordingly.
+
+2. how to load it into star-ccm+
+
+In ccm+ create a new simulation and do File>Import...
+
+Browse to the location where you have your .ngeom file, select it, press
+OK and that's it.
+
+3. how to do merging (or is automatic?)
+
+If you had couples in your Prostar model, your meshes will all be
+"fused" together automatically in ccm+ when you import the .ngeom file.
+Keep a look on the output window in Prostar when you run the ngeom
+command to make sure the couples are exported OK.
+
+Alternatively, you can "fuse" the different fluid regions in ccm+. To do
+this select all the fluid regions you want to merge together from the
+command tree on the left of your screen, under Regions. Press control
+and click on top of each one, once you've selected all, click the
+right-hand buttom of your mouse and select Fuse...
+
+4. how to save it from star-ccm+
+
+Once your model is ready in ccm+ (i.e. all regions and boundary patches
+defined), go to File>Export... and select .ccm format.

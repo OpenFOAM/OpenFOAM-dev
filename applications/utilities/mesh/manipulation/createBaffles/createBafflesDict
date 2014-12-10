@@ -1,0 +1,144 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Sample for creating baffles:
+// - usually converting internal faces into two boundary faces
+// - or converting boundary faces into a boundary face
+//   (internalFacesOnly=false)(though should use really createPatch
+//    to do this)
+//
+// - selection of faces (and orientation) to 'baffle' through:
+//      faceZone:
+//          type        faceZone;
+//          zoneName    f0;
+//      searchableSurface:
+//          type        searchableSurface;
+//          surface     triSurfaceMesh;
+//          name        baffle1D.stl;
+//
+// - specification of patches for baffle sides in one of two modes:
+//      - patchPairs : create two patches of same type, same input
+//      - patches    : create patches separately, full control over what
+//                     to create on what side
+//                     (this mode can also create duplicate (overlapping)
+//                      sets of baffles:
+//                      - internalFacesOnly = false
+//                      - have 4 entries in patches:
+//                          - master
+//                          - slave
+//                          - additional master
+//                          - additional slave)
+
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
+
+// Optionally do not read/convert/write any fields.
+//noFields true;
+
+
+// Baffles to create.
+baffles
+{
+    baffle1
+    {
+        //- Use surface to select faces and orientation.
+        type        searchableSurface;
+        surface     triSurfaceMesh;
+        name        baffle1D.stl;
+        //- Optional flip
+        //flip        false;
+
+
+        // Generate patchGroup baffle1 with two patches:
+        //  - baffle1_master
+        //  - baffle1_slave
+        patchPairs
+        {
+            type            wall;
+            //- Optional override of added patchfields. If not specified
+            //  any added patchfields are of type calculated.
+            patchFields
+            {
+                U
+                {
+                    type            fixedValue;
+                    value           uniform (0 0 0);
+                }
+            }
+        }
+    }
+
+
+    cyclicFaces
+    {
+        //- Select faces and orientation through a searchableSurface
+        type        searchableSurface;
+        surface     searchablePlate;
+
+        origin      (0.099 -0.006 0.004);
+        span        (0 0.012 0.012);
+
+
+        // Generate patches explicitly
+        patches
+        {
+            master
+            {
+                //- Master side patch
+
+                name            fan_half0;
+                type            cyclic;
+                neighbourPatch  fan_half1;
+
+                patchFields
+                {
+                    p
+                    {
+                        type            fan;
+                        patchType       cyclic;
+                        jump            uniform 0;
+                        value           uniform 0;
+                        jumpTable       polynomial 1((100 0));
+                    }
+                }
+            }
+            slave
+            {
+                //- Slave side patch
+
+                name            fan_half1;
+                type            cyclic;
+                neighbourPatch  fan_half0;
+
+                patchFields
+                {
+                    p
+                    {
+                        type            fan;
+                        patchType       cyclic;
+                        value           uniform 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

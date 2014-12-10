@@ -1,0 +1,7 @@
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -ItractionDisplacementCorrectionStress \
+    -I../solidDisplacementFoam
+
+EXE_LIBS = \
+    -lfiniteVolume

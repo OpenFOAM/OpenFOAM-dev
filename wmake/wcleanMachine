@@ -1,0 +1,88 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wcleanMachine
+#
+# Description
+#     Searches the directory tree starting at the current directory for the
+#     object file directories of the specified machine type(s) and deletes them.
+#     If a machine type is not provided the current machine type is assumed.
+#
+#     Usage: wcleanMachine [ -current ]
+#            wcleanMachine <machineType> [ .. <machineTypeN> ]
+#
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: ${0##*/} machineType [... machineTypeN] [ -current ]
+
+  Searches the directory tree starting at the current directory for the
+  object file directories of the specified machine type(s) and deletes them.
+  If either -current or no machine type is specified then the current type
+  is assumed (from $WM_OPTIONS).
+
+USAGE
+    exit 1
+}
+
+# Print help message
+if [ "$1" = "-h" -o "$1" = "-help" ]
+then
+    usage
+fi
+
+# Get the machines from the arguments
+machines="$@"
+
+# If no arguments are provided default to current machine type
+if [ "$#" -lt 1 ]
+then
+    machines="-current"
+fi
+
+# Loop over all the machine types specified and delete the object directories
+for machType in $machines
+do
+    if [ "$machType" = "-current" ]
+    then
+        machType="$WM_OPTIONS"
+        echo "Current machine type: $machType"
+        [ -n "$machType" ] || continue
+    fi
+
+    echo "Cleaning machine type: $machType"
+
+    find . -depth \( -name Make -o -name "Make.[A-Za-z]*" \) -type d -print | \
+        xargs -i find '{}' -mindepth 1 -maxdepth 1 \
+              \( -type d -name "*$machType" -o -name "*$machType$WM_MPLIB" \) \
+              -print | xargs rm -rf
+
+    rm -rf platforms/${machType}*
+
+done
+
+#------------------------------------------------------------------------------

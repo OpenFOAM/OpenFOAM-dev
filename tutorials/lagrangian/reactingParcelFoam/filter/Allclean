@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+cleanCase
+
+# remove 0 directory
+rm -rf 0
+
+# remove post-processing directory
+rm -rf postProcessing
+
+# copy 0.org to 0
+cp -r 0.org 0
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,134 @@
+oscillatingInletACMI2D
+
+This tutorial case gives an example of the Arbitrarily Coupled Mesh Interface
+(ACMI) usage.  The mesh is composed of two mesh regions: an inlet channel which
+oscillates in the +/- Y-direction, and a fixed mesh region.
+
+Each ACMI patch requires the specification of a 'non-overlapping' patch.  In
+this example, the non-overlapping patches are described as walls, e.g. taken
+from the constant/polyMesh/boundary file:
+
+    1. First ACMI patch pair applied to the inlet channel outlet
+
+        ACMI1_couple
+        {
+            type            cyclicACMI;
+            nFaces          40;
+            startFace       43720;
+            matchTolerance  0.0001;
+            transform       noOrdering;
+            neighbourPatch  ACMI2_couple;
+            nonOverlapPatch ACMI1_blockage;
+        }
+        ACMI1_blockage
+        {
+            type            wall;
+            nFaces          40;
+            startFace       43680;
+        }
+
+
+    1. Second ACMI patch pair applied to the fixed mesh region inlet
+
+        ACMI2_couple
+        {
+            type            cyclicACMI;
+            nFaces          96;
+            startFace       43856;
+            matchTolerance  0.0001;
+            transform       noOrdering;
+            neighbourPatch  ACMI1_couple;
+            nonOverlapPatch ACMI2_blockage;
+        }
+        ACMI2_blockage
+        {
+            type            wall;
+            nFaces          96;
+            startFace       43760;
+        }
+
+
+In the above, the ACMI1_blockage and ACMI1_couple patches occupy the same space,
+with duplicate points, edges and faces.  The ACMI2_blockage and ACMI2_couple
+patches are created similarly.
+
+The duplicate patches are initially created using the createBaffles utility.
+Firstly, the original (non-duplicated) patch faces are collected into zones
+using the topoSet utility.
+
+Note: when specifying the ACMI patch-pairs, the coupled patch must be specified
+before its associated non-overlapping patch.
+
+Each ACMI/non-overlapping patch pair is specified using a master-slave approach.
+However, since we are generating boundary patches (which are always master
+patches) the slave patches are simply defined using 'dummy' entries, e.g.:
+
+    type        faceZone;
+    zoneName    couple1Faces;
+
+    patches
+    {
+        // create cyclic ACMI patch
+        master
+        {
+            //- Master side patch
+            name            ACMI1_couple;
+            type            cyclicACMI;
+            matchTolerance  0.0001;
+            neighbourPatch  ACMI2_couple;
+            nonOverlapPatch ACMI1_blockage;
+            transform       noOrdering;
+        }
+        slave // dummy entries only
+        {
+            //- Slave side patch
+            name            ACMI1_couple;
+            type            patch;
+        }
+        // create blockage patch
+        master2
+        {
+            //- Master side patch
+            name            ACMI1_blockage;
+            type            wall;
+        }
+        slave12 // dummy entries only
+        {
+            //- Slave side patch
+            name            ACMI1_blockage;
+            type            wall;
+        }
+
+    }
+
+Boundary conditions must then be applied to all geometric patches in the usual,
+manner, and the cases can be executed in parallel (as shown when running the
+Allrun-parallel script) without any speacial treatment, i.e. the case set-up is
+the same as when operating in serial mode.
+
+
+checkMesh
+---------
+checkMesh will see the 'duplicate' boundary faces but does not know about
+the area factors so will complain:
+
+     ***Boundary openness (-0.0103092 2.3845e-17 3.80774e-17) possible hole in boundary description.
+     ***Open cells found, max cell openness: 0.333333, number of open cells 136
+      <<Writing 136 non closed cells to set nonClosedCells
+
+As long as these non-closed cells are on the ACMI they can be ignored.
+
+
+paraFoam
+--------
+- display: it will not display the outside of the ACMI, there will be a hole.
+- cuttingPlanes: they leave out the duplicate faces (i.e. the cells on
+  the ACMI patches)
+- interpolation: the interpolation does not take into account the
+area-weights on the ACMI.
+
+
+pointFields
+-----------
+Same as paraFoam: the interpolation does not take into account the
+area-weights on the ACMI.

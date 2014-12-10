@@ -1,0 +1,243 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     Alltest
+#
+# Description
+#     quickly tests the tutorials and writes out the scheme/solver information
+#
+#------------------------------------------------------------------------------
+cd ${0%/*} || exit 1    # run from this directory
+
+usage()
+{
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [OPTION]
+
+options:
+  -root <dir>       specify root directory to run tests from
+  -default          sets up a default scheme on all schemes
+  -help             print the usage
+
+* quickly tests the tutorials and writes out the scheme/solver information
+
+USAGE
+    exit 1
+}
+
+#------------------------------------------------------------------------------
+
+unset DEFAULT_SCHEMES
+
+ROOT="./"
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -r | -root)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        ROOT="$2"
+        shift
+        ;;
+    -h | -help)
+        usage
+        ;;
+    -d | -default)
+        DEFAULT_SCHEMES=true
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+    shift
+done
+
+
+setDefaultFvSchemes()
+{
+cat<<EOF
+gradSchemes { default Gauss linear; }
+divSchemes
+{
+    default Gauss linear;
+    div(phi,fu_ft_ha) Gauss multivariateSelection
+    {
+        fu upwind;
+        ft upwind;
+        h  upwind;
+    };
+    div(phi,ft_b_ha_hau) Gauss multivariateSelection
+    {
+        fu upwind;
+        ft upwind;
+        b  upwind;
+        h  upwind;
+        hu upwind;
+    };
+}
+laplacianSchemes { default Gauss linear corrected; }
+interpolationSchemes { default linear; }
+snGradSchemes { default corrected; }
+fluxRequired { default yes; }
+EOF
+}
+
+#
+# VARIABLE
+#
+unset MAIN_CONTROL_DICT
+
+for i in \
+    $HOME/.$WM_PROJECT/$WM_PROJECT_VERSION \
+    $HOME/.$WM_PROJECT \
+    $WM_PROJECT_DIR/etc \
+    ;
+do
+    if [ -f "$i/controlDict" ]
+    then
+        MAIN_CONTROL_DICT="$i/controlDict"
+        break
+    fi
+done
+
+[ -f "$MAIN_CONTROL_DICT" ] || usage "main controlDict not found"
+
+
+TUTORIALS_DIR=$ROOT
+TEST_RUN_DIR=../tutorialsTest
+FV_SCHEMES=\
+" \
+    gradScheme \
+    divScheme \
+    laplacianScheme \
+    interpolationScheme \
+    snGradScheme \
+    fluxRequired \
+"
+SCHEMES_FILE="FvSchemes"
+SCHEMES_TEMP="FvSchemes.temp"
+SOLVERS_FILE="FvSolution"
+SOLVERS_TEMP="FvSolution.temp"
+
+
+#
+# MAIN
+#
+
+if [ -d "$TEST_RUN_DIR" ]
+then
+    rm -rf $TEST_RUN_DIR
+fi
+
+echo "Modifying ${MAIN_CONTROL_DICT}"
+if [ -e ${MAIN_CONTROL_DICT}.org ]
+then
+    echo "File ${MAIN_CONTROL_DICT}.org already exists"
+    echo "Did Alltest fail in some way and then run again?"
+    exit 1
+fi
+
+# Clean up on termination and on Ctrl-C
+trap 'mv ${MAIN_CONTROL_DICT}.org ${MAIN_CONTROL_DICT} 2>/dev/null; exit 0' \
+    EXIT TERM INT
+cp ${MAIN_CONTROL_DICT} ${MAIN_CONTROL_DICT}.org
+
+sed \
+-e s/"\(fvSchemes[ \t]*\)\([0-9]\);"/"\1 1;"/g \
+-e s/"\(solution[ \t]*\)\([0-9]\);"/"\1 1;"/g \
+${MAIN_CONTROL_DICT}.org > ${MAIN_CONTROL_DICT}
+
+echo "Copying the tutorials"
+cp -a ${TUTORIALS_DIR} ${TEST_RUN_DIR}
+
+echo "Modifying the controlDicts to run only one time step"
+cd ${TEST_RUN_DIR} || exit 1
+
+for CD in `find . -name "controlDict*"`
+do
+    mv ${CD} ${CD}.org
+    sed \
+    -e s/"\(startFrom[ \t]*\)\([a-zA-Z]*\);"/"\1 latestTime;"/g \
+    -e s/"\(stopAt[ \t]*\)\([a-zA-Z]*\);"/"\1 nextWrite;"/g \
+    -e s/"\(writeControl[ \t]*\)\([a-zA-Z]*\);"/"\1 timeStep;"/g \
+    -e s/"\(writeInterval[ \t]*\)\([0-9a-zA-Z.-]*\);"/"\1 1;"/g \
+    ${CD}.org > ${CD}
+done
+
+if [ "$DEFAULT_SCHEMES" = true ]
+then
+    echo "Modifying the fvSchemes to contain only default schemes"
+    for FV_SC in `find . -name fvSchemes`
+    do
+        for S in $FV_SCHEMES
+        do
+            mv ${FV_SC} ${FV_SC}.org
+            sed -e /"${S}"/,/$p/d ${FV_SC}.org > ${FV_SC}
+        done
+        setDefaultFvSchemes >> ${FV_SC}
+    done
+fi
+
+cp -f $FOAM_TUTORIALS/Allrun .
+./Allrun
+
+
+sed -e :a -e '/\\$/N; s/\\\n//; ta' Allrun > temp
+APPLICATIONS=\
+    `grep "applications=" temp | sed 's/applications=\"\([A-Za-z \t]*\)\"/\1/g'`
+
+rm $SCHEMES_FILE > /dev/null 2>&1
+for APP in $APPLICATIONS
+do
+    echo $APP >> $SCHEMES_FILE
+    echo "$APP: " | tr -d "\n" >> $SOLVERS_FILE
+    for ST in $FV_SCHEMES
+    do
+        rm $SCHEMES_TEMP $SOLVERS_TEMP > /dev/null 2>&1
+        echo "  ${ST}" >> $SCHEMES_FILE
+        for LOG in `find ${APP} -name "log.${APP}"`
+        do
+            for S in `grep ${ST} ${LOG} | cut -d" " -f4`
+            do
+                echo "    ${S}" >> $SCHEMES_TEMP
+            done
+        echo `grep solver ${LOG} | cut -d" " -f4` >> $SOLVERS_TEMP
+        done
+        if [ -f $SCHEMES_TEMP ]
+        then
+            cat $SCHEMES_TEMP | sort -u >> $SCHEMES_FILE
+        fi
+    done
+    cat $SOLVERS_TEMP | tr " " "\n" | sort -u | tr "\n" " " >> $SOLVERS_FILE
+    echo "" >> $SOLVERS_FILE
+done
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,66 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    note        "settings for calculating the equilibrium flame temperature";
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+P       1e5;
+
+H2
+{
+    fuel H2;
+    n    0;
+    m    2;
+}
+
+CH4
+{
+    fuel CH4___ANHARMONIC;
+    n    1;
+    m    4;
+}
+
+ETHYLENE
+{
+    fuel C2H4;
+    n    2;
+    m    4;
+}
+
+PROPANE
+{
+    fuel C3H8;
+    n    3;
+    m    8;
+}
+
+OCTANE
+{
+    fuel C8H18(L)_isooctane;
+    n    8;
+    m    18;
+}
+
+N-HEPTANE
+{
+    fuel C7H16_n-heptane;
+    n    7;
+    m    16;
+}
+
+$H2;
+// $CH4;
+// $PROPANE;
+
+// ************************************************************************* //

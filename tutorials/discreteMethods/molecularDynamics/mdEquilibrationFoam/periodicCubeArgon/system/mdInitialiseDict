@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      molConfigDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Euler angles, expressed in degrees as phi, theta, psi, see
+// http://mathworld.wolfram.com/EulerAngles.html
+
+liquid
+{
+    massDensity             1220;
+    temperature             300;
+    bulkVelocity            (0.0 0.0 0.0);
+    latticeIds              (Ar);
+    tetherSiteIds           ();
+    latticePositions
+    (
+        (0 0 0)
+    );
+    anchor                  (0 0 0);
+    orientationAngles       (0 0 0);
+    latticeCellShape        (1 1 1);
+}
+
+// ************************************************************************* //

@@ -1,0 +1,173 @@
+/*
+ * tabs styles, without slidingdoor graphics
+ * http://www.alistapart.com/articles/slidingdoors
+ */
+
+div.navigation
+{
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 3px solid rgb(175,175,175);
+}
+
+
+div.tabs,
+div.tabs2,
+div.tabs3
+{
+    width           : 100%;
+    padding-top     : 5px;
+    padding-bottom  : 5px;
+    background:     rgb(240,240,240);
+    border-bottom: 1px solid rgb(175,175,175);
+}
+
+div.tabs ul,
+div.tabs2 ul,
+div.tabs3 ul
+{
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    list-style: none;
+/*    max-height: 16px; */
+}
+
+
+div.tabs li, div.tabs form,
+div.tabs2 li, div.tabs2 form,
+div.tabs3 li, div.tabs3 form
+{
+    display         : inline;
+    margin          : 0px;
+    padding         : 0px;
+}
+
+div.tabs ul li,
+div.tabs2 ul li,
+div.tabs3 ul li
+{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: 100%;
+}
+
+div.tabs form,
+div.tabs2 form
+{
+    padding         : 0px 9px;
+}
+
+div.tabs a,
+div.tabs2 a
+{
+    font-size       : 12px;
+    font-weight     : normal;
+    text-decoration : none;
+    border-right: 1px solid rgb(175,175,175);
+}
+
+/* not needed - no image */
+div.tabs a:hover,
+div.tabs2 a:hover
+{
+    background-position: 100% -150px;
+}
+
+div.tabs a:link,
+div.tabs a:visited,
+div.tabs a:active,
+div.tabs a:hover,
+div.tabs2 a:link,
+div.tabs2 a:visited,
+div.tabs2 a:active,
+div.tabs2 a:hover,
+div.tabs3 a:link,
+div.tabs3 a:visited,
+div.tabs3 a:active,
+div.tabs3 a:hover
+{
+    color           : #000000;
+    color:#555;
+}
+
+div.tabs span,
+div.tabs2 span,
+div.tabs3 span
+{
+    display         : inline;
+    padding         : 0px 9px;
+    white-space     : nowrap;
+}
+
+/* client-side search */
+div.tabs #MSearchBox,
+div.tabs2 #MSearchBox
+{
+   float            : right;
+   background       : white;
+   display          : inline;
+   font-size        : 1em;
+}
+
+div.tabs #MSearchSelect,
+div.tabs2 #MSearchSelect
+{
+   float            : left;
+   display          : inline;
+   font-size        : 1em;
+}
+
+/* old name? */
+div.tabs input,
+div.tabs2 input
+{
+    float           : right;
+    display         : inline;
+    font-size       : 1em;
+}
+
+div.tabs td,
+div.tabs2 td
+{
+    font-size       : 80%;
+    font-weight     : bold;
+    text-decoration : none;
+}
+
+/* Commented backslash hack hides rule from IE5-Mac \*/
+div.tabs span { float : none; }
+/* End IE5-Mac hack */
+
+/* not needed - no image */
+div.tabs a:hover span
+{
+    background-position: 0% -150px;
+}
+
+div.tabs li.current a,
+div.tabs2 li.current a
+{
+    border-width    : 0px;
+    border-right: 1px solid rgb(175,175,175);
+    color           : #555;
+}
+
+div.tabs li.current span,
+div.tabs2 li.current span
+{
+    padding-bottom: 0px;
+    white-space: nowrap;
+    font-style: italic;
+}
+
+div.navpath
+{
+    background       : none;
+    border           : none;
+    margin           : 10px 0px;
+    padding          : 0px;
+    font-size        : 110%;
+    text-align       : center;
+}
+

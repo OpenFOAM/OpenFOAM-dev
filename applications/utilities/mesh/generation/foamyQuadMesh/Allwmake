@@ -1,0 +1,14 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+set -x
+
+if [ -n "$CGAL_ARCH_PATH" ]
+then
+    #- Already built by ../Allwake
+    #wmake libso ../foamyHexMesh/conformalVoronoiMesh
+
+    wmake libso conformalVoronoi2DMesh
+    wmake
+fi
+
+# ----------------------------------------------------------------- end-of-file

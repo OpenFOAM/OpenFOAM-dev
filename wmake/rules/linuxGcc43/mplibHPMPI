@@ -1,0 +1,3 @@
+PFLAGS     =
+PINC       = -I$(MPI_ARCH_PATH)/include -D_MPICC_H
+PLIBS      = -L$(MPI_ARCH_PATH)/lib/linux_ia32 -lmpi

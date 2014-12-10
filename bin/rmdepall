@@ -1,0 +1,69 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     rmdepall
+#
+# Description
+#     Remove all .dep files or remove .dep files referring to <file>
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: ${0##*/} [file]
+
+Remove all .dep files or remove .dep files referring to <file>
+
+USAGE
+    exit 1
+}
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -*)
+       usage "unknown option: '$*'"
+       ;;
+    *)
+       break
+       ;;
+    esac
+done
+
+
+if [ "$#" -eq 0 ]
+then
+    echo "removing all .dep files ..."
+    find . -name '*.dep' -print | xargs -t rm 2>/dev/null
+else
+    echo "removing .dep files referring to $1 ..."
+    find . -name '*.dep' -exec grep "$1" '{}' \; -exec rm '{}' \;
+fi
+
+#------------------------------------------------------------------------------

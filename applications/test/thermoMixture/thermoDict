@@ -1,0 +1,43 @@
+specie1
+{
+   specie
+   {
+      nMoles 1;
+      molWeight 1;
+   }
+
+   thermodynamics
+   {
+      Cp 1;
+      Cv 1;
+      Hf 0;
+   }
+
+   transport
+   {
+      mu 1;
+      Pr 1;
+   }
+}
+
+specie2
+{
+   specie
+   {
+      nMoles 1;
+      molWeight 0.5;
+   }
+
+   thermodynamics
+   {
+      Cp 2;
+      Cv 2;
+      Hf 0;
+   }
+
+   transport
+   {
+      mu 1;
+      Pr 1;
+   }
+}

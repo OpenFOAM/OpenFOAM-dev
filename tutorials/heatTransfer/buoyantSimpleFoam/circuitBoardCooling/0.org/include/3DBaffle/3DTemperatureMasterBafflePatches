@@ -1,0 +1,26 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+T
+{
+        type                compressible::thermalBaffle;
+        kappa               fluidThermo;
+        kappaName           none;
+        value               uniform 300;
+
+        regionName           ${baffleRegionName};
+        active               yes;
+
+        # include "3DbaffleSolidThermo"
+
+        // New fvMesh (region) information
+        # include "extrudeModel"
+
+}
+
+// ************************************************************************* //

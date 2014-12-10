@@ -1,0 +1,64 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     doxyFilter
+#
+# Description
+#     pass-through filter for doxygen
+#
+#     Special treatment for applications/{solvers,utilities}/*.C
+#     - only keep the first comment block of the C source file
+#       use @cond / @endcond to suppress documenting all classes/variables
+#
+#     Special treatment for applications/{solvers,utilities}/*.H
+#     - use @cond / @endcond to suppress documenting all classes/variables
+#------------------------------------------------------------------------------
+
+if [ "$#" -gt 0 ]
+then
+    filePath=$(echo $1 | sed -e s@^$WM_PROJECT_DIR@../../..@ )
+    # dirName=$(echo "$filePath" | sed -e 's@/[^/]*$@@' )
+    dirName=${filePath%/[^/]*}
+    fileName=${filePath##*/}
+
+    awkScript=$WM_PROJECT_DIR/bin/tools/doxyFilter.awk
+
+    case "$1" in
+    */applications/solvers/*.C | */applications/utilities/*.C )
+        awkScript=$WM_PROJECT_DIR/bin/tools/doxyFilter-top.awk
+        ;;
+#    */applications/solvers/*.H | */applications/utilities/*.H )
+#        awkScript=$WM_PROJECT_DIR/bin/tools/doxyFilter-ignore.awk
+#        ;;
+    esac
+
+    awk -f $WM_PROJECT_DIR/bin/tools/doxyFilter-table.awk $1 | \
+    awk -f $awkScript  | \
+    sed -f $WM_PROJECT_DIR/bin/tools/doxyFilter.sed \
+        -e s@%filePath%@$filePath@g \
+        -e s@%fileName%@$fileName@g \
+        -e s@%dirName%@$dirName@g
+fi
+#------------------------------------------------------------------------------

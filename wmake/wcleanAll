@@ -1,0 +1,80 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wcleanAll
+#
+# Description
+#     search all the directories below the current for the object file
+#     directories of all machines and delete them.
+#
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+usage: ${0##*/}
+
+    Remove all object files and *.dep files
+
+USAGE
+    exit 1
+}
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+[ -d bin -a -d src ] || usage "not in the project top level directory"
+
+
+echo "Removing platforms/ subdirectores"
+rm -rf platforms/*
+
+echo "Removing *.dep files"
+find . -name '*.dep' -exec rm {} \;
+
+echo "Cleaning Make subdirectories"
+find . -depth \( -name Make -o -name "Make.[A-Za-z]*" \) -type d -print | \
+    xargs -i find '{}' -mindepth 1 -maxdepth 1 -type d -print | \
+    xargs rm -rf
+
+echo "Removing lnInclude and intermediate directories"
+find . -depth -type d \( -name lnInclude -o -name ii_files -o -name Templates.DB \) -exec rm -rf {} \;
+
+echo "Removing misc files"
+find . \( -name exe -o -name log -o -name so_locations \) -exec rm {} \;
+
+tutorials/Allclean
+
+#------------------------------------------------------------------------------

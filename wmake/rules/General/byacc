@@ -1,0 +1,6 @@
+.SUFFIXES: .y
+
+ytoo = byacc -v $(YYPREFIX) -d $$SOURCE ; mv y.tab.c $*.C ; mv y.tab.h $*.H ; $(CC) $(c++FLAGS) -c $*.C -o $@
+
+.y.dep:
+	$(MAKE_DEP)

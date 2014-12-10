@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+fi
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced "Helvetica,20"
+    set output "OF_vs_CHEMKINII.eps"
+    set xlabel "Time / [s]" font "Helvetica,24"
+    set ylabel "Temperature / [K]" font "Helvetica,24"
+    set grid
+    set key left top
+    set xrange [0:0.001]
+    set yrange [750:2750]
+    set ytic 250
+    plot \
+        "../chemFoam.out" u 1:2 t "OpenFOAM" with points lt 1 pt 6 ps 1.5,\
+        "chemkinII" with lines title "Chemkin II" lt -1
+EOF
+
+# ----------------------------------------------------------------- end-of-file
+

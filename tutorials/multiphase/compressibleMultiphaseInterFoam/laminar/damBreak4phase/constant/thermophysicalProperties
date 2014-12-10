@@ -1,0 +1,33 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phases (water oil mercury air);
+
+pMin            pMin [ 1 -1 -2 0 0 0 0 ] 10000;
+
+sigmas
+(
+    (air water) 0.07
+    (air oil) 0.07
+    (air mercury) 0.07
+    (water oil) 0.07
+    (water mercury) 0.07
+    (oil mercury) 0.07
+);
+
+
+// ************************************************************************* //

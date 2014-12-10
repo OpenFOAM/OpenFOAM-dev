@@ -1,0 +1,4 @@
+R.C
+compatibilityFvPatchFields/turbulentIntensityKineticEnergyInlet/turbulentIntensityKineticEnergyInletFvPatchSymmTensorField.C
+
+EXE = $(FOAM_APPBIN)/R

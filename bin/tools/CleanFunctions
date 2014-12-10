@@ -1,0 +1,136 @@
+#---------------------------------*- sh -*-------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     CleanFunctions
+#
+# Description
+#     Miscellaneous cleanup functions for tutorial cases
+#------------------------------------------------------------------------------
+
+#cleanTimeDirectories()
+#{
+#    echo "Cleaning $PWD case"
+#    for time in $(foamInfoExec -times)
+#    do
+#        # keep 0 and constant directories
+#        [ "$time" = "0" -o "$time" = constant ] || {
+#            echo "Deleting directory $time"
+#            rm -rf $time > /dev/null 2>&1
+#        }
+#    done
+#    rm -rf {log,log.*,log-*,logSummary.*,.fxLock,*.xml,ParaView*,paraFoam*,*.OpenFOAM} > /dev/null 2>&1
+#}
+
+cleanTimeDirectories()
+{
+    echo "Cleaning $PWD case"
+    zeros=""
+    while [ ${#zeros} -lt 8 ]
+    do
+        timeDir="0.${zeros}[1-9]*"
+        rm -rf ./${timeDir} ./-${timeDir} > /dev/null 2>&1
+        zeros="0$zeros"
+    done
+    rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./log-* ./logSummary.* ./.fxLock ./*.xml ./ParaView* ./paraFoam* ./*.OpenFOAM ./*.blockMesh ./.setSet > /dev/null 2>&1
+}
+
+
+#
+# Remove dynamicCode subdirectory if it looks appropriate
+#
+cleanDynamicCode()
+{
+    if [ -d system -a -d dynamicCode ]
+    then
+        rm -rf dynamicCode > /dev/null 2>&1
+    fi
+}
+
+
+cleanCase()
+{
+    cleanTimeDirectories
+    cleanDynamicCode
+
+    rm -rf processor* > /dev/null 2>&1
+    rm -rf postProcessing > /dev/null 2>&1
+    rm -rf probes* > /dev/null 2>&1
+    rm -rf forces* > /dev/null 2>&1
+    rm -rf graphs* > /dev/null 2>&1
+    rm -rf sets > /dev/null 2>&1
+    rm -rf surfaceSampling > /dev/null 2>&1
+    rm -rf cuttingPlane > /dev/null 2>&1
+    rm -rf system/machines > /dev/null 2>&1
+
+    if [ -d constant/polyMesh ]
+    then
+        (cd constant/polyMesh && \
+            rm -rf \
+            allOwner* cell* face* meshModifiers* \
+            owner* neighbour* point* edge* \
+            cellLevel* pointLevel* refinementHistory* level0Edge* surfaceIndex* sets \
+            > /dev/null 2>&1 \
+        )
+    fi
+    (cd constant && \
+        rm -rf \
+        cellToRegion cellLevel* pointLevel* \
+        > /dev/null 2>&1 \
+    )
+
+    rm -rf constant/tetDualMesh > /dev/null 2>&1
+
+    rm -rf VTK > /dev/null 2>&1
+    rm -f 0/cellLevel 0/pointLevel 0/cellDist constant/cellDecomposition
+
+    if [ -e constant/polyMesh/blockMeshDict.m4 ]
+    then
+        rm -f constant/polyMesh/blockMeshDict > /dev/null 2>&1
+    fi
+}
+
+removeCase()
+{
+    echo "Removing ${1:-unknown} case"
+    rm -rf $1
+}
+
+cleanSamples()
+{
+    rm -rf ./sets ./samples ./sampleSurfaces > /dev/null 2>&1
+}
+
+cleanUcomponents()
+{
+    rm -rf 0/Ux 0/Uy 0/Uz > /dev/null 2>&1
+}
+
+cleanApplication()
+{
+    echo "Cleaning $PWD application"
+    wclean
+}
+
+
+#------------------------------------------------------------------------------

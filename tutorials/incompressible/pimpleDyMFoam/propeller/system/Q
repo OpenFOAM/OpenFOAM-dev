@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+// Calculate Q (from U)
+Q
+{
+    // Where to load it from
+    functionObjectLibs ("libutilityFunctionObjects.so");
+
+    type Q;
+
+    // Output every
+    outputControl outputTime;
+}
+
+
+// ************************************************************************* //

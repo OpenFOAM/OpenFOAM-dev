@@ -1,0 +1,91 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamListSourceFiles <directory>
+#
+# Description
+#     Lists source files and Make/{files,options} in given directory
+#
+# Note
+#     Not normally called directly by the user.
+#------------------------------------------------------------------------------
+
+[ $# -eq 1 ] || {
+cat <<USAGE 1>&2
+Usage : ${0##*/} directory
+
+* Lists source files and Make/{files,options} in given directory
+
+USAGE
+    exit 1
+}
+
+# canonical form (no double and no trailing dashes)
+packDir=$(echo "$1" | sed -e 's@//*@/@g' -e 's@/$@@')
+
+# check for essential directories
+[ -d "$packDir" ] || {
+    echo "Error: directory $packDir does not exist" 1>&2
+    exit 1
+}
+
+
+#
+# list of files but excluding
+# - dependent files (dep, obj, lib), archives
+# - exclude Doxygen documentation etc
+#
+
+find -H $packDir                                                              \
+    ! -type d                                                                 \
+   \( -type f -o -type l \)                                                   \
+    ! -name "*~"                                                              \
+ -a ! -name ".*~"                                                             \
+ -a ! -name "*.orig"                                                          \
+ -a ! -name "*.dep"                                                           \
+ -a ! -name "*.o"                                                             \
+ -a ! -name "*.so"                                                            \
+ -a ! -name "*.a"                                                             \
+ -a ! -name "*.tar"                                                           \
+ -a ! -name "*.tar.gz"                                                        \
+ -a ! -name "*.tgz"                                                           \
+ -a ! -name "*.tar.bz2"                                                       \
+ -a ! -name "*.tbz"                                                           \
+ -a ! -name "core"                                                            \
+ -a ! -name "core.[1-9]*"                                                     \
+ -a ! -name "libccmio*"                                                       \
+| sed                                                                         \
+ -e '\@/\.git/@d'                                                             \
+ -e '\@/\.tags/@d'                                                            \
+ -e '\@/platforms/@d'                                                         \
+ -e '\@/t/@d'                                                                 \
+ -e '\@/Make[.A-Za-z]*/[^/]*/@d'                                              \
+ -e '\@/[Dd]oxygen/html/@d'                                                   \
+ -e '\@/download/@d'                                                          \
+ -e '\@/libccmio-.*/@d'                                                       \
+ -e '\@/debian/@d'
+
+
+#------------------------------------------------------------------------------

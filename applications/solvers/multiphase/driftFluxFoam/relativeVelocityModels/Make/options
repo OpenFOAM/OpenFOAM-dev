@@ -1,0 +1,12 @@
+EXE_INC = \
+    -I../incompressibleTwoPhaseInteractingMixture \
+    -I../mixtureViscosityModels/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/transportModels \
+    -I$(LIB_SRC)/transportModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/transportModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/transportModels/interfaceProperties/lnInclude
+
+LIB_LIBS = \
+    -lfiniteVolume \
+    -lincompressibleTransportModels

@@ -1,0 +1,95 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+// Interpolate U to create near-wall UNear
+near
+{
+    // Where to load it from
+    functionObjectLibs ("libfieldFunctionObjects.so");
+
+    type nearWallFields;
+
+    // Output every
+    outputControl   outputTime;
+
+    // Fields to be sampled. Per field original name and mapped field to
+    // create.
+    // Note: fields only get updated when writing!
+    fields
+    (
+        (U UNear)
+    );
+
+    // Patches/groups to sample (regular expressions)
+    patches (motorBikeGroup);
+
+    // Distance to sample
+    distance 0.001;
+}
+
+// Use UNear to track along wall
+wallBoundedStreamLines
+{
+    // Where to load it from (if not already in solver)
+    functionObjectLibs ("libfieldFunctionObjects.so");
+    type            wallBoundedStreamLine;
+
+    // Output every
+    outputControl   outputTime;
+
+    setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot;
+
+    // Velocity field to use for tracking.
+    UName UNear;
+
+    // Interpolation method. Default is cellPoint. See sampleDict.
+    //interpolationScheme pointMVC;
+
+    // Tracked forwards (+U) or backwards (-U)
+    trackForward    true;
+
+    interpolationScheme cellPoint;
+
+    // Names of fields to sample. Should contain above velocity field!
+    fields (p U k UNear);
+
+    // Steps particles can travel before being removed
+    lifeTime        100;
+
+    // Cloud name to use
+    cloudName       wallBoundedParticleTracks;
+
+    // Seeding method. See the sampleSets in sampleDict.
+    seedSampleSet   patchSeed;    //cloud;//triSurfaceMeshPointSet;
+
+    uniformCoeffs
+    {
+        type        uniform;
+        axis        x;  //distance;
+
+        start       (0.0035 0.0999 0.0001);
+        end         (0.0035 0.0999 0.0099);
+        nPoints     20;
+    }
+    cloudCoeffs
+    {
+        type        cloud;
+        axis        x;  //distance;
+        points      ((0.351516548679288 -0.0116085375585099 1.24));
+    }
+    patchSeedCoeffs
+    {
+        type        patchSeed;
+        patches     (motorBikeGroup);
+        axis        x;  //distance;
+        maxPoints   20000;
+    }
+}
+
+
+// ************************************************************************* //

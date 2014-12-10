@@ -1,0 +1,23 @@
+dynamicFvMesh/dynamicFvMesh.C
+dynamicFvMesh/dynamicFvMeshNew.C
+staticFvMesh/staticFvMesh.C
+dynamicMotionSolverFvMesh/dynamicMotionSolverFvMesh.C
+dynamicInkJetFvMesh/dynamicInkJetFvMesh.C
+dynamicRefineFvMesh/dynamicRefineFvMesh.C
+
+solidBodyMotionFvMesh/solidBodyMotionFvMesh.C
+solidBodyMotionFvMesh/multiSolidBodyMotionFvMesh.C
+solidBodyMotionFunctions = solidBodyMotionFvMesh/solidBodyMotionFunctions
+$(solidBodyMotionFunctions)/solidBodyMotionFunction/solidBodyMotionFunction.C
+$(solidBodyMotionFunctions)/solidBodyMotionFunction/solidBodyMotionFunctionNew.C
+$(solidBodyMotionFunctions)/SDA/SDA.C
+$(solidBodyMotionFunctions)/tabulated6DoFMotion/tabulated6DoFMotion.C
+$(solidBodyMotionFunctions)/linearMotion/linearMotion.C
+$(solidBodyMotionFunctions)/rotatingMotion/rotatingMotion.C
+$(solidBodyMotionFunctions)/axisRotationMotion/axisRotationMotion.C
+$(solidBodyMotionFunctions)/multiMotion/multiMotion.C
+$(solidBodyMotionFunctions)/oscillatingLinearMotion/oscillatingLinearMotion.C
+$(solidBodyMotionFunctions)/oscillatingRotatingMotion/oscillatingRotatingMotion.C
+solidBodyMotionFvMesh/pointPatchFields/derived/solidBodyMotionDisplacement/solidBodyMotionDisplacementPointPatchVectorField.C
+
+LIB = $(FOAM_LIBBIN)/libdynamicFvMesh

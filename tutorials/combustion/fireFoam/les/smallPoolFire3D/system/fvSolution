@@ -1,0 +1,109 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    "(rho|rhoFinal)"
+    {
+        solver              PCG;
+        preconditioner      DIC;
+        tolerance           1e-6;
+        relTol              0;
+    };
+
+    p_rgh
+    {
+        solver              GAMG;
+        tolerance           1e-6;
+        relTol              0.1;
+        smoother            GaussSeidel;
+        cacheAgglomeration  true;
+        nCellsInCoarsestLevel   10;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
+    };
+
+    p_rghFinal
+    {
+        $p_rgh;
+        tolerance           1e-6;
+        relTol              0;
+    };
+
+
+    "(U|Yi|k|h)"
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-6;
+        relTol          0.1;
+        nSweeps         1;
+    };
+
+    "(U|Yi|k|h)Final"
+    {
+        $U;
+        tolerance       1e-6;
+        relTol          0;
+    };
+
+    Ii
+    {
+        solver              GAMG;
+        tolerance           1e-4;
+        relTol              0;
+        smoother            symGaussSeidel;
+        cacheAgglomeration  true;
+        nCellsInCoarsestLevel   10;
+        agglomerator        faceAreaPair;
+        mergeLevels         1;
+        maxIter             1;
+        nPreSweeps          0;
+        nPostSweeps         1;
+    }
+
+    G
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-04;
+        relTol          0;
+    }
+
+}
+
+PIMPLE
+{
+    momentumPredictor yes;
+    nOuterCorrectors  1;
+    nCorrectors       2;
+    nNonOrthogonalCorrectors 0;
+}
+
+relaxationFactors
+{
+    fields
+    {
+    }
+    equations
+    {
+        "(U|k).*"                   1;
+        "(CH4|O2|H2O|CO2|h).*"      1;
+    }
+}
+
+// ************************************************************************* //

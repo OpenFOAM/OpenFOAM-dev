@@ -1,0 +1,22 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+export COMPILE_FLAGS=''
+export LINK_FLAGS=''
+
+if [ -f "${FOAM_LIBBIN}/libSloanRenumber.so" ]
+then
+    echo "Found libSloanRenumber.so  --  enabling Sloan renumbering support."
+    export LINK_FLAGS="${LINK_FLAGS} -lSloanRenumber"
+fi
+
+if [ "${ZOLTAN_ARCH_PATH}/lib/libzoltan.a" -a -f "${FOAM_LIBBIN}/libzoltanRenumber.so" ]
+then
+    echo "Found libzoltanRenumber.so  --  enabling zoltan renumbering support."
+    export COMPILE_FLAGS="-DFOAM_USE_ZOLTAN"
+    export LINK_FLAGS="${LINK_FLAGS} -lzoltanRenumber -L${ZOLTAN_ARCH_PATH}/lib -lzoltan"
+fi
+
+wmake
+
+# ----------------------------------------------------------------- end-of-file

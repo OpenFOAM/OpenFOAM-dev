@@ -1,0 +1,11 @@
+.SUFFIXES: .y .Y
+
+ytoo = bison -v -d -y $$SOURCE ; mv y.tab.c $*.c ; mv y.tab.h $*.h ; $(cc) $(cFLAGS) -c $*.c -o $@
+
+Ytoo = bison -v -d -y $$SOURCE ; mv y.tab.c $*.C ; mv y.tab.h $*.H ; $(CC) $(c++FLAGS) -c $*.C -o $@
+
+.y.dep:
+	$(MAKE_DEP)
+
+.Y.dep:
+	$(MAKE_DEP)

@@ -1,0 +1,144 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    SYMP3
+    {
+        type            slip;
+    }
+
+    INLE1
+    {
+        type            fixedValue;
+        value           uniform (0.1315 0 0);
+    }
+
+    OUTL9
+    {
+        type            fixedValue;
+        value           uniform (0 0.0177 0);
+    }
+
+    OUTL10
+    {
+        type            fixedValue;
+        value           uniform (0 0.0177 0);
+    }
+
+    OUTL11
+    {
+        type            fixedValue;
+        value           uniform (0 0.0177 0);
+    }
+
+    OUTL12
+    {
+        type            fixedValue;
+        value           uniform (0 0.0177 0);
+    }
+
+    WALL6
+    {
+        type            translatingWallVelocity;
+        U               (-0.003 0 0);
+        value           uniform (-0.003 0 0);
+    }
+
+    WALL8
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL61
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL62
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL63
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL64
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL65
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL66
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL67
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL68
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL69
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL7
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    WALL70
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    OUTL15
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,76 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+
+exponents="2 3 4 5 6 7 8"
+
+echo "# yPlus vs uPlus" > yPlus_vs_uPlus
+
+for e in $exponents
+do
+    echo "    Setting nu to 1e-$e"
+
+    sed "s/XXX/$e/g" constant/transportProperties.template \
+        > constant/transportProperties
+
+    runApplication `getApplication`
+
+    mv log.boundaryFoam log.boundaryFoam_$e
+
+    # extract y+, U+
+    # note: both must be added to foamLog.db
+    runApplication foamLog log.boundaryFoam_$e
+
+    mv log.foamLog log.foamLog_$e
+
+    if [ -e logs/yPlus_0 ]
+    then
+        yPlus=`awk < logs/yPlus_0 'END{print $2}'`
+        uPlus=`awk < logs/uPlus_0 'END{print $2}'`
+
+        echo "$yPlus $uPlus" >> yPlus_vs_uPlus
+    fi
+
+    rm -rf logs
+done
+
+
+# create validation plot
+# test if gnuplot exists on the system
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+fi
+
+graphName="OF_vs_ANAYTICAL.eps"
+
+echo "Creating graph of u+ vs y+ to $graphName"
+gnuplot<<EOF
+    set terminal postscript eps color enhanced
+    set output "$graphName"
+    set grid
+    set xlabel "y+"
+    set ylabel "u+"
+    set key top left
+    set size 0.75, 0.75
+    set parametric
+    # u+ range
+    set trange [0:35]
+    # Spaldings law
+    k=0.41
+    E=9.8
+    f(t) = t + 1/E*(exp(k*t) - 1 - k*t*(1 + 0.5*k*t) - 1/6*k*t**3)
+    set logscale x
+    set format x "10^{%T}"
+    plot f(t),t title "Spalding" with lines linetype -1, \
+        "yPlus_vs_uPlus" title "OpenFOAM" with points lt 1 pt 6
+EOF
+
+echo Done
+
+# ----------------------------------------------------------------- end-of-file

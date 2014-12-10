@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+T
+{
+    type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
+
+    thickness       uniform 0.005;  // thickness [m]
+    Qs              uniform 100;    // heat flux [W/m2]
+
+    # include "1DbaffleSolidThermo"
+
+    value               uniform 300;
+}
+
+// ************************************************************************* //

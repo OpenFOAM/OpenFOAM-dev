@@ -1,0 +1,99 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wmakeFilesAndOptions
+#
+# Description
+#     Scan current directory for directories and source files
+#     and construct Make/files and Make/options
+#
+#     Usage : wmakeFilesAndOptions
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/}
+
+    Scan current directory for directories and source files
+    and construct 'Make/files' and 'Make/options'
+
+USAGE
+    exit 1
+}
+
+
+# simple parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)   # provide immediate help
+        usage
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+# no arguments
+[ "$#" -eq 0 ] || usage "unexpected arguments: '$*'"
+
+#
+# check environment variables
+#
+for check in WM_OPTIONS WM_LINK_LANGUAGE WM_DIR
+do
+    eval test "\$$check" || {
+        echo "$Script error: environment variable \$$check not set" 1>&2
+        exit 1
+    }
+done
+
+if [ -d Make ]
+then
+    echo "$Script error: Make directory already exists" 1>&2
+    exit 1
+else
+    mkdir Make
+fi
+
+[ -e Make/files ] || {
+    echo "$Script: Creating Make/files"
+    $WM_DIR/scripts/makeFiles
+}
+
+[ -e Make/options ] || {
+    echo "$Script: Creating Make/options"
+    $WM_DIR/scripts/makeOptions
+}
+
+#------------------------------------------------------------------------------

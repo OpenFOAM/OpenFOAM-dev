@@ -1,0 +1,5 @@
+# use the system installed openmpi - mpicc must be installed
+
+PFLAGS     = -DOMPI_SKIP_MPICXX
+PINC       = $(shell mpicc --showme:compile)
+PLIBS      = $(shell mpicc --showme:link)

@@ -1,0 +1,68 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
+
+// Baffles to create.
+baffles
+{
+    baffleFacesThermoBaffle1D
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        searchableSurface;
+        surface     triSurfaceMesh;
+        name        baffle1D.stl;
+
+        patchPairs
+        {
+            type            wall;
+            patchFields
+            {
+                #include "./0/include/wallBafflePatches"
+                #include "./0/include/1DBaffle/1DTemperatureMasterBafflePatches"
+            }
+        }
+    }
+
+    #include "./0/include/baffle3DSetup"
+
+    baffleFacesThermoBaffle3D
+    {
+        type        searchableSurface;
+        surface     triSurfaceMesh;
+        name        baffle3D.stl;
+
+        patchPairs
+        {
+            type            mappedWall;
+            sampleMode      nearestPatchFace;
+            // Put master and slave patch in same group (default on)
+            // Otherwise makeup group names xxx_master and xxx_slave
+            sameGroup       off;
+            patchFields
+            {
+                #include "./0/include/wallBafflePatches"
+                #include "./0/include/3DBaffle/3DTemperatureMasterBafflePatches"
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

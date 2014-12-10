@@ -1,0 +1,361 @@
+README_1.0_to_2.0
+=================
+This document exists to help those who already have a working user defined
+reader (using the 1.0 API) to change it into the 2.0 API format - if desired.
+
+Note that you do not have to update your (1.0 API) user defined reader if it
+is already working fine for you.
+
+You should consider it if:
+  - efficieny gains are needed or
+  - you need access to complex variables or
+  - you need access to tensor variables or
+  - you need multiple timeset capability or
+  - you want to provide your own "border" elements (as opposed to EnSight's
+                                                    computation of them)
+
+As an indication of the differences that might be realized in efficency,
+consider the following comparison on an unstructured model consisting of:
+
+1,639,058 nodes
+7,079,211 elements      240530 tria3
+                          3984 quad4
+                       5927663 tetra4
+                           653 pyramid5
+                        906381 penta6
+
+12 parts
+
+The same model was represented in EnSight6 and EnSight Gold format.
+
+
+                    EnSight6 format into:           EnSight Gold format into:
+            ------------------------------------    -------------------------
+            EnSight7.1  |Ensight7.2  |Ensight 7.1  |EnSight7.2  |Ensight7.2
+            internal    |internal    |userd reader |internal    |userd reader
+            reader      |reader      |(API 1.0)    |reader      |(API 2.0)
+                        |            |             |            |
+            Time | Mem  |Time | Mem  |Time | Mem   |Time | Mem  |Time | Mem
+            (sec)| (Mb) |(sec)| (Mb) |(sec)| (Mb)  |(sec)| (Mb) |(sec)| (Mb)
+            ----------- |----------- |-----------  |----------- |-----------
+@ part       4.3   27.6 | 3.5   28.4 | 4.0   27.6  | 3.3    8.8 | 3.3    8.9
+loader                  |            |             |            |
+                        |            |             |            |
+after       14.0  243.4 |12.8  244.3 |49.8  475.8  | 6.0  211.5 | 6.2  211.6
+loading all             |            |             |            |
+12 parts                |            |             |            |
+(non-visual)            |            |             |            |
+                        |            |             |            |
+after       16.8  263.2 |16.0  264.2 |52.8  490.7  | 9.1  236.2 | 9.5  236.2
+activate of             |            |             |            |
+a vector.               |            |             |            |
+                                           ^                          ^
+                                          /|\                        /|\
+                                           |                          |
+                                           |                          |
+                                           |                          |
+                                                Compare these two!
+
+
+Significant is the inefficiency of the 1.0 API, and the fact that the
+2.0 API has the same improved efficiency (both in speed and memory) as
+the gold internal reader!
+
+Note: Structured data will not show much difference between the two API's,
+but it was more efficient initially.
+
+
+=========================================================
+A note on philosophical differences between the two API's:
+=========================================================
+
+API 1.0 deals with:
+-------------------
+ -> global coordinate array  & corresponding
+    -> global node id array
+    -> global nodal variables
+
+ -> for each part:
+    -> local element connectivities (grouped by type) & corresponding
+       -> local element ids
+       -> local elemental variables
+
+
+The element connectivities, within parts, reference the global coordinate
+array. If node ids are provided, the element connectivities have to be in
+terms of the node ids. If node ids are not provided, the connectivities are in
+terms of the (one-based) index number of each node in the global coordinate
+array. Thus, node ids are more than labels - they are a part of the
+connectivity referencing scheme. Element ids are purely labels.
+
+This API was originally setup to try to make the interface to other codes as
+straightforward as possible.  Efficiency was not the major consideration.
+
+EnSight must do a fair amount of work to get data provided in the manner
+described above into the form that it uses internally. There is mapping that
+has to be setup and maintained between the global arrays and the local part
+arrays so that updating over time can be accomplished efficiently. There is
+hashing that is required in order to deal efficently with node ids.
+
+All of this leads to a considerable amount of temporary memory and processing,
+in order to get a model read into EnSight.
+
+
+API 2.0 deals with:
+-------------------
+ -> for each part:
+    -> part coordinates  & corresponding
+    -> part node ids
+    -> part nodal variables
+
+    -> part element connectivities (grouped by type) & corresponding
+       -> part element ids
+       -> part elemental variables
+
+API 2.0 requires that the coordinates and corresponding nodal variables be
+provided per part. This eliminates the global to local mapping with all its
+associated temporary memory and processing time. The connectivity of the
+elements in each part reference the node indicies of its own (one-based) part
+coordinate array.  The connectivity of the elements do not reference the nodes
+according to node ids.  Node ids (and element ids for that matter) are purely
+labels for screen display and for query operations within EnSight. This
+eliminates the need for node id hashing as a model is read.
+ 
+The 2.0 API has been created for those needing more efficiency - both in terms
+of memory use and speed. The increased efficiency is possible because data is
+requested in a manner which more closely represents the way that EnSight
+stores and manipulates information internally. The new API requests size
+information and allocates the actual internal structures and arrays
+accordingly.  Pointers to these arrays are passed directly to you in the
+routines which gather data, thus eliminating a considerable amount of
+temporary memory (and allocation time) that is needed in the old
+API. Depending on what you must do to get your data into the form required,
+the memory savings and the speed improvement when loading models can be quite
+significant!!
+ 
+Additionally, the ability to handle tensor and complex variables has been
+added to the new API, and support for multiple timesets is provided.
+------------------------------------------------
+
+
+So, with that said, if you determine that you want to convert your existing
+reader to the new API format, The following may be helpful.
+
+====================
+First the Good News!  The following routines are identical in both API's!!
+====================  ----------------------------------------------------
+USERD_bkup
+USERD_get_block_coords_by_component
+USERD_get_block_iblanking
+USERD_get_changing_geometry_status
+USERD_get_dataset_query_file_info
+USERD_get_element_label_status
+USERD_get_name_of_reader
+USERD_get_node_label_status
+USERD_get_number_of_files_in_dataset
+USERD_get_number_of_model_parts
+USERD_get_number_of_variables
+USERD_set_filenames
+USERD_stop_part_building
+
+
+
+========================
+Second, pretty Good News!    The following routines have minor changes,
+========================     namely a slight name change and the addition
+                             of arguments related to complex data, constant
+(Note, the name changes      type, or self contained parts vs global coords.
+ are needed so both
+ API's can exist together)   The arguments must be added, but depending on
+                             your situation, many might simply be place
+                             holders.
+-------------------------------------------------------------------------------
+
+   -----------------------------------------------------
+A) Changes related to imaginary flag for complex data
+   =====================================================
+   If you don't deal with complex variables, simply add
+   this flag to your argument list and ignore its value.
+   ----------------------------------------------------- 
+
+API 1.0                                 API 2.0
+-------                                 -------
+USERD_get_constant_value                USERD_get_constant_val
+(                                       (
+ int which var                           int which_var,
+                                         int imag_data
+)                                       )
+
+USERD_get_description_lines             USERD_get_descrip_lines
+(                                       (
+ int which_type,                         int which_type,
+ int which_var,                          int which_var,
+                                         int imag_data,
+ char line1[Z_BUFL],                     char line1[Z_BUFL],
+ char line2[Z_BUFL]                      char line2[Z_BUFL]
+)                                       )
+
+USERD_get_variable_value_at_specific    USERD_get_var_value_at_specific
+(                                       (
+ int which_var,                          int which_var,
+ int which_node_or_elem,                 int which_node_or_elem,
+ int which_part,                         int which_part,
+ int which_elem_type,                    int which_elem_type,
+ int time_step,                          int time_step,
+ float values[3]                         float values[3],
+                                         int imag_data
+)                                       )
+
+
+   ---------------------------------------------------------
+B) Changes related to complex data info, and constant type
+   (and some of the multiple timeset support)
+   =========================================================
+   If you don't deal with complex variables, simply add the
+   arguments for var_complex, var_ifilename, and var_freq
+   and assign var_complex to be FALSE.
+
+   The argument var_contran needs to be added, and set
+   appropriately if you have constant variables, to indicate
+   if the constant variable is fixed for all time or varies
+   over time.
+
+   The argument var_timeset needs to be added, and set
+   appropriately.
+   --------------------------------------------------------- 
+
+API 1.0                                 API 2.0
+-------                                 -------
+USERD_get_variable_info                 USERD_get_gold_variable_info
+(                                       (
+ char **var_description,                 char **var_description,
+ char **var_filename,                    char **var_filename,
+ int *var_type,                          int *var_type,
+ int *var_classify                       int *var_classify,
+                                         int *var_complex,
+                                         char **var_ifilename,
+                                         float *var_freq,
+                                         int *var_contran,
+                                         int *var_timeset
+)                                       )
+
+
+   ------------------------------------------------------
+C) Changes related to self contained part coordinates
+   ======================================================
+   The number_of_nodes argument needs to be added and
+   set for each part. This one is critical for you to do.
+   ------------------------------------------------------
+
+API 1.0                                 API 2.0
+-------                                 -------
+USERD_get_part_build_info               USERD_get_gold_part_build_info
+(                                       (
+ int *part_numbers,                      int *part_types,
+ int *part_types,                        int *part_types,
+ char *part_description[Z_BUFL],         char *part_description[Z_BUFL],
+                                         int *number_of_nodes,
+ int *number_of_elements[Z_MAXTYPE],     int *number_of_elements[Z_MAXTYPE],
+ int *ijk_dimensions[3],                 int *ijk_dimensions[3],
+ int *iblanking_options[6]               int *iblanking_options[6]
+)                                       )
+
+
+   ------------------------------------------------------
+D) Changes related to multiple timeset support
+   ======================================================
+   The timeset_number argument needs to be added for the
+   following three routines.
+
+   The multiple timeset support also includes the change
+   in B) above for USERD_get_gold_variable_info and the
+   last three new routines in the third section of this
+   readme file.
+   ------------------------------------------------------
+
+API 1.0                                 API 2.0
+-------                                 -------
+USERD_get_number_of_time_steps          USERD_get_num_of_time_steps
+(                                       (
+ void                                    int timeset_number
+)                                       )
+
+USERD_get_solution_times                USERD_get_sol_times
+(                                       (
+                                         int timeset_number,
+ float *solution_times                   float *solution_times
+)                                       )
+
+USERD_set_time_step                     USERD_set_time_set_and_step
+(                                       (
+                                         int timeset_number,
+ int time_step                           int time_step
+)                                       )
+
+
+   ------------------------------------------------------
+E) Changes related to global_extern.h
+   ======================================================
+
+   Be sure to include the updated global_extern.h file that comes 
+   with the EnSight 7.2 release (not the one from previous releases).
+
+
+
+
+=================================================================
+Third, deleted and new routines.  (Here is where the work lies)
+
+  Several old routines are gone. You will have to create the new
+  routines that replace them. I think you will find in most cases
+  that your old routines will form the basis of the new routines,
+  and that it isn't too difficult to provide the information in
+  the new way.
+
+  The detailed specifications for these new routines can be found
+  in README_USERD_2.0 (or the headers in libuserd.c of the
+  dummy_gold or ensight_gold readers).
+=================================================================
+
+API 1.0                                     API 2.0
+-------                                     -------
+
+These routines:                             replaced by the single routine:
+---------------------------                 -------------------------------
+USERD_get_block_scalar_values               USERD_get_var_by_component
+USERD_get_block_vector_values_by_component    
+USERD_get_scalar_values                       
+USERD_get_vector_values                       
+
+These global coordinate routines:           replaced by part coord routines:
+---------------------------------           --------------------------------
+USERD_get_global_coords                     USERD_get_part_coords
+USERD_get_global_node_ids                   USERD_get_part_node_ids
+USERD_get_number_of_global_nodes
+
+These part connectivity routines:           replaced by part by type routines:
+---------------------------------           ----------------------------------
+USERD_get_element_connectivities_for_part   USERD_get_part_elements_by_type
+USERD_get_element_ids_for_part              USERD_get_part_element_ids_by_type
+
+
+                                            These are New Routines
+                                            ----------------------
+                      (Can be a dummy) ->   USERD_exit_routine
+                      (Can be a dummy) ->   USERD_get_model_extents
+                            (Required) ->   USERD_get_reader_version
+
+     multiple timeset releated:
+                            (Required) ->   USERD_get_number_timesets
+                            (Required) ->   USERD_get_timeset_description
+                            (Required) ->   USERD_get_geom_timeset_number
+
+     border provided by the reader option:
+                            (Required) ->   USERD_get_border_availability
+                      (Can be a dummy) ->   USERD_get_border_elements_by_type
+
+     transient model allocation efficency:
+                      (Can be a dummy) ->   USERD_get_maxsize_info
+
+     Possible use with Server-of-Servers:
+                      (Can be a dummy) ->   USERD_set_server_number

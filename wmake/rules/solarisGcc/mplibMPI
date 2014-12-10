@@ -1,0 +1,3 @@
+PFLAGS     =
+PINC       = -I$(MPI_ROOT)/include
+PLIBS      = -L$(MPI_ROOT)/lib/$(MPI_ARCH) -lmpi

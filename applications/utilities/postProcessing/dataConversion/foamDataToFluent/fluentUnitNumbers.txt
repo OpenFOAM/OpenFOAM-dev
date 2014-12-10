@@ -1,0 +1,297 @@
+enum {
+  XF_RF_DATA_NULL=0,
+  XF_RF_DATA_NULL_M1=0,
+  XF_RF_DATA_NULL_M2=0,
+  XF_RF_DATA_NULL_MEAN=0,
+  XF_RF_DATA_NULL_RMS=0,
+  XF_RF_DATA_PRESSURE=1,
+  XF_RF_DATA_MOMENTUM=2,
+  XF_RF_DATA_TEMPERATURE=3,
+  XF_RF_DATA_ENTHALPY=4,
+  XF_RF_DATA_TKE=5,
+  XF_RF_DATA_TED=6,
+  XF_RF_DATA_SPECIES=7,
+  XF_RF_DATA_G=8,
+  XF_RF_DATA_G_M1=0, /* never stored but symbol is required */
+  XF_RF_DATA_G_M2=0,
+  XF_RF_DATA_WSWIRL=9,
+  XF_RF_DATA_DPMS_MASS=10,
+  XF_RF_DATA_DPMS_MOM=11,
+  XF_RF_DATA_DPMS_ENERGY=12,
+  XF_RF_DATA_DPMS_SPECIES=13,
+  XF_RF_DATA_DVOLUME_DT=14,
+  XF_RF_DATA_BODY_FORCES=15,
+  XF_RF_DATA_FMEAN=16,
+  XF_RF_DATA_FVAR=17,
+  XF_RF_DATA_MASS_FLUX=18,
+  XF_RF_DATA_WALL_SHEAR=19,
+  XF_RF_DATA_BOUNDARY_HEAT_FLUX=20,
+  XF_RF_DATA_BOUNDARY_RAD_HEAT_FLUX=21,
+  XF_RF_DATA_OLD_PRESSURE=22,
+  XF_RF_DATA_POLLUT=23,
+  XF_RF_DATA_DPMS_P1_S=24,
+  XF_RF_DATA_DPMS_P1_AP=25,
+  XF_RF_DATA_WALL_GAS_TEMPERATURE=26,
+  XF_RF_DATA_DPMS_P1_DIFF=27,
+  XF_RF_DATA_DR_SURF=28,
+
+  /* conserved variables at n-1 and n-2 time levels (rampant) */
+  XF_RF_DATA_W_M1=29,
+  XF_RF_DATA_W_M2=30,
+
+  XF_RF_DATA_DPMS_BURNOUT=31,
+  XF_RF_DATA_DPMS_CONCENTRATION=32,
+  XF_RF_DATA_PDF_MW=33,
+  XF_RF_DATA_DPMS_WSWIRL=34,
+  XF_RF_DATA_YPLUS=35,
+  XF_RF_DATA_YPLUS_UTAU=36,
+  XF_RF_DATA_WALL_SHEAR_SWIRL=37,
+
+  XF_RF_DATA_WALL_T_INNER=38,
+  XF_RF_DATA_POLLUT0=39,
+  XF_RF_DATA_POLLUT1=40,
+  XF_RF_DATA_WALL_G_INNER=41,
+  XF_RF_DATA_PREMIXC=42,
+  XF_RF_DATA_PREMIXC_T=43,
+  XF_RF_DATA_PREMIXC_RATE=44,
+  XF_RF_DATA_POLLUT2=45,
+  XF_RF_DATA_POLLUT3=46,
+
+  XF_RF_DATA_MASS_FLUX_M1=47,
+  XF_RF_DATA_MASS_FLUX_M2=48,
+  XF_RF_DATA_GRID_FLUX=49,
+
+  XF_RF_DATA_DO_I=50,
+  XF_RF_DATA_DO_RECON_I=51,
+  XF_RF_DATA_DO_ENERGY_SOURCE=52,
+  XF_RF_DATA_DO_IRRAD=53,
+  XF_RF_DATA_DO_QMINUS=54,
+  XF_RF_DATA_DO_IRRAD_OLD=55,
+  XF_RF_DATA_DO_IWX=56,
+  XF_RF_DATA_DO_IWY=57,
+  XF_RF_DATA_DO_IWZ=58,
+
+  XF_RF_DATA_MACH=59,
+
+  XF_RF_DATA_SLIP_U=60,
+  XF_RF_DATA_SLIP_V=61,
+  XF_RF_DATA_SLIP_W=62,
+
+  XF_RF_DATA_SDR=63,          /* omega in the k-w model */
+  XF_RF_DATA_SDR_M1=64,
+  XF_RF_DATA_SDR_M2=65,
+
+  XF_RF_DATA_POLLUT4=66,
+  XF_RF_DATA_GRANULAR_TEMPERATURE = 67,
+  XF_RF_DATA_GRANULAR_TEMPERATURE_M1 = 68,
+  XF_RF_DATA_GRANULAR_TEMPERATURE_M2 = 69,
+
+  XF_RF_DATA_VFLUX=70,
+
+  XF_RF_DATA_VFLUX_M1=80,
+
+  XF_RF_DATA_VFLUX_M2=90,
+
+  XF_RF_DATA_DO_QTRANS=92,
+  XF_RF_DATA_DO_QREFL=93,
+  XF_RF_DATA_DO_QABS=94,
+
+  XF_RF_DATA_DENSITY=101,
+  XF_RF_DATA_MU_LAM=102,
+  XF_RF_DATA_MU_TURB=103,
+  XF_RF_DATA_CP=104,
+  XF_RF_DATA_KTC=105,
+  XF_RF_DATA_VGS_DTRM=106,
+  XF_RF_DATA_VGF_DTRM=107,
+  XF_RF_DATA_RSTRESS=108,	/* V4 reynolds stress model */
+  XF_RF_DATA_THREAD_RAD_FLUX=109,
+
+  /* mass absorption term for absorbing porous media model */
+  XF_RF_DATA_SPE_Q=110,
+
+  XF_RF_DATA_X_VELOCITY=111,
+  XF_RF_DATA_Y_VELOCITY=112,
+  XF_RF_DATA_Z_VELOCITY=113,
+  XF_RF_DATA_WALL_VELOCITY=114,
+
+  XF_RF_DATA_PRESSURE_M1=0,    /* never stored but symbol is required */
+  XF_RF_DATA_X_VELOCITY_M1=115,
+  XF_RF_DATA_Y_VELOCITY_M1=116,
+  XF_RF_DATA_Z_VELOCITY_M1=117,
+
+  XF_RF_DATA_PHASE_MASS=118,    /* cavitation mass source */
+  XF_RF_DATA_TEMPERATURE_M1=0,  /* never stored but symbol is required
+*/
+  XF_RF_DATA_TKE_M1=119,
+  XF_RF_DATA_TED_M1=120,
+
+  XF_RF_DATA_PRESSURE_M2=0,  /* never stored but symbol is required */
+  XF_RF_DATA_X_VELOCITY_M2=122,
+  XF_RF_DATA_Y_VELOCITY_M2=123,
+  XF_RF_DATA_Z_VELOCITY_M2=124,
+  XF_RF_DATA_TEMPERATURE_M2=0, /* never stored but symbol is required */
+  XF_RF_DATA_TKE_M2=126,
+  XF_RF_DATA_TED_M2=127,
+
+  XF_RF_DATA_RUU=128,	/* V5 reynolds stress model */
+  XF_RF_DATA_RVV=129,	/* V5 reynolds stress model */
+  XF_RF_DATA_RWW=130,	/* V5 reynolds stress model */
+  XF_RF_DATA_RUV=131,	/* V5 reynolds stress model */
+  XF_RF_DATA_RVW=132,	/* V5 reynolds stress model */
+  XF_RF_DATA_RUW=133,	/* V5 reynolds stress model */
+
+  XF_RF_DATA_DPMS_EROSION=134,
+  XF_RF_DATA_DPMS_ACCRETION=135,
+
+  XF_RF_DATA_FMEAN2=136,
+  XF_RF_DATA_FVAR2=137,
+
+  XF_RF_DATA_ENTHALPY_M1=138,
+  XF_RF_DATA_ENTHALPY_M2=139,
+
+  XF_RF_DATA_FMEAN_M1=140,
+  XF_RF_DATA_FMEAN_M2=141,
+  XF_RF_DATA_FVAR_M1=142,
+  XF_RF_DATA_FVAR_M2=143,
+  XF_RF_DATA_FMEAN2_M1=144,
+  XF_RF_DATA_FMEAN2_M2=145,
+  XF_RF_DATA_FVAR2_M1=146,
+  XF_RF_DATA_FVAR2_M2=147,
+
+  XF_RF_DATA_PREMIXC_M1=148,
+  XF_RF_DATA_PREMIXC_M2=149,
+
+  /*vof 1,2,3,4 kept for v5 compatibility */
+  XF_RF_DATA_VOF = 150,
+  XF_RF_DATA_VOF_1 = 151,
+  XF_RF_DATA_VOF_2 = 152,
+  XF_RF_DATA_VOF_3 = 153,
+  XF_RF_DATA_VOF_4 = 154,
+
+  XF_RF_DATA_VOF_M1 = 160 ,
+  XF_RF_DATA_VOF_1_M1 = 161 ,
+  XF_RF_DATA_VOF_2_M1 = 162 ,
+  XF_RF_DATA_VOF_3_M1 = 163 ,
+  XF_RF_DATA_VOF_4_M1 = 164 ,
+
+  XF_RF_DATA_VOF_M2 = 170 ,
+  XF_RF_DATA_VOF_1_M2 = 171 ,
+  XF_RF_DATA_VOF_2_M2 = 172 ,
+  XF_RF_DATA_VOF_3_M2 = 173 ,
+  XF_RF_DATA_VOF_4_M2 = 174 ,
+
+  /* dynamic mesh */
+  XF_RF_DATA_VOLUME_M2 = 180 ,
+  XF_RF_DATA_WALL_GRID_VELOCITY = 181 ,
+
+
+  XF_RF_DATA_SV_T_AUX = 190 ,                /* auxilliary temperature
+for particles */
+  XF_RF_DATA_SV_T_AP_AUX = 191 ,             /* auxilliary ap
+coefficient for particles */
+  XF_RF_DATA_TOTAL_PRESSURE=192,
+  XF_RF_DATA_TOTAL_TEMPERATURE=193,
+  XF_RF_DATA_NRBC_DC=194,                    /* change in char. var for
+nrbc*/
+
+
+  EXPAND_50_EQUAL(XF_RF_DATA_Y_,       200), /* species */
+  EXPAND_50(XF_RF_DATA_Y_,_M1=,        250), /* species at fist time
+level */
+  EXPAND_50(XF_RF_DATA_Y_,_M2=,        300), /* species at second time
+level */
+  EXPAND_50_EQUAL(XF_RF_DATA_DR_SURF_, 350), /* surface deposition rate
+*/
+
+  /* Please start next XF_RF_DATA_ subsection ids at 400 or above
+   * to allow room for the addition of more species ids if needed */
+
+  XF_RF_DATA_PRESSURE_MEAN=400,
+  XF_RF_DATA_PRESSURE_RMS=401,
+  XF_RF_DATA_X_VELOCITY_MEAN=402,
+  XF_RF_DATA_X_VELOCITY_RMS=403,
+  XF_RF_DATA_Y_VELOCITY_MEAN=404,
+  XF_RF_DATA_Y_VELOCITY_RMS=405,
+  XF_RF_DATA_Z_VELOCITY_MEAN=406,
+  XF_RF_DATA_Z_VELOCITY_RMS=407,
+  XF_RF_DATA_TEMPERATURE_MEAN=408,
+  XF_RF_DATA_TEMPERATURE_RMS=409,
+  XF_RF_DATA_VOF_MEAN=410,
+  XF_RF_DATA_VOF_RMS=411,
+  EXPAND_50_EQUAL(XF_RF_DATA_DPMS_Y_,450),
+
+  /* Don't add section ids here unless you need a large contiguous
+chunk.
+   * Use id's 40-100 first! */
+  XF_RF_DATA_NUT=500,
+  XF_RF_DATA_NUT_M1=501,
+  XF_RF_DATA_NUT_M2=502,
+
+  XF_RF_DATA_RUU_M1=503,	
+  XF_RF_DATA_RVV_M1=504,	
+  XF_RF_DATA_RWW_M1=505,	
+  XF_RF_DATA_RUV_M1=506,	
+  XF_RF_DATA_RVW_M1=507,	
+  XF_RF_DATA_RUW_M1=508,
+
+  XF_RF_DATA_RUU_M2=509,	
+  XF_RF_DATA_RVV_M2=510,	
+  XF_RF_DATA_RWW_M2=511,	
+  XF_RF_DATA_RUV_M2=512,	
+  XF_RF_DATA_RVW_M2=513,	
+  XF_RF_DATA_RUW_M2=514,
+
+  XF_RF_DATA_ENERGY_M1=515,
+  XF_RF_DATA_ENERGY_M2=516,
+
+  XF_RF_DATA_DENSITY_M1=517,
+  XF_RF_DATA_DENSITY_M2=518,
+
+  XF_RF_DATA_DPMS_PDF_1=519,
+  XF_RF_DATA_DPMS_PDF_2=520,
+
+  /* shell: using 530->539 */
+  XF_RF_DATA_SHELL_CELL_T=530,
+  XF_RF_DATA_SHELL_FACE_T=531,
+
+  XF_RF_DATA_DELH=600,                /* obsolete  for >= v6.0*/
+  XF_RF_DATA_DPMS_MOM_AP=601,
+  XF_RF_DATA_DPMS_WSWIRL_AP=602,
+  XF_RF_DATA_X_PULL=603,
+  XF_RF_DATA_Y_PULL=604,
+  XF_RF_DATA_Z_PULL=605,
+  XF_RF_DATA_LIQF=606,
+
+  /* pdf transport */
+  XF_RF_DATA_PDFT_QBAR=610,
+  XF_RF_DATA_PDFT_PHI=611,
+  XF_RF_DATA_PDFT_Q_TA=612,
+  XF_RF_DATA_PDFT_SVOL_TA=613,
+  XF_RF_DATA_PDFT_MASS_TA=614,
+
+  EXPAND_50_EQUAL(XF_RF_DATA_UDS_,700), /* user defined scalar */
+  EXPAND_50(XF_RF_DATA_UDS_,_M1=, 750), /* user defined scalar
+				         * at fist time level */
+  EXPAND_50(XF_RF_DATA_UDS_,_M2=, 800),  /* user defined scalar
+					 * at second time level */
+  XF_RF_DATA_GRANULAR_PRESSURE=910,
+  XF_RF_DATA_GRANULAR_PRESSURE_M1=0,/* never stored but symbol is
+required */
+  XF_RF_DATA_GRANULAR_PRESSURE_M2=0,/* never stored but symbol is
+required */
+
+  XF_RF_DATA_UDM_I=970,
+
+  /* Don't add section ids here unless you need a large contiguous
+chunk.
+   * Use id's 40-100 and 128-200 first! */
+
+
+  EXPAND_50(XF_RF_DATA_Y_,_MEAN=,    1000), /*  time average species */
+  EXPAND_50(XF_RF_DATA_Y_,_RMS=,     1050), /*  RMS species  */
+
+  EXPAND_50_EQUAL(XF_RF_DATA_Y_EDC_,  1100), /* EDC species */
+  EXPAND_50_EQUAL(XF_RF_DATA_DPMS_SURFACE_SPECIES_,  1150) /* particle
+surface species */
+
+};

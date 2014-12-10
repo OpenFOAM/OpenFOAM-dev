@@ -1,0 +1,467 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// List of actions. Each action is a dictionary with e.g.
+//     // name of set
+//     name    c0;
+//
+//     // type: pointSet/faceSet/cellSet/faceZoneSet/cellZoneSet
+//     type    cellSet;
+//
+//     // action to perform on set. Two types:
+//     // - require no source : clear/invert/remove
+//     //       clear  : clears set or zone
+//     //       invert : select all currently non-selected elements
+//     //       remove : removes set or zone
+//     // - require source    : new/add/delete/subset
+//     //       new    : create new set or zone from source
+//     //       add    : add source to contents
+//     //       delete : deletes source from contents
+//     //       subset : keeps elements both in contents and source
+//     action  new;
+//
+// The source entry varies according to the type of set:
+//
+// cellSet
+// ~~~~~~~
+//
+//    // Select by explicitly providing cell labels
+//    source labelToCell;
+//    sourceInfo
+//    {
+//        value (12 13 56);   // labels of cells
+//    }
+//
+//    // Copy elements from cellSet
+//    source cellToCell;
+//    sourceInfo
+//    {
+//        set c1;
+//    }
+//
+//    // Cells in cell zone
+//    source zoneToCell;
+//    sourceInfo
+//    {
+//        name ".*Zone";      // Name of cellZone, regular expressions allowed
+//    }
+//
+//    // Cells on master or slave side of faceZone
+//    source faceZoneToCell;
+//    sourceInfo
+//    {
+//        name ".*Zone";      // Name of faceZone, regular expressions allowed
+//        option master;      // master/slave
+//    }
+//
+//    // Select based on faceSet
+//    source faceToCell;
+//    sourceInfo
+//    {
+//        set f0;             // Name of faceSet
+//
+//        //option neighbour; // cell with neighbour in faceSet
+//        //option owner;     //  ,,       owner
+//        option any;         // cell with any face in faceSet
+//        //option all;       // cell with all faces in faceSet
+//    }
+//
+//    // Select based on pointSet
+//    source pointToCell;
+//    sourceInfo
+//    {
+//        set p0;
+//        option any;         // cell with any point in pointSet
+//        //option edge;      // cell with an edge with both points in pointSet
+//    }
+//
+//    // Select based on cellShape
+//    source shapeToCell;
+//    sourceInfo
+//    {
+//        type hex;           // hex/wedge/prism/pyr/tet/tetWedge/splitHex
+//    }
+//
+//    // Cells with cell centre within box ('box') or multiple boxes ('boxes')
+//    source boxToCell;
+//    sourceInfo
+//    {
+//       box   (0 0 0) (1 1 1);
+//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
+//    }
+//
+//    // Cells with cell centre within box
+//    // Is skewed, rotated box. Given as origin and three spanning vectors.
+//    source rotatedBoxToCell;
+//    sourceInfo
+//    {
+//       origin   (0.2 0.2 -10);
+//       i        (0.2 0.2 0);
+//       j        (-0.2 0.2 0);
+//       k        (10 10 10);
+//    }
+//
+//    // Cells with centre within cylinder
+//    source cylinderToCell;
+//    sourceInfo
+//    {
+//       p1       (0.2 0.2 -10); // start point on cylinder axis
+//       p2       (0.2 0.2 0);   // end point on cylinder axis
+//       radius   5.0;
+//    }
+//
+//    // Cells with centre within sphere
+//    source sphereToCell;
+//    sourceInfo
+//    {
+//       centre   (0.2 0.2 -10);
+//       radius   5.0;
+//    }
+//
+//    // Cells with cellCentre nearest to coordinates
+//    source nearestToCell;
+//    sourceInfo
+//    {
+//       points ((0 0 0) (1 1 1)(2 2 2));
+//    }
+//
+//    // Select based on surface
+//    source surfaceToCell;
+//    sourceInfo
+//    {
+//        file            "www.avl.com-geometry.stl";
+//        useSurfaceOrientation false;  // use closed surface inside/outside
+//                                      // test (ignores includeCut,
+//                                      // outsidePoints)
+//        outsidePoints   ((-99 -99 -59));    // definition of outside
+//        includeCut      false;              // cells cut by surface
+//        includeInside   false;              // cells not on outside of surf
+//        includeOutside  false;              // cells on outside of surf
+//        nearDistance    -1;                 // cells with centre near surf
+//                                            // (set to -1 if not used)
+//        curvature       0.9;                // cells within nearDistance
+//                                            // and near surf curvature
+//                                            // (set to -100 if not used)
+//    }
+//
+//    // values of field within certain range
+//    source fieldToCell;
+//    sourceInfo
+//    {
+//        fieldName   U;      // Note: uses mag(U) since volVectorField
+//        min         0.1;
+//        max         0.5;
+//    }
+//
+//    // Mesh region (non-face connected part of (subset of)mesh)
+//    source regionToCell;
+//    sourceInfo
+//    {
+//        set         c0;         // optional name of cellSet giving mesh subset
+//        insidePoints ((1 2 3)); // points inside region to select
+//        nErode      0;          // optional number of layers to erode
+//                                // selection
+//    }
+//
+//    // Cells underneath plane such that volume is reached. E.g. for use
+//    // in setFields to set the level given a wanted volume.
+//    source targetVolumeToCell;
+//    sourceInfo
+//    {
+//        volume  2e-05;
+//        normal  (0 1 0);          // usually in direction of gravity
+//    }
+//
+//
+//
+// faceSet
+// ~~~~~~~
+//
+//    // Copy elements from faceSet
+//    source faceToFace;
+//    sourceInfo
+//    {
+//        set f1;
+//    }
+//
+//    // Select based on cellSet
+//    source cellToFace;
+//    sourceInfo
+//    {
+//        set c0;
+//        option all;         // All faces of cells
+//        //option both;      // Only faces whose owner&neighbour are in cellSet
+//    }
+//
+//    // Select based on pointSet
+//    source pointToFace;
+//    sourceInfo
+//    {
+//        set p0;
+//        option any;         // Faces using any point in pointSet
+//        //option all        // Faces with all points in pointSet
+//        //option edge       // Faces with two consecutive points in pointSet
+//    }
+//
+//    //  Select by explicitly providing face labels
+//    source labelToFace;
+//    sourceInfo
+//    {
+//        value (12 13 56);   // labels of faces
+//    }
+//
+//    // All faces of patch
+//    source patchToFace;
+//    sourceInfo
+//    {
+//        name ".*Wall";      // Name of patch or patch group,
+//                            // (regular expressions allowed)
+//    }
+//
+//    // All boundary faces
+//    source boundaryToFace;
+//    sourceInfo
+//    {
+//    }
+//
+//    // All faces of faceZone
+//    source zoneToFace;
+//    sourceInfo
+//    {
+//        name ".*Zone1";     // Name of faceZone, regular expressions allowed
+//    }
+//
+//    // Faces with face centre within box ('box') or multiple boxes ('boxes')
+//    source boxToFace;
+//    sourceInfo
+//    {
+//        box  (0 0 0) (1 1 1);
+//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
+//    }
+//
+//    // Faces with normal to within certain angle aligned with vector.
+//    source normalToFace;
+//    sourceInfo
+//    {
+//        normal (0 0 1);     // Vector
+//        cos     0.01;       // Tolerance (max cos of angle)
+//    }
+//
+//    // Walk on faces in faceSet, starting from face nearest given position
+//    source  regionToFace;
+//    sourceInfo
+//    {
+//        set         f0;
+//        nearPoint   (0.1 0.1 0.005);
+//    }
+//
+//
+//
+// pointSet
+// ~~~~~~~
+//
+//    // Copy elements from pointSet
+//    source pointToPoint;
+//    sourceInfo
+//    {
+//        set p1;
+//    }
+//
+//    // Select based on cellSet
+//    source cellToPoint;
+//    sourceInfo
+//    {
+//        set c0;
+//        option all;         // all points of cell
+//    }
+//
+//    // Select based on faceSet
+//    source faceToPoint;
+//    sourceInfo
+//    {
+//        set f0;             // name of faceSet
+//        option all;         // all points of face
+//    }
+//
+//    // Select by explicitly providing point labels
+//    source labelToPoint;
+//    sourceInfo
+//    {
+//        value (12 13 56);   // labels of points
+//    }
+//
+//    // All points in pointzone
+//    source zoneToPoint;
+//    sourceInfo
+//    {
+//        name ".*Zone";      // name of pointZone, regular expressions allowed
+//    }
+//
+//    // Points nearest to coordinates
+//    source nearestToPoint;
+//    sourceInfo
+//    {
+//       points ((0 0 0) (1 1 1));
+//    }
+//
+//    // Points with coordinate within box ('box') or multiple boxes ('boxes')
+//    source boxToPoint;
+//    sourceInfo
+//    {
+//       box   (0 0 0) (1 1 1);
+//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
+//    }
+//
+//    // Select based on surface
+//    source surfaceToPoint;
+//    sourceInfo
+//    {
+//        file            "www.avl.com-geometry.stl";
+//        nearDistance    0.1;    // points near to surface
+//        includeInside   false;  // points on inside of surface
+//                                // (requires closed surface with consistent
+//                                //  normals)
+//        includeOutside  false;  //   ,,    outside  ,,
+//    }
+//
+//
+//
+//
+// cellZoneSet
+// ~~~~~~~~~~~
+// (mirrors operations on a cellSet into a cellZone)
+//
+//    // Select based on cellSet
+//    source setToCellZone;
+//    sourceInfo
+//    {
+//        set c0;           // name of cellSet
+//    }
+//
+//
+//
+// faceZoneSet
+// ~~~~~~~~~~~
+//    // Select based on faceSet without orientation
+//    source setToFaceZone;
+//    sourceInfo
+//    {
+//        faceSet f0;       // name of faceSet
+//    }
+//
+//    // Select based on faceSet, using cellSet to determine orientation
+//    source setsToFaceZone;
+//    sourceInfo
+//    {
+//        faceSet f0;       // name of faceSet
+//        cellSet c0;       // name of cellSet of slave side
+//        flip    false;    // optional: flip the faceZone (so now the cellSet
+//                          //           is the master side)
+//    }
+//
+//    // Select based on surface. Orientation from normals on surface
+//    {
+//        name    fz0;
+//        type    faceZoneSet;
+//        action  new;
+//        source  searchableSurfaceToFaceZone;
+//        sourceInfo
+//        {
+//            surface searchableSphere;
+//            centre  (0.05 0.05 0.005);
+//            radius  0.025;
+//            //name  sphere.stl; // Optional name if surface triSurfaceMesh
+//        }
+//    }
+//
+//
+//
+// pointZoneSet
+// ~~~~~~~~~~~~
+// (mirrors operations on a pointSet into a pointZone)
+//
+//    // Select based on pointSet
+//    source setToPointZone;
+//    sourceInfo
+//    {
+//        set p0;           // name of pointSet
+//    }
+//
+//
+//
+
+actions
+(
+    // Example:pick up internal faces on outside of cellSet
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Load initial cellSet
+    {
+        name    c0;
+        type    cellSet;
+        action  new;
+        source labelToCell;
+        sourceInfo
+        {
+            value (12 13 56);
+        }
+    }
+
+    // Get all faces in cellSet
+    {
+        name    f0;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        sourceInfo
+        {
+            set     c0;
+            option  all;
+        }
+    }
+
+    // Determine inverse cellSet
+    {
+        name    c1;
+        type    cellSet;
+        action  new;
+        source  cellToCell;
+        sourceInfo
+        {
+            set c0;
+        }
+    }
+    {
+        name    c1;
+        type    cellSet;
+        action  invert;
+    }
+
+    // Keep in f0 all faces in c1
+    {
+        name    f0;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        sourceInfo
+        {
+            set     c1;
+            option  all;
+        }
+    }
+);
+
+// ************************************************************************* //

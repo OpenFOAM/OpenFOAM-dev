@@ -1,0 +1,49 @@
+ELEMENTS
+H O C N AR
+END
+SPECIES
+H2 H O2 O OH HO2 H2O2 H2O AR N2
+END
+REACTIONS
+   OH+H2=H+H2O             2.14E+08  1.52  3449.0 !MARINOV 1995A
+   O+OH=O2+H               2.02E+14  -0.4     0.0 !MARINOV 1995A
+   O+H2=OH+H               5.06E+04  2.67  6290.0 !MARINOV 1995A
+   H+O2(+M)=HO2(+M)        4.52E+13  0.0      0.0 !MARINOV 1995A
+   LOW /  1.05E+19  -1.257  0.0 /                 !MARINOV 1995A
+   H2O/0.0/ H2/0.0/ N2/0.0/
+   H+O2(+N2)=HO2(+N2)      4.52E+13  0.0      0.0 !MARINOV 1995A
+   LOW / 2.03E+20  -1.59    0.0  /                !MARINOV 1995A
+   H+O2(+H2)=HO2(+H2)      4.52E+13  0.0      0.0 !MARINOV 1995A
+   LOW / 1.52E+19  -1.133   0.0 /                 !MARINOV 1995A
+   H+O2(+H2O)=HO2(+H2O)    4.52E+13  0.0      0.0 !MARINOV 1995A
+   LOW / 2.10E+23  -2.437   0.0 /                 !MARINOV 1995A
+   OH+HO2=H2O+O2           2.13E+28 -4.827 3500.0 !HIPPLER 1995
+    DUP
+   OH+HO2=H2O+O2           9.10E+14  0.0  10964.0 !HIPPLER 1995
+    DUP
+   H+HO2=OH+OH             1.50E+14  0.0  1000.0  !MARINOV 1995A
+   H+HO2=H2+O2             8.45E+11  0.65 1241.0  !MARINOV 1995A
+   H+HO2=O+H2O             3.01E+13  0.0  1721.0  !MARINOV 1995A
+   O+HO2=O2+OH             3.25E+13  0.0     0.0  !MARINOV 1995A
+   OH+OH=O+H2O             3.57E+04  2.4 -2112.0  !MARINOV 1995A
+   H+H+M=H2+M              1.00E+18 -1.0     0.0  !MARINOV 1995A
+   H2O/0.0/ H2/0.0/
+   H+H+H2=H2+H2            9.20E+16 -0.6     0.0  !MARINOV 1995A
+   H+H+H2O=H2+H2O          6.00E+19 -1.25    0.0  !MARINOV 1995A
+   H+OH+M=H2O+M            2.21E+22 -2.0     0.0  !MARINOV 1995A
+    H2O/6.4/
+   H+O+M=OH+M              4.71E+18 -1.0     0.0  !MARINOV 1995A
+    H2O/6.4/
+   O+O+M=O2+M              1.89E+13  0.0 -1788.0  !MARINOV 1995A
+   HO2+HO2=H2O2+O2         4.20E+14  0.0 11982.0  !MARINOV 1995A
+   DUP
+   HO2+HO2=H2O2+O2         1.30E+11  0.0 -1629.0  !MARINOV 1995A
+   DUP
+   OH+OH(+M)=H2O2(+M)      1.24E+14 -0.37    0.0  !MARINOV 1995A
+   LOW /  3.04E+30   -4.63   2049.0 /             !MARINOV 1995A
+    TROE / 0.470   100.0   2000.0  1.0E+15/
+   H2O2+H=HO2+H2           1.98E+06  2.0  2435.0  !MARINOV 1995A
+   H2O2+H=OH+H2O           3.07E+13  0.0  4217.0  !MARINOV 1995A
+   H2O2+O=OH+HO2           9.55E+06  2.0  3970.0  !MARINOV 1995A
+   H2O2+OH=H2O+HO2         2.40E+00 4.042 -2162.0 !MARINOV 1995A
+END

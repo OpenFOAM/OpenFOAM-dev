@@ -1,0 +1,24 @@
+ensight/file/ensightFile.C
+ensight/file/ensightGeoFile.C
+ensight/part/ensightPart.C
+ensight/part/ensightPartIO.C
+ensight/part/ensightPartCells.C
+ensight/part/ensightPartFaces.C
+ensight/part/ensightParts.C
+
+meshTables/boundaryRegion.C
+meshTables/cellTable.C
+
+meshReader/meshReader.C
+meshReader/meshReaderAux.C
+meshReader/calcPointCells.C
+meshReader/createPolyCells.C
+meshReader/createPolyBoundary.C
+meshReader/starcd/STARCDMeshReader.C
+
+meshWriter/meshWriter.C
+meshWriter/starcd/STARCDMeshWriter.C
+
+polyDualMesh/polyDualMesh.C
+
+LIB = $(FOAM_LIBBIN)/libconversion

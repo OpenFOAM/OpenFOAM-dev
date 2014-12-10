@@ -1,0 +1,34 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#moveTimeMeshToConstant()
+#{
+#   DT=`foamInfoExec -times | tail -1`
+#   if [ "$DT" != 0 ]
+#   then
+#       mv ${DT}/polyMesh/* constant/polyMesh
+#       rm -rf ${DT}
+#   fi
+#}
+
+runApplication blockMesh
+
+runApplication datToFoam grid256.dat
+
+CONST="constant"
+cat $CONST/pointsHeader $CONST/points.tmp > $CONST/polyMesh/points
+runApplication collapseEdges -overwrite
+#moveTimeMeshToConstant
+
+echo "Changing patch type to wedge type in boundary file"
+mv $CONST/polyMesh/boundary $CONST/polyMesh/boundary.bak
+sed -f $CONST/wedgeScr $CONST/polyMesh/boundary.bak > $CONST/polyMesh/boundary
+rm $CONST/polyMesh/boundary.bak
+
+runApplication `getApplication`
+
+
+# ----------------------------------------------------------------- end-of-file

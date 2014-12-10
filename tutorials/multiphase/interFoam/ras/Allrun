@@ -1,0 +1,55 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+setDamBreakFine ()
+{
+    blockMeshDict="constant/polyMesh/blockMeshDict"
+    controlDict="system/controlDict"
+    sed \
+    -e s/"23 8"/"46 10"/g \
+    -e s/"19 8"/"40 10"/g \
+    -e s/"23 42\(.*\) 1 1)"/"46 76\1 2 1)"/g \
+    -e s/"4 42\(.*\) 1 1)"/"4 76\1 2 1)"/g \
+    -e s/"19 42\(.*\) 1 1)"/"40 76\1 2 1)"/g \
+    $blockMeshDict > temp.$$
+    mv temp.$$ $blockMeshDict
+    sed \
+    -e s/"\(deltaT[ \t]*\) 0.001;"/"\1 5e-04;"/g \
+    -e s/"\(endTime[ \t]*\) 1;"/"\1 0.4;"/g \
+    $controlDict > temp.$$
+    mv temp.$$ $controlDict
+}
+
+# Do damBreak
+(cd damBreak && foamRunTutorials)
+
+# Clone case
+cloneCase damBreak damBreakFine
+
+(
+    cd damBreakFine || exit
+
+    # Modify case
+    setDamBreakFine
+    cp ../damBreak/0/alpha.water.org 0/alpha.water
+    # And execute
+    runApplication blockMesh
+    runApplication setFields
+    runApplication decomposePar
+    runParallel `getApplication` 4
+    runApplication reconstructPar
+)
+
+# Do damBreakPorousBaffle
+(cd damBreakPorousBaffle && foamRunTutorials)
+
+# Do weirOverflow
+(cd weirOverflow && foamRunTutorials)
+
+# Do waterChannel
+(cd waterChannel && foamRunTutorials)
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,11 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+if [ ! -d ${WM_THIRD_PARTY_DIR}/tecio ]
+then
+    echo "Did not find tecio in ${WM_THIRD_PARTY_DIR}. Not building foamToTecplot360."
+else
+    wmake
+fi
+
+# ----------------------------------------------------------------- end-of-file

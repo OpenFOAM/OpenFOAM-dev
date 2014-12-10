@@ -1,0 +1,48 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runRefineMesh ()
+{
+    echo "Running refineMesh on $PWD"
+    refineMesh -dict system/refineMeshDict -overwrite > log.refineMesh 2>&1
+}
+
+# copy DTC hull surface from resources folder
+cp $FOAM_TUTORIALS/resources/geometry/DTC-scaled.stl.gz constant/triSurface/
+
+runApplication surfaceFeatureExtract
+
+runApplication blockMesh
+
+i=1
+if [ -f log.topoSet.6 ] ; then
+   i=7
+fi
+while [ "$i" -lt 7 ] ; do
+    cp system/topoSetDict.${i} system/topoSetDict
+    runApplication topoSet
+    runRefineMesh
+    mv log.topoSet log.topoSet.$i
+    mv log.refineMesh log.refineMesh.$i
+    i=$(expr $i + 1)
+done
+
+runApplication snappyHexMesh -overwrite
+
+\rm -rf 0
+\cp -r 0.org 0
+
+runApplication setFields
+
+runApplication decomposePar
+
+runParallel renumberMesh 8 -overwrite
+
+runParallel $(getApplication) 8
+
+runApplication reconstructPar
+
+# ----------------------------------------------------------------- end-of-file

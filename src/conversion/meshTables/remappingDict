@@ -1,0 +1,36 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      remapping;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// this is a simple example of remapping cellTable and boundaryRegion entries
+// NB: can't yet combine boundaryRegions, since this reorganizes the mesh faces
+
+// rename/combine cellTable entries
+//   newName ( listOldNames );
+cellTable
+{
+    fluid ( fluid "[Ff]Luid[0-9]+" "(inlet|outlet)Region" "cellTable_[0-9]+" );
+    cat1  ( CAT1 "cat1_(Back|Front|Gamma)" );
+}
+
+// rename boundary regions
+//   newName oldName;
+boundaryRegion
+{
+    inlet_4  inlet_1;
+    inlet_5  inlet_2;
+    inlet_6  inlet_3;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -1,0 +1,501 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamInstallationTest
+#
+# Description
+#     Checks the machine system, the installation of OpenFOAM, and the user's
+#     personal configuration for running OpenFOAM.
+#
+#------------------------------------------------------------------------------
+
+# Base settings
+MIN_VERSION_GCC=4.5.0
+
+# General
+WIDTH=20
+
+# Global variables
+fatalError=0
+criticalError=0
+
+# System variables
+HOST=`uname -n`
+OSTYPE=`uname -s`
+USER_NAME=$LOGNAME
+: ${USER_NAME:=$USER}
+
+# which OpenFOAM application to test for the Version
+foamTestApp=icoFoam
+
+#==============================================================================
+#                             HELPER FUNCTIONS
+#==============================================================================
+
+hline()
+{
+    echo "-------------------------------------------------------------------------------"
+}
+
+
+heading()
+{
+    echo
+    echo
+    echo "$1"
+}
+
+
+lenBase()
+{
+    echo $1 | tr -d " " | wc -m | tr -d " "
+}
+
+
+length()
+{
+    NOCHAR=`lenBase $1`
+    NOCHAR=`expr $NOCHAR - 1`
+    [ $NOCHAR -ge 0 ] || NOCHAR=0
+    echo $NOCHAR
+}
+
+
+stringLength()
+{
+    echo $1 | wc -m | tr -d " "
+}
+
+
+fixlen()
+{
+    WORD=$1
+    ONELEN=`stringLength $1`
+    LDIFF=`expr $ONELEN - $2`
+    if [ $LDIFF -le 1 ]
+    then
+        while [ $LDIFF -lt 0 ]
+        do
+            WORD="$WORD "
+            LDIFF=`expr $LDIFF + 1`
+        done
+        echo "$WORD"
+    else
+        LDIFF=`expr $LDIFF + 4`
+        WORD=`echo "$WORD" | cut -c${LDIFF}-`
+        echo "...${WORD}"
+    fi
+}
+
+
+reportEnv()
+{
+    EXP_ENV=`eval "echo $1"`
+    EXP_PATH=`eval "echo $2"`
+    CRIT="$3"
+    EXISTS=" no  "
+    ON_PATH=""
+    if [ `length $EXP_ENV` -gt 0 ]
+    then
+        case "$OSTYPE" in
+        SunOS)
+            if /usr/bin/test -e $EXP_ENV
+            then
+                EXISTS=" yes "
+                if [ "$2" != noPath ]
+                then
+                    ON_PATH=" no "
+                    oldIFS=$IFS
+                    IFS=':'
+                    for e in $EXP_PATH
+                    do
+                        case "$e" in
+                        "$EXP_ENV" | "$EXP_ENV/bin" | "$EXP_ENV/lib")
+                            ON_PATH="yes "
+                            ;;
+                        esac
+                    done
+                    IFS=$oldIFS
+               else
+                    CRIT="    $3"
+               fi
+            else
+                ON_PATH="    "
+            fi
+            echo "`fixlen "$1" 21` `fixlen "$EXP_ENV" 40` $EXISTS $ON_PATH $CRIT"
+            ;;
+        *)
+            if [ -e "$EXP_ENV" ]
+            then
+                EXISTS=" yes "
+                if [ "$2" != noPath ]
+                then
+                    ON_PATH=" no "
+                    oldIFS=$IFS
+                    IFS=':'
+                    for e in $EXP_PATH
+                    do
+                        case "$e" in
+                        "$EXP_ENV" | "$EXP_ENV/bin" | "$EXP_ENV/lib")
+                            ON_PATH="yes "
+                            ;;
+                        esac
+                    done
+                    IFS=$oldIFS
+               else
+                    CRIT="    $3"
+               fi
+            else
+                ON_PATH="    "
+            fi
+            echo "`fixlen "$1" 21` `fixlen "$EXP_ENV" 40` $EXISTS $ON_PATH $CRIT"
+            ;;
+        esac
+    else
+        echo "`fixlen "$1" 21` --------- env variable not set ---------            $3"
+    fi
+
+    ERROR="false"
+    if [ "$EXISTS" = no ] || [ "$ON_PATH" = no ]
+    then
+        ERROR="true"
+    fi
+    if [ "$3" = yes ] && [ "$ERROR" = true ]
+    then
+        criticalError=`expr $criticalError + 1`
+        echo "WARNING: CRITICAL ERROR"
+        echo
+    fi
+
+}
+
+
+findExec()
+{
+    oldIFS=$IFS
+    IFS=':'
+    for d in $1
+    do
+        case "$OSTYPE" in
+        SunOS)
+            if /usr/bin/test ! -d "$d/$2" -a -x "$d/$2"
+            then
+                IFS=$oldIFS
+                echo "$d/$2"
+                return 0
+            fi
+            ;;
+        *)
+            if [ ! -d "$d/$2" -a -x "$d/$2" ]
+            then
+                IFS=$oldIFS
+                echo "$d/$2"
+                return 0
+            fi
+            ;;
+        esac
+    done
+    IFS=$oldIFS
+    return 1
+}
+
+
+reportExecutable()
+{
+    APP_PATH=""
+    APP_PATH=`findExec $PATH $1`
+    APP_SPEC="$2"
+    if [ ! -n $APP_PATH ]
+    then
+        echo "`fixlen "$1" 9`" "*** not installed ***"
+        VERSION=""
+        case "$1" in
+        gcc | $foamTestApp)
+            echo "          CRITICAL ERROR"
+            criticalError=`expr $criticalError + 1`
+            ;;
+        esac
+        echo
+        return 1
+    fi
+    case "$1" in
+    $foamTestApp)
+        VERSION=`$1 -case /dev/null 2>&1      \
+            | sed -ne 's/^.*Version: *\([^ ][^ ]*\).*/\1/p'`
+        ;;
+    flex)
+        VERSION=`$1 --version /dev/null 2>&1      \
+            | sed -ne 's/flex \([0-9][0-9.]*\).*/\1/p' `
+        ;;
+    gcc)
+        VERSION=`$1 -v 2>&1 \
+            | sed -ne 's/^gcc version \([0-9][0-9.]*\).*/\1/p' `
+
+        MINV1=`echo $MIN_VERSION_GCC | cut -d. -f1`
+        MINV2=`echo $MIN_VERSION_GCC | cut -d. -f2`
+        MINV3=`echo $MIN_VERSION_GCC | cut -d. -f3`
+
+        V1=`echo $VERSION | cut -d. -f1`
+        V2=`echo $VERSION | cut -d. -f2`
+        V3=`echo $VERSION | cut -d. -f3`
+
+
+        gccOK=""
+        pass=""
+        if [ $V1 -lt $MINV1 ]; then
+            gccOk="ERROR"
+        elif [ $V1 -gt $MINV1 ]; then
+            pass="yes"
+        fi
+
+        if [ "$pass" = "" ] && [ "$gccOk" = "" ]; then
+            if [ $V2 -lt $MINV2 ]; then
+                gccOk="ERROR"
+            elif [ $V2 -gt $MINV2 ]; then
+                pass="yes"
+            fi
+        fi
+
+        if [ "$pass" = "" ] && [ "$gccOk" = "" ] && [ $V3 != "" ] && [ $MINV3 != "" ]; then
+            if [ $V3 -lt $MINV3 ]; then
+                gccOk="ERROR"
+            fi
+        fi
+
+        if [ "$gccOk" != "" ]; then
+            echo "ERROR: gcc version is too old for this release of OpenFOAM"
+            echo "    User version    : $VERSION"
+            echo "    Minimum required: $MIN_VERSION_GCC"
+            echo ""
+            fatalError=`expr $fatalError + 1`
+        fi
+
+
+        ;;
+    gtar)
+        VERSION=`$APP_PATH --version | head -1`
+        ;;
+    tar)
+        VERSION=`$APP_PATH --version | head -1 | cut -d" " -f4`
+        ;;
+    gzip)
+        case "$OSTYPE" in
+        SunOS)
+            VERSION=`$1 --version 2>&1 | grep gzip | cut -d" " -f2`
+            ;;
+        *)
+            VERSION=`$1 --version | head -1 | cut -d" " -f2`
+            ;;
+        esac
+        ;;
+    esac
+    if [ "$APP_PATH" = "$APP_SPEC" ] || [ ! "$2" ]
+    then
+        echo "`fixlen "$1" 9` `fixlen "$VERSION" 10` `fixlen "$APP_PATH" 58`"
+    else
+        echo "`fixlen "$1" 9` `fixlen "$VERSION" 10`"
+        echo "WARNING:  Conflicting installations:"
+        echo "          OpenFOAM settings        : $APP_SPEC"
+        echo "          current path             : $APP_PATH"
+        case "$1" in
+        gcc | $foamTestApp)
+            echo "          CRITICAL ERROR"
+            criticalError=`expr $criticalError + 1`
+            ;;
+        esac
+        echo ""
+    fi
+}
+
+
+checkOpenFOAMEnvironment()
+{
+    [ -d "$WM_PROJECT_INST_DIR" ] && [ -d "$WM_THIRD_PARTY_DIR" ] || {
+        echo ""
+        echo "FATAL ERROR: OpenFOAM environment not configured."
+        echo ""
+        echo "    Please refer to the installation section of the README file:"
+        echo "    <OpenFOAM installation dir>/OpenFOAM-${WM_PROJECT_VERSION}/README"
+        echo "    to source the OpenFOAM environment."
+        echo ""
+        exit 1
+    }
+}
+
+
+checkUserShell()
+{
+    echo "`fixlen Shell: $WIDTH` ${SHELL##*/}"
+    case $SHELL in
+    */csh | */tcsh | */bash | */ksh)
+        ;;
+    *)
+        echo "FATAL ERROR: Cannot identify the shell you are running."
+        echo "             OpenFOAM ${WM_PROJECT_VERSION} is compatible with "
+        echo "             csh, tcsh, ksh and bash."
+        echo
+        fatalError=`expr $fatalError + 1`
+        ;;
+    esac
+}
+
+
+checkHostName()
+{
+    echo "`fixlen Host: $WIDTH` $HOST"
+    if [ ! "$HOST" ]
+    then
+        echo "FATAL ERROR: Cannot stat hostname."
+        echo "             Contact your system administrator, "
+        echo "             OpenFOAM ${WM_PROJECT_VERSION} needs a valid "
+        echo "             hostname to function."
+        echo
+        fatalError=`expr $fatalError + 1`
+    fi
+}
+
+
+checkOS()
+{
+    case "$OSTYPE" in
+    Linux | LinuxAMD64 | SunOS )
+        echo "`fixlen OS: $WIDTH` $OSTYPE version $(uname -r)"
+        ;;
+    *)
+        echo "FATAL ERROR: Incompatible operating system \"$OSTYPE\"."
+        echo "             OpenFOAM ${FWM_PROJECT_VERSION} is currently "
+        echo "             available for Linux and SunOS only."
+        echo
+        fatalError=`expr $fatalError + 1`
+        ;;
+    esac
+}
+
+
+#==============================================================================
+#                                MAIN SCRIPT
+#==============================================================================
+#
+echo "Executing $0:"
+
+#------------------------------------------------------------------------------
+heading "Checking basic setup..."
+hline
+checkOpenFOAMEnvironment
+checkUserShell
+checkHostName
+checkOS
+hline
+
+#------------------------------------------------------------------------------
+heading "Checking main OpenFOAM env variables..."
+COL1=`fixlen Environment_variable 21`
+COL2=`fixlen Set_to_file_or_directory 40`
+COL3="Valid"
+COL4="Path"
+COL5="Crit"
+hline
+echo "$COL1 $COL2 $COL3      $COL5"
+hline
+reportEnv '$WM_PROJECT_INST_DIR' 'noPath' "yes"
+reportEnv '$WM_PROJECT_USER_DIR' 'noPath' "no"
+reportEnv '$WM_THIRD_PARTY_DIR'  'noPath' "yes"
+hline
+
+#------------------------------------------------------------------------------
+heading "Checking the OpenFOAM env variables set on the PATH..."
+hline
+echo "$COL1 $COL2 $COL3 $COL4 $COL5"
+hline
+reportEnv '$WM_PROJECT_DIR'   '$PATH' "yes"
+echo ""
+reportEnv '$FOAM_APPBIN'      '$PATH' "yes"
+reportEnv '$FOAM_SITE_APPBIN' '$PATH' "no"
+reportEnv '$FOAM_USER_APPBIN' '$PATH' "no"
+reportEnv '$WM_DIR'           '$PATH' "yes"
+hline
+
+#------------------------------------------------------------------------------
+heading "Checking the OpenFOAM env variables set on the LD_LIBRARY_PATH..."
+hline
+echo "$COL1 $COL2 $COL3 $COL4 $COL5"
+hline
+reportEnv '$FOAM_LIBBIN'      '$LD_LIBRARY_PATH' "yes"
+reportEnv '$FOAM_SITE_LIBBIN' '$LD_LIBRARY_PATH' "no"
+reportEnv '$FOAM_USER_LIBBIN' '$LD_LIBRARY_PATH' "no"
+reportEnv '$MPI_ARCH_PATH'    '$LD_LIBRARY_PATH' "yes"
+hline
+
+#------------------------------------------------------------------------------
+heading "Third party software"
+COL1=`fixlen Software 9`
+COL2=`fixlen Version 10`
+COL3=`fixlen Location 10`
+hline
+echo "$COL1 $COL2 $COL3"
+hline
+reportExecutable flex
+reportExecutable "$WM_CC"
+reportExecutable gzip
+if [ "$OSTYPE" = Linux ]
+then
+    reportExecutable tar
+else
+    reportExecutable gtar
+fi
+reportExecutable $foamTestApp  "$FOAM_APPBIN/$foamTestApp"
+
+hline
+
+#------------------------------------------------------------------------------
+heading "Summary"
+hline
+
+if [ $fatalError -gt 0 ]
+then
+    echo "The system test has evoked $fatalError fatal error(s)."
+else
+    echo "Base configuration ok."
+fi
+if [ $criticalError -gt 0 ]
+then
+    echo "The foam installation contains $criticalError critical error(s)."
+else
+    echo "Critical systems ok."
+fi
+if [ $criticalError -gt 0 ] || [ $fatalError -gt 0 ]
+then
+    echo
+    echo "Review the output for warning messages and consult"
+    echo "the installation guide for troubleshooting."
+fi
+
+echo
+echo Done
+echo
+
+exit 0
+
+#------------------------------------------------------------------------------

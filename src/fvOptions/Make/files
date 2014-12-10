@@ -1,0 +1,53 @@
+fvOptions/fvOption.C
+fvOptions/fvOptionIO.C
+fvOptions/fvOptionList.C
+fvOptions/fvIOoptionList.C
+
+
+/* sources */
+
+generalSources=sources/general
+$(generalSources)/codedSource/codedSource.C
+$(generalSources)/semiImplicitSource/semiImplicitSource.C
+
+derivedSources=sources/derived
+$(derivedSources)/actuationDiskSource/actuationDiskSource.C
+$(derivedSources)/effectivenessHeatExchangerSource/effectivenessHeatExchangerSource.C
+$(derivedSources)/explicitPorositySource/explicitPorositySource.C
+$(derivedSources)/MRFSource/MRFSource.C
+$(derivedSources)/pressureGradientExplicitSource/pressureGradientExplicitSource.C
+$(derivedSources)/pressureGradientExplicitSource/pressureGradientExplicitSourceIO.C
+$(derivedSources)/radialActuationDiskSource/radialActuationDiskSource.C
+$(derivedSources)/rotorDiskSource/rotorDiskSource.C
+$(derivedSources)/rotorDiskSource/bladeModel/bladeModel.C
+$(derivedSources)/rotorDiskSource/profileModel/profileModel.C
+$(derivedSources)/rotorDiskSource/profileModel/profileModelList.C
+$(derivedSources)/rotorDiskSource/profileModel/lookup/lookupProfile.C
+$(derivedSources)/rotorDiskSource/profileModel/series/seriesProfile.C
+$(derivedSources)/rotorDiskSource/trimModel/trimModel/trimModel.C
+$(derivedSources)/rotorDiskSource/trimModel/trimModel/trimModelNew.C
+$(derivedSources)/rotorDiskSource/trimModel/fixed/fixedTrim.C
+$(derivedSources)/rotorDiskSource/trimModel/targetCoeff/targetCoeffTrim.C
+$(derivedSources)/solidificationMeltingSource/solidificationMeltingSource.C
+$(derivedSources)/solidificationMeltingSource/solidificationMeltingSourceIO.C
+
+interRegion = sources/interRegion
+$(interRegion)/interRegionHeatTransferModel/constantHeatTransfer/constantHeatTransfer.C
+$(interRegion)/interRegionHeatTransferModel/interRegionHeatTransferModel/interRegionHeatTransferModel.C
+$(interRegion)/interRegionHeatTransferModel/tabulatedHeatTransfer/tabulatedHeatTransfer.C
+$(interRegion)/interRegionHeatTransferModel/variableHeatTransfer/variableHeatTransfer.C
+$(interRegion)/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
+
+
+
+/* constraints */
+
+generalConstraints=constraints/general
+$(generalConstraints)/explicitSetValue/explicitSetValue.C
+
+derivedConstraints=constraints/derived
+$(derivedConstraints)/fixedTemperatureConstraint/fixedTemperatureConstraint.C
+$(derivedConstraints)/temperatureLimitsConstraint/temperatureLimitsConstraint.C
+
+
+LIB = $(FOAM_LIBBIN)/libfvOptions

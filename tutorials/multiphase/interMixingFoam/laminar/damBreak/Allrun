@@ -1,0 +1,14 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+cp 0/alpha.air.org 0/alpha.air
+cp 0/alpha.other.org 0/alpha.other
+cp 0/alpha.water.org 0/alpha.water
+runApplication setFields
+runApplication `getApplication`
+
+# ----------------------------------------------------------------- end-of-file

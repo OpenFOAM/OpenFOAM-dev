@@ -1,0 +1,5 @@
+Example of an explicit coupling between OpenFOAM and an external application
+using the externalCoupled boundary conditions.
+
+The case is based on the buoyantCavity tutorial case, whereby on each iteration
+the 'hot' and 'cold' patch temperatures are incremented by 1K.

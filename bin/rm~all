@@ -1,0 +1,55 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     rm~all
+#
+# Description
+#     remove all *~ files
+#------------------------------------------------------------------------------
+
+# default is pwd
+if [ "$#" -eq 0 ]
+then
+    set -- .
+elif [ "$1" = "-h" -o "$1" = "-help" ]
+then
+    echo "Usage: ${0##*/} [dir1] .. [dirN]"
+    echo "    remove all *~ files"
+    exit 1
+fi
+
+
+for i
+do
+    if [ -d "$i" ]
+    then
+        echo "removing all *~ files: $i"
+        find $i \( -name '*~' -o -name '.*~' \) -print | xargs -t rm 2>/dev/null
+    else
+        echo "no directory: $i" 1>&2
+    fi
+done
+
+#------------------------------------------------------------------------------

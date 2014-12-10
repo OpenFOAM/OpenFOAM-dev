@@ -1,0 +1,255 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wmakeSchedulerUptime
+#
+# Description
+#     Scheduler for network distributed compilations using wmake.
+#     - WM_HOSTS contains a list of hosts and number of concurrent processes
+#     eg,
+#        export WM_HOSTS="hostA:1 hostB:2 hostC:1"
+#     - WM_COLOURS contains a list of colours to cycle through
+#        export WM_COLOURS="black blue green cyan red magenta yellow"
+#
+#     Sources the relevant cshrc/bashrc if not set.
+#
+#     WM_PROJECT_DIR, WM_PROJECT and WM_PROJECT_VERSION will have been set
+#     before calling this routine.
+#     FOAM_INST_DIR may possibly have been set (to find installation)
+#
+# Usage
+#     wmakeSchedulerUptime COMMAND
+#         run 'COMMAND' on one of the slots listed in WM_HOSTS
+#
+#     wmakeScheduler -count
+#         count the total number of slots available in WM_HOSTS
+#         eg,  export WM_NCOMPPROCS=$(wmakeScheduler -count)
+#
+#-------------------------------------------------------------------------------
+
+# csh sets HOST, bash sets HOSTNAME
+: ${HOST:=$HOSTNAME}
+
+
+lockDir=$HOME/.$WM_PROJECT/.wmake
+# fallback - 1 core on current host
+: ${WM_HOSTS:=$HOST:1}
+
+# count the total number of slots available and exit
+if [ "$1" = "-count" ]
+then
+    expr $(
+        for slotGroup in $WM_HOSTS
+        do
+            n=${slotGroup##*:}
+            [ "$n" = "${slotGroup%%:*}" ] && n=1  # missing ':'
+            echo "+ ${n:-1}"
+        done
+    )
+    exit 0
+fi
+
+# where to source WM_PROJECT settings in a remote shell
+# This code tries to figure out which cshrc or bashrc to execute.
+# !! Assumes remote computer running same shell and startup files
+# in same location
+
+sourceFoam=false    # fallback command
+case $SHELL in
+*/csh | */tcsh )    # [t]csh vs bash|ksh|sh
+    shellRc=cshrc
+    ;;
+*)
+    shellRc=bashrc
+    ;;
+esac
+
+# check ~/.$WM_PROJECT/$WM_PROJECT_VERSION/
+# check ~/.$WM_PROJECT/
+# check <installedProject>/etc/
+if [ "$WM_PROJECT" ]
+then
+    for i in \
+        $HOME/.$WM_PROJECT/$WM_PROJECT_VERSION \
+        $HOME/.$WM_PROJECT \
+        $WM_PROJECT_DIR/etc \
+        ;
+    do
+        if [ -f "$i/$shellRc" ]
+        then
+            sourceFoam="$i/$shellRc"
+            break
+        fi
+    done
+fi
+
+# Construct test string for remote execution.
+# Source WM_PROJECT settings if WM_PROJECT environment not set.
+# attempt to preserve the installation directory 'FOAM_INST_DIR'
+# use FOAM_SETTINGS to pass command-line settings
+case $sourceFoam in
+*/bashrc)
+    if [ "$FOAM_INST_DIR" ]
+    then
+        sourceFoam='[ "$WM_PROJECT" ] || '"FOAM_INST_DIR=$FOAM_INST_DIR . $sourceFoam $FOAM_SETTINGS"
+    else
+        sourceFoam='[ "$WM_PROJECT" ] || '". $sourceFoam $FOAM_SETTINGS"
+    fi
+    ;;
+
+*/cshrc)
+    # TODO: csh equivalent to bash code (preserving FOAM_INST_DIR)
+    sourceFoam='if ( ! $?WM_PROJECT ) source '"$sourceFoam $FOAM_SETTINGS"
+    ;;
+esac
+
+# quote double-quotes for remote command line
+rcmd=$(echo $* | sed -e s/\"/\'\"\'/g)
+## the same, without forking (not ksh, maybe not /bin/sh either)
+# rcmd=$(while [ "$#" -gt 0 ]; do echo "${1//\"/'\"'}"; shift; done)
+
+
+# Convert WM_COLOURS into an array
+declare colourList
+nColours=0
+for col in $WM_COLOURS
+do
+    colourList[$nColours]=$col
+    ((nColours = $nColours + 1))
+done
+
+# Bashism: make pipe fail early.
+# This ensures the return value of the command is returned and not of the
+# colouring pipe etc.
+set -o pipefail
+
+
+#
+# colour output by argument 1
+#
+colourPipe()
+{
+    if [ "$1" ]
+    then
+    (
+        while read line
+        do
+            setterm -foreground $1
+            echo "$line"
+        done
+        setterm -foreground default
+    )
+    else
+        cat
+    fi
+}
+
+
+
+# parse options
+nprocs=1
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -np)
+        shift
+        nprocs=$1
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+colourIndex=0
+
+while :
+do
+    for slotGroup in $WM_HOSTS
+    do
+        # split 'host:N', but catch 'host:' and 'host' too
+        host=${slotGroup%%:*}
+        n=${slotGroup##*:}
+        [ "$n" = "$host" ] && n=1  # missing ':'
+        : ${n:=1}
+
+
+        # Determine load
+        if [ "$host" = "$HOST" ]; then
+            stat=`uptime`
+        else
+            stat=`ssh $host uptime`
+        fi
+        load=`echo "$stat" | sed -e 's/.*average:[^0-9.]*\([0-9.]*\).*/\1/'`
+
+
+        #echo "Machine:$host  load:$load  allowed:$WM_NCOMPPROCS  nprocs:$nprocs"
+
+
+        # Check if adding nprocs to load causes overload
+        if (echo '' | awk "{if ($load + $nprocs > $WM_NCOMPPROCS) {exit 1}}")
+        then
+            if [ "$nColours" -gt 0 ]
+            then
+                # Set colour
+                colour="${colourList[$colourIndex]}"
+                echo "Machine:$host  Starting:$*"
+
+                if [ "$host" = "$HOST" ]; then
+                    eval $* 2>&1 | colourPipe "$colour"
+                else
+                    ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" 2>&1 | colourPipe "$colour"
+                fi
+                retval=$?
+            else
+                echo "Machine:$host  Starting:$*"
+                if [ "$host" = "$HOST" ]; then
+                    eval $* 2>&1
+                else
+                    ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" 2>&1
+                fi
+                retval=$?
+            fi
+            exit $retval
+        fi
+
+
+        # Cycle through colours. Note: outside lock clause!
+        colourIndex=$(expr $colourIndex + 1)
+        [ "$colourIndex" -lt "$nColours" ] || colourIndex=0
+
+    done
+
+    # Did not find any free machines. Rest a bit.
+    #echo "Too much load. Waiting"
+    sleep 1
+done
+
+#------------------------------------------------------------------------------

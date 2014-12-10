@@ -1,0 +1,3 @@
+PFLAGS     =
+PINC       = -I$(MPI_ARCH_PATH)/include/sparcv9/mpi -DMPIPP_H
+PLIBS      = -L$(MPI_ARCH_PATH)/lib/sparcv9 -lmpi_f -L/opt/FSUNf90/lib/sparcv9 -lfjgmp64 -L/opt/FJSVpnidt/lib -lfjidt -ljrm -lfj90i -lfj90f -lfj90fmt  -lelf

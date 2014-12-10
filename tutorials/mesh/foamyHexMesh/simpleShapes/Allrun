@@ -1,0 +1,31 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication surfaceOrient \
+    constant/triSurface/cone.stl \
+    -inside '(0 -0.5 0)' \
+    constant/triSurface/cone_orient.stl
+mv log.surfaceOrient log.surfaceOrient.cone
+
+runApplication surfaceOrient \
+    constant/triSurface/sphere.stl \
+    -inside '(0 -0.5 0)' \
+    constant/triSurface/sphere_orient.stl
+mv log.surfaceOrient log.surfaceOrient.sphere
+
+runApplication surfaceBooleanFeatures intersection \
+                       constant/triSurface/cone_orient.stl \
+                       constant/triSurface/sphere_orient.stl
+
+runApplication foamyHexMesh
+
+runApplication collapseEdges -latestTime -collapseFaceSet indirectPatchFaces
+mv log.collapseEdges log.collapseFaceSet
+
+runApplication collapseEdges -latestTime -collapseFaces
+
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+
+# Set-up the LES case
+cp ../lesFiles/fvS* ../lesFiles/controlDict system/
+cp ../lesFiles/LESProperties ../lesFiles/turbulenceProperties constant/
+
+ls -d processor* | xargs -i rm -rf ./{}/0 $1
+ls -d processor* | xargs -i mv ./{}/500 ./{}/0 $1
+ls -d processor* | xargs -i rm -rf ./{}/0/uniform $1
+
+ls -d processor* | xargs -i cp ../lesFiles/LESProperties ./{}/constant/ $1
+ls -d processor* | xargs -i cp ../lesFiles/turbulenceProperties ./{}/constant/ $1
+ls -d processor* | xargs -i cp ../lesFiles/nuSgs ./{}/0/ $1
+
+
+runParallel pisoFoam 8
+
+runApplication reconstructParMesh -constant -mergeTol 1e-6
+
+runApplication reconstructPar

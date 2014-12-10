@@ -1,0 +1,22 @@
+/*
+foamyHexMeshSurfaceSimplify_non_octree.C
+MarchingCubes/MarchingCubes.cpp
+MarchingCubes/ply.c
+*/
+
+/*
+MarchingCubes = fastdualoctree_sgp
+
+$(MarchingCubes)/data_access.cpp
+$(MarchingCubes)/fparser.cpp
+$(MarchingCubes)/fpoptimizer.cpp
+$(MarchingCubes)/MarchingCubes.cpp
+$(MarchingCubes)/mc_draw.cpp
+$(MarchingCubes)/morton.cpp
+$(MarchingCubes)/opt_octree.cpp
+$(MarchingCubes)/hash_octree.cpp
+*/
+
+foamyHexMeshSurfaceSimplify.C
+
+EXE = $(FOAM_APPBIN)/foamyHexMeshSurfaceSimplify

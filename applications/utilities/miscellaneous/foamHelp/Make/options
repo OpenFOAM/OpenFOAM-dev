@@ -1,0 +1,15 @@
+EXE_INC = \
+    -IhelpTypes/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+EXE_LIBS = \
+    -lhelpTypes \
+    -lfiniteVolume \
+    -lincompressibleTurbulenceModel \
+    -lcompressibleTurbulenceModel \
+    -lincompressibleRASModels \
+    -lcompressibleRASModels \
+    -lincompressibleLESModels \
+    -lcompressibleLESModels \
+    -lradiationModels \
+    -lfluidThermophysicalModels

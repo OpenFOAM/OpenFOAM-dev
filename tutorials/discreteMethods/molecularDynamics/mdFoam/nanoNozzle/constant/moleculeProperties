@@ -1,0 +1,45 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      moleculeProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+water
+{
+    siteIds                     (H H O M);
+    pairPotentialSiteIds        (O);
+    siteReferencePositions
+    (
+        (7.56950327263661e-11 5.85882276618295e-11 0)
+        (-7.56950327263661e-11 5.85882276618295e-11 0)
+        (0 0 0)
+        (0 1.5e-11 0)
+    );
+    siteMasses
+    (
+        1.67353255e-27
+        1.67353255e-27
+        2.6560176e-26
+        0
+    );
+    siteCharges
+    (
+        8.3313177324e-20
+        8.3313177324e-20
+        0
+        -1.66626354648e-19
+    );
+}
+
+// ************************************************************************* //

@@ -1,0 +1,165 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wclean
+#
+# Description
+#     Clean up the wmake control directory Make/\$WM_OPTIONS and remove the
+#     lnInclude directories generated for libraries.
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: $Script [OPTION] [dir]
+       $Script [OPTION] target [dir [MakeDir]]
+
+options:
+  -s | -silent      ignored - for compatibility with wmake
+  -help             print the usage
+
+Clean up the wmake control directory Make/\$WM_OPTIONS and remove the
+lnInclude directories generated for libraries.
+
+The targets correspond to a subset of the 'wmake' special targets:
+  all               all subdirectories, uses any Allwclean or Allclean
+                    files if they exist
+  exe | lib | libo | libso
+                    clean Make, any *.dep files and lnInclude directories
+
+USAGE
+    exit 1
+}
+
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -s | -silent)    # ignored - for compatibility with wmake
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+#------------------------------------------------------------------------------
+# check arguments and change to the directory in which to run wclean
+#------------------------------------------------------------------------------
+
+unset dir makeType
+MakeDir=Make
+
+if [ $# -ge 1 ]
+then
+
+    if [ -d "$1" ]
+    then
+        dir=$1
+    else
+        makeType=$1
+    fi
+
+    # specified directory name:
+    [ $# -ge 2 ] && dir=$2
+
+    # specified alternative name for the Make sub-directory:
+    [ $# -ge 3 ] && MakeDir=$3
+
+    if [ "$dir" ]
+    then
+        cd $dir 2>/dev/null || {
+            echo "$Script error: could not change to directory '$dir'" 1>&2
+            exit 1
+        }
+    fi
+
+    # provide some feedback
+    echo "$Script ${dir:-./}"
+fi
+
+#------------------------------------------------------------------------------
+# Recurse the directories tree
+#------------------------------------------------------------------------------
+
+if [ "$makeType" = all ]
+then
+    if [ -e Allwclean ]       # consistent with Allwmake
+    then
+        ./Allwclean
+        exit $?
+    elif [ -e Allclean ]      # often used for tutorial cases
+    then
+        ./Allclean
+        exit $?
+    elif [ ! -d $MakeDir ]
+    then
+        for dir in `find . \( -type d -a -name Make \)`
+        do
+            $0 ${dir%/Make}   # parent directory - trim /Make from the end
+        done
+        exit 0
+    fi
+fi
+
+# makeType is not needed beyond this point
+unset makeType
+
+
+#------------------------------------------------------------------------------
+# Require the existence of the 'Make' directory
+#------------------------------------------------------------------------------
+
+[ -d $MakeDir ] || {
+    echo "$Script error: '$MakeDir' directory does not exist" 1>&2
+    exit 1
+}
+
+
+# -----------------------------------------------------------------------------
+
+rm -rf $MakeDir/$WM_OPTIONS $MakeDir/classes 2>/dev/null
+
+find . -name "*.dep" -exec rm {} \;
+
+# always safe to remove lnInclude
+rm -rf lnInclude 2>/dev/null
+
+rm -rf ii_files Templates.DB 2>/dev/null
+rm -f so_locations 2>/dev/null
+
+#------------------------------------------------------------------------------

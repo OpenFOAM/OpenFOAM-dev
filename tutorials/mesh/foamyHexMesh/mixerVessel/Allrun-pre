@@ -1,0 +1,109 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+intersectSurfaces()
+{
+    runApplication              \
+        surfaceBooleanFeatures  \
+        intersection            \
+        "$@"
+
+    outputName1=$(basename $1)
+    outputName1=${outputName1%.*}
+
+    outputName2=$(basename $2)
+    outputName2=${outputName2%.*}
+
+    mv log.surfaceBooleanFeatures \
+       log.surfaceBooleanFeatures.$outputName1:$outputName2
+}
+
+# Set application name
+application=$(getApplication)
+
+# Get number of processors to run on
+nProcs=$(getNumberOfProcessors)
+
+\rm -rf 0
+
+
+# Run the surface preparation script
+./constant/triSurface/surfaceProcess.sh > log.surfaceProcess 2>&1
+
+
+# Surface intersections
+intersectSurfaces                           \
+    constant/triSurface/vessel.stl          \
+    constant/triSurface/spargerShaft.stl    \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/vessel.stl          \
+    constant/triSurface/shaft.stl           \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/spargerShaft.stl    \
+    constant/triSurface/spargerInlet.stl    \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/stirrer.stl         \
+    constant/triSurface/shaftRotating.stl   \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/stirrer_baffles.stl \
+    constant/triSurface/stirrer.stl         \
+    -surf1Baffle                            \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/rotating.stl        \
+    constant/triSurface/shaft.stl           \
+    -surf1Baffle                            \
+    -perturb
+
+# Intersect blades with the plate
+for bladeI in $(seq 1 6);
+do
+    intersectSurfaces                                   \
+        constant/triSurface/stirrer_baffles_$bladeI.obj \
+        constant/triSurface/stirrer_baffles_plate.obj   \
+        -surf1Baffle                                    \
+        -surf2Baffle
+done
+
+
+# Meshing
+\cp system/controlDict.mesh system/controlDict
+\cp system/collapseDict.collapseFaces system/collapseDict
+
+runApplication blockMesh -region backgroundMeshDecomposition
+
+runApplication decomposePar -region backgroundMeshDecomposition
+
+runApplication surfaceFeatureExtract
+
+runParallel foamyHexMesh $nProcs
+
+runParallel collapseEdges $nProcs -collapseFaces -latestTime
+mv log.collapseEdges log.collapseFaces
+
+#\cp system/collapseDict.indirectPatchFaces system/collapseDict
+#runParallel collapseEdges $nProcs -collapseFaceSet indirectPatchFaces -latestTime
+#mv log.collapseEdges log.collapseFaceSet
+
+runParallel checkMesh $nProcs -allTopology -allGeometry -latestTime
+
+runApplication reconstructParMesh -latestTime
+
+# Copy the mesh into polyMesh and delete the 102 directory
+\cp -r 101/polyMesh constant
+\rm -rf 101
+
+
+# ----------------------------------------------------------------- end-of-file

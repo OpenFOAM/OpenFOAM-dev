@@ -1,0 +1,19 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+rm -rf 0
+cp -rf 0.org 0
+
+runApplication blockMesh
+
+runApplication potentialFoam
+
+# remove incompatible (volumetric) flux field
+rm -f 0/phi
+
+runApplication $(getApplication)
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,144 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamUpdateCaseFileHeader
+#
+# Description
+#     Updates the header of application files.
+#     By default, writes current version in the header.
+#     Alternatively version can be specified with -v option.
+#     Also removes consecutive blank lines from file.
+#
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTION] <file1> ... <fileN>
+
+options:
+  -version <ver>    specifies the version to be written in the header
+  -help             print the usage
+
+  Updates the header of application files and removes consecutive blank lines.
+  By default, writes current OpenFOAM version in the header.
+  An alternative version can be specified with the -version option.
+
+USAGE
+    exit 1
+}
+
+#------------------------------------------------------------------------------
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -v | -version)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        version="$2"
+        shift 2
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+# constant width for version - default to WM_PROJECT_VERSION
+version=$(printf %-36s ${version:-$WM_PROJECT_VERSION})
+
+[ $# -ge 1 ] || usage
+
+#------------------------------------------------------------------------------
+
+printHeader()
+{
+    cat<<HEADER
+/*--------------------------------*- C++ -*----------------------------------*\\
+| =========                 |                                                 |
+| \\\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\\\    /   O peration     | Version:  $version  |
+|   \\\\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\\\/     M anipulation  |                                                 |
+\\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      $1;
+    class       $2;
+    object      $3;
+}
+HEADER
+}
+
+
+#
+# extract attribute '$1' from file '$2'
+#
+FoamFileAttribute()
+{
+    sed -n -e 's/[ ;]*$//' -e "s/^ *$1 *//p" $2
+}
+
+
+#
+# main
+#
+
+tmpFile=FoamFile.tmp$$
+for caseFile
+do
+    if grep FoamFile $caseFile >/dev/null 2>&1
+    then
+        echo "Updating case file: $caseFile"
+        sed -n '/FoamFile/,/}/p' $caseFile > $tmpFile
+
+        format=$(FoamFileAttribute format $tmpFile)
+        class=$(FoamFileAttribute  class  $tmpFile)
+        object=$(FoamFileAttribute object $tmpFile)
+        # extract note? - needs special handling
+        unset note
+
+        printHeader $format $class $object "$note" > $tmpFile
+
+        sed '1,/}/d' $caseFile | sed '/./,/^$/!d' >> $tmpFile
+
+        # use cat to avoid removing/replace soft-links
+        [ -s $tmpFile ] && cat $tmpFile >| $caseFile
+        rm -f $tmpFile 2>/dev/null
+    else
+        echo " Invalid case file: $caseFile" 1>&2
+    fi
+done
+
+#------------------------------------------------------------------ end-of-file

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get application name
+application=`getApplication`
+
+runApplication blockMesh
+
+# Create faceZones for baffles and fan
+runApplication topoSet
+
+cp -r 0.org 0
+
+# Create wall and cyclic baffles and the fields on them
+runApplication createBaffles -overwrite
+
+runApplication $application

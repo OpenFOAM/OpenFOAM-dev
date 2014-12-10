@@ -1,0 +1,2 @@
+c++DBUG    = -pg
+c++OPT     = -O2

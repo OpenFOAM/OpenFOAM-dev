@@ -1,0 +1,109 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     rmdepold
+#
+# Description
+#     Usage: rmdepold [dir1 .. dirN]
+#
+#     Remove *.dep files that are without a corresponding .C or .L file.
+#     This often occurs when a directory has been moved.
+#         - print questionable directory and the *.dep file
+#         - optionally remove empty directories
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: ${0##*/} [OPTION] [dir1 .. dirN]
+options:
+  -rmdir      find and remove empty directories (recursively)
+
+Remove *.dep files that are without a corresponding .C or .L file.
+This often occurs when a directory has been moved.
+  - print questionable directory and file
+  - optionally remove empty directories
+
+USAGE
+    exit 1
+}
+
+unset optRmdir
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -rmdir)
+        optRmdir=true
+        shift
+        ;;
+    -*)
+       usage "unknown option: '$*'"
+       ;;
+    *)
+       break
+       ;;
+    esac
+done
+
+# default is the current directory
+[ "$#" -gt 0 ] || set -- .
+
+for checkDir
+do
+    if [ -d $checkDir ]
+    then
+        echo "searching: $checkDir"
+    else
+        echo "skipping non-dir: $checkDir"
+        continue
+    fi
+
+    find $checkDir -name '*.dep' -print | while read depFile
+    do
+        # check C++ and Flex files
+        if [ ! -r "${depFile%dep}C" -a ! -r "${depFile%dep}L" ];
+        then
+            echo "rm $depFile"
+            rm -f $depFile 2>/dev/null
+        fi
+    done
+
+    # remove empty dirs
+    if [ "$optRmdir" ]
+    then
+        # get subdirs ourselves so we can avoid particular directories
+        for dir in $(find $checkDir -mindepth 1 -maxdepth 1 -type d \( -name .git -prune -o -print \) )
+        do
+            echo "check dir: $dir"
+            find $dir -depth -type d -empty -exec rmdir {} \; -print
+        done
+    fi
+done
+# -----------------------------------------------------------------------------

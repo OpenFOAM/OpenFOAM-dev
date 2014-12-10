@@ -1,0 +1,14 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+set -x
+
+if [ -n "$CGAL_ARCH_PATH" ]
+then
+    wmake libso conformalVoronoiMesh
+    wmake
+    #wmake foamyHexMeshBackgroundMesh
+    #(cd foamyHexMeshSurfaceSimplify && ./Allwmake)
+    #wmake cellSizeAndAlignmentGrid
+fi
+
+# ----------------------------------------------------------------- end-of-file

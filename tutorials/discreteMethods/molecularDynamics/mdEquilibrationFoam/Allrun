@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+for caseName in periodicCubeArgon periodicCubeWater
+do
+(
+    cd $caseName || exit
+
+    runApplication blockMesh
+    runApplication mdInitialise
+    runApplication `getApplication`
+)
+done
+# ----------------------------------------------------------------- end-of-file

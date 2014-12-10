@@ -1,0 +1,234 @@
+#----------------------------------*-sh-*--------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File
+#     etc/cshrc
+#
+# Description
+#     Startup file for OpenFOAM
+#     Sourced from ~/.login or ~/.cshrc
+#
+#------------------------------------------------------------------------------
+
+setenv WM_PROJECT OpenFOAM
+setenv WM_PROJECT_VERSION dev
+
+################################################################################
+# USER EDITABLE PART: Changes made here may be lost with the next upgrade
+#
+# either setenv FOAM_INST_DIR before sourcing this file or set
+# 'foamInstall' below to where OpenFOAM is installed
+#
+# Location of the OpenFOAM installation
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set foamInstall = $HOME/$WM_PROJECT
+# set foamInstall = ~$WM_PROJECT
+# set foamInstall = /opt/$WM_PROJECT
+# set foamInstall = /usr/local/$WM_PROJECT
+#
+# END OF (NORMAL) USER EDITABLE PART
+################################################################################
+
+#
+# These are the defaults for this version which should generally be
+# overridden from the prefs.csh file or from command-line specification
+#
+#- note the location for later use (eg, in job scripts)
+if ( ! $?FOAM_INST_DIR ) setenv FOAM_INST_DIR $foamInstall
+
+#- Compiler location:
+#    foamCompiler = system | ThirdParty (OpenFOAM)
+setenv foamCompiler system
+
+#- Compiler:
+#    WM_COMPILER = Gcc | Gcc45 | Gcc46 | Gcc47 | Clang | Icc (Intel icc)
+setenv WM_COMPILER Gcc
+setenv WM_COMPILER_ARCH # defined but empty
+unsetenv WM_COMPILER_LIB_ARCH
+
+#- Architecture:
+#    WM_ARCH_OPTION = 32 | 64
+setenv WM_ARCH_OPTION 64
+
+#- Precision:
+#    WM_PRECISION_OPTION = DP | SP
+setenv WM_PRECISION_OPTION DP
+
+#- Optimised, debug, profiling:
+#    WM_COMPILE_OPTION = Opt | Debug | Prof
+setenv WM_COMPILE_OPTION Opt
+
+#- MPI implementation:
+#    WM_MPLIB = SYSTEMOPENMPI | OPENMPI | MPICH | MPICH-GM | HPMPI
+#               | GAMMA | MPI | QSMPI | SGIMPI
+setenv WM_MPLIB SYSTEMOPENMPI
+
+#- Operating System:
+#    WM_OSTYPE = POSIX | ???
+setenv WM_OSTYPE POSIX
+
+#- Floating-point signal handling:
+#    set or unset
+setenv FOAM_SIGFPE
+
+#- memory initialisation:
+#    set or unset
+#setenv FOAM_SETNAN
+
+
+################################################################################
+
+# The old dirs to be cleaned from the various environment variables
+# - remove anything under top-level directory.
+# NB: the WM_PROJECT_INST_DIR might not be identical between versions
+set foamOldDirs="$FOAM_INST_DIR $HOME/$WM_PROJECT/$LOGNAME"
+if ( $?WM_PROJECT_INST_DIR ) then
+    if ( "$WM_PROJECT_INST_DIR" != "$FOAM_INST_DIR" ) then
+        set foamOldDirs="$WM_PROJECT_INST_DIR $foamOldDirs"
+    endif
+endif
+
+
+# Location of installation
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+setenv WM_PROJECT_INST_DIR $FOAM_INST_DIR
+setenv WM_PROJECT_DIR $WM_PROJECT_INST_DIR/$WM_PROJECT-$WM_PROJECT_VERSION
+
+# Location of third-party software
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+setenv WM_THIRD_PARTY_DIR $WM_PROJECT_INST_DIR/ThirdParty-$WM_PROJECT_VERSION
+
+# Location of site-specific templates etc
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# unset is equivalent to $WM_PROJECT_INST_DIR/site
+if ( $?WM_PROJECT_SITE ) then
+    set foamOldDirs="$WM_PROJECT_SITE $foamOldDirs"
+    if ( ! -d "$WM_PROJECT_SITE" ) unsetenv WM_PROJECT_SITE
+else
+    unsetenv WM_PROJECT_SITE
+endif
+
+# Location of user files
+# ~~~~~~~~~~~~~~~~~~~~~~
+setenv WM_PROJECT_USER_DIR $HOME/$WM_PROJECT/$LOGNAME-$WM_PROJECT_VERSION
+
+
+# Source files, possibly with some verbosity
+alias _foamSource 'if ($?FOAM_VERBOSE && $?prompt) echo "Sourcing: \!*"; if (\!* != "") source \!*'
+
+# Add in preset user or site preferences:
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile prefs.csh`
+
+# Evaluate command-line parameters and record settings for later
+# these can be used to set/unset values, or specify alternative pref files
+setenv FOAM_SETTINGS "${*}"
+while ( $#argv > 0 )
+    switch ($argv[1])
+    case -*:
+        # stray option (not meant for us here) -> get out
+        break
+        breaksw
+    case *=:
+        # name=       -> unsetenv name
+        if ($?FOAM_VERBOSE && $?prompt) echo "unsetenv $argv[1]:s/=//"
+        eval "unsetenv $argv[1]:s/=//"
+        breaksw
+    case *=*:
+        # name=value  -> setenv name value
+        if ($?FOAM_VERBOSE && $?prompt) echo "setenv $argv[1]:s/=/ /"
+        eval "setenv $argv[1]:s/=/ /"
+        breaksw
+    default:
+        # filename: source it
+        if ( -f "$1" ) then
+            _foamSource "$1"
+        else
+            _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile -silent "$1"`
+        endif
+        breaksw
+    endsw
+    shift
+end
+
+
+# Clean standard environment variables (PATH, LD_LIBRARY_PATH, MANPATH)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set foamClean=$WM_PROJECT_DIR/bin/foamCleanPath
+
+#- prevent local variables from shadowing setenv variables
+unset PATH MANPATH LD_LIBRARY_PATH LD_PRELOAD
+
+if (! $?LD_LIBRARY_PATH ) setenv LD_LIBRARY_PATH ''
+if (! $?MANPATH) setenv MANPATH ''
+
+#- Clean PATH (path)
+set cleaned=`$foamClean "$PATH" "$foamOldDirs"`
+if ( $status == 0 ) setenv PATH $cleaned
+
+#- Clean LD_LIBRARY_PATH
+set cleaned=`$foamClean "$LD_LIBRARY_PATH" "$foamOldDirs"`
+if ( $status == 0 ) setenv LD_LIBRARY_PATH $cleaned
+
+#- Clean MANPATH
+set cleaned=`$foamClean "$MANPATH" "$foamOldDirs"`
+if ( $status == 0 ) setenv MANPATH $cleaned
+
+
+# Source project setup files
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~
+_foamSource $WM_PROJECT_DIR/etc/config/settings.csh
+_foamSource $WM_PROJECT_DIR/etc/config/aliases.csh
+
+# Source user setup files for optional packages
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/paraview.csh`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/ensight.csh`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/CGAL.csh`
+
+
+# Clean environment paths again. Only remove duplicates
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#- Clean PATH (path)
+set cleaned=`$foamClean "$PATH"`
+if ( $status == 0 ) setenv PATH $cleaned
+
+#- Clean LD_LIBRARY_PATH
+set cleaned=`$foamClean "$LD_LIBRARY_PATH"`
+if ( $status == 0 ) setenv LD_LIBRARY_PATH $cleaned
+
+#- Clean MANPATH (trailing ':' to find system pages)
+set cleaned=`$foamClean "$MANPATH"`:
+if ( $status == 0 ) setenv MANPATH "$cleaned"
+
+#- Clean LD_PRELOAD
+if ( $?LD_PRELOAD ) then
+    set cleaned=`$foamClean "$LD_PRELOAD"`
+    if ( $status == 0 ) setenv LD_PRELOAD $cleaned
+endif
+
+# cleanup environment:
+# ~~~~~~~~~~~~~~~~~~~~
+unset cleaned foamClean foamInstall foamOldDirs
+unalias _foamSource
+
+# ----------------------------------------------------------------- end-of-file

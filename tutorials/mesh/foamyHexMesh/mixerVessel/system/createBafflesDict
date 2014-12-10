@@ -1,0 +1,103 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
+
+
+// Baffles to create.
+baffles
+{
+    baffles
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    baffles;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+                name            baffles;
+                type            wall;
+            }
+            slave
+            {
+                ${..master}
+            }
+        }
+    }
+
+    stirrer_baffles
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    stirrer_baffles;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+                name            stirrer_baffles;
+                type            wall;
+            }
+            slave
+            {
+                ${..master}
+            }
+        }
+    }
+
+    rotating
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    rotating;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+                name            AMI1;
+                type            cyclicAMI;
+                matchTolerance  0.0001;
+                neighbourPatch  AMI2;
+                transform       noOrdering;
+                // Switch to zero-gradient for low weights
+                lowWeightCorrection 0.2;
+            }
+
+            slave
+            {
+                //- Slave side patch
+                name            AMI2;
+                type            cyclicAMI;
+                matchTolerance  0.0001;
+                neighbourPatch  AMI1;
+                transform       noOrdering;
+                lowWeightCorrection 0.2;
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

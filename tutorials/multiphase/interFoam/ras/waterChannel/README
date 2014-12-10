@@ -1,0 +1,6 @@
+- This case uses blockMesh and extrudeMesh to create a channel geometry.
+  - See Allrun script to generate geometry.
+- The case is set up to run with interFoam.
+- For running with LTSInterFoam, an alternative set of main files from
+  system directory (controlDict, etc) are included in LTSInterFoam
+  subdirectory to replace the existing files set up for interFoam.

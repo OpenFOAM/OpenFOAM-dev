@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      combustionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+laminarFlameSpeedCorrelation SCOPE;
+
+fuel        Propane;
+
+fuelFile    "fuels/propane.dat";
+
+ignite      yes;
+
+ignitionSites
+(
+
+    {
+        location        (1.5 1.5 0.5);
+        diameter        0.1;
+        start           1E-05;
+        duration        0.05;
+        strength        60.0;
+    }
+);
+
+ignitionSphereFraction  1;
+
+ignitionThickness   ignitionThickness [0 1 0 0 0 0 0] 0;
+
+ignitionCircleFraction  0;
+
+ignitionKernelArea ignitionKernelArea [0 2 0 0 0 0 0] 0;
+
+// ************************************************************************* //

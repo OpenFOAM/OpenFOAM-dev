@@ -1,0 +1,33 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// wordRe, string
+(
+    ( "a.*" "abc" )
+    ( "a.*" "bac" )
+    ( "A.*" "abcd" )
+    ( "a.*" "ABCD" )
+    ( "a.*" "def" )
+    ( "d(.*)f" "def" )
+    ( "plain" "def" )
+    ( "plain" "def" )
+    ( "plain\\(0\\)" "def" )
+    ( "plain\(0\)" "ghi" )
+    ( "regex(0)" "ghi" )
+    ( "plain\\\(0\\\)" "ghi" )
+    ( "this"  "def" )
+    ( "this"  "this" )
+    ( plain\\(0\\) "def" )
+    ( plain\(0\) "ghi" )
+    ( plain\\\(0\\\) "ghi" )
+    ( "done"  "done" )
+)
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -1,0 +1,15 @@
+Misc. tools for finding and/or repairing common documentation problems
+See the comments in the scripts.
+
+1.  find-suspiciousTags
+2.  fix-Class
+3.  find-tinyDescription
+4.  find-placeholderDescription
+5.  find-retagged
+
+Misc Tools
+1.  find-templateInComments
+2.  find-its
+3.  find-junkFiles
+4.  find-longlines
+

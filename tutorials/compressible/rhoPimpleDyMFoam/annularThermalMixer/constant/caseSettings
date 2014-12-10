@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "";
+    object      caseSummary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+innerInlet
+{
+    U               (0 0 0.2);
+    epsilon         5.70e-5;
+    k               2.40e-5;
+    T               233;
+}
+
+outerInlet
+{
+    U               (0 0 0.1);
+    epsilon         3.98e-5;
+    k               6.00e-6;
+    T               293;
+}
+
+meshMotionProperties
+{
+    omega 25; // rad/s
+}
+
+#include "${FOAM_CASE}/constant/boundaryConditions"
+
+// ************************************************************************* //

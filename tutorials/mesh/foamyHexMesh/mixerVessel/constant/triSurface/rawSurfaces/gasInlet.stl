@@ -1,0 +1,254 @@
+solid gasInlet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0984808 0.0173648 0
+   vertex 0 0 0
+   vertex 0.1 0 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0939693 0.034202 0
+   vertex 0 0 0
+   vertex 0.0984808 0.0173648 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0866025 0.05 0
+   vertex 0 0 0
+   vertex 0.0939693 0.034202 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0766044 0.0642788 0
+   vertex 0 0 0
+   vertex 0.0866025 0.05 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0642788 0.0766044 0
+   vertex 0 0 0
+   vertex 0.0766044 0.0642788 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.05 0.0866025 0
+   vertex 0 0 0
+   vertex 0.0642788 0.0766044 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.034202 0.0939693 0
+   vertex 0 0 0
+   vertex 0.05 0.0866025 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0173648 0.0984808 0
+   vertex 0 0 0
+   vertex 0.034202 0.0939693 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 6.12323e-18 0.1 0
+   vertex 0 0 0
+   vertex 0.0173648 0.0984808 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.0173648 0.0984808 0
+   vertex 0 0 0
+   vertex 6.12323e-18 0.1 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.034202 0.0939693 0
+   vertex 0 0 0
+   vertex -0.0173648 0.0984808 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.05 0.0866025 0
+   vertex 0 0 0
+   vertex -0.034202 0.0939693 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.0642788 0.0766044 0
+   vertex 0 0 0
+   vertex -0.05 0.0866025 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.0766044 0.0642788 0
+   vertex 0 0 0
+   vertex -0.0642788 0.0766044 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.0866025 0.05 0
+   vertex 0 0 0
+   vertex -0.0766044 0.0642788 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.0939693 0.034202 0
+   vertex 0 0 0
+   vertex -0.0866025 0.05 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.0984808 0.0173648 0
+   vertex 0 0 0
+   vertex -0.0939693 0.034202 0
+  endloop
+ endfacet
+ facet normal -0 0 1
+  outer loop
+   vertex -0.1 1.22465e-17 0
+   vertex 0 0 0
+   vertex -0.0984808 0.0173648 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -0.0984808 -0.0173648 0
+   vertex 0 0 0
+   vertex -0.1 1.22465e-17 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -0.0939693 -0.034202 0
+   vertex 0 0 0
+   vertex -0.0984808 -0.0173648 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -0.0866025 -0.05 0
+   vertex 0 0 0
+   vertex -0.0939693 -0.034202 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -0.0766044 -0.0642788 0
+   vertex 0 0 0
+   vertex -0.0866025 -0.05 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -0.0642788 -0.0766044 0
+   vertex 0 0 0
+   vertex -0.0766044 -0.0642788 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -0.05 -0.0866025 0
+   vertex 0 0 0
+   vertex -0.0642788 -0.0766044 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -0.034202 -0.0939693 0
+   vertex 0 0 0
+   vertex -0.05 -0.0866025 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -0.0173648 -0.0984808 0
+   vertex 0 0 0
+   vertex -0.034202 -0.0939693 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex -1.83697e-17 -0.1 0
+   vertex 0 0 0
+   vertex -0.0173648 -0.0984808 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0173648 -0.0984808 0
+   vertex 0 0 0
+   vertex -1.83697e-17 -0.1 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.034202 -0.0939693 0
+   vertex 0 0 0
+   vertex 0.0173648 -0.0984808 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.05 -0.0866025 0
+   vertex 0 0 0
+   vertex 0.034202 -0.0939693 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0642788 -0.0766044 0
+   vertex 0 0 0
+   vertex 0.05 -0.0866025 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0766044 -0.0642788 0
+   vertex 0 0 0
+   vertex 0.0642788 -0.0766044 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0866025 -0.05 0
+   vertex 0 0 0
+   vertex 0.0766044 -0.0642788 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0939693 -0.034202 0
+   vertex 0 0 0
+   vertex 0.0866025 -0.05 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0984808 -0.0173648 0
+   vertex 0 0 0
+   vertex 0.0939693 -0.034202 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.1 -2.44929e-17 0
+   vertex 0 0 0
+   vertex 0.0984808 -0.0173648 0
+  endloop
+ endfacet
+endsolid gasInlet

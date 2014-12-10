@@ -1,0 +1,29 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+#set -x
+
+case "$ParaView_VERSION" in
+3*)
+    if [ -d "$ParaView_DIR" -a -r "$ParaView_DIR" ]
+    then
+        [ -n "$PV_PLUGIN_PATH" ] || {
+            echo "$0 : PV_PLUGIN_PATH not valid - it is unset"
+            exit 1
+        }
+
+        # ensure CMake gets the correct C++ compiler
+        [ -n "$WM_CXX" ] && export CXX="$WM_CXX"
+
+        wmake libso vtkPV3Readers
+        PV3blockMeshReader/Allwmake
+        PV3FoamReader/Allwmake
+    else
+        echo "ERROR: ParaView not found in $ParaView_DIR"
+    fi
+    ;;
+*)
+    echo "WARN: PV3 readers not building: ParaView_VERSION=$ParaView_VERSION"
+    ;;
+esac
+
+# ----------------------------------------------------------------- end-of-file

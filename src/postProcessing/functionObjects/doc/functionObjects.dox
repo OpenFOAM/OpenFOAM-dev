@@ -1,0 +1,94 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it under
+    the terms of the GNU General Public License as published by the Free
+    Software Foundation, either version 3 of the License, or (at your option)
+    any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+    details.
+
+    You should have received a copy of the GNU General Public License along with
+    OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+\page pagePostProcessing Post-processing
+
+\section secFunctionObjects Function objects
+
+OpenFOAM includes a collection of \ref grpFunctionObjects that offer users the
+opportunity to closely manage their computational analyses.  These objects can
+be applied to manipulate the workflow process, and provide a mechanism to
+extract predicted field and derived quantities at run-time.  Alternatively,
+the actions can be executed afterwards using the \c execFlowFunctionObjects
+utility.
+
+\linebreak
+The current range of features comprises of:
+- \ref grpCloudFunctionObjects
+- \ref grpFieldFunctionObjects
+- \ref grpForcesFunctionObjects
+- \ref grpFVFunctionObjects
+- \ref grpIOFunctionObjects
+- \ref grpJobControlFunctionObjects
+- \ref grpUtilitiesFunctionObjects
+
+\linebreak
+\subsection secFieldFunctionObjectUsage Using function objects
+
+Function objects are defined by additional entries in the
+$FOAM_CASE/system/controlDict input dictionary.  Each object is listed in a
+\c functions sub-dictionary entry, e.g. the following shows the input options
+applicable to `output' -type objects:
+
+\verbatim
+functions
+{
+    myFunctionObject    // user-defined name of function object entry
+    {
+        type                functionObjectType;
+        functionObjectLibs  ("libMyFunctionObjectlib.so");
+        region              defaultRegion;
+        enabled             yes;
+        timeStart           0;
+        timeEnd             10;
+        outputControl       outputTime;
+        outputInterval      1;
+        ...
+    }
+}
+\endverbatim
+
+Where:
+\table
+    Property | Description                           | Required | Default value
+    type     | type of function object               | yes      |
+    functionObjectLibs | libraries containing object implementation | yes |
+    region   | name of region for multi-region cases | no       |
+    enabled  | on/off switch                         | no       | yes
+    timeStart| start time                            | no       |
+    timeEnd  | end time                              | no       | 
+    outputControl | when to output: either 'outputTime' or 'timeStep'| no | timeStep
+    outputInterval| steps between output when outputControl=timeStep | no | 1
+\endtable
+
+The sub-dictionary name \c myFunctionObject is chosen by the user, and is
+typically used as the name of the output directory for any derived data.  The
+\c type entry defines the type of function object properties that follow.
+Since the function objects are packaged into separate libraries, the user must
+tell the code where to find the function object implementation, identified
+using the \c libs entry.  
+
+
+\*---------------------------------------------------------------------------*/

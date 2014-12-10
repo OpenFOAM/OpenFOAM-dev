@@ -1,0 +1,21 @@
+.SUFFIXES: .C .cxx .cc .cpp
+
+c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast
+
+CC          = g++ -m64 -mcpu=power5+
+
+include $(RULES)/c++$(WM_COMPILE_OPTION)
+
+ptFLAGS     = -DNoRepository -ftemplate-depth-100
+
+c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS) -fPIC
+
+Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $$SOURCE -o $@
+cxxtoo      = $(Ctoo)
+cctoo       = $(Ctoo)
+cpptoo      = $(Ctoo)
+
+LINK_LIBS   = $(c++DBUG)
+
+LINKLIBSO   = $(CC) $(c++FLAGS) -shared
+LINKEXE     = $(CC) $(c++FLAGS) -Xlinker --add-needed

@@ -1,0 +1,128 @@
+%-----------------------------------------------------------------------------
+% =========                 |
+% \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+%  \\    /   O peration     |
+%   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+%    \\/     M anipulation  |
+%------------------------------------------------------------------------------
+% License
+%     This file is part of OpenFOAM.
+%
+%     OpenFOAM is free software: you can redistribute it and/or modify it
+%     under the terms of the GNU General Public License as published by
+%     the Free Software Foundation, either version 3 of the License, or
+%     (at your option) any later version.
+%
+%     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+%     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+%     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+%     for more details.
+%
+%     You should have received a copy of the GNU General Public License
+%     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+%
+% LaTeX Style file
+%     tensorOperator.sty
+%
+% Description
+%     Standard OpenFOAM LaTeX macros for typesetting tensor algebra.
+%
+%------------------------------------------------------------------------------
+
+% tensor style
+% ~~~~~~~~~~~~
+\renewcommand{\vec}[1] {\ensuremath{\mathbf #1}}
+\newcommand{\gvec}[1] {\ensuremath{\mbox{\boldmath$\bf#1$}}}
+
+% products
+% ~~~~~~~~
+\newcommand{\anyprod}{\star}
+\newcommand{\cprod} {\times}
+\newcommand{\dprod} {\,{\scriptscriptstyle \stackrel{\bullet}{{}}}\,}
+\newcommand{\ddprod} {\,{\scriptscriptstyle \stackrel{\bullet}{\bullet}}\,}
+\newcommand{\tdprod} {\,{\scriptscriptstyle \stackrel{3}{\bullet}}\,}
+\newcommand{\tprod} {\,{\scriptscriptstyle \stackrel{\otimes}{{}}}\,}
+
+% operations
+% ~~~~~~~~~~
+\newcommand{\adj} {\ensuremath{\operatorname{adj}}}
+\newcommand{\cof} {\ensuremath{\operatorname{cof}}}
+\newcommand{\diag} {\ensuremath{\operatorname{diag}}}
+\newcommand{\dev} {\ensuremath{\operatorname{dev}}}
+
+\newcommand{\Hodge} {\ensuremath{\operatorname{\stackrel{\displaystyle \ast}{}}}}
+\newcommand{\hyd} {\ensuremath{\operatorname{hyd}}}
+\renewcommand{\max} {\ensuremath{\operatorname{max}}}
+\renewcommand{\min} {\ensuremath{\operatorname{min}}}
+\newcommand{\inv} {\ensuremath{\operatorname{inv}}}
+\newcommand{\sym} {\ensuremath{\operatorname{symm}}}    % symm ?
+\newcommand{\skw} {\ensuremath{\operatorname{skew}}}    % skew already defined
+\newcommand{\tr} {\ensuremath{\operatorname{tr}}}
+\newcommand{\trans}[1] {\ensuremath{#1^{\operatorname{T}}}}
+
+% alternative tensor operators for hypersonics etc.
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\newcommand{\devs}[1] {\overset{\scriptscriptstyle\circ}{#1}}
+%\newcommand{\trans}[1] {\ensuremath{#1^{\operatorname{T}}}}
+\newcommand{\symms}[1] {\overleftrightarrow{#1}}
+\newlength{\skewslength}
+\newlength{\skewsheight}
+\newcommand{\skews}[1]{
+    \settowidth{\skewslength}{#1}%
+    \settoheight{\skewsheight}{#1}%
+    \addtolength{\skewsheight}{0.4mm}%
+    {\overleftrightarrow{#1}\hspace{-.5\skewslength}%
+    \rule[\skewsheight]{.4pt}{1.4mm}
+    \hspace{.5\skewslength}%
+}}
+%\newcommand{\skew}[1] {\ensuremath{#1^{\operatorname{A}}}}
+
+% spatial derivatives
+% ~~~~~~~~~~~~~~~~~~~
+\newcommand{\curl}{\ensuremath{\nabla\cprod}}
+\renewcommand{\div} {\ensuremath{\nabla\dprod}}
+\newcommand{\grad}{\ensuremath{\nabla}}
+\newcommand{\laplacian}{\ensuremath{\nabla^{2}}}
+
+% temporal derivatives
+% ~~~~~~~~~~~~~~~~~~~~
+\newcommand{\ddt}[1] {\ensuremath{\frac{\partial #1}{\partial t }}}
+\newcommand{\DDt}[1] {\ensuremath{\frac{D #1}{D t}}}
+\newcommand{\DpDt}[2] {\ensuremath{\frac{d_{#1} #2}{d t }}}
+\newcommand{\dsdts}[1] {\ensuremath{\frac{\partial ^2 #1}{\partial t^2}}}
+\newcommand{\rate}[1] {\ensuremath{\dot{#1}}}
+
+\newcommand{\genDer}{\mathcal{L}}
+
+% time average symbols
+% ~~~~~~~~~~~~~~~~~~~~
+\newcommand{\av}[1] {\ensuremath{\overline{#1}}}
+\newcommand{\corrtwo}[2] {{\dwea{\dprime{#1} \dprime{#2}}}}
+\newcommand{\curly}[1] {{\cal #1}}
+\newcommand{\dprime}[1] {\ensuremath{{#1}^{^{\prime \prime}}}}
+\newcommand{\dwea}[1] {\ensuremath{\widetilde{#1}}}
+\newcommand{\dweafluc}[1] {\ensuremath{\dprime{#1}}}
+\newcommand{\fluc}[1] {\ensuremath{#1^{\prime}}}
+
+% index style
+% ~~~~~~~~~~~
+\newcommand{\veci}[2][i] {\ensuremath{#2_{#1}}}
+\newcommand{\teni}[2][ij] {\ensuremath{#2_{#1}}}
+\newcommand{\tenTi}[2][ji] {\ensuremath{#2_{#1}}}
+
+% index operations
+% ~~~~~~~~~~~~~~~~
+\newcommand{\deltai}[1] {\ensuremath{\partial_{#1}}}
+
+% Sub-subscripts
+% ~~~~~~~~~~~~~~
+\newcommand{\eff} {{\scriptscriptstyle e\!f\!\!f\!}}
+
+% unknown use
+% ~~~~~~~~~~~
+%\font\bigtenrm=cmr12 scaled 1200
+%\newcommand{\eexp}[1]{{\hbox{$\textfont1=\bigtenrm e$}}^{\raise3pt
+%\hbox{$#1$}}}
+
+
+% ------------------------------------------------------------------------------

@@ -1,0 +1,7 @@
+/* import doxygen-specific styles */
+@import url(doxygen.css);    /* standard doxygen style with very minor mods */
+@import url(doxyMod.css);    /* modifications to standard doxygen style */
+@import url(doxyTabs.css);   /* modified doxygen tabs style */
+@import url(cfdLayout.css);  /* OpenFOAM layout styles */
+@import url(cfdNav.css);     /* OpenFOAM navigation styles */
+

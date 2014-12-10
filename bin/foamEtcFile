@@ -1,0 +1,293 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamEtcFile
+#
+# Description
+#     Locate user/group/shipped file with semantics similar to the
+#     ~OpenFOAM/fileName expansion.
+#
+#     The -mode option can be used to allow chaining from
+#     personal settings to site-wide settings.
+#
+#     For example, within the user ~/.OpenFOAM/<VER>/prefs.sh:
+#     \code
+#        foamPrefs=`$WM_PROJECT_DIR/bin/foamEtcFile -m go prefs.sh` \
+#            && _foamSource $foamPrefs
+#     \endcode
+#
+# Note
+#     This script must exist in <foamInstall>/OpenFOAM-<VERSION>/bin/
+#     or <foamInstall>/openfoam<VERSION>/bin/ (for the debian version)
+#
+#-------------------------------------------------------------------------------
+usage() {
+    [ "${optQuiet:-$optSilent}" = true ] && exit 1
+
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTION] fileName
+       ${0##*/} [OPTION] -list
+options:
+  -all              return all files (otherwise stop after the first match)
+  -list             list the directories to be searched
+  -mode <mode>      any combination of u(user), g(group), o(other)
+  -prefix <dir>     specify an alternative installation prefix
+  -quiet            suppress all normal output
+  -silent           suppress all stderr output
+  -version <ver>    specify an alternative OpenFOAM version
+                    in the form Maj.Min.Rev (eg, 1.7.0)
+  -help             print the usage
+
+  Locate user/group/shipped file with semantics similar to the
+  ~OpenFOAM/fileName expansion.
+
+  The options can also be specified as a single character
+  (eg, '-q' instead of '-quiet'), but must not be grouped.
+
+  Exit status
+      0  when the file is found. Print resolved path to stdout.
+      1  for miscellaneous errors.
+      2  when the file is not found.
+
+USAGE
+    exit 1
+}
+
+#-------------------------------------------------------------------------------
+
+# the bin dir:
+binDir="${0%/*}"
+
+# the project dir:
+projectDir="${binDir%/bin}"
+
+# the prefix dir (same as foamInstall):
+prefixDir="${projectDir%/*}"
+
+# the name used for the project directory
+projectDirName="${projectDir##*/}"
+
+# version number used for debian packaging
+unset versionNum
+
+#
+# handle standard and debian naming convention
+#
+case "$projectDirName" in
+OpenFOAM-*)         # standard naming convention OpenFOAM-<VERSION>
+    version="${projectDirName##OpenFOAM-}"
+    ;;
+
+openfoam[0-9]*)     # debian naming convention 'openfoam<VERSION>'
+    versionNum="${projectDirName##openfoam}"
+    case "$versionNum" in
+    ??)         # convert 2 digit version number to decimal delineated
+        version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)@\1.\2@')
+        ;;
+    ???)        # convert 3 digit version number to decimal delineated
+        version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)\(.\)@\1.\2.\3@')
+        ;;
+    ????)       # convert 4 digit version number to decimal delineated
+        version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)\(.\)\(.\)@\1.\2.\3.\4@')
+        ;;
+    *)          # failback - use current environment setting
+        version="$WM_PROJECT_VERSION"
+        ;;
+    esac
+    ;;
+
+*)
+    echo "Error : unknown/unsupported naming convention"
+    exit 1
+    ;;
+esac
+
+
+# default mode is 'ugo'
+mode=ugo
+unset optAll optList optQuiet optSilent
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -a | -all)
+        optAll=true
+        ;;
+    -l | -list)
+        optList=true
+        ;;
+    -m | -mode)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        mode="$2"
+
+        # sanity check:
+        case "$mode" in
+        *u* | *g* | *o* )
+           ;;
+        *)
+           usage "'$1' option with invalid mode '$mode'"
+           ;;
+        esac
+        shift
+        ;;
+    -p | -prefix)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        prefixDir="$2"
+        shift
+        ;;
+    -q | -quiet)
+        optQuiet=true
+        ;;
+    -s | -silent)
+        optSilent=true
+        ;;
+    -v | -version)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        version="$2"
+        # convert x.y.z -> xyz version (if installation looked like debian)
+        if [ -n "$versionNum" ]
+        then
+            versionNum=$(echo "$version" | sed -e 's@\.@@g')
+        fi
+        shift
+        ;;
+    --)
+        shift
+        break
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+    shift
+done
+
+
+# debugging:
+# echo "Installed locations:"
+# for i in projectDir prefixDir projectDirName version versionNum
+# do
+#     eval echo "$i=\$$i"
+# done
+
+
+# Save the essential bits of information
+# silently remove leading ~OpenFOAM/ (used in Foam::findEtcFile)
+nArgs=$#
+fileName="${1#~OpenFOAM/}"
+
+# Define the various places to be searched:
+unset dirList
+case "$mode" in
+*u*)  # user
+    userDir="$HOME/.${WM_PROJECT:-OpenFOAM}"
+    dirList="$dirList $userDir/$version $userDir"
+    ;;
+esac
+
+case "$mode" in
+*g*)  # group (site)
+    siteDir="${WM_PROJECT_SITE:-$prefixDir/site}"
+    dirList="$dirList $siteDir/$version $siteDir"
+    ;;
+esac
+
+case "$mode" in
+*o*)  # other (shipped)
+    if [ -n "$versionNum" ]
+    then
+        # debian packaging
+        dirList="$dirList $prefixDir/openfoam$versionNum/etc"
+    else
+        # standard packaging
+        dirList="$dirList $prefixDir/${WM_PROJECT:-OpenFOAM}-$version/etc"
+    fi
+    ;;
+esac
+set -- $dirList
+
+
+#
+# The main routine
+#
+
+exitCode=0
+if [ "$optList" = true ]
+then
+
+    # list directories, or potential file locations
+    [ "$nArgs" -le 1 ] || usage
+
+    # a silly combination, but -quiet does have precedence
+    [ "$optQuiet" = true ] && exit 0
+
+    for dir
+    do
+        if [ "$nArgs" -eq 1 ]
+        then
+            echo "$dir/$fileName"
+        else
+            echo "$dir"
+        fi
+    done
+
+else
+
+    [ "$nArgs" -eq 1 ] || usage
+
+    # general error, eg file not found
+    exitCode=2
+
+    for dir
+    do
+        if [ -f "$dir/$fileName" ]
+        then
+            exitCode=0
+            if [ "$optQuiet" = true ]
+            then
+                break
+            else
+                echo "$dir/$fileName"
+                [ "$optAll" = true ] || break
+            fi
+        fi
+    done
+
+fi
+
+
+exit $exitCode
+
+#------------------------------------------------------------------------------

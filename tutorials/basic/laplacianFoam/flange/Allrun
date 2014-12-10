@@ -1,0 +1,27 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get application name
+application=`getApplication`
+
+runAnsysToFoam()
+{
+    if [ -f log.ansysToFoam ]
+    then
+        echo "ansysToFoam already run on $PWD: remove log file to re-run"
+    else
+        echo "ansysToFoam: converting mesh $1"
+        ansysToFoam $1 -scale $2 > log.ansysToFoam 2>&1
+    fi
+}
+
+runAnsysToFoam flange.ans 0.001
+runApplication $application
+runApplication foamToEnsight
+runApplication foamToEnsightParts
+runApplication foamToVTK
+
+# ----------------------------------------------------------------- end-of-file

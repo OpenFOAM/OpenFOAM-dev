@@ -1,0 +1,5 @@
+# X11 includes and libraries in the standard location
+#
+XFLAGS     =
+XINC       = $(XFLAGS) -I/usr/include/X11
+XLIBS      = -lXext -lX11

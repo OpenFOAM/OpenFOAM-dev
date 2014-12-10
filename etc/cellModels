@@ -1,0 +1,498 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+// Foam Dictionary.
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+14
+(
+
+unknown
+{
+    index 0;
+    numberOfPoints 0;
+
+    faces 0();
+
+    edges 0();
+}
+
+
+hex
+{
+    index 3;
+    numberOfPoints 8;
+
+    faces
+    6
+    (
+        4(0 4 7 3)   // x-min
+        4(1 2 6 5)   // x-max
+        4(0 1 5 4)   // y-min
+        4(3 7 6 2)   // y-max
+        4(0 3 2 1)   // z-min
+        4(4 5 6 7)   // z-max
+    );
+
+    edges
+    12
+    (
+        (0 1)      // x-direction
+        (3 2)
+        (7 6)
+        (4 5)
+        (0 3)      // y-direction
+        (1 2)
+        (5 6)
+        (4 7)
+        (0 4)      // z-direction
+        (1 5)
+        (2 6)
+        (3 7)
+    );
+}
+
+
+wedge
+{
+    index 4;
+    numberOfPoints 7;
+
+    faces
+    6
+    (
+        3(0 2 1)
+        4(3 4 5 6)
+        3(0 3 6)
+        4(1 2 5 4)
+        4(0 1 4 3)
+        4(0 6 5 2)
+    );
+
+    edges
+    11
+    (
+        (0 1)
+        (1 2)
+        (0 2)
+        (0 3)
+        (0 6)
+        (2 5)
+        (1 4)
+        (3 4)
+        (3 6)
+        (4 5)
+        (5 6)
+    );
+}
+
+
+prism
+{
+    index 5;
+    numberOfPoints 6;
+
+    faces
+    5
+    (
+        3(0 2 1)     // Bottom triangle
+        3(3 4 5)     // Top triangle
+
+        4(0 3 5 2)   // Three side quadrilaterals
+        4(1 2 5 4)
+        4(0 1 4 3)
+    );
+
+    edges
+    9
+    (
+        (0 2)
+        (0 1)
+        (1 2)
+        (3 5)
+        (4 5)
+        (3 4)
+        (0 3)
+        (1 4)
+        (2 5)
+    );
+}
+
+
+pyr
+{
+    index 6;
+    numberOfPoints 5;
+
+    faces
+    5
+    (
+        // Base
+        4(0 3 2 1)
+
+        // Sides
+        3(0 4 3)
+        3(3 4 2)
+        3(1 2 4)
+        3(0 1 4)
+    );
+
+    edges
+    8
+    (
+        (0 1)
+        (1 2)
+        (2 3)
+        (0 3)
+        (0 4)
+        (1 4)
+        (2 4)
+        (3 4)
+    );
+}
+
+
+tet
+{
+    index 7;
+    numberOfPoints 4;
+
+    faces
+    4
+    (
+        3(1 2 3)
+        3(0 3 2)
+        3(0 1 3)
+        3(0 2 1)
+    );
+
+    edges
+    6
+    (
+        (0 1)
+        (0 2)
+        (0 3)
+        (3 1)
+        (1 2)
+        (3 2)
+    );
+}
+
+
+tetWedge
+{
+    index 9;
+    numberOfPoints 5;
+
+    faces
+    4
+    (
+        3(0 2 1)
+        3(0 1 3)
+        4(0 3 4 2)
+        4(1 2 4 3)
+    );
+
+    edges
+    7
+    (
+        (0 1)
+        (1 2)
+        (0 2)
+        (3 4)
+        (0 3)
+        (1 3)
+        (2 4)
+    );
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// split-hex. Used for embedded refinement
+splitHex
+{
+    index 8;
+    numberOfPoints 10;
+
+    faces
+    7
+    (
+        4(9 3 0 8)   // x-min1
+        4(7 9 8 4)   // x-min2
+        4(5 1 2 6)   // x-max
+        4(4 0 1 5)   // y-min
+        4(2 3 7 6)   // y-max
+        4(3 2 1 0)   // z-min
+        4(7 4 5 6)   // z-max
+    );
+
+    edges
+    17
+    (
+        (0 1)      // x-direction
+        (3 2)
+        (7 6)
+        (4 5)
+        (0 3)      // y-direction
+        (8 9)
+        (4 7)
+        (5 6)
+        (1 2)
+        (0 4)      // z-direction
+        (0 8)
+        (4 8)
+        (1 5)
+        (2 6)
+        (3 7)
+        (3 9)
+        (7 9)
+    );
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// SAMM cell types
+sammTrim1
+{
+    index 11;
+    numberOfPoints 10;
+
+    faces
+    7
+    (
+        4(2 3 8 7)        // x-min
+        5(0 1 6 5 4)      // x-max
+        4(2 1 0 3)        // y-min
+        5(7 8 9 5 6)      // y-max
+        4(2 7 6 1)        // z-min
+        5(3 0 4 9 8)      // z-max
+        3(4 5 9)          // cut
+    );
+
+    edges
+    15
+    (
+        (2 1)            // x-direction
+        (3 0)
+        (8 9)
+        (7 6)
+        (2 7)            // y-direction
+        (3 8)
+        (0 4)
+        (1 6)
+        (2 3)            // z-direction
+        (7 8)
+        (6 5)
+        (1 0)
+        (4 5)            // other
+        (5 9)
+        (10 5)
+    );
+}
+
+
+sammTrim2
+{
+    index 12;
+    numberOfPoints 10;
+
+    faces
+    7
+    (
+        4(2 3 8 7)        // x-min
+        4(1 6 5 0)        // x-max
+        5(2 1 0 4 3)      // y-min
+        5(7 8 9 5 6)      // y-max
+        4(2 7 6 1)        // z-min
+        4(3 4 9 8)        // z-max
+        4(0 5 9 4)        // other
+    );
+
+    edges
+    15
+    (
+        (2 1)            // x-direction
+        (3 4)
+        (8 9)
+        (7 6)
+        (2 7)            // y-direction
+        (3 8)
+        (4 9)
+        (0 5)
+        (1 6)
+        (2 3)            // z-direction
+        (7 8)
+        (6 5)
+        (1 0)
+        (9 5)            // other
+        (4 0)
+    );
+}
+
+
+sammTrim3
+{
+    index 13;
+    numberOfPoints 10;
+
+    faces
+    7
+    (
+        5(2 3 9 8 7)      // x-min
+        4(1 5 4 0)        // x-max
+        4(2 1 0 3)        // y-min
+        3(7 8 6)          // y-max
+        5(2 7 6 5 1)      // z-min
+        4(3 0 4 9)        // z-max
+        5(4 5 6 8 9)      // other
+    );
+
+    edges
+    15
+    (
+        (2 1)            // x-direction
+        (3 0)
+        (7 6)
+        (2 7)            // y-direction
+        (3 9)
+        (0 4)
+        (1 5)
+        (2 3)            // z-direction
+        (1 0)
+        (8 7)
+        (8 9)            // other
+        (9 4)
+        (4 5)
+        (5 6)
+        (6 8)
+    );
+}
+
+
+sammTrim4
+{
+    index 14;
+    numberOfPoints 10;
+
+    faces
+    7
+    (
+        5(0 2 6 5 1)      // x-min
+        3(3 9 8)          // x-max
+        5(0 3 8 7 2)      // y-min
+        3(1 5 4)          // y-max
+        5(0 1 4 9 3)      // z-min
+        3(2 7 6)          // z-max
+        6(4 5 6 7 8 9)    // other
+    );
+
+    edges
+    15
+    (
+        (0 3)            // x-direction
+        (1 4)
+        (2 7)
+        (0 1)            // y-direction
+        (2 6)
+        (3 9)
+        (0 2)            // z-direction
+        (3 8)
+        (1 5)
+        (4 5)            // other
+        (5 6)
+        (6 7)
+        (7 8)
+        (8 9)
+        (9 4)
+    );
+}
+
+
+sammTrim5
+{
+    index 15;
+    numberOfPoints 8;
+
+    faces
+    6
+    (
+        4(2 3 7 6)        // x-min
+        3(1 5 0)          // x-max
+        5(2 1 0 4 3)      // y-min
+        4(2 6 5 1)        // z-min
+        3(3 4 7)          // z-max
+        5(0 5 6 7 4)      // other
+    );
+
+    edges
+    12
+    (
+        (2 1)            // x-direction
+        (3 4)
+        (2 6)            // y-direction
+        (3 7)
+        (1 5)
+        (2 3)            // z-direction
+        (1 0)
+        (0 5)            // other
+        (5 6)
+        (6 7)
+        (7 4)
+        (4 0)
+    );
+}
+
+// Equal to sammTrim8
+hexagonalPrism
+{
+    index 18;
+    numberOfPoints 12;
+
+    faces
+    8
+    (
+        6(0 5 4 3 2 1)    // bottom
+        6(6 7 8 9 10 11)  // top
+        4(0 1 7 6)        // sides
+        4(1 2 8 7)
+        4(2 3 9 8)
+        4(3 4 10 9)
+        4(4 5 11 10)
+        4(5 0 6 11)
+    );
+
+    edges
+    18
+    (
+        (0 1)            // bottom
+        (1 2)
+        (2 3)
+        (3 4)
+        (4 5)
+        (5 0)
+        (6 7)            // top
+        (7 8)
+        (8 9)
+        (9 10)
+        (10 11)
+        (11 6)
+        (0 6)            // sides
+        (1 7)
+        (2 8)
+        (3 9)
+        (4 10)
+        (5 11)
+    );
+}
+
+)
+
+
+// ************************************************************************* //

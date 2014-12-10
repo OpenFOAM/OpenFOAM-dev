@@ -1,0 +1,21 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+makeType=${1:-libso}
+
+# get METIS_VERSION, METIS_ARCH_PATH
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/metis.sh`
+then
+    . $settings
+    echo "using METIS_ARCH_PATH=$METIS_ARCH_PATH"
+    if [ -r $METIS_ARCH_PATH/lib/libmetis.so ]
+    then
+        wmake $makeType
+    fi
+else
+    echo
+    echo "Error: no config/metis.sh settings"
+    echo
+fi
+
+
+# ----------------------------------------------------------------- end-of-file

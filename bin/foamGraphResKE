@@ -1,0 +1,85 @@
+#!/bin/csh -f
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamGraphResKE
+#
+# Description
+#
+#------------------------------------------------------------------------------
+if (! -f "$1" ) then
+    echo "No file: '$1'"
+    exit 1
+endif
+
+set tmpK = newK$$.dat
+cat $1 | grep "Solving for k" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%f %e\n", NENTRIES, $8)}' - > $tmpK
+
+set tmpEpsilon = newEpsilon$$.dat
+cat $1 | grep "Solving for epsilon" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%f %e\n", NENTRIES, $8)}' - > $tmpEpsilon
+
+set linesK = `cat $tmpK | wc -l`
+set linesEpsilon = `cat $tmpEpsilon | wc -l`
+
+set ngraphs = 0
+
+if ($linesK > 1) then
+@ ngraphs = $ngraphs + 1
+endif
+
+if ($linesEpsilon > 1) then
+@ ngraphs = $ngraphs + 1
+endif
+
+cat << EOF > residualKE.dat
+Solver Performance
+number of iterations
+residual
+0 0
+0 0
+$ngraphs
+EOF
+
+if ($linesK > 1) then
+cat << EOF >> residualKE.dat
+k
+0
+$linesK
+EOF
+cat $tmpK >> residualKE.dat
+endif
+
+if ($linesEpsilon > 1) then
+cat << EOF >> residualKE.dat
+epsilon
+0
+$linesEpsilon
+EOF
+cat $tmpEpsilon >> residualKE.dat
+endif
+
+rm $tmpK
+rm $tmpEpsilon
+
+#------------------------------------------------------------------------------

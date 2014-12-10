@@ -1,0 +1,83 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamTags
+#
+# Description
+#     Build the tags files for all the .C and .H files
+#
+#     This script is designed for use with emacs
+#
+#     For use, download/install 'exuberant ctags'.  The executable for this
+#     package is called ctags, which conflicts with the 'standard' version
+#     of ctags found on most *nix systems.  Rename the exuberant ctags
+#     executable to ectags.
+#
+#------------------------------------------------------------------------------
+
+if [ $# -ne 0 ]
+then
+    echo "Usage : ${0##*/}"
+    echo ""
+    echo "Build the tags files for all the .C and .H files"
+    echo ""
+    exit 1
+fi
+
+
+for cmd in etags ectags
+do
+    type $cmd >/dev/null 2>&1 || {
+        echo "${0##*/} cannot build tag files: '$cmd' command not found"
+        exit 1
+    }
+done
+
+
+cd $WM_PROJECT_DIR || exit 1
+mkdir .tags 2>/dev/null
+
+
+etagsCmd="etags --declarations -l c++ -o .tags/etags -"
+#etagsDefCmd="etags -l c++ -o .tags/etagsDef -"
+#etagsDecCmd="etags --declarations -l c++ -o .tags/etagsDec -"
+
+etagsCmd="ectags -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etags -L -"
+etagsDefCmd="ectags -e --extra=+fq --file-scope=no -o .tags/etagsDef -L -"
+etagsDecCmd="ectags -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etagsDec -L -"
+
+ectagsDecCmd="ectags -o .tags/ectagsDec --file-scope=no --c-kinds=+p --excmd=n --extra=+fq --fields=+afiKmnsSzt -L -"
+
+find -H $WM_PROJECT_DIR \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsCmd
+find -H $WM_PROJECT_DIR \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsDefCmd
+find -H $WM_PROJECT_DIR \( -name "*.H" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsDecCmd
+find -H $WM_PROJECT_DIR \( -name "*.H" -o -name lnInclude -prune -o -name Doxygen -prune \) | $ectagsDecCmd
+
+gtags -i --gtagsconf bin/tools/gtagsrc .tags
+
+foamEbrowse
+
+
+#------------------------------------------------------------------------------

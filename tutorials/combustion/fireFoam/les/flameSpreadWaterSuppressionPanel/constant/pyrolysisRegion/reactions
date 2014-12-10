@@ -1,0 +1,22 @@
+species
+(
+    wood
+    char
+);
+
+gaseousSpecies
+(
+    gas
+);
+
+reactions
+{
+    charReaction
+    {
+        type        irreversibleArrheniusSolidReaction;
+        reaction    "wood^4.86 = char + gas";
+        A           7.83e10;
+        Ta          15274.57;
+        Tcrit       400;
+    }
+}

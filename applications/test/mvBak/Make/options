@@ -1,0 +1,2 @@
+/* EXE_INC = -I$(LIB_SRC)/cfdTools/include */
+/* EXE_LIBS = -lfiniteVolume */

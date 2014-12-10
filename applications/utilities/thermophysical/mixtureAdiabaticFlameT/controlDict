@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    note        "settings for calculating the adiabatic flame temperature";
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+P   1e5;
+T0  300;
+
+reactants
+3
+(
+    //reactant  volume fraction
+    H2          0.29577
+    O2          0.14788
+    N2          0.55635
+)
+hydrogen;
+
+
+products
+2
+(
+    H2O        0.3471
+    N2         0.6529
+)
+waterVapour;
+
+
+// ************************************************************************* //

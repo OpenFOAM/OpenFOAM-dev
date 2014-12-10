@@ -1,0 +1,120 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // rotor faces
+    {
+        name    rotorCells;
+        type    cellSet;
+        action  new;
+        source  zoneToCell;
+        sourceInfo
+        {
+            name    cylinder;
+        }
+    }
+    {
+        name    rotorFaces;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        sourceInfo
+        {
+            set     rotorCells;
+            option  all;
+        }
+    }
+    {
+        name    rotorFaces;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (-100 -100 0.1) (100 100 0.15);
+        }
+    }
+
+    {
+        name    rotorBlades;
+        type    faceSet;
+        action  new;
+        source  faceToFace;
+        sourceInfo
+        {
+            set     rotorFaces;
+        }
+    }
+
+    {
+        name    rotorBlades;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (-100 0.249 -100) (100 0.251 100);
+        }
+    }
+
+    {
+        name    rotorBlades2;
+        type    faceSet;
+        action  new;
+        source  faceToFace;
+        sourceInfo
+        {
+            set     rotorFaces;
+        }
+    }
+
+    {
+        name    rotorBlades2;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (0.249 -100 -100) (0.251 100 100);
+        }
+    }
+
+    {
+        name    rotorBlades;
+        type    faceSet;
+        action  add;
+        source  faceToFace;
+        sourceInfo
+        {
+            set     rotorBlades2;
+        }
+    }
+    {
+        name    rotorBlades;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet rotorBlades;
+        }
+    }
+);
+
+
+// ************************************************************************* //

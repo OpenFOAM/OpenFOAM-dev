@@ -1,0 +1,15 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+makeType=${1:-libso}
+set -x
+
+wmake $makeType cloud
+wmake $makeType field
+wmake $makeType forces
+wmake $makeType fvTools
+wmake $makeType IO
+wmake $makeType jobControl
+wmake $makeType systemCall
+wmake $makeType utilities
+
+# ----------------------------------------------------------------- end-of-file

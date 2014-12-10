@@ -1,0 +1,31 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#create meshes
+runApplication blockMesh -region air
+mv log.blockMesh log.blockMesh.air
+runApplication blockMesh -region porous
+mv log.blockMesh log.blockMesh.porous
+
+# create rotor blades in air region
+runApplication topoSet -region air -dict system/topoSetDict.1
+mv log.topoSet log.topoSet.air.1
+
+runApplication createBaffles -region air -overwrite
+
+# create rotor zone in air region for MRF
+runApplication topoSet -region air -dict system/topoSetDict.2
+mv log.topoSet log.topoSet.air.2
+
+rm -rf constant/air/polyMesh/sets
+
+# create dummy files for post-processing
+paraFoam -touch -region porous
+paraFoam -touch -region air
+
+
+cp -rf 0.org 0

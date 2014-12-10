@@ -1,0 +1,13 @@
+EXE_INC = \
+    -I.. \
+    -I../incompressible/lnInclude \
+    -I../interfaceProperties/lnInclude \
+    -I../twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+LIB_LIBS = \
+    -ltwoPhaseMixture \
+    -lincompressibleTransportModels \
+    -linterfaceProperties \
+    -ltwoPhaseProperties \
+    -lfiniteVolume

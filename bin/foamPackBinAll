@@ -1,0 +1,86 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamPackBinAll [OPTION]
+#
+# Description
+#     Pack and compress all binary versions of OpenFOAM for release
+#
+# Script
+#     foamPackThirdPartyBinAll [OPTION]
+#
+# Description
+#     Pack and compress all binary versions of OpenFOAM ThirdParty for release
+#
+#------------------------------------------------------------------------------
+binDir="${0%/*}"  # this script is located in the bin/ dir
+
+case "${0##*/}" in
+*ThirdParty*)
+    # for ThirdParty
+    packDir=ThirdParty-$WM_PROJECT_VERSION
+    packBin=foamPackThirdPartyBin
+    ;;
+*)
+    # regular
+    packDir=$WM_PROJECT-$WM_PROJECT_VERSION
+    packBin=foamPackBin
+    ;;
+esac
+
+
+[ -d $packDir ] || {
+    echo "Error: directory $packDir does not exist" 1>&2
+    exit 1
+}
+
+
+if [ -d $packDir/lib ]
+then
+
+    # obtain archOptions types from lib/<archOptions>
+    for archOptions in $packDir/lib/*
+    do
+        $binDir/$packBin $@ ${archOptions##*/}
+    done
+
+elif [ -d $packDir/platforms ]
+then
+
+    # obtain archOptions types from platforms/<archOptions>/lib
+    for archOptions in $packDir/platforms/*/lib
+    do
+        archOptions=${archOptions%%/lib}
+        $binDir/$packBin $@ ${archOptions##*/}
+    done
+
+else
+
+    echo "Error: directory $packDir does not appear packable" 1>&2
+    exit 1
+
+fi
+
+#------------------------------------------------------------------------------

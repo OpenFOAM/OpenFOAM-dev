@@ -1,0 +1,134 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     org-batch
+#
+# Description
+#     Batch process emacs org-mode files to create html/LaTeX etc.
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: $Script [OPTIONS] file1 [.. fileN]
+options:
+  -html      create html (default)
+  -latex     create LaTeX
+  -pdflatex  create pdf via pdflatex
+
+* Batch process emacs org-mode files to create html/LaTeX etc.
+
+USAGE
+    exit 1
+}
+
+
+# default is html export:
+mode=html
+unset makePDF
+
+echo "have $Script"
+case $Script in
+*pdflatex)
+    mode=latex
+    makePDF=pdflatex
+    ;;
+*latex)
+    mode=latex
+    ;;
+*html)
+    mode=html
+    ;;
+esac
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -html)
+        mode=html
+        shift
+        ;;
+    -latex)
+        mode=latex
+        shift
+        ;;
+    -pdflatex)
+        mode=latex
+        makePDF=pdflatex
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+# default is the current directory
+[ "$#" -gt 0 ] || usage "No files specified"
+
+type emacs >/dev/null 2>&1 || usage "No emacs found in PATH"
+
+
+for org
+do
+    echo "Processing: $org"
+    echo "----------"
+    if [ -f "$org" ]
+    then
+        emacs --batch -l org --visit=$org \
+              --funcall org-export-as-$mode-batch
+
+        # post-processing step to create pdf
+        case "$makePDF" in
+        pdflatex)
+            input="${org%.org}.tex"
+
+            if [ -f "$input" ]
+            then
+                pdflatex "$input"
+            else
+                echo "No $input to convert to pdf"
+            fi
+            ;;
+        esac
+
+    else
+        echo "File not found"
+    fi
+    echo "----------"
+done
+
+#------------------------------------------------------------------------------

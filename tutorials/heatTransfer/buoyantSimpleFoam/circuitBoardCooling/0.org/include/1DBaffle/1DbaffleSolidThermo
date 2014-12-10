@@ -1,0 +1,28 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+specie
+{
+    nMoles          1;
+    molWeight       20;
+}
+transport
+{
+    kappa           1;
+}
+thermodynamics
+{
+    Hf              0;
+    Cp              10;
+}
+equationOfState
+{
+    rho             10;
+}
+
+// ************************************************************************* //

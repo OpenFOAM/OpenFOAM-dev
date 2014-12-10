@@ -1,0 +1,3 @@
+DPMFoam.C
+
+EXE = $(FOAM_APPBIN)/DPMFoam

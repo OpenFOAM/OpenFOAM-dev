@@ -1,0 +1,26 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get application directory
+application=`getApplication`
+
+runApplication blockMesh
+runApplication transformPoints -scale '(1.6666 1 1)'
+
+runApplication changeDictionary -instance system -dict system/changeDictionaryDict.X
+runApplication mirrorMesh -overwrite
+rm log.mirrorMesh
+
+rm log.changeDictionary
+runApplication changeDictionary -instance system -dict system/changeDictionaryDict.Y
+
+runApplication mirrorMesh -overwrite
+
+runApplication topoSet
+runApplication createPatch -overwrite
+runApplication $application
+
+# ----------------------------------------------------------------- end-of-file

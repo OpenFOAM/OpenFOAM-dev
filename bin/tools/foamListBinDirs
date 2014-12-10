@@ -1,0 +1,117 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamListBinDirs <directory> [archOptions]
+#
+# Description
+#     Lists directories containing binary files of OpenFOAM
+#
+# Note
+#     Not normally called directly by the user.
+#------------------------------------------------------------------------------
+toolsDir="${0%/*}"  # this script is already located in the tools/ directory
+
+[ $# -eq 1 -o $# -eq 2 ] || {
+cat <<USAGE 1>&2
+Usage : ${0##*/} <packDir> [archOptions]
+
+* Lists directories containing binary files for OpenFOAM
+
+    The value of 'archOptions' normally corresponds to \$WM_OPTIONS
+    The current value of \$WM_OPTIONS = $WM_OPTIONS
+
+USAGE
+    exit 1
+}
+
+#------------------------------------------------------------------------------
+packDir="$1"
+
+# default to same as $WM_OPTIONS - eg, 'linux64GccDPOpt'
+archOptions="${2:-$WM_OPTIONS}"
+
+[ -n "$archOptions" ] || {
+    echo "Error: no archOptions specified" 1>&2
+    exit 1
+}
+
+# base arch (w/o precision, optimization, etc)
+# same as "$WM_ARCH$WM_COMPILER"
+archCompiler=$(echo "$archOptions" | sed -e 's@[DS]P.*$@@')
+
+# same as $WM_ARCH - eg, 'linux64'
+# TODO: only works for Gcc, Icc, Clang
+archOS=$(echo "$archOptions" | sed -e 's@[GI]cc.*$@@' -e 's@Clang.*$@@')
+
+# links for 32-bit version, eg convert linux64 -> linux-64
+arch3264=$(echo "$archOS" | sed -e 's@64@-64@')
+
+
+#------------------------------------------------------------------------------
+# check for essential directories
+for dir in \
+    $packDir \
+    $packDir/platforms/$archOptions/bin \
+    $packDir/platforms/$archOptions/lib \
+    ;
+do
+    [ -d $dir ] || {
+        echo "Error: directory $dir does not exist" 1>&2
+        exit 1
+    }
+done
+
+#------------------------------------------------------------------------------
+# list of directories
+dirList=$(
+    for dir in \
+        $packDir/platforms/$archOptions/bin \
+        $packDir/platforms/$archOptions/lib \
+        $packDir/wmake/platforms/$archCompiler \
+        $packDir/wmake/platforms/$archOS \
+        $packDir/wmake/rules/General \
+        $packDir/wmake/rules/$archCompiler \
+        $packDir/wmake/rules/$archOS \
+        ;
+    do
+        [ -d $dir ] && echo $dir
+    done
+)
+
+
+cat <<INFO 1>&2
+-------------------------------------------------------------------------------
+Packing $archOptions ($archCompiler) port of $packDir
+    archOS       = $archOS
+    32bit archOS = $arch3264
+
+dirs:
+    $(echo ${dirList:-NONE})
+
+INFO
+
+echo "$dirList"
+
+#------------------------------------------------------------------------------

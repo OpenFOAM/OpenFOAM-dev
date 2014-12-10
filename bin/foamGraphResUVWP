@@ -1,0 +1,130 @@
+#!/bin/csh -f
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamGraphResUVWP
+#
+# Description
+#
+#------------------------------------------------------------------------------
+if (! -f "$1" ) then
+    echo "No file: '$1'"
+    exit 1
+endif
+
+set tmpU = newU$$.dat
+cat $1 | grep "Solving for Ux" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpU
+
+set tmpV = newV$$.dat
+cat $1 | grep "Solving for Uy" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpV
+
+set tmpW = newW$$.dat
+cat $1 | grep "Solving for Uz" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpW
+
+set tmpP = newP$$.dat
+cat $1 | grep "Solving for p" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpP
+
+set linesU = `cat $tmpU | wc -l`
+set linesV = `cat $tmpV | wc -l`
+set linesW = `cat $tmpW | wc -l`
+set linesP = `cat $tmpP | wc -l`
+
+set ngraphs = 0
+
+if ($linesU > 1) then
+@ ngraphs = $ngraphs + 1
+endif
+
+if ($linesV > 1) then
+@ ngraphs = $ngraphs + 1
+endif
+
+if ($linesW > 1) then
+@ ngraphs = $ngraphs + 1
+endif
+
+if ($linesP > 1) then
+@ ngraphs = $ngraphs + 1
+endif
+
+cat << EOF > residualUVWP.dat
+EOF
+#Solver Performance
+#number of iterations
+#residual
+#0 0
+#0 0
+#$ngraphs
+#EOF
+
+if ($linesU > 1) then
+cat << EOF >> residualUVWP.dat
+
+EOF
+#U
+#0
+#$linesU
+#EOF
+cat $tmpU >> residualUVWP.dat
+endif
+
+if ($linesV > 1) then
+cat << EOF >> residualUVWP.dat
+
+EOF
+#V
+#0
+#$linesV
+#EOF
+cat $tmpV >> residualUVWP.dat
+endif
+
+if ($linesW > 1) then
+cat << EOF >> residualUVWP.dat
+
+EOF
+#W
+#0
+#$linesW
+#EOF
+cat $tmpW >> residualUVWP.dat
+endif
+
+if ($linesP > 1) then
+cat << EOF >> residualUVWP.dat
+
+EOF
+#P
+#0
+#$linesP
+#EOF
+cat $tmpP >> residualUVWP.dat
+endif
+
+rm $tmpU
+rm $tmpV
+rm $tmpW
+rm $tmpP
+
+#------------------------------------------------------------------------------

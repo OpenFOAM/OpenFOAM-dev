@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Generate Packages file on debian repositories.
+
+for D in `find . -mindepth 4 -type d`
+do
+    dpkg-scanpackages $D | gzip -9c > ${D}/Packages.gz
+done

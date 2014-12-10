@@ -1,0 +1,12 @@
+* Buoyancy driven, natural convection
+
+
+* Reference: Betts, P.L. and Bokhari, I.H.; "Experiments in turbulent natural convection in an enclosed tall cavity"; International Journal of Heat and Fluid Flow; volume 21; 2000; pp 675-683.
+
+
+* Test case considers the lower of the two plate temperature differences, 19.6 degC.
+
+
+* Experimental data publicly available from (13/08/2009):
+
+http://cfd.mace.manchester.ac.uk/cgi-bin/cfddb/prpage.cgi?79&EXP&database/cases/case79/Case_data&database/cases/case79&cas79_head.html&cas79_desc.html&cas79_meth.html&cas79_data.html&cas79_refs.html&cas79_rsol.html&1&0&0&0&0&unknown

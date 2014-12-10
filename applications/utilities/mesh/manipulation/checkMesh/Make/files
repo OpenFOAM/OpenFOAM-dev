@@ -1,0 +1,7 @@
+printMeshStats.C
+checkTopology.C
+checkGeometry.C
+checkMeshQuality.C
+checkMesh.C
+
+EXE = $(FOAM_APPBIN)/checkMesh

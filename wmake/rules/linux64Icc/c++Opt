@@ -1,0 +1,2 @@
+c++DBUG     =
+c++OPT      = -xHost -O2 -no-prec-div

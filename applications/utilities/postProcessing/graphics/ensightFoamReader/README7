@@ -1,0 +1,1847 @@
+--------------------------------------
+EnSight User Defined Reader Capability
+--------------------------------------
+
+A user defined reader capability is included in EnSight which allows otherwise
+unsupported structured or unstructured data to be read.  The user defined
+reader utilizes a dynamic shared library composed of routines defined in this
+document, but produced by the user (or some third party). This capability is
+currently available for dec, ibm, hp, sgi, and sun servers.
+
+****************************************************************************
+Note: Several user defined readers have been included with your EnSight
+      release and can be accessed by changing the ENSIGHT6_READER
+      environment variable as outlined in step 3. below.   Please be aware
+      that these are "unsupported" readers, but many of them are being used
+      successfully.
+****************************************************************************
+
+
+The process for producing a user defined reader is:
+--------------------------------------------------
+1. Write code for all pertinent routines in the library (Unless someone else
+   has done this for you).
+
+        This is of course where the work is done by the user.  The word
+        "pertinent" is used because depending on the nature of the data, some
+        of the routines in the library may be dummy routines.
+
+        The source code for a dummy library and for various other working or
+        sample libraries is copied from the installation CD during
+        installation.  These will be located in directories under:
+
+        $ENSIGHT6_HOME/ensight62/user_defined_src/readers
+
+        examples:
+        --------
+        The default library. Basic dummy routines.
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/dummy
+
+        Sample library which reads unstructured binary EnSight6 data.
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/ensight6
+
+        Sample library which reads binary static plot3d data.
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/plot3d
+
+        Reads binary LS-DYNA3D state database.
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/ls-dyna3d
+
+        Reads FORTRAN binary Unstrutured dytran data base.
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/dytran
+
+        Reads FlowScience "flsgrf" flow3d data.
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/flow3d
+
+        Reads Tecplot "plt" files.        
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/tecplot
+
+        Reads Common File Format data.        
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/cff
+
+        Reads Cobalt grid and picture/restart file data.        
+          $ENSIGHT6_HOME/ensight62/user_defined_src/readers/cobalt
+ 
+        You may find it useful to place your library source in this area as
+        well, but are not limited to this location.
+
+ * ===>	The descriptions of each library routine and the order that the
+	routines are called, which is provided in this file, along with
+ 	the example libraries, should make it possible for you to produce
+	code for your own data reader.	
+
+
+2. Produce the dynamic shared library.
+
+        This is a compiling and loading process which varies according to
+        the type of machine you are on.  Thus, a separate makefile is provided
+        for each machine type.  Operating system level differences could cause
+        you to have to modify these makefiles slightly, but the general
+        process is very straightforward.  Note that for the SGI environment you
+        must compile with the following flags to ensure compatability with
+        the EnSight server:  Irix_5.3     -mips1
+                             Irix_6.2     -mips2
+                             Irix_6.5_n32 -mips3
+                             Irix_6.5_n64 -mips4 -64
+
+       __________________________________________________________________
+      | MACHINE | MAKEFILE TO USE       |  SHARED LIBRARY NAME PRODUCED  |
+      |  TYPE   |--------------------------------------------------------|
+      |         |         LD COMMAND USED IN MAKEFILE                    |
+       ==================================================================
+       __________________________________________________________________
+      | sgi     | makefile.sgi          |  libuserd.so                   |
+      |         |--------------------------------------------------------|
+      |         | ld -shared -all -o libuserd.so libuserd.o              |
+       ------------------------------------------------------------------
+       __________________________________________________________________
+      | hp      | makefile.hp           |  libuserd.sl                   |
+      |         |--------------------------------------------------------|
+      |         | ld -b -o libuserd.sl libuserd.o                        |
+       ------------------------------------------------------------------
+       __________________________________________________________________
+      | sun     | makefile.sun          |  libuserd.so                   |
+      |         |--------------------------------------------------------|
+      |         | ld -G -o libuserd.so libuserd.o                        |
+       ------------------------------------------------------------------
+       __________________________________________________________________
+      | dec     | makefile.dec          |  libuserd.so                   |
+      |         |--------------------------------------------------------|
+      |         | ld -shared -all -o libuserd.so libuserd.o -lc          |
+       ------------------------------------------------------------------
+       __________________________________________________________________
+      | ibm     | makefile.ibm          |  libuserd.so                   |
+      |         |--------------------------------------------------------|
+      |         | ld -G -o libuserd.so libuserd.o -bnoentry -bexpall -lc |
+       ------------------------------------------------------------------
+
+   Once you have created your library, you should place it in a directory
+   of your choice under:
+
+     $ENSIGHT6_HOME/machines/$ENSIGHT6_ARCH/lib_readers
+
+   Thus, if you created a reader for "mydata", you should create the
+   following directory, and place your libuserd.so into it:
+
+     $ENSIGHT6_HOME/machines/$ENSIGHT6_ARCH/lib_readers/mydata
+
+
+3. Set up the ENSIGHT6_READER environment variable so EnSight will know
+   which reader directory to use at runtime.
+
+   Ensight will look for the library under:
+
+     $ENSIGHT6_HOME/machines/$ENSIGHT6_ARCH/lib_readers/$ENSIGHT6_READER
+
+   When EnSight was installed, you set this variable to "dummy", with:
+
+     setenv ENSIGHT6_READER dummy
+
+   You can use any of the other provided readers by changing this variable.
+   For example, to use the dytran reader:
+
+     setenv ENSIGHT6_READER dytran 
+
+   Thus, you can use your reader in the same way.  If you provided "mydata",
+   change ENSIGHT6_READER to:
+ 
+     setenv ENSIGHT6_READER mydata
+
+
+   For your information, EnSight makes sure that the appropriate library
+   environment variable is set for your machine architecture. You do not
+   have to deal with this if you locate your library as outlined above.
+   The library environment variables used are:
+
+        Machine type    Environment variable to set
+        ------------    ---------------------------
+        sgi             LD_LIBRARY_PATH
+        dec             LD_LIBRARY_PATH
+        sun             LD_LIBRARY_PATH
+        hp              SHLIB_PATH
+        ibm             LIBPATH
+
+IMPORTANT:  Unless the shared library is available in the
+            .../$ENSIGHT6_READER directory, EnSight will not run.
+
+As always, EnSight support is available if you need it.
+
+
+
+-------------------------------
+Quick Index of Library Routines
+-------------------------------
+
+Generally Needed for UNSTRUCTURED data
+--------------------------------------
+USERD_get_number_of_global_nodes                number of global nodes
+USERD_get_global_coords                         global node coordinates
+USERD_get_global_node_ids                       global node ids
+USERD_get_element_connectivities_for_part       part's element connectivites
+USERD_get_element_ids_for_part                  part's element ids
+USERD_get_scalar_values                         global scalar variables
+USERD_get_vector_values                         global vector variables
+
+
+Generally Needed for BLOCK data
+-----------------------------------------
+USERD_get_block_coords_by_component             block coordinates
+USERD_get_block_iblanking                       block iblanking values
+USERD_get_block_scalar_values                   block scalar variables
+USERD_get_block_vector_values_by_component      block vector variables 
+
+
+Generally needed for either or both kinds of data
+-------------------------------------------------
+USERD_set_filenames                             filenames entered in GUI
+USERD_set_time_step                             current time step
+
+USERD_get_name_of_reader                        name of reader for GUI
+USERD_get_number_of_files_in_dataset            number of files in model
+USERD_get_dataset_query_file_info               info about each model file
+USERD_get_changing_geometry_status              changing geometry?
+USERD_get_node_label_status                     node labels?
+USERD_get_element_label_status                  element labels?
+USERD_get_number_of_time_steps                  number of time steps
+USERD_get_solution_times                        solution time values
+USERD_get_description_lines                     file associated descrip lines
+USERD_get_number_of_variables                   number of variables
+USERD_get_variable_info                         variable type/descrip etc.
+USERD_get_constant_value                        constant variable's value
+USERD_get_number_of_model_parts                 number of model parts
+USERD_get_part_build_info                       part type/descrip etc.
+USERD_get_variable_value_at_specific            node's or element's variable
+                                                   value over time
+
+USERD_stop_part_building                        cleanup routine
+USERD_bkup                                      archive routine
+
+
+
+-------------------------
+Order Routines are called
+-------------------------
+
+The various main operations are given basically in the order they will
+be performed.  Within each operation, the order the routines will be
+called is given.  
+
+1. Setting name in the gui, and specifying one or two input fields
+
+        USERD_get_name_of_reader
+
+2. Setting filenames and getting time info
+        USERD_set_filenames
+        USERD_get_number_of_time_steps
+        USERD_get_solution_times
+        USERD_set_time_step
+
+3. Gathering info for part builder
+
+        USERD_set_time_step
+        USERD_get_changing_geometry_status
+        USERD_get_node_label_status
+        USERD_get_element_label_status
+        USERD_get_number_of_files_in_dataset
+        USERD_get_dataset_query_file_info
+        USERD_get_description_lines             (for geometry)
+        USERD_get_number_of_model_parts
+        USERD_get_part_build_info
+        USERD_get_number_global_nodes
+        USERD_get_global_coords                 (for model extents)
+        USERD_get_block_coords_by_component     (for model extents)
+
+4. Gathering Variable info
+
+        USERD_get_number_of_variables
+        USERD_get_variable_info
+              
+5. Part building (per part created)
+
+        USERD_set_time_step
+        USERD_get_global_coords
+        USERD_get_global_node_ids
+        USERD_get_element_connectivities_for_part
+        USERD_get_element_ids_for_part
+        USERD_get_block_iblanking
+        USERD_get_block_coords_by_component
+
+        USERD_stop_part_building      (only once when part builder
+                                       dialog is closed)
+
+6. Loading Variables
+          
+        constants:
+        ---------
+        USERD_set_time_step
+        USERD_get_constant_value
+          
+        scalars:
+        -------
+        USERD_get_description_lines
+        USERD_set_time_step
+        USERD_get_scalar_values
+        USERD_get_block_scalar_values
+
+        vectors:
+        -------
+        USERD_get_description_lines
+        USERD_set_time_step
+        USERD_get_vector_values
+        USERD_get_block_vector_values_by_component
+
+7. Changing geometry
+
+        changing coords only:
+        --------------------
+        USERD_set_time_step
+        USERD_get_global_coords
+        USERD_get_block_coords_by_component
+
+        changing connectivity:
+        ---------------------
+        USERD_set_time_step
+        USERD_get_number_of_model_parts
+        USERD_get_part_build_info
+        USERD_get_number_global_nodes
+        USERD_get_global_coords
+        USERD_get_global_node_ids
+        USERD_get_element_connectivities_for_part
+        USERD_get_element_ids_for_part
+        USERD_get_block_iblanking
+        USERD_get_block_coords_by_component
+  
+
+
+-----------------------
+Detailed Specifications
+-----------------------
+
+Include files:
+--------------
+The following header file is required in any file containing these library
+routines. 
+
+       #include "global_extern.h"
+
+
+Basis of arrays:
+---------------
+Unless explicitly stated otherwise, all arrays are zero based - in true C
+fashion.
+
+
+Global variables:
+----------------
+You will generally need to have a few global variables which are shared by
+the various library routines. The detailed specifications below have assumed
+the following are available.  (Their names describe their purpose, and they
+will be used in helping describe the details of the routines below).
+
+static int Numparts_available      = 0;
+static int Num_unstructured_parts  = 0;
+static int Num_structured_blocks   = 0;
+
+/* Note: Numparts_available = Num_unstructured_parts + Num_structured_blocks */
+
+static int Num_time_steps          = 1;
+static int Num_global_nodes        = 0;
+static int Num_variables           = 0;
+static int Num_dataset_files       = 0;
+static int Current_time_step       = 0;
+
+
+
+
+
+_________________________________________
+-----------------------------------------
+Library Routines (in alphabetical order):
+_________________________________________
+-----------------------------------------
+
+--------------------------------------------------------------------
+USERD_bkup
+
+   Description:
+   -----------
+   This routine is called during the EnSight archive process.  You can
+   use it to save or restore info relating to your user defined reader.
+
+   Specification:
+   -------------
+   int USERD_bkup(FILE *archive_file,
+                  int backup_type)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  archive_file         = The archive file pointer
+
+   (IN)  backup_type          = Z_SAVE_ARCHIVE for saving archive
+                                Z_REST_ARCHIVE for restoring archive
+
+   Notes:
+   -----
+   * Since EnSight's archive file is saved in binary form, you should
+     also do any writing to it or reading from it in binary.
+
+   * You should archive any variables, which will be needed for
+     future operations, that will not be read or computed again
+     before they will be needed.  These are typically global
+     variables.
+
+   * Make sure that the number of bytes that you write on a save and
+     the number of bytes that you read on a restore are identical!!
+
+   * If any of the variables you save are allocated arrays, you must
+     do the allocations before restoring into them.
+
+
+
+--------------------------------------------------------------------
+USERD_get_block_coords_by_component
+
+   Description:
+   -----------
+   Get the coordinates of a given structured block, a component at a time.
+
+   Specification:
+   -------------
+   int USERD_get_block_coords_by_component(int block_number,
+                                           int which_component,
+                                           float *coord_array)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  block_number            = The block part number
+
+   (IN)  which_component         = Z_COMPX if x component wanted
+                                 = Z_COMPY if y component wanted
+                                 = Z_COMPZ if z component wanted
+
+   (OUT) coord_array             = 1D array containing x,y, or z
+                                   coordinate component of each node
+
+                                  (Array will have been allocated
+                                   i*j*k for the block long)
+
+   Notes:
+   -----
+   * Not called unless Num_structured_blocks is > 0
+
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_block_iblanking
+
+   Description:
+   -----------
+   Get the iblanking value at each node of a block (if the block is
+   iblanked).
+
+   Specification:
+   -------------
+   int USERD_get_block_iblanking(int block_number,
+                                 int *iblank_array)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  block_number            = The block part number
+   (OUT) iblank_array            = 1D array containing iblank value
+                                   for each node.
+
+                                  (Array will have been allocated
+                                   i*j*k for the block long)
+
+          possible values are:   Z_EXT     = exterior
+                                 Z_INT     = interior
+                                 Z_BND     = boundary
+                                 Z_INTBND  = internal boundary
+                                 Z_SYM     = symmetry plane
+
+   Notes:
+   -----
+   * Not called unless Num_structured_blocks is > 0  and you have
+     some iblanked blocks
+
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_block_scalar_values
+
+   Description:
+   -----------
+   if Z_PER_NODE:
+     Get the values at each node of a block, for a given scalar variable
+
+   or if Z_PER_ELEM:
+     Get the values at each element of a block, for a given scalar variable
+
+   Specification:
+   -------------
+   int USERD_get_block_scalar_values(int block_number,
+                                     int which_scalar,
+                                     float *scalar_array)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  block_number            = The block part number
+   (IN)  which_scalar            = The variable number
+   (OUT) scalar_array            = 1D array containing scalar values
+                                   for each node or element.
+
+                                   Array will have been allocated:
+        
+                                   if Z_PER_NODE:
+                                      i*j*k for the block long
+
+                                   if Z_PER_ELEM:
+                                      (i-1)*(i-1)*(k-1) for the block long
+
+   Notes:
+   -----
+   * Not called unless Num_structured_blocks is > 0,
+     Num_variables is > 0, and there are some scalar type variables
+
+   * The per_node or per_elem classification must be obtainable from the
+     variable number (a var_classify array needs to be retained)
+
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_block_vector_values_by_component
+
+   Description:
+   -----------
+   if Z_PER_NODE:
+     Get the values at each node of a block, for a given vector
+     variable, one component at a time.
+
+   or if Z_PER_ELEM:
+     Get the values at each element of a block, for a given vector
+     variable, one component at a time.
+
+
+   Specification:
+   -------------
+   int USERD_get_block_vector_values_by_component(int block_number,
+                                                  int which_vector,
+                                                  int which_component,
+                                                  float *vector_array)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  block_number            = The block part number
+
+   (IN)  which_vector            = The variable number
+
+   (IN)  which_component         = Z_COMPX if x component wanted
+                                 = Z_COMPY if y component wanted
+                                 = Z_COMPZ if z component wanted
+
+   (OUT) vector_array            = 1D array containing vector
+                                   component value for each node or element.
+
+                                   Array will have been allocated:
+        
+                                   if Z_PER_NODE:
+                                      i*j*k for the block long
+
+                                   if Z_PER_ELEM:
+                                      (i-1)*(i-1)*(k-1) for the block long
+
+   Notes:
+   -----
+   * Not called unless Num_structured_blocks is > 0,
+     Num_variables is > 0, and there are some vector type variables
+
+   * The per_node or per_elem classification must be obtainable from the
+     variable number (a var_classify array needs to be retained)
+
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_changing_geometry_status
+
+   Description:
+   -----------
+   Gets the changing geometry status for the model
+
+   Specification:
+   -------------
+   int USERD_get_changing_geometry_status( void )
+
+   Returns:
+   -------
+   Z_STATIC        if geometry does not change
+   Z_CHANGE_COORDS if changing coordinates only
+   Z_CHANGE_CONN   if changing connectivity
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----
+   * EnSight does not support changing number of parts.  But the
+     coords and/or the connectivity of the parts can change.
+
+
+
+--------------------------------------------------------------------
+USERD_get_constant_value
+
+   Description:
+   -----------
+   Get the value of a constant at a time step
+
+   Specification:
+   -------------
+   float USERD_get_constant_value(int which_var)
+
+   Returns:
+   -------
+   Value of the requested constant variable
+
+   Arguments:
+   ---------
+   (IN)  which_var            = The variable number
+
+   Notes:
+   -----
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_dataset_query_file_info
+
+   Description:
+   -----------
+   Get the information about files in the dataset.  Used for the
+   dataset query option within EnSight.
+
+   Specification:
+   -------------
+   int USERD_get_dataset_query_file_info(Z_QFILES *qfiles)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (OUT) qfiles   = Structure containing information about each file
+                    of the dataset. The Z_QFILES structure is defined
+                    in the global_extern.h file
+
+                   (The structure will have been allocated
+                    Num_dataset_files long, with 10 description
+                    lines per file).
+
+      qfiles[].name        = The name of the file
+                             (Z_MAXFILENP is the dimensioned length
+                              of the name)
+
+      qfiles[].sizeb       = The number of bytes in the file
+                             (Typically obtained with a call to the
+                              "stat" system routine) (Is a long)
+
+      qfiles[].timemod     = The time the file was last modified 
+                             (Z_MAXTIMLEN is the dimensioned length
+                              of this string)
+                             (Typically obtained with a call to the
+                              "stat" system routine)
+
+      qfiles[].num_d_lines = The number of description lines you
+                              are providing from the file. Max = 10
+
+      qfiles[].f_desc[]    = The description line(s) per file,
+                              qfiles[].num_d_lines of them
+                              (Z_MAXFILENP is the allocated length of
+                               each line)
+
+   Notes:
+   -----
+   * If Num_dataset_files is 0, this routine will not be called.
+
+
+
+--------------------------------------------------------------------
+USERD_get_description_lines
+
+   Description:
+   -----------
+   Get two description lines associated with geometry per time step,
+   or one description line associated with a variable per time step.
+
+   Specification:
+   -------------
+   int USERD_get_description_lines(int which_type,
+                                   int which_var,
+                                   char line1[Z_BUFL],
+                                   char line2[Z_BUFL])
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  which_type           = Z_GEOM for geometry (2 lines)
+                              = Z_VARI for variable (1 line)
+
+   (IN)  which_var            = If it is a variable, which one.
+                                Ignored if geometry type.
+
+   (OUT) line1                = The 1st geometry description line,
+                                or the variable description line.
+
+   (OUT) line2                = The 2nd geometry description line
+                                Not used if variable type.
+
+   Notes:
+   -----
+   * Will be based on Current_time_step
+
+   * These are the lines EnSight can echo to the screen in
+     annotation mode.
+
+
+
+--------------------------------------------------------------------
+USERD_get_element_connectivities_for_part
+
+   Description:
+   -----------
+   Gets the connectivities for the elements of an unstructured part
+
+   Specification:
+   -------------
+   int USERD_get_element_connectivities_for_part(int part_number,
+                                                 int **conn_array[Z_MAXTYPE])
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  part_number             = The part number
+
+   (OUT) conn_array              = 3D array containing connectivity
+                                   of each element of each type.
+
+                                  (Array will have been allocated
+                                   Z_MAXTYPE by num_of_elements of
+                                   each type by connectivity length
+                                   of each type)
+
+                       ex) If num_of_elements[Z_TRI03] = 25
+                              num_of_elements[Z_QUA04] = 100
+                              num_of_elements[Z_HEX08] = 30
+                           as obtained in:
+                            USERD_get_part_build_info
+
+                           Then the allocated dimensions available
+                           for this routine will be:
+                              conn_array[Z_TRI03][25][3]
+                              conn_array[Z_QUA04][100][4]
+                              conn_array[Z_HEX08][30][8]
+   
+   Notes:
+   -----
+   * Not called unless Num_unstructured_parts is > 0
+
+   * Will be based on Current_time_step
+
+   * The coord_array loaded in USERD_get_global_coords is zero-based,
+     but within EnSight it will become a one-based array.
+     Thus, coord_array[0] will be accessed by node 1 from the conn_array,
+           coord_array[1] will be accessed by node 2 from the conn_array, etc.
+
+      ex) Given a model of two triangles, you should load coord_array in
+          USERD_get_global_coords as follows:
+
+                            node  coordinates
+                            ----  -----------
+          4 --------- 3      1    coord_array[0].xyz[0] = 0.0
+           |\        |            coord_array[0].xyz[1] = 0.0
+           | \  T2   |            coord_array[0].xyz[2] = 0.0
+           |  \      |
+           |   \     |       2    coord_array[1].xyz[0] = 1.0
+           |    \    |            coord_array[1].xyz[1] = 0.0
+           |     \   |            coord_array[1].xyz[2] = 0.0
+           |      \  |
+           |  T1   \ |       3    coord_array[2].xyz[0] = 1.0
+           |        \|            coord_array[2].xyz[1] = 1.6
+          1 --------- 2           coord_array[2].xyz[2] = 0.0
+
+                             4    coord_array[3].xyz[0] = 0.0
+                                  coord_array[3].xyz[1] = 1.6
+                                  coord_array[3].xyz[2] = 0.0
+
+
+        And conn_array here as follows:
+                                               
+        Triangle  Connectivity
+        --------  ------------
+           T1     conn_array[Z_TRI03][0][0] = 1
+                  conn_array[Z_TRI03][0][1] = 2
+                  conn_array[Z_TRI03][0][2] = 4
+
+           T2     conn_array[Z_TRI03][1][0] = 2
+                  conn_array[Z_TRI03][1][1] = 3
+                  conn_array[Z_TRI03][1][2] = 4
+
+
+
+--------------------------------------------------------------------
+USERD_get_element_ids_for_part
+
+   Description:
+   -----------
+   Gets the ids for the elements of an unstructured part.
+
+   Specification:
+   -------------
+   int USERD_get_element_ids_for_part(int part_number,
+                                      int *elemid_array[Z_MAXTYPE])
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  part_number             = The part number
+
+   (OUT) elemid_array            = 2D array containing id of each
+                                   element of each type.
+
+                                  (Array will have been allocated
+                                   Z_MAXTYPE by num_of_elements of
+                                   each type)
+
+                       ex) If num_of_elements[Z_TRI03] = 25
+                              num_of_elements[Z_QUA04] = 100
+                              num_of_elements[Z_HEX08] = 30
+                           as obtained in:
+                            USERD_get_part_build_info
+
+                           Then the allocated dimensions available
+                           for this routine will be:
+                              conn_array[Z_TRI03][25]
+                              conn_array[Z_QUA04][100]
+                              conn_array[Z_HEX08][30]
+
+   Notes:
+   -----
+   * Not called unless Num_unstructured_parts is > 0  and element
+     label status is TRUE
+
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_element_label_status
+
+   Description:
+   -----------
+   Answers the question as to whether element labels will be provided.
+
+   Specification:
+   -------------
+   int USERD_get_element_label_status( void )
+
+   Returns:
+   -------
+   TRUE        if element labels will be provided
+   FALSE       if element labels will NOT be provided
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----
+   * element lables are needed in order to do any element querying, or
+     element labeling on-screen within EnSight.
+
+       For unstructured parts, you can read them from your file if
+       available, or can assign them, etc. They need to be unique
+       per part, and are often unique per model.
+
+         USERD_get_element_ids_for_part is used to obtain the ids,
+         on a part by part basis, if TRUE status is returned here.
+
+       For structured parts, EnSight will assign ids if you return a
+         status of TRUE here.  You cannot assign them youself!!
+
+
+
+--------------------------------------------------------------------
+USERD_get_global_coords
+
+   Description:
+   -----------
+   Gets the coordinates for the global nodes.
+
+   Specification:
+   -------------
+   int USERD_get_global_coords(CRD *coord_array)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (OUT) coord_array             = 1D array of CRD structures,
+                                   which contains x,y,z coordinates
+                                   of each node.
+
+                                  (Array will have been allocated
+                                   Num_global_nodes long)
+
+    For reference, CRD structure (which is in global_extern) is:
+
+         typedef struct {
+            float xyz[3];
+         }CRD;
+
+   Notes:
+   -----
+   * Not called unless Num_unstructured_parts is > 0
+
+   * Will be based on Current_time_step
+
+   * The coord_array is zero-based, but within EnSight it will become
+     a one-based array.
+     Thus, coord_array[0] will be accessed by node 1 from the conn_array,
+           coord_array[1] will be accessed by node 2 from the conn_array, etc.
+
+      ex) Given a model of two triangles, you should load coord_array as
+          follows:
+
+                            node  coordinates
+                            ----  -----------
+          4 --------- 3      1    coord_array[0].xyz[0] = 0.0
+           |\        |            coord_array[0].xyz[1] = 0.0
+           | \  T2   |            coord_array[0].xyz[2] = 0.0
+           |  \      |
+           |   \     |       2    coord_array[1].xyz[0] = 1.0
+           |    \    |            coord_array[1].xyz[1] = 0.0
+           |     \   |            coord_array[1].xyz[2] = 0.0
+           |      \  |
+           |  T1   \ |       3    coord_array[2].xyz[0] = 1.0
+           |        \|            coord_array[2].xyz[1] = 1.6
+          1 --------- 2           coord_array[2].xyz[2] = 0.0
+
+                             4    coord_array[3].xyz[0] = 0.0
+                                  coord_array[3].xyz[1] = 1.6
+                                  coord_array[3].xyz[2] = 0.0
+
+
+        And conn_array in USERD_get_element_connectivities_for_part
+        as follows:
+                                               
+        Triangle  Connectivity
+        --------  ------------
+           T1     conn_array[Z_TRI03][0][0] = 1
+                  conn_array[Z_TRI03][0][1] = 2
+                  conn_array[Z_TRI03][0][2] = 4
+
+           T2     conn_array[Z_TRI03][1][0] = 2
+                  conn_array[Z_TRI03][1][1] = 3
+                  conn_array[Z_TRI03][1][2] = 4
+
+--------------------------------------------------------------------
+USERD_get_global_node_ids
+
+   Description:
+   -----------
+   Gets the node ids assigned to each of the global nodes.
+
+   Specification:
+   -------------
+   int USERD_get_global_node_ids(int *nodeid_array)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (OUT) nodeid_array            = 1D array containing node ids of
+                                    each node. The ids must be > 0
+
+                                   (Array will have been allocated
+                                    Num_global_nodes long)
+   Notes:
+   -----
+   * Not called unless Num_unstructured_parts is > 0  and node label
+     status is TRUE
+
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_name_of_reader
+
+   Description:
+   -----------
+   Gets the name of your user defined reader.  The user interface will
+   ask for this and include it in the available reader list.
+
+   Specification:
+   -------------
+   int USERD_get_name_of_reader(char reader_name[Z_MAX_USERD_NAME],
+				int *two_fields)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (OUT) reader_name          = the name of the your reader or data format.
+                              (max length is Z_MAX_USERD_NAME, which is 20)
+
+   (OUT) *two_fields          = FALSE if only one data field required
+				      in the data dialog of EnSight.
+				TRUE if two data fields required.
+
+   Notes:
+   -----
+   * Always called.  Provide a name for your custom reader format.
+
+   * If you don't want a custom reader to show up in the data dialog
+     choices, return a name of "No_Custom"
+
+
+
+--------------------------------------------------------------------
+USERD_get_node_label_status
+
+   Description:
+   -----------
+   Answers the question as to whether node labels will be provided.
+
+   Specification:
+   -------------
+   int USERD_get_node_label_status( void )
+
+   Returns:
+   -------
+   TRUE        if node labels will be provided
+   FALSE       if node labels will NOT be provided
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----
+   * Node ids are needed in order to do any node querying, or node
+     labeling on-screen within EnSight.
+
+       For unstructured parts, you can read them from your file if
+       available, or can assign them, etc. They need to be unique
+       per part, and are often unique per model.  The must also be
+       positive numbers greater than zero.
+
+         USERD_get_global_node_ids is used to obtain the ids, if the
+         status returned here is TRUE.
+
+         Also be aware that if you say node labels are available,
+         the connectivity of elements must be according to these
+         node ids.
+
+       For structured parts, EnSight will assign ids if you return a
+         status of TRUE here.  You cannot assign them yourself!!
+
+
+
+--------------------------------------------------------------------
+USERD_get_number_of_files_in_dataset
+
+   Description:
+   -----------
+   Get the total number of files in the dataset.  Used for the
+   dataset query option within EnSight.
+
+   Specification:
+   -------------
+   int USERD_get_number_of_files_in_dataset( void )
+
+   Returns:
+   -------
+   The total number of files in the dataset.
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----
+   * You can be as complete as you want about this.  If you don't
+     care about the dataset query option, return a value of 0
+     If you only want certain files, you can just include them. But,
+     you will need to supply the info in USERD_get_dataset_query_file_info
+     for each file you include here.
+
+   * Num_dataset_files would be set here
+
+
+
+--------------------------------------------------------------------
+USERD_get_number_of_global_nodes
+
+   Description:
+   -----------
+   Gets the number of global nodes, used for unstructured parts.
+
+   Specification:
+   -------------
+   int USERD_get_number_of_global_nodes()
+
+   Returns:
+   -------
+   Number of global nodes (>=0 if okay, <0 if problems)
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----
+   * Not called unless Num_unstructured_parts is > 0
+
+   * Will be based on Current_time_step
+
+   * For unstructured data:
+           EnSight wants  1. A global array of nodes
+                          2. Element connectivities by part, which
+                             reference the node numbers of the global
+                             node array.
+                IMPORTANT:
+                ---------
+                If you provide node ids, then element connectivities
+                must be in terms of the node ids.  If you do not
+                provide node ids, then element connectivities must be
+                in terms of the index into the node array, but shifted
+                to start at 1
+
+   * Num_global_nodes would be set here
+
+
+
+--------------------------------------------------------------------
+USERD_get_number_of_model_parts
+
+   Description:
+   -----------
+   Gets the total number of unstructured and structured parts
+   in the model, for which you can supply information.
+
+   Specification:
+   -------------
+   int USERD_get_number_of_model_parts( void )
+
+   Returns:
+   -------
+   Number of parts  (>0 if okay, <=0 if probs).
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----
+   * If going to have to read down through the parts in order to
+     know how many, you may want to build a table of pointers to
+     the various parts, so you can easily get to particular parts in
+     later processes.  If you can simply read the number of parts
+     at the head of the file, then you would probably not build the
+     table at this time.
+
+   * This routine would set Numparts_available, which is equal to
+     Num_unstructured_parts + Num_structured_blocks.
+
+
+
+--------------------------------------------------------------------
+USERD_get_number_of_time_steps
+
+   Description:
+   -----------
+   Gets the number of time steps of data available.
+
+   Specification:
+   -------------
+   int USERD_get_number_of_time_steps( void )
+
+   Returns:
+   -------
+   Number of time steps  (>0 if okay, <=0 if problems).
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----
+   * This should be >= 1       1 indicates a static model
+                              >1 indicates a transient model
+
+   * Num_time_steps would be set here
+
+
+
+--------------------------------------------------------------------
+USERD_get_number_of_variables
+
+   Description:
+   -----------
+   Get the number of variables for which you will be providing info.
+
+   Specification:
+   -------------
+   int USERD_get_number_of_variables( void )
+
+   Returns:
+   -------
+   Number of variables (includes constant, scalar, and vector types)
+                       (>=0 if okay, <0 if problem)
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----
+    *****************************************************************
+   * Variable numbers, by which references will be made, are implied
+     here. If you say there are 3 variables, the variable numbers
+     will be 1, 2, and 3.
+    *****************************************************************
+
+   * Num_variables would be set here
+
+
+
+--------------------------------------------------------------------
+USERD_get_part_build_info
+
+   Description:
+   -----------
+   Gets the info needed for the part building process.
+
+   Specification:
+   -------------
+   int USERD_get_part_build_info(int *part_numbers,
+                                 int *part_types,
+                                 char *part_description[Z_BUFL],
+                                 int *number_of_elements[Z_MAXTYPE],
+                                 int *ijk_dimensions[3],
+                                 int *iblanking_options[6])
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (OUT) part_numbers           = Array containing part numbers for
+                                  each of the model parts.
+
+                                  IMPORTANT:
+                                   Parts numbers must be >= 1
+
+            ********************************************
+             The numbers provided here are the ones by
+             which the parts will be referred to in any
+             of the other routines which receive a part
+             number or block number as an argument!! 
+            ********************************************
+
+                                  (Array will have been allocated
+                                   Numparts_available long)
+
+   (OUT) part_types             = Array containing one of the
+                                  following for each model part:
+
+                                       Z_UNSTRUCTURED or
+                                       Z_STRUCTURED  or
+                                       Z_IBLANKED
+
+                                  (Array will have been allocated
+                                   Numparts_available long)
+
+   (OUT) part_description       = Array containing a description
+                                  for each of the model parts
+
+                                  (Array will have been allocated
+                                   Numparts_available by Z_BUFL
+                                   long)
+
+   (OUT) number_of_elements     = 2D array containing number of
+                                  each type of element for each
+                                  unstructured model part.
+                                  ------------
+                                  Possible types are:
+
+                                Z_POINT   =  point
+                                Z_BAR02   =  2-noded bar
+                                Z_BAR03   =  3-noded bar
+                                Z_TRI03   =  3-noded triangle
+                                Z_TRI06   =  6-noded triangle
+                                Z_QUA04   =  4-noded quadrilateral
+                                Z_QUA08   =  8-noded quadrilateral
+                                Z_TET04   =  4-noded tetrahedron
+                                Z_TET10   = 10-noded tetrahedron
+                                Z_PYR05   =  5-noded pyramid
+                                Z_PYR13   = 13-noded pyramid
+                                Z_PEN06   =  6-noded pentahedron
+                                Z_PEN15   = 15-noded pentahedron
+                                Z_HEX08   =  8-noded hexahedron
+                                Z_HEX20   = 20-noded hexahedron
+
+                               (Ignored unless Z_UNSTRUCTURED type)
+
+                                  (Array will have been allocated
+                                   Numparts_available by
+                                   Z_MAXTYPE long)
+
+   (OUT) ijk_dimensions         = 2D array containing ijk dimensions
+                                  for each structured model part.
+                                           ----------
+                                  (Ignored if Z_UNSTRUCTURED type)
+
+                                  (Array will have been allocated
+                                   Numparts_available by 3 long)
+
+                             ijk_dimensions[][0] = I dimension
+                             ijk_dimensions[][1] = J dimension
+                             ijk_dimensions[][2] = K dimension
+
+   (OUT) iblanking_options      = 2D array containing iblanking
+                                  options possible for each
+                                  structured model part.
+                                  ----------
+                                  (Ignored unless Z_IBLANKED type)
+
+                                  (Array will have been allocated
+                                   Numparts_available by 6 long)
+
+      iblanking_options[][Z_EXT]     = TRUE if external (outside)
+                       [][Z_INT]     = TRUE if internal (inside)
+                       [][Z_BND]     = TRUE if boundary
+                       [][Z_INTBND]  = TRUE if internal boundary
+                       [][Z_SYM]     = TRUE if symmetry surface
+
+
+   Notes:
+   -----
+   * If you haven't built a table of pointers to the different parts,
+     you might want to do so here as you gather the needed info.
+
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_scalar_values
+
+   Description:
+   -----------
+   if Z_PER_NODE:
+     Get the values at each global node for a given scalar variable.
+
+   or if Z_PER_ELEM:
+     Get the values at each element of a specific part and type for a
+     given scalar variable.
+
+   Specification:
+   -------------
+   int USERD_get_scalar_values(int which_scalar,
+                               int which_part,
+                               int which_type,
+                               float *scalar_array)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  which_scalar            = The variable number (of scalar type)
+
+   (IN)  which_part 
+
+            if Z_PER_NODE:         Not used
+
+            if Z_PER_ELEM:       = The part number
+
+   (IN)  which_type
+
+            if Z_PER_NODE:         Not used
+
+            if Z_PER_ELEM:       = The element type
+
+   (OUT) scalar_array 
+
+            if Z_PER_NODE:       = 1D array containing scalar values
+                                    for each node.
+
+                                   (Array will have been allocated
+                                    Num_global_nodes long)
+
+            if Z_PER_ELEM:       = 1d array containing scalar values for
+                                   each element of a particular part and type.
+                                    
+                                   (Array will have been allocated
+                                    number_of_elements[which_part][which_type]
+                                    long.  See USERD_get_part_build_info)
+
+   Notes:
+   -----
+   * Not called unless Num_unstructured_parts is > 0,
+     Num_variables is > 0, and you have some scalar type variables.
+
+   * The per_node or per_elem classification must be obtainable from the
+     variable number (a var_classify array needs to be retained)
+
+   * Will be based on Current_time_step
+
+
+
+--------------------------------------------------------------------
+USERD_get_solution_times
+
+   Description:
+   -----------
+   Get the solution times associated with each time step.
+
+   Specification:
+   -------------
+   int USERD_get_solution_times(float *solution_times)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (OUT) solution_times       = 1D array of solution times/time step
+
+                                  (Array will have been allocated
+                                   Num_time_steps long)
+
+   Notes:
+   -----
+   * The solution times must be non-negative and increasing.
+
+
+
+--------------------------------------------------------------------
+USERD_get_variable_info
+
+   Description:
+   -----------
+   Get the variable descriptions, types and filenames
+
+   Specification:
+   -------------
+   int USERD_get_variable_info(char **var_description,
+                               char **var_filename,
+                               int *var_type,
+                               int *var_classify)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (OUT) var_description      = Variable descriptions
+
+                                (Array will have been allocated
+                                 Num_variables by Z_BUFL long)
+
+   (OUT) var_filename         = Variable filenames
+
+                                (Array will have been allocated
+                                 Num_variables by Z_BUFL long)
+
+   (OUT) var_type             = Variable type
+
+                                (Array will have been allocated
+                                 Num_variables long)
+
+                                types are:  Z_CONSTANT
+                                            Z_SCALAR
+                                            Z_VECTOR
+
+   (OUT) var_classify         = Variable classification
+
+                                (Array will have been allocated
+                                 Num_variables long)
+
+                                types are:  Z_PER_NODE
+                                            Z_PER_ELEM
+
+   Notes:
+   -----
+   * The implied variable numbers apply, but be aware that the
+     arrays are zero based.
+     So for variable 1, will need to provide   var_description[0]
+                                               var_filename[0]
+                                               var_type[0]
+                                               var_classify[0]
+
+        for variable 2, will need to provide   var_description[1]
+                                               var_filename[1]
+                                               var_type[1]
+                                               var_classify[1]
+              etc.
+
+
+
+--------------------------------------------------------------------
+USERD_get_variable_value_at_specific
+
+   Description:
+   -----------
+   if Z_PER_NODE:
+     Get the value of a particular variable at a particular node in a
+     particular part at a particular time.
+
+   or if Z_PER_ELEM:
+     Get the value of a particular variable at a particular element of
+     a particular type in a particular part at a particular time.
+
+
+   Specification:
+   -------------
+   int USERD_get_variable_value_at_specific(int which_var,
+                                            int which_node_or_elem,
+                                            int which_part,
+                                            int which_elem_type,
+                                            int time_step,
+                                            float values[3])
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  which_var   = The variable number
+
+   (IN)  which_node_or_elem
+
+                        If Z_PER_NODE:
+                          = The node number.  This is not the id, but is
+                                              the index of the global node 
+                                              list (1 based), or the block's
+                                              node list (1 based).
+
+                            Thus,  coord_array[1]
+                                   coord_array[2]
+                                   coord_array[3]
+                                        .      |
+                                        .      |which_node_or_elem index
+                                        .             ----
+
+
+                        If Z_PER_ELEM:
+                          = The element number.  This is not the id, but is
+                                                 the element number index
+                                                 of the number_of_element array
+                                                 (see USERD_get_part_build_info),
+                                                 or the block's element list
+  zzzzz                                          (1 based).
+
+                            Thus,  for which_part:
+                                   conn_array[which_elem_type][0]
+                                   conn_array[which_elem_type][1]
+                                   conn_array[which_elem_type][2]
+                                        .                      |
+                                        .          which_node_or_elem index
+                                        .                        ----
+
+
+   (IN)  which_part
+
+                        If Z_PER_NODE, or block part:
+                          = Not used
+
+                        If Z_PER_ELEM:
+                          = The part number
+
+   (IN)  which_elem_type
+
+                        If Z_PER_NODE, or block part:
+                          = Not used
+
+                        If Z_PER_ELEM:
+                          = The element type.    This is the element type index
+                                                 of the number_of_element array
+                                                 (see USERD_get_part_build_info)
+
+   (IN)  time_step   = The time step
+
+   (OUT) values      = scalar or vector component value(s)
+                        values[0] = scalar or vector[0]
+                        values[1] = vector[1]
+                        values[2] = vector[2]
+
+
+   Notes:
+   -----
+   * This routine is used in node querys over time (or element querys over
+     time for Z_PER_ELEM variables).  If these operations are not critical
+     to you, this can be a dummy routine.
+
+   * The per_node or per_elem classification must be obtainable from the
+     variable number (a var_classify array needs to be retained)
+
+
+--------------------------------------------------------------------
+USERD_get_vector_values
+
+   Description:
+   -----------
+   if Z_PER_NODE:
+     Get the values at each global node for a given vector variable.
+
+   or if Z_PER_ELEM:
+     Get the values at each element of a specific part and type for a
+     given vector variable.
+
+   Specification:
+   -------------
+   int USERD_get_vector_values(int which_vector,
+                               int which_part,
+                               int which_type,
+                               float *vector_array)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN)  which_vector            = The variable number
+
+   (IN)  which_part 
+
+            if Z_PER_NODE:         Not used
+
+            if Z_PER_ELEM:       = The part number
+
+   (IN)  which_type
+
+            if Z_PER_NODE:         Not used
+
+            if Z_PER_ELEM:       = The element type
+
+   (OUT) vector_array 
+
+            if Z_PER_NODE:       = 1D array containing vector values
+                                    for each node.
+
+                                   (Array will have been allocated
+                                    3 by Num_global_nodes long)
+
+                      Info stored in this fashion:
+                            vector_array[0] = xcomp of node 1
+                            vector_array[1] = ycomp of node 1
+                            vector_array[2] = zcomp of node 1
+
+                            vector_array[3] = xcomp of node 2
+                            vector_array[4] = ycomp of node 2
+                            vector_array[5] = zcomp of node 2
+
+                            vector_array[6] = xcomp of node 3
+                            vector_array[7] = ycomp of node 3
+                            vector_array[8] = zcomp of node 3
+                                    etc.
+
+            if Z_PER_ELEM:       = 1d array containing vector values for
+                                   each element of a particular part and type.
+                                    
+                                 (Array will have been allocated
+                                  3 by number_of_elements[which_part][which_type]
+                                  long.  See USERD_get_part_build_info)
+
+                      Info stored in this fashion:
+                            vector_array[0] = xcomp of elem 1 (of part and type)
+                            vector_array[1] = ycomp of elem 1         "
+                            vector_array[2] = zcomp of elem 1         "
+
+                            vector_array[3] = xcomp of elem 2         "
+                            vector_array[4] = ycomp of elem 2         "
+                            vector_array[5] = zcomp of elem 2         "
+
+                            vector_array[6] = xcomp of elem 3         "
+                            vector_array[7] = ycomp of elem 3         "
+                            vector_array[8] = zcomp of elem 3         "
+                                    etc.
+
+   Notes:
+   -----
+   * Not called unless Num_unstructured_parts is > 0,
+     Num_variables is > 0,  and you have some vector type variables
+
+   * The per_node or per_elem classification must be obtainable from the
+     variable number (a var_classify array needs to be retained)
+
+   * Will be based on Current_time_step
+
+
+--------------------------------------------------------------------
+USERD_set_filenames
+
+   Description:
+   -----------
+   Receives the geometry and result filenames entered in the data
+   dialog.  The user written code will have to store and use these
+   as needed.
+
+   Specification:
+   -------------
+   int USERD_set_filenames(char filename_1[],
+                           char filename_2[],
+                           char the_path[],
+                           int swapbytes)
+
+   Returns:
+   -------
+   Z_OK  if successful
+   Z_ERR if not successful
+
+   Arguments:
+   ---------
+   (IN) filename_1   = the filename entered into the geometry
+                         field of the data dialog.
+   (IN) filename_2   = the filename entered into the result
+                         field of the data dialog.
+			 (If the two_fields flag in USERD_get_name_of_reader
+			  is FALSE, this will be null string)
+   (IN) the_path     = the path info from the data dialog.
+                       Note: filename_1 and filename_2 have already
+                            had the path prepended to them.  This
+                            is provided in case it is needed for
+                            filenames contained in one of the files
+   (IN) swapbytes    = TRUE if should swap bytes when reading data.
+
+   Notes:
+   -----
+   * Since you must manage everything from the input that is entered in
+     these data dialog fields, this is an important routine!
+
+   * It may be that you will need to have an executive type file that contains
+     info and other filenames within it, like EnSight6's case file.
+
+
+
+--------------------------------------------------------------------
+USERD_set_time_step
+
+   Description:
+   -----------
+   Set the current time step.  All functions that need time, and
+   that do not explicitly pass it in, will use the time step set by
+   this routine.
+
+   Specification:
+   -------------
+   void USERD_set_time_step(int time_step)
+
+   Returns:
+   -------
+   nothing
+
+   Arguments:
+   ---------
+   (IN) time_step - The current time step to set
+
+   Notes:
+   -----
+   * Current_time_step would be set here
+
+
+
+--------------------------------------------------------------------
+USERD_stop_part_building
+
+   Description:
+   -----------
+   This routine called when the part building dialog is closed.  It is
+   provided in case you desire to release memory, etc. that was only needed
+   during the part building process.
+
+   Specification:
+   -------------
+   void USERD_stop_part_building( void )
+
+   Returns:
+   -------
+   nothing
+
+   Arguments:
+   ---------
+   none
+
+   Notes:
+   -----

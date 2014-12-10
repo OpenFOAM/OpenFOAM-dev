@@ -1,0 +1,12 @@
+!SENS
+CONP
+PRES 13.500  ! atm
+TEMP 1000.0  ! K
+TIME 7.0e-2  ! sec
+DELT 1.E-5  ! sec
+REAC CH4 0.5
+REAC O2  1.0
+REAC N2  3.76
+!REAC H 0.1;
+!REAC H2O 0.1;
+END

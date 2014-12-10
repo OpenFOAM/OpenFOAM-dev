@@ -1,0 +1,82 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     findEmptyMake
+#
+# Description
+#     Usage: findEmptyMake [dir1 .. dirN]
+#
+#     Find Make/ directories without a 'files' or 'options' file.
+#     This can occur when a directory has been moved.
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: ${0##*/} [OPTION] [dir1 .. dirN]
+
+Find Make/ directories without a 'files' or 'options' file.
+This can occur when a directory has been moved.
+
+USAGE
+    exit 1
+}
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -*)
+       usage "unknown option: '$*'"
+       ;;
+    *)
+       break
+       ;;
+    esac
+done
+
+# default is the current directory
+[ "$#" -gt 0 ] || set -- .
+
+for checkDir
+do
+    if [ -d "$checkDir" ]
+    then
+        echo "searching: $checkDir" 1>&2
+    else
+        echo "skipping non-dir: $checkDir" 1>&2
+        continue
+    fi
+
+    find $checkDir -depth -name Make -type d -print | while read makeDir
+    do
+        [ -r "$makeDir/files" -a -r "$makeDir/options" ] || echo "$makeDir"
+    done
+
+done
+# -----------------------------------------------------------------------------

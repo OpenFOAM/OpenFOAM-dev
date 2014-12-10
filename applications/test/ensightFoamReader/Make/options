@@ -1,0 +1,5 @@
+EXE_INC = \
+    -DUSERD_API_203
+
+EXE_LIBS = \
+    -luserd-foam

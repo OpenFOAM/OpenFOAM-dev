@@ -1,0 +1,3 @@
+gen6DoF.C
+
+EXE = $(FOAM_USER_APPBIN)/gen6DoF

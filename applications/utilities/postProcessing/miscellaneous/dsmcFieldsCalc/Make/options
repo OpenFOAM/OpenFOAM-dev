@@ -1,0 +1,16 @@
+EXE_INC = \
+    -I$(LIB_SRC)/postProcessing/postCalc \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/lagrangian/basic/lnInclude \
+    -I$(LIB_SRC)/postProcessing/functionObjects/utilities/lnInclude \
+    -I$(LIB_SRC)/lagrangian/dsmc/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+EXE_LIBS = \
+    $(FOAM_LIBBIN)/postCalc.o \
+    -lmeshTools \
+    -lfiniteVolume \
+    -lutilityFunctionObjects \
+    -llagrangian \
+    -ldsmc
+

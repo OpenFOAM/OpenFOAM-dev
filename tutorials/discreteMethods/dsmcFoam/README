@@ -1,0 +1,52 @@
+Fields are used by dsmcFoam in several ways, some of which are different to
+their use elsewhere in OpenFOAM.  None of these fields are solved by partial
+differential equations, they are used either to record simulation data, or to
+supply boundary data.
+
+In each case there are 11 fields:
+
+    boundaryT, boundaryU:
+
+        The wall and free stream conditions at the boundary are specified for
+        velocity and temperature with these fields - only the data on the
+        patches is used, the cell data is not.  These are the only two fields
+        which supply data to the case.
+
+    dsmcRhoN:
+
+        The population of dsmc particles in cells is recorded to visualise how
+        well the cell population conditions required for dsmc are met.  The
+        boundary conditions are zeroGradient because only cell data is
+        meaningful.
+
+    fD, q:
+
+        The wall heat flux (q) and force density (fD, i.e. stress vector) is
+        recorded with these fields - only the data on wall patches is relevant,
+        the cell data is not.
+
+    iDof, internalE, linearKE, momentum, rhoM, rhoN:
+
+        These fields are the densities of extensive quantities in the
+        simulation, i.e. of number, mass, momentum, energy.  Cell data is
+        recorded in the internal field and the boundaryField is used to record
+        the data of particles that strike wall patches.  The properties of
+        particles striking wall faces are weighted by 1/(Un*fA), where Un is the
+        normal component of the particle's velocity and fA is the face area.
+        This is done so that when intensive quantities, such as velocity or
+        temperature, are evaluated on the wall the values are correct this
+        allows velocity slip and temperature jump to be evaluated.
+
+        Therefore, the data in these fields on wall patches is of a different
+        type to the volume data.  This may cause problems when post-processing,
+        as any interpolation of these fields will have a artifacts in the near
+        wall cells because the values on the faces are radically different.
+        This can be overcome by visualising the data uninterpolated, or by
+        copying the fields and setting zeroGradient boundary conditions on
+        walls.  Calculated intensive fields do not have this issue.
+
+Further fields are produced by dsmcFoam, i.e. dsmcSigmaTcRMax (used in the
+selection of collision partners) and by the fieldAverage (averaging the
+extensive quantity densities) and dsmcFields (calculating intensive quantities,
+i.e. velocity and temperature, from extensive quantities) function objects in
+each case as it runs.

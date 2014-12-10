@@ -1,0 +1,7 @@
+#!/bin/sh
+
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+# rm -f constant/triSurface/cyclone.stl.gz > /dev/null 2>&1
+
+cleanCase

@@ -1,0 +1,6 @@
+EXE_INC = \
+    -I../multiphaseSystem/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+LIB_LIBS = \
+    -lmultiphaseSystem

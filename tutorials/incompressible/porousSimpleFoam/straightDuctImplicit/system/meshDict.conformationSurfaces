@@ -1,0 +1,85 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      meshDict.surfaceConformation;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+angledDuct
+{
+    featureMethod   none;
+    meshableSide    inside;
+
+    regions
+    {
+        wall
+        {
+            patchInfo
+            {
+                type        wall;
+                inGroups    (groupWalls);
+            }
+        }
+        porosityWall
+        {
+            patchInfo
+            {
+                type        wall;
+                inGroups    (groupWalls);
+            }
+        }
+        front
+        {
+            patchInfo
+            {
+                type        wall;
+                inGroups    (groupWalls);
+            }
+        }
+        inlet
+        {
+            patchInfo
+            {
+                type        patch;
+            }
+        }
+        outlet
+        {
+            patchInfo
+            {
+                type        patch;
+            }
+        }
+        back
+        {
+            patchInfo
+            {
+                type        wall;
+                inGroups    (groupWalls);
+            }
+        }
+    }
+}
+
+porosity
+{
+    featureMethod   none;
+
+    // Mesh both sides, one of which is a cellZone
+    meshableSide    both;
+    faceZone        porosity;
+    cellZone        porosity;
+    cellZoneInside  inside;
+}
+
+
+// ************************************************************************* //

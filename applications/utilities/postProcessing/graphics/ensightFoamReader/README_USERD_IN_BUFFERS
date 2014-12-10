@@ -1,0 +1,1447 @@
+README_USERD_IN_BUFFERS
+========================
+Five optional routines for normal elements,
+
+  USERD_get_part_coords_in_buffers               |
+  USERD_get_part_node_ids_in_buffers             |
+  USERD_get_part_elements_by_type_in_buffers     |If any of these are implemented,
+  USERD_get_part_element_ids_by_type_in_buffers  |all 5 of them must be implemented
+  USERD_get_var_by_component_in_buffers          |
+
+
+
+one optional routine for nsided elements,
+
+  USERD_get_nsided_conn_in_buffers
+
+
+
+and one optional routine for nfaced elements,
+
+  USERD_get_nfaced_conn_in_buffers
+
+
+can be added into any API 2.* reader to be used by the 
+Unstructured Auto Distribute capability in EnSight 8.2 and later.
+
+Unstructured Auto Distribute is a capability requiring Server of Servers (SOS)
+that will partition an unstructured model for you automatically across a set of
+servers.
+
+If you do not implement the routines listed above (and described below) in your
+reader, EnSight can still perform this operation but will require much more memory on
+each server to read in the data (somewhat like each server having to read the
+whole model). You will however, get the execution advantage of having your model
+partitioned across multiple servers.
+
+If you do implement these routines in your reader (in a proper manner), you
+should be able to not only get the execution advantages, but also memory usage
+on each server which is proportional to the subset that it is assigned to deal with. 
+
+
+Note that the optional routines are functionally quite similar
+to the following functions. And thus their implementation should
+not be too difficult to add to any existing reader that has already
+implemented these:
+------------------------------------------
+USERD_get_part_coords
+USERD_get_part_node_ids
+USERD_get_part_elements_by_type
+USERD_get_part_element_ids_by_type
+USERD_get_var_by_component
+
+USERD_get_nsided_conn
+
+USERD_get_nfaced_conn
+
+
+
+Routine Details:
+================
+
+/*--------------------------------------------------------------------
+ * USERD_get_part_coords_in_buffers -
+ *--------------------------------------------------------------------
+ *
+ *   Get the coordinates for an unstructured part in buffers.
+ *
+ *  (IN)  part_number             = The part number
+ *
+ *                                  (1-based index of part table, namely:
+ *
+ *                                     1 ... Numparts_available.
+ *
+ *                                   It is NOT the part_id that
+ *                                   is loaded in USERD_get_gold_part_build_info)
+ *
+ *  (IN)  first                   = TRUE if first invocation of a buffered set.
+ *                                  Will be FALSE for all subsequent invocations
+ *                                  of the set.  This is so you can open files, get to
+ *                                  the correct starting spot, initialize, etc.
+ *
+ *  (IN) n_beg                    = Zero based, first node index
+ *                                  of the buffered set
+ *
+ *  (IN) n_end                    = Zero based, last node index
+ *                                  of the buffered set
+ *                                      
+ *                     Thus, for first five nodes:
+ *                       n_beg = 0
+ *                       n_end = 4
+ *                       total_number = (n_end - n_beg) + 1 = (4 - 0) + 1 = 5
+ *
+ *                     for second five nodes, would be:      
+ *                       n_beg = 5
+ *                       n_end = 9
+ *                       total_number = (n_end - n_beg) + 1 = (9 - 5) + 1 = 5
+ *
+ *                     for all nodes of a part, would be:
+ *                       n_beg = 0
+ *                       n_end = num_nodes - 1
+ *
+ *  (IN)  buffer_size             = The size of the buffer.
+ *                                  Namely:   coord_array[3][buffer_size]
+ *
+ *  (OUT) coord_array             = 2D float buffer array which is set up to hold
+ *                                  x,y,z coordinates of nodes.
+ *
+ *       (IMPORTANT: the second dimension of of this array is 0-based!!!)
+ *
+ *       (IMPORTANT: in the sister routine (USERD_get_part_coords) - which
+ *                   does not use buffers. This array is 1-based.  So pay attention.)
+ *
+ *                                  (Array will have been allocated
+ *                                   3 by buffer_size long
+ *
+ * Example, if we had a part with 645 nodes and the buffer size was set to 200
+ *
+ *          first invocation:
+ *            first = TRUE            Will be TRUE the first time! 
+ *            n_beg = 0
+ *            n_end = 644
+ *            buffer_size = 200
+ *            coord_array[3][200]     fill with values for nodes 1 - 200   (zero-based)
+ *            *num_returned = 200     set this
+ *            return(0)               return this (indicates more to do)
+ *
+ *          second invocation:        which occurs because we returned a 0 last time
+ *            first = FALSE           will now be FALSE
+ *            n_beg = 0
+ *            n_end = 644
+ *            buffer_size = 200
+ *            coord_array[3][200]     fill with values for nodes 201 - 400 (zero-based)
+ *            *num_returned = 200     set this
+ *            return(0)               return this (indicates more to do)
+ *
+ *          third invocation:         which occurs because we returned a 0 last time
+ *            first = FALSE           will still be FALSE
+ *            n_beg = 0
+ *            n_end = 644
+ *            buffer_size = 200
+ *            coord_array[3][200]     fill with values for nodes 401 - 600 (zero-based)
+ *            *num_returned = 200     set this
+ *            return(0)               return this (indicates more to do)
+ *
+ *          fourth invocation:        which occurs because we returned a 0 last time
+ *            first = FALSE           will still be FALSE
+ *            n_beg = 0
+ *            n_end = 644
+ *            buffer_size = 200
+ *            coord_array[3][200]     fill with values for nodes 601 - 645 (zero-based)
+ *            *num_returned = 45      set this
+ *            return(1)               return this (indicates done!)
+ *
+ *  (OUT)  *num_returned          = The number of nodes whose coordinates are returned
+ *                                  in the buffer. This will normally be equal to
+ *                                  buffer_size except for that last buffer -
+ *                                  which could be less than a full buffer. 
+ *
+ * returns  0  if got some, more to do
+ *          1  if got some, done
+ *         -1  if an error
+ *
+ *  Notes:
+ *  * This will be based on Current_time_step
+ *
+ *  * Not called unless number_of_nodes for the part > 0
+ *
+ *  * Again, make sure each buffer is zero based. For our example above:
+ *
+ *                                                 Invocation:
+ *                                     1          2          3           4
+ *                                  -------    -------    --------    -------
+ *      coord_array[0][0]    x  for node 1     node 201   node 401    node 601   
+ *      coord_array[1][0]    y  for    "          "          "           " 
+ *      coord_array[2][0]    z  for    "          "          "           " 
+ *
+ *      coord_array[0][1]    x  for node 2     node 202   node 402    node 602
+ *      coord_array[1][1]    y  for    "          "          "           "
+ *      coord_array[2][1]    z  for    "          "          "           "
+ * 
+ *      ...
+ *
+ *      coord_array[0][199]  x  for node 200   node 400   node 600    node 645
+ *      coord_array[1][199]  y  for    "          "          "           "
+ *      coord_array[2][199]  z  for    "          "          "           "
+ *--------------------------------------------------------------------*/
+int
+USERD_get_part_coords_in_buffers(int part_number,
+                                 float **coord_array,
+                                 int first,
+                                 int n_beg,
+                                 int n_end,
+                                 int buffer_size,
+                                 int *num_returned)
+
+
+
+
+
+/*--------------------------------------------------------------------
+ * USERD_get_part_node_ids_in_buffers -
+ *--------------------------------------------------------------------
+ *
+ *   Get the node ids for an unstructured part in buffers.
+ *
+ *  (IN)  part_number             = The part number
+ *
+ *                                  (1-based index of part table, namely:
+ *
+ *                                     1 ... Numparts_available.
+ *
+ *                                   It is NOT the part_id that
+ *                                   is loaded in USERD_get_gold_part_build_info)
+ *
+ *  (IN)  first                   = TRUE if first invocation of a buffered set.
+ *                                  Will be FALSE for all subsequent invocations
+ *                                  of the set.  This is so you can open files, get to
+ *                                  the correct starting spot, initialize, etc.
+ *
+ *  (IN) n_beg                    = Zero based, first node index
+ *                                  of the buffered set
+ *
+ *  (IN) n_end                    = Zero based, last node index
+ *                                  of the buffered set
+ *                                      
+ *                     Thus, for first five nodes:
+ *                       n_beg = 0
+ *                       n_end = 4
+ *                       total_number = (n_end - n_beg) + 1 = (4 - 0) + 1 = 5
+ *
+ *                     for second five nodes, would be:      
+ *                       n_beg = 5
+ *                       n_end = 9
+ *                       total_number = (n_end - n_beg) + 1 = (9 - 5) + 1 = 5
+ *
+ *                     for all nodes of a part, would be:
+ *                       n_beg = 0
+ *                       n_end = num_nodes - 1
+ *
+ *  (IN)  buffer_size             = The size of the buffer.
+ *                                  Namely:   nodeid_array[buffer_size]
+ *
+ *  (OUT) nodeid_array            = 1D buffer array which is set up to hold
+ *                                  node ids of nodes
+ *
+ *       (IMPORTANT: this array is 0-based!!!)
+ *
+ *       (IMPORTANT: in the sister routine (USERD_get_part_node_ids) - which
+ *                   does not use buffers. This array is 1-based.  So pay attention.)
+ *
+ *                                  (Array will have been allocated
+ *                                   buffer_size long)
+ *
+ * Example, if we had a part with 645 nodes and the buffer size was set to 200
+ *
+ *          first invocation:
+ *            first = TRUE            Will be TRUE the first time! 
+ *            n_beg = 0
+ *            n_end = 644
+ *            buffer_size = 200
+ *            nodeid_array[200]       fill with values for nodes 1 - 200   (zero-based)
+ *            *num_returned = 200     set this
+ *            return(0)               return this (indicates more to do)
+ *
+ *          second invocation:        which occurs because we returned a 0 last time
+ *            first = FALSE           will now be FALSE
+ *            n_beg = 0
+ *            n_end = 644
+ *            buffer_size = 200
+ *            nodeid_array[200]       fill with values for nodes 201 - 400 (zero-based)
+ *            *num_returned = 200     set this
+ *            return(0)               return this (indicates more to do)
+ *
+ *          third invocation:         which occurs because we returned a 0 last time
+ *            first = FALSE           will still be FALSE
+ *            n_beg = 0
+ *            n_end = 644
+ *            buffer_size = 200
+ *            nodeid_array[200]       fill with values for nodes 401 - 600 (zero-based)
+ *            *num_returned = 200     set this
+ *            return(0)               return this (indicates more to do)
+ *
+ *          fourth invocation:        which occurs because we returned a 0 last time
+ *            first = FALSE           will still be FALSE
+ *            n_beg = 0
+ *            n_end = 644
+ *            buffer_size = 200
+ *            nodeid_array[200]       fill with values for nodes 601 - 645 (zero-based)
+ *            *num_returned = 45      set this
+ *            return(1)               return this (indicates done!)
+ *
+ *
+ *  (OUT)  *num_returned          = The number of nodes whose ids are returned
+ *                                  in the buffer. This will normally be equal
+ *                                  to buffer_size except for that last buffer
+ *                                  - which could be less than a full buffer. 
+ *
+ * returns  0  if got some, more to do
+ *          1  if got some, done
+ *         -1  if an error
+ *
+ *  Notes:
+ *  * This will be based on Current_time_step
+ *
+ *  * Not called unless number_of_nodes for the part > 0
+ *
+ *  * Again, make sure each buffer is zero based. For our example above:
+ *
+ *                                                 Invocation:
+ *                                     1          2          3           4
+ *                                  -------    -------    --------    -------
+ *      nodeid_array[0]    id   for node 1     node 201   node 401    node 601   
+ *
+ *      nodeid_array[1]    id   for node 2     node 202   node 402    node 602
+ *
+ *      ...
+ *
+ *      nodeid_array[199]  id   for node 200   node 400   node 600    node 645
+ *--------------------------------------------------------------------*/
+int
+USERD_get_part_node_ids_in_buffers(int part_number,
+                                   int *nodeid_array,
+                                   int first,
+                                   int n_beg,
+                                   int n_end,
+                                   int buffer_size,
+                                   int *num_returned)
+
+
+
+
+/*--------------------------------------------------------------------
+ * USERD_get_part_elements_by_type_in_buffers -
+ *--------------------------------------------------------------------
+ *
+ *   Gets the connectivities for the elements of a particular type
+ *   in an unstructured part in buffers
+ *
+ *  (IN)  part_number             = The part number
+ *
+ *                                  (1-based index of part table, namely:
+ *
+ *                                     1 ... Numparts_available.
+ *
+ *                                   It is NOT the part_id that
+ *                                   is loaded in USERD_get_gold_part_build_info)
+ *
+ *  (IN)  element_type            = One of the following (See global_extern.h)
+ *                                  Z_POINT    node point element
+ *                                  Z_BAR02    2 node bar
+ *                                  Z_BAR03    3 node bar
+ *                                  Z_TRI03    3 node triangle
+ *                                  Z_TRI06    6 node triangle
+ *                                  Z_QUA04    4 node quad
+ *                                  Z_QUA08    8 node quad
+ *                                  Z_TET04    4 node tetrahedron
+ *                                  Z_TET10   10 node tetrahedron
+ *                                  Z_PYR05    5 node pyramid
+ *                                  Z_PYR13   13 node pyramid
+ *                                  Z_PEN06    6 node pentahedron
+ *                                  Z_PEN15   15 node pentahedron
+ *                                  Z_HEX08    8 node hexahedron
+ *                                  Z_HEX20   20 node hexahedron
+ *
+ *   Starting at API 2.01:
+ *   ====================
+ *                                  Z_G_POINT    ghost node point element
+ *                                  Z_G_BAR02    2 node ghost bar
+ *                                  Z_G_BAR03    3 node ghost bar
+ *                                  Z_G_TRI03    3 node ghost triangle
+ *                                  Z_G_TRI06    6 node ghost triangle
+ *                                  Z_G_QUA04    4 node ghost quad
+ *                                  Z_G_QUA08    8 node ghost quad
+ *                                  Z_G_TET04    4 node ghost tetrahedron
+ *                                  Z_G_TET10   10 node ghost tetrahedron
+ *                                  Z_G_PYR05    5 node ghost pyramid
+ *                                  Z_G_PYR13   13 node ghost pyramid
+ *                                  Z_G_PEN06    6 node ghost pentahedron
+ *                                  Z_G_PEN15   15 node ghost pentahedron
+ *                                  Z_G_HEX08    8 node ghost hexahedron
+ *                                  Z_G_HEX20   20 node ghost hexahedron
+ *                                  Z_NSIDED     n node ghost nsided polygon
+ *                                  Z_NFACED     n face ghost nfaced polyhedron
+ *
+ *   Starting at API 2.02:
+ *   ====================
+ *                                  Z_NSIDED     n node nsided polygon
+ *                                  Z_NFACED     n face nfaced polyhedron
+ *                                  Z_G_NSIDED   n node ghost nsided polygon
+ *                                  Z_G_NFACED   n face ghost nfaced polyhedron
+ *
+ *  (IN)  first                   = TRUE if first invocation of a buffered set.
+ *                                  Will be FALSE for all subsequent invocations
+ *                                  of the set.  This is so you can open files, get to
+ *                                  the correct starting spot, initialize, etc.
+ *
+ *  (IN) e_beg                    = Zero based, first element number
+ *                                  of the buffered set
+ *
+ *  (IN) e_end                    = Zero based, last element number
+ *                                  of the buffered set
+ *
+ *                     Thus, for first five elements of a type:
+ *                       e_beg = 0
+ *                       e_end = 4
+ *                       total_number = (e_end - e_beg) + 1 = (4 - 0) + 1 = 5
+ *
+ *                     for second five elements of a type, would be:
+ *                       e_beg = 5
+ *                       e_end = 9
+ *                       total_number = (e_end - e_beg) + 1 = (9 - 5) + 1 = 5
+ *
+ *                     for all elements of the type of a part, would be:
+ *                       n_beg = 0
+ *                       n_end = num_elements_of_type - 1
+ *
+ *  (IN) buffer_size              = The size of the buffer.
+ *                                  Namely:  conn_array[buffer_size][element_size]
+ *
+ *  (OUT) conn_array              = 2D buffer array which is set up to hold
+ *                                  connectivity of elements of the type.
+ *
+ *                                  (Array will have been allocated
+ *                                   buffer_size of
+ *                                   the type by connectivity length
+ *                                   of the type)
+ *
+ *                       ex) The allocated dimensions available
+ *                           for this routine will be:
+ *                              conn_array[buffer_size][3]   when called with Z_TRI03
+ *
+ *                              conn_array[buffer_size][4]   when called with Z_QUA04
+ *
+ *                              conn_array[buffer_size][8]   when called with Z_HEX08
+ *
+ *                              etc.
+ *
+ *   * Example, (if 158 quad elements, and buffer size is 200)
+ *
+ *       (get all 158 quad4s in one invocation)
+ *          element_type = Z_QUA04
+ *          first = TRUE               Will be TRUE the first time!
+ *          e_beg  = 0                 (zero based, first element index)
+ *          e_end  = 157               (zero based, last element index)
+ *          buffer_size = 200
+ *          conn_array[200][4]         Use first 158 locations of the array
+ *          *num_returned = 158        set this
+ *          return(1)                  return this (indicates no more to do)
+ *
+ *   * Example, (if 158 quad elements, and buffer size is 75)
+ *
+ *        first invocation:
+ *          element_type = Z_QUA04
+ *          first = TRUE               Will be TRUE the first time!
+ *          e_beg  = 0
+ *          e_end  = 157
+ *          buffer_size = 75
+ *          conn_array[75][4]          load in conn for elements 1 - 75
+ *          *num_returned = 75         set this
+ *          return(0)                  return this (indicates more to do)
+ *
+ *        second invocation:
+ *          element_type = Z_QUA04
+ *          first = TRUE               Will be TRUE the first time!
+ *          e_beg  = 0
+ *          e_end  = 157
+ *          buffer_size = 75
+ *          conn_array[75][4]          load in conn for elements 76 - 150
+ *          *num_returned = 75         set this
+ *          return(0)                  return this (indicates more to do)
+ *
+ *        third invocation:
+ *          element_type = Z_QUA04
+ *          first = TRUE               Will be TRUE the first time!
+ *          e_beg  = 0
+ *          e_end  = 157
+ *          buffer_size = 75
+ *          conn_array[75][4]          load in conn for elements 151 - 158
+ *          *num_returned = 8          set this
+ *          return(1)                  return this (indicates no more to do)
+ *
+ *
+ *  (OUT)  *num_returned          = The number of elements whose connectivities
+ *                                  are returned in the buffer. This will
+ *                                  normally be equal to buffer_size except for
+ *                                  that last buffer - which could be less than
+ *                                  a full buffer.
+ *
+ * returns  0  if got some, more to do
+ *          1  if got some, done
+ *         -1  if an error
+ *
+ *  Notes:
+ *  * This will be based on Current_time_step
+ *
+ *  * Again, make sure each buffer is zero based. For our example using buffers above:
+ *
+ *                                                        Invocation:
+ *                                                  1          2          3    
+ *                                               -------    -------    --------
+ *      conn_array[0][0]       node 1 in conn for quad 1    quad 76     quad 151
+ *      conn_array[0][1]       node 2 in conn for quad 1    quad 76     quad 151
+ *      conn_array[0][2]       node 3 in conn for quad 1    quad 76     quad 151
+ *      conn_array[0][3]       node 4 in conn for quad 1    quad 76     quad 151
+ *
+ *      conn_array[1][0]       node 1 in conn for quad 2    quad 77     quad 152
+ *      conn_array[1][1]       node 2 in conn for quad 2    quad 77     quad 152
+ *      conn_array[1][2]       node 3 in conn for quad 2    quad 77     quad 152
+ *      conn_array[1][3]       node 4 in conn for quad 2    quad 77     quad 152
+ *
+ *      ...
+ *
+ *      conn_array[74][0]      node 1 in conn for quad 75    quad 150   quad 158
+ *      conn_array[74][1]      node 2 in conn for quad 75    quad 150   quad 158
+ *      conn_array[74][2]      node 3 in conn for quad 75    quad 150   quad 158
+ *      conn_array[74][3]      node 4 in conn for quad 75    quad 150   quad 158
+ *--------------------------------------------------------------------*/
+int
+USERD_get_part_elements_by_type_in_buffers(int part_number,
+                                           int element_type,
+                                           int **conn_array,
+                                           int first,
+                                           int e_beg,
+                                           int e_end,
+                                           int buffer_size,
+                                           int *num_returned)
+
+
+
+
+
+/*--------------------------------------------------------------------
+ * USERD_get_part_element_ids_by_type_in_buffers -
+ *--------------------------------------------------------------------
+ *
+ *   Gets the ids for the elements of a particular type
+ *   in an unstructured part in buffers
+ *
+ *  (IN)  part_number             = The part number
+ *
+ *                                  (1-based index of part table, namely:
+ *
+ *                                     1 ... Numparts_available.
+ *
+ *                                   It is NOT the part_id that
+ *                                   is loaded in USERD_get_gold_part_build_info)
+ *
+ *  (IN)  element_type            = One of the following (See global_extern.h)
+ *                                  Z_POINT    node point element
+ *                                  Z_BAR02    2 node bar
+ *                                  Z_BAR03    3 node bar
+ *                                  Z_TRI03    3 node triangle
+ *                                  Z_TRI06    6 node triangle
+ *                                  Z_QUA04    4 node quad
+ *                                  Z_QUA08    8 node quad
+ *                                  Z_TET04    4 node tetrahedron
+ *                                  Z_TET10   10 node tetrahedron
+ *                                  Z_PYR05    5 node pyramid
+ *                                  Z_PYR13   13 node pyramid
+ *                                  Z_PEN06    6 node pentahedron
+ *                                  Z_PEN15   15 node pentahedron
+ *                                  Z_HEX08    8 node hexahedron
+ *                                  Z_HEX20   20 node hexahedron
+ *
+ *   Starting at API 2.01:
+ *   ====================
+ *                                  Z_G_POINT    ghost node point element
+ *                                  Z_G_BAR02    2 node ghost bar
+ *                                  Z_G_BAR03    3 node ghost bar
+ *                                  Z_G_TRI03    3 node ghost triangle
+ *                                  Z_G_TRI06    6 node ghost triangle
+ *                                  Z_G_QUA04    4 node ghost quad
+ *                                  Z_G_QUA08    8 node ghost quad
+ *                                  Z_G_TET04    4 node ghost tetrahedron
+ *                                  Z_G_TET10   10 node ghost tetrahedron
+ *                                  Z_G_PYR05    5 node ghost pyramid
+ *                                  Z_G_PYR13   13 node ghost pyramid
+ *                                  Z_G_PEN06    6 node ghost pentahedron
+ *                                  Z_G_PEN15   15 node ghost pentahedron
+ *                                  Z_G_HEX08    8 node ghost hexahedron
+ *                                  Z_G_HEX20   20 node ghost hexahedron
+ *                                  Z_NSIDED     n node ghost nsided polygon
+ *                                  Z_NFACED     n face ghost nfaced polyhedron
+ *
+ *   Starting at API 2.02:
+ *   ====================
+ *                                  Z_NSIDED     n node nsided polygon
+ *                                  Z_NFACED     n face nfaced polyhedron
+ *                                  Z_G_NSIDED   n node ghost nsided polygon
+ *                                  Z_G_NFACED   n face ghost nfaced polyhedron
+ *
+ *  (IN)  first                   = TRUE if first invocation of a buffered set.
+ *                                  Will be FALSE for all subsequent invocations
+ *                                  of the set.  This is so you can open files, get to
+ *                                  the correct starting spot, initialize, etc.
+ *
+ *  (IN) e_beg                    = Zero based, first element number
+ *                                  of the buffered set
+ *
+ *  (IN) e_end                    = Zero based, last element number
+ *                                  of the buffered set
+ *
+ *                     Thus, for first five elements of a type:
+ *                       e_beg = 0
+ *                       e_end = 4
+ *                       total_number = (e_end - e_beg) + 1 = (4 - 0) + 1 = 5
+ *
+ *                     for second five elements of a type, would be:
+ *                       e_beg = 5
+ *                       e_end = 9
+ *                       total_number = (e_end - e_beg) + 1 = (9 - 5) + 1 = 5
+ *
+ *                     for all elements of the type of a part, would be:
+ *                       n_beg = 0
+ *                       n_end = num_elements_of_type - 1
+ *
+ *  (IN) buffer_size              = The size of the buffer.
+ *                                  Namely:  elemid_array[buffer_size]
+ *
+ *  (OUT) elemid_array            = 1D buffer array which is set up to hold ids
+ *                                  of elements of the type.
+ *
+ *                                  (Array will have been allocated
+ *                                   buffer_size long)
+ *
+ *   * Example, (if 158 quad elements, and buffer size is 200)
+ *
+ *       (get all 158 quad4 ids in one invocation)
+ *          element_type = Z_QUA04
+ *          first = TRUE               Will be TRUE the first time!
+ *          e_beg  = 0                 (zero based, first element index)
+ *          e_end  = 157               (zero based, last element index)
+ *          buffer_size = 200
+ *          elemeid_array[200]         Use first 158 locations of the array
+ *          *num_returned = 158        set this
+ *          return(1)                  return this (indicates no more to do)
+ *
+ *   * Example, (if 158 quad elements, and buffer size is 75)
+ *
+ *        first invocation:
+ *          element_type = Z_QUA04
+ *          first = TRUE               Will be TRUE the first time!
+ *          e_beg  = 0
+ *          e_end  = 157
+ *          buffer_size = 75
+ *          elemid_array[75]           load in ids for elements 1 - 75
+ *          *num_returned = 75         set this
+ *          return(0)                  return this (indicates more to do)
+ *
+ *        second invocation:
+ *          element_type = Z_QUA04
+ *          first = TRUE               Will be TRUE the first time!
+ *          e_beg  = 0
+ *          e_end  = 157
+ *          buffer_size = 75
+ *          elemid_array[75]           load in ids for elements 76 - 150
+ *          *num_returned = 75         set this
+ *          return(0)                  return this (indicates more to do)
+ *
+ *        third invocation:
+ *          element_type = Z_QUA04
+ *          first = TRUE               Will be TRUE the first time!
+ *          e_beg  = 0
+ *          e_end  = 157
+ *          buffer_size = 75
+ *          elemid_array[75]           load in ids for elements 151 - 158
+ *          *num_returned = 8          set this
+ *          return(1)                  return this (indicates no more to do)
+ *
+ *
+ *  (OUT)  *num_returned          = The number of elements whose ids are returned
+ *                                  in the buffer. This will normally be equal
+ *                                  to buffer_size except for that last buffer
+ *                                  - which could be less than a full buffer.
+ *
+ * returns  0  if got some, more to do
+ *          1  if got some, done
+ *         -1  if an error
+ *
+ *  Notes:
+ *  * This will be based on Current_time_step
+ *
+ *  * Again, make sure each buffer is zero based. For our example using buffers above:
+ *
+ *                                                  Invocation:
+ *                                           1          2          3    
+ *                                        -------    -------    --------
+ *      elemid_array[0]       elem id  for quad 1    quad 76     quad 151
+ *
+ *      elemid_array[1]       elem id  for quad 2    quad 77     quad 152
+ *
+ *      ...
+ *
+ *      elemid_array[74]      elem id  for quad 75   quad 150    quad 158
+ *--------------------------------------------------------------------*/
+int
+USERD_get_part_element_ids_by_type_in_buffers(int part_number,
+                                              int element_type,
+                                              int *elemid_array,
+                                              int first,
+                                              int e_beg,
+                                              int e_end,
+                                              int buffer_size,
+                                              int *num_returned)
+
+
+
+
+
+
+/*--------------------------------------------------------------------
+ * USERD_get_var_by_component_in_buffers -  used by unstructured parts
+ *--------------------------------------------------------------------
+ *
+ *  if Z_PER_NODE:
+ *    Get the component value at each node for a given variable in the part
+ *    in buffers.
+ *
+ *  or if Z_PER_ELEM:
+ *    Get the component value at each element of a specific part and type for
+ *    a given variable in buffers.
+ *
+ *  (IN)  which_variable          = The variable number
+ *
+ *  (IN)  which_part                Since EnSight Version 7.4
+ *                                  -------------------------
+ *                                = The part number
+ *
+ *                                  (1-based index of part table, namely:
+ *
+ *                                     1 ... Numparts_available.
+ *
+ *                                   It is NOT the part_id that
+ *                                   is loaded in USERD_get_gold_part_build_info)
+ *
+ *                                  Prior to EnSight Version 7.4
+ *                                  ----------------------------
+ *                                = The part id   This is the part_id label loaded
+ *                                                in USERD_get_gold_part_build_inf\o.
+ *                                                It is NOT the part table index.
+ *
+ *  (IN)  var_type                = Z_SCALAR
+ *                                  Z_VECTOR
+ *                                  Z_TENSOR     ( symmetric tensor)
+ *                                  Z_TENSOR9    (asymmetric tensor)
+ *
+ *  (IN)  which_type
+ *
+ *           if Z_PER_NODE:         Not used
+ *
+ *           if Z_PER_ELEM:       = The element type
+ *                                  Z_POINT    node point element
+ *                                  Z_BAR02    2 node bar
+ *                                  Z_BAR03    3 node bar
+ *                                  Z_TRI03    3 node triangle
+ *                                  Z_TRI06    6 node triangle
+ *                                  Z_QUA04    4 node quad
+ *                                  Z_QUA08    8 node quad
+ *                                  Z_TET04    4 node tetrahedron
+ *                                  Z_TET10   10 node tetrahedron
+ *                                  Z_PYR05    5 node pyramid
+ *                                  Z_PYR13   13 node pyramid
+ *                                  Z_PEN06    6 node pentahedron
+ *                                  Z_PEN15   15 node pentahedron
+ *                                  Z_HEX08    8 node hexahedron
+ *                                  Z_HEX20   20 node hexahedron
+ *
+ *   Starting at API 2.01:
+ *   ====================
+ *                                  Z_G_POINT    ghost node point element
+ *                                  Z_G_BAR02    2 node ghost bar
+ *                                  Z_G_BAR03    3 node ghost bar
+ *                                  Z_G_TRI03    3 node ghost triangle
+ *                                  Z_G_TRI06    6 node ghost triangle
+ *                                  Z_G_QUA04    4 node ghost quad
+ *                                  Z_G_QUA08    8 node ghost quad
+ *                                  Z_G_TET04    4 node ghost tetrahedron
+ *                                  Z_G_TET10   10 node ghost tetrahedron
+ *                                  Z_G_PYR05    5 node ghost pyramid
+ *                                  Z_G_PYR13   13 node ghost pyramid
+ *                                  Z_G_PEN06    6 node ghost pentahedron
+ *                                  Z_G_PEN15   15 node ghost pentahedron
+ *                                  Z_G_HEX08    8 node ghost hexahedron
+ *                                  Z_G_HEX20   20 node ghost hexahedron
+ *   Starting at API 2.02:
+ *   ====================
+ *                                  Z_NSIDED     n node nsided polygon
+ *                                  Z_NFACED     n face nfaced polyhedron
+ *                                  Z_G_NSIDED   n node ghost nsided polygon
+ *                                  Z_G_NFACED   n face ghost nfaced polyhedron
+ *
+ *
+ *
+ *  (IN)  imag_data               = TRUE if imag component
+ *                                  FALSE if real component
+ *
+ *  (IN)  component               = The component: (0       if Z_SCALAR)
+ *                                                 (0 - 2   if Z_VECTOR)
+ *                                                 (0 - 5   if Z_TENSOR)
+ *                                                 (0 - 8   if Z_TENSOR9)
+ *
+ *                                * 6 Symmetric Indicies, 0:5    *
+ *                                * ---------------------------- *
+ *                                *     | 11 12 13 |   | 0 3 4 | *
+ *                                *     |          |   |       | *
+ *                                * T = |    22 23 | = |   1 5 | *
+ *                                *     |          |   |       | *
+ *                                *     |       33 |   |     2 | *
+ *
+ *                                * 9 General   Indicies, 0:8    *
+ *                                * ---------------------------- *
+ *                                *     | 11 12 13 |   | 0 1 2 | *
+ *                                *     |          |   |       | *
+ *                                * T = | 21 22 23 | = | 3 4 5 | *
+ *                                *     |          |   |       | *
+ *                                *     | 31 32 33 |   | 6 7 8 | *
+ *
+ *  (IN) ne_beg
+ *          if Z_PER_NODE:   = Zero based, first node index of the buffered set
+ *          if Z_PER_ELEM:   = Zero based, first element index of the buffered set
+ *
+ *  (IN) ne_end
+ *          if Z_PER_NODE:   = Zero based, last node index of the buffered set
+ *          if Z_PER_ELEM:   = Zero based, last element index of the buffered set
+ *
+ *                     Thus, for first five elements or nodes:
+ *                       e_beg = 0
+ *                       e_end = 4
+ *                       total_number = (e_end - e_beg) + 1 = (4 - 0) + 1 = 5
+ *
+ *                     for second five elements or nodes, would be:
+ *                       e_beg = 5
+ *                       e_end = 9
+ *                       total_number = (e_end - e_beg) + 1 = (9 - 5) + 1 = 5
+ *
+ *                     for all elements or nodes of a part, would be:
+ *                       n_beg = 0
+ *                       n_end = num_elements_or_nodes - 1
+ *
+ * (IN) first                    = TRUE if first invocation of a buffered set.
+ *                                  Will be FALSE for all subsequent invocations
+ *                                  of the set.  This is so you can open files, get to
+ *                                  the correct starting spot, initialize, etc.
+ *
+ * (IN) buffer_size              = The size of the buffer.
+ *                                  Namely:  var_array[buffer_size]
+ *
+ * (IN) leftside                 = TRUE if current time is at a timestep or
+ *                                      when getting the left side of a time
+ *                                      span that encloses the current time.
+ *                               = FALSE when getting the right side of a time
+ *                                       span that encloses the current time.
+ *
+ *  Timeline:
+ *   step1         step2          step3
+ *     |-------------|--------------|-------...  requires no interpolation
+ *                   ^                           get values at step2 (leftside = TRUE)
+ *                   current time                   (leftside = TRUE)
+ *
+ *
+ *  Timeline:
+ *   step1         step2          step3
+ *     |-------------|--------------|-------...  requires interpolation
+ *              ^                                get values at step2 (leftside = TRUE)
+ *              current time                 and get values at step3 (leftside = FALSE)
+ *
+ *    Note that it would generally be easier for this routine if EnSight got all
+ *         of the left side, then all of the right side, and then did its
+ *         interpolation. But, in the spirit of doing things in buffers (to save
+ *         memory) it gets a left side buffer (and the corresponding right side
+ *         buffer and interpolates these), if needed, before going to the next
+ *         buffer of the set.  Thus, you need to be able to handle that situation.
+ *
+ *    Note also that EnSight will have called the routine to change the current
+ *         time step between the two invocations when interpolation is required.
+ *         And Ensight does the interpolating.  This variable is provided so
+ *         that you can deal with two different files or pointers between the
+ *         corresponding invocations for the two times
+ *
+ * (OUT) var_array
+ *
+ *     -----------------------------------------------------------------------
+ *     (IMPORTANT: this array is 0-based for both Z_PER_NODE and Z_PER_ELEM!!!
+ *     -----------------------------------------------------------------------
+ *
+ *          if Z_PER_NODE:       = 1D buffer array set up to hold a variable
+ *                                 component value for nodes.
+ *
+ *          if Z_PER_ELEM:       = 1D buffer array set up to hold a variable
+ *                                 component value for elements.
+ *
+ *                                 (Array will have been allocated
+ *                                  buffer_size long)
+ *
+ *              Info stored in this fashion:
+ *                   var_array[0] = var component for node or element 1 of part
+ *                   var_array[1] = var component for node or element 2 of part
+ *                   var_array[2] = var component for node or element 3 of part
+ *                   etc.
+ *
+ *   * Example, (if 158 quad elements with a real Z_PER_ELEM scalar,
+ *               current time is between steps, and buffer size is 75)
+ *
+ *        first invocation:            (for left side of time span)
+ *          var_type = Z_SCALAR
+ *          which_type = Z_PER_ELEM
+ *          imag_data = FALSE
+ *          component = 0
+ *          ne_beg = 0
+ *          ne_end = 157
+ *          first = TRUE               Will be TRUE the first time!
+ *          buffer_size = 75
+ *          leftside = TRUE            <==
+ *          var_array[75]              load in scalar value for elements 1 - 75
+ *          *num_returned = 75         set this
+ *          return(0)                  return this (indicates more to do)
+ *
+ *        second invocation:           (for right side of time span)
+ *          var_type = Z_SCALAR
+ *          which_type = Z_PER_ELEM
+ *          imag_data = FALSE
+ *          component = 0
+ *          ne_beg = 0
+ *          ne_end = 157
+ *          first = TRUE               Note: Will still be TRUE (because is right side)
+ *          buffer_size = 75
+ *          leftside = FALSE           <==
+ *          var_array[75]              load in scalar value for elements 1 - 75
+ *          *num_returned = 75         set this
+ *          return(0)                  return this (indicates more to do)
+ *
+ * -------------------------------
+ *        third invocation:            (for left side of time span)
+ *          var_type = Z_SCALAR
+ *          which_type = Z_PER_ELEM
+ *          imag_data = FALSE
+ *          component = 0
+ *          ne_beg = 0
+ *          ne_end = 157
+ *          first = FALSE              Will be FALSE now
+ *          buffer_size = 75
+ *          leftside = TRUE            <==
+ *          var_array[75]              load in scalar value for elements 76 - 150
+ *          *num_returned = 75         set this
+ *          return(0)                  return this (indicates more to do)
+ *
+ *        fourth invocation:           (for right side of time span)
+ *          var_type = Z_SCALAR
+ *          which_type = Z_PER_ELEM
+ *          imag_data = FALSE
+ *          component = 0
+ *          ne_beg = 0
+ *          ne_end = 157
+ *          first = FALSE             
+ *          buffer_size = 75
+ *          leftside = FALSE           <==
+ *          var_array[75]              load in scalar value for elements 76 - 150
+ *          *num_returned = 75         set this
+ *          return(0)                  return this (indicates more to do)
+ *
+ *------------------------------------
+ *        fifth invocation:            (for left side of time span)
+ *          var_type = Z_SCALAR
+ *          which_type = Z_PER_ELEM
+ *          imag_data = FALSE
+ *          component = 0
+ *          ne_beg = 0
+ *          ne_end = 157
+ *          first = FALSE              Will still be FALSE
+ *          buffer_size = 75
+ *          leftside = TRUE            <==
+ *          var_array[75]              load in scalar value for elements 151 - 158
+ *          *num_returned = 8          set this
+ *          return(1)                  return this (indicates no more to do)
+ *
+ *        sixth invocation:           (for right side of time span)
+ *          var_type = Z_SCALAR
+ *          which_type = Z_PER_ELEM
+ *          imag_data = FALSE
+ *          component = 0
+ *          ne_beg = 0
+ *          ne_end = 157
+ *          first = FALSE            
+ *          buffer_size = 75
+ *          leftside = FALSE           <==
+ *          var_array[75]              load in scalar value for elements 151 - 158
+ *          *num_returned = 8          set this
+ *          return(1)                  return this (indicates no more to do)
+ *
+ *
+ *  (OUT)  *num_returned          = The number of nodes or elements whose variable
+ *                                  values are returned in the buffer. This will
+ *                                  normally be equal to buffer_size except for
+ *                                  that last buffer - which could be less than
+ *                                  a full buffer.
+ *
+ * returns  0  if got some, more to do
+ *          1  if got some, done
+ *         -1  if an error
+ *
+ *  Notes:
+ *  * This will be based on Current_time_step
+ *
+ *  * Again, make sure each buffer is zero based. For our example using buffers above:
+ *
+ *                                                  Invocation:
+ *                         ----------------   ------------------   ------------------- 
+ *                            1        2         3          4          5          6
+ *                         -------  -------   --------  --------   ---------  ---------
+ * var_array[0]  scalar of quad 1L  quad 1R   quad 76L  quad 76R   quad 151L  quad 151R
+ *
+ * var_array[1]  scalar of quad 2L  quad 2R   quad 77L  quad 77R   quad 152L  quad 152R
+ *
+ * ...
+ *
+ * var_array[74] scalar of quad 75L quad 75R  quad 150L quad 150R  quad 158L  quad 158R
+ *
+ *   Where:   L indicates left time step
+ *            R indicates right time step
+ *--------------------------------------------------------------------*/
+int
+USERD_get_var_by_component_in_buffers(int which_variable,
+                                      int which_part,
+                                      int var_type,
+                                      int which_type,
+                                      int imag_data,
+                                      int component,
+                                      float *var_array,
+                                      int first,
+                                      int ne_beg,
+                                      int ne_end,
+                                      int buffer_size,
+                                      int leftside,
+                                      int *num_returned)
+
+
+
+
+/*--------------------------------------------------------------------
+ * USERD_get_nsided_conn_in_buffers -
+ *--------------------------------------------------------------------
+ *
+ *   Gets the two arrays containing the connectivity information
+ *   of nsided elements in buffers
+ *
+ *  (IN)  part_number      = The part number
+ *
+ *                           (1-based index of part table, namely:
+ *
+ *                              1 ... Numparts_available.
+ *
+ *                            It is NOT the part_id that
+ *                            is loaded in USERD_get_gold_part_build_info)
+ *
+ *  (IN)  first            = TRUE if first invocation of a buffered set.
+ *                           Will be FALSE for all subsequent invocations
+ *                           of the set.  This is so you can open files,
+ *                           get to the correct starting spot,
+ *                           initialize, etc.
+ *
+ *  (IN) e_beg             = Zero based, first element number
+ *                           of the buffered set
+ *
+ *  (IN) e_end             = Zero based, last element number
+ *                           of the buffered set
+ *
+ *                     Thus, for first five elements of a type:
+ *                       e_beg = 0
+ *                       e_end = 4
+ *                       total_number = (e_end - e_beg) + 1 = (4 - 0) + 1 = 5
+ *
+ *                     for second five elements of a type, would be:
+ *                       e_beg = 5
+ *                       e_end = 9
+ *                       total_number = (e_end - e_beg) + 1 = (9 - 5) + 1 = 5
+ *
+ *                     for all elements of the type of a part, would be:
+ *                       n_beg = 0
+ *                       n_end = num_elements_of_type - 1
+ *
+ *  (IN) buffer_size         = The size of the num_nodes_per_elem_array buffer.
+ *                             Namely: num_nodes_per_elem_array[buffer_size]
+ *
+ *  (OUT) num_nodes_per_elem_array = 1D buffer array of the number of nodes
+ *                                   per nsided element.
+ *
+ *  (OUT) nsided_conn_array  = 1D buffer array of nsided connectivies
+ *
+ *                             (int array will have been allocated
+ *                              long enough to hold all the nsided
+ *                              connectivities in the buffered chunk)
+ *
+ *  (OUT) *num_returned      = The number of elements whose connectivities
+ *                             are returned in the buffer. This will
+ *                             normally be equal to buffer_size except for
+ *                             that last buffer - which could be less than
+ *                             a full buffer.
+ *
+ *   Providing nsided information to Ensight:
+ *
+ *   NOTE: for other nsided operations you need these first two, but we
+ *         don't actually use them in this routine.
+ *
+ *   1. In USERD_get_gold_part_build_info, provide the number of nsided
+ *      elements in the part.
+ *
+ *   2. In USERD_get_part_elements_by_type, provide (in the conn_array),
+ *      the number of nodes per nsided element. (as if connectivity
+ *      length of an nsided element is one)
+ *
+ *   We do use the following:
+ *   3. In this routine, provide the corresponding num_nodes_per_element and
+ *      streamed connectivities for each of the nsided elements in this
+ *      buffered portion.
+ *
+ *
+ *   Simple example:         5        6
+ *                          +--------+
+ *   3 nsided elements:    /|         \
+ *   (1 4-sided           / |          \
+ *    1 3-sided          /  |           \
+ *    1 7-sided)        /   |            \ 7
+ *                     /3   |4            +
+ *                    +-----+             |
+ *                    |     |             |
+ *                    |     |             |8
+ *                    |     |             +
+ *                    |     |            /
+ *                    |     |           /
+ *                    |     |          /
+ *                    |1    |2        /9
+ *                    +-----+--------+
+ *
+ *    NOTE, don't really use these first two here  (See USERD_get_nsided_conn)
+ *
+ *    1. In USERD_get_gold_part_build_info:
+ *            number_of_elements[Z_NSIDED] = 3
+ *                                           .
+ *                                          /|\
+ *                                           |
+ *    2. In USERD_get_part_elements_by_type:
+ *        length of conn_array will be:      3 x 1
+ *
+ *        for element_type of Z_NSIDED:
+ *            conn_array[0][0] = 4           (for the 4-sided element)
+ *            conn_array[1][0] = 3           (for the 3-sided element)
+ *            conn_array[2][0] = 7           (for the 7-sided element)
+ *
+ *                         Sum  ===
+ *                               14
+ *
+ *    But for our example, lets assume that that our buffer is just 2
+ *                                                   ================
+ *    3. In this routine:
+ *
+ *       first invocation:
+ *         first = TRUE
+ *         e_beg = 0
+ *         e_end = 2
+ *         buffer_size = 2
+ *         num_nodes_per_elem_array[2]    load it: num_nodes_per_elem_array[0] = 4
+ *                                                 num_nodes_per_elem_array[1] = 3
+ *
+ *         nsided_conn_array[at least 7]  load it:   nsided_conn_array[0] = 1
+ *                                                   nsided_conn_array[1] = 2
+ *                                                   nsided_conn_array[2] = 4
+ *                                                   nsided_conn_array[3] = 3
+ *
+ *                                                   nsided_conn_array[4] = 3
+ *                                                   nsided_conn_array[5] = 4
+ *                                                   nsided_conn_array[6] = 5
+ *         *num_returned = 2
+ *         return(0)                       return this (indicates more to do)
+ *
+ *       second invocation:
+ *         first = FALSE
+ *         e_beg = 0
+ *         e_end = 2
+ *         buffer_size = 2
+ *         num_nodes_per_elem_array[2]    load it: num_nodes_per_elem_array[0] = 7
+ *
+ *         nsided_conn_array[at least 7]  load it:   nsided_conn_array[0] = 2
+ *                                                   nsided_conn_array[1] = 9
+ *                                                   nsided_conn_array[2] = 8
+ *                                                   nsided_conn_array[3] = 7
+ *                                                   nsided_conn_array[4] = 6
+ *                                                   nsided_conn_array[5] = 5
+ *                                                   nsided_conn_array[6] = 4
+ *         *num_returned = 1
+ *         return(1)                       return this (indicates no more to do)
+ *
+ * returns  0  if got some, more to do
+ *          1  if got some, done
+ *         -1  if an error
+ *
+ *  Notes:
+ *  * This will be based on Current_time_step
+ *
+ *  * Will not be called unless there are some nsided elements in the
+ *    the part
+ *--------------------------------------------------------------------*/
+int
+USERD_get_nsided_conn_in_buffers(int part_number,
+                                 int *num_nodes_per_elem_array,
+                                 int *nsided_conn_array,
+                                 int first,
+                                 int e_beg,
+                                 int e_end,
+                                 int buffer_size,
+                                 int *num_returned)
+
+
+
+
+/*--------------------------------------------------------------------
+ * USERD_get_nfaced_conn_in_buffers -
+ *--------------------------------------------------------------------
+ *
+ *   Gets three arrays containing the number of faces per element,
+ *   number of nodes per face, and connectivity per face of nfaced
+ *   elements in buffers
+ *
+ *  (IN)  part_number      = The part number
+ *
+ *                           (1-based index of part table, namely:
+ *
+ *                              1 ... Numparts_available.
+ *
+ *                            It is NOT the part_id that
+ *                            is loaded in USERD_get_gold_part_build_info)
+ *
+ *  (IN)  first            = TRUE if first invocation of a buffered set.
+ *                           Will be FALSE for all subsequent invocations
+ *                           of the set.  This is so you can open files,
+ *                           get to the correct starting spot,
+ *                           initialize, etc.
+ *
+ *  (IN) e_beg             = Zero based, first element number
+ *                           of the buffered set
+ *
+ *  (IN) e_end             = Zero based, last element number
+ *                           of the buffered set
+ *
+ *                     Thus, for first five elements of a type:
+ *                       e_beg = 0
+ *                       e_end = 4
+ *                       total_number = (e_end - e_beg) + 1 = (4 - 0) + 1 = 5
+ *
+ *                     for second five elements of a type, would be:
+ *                       e_beg = 5
+ *                       e_end = 9
+ *                       total_number = (e_end - e_beg) + 1 = (9 - 5) + 1 = 5
+ *
+ *                     for all elements of the type of a part, would be:
+ *                       n_beg = 0
+ *                       n_end = num_elements_of_type - 1
+ *
+ *  (IN) buffer_size         = The size of the num_nodes_per_elem_array buffer.
+ *                             Namely: num_nodes_per_elem_array[buffer_size]
+ *
+ *  (OUT) nfaced_fpe_array   = 1D buffer array of the number of faces per nfaced
+ *                             element.
+ *
+ *                                (int array will have been allocated
+ *                                 buffer_size long)
+ *
+ *  (OUT) nfaced_npf_array   = 1D buffer array of the number of nodes per face
+ *                             for nfaced elements.
+ *
+ *                                (int array will have been allocated long
+ *                                 enough to hold a buffer's size of values)
+ *
+ *  (OUT) nfaced_conn_array  = 1D array of nsided face connectivies of
+ *                             nfaced elements
+ *
+ *                             (int array will have been allocated
+ *                              long enough to hold a buffer's worth of values)
+ *
+ *   Providing nfaced information to Ensight:
+ *
+ *   NOTE: for other nfaced operations you need these first two, but we
+ *         don't actually use them in this routine.
+ *
+ *   1. In USERD_get_gold_part_build_info, provide the number of nfaced
+ *      polyhedral elements in the part.
+ *
+ *   2. In USERD_get_part_elements_by_type, provide (in the conn_array),
+ *      the number of faces per nfaced element. (as if connectivity
+ *      length of an nfaced element is one)
+ *
+ *   We do use the following:
+ *   3. In this routine, provide the corresponding number of faces per nfaced
+ *      element, streamed number of nodes per face, and streamed face
+ *      connectivities for each of the faces of the nfaced elements in the
+ *      bufferred portion.
+ *
+ *
+ *   Simple example:         11        10   12
+ *                          +--------+-----+
+ *   2 nfaced elements:    /|        |\   /|
+ *   (1 7-faced           / |        | \ / |
+ *    1 5-sided)         /  |        |  +9 |
+ *                      /   |        | /|  |
+ *                     /7   |      8 /  |  |
+ *                    +-----------+/ |  |  |
+ *                    |     |5    |  |4 |  |6
+ *                    |     +-----|--+--|--+
+ *                    |    /      |   \ | /
+ *                    |   /       |    \|/3
+ *                    |  /        |     +
+ *                    | /         |    /
+ *                    |/1         |2 /
+ *                    +-----------+/
+ *
+ *    Note, don't really use these first two here (See USERD_get_nfaced_conn)
+ *
+ *    1. In USERD_get_gold_part_build_info:
+ *            number_of_elements[Z_NFACED] = 2
+ *                                           .
+ *                                          /|\
+ *                                           |
+ *    2. In USERD_get_part_elements_by_type:
+ *        length of conn_array will be:      2 x 1
+ *        for element_type of Z_NFACED:
+ *            conn_array[0][0] = 7           (for the 7-faced element)
+ *            conn_array[1][0] = 5           (for the 5-faced element)
+ *                              ==
+ *                         Sum  12
+ *
+ *
+ *    But for our simple example, lets assume that that our buffer is just 1
+ *      so that we have multiple invocations.               ================
+ *
+ *    3. In this routine:
+ *
+ *       first invocation:
+ *         first = TRUE
+ *         e_beg = 0
+ *         e_end = 1
+ *         buffer_size = 1
+ *         nfaced_fpe_array[1]            load it: nfaced_fpe_array[0] = 7
+ *
+ *         nfaced_npf_array[at least 7]   load it: nfaced_npf_array[0] = 5
+ *                                                 nfaced_npf_array[1] = 5
+ *                                                 nfaced_npf_array[2] = 4
+ *                                                 nfaced_npf_array[3] = 4
+ *                                                 nfaced_npf_array[4] = 4
+ *                                                 nfaced_npf_array[5] = 4
+ *                                                 nfaced_npf_array[6] = 4
+ *
+ *         nsided_conn_array[at least 30] load it: nsided_conn_array[0] = 7
+ *                                                 nsided_conn_array[1] = 8
+ *                                                 nsided_conn_array[2] = 9
+ *                                                 nsided_conn_array[3] = 10
+ *                                                 nsided_conn_array[4] = 11
+ *
+ *                                                 nsided_conn_array[5] = 1
+ *                                                 nsided_conn_array[6] = 5
+ *                                                 nsided_conn_array[7] = 4
+ *                                                 nsided_conn_array[8] = 3
+ *                                                 nsided_conn_array[9] = 2
+ *
+ *                                                 nsided_conn_array[10] = 1
+ *                                                 nsided_conn_array[11] = 2
+ *                                                 nsided_conn_array[12] = 8
+ *                                                 nsided_conn_array[13] = 7
+ *
+ *                                                 nsided_conn_array[14] = 5
+ *                                                 nsided_conn_array[15] = 1
+ *                                                 nsided_conn_array[16] = 7
+ *                                                 nsided_conn_array[17] = 11
+ *
+ *                                                 nsided_conn_array[18] = 4
+ *                                                 nsided_conn_array[19] = 5
+ *                                                 nsided_conn_array[20] = 11
+ *                                                 nsided_conn_array[21] = 10
+ *
+ *                                                 nsided_conn_array[22] = 2
+ *                                                 nsided_conn_array[23] = 3
+ *                                                 nsided_conn_array[24] = 9
+ *                                                 nsided_conn_array[25] = 8
+ *
+ *                                                 nsided_conn_array[26] = 3
+ *                                                 nsided_conn_array[27] = 4
+ *                                                 nsided_conn_array[28] = 10
+ *                                                 nsided_conn_array[29] = 9
+ *         *num_returned = 1;
+ *         return(0)
+ *
+ *       second invocation:
+ *         first = FALSE
+ *         e_beg = 0
+ *         e_end = 1
+ *         buffer_size = 1
+ *         nfaced_fpe_array[1]            load it: nfaced_fpe_array[0] = 5
+ *
+ *         nfaced_npf_array[at least 7]   load it: nfaced_npf_array[0] = 3
+ *                                                 nfaced_npf_array[1] = 3
+ *                                                 nfaced_npf_array[2] = 4
+ *                                                 nfaced_npf_array[3] = 4
+ *                                                 nfaced_npf_array[4] = 4
+ *
+ *         nsided_conn_array[at least 18] load it: nsided_conn_array[0] = 9
+ *                                                 nsided_conn_array[1] = 12
+ *                                                 nsided_conn_array[2] = 10
+ *
+ *                                                 nsided_conn_array[3] = 3
+ *                                                 nsided_conn_array[4] = 4
+ *                                                 nsided_conn_array[5] = 6
+ *
+ *                                                 nsided_conn_array[6] = 6
+ *                                                 nsided_conn_array[7] = 4
+ *                                                 nsided_conn_array[8] = 10
+ *                                                 nsided_conn_array[9] = 12
+ *
+ *                                                 nsided_conn_array[10] = 3
+ *                                                 nsided_conn_array[11] = 6
+ *                                                 nsided_conn_array[12] = 12
+ *                                                 nsided_conn_array[13] = 9
+ *
+ *                                                 nsided_conn_array[14] = 4
+ *                                                 nsided_conn_array[15] = 3
+ *                                                 nsided_conn_array[16] = 9
+ *                                                 nsided_conn_array[17] = 10
+ *         *num_returned = 1;
+ *         return(1)
+ *
+ * returns  0  if got some, more to do
+ *          1  if got some, done
+ *         -1  if an error
+ *
+ *  Notes:
+ *  * This will be based on Current_time_step
+ *
+ *  * Will not be called unless there are some nfaced elements in the
+ *    the part
+ *--------------------------------------------------------------------*/
+int
+USERD_get_nfaced_conn_in_buffers(int part_number,
+                                 int *nfaced_fpe_array,
+                                 int *nfaced_npf_array,
+                                 int *nfaced_conn_array,
+                                 int first,
+                                 int e_beg,
+                                 int e_end,
+                                 int buffer_size,
+                                 int *num_returned)

@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+cyclic
+{
+    type  cyclic;
+}
+
+cyclicAMI
+{
+    type  cyclicAMI;
+}
+
+cyclicACMI
+{
+    type  cyclicACMI;
+}
+
+cyclicSlip
+{
+    type  cyclicSlip;
+}
+
+empty
+{
+    type  empty;
+}
+
+nonuniformTransformCyclic
+{
+    type  nonuniformTransformCyclic;
+}
+
+processor
+{
+    type  processor;
+}
+
+processorCyclic
+{
+    type  processorCyclic;
+}
+
+symmetryPlane
+{
+    type  symmetryPlane;
+}
+
+symmetry
+{
+    type  symmetry;
+}
+
+wedge
+{
+    type  wedge;
+}
+
+
+// ************************************************************************* //

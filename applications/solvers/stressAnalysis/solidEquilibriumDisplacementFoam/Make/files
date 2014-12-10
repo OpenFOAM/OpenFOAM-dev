@@ -1,0 +1,4 @@
+tractionDisplacementCorrection/tractionDisplacementCorrectionFvPatchVectorField.C
+solidEquilibriumDisplacementFoam.C
+
+EXE = $(FOAM_APPBIN)/solidEquilibriumDisplacementFoam

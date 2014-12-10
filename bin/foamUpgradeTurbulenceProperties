@@ -1,0 +1,97 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamUpgradeTurbulenceProperties
+#
+# Description
+#     Upgrade the turbulenceProperties dictionary to the new format employed
+#     in OpenFOAM version 1.5
+#     - RAS turbulence models now defined by the RASProperties dictionary,
+#       and RASModel keyword.
+#     - LES turbulence models now defined by the LESProperties dictionary,
+#       and LESModel keyword.
+#
+#------------------------------------------------------------------------------
+
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/} <turbulenceProperties>
+
+  Where <turbulenceProperties> is the full path to the
+  turbulenceProperties dictionary
+
+  Note: can upgrade several files at once
+
+USAGE
+   exit 1
+}
+
+#
+# $1: turbulence model
+# $2: new properties type
+# $3: original dictionary
+#
+convertDict()
+{
+    echo "Identified $1 turbulence model in '$3'"
+    outputPath=`dirname $3`
+
+    if [ -e "$outputPath/$1Properties" ]
+    then
+        echo "Error: file already exists $outputPath/$1Properties'" 1>&2
+    else
+        sed -e "s/turbulenceProperties/$1Properties/" \
+            -e "s/$2/$1Model/" \
+            -e "s/[a-zA-Z0-9]* [ ]*\[[0-9 ]*\]//" \
+            $3 > "$outputPath/$1Properties"
+
+        echo "    wrote $outputPath/$1Properties"
+    fi
+}
+
+[ $# -ge 1 ] || usage
+
+for turbDict
+do
+    # Identify type of turbulence model and convert
+    if [ -f $turbDict ]
+    then
+        if grep turbulenceModel $turbDict >/dev/null 2>&1
+        then
+            convertDict RAS turbulenceModel $turbDict
+        elif grep LESmodel $turbDict >/dev/null 2>&1
+        then
+            convertDict LES LESmodel $turbDict
+        else
+            echo "Unable to determine turbulence model type in '$turbDict'" 1>&2
+            echo "    - nothing changed" 1>&2
+        fi
+    else
+        echo "Error: file '$turbDict' does not exist" 1>&2
+    fi
+done
+
+#------------------------------------------------------------------------------

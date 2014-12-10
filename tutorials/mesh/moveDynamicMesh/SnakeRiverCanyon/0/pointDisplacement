@@ -1,0 +1,111 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       pointVectorField;
+    location    "0";
+    object      pointMotionU;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 0 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    maxZ
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    minZ
+    {
+        type            surfaceDisplacement;
+        value           uniform (0 0 0);
+
+        // Clip displacement to surface by max deltaT*velocity.
+        velocity            (10 10 10);
+
+        geometry
+        {
+            AcrossRiver.stl
+            {
+                type triSurfaceMesh;
+            }
+        };
+
+        // Find projection with surface:
+        //     fixedNormal : intersections along prespecified direction
+        //     pointNormal : intersections along current pointNormal of patch
+        //     nearest     : nearest point on surface
+        // Other
+        projectMode fixedNormal;
+
+        // if fixedNormal : normal
+        projectDirection (0 0 1);
+
+        //- -1 or component to knock out before doing projection
+        wedgePlane      -1;
+
+        //- Points that should remain fixed
+        //frozenPointsZone fixedPointsZone;
+    }
+
+//    minZ
+//    {
+//        type            surfaceSlipDisplacement;
+//        geometry
+//        {
+//            hellskull.stl
+//            {
+//                type triSurfaceMesh;
+//            }
+//        };
+//
+//        followMode fixedNormal;
+//
+//        projectDirection (0 0 1);
+//
+//        //- -1 or component to knock out before doing projection
+//        wedgePlane      -1;
+//
+//        //- Points that should remain fixed
+//        //frozenPointsZone fixedPointsZone;
+//    }
+
+    maxX
+    {
+        type            fixedNormalSlip;
+        n               (1 0 0);
+    }
+
+    minX
+    {
+        type            fixedNormalSlip;
+        n               (1 0 0);
+    }
+
+    minY
+    {
+        type            fixedNormalSlip;
+        n               (0 1 0);
+    }
+
+    maxY
+    {
+        type            fixedNormalSlip;
+        n               (0 1 0);
+    }
+}
+
+
+// ************************************************************************* //

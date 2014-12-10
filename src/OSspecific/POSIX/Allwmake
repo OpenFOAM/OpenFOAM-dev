@@ -1,0 +1,25 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+makeType=${1:-libo}
+
+unset COMP_FLAGS LINK_FLAGS
+
+#
+# use <sys/inotify.h> if available (Linux)
+# unless otherwise specified (with USE_STAT)
+#
+# eg,  ./Allwmake USE_STAT
+#
+if [ -f /usr/include/sys/inotify.h -a "${1%USE_STAT}" = "$1" ]
+then
+    echo "Found <sys/inotify.h>  --  enabling inotify for file monitoring."
+    export COMP_FLAGS="-DFOAM_USE_INOTIFY"
+else
+    unset COMP_FLAGS
+fi
+
+
+# make (non-shared) object
+wmake $makeType 
+
+# ----------------------------------------------------------------- end-of-file

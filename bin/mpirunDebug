@@ -1,0 +1,265 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     mpirunDebug
+#
+# Description
+#     Driver script to run mpi jobs with the processes in separate
+#     windows or to separate log files.
+#     Requires bash on all processors.
+#------------------------------------------------------------------------------
+
+if [ `uname -s` = Linux ]
+then
+    ECHO='echo -e'
+else
+    ECHO='echo'
+fi
+
+
+usage()
+{
+    cat<<USAGE
+
+Usage: ${0##*/}  -np <dd> <executable> <args>
+
+* This will run like mpirun but with each process in an XTerm
+
+USAGE
+    exit 1
+}
+
+unset nProcs exec args
+
+while [ "$1" != "" ]
+do
+    echo "$1"
+    case $1 in
+    -np)
+        nProcs=$2
+        shift
+        ;;
+    *)
+        if [ ! "$exec" ]
+        then
+            exec=$1
+        elif [ ! "$args" ]
+        then
+            args="\"$1\""
+        else
+            args="$args \"$1\""
+        fi
+        ;;
+    esac
+    shift
+done
+
+echo "nProcs=$nProcs"
+echo "exec=$exec"
+echo "args=$args"
+
+[ "$nProcs" ] || usage
+[ "$args" ] || usage
+[ "$exec" ] || usage
+
+exec=`which $exec`
+if [ ! -x "$exec" ]
+then
+    echo "Cannot find executable $exec or is not executable"
+    usage
+fi
+
+if [ ! "$PWD" ]
+then
+    PWD=`pwd`
+fi
+
+echo "run $args" > $PWD/gdbCommands
+echo "where" >> $PWD/gdbCommands
+echo "Constructed gdb initialization file $PWD/gdbCommands"
+
+$ECHO "Choose running method: 0)normal  1)gdb+xterm  2)gdb  3)log  4)log+xterm  5)xterm+valgrind  6)gperftools(callgrind): \c"
+read method
+case "$method" in
+0 | 1 | 2 | 3 | 4 | 5 | 6)
+    # okay
+    ;;
+*)
+    usage
+    ;;
+esac
+
+$ECHO "Run all processes local or distributed? 1)local  2)remote: \c"
+read spawn
+if [ "$spawn" -ne 1 -a "$spawn" -ne 2 ]
+then
+    usage
+fi
+
+
+# check ~/.$WM_PROJECT/$WM_PROJECT_VERSION/
+# check ~/.$WM_PROJECT/
+# check <installedProject>/etc/
+if [ "$WM_PROJECT" ]
+then
+
+    for i in \
+        $HOME/.$WM_PROJECT/$WM_PROJECT_VERSION \
+        $HOME/.$WM_PROJECT \
+        $WM_PROJECT_DIR/etc \
+        ;
+    do
+        if [ -f "$i/bashrc" ]
+        then
+            sourceFoam="$i/bashrc"
+            break
+        fi
+    done
+fi
+
+# Construct test string for remote execution.
+# Source OpenFOAM settings if OpenFOAM environment not set.
+# attempt to preserve the installation directory 'FOAM_INST_DIR'
+# use FOAM_SETTINGS to pass command-line settings
+if [ "$FOAM_INST_DIR" ]
+then
+    sourceFoam="FOAM_INST_DIR=$FOAM_INST_DIR . $sourceFoam $FOAM_SETTINGS"
+else
+    sourceFoam=". $sourceFoam $FOAM_SETTINGS"
+fi
+
+echo "**sourceFoam:$sourceFoam"
+
+rm -f $PWD/mpirun.schema
+touch $PWD/mpirun.schema
+
+proc=0
+xpos=0
+ypos=0
+for ((proc=0; proc<$nProcs; proc++))
+do
+    procCmdFile="$PWD/processor${proc}.sh"
+    procLog="processor${proc}.log"
+    geom="-geometry 120x15+$xpos+$ypos"
+
+    case "$WM_MPLIB" in
+    *OPENMPI)
+        node="-np 1 "
+        ;;
+    *)
+        node=""
+    esac
+
+    echo "#!/bin/bash" > $procCmdFile
+    case "$method" in
+    0)
+        echo "$sourceFoam; cd $PWD; $exec $args | tee $procLog" >> $procCmdFile
+        echo "${node}$procCmdFile" >> $PWD/mpirun.schema
+        ;;
+    1)
+        echo "$sourceFoam; cd $PWD; gdb -command $PWD/gdbCommands $exec 2>&1 | tee $procLog; read dummy" >> $procCmdFile
+        #echo "$sourceFoam; cd $PWD; $exec $args; read dummy" >> $procCmdFile
+        echo "${node}xterm -font fixed -title 'processor'$proc $geom -e $procCmdFile" >> $PWD/mpirun.schema
+        ;;
+    2)
+        echo "$sourceFoam; cd $PWD; gdb -command $PWD/gdbCommands $exec > $procLog 2>&1" >> $procCmdFile
+        echo "${node}$procCmdFile" >> $PWD/mpirun.schema
+        ;;
+    3)
+        echo "$sourceFoam; cd $PWD; $exec $args > $procLog 2>&1" >> $procCmdFile
+        echo "${node}$procCmdFile" >> $PWD/mpirun.schema
+        ;;
+    4)
+        echo "$sourceFoam; cd $PWD; $exec $args 2>&1 | tee $procLog; read dummy" >> $procCmdFile
+        echo "${node}xterm -font fixed -title 'processor'$proc $geom -e $procCmdFile" >> $PWD/mpirun.schema
+        ;;
+    5)
+        echo "$sourceFoam; cd $PWD; valgrind --leak-check=full --show-reachable=yes $exec $args 2>&1 | tee $procLog; read dummy" >> $procCmdFile
+        echo "${node}xterm -font fixed -title 'processor'$proc $geom -e $procCmdFile" >> $PWD/mpirun.schema
+        ;;
+    6)
+        echo "$sourceFoam; cd $PWD; CPUPROFILE=log.profiler_$proc $exec $args; \
+             pprof --callgrind $exec log.profiler_$proc > log.profiler_$proc.callgrind;" >> $procCmdFile
+        echo "${node}$procCmdFile" >> $PWD/mpirun.schema
+        ;;
+    esac
+
+    chmod +x $procCmdFile
+
+    let column=proc%6
+    if [ $proc -ne 0 -a $column -eq 0 ]
+    then
+        ((xpos+=600))
+        ((ypos=0))
+    else
+        ((ypos+=200))
+    fi
+done
+
+for ((proc=0; proc<$nProcs; proc++))
+do
+    procLog="processor${proc}.log"
+    echo "    tail -f $procLog"
+done
+
+unset cmd
+
+case "$WM_MPLIB" in
+*OPENMPI)
+    cmd="mpirun -app $PWD/mpirun.schema </dev/null"
+    ;;
+MPICH)
+    cmd="mpiexec"
+    for ((proc=0; proc<$nProcs; proc++))
+    do
+        read procCmd
+
+        procXtermCmdFile="$PWD/processor${proc}Xterm.sh"
+        echo "#!/bin/sh" > $procXtermCmdFile
+        echo "$procCmd" >> $procXtermCmdFile
+        chmod +x $procXtermCmdFile
+        if [ $proc -ne 0 ]
+        then
+            cmd="${cmd} :"
+        fi
+        cmd="${cmd} -n 1 ${procXtermCmdFile}"
+    done < $PWD/mpirun.schema
+    ;;
+*)
+    echo
+    echo "Unsupported WM_MPLIB setting : $WM_MPLIB"
+    printUsage
+    exit 1
+esac
+
+echo "Constructed $PWD/mpirun.schema file."
+echo ""
+echo "    $cmd"
+echo ""
+$ECHO "Press return to execute.\c"
+read dummy
+exec $cmd
+
+#------------------------------------------------------------------------------

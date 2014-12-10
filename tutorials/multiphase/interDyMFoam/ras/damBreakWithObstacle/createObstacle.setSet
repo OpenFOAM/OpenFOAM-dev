@@ -1,0 +1,3 @@
+cellSet c0 new
+cellSet c0 invert
+cellSet c0 delete boxToCell (0.375 0.375 0) (0.625 0.625 0.25)

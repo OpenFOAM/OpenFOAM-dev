@@ -1,0 +1,14 @@
+EXE_INC = \
+    -DFULLDEBUG -g -O0 \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/lagrangian/intermediate/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/radiationModels/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/thermophysicalFunctions/lnInclude
+
+EXE_LIBS = \
+    -lfiniteVolume \
+    -llagrangianIntermediate \
+    -lradiationModels \
+    -lthermophysicalFunctions \
+    -lregionModels \
+    -lsampling

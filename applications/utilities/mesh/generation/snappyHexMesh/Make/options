@@ -1,0 +1,21 @@
+EXE_INC = \
+    /* -g -DFULLDEBUG -O0 */ \
+    -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
+    -I$(LIB_SRC)/mesh/autoMesh/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_SRC)/triSurface/lnInclude \
+    -I$(LIB_SRC)/surfMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/edgeMesh/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+EXE_LIBS = \
+    -lfiniteVolume \
+    -ldecompositionMethods \
+    -L$(FOAM_LIBBIN)/dummy -lptscotchDecomp \
+    -lmeshTools \
+    -lsurfMesh \
+    -lfileFormats \
+    -ldynamicMesh \
+    -lautoMesh

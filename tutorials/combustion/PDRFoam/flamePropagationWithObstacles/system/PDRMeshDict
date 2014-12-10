@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      PDRMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//- Per faceSet the patch the faces should go into blocked baffles
+blockedFaces ((blockedFacesSet blockedFaces));
+
+//- Per faceSet the patch the faces should go into coupled baffles
+coupledFaces
+{
+
+    coupledFacesSet
+    {
+        wallPatchName               baffleWall;
+        cyclicMasterPatchName       baffleCyclic_half0;
+    }
+}
+
+//- Name of cellSet that holds the cells to fully remove
+blockedCells blockedCellsSet;
+
+//- All exposed faces that are not specified in blockedFaces go into
+//  this patch
+defaultPatch outer;
+
+// ************************************************************************* //

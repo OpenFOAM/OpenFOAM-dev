@@ -1,0 +1,574 @@
+/* Naviation Styles */
+.nav0
+{
+    width:350px;
+    position:absolute;
+    z-index:2;
+    margin:25px 0 0 0;
+    margin-left:610px !important /*Non-IE6*/;
+    margin-left:613px /*IE6*/;
+}
+.nav0 ul
+{
+    float:right;
+    padding:0 20px 0 0;
+}
+.nav0 li
+{
+    display:inline;
+    list-style:none;
+}
+.nav0 li a
+{
+    padding:0 0 0 3px;
+}
+.nav0 a:hover
+{
+    text-decoration:none;
+}
+.nav0 a img
+{
+    height:20px;
+    border:none;
+}
+.nav1
+{
+    width:350px;
+    position:absolute;
+    z-index:3;
+    margin:55px 0 0 610px;
+}
+.nav1 ul
+{
+    float:right;
+    padding:0 15px 0 0;
+    font-weight:normal;
+}
+.nav1 li
+{
+    display:inline;
+    list-style:none;
+}
+.nav1 li a
+{
+    display:block;
+    float:left;
+    padding:2px 5px 2px 5px;
+    color:rgb(125,125,125);
+    text-decoration:none;
+    font-size:110%;
+}
+.nav1 a:hover
+{
+    text-decoration:none;
+    color:rgb(50,50,50);
+}
+.nav1_ln
+{
+    float:right;
+    height:2.1em;
+    width:300px;
+}
+.nav1_ln ul
+{
+    float:right;
+    padding:7px 15px 0 0;
+    font-weight:normal;
+}
+.nav1_ln li
+{
+    display:inline;
+    list-style:none;
+}
+.nav1_ln li a
+{
+    display:block;
+    float:left;
+    padding:2px 5px 2px 5px;
+    color:rgb(125,125,125);
+    text-decoration:none;
+    font-size:110%;
+}
+.nav1_ln a:hover
+{
+    text-decoration:none;
+    color:rgb(50,50,50);
+}
+.nav2
+{
+    white-space:nowrap /*IE hack*/;
+    float:left;
+    width:100%;
+    background:rgb(225,225,225);
+    color:rgb(100,100,100);
+    font-size:130%;
+    height:2.1em;
+} /*Color navigation bar normal mode*/
+.nav2 ul
+{
+    list-style-type:none;
+}
+.nav2 ul li
+{
+    float:left;
+    z-index:auto !important /*Non-IE6*/;
+    z-index:1000 /*IE6*/;
+    border-right:solid 1px rgb(175,175,175);
+}
+.nav2 ul li a
+{
+    float:none !important /*Non-IE6*/;
+    float:left /*IE-6*/;
+    display:block;
+    height:2.1em;
+    line-height:2.1em;
+    padding:0 16px 0 16px;
+    text-decoration:none;
+    font-weight:normal;
+    color: rgb(100,100,100);
+    color:#333;
+}
+.nav2 ul li ul
+{
+    display:none;
+    border:none;
+}
+.nav2 ul li:hover
+{
+    position:relative;
+} /*Sylvain IE hack*/
+.nav2 ul li:hover a
+{
+    background-color:rgb(215,215,215);
+    text-decoration:none;
+} /*Color main cells hovering mode*/
+.nav2 ul li:hover ul
+{
+    display:block;
+    width:12.0em;
+    position:absolute;
+    z-index:999;
+    top:2.0em;
+    margin-top:0.1em;
+    left:0;
+}
+.nav2 ul li:hover ul li a
+{
+    white-space:normal;
+    display:block;
+    width:12.0em;
+    height:auto;
+    line-height:1.3em;
+    margin-left:-1px;
+    padding:4px 16px 4px 16px;
+    border-left:solid 1px rgb(175,175,175);
+    border-bottom: solid 1px rgb(175,175,175);
+    background-color:rgb(240,240,240);
+    font-weight:normal;
+    color:rgb(100,100,100);
+    color:#333;
+} /*Color subcells normal mode*/
+.nav2 ul li:hover ul li a:hover
+{
+    background-color:rgb(215,215,215);
+    text-decoration:none;
+} /*Color subcells hovering mode*/
+.nav2 table
+{
+    position:absolute;
+    top:0;
+    left:-1px;
+    border-collapse:collapse;
+}
+.nav2 ul li a:hover
+{
+    position:relative /*Sylvain IE hack*/;
+    z-index:1000 /*Sylvain IE hack*/;
+    background-color:rgb(215,215,215);
+    text-decoration:none;
+} /*Color main cells hovering mode*/
+.nav2 ul li a:hover ul
+{
+    display:block;
+    width:12.0em;
+    position:absolute;
+    z-index:999;
+    top:2.1em;
+    t\op:2.0em;
+    left:0;
+    marg\in-top:0.1em;
+}
+.nav2 ul li a:hover ul li a
+{
+    white-space:normal;
+    display:block;
+    w\idth:12.0em;
+    height:1px;
+    line-height:1.3em;
+    padding:4px 16px 4px 16px;
+    border-left:solid 1px rgb(175,175,175);
+    border-bottom: solid 1px rgb(175,175,175);
+    background-color:rgb(240,240,240);
+    font-weight:normal;
+    color:rgb(50,50,50);
+} /*Color subcells normal mode*/
+.nav2 ul li a:hover ul li a:hover
+{
+    background-color:rgb(215,215,215);
+    text-decoration:none;
+} /*Color subcells hovering mode*/
+
+/*nav3-grid ****************************************/
+.nav3-grid
+{
+    width:199px;
+    border-bottom:solid 1px rgb(200,200,200);
+}
+.nav3-grid dt a, .nav3-grid dt a:visited
+{
+    display:block;
+    min-height:2.0em /*Non-IE6*/;
+    height:auto !important;
+    height:2.0em /*IE6*/;
+    line-height:2.0em;
+    padding:0px 10px 0px 20px;
+    border-top: solid 1px rgb(200,200,200);
+    text-decoration:none;
+    color:rgb(70,122,167);
+    font-weight:bold;
+    font-size:100%;
+}
+.nav3-grid dd a, .nav3-grid dd a:visited
+{
+    display:block;
+    min-height:1.7em /*Non-IE6*/;
+    height:auto !important;
+    height:1.7em /*IE6*/;
+    line-height:1.7em;
+    padding:0px 10px 0px 40px;
+    border:none;
+    font-weight:normal;
+    text-decoration:none;
+    color:rgb(70,122,167);
+    font-size:100%;
+}
+.nav3-grid dt a:hover, .nav3-grid dd a:hover
+{
+    background-color:rgb(225,225,225);
+    color:rgb(42,90,138);
+    text-decoration:none;
+}
+
+/*nav3-nobullet *********************/
+nav3-bullet
+{
+    width:170px;
+    margin:10px 0 0 20px;
+}
+.nav3-bullet dt a, .nav3-bullet dt a:visited
+{
+    line-height:2.0em;
+    padding:0 0 0 10px;
+    background:url(img/bg_bullet_full_1.gif) no-repeat 0px 50%;
+    text-decoration:none;
+    color:rgb(70,122,167);
+    font-weight:bold;
+    font-size:120%;
+}
+.nav3-bullet dd a, .nav3-bullet dd a:visited
+{
+    line-height:1.7em;
+    margin:0 0 0 15px;
+    padding:0 0 0 10px;
+    background:url(img/bg_bullet_half_1.gif) no-repeat 0px 50%;
+    text-decoration:none;
+    color:rgb(70,122,167);
+    font-weight:normal;
+    font-size:120%;
+}
+.nav3-bullet dt a:hover
+{
+    background:url(img/bg_bullet_full_2.gif) no-repeat 0px 50%;
+    text-decoration:underline;
+    color:rgb(42,90,138);
+}
+.nav3-bullet dd a:hover
+{
+    background:url(img/bg_bullet_half_2.gif) no-repeat 0px 50%;
+    text-decoration:underline;
+    color:rgb(42,90,138);
+}
+.nav3-nobullet
+{
+    width:170px;
+    margin:10px 0 0 20px;
+}
+.nav3-nobullet dt a, .nav3-nobullet dt a:visited
+{
+    line-height:2.0em;
+    text-decoration:none;
+    color:rgb(70,122,167);
+    font-weight:bold;
+    font-size:120%;
+}
+.nav3-nobullet dd a, .nav3-nobullet dd a:visited
+{
+    line-height:1.7em;
+    margin:0 0 0 15px;
+    text-decoration:none;
+    color:rgb(70,122,167);
+    font-weight:normal;
+    font-size:120%;
+}
+.nav3-nobullet dt a:hover, .nav3-nobullet dd a:hover
+{
+    text-decoration:underline;
+    color:rgb(42,90,138);
+}
+
+div.navpath, div.summary
+{
+    display: none;
+}
+
+/*main-navigation ************************************************/
+.main-navigation .loginform
+{
+    width:160px;
+    margin:-10px 20px 0 20px;
+}
+.main-navigation .loginform p
+{
+    clear:both;
+    margin:0;
+    padding:0;
+}
+.main-navigation .loginform fieldset
+{
+    width:160px;
+    border:none;
+}
+.main-navigation .loginform label.top
+{
+    float:left;
+    width:125px;
+    margin:0 0 2px 0;
+    font-size:110%;
+}
+.main-navigation .loginform label.right
+{
+    float:left;
+    width:125px;
+    margin:5px 0 0 0;
+    padding:0 0 0 3px;
+    /*IE6*/;
+    font-size:110%;
+}
+.main-navigation .loginform input.field
+{
+    width:158px;
+    margin:0 0 5px 0;
+    padding:0.1em 0 0.2em 0 !important /*Non-IE6*/;
+    padding:0.2em 0 0.3em 0 /*IE6*/;
+    border:solid 1px rgb(200,200,200);
+    font-family:verdana,arial,sans-serif;
+    font-size:110%;
+}
+.main-navigation .loginform input.checkbox
+{
+    float:left;
+    margin:5px 0 0 0 !important /*Non-IE6*/;
+    margin:2px 0 0 -3px /*IE6*/;
+    border:none;
+}
+.main-navigation .loginform input.button
+{
+    float:left;
+    width:5.0em;
+    margin:10px 0 5px 0;
+    padding:1px;
+    background:rgb(230,230,230);
+    border:solid 1px rgb(150,150,150);
+    text-align:center;
+    font-family:verdana,arial,sans-serif;
+    color:rgb(150,150,150);
+    font-size:110%;
+}
+.main-navigation .loginform input.button:hover
+{
+    cursor:pointer;
+    border:solid 1px rgb(80,80,80);
+    background:rgb(220,220,220);
+    color:rgb(80,80,80);
+}
+.main-navigation .searchform
+{
+    width:160px;
+    margin:0 20px 0 20px;
+}
+.main-navigation .searchform p
+{
+    clear:both;
+    margin:0;
+    padding:0;
+}
+.main-navigation .searchform fieldset
+{
+    border:none;
+}
+.main-navigation .searchform input.field
+{
+    float:left;
+    width:158px;
+    padding:0.1em 0 0.2em 0 !important /*Non-IE6*/;
+    padding:0.2em 0 0.3em 0 /*IE6*/;
+    border:1px solid rgb(200,200,200);
+    font-family:verdana,arial,sans-serif;
+    font-size:120%;
+}
+.main-navigation .searchform input.button
+{
+    float:left;
+    width:3.0em;
+    margin-top: 0.5em;
+    padding:1px;
+    background:rgb(230,230,230);
+    border:solid 1px rgb(150,150,150);
+    text-align:center;
+    font-family:verdana,arial,sans-serif;
+    color:rgb(150,150,150);
+    font-size:120%;
+}
+.main-navigation .searchform input.button:hover
+{
+    cursor:pointer;
+    border:solid 1px rgb(80,80,80);
+    background:rgb(220,220,220);
+    color:rgb(80,80,80);
+}
+.main-navigation h1.first
+{
+    clear:both;
+    margin:0px;
+    padding:4px 20px 3px 20px;
+    background-color:rgb(190,190,190);
+    background-color:#89aad6;
+    font-family:"trebuchet ms",arial,sans-serif;
+    color:rgb(255,255,255);
+    font-weight:bold;
+}
+.main-navigation h1
+{
+    clear:both;
+    margin:30px 0 20px 0;
+    padding:4px 20px 3px 20px;
+    background:rgb(190,190,190);
+    background:#89aad6;
+    font-family:"trebuchet ms",arial,sans-serif;
+    color:rgb(255,255,255);
+    font-weight:bold;
+    font-size:1.2em;
+}
+.main-navigation h2
+{
+    clear:both;
+    margin:20px 10px 10px 20px;
+    font-family:"trebuchet ms",arial,sans-serif;
+    color:rgb(100,100,100);
+    font-weight:bold;
+    font-size:150%;
+}
+.main-navigation h3
+{
+    clear:both;
+    margin:10px 10px 5px 20px;
+    color:rgb(80,80,80);
+    font-weight:bold;
+    font-size:110%;
+} /* Note: h2 not existent, to make identical to formats for main-navigation for easier exchange */
+.main-navigation p
+{
+    clear:both;
+    margin:0 10px 10px 20px;
+    color:rgb(80,80,80);
+    line-height:1.3em;
+    font-size:110%;
+}
+.main-navigation p.center
+{
+    text-align:center;
+}
+.main-navigation p.right
+{
+    text-align:right;
+}
+.main-navigation ul
+{
+    list-style:none;
+    margin:0.5em 5px 1.0em 5px;
+}
+.main-navigation ul li
+{
+    margin:5px 0 0.2em 2px;
+    background-image:none;
+    line-height:1.4em;
+    font-size:90%;
+    color:#467aa7;
+    font-weight:normal;
+}
+.main-navigation a,
+.main-navigation ul li ul li,
+.main-navigation ul li ul li a,
+.main-navigation ul li ul li a:visited
+{
+    color:#333;
+    font-weight:normal;
+}
+.main-navigation ol
+{
+    margin:0.5em 10px 1.0em 40px !important /*Non-IE6*/;
+    margin:0.5em 10px 1.0em 45px /*IE6*/;
+}
+.main-navigation ol li
+{
+    list-style-position:outside;
+    margin:0 0 0.4em 0;
+    font-size:110%;
+}
+
+.main-navigation
+{
+    font-size:14px;
+    display:inline /*Fix IE floating margin bug*/;
+    float:left;
+    width:200px;
+    height:100%;
+    overflow:visible !important /*Firefox*/;
+    overflow:hidden /*IE6*/;
+    background:rgb(245,245,245);
+}
+
+.main-navigation .round-border-topright
+{
+    width:10px;
+    height:10px;
+    position:absolute;
+    z-index:10;
+    margin:0 0 0 190px;
+    background:url(img/bg_corner_topright.gif) no-repeat;
+}
+
+.main-navigation h2
+{
+    margin: 5px 10px 5px 10px;
+}
+.main-navigation h1.first ,.main-navigation h1
+{
+    background-color:#89aad6 !important;
+}
+.main-navigation
+{
+    background-color:#d5e1f0 !important;
+}
+
+

@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/ParaViewResources" >
+      <file>PV3blockMeshReader.xml</file>
+  </qresource>
+</RCC>

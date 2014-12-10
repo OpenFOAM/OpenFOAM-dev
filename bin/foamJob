@@ -1,0 +1,264 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamJob
+#
+# Description
+#     Run an OpenFOAM job in background.
+#     Redirects the output to 'log' in the case directory.
+#
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTION] <application> ...
+options:
+  -case <dir>       specify alternative case directory, default is the cwd
+  -parallel         parallel run of processors
+  -screen           also sends output to screen
+  -version <ver>    specify an alternative OpenFOAM version
+  -help             print the usage
+
+* run an OpenFOAM job in background.
+  Redirects the output to 'log' in the case directory
+
+USAGE
+    exit 1
+}
+
+#for being able to echo strings that have single quotes
+echoArgs() {
+    addSpace=""
+
+    for stringItem in "$@"; do
+
+        echo -n "${addSpace}"
+
+        if [ "${stringItem##* }" = "$stringItem" ]
+        then
+            echo -n "$stringItem"
+            addSpace=" "
+        else
+            echo -n "'$stringItem'"
+            addSpace=" "
+        fi
+
+    done
+
+    unset stringItem addSpace
+}
+
+unset version
+
+# replacement for possibly buggy 'which'
+findExec() {
+    case "$1" in
+    */*)
+        if [ -x "$1" ]
+        then
+            echo "$1"
+            return 0
+        fi
+        ;;
+    esac
+
+    oldIFS=$IFS
+    IFS=':'
+    for d in $PATH
+    do
+        # echo "testing: $d/$1" 1>&2
+        if [ -x "$d/$1" -a ! -d "$d/$1" ]
+        then
+            # echo "Found exec: $d/$1" 1>&2
+            IFS=$oldIFS
+            echo "$d/$1"
+            return 0
+        fi
+     done
+     IFS=$oldIFS
+     echo ""
+     return 1
+}
+
+
+
+# MAIN SCRIPT
+#~~~~~~~~~~~~
+unset parallelOpt screenOpt
+
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -h | -help)
+      usage
+      ;;
+   -case)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      cd "$2" 2>/dev/null || usage "directory does not exist:  '$2'"
+      shift 2
+      ;;
+   -p | -parallel)
+      parallelOpt=true
+      shift
+      ;;
+   -s | -screen)
+      screenOpt=true
+      shift
+      ;;
+   -v | -version)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      version="$2"
+      shift 2
+      ;;
+   --)
+      shift
+      break
+      ;;
+   -*)
+      usage "invalid option '$1'"
+      ;;
+   *)
+      break
+      ;;
+   esac
+done
+
+[ "$#" -ge 1 ] || usage "No application specified"
+
+
+# use foamExec for a specified version
+# also need foamExec for remote (parallel) runs
+if [ -n "$version" -o "$parallelOpt" = true ]
+then
+    # when possible, determine if application even exists
+    if [ -z "$version" ]
+    then
+        findExec $1 >/dev/null || usage "Application '$1' not found"
+    fi
+
+    # use foamExec for dispatching
+    APPLICATION=`findExec foamExec` || usage "'foamExec' not found"
+
+    [ -n "$version" ] && APPLICATION="$APPLICATION -version $version"
+
+    # attempt to preserve the installation directory 'FOAM_INST_DIR'
+    if [ -d "$FOAM_INST_DIR" ]
+    then
+        APPLICATION="$APPLICATION -prefix $FOAM_INST_DIR"
+    fi
+
+else
+    APPLICATION=`findExec $1` || usage "Application '$1' not found"
+    echo "Application : $1"
+    shift
+fi
+
+
+if [ "$parallelOpt" = true ]
+then
+    # parallel
+    # ~~~~~~~~
+
+    #
+    # is the case decomposed?
+    #
+    if [ -r "processor0" ]
+    then
+        NPROCS="`/bin/ls -1d processor* | wc -l`"
+    else
+        echo "Case is not currently decomposed"
+        if [ -r system/decomposeParDict ]
+        then
+            echo "system/decomposeParDict exists"
+            echo "Try decomposing with \"foamJob decomposePar\""
+            exit 1
+        else
+            echo "Cannot find system/decomposeParDict file required to decompose the case for parallel running."
+            echo "Please consult the User Guide for details of parallel running"
+            exit 1
+        fi
+    fi
+
+    #
+    # locate mpirun
+    #
+    mpirun=`findExec mpirun` || usage "'mpirun' not found"
+    mpiopts="-np $NPROCS"
+
+    #
+    # is the machine ready to run parallel?
+    #
+    echo "Parallel processing using $WM_MPLIB with $NPROCS processors"
+    case "$WM_MPLIB" in
+    *OPENMPI)
+        # add hostfile info
+        for hostfile in \
+            hostfile \
+            machines \
+            system/hostfile \
+            system/machines \
+            ;
+        do
+            if [ -r $hostfile ]
+            then
+                mpiopts="$mpiopts -hostfile $hostfile"
+                break
+            fi
+        done
+        ;;
+    esac
+
+    #
+    # run (in parallel)
+    #
+    if [ "$screenOpt" = true ]
+    then
+        echo "Executing: $mpirun $mpiopts $APPLICATION $(echoArgs "$@") -parallel | tee log"
+        $mpirun $mpiopts $APPLICATION "$@" -parallel | tee log
+    else
+        echo "Executing: $mpirun $mpiopts $APPLICATION $(echoArgs "$@") -parallel > log 2>&1"
+        $mpirun $mpiopts $APPLICATION "$@" -parallel > log 2>&1 &
+    fi
+
+else
+    #
+    # run (on single processor)
+    #
+    if [ "$screenOpt" = true ]
+    then
+        echo "Executing: $APPLICATION $(echoArgs "$@") | tee log &"
+        $APPLICATION "$@" | tee log &
+        wait $!
+    else
+        echo "Executing: $APPLICATION $(echoArgs "$@") > log 2>&1 &"
+        $APPLICATION "$@" > log 2>&1 &
+    fi
+fi
+
+#------------------------------------------------------------------------------

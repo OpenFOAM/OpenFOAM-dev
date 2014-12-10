@@ -1,0 +1,68 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fixedTemperaure1
+{
+    type            fixedTemperatureConstraint;
+    active          true;
+    selectionMode   cellZone;
+    cellZone        porosity;
+
+    fixedTemperatureConstraintCoeffs
+    {
+        mode            uniform;
+        temperature     350;
+    }
+}
+
+
+porosity1
+{
+    type            explicitPorositySource;
+    active          true;
+    selectionMode   cellZone;
+    cellZone        porosity;
+
+    explicitPorositySourceCoeffs
+    {
+        type            fixedCoeff;
+        active          yes;
+        cellZone        porosity;
+
+        fixedCoeffCoeffs
+        {
+            alpha       alpha [0 0 -1 0 0 0 0] (500 -1000 -1000);
+            beta        beta  [0 -1 0 0 0 0 0] (0 0 0);
+            rhoRef      1;
+
+            coordinateSystem
+            {
+                type    cartesian;
+                origin  (0 0 0);
+                coordinateRotation
+                {
+                    type    axesRotation;
+                    e1  (0.70710678 0.70710678 0);
+                    e2  (0 0 1);
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

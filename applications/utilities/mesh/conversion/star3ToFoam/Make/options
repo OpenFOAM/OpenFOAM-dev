@@ -1,0 +1,7 @@
+EXE_INC = \
+    /* -DDEBUG_MERGE */ \
+    /* -DDEBUG_COUPLE */ \
+    /* -DDEBUG_COUPLE_INTERSECTION */ \
+    /* -DDEBUG_RIGHT_HAND_WALK */ \
+    /* -DDEBUG_FACE_ORDERING */ \
+    /* -DDEBUG_COUPLE_PROJECTION */

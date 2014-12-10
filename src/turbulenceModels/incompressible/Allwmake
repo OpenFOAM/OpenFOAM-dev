@@ -1,0 +1,10 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+makeType=${1:-libso}
+set -x
+
+wmake $makeType turbulenceModel
+wmake $makeType RAS
+wmake $makeType LES
+
+# ----------------------------------------------------------------- end-of-file

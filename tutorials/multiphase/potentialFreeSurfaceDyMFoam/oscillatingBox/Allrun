@@ -1,0 +1,21 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Set application name
+application=`getApplication`
+
+runApplication blockMesh
+runApplication topoSet
+mv log.topoSet log.topoSet.1
+runApplication subsetMesh -overwrite c0 -patch floatingObject
+runApplication topoSet -dict system/topoSetDict-selectBottom
+runApplication createPatch -overwrite
+
+cp -r 0.org 0 > /dev/null 2>&1
+
+runApplication $application
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,68 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+flowVelocity    ( 20 0 0 );
+
+pressure        0;
+
+turbulentKE     0.24;
+
+turbulentOmega  1.78;
+
+dimensions      [ 0 1 -1 0 0 0 0 ];
+
+internalField   uniform ( 20 0 0 );
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform ( 20 0 0 );
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform ( 0 0 0 );
+        value           uniform ( 20 0 0 );
+    }
+    lowerWall
+    {
+        type            fixedValue;
+        value           uniform ( 20 0 0 );
+    }
+    "motorBike_.*"
+    {
+        type            fixedValue;
+        value           uniform ( 0 0 0 );
+    }
+    upperWall
+    {
+        type            symmetryPlane;
+    }
+    "(front|back)"
+    {
+        type            symmetryPlane;
+    }
+    "proc.*"
+    {
+        type            processor;
+    }
+}
+
+
+// ************************************************************************* //

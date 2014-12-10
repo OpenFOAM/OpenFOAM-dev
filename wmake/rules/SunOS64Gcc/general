@@ -1,0 +1,10 @@
+CPP        = /lib/cpp
+LD         = ld -64
+
+PROJECT_LIBS = -l$(WM_PROJECT) -lnsl -lsocket -L$(FOAM_LIBBIN)/dummy -lPstream
+
+include $(GENERAL_RULES)/standard
+
+include $(RULES)/X
+include $(RULES)/c
+include $(RULES)/c++

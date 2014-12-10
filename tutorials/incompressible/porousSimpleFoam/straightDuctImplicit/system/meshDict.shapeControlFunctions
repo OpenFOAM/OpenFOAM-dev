@@ -1,0 +1,49 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      meshDict.shapeControlFunctions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+angledDuct
+{
+    type                        searchableSurfaceControl;
+    forceInitialPointInsertion  on;
+    priority                    1;
+    mode                        inside;
+    surfaceCellSizeFunction     uniformValue;
+    uniformValueCoeffs
+    {
+        surfaceCellSizeCoeff    1;
+    }
+    cellSizeFunction            uniform;
+    uniformCoeffs
+    {}
+}
+
+porosity
+{
+    type                        searchableSurfaceControl;
+    forceInitialPointInsertion  on;
+    priority                    1;
+    mode                        inside;
+    surfaceCellSizeFunction     uniformValue;
+    uniformValueCoeffs
+    {
+        surfaceCellSizeCoeff    1;
+    }
+    cellSizeFunction            uniform;
+    uniformCoeffs
+    {}
+}
+
+// ************************************************************************* //

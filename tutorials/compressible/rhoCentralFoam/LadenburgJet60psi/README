@@ -1,0 +1,2 @@
+- The time 0 solution is a fairly well-converged solution to this simulation
+- The endTime is short for testing purposes

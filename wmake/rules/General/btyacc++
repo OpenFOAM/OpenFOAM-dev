@@ -1,0 +1,6 @@
+.SUFFIXES: .Y
+
+Ytoo = btyacc++ -v -d $(SKELETON) $$SOURCE ; mv y_tab.c $*.C ; mv y_tab.h $*.H ; $(CC) $(c++FLAGS) -c $*.C -o $@
+
+.Y.dep:
+	$(MAKE_DEP)

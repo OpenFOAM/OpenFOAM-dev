@@ -1,0 +1,46 @@
+2008-10-23
+
+Contents:
+
+surfaceAdd
+- adds to surface files. (but does not intersect or anything)
+
+surfaceBooleanOp
+- Boolean operations (add, or, xor) on closed surfaces. Probably not working.
+
+surfaceCheck
+- checks surface for incorrect topology. Checks normals of neighbouring faces.
+
+surfaceCoarsen
+- Stan Melax coarsening algorithm
+
+surfaceConvert
+- Converts surfaces to/from various formats
+
+surfaceFind
+- Finds nearest vertex and face to given point.
+
+surfaceMeshTriangulate
+- Triangulate external faces of mesh and write as surface.
+
+surfacePointMerge
+- Explicit point merge of surface.
+
+surfaceSetOutside
+- Orient normals on (closed) surface.
+
+surfaceSmooth
+- Laplacian smoothing on surface vertices
+
+surfaceSubset
+- Subsets surface
+
+surfaceToPatch
+- Applies region information of surfaces to mesh.
+  Each external face of mesh gets region number of nearest surface triangle.
+
+-------------------------------------------------------------------------------
+
+surfaceMeshConvert
+- Similar to surfaceConvert, but uses surfMesh library
+

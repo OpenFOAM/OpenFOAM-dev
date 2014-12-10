@@ -1,0 +1,86 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+makeType=${1:-libso}
+
+wmakeCheckPwd "$WM_PROJECT_DIR/src" || {
+    echo "Error: Current directory is not \$WM_PROJECT_DIR/src"
+    echo "    The environment variables are inconsistent with the installation."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+
+[ -n "$FOAM_EXT_LIBBIN" ] || {
+    echo "Error: FOAM_EXT_LIBBIN not set"
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+
+set -x
+
+# update OpenFOAM version strings if required
+wmakePrintBuild -check || /bin/rm -f OpenFOAM/Make/*/global.? 2>/dev/null
+
+wmakeLnInclude OpenFOAM
+wmakeLnInclude OSspecific/${WM_OSTYPE:-POSIX}
+Pstream/Allwmake $*
+
+OSspecific/${WM_OSTYPE:-POSIX}/Allwmake $*
+wmake $makeType OpenFOAM
+
+wmake $makeType fileFormats
+wmake $makeType surfMesh
+wmake $makeType triSurface
+wmake $makeType meshTools
+wmake $makeType edgeMesh
+
+# Decomposition methods needed by dummyThirdParty
+parallel/decompose/AllwmakeLnInclude
+# dummyThirdParty (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
+dummyThirdParty/Allwmake $*
+
+wmake $makeType finiteVolume
+wmake $makeType lagrangian/basic
+wmake $makeType lagrangian/distributionModels
+wmake $makeType genericPatchFields
+
+# Build the proper scotchDecomp, metisDecomp etc.
+parallel/Allwmake $*
+
+renumber/Allwmake $*
+
+wmake $makeType conversion
+
+wmake $makeType sampling
+
+wmake $makeType mesh/extrudeModel
+
+wmake $makeType dynamicMesh
+wmake $makeType dynamicFvMesh
+wmake $makeType topoChangerFvMesh
+
+wmake $makeType ODE
+wmake $makeType randomProcesses
+
+thermophysicalModels/Allwmake $*
+transportModels/Allwmake $*
+turbulenceModels/Allwmake $*
+TurbulenceModels/Allwmake $*
+wmake $makeType combustionModels
+regionModels/Allwmake $*
+lagrangian/Allwmake $*
+mesh/Allwmake $*
+
+fvAgglomerationMethods/Allwmake $*
+
+wmake $makeType fvMotionSolver
+wmake $makeType engine
+
+wmake $makeType fvOptions
+
+wmake $makeType regionCoupled
+
+postProcessing/Allwmake $*
+
+wmake $makeType sixDoFRigidBodyMotion
+
+# ----------------------------------------------------------------- end-of-file

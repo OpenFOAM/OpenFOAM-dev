@@ -1,0 +1,163 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamSystemCheck
+#
+# Description
+#     Checks the machine system and the user's
+#     personal configuration for running OpenFOAM.
+#
+#------------------------------------------------------------------------------
+
+# STATIC VARIABLES
+# ~~~~~~~~~~~~~~~~
+HLINE="-----------------------------------------------------------------------"
+WIDTH=16
+unset fatalError
+
+# FUNCTIONS
+# ~~~~~~~~~
+heading()
+{
+    echo
+    echo "$1"
+    echo "$HLINE"
+}
+
+lenBase()
+{
+    echo $1 | tr -d " " | wc -m | tr -d " "
+}
+
+length()
+{
+    NOCHAR=$(lenBase $1)
+    NOCHAR=$(expr $NOCHAR - 1)
+    [ $NOCHAR -ge 0 ] || NOCHAR=0
+    echo $NOCHAR
+}
+
+fixlen()
+{
+    WORD=$1
+    ONELEN=$(length "$1")
+    LDIFF=$(expr $ONELEN - $2)
+    if [ $LDIFF -le 1 ]
+    then
+        while [ $LDIFF -lt 0 ]
+        do
+            WORD="$WORD "
+            LDIFF=$(expr $LDIFF + 1)
+        done
+        echo "$WORD"
+    else
+        LDIFF=$(expr $LDIFF + 4)
+        WORD=$(echo "$WORD" | cut -c${LDIFF}-)
+        echo "...${WORD}"
+    fi
+}
+
+# MAIN CODE
+# ~~~~~~~~~
+heading "Checking basic system..."
+
+# check shell
+echo "$(fixlen Shell: $WIDTH) $SHELL"
+case "$SHELL" in
+*/csh | */tcsh | */bash | */ksh)
+    ;;
+*)
+    echo "ERROR: Cannot identify the current shell."
+    echo "       OpenFOAM $WM_PROJECT_VERSION is compatible"
+    echo "       with csh, tcsh, ksh and bash."
+    echo
+    fatalError=true
+    ;;
+esac
+
+# check hostname
+HOST=$(uname -n)
+echo "$(fixlen Host: $WIDTH) $HOST"
+if [ $(length $HOST) -eq 0 ]
+then
+    echo "ERROR: Cannot stat hostname."
+    echo "       OpenFOAM $WM_PROJECT_VERSION needs a valid hostname to"
+    echo "       function. Contact your system administrator."
+    echo
+    fatalError=true
+fi
+
+# check os
+OSTYPE=$(uname -s)
+case "$OSTYPE" in
+Linux | LinuxAMD64 | SunOS )
+    echo "$(fixlen OS: $WIDTH) $OSTYPE version $(uname -r)"
+    ;;
+*)
+    echo "ERROR: Incompatible operating system \"$OSTYPE\"."
+    echo "       OpenFOAM $WM_PROJECT_VERSION is currently available for "
+    echo "       Linux, LinuxAMD64 and SunOS only."
+    echo
+    fatalError=true
+    ;;
+esac
+
+
+# check user name
+USER_NAME=$LOGNAME
+if [ $(length $USER_NAME) -eq 0 ]
+then
+    USER_NAME=$USER
+fi
+
+echo "$(fixlen User: $WIDTH) ${USER_NAME}"
+if [ $(length $USER_NAME) -eq 0 ]
+then
+    echo "ERROR: Cannot stat user name $USER_NAME."
+    echo "       OpenFOAM $WM_PROJECT_VERSION needs a valid user name."
+    echo "       Contact your system administrator. "
+    echo
+    fatalError=true
+fi
+
+
+echo
+echo
+if [ "$fatalError" = true ]
+then
+    echo "System check: FAIL"
+    echo "=================="
+    echo "Your system is not currently compatible with OpenFOAM installation "
+    echo "requirements. Review the error messages and consult the documentation"
+    echo "for further instructions."
+    echo
+else
+    echo "System check: PASS"
+    echo "=================="
+    echo "Continue OpenFOAM installation."
+    echo
+fi
+
+#------------------------------------------------------------------------------

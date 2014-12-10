@@ -1,0 +1,7 @@
+/*
+fvMeshGeometry.C
+fvMesh.C
+*/
+Test-fieldMapping.C
+
+EXE = $(FOAM_USER_APPBIN)/Test-fieldMapping

@@ -1,0 +1,106 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamPackThirdParty [OPTION]
+#
+# Description
+#     Pack and compress the OpenFOAM ThirdParty directory for release
+#
+#------------------------------------------------------------------------------
+packDir=ThirdParty-$WM_PROJECT_VERSION
+toolsDir="${0%/*}/tools"  # this script is located in the tools/ parent dir
+
+usage() {
+    exec 1>&2
+    while [ "$#" -gt 0 ]; do echo "$1"; shift; done
+cat <<USAGE
+Usage: ${0##*/} [OPTION]
+options:
+  -o <dir>          specify alternative output directory
+
+* Pack and compress ThirdParty directory for release
+
+USAGE
+    exit 1
+}
+
+unset prefix outputDir nogit
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -nogit)
+        nogit=true
+        shift
+        ;;
+    -o | -output)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        outputDir=${2%%/}
+        shift 2
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+# check for essential directories
+[ -d $packDir ] || {
+    echo "Error: directory $packDir does not exist" 1>&2
+    exit 1
+}
+
+
+#------------------------------------------------------------------------------
+timeStamp=$(date +%Y-%m-%d)
+packExt=tgz
+packBase=${packDir}_${timeStamp}
+
+# add optional output directory
+[ -d "$outputDir" ] && packBase="$outputDir/$packBase"
+packFile=$packBase.$packExt
+
+# avoid overwriting old pack file
+if [ -f $packFile ]
+then
+    echo "Error: $packFile already exists"
+    exit 1
+fi
+
+
+#------------------------------------------------------------------------------
+
+# add time-stamp file before packing
+echo $timeStamp 2>/dev/null > $packDir/.timeStamp
+echo "pack manually" 1>&2
+foamPackSource $packDir $packFile
+
+#------------------------------------------------------------------------------

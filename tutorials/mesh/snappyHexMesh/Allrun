@@ -1,0 +1,17 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+
+(
+    cd flange || exit
+    ./Allrun
+)
+
+exit 0
+
+# These cases are links to solver test cases and are run when the Allrun
+# scripts of those solvers are run.
+
+# This dummy Allrun script avoids meshing these cases twice.
+
+# ----------------------------------------------------------------- end-of-file

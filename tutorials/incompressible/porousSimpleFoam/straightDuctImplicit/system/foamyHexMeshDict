@@ -1,0 +1,94 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      foamyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "$WM_PROJECT_DIR/etc/caseDicts/foamyHexMeshDict"
+
+geometry
+{
+    #include "meshDict.geometry"
+}
+
+
+surfaceConformation
+{
+    locationInMesh (-0.078 0.02 0.0);
+
+    featurePointControls
+    {
+        specialiseFeaturePoints         on;
+        edgeAiming                      on;
+        guardFeaturePoints              off;
+        snapFeaturePoints               off;
+        circulateEdges                  off;
+    }
+
+
+    geometryToConformTo
+    {
+        #include "meshDict.conformationSurfaces"
+    }
+
+    additionalFeatures
+    {
+        boundaryAndFaceZones
+        {
+            featureMethod           extendedFeatureEdgeMesh;
+            extendedFeatureEdgeMesh "boundaryAndFaceZones.extendedFeatureEdgeMesh";
+        }
+    }
+}
+
+
+motionControl
+{
+    defaultCellSize         0.0035;
+
+    minimumCellSizeCoeff    0;
+
+    maxRefinementIterations 0;
+
+    maxSmoothingIterations  100;
+
+    shapeControlFunctions
+    {
+        #include "meshDict.shapeControlFunctions"
+    }
+
+    objOutput                   off;
+
+    timeChecks                  off;
+
+    printVertexInfo             off;
+}
+
+
+polyMeshFiltering
+{
+    filterEdges                         false;
+    filterFaces                         off;
+    writeTetDualMesh                    true;
+    writeCellShapeControlMesh           false;
+    writeBackgroundMeshDecomposition    false;
+}
+
+
+meshQualityControls
+{
+    #include "meshQualityDict"
+}
+
+
+// ************************************************************************* //

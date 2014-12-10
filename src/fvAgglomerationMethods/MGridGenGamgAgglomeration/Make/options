@@ -1,0 +1,15 @@
+/* Needs ParMGridGen environment variable set. (see Allwmake script) */
+
+TYPE_REAL=
+#if defined(WM_SP)
+TYPE_REAL=-DTYPE_REAL
+#endif
+
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(ParMGridGen)/MGridGen/Lib/lnInclude \
+    -I$(ParMGridGen)/MGridGen/IMlib/lnInclude \
+    $(TYPE_REAL)
+
+LIB_LIBS = \
+    -L$(FOAM_EXT_LIBBIN) -lMGridGen

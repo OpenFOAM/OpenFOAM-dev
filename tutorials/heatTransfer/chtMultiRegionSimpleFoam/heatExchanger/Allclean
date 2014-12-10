@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+cleanCase
+
+foamClearPolyMesh -region air
+foamClearPolyMesh -region porous
+
+rm -f *.OpenFOAM
+
+rm -rf 0

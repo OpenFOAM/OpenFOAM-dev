@@ -1,0 +1,25 @@
+Star-CD uses a so-called 'cell table' to organize properties. The ccm and
+star4 converters preserve this information as a Map of dictionaries under
+"constant/cellTable" and as cell data under "constant/polyMesh/cellTableId".
+
+The combination of both files allows subsequent creating of cellSets and
+cellZones for any combination of properties (eg, porosities and solids).
+
+Additionally, the reverse converters can use this information when
+converting foam meshes back to the Star-CD formats.
+
+The names of the dictionary elements (eg, Label, MaterialType, etc) are
+chosen to match those used by the ccm-format.
+
+Here is a sample dictionary entry:
+
+<int>                           // unique positive int
+{
+    Label           <word>;     // optional
+    MaterialType    <word>;     // optional (fluid|solid)
+    MaterialId      <int>;      // optional
+    PorosityId      <int>;      // optional
+    GroupId         <int>;      // optional
+    SpinId          <int>;      // optional
+}
+

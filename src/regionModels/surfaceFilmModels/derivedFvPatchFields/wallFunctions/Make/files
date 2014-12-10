@@ -1,0 +1,5 @@
+alphatFilmWallFunction/alphatFilmWallFunctionFvPatchScalarField.C
+mutkFilmWallFunction/mutkFilmWallFunctionFvPatchScalarField.C
+
+
+LIB = $(FOAM_LIBBIN)/libsurfaceFilmDerivedFvPatchFields

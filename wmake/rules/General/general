@@ -1,0 +1,10 @@
+AR         = ar
+ARFLAGS    = cr
+RANLIB     = ranlib
+CPP        = cpp
+LD         = ld
+
+GFLAGS     = -D$(WM_ARCH) -DWM_$(WM_PRECISION_OPTION)
+GINC       =
+GLIBS      = -lm
+GLIB_LIBS  =

@@ -1,0 +1,107 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      extrudeMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// What to extrude:
+//      patch   : from patch of another case ('sourceCase')
+//      mesh    : as above but with original case included
+//      surface : from externally read surface
+
+//constructFrom mesh;
+constructFrom patch;
+//constructFrom surface;
+
+// If construct from patch/mesh:
+sourceCase "../cavity";
+sourcePatches (movingWall);
+// If construct from patch: patch to use for back (can be same as sourcePatch)
+exposedPatchName movingWall;
+// If construct from surface:
+surface "movingWall.stl";
+
+// Flip surface normals before usage. Valid only for extrude from surface or
+// patch.
+flipNormals false;
+
+//- Linear extrusion in point-normal direction
+//extrudeModel        linearNormal;
+
+//- Linear extrusion in specified direction
+//extrudeModel        linearDirection;
+
+//- Wedge extrusion. If nLayers is 1 assumes symmetry around plane.
+extrudeModel        wedge;
+
+//- Extrudes into sphere around (0 0 0)
+//extrudeModel        linearRadial;
+
+//- Extrudes into sphere around (0 0 0) with specified radii
+//extrudeModel        radial;
+
+//- Extrudes into sphere with grading according to pressure (atmospherics)
+//extrudeModel        sigmaRadial;
+
+nLayers             10;
+
+expansionRatio      1.0;    //0.9;
+
+wedgeCoeffs
+{
+    axisPt      (0 0.1 -0.05);
+    axis        (-1 0 0);
+    angle       360;  // For nLayers=1 assume symmetry so angle/2 on each side
+}
+
+linearNormalCoeffs
+{
+    thickness       0.05;
+}
+
+linearDirectionCoeffs
+{
+    direction       (0 1 0);
+    thickness       0.05;
+}
+
+linearRadialCoeffs
+{
+    R               0.1;
+    // Optional inner radius
+    Rsurface        0.01;
+}
+
+radialCoeffs
+{
+    // Radii specified through interpolation table
+    R               table ((0 0.01)(3 0.03)(10 0.1));
+}
+
+
+sigmaRadialCoeffs
+{
+    RTbyg           1;
+    pRef            1;
+    pStrat          1;
+}
+
+// Do front and back need to be merged? Usually only makes sense for 360
+// degree wedges.
+mergeFaces false;   //true;
+
+// Merge small edges. Fraction of bounding box.
+mergeTol 0;
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allrun.pre
+
+runApplication decomposePar -region air
+mv log.decomposePar log.decomposePar.air
+
+runApplication decomposePar -region porous
+mv log.decomposePar log.decomposePar.porous
+
+runParallel $(getApplication) 4
+
+runApplication reconstructPar -latestTime -region air
+mv log.reconstructPar log.reconstructPar.air
+
+runApplication reconstructPar -latestTime -region porous
+mv log.reconstructPar log.reconstructPar.porous

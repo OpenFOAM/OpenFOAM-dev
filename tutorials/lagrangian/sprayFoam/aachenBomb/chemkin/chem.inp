@@ -1,0 +1,11 @@
+ELEMENTS
+ H   O    C   N   AR
+END
+SPECIE
+C7H16 O2 N2 CO2 H2O
+END
+REACTIONS
+ C7H16 + 11O2            => 7CO2 + 8H2O        5.00E+8  0.0   15780.0! 1
+	FORD	/ C7H16	0.25 /
+	FORD	/ O2 1.5 /
+END

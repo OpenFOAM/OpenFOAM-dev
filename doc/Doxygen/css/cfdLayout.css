@@ -1,0 +1,345 @@
+/* OpenFOAM layout styles */
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    font-size: 62.5%;
+} /*Font-size: 1.0em = 10px when browser default size is 16px*/
+
+p:after {
+    content:".";
+    display:block;
+    height:0;
+    /* clear:both */;
+    visibility:hidden;
+}
+
+.clear-contentunit {
+    clear:both;
+    width:100%;
+    height:0.1em;
+    border:none;
+    background:rgb(210,210,210);
+    color:rgb(210,210,210);
+}
+
+/* page-container **************************************/
+
+.page-container {
+    width:100%;
+    margin:0px auto;
+    margin-top:10px;
+    margin-bottom:10px;
+    font-size:1.0em;
+}
+
+.page-container:after,
+.header:after,
+.header-bottom:after,
+.header-breadcrumbs:after,
+.main:after,
+.main-navigation:after,
+.main-content:after,
+.main-content div:after,
+.main-subcontent:after
+{
+    content:".";
+    display:block;
+    height:0;
+    clear:both;
+    visibility:hidden;
+}
+
+/*Font-size: 1.0em = 12px when browser default size is 16px*/
+.main
+{
+    font-size: 120%;
+}
+
+/*********************header***************************************************/
+.header {
+    width:100%;
+}
+
+.header-top {
+    height:80px;
+    border:3px solid rgb(175,175,175);
+    border-bottom-width: 0;
+    margin-top:10px;
+    background:#d5e1f0;
+    overflow:visible !important /*Firefox*/;
+    overflow:hidden /*IE6*/;
+}
+
+.left {margin:none; border:none; }
+.right {margin:none; border:none; position:absolute; right:35px;top:32px}
+
+.header-bottom {
+    border:3px solid rgb(175,175,175);
+    border-top-width: 1px;
+    background:rgb(225,225,225);
+}
+
+/********************sitelogo *************************************************/
+.sitelogo {
+    width:100%;
+    height:40px;
+    position:absolute;
+    z-index:1;
+    margin:20px 0 0 15px;
+}
+
+/**************************sitename ************************************************/
+.sitename {
+    width:400px;
+    height:45px;
+    margin:auto;
+    margin-top:25px;
+    overflow:visible !important /*Firefox*/;
+    overflow:hidden /*IE6*/;
+}
+
+.sitename h1 {
+    font-weight:normal;
+    font-size:240%;
+}
+
+.sitename h2 {
+    margin:-2px 0 0 0;
+    color:rgb(125,125,125);
+    font-weight:normal;
+    font-size:100%;
+}
+.sitename a {
+    text-decoration:none;
+    color:rgb(125,125,125);
+    color:#333;
+}
+.sitename a:hover {
+    text-decoration:none;
+    color:rgb(125,125,125);
+}
+
+/*****************header-breadcrumbs ***************************************/
+.header-breadcrumbs {
+    clear:both;
+    width:100%;
+    padding:1.0em 0 1.5em 0;
+    border-left:3px solid rgb(175,175,175);
+    border-right:0px solid rgb(175,175,175);
+}
+
+.header-breadcrumbs ul {
+    float:left;
+    width:560px;
+    list-style:none;
+    padding:7px 0 0 3px;
+    font-family:verdana,arial,sans-serif;
+}
+
+.header-breadcrumbs ul li {
+    display:inline;
+    padding:0 0 0 5px;
+    color:#323232;
+    font-size:100%;
+}
+
+.header-breadcrumbs ul a {
+    color:rgb(70,122,167);
+    text-decoration:none;
+}
+
+.header-breadcrumbs ul a:hover {
+    color:rgb(42,90,138);
+    color:#333;
+    text-decoration:underline;
+}
+.header-breadcrumbs .searchform {
+    float:right;
+    width:285px;
+    padding:0 17px 0px 0px !important /*Non-IE6*/;
+    padding:0 12px 0px 0px /*IE6*/;
+}
+.header-breadcrumbs .searchform form fieldset {
+    float:right;
+    border:none;
+}
+.header-breadcrumbs .searchform input.field {
+    width:10.0em;
+    padding:0.2em 0 0.2em 0;
+    border:1px solid rgb(200,200,200);
+    font-family:verdana,arial,sans-serif;
+    font-size:120%;
+}
+.header-breadcrumbs .searchform input.button {
+    width:3.0em;
+    padding:1px !important /*Non-IE6*/;
+    padding:0 /*IE6*/;
+    background:rgb(230,230,230);
+    border:solid 1px rgb(150,150,150);
+    text-align:center;
+    font-family:verdana,arial,sans-serif;
+    color:rgb(150,150,150);
+    font-size:120%;
+}
+.header-breadcrumbs .searchform input.button:hover {
+    cursor:pointer;
+    border:solid 1px rgb(80,80,80);
+    background:rgb(220,220,220);
+    color:rgb(80,80,80);
+}
+
+
+/******************footer ************************************************/
+.footer {
+    clear:both;
+    padding:1.0em 1.0em 1.0em 1.0em;
+    border:3px solid rgb(175,175,175);
+    background:rgb(225,225,225);
+    font-size:1.0em;
+    overflow:visible !important /*Firefox*/;
+    overflow:hidden /*IE6*/;
+}
+.footer p {
+    line-height:1.3em;
+    text-align:center;
+    color:rgb(125,125,125);
+    font-weight:bold;
+    font-size:110%;
+}
+.footer p.credits {
+    font-weight:normal;
+}
+.footer a {
+    text-decoration:underline;
+    color:rgb(125,125,125);
+}
+.footer a:hover {
+    text-decoration:none;
+    color:rgb(0,0,0);
+}
+/*
+.footer a:visited {
+    color:rgb(0,0,0);
+}
+*/
+.footer:after {
+    content:".";
+    display:block;
+    height:0;
+    clear:both;
+    visibility:hidden;
+}
+
+/*******************main **********************************************/
+.main {
+    clear:both;
+    width:100% minus 2px;
+    padding-bottom:30px;
+    border-left: 3px solid rgb(175,175,175);
+    border-right:3px solid rgb(175,175,175);
+    background:transparent url(img/bg_main.gif) top left repeat-y;
+}
+.main img {
+    clear:both;
+    margin:3px 10px 7px 0;
+    padding:1px;
+}
+.main img.center {
+    clear:both;
+    float:none;
+    display:block;
+    margin:0 auto;
+    padding:1px;
+}
+.main img.right {
+    clear:both;
+    float:right;
+    margin:3px 0 7px 10px;
+    padding:1px;
+}
+
+div.contents a {
+    color:rgb(70,122,167);
+    font-weight:bold;
+    text-decoration:none;
+}
+div.contents a:hover {
+    color:rgb(42,90,138);
+    text-decoration:underline;
+}
+/*
+.main a:visited {
+    color:rgb(42,90,138);
+}
+*/
+
+.main a img {
+    border:solid 1px rgb(150,150,150);
+}
+.main a:hover img {
+    border:solid 1px rgb(220,220,220);
+}
+
+/********************************/
+/*  PRINTING and MISCELLANEOUS  */
+/********************************/
+@media print {
+
+.header-top {
+    width:100%;
+    height:80px;
+    background:rgb(240,240,240);
+    overflow:visible !important /*Firefox*/;
+    overflow:hidden /*IE6*/;
+}
+.header-breadcrumbs {
+    width:100%;
+    background:transparent;
+}
+.nav2 {
+    float:left;
+    width:100%;
+    border:none;
+    background:rgb(240,240,240);
+    color:rgb(75,75,75);
+    font-size:1.0em;
+    font-size:130%;
+} /*Color navigation bar normal mode*/
+.main {
+    clear:both;
+    width:100%;
+    padding-bottom:30px;
+    background:transparent;
+}
+.main-navigation {
+    display:inline /*Fix IE floating margin bug*/;
+    float:left;
+    width:199px;
+    border-right:1px solid rgb(200,200,200);
+    border-bottom:1px solid rgb(200,200,200);
+    background-color:rgb(240,240,240);
+    overflow:visible !important /*Firefox*/;
+    overflow:hidden /*IE*/;
+}
+.footer {
+    clear:both;
+    width:100%;
+    height:3.7em;
+    padding:1.1em 0 0;
+    background:rgb(240,240,240);
+    font-size:1.0em;
+    overflow:visible !important /*Firefox*/;
+    overflow:hidden /*IE6*/;
+}
+div.crosslinks {
+    visibility:hidden;
+}
+
+} /* end media print */
+

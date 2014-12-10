@@ -1,0 +1,91 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     ensightFoamReaderTest
+#
+# Description
+#     start ensightFoamReader-udr_checker
+#
+#------------------------------------------------------------------------------
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [OPTION]
+options:
+  -case   dir    specify alternative case directory
+
+* start ensightFoamReader-udr_checker
+
+USAGE
+    exit 1
+}
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -case)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        cd "$2" 2>/dev/null || usage "directory does not exist:  '$2'"
+        shift 2
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+
+# check existence of essential files
+for check in system/controlDict system/fvSchemes system/fvSolution
+do
+    [ -s "$check" ] || usage "file does not exist:  '$check'"
+done
+
+
+# export values that might be needed
+export FOAM_CASE=$PWD
+export FOAM_CASENAME=${PWD##*/}
+
+pathName=${PWD%/*}
+
+playFile=/tmp/ensightFoamReader.$$
+trap "rm -f $playFile 2>/dev/null; exit 0" EXIT TERM INT
+
+cat << PLAY_FILE > $playFile
+$pathName
+$FOAM_CASENAME
+0
+PLAY_FILE
+
+echo "ensightFoamReader-udr_checker -p $playFile"
+
+ensightFoamReader-udr_checker -p $playFile
+
+#------------------------------------------------------------------------------

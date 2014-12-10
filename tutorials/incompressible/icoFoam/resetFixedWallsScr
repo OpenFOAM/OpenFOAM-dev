@@ -1,0 +1,8 @@
+/fixedWalls/,/}/{
+/fixedWalls/p
+/{/p
+/type            fixedValue;/p
+s/value[ \t]*nonuniform[ \t]*List<vector>[ \t]*/value           uniform (0 0 0);/p
+/}/p
+d
+}

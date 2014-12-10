@@ -1,0 +1,16 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+Uref                 10.0;
+Href                 20;
+z0                   uniform 0.1;
+turbulentKE          1.3;
+windDirection        (1 0 0);
+zDirection           (0 0 1);
+zGround              uniform 935.0;
+// ************************************************************************* //

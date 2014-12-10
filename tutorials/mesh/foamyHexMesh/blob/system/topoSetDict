@@ -1,0 +1,149 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    {
+        name    z;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-100 -100 -0.2)(100 100 100);
+        }
+    }
+
+    {
+        name    zf;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    z;
+            option all;
+        }
+    }
+
+    {
+        name    z;
+        type    cellSet;
+        action  invert;
+    }
+
+    {
+        name    zf;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    z;
+            option all;
+        }
+    }
+
+    // ~~~~~~~~~~~~~~~~ //
+
+    {
+        name    x;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-0.32 -100 -100)(100 100 100);
+        }
+    }
+
+    {
+        name    xf;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    x;
+            option all;
+        }
+    }
+
+    {
+        name    x;
+        type    cellSet;
+        action  invert;
+    }
+
+    {
+        name    xf;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    x;
+            option all;
+        }
+    }
+
+    // ~~~~~~~~~~~~~~~~ //
+
+    {
+        name    sp;
+        type    cellSet;
+        action  new;
+        source  sphereToCell;
+        sourceInfo
+        {
+            centre (-0.3 -0.3 -0.3);
+            radius 0.4;
+        }
+    }
+
+    {
+        name    spf;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    sp;
+            option all;
+        }
+    }
+
+    {
+        name    sp;
+        type    cellSet;
+        action  invert;
+    }
+
+    {
+        name    spf;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    sp;
+            option all;
+        }
+    }
+);
+
+// ************************************************************************* //

@@ -1,0 +1,45 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+setDecompressionTankFine()
+{
+    blockMeshDict="constant/polyMesh/blockMeshDict"
+    controlDict="system/controlDict"
+
+    sed \
+    -e s/"30 20"/"120 80"/g \
+    -e s/"30 5"/"120 20"/g \
+    -e s/"25 5"/"100 20"/g \
+    -e s/"30 95"/"120 380"/g \
+    $blockMeshDict > temp.$$
+    mv temp.$$ $blockMeshDict
+
+    sed \
+    -e s/"\(deltaT[ \t]*\) 5e-07;"/"\1 1e-07;"/g \
+    -e s/"\(endTime[ \t]*\) 0.00025;"/"\1 0.00015;"/g \
+    $controlDict > temp.$$
+    mv temp.$$ $controlDict
+}
+
+
+# Do decompressionTank
+( cd decompressionTank && foamRunTutorials )
+
+# Clone case
+cloneCase decompressionTank decompressionTankFine
+
+(
+    cd decompressionTankFine || exit
+
+    # Modify case
+    setDecompressionTankFine
+
+    # And execute
+    runApplication blockMesh
+    runApplication `getApplication`
+)
+
+# ----------------------------------------------------------------- end-of-file

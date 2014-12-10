@@ -1,0 +1,2 @@
+2013-05-27 Detect 'pinches' in patch (i.e., non-manifold on point). Run on
+cavity_pinched subdirectory.

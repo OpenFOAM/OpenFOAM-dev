@@ -1,0 +1,47 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+    class           dictionary;
+    object          meshDict.geometry;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+flange.stl
+{
+    name flange;
+    type triSurfaceMesh;
+
+    regions
+    {
+        patch1
+        {
+            name wall;
+        }
+
+        patch2
+        {
+            name plate;
+        }
+
+        patch3
+        {
+            name rings;
+        }
+
+        patch4
+        {
+            name outlet;
+        }
+    }
+}
+
+
+// ************************************************************************* //

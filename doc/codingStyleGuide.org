@@ -1,0 +1,525 @@
+#                            -*- mode: org; -*-
+#
+#+TITLE:               OpenFOAM C++ style guide
+#+AUTHOR:                      OpenFOAM Foundation
+#+DATE:                             Aug 2011
+#+LINK:                     http://www.OpenFOAM.org
+#+OPTIONS: author:nil ^:{}
+#+STARTUP: hidestars
+#+STARTUP: odd
+
+* OpenFOAM C++ style guide
+*** General
+    + 80 character lines max
+    + The normal indentation is 4 spaces per logical level.
+    + Use spaces for indentation, not tab characters.
+    + Avoid trailing whitespace.
+    + The body of control statements (eg, =if=, =else=, =while=, etc). is
+      always delineated with brace brackets. A possible exception can be
+      made in conjunction with =break= or =continue= as part of a control
+      structure.
+    + The body of =case= statements is usually delineated with brace brackets.
+    + A fall-through =case= should be commented as such.
+
+    + stream output
+      + =<<= is always four characters after the start of the stream,
+        so that the =<<= symbols align, i.e.
+        #+BEGIN_SRC c++
+        Info<< ...
+        os  << ...
+        #+END_SRC
+        so
+        #+BEGIN_SRC C++
+        WarningIn("className::functionName()")
+            << "Warning message"
+        #+END_SRC
+        *not*
+        #+BEGIN_SRC C++
+        WarningIn("className::functionName()")
+        << "Warning message"
+        #+END_SRC
+
+    + no unnecessary class section headers, i.e. remove
+#+BEGIN_SRC C++
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+    // Check
+
+    // Edit
+
+    // Write
+#+END_SRC
+      if they contain nothing, even if planned for 'future use'
+
+    + class titles are centred
+#+BEGIN_SRC C++
+/*---------------------------------------------------------------------------*\
+                        Class exampleClass Declaration
+\*---------------------------------------------------------------------------*/
+#+END_SRC
+
+      *not*
+
+#+BEGIN_SRC C++
+/*---------------------------------------------------------------------------*\
+                Class exampleClass Declaration
+\*---------------------------------------------------------------------------*/
+#+END_SRC
+
+*** The /.H/ Files
+    + header file spacing
+      + Leave two empty lines between sections
+        (as per functions in the /.C/ file etc)
+    + use =//- Comment= comments in header file to add descriptions to class
+      data and functions do be included in the Doxygen documentation:
+      + text on the line starting with =//-= becomes the Doxygen brief
+        description;
+      + text on subsequent lines becomes the Doxygen detailed description /e.g./
+        #+BEGIN_SRC C++
+        //- A function which returns a thing
+        //  This is a detailed description of the function
+        //  which processes stuff and returns other stuff
+        //  depending on things.
+        thing function(stuff1, stuff2);
+        #+END_SRC
+      + list entries start with =-= or =-#= for numbered lists but cannot start
+        on the line immediately below the brief description so
+        #+BEGIN_SRC C++
+        //- Compare triFaces
+        //  Returns:
+        //  -  0: different
+        //  - +1: identical
+        //  - -1: same face, but different orientation
+        static inline int compare(const triFace&, const triFace&);
+        #+END_SRC
+        or
+        #+BEGIN_SRC C++
+        //- Compare triFaces returning 0, +1 or -1
+        //
+        //  -  0: different
+        //  - +1: identical
+        //  - -1: same face, but different orientation
+        static inline int compare(const triFace&, const triFace&);
+        #+END_SRC
+        *not*
+        #+BEGIN_SRC C++
+        //- Compare triFaces returning 0, +1 or -1
+        //  -  0: different
+        //  - +1: identical
+        //  - -1: same face, but different orientation
+        static inline int compare(const triFace&, const triFace&);
+        #+END_SRC
+      + list can be nested for example
+        #+BEGIN_SRC C++
+        //- Search for \em name
+        //  in the following hierarchy:
+        //  -# personal settings:
+        //    - ~/.OpenFOAM/\<VERSION\>/
+        //      <em>for version-specific files</em>
+        //    - ~/.OpenFOAM/
+        //      <em>for version-independent files</em>
+        //  -# site-wide settings:
+        //    - $WM_PROJECT_INST_DIR/site/\<VERSION\>
+        //      <em>for version-specific files</em>
+        //    - $WM_PROJECT_INST_DIR/site/
+        //      <em>for version-independent files</em>
+        //  -# shipped settings:
+        //    - $WM_PROJECT_DIR/etc/
+        //
+        //  \return the full path name or fileName() if the name cannot be found
+        //  Optionally abort if the file cannot be found
+        fileName findEtcFile(const fileName&, bool mandatory=false);
+        #+END_SRC
+      + for more details see the Doxygen documentation.
+    + destructor
+      + If adding a comment to the destructor -
+        use =//-= and code as a normal function:
+        #+BEGIN_SRC C++
+        //- Destructor
+        ~className();
+        #+END_SRC
+    + inline functions
+      + Use inline functions where appropriate in a separate /classNameI.H/
+        file.  Avoid cluttering the header file with function bodies.
+
+*** The /.C/ Files
+    + Do not open/close namespaces in a /.C/ file
+      + Fully scope the function name, i.e.
+        #+BEGIN_SRC C++
+        Foam::returnType Foam::className::functionName()
+        #+END_SRC
+        *not*
+        #+BEGIN_SRC C++
+        namespace Foam
+        {
+            ...
+            returnType className::functionName()
+            ...
+        }
+        #+END_SRC
+        EXCEPTION
+
+        When there are multiple levels of namespace, they may be used in the
+        /.C/ file, i.e.
+        #+BEGIN_SRC C++
+        namespace Foam
+        {
+        namespace compressible
+        {
+        namespace RASModels
+        {
+            ...
+        } // End namespace RASModels
+        } // End namespace compressible
+        } // End namespace Foam
+        #+END_SRC
+
+    + Use two empty lines between functions
+
+*** Coding Practice
+    + passing data as arguments or return values.
+      + Pass bool, label and scalar as copy, anything larger by reference.
+    + const
+      + Use everywhere it is applicable.
+    + variable initialisation using
+      #+BEGIN_SRC C++
+      const className& variableName = otherClass.data();
+      #+END_SRC
+      *not*
+      #+BEGIN_SRC C++
+      const className& variableName(otherClass.data());
+      #+END_SRC
+    + virtual functions
+      + If a class is virtual, make all derived classes virtual.
+
+*** Conditional Statements
+    #+BEGIN_SRC C++
+    if (condition)
+    {
+        code;
+    }
+    #+END_SRC
+    OR
+    #+BEGIN_SRC C++
+    if
+    (
+       long condition
+    )
+    {
+        code;
+    }
+    #+END_SRC
+    *not* (no space between =if= and =(= used)
+    #+BEGIN_SRC C++
+    if(condition)
+    {
+        code;
+    }
+    #+END_SRC
+
+*** =for= and =while= Loops
+    #+BEGIN_SRC C++
+    for (i = 0; i < maxI; i++)
+    {
+        code;
+    }
+    #+END_SRC
+    OR
+    #+BEGIN_SRC C++
+    for
+    (
+        i = 0;
+        i < maxI;
+        i++
+    )
+    {
+        code;
+    }
+    #+END_SRC
+    *not* this (no space between =for= and =(= used)
+    #+BEGIN_SRC C++
+    for(i = 0; i < maxI; i++)
+    {
+        code;
+    }
+    #+END_SRC
+    Note that when indexing through iterators, it is often slightly more
+    efficient to use the pre-increment form. Eg, =++iter= instead of =iter++=
+
+*** =forAll=, =forAllIter=, =forAllConstIter=, etc. loops
+    like =for= loops, but
+    #+BEGIN_SRC C++
+    forAll(
+    #+END_SRC
+    *not*
+    #+BEGIN_SRC C++
+    forAll (
+    #+END_SRC
+    Using the =forAllIter= and =forAllConstIter= macros is generally
+    advantageous - less typing, easier to find later.  However, since
+    they are macros, they will fail if the iterated object contains
+    any commas.
+
+    The following will FAIL!:
+
+    #+BEGIN_SRC C++
+    forAllIter(HashTable<labelPair, edge, Hash<edge> >, foo, iter)
+    #+END_SRC
+    These convenience macros are also generally avoided in other
+    container classes and OpenFOAM primitive classes.
+
+*** Splitting Over Multiple Lines
+***** Splitting return type and function name
+      + split initially after the function return type and left align
+      + do not put =const= onto its own line - use a split to keep it with
+        the function name and arguments.
+        #+BEGIN_SRC C++
+        const Foam::longReturnTypeName&
+        Foam::longClassName::longFunctionName const
+        #+END_SRC
+        *not*
+        #+BEGIN_SRC C++
+        const Foam::longReturnTypeName&
+            Foam::longClassName::longFunctionName const
+        #+END_SRC
+        *nor*
+        #+BEGIN_SRC C++
+        const Foam::longReturnTypeName& Foam::longClassName::longFunctionName
+        const
+        #+END_SRC
+        *nor*
+        #+BEGIN_SRC C++
+        const Foam::longReturnTypeName& Foam::longClassName::
+        longFunctionName const
+        #+END_SRC
+      + if it needs to be split again, split at the function name (leaving
+        behind the preceding scoping =::=s), and again, left align, i.e.
+        #+BEGIN_SRC C++
+        const Foam::longReturnTypeName&
+        Foam::veryveryveryverylongClassName::
+        veryveryveryverylongFunctionName const
+        #+END_SRC
+
+***** Splitting long lines at an "="
+     Indent after split
+     #+BEGIN_SRC C++
+     variableName =
+         longClassName.longFunctionName(longArgument);
+     #+END_SRC
+     OR (where necessary)
+     #+BEGIN_SRC C++
+     variableName =
+         longClassName.longFunctionName
+         (
+             longArgument1,
+             longArgument2
+         );
+     #+END_SRC
+     *not*
+     #+BEGIN_SRC C++
+     variableName =
+     longClassName.longFunctionName(longArgument);
+     #+END_SRC
+     *nor*
+     #+BEGIN_SRC C++
+     variableName = longClassName.longFunctionName
+     (
+         longArgument1,
+         longArgument2
+     );
+     #+END_SRC
+
+*** Maths and Logic
+    + operator spacing
+      #+BEGIN_SRC C++
+      a + b, a - b
+      a*b, a/b
+      a & b, a ^ b
+      a = b, a != b
+      a < b, a > b, a >= b, a <= b
+      a || b, a && b
+      #+END_SRC
+
+    + splitting formulae over several lines
+
+      Split and indent as per "splitting long lines at an ="
+      with the operator on the lower line.  Align operator so that first
+      variable, function or bracket on the next line is 4 spaces indented i.e.
+      #+BEGIN_SRC C++
+      variableName =
+          a*(a + b)
+         *exp(c/d)
+         *(k + t);
+      #+END_SRC
+      This is sometimes more legible when surrounded by extra parentheses:
+
+      #+BEGIN_SRC C++
+      variableName =
+      (
+          a*(a + b)
+         *exp(c/d)
+         *(k + t)
+      );
+      #+END_SRC
+
+    + splitting logical tests over several lines
+
+      outdent the operator so that the next variable to test is aligned with
+      the four space indentation, i.e.
+      #+BEGIN_SRC C++
+      if
+      (
+          a == true
+       && b == c
+      )
+      #+END_SRC
+
+** Documentation
+*** General
+    + For readability in the comment blocks, certain tags are used that are
+      translated by pre-filtering the file before sending it to Doxygen.
+
+    + The tags start in column 1, the contents follow on the next lines and
+      indented by 4 spaces. The filter removes the leading 4 spaces from the
+      following lines until the next tag that starts in column 1.
+
+    + The 'Class' and 'Description' tags are the most important ones.
+
+    + The first paragraph following the 'Description' will be used for the
+      brief description, the remaining paragraphs become the detailed
+      description.
+
+      For example,
+      #+BEGIN_SRC C++
+      Class
+          Foam::myClass
+
+      Description
+          A class for specifying the documentation style.
+
+          The class is implemented as a set of recommendations that may
+          sometimes be useful.
+      #+END_SRC
+
+    + The class name must be qualified by its namespace, otherwise Doxygen
+      will think you are documenting some other class.
+
+    + If you don't have anything to say about the class (at the moment), use
+      the namespace-qualified class name for the description. This aids with
+      finding these under-documented classes later.
+      #+BEGIN_SRC C++
+      Class
+          Foam::myUnderDocumentedClass
+
+      Description
+          Foam::myUnderDocumentedClass
+      #+END_SRC
+
+    + Use 'Class' and 'Namespace' tags in the header files.
+      The Description block then applies to documenting the class.
+
+    + Use 'InClass' and 'InNamespace' in the source files.
+      The Description block then applies to documenting the file itself.
+      #+BEGIN_SRC C++
+      InClass
+          Foam::myClass
+
+      Description
+          Implements the read and writing of files.
+      #+END_SRC
+
+*** Doxygen Special Commands
+    Doxygen has a large number of special commands with a =\= prefix.
+
+    Since the filtering removes the leading spaces within the blocks, the
+    Doxygen commmands can be inserted within the block without problems.
+    #+BEGIN_SRC C++
+    InClass
+        Foam::myClass
+
+    Description
+        Implements the read and writing of files.
+
+        An example input file:
+        \verbatim
+            patchName
+            {
+                type        myPatchType;
+                refValue    100;
+                value       uniform 1;
+            }
+        \endverbatim
+
+        Within the implementation, a loop over all patches is done:
+        \code
+            forAll(patches, patchI)
+            {
+                ...  // some operation
+            }
+        \endcode
+    #+END_SRC
+
+*** HTML Special Commands
+    Since Doxygen also handles HTML tags to a certain extent, the angle
+    brackets need quoting in the documentation blocks. Non-HTML tags cause
+    Doxygen to complain, but seem to work anyhow.
+
+    eg,
+    + The template with type =<HR>= is a bad example.
+    + The template with type =\<HR\>= is a better example.
+    + The template with type =<Type>= causes Doxygen to complain about an
+      unknown html type, but it seems to work okay anyhow.
+
+*** Documenting Namespaces
+    + If namespaces are explictly declared with the =Namespace()= macro,
+      they should be documented there.
+
+    + If the namespaces is used to hold sub-models, the namespace can be
+      documented in the same file as the class with the model selector.
+      eg,
+      #+BEGIN_SRC C++
+      documented namespace 'Foam::functionEntries' within the
+      class 'Foam::functionEntry'
+      #+END_SRC
+
+    + If nothing else helps, find some sensible header.
+      eg,
+      #+BEGIN_SRC C++
+      namespace 'Foam' is documented in the foamVersion.H file
+      #+END_SRC
+
+*** Documenting typedefs and classes defined via macros
+    ... not yet properly resolved
+
+*** Documenting Applications
+    Any number of classes might be defined by a particular application, but
+    these classes will not, however, be available to other parts of
+    OpenFOAM. At the moment, the sole purpuse for running Doxygen on the
+    applications is to extract program usage information for the '-doc'
+    option.
+
+    The documentation for a particular application is normally contained
+    within the first comment block in a /.C/ source file. The solution is this
+    to invoke a special filter for the "/applications/{solver,utilities}/"
+    directories that only allows the initial comment block for the /.C/ files
+    through.
+
+    The layout of the application documentation has not yet been finalized,
+    but foamToVTK shows an initial attempt.
+
+*** Orthography
+    Given the origins of OpenFOAM, the British spellings (eg, neighbour and not
+    neighbor) are generally favoured.
+
+    Both '-ize' and the '-ise' variant are found in the code comments. If
+    used as a variable or class method name, it is probably better to use
+    '-ize', which is considered the main form by the Oxford University
+    Press. Eg,
+    #+BEGIN_SRC C++
+    myClass.initialize()
+    #+END_SRC
+
+    The word "its" (possesive) vs. "it's" (colloquial for "it is" or "it has")
+    seems to confuse non-native (and some native) English speakers.
+    It is better to donate the extra keystrokes and write "it is" or "it has".
+    Any remaining "it's" are likely an incorrect spelling of "its".

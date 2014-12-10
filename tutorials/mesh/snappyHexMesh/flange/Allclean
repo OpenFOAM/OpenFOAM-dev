@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+# remove surface
+\rm -f constant/triSurface/flange.stl.gz
+
+rm -rf 0 > /dev/null 2>&1
+rm -f ./flange ./*.obj > /dev/null 2>&1
+rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
+rm -f constant/triSurface/flange.eMesh > /dev/null 2>&1
+rm -f constant/polyMesh/boundary
+
+cleanCase
+
+# ----------------------------------------------------------------- end-of-file

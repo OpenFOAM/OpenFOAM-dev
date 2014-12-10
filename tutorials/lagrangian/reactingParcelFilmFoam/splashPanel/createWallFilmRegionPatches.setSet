@@ -1,0 +1,5 @@
+# Create face sets
+faceSet sideFaces1 new boxToFace (-0.00001 -0.00001 -1) (0.10001 0.00001 1)
+faceSet sideFaces2 new boxToFace ( 0.09999 -0.00001 -1) (0.10001 0.05001 1)
+faceSet sideFaces3 new boxToFace (-0.00001  0.04999 -1) (1.00001 0.05001 1)
+faceSet sideFaces4 new boxToFace (-0.00001 -0.00001 -1) (0.00001 0.05001 1)

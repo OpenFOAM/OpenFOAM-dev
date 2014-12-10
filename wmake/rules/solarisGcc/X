@@ -1,0 +1,3 @@
+XFLAGS     =
+XINC       = $(XFLAGS) -I/usr/openwin/include/X11
+XLIBS      = -L/usr/openwin/lib -lXext -lX11

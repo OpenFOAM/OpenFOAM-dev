@@ -1,0 +1,16 @@
+.SUFFIXES: .c .h
+
+cWARN        =
+
+cc          = icc
+
+include $(RULES)/c$(WM_COMPILE_OPTION)
+
+cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS) -fPIC
+
+ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
+
+LINK_LIBS   = $(cDBUG) -L$(IA32ROOT)/lib
+
+LINKLIBSO   = $(cc) -i_dynamic
+LINKEXE     = $(cc) -Xlinker -z -Xlinker nodefs

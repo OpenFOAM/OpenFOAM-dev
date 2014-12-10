@@ -1,0 +1,10 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+set -x
+
+if [ -d "${FASTDUALOCTREE_SRC_PATH}" ]
+then
+    wmake
+fi
+
+# ----------------------------------------------------------------- end-of-file

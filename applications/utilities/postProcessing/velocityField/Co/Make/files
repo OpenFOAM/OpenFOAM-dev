@@ -1,0 +1,3 @@
+Co.C
+
+EXE = $(FOAM_APPBIN)/Co

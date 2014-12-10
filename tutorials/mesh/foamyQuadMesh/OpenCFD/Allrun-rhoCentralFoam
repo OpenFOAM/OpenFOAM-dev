@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get the number of processors to run on from system/decomposeParDict
+nProcs=$(getNumberOfProcessors)
+
+cp system/controlDict.rhoCentralFoam system/controlDict
+cp -r 0.org 0
+
+runApplication decomposePar
+runParallel rhoCentralFoam $nProcs
+runApplication reconstructPar
+
+
+# ----------------------------------------------------------------- end-of-file

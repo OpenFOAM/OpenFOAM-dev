@@ -1,0 +1,11 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+set -x
+
+# deal with client/server vs combined plugins
+rm -f $FOAM_LIBBIN/libPV4FoamReader* 2>/dev/null
+
+rm -rf PV4FoamReader/Make
+wclean libso vtkPV4Foam
+
+# ----------------------------------------------------------------- end-of-file

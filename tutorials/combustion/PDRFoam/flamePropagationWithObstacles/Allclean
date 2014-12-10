@@ -1,0 +1,16 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+cleanCase
+
+rm -rf VTK
+rm -rf 0
+rm -rf constant/polyMesh/sets constant/polyMesh/faces
+rm -rf constant/polyMesh/faces
+rm -rf constant/polyMesh/points
+rm -rf constant/polyMesh/owner
+rm -rf constant/polyMesh/neighbour
+
+# ----------------------------------------------------------------- end-of-file

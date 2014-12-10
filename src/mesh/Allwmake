@@ -1,0 +1,10 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+makeType=${1:-libso}
+set -x
+
+wmake $makeType autoMesh
+wmake $makeType blockMesh
+wmake $makeType extrudeModel
+
+# ----------------------------------------------------------------- end-of-file

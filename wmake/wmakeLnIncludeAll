@@ -1,0 +1,98 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wmakeLnIncludeAll
+#
+# Description
+#     Find directories with a 'Make/files' that contains a 'LIB =' directive
+#     and execute 'wmakeLnInclude -f' for each one
+#
+#------------------------------------------------------------------------------
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [dir1 .. dirN]
+
+    Find directories with a 'Make/files' that contains a 'LIB =' directive
+    and execute 'wmakeLnInclude -f' for each one
+
+USAGE
+    exit 1
+}
+
+#------------------------------------------------------------------------------
+findName=lnInclude
+
+# simple parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)   # provide immediate help
+        usage
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+# default to searching from pwd
+[ "$#" -gt 0 ] || set -- .
+
+for checkDir
+do
+    if [ -d $checkDir ]
+    then
+        echo "searching: $checkDir for 'Make' directories"
+        echo "---------"
+    else
+        echo "skipping non-dir: $checkDir"
+        echo "----------------"
+        continue
+    fi
+
+    find $checkDir -depth -type d -name Make -print | while read MakeDir
+    do
+        topDir=${MakeDir%/Make}    # trim /Make from the end
+        if [ -d "$topDir" ]
+        then
+            if grep -e '^ *LIB *=' "$MakeDir/files" >/dev/null 2>&1
+            then
+                wmakeLnInclude -f $topDir
+            elif [ -d "$topDir/lnInclude" ]
+            then
+                echo "removing spurious $topDir/lnInclude"
+                rm -rf "$topDir/lnInclude"
+            fi
+        fi
+    done
+done
+
+#------------------------------------------------------------------------------

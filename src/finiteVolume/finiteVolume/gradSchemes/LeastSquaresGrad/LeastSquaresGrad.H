@@ -1,0 +1,174 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+Class
+    Foam::fv::LeastSquaresGrad
+
+Description
+    Gradient calculated using weighted least-squares on an arbitrary stencil.
+    The stencil type is provided via a template argument and any cell-based
+    stencil is supported:
+
+    \table
+        Stencil                     | Connections     | Scheme name
+        centredCFCCellToCellStencil | cell-face-cell  | Not Instantiated
+        centredCPCCellToCellStencil | cell-point-cell | pointCellsLeastSquares
+        centredCECCellToCellStencil | cell-edge-cell  | edgeCellsLeastSquares
+    \endtable
+
+    The first of these is not instantiated by default as the standard
+    leastSquaresGrad is equivalent and more efficient.
+
+    \heading Usage
+
+    Example of the gradient specification:
+    \verbatim
+    gradSchemes
+    {
+        default         pointCellsLeastSquares;
+    }
+    \endverbatim
+
+See Also
+    Foam::fv::LeastSquaresVectors
+    Foam::fv::leastSquaresGrad
+
+SourceFiles
+    LeastSquaresGrad.C
+    LeastSquaresVectors.H
+    LeastSquaresVectors.C
+
+\*---------------------------------------------------------------------------*/
+
+#ifndef LeastSquaresGrad_H
+#define LeastSquaresGrad_H
+
+#include "gradScheme.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace fv
+{
+
+/*---------------------------------------------------------------------------*\
+                      Class LeastSquaresGrad Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type, class Stencil>
+class LeastSquaresGrad
+:
+    public fv::gradScheme<Type>
+{
+    // Private Data
+
+        //- Minimum determinant criterion to choose extra cells
+        scalar minDet_;
+
+
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        LeastSquaresGrad(const LeastSquaresGrad&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const LeastSquaresGrad&);
+
+
+public:
+
+    //- Runtime type information
+    TypeName("LeastSquares");
+
+
+    // Constructors
+
+        //- Construct from Istream
+        LeastSquaresGrad(const fvMesh& mesh, Istream& schemeData)
+        :
+            gradScheme<Type>(mesh)
+        {}
+
+
+    // Member Functions
+
+        //- Return the gradient of the given field to the gradScheme::grad
+        //  for optional caching
+        virtual tmp
+        <
+            GeometricField
+            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
+        > calcGrad
+        (
+            const GeometricField<Type, fvPatchField, volMesh>& vsf,
+            const word& name
+        ) const;
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace fv
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Add the patch constructor functions to the hash tables
+
+#define makeLeastSquaresGradTypeScheme(SS, STENCIL, TYPE)                     \
+                                                                              \
+typedef LeastSquaresGrad<TYPE, STENCIL> LeastSquaresGrad##TYPE##STENCIL##_;   \
+defineTemplateTypeNameAndDebugWithName                                        \
+    (LeastSquaresGrad##TYPE##STENCIL##_, #SS, 0);                             \
+                                                                              \
+gradScheme<TYPE>::addIstreamConstructorToTable                                \
+<LeastSquaresGrad<TYPE, STENCIL> >                                            \
+    add##SS##STENCIL##TYPE##IstreamConstructorToTable_;
+
+#define makeLeastSquaresGradScheme(SS, STENCIL)                               \
+                                                                              \
+typedef LeastSquaresVectors<STENCIL> LeastSquaresVectors##STENCIL##_;         \
+defineTemplateTypeNameAndDebugWithName                                        \
+    (LeastSquaresVectors##STENCIL##_, #SS, 0);                                \
+                                                                              \
+makeLeastSquaresGradTypeScheme(SS,STENCIL,scalar)                             \
+makeLeastSquaresGradTypeScheme(SS,STENCIL,vector)
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#   include "LeastSquaresGrad.C"
+#endif
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
+
+// ************************************************************************* //

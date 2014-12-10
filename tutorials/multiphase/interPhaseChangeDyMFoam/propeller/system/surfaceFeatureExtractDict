@@ -1,0 +1,59 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeatureExtractDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//innerCylinder.obj
+//{
+//    #include "surfaceFeatureExtractDictDefaults"
+//}
+
+
+innerCylinderSmall.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+
+outerCylinder.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+
+propellerStem1.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+
+propellerStem2.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+
+propellerStem3.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+
+propellerTip.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+
+// ************************************************************************* //

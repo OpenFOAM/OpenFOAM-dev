@@ -1,0 +1,36 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get application name
+application=`getApplication`
+
+runRefineMesh ()
+{
+    echo "Running refineMesh on $PWD"
+    refineMesh -dict system/refineMeshDict > log.refineMesh 2>&1
+}
+
+runApplication blockMesh
+
+i=1
+if [ -f log.topoSet ] ; then
+   i=3
+fi
+while [ "$i" -lt 3 ] ; do
+    if [ -f log.topoSet ] ; then
+        mv log.topoSet log.topoSet.1
+    fi
+    cp system/topoSetDict.${i} system/topoSetDict
+    runApplication topoSet
+    runRefineMesh
+    cp -r 1e-08/polyMesh/* constant/polyMesh
+    rm -rf 1e-08
+    i=`expr $i + 1`
+done
+
+runApplication $application
+
+# ----------------------------------------------------------------- end-of-file

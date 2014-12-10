@@ -1,0 +1,17 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+set -x
+
+if [ -d "$ParaView_DIR" -a -r "$ParaView_DIR" ]
+then
+    wmake libso vtkPV4Foam
+    (
+        cd PV4FoamReader
+        mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
+        cd Make/$WM_OPTIONS
+        cmake ../..
+        make
+    )
+fi
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
+
+
+// Baffles to create.
+baffles
+{
+    cyclicFaces
+    {
+        //- Select faces and orientation through a searchableSurface
+        type        searchableSurface;
+        surface     searchablePlate;
+        origin      (0.3042 0.0493 -100);
+        span        (0 0.1584  200);
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+
+                name            porous_half0;
+                type            cyclic;
+                neighbourPatch  porous_half1;
+
+                //- Optional override of added patchfields. If not specified
+                //  any added patchfields are of type calculated.
+                patchFields
+                {
+                    p_rgh
+                    {
+                        type            porousBafflePressure;
+                        patchType       cyclic;
+                        D               1000;
+                        I               500;
+                        length          0.15;
+                        jump            uniform 0;
+                        value           uniform 0;
+                    }
+                }
+            }
+            slave
+            {
+                //- Slave side patch
+
+                name            porous_half1;
+                type            cyclic;
+                neighbourPatch  porous_half0;
+
+                patchFields
+                {
+                    ${...master.patchFields}
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

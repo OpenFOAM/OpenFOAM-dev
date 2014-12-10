@@ -1,0 +1,89 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     potentialFreeSurfaceDyMFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         20;
+
+deltaT          0.001;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.02;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.4;
+
+maxDeltaT       1;
+
+functions
+{
+    forces
+    {
+        type            forces;
+        functionObjectLibs ("libforces.so");
+        outputControl   outputTime;
+        patches         (floatingObject);
+        pName           p;
+        UName           U;
+        rhoName         rhoInf;
+        log             yes;
+        rhoInf          1000;
+        CofR            (0 0 0);
+    }
+
+    poolHeight
+    {
+        type            faceSource;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        enabled         yes;
+        outputControl   timeStep;
+        outputInterval  1;
+        log             yes;
+        valueOutput     no;
+        source          faceZone;
+        sourceName      f0;
+        operation       areaAverage;
+        fields
+        (
+            zeta
+        );
+    }
+};
+
+// ************************************************************************* //

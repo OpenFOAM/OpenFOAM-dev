@@ -1,0 +1,139 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamRunTutorials
+#
+# Description
+#       Run either Allrun or blockMesh/application in current directory
+#       and all its subdirectories.
+#
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# Select the version of make to be used
+#------------------------------------------------------------------------------
+
+# normally use "make"
+make="make"
+runTests=false
+skipFirst=false
+
+## set WM_NCOMPPROCS automatically when both WM_HOSTS and WM_SCHEDULER are set
+#if [ -z "$WM_NCOMPPROCS" -a -n "$WM_HOSTS" -a -n "$WM_SCHEDULER" ]
+#then
+#    WM_NCOMPPROCS=$(wmakeScheduler -count)
+#    [ $? -eq 0 ] || unset WM_NCOMPPROCS
+#fi
+#
+#if [ "$WM_NCOMPPROCS" ]
+#then
+#    if [ "$WM_NCOMPPROCS" -gt 1 -a ! "$MAKEFLAGS" ]
+#    then
+#        lockDir=$HOME/.$WM_PROJECT/.wmake
+#
+#        if [ -d $lockDir ]
+#        then
+#            rm -f $lockDir/*
+#        else
+#            mkdir -p $lockDir
+#        fi
+#
+#        make="make --no-print-directory -j "$WM_NCOMPPROCS
+#    fi
+#fi
+
+
+
+# Source tutorial functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+thisScript=$0
+if [ "/${thisScript#/}" != "$thisScript" ]
+then
+    thisScript="$PWD/$thisScript"
+fi
+
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -t | -test)
+        runTests=true
+        shift
+        ;;
+    -s | -skipFirst)
+        skipFirst=true
+        shift
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+# If an argument is supplied do not execute ./Allrun to avoid recursion
+if ! $skipFirst && $runTests && [ -f "./Alltest" ]
+then
+    # Run a special test script.
+    ./Alltest
+elif ! $skipFirst && [ -f "./Allrun" ]
+then
+    # Specialised script.
+    ./Allrun
+elif [ -d system ]
+then
+    # Normal case.
+    parentDir=`dirname $PWD`
+    application=`getApplication`
+    runApplication blockMesh
+    runApplication $application
+else
+    # Loop over sub-directories and compile any applications
+    for caseName in *
+    do
+        if [ -d $caseName -a -d "$caseName/Make" ]
+        then
+            ( compileApplication $caseName )
+        fi
+    done
+    # Recurse to subdirectories
+    #for caseName in *
+    #do
+    #    if [ -d $caseName ]
+    #    then
+    #        ( cd $caseName && $thisScript )
+    #    fi
+    #done
+    FOAM_TARGETS=$(for d in *; do [ -d "$d" ] && echo "$d"; done | xargs)
+    #$make -k -f $WM_PROJECT_DIR/bin/tools/MakefileDirs FOAM_TARGETS="$FOAM_TARGETS" FOAM_APP="$WM_SCHEDULER $thisScript"
+
+    passArgs=$(if $runTests; then echo "-test"; fi)
+
+    $make -k -f $WM_PROJECT_DIR/bin/tools/MakefileDirs FOAM_TARGETS="$FOAM_TARGETS" FOAM_APP="$thisScript" FOAM_ARGS="$passArgs"
+fi
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,3 @@
+cDBUG       =
+cOPT        = -O3
+# -fprefetch-loop-arrays

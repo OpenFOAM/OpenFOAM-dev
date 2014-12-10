@@ -1,0 +1,6 @@
+<ParaViewReaders>
+  <Reader name="PV3FoamReader"
+          extensions="OpenFOAM"
+          file_description="OpenFOAM Reader">
+  </Reader>
+</ParaViewReaders>

@@ -1,0 +1,7 @@
+EXE_INC = \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_SRC)/surfMesh/lnInclude
+
+LIB_LIBS = \
+    -lfileFormats \
+    -lsurfMesh

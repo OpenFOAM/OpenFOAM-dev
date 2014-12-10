@@ -1,0 +1,102 @@
+#---------------------------------*- sh -*-------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     RunFunctions
+#
+# Description
+#     Miscellaneous functions for running tutorial cases
+#------------------------------------------------------------------------------
+
+getNumberOfProcessors()
+{
+    sed -ne 's/^numberOfSubdomains *\(.*\);/\1/p' system/decomposeParDict
+}
+
+getApplication()
+{
+    sed -ne 's/^ *application *\([a-zA-Z]*\) *;.*$/\1/p' system/controlDict
+}
+
+runApplication()
+{
+    APP_RUN=$1
+    APP_NAME=${1##*/}
+    shift
+
+    if [ -f log.$APP_NAME ]
+    then
+        echo "$APP_NAME already run on $PWD: remove log file to re-run"
+    else
+        echo "Running $APP_RUN on $PWD"
+        $APP_RUN "$@" > log.$APP_NAME 2>&1
+    fi
+}
+
+runParallel()
+{
+    APP_RUN=$1
+    APP_NAME=${1##*/}
+    shift
+
+    if [ -f log.$APP_NAME ]
+    then
+        echo "$APP_NAME already run on $PWD: remove log file to re-run"
+    else
+        nProcs=$1
+        shift
+        echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
+
+        #if [ "$WM_SCHEDULER" ]
+        #then
+        #    echo "$PWD: $WM_SCHEDULER -np $nProcs" 1>&2
+        #    $WM_SCHEDULER -np $nProcs "( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null > log.$APP_NAME 2>&1 )"
+        #else
+            ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null > log.$APP_NAME 2>&1 )
+        #fi
+    fi
+}
+
+compileApplication()
+{
+    echo "Compiling $1 application"
+    wmake $1
+}
+
+cloneCase()
+{
+    if [ -d $2 ]
+    then
+        echo "Case already cloned: remove case directory $2 to clone"
+    else
+        echo "Cloning $2 case from $1"
+        mkdir $2
+        cpfiles="0 system constant"
+        for f in $cpfiles
+        do
+            cp -r $1/$f $2
+        done
+    fi
+}
+
+#------------------------------------------------------------------------------

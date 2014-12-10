@@ -1,0 +1,29 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+
+(
+    cd blob || exit
+    ./Allrun
+)
+(
+    cd flange || exit
+    ./Allrun
+)
+(
+    cd simpleShapes || exit
+    ./Allrun
+)
+(
+    cd mixerVessel || exit
+    ./Allrun
+)
+
+exit 0
+
+# Any cases that are links to solver test cases and are run when the Allrun
+# scripts of those solvers are run.
+
+# This dummy Allrun script avoids meshing these cases twice.
+
+# ----------------------------------------------------------------- end-of-file

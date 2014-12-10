@@ -1,0 +1,107 @@
+Kiva cell/vertex connectivity arrays.
+
+c +++ kiva-3 notation: i4 refers both to vertex #4 and the cell shown:
+c +++
+c +++
+c +++                         7/--------/|6
+c +++                         /        / |
+c +++                        / |      /  |
+c +++                       /        /   |
+c +++                     8/--------/5   |
+c +++                      |   |    |    |
+c +++                      |        |    |
+c +++                      |  3|-  -| -  |2
+c +++                      |   /    |   /
+c +++                      |        |  /
+c +++                      | /      | /
+c +++                      |        |/
+c +++                     4----------1
+c +++                                     top=i8tab(i4)
+c +++                                          |
+c +++                                          |   derriere=i3tab(i4)
+c +++                                          |  /
+c +++                                          | /
+c +++                                          |/
+c +++                  left=imtab(i4)--------<i4>-----right=i1tab(i4)
+c +++                                         /|
+c +++                                        / |
+c +++                                       /  |
+c +++                        front=jmtab(i4)   |
+c +++                                          |
+c +++                                   bottom=kmtab(i4)
+c
+c ======================================================================
+
+cell 'i4' is connected to vertex 'i4'.
+To get the points of cell 'i' is thus done in the following way:
+
+i
+i1tab(i)
+i3tab(i1tab(i))
+i3tab(i)
+i8tab(i)
+i1tab(i8tab(i))
+i3tab(i1tab(i8tab(i)))
+i3tab(i8tab(i))
+
+Only three of the faces have boundary condition. They are stored in the following arrays
+
+bcl - boundary condition left face
+bcf - boundary condition front face
+bcb - boundary condition bottom face
+
+To get the other boundary conditions, you must get the neighbouring cells
+and obtain the bc from them.
+
+The bc values are:
+1.0  - moving  - moving (piston top)
+2.0  - solid   - solid (wall)
+3.0  - axis    - center axis, line
+4.0  - fluid   - fluid (i.e. no bc)
+5.0  - periodf - front periodic bc
+6.0  - periodd - back periodic bc
+7.0  - inflow  - inflow
+8.0  - outflow - outflow
+9.0  - presin  - pressure inflow
+10.0 - presout - pressure outflow
+
+c ======================================================================
+
+fv - flag for vertices
+
+The values are:
+
+0.0 - inactive vertex
+1.0 - flfluid - interior (fluid) vertex
+2.0 - flface  - vertex on a moving surface (piston/valve)
+3.0 - flbowl  - vertex within the piston bowl
+4.0 - flsqsh  - vertex in squish region and above piston
+5.0 - fldome  - vertex within head, but not on the surface itself
+6.0 - flhead  - vertex on the head surface
+
+c ======================================================================
+
+f - flag for cells
+
+The values are:
+
+0.0 - inactive (ghost) cell
+1.0 - active cell
+
+c ======================================================================
+
+idface - vertex flag for moving surface
+
+The values are:
+
+-1 - Not on a moving surface
+ 0 - Piston top
+ 1..6 - Valve nr.
+
+c ======================================================================
+
+idreg - cell region number.
+
+c ======================================================================
+
+The first non-ghost cell will be '

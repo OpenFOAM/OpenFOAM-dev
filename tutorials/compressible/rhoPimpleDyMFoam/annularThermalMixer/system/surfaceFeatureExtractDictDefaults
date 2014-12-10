@@ -1,0 +1,31 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeatureExtractDictDefaults;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+extractionMethod    extractFromSurface;
+
+extractFromSurfaceCoeffs
+{
+    includedAngle   150;  // Identifes a feature when angle
+}                         // between faces < includedAngle
+
+trimFeatures
+{
+    minElem         10;   // minimum edges within a feature
+}
+
+writeObj            yes;  // writes out .obj files to view features
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

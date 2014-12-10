@@ -1,0 +1,2 @@
+#!/bin/sh
+awk '{print $1 " " $4}' postProcessing/poolHeight/0/faceSource.dat > poolHeight_vs_time

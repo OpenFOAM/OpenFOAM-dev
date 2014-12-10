@@ -1,0 +1,444 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamLog
+#
+# Description
+#     extracts info from log file
+#
+# Bugs
+#     -solution singularity not handled
+#------------------------------------------------------------------------------
+Script=${0##*/}
+toolsDir=${0%/*}/tools
+siteDir=${WM_PROJECT_SITE:-${WM_PROJECT_INST_DIR:-<unknown>}/site}
+userDir=$HOME/.OpenFOAM
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+
+Usage: $Script [OPTIONS] <log>
+  -list             lists but does not extract
+  -n                create single column files with the extracted data only
+  -quiet            quiet operation
+  -localDB          only use the local database file
+  -help             print the usage
+
+$Script - extracts xy files from OpenFOAM logs.
+
+USAGE
+    exit 1
+}
+
+#------------------------------------------------------------------------------
+
+printHelp() {
+cat <<HELP
+-----------------------------------------------------------------------------
+The default is to extract for all the 'Solved for' variables the initial
+residual, the final residual and the number of iterations. Additionally, a
+(user editable) database is used to extract data for standard non-solved for
+variables like Courant number, and execution time.
+
+$Script -l lists all the possible variables without extracting them.
+
+The program will generate and run an awk script which writes a set of files,
+logs/<var>_<subIter>, for every <var> specified, for every occurrence inside
+a time step.
+
+For variables that are 'Solved for', the initial residual name will be
+<var>, the final residual receive the name <var>FinalRes,
+
+The files are output in a simple xy format with the first column Time (default)
+and the second the extracted values. Option -n creates single column
+files with the extracted data only.
+
+
+The query database is a simple text format with three entries per line,
+separated with '/' :
+  Column 1 is the name of the variable (cannot contain spaces).
+  Column 2 is the extended regular expression (egrep) to select the line.
+  Column 3 is the string (fgrep) to select the column inside the line.
+The value taken will be the first (non-space)word after this column.
+The database ($Script.db) will taken from these locations:
+
+    .
+    $userDir/$WM_PROJECT_VERSION
+    $userDir
+    $siteDir/$WM_PROJECT_VERSION
+    $siteDir
+    $WM_PROJECT_DIR/etc
+    $toolsDir
+
+Option -q suppresses the default information and only prints the extracted
+variables.
+-----------------------------------------------------------------------------
+HELP
+
+usage
+}
+
+
+timeName=Time
+unset listOpt quietOpt localDB
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        printHelp
+        exit 0
+        ;;
+    -n)
+        unset timeName
+        shift
+        ;;
+    -l | -list)
+        listOpt=true
+        shift
+        ;;
+    -q | -quiet | -s | -silent)
+        quietOpt=true
+        shift
+        ;;
+    -localDB)
+        localDB=true
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+# find the database file
+DBFILE=$Script.db
+[ -f $DBFILE ] || DBFILE=`foamEtcFile $Script.db` || DBFILE=$toolsDir/$Script.db
+
+# need the database file
+[ -f $DBFILE ] || {
+    echo "$Script: Cannot read database $DBFILE"
+    exit 1
+}
+
+# single logFile
+if [ $# -eq 1 ]
+then
+    LOG=$1
+    [ -r "$LOG" ] && [ -f "$LOG" ] || usage "Cannot read log $LOG"
+else
+    usage
+fi
+
+
+myEcho()
+{
+   [ "$quietOpt" = true ] || echo "$*"
+}
+
+
+# getSolvedVars logFile
+# Prints names of all 'solved for' variables in the log file.
+getSolvedVars()
+{
+    fgrep ' Solving for ' $1 | fgrep ',' | sed -e 's/.* Solving for \([^,]*\)[,:].*/\1/' | sed -e 's/\./_/g' | sort -u
+}
+
+
+# getQueries dbFile queryName
+# Gets regular expressions for a certain queryName from the database
+getQueries()
+{
+    dbFile=$1
+    queryName=$2
+
+    [ -f "$dbFile" ] || {
+        echo "Cannot find dbFile $dbFile"
+        exit 1
+    }
+
+    LINEQ=`grep -v '^#' $dbFile | awk -F '/' "/$queryName/ {if (\"$queryName\" "'!= $1) next; print $2}'`
+    NUMQ=`grep -v '^#' $dbFile | awk -F '/' "/$queryName/ {if (\"$queryName\" "'!= $1) next; print $3}'`
+
+    #echo "For $queryName found line selection /$LINEQ/ , column selection /$NUMQ/" 1>&2
+    #if [ ! "$LINEQ" -o ! "$NUMQ" ]
+    #then
+    #    echo "Did not find query for $2 in database $1" 1>&2
+    #fi
+}
+
+
+# getDbQueryList dbFile
+# Echoes list of possible queries
+getDbQueryList()
+{
+    grep -v '^#' $1 | grep '[^ \t]' | awk -F '/' '{print $1}'
+}
+
+
+# getSolveQueryList logFile
+# Echoes list of queries from "solved for" variables in log file
+getSolveQueryList()
+{
+    solvedVars=`getSolvedVars $1`
+
+    for var in $solvedVars
+    do
+        echo "${var}"
+        echo "${var}FinalRes"
+        echo "${var}Iters"
+    done
+}
+
+
+# getAllQueries dbFile logFile
+# Gets all queries from database and from logfile
+getAllQueries()
+{
+    #-- All solved for queries from log file
+    [ "$localDB" = true ] || queries=`getSolveQueryList $2`
+
+    #-- Add ones from database, present in log file
+    # Note: just like awk, line selected with regular expression,
+    #       column with string.
+    dbQueries=`getDbQueryList $1`
+
+    for var in $dbQueries
+    do
+        getQueries $1 "$var"
+        line=`egrep "$LINEQ" $2`
+        if [ "$line" ]
+        then
+            column=`echo "$line" | fgrep "$NUMQ"`
+            if [ "$column" ]
+            then
+                queries="$queries $var"
+            fi
+        fi
+    done
+
+    for q in $queries
+    do
+        echo "$q"
+    done | sort -u
+}
+
+
+#-----------------------------
+# Main
+#-----------------------------
+
+if [ "$listOpt" = true ]
+then
+    getAllQueries $DBFILE $LOG
+    exit 0
+fi
+
+caseDir=.
+outputDir=$caseDir/logs
+
+[ -d "$caseDir" ] || {
+    echo "$Script: Cannot read $caseDir"
+    exit 1
+}
+
+QUERYNAMES=`getAllQueries $DBFILE $LOG`
+
+#
+# Make logs dir in case directory and place awk file there
+#
+mkdir -p $outputDir
+AWKFILE=$outputDir/$Script.awk
+
+myEcho "Using:"
+myEcho "  log      : $LOG"
+myEcho "  database : $DBFILE"
+myEcho "  awk file : $AWKFILE"
+myEcho "  files to : $outputDir"
+myEcho ""
+
+
+#-----------------------------
+# Generate Awk program
+#-----------------------------
+
+rm -f $AWKFILE 2> /dev/null
+cat << AWK_CONTENTS > $AWKFILE
+# header
+BEGIN {
+    Iteration=0
+    resetCounters()
+}
+
+# reset counters used for variable postfix
+function resetCounters() {
+AWK_CONTENTS
+# ----------
+
+for queryName in $QUERYNAMES
+do
+    varName=${queryName}Cnt
+    echo "    ${varName}=0" >> $AWKFILE
+done
+
+echo "    # Reset counters for general Solving for extraction" >> $AWKFILE
+echo "    for (varName in subIter)" >> $AWKFILE
+echo "    {" >> $AWKFILE
+echo "        subIter[varName]=0" >> $AWKFILE
+echo "    }" >> $AWKFILE
+echo "}" >> $AWKFILE
+echo "" >> $AWKFILE
+
+
+cat << AWK_CONTENTS >> $AWKFILE
+# Extract value after columnSel
+function extract(inLine,columnSel,outVar,a,b)
+{
+    a=index(inLine, columnSel)
+    b=length(columnSel)
+    split(substr(inLine, a+b),outVar)
+    gsub("[,:]","",outVar[1])
+}
+
+AWK_CONTENTS
+# ----------
+
+#
+# Code for iteration separator (increments 'Iteration')
+#
+getQueries $DBFILE 'Separator'
+cat << AWK_CONTENTS >> $AWKFILE
+# Iteration separator (increments 'Iteration')
+/$LINEQ/ {
+    Iteration++
+    resetCounters()
+}
+
+AWK_CONTENTS
+# ----------
+
+#
+# Code for extracting Time
+#
+getQueries $DBFILE 'Time'
+cat << AWK_CONTENTS >> $AWKFILE
+# Time extraction (sets 'Time')
+/$LINEQ/ {
+    extract(\$0, "$NUMQ", val)
+    Time=val[1]
+}
+
+AWK_CONTENTS
+# ----------
+
+#
+# Code for singularity handling.
+#
+cat << AWK_CONTENTS >> $AWKFILE
+# Skip whole line with singularity variable
+/solution singularity/ {
+    next;
+}
+
+AWK_CONTENTS
+# ----------
+
+#
+# Code for extracting solved for quantities
+#
+[ "$localDB" = true ] ||
+    cat << AWK_CONTENTS >> $AWKFILE
+    # Extraction of any solved for variable
+    /Solving for/ {
+        extract(\$0, "Solving for ", varNameVal)
+
+        varName=varNameVal[1]
+        file=varName "_" subIter[varName]++
+        file="$outputDir/" file
+        extract(\$0, "Initial residual = ", val)
+        print $timeName "\t" val[1] > file
+
+        varName=varNameVal[1] "FinalRes"
+        file=varName "_" subIter[varName]++
+        file="$outputDir/" file
+        extract(\$0, "Final residual = ", val)
+        print $timeName "\t" val[1] > file
+
+        varName=varNameVal[1] "Iters"
+        file=varName "_" subIter[varName]++
+        file="$outputDir/" file
+        extract(\$0, "No Iterations ", val)
+        print $timeName "\t" val[1] > file
+    }
+
+AWK_CONTENTS
+# ----------
+
+#
+# Code to process queries
+#
+for queryName in $QUERYNAMES
+do
+    getQueries $DBFILE $queryName
+    if [ "$LINEQ" -a "$NUMQ" ]
+    then
+        counter=${queryName}Cnt
+
+        echo "# Extraction of $queryName" >> $AWKFILE
+        echo "/$LINEQ/ {" >> $AWKFILE
+        echo "    extract(\$0, \"$NUMQ\", val)" >> $AWKFILE
+        echo "    file=\"$outputDir/${queryName}_\" ${counter}" >> $AWKFILE
+        echo "    print $timeName \"\\t\" val[1] > file" >> $AWKFILE
+        echo "    ${counter}++" >> $AWKFILE
+        echo "}" >> $AWKFILE
+        echo "" >> $AWKFILE
+    fi
+done
+
+
+#-----------------------------
+# Run awk program on log
+#-----------------------------
+(
+    cmd="awk -f $AWKFILE $LOG"
+    myEcho "Executing: $cmd"
+    $cmd
+    myEcho ""
+)
+
+#-----------------------------
+# Print found
+#-----------------------------
+myEcho "Generated XY files for:"
+[ "$quietOpt" = true ] || getAllQueries $DBFILE $LOG
+myEcho "End"
+
+#------------------------------------------------------------------------------

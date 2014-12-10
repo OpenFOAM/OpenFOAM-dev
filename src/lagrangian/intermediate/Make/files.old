@@ -1,0 +1,70 @@
+PARCELS=parcels
+BASEPARCELS=$(PARCELS)/baseClasses
+DERIVEDPARCELS=$(PARCELS)/derived
+
+
+CLOUDS=clouds
+BASECLOUDS=$(CLOUDS)/baseClasses
+DERIVEDCLOUDS=$(CLOUDS)/derived
+
+
+/* Parcels */
+$(BASEPARCELS)/reactingParcel/reactingParcel.C
+
+
+/* Cloud base classes */
+$(BASECLOUDS)/kinematicCloud/kinematicCloud.C
+$(BASECLOUDS)/thermoCloud/thermoCloud.C
+$(BASECLOUDS)/reactingCloud/reactingCloud.C
+
+
+/* kinematic parcel sub-models */
+KINEMATICPARCEL=$(DERIVEDPARCELS)/basicKinematicParcel
+$(KINEMATICPARCEL)/basicKinematicParcel.C
+$(KINEMATICPARCEL)/defineBasicKinematicParcel.C
+$(KINEMATICPARCEL)/makeBasicKinematicParcelSubmodels.C
+
+/* thermo parcel sub-models */
+THERMOPARCEL=$(DERIVEDPARCELS)/fluidThermoParcel
+$(THERMOPARCEL)/fluidThermoParcel.C
+$(THERMOPARCEL)/defineBasicThermoParcel.C
+$(THERMOPARCEL)/makeBasicThermoParcelSubmodels.C
+
+/* reacting parcel sub-models */
+REACTINGPARCEL=$(DERIVEDPARCELS)/basicReactingParcel
+$(REACTINGPARCEL)/basicReactingParcel.C
+$(REACTINGPARCEL)/defineBasicReactingParcel.C
+$(REACTINGPARCEL)/makeBasicReactingParcelSubmodels.C
+
+
+/* bolt-on models */
+
+submodels/Kinematic/PatchInteractionModel/LocalInteraction/patchInteractionData.C
+
+KINEMATICINJECTION=submodels/Kinematic/InjectionModel
+$(KINEMATICINJECTION)/KinematicLookupTableInjection/kinematicParcelInjectionData.C
+$(KINEMATICINJECTION)/KinematicLookupTableInjection/kinematicParcelInjectionDataIO.C
+$(KINEMATICINJECTION)/KinematicLookupTableInjection/kinematicParcelInjectionDataIOList.C
+
+THERMOINJECTION=submodels/Thermodynamic/InjectionModel
+$(THERMOINJECTION)/ThermoLookupTableInjection/thermoParcelInjectionData.C
+$(THERMOINJECTION)/ThermoLookupTableInjection/thermoParcelInjectionDataIO.C
+$(THERMOINJECTION)/ThermoLookupTableInjection/thermoParcelInjectionDataIOList.C
+
+REACTINGINJECTION=submodels/Reacting/InjectionModel
+$(REACTINGINJECTION)/ReactingLookupTableInjection/reactingParcelInjectionData.C
+$(REACTINGINJECTION)/ReactingLookupTableInjection/reactingParcelInjectionDataIO.C
+$(REACTINGINJECTION)/ReactingLookupTableInjection/reactingParcelInjectionDataIOList.C
+
+
+/* integration schemes */
+IntegrationScheme/makeIntegrationSchemes.C
+
+
+/* phase properties */
+phaseProperties/phaseProperties/phaseProperties.C
+phaseProperties/phaseProperties/phasePropertiesIO.C
+phaseProperties/phasePropertiesList/phasePropertiesList.C
+
+
+LIB = $(FOAM_LIBBIN)/liblagrangianIntermediate

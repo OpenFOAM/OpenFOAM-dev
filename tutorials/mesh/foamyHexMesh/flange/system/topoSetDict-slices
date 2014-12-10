@@ -1,0 +1,152 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+zSlice  -0.009;
+ySlice  0.0;
+xSlice  0.0;
+
+actions
+(
+    {
+        name    z;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-100 -100 $zSlice)(100 100 100);
+        }
+    }
+
+    {
+        name    zf;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    z;
+            option all;
+        }
+    }
+
+    {
+        name    z;
+        type    cellSet;
+        action  invert;
+    }
+
+    {
+        name    zf;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    z;
+            option all;
+        }
+    }
+
+    // ~~~~~~~~~~~~~~~~ //
+
+    {
+        name    y;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-100 $ySlice -100)(100 100 100);
+        }
+    }
+
+    {
+        name    yf;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    y;
+            option all;
+        }
+    }
+
+    {
+        name    y;
+        type    cellSet;
+        action  invert;
+    }
+
+    {
+        name    yf;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    y;
+            option all;
+        }
+    }
+
+    // ~~~~~~~~~~~~~~~~ //
+
+    {
+        name    x;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box ($xSlice -100 -100)(100 100 100);
+        }
+    }
+
+    {
+        name    xf;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    x;
+            option all;
+        }
+    }
+
+    {
+        name    x;
+        type    cellSet;
+        action  invert;
+    }
+
+    {
+        name    xf;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        sourceInfo
+        {
+            set    x;
+            option all;
+        }
+    }
+);
+
+// ************************************************************************* //

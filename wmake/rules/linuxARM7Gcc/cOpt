@@ -1,0 +1,3 @@
+cDBUG       =
+#cOPT        = -O3 -floop-optimize -falign-loops -falign-labels -falign-functions -falign-jumps -fprefetch-loop-arrays -mcpu=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard
+cOPT        = -O3 -floop-optimize -falign-loops -falign-labels -falign-functions -falign-jumps -fprefetch-loop-arrays -mcpu=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=softfp

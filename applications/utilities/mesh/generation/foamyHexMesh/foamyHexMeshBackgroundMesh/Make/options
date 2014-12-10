@@ -1,0 +1,36 @@
+EXE_DEBUG = -DFULLDEBUG -g -O0
+EXE_FROUNDING_MATH = -frounding-math
+EXE_NDEBUG = -DNDEBUG
+
+include $(GENERAL_RULES)/CGAL
+
+EXE_INC = \
+    ${EXE_FROUNDING_MATH} \
+    ${EXE_NDEBUG} \
+    ${CGAL_INC} \
+    -I../conformalVoronoiMesh/lnInclude \
+    -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
+    -I$(LIB_SRC)/edgeMesh/lnInclude \
+    -I$(LIB_SRC)/mesh/autoMesh/lnInclude \
+    -I$(LIB_SRC)/triSurface/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I../vectorTools
+
+EXE_LIBS = \
+    $(CGAL_LIBS) \
+    -lboost_thread \
+    -lmpfr \
+    -lgmp \
+    -lconformalVoronoiMesh \
+    -ldecompositionMethods /* -L$(FOAM_LIBBIN)/dummy -lscotchDecomp */ \
+    -ledgeMesh \
+    -ltriSurface \
+    -lmeshTools \
+    -lfileFormats \
+    -lsampling \
+    -ldynamicMesh \
+    -lfiniteVolume

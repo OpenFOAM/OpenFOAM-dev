@@ -1,0 +1,101 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamSolverSweeps
+#
+# Description
+#
+#------------------------------------------------------------------------------
+
+#-- settings
+timeFile=/tmp/FOAM_iters.time
+runTimeFile=/tmp/FOAM_iters.rtime
+piterFile=/tmp/FOAM_iters.piters
+uiterFile=/tmp/FOAM_iters.uiters
+
+echo "timeFile=$timeFile"
+echo "runTimeFile=$runTimeFile"
+echo "piterFile=$piterFile"
+echo "uiterFile=$uiterFile"
+echo ""
+
+
+# sumFile <file>
+#
+# prints sum of all numbers in file
+sumFile () {
+  sum=0
+  for num in `cat $1`
+  do
+    sum=`expr $sum + $num`
+  done
+  echo $sum
+}
+
+
+
+# Main
+#~~~~~~
+
+echo "Name of log file (LOG) : \c"
+read logFile
+logFile=${logFile:-LOG}
+
+
+foamProgram=`grep '< .* >' ${logFile} | awk '{print $2}'`
+echo ""
+echo "Program: ${foamProgram}"
+
+
+grep 'ExecutionTime =' ${logFile} > ${runTimeFile}
+echo ""
+echo "Runtime:"
+echo "  1st iter  : "`head -1 ${runTimeFile}`
+echo "  overall   : "`tail -1 ${runTimeFile}`
+
+grep '^Time =' ${logFile} > ${timeFile}
+echo ""
+echo "Simulation:"
+echo "  steps: "`wc -l ${timeFile} | awk '{print $1}'`
+echo "  from : "`head -1 ${timeFile}`
+echo "  to   : "`tail -1 ${timeFile}`
+echo ""
+
+grep 'Solving for p,' ${logFile} | awk '{print $15}' > ${piterFile}
+grep 'Solving for U' ${logFile} | awk '{print $15}' > ${uiterFile}
+
+
+echo "Solver sweeps:"
+echo "  p           : "`sumFile ${piterFile}`
+echo "  U(U0,U1,U2) : "`sumFile ${uiterFile}`
+echo ""
+
+
+rm ${timeFile}
+rm ${runTimeFile}
+rm ${piterFile}
+rm ${uiterFile}
+
+#------------------------------------------------------------------------------

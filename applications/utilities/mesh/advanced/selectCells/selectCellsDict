@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      selectCellsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Whether to use surface. If false no surface will be read and only
+// outsidePoints/selectOutside will be used to determine cells to keep.
+useSurface      false;
+
+// Surface to keep to
+surface         "plexi.obj";
+
+// What is outside
+outsidePoints   ((-1 -1 -1));
+
+//
+// Selection of final set
+//
+
+// Select based on side of surface. Usually select inside cells and project
+// outwards or select outside cells and project inwards.
+selectCut       false;
+selectInside    false;
+selectOutside   true;
+// Leave out cell closer than nearDistance to the surface. Usually
+// 0.5*of the cell size. Set to <0 to disable.
+nearDistance    -1;
+
+// ************************************************************************* //

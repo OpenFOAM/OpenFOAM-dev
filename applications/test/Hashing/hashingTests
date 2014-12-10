@@ -1,0 +1,59 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+stringList
+(
+    "The quick brown fox jumps over the lazy dog"
+    "The best hash is the one you don't write yourself!"
+)
+
+
+labelList
+(
+    0
+    1
+    100
+    1000
+    -1
+    -10
+    -100
+)
+
+labelListList
+(
+    (0)
+    (0 0)
+    (0 0 0)
+    (0 1)
+    (100 1000)
+    (0 1 100 1000)
+)
+
+// edges are hashed commutatively
+edgeList
+(
+    (0 1)
+    (1 0)
+    (45 100)
+    (100 45)
+    (128 1000)
+    (1000 128)
+)
+
+// triFaces are also hashed commutatively (via multiply/add)
+triFaceList
+(
+    (10 20 30)
+    (30 20 10)
+    (20 10 30)
+)
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

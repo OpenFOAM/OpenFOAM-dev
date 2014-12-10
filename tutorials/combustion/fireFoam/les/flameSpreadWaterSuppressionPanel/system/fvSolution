@@ -1,0 +1,111 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    rho
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       0;
+        relTol          0.1;
+    };
+
+    rhoFinal
+    {
+        $rho;
+        tolerance       1e-6;
+        relTol          0;
+    };
+
+    p_rgh
+    {
+        solver              GAMG;
+        tolerance           1e-5;
+        relTol              0.01;
+        smoother            GaussSeidel;
+        cacheAgglomeration  true;
+        nCellsInCoarsestLevel   10;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
+    };
+
+    p_rghFinal
+    {
+        solver              GAMG;
+        tolerance           1e-6;
+        relTol              0;
+        smoother            GaussSeidel;
+        cacheAgglomeration  true;
+        nCellsInCoarsestLevel 10;
+        //nCellsInCoarsestLevel 1;
+        agglomerator     faceAreaPair;
+        mergeLevels      1;
+    };
+
+    "(U|Yi|h|k)"
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-8;
+        relTol          0.1;
+    };
+
+    "(U|Yi|h|k)Final"
+    {
+        $U;
+        tolerance       1e-8;
+        relTol          0;
+    };
+
+    Ii
+    {
+        solver          GAMG;
+        tolerance       1e-4;
+        relTol          0;
+        smoother        DILU;
+        cacheAgglomeration  true;
+        nCellsInCoarsestLevel   10;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
+        maxIter         20;
+    }
+}
+
+PIMPLE
+{
+    momentumPredictor yes;
+    nOuterCorrectors  1;
+    nCorrectors       2;
+    nNonOrthogonalCorrectors 0;
+}
+
+relaxationFactors
+{
+    fields
+    {
+    }
+    equations
+    {
+        "(U|k).*"                   1;
+        "(C3H8|O2|H2O|CO2|h).*"     1;
+    }
+}
+
+
+// ************************************************************************* //

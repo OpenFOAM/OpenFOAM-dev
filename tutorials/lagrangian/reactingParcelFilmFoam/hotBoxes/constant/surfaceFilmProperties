@@ -1,0 +1,140 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      SurfaceFilmProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaceFilmModel thermoSingleLayer;
+
+regionName      wallFilmRegion;
+
+active          true;
+
+
+thermoSingleLayerCoeffs
+{
+    filmThermoModel liquid;
+
+    liquidCoeffs
+    {
+        useReferenceValues no;
+        liquid      H2O;
+    }
+
+    filmViscosityModel liquid;
+
+    deltaWet    1e-4;
+
+    hydrophilic no;
+
+    radiationModel  none;
+
+    turbulence  laminar;
+    laminarCoeffs
+    {
+        Cf          0.005;
+    }
+
+    upperSurfaceModels
+    {
+/*
+        heatTransferModel constant;
+        constantCoeffs
+        {
+           c0              1e-8;
+        }
+*/
+        heatTransferModel mappedConvectiveHeatTransfer;
+    }
+
+    lowerSurfaceModels
+    {
+        heatTransferModel constant;
+        constantCoeffs
+        {
+            c0              50;
+        }
+    }
+
+    forces
+    (
+        thermocapillary
+        contactAngle
+    );
+
+    contactAngleCoeffs
+    {
+        Ccf             0.085;
+        contactAngleDistribution
+        {
+            type            normal;
+            normalDistribution
+            {
+                minValue        50;
+                maxValue        100;
+                expectation     75;
+                variance        100;
+            }
+        }
+
+        zeroForcePatches
+        ();
+    }
+
+    injectionModels
+    (
+        curvatureSeparation
+        drippingInjection
+    );
+
+    curvatureSeparationCoeffs
+    {
+        definedPatchRadii
+        (
+            ("(cube[0-9][0-9]_side[0-9]_to_cube[0-9][0-9]_side[0-9])" 0)
+        );
+    }
+
+    drippingInjectionCoeffs
+    {
+        cloudName    reactingCloud1;
+        deltaStable  0;
+
+        particlesPerParcel 100.0;
+
+        parcelDistribution
+        {
+            type         RosinRammler;
+            RosinRammlerDistribution
+            {
+                minValue        5e-04;
+                maxValue        0.0012;
+                d               7.5e-05;
+                n               0.5;
+            }
+        }
+    }
+
+    phaseChangeModel standardPhaseChange;
+
+    standardPhaseChangeCoeffs
+    {
+        Tb              373;
+        deltaMin        1e-8;
+        L               1.0;
+    }
+}
+
+
+// ************************************************************************* //

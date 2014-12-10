@@ -1,0 +1,4 @@
+c++DBUG     =
+c++OPT      = -O3
+#c++OPT      = -march=nocona -O3
+# -ftree-vectorize -ftree-vectorizer-verbose=3

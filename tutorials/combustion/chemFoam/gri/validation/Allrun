@@ -1,0 +1,14 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1    # run from this directory
+
+# Extract Chemkin II data into a friendlier format
+echo "# Time [s]    Temperature [K]" > chemkinII
+grep '^ Time (sec)' ../chemkin/senk.out | awk '{print $4 "    " $8 }' \
+    >> chemkinII
+
+./createGraph
+
+# ----------------------------------------------------------------- end-of-file
+
+

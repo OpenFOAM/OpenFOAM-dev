@@ -1,0 +1,6 @@
+/wedge1/,/nFaces/{
+s/patch/wedge/
+}
+/wedge2/,/nFaces/{
+s/patch/wedge/
+}

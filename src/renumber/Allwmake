@@ -1,0 +1,40 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+makeType=${1:-libso}
+
+## get ZOLTAN_ARCH_PATH
+#if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/zoltan.sh`
+#then
+#    . $settings
+#    echo "using ZOLTAN_ARCH_PATH=$ZOLTAN_ARCH_PATH"
+#else
+#    echo
+#    echo "Error: no config/zoltan.sh settings"
+#    echo
+#fi
+
+
+set -x
+
+wmake $makeType renumberMethods
+
+if [ -n "$BOOST_ARCH_PATH" ]
+then
+    wmake $makeType SloanRenumber
+else
+    echo
+    echo "Skipping SloanRenumber"
+    echo
+fi
+
+
+if [ -n "$ZOLTAN_ARCH_PATH" ]
+then
+    wmake $makeType zoltanRenumber
+else
+    echo
+    echo "Skipping zoltanRenumber"
+    echo
+fi
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,120 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+filter1
+{
+    type            explicitPorositySource;
+    selectionMode   cellZone;
+    cellZone        filter;
+    active          true;
+
+    explicitPorositySourceCoeffs
+    {
+        type            DarcyForchheimer;
+
+        DarcyForchheimerCoeffs
+        {
+            d   d [0 -2 0 0 0 0 0] (500000 -1000 -1000);
+            f   f [0 -1 0 0 0 0 0] (0 0 0);
+
+            coordinateSystem
+            {
+                type    cartesian;
+                origin  (0 0 0);
+                coordinateRotation
+                {
+                    type    axesRotation;
+                    e1  (1 0 0);
+                    e2  (0 1 0);
+                }
+            }
+        }
+    }
+}
+
+
+massSource1
+{
+    type            scalarSemiImplicitSource;
+    active          true;
+    timeStart       0.2;
+    duration        2.0;
+    selectionMode   points;
+    points
+    (
+        (2.75 0.5 0)
+    );
+
+    scalarSemiImplicitSourceCoeffs
+    {
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            rho         (1e-4 0); // kg/s
+            H2O         (1e-4 0); // kg/s
+        }
+    }
+}
+
+
+momentumSource1
+{
+    type            vectorSemiImplicitSource;
+    active          true;
+    timeStart       0.2;
+    duration        2.0;
+    selectionMode   points;
+    points
+    (
+        (2.75 0.5 0)
+    );
+
+    vectorSemiImplicitSourceCoeffs
+    {
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            U           ((0 0.005 0) 0);
+        }
+    }
+}
+
+
+energySource1
+{
+    type            scalarSemiImplicitSource;
+    active          true;
+    timeStart       0.2;
+    duration        2.0;
+    selectionMode   points;
+    points
+    (
+        (2.75 0.5 0)
+    );
+
+    scalarSemiImplicitSourceCoeffs
+    {
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            h           (10 0);
+        }
+    }
+}
+
+
+// ************************************************************************* //

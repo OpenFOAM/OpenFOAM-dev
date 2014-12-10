@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+baffleRegionName    baffle3DRegion;
+
+masterPatchName     baffle3DRegionMaster;
+
+slavePatchName      baffle3DRegionSlave;
+
+oneD                false;
+
+nLayers             50;
+
+thickness           0.02;
+
+Kappa               0.01;
+
+Cp                  15;
+
+rho                 80;
+
+// ************************************************************************* //

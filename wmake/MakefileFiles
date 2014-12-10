@@ -1,0 +1,76 @@
+#-------------------------------*- makefile -*---------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File
+#     MakefileFiles
+#
+# Description
+#     A Makefile for the 'files', used by wmake
+#
+#------------------------------------------------------------------------------
+
+GENERAL_RULES = $(WM_DIR)/rules/General
+RULES         = $(WM_DIR)/rules/$(WM_ARCH)$(WM_COMPILER)
+WM_SCRIPTS    = $(WM_DIR)/scripts
+OBJECTS_DIR   = $(WM_OPTIONS)
+FFLAGS        =
+
+include $(GENERAL_RULES)/general
+include $(RULES)/general
+include $(OBJECTS_DIR)/options
+
+#------------------------------------------------------------------------------
+# declare names of make system control files derived from file 'files'
+#------------------------------------------------------------------------------
+
+FILES   = $(WM_OPTIONS)/files
+
+SFILES  = $(WM_OPTIONS)/sourceFiles
+OFILES  = $(WM_OPTIONS)/objectFiles
+DFILES  = $(WM_OPTIONS)/dependencyFiles
+IFILES  = $(WM_OPTIONS)/includeDeps
+
+#------------------------------------------------------------------------------
+# Declare dependecy of all make system files on FILES
+# Causes all derived files to be remade if any are changed or missing
+#------------------------------------------------------------------------------
+
+allFiles : $(FILES) $(SFILES) $(OFILES) $(DFILES) $(IFILES)
+
+$(FILES) : files
+	@$(CPP) $(GFLAGS) $(FFLAGS) files | sed -e 's@   *@ @g' > $(FILES)
+
+$(SFILES): files
+	@$(WM_SCRIPTS)/makeDerivedFiles
+
+$(OFILES): files
+	@$(WM_SCRIPTS)/makeDerivedFiles
+
+$(DFILES): files
+	@$(WM_SCRIPTS)/makeDerivedFiles
+
+$(IFILES): files
+	@$(WM_SCRIPTS)/makeDerivedFiles
+
+
+#------------------------------------------------------------------------------

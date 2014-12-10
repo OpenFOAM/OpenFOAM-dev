@@ -1,0 +1,40 @@
+EXE_DEBUG = -DFULLDEBUG -g -O0
+EXE_FROUNDING_MATH = -frounding-math
+EXE_NDEBUG = -DNDEBUG
+
+CGAL_EXACT = /*-DCGAL_DONT_USE_LAZY_KERNEL*/
+CGAL_INEXACT = -DCGAL_INEXACT
+
+include $(GENERAL_RULES)/CGAL
+
+EXE_INC = \
+    ${EXE_FROUNDING_MATH} \
+    ${EXE_NDEBUG} \
+    ${CGAL_EXACT} \
+    ${CGAL_INEXACT} \
+    ${CGAL_INC} \
+    ${c++CGALWARN} \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
+    -I$(LIB_SRC)/edgeMesh/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/surfMesh/lnInclude \
+    -I$(LIB_SRC)/triSurface/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/mesh/autoMesh/lnInclude \
+    -IPrintTable \
+    -I../vectorTools \
+    -I/usr/include
+
+LIB_LIBS = \
+    ${CGAL_LIBS} \
+    -lmeshTools \
+    -ledgeMesh \
+    -lfileFormats \
+    -ltriSurface \
+    -ldynamicMesh \
+    -lsurfMesh \
+    -lsampling \
+    -lautoMesh

@@ -1,0 +1,88 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    {
+        name    cyclicFaces;
+        type    faceSet;
+        action  new;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (0.099 -0.006 0.004)(0.101 0.006 0.016);
+        }
+    }
+
+    {
+        name    cyclicFacesSlaveCells;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-10 -10 -10)(0.1 10 10);
+        }
+    }
+
+    {
+        name    cyclicFaces;
+        type    faceZoneSet;
+        action  new;
+        source  setsToFaceZone;
+        sourceInfo
+        {
+            faceSet cyclicFaces;
+            cellSet cyclicFacesSlaveCells;
+        }
+    }
+
+    {
+        name    baffleFaces;
+        type    faceSet;
+        action  new;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (0.099 -10 -10)(0.101 10 10);
+        }
+    }
+
+    {
+        name    baffleFaces;
+        type    faceSet;
+        action  delete;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (0.099 -0.006 0.004)(0.101 0.006 0.016);
+        }
+    }
+
+    {
+        name    baffleFaces;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet baffleFaces;
+        }
+    }
+);
+
+// ************************************************************************* //

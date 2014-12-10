@@ -1,0 +1,101 @@
+solid patchEE80EE
+  facet normal 0 0 -1
+    outer loop
+       vertex -22 1.19209e-07 0
+       vertex 22 1.19209e-07 0
+       vertex 6.25849e-07 -1 0
+    endloop
+  endfacet
+endsolid patchEE80EE
+solid patchFFFF00
+  facet normal 0 0 -1
+    outer loop
+       vertex -22 1.19209e-07 0
+       vertex -6.4 1 0
+       vertex 22 1.19209e-07 0
+    endloop
+  endfacet
+endsolid patchFFFF00
+solid patch458674
+  facet normal 0 0 1
+    outer loop
+       vertex -22 1.19209e-07 0
+       vertex -8.8 -1.1 0
+       vertex 6.25849e-07 -1 0
+    endloop
+  endfacet
+endsolid patch458674
+solid patchFF0000
+  facet normal 0 0 -1
+    outer loop
+       vertex -6.4 1 0
+       vertex 11.2 0.9 0
+       vertex 22 1.19209e-07 0
+    endloop
+  endfacet
+endsolid patchFF0000
+solid patchFF
+  facet normal 0 0 -1
+    outer loop
+       vertex -22 1.19209e-07 0
+       vertex -7.2 17.8 0
+       vertex -6.4 1 0
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+       vertex -7.2 17.8 0
+       vertex 11.2 0.9 0
+       vertex -6.4 1 0
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+       vertex -7.2 17.8 0
+       vertex 18.7 18.2 0
+       vertex 11.2 0.9 0
+    endloop
+  endfacet
+  facet normal 0 -0 -1
+    outer loop
+       vertex 18.7 18.2 0
+       vertex 22 1.19209e-07 0
+       vertex 11.2 0.9 0
+    endloop
+  endfacet
+  facet normal -0 0 1
+    outer loop
+       vertex 6.25849e-07 -1 0
+       vertex 11.6 -21.1 0
+       vertex 22 1.19209e-07 0
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+       vertex -8.8 -1.1 0
+       vertex -8.4 -20.9 0
+       vertex 11.6 -21.1 0
+    endloop
+  endfacet
+  facet normal -0 0 1
+    outer loop
+       vertex -8.8 -1.1 0
+       vertex 11.6 -21.1 0
+       vertex 6.25849e-07 -1 0
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+       vertex -22 1.19209e-07 0
+       vertex -25 -25.3 0
+       vertex -8.4 -20.9 0
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+       vertex -22 1.19209e-07 0
+       vertex -8.4 -20.9 0
+       vertex -8.8 -1.1 0
+    endloop
+  endfacet
+endsolid patchFF

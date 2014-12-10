@@ -1,0 +1,13 @@
+topoChangerFvMesh/topoChangerFvMesh.C
+rawTopoChangerFvMesh/rawTopoChangerFvMesh.C
+
+/*
+linearValveFvMesh/linearValveFvMesh.C
+linearValveLayersFvMesh/linearValveLayersFvMesh.C
+*/
+movingConeTopoFvMesh/movingConeTopoFvMesh.C
+/*
+mixerFvMesh/mixerFvMesh.C
+*/
+
+LIB = $(FOAM_LIBBIN)/libtopoChangerFvMesh

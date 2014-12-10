@@ -1,0 +1,56 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+#
+# FUNCTIONS
+#
+usage()
+{
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+
+    cat<<USAGE
+Usage: ${0##*/} [OPTION]
+
+options:
+  -l         -latestTime option for sample
+  -h         help
+
+Runs a set of samples across the cone face and concatenates output files
+USAGE
+    exit 1
+}
+
+# -----------------------------------------------------------------------------
+
+unset timeOpt
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -l | -latestTime)
+        timeOpt="-latestTime"
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+
+sample $timeOpt
+SDIR=sets
+LSDIR=`ls $SDIR | head -1`
+EXAMPLE_FILE=`ls -1 $SDIR/${LSDIR}/* | head -1`
+FS=`basename $EXAMPLE_FILE | cut -d_ -f2-`
+
+for d in $SDIR/*
+do
+    cat ${d}/cone25_${FS} ${d}/cone55_${FS} ${d}/base_${FS} > ${d}/biconic_${FS}
+done
+
+# ----------------------------------------------------------------- end-of-file

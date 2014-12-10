@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+cp $FOAM_TUTORIALS/resources/geometry/cyclone.stl.gz constant/triSurface
+
+runApplication blockMesh
+
+runApplication snappyHexMesh -overwrite
+
+runApplication decomposePar
+
+runParallel MPPICFoam $(echo processor* | wc -w)

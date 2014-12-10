@@ -1,0 +1,80 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     makeFiles
+#
+# Description
+#     Scan the current directory for source files and construct Make/files
+#
+#     Usage : makeFiles
+#
+#------------------------------------------------------------------------------
+
+if [ -r Make/files ]
+then
+    echo "Error: Make/files already exists - exiting"
+    exit 1
+fi
+
+dirToString=$WM_DIR/platforms/$WM_ARCH$WM_COMPILER/dirToString
+
+[ -d Make ] || mkdir Make
+rm -f Make/files
+
+for dir in `find . -type d -print`
+do
+    case "$dir" in
+    . | ./Make | ./lnInclude )
+        # skip special directories
+        ;;
+    *)
+        baseDir=`echo $dir | sed 's%^\./%%'`
+        baseDirName=`echo $baseDir | $dirToString`
+
+        echo $baseDirName " = " $baseDir >> Make/files
+        ;;
+    esac
+done
+
+echo >> Make/files
+
+for file in `find . -name "*.[cCylLfF]" -type f -print`
+do
+    fileName=`echo ${file##*/}`
+    pathName=`echo ${file%/*} | sed 's%^\.%%' | sed 's%^/%%' | $dirToString`
+
+    if [ -n "$pathName" ]
+    then
+        echo '$('$pathName')/'$fileName >> Make/files
+    else
+        echo $fileName >> Make/files
+    fi
+done
+
+echo >> Make/files
+
+echo 'EXE = $(FOAM_APPBIN)/'${PWD##*/} >> Make/files
+
+#------------------------------------------------------------------------------

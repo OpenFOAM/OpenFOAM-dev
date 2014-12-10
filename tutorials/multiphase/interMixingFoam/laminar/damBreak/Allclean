@@ -1,0 +1,8 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+foamCleanTutorials cases
+rm -rf alpha.air alpha.other alpha.water \
+    alpha.air.gz alpha.other.gz  alpha.water.gz
+
+# ----------------------------------------------------------------- end-of-file

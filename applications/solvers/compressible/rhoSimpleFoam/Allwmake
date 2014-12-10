@@ -1,0 +1,9 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+set -x
+
+wmake
+wmake rhoPorousSimpleFoam
+wmake rhoSimplecFoam
+
+# ----------------------------------------------------------------- end-of-file

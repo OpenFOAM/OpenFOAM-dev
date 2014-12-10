@@ -1,0 +1,9 @@
+EXE_INC = \
+    -I$(LIB_SRC)/triSurface/lnInclude \
+    -I$(LIB_SRC)/surfMesh/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude
+
+LIB_LIBS = \
+    -ltriSurface \
+    -lsurfMesh \
+    -lfileFormats

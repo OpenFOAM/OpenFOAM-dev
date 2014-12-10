@@ -1,0 +1,30 @@
+faceSet cubeFaces clear
+faceSet cubeFaces add boxToFace (0.399 0.099 0.299) (0.601 0.301 0.301)
+faceSet cubeFaces add boxToFace (0.599 0.099 0.099) (0.601 0.301 0.301)
+faceSet cubeFaces add boxToFace (0.399 0.099 0.099) (0.601 0.301 0.101)
+faceSet cubeFaces add boxToFace (0.399 0.099 0.099) (0.401 0.301 0.301)
+faceSet cubeFaces add boxToFace (0.399 0.299 0.099) (0.601 0.301 0.301)
+faceSet cubeFaces add boxToFace (0.399 0.099 0.099) (0.601 0.101 0.301)
+faceSet cubeFaces add boxToFace (0.399 0.099 0.599) (0.601 0.301 0.601)
+faceSet cubeFaces add boxToFace (0.599 0.099 0.399) (0.601 0.301 0.601)
+faceSet cubeFaces add boxToFace (0.399 0.099 0.399) (0.601 0.301 0.401)
+faceSet cubeFaces add boxToFace (0.399 0.099 0.399) (0.401 0.301 0.601)
+faceSet cubeFaces add boxToFace (0.399 0.299 0.399) (0.601 0.301 0.601)
+faceSet cubeFaces add boxToFace (0.399 0.099 0.399) (0.601 0.101 0.601)
+faceSet cubeFaces add boxToFace (0.399 0.399 0.299) (0.601 0.601 0.301)
+faceSet cubeFaces add boxToFace (0.599 0.399 0.099) (0.601 0.601 0.301)
+faceSet cubeFaces add boxToFace (0.399 0.399 0.099) (0.601 0.601 0.101)
+faceSet cubeFaces add boxToFace (0.399 0.399 0.099) (0.401 0.601 0.301)
+faceSet cubeFaces add boxToFace (0.399 0.599 0.099) (0.601 0.601 0.301)
+faceSet cubeFaces add boxToFace (0.399 0.399 0.099) (0.601 0.401 0.301)
+faceSet cubeFaces add boxToFace (0.399 0.399 0.599) (0.601 0.601 0.601)
+faceSet cubeFaces add boxToFace (0.599 0.399 0.399) (0.601 0.601 0.601)
+faceSet cubeFaces add boxToFace (0.399 0.399 0.399) (0.601 0.601 0.401)
+faceSet cubeFaces add boxToFace (0.399 0.399 0.399) (0.401 0.601 0.601)
+faceSet cubeFaces add boxToFace (0.399 0.599 0.399) (0.601 0.601 0.601)
+faceSet cubeFaces add boxToFace (0.399 0.399 0.399) (0.601 0.401 0.601)
+cellSet cubeFacesCells new faceToCell cubeFaces owner
+faceZoneSet cubeFaces new setsToFaceZone cubeFaces cubeFacesCells
+faceSet floorFaces new boxToFace (-0.001 -0.001 -0.001) (1.001 1.001 0.001)
+cellSet floorCells new faceToCell floorFaces owner
+faceZoneSet floorFaces new setsToFaceZone floorFaces floorCells

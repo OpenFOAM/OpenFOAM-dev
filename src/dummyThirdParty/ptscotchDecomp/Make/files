@@ -1,0 +1,3 @@
+dummyPtscotchDecomp.C
+
+LIB = $(FOAM_LIBBIN)/dummy/libptscotchDecomp

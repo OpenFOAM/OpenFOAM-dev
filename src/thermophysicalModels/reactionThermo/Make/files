@@ -1,0 +1,20 @@
+chemistryReaders/chemkinReader/chemkinReader.C
+chemistryReaders/chemkinReader/chemkinLexer.C
+chemistryReaders/chemistryReader/makeChemistryReaders.C
+
+mixtures/basicMultiComponentMixture/basicMultiComponentMixture.C
+
+psiReactionThermo/psiReactionThermo.C
+psiReactionThermo/psiReactionThermos.C
+
+psiuReactionThermo/psiuReactionThermo.C
+psiuReactionThermo/psiuReactionThermos.C
+
+rhoReactionThermo/rhoReactionThermo.C
+rhoReactionThermo/rhoReactionThermos.C
+
+derivedFvPatchFields/fixedUnburntEnthalpy/fixedUnburntEnthalpyFvPatchScalarField.C
+derivedFvPatchFields/gradientUnburntEnthalpy/gradientUnburntEnthalpyFvPatchScalarField.C
+derivedFvPatchFields/mixedUnburntEnthalpy/mixedUnburntEnthalpyFvPatchScalarField.C
+
+LIB = $(FOAM_LIBBIN)/libreactionThermophysicalModels

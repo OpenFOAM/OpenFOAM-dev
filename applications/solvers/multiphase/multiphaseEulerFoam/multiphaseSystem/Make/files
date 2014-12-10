@@ -1,0 +1,10 @@
+phaseModel/phaseModel.C
+diameterModels/diameterModel/diameterModel.C
+diameterModels/diameterModel/newDiameterModel.C
+diameterModels/constantDiameter/constantDiameter.C
+diameterModels/isothermalDiameter/isothermalDiameter.C
+
+alphaContactAngle/alphaContactAngleFvPatchScalarField.C
+multiphaseSystem.C
+
+LIB = $(FOAM_LIBBIN)/libmultiphaseSystem

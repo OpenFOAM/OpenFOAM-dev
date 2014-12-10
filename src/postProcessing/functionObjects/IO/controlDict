@@ -1,0 +1,122 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// So we get a decent warning if we have multiple functionObject entries
+// with the same name.
+#inputMode error;
+
+application     icoFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.5;
+
+deltaT          0.005;
+
+writeControl    timeStep;
+
+writeInterval   20;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+functions
+{
+    partialWrite
+    {
+        // Write some registered objects more often than others.
+        // Above writeControl determines most frequent dump.
+
+        type            partialWrite;
+
+        // Where to load it from
+        functionObjectLibs ("libIOFunctionObjects.so");
+
+        // Optional mesh region to operate on. Only one partialWrite per
+        // region allowed.
+        region wallFilmRegion;
+
+        // Execute upon options:
+        //  timeStep
+        //  outputTime
+        //  adjustableTime
+        //  runTime
+        //  clockTime
+        //  cpuTime
+        outputControl   outputTime;
+
+        // Objects (fields or lagrangian fields in any of the clouds)
+        // to write every outputTime
+        objectNames    (p positions nParticle);
+
+        // Write as normal every writeInterval'th outputTime.
+        outputInterval  1; // (timeStep, outputTime)
+
+        // Interval of time (sec) to write down(
+        writeInterval   10.5 //(adjustableTime, runTime, clockTime, cpuTime)
+    }
+
+    dumpObjects
+    {
+        // Forcibly write registered objects
+
+        type            writeRegisteredObject;
+
+        // Where to load it from
+        functionObjectLibs ("libIOFunctionObjects.so");
+
+        // When to write:
+        //  timeStep            (with optional outputInterval)
+        //  outputTime          (with optional outputInterval)
+        //  adjustableTime
+        //  runTime
+        //  clockTime
+        //  cpuTime
+        outputControl   outputTime;
+
+         // Write every writeInterval (only valid for timeStemp, outputTime)
+        outputInterval  1;
+
+         // Interval of time (valid for adjustableTime, runTime, clockTime,
+        //  cpuTime)
+        writeInterval   10.5;
+
+        // Objects to write
+        objectNames    ();
+
+
+        // Is the object written by this function Object alone
+        // (default is false)
+        //exclusiveWriting       true;
+    }
+}
+
+// ************************************************************************* //

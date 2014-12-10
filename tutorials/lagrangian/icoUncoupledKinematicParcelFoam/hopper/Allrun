@@ -1,0 +1,21 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+cd hopperInitialState
+runApplication blockMesh
+runApplication decomposePar
+runParallel `getApplication` 4
+runApplication reconstructPar -latestTime
+cd ..
+
+cd hopperEmptying
+runApplication blockMesh
+runApplication mapFields ../hopperInitialState -sourceTime latestTime
+runApplication decomposePar
+runParallel `getApplication` 4
+runApplication reconstructPar
+
+# ----------------------------------------------------------------- end-of-file

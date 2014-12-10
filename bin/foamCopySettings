@@ -1,0 +1,151 @@
+#!/bin/sh
+#-------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamCopySettings
+#
+# Description
+#     Usage: foamCopySettings srcDir dstDir
+#
+#     Copy OpenFOAM settings from one case to another, without copying
+#     the mesh or results
+#     - requires rsync
+#
+# Note
+#     The foamCopySettings.rc (found with the ~OpenFOAM expansion) can be used
+#     to add any custom rsync options.
+#-------------------------------------------------------------------------------
+Script=${0##*/}
+
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+
+Usage: $Script srcDir dstDir
+
+    Copy OpenFOAM settings from one case to another, without copying
+    the mesh or results.
+    - requires rsync
+
+Note
+    The $Script.rc (found via the ~OpenFOAM expansion - see foamEtcFile)
+    can be used to add any custom rsync options.
+
+USAGE
+    exit 1
+}
+#------------------------------------------------------------------------------
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+# need rsync
+type rsync >/dev/null 2>&1 || usage "Error: 'rsync' seems to be missing"
+
+[ "$#" -eq 2 ] || usage "Error: incorrect number of arguments"
+
+srcDir=${1%/}
+dstDir=${2%/}
+
+for i in $srcDir $dstDir
+do
+    [ -d "$i" ] || { echo "Error: directory '$i' does not exist"; exit 1; }
+done
+
+# check that the srcDir looks okay
+for i in $srcDir/constant $srcDir/system
+do
+    if [ ! -d "$i" ]
+    then
+        echo "Error: no '${i##*/}' directory in '$srcDir'"
+        echo "       does not appear to be an OpenFOAM case"
+        exit 1
+    fi
+done
+
+# files and directories to copy
+# avoid processor directories here too to make for cleaner output
+fileList=$(find -H $srcDir -mindepth 1 -maxdepth 1 -not -name "processor*")
+
+# avoid polyMesh and processor* directories
+rsync="rsync --exclude polyMesh --exclude processor*"
+
+#
+# get any extra user options
+# extract lines starting with '--longOption'
+#
+if rcFile=$(foamEtcFile $Script.rc)
+then
+    rsync="$rsync "$(sed -ne '/^ *--/p' $rcFile | tr '\n' ' ')
+fi
+
+
+# TODO:
+#  - verify that it works with multiple mesh regions
+#  - special treatment for starting with negative crank angles
+
+
+echo
+echo "synchronizing with"
+echo "    $rsync"
+echo
+
+for i in $fileList
+do
+    name="${i##*/}"
+    # skip numerical (results) directories (except 0)
+    # and things that look like log files or queuing system output
+    case "$name" in
+    ( [1-9] | [0-9]?* | log | *.log | foam.[eo][1-9]* )
+        echo "$i  [skipped]"
+        continue
+        ;;
+    # skip things that look sampled directories and converted data
+    ( probes | sets | surfaces | En[Ss]ight )
+        echo "$i  [skipped]"
+        continue
+        ;;
+    (*)
+        echo "$i -> $dstDir/$name"
+        $rsync -a $i $dstDir
+        ;;
+    esac
+done
+
+# ------------------------------------------------------------------ end-of-file

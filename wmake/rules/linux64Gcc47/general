@@ -1,0 +1,8 @@
+CPP        = cpp -traditional-cpp
+
+PROJECT_LIBS = -l$(WM_PROJECT) -ldl
+
+include $(GENERAL_RULES)/standard
+
+include $(RULES)/c
+include $(RULES)/c++

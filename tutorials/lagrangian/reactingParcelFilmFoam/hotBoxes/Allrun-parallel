@@ -1,0 +1,22 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allrun.pre
+
+application=`getApplication`
+
+runApplication decomposePar -region wallFilmRegion
+mv log.decomposePar log.decomposePar.wallFilmRegion
+runApplication decomposePar
+mv log.decomposePar log.decomposePar.primaryRegion
+
+runParallel $application 4
+
+runApplication reconstructPar -region wallFilmRegion
+mv log.reconstructPar log.reconstructPar.wallFilmRegion
+runApplication reconstructPar
+mv log.reconstructPar log.reconstructPar.primaryRegion
+

@@ -1,0 +1,122 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      testDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputMode  merge
+#includeIfPresent "someUnknownFile"
+#includeIfPresent "$FOAM_CASE/someUnknownFile"
+#includeIfPresent "$FOAM_CASE/someUnknownFile-$FOAM_CASENAME"
+
+internalField   uniform 1;
+
+// use 'protect' to supply defaults
+#inputMode  protect
+internalField   uniform 10;
+dimensions      [ 0 2 -2 0 0 0 0 ];
+#inputMode  merge
+
+active
+{
+    type            turbulentIntensityKineticEnergyInlet;
+    intensity       0.1;
+    value           $internalField;
+}
+
+inactive
+{
+    type            zeroGradient;
+}
+
+
+// Indirection
+varType active;
+
+// Indirection of values
+x 5;
+varName x;
+
+
+//Indirection for keys
+key inlet_9;
+
+
+boundaryField
+{
+    Default_Boundary_Region
+    {
+        type            zeroGradient;
+    }
+
+    inlet_1  { $active }
+    inlet_2  { $inactive }
+    inlet_3  { $inactive }
+    inlet_4  { $inactive }
+    inlet_5  "a primitiveEntry is squashed by a directory entry";
+    inlet_5  { $inactive }
+    inlet_6  { $.inactive }     // Test scoping
+    inlet_7  { ${inactive}}     // Test variable expansion
+    inlet_8  { $inactive }
+    ${key}   { $inactive }
+
+    #include "testDictInc"
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           #include "value";
+        // error           #remove self;
+        x               ${${varName}};  // Test indirection/recursive expansion
+        y               6;
+    }
+
+    // this should have no effect
+    #remove inactive
+
+    inlet_7  { ${${varType}}}   // Test indirection/recursive expansion
+    #inputMode overwrite
+    inlet_8  { $active }
+}
+
+// NB: the inputMode has a global scope
+#inputMode merge
+#include "testDict2"
+
+foo
+{
+    $active
+}
+
+bar
+{
+    $active
+}
+
+baz
+{
+    $active
+}
+
+"anynumber.*"
+{
+    $active
+}
+
+// this should work
+#remove active
+
+// this should work too
+#remove ( bar baz )
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

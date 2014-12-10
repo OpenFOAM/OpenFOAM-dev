@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phases (air other water);
+
+air
+{
+    transportModel  Newtonian;
+    nu              nu [0 2 -1 0 0 0 0] 1.48e-05;
+    rho             rho [1 -3 0 0 0 0 0] 1;
+}
+
+other
+{
+    transportModel  Newtonian;
+    nu              nu [0 2 -1 0 0 0 0]  1e-6;
+    rho             rho [1 -3 0 0 0 0 0] 1010;
+}
+
+water
+{
+    transportModel  Newtonian;
+    nu              nu [0 2 -1 0 0 0 0]  1e-6;
+    rho             rho [1 -3 0 0 0 0 0] 1000;
+}
+
+// Surface tension coefficients
+sigma12           sigma12 [1 0 -2 0 0 0 0] 0.05;
+sigma13           sigma13 [1 0 -2 0 0 0 0] 0.04;
+
+// Diffusivity between miscible phases
+D23               D23   [0 2 -1 0 0 0 0]  3e-09;
+
+// ************************************************************************* //

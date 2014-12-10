@@ -1,0 +1,321 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wmake
+#
+# Description
+#     General, easy to use make system for multi-platform development.
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: $Script [OPTION] [dir]
+       $Script [OPTION] target [dir [MakeDir]]
+
+options:
+  -s | -silent      invoke make in 'silent' mode (do not echo commands)
+  -help             print the usage
+
+
+A general, easy-to-use make system for multi-platform development
+
+The 'target' is a Makefile target:
+  e.g., Make/linux64GccDPOpt/fvMesh.o
+
+or a special target:
+  all               all subdirectories, uses any Allwmake files if they exist
+  exe               build statically linked executable
+  lib               build statically linked archive lib (.a)
+  libo              build statically linked lib (.o)
+  libso             build dynamically linked lib (.so)
+  jar               build Java jar
+  dep               build lnInclude and dependencies only
+
+USAGE
+    exit 1
+}
+
+# normally use "make"
+make="make"
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -s | -silent)
+        make="$make -s"
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+#------------------------------------------------------------------------------
+# Check environment variables
+#------------------------------------------------------------------------------
+
+for check in WM_OPTIONS WM_LINK_LANGUAGE WM_DIR
+do
+    eval test "\$$check" || {
+        echo "$Script error: environment variable \$$check not set" 1>&2
+        exit 1
+    }
+done
+
+
+# when compiling anything but a standalone exe:
+# WM_PROJECT and WM_PROJECT_DIR must be set
+[ "$1" = exe -o \( "$WM_PROJECT" -a "$WM_PROJECT_DIR" \) ] || {
+    echo "$Script error:" 1>&2
+    echo "    environment variable \$WM_PROJECT or \$WM_PROJECT_DIR not set" 1>&2
+    echo "    while building project library" 1>&2
+    exit 1
+}
+
+
+#------------------------------------------------------------------------------
+# Select the version of make use
+#------------------------------------------------------------------------------
+
+# set WM_NCOMPPROCS automatically when both WM_HOSTS and WM_SCHEDULER are set
+if [ -z "$WM_NCOMPPROCS" -a -n "$WM_HOSTS" -a -n "$WM_SCHEDULER" ]
+then
+    WM_NCOMPPROCS=$(wmakeScheduler -count)
+    [ $? -eq 0 ] || unset WM_NCOMPPROCS
+fi
+
+if [ "$WM_NCOMPPROCS" ]
+then
+    if [ "$WM_NCOMPPROCS" -gt 1 -a ! "$MAKEFLAGS" ]
+    then
+        lockDir=$HOME/.$WM_PROJECT/.wmake
+
+        if [ -d $lockDir ]
+        then
+            rm -f $lockDir/*
+        else
+            mkdir -p $lockDir
+        fi
+
+        make="$make --no-print-directory -j "$WM_NCOMPPROCS
+    fi
+fi
+
+
+#------------------------------------------------------------------------------
+# Check arguments and change to the directory in which to run wmake
+#------------------------------------------------------------------------------
+
+unset dir makeType
+MakeDir=Make
+
+if [ $# -ge 1 ]
+then
+    if [ -d "$1" ]
+    then
+        dir=$1
+    else
+        makeType=$1
+    fi
+
+    # specified directory name:
+    [ $# -ge 2 ] && dir=$2
+
+    # specified alternative name for the Make sub-directory:
+    [ $# -ge 3 ] && MakeDir=$3
+
+    if [ "$dir" ]
+    then
+        cd $dir 2>/dev/null || {
+            echo "$Script error: could not change to directory '$dir'" 1>&2
+            exit 1
+        }
+    fi
+fi
+
+
+#------------------------------------------------------------------------------
+# Recurse the application directories tree
+#------------------------------------------------------------------------------
+
+if [ "$makeType" = all ]
+then
+    if [ -e Allwmake ]
+    then
+        ./Allwmake
+        exit $?
+    elif [ ! -d $MakeDir ]
+    then
+        # FOAM_APPS=$(find . -maxdepth 1 \( -type d -a ! -name "." -a ! -name Optional -a ! -name Make \)  -printf "%f ")
+        # avoid 'find' with '-printf' ... not entirely portable
+        FOAM_APPS=$(for d in *; do [ -d "$d" -a "$d" != Optional -a "$d" != Make ] && echo "$d"; done | xargs)
+        $make -k -f $WM_DIR/MakefileApps FOAM_APPS="$FOAM_APPS"
+        exit $?
+    fi
+fi
+
+
+#------------------------------------------------------------------------------
+# Search up directories tree for the Make sub-directory and build there
+# Also check the existance of the 'files' file
+#------------------------------------------------------------------------------
+
+unset dir
+MakeDir=Make
+
+expandpath()
+{
+    dir=`dirname $1`
+    cwd=$PWD
+    cd $dir
+    exPath=$PWD
+    cd $cwd
+}
+
+find_target()
+{
+    expandpath $1
+
+    if [ "$exPath" = "$WM_PROJECT_DIR" -o "$exPath" = "$HOME" -o "$exPath" = "/" ]
+    then
+        echo "$Script error: could not find Make directory"
+    elif [ -d "$1/Make" ]; then
+        echo "    Found target directory " $1
+        dir=$1
+    else
+        find_target "$1/.."
+    fi
+}
+
+if [ ! -d $MakeDir ]
+then
+    echo "$Script: '$MakeDir' directory does not exist in $PWD" 1>&2
+    echo "    Searching up directories tree for Make directory"
+
+    find_target .
+    makeType=
+
+    if [ "$dir" ]
+    then
+        cd $dir 2>/dev/null || {
+            echo "$Script error: could not change to directory '$dir'" 1>&2
+            exit 1
+        }
+    fi
+fi
+
+
+[ -r $MakeDir/files ] || {
+    echo "$Script error: file '$MakeDir/files' does not exist in $PWD" 1>&2
+    exit 1
+}
+
+
+#------------------------------------------------------------------------------
+# Transform options
+#------------------------------------------------------------------------------
+
+# transform "all" or no option to "libso" if that looks appropriate or remove it
+# so that the call to make builds the application
+if [ "$makeType" = all -o "$makeType" = "" ]
+then
+    unset makeType
+    if grep -e '^ *LIB *=' "$MakeDir/files" >/dev/null 2>&1
+    then
+        makeType=libso
+    fi
+fi
+
+
+#------------------------------------------------------------------------------
+# Spawn a sub-shell and unset MAKEFLAGS in that sub-shell to avoid
+# files and options being built in parallel
+#------------------------------------------------------------------------------
+
+(
+    cd $MakeDir
+    unset MAKEFLAGS
+    make -s -f $WM_DIR/MakefileOptions
+    make -s -f $WM_DIR/MakefileFiles allFiles
+)
+
+
+#------------------------------------------------------------------------------
+# Check the $OBJECTS_DIR = $MakeDir/$WM_OPTIONS/objectFiles file
+# was created successfully
+#------------------------------------------------------------------------------
+
+OBJECTS_DIR=$MakeDir/$WM_OPTIONS
+
+[ -r $OBJECTS_DIR/objectFiles ] || {
+    echo "$Script error: file '$OBJECTS_DIR/objectFiles' could not be created in $PWD" 1>&2
+    exit 1
+}
+
+
+#------------------------------------------------------------------------------
+# Make the dependency files
+#------------------------------------------------------------------------------
+
+touch $OBJECTS_DIR/dontIncludeDeps
+
+case "$makeType" in
+lib | libo | libso | dep )
+    $make -s -f $WM_DIR/Makefile MAKE_DIR=$MakeDir INCLUDE_DEPS=$OBJECTS_DIR/dontIncludeDeps lnInclude/uptodate
+    ;;
+esac
+
+$make -s -f $WM_DIR/Makefile MAKE_DIR=$MakeDir INCLUDE_DEPS=$OBJECTS_DIR/dontIncludeDeps $OBJECTS_DIR/dependencies
+
+rc=$?
+[ $rc -eq 0 ] || exit $rc
+
+
+#------------------------------------------------------------------------------
+# Make the object files and link
+#------------------------------------------------------------------------------
+
+if [ "$makeType" != dep ]
+then
+    cmd="$make -f $WM_DIR/Makefile MAKE_DIR=$MakeDir INCLUDE_DEPS=$OBJECTS_DIR/includeDeps $makeType"
+    # echo "cmd=$cmd"
+    exec $cmd
+fi
+
+#------------------------------------------------------------------------------

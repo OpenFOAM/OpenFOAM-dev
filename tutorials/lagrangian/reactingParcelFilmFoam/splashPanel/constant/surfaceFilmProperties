@@ -1,0 +1,74 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      SurfaceFilmProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaceFilmModel thermoSingleLayer;
+
+regionName      wallFilmRegion;
+
+active          true;
+
+thermoSingleLayerCoeffs
+{
+    filmThermoModel liquid;
+
+    liquidCoeffs
+    {
+        useReferenceValues  no;
+        liquid      H2O;
+    }
+
+    filmViscosityModel liquid;
+
+    deltaWet    1e-4;
+    hydrophilic no;
+
+    turbulence  laminar;
+    laminarCoeffs
+    {
+        Cf          0.005;
+    }
+
+    forces
+    (
+        thermocapillary
+    );
+
+    injectionModels
+    ();
+
+    phaseChangeModel none;
+
+    radiationModel none;
+
+    upperSurfaceModels
+    {
+        heatTransferModel constant;
+        constantCoeffs
+        {
+            c0                1e-8;
+        }
+    }
+
+    lowerSurfaceModels
+    {
+        heatTransferModel constant;
+        constantCoeffs
+        {
+            c0                1e-8;
+        }
+    }
+}

@@ -1,0 +1,450 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamEndJob
+#
+# Description
+#     Ends running job on current machine. Called with root,case,pid.
+#     - checks if pid exists
+#     - modifies controlDict
+#     - waits until
+#       - pid disappeared
+#       - controlDict modified
+#       to restore controlDict
+#
+#-------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: $Script [OPTION] <pid>
+Usage: $Script [OPTION] -c
+
+options:
+  -clear            clear any outstanding $Script for the case
+  -case <dir>       specify alternative case directory, default is the cwd
+  -now              stop at next time step
+  -help             print the usage
+
+Tries to end running OpenFOAM application at next write (or optionally
+at the next time step). It needs runTimeModifiable switched on in the
+controlDict. It changes stopAt in the controlDict and waits for the
+job to finish. Restores original controlDict if
+
+    - job has finished
+    - controlDict gets modified (by user)
+    - $Script gets killed.
+
+The -clear option clears any outstanding $Script for the case.
+
+USAGE
+    exit 1
+}
+
+unset clearOpt stopOpt
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -case)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        cd "$2" 2>/dev/null || usage "directory does not exist:  '$2'"
+        shift 2
+        ;;
+    -c | -clear)
+        clearOpt=true
+        shift
+        ;;
+    -n | -now)
+        stopOpt=now
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+# parent directory for normal or parallel
+case "$PWD" in
+    processor*) caseDir=".." ;;
+    *)          caseDir="."  ;;
+esac
+
+# check that case directory is writeable
+[ -w $caseDir ] || {
+    echo "$Script : $caseDir is not writeable"
+    exit 1
+}
+
+# check that controlDict is writeable
+controlDict=$caseDir/system/controlDict
+[ -w $controlDict ] || {
+    echo "$Script : $controlDict is not writeable"
+    exit 1
+}
+
+# need a pid unless with the -clear option
+if [ "$clearOpt" = true ]
+then
+    [ $# -eq 0 ] || usage
+else
+    [ $# -eq 1 ] || usage
+    PID=$1
+fi
+
+
+#-------------------------------------------------------------------------------
+#
+# Functions
+#
+#-------------------------------------------------------------------------------
+
+# getNumberedLine dictionary entry
+# Prints dictionary entry line + lineno
+getNumberedLine() {
+    grep -n "^[ \t]*$2[ \t]" $1 | grep -v '^//' | head -1
+}
+
+# getLine dictionary entry
+# Prints dictionary entry line (without lineno)
+getLine() {
+    getNumberedLine $1 "$2" | sed -e 's/^[^:]*://'
+}
+
+# getRawEntry dictionary entry
+# Prints value of dictionary entry
+getRawEntry() {
+    getLine $1 "$2" | sed -e "s/^[ \t]*$2[ \t][ \t]*//"
+}
+
+# getEntry dictionary entry
+# Like getRawEntry but strips " and ending ';'
+getEntry() {
+    getRawEntry $1 "$2" | sed -e 's/^"//'  -e 's/;$//' -e 's/"$//'
+}
+
+# getKey entryLine
+# Prints first item on line
+getKey() {
+    echo "$1" | sed -e 's/[ \t]*\(.*\)[ \t].*/\1/'
+}
+
+
+# setRawEntry dictionary entry newValue
+# Replaces value of entry
+setRawEntry() {
+    oldNumLine=`getNumberedLine $1 "$2"`
+    lineNo=`echo "$oldNumLine" | sed -e 's/:.*//'`
+    oldLine=`echo "$oldNumLine" | sed -e 's/^[^:]*://'`
+    oldKey=`getKey "$oldLine"`
+    oldVal=`getRawEntry $1 "$2"`
+
+    if [ ! "$oldKey" -o ! "$oldVal" -o ! "$oldLine" ]
+    then
+        echo "setRawStringEntry: entry $2 not found in $1"
+        echo "oldKey=$oldKey"
+        echo "lineNo=$lineNo"
+        echo "oldLine=$oldLine"
+        exit 1
+    fi
+
+    #echo "oldKey=$oldKey"
+    #echo "lineNo=$lineNo"
+    #echo "oldLine=$oldLine"
+    #echo "oldVal=$oldVal"
+    mv $1 ${1}_tmp
+    sed -e "${lineNo}s/ ${oldVal}/ $3;/" ${1}_tmp > $1
+    rm -f ${1}_tmp
+}
+
+
+
+# like getEntry but returns true if boolean is logical true
+getBoolEntry()
+{
+    val=`getEntry $1 $2`
+    case "$val" in
+    y | yes | true | on | 1)
+        return 0
+        ;;
+    n | no | false | off | 0)
+        return 123
+        ;;
+    *)
+        echo "$Script : getBoolEntry : Illegal boolean value $val in dictionary $1"
+        exit 1
+        ;;
+    esac
+}
+
+# processExists pid
+# Returns true if pid exists.
+processExists() {
+    ps -u $LOGNAME -o pid | fgrep $1 >/dev/null
+}
+
+# Restore controlDict and clean up
+restoreDict() {
+    trap QUIT TERM INT
+
+    echo "$Script : Restoring controlDict from controlDict_bak"
+    if [ -r ${controlDict}_bak ]
+    then
+        cp ${controlDict}_bak $controlDict
+    fi
+
+    rm -f $pidFile
+
+    echo "$Script : Exiting"
+    exit 0
+}
+
+
+#-------------------------------------------------------------------------------
+#
+# Main
+#
+#-------------------------------------------------------------------------------
+
+#-- Force standards behaving ps
+#   Get info on all $USER processes
+case `uname -s` in
+HP-UX*)
+    UNIX95=a
+    export UNIX95
+    ;;
+IRIX*)
+    _XPG=1
+    export _XPG
+    ;;
+esac
+
+
+# Pid actually running
+if [ "$clearOpt" != true ]
+then
+    processExists $PID
+    if [ $? -ne 0 ]
+    then
+        echo "$Script : process $PID not running"
+        exit 1
+    fi
+fi
+
+#- runTimeModifiable
+getBoolEntry $controlDict runTimeModifiable || {
+    echo "$Script : runTimeModifiable not true in dictionary $controlDict"
+    exit 1
+}
+
+#
+#- Check if another foamEndJob running
+#
+if [ "$clear" = true ]
+then
+    pidFiles=`ls $caseDir/.foamEndJob* 2>/dev/null`
+    for pidFile in $pidFiles
+    do
+        pid=`cat $pidFile`
+        if [ "$pid" ]
+        then
+            echo "$Script : found $Script (pid $pid) for OpenFOAM process"
+            echo "  case: $PWD/$caseDir"
+            echo "$Script : Killing $Script (pid $pid)"
+            kill $pid
+            rm -f $pidFile
+        fi
+    done
+    exit 0
+fi
+
+pidFile=$caseDir/.foamEndJob$PID
+if [ -f $pidFile ]
+then
+    pid=`cat $pidFile`
+    if [ "$pid" ]
+    then
+        processExists $pid
+        if [ $? -eq 0 ]
+        then
+            echo "$Script : found running $Script (pid $pid) for OpenFOAM process"
+            echo "  case: $PWD/$caseDir"
+            echo "  pid : $PID"
+            echo "  lock: $pidFile"
+            echo "Remove the lock if this is not the case"
+            exit 1
+        fi
+    fi
+fi
+
+# Mark with my pid
+echo $$ > $pidFile
+
+#
+#- Get controlDict entries
+#
+
+
+#- startTime
+startTime=`getEntry $controlDict startTime`
+[ "$startTime" ] || {
+    echo "$Script : startTime not set in dictionary $controlDict"
+    exit 1
+}
+
+#- Write interval
+writeInterval=`getEntry $controlDict writeInterval`
+[ "$writeInterval" ] || {
+    echo "$Script : writeInterval not set in dictionary $controlDict"
+    exit 1
+}
+
+#- stopAt
+stopAt=`getEntry $controlDict stopAt`
+[ "$stopAt" ] || {
+    echo "$Script : stopAt not set in dictionary $controlDict"
+    exit 1
+}
+
+#- endTime
+endTime=`getEntry $controlDict endTime`
+[ "$endTime" ] || {
+    echo "$Script : endTime not set in dictionary $controlDict"
+    exit 1
+}
+
+
+echo "$Script : Read from controlDict:"
+echo "  controlDict   : $controlDict"
+echo "  writeInterval : $writeInterval"
+#echo "  startTime     : $startTime"
+echo "  stopAt        : $stopAt"
+#echo "  endTime       : $endTime"
+
+echo "$Script : Making backup of controlDict to controlDict_bak"
+cp $controlDict ${controlDict}_bak
+
+#- Set up handler to restore controlDict
+trap restoreDict QUIT TERM INT
+
+if [ "$stopOpt" = now ]
+then
+    setRawEntry  $controlDict stopAt nextWrite
+    setRawEntry  $controlDict writeControl timeStep
+    setRawEntry  $controlDict writeInterval 1
+
+    echo "$Script : Changed in controlDict:"
+    echo "    `getLine $controlDict stopAt`"
+    echo "    `getLine $controlDict writeControl`"
+    echo "    `getLine $controlDict writeInterval`"
+else
+    setRawEntry $controlDict stopAt nextWrite
+
+    echo "$Script : Changed in controlDict:"
+    echo "    `getLine $controlDict stopAt`"
+fi
+
+
+
+#- Just to make sure time has changed
+touch ${controlDict}
+
+sleep 5
+
+#- Give bak a later date
+touch ${controlDict}_bak
+
+#- Loop a while to give NFS time to update
+if [ ${controlDict} -nt ${controlDict}_bak ]
+then
+    echo "$Script : controlDict newer than controlDict_bak"
+    echo "$Script : Waiting for file dates to get updated"
+
+    iter=0
+    while [ ${controlDict} -nt ${controlDict}_bak ]
+    do
+        if [ $iter -ge 120 ]
+        then
+            #- 120*5 sec = 10 mins passed. Give up
+            echo "$Script : File date not yet ok after 10 mins ... giving up"
+            break
+        fi
+        #- Give _bak a later time
+        touch ${controlDict}_bak
+
+        #- Give NFS a chance to update time on controlDict.
+        sleep 5
+
+        iter=`expr $iter + 1`
+    done
+fi
+
+#
+#- Start waiting until:
+#  - pid finished. Restore controlDict.
+#  - controlDict modified. No restore.
+#  - controlDict_bak removed. No restore.
+
+echo "$Script : Waiting for OpenFOAM job $PID to finish ..."
+
+while true
+do
+    sleep 5
+
+    [ -r ${controlDict}_bak ] || {
+        echo "$Script : ${controlDict}_bak disappeared. Exiting without restore"
+        exit 1
+    }
+
+    if [ ${controlDict} -nt ${controlDict}_bak ]
+    then
+        echo "$Script : ${controlDict} modified externally. Exiting without restore"
+        exit 0
+    fi
+
+    processExists $PID
+    if [ $? -ne 0 ]
+    then
+        #- Job finished
+        break
+    fi
+    # echo "OpenFOAM job $PID still running ..."
+done
+
+#- Dictionary restore
+restoreDict
+
+#------------------------------------------------------------------------------

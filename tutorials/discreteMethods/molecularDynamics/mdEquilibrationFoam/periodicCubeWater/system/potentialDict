@@ -1,0 +1,118 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      potentials;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Subdictionaries specifying types of intermolecular potential.
+// Sub-sub dictionaries specify the potentials themselves.
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Removal order
+
+// This is the order in which to remove overlapping pairs if more than one
+// type of molecule is present.  The most valuable molecule type is at the
+// right hand end, the molecule that will be removed 1st is 1st on the list.
+// Not all types need to be present, a molecule that is not present is
+// automatically less valuable than any on the list.  For molecules of the
+// same type there is no control over which is removed.
+
+removalOrder ( water );
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Potential Energy Limit
+
+// Maximum permissible pair energy allowed at startup.  Used to remove
+// overlapping molecules created during preprocessing.
+
+potentialEnergyLimit 1e-18;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Pair potentials
+
+// If a pair are not present here it is assumed that they do not interact.
+
+// Electrostatic pair interactions are not listed here - they are handled
+// separately.
+
+// If there are r different type of molecules, and a pair force is required
+// between all combinations, then there are C = r(r+1)/2 combinations,
+// i.e. for r = {1,2,3,4}, C = {1,3,6,10} (sum of triangular numbers).
+
+// Pair potentials are specified by the combinaition of their ids,
+// for MOLA and MOLB, "MOLA-MOLB" OR "MOLB-MOLA" is acceptable
+// (strictly OR, both or neither will throw an error)
+
+pair
+{
+    O-O
+    {
+        pairPotential   lennardJones;
+        rCut            1.0e-9;
+        rMin            0.1e-9;
+        dr              1e-13;
+        lennardJonesCoeffs
+        {
+            sigma       3.154e-10;
+            epsilon     1.07690722e-21;
+        }
+        energyScalingFunction   noScaling;
+        writeTables     yes;
+    }
+
+    electrostatic
+    {
+        pairPotential   dampedCoulomb;
+        rCut            1e-9;
+        rMin            2e-11;
+        dr              2e-12;
+        dampedCoulombCoeffs
+        {
+            alpha       2e9;
+        }
+        energyScalingFunction   shiftedForce;
+        writeTables     yes;
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Tethering Potentials
+
+tether
+{
+    O
+    {
+        tetherPotential restrainedHarmonicSpring;
+        restrainedHarmonicSpringCoeffs
+        {
+            springConstant  0.277;
+            rR              1.2e-9;
+        }
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// External Forces
+
+// Bulk external forces (namely gravity) will be specified as forces rather
+// than potentials to allow their direction to be controlled.
+
+external
+{
+    gravity             (0 0 0);
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,272 @@
+#!/bin/bash
+#---------------------------------*- sh -*-------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     pre-receive-hook
+#
+# Description
+#     pre-receive hook for git.
+#     Copy or link this file as ".git/hooks/pre-receive"
+#
+#     Eg,
+#     (
+#         cd $WM_PROJECT_DIR/.git/hooks &&
+#         ln -sf ../../bin/tools/pre-receive-hook pre-receive
+#     )
+#
+#     Hook receives: <old-sha1> <new-sha1> <ref-name>
+#
+#     Checks for
+#     - illegal code, e.g. <TAB>
+#     - columns greater than 80 for *.[CH] files
+#
+#------------------------------------------------------------------------------
+hookName="pre-receive"
+die()
+{
+    echo "$hookName hook failure" 1>&2
+    echo '-----------------------------------' 1>&2
+    echo '' 1>&2
+    echo "$@" 1>&2
+    echo '' 1>&2
+    exit 1
+}
+
+#-----------------------------------------------------------------------------
+
+unset fileList
+unset badFiles
+# join list of files with this amount of space
+Indent="    "
+
+#
+# report bad files and die if there are any
+#
+dieOnBadFiles()
+{
+    if [ -n "$badFiles" ]
+    then
+        echo "$hookName hook failure" 1>&2
+        echo '-----------------------------------' 1>&2
+        echo "$@" 1>&2
+        echo '' 1>&2
+        echo "File(s):" 1>&2
+        echo "$badFiles" 1>&2
+        echo ''  1>&2
+        exit 1
+    fi
+}
+
+
+#
+# qualify 'git grep' to check cached value or from a specific commit
+#
+gitScope()
+{
+    if [ "$#" -gt 0 ]
+    then
+        echo "$1:"
+    else
+        echo "--cached -- "
+    fi
+}
+
+
+#
+# check for bad strings, characters, etc
+#
+checkIllegalCode()
+{
+    echo "$hookName: check bad strings/characters etc ..." 1>&2
+
+    reBad="("$'\t'"|"$'\r\n'")"
+    msgBad="<TAB> or DOS-line-endings"
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        case "$f" in
+        # exclude potential makefiles
+        (*[Mm]akefile* | wmake/rules/*)
+        ;;
+        (*)
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -E -hn -e "$reBad" $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Remove/correct bad '$msgBad' references"
+}
+
+
+#
+# limit line length to 80-columns
+#
+checkLineLength()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#
+# limit line length to 80-columns, except C++ comment lines
+#
+checkLineLengthNonComments()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' \
+                --and --not -e '^ *//' \
+                $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#
+# limit line length to 80-columns, except #directive lines
+#
+checkLineLengthNonDirective()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' \
+                --and --not -e '^ *#' \
+                $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#------------------------------------------------------------------------------
+# Main code : do all checks
+#
+
+while read oldSHA1 newSHA1 refName
+do
+    unset fileList rawFileList
+
+    if [ "$newSHA1" = 0 ]
+    then
+        # ref to be deleted
+        continue
+    elif [ "$oldSHA1" = 0 ]
+    then
+        # ref to be created
+        rawFileList=$(git diff-tree --root $newSHA1)
+    else
+        # normal changes
+        rawFileList=$(git diff --name-only $oldSHA1..$newSHA1)
+    fi
+
+    #
+    # no files changed: can skip all the checks
+    #
+    [ -n "$rawFileList" ] || continue
+
+    fileList=$(
+    for f in $rawFileList
+    do
+        git cat-file -e $newSHA1:$f > /dev/null 2>&1 && echo "$f"
+    done
+    )
+
+    # check for illegal code, e.g. <TAB>, etc
+    checkIllegalCode $newSHA1
+
+    # ensure code conforms to 80 columns max
+    checkLineLengthNonDirective $newSHA1
+
+done
+
+
+exit 0
+#------------------------------------------------------------------------------

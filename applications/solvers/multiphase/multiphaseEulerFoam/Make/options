@@ -1,0 +1,22 @@
+EXE_INC = \
+    -ImultiphaseSystem/lnInclude \
+    -ImultiphaseFixedFluxPressure \
+    -IinterfacialModels/lnInclude \
+    -I$(LIB_SRC)/transportModels \
+    -I$(LIB_SRC)/transportModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/transportModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/transportModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
+    -I$(LIB_SRC)/turbulenceModels \
+    -I$(LIB_SRC)/turbulenceModels/incompressible/LES/LESModel \
+    -I$(LIB_SRC)/turbulenceModels/LES/LESdeltas/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+EXE_LIBS = \
+    -lmultiphaseSystem \
+    -linterfaceProperties \
+    -lincompressibleTransportModels \
+    -lcompressibleMultiphaseEulerianInterfacialModels \
+    -lincompressibleLESModels \
+    -lincompressibleRASModels \
+    -lfiniteVolume

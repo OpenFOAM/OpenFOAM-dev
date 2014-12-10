@@ -1,0 +1,18 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+extrudeModel        linearNormal;
+nLayers             ${nLayers};
+expansionRatio      1;
+columnCells         ${oneD}; //3D
+linearNormalCoeffs
+{
+    thickness           ${thickness};
+}
+
+// ************************************************************************* //

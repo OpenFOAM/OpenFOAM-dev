@@ -1,0 +1,7 @@
+EXE_INC = \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+EXE_LIBS = \
+    -lsampling \
+    -lmeshTools

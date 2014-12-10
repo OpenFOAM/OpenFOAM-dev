@@ -1,0 +1,22 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
+    echo "Error: Current directory is not \$WM_PROJECT_DIR/applications"
+    echo "    The environment variables are inconsistent with the installation."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+
+[ -n "$FOAM_EXT_LIBBIN" ] || {
+    echo "Error: FOAM_EXT_LIBBIN not set"
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+
+set -x
+
+wmake all utilities $*
+wmake all solvers $*
+
+# ----------------------------------------------------------------- end-of-file

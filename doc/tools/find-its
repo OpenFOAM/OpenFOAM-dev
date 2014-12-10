@@ -1,0 +1,17 @@
+#!/bin/sh
+# -----------------------------------------------------------------------------
+# Script
+#     find-its
+#
+# Description
+#     Search for files with "it's"
+#     This contraction (== "it is") looks too much like "its" (possesive)
+#     and confuses non-native (and some native) English speakers.
+#
+# -----------------------------------------------------------------------------
+set -x
+cd $WM_PROJECT_DIR || exit 1
+
+git grep -e "it's"
+
+#------------------------------------------------------------------ end-of-file

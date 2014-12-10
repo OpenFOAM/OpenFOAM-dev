@@ -1,0 +1,24 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication surfaceFeatureExtract
+
+runApplication blockMesh
+runApplication snappyHexMesh -overwrite
+
+if [ -d 0 ] ; then
+   rm -rf 0
+fi
+
+runApplication createPatch -overwrite
+runApplication createBaffles -overwrite
+runApplication mergeOrSplitBaffles -split -overwrite
+
+cp -r 0.org 0
+
+runApplication $(getApplication)
+
+# ----------------------------------------------------------------- end-of-file

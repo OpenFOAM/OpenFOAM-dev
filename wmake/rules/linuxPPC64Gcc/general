@@ -1,0 +1,10 @@
+CPP        = cpp -traditional-cpp $(GFLAGS)
+LD         = ld -m elf64ppc
+
+PROJECT_LIBS = -l$(WM_PROJECT) -ldl
+
+include $(GENERAL_RULES)/standard
+
+include $(RULES)/X
+include $(RULES)/c
+include $(RULES)/c++

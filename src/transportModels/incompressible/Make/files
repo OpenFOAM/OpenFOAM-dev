@@ -1,0 +1,14 @@
+viscosityModels/viscosityModel/viscosityModel.C
+viscosityModels/viscosityModel/viscosityModelNew.C
+viscosityModels/Newtonian/Newtonian.C
+viscosityModels/powerLaw/powerLaw.C
+viscosityModels/CrossPowerLaw/CrossPowerLaw.C
+viscosityModels/BirdCarreau/BirdCarreau.C
+viscosityModels/HerschelBulkley/HerschelBulkley.C
+
+transportModel/transportModel.C
+singlePhaseTransportModel/singlePhaseTransportModel.C
+
+incompressibleTwoPhaseMixture/incompressibleTwoPhaseMixture.C
+
+LIB = $(FOAM_LIBBIN)/libincompressibleTransportModels

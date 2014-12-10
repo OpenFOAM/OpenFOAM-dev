@@ -1,0 +1,102 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wmakeCheckPwd
+#
+# Description
+#     Check that the current working directory is equal to a particular
+#     target directory, resolving the absolute path as required
+#
+#-------------------------------------------------------------------------------
+unset quietOpt
+
+usage() {
+    [ "$quietOpt" = true ] && exit 1
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [OPTION] dirName
+
+options:
+  -q | -quiet   suppress all normal output
+
+  Check that the current working directory is equal to a particular
+  target directory, resolving the absolute path as required
+
+  Exit status 0 when the directories are identical
+  Exit status 1 on error
+
+USAGE
+    exit 1
+}
+
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -q | -quiet)
+        quietOpt=true
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+[ "$#" -eq 1 ] || usage
+dirName="$1"
+
+
+# trivial checks first
+[ "$PWD" = "$dirName" ] && exit 0
+
+[ -d "$dirName" ] || {
+    [ "$quietOpt" = true ] || echo "Error: Directory does not exist $dirName"
+    exit 1
+}
+
+
+# use /bin/pwd to get the absolute path (could be linked)
+thisDir=$(/bin/pwd)
+target=$(cd $dirName 2>/dev/null && /bin/pwd)
+
+# okay
+[ "$thisDir" = "$target" ] && exit 0
+
+# some other error
+[ "$quietOpt" = true ] || echo "Error: Current directory is not $dirName"
+exit 1
+
+#------------------------------------------------------------------------------

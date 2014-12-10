@@ -1,0 +1,13 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+mv ./-180 temp180
+rm -rf 0
+cp system/controlDict.1st system/controlDict
+cleanCase
+mv temp180 ./-180
+
+# ----------------------------------------------------------------- end-of-file

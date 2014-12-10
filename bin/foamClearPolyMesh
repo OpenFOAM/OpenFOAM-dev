@@ -1,0 +1,144 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamClearPolyMesh
+#
+# Description
+#    Remove the contents of the constant/polyMesh directory
+#    as per the Foam::polyMesh::removeFiles() method.
+#
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTION]
+options:
+  -case <dir>       specify alternative case directory, default is the cwd
+  -region <name>    specify alternative mesh region
+  -help             print the usage
+
+Remove the contents of the constant/polyMesh directory as per the
+Foam::polyMesh::removeFiles() method.
+
+USAGE
+   exit 1
+}
+
+unset caseDir regionName
+
+# parse a single option
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -case)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        cd "$2" 2>/dev/null || usage "directory does not exist:  '$2'"
+        caseDir=$2
+        shift 2
+        ;;
+    -region)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        regionName=$2
+        shift 2
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+if [ -n "$regionName" ]
+then
+    meshDir=$regionName/polyMesh
+else
+    meshDir=polyMesh
+fi
+
+# if -case was specified: insist upon 'constant/polyMesh'
+if [ -n "$caseDir" ]
+then
+    if [ -d constant/$meshDir ]
+    then
+        # use constant/polyMesh
+        meshDir=constant/$meshDir
+    else
+       echo "Error: no 'constant/$meshDir' in $caseDir" 1>&2
+       exit 1
+    fi
+else
+    if [ -d constant/$meshDir ]
+    then
+        # use constant/polyMesh
+        meshDir=constant/$meshDir
+    elif [ -d $meshDir ]
+    then
+        # likely already in constant/ - do not adjust anything
+        :
+    elif [ "${PWD##*/}" = polyMesh -a -z "$regionName" ]
+    then
+        # apparently already within polyMesh/
+        meshDir=.
+    else
+        echo "Error: no appropriate 'polyMesh/' directory found" 1>&2
+        exit 1
+    fi
+fi
+
+
+#
+# remove files (mesh itself, modifiers, snappyHexMesh ones) and subdirectories
+# also remove .gz versions of the same files
+#
+echo "Clearing ${caseDir:-.}/$meshDir" 1>&2
+
+for i in \
+    points \
+    faces \
+    owner \
+    neighbour \
+    cells \
+    boundary \
+    pointZones \
+    faceZones \
+    cellZones \
+    meshModifiers \
+    parallelData \
+    sets \
+    cellLevel \
+    pointLevel \
+    level0Edge \
+    refinementHistory \
+    surfaceIndex \
+;
+do
+    rm -rf $meshDir/$i $meshDir/$i.gz
+done
+
+#------------------------------------------------------------------------------

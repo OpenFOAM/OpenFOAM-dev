@@ -1,0 +1,138 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamDistccd
+#
+# Description
+#     Script to control distccd daemons. (distcc/distccd is a distributed
+#     C/C++ compilation frontend). Distccd daemons need to be running
+#     on all platforms one wants to build on. The platforms are specified
+#     in the DISTCC_HOSTS environment variable.
+#
+#------------------------------------------------------------------------------
+
+usage()
+{
+    echo "Usage : ${0##*/} start|stop|list"
+    echo ""
+    exit 1
+}
+
+RSH='ssh'
+
+if [ ! "$DISTCC_HOSTS" ]
+then
+    echo "${0##*/} Warnings"
+    echo "    variable DISTCC_HOSTS not set."
+    echo "    please set DISTCC_HOSTS to the list of hosts to use."
+    echo "    the format is host1:port host2:port host3:port etc."
+    echo
+
+    exit 1
+fi
+
+[ $# -eq 1 ] || usage
+
+
+case "$1" in
+start)
+    grep -v '^#' /etc/hosts | awk '{print $1, $2 " "}' > ~/filteredHosts.txt
+
+    allowIPS=''
+    for host in $DISTCC_HOSTS
+    do
+        machine=`echo "$host" | awk -F: '{print $1}'`
+        iptest=`echo "$machine" | sed -e 's/[0-9.]//g'`
+        if [ ! "$iptest" ]
+        then
+            # address only contained 0-9 and '.'. Probably ip address.
+            ip=$machine
+        else
+            # address probably not ip address. Try searching /etc/hosts
+            ip=`egrep " $machine " ~/filteredHosts.txt | awk '{print $1}'`
+        fi
+
+        if [ ! "$ip" ]
+        then
+            echo "$0 : host specifier $host either is not an ip address or cannot be found in /etc/hosts."
+            echo "$0 : Exiting."
+            exit 1
+        fi
+
+        allowIPS="$allowIPS --allow $ip"
+    done
+    echo "allowIPS=$allowIPS"
+
+    for host in $DISTCC_HOSTS
+    do
+        echo ""
+        echo "Trying to start distccd on host $host ..."
+
+        machine=`echo "$host" | awk -F: '{print $1}'`
+        port=`echo "$host" | awk -F: '{print $2}'`
+
+        if [ "$machine" -a "$port" ]
+        then
+            #echo "Machine:$machine  port:$port"
+            echo "distccd --daemon $allowIPS --port $port"' --jobs `egrep "^processor" /proc/cpuinfo | wc -l`'
+            $RSH $machine "distccd --verbose --daemon $allowIPS --port $port"' --jobs `egrep "^processor" /proc/cpuinfo | wc -l`'
+        else
+            echo "$0 : host specifier $host not in correct form machine:port."
+            echo "$0 : Exiting."
+            exit 1
+        fi
+    done
+    ;;
+
+stop)
+    for host in $DISTCC_HOSTS
+    do
+        echo ""
+        echo "Trying to stop all distccd on host $host ..."
+
+        machine=`echo "$host" | awk -F: '{print $1}'`
+
+        $RSH $machine killall distccd
+    done
+    ;;
+
+list)
+    for host in $DISTCC_HOSTS
+    do
+        echo ""
+        echo "Trying to find process distccd on host $host ..."
+
+        machine=`echo "$host" | awk -F: '{print $1}'`
+
+        $RSH $machine "ps -ef | grep distccd | grep -v grep"
+    done
+    ;;
+
+*)
+    usage
+    ;;
+esac
+
+#------------------------------------------------------------------------------

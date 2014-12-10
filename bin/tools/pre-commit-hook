@@ -1,0 +1,328 @@
+#!/bin/bash
+#---------------------------------*- sh -*-------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     pre-commit-hook
+#
+# Description
+#     pre-commit hook for git.
+#     Copy or link this file as ".git/hooks/pre-commit"
+#
+#     Eg,
+#     (
+#         cd $WM_PROJECT_DIR/.git/hooks &&
+#         ln -sf ../../bin/tools/pre-commit-hook pre-commit
+#     )
+#
+#     Hook receives: empty
+#
+#     Checks for
+#     - illegal code, e.g. <TAB>
+#     - columns greater than 80 for *.[CH] files
+#
+# Note
+#     Using "git commit --no-verify" it is possible to override the hook.
+#
+#     By supplying arguments to the hook, it can also be used to manually
+#     test the specified files/directories for standards conformance.
+#
+#------------------------------------------------------------------------------
+hookName="pre-commit"
+die()
+{
+    echo "$hookName hook failure" 1>&2
+    echo '-----------------------------------' 1>&2
+    echo '' 1>&2
+    echo "$@" 1>&2
+    echo '' 1>&2
+    exit 1
+}
+
+#-----------------------------------------------------------------------------
+# Check content that will be added by this commit.
+
+if git rev-parse --verify HEAD > /dev/null 2>&1
+then
+    against=HEAD
+else
+    # Initial commit: diff against an empty tree object
+    against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+fi
+
+# called manually with arguments for the files/directories to be tested?
+if [ "$#" -gt 0 ]
+then
+    case "$1" in
+    -h | -help)
+        die "interactive usage: supply list of files/directories to check"
+        ;;
+    esac
+
+    # obtain list of all specified files/directories
+    fileList=$(git ls-files -- $@ 2>/dev/null)
+else
+    # list of all files to be committed
+    fileList=$(git diff-index --cached --name-only $against --)
+fi
+
+#
+# no files changed: can skip all the checks
+# this usage can correspond to a 'git commit --amend'
+#
+[ -n "$fileList" ] || exit 0
+
+
+unset badFiles
+# join list of files with this amount of space
+Indent="    "
+
+#
+# report bad files and die if there are any
+#
+dieOnBadFiles()
+{
+    if [ -n "$badFiles" ]
+    then
+        echo "$hookName hook failure" 1>&2
+        echo '-----------------------------------' 1>&2
+        echo "$@" 1>&2
+        echo '' 1>&2
+        echo "File(s):" 1>&2
+        echo "$badFiles" 1>&2
+        echo ''  1>&2
+        exit 1
+    fi
+}
+
+
+#
+# qualify 'git grep' to check cached value or from a specific commit
+#
+gitScope()
+{
+    if [ "$#" -gt 0 ]
+    then
+        echo "$1:"
+    else
+        echo "--cached -- "
+    fi
+}
+
+
+#
+# check for bad strings, characters, etc
+#
+checkIllegalCode()
+{
+    echo "$hookName: check bad strings/characters etc ..." 1>&2
+
+    reBad="("$'\t'")"
+    msgBad="<TAB>"
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        case "$f" in
+        # exclude potential makefiles
+        (*[Mm]akefile* | wmake/rules/* | *.f* | *.v[cf]proj | *.pdf | *.png | *.html | *.gif | *.css | *.gz)
+        ;;
+        (*)
+            fileType=`file -b $f`
+            if [ "$fileType" != "data" ]
+            then
+                # parse line numbers from grep output:
+                #        <lineNr>:   contents
+                lines=$(git grep -E -hn -e "$reBad" $scope"$f" |
+                    sed -e 's@:.*@@' |
+                    tr '\n' ' '
+                )
+                [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
+            fi
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Remove/correct bad '$msgBad' references"
+}
+
+
+#
+# limit line length to 80-columns
+#
+checkLineLength()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#
+# limit line length to 80-columns, except C++ comment lines
+#
+checkLineLengthNonComments()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' \
+                --and --not -e '^ *//' \
+                $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#
+# limit line length to 80-columns, except #directive lines
+#
+checkLineLengthNonDirective()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' \
+                --and --not -e '^ *#' \
+                $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#
+# check that OpenFOAM Foundation copyright is current
+#
+checkCopyright()
+{
+    year=$(date +%Y)
+    echo "$hookName: check copyright ..." 1>&2
+
+    badFiles=$(
+    for f in $fileList
+    do
+        startYear=`grep "Copyright.*OpenFOAM" $f | sed 's/[^0-9]*\([0-9]*\).*/\1/g'`
+        endYear=`grep "Copyright.*-.*OpenFOAM" $f | sed 's/[^-]*-\([0-9]*\).*/\1/g'`
+        #echo "startYear=$startYear endYear=$endYear"
+        if [ "$startYear" != "" ]
+        then
+            if [ "$endYear" != "" ]
+            then
+                # Date is of type 2011-2012 OpenFOAM Foundation
+                if [ "$year" != "$endYear" ]
+                then
+                    echo "Updated copyright for: $f" 1>&2
+                    echo "$f"
+                    sed -i "s/$startYear-$endYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
+                fi
+            else
+                # Date is of type 2011 OpenFOAM Foundation
+                if [ "$year" != "$startYear" ]
+                then
+                    echo "$f"
+                    echo "Updated copyright for: $f" 1>&2
+                    sed -i "s/$startYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
+                fi
+            fi
+        fi
+    done
+    )
+
+    dieOnBadFiles "Some copyright dates were automatically updated; Please check these before pushing"
+}
+
+
+#------------------------------------------------------------------------------
+# Main code : do all checks
+#
+
+# builtin whitespace check to avoid trailing space, including CR-LF endings
+bad=$(git diff-index --cached --check $against --) || die "$bad"
+
+# check for illegal code, e.g. <TAB>, etc
+checkIllegalCode
+
+# ensure code conforms to 80 columns max
+checkLineLengthNonDirective
+
+checkCopyright
+
+exit 0
+#------------------------------------------------------------------------------

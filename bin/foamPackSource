@@ -1,0 +1,103 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamPackSource <directory> <tarFile>
+#
+# Description
+#     Pack and compress all source files from a given directory.
+#
+# Note
+#     Not normally called directly by the user
+#------------------------------------------------------------------------------
+tmpFile=${TMPDIR:-/tmp}/foamPackFiles.$$
+toolsDir="${0%/*}/tools"  # this script is located in the tools/ parent dir
+
+[ $# -eq 2 ] || {
+cat <<USAGE 1>&2
+Usage : ${0##*/} directory tarFile
+
+* Pack and compress all source files from a given directory into <tarFile>
+
+USAGE
+    exit 1
+}
+
+# canonical form (no double and no trailing dashes)
+packDir=$(echo "$1" | sed -e 's@//*@/@g' -e 's@/$@@')
+packFile=$2
+
+# check for essential directories
+[ -d $packDir ] || {
+    echo "Error: directory $packDir does not exist" 1>&2
+    exit 1
+}
+
+
+# avoid overwriting old pack file
+if [ -f $packFile ]
+then
+    echo "Error: $packFile already exists" 1>&2
+    exit 1
+fi
+
+# Clean up on termination and on Ctrl-C
+trap 'rm -f $tmpFile 2>/dev/null; exit 0' EXIT TERM INT
+
+# get all names
+$toolsDir/foamListSourceFiles $packDir > $tmpFile
+
+
+# provide some feedback
+cat <<INFO 1>&2
+-------------------------------------------------------------------------------
+Packing $packDir source files into $packFile
+
+INFO
+wc $tmpFile | awk '{print "Packing",$1,"files - this could take some time ..."}' 1>&2
+
+
+# bzip2 or gzip compression
+case "$packFile" in
+*tbz)
+    tarOpt=cpjf
+    ;;
+*)
+    tarOpt=cpzf
+    ;;
+esac
+
+# Clean up on Ctrl-C
+trap 'rm -f $packFile $tmpFile 2>/dev/null' INT
+
+tar $tarOpt $packFile --files-from $tmpFile
+if [ $? -eq 0 ]
+then
+    echo "Finished packing $packDir into $packFile" 1>&2
+else
+    echo "Error: failure packing $packDir into $packFile" 1>&2
+    rm -f $packFile 2>/dev/null
+fi
+
+#------------------------------------------------------------------------------

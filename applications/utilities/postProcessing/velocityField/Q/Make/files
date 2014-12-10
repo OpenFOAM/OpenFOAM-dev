@@ -1,0 +1,4 @@
+
+Q.C
+
+EXE = $(FOAM_APPBIN)/Q

@@ -1,0 +1,43 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+
+# Setup case
+./Allrun.pre
+
+
+#-- Run in parallel
+
+# Decompose
+runApplication decomposePar -allRegions
+
+# Agglomerate patch faces
+for i in bottomAir topAir
+do
+    mpirun -np 4 faceAgglomerate -region $i -dict constant/viewFactorsDict -parallel>   log.faceAgglomerate.$i 2>&1
+done
+
+# Generate view factors
+for i in bottomAir topAir
+do
+    mpirun -np 4 viewFactorsGen -region $i -parallel > log.viewFactorsGen.$i 2>&1
+done
+
+# Run
+runParallel `getApplication` 4
+
+# Reconstruct
+runApplication reconstructPar -allRegions
+
+
+
+echo
+echo "creating files for paraview post-processing"
+echo
+paraFoam -touchAll
+
+# ----------------------------------------------------------------- end-of-file

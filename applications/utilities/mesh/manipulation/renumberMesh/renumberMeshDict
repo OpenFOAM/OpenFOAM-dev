@@ -1,0 +1,110 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    note        "mesh renumbering dictionary";
+    object      renumberMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Write maps from renumbered back to original mesh
+writeMaps true;
+
+// Optional entry: sort cells on coupled boundaries to last for use with
+// e.g. nonBlockingGaussSeidel.
+sortCoupledFaceCells false;
+
+// Optional entry: renumber on a block-by-block basis. It uses a
+// blockCoeffs dictionary to construct a decompositionMethod to do
+// a block subdivision) and then applies the renumberMethod to each
+// block in turn. This can be used in large cases to keep the blocks
+// fitting in cache with all the the cache misses bunched at the end.
+// This number is the approximate size of the blocks - this gets converted
+// to a number of blocks that is the input to the decomposition method.
+//blockSize 1000;
+
+// Optional entry: sort points into internal and boundary points
+//orderPoints false;
+
+
+
+method          CuthillMcKee;
+//method          Sloan;
+//method          manual;
+//method          random;
+//method          structured;
+//method          spring;
+//method          zoltan;             // only if compiled with zoltan support
+
+//CuthillMcKeeCoeffs
+//{
+//    // Reverse CuthillMcKee (RCM) or plain
+//    reverse true;
+//}
+
+manualCoeffs
+{
+    // In system directory: new-to-original (i.e. order) labelIOList
+    dataFile "cellMap";
+}
+
+
+// For extruded (i.e. structured in one direction) meshes
+structuredCoeffs
+{
+    // Patches that mesh was extruded from. These determine the starting
+    // layer of cells
+    patches (movingWall);
+    // Method to renumber the starting layer of cells
+    method  random;
+
+    // Renumber in columns (depthFirst) or in layers
+    depthFirst true;
+
+    // Reverse ordering
+    reverse false;
+}
+
+
+springCoeffs
+{
+    // Maximum jump of cell indices. Is fraction of number of cells
+    maxCo 0.01;
+
+    // Limit the amount of movement; the fraction maxCo gets decreased
+    // with every iteration
+    freezeFraction 0.999;
+
+    // Maximum number of iterations
+    maxIter 1000;
+}
+
+
+blockCoeffs
+{
+    method          scotch;
+    //method hierarchical;
+    //hierarchicalCoeffs
+    //{
+    //    n           (1 2 1);
+    //    delta       0.001;
+    //    order       xyz;
+    //}
+}
+
+
+zoltanCoeffs
+{
+    ORDER_METHOD    LOCAL_HSFC;
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,85 @@
+#!/bin/sh
+#
+# Dummy external solver to communicate with OpenFOAM via externalCoupled
+# boundary conditions
+#
+# Functionality is hard-coded for this particular test case
+# - patch temperatures increased by 1K on each step
+#
+cd ${0%/*} || exit 1    # run from this directory
+
+echo "Executing dummy external solver"
+
+commsDir="comms"
+lockFile="${commsDir}/OpenFOAM.lock"
+dataFile="${commsDir}/data"
+waitSec=1
+timeOut=10
+refGrad=0
+valueFraction=1
+
+log()
+{
+    echo "External: $@"
+}
+
+init()
+{
+    log "initialisation: creating ${dataFile}.in"
+
+    # Hard-coded for 2 patches of size 2250
+    n=2250
+    refCold=283
+    refHot=303
+    touch "${dataFile}.in"
+    for i in $(seq 1 $n); do
+        echo "$refHot $refGrad $valueFraction" >> "${dataFile}.in"
+    done
+    for i in $(seq 1 $n); do
+        echo "$refCold $refGrad $valueFraction" >> "${dataFile}.in"
+    done
+
+    # create lock file to pass control to OF
+    touch ${lockFile}
+}
+
+
+# tutorial case employs the 'initByExternalOption', so we need to provide
+# the initial values
+init
+
+
+totalWait=0
+step=0
+while [ 1 ]; do
+    if [ -f $lockFile ]; then
+        log "found lock file ${lockFile} - waiting"
+        totalWait=$(expr $totalWait + $waitSec)
+        if [ $totalWait -gt $timeOut ]; then
+            log "timeout"
+            break
+        else
+            sleep $waitSec
+        fi
+    else
+        totalWait=0
+        step=$(expr $step + 1)
+        log "step $step"
+        log "lock not present - taking control"
+
+        log "sleeping for $waitSec secs to simulate external process"
+        sleep $waitSec
+
+        log "creating ${dataFile}.in"
+
+        awk '{if( $1 != "#" ){print $2+1 " 0 1"}}' ${dataFile}.out > ${dataFile}.in
+
+        log "creating lock file ${lockFile}"
+        touch ${lockFile}
+    fi
+done
+
+log "done"
+
+
+# ----------------------------------------------------------------- end-of-file

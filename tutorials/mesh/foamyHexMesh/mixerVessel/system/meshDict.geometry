@@ -1,0 +1,155 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+    class           dictionary;
+    object          meshDict.geometry;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+vessel.stl
+{
+    name vessel;
+    type triSurfaceMesh;
+
+    regions
+    {
+        outlet {name outlet;}
+        vessel {name vessel;}
+    }
+}
+
+
+spargerInlet.stl
+{
+    name spargerInlet;
+    type triSurfaceMesh;
+
+    regions
+    {
+        gasInlet
+        {
+            name gasInlet;
+        }
+
+        sparger
+        {
+            name sparger;
+        }
+    }
+}
+
+
+spargerShaft.stl
+{
+    name spargerShaft;
+    type triSurfaceMesh;
+
+    regions
+    {
+        sparger
+        {
+            name spargerShaft;
+        }
+    }
+}
+
+
+shaftRotating.stl
+{
+    name shaftRotating;
+    type triSurfaceMesh;
+
+    regions
+    {
+        shaftRotating
+        {
+            name shaftRotating;
+        }
+    }
+}
+
+
+shaft.stl
+{
+    name shaft;
+    type triSurfaceMesh;
+
+    regions
+    {
+        shaft
+        {
+            name shaft;
+        }
+    }
+}
+
+
+stirrer_baffles.stl
+{
+    name stirrer_baffles;
+    type triSurfaceMesh;
+
+    regions
+    {
+        stirrer
+        {
+            name stirrer_baffles;
+        }
+    }
+}
+
+
+stirrer.stl
+{
+    name stirrer;
+    type triSurfaceMesh;
+
+    regions
+    {
+        stirrer
+        {
+            name stirrer;
+        }
+    }
+}
+
+
+rotating.stl
+{
+    name rotating;
+    type triSurfaceMesh;
+
+    regions
+    {
+        MRF
+        {
+            name rotating;
+        }
+    }
+}
+
+
+baffles.stl
+{
+    name baffles;
+    type triSurfaceMesh;
+
+    regions
+    {
+        baffles
+        {
+            name baffles;
+        }
+    }
+}
+
+
+// ************************************************************************* //

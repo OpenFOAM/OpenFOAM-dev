@@ -1,0 +1,13 @@
+!SENS
+CONP
+PRES 50.00  ! atm
+TEMP 800.0  ! K
+TIME 1.E-2  ! sec
+DELT 1.E-6  ! sec
+REAC IC8H18 0.08
+REAC O2  1.0
+REAC N2  3.76
+END
+! c8h18 + x o2 -> 8 co2 + 9 h2o
+! -> 9 + 16 = 25 -> 12.5
+! 1/12.5 = 0.08

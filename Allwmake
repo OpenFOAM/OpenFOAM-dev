@@ -1,0 +1,37 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+wmakeCheckPwd "$WM_PROJECT_DIR" || {
+    echo "Error: Current directory is not \$WM_PROJECT_DIR"
+    echo "    The environment variables are inconsistent with the installation."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+
+[ -n "$FOAM_EXT_LIBBIN" ] || {
+    echo "Error: FOAM_EXT_LIBBIN not set"
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+
+# wmake is required for subsequent targets
+( cd wmake/src && make )
+
+# build ThirdParty sources
+if [ -d "$WM_THIRD_PARTY_DIR" ]
+then
+    $WM_THIRD_PARTY_DIR/Allwmake
+else
+    echo "no ThirdParty sources found - skipping"
+fi
+
+# build OpenFOAM libraries and applications
+src/Allwmake $*
+applications/Allwmake $*
+
+if [ "$1" = doc ]
+then
+    doc/Allwmake $*
+fi
+
+# ----------------------------------------------------------------- end-of-file

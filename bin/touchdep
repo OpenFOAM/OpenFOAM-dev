@@ -1,0 +1,101 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     touchdep
+#
+# Description
+#     touch all .dep files
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTION] [dir1] .. [dirN]
+options:
+  -make         limit selection to 'Make/\$WM_OPTIONS*' (Make/$WM_OPTIONS*)
+  -help         print the usage
+
+Find and touch all .dep files in the specified directories.
+Uses the cwd by default if no directories are specified.
+
+Current value of WM_OPTIONS=$WM_OPTIONS
+
+
+NOTE The '-make' is a future feature.
+This is currently no separation of .dep files by platforms.
+
+USAGE
+    exit 1
+}
+
+
+unset restrictOpt
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -m | -make)
+        [ -n "$WM_OPTIONS" ] || usage "Error: -make option only valid when \$WM_OPTIONS is set"
+        restrictOpt=true
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+# no directories specified: default is pwd
+[ "$#" -gt 0 ] || set -- .
+
+for i
+do
+    if [ -d "$i" ]
+    then
+        if [ "$restrictOpt" = true ]
+        then
+            echo "touching all .dep files under Make/$WM_OPTIONS* : $i"
+            find $i -depth -name Make -type d -print | \
+                xargs -i find '{}' -depth -name "$WM_OPTIONS*" -type d -print | \
+                xargs -i find '{}' -name '*.dep' -type f -print | \
+                xargs -t touch
+        else
+            echo "touching all .dep files: $i"
+            find $i -name '*.dep' -type f -print | xargs -t touch
+        fi
+    else
+        echo "no directory: $i"
+    fi
+done
+#------------------------------------------------------------------------------

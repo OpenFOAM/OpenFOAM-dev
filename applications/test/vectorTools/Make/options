@@ -1,0 +1,1 @@
+EXE_INC = -I$(FOAM_APP)/utilities/mesh/generation/cvMesh/vectorTools

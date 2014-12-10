@@ -1,0 +1,10 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+set -x
+
+wmake
+wmake rhoPimplecFoam
+wmake rhoLTSPimpleFoam
+wmake rhoPimpleDyMFoam
+
+# ----------------------------------------------------------------- end-of-file

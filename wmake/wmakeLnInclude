@@ -1,0 +1,162 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wmakeLnInclude
+#
+# Description
+#     Link all the source files in the <dir> directory into <dir>/lnInclude
+#
+#     Usage: wmakeLnInclude [-f] <dir>
+#
+#     The desired source files:
+#         *.C *.H *.h *.cpp *.cxx *.hpp *.hxx
+#
+#     Avoid
+#         *.c (C source)
+#         .#* (cvs recovered files)
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: $Script [OPTION] dir
+
+options:
+  -f | -force       force update
+  -s | -silent      use 'silent' mode (do not echo command)
+  -help             print the usage
+
+    Link all the source files in the <dir> into <dir>/lnInclude
+
+Note
+    The '-f' option forces an update when the lnInclude directory already exists
+    and changes the default linking from 'ln -s' to 'ln -sf'.
+
+USAGE
+    exit 1
+}
+
+#------------------------------------------------------------------------------
+
+# default 'find' option
+unset findOpt
+
+# default 'ln' option
+lnOpt="-s"
+
+unset forceUpdate silentOpt
+
+# simple parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)   # provide immediate help
+        usage
+        ;;
+    -f | -force)
+        forceUpdate=true
+        lnOpt="-sf"
+        shift
+        ;;
+    -s | -silent)
+        silentOpt=true
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+if [ $# -eq 1 ]
+then
+    baseDir=$1
+else
+    usage "ERROR: incorrect number of arguments"
+fi
+
+
+# convert incorrect path/dir/lnInclude to something sensible
+while [ "${baseDir##*/}" = lnInclude ]
+do
+    baseDir="${baseDir%/*}"
+    if [ "$baseDir" = lnInclude ]
+    then
+        baseDir="."
+    fi
+done
+incDir=$baseDir/lnInclude
+
+
+[ -d $baseDir ] || {
+    echo "$Script error: base directory $baseDir does not exist" 1>&2
+    exit 2
+}
+
+if [ -d $incDir ]
+then
+    [ "$forceUpdate" = true ] || {
+        # echo "$Script error: include directory $incDir already exists" 1>&2
+        exit 0
+    }
+else
+    mkdir $incDir
+fi
+
+[ -d $incDir ] || {
+    echo "$Script error: failed to create include directory $incDir" 1>&2
+    exit 0
+}
+
+cd $incDir || exit 1
+
+#------------------------------------------------------------------------------
+
+if [ "$silentOpt" != true ]
+then
+    echo "$Script: linking include files to $incDir" 1>&2
+fi
+
+#
+# remove any broken links first (this helps when file locations have moved)
+#
+find -L . -type l -exec rm {} \;
+
+#
+# create links, avoid recreating links unless necessary
+# things placed in the 'noLink' directory are skipped
+#
+find .. $findOpt \
+    \( -name lnInclude -o -name Make -o -name config -o -name noLink \) -prune \
+ -o \( -name '*.[CHh]' -o -name '*.[ch]xx' -o -name '*.[ch]pp' -o -name '*.type' \)  \
+ -exec ln $lnOpt {} . \;
+
+#------------------------------------------------------------------------------

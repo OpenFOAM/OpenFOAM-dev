@@ -1,0 +1,7 @@
+EXE_INC = \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    $(COMP_FLAGS)
+
+EXE_LIBS = \
+    -lmeshTools \
+    $(LINK_FLAGS)

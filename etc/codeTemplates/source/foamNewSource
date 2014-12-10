@@ -1,0 +1,115 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamNewSource
+#
+# Description
+#     Create a new standard OpenFOAM source file
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+Template="$WM_PROJECT_DIR/etc/codeTemplates/source/_Template"
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: $Script [OPTION] <type> <ClassName>
+options:
+  -help             print the usage
+
+* create a new standard OpenFOAM source file
+
+type: (C|H|I|IO|App)
+
+A ClassName starting with '-' will simply display the template
+
+USAGE
+    exit 1
+}
+
+
+className="$2"
+unset subType Type printOpt
+
+# for a className starting with '-' simply display the code
+if [ "${2#-}" != "${2}" ]
+then
+    printOpt=true
+fi
+
+
+# this implicitly covers a lone -help
+[ "$#" -gt 1 ] || usage
+
+case "$1" in
+(-h | -help)
+    usage
+    ;;
+(C|H)
+    Type=".$1"
+    ;;
+(I)
+    Type="$1.H"
+    ;;
+(IO)
+    Type="$1.C"
+    ;;
+(app|App)
+    subType=App
+    Type=".C"
+    ;;
+(*)
+    usage "unknown type '$1'"
+    ;;
+esac
+
+[ "$#" -eq 2 ] || usage "wrong number of arguments"
+shift 2
+
+
+if [ "${printOpt:-false}" = true ]
+then
+    cat $Template$subType$Type
+else
+
+    fileName="$className$Type"
+
+    echo "$Script: Creating new interface file $fileName"
+    if [ -e "$fileName" ]
+    then
+        echo "   Error: file exists"
+        exit 1
+    fi
+
+    # process class name
+    sed "s/CLASSNAME/$className/g" $Template$subType$Type > $fileName
+
+    if [ "$subType" = App -a ! -d Make ]
+    then
+        wmakeFilesAndOptions
+    fi
+fi
+
+#------------------------------------------------------------------------------

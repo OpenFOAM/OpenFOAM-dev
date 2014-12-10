@@ -1,0 +1,59 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      combustionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+combustionModel  infinitelyFastChemistry<psiThermoCombustion,gasHThermoPhysics>;
+//combustionModel  FSD<psiThermoCombustion,gasHThermoPhysics>;
+
+active  true;
+
+infinitelyFastChemistryCoeffs
+{
+    semiImplicit no;
+    C           5.0;
+}
+
+FSDCoeffs
+{
+    Cv          0.1;
+    ftVarMin    1e-2;
+
+    reactionRateFlameArea relaxation;
+
+    fuel                Methane;
+
+    relaxationCoeffs
+    {
+        C                     2.0;
+        alpha                 1.0;
+        Methane
+        {
+            omega0            0.5;
+            eta               -0.013;
+            omegaMin          0.01;
+            sigmaExt          470;
+        }
+        Propane
+        {
+            omega0            0.4;
+            eta               -0.00656;
+            omegaMin          0.01;
+            sigmaExt          450;
+        }
+    }
+}
+
+// ************************************************************************* //

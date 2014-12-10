@@ -1,0 +1,146 @@
+1.  OVERVIEW
+
+	This code accompanies the paper:
+
+	Brian Mirtich, "Fast and Accurate Computation of
+	Polyhedral Mass Properties," journal of graphics
+	tools, volume 1, number 2, 1996.
+
+	It computes the ten volume integrals needed for
+	determining the center of mass, moments of
+	inertia, and products of inertia for a uniform
+	density polyhedron.  From this information, a
+	body frame can be computed.
+
+	To compile the program, use an ANSI compiler, and
+	type something like
+  
+		% cc volInt.c -O2 -lm -o volInt
+
+
+	Revision history
+
+	26 Jan 1996	Program creation.
+
+	 3 Aug 1996	Corrected bug arising when polyhedron density
+			is not 1.0.  Changes confined to function main().
+			Thanks to Zoran Popovic for catching this one.
+
+
+
+2.  POLYHEDRON GEOMETRY FILES
+
+	The program reads a data file specified on the
+	command line.  This data file describes the
+	geometry of a polyhedron, and has the following
+	format:
+
+	N	
+
+	x_0	y_0	z_0
+	x_1	y_1	z_1
+	.
+	.
+	.
+	x_{N-1}	y_{N-1}	z_{N-1}
+
+	M
+
+	k1	v_{1,1} v_{1,2} ... v_{1,k1}
+	k2	v_{2,1} v_{2,2} ... v_{2,k2}
+	.
+	.
+	.
+	kM	v_{M,1} v_{M,2} ... v_{M,kM}
+
+
+	where:
+		N		number of vertices on polyhedron
+		x_i y_i z_i	x, y, and z coordinates of ith vertex
+		M		number of faces on polyhedron
+		ki		number of vertices on ith face
+		v_{i,j}		jth vertex on ith face
+
+	In English:
+
+		First the number of vertices are specified.  Next
+		the vertices are defined by listing the 3
+		coordinates of each one.  Next the number of faces
+		are specified.  Finally, the faces themselves are
+		specified.  A face is specified by first giving
+		the number of vertices around the polygonal face,
+		followed by the (integer) indices of these
+		vertices.  When specifying indices, note that
+		they must be given in counter-clockwise order
+		(when looking at the face from outside the
+		polyhedron), and the vertices are indexed from 0
+		to N-1 for a polyhedron with N faces.
+
+	White space can be inserted (or not) as desired.
+	Three example polyhedron geometry files are included:
+
+	cube	A cube, 20 units on a side, centered at 
+		the origin and aligned with the coordinate axes.
+
+	tetra	A tetrahedron formed by taking the convex 
+		hull of the origin, and	the points (5,0,0), 
+		(0,4,0), and (0,0,3).
+
+	icosa	An icosahedron with vertices lying on the unit 
+		sphere, centered at the origin.
+
+
+
+3.  RUNNING THE PROGRAM
+
+	Simply type,
+	
+		% volInt <polyhedron geometry filename>
+
+	The program will read in the geometry of the
+	polyhedron, and the print out the ten volume
+	integrals.
+
+	The program also computes some of the mass
+	properties which may be inferred from the volume
+	integrals.  A density of 1.0 is assumed, although
+	this may be changed in function main().  The
+	center of mass is computed as well as the inertia
+	tensor relative to a frame with origin at the
+	center of mass.  Note, however, that this matrix
+	may not be diagonal.  If not, a diagonalization
+	routine must be performed, to determine the
+	orientation of the true body frame relative to
+	the original model frame.  The Jacobi method
+	works quite well (see Numerical Recipes in C by
+	Press, et. al.).
+
+
+
+4.  DISCLAIMERS
+
+	1.  The volume integration code has been written
+	to match the development and algorithms presented
+	in the paper, and not with maximum optimization
+	in mind.  While inherently very efficient, a few
+	more cycles can be squeezed out of the algorithm.
+	This is left as an exercise. :)
+
+	2.  Don't like global variables?  The three
+	procedures which evaluate the volume integrals
+	can be combined into a single procedure with two
+	nested loops.  In addition to providing some
+	speedup, all of the global variables can then be
+	made local.
+
+	3.  The polyhedron data structure used by the
+	program is admittedly lame; much better schemes
+	are possible.  The idea here is just to give the
+	basic integral evaluation code, which will have
+	to be adjusted for other polyhedron data
+	structures.
+
+	4.  There is no error checking for the input
+	files.  Be careful.  Note the hard limits
+	#defined for the number of vertices, number of
+	faces, and number of vertices per faces.

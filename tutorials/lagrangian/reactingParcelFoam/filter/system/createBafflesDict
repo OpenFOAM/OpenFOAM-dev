@@ -1,0 +1,81 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
+
+// Baffles to create.
+baffles
+{
+    cycLeft
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    cycLeft;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+
+                name            cycLeft_half0;
+                type            cyclic;
+                neighbourPatch  cycLeft_half1;
+            }
+            slave
+            {
+                //- Slave side patch
+
+                name            cycLeft_half1;
+                type            cyclic;
+                neighbourPatch  cycLeft_half0;
+            }
+        }
+    }
+
+    cycRight
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    cycRight;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+
+                name            cycRight_half0;
+                type            cyclic;
+                neighbourPatch  cycRight_half1;
+            }
+            slave
+            {
+                //- Slave side patch
+
+                name            cycRight_half1;
+                type            cyclic;
+                neighbourPatch  cycRight_half0;
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

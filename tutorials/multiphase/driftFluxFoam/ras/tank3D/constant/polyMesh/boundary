@@ -1,0 +1,160 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+(
+    SYMP3
+    {
+        type            patch;
+        startFace       53708;
+        nFaces          3191;
+    }
+
+    INLE1
+    {
+        type            patch;
+        startFace       56899;
+        nFaces          45;
+    }
+
+    OUTL9
+    {
+        type            patch;
+        startFace       56944;
+        nFaces          11;
+    }
+
+    OUTL10
+    {
+        type            patch;
+        startFace       56955;
+        nFaces          11;
+    }
+
+    OUTL11
+    {
+        type            patch;
+        startFace       56966;
+        nFaces          11;
+    }
+
+    OUTL12
+    {
+        type            patch;
+        startFace       56977;
+        nFaces          11;
+    }
+
+    WALL6
+    {
+        type            wall;
+        startFace       56988;
+        nFaces          1474;
+    }
+
+    WALL8
+    {
+        type            wall;
+        startFace       58462;
+        nFaces          1640;
+    }
+
+    WALL61
+    {
+        type            wall;
+        startFace       60102;
+        nFaces          44;
+    }
+
+    WALL62
+    {
+        type            wall;
+        startFace       60146;
+        nFaces          78;
+    }
+
+    WALL63
+    {
+        type            wall;
+        startFace       60224;
+        nFaces          255;
+    }
+
+    WALL64
+    {
+        type            wall;
+        startFace       60479;
+        nFaces          157;
+    }
+
+    WALL65
+    {
+        type            wall;
+        startFace       60636;
+        nFaces          35;
+    }
+
+    WALL66
+    {
+        type            wall;
+        startFace       60671;
+        nFaces          60;
+    }
+
+    WALL67
+    {
+        type            wall;
+        startFace       60731;
+        nFaces          55;
+    }
+
+    WALL68
+    {
+        type            wall;
+        startFace       60786;
+        nFaces          116;
+    }
+
+    WALL69
+    {
+        type            wall;
+        startFace       60902;
+        nFaces          24;
+    }
+
+    WALL7
+    {
+        type            wall;
+        startFace       60926;
+        nFaces          121;
+    }
+
+    WALL70
+    {
+        type            wall;
+        startFace       61047;
+        nFaces          182;
+    }
+
+    OUTL15
+    {
+        type            patch;
+        startFace       61229;
+        nFaces          14;
+    }
+
+)
+
+// ************************************************************************* //

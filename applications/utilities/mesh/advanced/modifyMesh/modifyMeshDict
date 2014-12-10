@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      modifyMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Move boundary points:
+// Every entry is two coordinates. First one is location of the point to move,
+// the second is the position to move to.
+pointsToMove
+(
+    (( -0.17861 -0.45073 0.75276)( -0.18 -0.45073 0.75276))
+);
+
+// Split boundary edge in two:
+// First coord is a point on the (boundary) edge to cut, second is the
+// position of the newly introduced point
+edgesToSplit
+(
+    (( -0.17692 -0.45312 0.74516)( -0.18 -0.45 0.742))
+);
+
+// Triangulate a boundary face:
+// First coord is a point on the face to triangulate. It will introduce a
+// point on the face, triangulate and move the point to the second coordinate.
+facesToTriangulate
+(
+    (( -0.039123 -0.45045 0.74083) (-0.03844 -0.45049 0.73572))
+);
+
+// Boundary edges to collapse. First coord is point on the edge, second
+// is coordinate to collapse to.
+edgesToCollapse
+(
+    ((0.054975 0.099987 0.0044074)(0.054975 0.099987 0.0044074))
+);
+
+// Split cells:
+// First coord is a point inside the cell to split. A point inside the cell will
+// be introduced and the cell will get decomposed into polygonal base pyramids
+// with this new point as top. (so the original faces will not get split)
+cellsToSplit
+(
+    (( -0.039123 -0.45045 0.74083) (-0.03844 -0.45049 0.73572))
+);
+
+// Change patch:
+// Changes patchID of boundary faces. Coord selects the face, label is the
+// patch index.
+facesToRepatch
+(
+    (( -0.039123 -0.45045 0.74083) 1)
+);
+
+//// Create cell:
+//// Creates a cell on the boundary given a face covering a cavity. Gets
+//// the vertices of the face (outwards pointing normal) and a point internal
+//// to the new cell. (used to check the orientation of the face). Walks all
+//// boundary faces reachable from any edge on the face and constructs cell
+//// from it.
+//cellsToCreate
+//(
+//    (
+//        ((0 0 0) (1 0 0) (1 1 0) (0 1 0))   // vertices of face
+//        (0.5 0.5 0.1)                       // cell centre
+//    )
+//);
+
+// ************************************************************************* //

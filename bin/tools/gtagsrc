@@ -1,0 +1,62 @@
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Canfiguration file
+#     gtagsrc
+#
+# Description
+#     Configuration file for gtags(1).
+#
+#------------------------------------------------------------------------------
+default:\
+	:tc=gtags:tc=htags:
+#------------------------------------------------------------------------------
+# Configuration for gtags(1)
+# See gtags(1).
+#------------------------------------------------------------------------------
+common:\
+	:skip=GPATH,GTAGS,GRTAGS,GSYMS,HTML/,HTML.pub/,html/,tags,TAGS,ID,.ebrowse,.etags,.etagsDef,.etagsDec,y.tab.c,y.tab.h,.notfunction,cscope.out,cscope.po.out,cscope.in.out,.gdbinit,SCCS/,RCS/,CVS/,CVSROOT/,{arch}/,.svn/,.git/,.cvsrc,.cvsignore,.gitignore,.cvspass,.cvswrappers,.deps/,autom4te.cache/,.snprj/:\
+	:langmap=c\:.c.h,yacc\:.y,asm\:.s.S,java\:.java,cpp\:.c++.cc.cpp.cxx.hxx.hpp.C.H,php\:.php.php3.phtml:
+gtags:\
+	:tc=common:\
+	:GTAGS=gtags-parser %s:\
+	:GRTAGS=gtags-parser -r %s:\
+	:GSYMS=gtags-parser -s %s:\
+	:skip=lnInclude/,tutorials/,wmake/,doc/,lib/,etc/:
+#
+#------------------------------------------------------------------------------
+# Configuration for htags(1)
+#------------------------------------------------------------------------------
+htags:\
+	:body_begin=<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>:body_end=</body>:\
+	:table_begin=<table>:table_end=</table>:\
+	:title_begin=<h1><font color='#cc0000'>:title_end=</font></h1>:\
+	:comment_begin=<i><font color='green'>:comment_end=</font></i>:\
+	:sharp_begin=<font color='darkred'>:sharp_end=</font>:\
+	:brace_begin=<font color='red'>:brace_end=</font>:\
+	:warned_line_begin=<span style='background-color\:yellow'>:warned_line_end=</span>:\
+	:reserved_begin=<b>:reserved_end=</b>:script_alias=/cgi-bin/:\
+	:ncol#4:tabs#8:normal_suffix=html:gzipped_suffix=ghtml:\
+	:definition_header=no:
+
+#------------------------------------------------------------------------------

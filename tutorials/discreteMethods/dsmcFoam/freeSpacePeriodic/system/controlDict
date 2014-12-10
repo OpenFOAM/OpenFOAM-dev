@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     dsmcFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1e-3;
+
+deltaT          1e-6;
+
+writeControl    runTime;
+
+writeInterval   1e-4;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  10;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  no;
+
+functions
+{
+    fieldAverage1
+    {
+        type            fieldAverage;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        outputControl   outputTime;
+        resetOnOutput   off;
+
+        fields
+        (
+            rhoN
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            rhoM
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            dsmcRhoN
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            momentum
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            linearKE
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            internalE
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            iDof
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            q
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            fD
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+        );
+    }
+    dsmcFields1
+    {
+        type            dsmcFields;
+        functionObjectLibs ( "libutilityFunctionObjects.so" );
+        enabled         true;
+        outputControl   outputTime;
+    }
+}
+
+// ************************************************************************* //

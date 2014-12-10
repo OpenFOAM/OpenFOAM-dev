@@ -1,0 +1,273 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+castellatedMesh true;
+snap            true;
+addLayers       false;
+
+geometry
+{
+    AMI.obj
+    {
+        type        triSurfaceMesh;
+        name        AMI;
+    }
+
+    innerInlet.obj
+    {
+        type        triSurfaceMesh;
+        name        innerInlet;
+    }
+
+    outerInlet.obj
+    {
+        type        triSurfaceMesh;
+        name        outerInlet;
+    }
+
+    innerOutlet.obj
+    {
+        type        triSurfaceMesh;
+        name        innerOutlet;
+    }
+
+    outerOutlet.obj
+    {
+        type        triSurfaceMesh;
+        name        outerOutlet;
+    }
+
+    rotorBlades.obj
+    {
+        type        triSurfaceMesh;
+        name        rotorBlades;
+    }
+
+    shaft.obj
+    {
+        type        triSurfaceMesh;
+        name        shaft;
+    }
+
+    statorBlades.obj
+    {
+        type        triSurfaceMesh;
+        name        statorBlades;
+    }
+
+    wall.obj
+    {
+        type        triSurfaceMesh;
+        name        walls;
+    }
+};
+
+castellatedMeshControls
+{
+    maxLocalCells 100000;
+    maxGlobalCells 2000000;
+    minRefinementCells 0;
+    maxLoadUnbalance 0.10;
+    nCellsBetweenLevels 2;
+
+    features
+    (
+        {
+            file        "AMI.eMesh";
+            level       2;
+        }
+        {
+            file        "rotorBlades.eMesh";
+            level       2;
+        }
+        {
+            file        "shaft.eMesh";
+            level       1;
+        }
+        {
+            file        "statorBlades.eMesh";
+            level       2;
+        }
+        {
+            file        "wall.eMesh";
+            level       1;
+        }
+    );
+
+    refinementSurfaces
+    {
+        AMI
+        {
+            level       (2 2);
+            faceZone    rotatingZone;
+            cellZone    rotatingZone;
+            cellZoneInside  inside;
+        }
+
+        innerInlet
+        {
+            level       (1 1);
+            patchInfo
+            {
+                type patch;
+                inGroups (inlet);
+            }
+        }
+
+        outerInlet
+        {
+            level       (1 1);
+            patchInfo
+            {
+                type patch;
+                inGroups (inlet);
+            }
+        }
+
+        innerOutlet
+        {
+            level       (1 1);
+            patchInfo
+            {
+                type patch;
+                inGroups (outlet);
+            }
+        }
+
+        outerOutlet
+        {
+            level       (1 1);
+            patchInfo
+            {
+                type patch;
+                inGroups (outlet);
+            }
+        }
+
+        rotorBlades
+        {
+            level       (2 2);
+            patchInfo
+            {
+                type wall;
+                inGroups (movingWalls);
+            }
+            faceZone rotorBlades;
+            faceType baffle;
+        }
+
+        shaft
+        {
+            level       (1 1);
+            patchInfo
+            {
+                type wall;
+                inGroups (movingWalls);
+            }
+        }
+
+        statorBlades
+        {
+            level       (2 2);
+            patchInfo
+            {
+                type wall;
+                inGroups (staticWalls);
+            }
+            faceZone statorBlades;
+            faceType baffle;
+        }
+
+        walls
+        {
+            level       (1 1);
+            patchInfo
+            {
+                type wall;
+                inGroups (staticWalls);
+            }
+        }
+    }
+
+    resolveFeatureAngle 30;
+
+    refinementRegions
+    {
+    }
+
+    locationInMesh (0.035 0.043 0.017);
+
+    allowFreeStandingZoneFaces true;
+}
+
+snapControls
+{
+    nSmoothPatch 3;
+    tolerance 1.0;
+    nSolveIter 100;
+    nRelaxIter 5;
+    nFeatureSnapIter 5;
+}
+
+addLayersControls
+{
+    relativeSizes true;
+    layers
+    {
+    }
+    expansionRatio 1.0;
+    finalLayerThickness 0.3;
+    minThickness 0.1;
+    nGrow 0;
+    featureAngle 30;
+    nRelaxIter 3;
+    nSmoothSurfaceNormals 1;
+    nSmoothNormals 3;
+    nSmoothThickness 10;
+    maxFaceThicknessRatio 0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedianAxisAngle 90;
+    nBufferCellsNoExtrude 0;
+    nLayerIter 50;
+}
+
+meshQualityControls
+{
+    maxNonOrtho 65;
+
+    maxBoundarySkewness 20;
+    maxInternalSkewness 4;
+
+    maxConcave 80;
+    minVol 1e-13;
+    minTetQuality -1;
+    minArea -1;
+    minTwist 0.01;
+    minDeterminant 0.001;
+    minFaceWeight 0.05;
+    minVolRatio 0.01;
+    minTriangleTwist -1;
+    nSmoothScale 4;
+    errorReduction 0.75;
+    relaxed
+    {
+        maxNonOrtho 75;
+    }
+}
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //

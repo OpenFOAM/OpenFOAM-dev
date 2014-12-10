@@ -1,0 +1,6 @@
+.SUFFIXES: .qt
+
+qttoo = $(QTDIR)/bin/moc -f $$SOURCE -o $*.C ; $(CC) $(c++FLAGS) -c $*.C -o $@
+
+.qt.dep:
+	$(MAKE_DEP)

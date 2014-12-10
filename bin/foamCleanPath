@@ -1,0 +1,156 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamCleanPath
+#
+# Description
+#     Usage: foamCleanPath [-strip] path [wildcard] .. [wildcard]
+#
+#     Prints its argument (which should be a ':' separated path)
+#     without all
+#         - duplicate elements
+#         - elements whose start matches a wildcard
+#         - inaccessible directories (with the -strip (at your option)
+#
+# Note
+#     - this routine will fail when directories have embedded spaces
+#     - false matches possible if a wildcard contains '.' (sed regex)
+#     - the wildcards can themselves can be written together and separated
+#       by colons or whitespace
+#------------------------------------------------------------------------------
+usage() {
+    cat <<USAGE 1>&2
+Usage: ${0##*/} [OPTION] path [wildcard1] .. [wildcardN]
+options:
+  -strip            remove inaccessible directories
+  -help             print the usage
+
+  Prints its argument (which should be a ':' separated list) cleansed from
+    - duplicate elements
+    - elements whose start matches one of the wildcard(s)
+    - inaccessible directories (with the -strip option)
+
+  Exit status
+      0  on success
+      1  for miscellaneous errors.
+      2  initial value of 'path' is empty
+
+USAGE
+    exit 1
+}
+
+
+unset strip
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -strip)
+        strip=true
+        shift
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+[ "$#" -ge 1 ] || usage
+
+dirList="$1"
+shift
+
+[ -n "$dirList" ] || exit 2    # quick exit on empty 'dirList'
+
+
+##DEBUG echo "input>$dirList<" 1>&2
+
+# preserve current IFS and split on colon or whitespace
+oldIFS="$IFS"
+IFS=': '
+
+# "wildcard1 ... wildcardN" may have been passed as a single parameter
+# or may contain ':' separators
+set -- $*
+
+# strip out wildcards via sed
+while [ "$#" -ge 1 ]
+do
+    wildcard=$1
+    shift
+    ##DEBUG echo "remove>$wildcard<" 1>&2
+    if [ -n "$wildcard" ]
+    then
+        dirList=$(echo "$dirList:" | sed -e "s@${wildcard}[^:]*:@@g")
+    fi
+done
+
+# split on ':' (and on space as well to avoid any surprises)
+IFS=': '
+set -- $dirList
+
+##DEBUG echo "intermediate>$dirList<" 1>&2
+
+# rebuild the list from scratch
+unset dirList
+for dir
+do
+    ##DEBUG echo "check>$dir<" 1>&2
+    #- dirs must exist
+    if [ -e "$dir" ]
+    then
+        #- no duplicate dirs
+        duplicate=$(echo " $dirList " | sed -ne "s: $dir :DUP:p")
+
+        if [ ! "$duplicate" ]
+        then
+            dirList="$dirList $dir"
+        fi
+    elif [ "$strip" != true ]
+    then
+        # Print non-existing directories if not in 'strip' mode.
+        dirList="$dirList $dir"
+    fi
+done
+
+# split on whitespace
+IFS=' '
+set -- $dirList
+
+# rejoin on ':'
+IFS=':'
+dirList="$*"
+
+# restore IFS
+IFS="$oldIFS"
+
+##DEBUG echo "output>$dirList<" 1>&2
+echo "$dirList"
+
+# -----------------------------------------------------------------------------

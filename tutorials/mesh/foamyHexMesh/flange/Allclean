@@ -1,0 +1,24 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+rm -r constant/triSurface/flange.stl.gz > /dev/null 2>&1
+
+rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
+rm -r constant/ccx constant/ccy constant/ccz > /dev/null 2>&1
+rm -r constant/internalDelaunayVertices constant/targetCellSize > /dev/null 2>&1
+rm -r 0 > /dev/null 2>&1
+
+rm -rf constant/backgroundMeshDecomposition/polyMesh/boundary > /dev/null 2>&1
+rm -rf constant/backgroundMeshDecomposition/polyMesh/faces > /dev/null 2>&1
+rm -rf constant/backgroundMeshDecomposition/polyMesh/neighbour > /dev/null 2>&1
+rm -rf constant/backgroundMeshDecomposition/polyMesh/owner > /dev/null 2>&1
+rm -rf constant/backgroundMeshDecomposition/polyMesh/points > /dev/null 2>&1
+
+rm -r *.obj > /dev/null 2>&1
+
+cleanCase
+
+# ----------------------------------------------------------------- end-of-file

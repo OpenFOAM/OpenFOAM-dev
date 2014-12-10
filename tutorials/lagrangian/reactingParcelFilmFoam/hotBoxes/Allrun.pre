@@ -1,0 +1,36 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+cp -rf 0.org 0
+
+# create the underlying block mesh
+runApplication blockMesh
+
+# create the set for the obstacles
+runApplication topoSet
+
+# create the obstacles - add obstacle patches to wallFilm patch
+runApplication subsetMesh c0 -patch wallFilm -overwrite
+
+# split the obstacle patches into cube[1-6]_patch[1-6]
+echo "running patchifyObstacles"
+./patchifyObstacles > log.patchifyObstacles 2>&1
+
+# Create the wall film region via extrusion
+runApplication extrudeToRegionMesh -overwrite
+
+# Fine tuning of U and T boundary conditions
+runApplication changeDictionary
+
+# Copy the system settings over to the wall film region
+rm -rf system/wallFilmRegion
+cp -r system/wallFilmRegion.org system/wallFilmRegion
+
+find ./0 -maxdepth 1 -type f -exec \
+    sed -i "s/wallFilm/\"(region0_to.*)\"/g" {} \;
+
+paraFoam -touch
+paraFoam -touch -region wallFilmRegion

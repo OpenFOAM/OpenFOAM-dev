@@ -1,0 +1,229 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wmakePrintBuild
+#
+# Description
+#     Print the version used when building the project
+#
+#------------------------------------------------------------------------------
+# persistent build tag
+build="$WM_PROJECT_DIR/.build"
+
+usage() {
+    exec 1>&2
+
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+usage: ${0##*/} [OPTION]
+options:
+  -check          check the git head commit vs. \$WM_PROJECT_DIR/.build
+                  (exit code 0 for no changes)
+  -major          report \$WM_PROJECT_VERSION only and exit
+  -update         update \$WM_PROJECT_DIR/.build from the git information
+  -pkg TAG        specify packager/release tag ('none' marks an empty packager)
+  -short          report short version information (ie, without pkg tag)
+  -version VER    specify an alternative version
+
+Print the version used when building the project, in this order of precedence:
+  * the git head commit (prefixed with \$WM_PROJECT_VERSION)
+  * \$WM_PROJECT_DIR/.build
+  * \$WM_PROJECT_VERSION
+
+USAGE
+    exit 1
+}
+#------------------------------------------------------------------------------
+
+unset checkOnly update package version shortOpt
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -c | -check)
+        checkOnly=true
+        shift
+        ;;
+    -major)
+        echo ${WM_PROJECT_VERSION:-unknown}
+        exit 0
+        ;;
+    -u | -update)
+        update=true
+        shift
+        ;;
+    -pkg | -package)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        # mark empty as 'none', disallow '!' in string
+        package=$(echo "${2:-none}" | sed -e 's/!//g')
+        shift 2
+        ;;
+    -short)
+        shortOpt=true
+        shift
+        ;;
+    -v | -version)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        version="$2"
+        shift 2
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+#------------------------------------------------------------------------------
+
+#
+# retrieve old values from the $WM_PROJECT_DIR/.build cache, stored as
+#     version [packager]
+#
+unset oldPackage oldVersion
+getOldValues()
+{
+    set -- $(tail -1 $build 2>/dev/null)
+    oldVersion="$1"
+    [ "$#" -gt 0 ] && shift
+    oldPackage="$@"
+    [ "${oldPackage:-none}" = none ] && unset oldPackage
+}
+
+#
+# printTag - output the build tag
+# reuses the old -package tag if needed
+#
+printTag()
+{
+    if [ "${package:-${oldPackage:-none}}" = none ]
+    then
+        echo "$version"
+    else
+        echo "$version ${package:-$oldPackage}"
+    fi
+}
+
+
+
+if [ -n "$version" ]
+then
+    # specified a version - no error possible
+    rc=0
+else
+    # get the head SHA1 when building under git
+    # if there are multiple values (eg, HEAD, origin/HEAD, ...)
+    # only take the first one, which is 'HEAD'
+    version=$(
+        cd $WM_PROJECT_DIR 2>/dev/null && \
+        git show-ref --hash=12 --head HEAD 2>/dev/null | head -1
+    )
+
+    if [ -n "$version" ]
+    then
+        # mark as success and prefix with WM_PROJECT_VERSION
+        rc=0
+        version="${WM_PROJECT_VERSION}-$version"
+    else
+        # mark as failure
+        rc=1
+    fi
+fi
+
+
+# retrieve old values
+getOldValues
+
+if [ "$shortOpt" = true ]
+then
+    unset package oldPackage
+fi
+
+#
+# update persistent build tag if possible
+#
+if [ $rc -eq 0 -a -n "$update" ]
+then
+    if [ "$version:$package" != "$oldVersion:$oldPackage" ]
+    then
+        if [ -w "$build" -o \( -w "$WM_PROJECT_DIR" -a ! -e "$build" \) ]
+        then
+            printTag >| "$build" 2>/dev/null
+        fi
+    fi
+fi
+
+# cat<< DEBUG 1>&2
+# Debug information
+#     version='$version'
+#     package='$package'
+#     oldVersion='$oldVersion'
+#     oldPackage='$oldPackage'
+# DEBUG
+
+
+# check git vs. persistent build tag
+if [ -n "$checkOnly" ]
+then
+    if [ $rc -eq 0 ]
+    then
+        test "$version:${package:-$oldPackage}" = "$oldVersion:$oldPackage"
+        rc=$?
+        if [ $rc -eq 0 ]
+        then
+            echo "same version as previous build" 1>&2
+        else
+            echo "version changed from previous build" 1>&2
+        fi
+    else
+        echo "no git description found" 1>&2
+    fi
+    exit $rc
+fi
+
+
+#
+# cannot get git information or  -version version
+#
+if [ $rc -ne 0 ]
+then
+    if [ -n "$oldVersion" ]
+    then
+        # use previous version info
+        version="$oldVersion"
+    else
+        # fallback to WM_PROJECT_VERSION alone
+        version="${WM_PROJECT_VERSION:-unknown}"
+    fi
+fi
+
+
+# output the tag
+printTag
+
+#------------------------------------------------------------------------------

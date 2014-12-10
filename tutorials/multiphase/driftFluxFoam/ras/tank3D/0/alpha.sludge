@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      alpha.sludge;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    SYMP3
+    {
+        type            slip;
+    }
+
+    INLE1
+    {
+        type            fixedValue;
+        value           uniform 0.002;
+    }
+
+    OUTL9
+    {
+        type            zeroGradient;
+    }
+
+    OUTL10
+    {
+        type            zeroGradient;
+    }
+
+    OUTL11
+    {
+        type            zeroGradient;
+    }
+
+    OUTL12
+    {
+        type            zeroGradient;
+    }
+
+    WALL6
+    {
+        type            zeroGradient;
+    }
+
+    WALL8
+    {
+        type            zeroGradient;
+    }
+
+    WALL61
+    {
+        type            zeroGradient;
+    }
+
+    WALL62
+    {
+        type            zeroGradient;
+    }
+
+    WALL63
+    {
+        type            zeroGradient;
+    }
+
+    WALL64
+    {
+        type            zeroGradient;
+    }
+
+    WALL65
+    {
+        type            zeroGradient;
+    }
+
+    WALL66
+    {
+        type            zeroGradient;
+    }
+
+    WALL67
+    {
+        type            zeroGradient;
+    }
+
+    WALL68
+    {
+        type            zeroGradient;
+    }
+
+    WALL69
+    {
+        type            zeroGradient;
+    }
+
+    WALL7
+    {
+        type            zeroGradient;
+    }
+
+    WALL70
+    {
+        type            zeroGradient;
+    }
+
+    OUTL15
+    {
+        type            inletOutlet;
+        inletValue      uniform 0;
+    }
+}
+
+// ************************************************************************* //

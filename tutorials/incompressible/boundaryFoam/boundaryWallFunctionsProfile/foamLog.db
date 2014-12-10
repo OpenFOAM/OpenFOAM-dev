@@ -1,0 +1,62 @@
+#------------------------------------------------------------------------------
+# Query database for Foam Log extraction.
+# Each line stands for one query:
+#
+#    name '/' line selector '/' column selector
+#
+# e.g.
+#    kMin/bounding k,/min:
+#
+# The extraction will select a line using 'bounding k,' and in the line
+# takes the word following 'min:' as the value.
+#
+# A special entry is the 'Separator' entry which delimits one iteration
+# from the other.
+#
+#------------------------------------------------------------------------------
+
+#- String to recognize new iteration by (usually same as 'Time')
+Separator/^[ \t]*Time = /Time =
+
+#- Time value:
+Time/^[ \t]*Time = /Time =
+
+#- Continuity errors:
+contLocal/time step continuity errors :/sum local =
+contGlobal/time step continuity errors :/ global =
+contCumulative/time step continuity errors :/cumulative =
+
+#- Special for combustion code:
+minFu/min\(fu\) = /min(fu) =
+minFt/min\(ft\) = /min(ft) =
+
+#- Execution time:
+executionTime/ExecutionTime = /ExecutionTime =
+
+#- Courant no:
+CourantMax/Courant Number /max:
+CourantMean/Courant Number /mean:
+
+#- K bounding
+kMin/bounding k,/min:
+kMax/bounding k,/max:
+kAvg/bounding k,/average:
+
+#- epsilon bounding
+epsMin/bounding epsilon,/min:
+epsMax/bounding epsilon,/max:
+epsAvg/bounding epsilon,/average:
+
+#- gamma bounding
+gammaMin/Min\(gamma\) =/Min(gamma) =
+gammaMax/Max\(gamma\) =/Max(gamma) =
+
+#- Wall function data - line begins with Rey =
+Rey/Rey = /Rey =
+uTau/Rey = /uTau =
+nutPlus/Rey = /nut+ =
+yPlus/Rey = /y+ =
+uPlus/Rey = /u+ =
+kPlus/Rey = /k+ =
+epsilonPlus/Rey = /epsilon+ =
+

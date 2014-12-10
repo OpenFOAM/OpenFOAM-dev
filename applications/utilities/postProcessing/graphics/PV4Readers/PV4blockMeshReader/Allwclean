@@ -1,0 +1,11 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+set -x
+
+# deal with client/server vs combined plugins
+rm -f $FOAM_LIBBIN/libPV4blockMeshReader*  2>/dev/null
+
+rm -rf PV4blockMeshReader/Make
+wclean libso vtkPV4blockMesh
+
+# ----------------------------------------------------------------- end-of-file

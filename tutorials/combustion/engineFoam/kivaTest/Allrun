@@ -1,0 +1,20 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get application name
+application=`getApplication`
+
+runApplication kivaToFoam -file otape17
+
+cp system/controlDict.1st system/controlDict
+runApplication $application
+mv log.$application log.$application.1
+
+cp system/controlDict.2nd system/controlDict
+runApplication $application
+mv log.$application log.$application.2
+
+# ----------------------------------------------------------------- end-of-file

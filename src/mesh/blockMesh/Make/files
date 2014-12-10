@@ -1,0 +1,25 @@
+curvedEdges/BSpline.C
+curvedEdges/CatmullRomSpline.C
+curvedEdges/polyLine.C
+
+curvedEdges/arcEdge.C
+curvedEdges/curvedEdge.C
+curvedEdges/lineEdge.C
+curvedEdges/polyLineEdge.C
+curvedEdges/lineDivide.C
+curvedEdges/BSplineEdge.C
+curvedEdges/splineEdge.C
+
+blockDescriptor/blockDescriptor.C
+blockDescriptor/blockDescriptorEdges.C
+
+block/block.C
+block/blockCreate.C
+
+blockMesh/blockMesh.C
+blockMesh/blockMeshCreate.C
+blockMesh/blockMeshTopology.C
+blockMesh/blockMeshCheck.C
+blockMesh/blockMeshMerge.C
+
+LIB = $(FOAM_LIBBIN)/libblockMesh

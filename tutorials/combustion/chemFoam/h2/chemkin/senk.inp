@@ -1,0 +1,10 @@
+!SENS
+CONP
+PRES 2.00  ! atm
+TEMP 1000.0  ! K
+TIME 1.E-3  ! sec
+DELT 1.E-7  ! sec
+REAC H2  1.0
+REAC O2  1.0
+REAC N2  3.76
+END

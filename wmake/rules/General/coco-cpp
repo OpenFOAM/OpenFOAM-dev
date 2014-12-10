@@ -1,0 +1,15 @@
+# handle Coco/R attributed grammars written for the C++ version
+#     http://www.ssw.uni-linz.ac.at/Coco/
+#     http://github.com/olesenm/coco-cpp/
+#
+
+.SUFFIXES: .atg
+
+atgtoo =  \
+    $(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/coco-cpp/bin/coco-cpp \
+    -single \
+    $$SOURCE -o $(OBJECTS_DIR) && \
+    $(CC) $(c++FLAGS) -c $*.cpp -o $@
+
+.atg.dep:
+	$(MAKE_DEP)

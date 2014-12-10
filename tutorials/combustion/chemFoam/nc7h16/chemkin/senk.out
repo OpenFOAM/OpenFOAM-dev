@@ -1,0 +1,1349 @@
+
+ KINSEN:  Sensitity Analysis
+          Simplified Direct Method
+Original: Andy Lutz, Computational Mechanics Division, 8245
+          Sandia National Laboratories, Livermore, CA, 94550
+                        (415) 294-2761
+          Modified by Valerie Golovitchev
+          Combustion and Microdynamics group
+          CRS4, Cagliari, 09123, Italy
+          The following tools are used:
+          CHEMKIN-II Version 3.0, March 1994
+          DOUBLE PRECISION
+
+  CKLIB:  Chemical Kinetics Library
+          CHEMKIN-II Version 4.9, April 1994
+          DOUBLE PRECISION
+  Enter keyword: 
+    SENS, CONP, CONV, VTIM, CONT, TTIM
+          !SEN
+          CONP
+
+     Sensitivity analysis will not be performed.
+
+                Working Space Requirements
+                 Provided        Required 
+ Integer           100000          56549
+ Real             2500000         355730
+ Character           2000           1093
+
+
+  CKLIB:  Chemical Kinetics Library
+          CHEMKIN-II Version 4.9, April 1994
+          DOUBLE PRECISION
+  Enter keywords:
+    PRES, TEMP, REAC, TIME, DELT, TLIM, REST,
+    RTOL, ATOL, RTLS, ATLS, or END
+
+     Keyword input:
+
+PRES 50.00  ! atm                                                                   
+TEMP 800.0  ! K                                                                     
+TIME 1.E-3  ! sec                                                                   
+DELT 1.E-6  ! sec                                                                   
+REAC NC7H16 0.090909                                                                
+REAC O2  1.0                                                                        
+REAC N2  3.76                                                                       
+END                                                                                 
+
+     Pressure is held constant.
+
+
+  Initial Conditions:
+
+  Pressure (atm)  =  5.0000E+01
+  Temperature (K) =  8.0000E+02
+  Density (gm/cc) =  2.2994E-02
+
+  Mole Fractions:
+ H          = 0.0000E+00
+ H2         = 0.0000E+00
+ O          = 0.0000E+00
+ O2         = 2.0615E-01
+ OH         = 0.0000E+00
+ H2O        = 0.0000E+00
+ N2         = 7.7511E-01
+ CO         = 0.0000E+00
+ HCO        = 0.0000E+00
+ CO2        = 0.0000E+00
+ CH3        = 0.0000E+00
+ CH4        = 0.0000E+00
+ HO2        = 0.0000E+00
+ H2O2       = 0.0000E+00
+ CH2O       = 0.0000E+00
+ CH3O       = 0.0000E+00
+ C2H6       = 0.0000E+00
+ C2H4       = 0.0000E+00
+ C2H5       = 0.0000E+00
+ CH2        = 0.0000E+00
+ CH         = 0.0000E+00
+ C2H        = 0.0000E+00
+ C2H2       = 0.0000E+00
+ C2H3       = 0.0000E+00
+ CH3OH      = 0.0000E+00
+ CH2OH      = 0.0000E+00
+ CH2CO      = 0.0000E+00
+ HCCO       = 0.0000E+00
+ C2H5OH     = 0.0000E+00
+ PC2H4OH    = 0.0000E+00
+ SC2H4OH    = 0.0000E+00
+ CH3CO      = 0.0000E+00
+ CH2CHO     = 0.0000E+00
+ CH3CHO     = 0.0000E+00
+ C3H4-A     = 0.0000E+00
+ C3H4-P     = 0.0000E+00
+ C3H6       = 0.0000E+00
+ C4H6       = 0.0000E+00
+ NC3H7      = 0.0000E+00
+ IC3H7      = 0.0000E+00
+ C3H8       = 0.0000E+00
+ IC4H7      = 0.0000E+00
+ IC4H8      = 0.0000E+00
+ C4H7       = 0.0000E+00
+ C4H8-2     = 0.0000E+00
+ C4H8-1     = 0.0000E+00
+ SC4H9      = 0.0000E+00
+ PC4H9      = 0.0000E+00
+ TC4H9      = 0.0000E+00
+ IC4H9      = 0.0000E+00
+ IC4H10     = 0.0000E+00
+ C4H10      = 0.0000E+00
+ CH3COCH3   = 0.0000E+00
+ CH3COCH2   = 0.0000E+00
+ C2H5CHO    = 0.0000E+00
+ C2H5CO     = 0.0000E+00
+ C5H9       = 0.0000E+00
+ C5H10-1    = 0.0000E+00
+ C5H10-2    = 0.0000E+00
+ IC5H12     = 0.0000E+00
+ AC5H11     = 0.0000E+00
+ BC5H11     = 0.0000E+00
+ CC5H11     = 0.0000E+00
+ DC5H11     = 0.0000E+00
+ AC5H10     = 0.0000E+00
+ BC5H10     = 0.0000E+00
+ CC5H10     = 0.0000E+00
+ IC5H9      = 0.0000E+00
+ NC5H12     = 0.0000E+00
+ C5H11-1    = 0.0000E+00
+ C5H11-2    = 0.0000E+00
+ C5H11-3    = 0.0000E+00
+ NEOC5H12   = 0.0000E+00
+ NEOC5H11   = 0.0000E+00
+ C2H5O      = 0.0000E+00
+ CH3O2      = 0.0000E+00
+ C2H5O2     = 0.0000E+00
+ CH3O2H     = 0.0000E+00
+ C2H5O2H    = 0.0000E+00
+ C2H3O1-2   = 0.0000E+00
+ CH3CO2     = 0.0000E+00
+ C2H4O1-2   = 0.0000E+00
+ C2H4O2H    = 0.0000E+00
+ O2C2H4OH   = 0.0000E+00
+ CH3CO3     = 0.0000E+00
+ CH3CO3H    = 0.0000E+00
+ C2H3CO     = 0.0000E+00
+ C2H3CHO    = 0.0000E+00
+ C3H5O      = 0.0000E+00
+ C3H6OOH1-2 = 0.0000E+00
+ C3H6OOH1-3 = 0.0000E+00
+ C3H6OOH2-1 = 0.0000E+00
+ C3H6OOH1-2 = 0.0000E+00
+ C3H6OOH1-3 = 0.0000E+00
+ C3H6OOH2-1 = 0.0000E+00
+ NC3H7O     = 0.0000E+00
+ IC3H7O     = 0.0000E+00
+ NC3H7O2H   = 0.0000E+00
+ IC3H7O2H   = 0.0000E+00
+ NC3H7O2    = 0.0000E+00
+ IC3H7O2    = 0.0000E+00
+ C3H6O1-3   = 0.0000E+00
+ IC4H8O     = 0.0000E+00
+ IC4H8OH    = 0.0000E+00
+ IO2C4H8OH  = 0.0000E+00
+ IC4H7O     = 0.0000E+00
+ C4H7O      = 0.0000E+00
+ C4H8OH-1   = 0.0000E+00
+ C4H8OH-2   = 0.0000E+00
+ O2C4H8OH-1 = 0.0000E+00
+ O2C4H8OH-2 = 0.0000E+00
+ C4H8OOH1-2 = 0.0000E+00
+ C4H8OOH1-3 = 0.0000E+00
+ C4H8OOH1-4 = 0.0000E+00
+ C4H8OOH2-1 = 0.0000E+00
+ C4H8OOH2-3 = 0.0000E+00
+ C4H8OOH2-4 = 0.0000E+00
+ TC4H8OOH-I = 0.0000E+00
+ IC4H8OOH-I = 0.0000E+00
+ IC4H8OOH-T = 0.0000E+00
+ C4H8OOH1-2 = 0.0000E+00
+ C4H8OOH1-3 = 0.0000E+00
+ C4H8OOH1-4 = 0.0000E+00
+ C4H8OOH2-1 = 0.0000E+00
+ C4H8OOH2-3 = 0.0000E+00
+ C4H8OOH2-4 = 0.0000E+00
+ IC4H8O2H-I = 0.0000E+00
+ IC4H8O2H-T = 0.0000E+00
+ TC4H8O2H-I = 0.0000E+00
+ C4H8O1-2   = 0.0000E+00
+ C4H8O1-3   = 0.0000E+00
+ C4H8O1-4   = 0.0000E+00
+ C4H8O2-3   = 0.0000E+00
+ CC4H8O     = 0.0000E+00
+ PC4H9O     = 0.0000E+00
+ SC4H9O     = 0.0000E+00
+ IC4H9O     = 0.0000E+00
+ TC4H9O     = 0.0000E+00
+ PC4H9O2H   = 0.0000E+00
+ SC4H9O2H   = 0.0000E+00
+ IC4H9O2H   = 0.0000E+00
+ TC4H9O2H   = 0.0000E+00
+ TC4H9O2    = 0.0000E+00
+ IC4H9O2    = 0.0000E+00
+ SC4H9O2    = 0.0000E+00
+ PC4H9O2    = 0.0000E+00
+ CH3COCH2O2 = 0.0000E+00
+ CH3COCH2O2 = 0.0000E+00
+ CH3COCH2O  = 0.0000E+00
+ C4H10O     = 0.0000E+00
+ C2H3-CH2O  = 0.0000E+00
+ AC5H11O2   = 0.0000E+00
+ BC5H11O2   = 0.0000E+00
+ CC5H11O2   = 0.0000E+00
+ DC5H11O2   = 0.0000E+00
+ AC5H11O2H  = 0.0000E+00
+ BC5H11O2H  = 0.0000E+00
+ CC5H11O2H  = 0.0000E+00
+ DC5H11O2H  = 0.0000E+00
+ AC5H11O    = 0.0000E+00
+ BC5H11O    = 0.0000E+00
+ CC5H11O    = 0.0000E+00
+ DC5H11O    = 0.0000E+00
+ AC5H10OOH- = 0.0000E+00
+ AC5H10OOH- = 0.0000E+00
+ AC5H10OOH- = 0.0000E+00
+ AC5H10OOH- = 0.0000E+00
+ BC5H10OOH- = 0.0000E+00
+ BC5H10OOH- = 0.0000E+00
+ BC5H10OOH- = 0.0000E+00
+ CC5H10OOH- = 0.0000E+00
+ CC5H10OOH- = 0.0000E+00
+ CC5H10OOH- = 0.0000E+00
+ DC5H10OOH- = 0.0000E+00
+ DC5H10OOH- = 0.0000E+00
+ DC5H10OOH- = 0.0000E+00
+ AC5H10OOH- = 0.0000E+00
+ AC5H10OOH- = 0.0000E+00
+ AC5H10OOH- = 0.0000E+00
+ AC5H10OOH- = 0.0000E+00
+ BC5H10OOH- = 0.0000E+00
+ BC5H10OOH- = 0.0000E+00
+ BC5H10OOH- = 0.0000E+00
+ CC5H10OOH- = 0.0000E+00
+ CC5H10OOH- = 0.0000E+00
+ CC5H10OOH- = 0.0000E+00
+ DC5H10OOH- = 0.0000E+00
+ DC5H10OOH- = 0.0000E+00
+ DC5H10OOH- = 0.0000E+00
+ A-AC5H10O  = 0.0000E+00
+ A-BC5H10O  = 0.0000E+00
+ A-CC5H10O  = 0.0000E+00
+ A-DC5H10O  = 0.0000E+00
+ B-CC5H10O  = 0.0000E+00
+ B-DC5H10O  = 0.0000E+00
+ C-DC5H10O  = 0.0000E+00
+ C5H11O2-1  = 0.0000E+00
+ C5H11O2-2  = 0.0000E+00
+ C5H11O2-3  = 0.0000E+00
+ C5H11O2H-1 = 0.0000E+00
+ C5H11O2H-2 = 0.0000E+00
+ C5H11O2H-3 = 0.0000E+00
+ C5H11O-1   = 0.0000E+00
+ C5H11O-2   = 0.0000E+00
+ C5H11O-3   = 0.0000E+00
+ C5H10OOH1- = 0.0000E+00
+ C5H10OOH1- = 0.0000E+00
+ C5H10OOH1- = 0.0000E+00
+ C5H10OOH1- = 0.0000E+00
+ C5H10OOH2- = 0.0000E+00
+ C5H10OOH2- = 0.0000E+00
+ C5H10OOH2- = 0.0000E+00
+ C5H10OOH2- = 0.0000E+00
+ C5H10OOH3- = 0.0000E+00
+ C5H10OOH3- = 0.0000E+00
+ C5H10OOH1- = 0.0000E+00
+ C5H10OOH1- = 0.0000E+00
+ C5H10OOH1- = 0.0000E+00
+ C5H10OOH1- = 0.0000E+00
+ C5H10OOH2- = 0.0000E+00
+ C5H10OOH2- = 0.0000E+00
+ C5H10OOH2- = 0.0000E+00
+ C5H10OOH2- = 0.0000E+00
+ C5H10OOH3- = 0.0000E+00
+ C5H10OOH3- = 0.0000E+00
+ C5H10O1-2  = 0.0000E+00
+ C5H10O1-3  = 0.0000E+00
+ C5H10O1-4  = 0.0000E+00
+ C5H10O1-5  = 0.0000E+00
+ C5H10O2-3  = 0.0000E+00
+ C5H10O2-4  = 0.0000E+00
+ NEOC5H11O2 = 0.0000E+00
+ NEOC5H11O2 = 0.0000E+00
+ NEOC5H11O  = 0.0000E+00
+ NEOC5H10OO = 0.0000E+00
+ O2NEOC5H10 = 0.0000E+00
+ NEO-C5H10O = 0.0000E+00
+ C3H5-A     = 0.0000E+00
+ C3H5-S     = 0.0000E+00
+ C3H5-T     = 0.0000E+00
+ C3H3       = 0.0000E+00
+ C3H2       = 0.0000E+00
+ C3H6O1-2   = 0.0000E+00
+ HCO3H      = 0.0000E+00
+ HCO3       = 0.0000E+00
+ HCO2       = 0.0000E+00
+ C3KET12    = 0.0000E+00
+ C3KET13    = 0.0000E+00
+ C3KET21    = 0.0000E+00
+ NC4KET12   = 0.0000E+00
+ NC4KET13   = 0.0000E+00
+ NC4KET14   = 0.0000E+00
+ NC4KET21   = 0.0000E+00
+ NC4KET23   = 0.0000E+00
+ NC4KET24   = 0.0000E+00
+ IC4KETII   = 0.0000E+00
+ IC4KETIT   = 0.0000E+00
+ NEOC5KET   = 0.0000E+00
+ NC5KET12   = 0.0000E+00
+ NC5KET13   = 0.0000E+00
+ NC5KET14   = 0.0000E+00
+ NC5KET15   = 0.0000E+00
+ NC5KET21   = 0.0000E+00
+ NC5KET23   = 0.0000E+00
+ NC5KET24   = 0.0000E+00
+ NC5KET25   = 0.0000E+00
+ NC5KET31   = 0.0000E+00
+ NC5KET32   = 0.0000E+00
+ IC5KETAA   = 0.0000E+00
+ IC5KETAB   = 0.0000E+00
+ IC5KETAC   = 0.0000E+00
+ IC5KETAD   = 0.0000E+00
+ IC5KETCA   = 0.0000E+00
+ IC5KETCB   = 0.0000E+00
+ IC5KETCD   = 0.0000E+00
+ IC5KETDA   = 0.0000E+00
+ IC5KETDB   = 0.0000E+00
+ IC5KETDC   = 0.0000E+00
+ O2C2H4O2H  = 0.0000E+00
+ CH2O2HCHO  = 0.0000E+00
+ IC4H7OOH   = 0.0000E+00
+ IC3H5CHO   = 0.0000E+00
+ TC3H6OCHO  = 0.0000E+00
+ TC3H6CHO   = 0.0000E+00
+ IC3H7CHO   = 0.0000E+00
+ IC4H7OH    = 0.0000E+00
+ IC3H6CO    = 0.0000E+00
+ IC4H6OH    = 0.0000E+00
+ IC3H5CO    = 0.0000E+00
+ IC3H7CO    = 0.0000E+00
+ TC3H6O2CHO = 0.0000E+00
+ TC3H6O2HCO = 0.0000E+00
+ IC3H5O2HCH = 0.0000E+00
+ TC3H6OHCHO = 0.0000E+00
+ TC3H6OH    = 0.0000E+00
+ IC3H5OH    = 0.0000E+00
+ TC4H8CHO   = 0.0000E+00
+ O2C4H8CHO  = 0.0000E+00
+ O2HC4H8CO  = 0.0000E+00
+ O2HC4H7CHO = 0.0000E+00
+ C3H5OH     = 0.0000E+00
+ CH2CCH2OH  = 0.0000E+00
+ NC3H7CHO   = 0.0000E+00
+ NC3H7CO    = 0.0000E+00
+ CH2CH2COCH = 0.0000E+00
+ C2H5COCH2  = 0.0000E+00
+ C2H5COCH3  = 0.0000E+00
+ CH2CHOOHCO = 0.0000E+00
+ CH3CHOOHCO = 0.0000E+00
+ CH3CHOOCOC = 0.0000E+00
+ CH3CHCOCH3 = 0.0000E+00
+ C2H3COCH3  = 0.0000E+00
+ CH3CHCO    = 0.0000E+00
+ CH2CH2CHO  = 0.0000E+00
+ C3H6CHO-3  = 0.0000E+00
+ C3H6CHO-2  = 0.0000E+00
+ C2H5CHCO   = 0.0000E+00
+ IC3H5COCH3 = 0.0000E+00
+ IC3H5COCH2 = 0.0000E+00
+ AC3H4COCH3 = 0.0000E+00
+ SC3H5COCH2 = 0.0000E+00
+ CH3CHOCHO  = 0.0000E+00
+ CH3CHCHO   = 0.0000E+00
+ SC3H5CHO   = 0.0000E+00
+ SC3H5CO    = 0.0000E+00
+ IC3H6CHO   = 0.0000E+00
+ C3H6CHO-1  = 0.0000E+00
+ C2H5COC2H5 = 0.0000E+00
+ C2H5COC2H4 = 0.0000E+00
+ C2H5COC2H4 = 0.0000E+00
+ C2H5COC2H3 = 0.0000E+00
+ PC2H4COC2H = 0.0000E+00
+ SC2H4COC2H = 0.0000E+00
+ IC3H6CHCHO = 0.0000E+00
+ IC3H6CHCO  = 0.0000E+00
+ AC3H5CHCHO = 0.0000E+00
+ IC3H6CHCOC = 0.0000E+00
+ AC3H5CHCOC = 0.0000E+00
+ IC3H6CHCOC = 0.0000E+00
+ NC3H7COCH3 = 0.0000E+00
+ NC3H7COCH2 = 0.0000E+00
+ C3H6COCH3- = 0.0000E+00
+ C3H6COCH3- = 0.0000E+00
+ C3H6COCH3- = 0.0000E+00
+ IC3H7COCH3 = 0.0000E+00
+ IC3H7COCH2 = 0.0000E+00
+ IC3H6COCH3 = 0.0000E+00
+ TC3H6COCH3 = 0.0000E+00
+ NC3H7COC2H = 0.0000E+00
+ C3H6COC2H5 = 0.0000E+00
+ C3H6COC2H5 = 0.0000E+00
+ C3H6COC2H5 = 0.0000E+00
+ NC3H7COC2H = 0.0000E+00
+ NC3H7COC2H = 0.0000E+00
+ IC3H7COC2H = 0.0000E+00
+ IC3H6COC2H = 0.0000E+00
+ TC3H6COC2H = 0.0000E+00
+ IC3H7COC2H = 0.0000E+00
+ IC3H7COC2H = 0.0000E+00
+ IC3H7COC2H = 0.0000E+00
+ IC3H6COC2H = 0.0000E+00
+ TC3H6COC2H = 0.0000E+00
+ IC3H5COC2H = 0.0000E+00
+ AC3H4COC2H = 0.0000E+00
+ IC3H5COC2H = 0.0000E+00
+ IC3H5COC2H = 0.0000E+00
+ NC4H9CHO   = 0.0000E+00
+ NC4H9CO    = 0.0000E+00
+ AC3H5CHO   = 0.0000E+00
+ AC3H5CO    = 0.0000E+00
+ C2H3CHCHO  = 0.0000E+00
+ C4H8CHO-1  = 0.0000E+00
+ C4H8CHO-2  = 0.0000E+00
+ C4H8CHO-3  = 0.0000E+00
+ C4H8CHO-4  = 0.0000E+00
+ NC6H14     = 0.0000E+00
+ C6H13-1    = 0.0000E+00
+ C6H13-2    = 0.0000E+00
+ C6H13-3    = 0.0000E+00
+ C6H12-1    = 0.0000E+00
+ C6H12-2    = 0.0000E+00
+ C6H12-3    = 0.0000E+00
+ C6H11      = 0.0000E+00
+ C6H12O1-2  = 0.0000E+00
+ C6H12O1-3  = 0.0000E+00
+ C6H12O1-4  = 0.0000E+00
+ C6H12O1-5  = 0.0000E+00
+ C6H12O2-3  = 0.0000E+00
+ C6H12O2-4  = 0.0000E+00
+ C6H12O2-5  = 0.0000E+00
+ C6H12O3-4  = 0.0000E+00
+ C6H13O2H-1 = 0.0000E+00
+ C6H13O2H-2 = 0.0000E+00
+ C6H13O2H-3 = 0.0000E+00
+ C6H13O2-1  = 0.0000E+00
+ C6H13O2-2  = 0.0000E+00
+ C6H13O2-3  = 0.0000E+00
+ C6H12OOH1- = 0.0000E+00
+ C6H12OOH1- = 0.0000E+00
+ C6H12OOH1- = 0.0000E+00
+ C6H12OOH1- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH1- = 0.0000E+00
+ C6H12OOH1- = 0.0000E+00
+ C6H12OOH1- = 0.0000E+00
+ C6H12OOH1- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH2- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ C6H12OOH3- = 0.0000E+00
+ NC6KET12   = 0.0000E+00
+ NC6KET13   = 0.0000E+00
+ NC6KET14   = 0.0000E+00
+ NC6KET15   = 0.0000E+00
+ NC6KET21   = 0.0000E+00
+ NC6KET23   = 0.0000E+00
+ NC6KET24   = 0.0000E+00
+ NC6KET25   = 0.0000E+00
+ NC6KET26   = 0.0000E+00
+ NC6KET31   = 0.0000E+00
+ NC6KET32   = 0.0000E+00
+ NC6KET34   = 0.0000E+00
+ NC6KET35   = 0.0000E+00
+ NC6KET36   = 0.0000E+00
+ C6H13O-1   = 0.0000E+00
+ C6H13O-2   = 0.0000E+00
+ C6H13O-3   = 0.0000E+00
+ NC7H16     = 1.8741E-02
+ C7H15-1    = 0.0000E+00
+ C7H15-2    = 0.0000E+00
+ C7H15-3    = 0.0000E+00
+ C7H15-4    = 0.0000E+00
+ C7H14-1    = 0.0000E+00
+ C7H14-2    = 0.0000E+00
+ C7H14-3    = 0.0000E+00
+ C7H13      = 0.0000E+00
+ C7H15O2-1  = 0.0000E+00
+ C7H15O2-2  = 0.0000E+00
+ C7H15O2-3  = 0.0000E+00
+ C7H15O2-4  = 0.0000E+00
+ C7H15O2H-1 = 0.0000E+00
+ C7H15O2H-2 = 0.0000E+00
+ C7H15O2H-3 = 0.0000E+00
+ C7H15O2H-4 = 0.0000E+00
+ C7H15O-1   = 0.0000E+00
+ C7H15O-2   = 0.0000E+00
+ C7H15O-3   = 0.0000E+00
+ C7H15O-4   = 0.0000E+00
+ C7H14OOH1- = 0.0000E+00
+ C7H14OOH1- = 0.0000E+00
+ C7H14OOH1- = 0.0000E+00
+ C7H14OOH1- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH4- = 0.0000E+00
+ C7H14OOH4- = 0.0000E+00
+ C7H14OOH4- = 0.0000E+00
+ C7H14OOH1- = 0.0000E+00
+ C7H14OOH1- = 0.0000E+00
+ C7H14OOH1- = 0.0000E+00
+ C7H14OOH1- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH2- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH3- = 0.0000E+00
+ C7H14OOH4- = 0.0000E+00
+ C7H14OOH4- = 0.0000E+00
+ C7H14OOH4- = 0.0000E+00
+ C7H14O1-2  = 0.0000E+00
+ C7H14O1-3  = 0.0000E+00
+ C7H14O1-4  = 0.0000E+00
+ C7H14O1-5  = 0.0000E+00
+ C7H14O2-3  = 0.0000E+00
+ C7H14O2-4  = 0.0000E+00
+ C7H14O2-5  = 0.0000E+00
+ C7H14O2-6  = 0.0000E+00
+ C7H14O3-4  = 0.0000E+00
+ C7H14O3-5  = 0.0000E+00
+ NC7KET12   = 0.0000E+00
+ NC7KET13   = 0.0000E+00
+ NC7KET14   = 0.0000E+00
+ NC7KET15   = 0.0000E+00
+ NC7KET21   = 0.0000E+00
+ NC7KET23   = 0.0000E+00
+ NC7KET24   = 0.0000E+00
+ NC7KET25   = 0.0000E+00
+ NC7KET26   = 0.0000E+00
+ NC7KET31   = 0.0000E+00
+ NC7KET32   = 0.0000E+00
+ NC7KET34   = 0.0000E+00
+ NC7KET35   = 0.0000E+00
+ NC7KET36   = 0.0000E+00
+ NC7KET37   = 0.0000E+00
+ NC7KET41   = 0.0000E+00
+ NC7KET42   = 0.0000E+00
+ NC7KET43   = 0.0000E+00
+ NC5H11CHO  = 0.0000E+00
+ NC5H11CO   = 0.0000E+00
+ C5H10CHO-1 = 0.0000E+00
+ C5H10CHO-2 = 0.0000E+00
+ C5H10CHO-3 = 0.0000E+00
+ C5H10CHO-4 = 0.0000E+00
+ C5H10CHO-5 = 0.0000E+00
+ C4H7CHO1-4 = 0.0000E+00
+ C4H7CO1-4  = 0.0000E+00
+ C4H6CHO1-4 = 0.0000E+00
+ C4H6CHO1-4 = 0.0000E+00
+ NC4H9COCH3 = 0.0000E+00
+ NC4H9COCH2 = 0.0000E+00
+ C4H8COCH3- = 0.0000E+00
+ C4H8COCH3- = 0.0000E+00
+ C4H8COCH3- = 0.0000E+00
+ C4H8COCH3- = 0.0000E+00
+
+
+  Time Integration:
+
+ Time (sec) =  0.0000E+00   T (K) =  8.0000E+02
+ Time (sec) =  1.0712E-06   T (K) =  8.0000E+02
+ Time (sec) =  2.1786E-06   T (K) =  8.0000E+02
+ Time (sec) =  3.1277E-06   T (K) =  8.0000E+02
+ Time (sec) =  4.0769E-06   T (K) =  8.0000E+02
+ Time (sec) =  5.0261E-06   T (K) =  8.0000E+02
+ Time (sec) =  6.6080E-06   T (K) =  8.0000E+02
+ Time (sec) =  7.2408E-06   T (K) =  8.0000E+02
+ Time (sec) =  8.5063E-06   T (K) =  8.0000E+02
+ Time (sec) =  9.1391E-06   T (K) =  8.0000E+02
+ Time (sec) =  1.0405E-05   T (K) =  8.0000E+02
+ Time (sec) =  1.1037E-05   T (K) =  8.0000E+02
+ Time (sec) =  1.2936E-05   T (K) =  8.0000E+02
+ Time (sec) =  1.4201E-05   T (K) =  8.0000E+02
+ Time (sec) =  1.5467E-05   T (K) =  8.0000E+02
+ Time (sec) =  1.6732E-05   T (K) =  8.0000E+02
+ Time (sec) =  1.7998E-05   T (K) =  8.0000E+02
+ Time (sec) =  1.9264E-05   T (K) =  8.0000E+02
+ Time (sec) =  2.0529E-05   T (K) =  8.0000E+02
+ Time (sec) =  2.1795E-05   T (K) =  8.0000E+02
+ Time (sec) =  2.3060E-05   T (K) =  8.0000E+02
+ Time (sec) =  2.4326E-05   T (K) =  8.0000E+02
+ Time (sec) =  2.5591E-05   T (K) =  8.0000E+02
+ Time (sec) =  2.6857E-05   T (K) =  8.0000E+02
+ Time (sec) =  2.8122E-05   T (K) =  8.0000E+02
+ Time (sec) =  2.9388E-05   T (K) =  8.0000E+02
+ Time (sec) =  3.1919E-05   T (K) =  8.0000E+02
+ Time (sec) =  3.4197E-05   T (K) =  8.0000E+02
+ Time (sec) =  3.6475E-05   T (K) =  8.0000E+02
+ Time (sec) =  3.8753E-05   T (K) =  8.0000E+02
+ Time (sec) =  4.1031E-05   T (K) =  8.0000E+02
+ Time (sec) =  4.3309E-05   T (K) =  8.0000E+02
+ Time (sec) =  4.5587E-05   T (K) =  8.0000E+02
+ Time (sec) =  4.7865E-05   T (K) =  8.0000E+02
+ Time (sec) =  5.0143E-05   T (K) =  8.0000E+02
+ Time (sec) =  5.2421E-05   T (K) =  8.0000E+02
+ Time (sec) =  5.4699E-05   T (K) =  8.0000E+02
+ Time (sec) =  5.6977E-05   T (K) =  8.0000E+02
+ Time (sec) =  5.9255E-05   T (K) =  8.0000E+02
+ Time (sec) =  6.1533E-05   T (K) =  8.0000E+02
+ Time (sec) =  6.3583E-05   T (K) =  8.0000E+02
+ Time (sec) =  6.5633E-05   T (K) =  8.0000E+02
+ Time (sec) =  6.7683E-05   T (K) =  8.0000E+02
+ Time (sec) =  6.9734E-05   T (K) =  8.0000E+02
+ Time (sec) =  7.1784E-05   T (K) =  8.0000E+02
+ Time (sec) =  7.3834E-05   T (K) =  8.0000E+02
+ Time (sec) =  7.5679E-05   T (K) =  8.0000E+02
+ Time (sec) =  7.7524E-05   T (K) =  8.0000E+02
+ Time (sec) =  7.9370E-05   T (K) =  8.0000E+02
+ Time (sec) =  8.1215E-05   T (K) =  8.0000E+02
+ Time (sec) =  8.2875E-05   T (K) =  8.0000E+02
+ Time (sec) =  8.4536E-05   T (K) =  8.0000E+02
+ Time (sec) =  8.6197E-05   T (K) =  8.0000E+02
+ Time (sec) =  8.7857E-05   T (K) =  8.0000E+02
+ Time (sec) =  8.9518E-05   T (K) =  8.0000E+02
+ Time (sec) =  9.1179E-05   T (K) =  8.0000E+02
+ Time (sec) =  9.2673E-05   T (K) =  8.0000E+02
+ Time (sec) =  9.4168E-05   T (K) =  8.0000E+02
+ Time (sec) =  9.5662E-05   T (K) =  8.0000E+02
+ Time (sec) =  9.7157E-05   T (K) =  8.0000E+02
+ Time (sec) =  9.8652E-05   T (K) =  8.0000E+02
+ Time (sec) =  1.0015E-04   T (K) =  8.0000E+02
+ Time (sec) =  1.0164E-04   T (K) =  8.0000E+02
+ Time (sec) =  1.0314E-04   T (K) =  8.0000E+02
+ Time (sec) =  1.0463E-04   T (K) =  8.0000E+02
+ Time (sec) =  1.0612E-04   T (K) =  8.0000E+02
+ Time (sec) =  1.0747E-04   T (K) =  8.0000E+02
+ Time (sec) =  1.0881E-04   T (K) =  8.0000E+02
+ Time (sec) =  1.1016E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.1151E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.1285E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.1420E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.1554E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.1689E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.1823E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.1958E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.2092E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.2213E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.2334E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.2455E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.2576E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.2697E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.2818E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.2940E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.3061E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.3182E-04   T (K) =  8.0001E+02
+ Time (sec) =  1.3303E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.3412E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.3521E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.3630E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.3739E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.3847E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.3956E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.4065E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.4174E-04   T (K) =  8.0002E+02
+ Time (sec) =  1.4283E-04   T (K) =  8.0003E+02
+ Time (sec) =  1.4392E-04   T (K) =  8.0003E+02
+ Time (sec) =  1.4501E-04   T (K) =  8.0003E+02
+ Time (sec) =  1.4599E-04   T (K) =  8.0003E+02
+ Time (sec) =  1.4697E-04   T (K) =  8.0003E+02
+ Time (sec) =  1.4795E-04   T (K) =  8.0003E+02
+ Time (sec) =  1.4893E-04   T (K) =  8.0003E+02
+ Time (sec) =  1.4992E-04   T (K) =  8.0004E+02
+ Time (sec) =  1.5090E-04   T (K) =  8.0004E+02
+ Time (sec) =  1.5188E-04   T (K) =  8.0004E+02
+ Time (sec) =  1.5286E-04   T (K) =  8.0004E+02
+ Time (sec) =  1.5384E-04   T (K) =  8.0004E+02
+ Time (sec) =  1.5482E-04   T (K) =  8.0005E+02
+ Time (sec) =  1.5580E-04   T (K) =  8.0005E+02
+ Time (sec) =  1.5678E-04   T (K) =  8.0005E+02
+ Time (sec) =  1.5776E-04   T (K) =  8.0005E+02
+ Time (sec) =  1.5874E-04   T (K) =  8.0005E+02
+ Time (sec) =  1.5972E-04   T (K) =  8.0006E+02
+ Time (sec) =  1.6070E-04   T (K) =  8.0006E+02
+ Time (sec) =  1.6168E-04   T (K) =  8.0006E+02
+ Time (sec) =  1.6266E-04   T (K) =  8.0007E+02
+ Time (sec) =  1.6364E-04   T (K) =  8.0007E+02
+ Time (sec) =  1.6453E-04   T (K) =  8.0007E+02
+ Time (sec) =  1.6532E-04   T (K) =  8.0008E+02
+ Time (sec) =  1.6611E-04   T (K) =  8.0008E+02
+ Time (sec) =  1.6691E-04   T (K) =  8.0008E+02
+ Time (sec) =  1.6770E-04   T (K) =  8.0008E+02
+ Time (sec) =  1.6850E-04   T (K) =  8.0009E+02
+ Time (sec) =  1.6929E-04   T (K) =  8.0009E+02
+ Time (sec) =  1.7009E-04   T (K) =  8.0010E+02
+ Time (sec) =  1.7088E-04   T (K) =  8.0010E+02
+ Time (sec) =  1.7167E-04   T (K) =  8.0010E+02
+ Time (sec) =  1.7247E-04   T (K) =  8.0011E+02
+ Time (sec) =  1.7326E-04   T (K) =  8.0011E+02
+ Time (sec) =  1.7406E-04   T (K) =  8.0012E+02
+ Time (sec) =  1.7485E-04   T (K) =  8.0012E+02
+ Time (sec) =  1.7565E-04   T (K) =  8.0012E+02
+ Time (sec) =  1.7644E-04   T (K) =  8.0013E+02
+ Time (sec) =  1.7723E-04   T (K) =  8.0013E+02
+ Time (sec) =  1.7803E-04   T (K) =  8.0014E+02
+ Time (sec) =  1.7882E-04   T (K) =  8.0015E+02
+ Time (sec) =  1.7962E-04   T (K) =  8.0015E+02
+ Time (sec) =  1.8041E-04   T (K) =  8.0016E+02
+ Time (sec) =  1.8121E-04   T (K) =  8.0016E+02
+ Time (sec) =  1.8200E-04   T (K) =  8.0017E+02
+ Time (sec) =  1.8279E-04   T (K) =  8.0018E+02
+ Time (sec) =  1.8359E-04   T (K) =  8.0018E+02
+ Time (sec) =  1.8438E-04   T (K) =  8.0019E+02
+ Time (sec) =  1.8518E-04   T (K) =  8.0020E+02
+ Time (sec) =  1.8597E-04   T (K) =  8.0021E+02
+ Time (sec) =  1.8677E-04   T (K) =  8.0022E+02
+ Time (sec) =  1.8756E-04   T (K) =  8.0022E+02
+ Time (sec) =  1.8835E-04   T (K) =  8.0023E+02
+ Time (sec) =  1.8907E-04   T (K) =  8.0024E+02
+ Time (sec) =  1.8971E-04   T (K) =  8.0025E+02
+ Time (sec) =  1.9036E-04   T (K) =  8.0026E+02
+ Time (sec) =  1.9100E-04   T (K) =  8.0026E+02
+ Time (sec) =  1.9164E-04   T (K) =  8.0027E+02
+ Time (sec) =  1.9229E-04   T (K) =  8.0028E+02
+ Time (sec) =  1.9293E-04   T (K) =  8.0029E+02
+ Time (sec) =  1.9357E-04   T (K) =  8.0030E+02
+ Time (sec) =  1.9422E-04   T (K) =  8.0031E+02
+ Time (sec) =  1.9486E-04   T (K) =  8.0032E+02
+ Time (sec) =  1.9550E-04   T (K) =  8.0033E+02
+ Time (sec) =  1.9615E-04   T (K) =  8.0034E+02
+ Time (sec) =  1.9679E-04   T (K) =  8.0035E+02
+ Time (sec) =  1.9743E-04   T (K) =  8.0036E+02
+ Time (sec) =  1.9808E-04   T (K) =  8.0037E+02
+ Time (sec) =  1.9872E-04   T (K) =  8.0039E+02
+ Time (sec) =  1.9936E-04   T (K) =  8.0040E+02
+ Time (sec) =  2.0001E-04   T (K) =  8.0041E+02
+ Time (sec) =  2.0065E-04   T (K) =  8.0042E+02
+ Time (sec) =  2.0129E-04   T (K) =  8.0044E+02
+ Time (sec) =  2.0194E-04   T (K) =  8.0045E+02
+ Time (sec) =  2.0258E-04   T (K) =  8.0047E+02
+ Time (sec) =  2.0316E-04   T (K) =  8.0048E+02
+ Time (sec) =  2.0374E-04   T (K) =  8.0049E+02
+ Time (sec) =  2.0432E-04   T (K) =  8.0051E+02
+ Time (sec) =  2.0490E-04   T (K) =  8.0052E+02
+ Time (sec) =  2.0548E-04   T (K) =  8.0054E+02
+ Time (sec) =  2.0605E-04   T (K) =  8.0055E+02
+ Time (sec) =  2.0663E-04   T (K) =  8.0057E+02
+ Time (sec) =  2.0721E-04   T (K) =  8.0059E+02
+ Time (sec) =  2.0779E-04   T (K) =  8.0060E+02
+ Time (sec) =  2.0837E-04   T (K) =  8.0062E+02
+ Time (sec) =  2.0895E-04   T (K) =  8.0064E+02
+ Time (sec) =  2.0953E-04   T (K) =  8.0066E+02
+ Time (sec) =  2.1011E-04   T (K) =  8.0067E+02
+ Time (sec) =  2.1069E-04   T (K) =  8.0069E+02
+ Time (sec) =  2.1127E-04   T (K) =  8.0071E+02
+ Time (sec) =  2.1185E-04   T (K) =  8.0074E+02
+ Time (sec) =  2.1242E-04   T (K) =  8.0076E+02
+ Time (sec) =  2.1300E-04   T (K) =  8.0078E+02
+ Time (sec) =  2.1358E-04   T (K) =  8.0080E+02
+ Time (sec) =  2.1416E-04   T (K) =  8.0082E+02
+ Time (sec) =  2.1474E-04   T (K) =  8.0085E+02
+ Time (sec) =  2.1532E-04   T (K) =  8.0087E+02
+ Time (sec) =  2.1590E-04   T (K) =  8.0090E+02
+ Time (sec) =  2.1648E-04   T (K) =  8.0092E+02
+ Time (sec) =  2.1706E-04   T (K) =  8.0095E+02
+ Time (sec) =  2.1764E-04   T (K) =  8.0098E+02
+ Time (sec) =  2.1821E-04   T (K) =  8.0101E+02
+ Time (sec) =  2.1879E-04   T (K) =  8.0104E+02
+ Time (sec) =  2.1937E-04   T (K) =  8.0107E+02
+ Time (sec) =  2.1995E-04   T (K) =  8.0110E+02
+ Time (sec) =  2.2053E-04   T (K) =  8.0113E+02
+ Time (sec) =  2.2111E-04   T (K) =  8.0116E+02
+ Time (sec) =  2.2169E-04   T (K) =  8.0120E+02
+ Time (sec) =  2.2227E-04   T (K) =  8.0123E+02
+ Time (sec) =  2.2285E-04   T (K) =  8.0127E+02
+ Time (sec) =  2.2343E-04   T (K) =  8.0130E+02
+ Time (sec) =  2.2395E-04   T (K) =  8.0134E+02
+ Time (sec) =  2.2447E-04   T (K) =  8.0137E+02
+ Time (sec) =  2.2499E-04   T (K) =  8.0141E+02
+ Time (sec) =  2.2551E-04   T (K) =  8.0145E+02
+ Time (sec) =  2.2603E-04   T (K) =  8.0148E+02
+ Time (sec) =  2.2655E-04   T (K) =  8.0152E+02
+ Time (sec) =  2.2707E-04   T (K) =  8.0156E+02
+ Time (sec) =  2.2759E-04   T (K) =  8.0160E+02
+ Time (sec) =  2.2812E-04   T (K) =  8.0165E+02
+ Time (sec) =  2.2864E-04   T (K) =  8.0169E+02
+ Time (sec) =  2.2916E-04   T (K) =  8.0173E+02
+ Time (sec) =  2.2968E-04   T (K) =  8.0178E+02
+ Time (sec) =  2.3020E-04   T (K) =  8.0183E+02
+ Time (sec) =  2.3072E-04   T (K) =  8.0188E+02
+ Time (sec) =  2.3124E-04   T (K) =  8.0192E+02
+ Time (sec) =  2.3176E-04   T (K) =  8.0198E+02
+ Time (sec) =  2.3229E-04   T (K) =  8.0203E+02
+ Time (sec) =  2.3281E-04   T (K) =  8.0208E+02
+ Time (sec) =  2.3333E-04   T (K) =  8.0214E+02
+ Time (sec) =  2.3385E-04   T (K) =  8.0219E+02
+ Time (sec) =  2.3437E-04   T (K) =  8.0225E+02
+ Time (sec) =  2.3489E-04   T (K) =  8.0231E+02
+ Time (sec) =  2.3541E-04   T (K) =  8.0237E+02
+ Time (sec) =  2.3593E-04   T (K) =  8.0244E+02
+ Time (sec) =  2.3645E-04   T (K) =  8.0250E+02
+ Time (sec) =  2.3698E-04   T (K) =  8.0257E+02
+ Time (sec) =  2.3750E-04   T (K) =  8.0264E+02
+ Time (sec) =  2.3802E-04   T (K) =  8.0271E+02
+ Time (sec) =  2.3854E-04   T (K) =  8.0278E+02
+ Time (sec) =  2.3906E-04   T (K) =  8.0286E+02
+ Time (sec) =  2.3953E-04   T (K) =  8.0293E+02
+ Time (sec) =  2.4000E-04   T (K) =  8.0300E+02
+ Time (sec) =  2.4047E-04   T (K) =  8.0307E+02
+ Time (sec) =  2.4094E-04   T (K) =  8.0314E+02
+ Time (sec) =  2.4140E-04   T (K) =  8.0322E+02
+ Time (sec) =  2.4187E-04   T (K) =  8.0330E+02
+ Time (sec) =  2.4234E-04   T (K) =  8.0338E+02
+ Time (sec) =  2.4328E-04   T (K) =  8.0354E+02
+ Time (sec) =  2.4422E-04   T (K) =  8.0372E+02
+ Time (sec) =  2.4516E-04   T (K) =  8.0390E+02
+ Time (sec) =  2.4600E-04   T (K) =  8.0408E+02
+ Time (sec) =  2.4727E-04   T (K) =  8.0436E+02
+ Time (sec) =  2.4811E-04   T (K) =  8.0455E+02
+ Time (sec) =  2.4938E-04   T (K) =  8.0486E+02
+ Time (sec) =  2.5022E-04   T (K) =  8.0508E+02
+ Time (sec) =  2.5102E-04   T (K) =  8.0530E+02
+ Time (sec) =  2.5216E-04   T (K) =  8.0563E+02
+ Time (sec) =  2.5330E-04   T (K) =  8.0598E+02
+ Time (sec) =  2.5406E-04   T (K) =  8.0623E+02
+ Time (sec) =  2.5520E-04   T (K) =  8.0662E+02
+ Time (sec) =  2.5627E-04   T (K) =  8.0701E+02
+ Time (sec) =  2.5729E-04   T (K) =  8.0742E+02
+ Time (sec) =  2.5832E-04   T (K) =  8.0784E+02
+ Time (sec) =  2.5900E-04   T (K) =  8.0814E+02
+ Time (sec) =  2.6027E-04   T (K) =  8.0873E+02
+ Time (sec) =  2.6119E-04   T (K) =  8.0919E+02
+ Time (sec) =  2.6211E-04   T (K) =  8.0968E+02
+ Time (sec) =  2.6304E-04   T (K) =  8.1019E+02
+ Time (sec) =  2.6418E-04   T (K) =  8.1088E+02
+ Time (sec) =  2.6501E-04   T (K) =  8.1141E+02
+ Time (sec) =  2.6611E-04   T (K) =  8.1216E+02
+ Time (sec) =  2.6719E-04   T (K) =  8.1295E+02
+ Time (sec) =  2.6819E-04   T (K) =  8.1374E+02
+ Time (sec) =  2.6919E-04   T (K) =  8.1459E+02
+ Time (sec) =  2.7016E-04   T (K) =  8.1547E+02
+ Time (sec) =  2.7106E-04   T (K) =  8.1634E+02
+ Time (sec) =  2.7218E-04   T (K) =  8.1752E+02
+ Time (sec) =  2.7305E-04   T (K) =  8.1851E+02
+ Time (sec) =  2.7406E-04   T (K) =  8.1975E+02
+ Time (sec) =  2.7507E-04   T (K) =  8.2109E+02
+ Time (sec) =  2.7602E-04   T (K) =  8.2246E+02
+ Time (sec) =  2.7711E-04   T (K) =  8.2418E+02
+ Time (sec) =  2.7815E-04   T (K) =  8.2597E+02
+ Time (sec) =  2.7913E-04   T (K) =  8.2784E+02
+ Time (sec) =  2.8008E-04   T (K) =  8.2982E+02
+ Time (sec) =  2.8111E-04   T (K) =  8.3219E+02
+ Time (sec) =  2.8209E-04   T (K) =  8.3472E+02
+ Time (sec) =  2.8302E-04   T (K) =  8.3736E+02
+ Time (sec) =  2.8402E-04   T (K) =  8.4051E+02
+ Time (sec) =  2.8509E-04   T (K) =  8.4437E+02
+ Time (sec) =  2.8605E-04   T (K) =  8.4832E+02
+ Time (sec) =  2.8708E-04   T (K) =  8.5315E+02
+ Time (sec) =  2.8803E-04   T (K) =  8.5824E+02
+ Time (sec) =  2.8907E-04   T (K) =  8.6475E+02
+ Time (sec) =  2.9003E-04   T (K) =  8.7172E+02
+ Time (sec) =  2.9101E-04   T (K) =  8.8007E+02
+ Time (sec) =  2.9205E-04   T (K) =  8.9058E+02
+ Time (sec) =  2.9303E-04   T (K) =  9.0210E+02
+ Time (sec) =  2.9404E-04   T (K) =  9.1551E+02
+ Time (sec) =  2.9503E-04   T (K) =  9.2967E+02
+ Time (sec) =  2.9603E-04   T (K) =  9.4328E+02
+ Time (sec) =  2.9701E-04   T (K) =  9.5417E+02
+ Time (sec) =  2.9802E-04   T (K) =  9.6219E+02
+ Time (sec) =  2.9902E-04   T (K) =  9.6749E+02
+ Time (sec) =  3.0001E-04   T (K) =  9.7128E+02
+ Time (sec) =  3.0100E-04   T (K) =  9.7426E+02
+ Time (sec) =  3.0200E-04   T (K) =  9.7679E+02
+ Time (sec) =  3.0302E-04   T (K) =  9.7902E+02
+ Time (sec) =  3.0401E-04   T (K) =  9.8098E+02
+ Time (sec) =  3.0500E-04   T (K) =  9.8276E+02
+ Time (sec) =  3.0608E-04   T (K) =  9.8450E+02
+ Time (sec) =  3.0702E-04   T (K) =  9.8589E+02
+ Time (sec) =  3.0805E-04   T (K) =  9.8728E+02
+ Time (sec) =  3.0908E-04   T (K) =  9.8855E+02
+ Time (sec) =  3.1002E-04   T (K) =  9.8961E+02
+ Time (sec) =  3.1113E-04   T (K) =  9.9074E+02
+ Time (sec) =  3.1214E-04   T (K) =  9.9169E+02
+ Time (sec) =  3.1316E-04   T (K) =  9.9256E+02
+ Time (sec) =  3.1400E-04   T (K) =  9.9322E+02
+ Time (sec) =  3.1502E-04   T (K) =  9.9397E+02
+ Time (sec) =  3.1603E-04   T (K) =  9.9465E+02
+ Time (sec) =  3.1705E-04   T (K) =  9.9529E+02
+ Time (sec) =  3.1806E-04   T (K) =  9.9588E+02
+ Time (sec) =  3.1908E-04   T (K) =  9.9643E+02
+ Time (sec) =  3.2009E-04   T (K) =  9.9695E+02
+ Time (sec) =  3.2110E-04   T (K) =  9.9743E+02
+ Time (sec) =  3.2212E-04   T (K) =  9.9789E+02
+ Time (sec) =  3.2313E-04   T (K) =  9.9833E+02
+ Time (sec) =  3.2415E-04   T (K) =  9.9874E+02
+ Time (sec) =  3.2516E-04   T (K) =  9.9914E+02
+ Time (sec) =  3.2601E-04   T (K) =  9.9946E+02
+ Time (sec) =  3.2702E-04   T (K) =  9.9983E+02
+ Time (sec) =  3.2804E-04   T (K) =  1.0002E+03
+ Time (sec) =  3.2907E-04   T (K) =  1.0005E+03
+ Time (sec) =  3.3007E-04   T (K) =  1.0009E+03
+ Time (sec) =  3.3123E-04   T (K) =  1.0012E+03
+ Time (sec) =  3.3216E-04   T (K) =  1.0015E+03
+ Time (sec) =  3.3309E-04   T (K) =  1.0018E+03
+ Time (sec) =  3.3401E-04   T (K) =  1.0021E+03
+ Time (sec) =  3.3517E-04   T (K) =  1.0025E+03
+ Time (sec) =  3.3610E-04   T (K) =  1.0027E+03
+ Time (sec) =  3.3703E-04   T (K) =  1.0030E+03
+ Time (sec) =  3.3819E-04   T (K) =  1.0034E+03
+ Time (sec) =  3.3912E-04   T (K) =  1.0036E+03
+ Time (sec) =  3.4004E-04   T (K) =  1.0039E+03
+ Time (sec) =  3.4120E-04   T (K) =  1.0042E+03
+ Time (sec) =  3.4213E-04   T (K) =  1.0045E+03
+ Time (sec) =  3.4306E-04   T (K) =  1.0048E+03
+ Time (sec) =  3.4422E-04   T (K) =  1.0051E+03
+ Time (sec) =  3.4515E-04   T (K) =  1.0053E+03
+ Time (sec) =  3.4607E-04   T (K) =  1.0056E+03
+ Time (sec) =  3.4700E-04   T (K) =  1.0059E+03
+ Time (sec) =  3.4816E-04   T (K) =  1.0062E+03
+ Time (sec) =  3.4909E-04   T (K) =  1.0065E+03
+ Time (sec) =  3.5001E-04   T (K) =  1.0067E+03
+ Time (sec) =  3.5117E-04   T (K) =  1.0071E+03
+ Time (sec) =  3.5210E-04   T (K) =  1.0073E+03
+ Time (sec) =  3.5303E-04   T (K) =  1.0076E+03
+ Time (sec) =  3.5419E-04   T (K) =  1.0079E+03
+ Time (sec) =  3.5512E-04   T (K) =  1.0082E+03
+ Time (sec) =  3.5604E-04   T (K) =  1.0085E+03
+ Time (sec) =  3.5720E-04   T (K) =  1.0088E+03
+ Time (sec) =  3.5813E-04   T (K) =  1.0091E+03
+ Time (sec) =  3.5929E-04   T (K) =  1.0094E+03
+ Time (sec) =  3.6013E-04   T (K) =  1.0097E+03
+ Time (sec) =  3.6138E-04   T (K) =  1.0100E+03
+ Time (sec) =  3.6221E-04   T (K) =  1.0103E+03
+ Time (sec) =  3.6305E-04   T (K) =  1.0105E+03
+ Time (sec) =  3.6430E-04   T (K) =  1.0109E+03
+ Time (sec) =  3.6513E-04   T (K) =  1.0111E+03
+ Time (sec) =  3.6639E-04   T (K) =  1.0115E+03
+ Time (sec) =  3.6722E-04   T (K) =  1.0118E+03
+ Time (sec) =  3.6806E-04   T (K) =  1.0120E+03
+ Time (sec) =  3.6931E-04   T (K) =  1.0124E+03
+ Time (sec) =  3.7014E-04   T (K) =  1.0127E+03
+ Time (sec) =  3.7140E-04   T (K) =  1.0131E+03
+ Time (sec) =  3.7223E-04   T (K) =  1.0133E+03
+ Time (sec) =  3.7306E-04   T (K) =  1.0136E+03
+ Time (sec) =  3.7432E-04   T (K) =  1.0140E+03
+ Time (sec) =  3.7515E-04   T (K) =  1.0142E+03
+ Time (sec) =  3.7640E-04   T (K) =  1.0146E+03
+ Time (sec) =  3.7724E-04   T (K) =  1.0149E+03
+ Time (sec) =  3.7807E-04   T (K) =  1.0151E+03
+ Time (sec) =  3.7933E-04   T (K) =  1.0155E+03
+ Time (sec) =  3.8016E-04   T (K) =  1.0158E+03
+ Time (sec) =  3.8141E-04   T (K) =  1.0162E+03
+ Time (sec) =  3.8225E-04   T (K) =  1.0165E+03
+ Time (sec) =  3.8308E-04   T (K) =  1.0168E+03
+ Time (sec) =  3.8433E-04   T (K) =  1.0172E+03
+ Time (sec) =  3.8517E-04   T (K) =  1.0174E+03
+ Time (sec) =  3.8600E-04   T (K) =  1.0177E+03
+ Time (sec) =  3.8751E-04   T (K) =  1.0182E+03
+ Time (sec) =  3.8826E-04   T (K) =  1.0185E+03
+ Time (sec) =  3.8901E-04   T (K) =  1.0187E+03
+ Time (sec) =  3.9051E-04   T (K) =  1.0192E+03
+ Time (sec) =  3.9126E-04   T (K) =  1.0195E+03
+ Time (sec) =  3.9202E-04   T (K) =  1.0198E+03
+ Time (sec) =  3.9352E-04   T (K) =  1.0203E+03
+ Time (sec) =  3.9427E-04   T (K) =  1.0205E+03
+ Time (sec) =  3.9502E-04   T (K) =  1.0208E+03
+ Time (sec) =  3.9652E-04   T (K) =  1.0213E+03
+ Time (sec) =  3.9727E-04   T (K) =  1.0216E+03
+ Time (sec) =  3.9803E-04   T (K) =  1.0218E+03
+ Time (sec) =  3.9953E-04   T (K) =  1.0224E+03
+ Time (sec) =  4.0028E-04   T (K) =  1.0226E+03
+ Time (sec) =  4.0103E-04   T (K) =  1.0229E+03
+ Time (sec) =  4.0253E-04   T (K) =  1.0235E+03
+ Time (sec) =  4.0329E-04   T (K) =  1.0237E+03
+ Time (sec) =  4.0404E-04   T (K) =  1.0240E+03
+ Time (sec) =  4.0554E-04   T (K) =  1.0246E+03
+ Time (sec) =  4.0629E-04   T (K) =  1.0248E+03
+ Time (sec) =  4.0704E-04   T (K) =  1.0251E+03
+ Time (sec) =  4.0854E-04   T (K) =  1.0257E+03
+ Time (sec) =  4.0930E-04   T (K) =  1.0260E+03
+ Time (sec) =  4.1080E-04   T (K) =  1.0265E+03
+ Time (sec) =  4.1215E-04   T (K) =  1.0271E+03
+ Time (sec) =  4.1346E-04   T (K) =  1.0276E+03
+ Time (sec) =  4.1477E-04   T (K) =  1.0281E+03
+ Time (sec) =  4.1608E-04   T (K) =  1.0286E+03
+ Time (sec) =  4.1739E-04   T (K) =  1.0291E+03
+ Time (sec) =  4.1869E-04   T (K) =  1.0296E+03
+ Time (sec) =  4.2000E-04   T (K) =  1.0301E+03
+ Time (sec) =  4.2131E-04   T (K) =  1.0307E+03
+ Time (sec) =  4.2262E-04   T (K) =  1.0312E+03
+ Time (sec) =  4.2393E-04   T (K) =  1.0318E+03
+ Time (sec) =  4.2524E-04   T (K) =  1.0323E+03
+ Time (sec) =  4.2655E-04   T (K) =  1.0328E+03
+ Time (sec) =  4.2785E-04   T (K) =  1.0334E+03
+ Time (sec) =  4.2916E-04   T (K) =  1.0340E+03
+ Time (sec) =  4.3047E-04   T (K) =  1.0345E+03
+ Time (sec) =  4.3178E-04   T (K) =  1.0351E+03
+ Time (sec) =  4.3309E-04   T (K) =  1.0357E+03
+ Time (sec) =  4.3440E-04   T (K) =  1.0363E+03
+ Time (sec) =  4.3571E-04   T (K) =  1.0368E+03
+ Time (sec) =  4.3701E-04   T (K) =  1.0374E+03
+ Time (sec) =  4.3832E-04   T (K) =  1.0380E+03
+ Time (sec) =  4.3963E-04   T (K) =  1.0386E+03
+ Time (sec) =  4.4094E-04   T (K) =  1.0392E+03
+ Time (sec) =  4.4225E-04   T (K) =  1.0399E+03
+ Time (sec) =  4.4356E-04   T (K) =  1.0405E+03
+ Time (sec) =  4.4487E-04   T (K) =  1.0411E+03
+ Time (sec) =  4.4617E-04   T (K) =  1.0418E+03
+ Time (sec) =  4.4748E-04   T (K) =  1.0424E+03
+ Time (sec) =  4.4879E-04   T (K) =  1.0430E+03
+ Time (sec) =  4.5010E-04   T (K) =  1.0437E+03
+ Time (sec) =  4.5141E-04   T (K) =  1.0444E+03
+ Time (sec) =  4.5272E-04   T (K) =  1.0450E+03
+ Time (sec) =  4.5403E-04   T (K) =  1.0457E+03
+ Time (sec) =  4.5534E-04   T (K) =  1.0464E+03
+ Time (sec) =  4.5664E-04   T (K) =  1.0471E+03
+ Time (sec) =  4.5795E-04   T (K) =  1.0478E+03
+ Time (sec) =  4.5926E-04   T (K) =  1.0485E+03
+ Time (sec) =  4.6057E-04   T (K) =  1.0492E+03
+ Time (sec) =  4.6188E-04   T (K) =  1.0500E+03
+ Time (sec) =  4.6319E-04   T (K) =  1.0507E+03
+ Time (sec) =  4.6450E-04   T (K) =  1.0514E+03
+ Time (sec) =  4.6580E-04   T (K) =  1.0522E+03
+ Time (sec) =  4.6711E-04   T (K) =  1.0530E+03
+ Time (sec) =  4.6842E-04   T (K) =  1.0537E+03
+ Time (sec) =  4.6973E-04   T (K) =  1.0545E+03
+ Time (sec) =  4.7104E-04   T (K) =  1.0553E+03
+ Time (sec) =  4.7235E-04   T (K) =  1.0561E+03
+ Time (sec) =  4.7366E-04   T (K) =  1.0569E+03
+ Time (sec) =  4.7496E-04   T (K) =  1.0578E+03
+ Time (sec) =  4.7627E-04   T (K) =  1.0586E+03
+ Time (sec) =  4.7758E-04   T (K) =  1.0595E+03
+ Time (sec) =  4.7889E-04   T (K) =  1.0603E+03
+ Time (sec) =  4.8020E-04   T (K) =  1.0612E+03
+ Time (sec) =  4.8151E-04   T (K) =  1.0621E+03
+ Time (sec) =  4.8282E-04   T (K) =  1.0630E+03
+ Time (sec) =  4.8412E-04   T (K) =  1.0639E+03
+ Time (sec) =  4.8543E-04   T (K) =  1.0648E+03
+ Time (sec) =  4.8674E-04   T (K) =  1.0658E+03
+ Time (sec) =  4.8805E-04   T (K) =  1.0667E+03
+ Time (sec) =  4.8936E-04   T (K) =  1.0677E+03
+ Time (sec) =  4.9067E-04   T (K) =  1.0687E+03
+ Time (sec) =  4.9198E-04   T (K) =  1.0697E+03
+ Time (sec) =  4.9328E-04   T (K) =  1.0707E+03
+ Time (sec) =  4.9459E-04   T (K) =  1.0718E+03
+ Time (sec) =  4.9590E-04   T (K) =  1.0728E+03
+ Time (sec) =  4.9721E-04   T (K) =  1.0739E+03
+ Time (sec) =  4.9852E-04   T (K) =  1.0750E+03
+ Time (sec) =  4.9983E-04   T (K) =  1.0761E+03
+ Time (sec) =  5.0114E-04   T (K) =  1.0773E+03
+ Time (sec) =  5.0231E-04   T (K) =  1.0783E+03
+ Time (sec) =  5.0349E-04   T (K) =  1.0794E+03
+ Time (sec) =  5.0467E-04   T (K) =  1.0804E+03
+ Time (sec) =  5.0585E-04   T (K) =  1.0815E+03
+ Time (sec) =  5.0702E-04   T (K) =  1.0827E+03
+ Time (sec) =  5.0820E-04   T (K) =  1.0838E+03
+ Time (sec) =  5.0938E-04   T (K) =  1.0849E+03
+ Time (sec) =  5.1056E-04   T (K) =  1.0861E+03
+ Time (sec) =  5.1174E-04   T (K) =  1.0873E+03
+ Time (sec) =  5.1280E-04   T (K) =  1.0884E+03
+ Time (sec) =  5.1386E-04   T (K) =  1.0895E+03
+ Time (sec) =  5.1492E-04   T (K) =  1.0907E+03
+ Time (sec) =  5.1587E-04   T (K) =  1.0917E+03
+ Time (sec) =  5.1682E-04   T (K) =  1.0928E+03
+ Time (sec) =  5.1778E-04   T (K) =  1.0939E+03
+ Time (sec) =  5.1873E-04   T (K) =  1.0950E+03
+ Time (sec) =  5.1969E-04   T (K) =  1.0961E+03
+ Time (sec) =  5.2064E-04   T (K) =  1.0972E+03
+ Time (sec) =  5.2159E-04   T (K) =  1.0984E+03
+ Time (sec) =  5.2255E-04   T (K) =  1.0995E+03
+ Time (sec) =  5.2350E-04   T (K) =  1.1007E+03
+ Time (sec) =  5.2446E-04   T (K) =  1.1020E+03
+ Time (sec) =  5.2541E-04   T (K) =  1.1032E+03
+ Time (sec) =  5.2636E-04   T (K) =  1.1045E+03
+ Time (sec) =  5.2732E-04   T (K) =  1.1058E+03
+ Time (sec) =  5.2827E-04   T (K) =  1.1071E+03
+ Time (sec) =  5.2923E-04   T (K) =  1.1084E+03
+ Time (sec) =  5.3018E-04   T (K) =  1.1098E+03
+ Time (sec) =  5.3104E-04   T (K) =  1.1110E+03
+ Time (sec) =  5.3190E-04   T (K) =  1.1123E+03
+ Time (sec) =  5.3276E-04   T (K) =  1.1136E+03
+ Time (sec) =  5.3361E-04   T (K) =  1.1149E+03
+ Time (sec) =  5.3447E-04   T (K) =  1.1163E+03
+ Time (sec) =  5.3533E-04   T (K) =  1.1177E+03
+ Time (sec) =  5.3619E-04   T (K) =  1.1191E+03
+ Time (sec) =  5.3705E-04   T (K) =  1.1205E+03
+ Time (sec) =  5.3791E-04   T (K) =  1.1220E+03
+ Time (sec) =  5.3868E-04   T (K) =  1.1233E+03
+ Time (sec) =  5.3945E-04   T (K) =  1.1247E+03
+ Time (sec) =  5.4022E-04   T (K) =  1.1261E+03
+ Time (sec) =  5.4100E-04   T (K) =  1.1275E+03
+ Time (sec) =  5.4177E-04   T (K) =  1.1290E+03
+ Time (sec) =  5.4247E-04   T (K) =  1.1303E+03
+ Time (sec) =  5.4316E-04   T (K) =  1.1316E+03
+ Time (sec) =  5.4386E-04   T (K) =  1.1330E+03
+ Time (sec) =  5.4455E-04   T (K) =  1.1344E+03
+ Time (sec) =  5.4525E-04   T (K) =  1.1358E+03
+ Time (sec) =  5.4594E-04   T (K) =  1.1373E+03
+ Time (sec) =  5.4664E-04   T (K) =  1.1388E+03
+ Time (sec) =  5.4733E-04   T (K) =  1.1403E+03
+ Time (sec) =  5.4803E-04   T (K) =  1.1419E+03
+ Time (sec) =  5.4872E-04   T (K) =  1.1434E+03
+ Time (sec) =  5.4942E-04   T (K) =  1.1450E+03
+ Time (sec) =  5.5005E-04   T (K) =  1.1465E+03
+ Time (sec) =  5.5067E-04   T (K) =  1.1480E+03
+ Time (sec) =  5.5130E-04   T (K) =  1.1495E+03
+ Time (sec) =  5.5192E-04   T (K) =  1.1511E+03
+ Time (sec) =  5.5255E-04   T (K) =  1.1527E+03
+ Time (sec) =  5.5318E-04   T (K) =  1.1543E+03
+ Time (sec) =  5.5374E-04   T (K) =  1.1558E+03
+ Time (sec) =  5.5430E-04   T (K) =  1.1573E+03
+ Time (sec) =  5.5487E-04   T (K) =  1.1588E+03
+ Time (sec) =  5.5543E-04   T (K) =  1.1604E+03
+ Time (sec) =  5.5599E-04   T (K) =  1.1620E+03
+ Time (sec) =  5.5650E-04   T (K) =  1.1635E+03
+ Time (sec) =  5.5701E-04   T (K) =  1.1650E+03
+ Time (sec) =  5.5751E-04   T (K) =  1.1665E+03
+ Time (sec) =  5.5802E-04   T (K) =  1.1680E+03
+ Time (sec) =  5.5853E-04   T (K) =  1.1696E+03
+ Time (sec) =  5.5903E-04   T (K) =  1.1712E+03
+ Time (sec) =  5.5954E-04   T (K) =  1.1728E+03
+ Time (sec) =  5.6005E-04   T (K) =  1.1744E+03
+ Time (sec) =  5.6055E-04   T (K) =  1.1761E+03
+ Time (sec) =  5.6106E-04   T (K) =  1.1778E+03
+ Time (sec) =  5.6157E-04   T (K) =  1.1795E+03
+ Time (sec) =  5.6203E-04   T (K) =  1.1811E+03
+ Time (sec) =  5.6248E-04   T (K) =  1.1827E+03
+ Time (sec) =  5.6294E-04   T (K) =  1.1844E+03
+ Time (sec) =  5.6339E-04   T (K) =  1.1861E+03
+ Time (sec) =  5.6385E-04   T (K) =  1.1878E+03
+ Time (sec) =  5.6431E-04   T (K) =  1.1895E+03
+ Time (sec) =  5.6476E-04   T (K) =  1.1912E+03
+ Time (sec) =  5.6522E-04   T (K) =  1.1930E+03
+ Time (sec) =  5.6568E-04   T (K) =  1.1948E+03
+ Time (sec) =  5.6613E-04   T (K) =  1.1967E+03
+ Time (sec) =  5.6659E-04   T (K) =  1.1986E+03
+ Time (sec) =  5.6704E-04   T (K) =  1.2005E+03
+ Time (sec) =  5.6745E-04   T (K) =  1.2022E+03
+ Time (sec) =  5.6824E-04   T (K) =  1.2056E+03
+ Time (sec) =  5.6934E-04   T (K) =  1.2106E+03
+ Time (sec) =  5.7008E-04   T (K) =  1.2141E+03
+ Time (sec) =  5.7119E-04   T (K) =  1.2195E+03
+ Time (sec) =  5.7230E-04   T (K) =  1.2251E+03
+ Time (sec) =  5.7304E-04   T (K) =  1.2290E+03
+ Time (sec) =  5.7407E-04   T (K) =  1.2346E+03
+ Time (sec) =  5.7507E-04   T (K) =  1.2403E+03
+ Time (sec) =  5.7618E-04   T (K) =  1.2468E+03
+ Time (sec) =  5.7726E-04   T (K) =  1.2534E+03
+ Time (sec) =  5.7807E-04   T (K) =  1.2585E+03
+ Time (sec) =  5.7914E-04   T (K) =  1.2656E+03
+ Time (sec) =  5.8022E-04   T (K) =  1.2730E+03
+ Time (sec) =  5.8103E-04   T (K) =  1.2788E+03
+ Time (sec) =  5.8211E-04   T (K) =  1.2867E+03
+ Time (sec) =  5.8313E-04   T (K) =  1.2945E+03
+ Time (sec) =  5.8410E-04   T (K) =  1.3022E+03
+ Time (sec) =  5.8507E-04   T (K) =  1.3101E+03
+ Time (sec) =  5.8619E-04   T (K) =  1.3196E+03
+ Time (sec) =  5.8706E-04   T (K) =  1.3274E+03
+ Time (sec) =  5.8809E-04   T (K) =  1.3368E+03
+ Time (sec) =  5.8901E-04   T (K) =  1.3457E+03
+ Time (sec) =  5.9007E-04   T (K) =  1.3564E+03
+ Time (sec) =  5.9101E-04   T (K) =  1.3664E+03
+ Time (sec) =  5.9203E-04   T (K) =  1.3781E+03
+ Time (sec) =  5.9306E-04   T (K) =  1.3905E+03
+ Time (sec) =  5.9408E-04   T (K) =  1.4040E+03
+ Time (sec) =  5.9501E-04   T (K) =  1.4174E+03
+ Time (sec) =  5.9604E-04   T (K) =  1.4337E+03
+ Time (sec) =  5.9706E-04   T (K) =  1.4521E+03
+ Time (sec) =  5.9803E-04   T (K) =  1.4721E+03
+ Time (sec) =  5.9901E-04   T (K) =  1.4955E+03
+ Time (sec) =  6.0003E-04   T (K) =  1.5248E+03
+ Time (sec) =  6.0102E-04   T (K) =  1.5613E+03
+ Time (sec) =  6.0202E-04   T (K) =  1.6136E+03
+ Time (sec) =  6.0301E-04   T (K) =  1.7055E+03
+ Time (sec) =  6.0400E-04   T (K) =  2.0072E+03
+ Time (sec) =  6.0500E-04   T (K) =  2.2875E+03
+ Time (sec) =  6.0601E-04   T (K) =  2.4401E+03
+ Time (sec) =  6.0701E-04   T (K) =  2.5082E+03
+ Time (sec) =  6.0802E-04   T (K) =  2.5417E+03
+ Time (sec) =  6.0902E-04   T (K) =  2.5604E+03
+ Time (sec) =  6.1003E-04   T (K) =  2.5720E+03
+ Time (sec) =  6.1101E-04   T (K) =  2.5795E+03
+ Time (sec) =  6.1202E-04   T (K) =  2.5849E+03
+ Time (sec) =  6.1303E-04   T (K) =  2.5887E+03
+ Time (sec) =  6.1404E-04   T (K) =  2.5915E+03
+ Time (sec) =  6.1502E-04   T (K) =  2.5936E+03
+ Time (sec) =  6.1610E-04   T (K) =  2.5953E+03
+ Time (sec) =  6.1707E-04   T (K) =  2.5965E+03
+ Time (sec) =  6.1804E-04   T (K) =  2.5974E+03
+ Time (sec) =  6.1900E-04   T (K) =  2.5982E+03
+ Time (sec) =  6.2009E-04   T (K) =  2.5990E+03
+ Time (sec) =  6.2101E-04   T (K) =  2.5995E+03
+ Time (sec) =  6.2210E-04   T (K) =  2.6000E+03
+ Time (sec) =  6.2318E-04   T (K) =  2.6005E+03
+ Time (sec) =  6.2405E-04   T (K) =  2.6008E+03
+ Time (sec) =  6.2514E-04   T (K) =  2.6012E+03
+ Time (sec) =  6.2601E-04   T (K) =  2.6015E+03
+ Time (sec) =  6.2710E-04   T (K) =  2.6018E+03
+ Time (sec) =  6.2819E-04   T (K) =  2.6021E+03
+ Time (sec) =  6.2906E-04   T (K) =  2.6024E+03
+ Time (sec) =  6.3014E-04   T (K) =  2.6027E+03
+ Time (sec) =  6.3123E-04   T (K) =  2.6030E+03
+ Time (sec) =  6.3202E-04   T (K) =  2.6032E+03
+ Time (sec) =  6.3319E-04   T (K) =  2.6035E+03
+ Time (sec) =  6.3436E-04   T (K) =  2.6038E+03
+ Time (sec) =  6.3515E-04   T (K) =  2.6040E+03
+ Time (sec) =  6.3632E-04   T (K) =  2.6043E+03
+ Time (sec) =  6.3711E-04   T (K) =  2.6045E+03
+ Time (sec) =  6.3828E-04   T (K) =  2.6048E+03
+ Time (sec) =  6.3906E-04   T (K) =  2.6050E+03
+ Time (sec) =  6.4024E-04   T (K) =  2.6052E+03
+ Time (sec) =  6.4102E-04   T (K) =  2.6054E+03
+ Time (sec) =  6.4220E-04   T (K) =  2.6057E+03
+ Time (sec) =  6.4337E-04   T (K) =  2.6060E+03
+ Time (sec) =  6.4454E-04   T (K) =  2.6063E+03
+ Time (sec) =  6.4525E-04   T (K) =  2.6065E+03
+ Time (sec) =  6.4659E-04   T (K) =  2.6068E+03
+ Time (sec) =  6.4726E-04   T (K) =  2.6069E+03
+ Time (sec) =  6.4860E-04   T (K) =  2.6072E+03
+ Time (sec) =  6.4927E-04   T (K) =  2.6074E+03
+ Time (sec) =  6.5061E-04   T (K) =  2.6077E+03
+ Time (sec) =  6.5129E-04   T (K) =  2.6079E+03
+ Time (sec) =  6.5263E-04   T (K) =  2.6082E+03
+ Time (sec) =  6.5330E-04   T (K) =  2.6083E+03
+ Time (sec) =  6.5464E-04   T (K) =  2.6086E+03
+ Time (sec) =  6.5531E-04   T (K) =  2.6088E+03
+ Time (sec) =  6.5665E-04   T (K) =  2.6091E+03
+ Time (sec) =  6.5799E-04   T (K) =  2.6094E+03
+ Time (sec) =  6.5933E-04   T (K) =  2.6097E+03
+ Time (sec) =  6.6068E-04   T (K) =  2.6100E+03
+ Time (sec) =  6.6202E-04   T (K) =  2.6103E+03
+ Time (sec) =  6.6336E-04   T (K) =  2.6106E+03
+ Time (sec) =  6.6470E-04   T (K) =  2.6109E+03
+ Time (sec) =  6.6604E-04   T (K) =  2.6112E+03
+ Time (sec) =  6.6738E-04   T (K) =  2.6115E+03
+ Time (sec) =  6.6873E-04   T (K) =  2.6118E+03
+ Time (sec) =  6.7007E-04   T (K) =  2.6120E+03
+ Time (sec) =  6.7141E-04   T (K) =  2.6123E+03
+ Time (sec) =  6.7275E-04   T (K) =  2.6126E+03
+ Time (sec) =  6.7409E-04   T (K) =  2.6129E+03
+ Time (sec) =  6.7543E-04   T (K) =  2.6132E+03
+ Time (sec) =  6.7677E-04   T (K) =  2.6135E+03
+ Time (sec) =  6.7812E-04   T (K) =  2.6137E+03
+ Time (sec) =  6.7946E-04   T (K) =  2.6140E+03
+ Time (sec) =  6.8214E-04   T (K) =  2.6146E+03
+ Time (sec) =  6.8482E-04   T (K) =  2.6151E+03
+ Time (sec) =  6.8751E-04   T (K) =  2.6156E+03
+ Time (sec) =  6.9019E-04   T (K) =  2.6162E+03
+ Time (sec) =  6.9287E-04   T (K) =  2.6167E+03
+ Time (sec) =  6.9556E-04   T (K) =  2.6172E+03
+ Time (sec) =  6.9824E-04   T (K) =  2.6177E+03
+ Time (sec) =  7.0092E-04   T (K) =  2.6182E+03
+ Time (sec) =  7.0360E-04   T (K) =  2.6187E+03
+ Time (sec) =  7.0629E-04   T (K) =  2.6192E+03
+ Time (sec) =  7.1165E-04   T (K) =  2.6202E+03
+ Time (sec) =  7.1702E-04   T (K) =  2.6211E+03
+ Time (sec) =  7.2239E-04   T (K) =  2.6220E+03
+ Time (sec) =  7.2775E-04   T (K) =  2.6229E+03
+ Time (sec) =  7.3312E-04   T (K) =  2.6238E+03
+ Time (sec) =  7.3848E-04   T (K) =  2.6247E+03
+ Time (sec) =  7.4385E-04   T (K) =  2.6255E+03
+ Time (sec) =  7.4922E-04   T (K) =  2.6263E+03
+ Time (sec) =  7.5458E-04   T (K) =  2.6271E+03
+ Time (sec) =  7.5995E-04   T (K) =  2.6279E+03
+ Time (sec) =  7.6531E-04   T (K) =  2.6287E+03
+ Time (sec) =  7.7068E-04   T (K) =  2.6294E+03
+ Time (sec) =  7.7605E-04   T (K) =  2.6302E+03
+ Time (sec) =  7.8141E-04   T (K) =  2.6309E+03
+ Time (sec) =  7.8678E-04   T (K) =  2.6316E+03
+ Time (sec) =  7.9214E-04   T (K) =  2.6322E+03
+ Time (sec) =  7.9751E-04   T (K) =  2.6329E+03
+ Time (sec) =  8.0288E-04   T (K) =  2.6336E+03
+ Time (sec) =  8.0824E-04   T (K) =  2.6342E+03
+ Time (sec) =  8.1361E-04   T (K) =  2.6348E+03
+ Time (sec) =  8.1897E-04   T (K) =  2.6354E+03
+ Time (sec) =  8.2434E-04   T (K) =  2.6360E+03
+ Time (sec) =  8.2971E-04   T (K) =  2.6366E+03
+ Time (sec) =  8.3507E-04   T (K) =  2.6372E+03
+ Time (sec) =  8.4044E-04   T (K) =  2.6377E+03
+ Time (sec) =  8.4580E-04   T (K) =  2.6383E+03
+ Time (sec) =  8.5117E-04   T (K) =  2.6388E+03
+ Time (sec) =  8.5654E-04   T (K) =  2.6393E+03
+ Time (sec) =  8.6190E-04   T (K) =  2.6398E+03
+ Time (sec) =  8.6727E-04   T (K) =  2.6403E+03
+ Time (sec) =  8.7263E-04   T (K) =  2.6408E+03
+ Time (sec) =  8.7800E-04   T (K) =  2.6413E+03
+ Time (sec) =  8.8337E-04   T (K) =  2.6418E+03
+ Time (sec) =  8.8873E-04   T (K) =  2.6422E+03
+ Time (sec) =  8.9410E-04   T (K) =  2.6427E+03
+ Time (sec) =  8.9946E-04   T (K) =  2.6431E+03
+ Time (sec) =  9.0483E-04   T (K) =  2.6435E+03
+ Time (sec) =  9.1020E-04   T (K) =  2.6440E+03
+ Time (sec) =  9.1556E-04   T (K) =  2.6444E+03
+ Time (sec) =  9.2093E-04   T (K) =  2.6448E+03
+ Time (sec) =  9.2629E-04   T (K) =  2.6452E+03
+ Time (sec) =  9.3166E-04   T (K) =  2.6455E+03
+ Time (sec) =  9.3703E-04   T (K) =  2.6459E+03
+ Time (sec) =  9.4239E-04   T (K) =  2.6463E+03
+ Time (sec) =  9.4776E-04   T (K) =  2.6466E+03
+ Time (sec) =  9.5312E-04   T (K) =  2.6470E+03
+ Time (sec) =  9.5849E-04   T (K) =  2.6473E+03
+ Time (sec) =  9.6922E-04   T (K) =  2.6480E+03
+ Time (sec) =  9.7888E-04   T (K) =  2.6486E+03
+ Time (sec) =  9.8854E-04   T (K) =  2.6491E+03
+ Time (sec) =  9.9820E-04   T (K) =  2.6497E+03
+ Time (sec) =  1.0000E-03   T (K) =  2.6498E+03
+
+
+   Integration completed:
+   Ignition Time (sec) =   3.2750E-04
+   Temp criteria (K) =   1.0000E+03
+
+   Binary file has   2789 time datasets.

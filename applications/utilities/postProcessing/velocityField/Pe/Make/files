@@ -1,0 +1,3 @@
+Pe.C
+
+EXE = $(FOAM_APPBIN)/Pe

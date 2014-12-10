@@ -1,0 +1,2 @@
+cDBUG       = -g -DFULLDEBUG
+cOPT        = -O0

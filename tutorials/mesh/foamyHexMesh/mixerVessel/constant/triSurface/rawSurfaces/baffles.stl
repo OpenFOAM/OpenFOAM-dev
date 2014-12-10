@@ -1,0 +1,114 @@
+solid baffles
+ facet normal 0.707107 0.707107 -0
+  outer loop
+   vertex 0.137322 -0.137322 0.025
+   vertex 0.137322 -0.137322 0.4
+   vertex 0.155 -0.155 0.025
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 0
+  outer loop
+   vertex 0.137322 -0.137322 0.4
+   vertex 0.155 -0.155 0.4
+   vertex 0.155 -0.155 0.025
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 -0
+  outer loop
+   vertex 0.155 -0.155 0.025
+   vertex 0.155 -0.155 0.4
+   vertex 0.172678 -0.172678 0.025
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 0
+  outer loop
+   vertex 0.155 -0.155 0.4
+   vertex 0.172678 -0.172678 0.4
+   vertex 0.172678 -0.172678 0.025
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 -0
+  outer loop
+   vertex 0.137322 -0.137322 0.4
+   vertex 0.137322 -0.137322 0.775
+   vertex 0.155 -0.155 0.4
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 0
+  outer loop
+   vertex 0.137322 -0.137322 0.775
+   vertex 0.155 -0.155 0.775
+   vertex 0.155 -0.155 0.4
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 -0
+  outer loop
+   vertex 0.155 -0.155 0.4
+   vertex 0.155 -0.155 0.775
+   vertex 0.172678 -0.172678 0.4
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 0
+  outer loop
+   vertex 0.155 -0.155 0.775
+   vertex 0.172678 -0.172678 0.775
+   vertex 0.172678 -0.172678 0.4
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 -0
+  outer loop
+   vertex -0.172678 0.172678 0.025
+   vertex -0.172678 0.172678 0.4
+   vertex -0.155 0.155 0.025
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 0
+  outer loop
+   vertex -0.172678 0.172678 0.4
+   vertex -0.155 0.155 0.4
+   vertex -0.155 0.155 0.025
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 -0
+  outer loop
+   vertex -0.155 0.155 0.025
+   vertex -0.155 0.155 0.4
+   vertex -0.137322 0.137322 0.025
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 0
+  outer loop
+   vertex -0.155 0.155 0.4
+   vertex -0.137322 0.137322 0.4
+   vertex -0.137322 0.137322 0.025
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 -0
+  outer loop
+   vertex -0.172678 0.172678 0.4
+   vertex -0.172678 0.172678 0.775
+   vertex -0.155 0.155 0.4
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 0
+  outer loop
+   vertex -0.172678 0.172678 0.775
+   vertex -0.155 0.155 0.775
+   vertex -0.155 0.155 0.4
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 -0
+  outer loop
+   vertex -0.155 0.155 0.4
+   vertex -0.155 0.155 0.775
+   vertex -0.137322 0.137322 0.4
+  endloop
+ endfacet
+ facet normal 0.707107 0.707107 0
+  outer loop
+   vertex -0.155 0.155 0.775
+   vertex -0.137322 0.137322 0.775
+   vertex -0.137322 0.137322 0.4
+  endloop
+ endfacet
+endsolid baffles

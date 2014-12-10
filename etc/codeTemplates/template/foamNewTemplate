@@ -1,0 +1,130 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamNewTemplate
+#
+# Description
+#     Create a new standard OpenFOAM templated source file
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+Template="$WM_PROJECT_DIR/etc/codeTemplates/template/_TemplateTemplate"
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: $Script [OPTION] <type> <ClassName> <Template arguments...>
+options:
+  -help             print the usage
+
+* create a new standard OpenFOAM source file for templated classes
+
+type: (C|H|I|IO)
+
+A ClassName starting with '-' will simply display the template
+
+USAGE
+    exit 1
+}
+
+# this implicitly covers a lone -help
+[ "$#" -gt 1 ] || usage
+
+
+className="$2"
+unset Type printOpt
+
+# for a className starting with '-' simply display the code
+if [ "${2#-}" != "${2}" ]
+then
+    printOpt=true
+fi
+
+
+case "$1" in
+(-h | -help)
+    usage
+    ;;
+(C|H)
+    Type=".$1"
+    ;;
+(I)
+    Type="$1.H"
+    ;;
+(IO)
+    Type="$1.C"
+    ;;
+*)
+    usage "unknown type '$1'"
+    ;;
+esac
+
+
+if [ "${printOpt:-false}" = true ]
+then
+    [ "$#" -eq 2 ] || usage "wrong number of arguments"
+    shift 2
+
+    cat $Template$Type
+
+else
+
+    [ "$#" -ge 3 ] || usage "wrong number of arguments"
+    shift 2
+
+    fileName="$className$Type"
+
+    echo "$Script: Creating new template interface file $fileName"
+    if [ -e "$fileName" ]
+    then
+        echo "   Error: file exists"
+        exit 1
+    fi
+
+
+    # process class name
+    sed -e "s/CLASSNAME/$className/g" $Template$Type > $fileName.1
+
+
+    # process remaining (template) arguments
+    for tArg
+    do
+        sed -e "s/TemplateClassArgument/class $tArg, TemplateClassArgument/g" \
+            -e "s/TemplateArgument/$tArg, TemplateArgument/g" \
+            $fileName.1 > $fileName.2
+
+        mv $fileName.2 $fileName.1
+    done
+
+
+    # remove remaining ", Template .."
+    sed -e "s/, TemplateClassArgument//g" \
+        -e "s/, TemplateArgument//g" \
+        $fileName.1 > $fileName
+
+    rm $fileName.1
+fi
+#------------------------------------------------------------------------------
