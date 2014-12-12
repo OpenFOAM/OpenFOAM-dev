@@ -339,7 +339,7 @@ Foam::scalar Foam::SprayParcel<ParcelType>::chi
             scalar TBoil = liq.pvInvert(p0);
 
             scalar hl = liq.hl(pAmb, TBoil);
-            scalar iTp = liq.h(pAmb, T0) - liq.rho(pAmb, T0);
+            scalar iTp = liq.h(pAmb, T0) - pAmb/liq.rho(pAmb, T0);
             scalar iTb = liq.h(pAmb, TBoil) - pAmb/liq.rho(pAmb, TBoil);
 
             chi += X[i]*(iTp - iTb)/hl;
