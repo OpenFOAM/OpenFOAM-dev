@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -681,7 +681,7 @@ Foam::label Foam::polyTopoChange::getCellOrder
                 cellInOrder++;
 
                 // find if the neighbours have been visited
-                const labelList& neighbours = cellCellAddressing[currentCell];
+                const labelUList neighbours = cellCellAddressing[currentCell];
 
                 // Add in increasing order of connectivity
 
