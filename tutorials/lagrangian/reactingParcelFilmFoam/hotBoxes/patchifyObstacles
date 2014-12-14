@@ -6,7 +6,7 @@
 #   \\  /    A nd           | Web:      www.OpenFOAM.org                      #
 #    \\/     M anipulation  |                                                 #
 #-----------------------------------------------------------------------------#
-cd ${0%/*} || exit 1    # run from this directory
+cd ${0%/*} || exit 1    # Run from this directory
 
 x0=0.4
 y0=0.1

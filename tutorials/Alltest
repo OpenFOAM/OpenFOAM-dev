@@ -29,7 +29,7 @@
 #     quickly tests the tutorials and writes out the scheme/solver information
 #
 #------------------------------------------------------------------------------
-cd ${0%/*} || exit 1    # run from this directory
+cd ${0%/*} || exit 1    # Run from this directory
 
 usage()
 {
