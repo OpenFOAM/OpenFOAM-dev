@@ -1,14 +1,17 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake $makeType regionModel
-wmake $makeType pyrolysisModels
-wmake $makeType surfaceFilmModels
-wmake $makeType surfaceFilmModels/derivedFvPatchFields/wallFunctions
-wmake $makeType thermalBaffleModels
-wmake $makeType regionCoupling
+wmake $targetType regionModel
+wmake $targetType pyrolysisModels
+wmake $targetType surfaceFilmModels
+wmake $targetType surfaceFilmModels/derivedFvPatchFields/wallFunctions
+wmake $targetType thermalBaffleModels
+wmake $targetType regionCoupling
 
 
 # ----------------------------------------------------------------- end-of-file

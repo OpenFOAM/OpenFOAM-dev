@@ -1,6 +1,9 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 # get SCOTCH_VERSION, SCOTCH_ARCH_PATH
 if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/scotch.sh`
@@ -15,7 +18,7 @@ fi
 
 
 #
-# define how to create an mpi-versioned library of $makeType
+# define how to create an mpi-versioned library of $targetType
 # compile into qualified directory
 # use sentinel file to handle version changes
 #
@@ -26,11 +29,11 @@ wmakeMpiLib()
     do
     (
         WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
-        whichmpi="$libName/Make/$WM_OPTIONS/using:$FOAM_MPI"
-        whichscotch="$libName/Make/$WM_OPTIONS/using:$SCOTCH_VERSION"
+        whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$FOAM_MPI"
+        whichscotch="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$SCOTCH_VERSION"
         [ -e "$whichmpi" -a -e "$whichscotch" ] || wclean $libName
-        echo "wmake $makeType $libName"
-        wmake $makeType $libName
+        echo "wmake $targetType $libName"
+        wmake $targetType $libName
         touch "$whichmpi" "$whichscotch"
     )
     done
@@ -43,16 +46,18 @@ wmakeLnInclude decompositionMethods
 
 if [ -n "$SCOTCH_ARCH_PATH" ]
 then
-    wmake $makeType scotchDecomp
+    wmake $targetType scotchDecomp
 
     if [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
     then
         #- Bit of a hack: ptscotch 6 requires scotch linked as well as. Can be
         #  removed once ptscotch declares dependency on scotch itself.
-        if [ "$SCOTCH_VERSION" = "scotch_6.0.0" ]
-        then
+        case "$SCOTCH_VERSION" in
+        scotch_6.*)
             export LINK_FLAGS="-lscotch"
-        fi
+            ;;
+        esac
+
 
         wmakeMpiLib ptscotchDecomp
     fi
@@ -64,11 +69,11 @@ fi
 
 
 # Try and build metisDecomp (has own logic)
-(cd metisDecomp && ./Allwmake $makeType)
+(cd metisDecomp && ./Allwmake $targetType)
 
 
-wmake $makeType decompositionMethods
+wmake $targetType decompositionMethods
 
-wmake $makeType decompose
+wmake $targetType decompose
 
 # ----------------------------------------------------------------- end-of-file

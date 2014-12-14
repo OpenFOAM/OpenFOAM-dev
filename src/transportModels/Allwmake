@@ -1,13 +1,16 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake $makeType twoPhaseMixture
-wmake $makeType interfaceProperties
-wmake $makeType twoPhaseProperties
-wmake $makeType incompressible
-wmake $makeType compressible
-wmake $makeType immiscibleIncompressibleTwoPhaseMixture
+wmake $targetType twoPhaseMixture
+wmake $targetType interfaceProperties
+wmake $targetType twoPhaseProperties
+wmake $targetType incompressible
+wmake $targetType compressible
+wmake $targetType immiscibleIncompressibleTwoPhaseMixture
 
 # ----------------------------------------------------------------- end-of-file

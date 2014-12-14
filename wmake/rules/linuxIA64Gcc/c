@@ -1,4 +1,4 @@
-.SUFFIXES: .c .h
+SUFFIXES += .c
 
 cWARN        = -Wall
 
@@ -8,7 +8,7 @@ include $(RULES)/c$(WM_COMPILE_OPTION)
 
 cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS) -fPIC
 
-ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
+ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $< -o $@
 
 LINK_LIBS   = $(cDBUG)
 

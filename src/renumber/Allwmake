@@ -1,6 +1,9 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 ## get ZOLTAN_ARCH_PATH
 #if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/zoltan.sh`
@@ -16,11 +19,11 @@ makeType=${1:-libso}
 
 set -x
 
-wmake $makeType renumberMethods
+wmake $targetType renumberMethods
 
 if [ -n "$BOOST_ARCH_PATH" ]
 then
-    wmake $makeType SloanRenumber
+    wmake $targetType SloanRenumber
 else
     echo
     echo "Skipping SloanRenumber"
@@ -30,7 +33,7 @@ fi
 
 if [ -n "$ZOLTAN_ARCH_PATH" ]
 then
-    wmake $makeType zoltanRenumber
+    wmake $targetType zoltanRenumber
 else
     echo
     echo "Skipping zoltanRenumber"

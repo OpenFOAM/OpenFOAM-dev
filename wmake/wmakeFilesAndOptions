@@ -38,7 +38,7 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/}
+Usage: $Script
 
     Scan current directory for directories and source files
     and construct 'Make/files' and 'Make/options'
@@ -48,7 +48,10 @@ USAGE
 }
 
 
-# simple parse options
+#------------------------------------------------------------------------------
+# Parse arguments and options
+#------------------------------------------------------------------------------
+
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -64,12 +67,13 @@ do
     esac
 done
 
-# no arguments
+# No arguments
 [ "$#" -eq 0 ] || usage "unexpected arguments: '$*'"
 
-#
-# check environment variables
-#
+
+#------------------------------------------------------------------------------
+# Check environment variables
+#------------------------------------------------------------------------------
 for check in WM_OPTIONS WM_LINK_LANGUAGE WM_DIR
 do
     eval test "\$$check" || {
@@ -95,5 +99,13 @@ fi
     echo "$Script: Creating Make/options"
     $WM_DIR/scripts/makeOptions
 }
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script usage
+
 
 #------------------------------------------------------------------------------

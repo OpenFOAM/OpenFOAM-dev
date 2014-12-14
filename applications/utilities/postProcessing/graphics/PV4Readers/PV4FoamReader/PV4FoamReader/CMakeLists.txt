@@ -72,6 +72,7 @@ ENDIF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
 
 TARGET_LINK_LIBRARIES(
     PV4FoamReader_SM
+    LINK_PUBLIC
     OpenFOAM
     finiteVolume
     vtkPV4Foam

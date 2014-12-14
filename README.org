@@ -2,7 +2,7 @@
 #
 #+TITLE:            OpenFOAM README for version dev
 #+AUTHOR:               The OpenFOAM Foundation
-#+DATE:                     10th December 2014
+#+DATE:                     14th December 2014
 #+LINK:                  http://www.openfoam.org
 #+OPTIONS: author:nil ^:{}
 # Copyright (c) 2014 OpenFOAM Foundation.
@@ -28,10 +28,10 @@
     [[http://www.OpenFOAM.org/git.php]]
 
 * Documentation
-  [[http://www.OpenFOAM.com/docs]]
-
-* Support and development contracts
-  [[http://www.OpenFOAM.com/support]]
+  [[http://www.OpenFOAM.org/docs]]
 
 * Reporting Bugs in OpenFOAM
-  [[http://www.OpenFOAM.com/bugs]]
+  [[http://www.OpenFOAM.org/bugs]]
+
+* Contacting the OpenFOAM Foundation
+  http://www.openfoam.org/contact

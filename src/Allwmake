@@ -1,86 +1,83 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 wmakeCheckPwd "$WM_PROJECT_DIR/src" || {
-    echo "Error: Current directory is not \$WM_PROJECT_DIR/src"
+    echo "Allwmake error: Current directory is not \$WM_PROJECT_DIR/src"
     echo "    The environment variables are inconsistent with the installation."
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
 
 [ -n "$FOAM_EXT_LIBBIN" ] || {
-    echo "Error: FOAM_EXT_LIBBIN not set"
+    echo "Allwmake error: FOAM_EXT_LIBBIN not set"
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
 
 set -x
 
-# update OpenFOAM version strings if required
+# Update OpenFOAM version strings if required
 wmakePrintBuild -check || /bin/rm -f OpenFOAM/Make/*/global.? 2>/dev/null
 
 wmakeLnInclude OpenFOAM
 wmakeLnInclude OSspecific/${WM_OSTYPE:-POSIX}
-Pstream/Allwmake $*
+Pstream/Allwmake $targetType $*
 
 OSspecific/${WM_OSTYPE:-POSIX}/Allwmake $*
-wmake $makeType OpenFOAM
+wmake $targetType OpenFOAM
 
-wmake $makeType fileFormats
-wmake $makeType surfMesh
-wmake $makeType triSurface
-wmake $makeType meshTools
-wmake $makeType edgeMesh
+wmake $targetType fileFormats
+wmake $targetType surfMesh
+wmake $targetType triSurface
+wmake $targetType meshTools
+wmake $targetType edgeMesh
 
 # Decomposition methods needed by dummyThirdParty
+# (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
 parallel/decompose/AllwmakeLnInclude
-# dummyThirdParty (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
-dummyThirdParty/Allwmake $*
+dummyThirdParty/Allwmake $targetType $*
 
-wmake $makeType finiteVolume
-wmake $makeType lagrangian/basic
-wmake $makeType lagrangian/distributionModels
-wmake $makeType genericPatchFields
+wmake $targetType finiteVolume
+wmake $targetType lagrangian/basic
+wmake $targetType lagrangian/distributionModels
+wmake $targetType genericPatchFields
 
-# Build the proper scotchDecomp, metisDecomp etc.
-parallel/Allwmake $*
+wmake $targetType conversion
+wmake $targetType sampling
+wmake $targetType mesh/extrudeModel
+wmake $targetType dynamicMesh
+wmake $targetType dynamicFvMesh
+wmake $targetType topoChangerFvMesh
 
-renumber/Allwmake $*
+# Compile scotchDecomp, metisDecomp etc.
+parallel/Allwmake $targetType $*
 
-wmake $makeType conversion
+wmake $targetType ODE
+wmake $targetType randomProcesses
 
-wmake $makeType sampling
+transportModels/Allwmake $targetType $*
+thermophysicalModels/Allwmake $targetType $*
+turbulenceModels/Allwmake $targetType $*
+TurbulenceModels/Allwmake $targetType $*
+wmake $targetType combustionModels
+regionModels/Allwmake $targetType $*
+lagrangian/Allwmake $targetType $*
+mesh/Allwmake $targetType $*
+renumber/Allwmake $targetType $*
+fvAgglomerationMethods/Allwmake $targetType $*
 
-wmake $makeType mesh/extrudeModel
+wmake $targetType fvMotionSolver
+wmake $targetType engine
+wmake $targetType fvOptions
+wmake $targetType regionCoupled
 
-wmake $makeType dynamicMesh
-wmake $makeType dynamicFvMesh
-wmake $makeType topoChangerFvMesh
+postProcessing/Allwmake $targetType $*
 
-wmake $makeType ODE
-wmake $makeType randomProcesses
+wmake $targetType sixDoFRigidBodyMotion
 
-thermophysicalModels/Allwmake $*
-transportModels/Allwmake $*
-turbulenceModels/Allwmake $*
-TurbulenceModels/Allwmake $*
-wmake $makeType combustionModels
-regionModels/Allwmake $*
-lagrangian/Allwmake $*
-mesh/Allwmake $*
-
-fvAgglomerationMethods/Allwmake $*
-
-wmake $makeType fvMotionSolver
-wmake $makeType engine
-
-wmake $makeType fvOptions
-
-wmake $makeType regionCoupled
-
-postProcessing/Allwmake $*
-
-wmake $makeType sixDoFRigidBodyMotion
 
 # ----------------------------------------------------------------- end-of-file

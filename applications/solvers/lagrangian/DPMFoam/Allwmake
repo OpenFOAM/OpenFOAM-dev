@@ -3,6 +3,6 @@
 cd ${0%/*} || exit 1
 set -x
 
-wmake DPMTurbulenceModels
+wmake libso DPMTurbulenceModels
 wmake
 wmake MPPICFoam

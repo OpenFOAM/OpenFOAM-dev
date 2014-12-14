@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -25,52 +25,60 @@
 #     MakefileFiles
 #
 # Description
-#     A Makefile for the 'files', used by wmake
+#     A Makefile for the 'options' and 'files' files, used by wmake
 #
 #------------------------------------------------------------------------------
 
 GENERAL_RULES = $(WM_DIR)/rules/General
 RULES         = $(WM_DIR)/rules/$(WM_ARCH)$(WM_COMPILER)
-WM_SCRIPTS    = $(WM_DIR)/scripts
-OBJECTS_DIR   = $(WM_OPTIONS)
-FFLAGS        =
+OBJECTS_DIR   = $(MAKE_DIR)/$(WM_OPTIONS)
 
 include $(GENERAL_RULES)/general
 include $(RULES)/general
-include $(OBJECTS_DIR)/options
 
 #------------------------------------------------------------------------------
 # declare names of make system control files derived from file 'files'
 #------------------------------------------------------------------------------
 
-FILES   = $(WM_OPTIONS)/files
+OPTIONS = $(OBJECTS_DIR)/options
+FILES   = $(OBJECTS_DIR)/files
+VARS    = $(OBJECTS_DIR)/variables
+SFILES  = $(OBJECTS_DIR)/sourceFiles
 
-SFILES  = $(WM_OPTIONS)/sourceFiles
-OFILES  = $(WM_OPTIONS)/objectFiles
-DFILES  = $(WM_OPTIONS)/dependencyFiles
-IFILES  = $(WM_OPTIONS)/includeDeps
+-include $(OPTIONS)
 
 #------------------------------------------------------------------------------
 # Declare dependecy of all make system files on FILES
 # Causes all derived files to be remade if any are changed or missing
 #------------------------------------------------------------------------------
 
-allFiles : $(FILES) $(SFILES) $(OFILES) $(DFILES) $(IFILES)
+all : $(OPTIONS) $(SFILES) $(VARS)
 
-$(FILES) : files
-	@$(CPP) $(GFLAGS) $(FFLAGS) files | sed -e 's@   *@ @g' > $(FILES)
+$(OPTIONS) : $(MAKE_DIR)/options
+	@$(CPP) $(GFLAGS) $(MAKE_DIR)/options | sed -e 's@   *@ @g' > $(OPTIONS)
 
-$(SFILES): files
-	@$(WM_SCRIPTS)/makeDerivedFiles
+$(SFILES): $(MAKE_DIR)/files
+	@$(CPP) $(GFLAGS) $(MAKE_DIR)/files | sed -e 's@   *@ @g' > $(FILES)
+	# Find all macro definitions in the files
+	@grep "=" $(FILES) > $(VARS)
+	echo "SOURCE = " > $(SFILES)
+	# Remove all macro definitions from the files list
+	@grep -v "=" $(FILES) >> $(SFILES)
+	@rm -f $(FILES)
+	# Add a newline to files to ensure the last line is followed by a newline
+	@echo "" >> $(SFILES)
+	# Remove commented lines, blank lines, and trailing blanks from files
+	@sed -i \
+	    -e '/^#/ d'         \
+	    -e '/^[ \t]*$$/ d'   \
+	    -e 's,[ \t]*$$,,'    \
+	     $(SFILES)
+	# Add backslashes
+	@sed -i \
+	    -e 's,$$, \\,'    \
+	    -e '$$s,\\,,'    \
+	    $(SFILES)
 
-$(OFILES): files
-	@$(WM_SCRIPTS)/makeDerivedFiles
-
-$(DFILES): files
-	@$(WM_SCRIPTS)/makeDerivedFiles
-
-$(IFILES): files
-	@$(WM_SCRIPTS)/makeDerivedFiles
-
+$(VARS): $(SFILES)
 
 #------------------------------------------------------------------------------

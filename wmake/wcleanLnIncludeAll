@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -29,14 +29,15 @@
 #     Delete all the lnInclude directories in the tree.
 #
 #------------------------------------------------------------------------------
+Script=${0##*/}
 
-# default is pwd
+# Default to the CWD
 if [ "$#" -eq 0 ]
 then
     set -- .
 elif [ "$1" = "-h" -o "$1" = "-help" ]
 then
-    echo "Usage: ${0##*/} [dir1] .. [dirN]"
+    echo "Usage: $Script [dir1] .. [dirN]"
     echo
     echo "    Delete all the lnInclude directories in the tree"
     echo
@@ -44,15 +45,23 @@ then
 fi
 
 
-for i
+for dir
 do
-    if [ -d "$i" ]
+    if [ -d "$dir" ]
     then
-        echo "removing lnInclude directories: $i"
-        find $i -depth -type d -name lnInclude -exec rm -rf {} \;
+        echo "removing lnInclude directories: $dir"
+        find $dir -depth -type d -name lnInclude -exec rm -rf {} \;
     else
-        echo "no directory: $i" 1>&2
+        echo "no directory: $dir" 1>&2
     fi
 done
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script
+
 
 #------------------------------------------------------------------------------

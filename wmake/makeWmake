@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -29,11 +29,13 @@
 #     Build platform-specific parts of wmake
 #
 #------------------------------------------------------------------------------
+Script=${0##*/}
+
 usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-usage: ${0##*/}
+Usage: $Script
 
   Build platform-specific parts of wmake
 
@@ -53,13 +55,19 @@ echo Build platform-specific parts of wmake
 echo
 (
     set -x
-    cd ${0%/*}/src && make $@
-    # or simply:  make -C ${0%/*}/src $@
+    make -C ${0%/*}/src $@
 )
 echo
 echo ========================================
 echo Done building wmake
 echo ========================================
 echo
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script usage
 
 #------------------------------------------------------------------------------

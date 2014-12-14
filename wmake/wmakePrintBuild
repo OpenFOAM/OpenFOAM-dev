@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -29,15 +29,14 @@
 #     Print the version used when building the project
 #
 #------------------------------------------------------------------------------
-# persistent build tag
-build="$WM_PROJECT_DIR/.build"
+Script=${0##*/}
 
 usage() {
     exec 1>&2
 
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-usage: ${0##*/} [OPTION]
+Usage: $Script [OPTION]
 options:
   -check          check the git head commit vs. \$WM_PROJECT_DIR/.build
                   (exit code 0 for no changes)
@@ -55,11 +54,13 @@ Print the version used when building the project, in this order of precedence:
 USAGE
     exit 1
 }
-#------------------------------------------------------------------------------
 
+
+#------------------------------------------------------------------------------
+# Parse arguments and options
+#------------------------------------------------------------------------------
 unset checkOnly update package version shortOpt
 
-# parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -80,7 +81,7 @@ do
         ;;
     -pkg | -package)
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        # mark empty as 'none', disallow '!' in string
+        # Mark empty as 'none', disallow '!' in string
         package=$(echo "${2:-none}" | sed -e 's/!//g')
         shift 2
         ;;
@@ -101,10 +102,14 @@ done
 
 #------------------------------------------------------------------------------
 
-#
-# retrieve old values from the $WM_PROJECT_DIR/.build cache, stored as
+# Persistent build tag
+build="$WM_PROJECT_DIR/.build"
+
+
+#------------------------------------------------------------------------------
+# Retrieve old values from the $WM_PROJECT_DIR/.build cache, stored as
 #     version [packager]
-#
+#------------------------------------------------------------------------------
 unset oldPackage oldVersion
 getOldValues()
 {
@@ -115,10 +120,9 @@ getOldValues()
     [ "${oldPackage:-none}" = none ] && unset oldPackage
 }
 
-#
-# printTag - output the build tag
-# reuses the old -package tag if needed
-#
+#------------------------------------------------------------------------------
+# printTag - output the build tag, reuses the old -package tag if needed
+#------------------------------------------------------------------------------
 printTag()
 {
     if [ "${package:-${oldPackage:-none}}" = none ]
@@ -130,13 +134,16 @@ printTag()
 }
 
 
+#------------------------------------------------------------------------------
+# Get the version
+#------------------------------------------------------------------------------
 
 if [ -n "$version" ]
 then
-    # specified a version - no error possible
+    # Specified a version - no error possible
     rc=0
 else
-    # get the head SHA1 when building under git
+    # Get the head SHA1 when building under git
     # if there are multiple values (eg, HEAD, origin/HEAD, ...)
     # only take the first one, which is 'HEAD'
     version=$(
@@ -146,17 +153,17 @@ else
 
     if [ -n "$version" ]
     then
-        # mark as success and prefix with WM_PROJECT_VERSION
+        # Mark as success and prefix with WM_PROJECT_VERSION
         rc=0
         version="${WM_PROJECT_VERSION}-$version"
     else
-        # mark as failure
+        # Mark as failure
         rc=1
     fi
 fi
 
 
-# retrieve old values
+# Retrieve old values
 getOldValues
 
 if [ "$shortOpt" = true ]
@@ -164,9 +171,10 @@ then
     unset package oldPackage
 fi
 
-#
-# update persistent build tag if possible
-#
+
+#------------------------------------------------------------------------------
+# Update persistent build tag if possible
+#------------------------------------------------------------------------------
 if [ $rc -eq 0 -a -n "$update" ]
 then
     if [ "$version:$package" != "$oldVersion:$oldPackage" ]
@@ -178,16 +186,10 @@ then
     fi
 fi
 
-# cat<< DEBUG 1>&2
-# Debug information
-#     version='$version'
-#     package='$package'
-#     oldVersion='$oldVersion'
-#     oldPackage='$oldPackage'
-# DEBUG
 
-
-# check git vs. persistent build tag
+#------------------------------------------------------------------------------
+# Check git vs. persistent build tag
+#------------------------------------------------------------------------------
 if [ -n "$checkOnly" ]
 then
     if [ $rc -eq 0 ]
@@ -207,23 +209,26 @@ then
 fi
 
 
-#
-# cannot get git information or  -version version
-#
+#------------------------------------------------------------------------------
+# Cannot get git information or  -version version
+#------------------------------------------------------------------------------
 if [ $rc -ne 0 ]
 then
     if [ -n "$oldVersion" ]
     then
-        # use previous version info
+        # Use previous version info
         version="$oldVersion"
     else
-        # fallback to WM_PROJECT_VERSION alone
+        # Fallback to WM_PROJECT_VERSION alone
         version="${WM_PROJECT_VERSION:-unknown}"
     fi
 fi
 
 
-# output the tag
+#------------------------------------------------------------------------------
+# Output the tag
+#------------------------------------------------------------------------------
 printTag
+
 
 #------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -26,17 +26,17 @@
 #
 # Description
 #     Makefile used by
-#         wmake all
+#         wmake -all
 #     to make the applications in the subdirectories of the current directory
 #
 #------------------------------------------------------------------------------
 
-.PHONY: application $(FOAM_APPS)
-
+.PHONY: application
 application: $(FOAM_APPS)
 
+.PHONY: $(FOAM_APPS)
 $(FOAM_APPS):
-	+@wmake all $@
+	+@wmake -all $(TARGET) $@
 
 
 #------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -48,16 +48,17 @@
 #         eg,  export WM_NCOMPPROCS=$(wmakeScheduler -count)
 #
 #-------------------------------------------------------------------------------
+Script=${0##*/}
 
 # csh sets HOST, bash sets HOSTNAME
 : ${HOST:=$HOSTNAME}
 
-
 lockDir=$HOME/.$WM_PROJECT/.wmake
-# fallback - 1 core on current host
+
+# Fallback - 1 core on current host
 : ${WM_HOSTS:=$HOST:1}
 
-# count the total number of slots available and exit
+# Count the total number of slots available and exit
 if [ "$1" = "-count" ]
 then
     expr $(
@@ -71,12 +72,12 @@ then
     exit 0
 fi
 
-# where to source WM_PROJECT settings in a remote shell
+# Where to source WM_PROJECT settings in a remote shell
 # This code tries to figure out which cshrc or bashrc to execute.
 # !! Assumes remote computer running same shell and startup files
 # in same location
 
-sourceFoam=false    # fallback command
+sourceFoam=false    # Fallback command
 case $SHELL in
 */csh | */tcsh )    # [t]csh vs bash|ksh|sh
     shellRc=cshrc
@@ -86,9 +87,9 @@ case $SHELL in
     ;;
 esac
 
-# check ~/.$WM_PROJECT/$WM_PROJECT_VERSION/
-# check ~/.$WM_PROJECT/
-# check <installedProject>/etc/
+# Check ~/.$WM_PROJECT/$WM_PROJECT_VERSION/
+# Check ~/.$WM_PROJECT/
+# Check <installedProject>/etc/
 if [ "$WM_PROJECT" ]
 then
     for i in \
@@ -125,9 +126,9 @@ case $sourceFoam in
     ;;
 esac
 
-# quote double-quotes for remote command line
+# Quote double-quotes for remote command line
 rcmd=$(echo $* | sed -e s/\"/\'\"\'/g)
-## the same, without forking (not ksh, maybe not /bin/sh either)
+# The same, without forking (not ksh, maybe not /bin/sh either)
 # rcmd=$(while [ "$#" -gt 0 ]; do echo "${1//\"/'\"'}"; shift; done)
 
 
@@ -146,9 +147,9 @@ done
 set -o pipefail
 
 
-#
-# colour output by argument 1
-#
+#------------------------------------------------------------------------------
+# Colour output by argument 1
+#------------------------------------------------------------------------------
 colourPipe()
 {
 
@@ -173,7 +174,7 @@ colourIndex=0
 # Check for existence of lockfile binary
 if ! type -p lockfile >/dev/null
 then
-    echo "Could not find executable 'lockfile'"
+    echo "$Script: Could not find executable 'lockfile'"
     exit 1
 fi
 
@@ -181,7 +182,7 @@ while :
 do
     for slotGroup in $WM_HOSTS
     do
-        # split 'host:N', but catch 'host:' and 'host' too
+        # Split 'host:N', but catch 'host:' and 'host' too
         host=${slotGroup%%:*}
         n=${slotGroup##*:}
         [ "$n" = "$host" ] && n=1  # missing ':'
@@ -201,14 +202,16 @@ do
                     if [ "$host" = "$HOST" ]; then
                         eval $* 2>&1 | colourPipe "$colour"
                     else
-                        ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" 2>&1 | colourPipe "$colour"
+                        ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" \
+                            2>&1 | colourPipe "$colour"
                     fi
                     retval=$?
                 else
                     if [ "$host" = "$HOST" ]; then
                         eval $* 2>&1
                     else
-                        ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" 2>&1
+                        ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" \
+                            2>&1
                     fi
                     retval=$?
                 fi
@@ -233,5 +236,13 @@ if [ "$nColours" -gt 0 ]
 then
     setterm -foreground default
 fi
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script
+
 
 #------------------------------------------------------------------------------

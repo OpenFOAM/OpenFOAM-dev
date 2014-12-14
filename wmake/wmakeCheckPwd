@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -23,13 +23,14 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     wmakeCheckPwd
+#     wmakeCheckPwd <dir>
 #
 # Description
-#     Check that the current working directory is equal to a particular
-#     target directory, resolving the absolute path as required
+#     Check that the current working directory is the directory <dir>
 #
 #-------------------------------------------------------------------------------
+Script=${0##*/}
+
 unset quietOpt
 
 usage() {
@@ -38,13 +39,12 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} [OPTION] dirName
+Usage: $Script [OPTION] dirName
 
 options:
   -q | -quiet   suppress all normal output
 
-  Check that the current working directory is equal to a particular
-  target directory, resolving the absolute path as required
+  Check that the current working directory is the directory <dir>
 
   Exit status 0 when the directories are identical
   Exit status 1 on error
@@ -54,7 +54,10 @@ USAGE
 }
 
 
-# parse options
+#------------------------------------------------------------------------------
+# Parse arguments and options
+#------------------------------------------------------------------------------
+
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -76,27 +79,40 @@ done
 
 
 [ "$#" -eq 1 ] || usage
+
+# Set dirName to <dir>
 dirName="$1"
 
-
-# trivial checks first
+# Simple check against $PWD
 [ "$PWD" = "$dirName" ] && exit 0
 
+# Check existance of <dir>
 [ -d "$dirName" ] || {
-    [ "$quietOpt" = true ] || echo "Error: Directory does not exist $dirName"
+    [ "$quietOpt" = true ] || {
+        echo "$Script error: Directory does not exist $dirName"
+    }
     exit 1
 }
 
-
-# use /bin/pwd to get the absolute path (could be linked)
+# Use /bin/pwd to get the absolute path (could be linked)
 thisDir=$(/bin/pwd)
 target=$(cd $dirName 2>/dev/null && /bin/pwd)
 
-# okay
+# Return 0 if this directory is <dir>
 [ "$thisDir" = "$target" ] && exit 0
 
-# some other error
-[ "$quietOpt" = true ] || echo "Error: Current directory is not $dirName"
+# This directory is not <dir>
+[ "$quietOpt" = true ] || {
+    echo "$Script error: Current directory is not $dirName"
+}
 exit 1
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script usage
+
 
 #------------------------------------------------------------------------------

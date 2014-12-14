@@ -1,9 +1,0 @@
-#!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-set -x
-
-wclean
-wclean rhoPorousSimpleFoam
-wclean rhoSimplecFoam
-
-# ----------------------------------------------------------------- end-of-file

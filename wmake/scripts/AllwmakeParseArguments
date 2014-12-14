@@ -1,0 +1,154 @@
+#----------------------------------*-sh-*--------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File
+#     wmake/scripts/AllwmakeParseArguments
+#
+# Description
+#     Allwmake argument parser
+#
+# Usage
+#     # Declare the targetType and set to default for library building
+#     targetType=libso      # lib, libo or libso
+#
+#     # Declare genDoc and set to default if documentation building is supported
+#     genDoc=0              # 0 or 1
+#
+#     # Parse the arguments by sourcing this script
+#     . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+
+    # Print normal usage options
+    cat<<USAGE
+
+Usage: $Script [OPTIONS]
+
+options:
+  -h or -help       Print list of Allwmake options
+  -k or -non-stop   Compile without stopping when errors occur
+  -j                Compile using all local cores/hyperthreads
+  -jN or -j N       Compile using N cores/hyperthreads
+  -no-scheduler     Compile without wmakeScheduler
+USAGE
+
+    # Print options for building code documentation
+    test -n "$genDoc" && cat<<USAGE_DOC
+  doc               Compile code documentation (requires Doxygen)
+USAGE_DOC
+
+    # Print options for building libraries
+    test -n "$targetType" && cat<<USAGE_LIB
+  lib               Compile statically linked archive lib (.a)
+  libo              Compile statically linked lib (.o)
+  libso             Compile dynamically linked lib (.so)
+  dep               Compile dependency files
+USAGE_LIB
+
+    exit 1
+}
+
+
+#------------------------------------------------------------------------------
+# Set WM_NCOMPPROCS to number of cores on local machine
+#------------------------------------------------------------------------------
+
+setWM_NCOMPPROCS()
+{
+    if [ -r /proc/cpuinfo ]
+    then
+        WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
+    else
+        WM_NCOMPPROCS=1
+    fi
+
+    export WM_NCOMPPROCS
+}
+
+
+#------------------------------------------------------------------------------
+# Parse the arguments and options
+#------------------------------------------------------------------------------
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+        # Print help
+        -h | -help)
+            usage
+            ;;
+        # Parallel compilation on all cores of local machine
+        -j)
+            setWM_NCOMPPROCS
+            test $# -ge 2 && expr $2 + 1 > /dev/null 2>&1 \
+                && shift && export WM_NCOMPPROCS=$1
+            echo "Compiling enabled on $WM_NCOMPPROCS cores"
+            ;;
+        # Parallel compilation on specified number of cores
+        -j*)
+            export WM_NCOMPPROCS=${1#-j}
+            echo "Compiling enabled on $WM_NCOMPPROCS cores"
+            ;;
+        # Non-stop compilatio, ignoring errors
+        -k | -non-stop)
+            export WM_CONTINUE_ON_ERROR=1
+            ;;
+        # Disable scheduled parallel compilation
+        -no-scheduler)
+            unset WM_SCHEDULER
+            ;;
+        # Generate documentation
+        doc)
+            test -n "$genDoc" || usage "invalid option '$1'"
+            genDoc=1
+            ;;
+        # Specify target type
+        lib | libo | libso | dep)
+            test -n "$targetType" || usage "invalid option '$1'"
+            targetType=$1
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -* | *)
+            usage "invalid option '$1'"
+            ;;
+    esac
+    shift
+done
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script usage setWM_NCOMPPROCS
+
+
+# ----------------------------------------------------------------- end-of-file

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -30,11 +30,13 @@
 #     and execute 'wmakeLnInclude -f' for each one
 #
 #------------------------------------------------------------------------------
+Script=${0##*/}
+
 usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} [dir1 .. dirN]
+Usage: $Script [dir1 .. dirN]
 
     Find directories with a 'Make/files' that contains a 'LIB =' directive
     and execute 'wmakeLnInclude -f' for each one
@@ -43,10 +45,13 @@ USAGE
     exit 1
 }
 
+
 #------------------------------------------------------------------------------
+# Parse arguments and options
+#------------------------------------------------------------------------------
+
 findName=lnInclude
 
-# simple parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -63,7 +68,7 @@ do
 done
 
 
-# default to searching from pwd
+# Default to searching from CWD
 [ "$#" -gt 0 ] || set -- .
 
 for checkDir
@@ -94,5 +99,13 @@ do
         fi
     done
 done
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script usage
+
 
 #------------------------------------------------------------------------------

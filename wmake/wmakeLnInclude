@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -36,6 +36,7 @@
 #     Avoid
 #         *.c (C source)
 #         .#* (cvs recovered files)
+#
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
@@ -61,17 +62,19 @@ USAGE
     exit 1
 }
 
+
+#------------------------------------------------------------------------------
+# Parse arguments and options
 #------------------------------------------------------------------------------
 
-# default 'find' option
+# Default 'find' option
 unset findOpt
 
-# default 'ln' option
+# Default 'ln' option
 lnOpt="-s"
 
 unset forceUpdate silentOpt
 
-# simple parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -100,11 +103,11 @@ if [ $# -eq 1 ]
 then
     baseDir=$1
 else
-    usage "ERROR: incorrect number of arguments"
+    usage "Error: incorrect number of arguments"
 fi
 
 
-# convert incorrect path/dir/lnInclude to something sensible
+# Convert incorrect path/dir/lnInclude to something sensible
 while [ "${baseDir##*/}" = lnInclude ]
 do
     baseDir="${baseDir%/*}"
@@ -138,25 +141,39 @@ fi
 
 cd $incDir || exit 1
 
-#------------------------------------------------------------------------------
-
 if [ "$silentOpt" != true ]
 then
     echo "$Script: linking include files to $incDir" 1>&2
 fi
 
-#
-# remove any broken links first (this helps when file locations have moved)
-#
+
+#------------------------------------------------------------------------------
+# Remove any broken links first (this helps when file locations have moved)
+#------------------------------------------------------------------------------
 find -L . -type l -exec rm {} \;
 
-#
-# create links, avoid recreating links unless necessary
+
+#------------------------------------------------------------------------------
+# Create links, avoid recreating links unless necessary
 # things placed in the 'noLink' directory are skipped
-#
+#------------------------------------------------------------------------------
 find .. $findOpt \
-    \( -name lnInclude -o -name Make -o -name config -o -name noLink \) -prune \
- -o \( -name '*.[CHh]' -o -name '*.[ch]xx' -o -name '*.[ch]pp' -o -name '*.type' \)  \
- -exec ln $lnOpt {} . \;
+     \( -name lnInclude -o -name Make -o -name config -o -name noLink \) \
+     -prune \
+     -o \( \
+     -name '*.[CHh]' \
+     -o -name '*.[ch]xx' \
+     -o -name '*.[ch]pp' \
+     -o -name '*.type' \
+     \)  \
+     -exec ln $lnOpt {} . \;
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script usage
+
 
 #------------------------------------------------------------------------------

@@ -1,33 +1,36 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
 export ParMGridGen=$WM_THIRD_PARTY_DIR/ParMGridGen-1.0
 
 if [ -e "$FOAM_LIBBIN/libMGridGen.so" ]
 then
-    wmake $makeType MGridGenGamgAgglomeration
+    wmake $targetType MGridGenGamgAgglomeration
 fi
 
-wmake $makeType pairPatchAgglomeration
+wmake $targetType pairPatchAgglomeration
 
 
 ## get SCOTCH_VERSION, SCOTCH_ARCH_PATH
-#if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/scotch.sh`
-#then
-#    . $settings
-#    echo "using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
-#else
-#    echo
-#    echo "Error: no config/scotch.sh settings"
-#    echo
-#fi
-#
-#if [ -n "$SCOTCH_ARCH_PATH" ]
-#then
-#    wmake $makeType scotchGamgAgglomeration
-#fi
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/scotch.sh`
+then
+    . $settings
+    echo "using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
+else
+    echo
+    echo "Error: no config/scotch.sh settings"
+    echo
+fi
+
+if [ -n "$SCOTCH_ARCH_PATH" ]
+then
+    wmake $targetType scotchGamgAgglomeration
+fi
 
 
 # ----------------------------------------------------------------- end-of-file

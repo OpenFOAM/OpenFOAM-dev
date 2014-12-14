@@ -1,6 +1,3 @@
-.SUFFIXES: .L
+SUFFIXES += .L
 
-Ltoo = flex -+ -o$*.C -f $$SOURCE ; $(CC) $(c++FLAGS) -c $*.C -o $@
-
-.L.dep:
-	$(MAKE_DEP)
+Ltoo = flex -+ -o$(@D)/$(<F).C -f $< ; $(CC) $(c++FLAGS) -c $(@D)/$(<F).C -o $@

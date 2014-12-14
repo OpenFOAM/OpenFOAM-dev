@@ -73,6 +73,7 @@ ENDIF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
 
 TARGET_LINK_LIBRARIES(
     PV4blockMeshReader_SM
+    LINK_PUBLIC
     OpenFOAM
     blockMesh
     vtkPV4blockMesh

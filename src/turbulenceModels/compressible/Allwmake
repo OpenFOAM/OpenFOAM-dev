@@ -1,10 +1,13 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake $makeType turbulenceModel
-wmake $makeType RAS
-wmake $makeType LES
+wmake $targetType turbulenceModel
+wmake $targetType RAS
+wmake $targetType LES
 
 # ----------------------------------------------------------------- end-of-file

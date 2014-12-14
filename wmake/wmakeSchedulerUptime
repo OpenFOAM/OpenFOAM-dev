@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -48,16 +48,16 @@
 #         eg,  export WM_NCOMPPROCS=$(wmakeScheduler -count)
 #
 #-------------------------------------------------------------------------------
+Script=${0##*/}
 
 # csh sets HOST, bash sets HOSTNAME
 : ${HOST:=$HOSTNAME}
 
-
 lockDir=$HOME/.$WM_PROJECT/.wmake
-# fallback - 1 core on current host
+# Fallback - 1 core on current host
 : ${WM_HOSTS:=$HOST:1}
 
-# count the total number of slots available and exit
+# Count the total number of slots available and exit
 if [ "$1" = "-count" ]
 then
     expr $(
@@ -71,7 +71,7 @@ then
     exit 0
 fi
 
-# where to source WM_PROJECT settings in a remote shell
+# Where to source WM_PROJECT settings in a remote shell
 # This code tries to figure out which cshrc or bashrc to execute.
 # !! Assumes remote computer running same shell and startup files
 # in same location
@@ -86,9 +86,9 @@ case $SHELL in
     ;;
 esac
 
-# check ~/.$WM_PROJECT/$WM_PROJECT_VERSION/
-# check ~/.$WM_PROJECT/
-# check <installedProject>/etc/
+# Check ~/.$WM_PROJECT/$WM_PROJECT_VERSION/
+# Check ~/.$WM_PROJECT/
+# Check <installedProject>/etc/
 if [ "$WM_PROJECT" ]
 then
     for i in \
@@ -210,7 +210,7 @@ do
         load=`echo "$stat" | sed -e 's/.*average:[^0-9.]*\([0-9.]*\).*/\1/'`
 
 
-        #echo "Machine:$host  load:$load  allowed:$WM_NCOMPPROCS  nprocs:$nprocs"
+        #echo "$Script: Machine:$host  load:$load  allowed:$WM_NCOMPPROCS  nprocs:$nprocs"
 
 
         # Check if adding nprocs to load causes overload
@@ -220,16 +220,17 @@ do
             then
                 # Set colour
                 colour="${colourList[$colourIndex]}"
-                echo "Machine:$host  Starting:$*"
+                echo "$Script: Machine:$host  Starting:$*"
 
                 if [ "$host" = "$HOST" ]; then
                     eval $* 2>&1 | colourPipe "$colour"
                 else
-                    ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" 2>&1 | colourPipe "$colour"
+                    ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" 2>&1 \
+                        | colourPipe "$colour"
                 fi
                 retval=$?
             else
-                echo "Machine:$host  Starting:$*"
+                echo "$Script: Machine:$host  Starting:$*"
                 if [ "$host" = "$HOST" ]; then
                     eval $* 2>&1
                 else
@@ -248,8 +249,16 @@ do
     done
 
     # Did not find any free machines. Rest a bit.
-    #echo "Too much load. Waiting"
+    #echo "$Script: Too much load. Waiting"
     sleep 1
 done
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script
+
 
 #------------------------------------------------------------------------------

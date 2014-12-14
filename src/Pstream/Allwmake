@@ -1,10 +1,13 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 
 #
-# define how to create an mpi-versioned library of $makeType
+# define how to create an mpi-versioned library of $targetType
 # compile into qualified directory
 # use sentinel file to handle version changes
 #
@@ -15,10 +18,10 @@ wmakeMpiLib()
     do
     (
         WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
-        whichmpi="$libName/Make/$WM_OPTIONS/using:$FOAM_MPI"
+        whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/Pstream/$libName/using:$FOAM_MPI"
         [ -e "$whichmpi" ] || wclean $libName
-        echo "wmake $makeType $libName"
-        wmake $makeType $libName
+        echo "wmake $targetType $libName"
+        wmake $targetType $libName
         touch "$whichmpi"
     )
     done
@@ -26,7 +29,7 @@ wmakeMpiLib()
 }
 
 set -x
-wmake $makeType dummy
+wmake $targetType dummy
 
 case "$WM_MPLIB" in
 *MPI*)
@@ -36,10 +39,6 @@ case "$WM_MPLIB" in
     echo
     wmakeMpiLib mpi
     ;;
-
-#GAMMA)
-#    wmake $makeType gamma
-#    ;;
 esac
 
 

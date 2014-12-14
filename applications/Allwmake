@@ -1,22 +1,27 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
-    echo "Error: Current directory is not \$WM_PROJECT_DIR/applications"
+    echo "Allwmake error: Current directory is not \$WM_PROJECT_DIR/applications"
     echo "    The environment variables are inconsistent with the installation."
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
 
 [ -n "$FOAM_EXT_LIBBIN" ] || {
-    echo "Error: FOAM_EXT_LIBBIN not set"
+    echo "Allwmake error: FOAM_EXT_LIBBIN not set"
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
 
 set -x
 
-wmake all utilities $*
-wmake all solvers $*
+wmake -all utilities $*
+wmake -all solvers $*
+
 
 # ----------------------------------------------------------------- end-of-file

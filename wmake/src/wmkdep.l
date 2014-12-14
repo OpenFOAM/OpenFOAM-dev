@@ -3,7 +3,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2011-2013 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2011-2014 OpenFOAM Foundation
     \\/      M anipulation   |
 ------------------------------------------------------------------------------
 License
@@ -68,16 +68,6 @@ void importDir(const char* dirName);
 ^[ \t]*#[ \t]*include[ \t]+\"   BEGIN(CFNAME);  /* c-file name */
 <CFNAME>[^"\n ]*        { BEGIN(INITIAL); nextFile(yytext); } /*"*/
 
-^[ \t]*import[ \t]+       BEGIN(JFNAME);  /* java-file name */
-<JFNAME>java.*;           BEGIN(INITIAL);
-<JFNAME>org.*;            BEGIN(INITIAL);
-<JFNAME>com.*;            BEGIN(INITIAL);
-<JFNAME>sunw.*;           BEGIN(INITIAL);
-<JFNAME>sun.*;            BEGIN(INITIAL);
-<JFNAME>launcher.*;       BEGIN(INITIAL);
-<JFNAME>[^"\n*]*;       { BEGIN(INITIAL); importFile(yytext); } /*"*/
-<JFNAME>[^"\n]*\*;      { BEGIN(INITIAL); importDir(yytext); } /*"*/
-
 "      "include[ \t]+\'   BEGIN(FFNAME);  /* FORTRAN-file name */
 <FFNAME>[^']*           { BEGIN(INITIAL); nextFile(yytext); } /*'*/
 
@@ -134,7 +124,6 @@ int lookUp(struct HashEntry** hashTable, const char* p)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-
 int nDirectories = 0;
 char** directories;
 char* sourceFile = NULL;
@@ -142,10 +131,6 @@ char* depFile = NULL;
 
 /* Set of files already visited */
 struct HashEntry* visitedFiles[HASH_TABLE_SIZE];
-
-/* Set of (java) directories already visited */
-struct HashEntry* visitedDirs[HASH_TABLE_SIZE];
-
 
 int main(int argc, char* argv[])
 {
@@ -226,31 +211,23 @@ int main(int argc, char* argv[])
      * because there is a bug in the SGI strncat that if 0 preceeds the '.'
      * it inserts a space
      */
-    depFile = (char*)malloc(strlen(sourceFile) + 3);
+    depFile = (char*)malloc(strlen(sourceFile) + 20);
     depFile[0] = 0;
-    strncat(depFile, sourceFile, (dotPos - sourceFile)/sizeof(char));
+    strcat(depFile, "$(OBJECTS_DIR)/");
+    strcat(depFile, sourceFile);
     strcat(depFile, ".dep");
 
-    if (strcmp(dotPos, ".java") == 0)
-    {
-        char *classFile = strdup(sourceFile);
-        classFile[(dotPos - sourceFile)/sizeof(char)] = 0;
+    char *objectFile = strdup(basePos);
+    objectFile[(dotPos - basePos)/sizeof(char)] = 0;
 
-        printf("$(CLASSES_DIR)/%s.class: %s\n", classFile, depFile);
-        free(classFile);
-    }
-    else
-    {
-        char *objectFile = strdup(basePos);
-        objectFile[(dotPos - basePos)/sizeof(char)] = 0;
-
-        printf("$(OBJECTS_DIR)/%s.o: %s\n", objectFile, depFile);
-        free(objectFile);
-    }
+    /* printf("$(OBJECTS_DIR)/%s.o: %s\n", objectFile, depFile); */
+    printf("%s: \\\n", depFile);
+    free(objectFile);
 
     nextFile(sourceFile);
     yylex();
 
+    puts("\n");
 
     for (i = 0; i < nDirectories; i++)
     {
@@ -322,7 +299,7 @@ void nextFile(const char* fileName)
 
             if ((newyyin = fopen(pathName, "r")))
             {
-                printf("%s: %s\n", depFile, pathName);
+                printf("%s \\\n", pathName);
                 buffers[currentBuffer++] = YY_CURRENT_BUFFER;
                 yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
 
@@ -361,7 +338,7 @@ void nextFile(const char* fileName)
     }
     else
     {
-        printf("%s: %s\n", depFile, fileName);
+        printf("%s \\\n", fileName);
         fflush(stdout);
 
         buffers[currentBuffer++] = YY_CURRENT_BUFFER;
@@ -382,77 +359,6 @@ void dotToSlash(char* fileName)
     {
         if (fileName[i] == '.') fileName[i] = '/';
     }
-}
-
-
-/*
- * Import (java) file
- */
-void importFile(const char* fileName)
-{
-    char* javaFileName;
-    int fileNameLen;
-
-    fileNameLen = strlen(fileName);
-    javaFileName = (char*)malloc(fileNameLen + 6);
-    javaFileName[0] = 0;
-    strncat(javaFileName, fileName, fileNameLen - 1);
-    dotToSlash(javaFileName);
-    strcat(javaFileName, ".java");
-
-    nextFile(javaFileName);
-
-    free(javaFileName);
-}
-
-
-/*
- * Import (java) directories
- */
-void importDir(const char* dirName)
-{
-    char *uDirName;
-    DIR *source;
-
-    if (lookUp(visitedDirs, dirName))
-    {
-        return;   /* already existed (did not insert) */
-    }
-
-    uDirName = strdup(dirName);
-    dotToSlash(uDirName);
-
-    uDirName[strlen(dirName)-2] = 0;
-
-    if ((source = opendir(uDirName)) == NULL)
-    {
-        fprintf
-        (
-            stderr,
-            "could not open directory %s\n",
-            uDirName
-        );
-    }
-    else
-    {
-        /* Read and parse all the entries in the directory */
-        struct dirent *list;
-
-        while ((list = readdir(source)) != NULL)
-        {
-            char* dotPos = strrchr(list->d_name, '.');
-
-            if (dotPos != NULL && strcmp(dotPos, ".java") == 0)
-            {
-                char* pathName = addDirectoryName(uDirName, list->d_name);
-                nextFile(pathName);
-                free(pathName);
-            }
-        }
-
-        closedir(source);
-    }
-    free(uDirName);
 }
 
 

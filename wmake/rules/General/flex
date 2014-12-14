@@ -1,6 +1,3 @@
-.SUFFIXES: .l
+SUFFIXES += .l
 
-ltoo = flex -o$*.c $$SOURCE ; $(cc) $(cFLAGS) -c $*.c -o $@
-
-.l.dep:
-	$(MAKE_DEP)
+ltoo = flex -o $(@D)/$(<F).c $< ; $(cc) $(cFLAGS) -c  $(@D)/$(<F).c -o $@

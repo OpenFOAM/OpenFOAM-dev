@@ -3,13 +3,10 @@
 #     http://github.com/olesenm/coco-cpp/
 #
 
-.SUFFIXES: .atg
+SUFFIXES += .atg
 
 atgtoo =  \
     $(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/coco-cpp/bin/coco-cpp \
     -single \
-    $$SOURCE -o $(OBJECTS_DIR) && \
-    $(CC) $(c++FLAGS) -c $*.cpp -o $@
-
-.atg.dep:
-	$(MAKE_DEP)
+    $< -o $(OBJECTS_DIR) && \
+    $(CC) $(c++FLAGS) -c $(@D)/$(<F).cpp -o $@

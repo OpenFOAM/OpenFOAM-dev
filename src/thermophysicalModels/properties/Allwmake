@@ -1,12 +1,15 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake $makeType liquidProperties
-wmake $makeType liquidMixtureProperties
-wmake $makeType solidProperties
-wmake $makeType solidMixtureProperties
+wmake $targetType liquidProperties
+wmake $targetType liquidMixtureProperties
+wmake $targetType solidProperties
+wmake $targetType solidMixtureProperties
 
 
 # ----------------------------------------------------------------- end-of-file

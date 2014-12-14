@@ -34,11 +34,13 @@
 #            wcleanMachine <machineType> [ .. <machineTypeN> ]
 #
 #------------------------------------------------------------------------------
+Script=${0##*/}
+
 usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-Usage: ${0##*/} machineType [... machineTypeN] [ -current ]
+Usage: $Script machineType [... machineTypeN] [ -current ]
 
   Searches the directory tree starting at the current directory for the
   object file directories of the specified machine type(s) and deletes them.
@@ -84,5 +86,13 @@ do
     rm -rf platforms/${machType}*
 
 done
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script machines
+
 
 #------------------------------------------------------------------------------

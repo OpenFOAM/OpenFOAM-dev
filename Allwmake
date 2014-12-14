@@ -1,37 +1,43 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation without documentation by default
+genDoc=0
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 wmakeCheckPwd "$WM_PROJECT_DIR" || {
-    echo "Error: Current directory is not \$WM_PROJECT_DIR"
+    echo "Allwmake error: Current directory is not \$WM_PROJECT_DIR"
     echo "    The environment variables are inconsistent with the installation."
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
 
 [ -n "$FOAM_EXT_LIBBIN" ] || {
-    echo "Error: FOAM_EXT_LIBBIN not set"
+    echo "Allwmake error: FOAM_EXT_LIBBIN not set"
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
 
-# wmake is required for subsequent targets
-( cd wmake/src && make )
+# Compile wmake support applications
+(cd wmake/src && make)
 
-# build ThirdParty sources
+# Compile ThirdParty libraries and applications
 if [ -d "$WM_THIRD_PARTY_DIR" ]
 then
     $WM_THIRD_PARTY_DIR/Allwmake
 else
-    echo "no ThirdParty sources found - skipping"
+    echo "Allwmake: no ThirdParty directory found - skipping"
 fi
 
-# build OpenFOAM libraries and applications
-src/Allwmake $*
-applications/Allwmake $*
+# Compile OpenFOAM libraries and applications
+src/Allwmake $targetType $*
 
-if [ "$1" = doc ]
-then
-    doc/Allwmake $*
-fi
+# Compile OpenFOAM libraries and applications
+applications/Allwmake $targetType $*
+
+# Optionally build OpenFOAM Doxygen documentation
+[ $genDoc -eq 1 ] && doc/Allwmake
+
 
 # ----------------------------------------------------------------- end-of-file

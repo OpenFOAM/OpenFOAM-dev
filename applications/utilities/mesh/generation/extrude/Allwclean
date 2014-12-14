@@ -1,8 +1,0 @@
-#!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
-set -x
-
-wclean extrudeMesh
-wclean extrudeToRegionMesh
-
-# ----------------------------------------------------------------- end-of-file

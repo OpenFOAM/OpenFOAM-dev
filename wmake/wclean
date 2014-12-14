@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -57,7 +57,10 @@ USAGE
 }
 
 
-# parse options
+#------------------------------------------------------------------------------
+# Parse arguments and options
+#------------------------------------------------------------------------------
+
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -81,7 +84,7 @@ done
 # check arguments and change to the directory in which to run wclean
 #------------------------------------------------------------------------------
 
-unset dir makeType
+unset dir targetType
 MakeDir=Make
 
 if [ $# -ge 1 ]
@@ -91,7 +94,7 @@ then
     then
         dir=$1
     else
-        makeType=$1
+        targetType=$1
     fi
 
     # specified directory name:
@@ -112,11 +115,12 @@ then
     echo "$Script ${dir:-./}"
 fi
 
+
 #------------------------------------------------------------------------------
 # Recurse the directories tree
 #------------------------------------------------------------------------------
 
-if [ "$makeType" = all ]
+if [ "$targetType" = all ]
 then
     if [ -e Allwclean ]       # consistent with Allwmake
     then
@@ -126,40 +130,51 @@ then
     then
         ./Allclean
         exit $?
-    elif [ ! -d $MakeDir ]
-    then
+    else
+        # For all the sub-directories containing a 'Make' directory
         for dir in `find . \( -type d -a -name Make \)`
         do
+            echo $dir
             $0 ${dir%/Make}   # parent directory - trim /Make from the end
         done
-        exit 0
     fi
 fi
 
-# makeType is not needed beyond this point
-unset makeType
+# targetType is not needed beyond this point
+unset targetType
 
 
 #------------------------------------------------------------------------------
-# Require the existence of the 'Make' directory
+# Clean the 'Make' directory if present
 #------------------------------------------------------------------------------
 
-[ -d $MakeDir ] || {
-    echo "$Script error: '$MakeDir' directory does not exist" 1>&2
-    exit 1
-}
+if [ -d $MakeDir ]
+then
+    objectsDir=$MakeDir/$WM_OPTIONS
+    if echo $PWD | grep "$WM_PROJECT_DIR"
+    then
+        platformPath=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}
+        objectsDir=$platformPath$(echo $PWD | sed s%$WM_PROJECT_DIR%% )
+    fi
+    rm -rf $objectsDir 2>/dev/null
+fi
 
 
-# -----------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# Remove the lnInclude directory if present
+#------------------------------------------------------------------------------
 
-rm -rf $MakeDir/$WM_OPTIONS $MakeDir/classes 2>/dev/null
+if [ -d lnInclude ]
+then
+    rm -rf lnInclude 2>/dev/null
+fi
 
-find . -name "*.dep" -exec rm {} \;
 
-# always safe to remove lnInclude
-rm -rf lnInclude 2>/dev/null
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
 
-rm -rf ii_files Templates.DB 2>/dev/null
-rm -f so_locations 2>/dev/null
+unset Script usage
+
 
 #------------------------------------------------------------------------------

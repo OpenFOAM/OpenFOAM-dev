@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -36,11 +36,10 @@
 SHELL      = /bin/sh
 
 #------------------------------------------------------------------------------
-# Initialise suffices list
+# Unset suffices list (suffix rules are not used)
 #------------------------------------------------------------------------------
 
 .SUFFIXES:
-.SUFFIXES: .o
 
 
 #------------------------------------------------------------------------------
