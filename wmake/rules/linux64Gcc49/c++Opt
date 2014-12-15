@@ -1,2 +1,4 @@
 c++DBUG     =
 c++OPT      = -O3
+
+EXE_FROUNDING_MATH = -frounding-math

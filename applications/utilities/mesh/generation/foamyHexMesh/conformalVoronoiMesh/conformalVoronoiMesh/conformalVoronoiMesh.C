@@ -607,7 +607,7 @@ void Foam::conformalVoronoiMesh::setVertexSizeAndAlignment()
     {
         if (vit->internalOrBoundaryPoint())
         {
-            const pointFromPoint pt = topoint(vit->point());
+            pointFromPoint pt = topoint(vit->point());
 
             cellShapeControls().cellSizeAndAlignment
             (

@@ -1,3 +1,4 @@
 c++DBUG     =
 c++OPT      = -O3
-# -fprefetch-loop-arrays
+
+EXE_FROUNDING_MATH = -frounding-math

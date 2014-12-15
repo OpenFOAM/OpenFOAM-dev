@@ -60,7 +60,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorPosition
 
     forAll(pts, pI)
     {
-        const pointFromPoint pt = topoint(pts[pI]);
+        pointFromPoint pt = topoint(pts[pI]);
 
         label nCandidates = 0;
 
@@ -130,7 +130,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorPosition
 
         if (ptProc[pI] < 0)
         {
-            const pointFromPoint pt = topoint(pts[pI]);
+            pointFromPoint pt = topoint(pts[pI]);
 
             if (!globalBackgroundBounds_.contains(pt))
             {
