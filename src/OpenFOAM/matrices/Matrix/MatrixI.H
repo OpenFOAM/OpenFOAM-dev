@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ clone() const
 template<class Form, class Type>
 inline const Foam::Matrix<Form, Type>& Foam::Matrix<Form, Type>::null()
 {
-    return *reinterpret_cast< Matrix<Form, Type>* >(0);
+    return NullObjectRef<Matrix<Form, Type> >();
 }
 
 

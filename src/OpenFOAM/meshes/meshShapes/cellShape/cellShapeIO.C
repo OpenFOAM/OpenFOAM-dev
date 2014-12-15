@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ Ostream& operator<<(Ostream& os, const InfoProxy<cellShape>& ip)
 {
     const cellShape& cs = ip.t_;
 
-    if (!(&cs.model()))
+    if (isNull(cs.model()))
     {
         os  << "    cellShape has no model!\n";
     }

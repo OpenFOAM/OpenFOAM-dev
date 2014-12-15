@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,52 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+#include "nullObject.H"
 
-template<class Type, class GeoMesh>
-inline const Foam::DimensionedField<Type, GeoMesh>&
-Foam::DimensionedField<Type, GeoMesh>::null()
-{
-    return NullObjectRef<DimensionedField<Type, GeoMesh> >();
-}
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-
-template<class Type, class GeoMesh>
-inline const typename GeoMesh::Mesh&
-Foam::DimensionedField<Type, GeoMesh>::mesh() const
-{
-    return mesh_;
-}
-
-
-template<class Type, class GeoMesh>
-inline const Foam::dimensionSet&
-Foam::DimensionedField<Type, GeoMesh>::dimensions() const
-{
-    return dimensions_;
-}
-
-template<class Type, class GeoMesh>
-inline Foam::dimensionSet&
-Foam::DimensionedField<Type, GeoMesh>::dimensions()
-{
-    return dimensions_;
-}
-
-
-template<class Type, class GeoMesh>
-inline const Foam::Field<Type>&
-Foam::DimensionedField<Type, GeoMesh>::field() const
-{
-    return *this;
-}
-
-template<class Type, class GeoMesh>
-inline Foam::Field<Type>&
-Foam::DimensionedField<Type, GeoMesh>::field()
-{
-    return *this;
-}
+const Foam::NullObject Foam::NullObject::nullObject;
+const Foam::NullObject* Foam::nullObjectPtr = &Foam::NullObject::nullObject;
 
 
 // ************************************************************************* //

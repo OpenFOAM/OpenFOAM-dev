@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ template<class T, class Container>
 inline const Foam::CompactListList<T, Container>&
 Foam::CompactListList<T, Container>::null()
 {
-    return *reinterpret_cast< CompactListList<T, Container>* >(0);
+    return NullObjectRef<CompactListList<T, Container> >();
 }
 
 

@@ -43,6 +43,11 @@ const char* const Foam::FOAMbuild = "BUILD_STRING";
 #include "new.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Create the nullObject singleton
+
+#include "nullObject.C"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Global IO streams
 
 #include "IOstreams.C"

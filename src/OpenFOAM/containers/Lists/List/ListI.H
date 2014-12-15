@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ inline Foam::autoPtr<Foam::List<T> > Foam::List<T>::clone() const
 template<class T>
 inline const Foam::List<T>& Foam::List<T>::null()
 {
-    return *reinterpret_cast< List<T>* >(0);
+    return NullObjectRef<List<T> >();
 }
 
 

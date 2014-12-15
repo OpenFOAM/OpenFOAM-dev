@@ -99,7 +99,7 @@ const Foam::tensorField& Foam::STARCDCoordinateRotation::Tr() const
     (
         "const tensorField& STARCDCoordinateRotatio::Tr() const"
     );
-     return *reinterpret_cast<const tensorField*>(0);
+    return NullObjectRef<tensorField>();
 }
 
 

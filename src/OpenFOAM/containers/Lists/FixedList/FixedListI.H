@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::FixedList<T, Size>::clone() const
 template<class T, unsigned Size>
 inline const Foam::FixedList<T, Size>& Foam::FixedList<T, Size>::null()
 {
-    return *reinterpret_cast< FixedList<T, Size>* >(0);
+    return NullObjectRef<FixedList<T, Size> >();
 }
 
 

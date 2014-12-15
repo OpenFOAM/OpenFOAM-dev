@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,7 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
             << abort(FatalError);
     }
 
-    return *reinterpret_cast< const Type* >(0);
+    return NullObjectRef<Type>();
 }
 
 

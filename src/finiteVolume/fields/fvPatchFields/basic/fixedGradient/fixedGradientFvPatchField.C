@@ -57,7 +57,7 @@ fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
     fvPatchField<Type>(ptf, p, iF, mapper),
     gradient_(ptf.gradient_, mapper)
 {
-    if (&iF && mapper.hasUnmapped())
+    if (notNull(iF) && mapper.hasUnmapped())
     {
         WarningIn
         (

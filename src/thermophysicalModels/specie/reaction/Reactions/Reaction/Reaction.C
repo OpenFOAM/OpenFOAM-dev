@@ -503,7 +503,7 @@ const Foam::speciesTable& Foam::Reaction<ReactionThermo>::gasSpecies() const
         "const speciesTable& gasSpecies() const"
         " for this reaction"
     );
-    return *reinterpret_cast<speciesTable*>(0);
+    return NullObjectRef<speciesTable>();
 }
 
 
@@ -516,7 +516,7 @@ Foam::Reaction<ReactionThermo>::glhs() const
         "inline const List<typename Reaction<ReactionThermo>::specieCoeffs>&"
         "Reaction<ReactionThermo>::glhs()"
     );
-    return *reinterpret_cast<List<specieCoeffs>*>(0);
+    return NullObjectRef<List<specieCoeffs> >();
 }
 
 
@@ -529,7 +529,8 @@ Foam::Reaction<ReactionThermo>::grhs() const
         "inline const List<typename Reaction<ReactionThermo>::specieCoeffs>&"
         "Reaction<ReactionThermo>::grhs()"
     );
-    return *reinterpret_cast<List<specieCoeffs>*>(0);
+    return NullObjectRef<List<specieCoeffs> >();
 }
+
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// set values for what is close to zero and what is considered to
+// Set values for what is close to zero and what is considered to
 // be positive (and not just rounding noise)
 //! \cond localScope
 const Foam::scalar zeroish  = Foam::SMALL;
@@ -39,7 +39,6 @@ const Foam::scalar positive = Foam::SMALL * 1E3;
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Find cut cells
 void Foam::cuttingPlane::calcCutCells
 (
     const primitiveMesh& mesh,
@@ -51,7 +50,7 @@ void Foam::cuttingPlane::calcCutCells
     const edgeList& edges = mesh.edges();
 
     label listSize = cellEdges.size();
-    if (&cellIdLabels)
+    if (notNull(cellIdLabels))
     {
         listSize = cellIdLabels.size();
     }
@@ -64,7 +63,8 @@ void Foam::cuttingPlane::calcCutCells
     for (label listI = 0; listI < listSize; ++listI)
     {
         label cellI = listI;
-        if (&cellIdLabels)
+
+        if (notNull(cellIdLabels))
         {
             cellI = cellIdLabels[listI];
         }
@@ -100,9 +100,6 @@ void Foam::cuttingPlane::calcCutCells
 }
 
 
-// Determine for each edge the intersection point. Calculates
-// - cutPoints_ : coordinates of all intersection points
-// - edgePoint  : per edge -1 or the index into cutPoints
 void Foam::cuttingPlane::intersectEdges
 (
     const primitiveMesh& mesh,
@@ -160,8 +157,6 @@ void Foam::cuttingPlane::intersectEdges
 }
 
 
-// Coming from startEdgeI cross the edge to the other face
-// across to the next cut edge.
 bool Foam::cuttingPlane::walkCell
 (
     const primitiveMesh& mesh,
@@ -253,7 +248,6 @@ bool Foam::cuttingPlane::walkCell
 }
 
 
-// For every cut cell determine a walk through all? its cuts.
 void Foam::cuttingPlane::walkCellCuts
 (
     const primitiveMesh& mesh,
@@ -367,7 +361,6 @@ Foam::cuttingPlane::cuttingPlane
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// recut mesh with existing planeDesc
 void Foam::cuttingPlane::reCut
 (
     const primitiveMesh& mesh,
@@ -393,14 +386,13 @@ void Foam::cuttingPlane::reCut
 }
 
 
-// remap action on triangulation
 void Foam::cuttingPlane::remapFaces
 (
     const labelUList& faceMap
 )
 {
     // recalculate the cells cut
-    if (&faceMap && faceMap.size())
+    if (notNull(faceMap) && faceMap.size())
     {
         MeshStorage::remapFaces(faceMap);
 
@@ -412,6 +404,7 @@ void Foam::cuttingPlane::remapFaces
         cutCells_.transfer(newCutCells);
     }
 }
+
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 

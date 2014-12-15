@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,51 +23,42 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type, class GeoMesh>
-inline const Foam::DimensionedField<Type, GeoMesh>&
-Foam::DimensionedField<Type, GeoMesh>::null()
+template <class T>
+inline const T& Foam::NullObjectRef()
 {
-    return NullObjectRef<DimensionedField<Type, GeoMesh> >();
+    return *reinterpret_cast<const T*>(nullObjectPtr);
+}
+
+template <class T>
+inline const T* Foam::NullObjectPtr()
+{
+    return reinterpret_cast<const T*>(nullObjectPtr);
 }
 
 
-template<class Type, class GeoMesh>
-inline const typename GeoMesh::Mesh&
-Foam::DimensionedField<Type, GeoMesh>::mesh() const
+template <class T>
+inline bool Foam::isNull(const T& t)
 {
-    return mesh_;
+    return &t == NullObjectPtr<T>();
+}
+
+template <class T>
+inline bool Foam::notNull(const T& t)
+{
+    return &t != NullObjectPtr<T>();
 }
 
 
-template<class Type, class GeoMesh>
-inline const Foam::dimensionSet&
-Foam::DimensionedField<Type, GeoMesh>::dimensions() const
+template <class T>
+inline bool Foam::isNull(const T* t)
 {
-    return dimensions_;
+    return t == NullObjectPtr<T>();
 }
 
-template<class Type, class GeoMesh>
-inline Foam::dimensionSet&
-Foam::DimensionedField<Type, GeoMesh>::dimensions()
+template <class T>
+inline bool Foam::notNull(const T* t)
 {
-    return dimensions_;
-}
-
-
-template<class Type, class GeoMesh>
-inline const Foam::Field<Type>&
-Foam::DimensionedField<Type, GeoMesh>::field() const
-{
-    return *this;
-}
-
-template<class Type, class GeoMesh>
-inline Foam::Field<Type>&
-Foam::DimensionedField<Type, GeoMesh>::field()
-{
-    return *this;
+    return t != NullObjectPtr<T>();
 }
 
 

@@ -98,7 +98,7 @@ const Foam::tensorField& Foam::EulerCoordinateRotation::Tr() const
     (
         "const tensorField& EulerCoordinateRotation::Tr() const"
     );
-    return *reinterpret_cast<const tensorField*>(0);
+    return NullObjectRef<tensorField>();
 }
 
 

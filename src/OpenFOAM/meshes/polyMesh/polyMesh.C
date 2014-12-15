@@ -678,23 +678,23 @@ void Foam::polyMesh::resetPrimitives
 
     // Take over new primitive data.
     // Optimized to avoid overwriting data at all
-    if (&points)
+    if (notNull(points))
     {
         points_.transfer(points());
         bounds_ = boundBox(points_, validBoundary);
     }
 
-    if (&faces)
+    if (notNull(faces))
     {
         faces_.transfer(faces());
     }
 
-    if (&owner)
+    if (notNull(owner))
     {
         owner_.transfer(owner());
     }
 
-    if (&neighbour)
+    if (notNull(neighbour))
     {
         neighbour_.transfer(neighbour());
     }

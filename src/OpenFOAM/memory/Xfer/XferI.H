@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,12 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "nullObject.H"
+
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
 
 template<class T>
 inline const Foam::Xfer<T>& Foam::Xfer<T>::null()
 {
-    return *reinterpret_cast< Xfer<T>* >(0);
+    return NullObjectRef<Xfer<T> >();
 }
 
 

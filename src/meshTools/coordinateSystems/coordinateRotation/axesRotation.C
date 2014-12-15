@@ -172,7 +172,7 @@ const Foam::tensorField& Foam::axesRotation::Tr() const
     (
         "const Foam::tensorField& axesRotation::Tr() const"
     );
-    return *reinterpret_cast<const tensorField*>(0);
+    return NullObjectRef<tensorField>();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,12 +182,12 @@ void Foam::edgeMesh::reset
 {
     // Take over new primitive data.
     // Optimized to avoid overwriting data at all
-    if (&pointLst)
+    if (notNull(pointLst))
     {
         points_.transfer(pointLst());
     }
 
-    if (&edgeLst)
+    if (notNull(edgeLst))
     {
         edges_.transfer(edgeLst());
 

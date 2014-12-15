@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,12 +88,12 @@ void Foam::MeshedSurfaceIOAllocator::resetFaces
     const Xfer<surfZoneList>& zones
 )
 {
-    if (&faces)
+    if (notNull(faces))
     {
         faces_.transfer(faces());
     }
 
-    if (&zones)
+    if (notNull(zones))
     {
         zones_.transfer(zones());
     }
@@ -109,7 +109,7 @@ void Foam::MeshedSurfaceIOAllocator::reset
 {
     // Take over new primitive data.
     // Optimized to avoid overwriting data at all
-    if (&points)
+    if (notNull(points))
     {
         points_.transfer(points());
     }
@@ -127,7 +127,7 @@ void Foam::MeshedSurfaceIOAllocator::reset
 {
     // Take over new primitive data.
     // Optimized to avoid overwriting data at all
-    if (&points)
+    if (notNull(points))
     {
         points_.transfer(points());
     }

@@ -56,7 +56,7 @@ Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
     refGrad_(ptf.refGrad_, mapper),
     valueFraction_(ptf.valueFraction_, mapper)
 {
-    if (&iF && mapper.hasUnmapped())
+    if (notNull(iF) && mapper.hasUnmapped())
     {
         WarningIn
         (

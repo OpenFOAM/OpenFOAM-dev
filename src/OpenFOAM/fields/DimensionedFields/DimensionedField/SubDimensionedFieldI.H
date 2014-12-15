@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh>
-inline SubDimensionedField<Type, GeoMesh>::SubDimensionedField
+inline Foam::SubDimensionedField<Type, GeoMesh>::SubDimensionedField
 (
     const SubField<Type>& slist
 )
@@ -40,7 +35,7 @@ inline SubDimensionedField<Type, GeoMesh>::SubDimensionedField
 {}
 
 template<class Type, class GeoMesh>
-inline SubDimensionedField<Type, GeoMesh>::SubDimensionedField
+inline Foam::SubDimensionedField<Type, GeoMesh>::SubDimensionedField
 (
     const UList<Type>& list,
     const label subSize
@@ -51,7 +46,7 @@ inline SubDimensionedField<Type, GeoMesh>::SubDimensionedField
 
 
 template<class Type, class GeoMesh>
-inline SubDimensionedField<Type, GeoMesh>::SubDimensionedField
+inline Foam::SubDimensionedField<Type, GeoMesh>::SubDimensionedField
 (
     const UList<Type>& list,
     const label subSize,
@@ -63,7 +58,7 @@ inline SubDimensionedField<Type, GeoMesh>::SubDimensionedField
 
 
 template<class Type, class GeoMesh>
-inline SubDimensionedField<Type, GeoMesh>::SubDimensionedField
+inline Foam::SubDimensionedField<Type, GeoMesh>::SubDimensionedField
 (
     const SubDimensionedField<Type, GeoMesh>& sfield
 )
@@ -75,18 +70,21 @@ inline SubDimensionedField<Type, GeoMesh>::SubDimensionedField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Return a null Field
 template<class Type, class GeoMesh>
-inline const SubDimensionedField<Type, GeoMesh>&
-SubDimensionedField<Type, GeoMesh>::null()
+inline const Foam::SubDimensionedField<Type, GeoMesh>&
+Foam::SubDimensionedField<Type, GeoMesh>::null()
 {
-    return *reinterpret_cast< SubDimensionedField<Type, GeoMesh>* >(0);
+    return NullObjectRef<SubDimensionedField<Type, GeoMesh> >();
 }
 
 
 template<class Type, class GeoMesh>
-inline tmp<Field<typename SubDimensionedField<Type, GeoMesh>::cmptType> >
-SubDimensionedField<Type, GeoMesh>::component
+inline
+Foam::tmp
+<
+    Foam::Field<typename Foam::SubDimensionedField<Type, GeoMesh>::cmptType>
+>
+Foam::SubDimensionedField<Type, GeoMesh>::component
 (
     const direction d
 ) const
@@ -99,8 +97,8 @@ SubDimensionedField<Type, GeoMesh>::component
 
 
 template<class Type, class GeoMesh>
-inline tmp<DimensionedField<Type, GeoMesh> >
-SubDimensionedField<Type, GeoMesh>::T() const
+inline Foam::tmp<Foam::DimensionedField<Type, GeoMesh> >
+Foam::SubDimensionedField<Type, GeoMesh>::T() const
 {
     return
     (
@@ -112,7 +110,7 @@ SubDimensionedField<Type, GeoMesh>::T() const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh>
-inline void SubDimensionedField<Type, GeoMesh>::operator=
+inline void Foam::SubDimensionedField<Type, GeoMesh>::operator=
 (
     const SubDimensionedField<Type, GeoMesh>& rhs
 )
@@ -122,17 +120,12 @@ inline void SubDimensionedField<Type, GeoMesh>::operator=
 }
 
 
-// Allow cast to a const DimensionedField<Type, GeoMesh>&
 template<class Type, class GeoMesh>
-inline SubDimensionedField<Type, GeoMesh>::operator
-const DimensionedField<Type, GeoMesh>&() const
+inline Foam::SubDimensionedField<Type, GeoMesh>::operator
+const Foam::DimensionedField<Type, GeoMesh>&() const
 {
     return *(reinterpret_cast<const DimensionedField<Type, GeoMesh>*>(this));
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

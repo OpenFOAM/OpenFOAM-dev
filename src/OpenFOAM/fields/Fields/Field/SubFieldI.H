@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ inline Foam::SubField<Type>::SubField
 template<class Type>
 inline const Foam::SubField<Type>& Foam::SubField<Type>::null()
 {
-    return *reinterpret_cast< SubField<Type>* >(0);
+    return NullObjectRef<SubField<Type> >();
 }
 
 
