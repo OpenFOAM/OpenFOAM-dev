@@ -81,4 +81,7 @@ doc/Doxygen/DTAGS
 /.cproject
 /.project
 
+# Ignore the test directory
+/tutorialsTest
+
 # end-of-file
