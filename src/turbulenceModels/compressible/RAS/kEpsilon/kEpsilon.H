@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,14 @@ Group
 
 Description
     Standard k-epsilon turbulence model for compressible flows
+    including RDT-based compression term.
+
+    Reference:
+    \verbatim
+        "k-epsilon equations for compressible reciprocating engine flows"
+        El Tahry, S. H.,
+        AIAA Journal of Energy 7 (1983), 345-353.
+    \endverbatim
 
     The default model coefficients correspond to the following:
     \verbatim
