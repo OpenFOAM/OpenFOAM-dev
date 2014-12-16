@@ -217,7 +217,7 @@ case ThirdParty:
     switch ("$WM_COMPILER")
     case Gcc:
     case Gcc48:
-        set gcc_version=gcc-4.8.2
+        set gcc_version=gcc-4.8.3
         set gmp_version=gmp-5.1.2
         set mpfr_version=mpfr-3.1.2
         set mpc_version=mpc-1.0.1
