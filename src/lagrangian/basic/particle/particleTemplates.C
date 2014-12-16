@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -506,14 +506,13 @@ Foam::scalar Foam::particle::trackToFace
             if (lambdaMin <= 1.0)
             {
                 trackFraction += lambdaMin*(1 - trackFraction);
-
                 position_ += lambdaMin*(endPosition - position_);
             }
             else
             {
-                trackFraction = 1.0;
-
                 position_ = endPosition;
+
+                return 1.0;
             }
         }
         else
