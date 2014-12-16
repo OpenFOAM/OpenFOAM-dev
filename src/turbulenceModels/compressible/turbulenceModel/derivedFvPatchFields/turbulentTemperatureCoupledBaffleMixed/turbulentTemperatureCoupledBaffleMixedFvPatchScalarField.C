@@ -117,14 +117,12 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 
         if (thicknessLayers_.size() > 0)
         {
+            // Calculate effective thermal resistance by harmonic averaging
             forAll (thicknessLayers_, iLayer)
             {
-                const scalar l = thicknessLayers_[iLayer];
-                if (l > 0.0)
-                {
-                    contactRes_ += kappaLayers_[iLayer]/l;
-                }
+                contactRes_ += thicknessLayers_[iLayer]/kappaLayers_[iLayer];
             }
+            contactRes_ = 1.0/contactRes_;
         }
     }
 
