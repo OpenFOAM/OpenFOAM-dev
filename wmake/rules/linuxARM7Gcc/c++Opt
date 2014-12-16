@@ -2,4 +2,4 @@ c++DBUG     =
 #c++OPT      = -O3 -floop-optimize -falign-loops -falign-labels -falign-functions -falign-jumps -fprefetch-loop-arrays -mcpu=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard
 c++OPT      = -O3 -floop-optimize -falign-loops -falign-labels -falign-functions -falign-jumps -fprefetch-loop-arrays -mcpu=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=softfp
 
-EXE_FROUNDING_MATH = -frounding-math
+ROUNDING_MATH = -frounding-math

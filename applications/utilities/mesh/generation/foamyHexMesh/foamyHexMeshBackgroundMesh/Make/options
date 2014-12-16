@@ -4,7 +4,7 @@ EXE_NDEBUG = -DNDEBUG
 include $(GENERAL_RULES)/CGAL
 
 EXE_INC = \
-    ${EXE_FROUNDING_MATH} \
+    ${ROUNDING_MATH} \
     ${EXE_NDEBUG} \
     ${CGAL_INC} \
     -I../conformalVoronoiMesh/lnInclude \

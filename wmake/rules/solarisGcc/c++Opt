@@ -1,4 +1,4 @@
 c++DBUG     =
 c++OPT      = -O3 -fno-schedule-insns
 
-EXE_FROUNDING_MATH = -frounding-math
+ROUNDING_MATH = -frounding-math
