@@ -12,6 +12,8 @@ runApplication reconstructPar -latestTime
 cd ..
 
 cd hopperEmptying
+rm -rf 0
+cp -r 0.org 0
 runApplication blockMesh
 runApplication mapFields ../hopperInitialState -sourceTime latestTime
 runApplication decomposePar

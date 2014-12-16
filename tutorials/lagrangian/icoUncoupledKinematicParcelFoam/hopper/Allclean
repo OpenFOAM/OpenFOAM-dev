@@ -9,6 +9,6 @@ cleanCase
 
 cd ../hopperEmptying
 cleanCase
-rm -rf 0/lagrangian
+rm -rf 0
 
 # ----------------------------------------------------------------- end-of-file
