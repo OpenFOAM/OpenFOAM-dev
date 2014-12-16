@@ -240,14 +240,14 @@ fi
 case "${foamCompiler}" in
 OpenFOAM | ThirdParty)
     case "$WM_COMPILER" in
-    Gcc | Gcc++0x | Gcc48 | Gcc48++0x)
+    Gcc | Gcc48)
         gcc_version=gcc-4.8.2
         gmp_version=gmp-5.1.2
         mpfr_version=mpfr-3.1.2
         mpc_version=mpc-1.0.1
         ;;
-    Gcc49 | Gcc49++0x)
-        gcc_version=gcc-4.9.0
+    Gcc49)
+        gcc_version=gcc-4.9.2
         gmp_version=gmp-5.1.2
         mpfr_version=mpfr-3.1.2
         mpc_version=mpc-1.0.1
