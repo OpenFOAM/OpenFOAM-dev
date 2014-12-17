@@ -58,7 +58,7 @@ include $(RULES)/$(WM_LINK_LANGUAGE)
 # targets
 #------------------------------------------------------------------------------
 
-all:  $(WMAKE_BIN)/dirToString $(WMAKE_BIN)/wmkdep $(WMAKE_BIN)/wmkdepend
+all:  $(WMAKE_BIN)/dirToString $(WMAKE_BIN)/wmkdep
 
 clean:
 	rm -f $(WMAKE_BIN)/* 2>/dev/null
@@ -75,14 +75,5 @@ $(WMAKE_BIN)/wmkdep: wmkdep.l
 	$(cc) $(cFLAGS) lex.yy.c -o $(WMAKE_BIN)/wmkdep
 	@rm -f lex.yy.c 2>/dev/null
 
-
-# for bootstrapping - use generated files directly (instead of from .atg file)
-$(WMAKE_BIN)/wmkdepend: wmkdepend.cpp \
-    wmkdependParser.cpp wmkdependScanner.cpp \
-    wmkdependParser.h   wmkdependScanner.h
-	@mkdir -p $(WMAKE_BIN)
-	$(CC) $(c++FLAGS) \
-	     wmkdepend.cpp wmkdependParser.cpp wmkdependScanner.cpp \
-	    -o $(WMAKE_BIN)/wmkdepend
 
 #------------------------------------------------------------------------------
