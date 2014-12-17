@@ -132,6 +132,16 @@ char* depFile = NULL;
 /* Set of files already visited */
 struct HashEntry* visitedFiles[HASH_TABLE_SIZE];
 
+/* Buffer pointer stack counter */
+int currentBuffer = 0;
+
+/* Buffer pointer stack */
+YY_BUFFER_STATE buffers[FILE_STACK_SIZE];
+
+/* Directory paths for the loaded files */
+const char* bufferPaths[FILE_STACK_SIZE];
+
+
 int main(int argc, char* argv[])
 {
     char *basePos, *dotPos;
@@ -224,6 +234,9 @@ int main(int argc, char* argv[])
     printf("%s: \\\n", depFile);
     free(objectFile);
 
+    /* Initialize buffer path for currentBuffer */
+    bufferPaths[currentBuffer] = NULL;
+
     nextFile(sourceFile);
     yylex();
 
@@ -240,10 +253,6 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-
-
-int currentBuffer = 0;                     /* Buffer pointer stack counter */
-YY_BUFFER_STATE buffers[FILE_STACK_SIZE];  /* Buffer pointer stack */
 
 
 /*
@@ -290,6 +299,28 @@ void nextFile(const char* fileName)
     /* Pointer to new file which is set if the file is successfully opened */
     FILE* newyyin = NULL;
 
+    /* Check if the file has same path as the file in the current buffer */
+    if (bufferPaths[currentBuffer] != NULL)
+    {
+        char* pathName = addDirectoryName(bufferPaths[currentBuffer], fileName);
+
+        if ((newyyin = fopen(pathName, "r")))
+        {
+            printf("%s \\\n", pathName);
+
+            buffers[currentBuffer++] = YY_CURRENT_BUFFER;
+            bufferPaths[currentBuffer] = bufferPaths[currentBuffer-1];
+
+            yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
+
+            free(pathName);
+
+            return;
+        }
+
+        free(pathName);
+    }
+
     if (!(newyyin = fopen(fileName, "r")))
     {
         int d;
@@ -300,7 +331,10 @@ void nextFile(const char* fileName)
             if ((newyyin = fopen(pathName, "r")))
             {
                 printf("%s \\\n", pathName);
+
                 buffers[currentBuffer++] = YY_CURRENT_BUFFER;
+                bufferPaths[currentBuffer] = directories[d];
+
                 yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
 
                 free(pathName);
@@ -342,6 +376,8 @@ void nextFile(const char* fileName)
         fflush(stdout);
 
         buffers[currentBuffer++] = YY_CURRENT_BUFFER;
+        bufferPaths[currentBuffer] = NULL;
+
         yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
     }
 }
