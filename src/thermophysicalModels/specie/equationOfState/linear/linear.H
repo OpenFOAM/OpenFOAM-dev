@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,11 @@ Class
     Foam::linear
 
 Description
-    Perfect gas equation of state.
+    Linear equation of state with constant compressibility
+
+    \verbatim
+        rho = rho0 + psi*p
+    \endverbatim
 
 SourceFiles
     linearI.H
