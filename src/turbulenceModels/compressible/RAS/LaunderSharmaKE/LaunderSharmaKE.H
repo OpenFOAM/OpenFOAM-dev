@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,20 @@ Group
 
 Description
     Launder and Sharma low-Reynolds k-epsilon turbulence model for
-    compressible and combusting flows.
+    compressible and combusting flows including RDT-based compression term.
+
+    References:
+    \verbatim
+        "Application of the Energy-Dissipation Model of Turbulence
+         to the Calculation of Flow Near a Spinning Disc",
+        Launder, B. E. and Sharma, B. I.,
+        Letters in Heat and Mass Transfer, Vol. 1, No. 2, 1974, pp 131-138.
+
+        For the RDT-based compression term:
+        "k-epsilon equations for compressible reciprocating engine flows"
+        El Tahry, S. H.,
+        AIAA Journal of Energy 7, 1983, pp 345-353.
+    \endverbatim
 
     The default model coefficients correspond to the following:
     \verbatim

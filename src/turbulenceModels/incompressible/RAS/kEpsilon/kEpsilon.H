@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,17 @@ Group
 
 Description
     Standard k-epsilon turbulence model for incompressible flows.
+
+    Reference:
+    \verbatim
+        Launder, B.E., and Spalding, D.B.,
+        "Mathematical Models of Turbulence",
+        Academic Press, 1972.
+
+        Launder, B.E., and Spalding, D.B.,
+        "Computational Methods for Turbulent Flows",
+        Comp. Meth in Appl Mech & Eng'g, Vol 3, 1974, pp 269-289.
+    \endverbatim
 
     The default model coefficients correspond to the following:
     \verbatim

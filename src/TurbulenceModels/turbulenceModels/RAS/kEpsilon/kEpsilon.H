@@ -28,7 +28,25 @@ Group
     grpRASTurbulence
 
 Description
-    Standard k-epsilon turbulence model
+    Standard k-epsilon turbulence model for compressible flows
+    including RDT-based compression term.
+
+    Reference:
+    \verbatim
+        Standard model:
+            Launder, B.E., and Spalding, D.B.,
+            "Mathematical Models of Turbulence",
+            Academic Press, 1972.
+
+            Launder, B.E., and Spalding, D.B.,
+            "Computational Methods for Turbulent Flows",
+            Comp. Meth in Appl Mech & Eng'g, Vol 3, 1974, pp 269-289.
+
+        Compressible form including RDT-based compression term:
+            "k-epsilon equations for compressible reciprocating engine flows"
+            El Tahry, S. H.,
+            AIAA Journal of Energy 7, 1983, pp 345-353.
+    \endverbatim
 
     The default model coefficients correspond to the following:
     \verbatim

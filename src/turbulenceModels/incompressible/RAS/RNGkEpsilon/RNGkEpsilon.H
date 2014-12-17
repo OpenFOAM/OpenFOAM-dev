@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,14 @@ Group
 
 Description
     Renormalisation group k-epsilon turbulence model for incompressible flows.
+
+    References:
+    \verbatim
+        "Development of Turbulence Models for Shear Flow by a
+         Double Expansion Technique",
+        Yakhot, V., Orszag, S.A., Thangam, S., Gatski, T.B. and Speziale, C.G.",
+        Physics of Fluids A, Vol. 4, No. 7, 1992, pp 1510-1520.
+    \endverbatim
 
     The default model coefficients correspond to the following:
     \verbatim

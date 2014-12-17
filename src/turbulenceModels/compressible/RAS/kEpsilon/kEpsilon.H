@@ -35,7 +35,7 @@ Description
     \verbatim
         "k-epsilon equations for compressible reciprocating engine flows"
         El Tahry, S. H.,
-        AIAA Journal of Energy 7 (1983), 345-353.
+        AIAA Journal of Energy 7, 1983, pp 345-353.
     \endverbatim
 
     The default model coefficients correspond to the following:
