@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -341,7 +341,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
     }
 
     // Remove the particle when mass falls below minimum threshold
-    if (np0*mass1 < td.cloud().constProps().minParticleMass())
+    if (np0*mass1 < td.cloud().constProps().minParcelMass())
     {
         td.keepParticle = false;
 

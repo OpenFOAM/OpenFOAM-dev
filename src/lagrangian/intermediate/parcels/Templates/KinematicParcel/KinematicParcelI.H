@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::KinematicParcel<ParcelType>::constantProperties::constantProperties()
     parcelTypeId_(dict_, -1),
     rhoMin_(dict_, 0.0),
     rho0_(dict_, 0.0),
-    minParticleMass_(dict_, 0.0)
+    minParcelMass_(dict_, 0.0)
 {}
 
 
@@ -51,7 +51,7 @@ inline Foam::KinematicParcel<ParcelType>::constantProperties::constantProperties
     parcelTypeId_(cp.parcelTypeId_),
     rhoMin_(cp.rhoMin_),
     rho0_(cp.rho0_),
-    minParticleMass_(cp.minParticleMass_)
+    minParcelMass_(cp.minParcelMass_)
 {}
 
 
@@ -65,7 +65,7 @@ inline Foam::KinematicParcel<ParcelType>::constantProperties::constantProperties
     parcelTypeId_(dict_, "parcelTypeId", -1),
     rhoMin_(dict_, "rhoMin", 1e-15),
     rho0_(dict_, "rho0"),
-    minParticleMass_(dict_, "minParticleMass", 1e-15)
+    minParcelMass_(dict_, "minParcelMass", 1e-15)
 {}
 
 
@@ -165,9 +165,9 @@ Foam::KinematicParcel<ParcelType>::constantProperties::rho0() const
 
 template<class ParcelType>
 inline Foam::scalar
-Foam::KinematicParcel<ParcelType>::constantProperties::minParticleMass() const
+Foam::KinematicParcel<ParcelType>::constantProperties::minParcelMass() const
 {
-    return minParticleMass_.value();
+    return minParcelMass_.value();
 }
 
 

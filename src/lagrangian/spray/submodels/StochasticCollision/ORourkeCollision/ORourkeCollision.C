@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ void Foam::ORourkeCollision<CloudType>::collide(const scalar dt)
         parcelType& p = iter();
         scalar mass = p.nParticle()*p.mass();
 
-        if (mass < this->owner().constProps().minParticleMass())
+        if (mass < this->owner().constProps().minParcelMass())
         {
             this->owner().deleteParticle(p);
         }

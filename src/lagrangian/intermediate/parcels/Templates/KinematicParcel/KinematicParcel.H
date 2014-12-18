@@ -105,8 +105,8 @@ public:
             //- Particle density [kg/m3] (constant)
             demandDrivenEntry<scalar> rho0_;
 
-            //- Minimum particle mass [kg]
-            demandDrivenEntry<scalar> minParticleMass_;
+            //- Minimum parcel mass [kg]
+            demandDrivenEntry<scalar> minParcelMass_;
 
 
     public:
@@ -138,7 +138,7 @@ public:
             inline scalar rho0() const;
 
             //- Return const access to the minimum particle mass
-            inline scalar minParticleMass() const;
+            inline scalar minParcelMass() const;
     };
 
 

@@ -48,7 +48,7 @@ constantProperties
     parcelTypeId 1;
 
     rhoMin          1e-15;
-    minParticleMass 1e-15;
+    minParcelMass   1e-15;
 
     rho0            2526;
     youngsModulus   1e8;

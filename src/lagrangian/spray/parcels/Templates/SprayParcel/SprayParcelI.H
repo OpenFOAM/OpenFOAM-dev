@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ inline Foam::SprayParcel<ParcelType>::constantProperties::constantProperties
     const label parcelTypeId,
     const scalar rhoMin,
     const scalar rho0,
-    const scalar minParticleMass,
+    const scalar minParcelMass,
     const scalar youngsModulus,
     const scalar poissonsRatio,
     const scalar T0,
@@ -85,7 +85,7 @@ inline Foam::SprayParcel<ParcelType>::constantProperties::constantProperties
         parcelTypeId,
         rhoMin,
         rho0,
-        minParticleMass,
+        minParcelMass,
         youngsModulus,
         poissonsRatio,
         T0,

@@ -514,7 +514,7 @@ void Foam::ReactingParcel<ParcelType>::calc
     }
 
     // Remove the particle when mass falls below minimum threshold
-    if (np0*mass1 < td.cloud().constProps().minParticleMass())
+    if (np0*mass1 < td.cloud().constProps().minParcelMass())
     {
         td.keepParticle = false;
 
