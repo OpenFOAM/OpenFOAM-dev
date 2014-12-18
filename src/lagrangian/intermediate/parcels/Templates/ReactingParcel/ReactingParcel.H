@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,25 +308,25 @@ public:
 
         // Access
 
-            //- Return const access to initial mass
+            //- Return const access to initial particle mass [kg]
             inline scalar mass0() const;
 
-            //- Return const access to mass fractions of mixture
+            //- Return const access to mass fractions of mixture []
             inline const scalarField& Y() const;
 
-            //- Return the owner cell pressure
+            //- Return the owner cell pressure [Pa]
             inline scalar pc() const;
 
-            //- Return reference to the owner cell pressure
+            //- Return reference to the owner cell pressure [Pa]
             inline scalar& pc();
 
 
         // Edit
 
-            //- Return access to initial mass
+            //- Return access to initial particle mass [kg]
             inline scalar& mass0();
 
-            //- Return access to mass fractions of mixture
+            //- Return access to mass fractions of mixture []
             inline scalarField& Y();
 
 
