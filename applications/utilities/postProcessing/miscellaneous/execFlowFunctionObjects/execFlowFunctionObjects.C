@@ -461,27 +461,14 @@ void calc
 }
 
 
-int main(int argc, char *argv[])
+autoPtr<functionObjectList> readFunctionObjects
+(
+    const argList& args,
+    const Time& runTime,
+    dictionary& folDict
+)
 {
-    Foam::timeSelector::addOptions();
-    #include "addRegionOption.H"
-    Foam::argList::addBoolOption
-    (
-        "noFlow",
-        "suppress creating flow models"
-    );
-    #include "addDictOption.H"
-
-    #include "setRootCase.H"
-    #include "createTime.H"
-    Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
-    #include "createNamedMesh.H"
-
-    // Construct functionObjectList
-
     autoPtr<functionObjectList> folPtr;
-    // Externally stored dictionary for if fol constructed not from runTime
-    dictionary folDict;
 
     if (args.optionFound("dict"))
     {
@@ -502,6 +489,35 @@ int main(int argc, char *argv[])
     }
     folPtr->start();
 
+    return folPtr;
+}
+
+
+int main(int argc, char *argv[])
+{
+    Foam::timeSelector::addOptions();
+    #include "addRegionOption.H"
+    Foam::argList::addBoolOption
+    (
+        "noFlow",
+        "suppress creating flow models"
+    );
+    #include "addDictOption.H"
+
+    #include "setRootCase.H"
+    #include "createTime.H"
+    Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
+    #include "createNamedMesh.H"
+
+    // Externally stored dictionary for functionObjectList
+    // if not constructed from runTime
+    dictionary folDict;
+
+    // Construct functionObjectList
+    autoPtr<functionObjectList> folPtr
+    (
+        readFunctionObjects(args, runTime, folDict)
+    );
 
     forAll(timeDirs, timeI)
     {
@@ -509,7 +525,11 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << endl;
 
-        mesh.readUpdate();
+        if (mesh.readUpdate() != polyMesh::UNCHANGED)
+        {
+            // Update functionObjectList if mesh changes
+            folPtr = readFunctionObjects(args, runTime, folDict);
+        }
 
         FatalIOError.throwExceptions();
 
