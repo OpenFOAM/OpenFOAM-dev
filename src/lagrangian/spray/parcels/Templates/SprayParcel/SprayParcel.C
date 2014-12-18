@@ -253,7 +253,7 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
 
     const vector g = td.cloud().g().value();
 
-    scalar massChild = 0.0;
+    scalar parcelMassChild = 0.0;
     scalar dChild = 0.0;
     if
     (
@@ -279,24 +279,26 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
             Urmag,
             this->tMom(),
             dChild,
-            massChild
+            parcelMassChild
         )
     )
     {
         scalar Re = rhoAv*Urmag*dChild/muAv;
-        this->mass0() -= massChild;
 
         // Add child parcel as copy of parent
         SprayParcel<ParcelType>* child = new SprayParcel<ParcelType>(*this);
-        child->mass0() = massChild;
         child->d() = dChild;
-        child->nParticle() = massChild/(this->rho()*this->volume(dChild));
+        child->d0() = dChild;
+        const scalar massChild = child->mass();
+        child->mass0() = massChild;
+        child->nParticle() = parcelMassChild/massChild;
 
         const forceSuSp Fcp =
             forces.calcCoupled(*child, dt, massChild, Re, muAv);
         const forceSuSp Fncp =
             forces.calcNonCoupled(*child, dt, massChild, Re, muAv);
 
+        child->age() = 0.0;
         child->liquidCore() = 0.0;
         child->KHindex() = 1.0;
         child->y() = td.cloud().breakup().y0();
