@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,8 @@ namespace Foam
 
 void Foam::radiation::fvDOM::initialise()
 {
-    if (mesh_.nSolutionD() == 3)    //3D
+    // 3D
+    if (mesh_.nSolutionD() == 3)
     {
         nRay_ = 4*nPhi_*nTheta_;
         IRay_.setSize(nRay_);
@@ -83,69 +84,84 @@ void Foam::radiation::fvDOM::initialise()
             }
         }
     }
+    // 2D
+    else if (mesh_.nSolutionD() == 2)
+    {
+        // Currently 2D solution is limited to the x-y plane
+        if (mesh_.solutionD()[vector::Z] != -1)
+        {
+            FatalErrorIn("fvDOM::initialise()")
+                << "Currently 2D solution is limited to the x-y plane"
+                << exit(FatalError);
+        }
+
+        scalar thetai = piByTwo;
+        scalar deltaTheta = pi;
+        nRay_ = 4*nPhi_;
+        IRay_.setSize(nRay_);
+        scalar deltaPhi = pi/(2.0*nPhi_);
+        label i = 0;
+        for (label m = 1; m <= 4*nPhi_; m++)
+        {
+            scalar phii = (2.0*m - 1.0)*deltaPhi/2.0;
+            IRay_.set
+            (
+                i,
+                new radiativeIntensityRay
+                (
+                    *this,
+                    mesh_,
+                    phii,
+                    thetai,
+                    deltaPhi,
+                    deltaTheta,
+                    nLambda_,
+                    absorptionEmission_,
+                    blackBody_,
+                    i
+                )
+            );
+            i++;
+        }
+    }
+    // 1D
     else
     {
-        if (mesh_.nSolutionD() == 2)    //2D (X & Y)
+        // Currently 1D solution is limited to the x-direction
+        if (mesh_.solutionD()[vector::X] != 1)
         {
-            scalar thetai = piByTwo;
-            scalar deltaTheta = pi;
-            nRay_ = 4*nPhi_;
-            IRay_.setSize(nRay_);
-            scalar deltaPhi = pi/(2.0*nPhi_);
-            label i = 0;
-            for (label m = 1; m <= 4*nPhi_; m++)
-            {
-                scalar phii = (2.0*m - 1.0)*deltaPhi/2.0;
-                IRay_.set
-                (
-                    i,
-                    new radiativeIntensityRay
-                    (
-                        *this,
-                        mesh_,
-                        phii,
-                        thetai,
-                        deltaPhi,
-                        deltaTheta,
-                        nLambda_,
-                        absorptionEmission_,
-                        blackBody_,
-                        i
-                    )
-                );
-                i++;
-            }
+            FatalErrorIn("fvDOM::initialise()")
+                << "Currently 1D solution is limited to the x-direction"
+                << exit(FatalError);
         }
-        else    //1D (X)
+
+        scalar thetai = piByTwo;
+        scalar deltaTheta = pi;
+        nRay_ = 2;
+        IRay_.setSize(nRay_);
+        scalar deltaPhi = pi;
+        label i = 0;
+        for (label m = 1; m <= 2; m++)
         {
-            scalar thetai = piByTwo;
-            scalar deltaTheta = pi;
-            nRay_ = 2;
-            IRay_.setSize(nRay_);
-            scalar deltaPhi = pi;
-            label i = 0;
-            for (label m = 1; m <= 2; m++)
-            {
-                scalar phii = (2.0*m - 1.0)*deltaPhi/2.0;
-                IRay_.set
+            scalar phii = (2.0*m - 1.0)*deltaPhi/2.0;
+            IRay_.set
+            (
+                i,
+                new radiativeIntensityRay
                 (
-                    i,
-                    new radiativeIntensityRay
-                    (
-                        *this,
-                        mesh_,
-                        phii,
-                        thetai,
-                        deltaPhi,
-                        deltaTheta,
-                        nLambda_,
-                        absorptionEmission_,
-                        blackBody_,
-                        i
-                    )
-                );
-                i++;
-            }
+                    *this,
+                    mesh_,
+                    phii,
+                    thetai,
+                    deltaPhi,
+                    deltaTheta,
+                    nLambda_,
+                    absorptionEmission_,
+                    blackBody_,
+                    i
+                )
+            );
+            i++;
         }
     }
 
@@ -387,6 +403,7 @@ Foam::radiation::fvDOM::fvDOM
 {
     initialise();
 }
+
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
