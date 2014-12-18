@@ -303,8 +303,8 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
         child->KHindex() = 1.0;
         child->y() = td.cloud().breakup().y0();
         child->yDot() = td.cloud().breakup().yDot0();
-        child->tc() = -GREAT;
-        child->ms() = 0.0;
+        child->tc() = 0.0;
+        child->ms() = -GREAT;
         child->injector() = this->injector();
         child->tMom() = massChild/(Fcp.Sp() + Fncp.Sp());
         child->user() = 0.0;
