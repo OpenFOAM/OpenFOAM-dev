@@ -30,7 +30,7 @@ Description
     References:
     \verbatim
         "Implementation and Comparison of Correlations for interfacial Forces
-        in a Gas-Liquid System within an Euler-Euler Framework"
+         in a Gas-Liquid System within an Euler-Euler Framework"
         Otromke, M.
         PhD Thesis, April 2013
     \endverbatim
@@ -39,7 +39,7 @@ Description
         "Struggle with Computational Bubble Dynamics"
         Tomiyama, A.,
         Multiphase Science and Technology
-        Volume 10, Issue 4, Pages 369-405, 1998
+        Volume 10, Issue 4, 1998, pp. 369-405
     \endverbatim
 
 SourceFiles

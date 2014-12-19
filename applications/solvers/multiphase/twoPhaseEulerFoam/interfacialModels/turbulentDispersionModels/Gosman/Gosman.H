@@ -30,10 +30,10 @@ Description
     Reference:
     \verbatim
         "Multidimensional modeling of turbulent two-phase flows in stirred
-        vessels"
-        A D Gosman, C Lekakou, S Politis, R I Issa and M K Looney
+         vessels"
+        Gosman, A.D., Lekakou, C., Politis, S., Issa, R.I., and Looney, M.K.,
         AIChE Journal
-        Volume 38, Issue 12, Pages 1946-1956, 1992
+        Volume 38, Issue 12, 1992, pp. 1946-1956
      \endverbatim
 
 SourceFiles

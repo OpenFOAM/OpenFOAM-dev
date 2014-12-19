@@ -30,9 +30,9 @@ Description
     Reference:
     \verbatim
         "Transverse migration of single bubbles in simple shear flows"
-        A Tomiyama, H Tamai, I Zun, S Hosokawa
+        Tomiyama, A., Tamai, H., Zun, I., Hosokawa, S.,
         Chemical Engineering Science
-        Volume 57, Issue 11, Pages 1849-1858, June 2002
+        Volume 57, Issue 11, June 2002, pp. 1849-1858
     \endverbatim
 
 SourceFiles

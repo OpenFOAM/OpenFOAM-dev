@@ -39,7 +39,7 @@ Description
         "Lateral forces on spheres in turbulent uniform shear flow"
         Moraga, F.J., Bonetto, F.J., Lahey, R.T.,
         International Journal of Multiphase Flow
-        Volume 25, Issues 6-7, Pages 1321-1372, September 1999
+        Volume 25, Issues 6-7, September 1999, pp. 1321-1372
     \endverbatim
 
 SourceFiles

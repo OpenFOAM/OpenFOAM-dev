@@ -40,7 +40,7 @@ Description
          Euler-Lagrange procedure"
         Lain, S., Brodera, D., Sommerfelda, M., Goza, M.F.,
         International Journal of Multiphase Flow
-        Volume 28, Issue 8, Pages 1381-1407, August 2002
+        Volume 28, Issue 8, August 2002, pp. 1381-1407
     \endverbatim
 
 SourceFiles

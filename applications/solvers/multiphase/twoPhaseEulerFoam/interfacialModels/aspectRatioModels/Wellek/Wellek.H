@@ -30,7 +30,7 @@ Description
     References:
     \verbatim
         "Implementation and Comparison of Correlations for interfacial Forces
-        in a Gas-Liquid System within an Euler-Euler Framework"
+         in a Gas-Liquid System within an Euler-Euler Framework"
         Otromke, M.,
         PhD Thesis, April 2013
     \endverbatim
@@ -39,7 +39,7 @@ Description
         "Shape of liquid drops moving in liquid media"
         Wellek, R.M., Agrawal, A.K., Skelland, A.H.P.,
         International Journal of Multiphase Flow
-        Volume 12, Issue 5, Pages 854-862, September 1966
+        Volume 12, Issue 5, September 1966, pp. 854-862
     \endverbatim
 
 SourceFiles

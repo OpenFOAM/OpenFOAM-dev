@@ -40,7 +40,7 @@ Description
         "The lift force on a spherical bubble in a viscous linear shear flow"
         Legendre, D., Magnaudet, J.,
         Journal of Fluid Mechanics
-        Volume 368, pp 81-126, August 1998
+        Volume 368, August 1998, pp. 81-126
     \endverbatim
 
 SourceFiles

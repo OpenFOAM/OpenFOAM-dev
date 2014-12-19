@@ -35,9 +35,7 @@ Description
 
     \verbatim
         "Development of Interfacial Area Transport Equation"
-        M. Ishii,
-        S. Kim,
-        J Kelly,
+        Ishii, M., Kim, S. and Kelly, J.,
         Nuclear Engineering and Technology, Vol.37 No.6 December 2005
     \endverbatim
 

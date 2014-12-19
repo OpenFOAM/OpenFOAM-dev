@@ -30,8 +30,8 @@ Description
     Reference:
     \verbatim
         "Derivation, implementation, and validation of computer simulation
-        models for gas-solid fluidized beds",
-        B.G.M. van Wachem,
+         models for gas-solid fluidized beds",
+        van Wachem, B.G.M.,
         Ph.D. Thesis, Delft University of Technology, Amsterdam, 2000.
     \endverbatim
 

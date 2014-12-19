@@ -38,7 +38,7 @@ Description
 
     \verbatim
         "The Favre averaged drag model for turbulent dispersion in Eulerian
-        multi-phase flows"
+         multi-phase flows"
         Burns, A.D., Frank, T., Hamill, I., Shi, J.M.,
         5th international conference on multiphase flow
         Volume 4, Paper 392, May 2004

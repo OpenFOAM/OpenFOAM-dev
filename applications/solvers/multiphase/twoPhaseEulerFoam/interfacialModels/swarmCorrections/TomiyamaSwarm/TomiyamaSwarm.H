@@ -30,11 +30,11 @@ Description
     Reference:
     \verbatim
         "Drag Coefficients of Bubbles. 2nd Report. Drag Coefficient for a Swarm
-        of Bubbles and its Applicability to Transient Flow."
-        A Tomiyama, I Kataoka, T Fukuda, and T Sakaguchi
+         of Bubbles and its Applicability to Transient Flow."
+        Tomiyama, A., Kataoka, I., Fukuda, T., and Sakaguchi, T.,
         Nippon Kikai Gakkai Ronbunshu
-        Volume 61, Issue 588, Pages 2810-2817, 1995
-    \endverbatim 
+        Volume 61, Issue 588, 1995, pp. 2810-2817
+    \endverbatim
 
 SourceFiles
     TomiyamaSwarm.C

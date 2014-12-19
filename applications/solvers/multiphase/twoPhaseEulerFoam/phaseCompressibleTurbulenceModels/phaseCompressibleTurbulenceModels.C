@@ -53,6 +53,12 @@ makeBaseTurbulenceModel
 #include "kEpsilon.H"
 makeRASModel(kEpsilon);
 
+#include "kOmegaSST.H"
+makeRASModel(kOmegaSST);
+
+#include "kOmegaSSTSato.H"
+makeRASModel(kOmegaSSTSato);
+
 #include "mixtureKEpsilon.H"
 makeRASModel(mixtureKEpsilon);
 
@@ -84,6 +90,5 @@ makeTurbulenceModel
 #include "phasePressureModel.H"
 makeTurbulenceModel
 (phaseModelPhaseCompressibleTurbulenceModel, RAS, phasePressureModel);
-
 
 // ************************************************************************* //

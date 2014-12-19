@@ -29,14 +29,14 @@ Description
 
     \verbatim
         "Turbulent bubbly two-phase flow in a triangular
-        duct"
+         duct"
         Lopez de Bertodano, M.
         Ph.D. Thesis, Rensselaer Polytechnic Institution, New York, USA, 1992.
     \endverbatim
 
     \verbatim
         "The Favre averaged drag model for turbulent dispersion in Eulerian
-        multi-phase flows"
+         multi-phase flows"
         Burns, A.D., Frank, T., Hamill, I., Shi, J.M.,
         5th international conference on multiphase flow
         Volume 4, Paper 392, May 2004
