@@ -11,6 +11,7 @@ dragModels/SyamlalOBrien/SyamlalOBrien.C
 dragModels/TomiyamaCorrelated/TomiyamaCorrelated.C
 dragModels/TomiyamaAnalytic/TomiyamaAnalytic.C
 dragModels/WenYu/WenYu.C
+dragModels/IshiiZuber/IshiiZuber.C
 
 swarmCorrections/swarmCorrection/swarmCorrection.C
 swarmCorrections/swarmCorrection/newSwarmCorrection.C
@@ -48,6 +49,7 @@ turbulentDispersionModels/noTurbulentDispersion/noTurbulentDispersion.C
 turbulentDispersionModels/constantTurbulentDispersionCoefficient/constantTurbulentDispersionCoefficient.C
 turbulentDispersionModels/Burns/Burns.C
 turbulentDispersionModels/Gosman/Gosman.C
+turbulentDispersionModels/LopezDeBertodano/LopezDeBertodano.C
 
 aspectRatioModels/aspectRatioModel/aspectRatioModel.C
 aspectRatioModels/aspectRatioModel/newAspectRatioModel.C
