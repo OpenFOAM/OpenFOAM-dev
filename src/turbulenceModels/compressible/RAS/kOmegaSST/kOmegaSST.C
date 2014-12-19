@@ -410,7 +410,7 @@ void kOmegaSST::correct()
         // Re-calculate viscosity
         mut_ =
             a1_*rho_*k_
-           /max(a1_*omega_, F2()*sqrt(2.0)*mag(symm(fvc::grad(U_))));
+           /max(a1_*omega_, F23()*sqrt(2.0)*mag(symm(fvc::grad(U_))));
         mut_.correctBoundaryConditions();
 
         // Re-calculate thermal diffusivity
