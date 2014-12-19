@@ -25,20 +25,15 @@ Class
     Foam::dragModels::WenYu
 
 Description
-    H, Enwald, E. Peirano, A-E Almstedt
-    'Eulerian Two-Phase Flow Theory Applied to Fluidization'
-    Int. J. Multiphase Flow, Vol. 22, Suppl, pp. 21-66 (1996)
-    Eq. 86-87, p. 40
+    Wen and Yu drag model
 
-    This is identical to the Wen and Yu, Rowe model Table 3.6 p.56  in
-    the Ph.D. thesis of Berend van Wachem
-    'Derivation, Implementation and Validation
-                    of
-          Computer Simulation Models
-         for Gas-Solid Fluidized Beds'
-
-    NB: The difference between the Gidaspow-version is the void-fraction
-        in the Re-number
+    Reference:
+    \verbatim
+        "Eulerian Two-Phase Flow Theory Applied to Fluidization"
+        Enwald, H., Peirano, E., Almstedt, A-E.,
+        Int. J. Multiphase Flow, Vol. 22, Suppl, pp. 21-66 (1996)
+        Eq. 86-87, p. 40
+    \endverbatim
 
 SourceFiles
     WenYu.C
@@ -68,8 +63,6 @@ class WenYu
 :
     public dragModel
 {
-private:
-
     // Private data
 
         //- Residual Reynolds Number

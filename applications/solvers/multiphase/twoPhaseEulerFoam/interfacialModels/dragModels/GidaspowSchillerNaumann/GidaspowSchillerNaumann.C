@@ -34,7 +34,7 @@ namespace Foam
 namespace dragModels
 {
     defineTypeNameAndDebug(GidaspowSchillerNaumann, 0);
-    addToRunTimeSelectionTable(dragModel, GidaspowSchillerNaumann, dictionary); 
+    addToRunTimeSelectionTable(dragModel, GidaspowSchillerNaumann, dictionary);
 }
 }
 

@@ -31,7 +31,7 @@ Description
     \verbatim
         "Terminal velocity of single bubbles in surface tension force dominant
         regime"
-        A Tomiyama, G P Celata, S Hosokawa, S Yoshida
+        Tomiyama, T., Celata, G.P., Hosokawa, S., Yoshida, S.,
         International Journal of Multiphase Flow
         Volume 28, Issue 9, Pages 1497-1519, September 2002
     \endverbatim
@@ -64,8 +64,6 @@ class TomiyamaCorrelated
 :
     public dragModel
 {
-private:
-
     // Private data
 
         //- Coefficient

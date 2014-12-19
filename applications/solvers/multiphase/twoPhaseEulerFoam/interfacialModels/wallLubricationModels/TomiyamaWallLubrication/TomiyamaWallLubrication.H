@@ -31,14 +31,13 @@ Description
     \verbatim
         "Implementation and Comparison of Correlations for interfacial Forces
         in a Gas-Liquid System within an Euler-Euler Framework"
-        M Otromke
-        PhD Thesis
-        April 2013
+        Otromke, M.
+        PhD Thesis, April 2013
     \endverbatim
 
     \verbatim
         "Struggle with Computational Bubble Dynamics"
-        A Tomiyama
+        Tomiyama, A.,
         Multiphase Science and Technology
         Volume 10, Issue 4, Pages 369-405, 1998
     \endverbatim
@@ -71,8 +70,6 @@ class TomiyamaWallLubrication
 :
     public wallLubricationModel
 {
-private:
-
     // Private data
 
         //- Characteristic channel dimension

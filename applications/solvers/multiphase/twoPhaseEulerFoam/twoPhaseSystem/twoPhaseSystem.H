@@ -64,8 +64,6 @@ class twoPhaseSystem
 :
     public IOdictionary
 {
-private:
-
     // Private data
 
         //- Reference to the mesh

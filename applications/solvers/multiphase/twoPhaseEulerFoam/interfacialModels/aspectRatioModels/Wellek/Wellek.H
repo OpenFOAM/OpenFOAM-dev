@@ -31,14 +31,13 @@ Description
     \verbatim
         "Implementation and Comparison of Correlations for interfacial Forces
         in a Gas-Liquid System within an Euler-Euler Framework"
-        M Otromke
-        PhD Thesis
-        April 2013
+        Otromke, M.,
+        PhD Thesis, April 2013
     \endverbatim
 
     \verbatim
         "Shape of liquid drops moving in liquid media"
-        R M Wellek, A K Agrawal, A H P Skelland
+        Wellek, R.M., Agrawal, A.K., Skelland, A.H.P.,
         International Journal of Multiphase Flow
         Volume 12, Issue 5, Pages 854-862, September 1966
     \endverbatim

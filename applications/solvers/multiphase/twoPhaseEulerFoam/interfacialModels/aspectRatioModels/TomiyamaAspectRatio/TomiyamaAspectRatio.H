@@ -31,9 +31,8 @@ Description
     \verbatim
         "Implementation and Comparison of Correlations for interfacial Forces
         in a Gas-Liquid System within an Euler-Euler Framework"
-        M Otromke
-        PhD Thesis
-        April 2013
+        Otromke, M.,
+        PhD Thesis, April 2013
     \endverbatim
 
 SourceFiles

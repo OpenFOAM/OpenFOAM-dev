@@ -25,17 +25,21 @@ Class
     Foam::dragModels::GidaspowSchillerNaumann
 
 Description
-    H, Enwald, E. Peirano, A-E Almstedt
-    'Eulerian Two-Phase Flow Theory Applied to Fluidization'
-    Int. J. Multiphase Flow, Vol. 22, Suppl, pp. 21-66 (1996)
-    Eq. 86-87, p. 40
+    Gidaspow, Schiller and Naumann drag model
 
-    This is identical to the Wen and Yu, Rowe model Table 3.6 p.56  in
-    the Ph.D. thesis of Berend van Wachem
-    'Derivation, Implementation and Validation
-                    of
-          Computer Simulation Models
-         for Gas-Solid Fluidized Beds'
+    References:
+    \verbatim
+        "Eulerian Two-Phase Flow Theory Applied to Fluidization"
+        Enwald, H., Peirano, E., Almstedt, A-E.,
+        Int. J. Multiphase Flow, Vol. 22, Suppl, pp. 21-66 (1996)
+        Eq. 86-87, p. 40
+
+        This is identical to the Wen and Yu, Rowe model Table 3.6 p.56  in
+        "Derivation, Implementation and Validation of Computer Simulation Models
+         for Gas-Solid Fluidized Beds",
+        Berend van Wachem
+        Ph.D. thesis.
+    \endverbatim
 
 SourceFiles
     GidaspowSchillerNaumann.C
@@ -65,8 +69,6 @@ class GidaspowSchillerNaumann
 :
     public dragModel
 {
-private:
-
     // Private data
 
         //- Residual Reynolds Number

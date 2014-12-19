@@ -30,16 +30,15 @@ Description
     References:
     \verbatim
         "Implementation and Comparison of Correlations for interfacial Forces
-        in a Gas-Liquid System within an Euler-Euler Framework"
-        M Otromke
-        PhD Thesis
-        April 2013
+         in a Gas-Liquid System within an Euler-Euler Framework"
+        Otromke, M.,
+        PhD Thesis, April 2013
     \endverbatim
 
     \verbatim
         "Modelling hydrodynamics and turbulence in a bubble column using the
-        Euler-Lagrange procedure"
-        S Lain, D Brodera, M Sommerfelda, M F Goza
+         Euler-Lagrange procedure"
+        Lain, S., Brodera, D., Sommerfelda, M., Goza, M.F.,
         International Journal of Multiphase Flow
         Volume 28, Issue 8, Pages 1381-1407, August 2002
     \endverbatim

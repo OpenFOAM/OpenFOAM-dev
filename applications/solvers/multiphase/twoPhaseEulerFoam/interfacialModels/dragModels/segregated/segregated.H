@@ -29,8 +29,8 @@ Description
 
     Reference:
     \verbatim
-        "Towards the Numerical Simulation of Multi-scale Two-phase Flows"
-        H Marschall
+        "Towards the Numerical Simulation of Multi-scale Two-phase Flows",
+        Marschall, H.,
         PhD Thesis, TU München, 2011
     \endverbatim
 
@@ -62,8 +62,6 @@ class segregated
 :
     public dragModel
 {
-private:
-
     // Private data
 
         //- M coefficient

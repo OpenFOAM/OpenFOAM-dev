@@ -25,6 +25,7 @@ Class
     Foam::dragModels::SchillerNaumann
 
 Description
+    Schiller and Naumann drag model for dispersed bubbly flows.
 
 SourceFiles
     SchillerNaumann.C
@@ -54,8 +55,6 @@ class SchillerNaumann
 :
     public dragModel
 {
-private:
-
     // Private data
 
         //- Residual Reynolds Number

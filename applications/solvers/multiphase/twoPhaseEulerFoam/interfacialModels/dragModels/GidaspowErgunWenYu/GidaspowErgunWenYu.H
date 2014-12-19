@@ -25,8 +25,14 @@ Class
     Foam::dragModels::GidaspowErgunWenYu
 
 Description
-    D. Gidaspow, Multiphase flow and fluidization,
+    Gidaspow, Ergun, Wen and Yu drag model
+
+    Reference:
+    \verbatim
+        "Multiphase flow and fluidization",
+        Gidaspow, D.,
         Academic Press, New York, 1994.
+    \endverbatim
 
 SourceFiles
     GidaspowErgunWenYu.C
@@ -59,8 +65,6 @@ class GidaspowErgunWenYu
 :
     public dragModel
 {
-private:
-
     // Private data
 
         //- Ergun drag model

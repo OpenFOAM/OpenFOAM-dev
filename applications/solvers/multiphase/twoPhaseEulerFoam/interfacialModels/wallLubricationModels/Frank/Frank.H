@@ -31,7 +31,7 @@ Description
     \verbatim
         "Implementation and Comparison of Correlations for interfacial Forces
         in a Gas-Liquid System within an Euler-Euler Framework"
-        M Otromke
+        Otromke, M.
         PhD Thesis
         April 2013
     \endverbatim
@@ -39,7 +39,7 @@ Description
     \verbatim
         "Advances in Computational Fluid Dynamics (CFD) of 3-dimensional Gas-
         Liquid Multiphase Flows"
-        T Frank
+        Frank, T.
         NAFEMS Seminar : Simulation of Complex Flows (CFD)
         Pages 1-18, April 2005
     \endverbatim
@@ -72,8 +72,6 @@ class Frank
 :
     public wallLubricationModel
 {
-private:
-
     // Private data
 
         //- Coefficient d

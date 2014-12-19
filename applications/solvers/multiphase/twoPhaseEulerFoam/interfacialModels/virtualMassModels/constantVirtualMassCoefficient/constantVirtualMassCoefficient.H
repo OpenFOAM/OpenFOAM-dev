@@ -55,8 +55,6 @@ class constantVirtualMassCoefficient
 :
     public virtualMassModel
 {
-private:
-
     // Private data
 
         //- Constant virtual mass coefficient
