@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Foam::BreakupModel<CloudType>::BreakupModel
     yDot0_(0.0),
     TABComega_(0.0),
     TABCmu_(0.0),
-    TABWeCrit_(0.0)
+    TABtwoWeCrit_(0.0)
 {}
 
 
@@ -55,7 +55,7 @@ Foam::BreakupModel<CloudType>::BreakupModel
     yDot0_(bum.yDot0_),
     TABComega_(bum.TABComega_),
     TABCmu_(bum.TABCmu_),
-    TABWeCrit_(bum.TABWeCrit_)
+    TABtwoWeCrit_(bum.TABtwoWeCrit_)
 {}
 
 
@@ -70,20 +70,19 @@ Foam::BreakupModel<CloudType>::BreakupModel
 :
     CloudSubModelBase<CloudType>(owner, dict, typeName, type),
     solveOscillationEq_(solveOscillationEq),
-    y0_(0.0),
-    yDot0_(0.0),
-    TABComega_(0.0),
-    TABCmu_(0.0),
-    TABWeCrit_(0.0)
+    y0_(this->coeffDict().template lookupOrDefault<scalar>("y0", 0.0)),
+    yDot0_(this->coeffDict().template lookupOrDefault<scalar>("yDot0", 0.0)),
+    TABComega_(8),
+    TABCmu_(5),
+    TABtwoWeCrit_(12)
 {
-    if (solveOscillationEq_)
+    if (solveOscillationEq_ && dict.found("TABCoeffs"))
     {
         const dictionary coeffs(dict.subDict("TABCoeffs"));
-        y0_ = coeffs.template lookupOrDefault<scalar>("y0", 0.0);
-        yDot0_ = coeffs.template lookupOrDefault<scalar>("yDot0", 0.0);
-        TABComega_ = coeffs.template lookupOrDefault<scalar>("Comega", 8.0);
-        TABCmu_ = coeffs.template lookupOrDefault<scalar>("Cmu", 10.0);
-        TABWeCrit_ = coeffs.template lookupOrDefault<scalar>("WeCrit", 12.0);
+        coeffs.lookup("Comega") >> TABComega_;
+        coeffs.lookup("Cmu") >> TABCmu_;
+        scalar WeCrit(readScalar(coeffs.lookup("WeCrit")));
+        TABtwoWeCrit_ = 2*WeCrit;
     }
 }
 
@@ -160,4 +159,3 @@ bool Foam::BreakupModel<CloudType>::update
 #include "BreakupModelNew.C"
 
 // ************************************************************************* //
-

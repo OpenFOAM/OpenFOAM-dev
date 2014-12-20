@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ bool Foam::TAB<CloudType>::update
     {
         scalar omega = sqrt(omega2);
         scalar We = rhoc*sqr(Urmag)*r/sigma;
-        scalar Wetmp = We/this->TABWeCrit_;
+        scalar Wetmp = We/this->TABtwoWeCrit_;
 
         scalar y1 = y - Wetmp;
         scalar y2 = yDot/omega;

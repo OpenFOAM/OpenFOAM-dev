@@ -45,6 +45,7 @@ License
 #include "makeReactingParcelSurfaceFilmModels.H"
 
 // Spray
+#include "DistortedSphereDragForce.H"
 #include "makeSprayParcelAtomizationModels.H"
 #include "makeSprayParcelBreakupModels.H"
 
@@ -72,6 +73,7 @@ namespace Foam
     makeReactingParcelSurfaceFilmModels(basicSprayCloud);
 
     // Spray sub-models
+    makeParticleForceModelType(DistortedSphereDragForce, basicSprayCloud);
     makeSprayParcelAtomizationModels(basicSprayCloud);
     makeSprayParcelBreakupModels(basicSprayCloud);
 };

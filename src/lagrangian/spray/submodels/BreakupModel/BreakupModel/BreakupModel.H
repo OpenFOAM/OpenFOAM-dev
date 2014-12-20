@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,10 @@ protected:
 
         scalar y0_;
         scalar yDot0_;
+
         scalar TABComega_;
         scalar TABCmu_;
-        scalar TABWeCrit_;
+        scalar TABtwoWeCrit_;
 
 
 public:
@@ -153,9 +154,9 @@ public:
             return TABCmu_;
         }
 
-        inline const scalar& TABWeCrit() const
+        inline const scalar& TABtwoWeCrit() const
         {
-            return TABWeCrit_;
+            return TABtwoWeCrit_;
         }
 
 
