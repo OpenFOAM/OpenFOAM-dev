@@ -29,7 +29,7 @@ Group
 
 Description
     Renormalisation group k-epsilon turbulence model for compressible flows
-    including RDT-based compression term.
+    including rapid distortion theory (RDT) based compression term.
 
     References:
     \verbatim

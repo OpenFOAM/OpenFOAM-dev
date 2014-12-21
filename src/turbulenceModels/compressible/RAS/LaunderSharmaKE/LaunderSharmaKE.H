@@ -29,7 +29,8 @@ Group
 
 Description
     Launder and Sharma low-Reynolds k-epsilon turbulence model for
-    compressible and combusting flows including RDT-based compression term.
+    compressible and combusting flows including rapid distortion theory (RDT)
+    based compression term.
 
     References:
     \verbatim

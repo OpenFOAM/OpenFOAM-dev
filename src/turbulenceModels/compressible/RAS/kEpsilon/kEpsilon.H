@@ -29,7 +29,7 @@ Group
 
 Description
     Standard k-epsilon turbulence model for compressible flows
-    including RDT-based compression term.
+    including rapid distortion theory (RDT) based compression term.
 
     Reference:
     \verbatim
