@@ -88,6 +88,7 @@ class axesRotation
             const axisOrder& order = e3e1
         );
 
+
 public:
 
     //- Runtime type information
@@ -134,7 +135,7 @@ public:
         //- Update the rotation for a list of cells
         virtual void updateCells(const polyMesh&, const labelList&)
         {
-            // do nothing
+            // Do nothing
         }
 
         //- Return local-to-global transformation tensor
@@ -196,14 +197,14 @@ public:
         ) const;
 
         //- Transform vectorField using transformation tensorField and return
-        // symmetrical tensorField
+        //  symmetric tensorField
         virtual tmp<symmTensorField> transformVector
         (
             const vectorField& st
         ) const;
 
         //- Transform vector using transformation tensor and return
-        // symmetrical tensor
+        //  symmetric tensor
         virtual symmTensor transformVector(const vector& st) const;
 
 

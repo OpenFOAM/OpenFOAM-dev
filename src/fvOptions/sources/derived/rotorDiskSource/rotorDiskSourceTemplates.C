@@ -43,7 +43,7 @@ void Foam::fv::rotorDiskSource::calculate
 {
     const scalarField& V = mesh_.V();
 
-    // logging info
+    // Logging info
     scalar dragEff = 0.0;
     scalar liftEff = 0.0;
     scalar AOAmin = GREAT;
@@ -57,19 +57,19 @@ void Foam::fv::rotorDiskSource::calculate
 
             const scalar radius = x_[i].x();
 
-            // velocity in local cylindrical reference frame
-            vector Uc = localAxesRotation_->transform(U[cellI], i);
+            // Transform velocity into local cylindrical reference frame
+            vector Uc = localAxesRotation_->invTransform(U[cellI], i);
 
-            // transform from rotor cylindrical into local coning system
+            // Transform velocity into local coning system
             Uc = R_[i] & Uc;
 
-            // set radial component of velocity to zero
+            // Set radial component of velocity to zero
             Uc.x() = 0.0;
 
-            // set blade normal component of velocity
+            // Set blade normal component of velocity
             Uc.y() = radius*omega_ - Uc.y();
 
-            // determine blade data for this radius
+            // Determine blade data for this radius
             // i2 = index of upper radius bound data point in blade list
             scalar twist = 0.0;
             scalar chord = 0.0;
@@ -78,14 +78,14 @@ void Foam::fv::rotorDiskSource::calculate
             scalar invDr = 0.0;
             blade_.interpolate(radius, twist, chord, i1, i2, invDr);
 
-            // flip geometric angle if blade is spinning in reverse (clockwise)
+            // Flip geometric angle if blade is spinning in reverse (clockwise)
             scalar alphaGeom = thetag[i] + twist;
             if (omega_ < 0)
             {
                 alphaGeom = mathematical::pi - alphaGeom;
             }
 
-            // effective angle of attack
+            // Effective angle of attack
             scalar alphaEff = alphaGeom - atan2(-Uc.z(), Uc.y());
             if (alphaEff > mathematical::pi)
             {
@@ -99,7 +99,7 @@ void Foam::fv::rotorDiskSource::calculate
             AOAmin = min(AOAmin, alphaEff);
             AOAmax = max(AOAmax, alphaEff);
 
-            // determine profile data for this radius and angle of attack
+            // Determine profile data for this radius and angle of attack
             const label profile1 = blade_.profileID()[i1];
             const label profile2 = blade_.profileID()[i2];
 
@@ -114,24 +114,24 @@ void Foam::fv::rotorDiskSource::calculate
             scalar Cd = invDr*(Cd2 - Cd1) + Cd1;
             scalar Cl = invDr*(Cl2 - Cl1) + Cl1;
 
-            // apply tip effect for blade lift
+            // Apply tip effect for blade lift
             scalar tipFactor = neg(radius/rMax_ - tipEffect_);
 
-            // calculate forces perpendicular to blade
+            // Calculate forces perpendicular to blade
             scalar pDyn = 0.5*rho[cellI]*magSqr(Uc);
 
             scalar f = pDyn*chord*nBlades_*area_[i]/radius/mathematical::twoPi;
             vector localForce = vector(0.0, -f*Cd, tipFactor*f*Cl);
 
-            // accumulate forces
+            // Accumulate forces
             dragEff += rhoRef_*localForce.y();
             liftEff += rhoRef_*localForce.z();
 
-            // convert force from local coning system into rotor cylindrical
+            // Transform force from local coning system into rotor cylindrical
             localForce = invR_[i] & localForce;
 
-            // convert force to global cartesian co-ordinate system
-            force[cellI] = localAxesRotation_->invTransform(localForce, i);
+            // Transform force into global Cartesian co-ordinate system
+            force[cellI] = localAxesRotation_->transform(localForce, i);
 
             if (divideVolume)
             {
