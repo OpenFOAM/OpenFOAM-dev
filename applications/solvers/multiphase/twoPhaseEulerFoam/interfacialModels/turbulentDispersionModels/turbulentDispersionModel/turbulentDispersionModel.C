@@ -25,6 +25,7 @@ License
 
 #include "turbulentDispersionModel.H"
 #include "phasePair.H"
+#include "fvcGrad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -53,6 +54,16 @@ Foam::turbulentDispersionModel::turbulentDispersionModel
 
 Foam::turbulentDispersionModel::~turbulentDispersionModel()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volVectorField>
+Foam::turbulentDispersionModel::F() const
+{
+    return Fprime()*fvc::grad(pair_.dispersed());
+
+}
 
 
 // ************************************************************************* //

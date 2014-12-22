@@ -25,7 +25,6 @@ License
 
 #include "LopezDeBertodano.H"
 #include "phasePair.H"
-#include "fvc.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -67,14 +66,13 @@ Foam::turbulentDispersionModels::LopezDeBertodano::~LopezDeBertodano()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volVectorField>
-Foam::turbulentDispersionModels::LopezDeBertodano::F() const
+Foam::tmp<Foam::volScalarField>
+Foam::turbulentDispersionModels::LopezDeBertodano::Fprime() const
 {
     return
         Ctd_
        *pair_.continuous().rho()
-       *pair_.continuous().turbulence().k()
-       *fvc::grad(pair_.dispersed());
+       *pair_.continuous().turbulence().k();
 }
 
 // ************************************************************************* //

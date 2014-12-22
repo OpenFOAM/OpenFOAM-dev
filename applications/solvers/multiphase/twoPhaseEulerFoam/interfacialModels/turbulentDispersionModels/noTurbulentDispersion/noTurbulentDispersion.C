@@ -93,4 +93,32 @@ Foam::turbulentDispersionModels::noTurbulentDispersion::F() const
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::turbulentDispersionModels::noTurbulentDispersion::Fprime() const
+{
+    const fvMesh& mesh(this->pair_.phase1().mesh());
+
+    return
+        tmp<volScalarField>
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "zero",
+                    mesh.time().timeName(),
+                    mesh
+                ),
+                mesh,
+                dimensionedScalar
+                (
+                    "zero",
+                    dimensionSet(1, -2, 1, 0, 0),
+                    0
+                )
+            )
+        );
+}
+
+
 // ************************************************************************* //

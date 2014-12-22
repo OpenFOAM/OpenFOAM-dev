@@ -25,7 +25,6 @@ License
 
 #include "Gosman.H"
 #include "phasePair.H"
-#include "fvc.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -69,8 +68,8 @@ Foam::turbulentDispersionModels::Gosman::~Gosman()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volVectorField>
-Foam::turbulentDispersionModels::Gosman::F() const
+Foam::tmp<Foam::volScalarField>
+Foam::turbulentDispersionModels::Gosman::Fprime() const
 {
     const fvMesh& mesh(pair_.phase1().mesh());
     const dragModel&
@@ -92,8 +91,7 @@ Foam::turbulentDispersionModels::Gosman::F() const
             sigma_
            *sqr(pair_.dispersed().d())
         )
-       *pair_.continuous().rho()
-       *fvc::grad(pair_.dispersed());
+       *pair_.continuous().rho();
 }
 
 

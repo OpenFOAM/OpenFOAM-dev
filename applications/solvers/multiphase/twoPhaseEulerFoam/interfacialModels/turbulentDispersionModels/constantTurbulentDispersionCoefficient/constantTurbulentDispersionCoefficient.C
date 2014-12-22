@@ -25,7 +25,6 @@ License
 
 #include "constantTurbulentDispersionCoefficient.H"
 #include "phasePair.H"
-#include "fvc.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -69,16 +68,15 @@ Foam::turbulentDispersionModels::constantTurbulentDispersionCoefficient::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volVectorField>
+Foam::tmp<Foam::volScalarField>
 Foam::turbulentDispersionModels::constantTurbulentDispersionCoefficient::
-F() const
+Fprime() const
 {
     return
         Ctd_
        *pair_.dispersed()
        *pair_.continuous().rho()
-       *pair_.continuous().turbulence().k()
-       *fvc::grad(pair_.dispersed());
+       *pair_.continuous().turbulence().k();
 }
 
 

@@ -82,7 +82,7 @@ public:
 
     // Static data members
 
-        //- Force dimensions 
+        //- Force dimensions
         static const dimensionSet dimF;
 
 
@@ -112,7 +112,11 @@ public:
     // Member Functions
 
         //- Turbulent dispersion force
-        virtual tmp<volVectorField> F() const = 0;
+        virtual tmp<volVectorField> F() const;
+
+        //- Turbulent dispersion force coefficient
+        //  multiplying the gradient of the phase-fraction
+        virtual tmp<volScalarField> Fprime() const = 0;
 };
 
 
