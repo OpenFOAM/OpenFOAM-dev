@@ -600,13 +600,6 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
     const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
 )
 {
-    IOobject ddtIOobject
-    (
-        "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
-        mesh().time().timeName(),
-        mesh()
-    );
-
     const surfaceScalarField rDeltaT(fvc::interpolate(SLrDeltaT()));
 
     fluxFieldType phiCorr
@@ -618,7 +611,12 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
     (
         new fluxFieldType
         (
-            ddtIOobject,
+            IOobject
+            (
+                "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
+                mesh().time().timeName(),
+                mesh()
+            ),
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),
@@ -639,13 +637,6 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
     const fluxFieldType& phi
 )
 {
-    IOobject ddtIOobject
-    (
-        "ddtCorr(" + U.name() + ',' + phi.name() + ')',
-        mesh().time().timeName(),
-        mesh()
-    );
-
     const surfaceScalarField rDeltaT(fvc::interpolate(SLrDeltaT()));
 
     fluxFieldType phiCorr
@@ -657,7 +648,12 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
     (
         new fluxFieldType
         (
-            ddtIOobject,
+            IOobject
+            (
+                "ddtCorr(" + U.name() + ',' + phi.name() + ')',
+                mesh().time().timeName(),
+                mesh()
+            ),
             this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime(), phiCorr)
            *rDeltaT*phiCorr
         )
@@ -674,21 +670,14 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
     const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
 )
 {
-    IOobject ddtIOobject
-    (
-        "ddtCorr(" + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
-        mesh().time().timeName(),
-        mesh()
-    );
-
-    const surfaceScalarField rDeltaT(fvc::interpolate(SLrDeltaT()));
-
     if
     (
         U.dimensions() == dimVelocity
      && Uf.dimensions() == dimDensity*dimVelocity
     )
     {
+        const surfaceScalarField rDeltaT(fvc::interpolate(SLrDeltaT()));
+
         GeometricField<Type, fvPatchField, volMesh> rhoU0
         (
             rho.oldTime()*U.oldTime()
@@ -703,7 +692,13 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
         (
             new fluxFieldType
             (
-                ddtIOobject,
+                IOobject
+                (
+                    "ddtCorr("
+                  + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
+                    mesh().time().timeName(),
+                    mesh()
+                ),
                 this->fvcDdtPhiCoeff
                 (
                     rhoU0,
@@ -720,25 +715,7 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
      && Uf.dimensions() == dimDensity*dimVelocity
     )
     {
-        fluxFieldType phiCorr
-        (
-             mesh().Sf() & (Uf.oldTime() - fvc::interpolate(U.oldTime()))
-        );
-
-        return tmp<fluxFieldType>
-        (
-            new fluxFieldType
-            (
-                ddtIOobject,
-                this->fvcDdtPhiCoeff
-                (
-                    U.oldTime(),
-                    mesh().Sf() & Uf.oldTime(),
-                    phiCorr
-                )
-               *rDeltaT*phiCorr
-            )
-        );
+        return fvcDdtUfCorr(U, Uf);
     }
     else
     {
@@ -762,21 +739,14 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
     const fluxFieldType& phi
 )
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
-
-    IOobject ddtIOobject
-    (
-        "ddtCorr(" + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
-        mesh().time().timeName(),
-        mesh()
-    );
-
     if
     (
         U.dimensions() == dimVelocity
      && phi.dimensions() == rho.dimensions()*dimVelocity*dimArea
     )
     {
+        dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
         GeometricField<Type, fvPatchField, volMesh> rhoU0
         (
             rho.oldTime()*U.oldTime()
@@ -791,7 +761,13 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
         (
             new fluxFieldType
             (
-                ddtIOobject,
+                IOobject
+                (
+                    "ddtCorr("
+                  + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+                    mesh().time().timeName(),
+                    mesh()
+                ),
                 this->fvcDdtPhiCoeff(rhoU0, phi.oldTime(), phiCorr)
                *rDeltaT*phiCorr
             )
@@ -803,20 +779,7 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
      && phi.dimensions() == rho.dimensions()*dimVelocity*dimArea
     )
     {
-        fluxFieldType phiCorr
-        (
-            phi.oldTime() - (mesh().Sf() & fvc::interpolate(U.oldTime()))
-        );
-
-        return tmp<fluxFieldType>
-        (
-            new fluxFieldType
-            (
-                ddtIOobject,
-                this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime(), phiCorr)
-               *rDeltaT*phiCorr
-            )
-        );
+        return fvcDdtPhiCorr(U, phi);
     }
     else
     {
