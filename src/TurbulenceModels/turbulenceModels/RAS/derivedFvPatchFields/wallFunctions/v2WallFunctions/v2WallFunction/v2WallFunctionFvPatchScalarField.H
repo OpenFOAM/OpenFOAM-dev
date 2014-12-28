@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,6 +102,9 @@ protected:
 
         //- Check the type of the patch
         virtual void checkType();
+
+        //- Write local wall function variables
+        virtual void writeLocalEntries(Ostream&) const;
 
         //- Calculate the Y+ at the edge of the laminar sublayer
         scalar yPlusLam(const scalar kappa, const scalar E);
