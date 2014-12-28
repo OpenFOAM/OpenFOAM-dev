@@ -232,11 +232,11 @@ void kLowReWallFunctionFvPatchScalarField::evaluate
 
 void kLowReWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
-    fixedValueFvPatchField<scalar>::write(os);
     os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
     os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
     os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
     os.writeKeyword("Ceps2") << Ceps2_ << token::END_STATEMENT << nl;
+    fixedValueFvPatchField<scalar>::write(os);
 }
 
 
