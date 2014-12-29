@@ -33,26 +33,27 @@ License
 
 namespace Foam
 {
-
-template<>
-const char*
-NamedEnum
-<externalWallHeatFluxTemperatureFvPatchScalarField::operationMode, 3>::names[]=
-{
-    "fixed_heat_flux",
-    "fixed_heat_transfer_coefficient",
-    "unknown"
-};
-
-const NamedEnum
-<
-    externalWallHeatFluxTemperatureFvPatchScalarField::operationMode, 3
->
-externalWallHeatFluxTemperatureFvPatchScalarField::operationModeNames;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    template<>
+    const char*
+    NamedEnum
+    <
+        externalWallHeatFluxTemperatureFvPatchScalarField::operationMode,
+        3
+    >::names[] =
+    {
+        "fixed_heat_flux",
+        "fixed_heat_transfer_coefficient",
+        "unknown"
+    };
 
 } // End namespace Foam
+
+const Foam::NamedEnum
+<
+    Foam::externalWallHeatFluxTemperatureFvPatchScalarField::operationMode,
+    3
+> Foam::externalWallHeatFluxTemperatureFvPatchScalarField::operationModeNames;
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -260,6 +261,10 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
     {
         case fixedHeatFlux:
         {
+            refGrad() = (q_ + Qr)/kappa(Tp);
+            refValue() = 0.0;
+            valueFraction() = 0.0;
+
             break;
         }
         case fixedHeatTransferCoeff:
@@ -277,6 +282,13 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
                 }
             }
             hp = 1.0/(1.0/h_ + totalSolidRes);
+
+            Qr /= Tp;
+            refGrad() = 0.0;
+            refValue() = hp*Ta_/(hp - Qr);
+            valueFraction() =
+                (hp - Qr)/((hp - Qr) + kappa(Tp)*patch().deltaCoeffs());
+
             break;
         }
         default:
@@ -288,21 +300,6 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
             )   << "Illegal heat flux mode " << operationModeNames[mode_]
                 << exit(FatalError);
         }
-    }
-
-    if (mode_ == fixedHeatFlux)
-    {
-        refGrad() =  (q_ + Qr)/kappa(Tp);
-        refValue() =  0.0;
-        valueFraction() = 0.0;
-    }
-    else if (mode_ == fixedHeatTransferCoeff)
-    {
-        Qr /= Tp;
-        refGrad() =  0.0;
-        refValue() =  hp*Ta_/(hp - Qr);
-        valueFraction() =
-            (hp - Qr)/((hp - Qr) + kappa(Tp)*patch().deltaCoeffs());
     }
 
     mixedFvPatchScalarField::updateCoeffs();
