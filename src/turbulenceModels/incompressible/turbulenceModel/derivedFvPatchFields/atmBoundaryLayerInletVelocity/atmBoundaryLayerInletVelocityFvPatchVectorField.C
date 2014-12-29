@@ -46,14 +46,14 @@ atmBoundaryLayerInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    Ustar_(0),
     n_(pTraits<vector>::zero),
     z_(pTraits<vector>::zero),
-    z0_(0),
     kappa_(0.41),
     Uref_(0),
-    Href_(0),
-    zGround_(0)
+    Zref_(0),
+    z0_(0),
+    zGround_(0),
+    Ustar_(0)
 {}
 
 
@@ -67,14 +67,14 @@ atmBoundaryLayerInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
-    Ustar_(ptf.Ustar_, mapper),
     n_(ptf.n_),
     z_(ptf.z_),
-    z0_(ptf.z0_, mapper),
     kappa_(ptf.kappa_),
     Uref_(ptf.Uref_),
-    Href_(ptf.Href_),
-    zGround_(ptf.zGround_, mapper)
+    Zref_(ptf.Zref_),
+    z0_(ptf.z0_, mapper),
+    zGround_(ptf.zGround_, mapper),
+    Ustar_(ptf.Ustar_, mapper)
 {}
 
 
@@ -87,14 +87,14 @@ atmBoundaryLayerInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    Ustar_(p.size()),
     n_(dict.lookup("n")),
     z_(dict.lookup("z")),
-    z0_("z0", dict, p.size()),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     Uref_(readScalar(dict.lookup("Uref"))),
-    Href_(readScalar(dict.lookup("Href"))),
-    zGround_("zGround", dict, p.size())
+    Zref_(readScalar(dict.lookup("Zref"))),
+    z0_("z0", dict, p.size()),
+    zGround_("zGround", dict, p.size()),
+    Ustar_(p.size())
 {
     if (mag(n_) < SMALL || mag(z_) < SMALL)
     {
@@ -115,7 +115,7 @@ atmBoundaryLayerInletVelocityFvPatchVectorField
     n_ /= mag(n_);
     z_ /= mag(z_);
 
-    Ustar_ = kappa_*Uref_/(log((Href_ + z0_)/max(z0_, 0.001)));
+    Ustar_ = kappa_*Uref_/(log((Zref_ + z0_)/max(z0_, 0.001)));
     scalarField Un
     (
         (Ustar_/kappa_)
@@ -134,14 +134,14 @@ atmBoundaryLayerInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(blpvf, iF),
-    Ustar_(blpvf.Ustar_),
     n_(blpvf.n_),
     z_(blpvf.z_),
-    z0_(blpvf.z0_),
     kappa_(blpvf.kappa_),
     Uref_(blpvf.Uref_),
-    Href_(blpvf.Href_),
-    zGround_(blpvf.zGround_)
+    Zref_(blpvf.Zref_),
+    z0_(blpvf.z0_),
+    zGround_(blpvf.zGround_),
+    Ustar_(blpvf.Ustar_)
 {}
 
 
@@ -188,8 +188,8 @@ void atmBoundaryLayerInletVelocityFvPatchVectorField::write(Ostream& os) const
         << kappa_ << token::END_STATEMENT << nl;
     os.writeKeyword("Uref")
         << Uref_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Href")
-        << Href_ << token::END_STATEMENT << nl;
+    os.writeKeyword("Zref")
+        << Zref_ << token::END_STATEMENT << nl;
     zGround_.writeEntry("zGround", os) ;
     writeEntry("value", os);
 }

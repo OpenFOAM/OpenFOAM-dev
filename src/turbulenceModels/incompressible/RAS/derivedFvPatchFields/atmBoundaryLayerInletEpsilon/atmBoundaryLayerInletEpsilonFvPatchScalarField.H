@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,57 +29,56 @@ Group
 
 Description
     This boundary condition specifies an inlet value for the turbulence
-    dissipation, \f$\epsilon\f$ (\c epsilon), appropriate for atmospheric
-    boundary layers (ABL), and designed to be used in conjunction with the
-    \c ABLInletVelocity inlet velocity boundary condition.
+    dissipation, \f$\epsilon\f$, appropriate for atmospheric boundary layers
+    (ABL), and designed to be used in conjunction with the
+    atmBoundaryLayerInletVelocity inlet velocity boundary condition.
 
         \f[
-            \epsilon = \frac{(U^*)^3}{K(z - z_g + z_0)}
+            \epsilon = \frac{(U^*)^3}{\kappa(z - z_g + z_0)}
         \f]
 
     where
     \vartable
-        U^*     | frictional velocity
-        K       | Karman's constant
-        z       | vertical co-ordinate [m]
-        z_0     | surface roughness length [m]
-        z_g     | minimum vlaue in z direction [m]
+        U^*     | Friction velocity
+        \kappa  | von Karman's constant
+        z       | Vertical coordinate
+        z_0     | Surface roughness height [m]
+        z_g     | Minimum z-coordinate [m]
     \endvartable
- 
+
     and:
 
         \f[
-            U^* = K \frac{U_{ref}}{ln\left(\frac{Z_{ref} + z_0}{z_0}\right)}
+            U^* = \kappa\frac{U_{ref}}{ln\left(\frac{Z_{ref} + z_0}{z_0}\right)}
         \f]
 
     where:
     \vartable
-        U_{ref} | reference velocity at \f$Z_{ref}\f$ [m/s]
-        Z_{ref} | reference height [m]
+        U_{ref} | Reference velocity at \f$Z_{ref}\f$ [m/s]
+        Z_{ref} | Reference height [m]
     \endvartable
 
     \heading Patch usage
 
     \table
-        Property     | Description             | Required    | Default value
-        z            | vertical direction of z-axis | yes    |
-        kappa        | Karman's constanat      | no          | 0.41
-        Uref         | reference velocity [m/s] | yes        |
-        Href         | reference height [m]    | yes         |
-        z0           | surface roughness length [m] | yes    |
-        zGround      | minimum z co-ordinate [m] | yes       |
+        Property     | Description                  | Required  | Default value
+        z            | Vertical direction           | yes       |
+        kappa        | von Karman's constant        | no        | 0.41
+        Uref         | Reference velocity [m/s]     | yes       |
+        Zref         | Reference height [m]         | yes       |
+        z0           | Surface roughness height [m] | yes       |
+        zGround      | Minimum z coordinate [m]     | yes       |
     \endtable
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    ground
     {
         type            atmBoundaryLayerInletEpsilon;
-        z               (0 1 0);
-        kappa           0.41;
-        Uref            1.0;
-        Href            0.0;
-        z0              uniform 0.0;
+        z               (0 0 1);
+        Uref            10.0;
+        Zref            20.0;
+        z0              uniform 0.1;
         zGround         uniform 0.0;
     }
     \endverbatim
@@ -121,22 +120,22 @@ class atmBoundaryLayerInletEpsilonFvPatchScalarField
         //- Direction of the z-coordinate
         vector z_;
 
-        //- Von Karman constant
+        //- von Karman constant
         const scalar kappa_;
 
         //- Reference velocity
         const scalar Uref_;
 
         //- Reference height
-        const scalar Href_;
+        const scalar Zref_;
 
-        //- Surface roughness length
+        //- Surface roughness height
         scalarField z0_;
 
-        //- Minimum co-ordinate value in z direction
+        //- Minimum coordinate value in z direction
         scalarField zGround_;
 
-        //- Frictional velocity
+        //- Friction velocity
         scalarField Ustar_;
 
 
@@ -206,13 +205,13 @@ public:
 
         // Access
 
-            //- Return max value
+            //- Return friction velocity
             const scalarField& Ustar() const
             {
                 return Ustar_;
             }
 
-            //- Return z direction
+            //- Return z-direction
             const vector& z() const
             {
                 return z_;

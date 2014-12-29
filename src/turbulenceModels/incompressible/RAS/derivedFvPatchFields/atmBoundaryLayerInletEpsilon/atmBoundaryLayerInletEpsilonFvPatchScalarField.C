@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField
     z_(vector::zero),
     kappa_(0.41),
     Uref_(0),
-    Href_(0),
+    Zref_(0),
     z0_(0),
     zGround_(0),
     Ustar_(0)
@@ -69,7 +69,7 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField
     z_(ptf.z_),
     kappa_(ptf.kappa_),
     Uref_(ptf.Uref_),
-    Href_(ptf.Href_),
+    Zref_(ptf.Zref_),
     z0_(ptf.z0_, mapper),
     zGround_(ptf.zGround_, mapper),
     Ustar_(ptf.Ustar_, mapper)
@@ -88,7 +88,7 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField
     z_(dict.lookup("z")),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     Uref_(readScalar(dict.lookup("Uref"))),
-    Href_(readScalar(dict.lookup("Href"))),
+    Zref_(readScalar(dict.lookup("Zref"))),
     z0_("z0", dict, p.size()),
     zGround_("zGround", dict, p.size()),
     Ustar_(p.size())
@@ -108,15 +108,15 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField
             << abort(FatalError);
     }
 
-    forAll (Ustar_, i)
-    {
-        Ustar_[i] = kappa_*Uref_/(log((Href_  + z0_[i])/max(z0_[i] , 0.001)));
-    }
-
+    // Ensure direction vectors are normalized
     z_ /= mag(z_);
 
-    const vectorField& c = patch().Cf();
-    scalarField::operator=(pow3(Ustar_)/(kappa_*((c & z_) - zGround_ + z0_)));
+    Ustar_ = kappa_*Uref_/(log((Zref_  + z0_)/max(z0_, 0.001)));
+
+    scalarField::operator=
+    (
+        pow3(Ustar_)/(kappa_*((z_ & patch().Cf()) - zGround_ + z0_))
+    );
 }
 
 
@@ -131,7 +131,7 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField
     z_(blpsf.z_),
     kappa_(blpsf.kappa_),
     Uref_(blpsf.Uref_),
-    Href_(blpsf.Href_),
+    Zref_(blpsf.Zref_),
     z0_(blpsf.z0_),
     zGround_(blpsf.zGround_),
     Ustar_(blpsf.Ustar_)
@@ -178,8 +178,8 @@ void atmBoundaryLayerInletEpsilonFvPatchScalarField::write(Ostream& os) const
         << kappa_ << token::END_STATEMENT << nl;
     os.writeKeyword("Uref")
         << Uref_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Href")
-        << Href_ << token::END_STATEMENT << nl;
+    os.writeKeyword("Zref")
+        << Zref_ << token::END_STATEMENT << nl;
     z0_.writeEntry("z0", os);
     zGround_.writeEntry("zGround", os);
     writeEntry("value", os);
