@@ -183,9 +183,6 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     const fvPatch& nbrPatch =
         refCast<const fvMesh>(nbrMesh).boundary()[samplePatchI];
 
-    //tmp<scalarField> intFld = patchInternalField();
-
-
     // Calculate the temperature by harmonic averaging
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -237,11 +234,8 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     //    - refValue = neighbour value
     //    - mixFraction = nbrKDelta / (nbrKDelta + myKDelta())
 
-
     this->refValue() = nbrIntFld();
-
     this->refGrad() = 0.0;
-
     this->valueFraction() = nbrKDelta()/(nbrKDelta() + myKDelta());
 
     mixedFvPatchScalarField::updateCoeffs();
