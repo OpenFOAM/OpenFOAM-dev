@@ -219,7 +219,7 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
     }
     mpp.distribute(KDeltaNbr);
 
-    scalarField KDelta(kappa(*this)*patch().deltaCoeffs());
+    scalarField KDelta(kappa(Tp)*patch().deltaCoeffs());
 
     scalarField Qr(Tp.size(), 0.0);
     if (QrName_ != "none")
@@ -234,17 +234,15 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
         mpp.distribute(QrNbr);
     }
 
-    scalarField alpha(KDeltaNbr - (Qr + QrNbr)/Tp);
-
-    valueFraction() = alpha/(alpha + KDelta);
-
-    refValue() = (KDeltaNbr*TcNbr)/alpha;
+    valueFraction() = KDeltaNbr/(KDeltaNbr + KDelta);
+    refValue() = TcNbr;
+    refGrad() = (Qr + QrNbr)/kappa(Tp);
 
     mixedFvPatchScalarField::updateCoeffs();
 
     if (debug)
     {
-        scalar Q = gSum(kappa(*this)*patch().magSf()*snGrad());
+        scalar Q = gSum(kappa(Tp)*patch().magSf()*snGrad());
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
@@ -254,9 +252,9 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
             << this->dimensionedInternalField().name() << " :"
             << " heat transfer rate:" << Q
             << " walltemperature "
-            << " min:" << gMin(*this)
-            << " max:" << gMax(*this)
-            << " avg:" << gAverage(*this)
+            << " min:" << gMin(Tp)
+            << " max:" << gMax(Tp)
+            << " avg:" << gAverage(Tp)
             << endl;
     }
 
