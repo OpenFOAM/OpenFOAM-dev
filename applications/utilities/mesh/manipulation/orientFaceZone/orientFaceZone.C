@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
             patch.meshEdges(mesh.edges(), mesh.pointEdges()),
             nMasterFaces,
             plusEqOp<label>(),
-            0
+            label(0)
         );
 
 
