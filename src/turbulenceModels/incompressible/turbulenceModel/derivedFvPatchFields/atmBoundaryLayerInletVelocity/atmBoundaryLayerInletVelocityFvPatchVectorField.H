@@ -29,52 +29,9 @@ Group
 
 Description
     This boundary condition specifies a velocity inlet profile appropriate
-    for atmospheric boundary layers (ABL).  The profile is derived from the
-    friction velocity, flow direction and "vertical" direction.
+    for atmospheric boundary layers (ABL).
 
-        \f[
-            U = \frac{U^*}{\kappa} ln\left(\frac{z - z_g + z_0}{z_0}\right)
-        \f]
-
-    where
-    \vartable
-        U^*     | Friction velocity
-        \kappa  | von Karman's constant
-        z       | Vertical coordinate
-        z_0     | Surface roughness height [m]
-        z_g     | Minimum z-coordinate [m]
-    \endvartable
-    and
-        \f[
-            U^* = \kappa\frac{U_{ref}}{ln\left(\frac{Z_{ref} + z_0}{z_0}\right)}
-        \f]
-    where
-    \vartable
-        U_{ref} | Reference velocity at \f$Z_{ref}\f$ [m/s]
-        Z_{ref} | Reference height [m]
-    \endvartable
-
-    Use in conjunction with the atmBoundaryLayerInletEpsilon boundary
-    condition if using an \f$\epsilon\f$ based turbulence model.
-
-    Reference:
-        D.M. Hargreaves and N.G. Wright,  "On the use of the k-epsilon model
-        in commercial CFD software to model the neutral atmospheric boundary
-        layer", Journal of Wind Engineering and Industrial Aerodynamics
-        95(2007), pp 355-369.
-
-    \heading Patch usage
-
-    \table
-        Property     | Description                  | Required  | Default value
-        n            | Flow direction               | yes       |
-        z            | Vertical direction           | yes       |
-        kappa        | von Karman's constant        | no        | 0.41
-        Uref         | Reference velocity [m/s]     | yes       |
-        Zref         | Reference height [m]         | yes       |
-        z0           | Surface roughness height [m] | yes       |
-        zGround      | Minimum z-coordinate [m]     | yes       |
-    \endtable
+    See Foam::incompressible::atmBoundaryLayer for details.
 
     Example of the boundary condition specification:
     \verbatim
@@ -90,11 +47,10 @@ Description
     }
     \endverbatim
 
-Note
-    D.M. Hargreaves and N.G. Wright recommend Gamma epsilon in the
-    k-epsilon model should be changed from 1.3 to 1.11 for consistency.
-    The roughness height (Er) is given by Er = 20 z0 following the same
-    reference.
+SeeAlso
+    Foam::incompressible::atmBoundaryLayer,
+    Foam::incompressible::atmBoundaryLayerInletKFvPatchScalarField,
+    Foam::incompressible::atmBoundaryLayerInletEpsilonFvPatchScalarField
 
 SourceFiles
     atmBoundaryLayerInletVelocityFvPatchVectorField.C
@@ -106,6 +62,7 @@ SourceFiles
 
 #include "fvPatchFields.H"
 #include "fixedValueFvPatchFields.H"
+#include "atmBoundaryLayer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -120,34 +77,9 @@ namespace incompressible
 
 class atmBoundaryLayerInletVelocityFvPatchVectorField
 :
-    public fixedValueFvPatchVectorField
+    public fixedValueFvPatchVectorField,
+    public atmBoundaryLayer
 {
-    // Private data
-
-        //- Flow direction
-        vector n_;
-
-        //- Direction of the z-coordinate
-        vector z_;
-
-        //- von Karman constant
-        const scalar kappa_;
-
-        //- Reference velocity
-        const scalar Uref_;
-
-        //- Reference height
-        const scalar Zref_;
-
-        //- Surface roughness height
-        scalarField z0_;
-
-        //- Minimum coordinate value in z direction
-        scalarField zGround_;
-
-        //- Friction velocity
-        scalarField Ustar_;
-
 
 public:
 
@@ -212,27 +144,6 @@ public:
 
 
     // Member functions
-
-        // Access
-
-            //- Return friction velocity
-            const scalarField& Ustar() const
-            {
-                return Ustar_;
-            }
-
-            //- Return flow direction
-            const vector& n() const
-            {
-                return n_;
-            }
-
-            //- Return z-direction
-            const vector& z() const
-            {
-                return z_;
-            }
-
 
         // Mapping functions
 

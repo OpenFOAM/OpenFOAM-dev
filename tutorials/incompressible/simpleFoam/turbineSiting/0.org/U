@@ -23,8 +23,6 @@ internalField   uniform $flowVelocity;
 
 boundaryField
 {
-    #include "include/ABLConditions"
-
     outlet
     {
         type            inletOutlet;
@@ -35,13 +33,7 @@ boundaryField
     inlet
     {
         type            atmBoundaryLayerInletVelocity;
-        Uref            $Uref;
-        Zref            $Zref;
-        n               $windDirection;
-        z               $zDirection;
-        z0              $z0;
-        value           $internalField;
-        zGround         $zGround;
+        #include        "include/ABLConditions"
     }
 
     terrain

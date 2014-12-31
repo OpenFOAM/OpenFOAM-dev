@@ -22,8 +22,6 @@ internalField   uniform $turbulentKE;
 
 boundaryField
 {
-    #include "include/ABLConditions"
-
     outlet
     {
         type            inletOutlet;
@@ -33,8 +31,8 @@ boundaryField
 
     inlet
     {
-        type            uniformFixedValue;
-        uniformValue    constant $turbulentKE;
+        type            atmBoundaryLayerInletK;
+        #include        "include/ABLConditions"
     }
 
     terrain
