@@ -163,11 +163,11 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 //Foam::label Foam::ptscotchDecomp::decomposeZeroDomains
 //(
 //    const fileName& meshPath,
-//    const List<int>& initadjncy,
-//    const List<int>& initxadj,
+//    const List<label>& initadjncy,
+//    const List<label>& initxadj,
 //    const scalarField& initcWeights,
 //
-//    List<int>& finalDecomp
+//    List<label>& finalDecomp
 //) const
 //{
 //    globalIndex globalCells(initxadj.size()-1);
@@ -210,7 +210,7 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 //
 //    // Number of cells to send to the next processor
 //    // (is same as number of cells next processor has to receive)
-//    List<int> nSendCells(Pstream::nProcs(), 0);
+//    List<label> nSendCells(Pstream::nProcs(), 0);
 //
 //    for (label procI = nSendCells.size()-1; procI >=1; procI--)
 //    {
@@ -262,10 +262,10 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 //        // Send cells to next processor
 //        OPstream toNextProc(Pstream::blocking, Pstream::myProcNo()+1);
 //
-//        int nCells = nSendCells[Pstream::myProcNo()];
-//        int startCell = xadj.size()-1 - nCells;
-//        int startFace = xadj[startCell];
-//        int nFaces = adjncy.size()-startFace;
+//        label nCells = nSendCells[Pstream::myProcNo()];
+//        label startCell = xadj.size()-1 - nCells;
+//        label startFace = xadj[startCell];
+//        label nFaces = adjncy.size()-startFace;
 //
 //        // Send for all cell data: last nCells elements
 //        // Send for all face data: last nFaces elements
@@ -311,7 +311,7 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 //    {
 //        IPstream fromNextProc(Pstream::blocking, Pstream::myProcNo()+1);
 //
-//        List<int> nextFinalDecomp(fromNextProc);
+//        List<label> nextFinalDecomp(fromNextProc);
 //
 //        if (nextFinalDecomp.size() != nSendCells[Pstream::myProcNo()])
 //        {
@@ -330,10 +330,10 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 //    {
 //        OPstream toPrevProc(Pstream::blocking, Pstream::myProcNo()-1);
 //
-//        int nToPrevious = nSendCells[Pstream::myProcNo()-1];
+//        label nToPrevious = nSendCells[Pstream::myProcNo()-1];
 //
 //        toPrevProc <<
-//            SubList<int>
+//            SubList<label>
 //            (
 //                finalDecomp,
 //                nToPrevious,
@@ -351,14 +351,14 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 Foam::label Foam::ptscotchDecomp::decompose
 (
     const fileName& meshPath,
-    const List<int>& adjncy,
-    const List<int>& xadj,
+    const List<label>& adjncy,
+    const List<label>& xadj,
     const scalarField& cWeights,
-    List<int>& finalDecomp
+    List<label>& finalDecomp
 ) const
 {
-    List<int> dummyAdjncy(1);
-    List<int> dummyXadj(1);
+    List<label> dummyAdjncy(1);
+    List<label> dummyXadj(1);
     dummyXadj[0] = 0;
 
     return decompose
@@ -378,13 +378,13 @@ Foam::label Foam::ptscotchDecomp::decompose
 Foam::label Foam::ptscotchDecomp::decompose
 (
     const fileName& meshPath,
-    const int adjncySize,
-    const int adjncy[],
-    const int xadjSize,
-    const int xadj[],
+    const label adjncySize,
+    const label adjncy[],
+    const label xadjSize,
+    const label xadj[],
     const scalarField& cWeights,
 
-    List<int>& finalDecomp
+    List<label>& finalDecomp
 ) const
 {
     if (debug)
@@ -477,7 +477,7 @@ Foam::label Foam::ptscotchDecomp::decompose
     // Graph
     // ~~~~~
 
-    List<int> velotab;
+    List<label> velotab;
 
 
     // Check for externally provided cellweights and if so initialise weights
@@ -766,7 +766,7 @@ Foam::labelList Foam::ptscotchDecomp::decompose
     );
 
     // Decompose using default weights
-    List<int> finalDecomp;
+    List<label> finalDecomp;
     decompose
     (
         mesh.time().path()/mesh.name(),
@@ -819,7 +819,7 @@ Foam::labelList Foam::ptscotchDecomp::decompose
     );
 
     // Decompose using weights
-    List<int> finalDecomp;
+    List<label> finalDecomp;
     decompose
     (
         mesh.time().path()/mesh.name(),
@@ -866,7 +866,7 @@ Foam::labelList Foam::ptscotchDecomp::decompose
     CompactListList<label> cellCells(globalCellCells);
 
     // Decompose using weights
-    List<int> finalDecomp;
+    List<label> finalDecomp;
     decompose
     (
         "ptscotch",

@@ -148,7 +148,7 @@ public:
         //- Processor interface functions
 
             //- Return communicator used for sending
-            virtual int comm() const
+            virtual label comm() const
             {
                 return comm_;
             }

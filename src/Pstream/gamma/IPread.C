@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,12 +27,11 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "IPstream.H"
-#include "long.H"
 #include "PstreamGlobals.H"
 
 extern "C"
 {
-#   include <linux/gamma/libgamma.h>
+    #include <linux/gamma/libgamma.h>
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

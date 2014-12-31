@@ -350,8 +350,8 @@ Foam::Istream& Foam::ISstream::read(token& t)
                 {
                     if (asLabel)
                     {
-                        label labelVal;
-                        if (readLabel(buf, labelVal))
+                        label labelVal = 0;
+                        if (Foam::read(buf, labelVal))
                         {
                             t = labelVal;
                         }
@@ -367,21 +367,6 @@ Foam::Istream& Foam::ISstream::read(token& t)
                             {
                                 t.setBad();
                             }
-// ---------------------------------------
-// this would also be possible if desired:
-// ---------------------------------------
-//                        // return as a label when possible
-//                        // eg, 1E6 -> 1000000
-//                        if (scalarVal <= labelMax && scalarVal >= labelMin)
-//                        {
-//                            label labelVal(scalarVal);
-//
-//                            if (labelVal == scalarVal)
-//                            {
-//                                t = labelVal;
-//                            }
-//                        }
-
                         }
                     }
                     else

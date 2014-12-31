@@ -164,7 +164,7 @@ Foam::GAMGSolver::GAMGSolver
 
                     const labelList& procAgglomMap =
                         agglomeration_.procAgglomMap(fineLevelIndex+1);
-                    const List<int>& procIDs =
+                    const List<label>& procIDs =
                         agglomeration_.agglomProcIDs(fineLevelIndex+1);
 
                     procAgglomerateMatrix

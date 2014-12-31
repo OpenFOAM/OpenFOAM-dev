@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,11 +60,11 @@ void Foam::scotchDecomp::check(const int retVal, const char* str)
 Foam::label Foam::scotchDecomp::decompose
 (
     const fileName& meshPath,
-    const List<int>& adjncy,
-    const List<int>& xadj,
+    const List<label>& adjncy,
+    const List<label>& xadj,
     const scalarField& cWeights,
 
-    List<int>& finalDecomp
+    List<label>& finalDecomp
 )
 {
     FatalErrorIn
@@ -72,10 +72,10 @@ Foam::label Foam::scotchDecomp::decompose
         "label scotchDecomp::decompose\n"
         "(\n"
             "const fileName& meshPath,\n"
-            "const List<int>&,\n"
-            "const List<int>&,\n"
+            "const List<label>&,\n"
+            "const List<label>&,\n"
             "const scalarField&,\n"
-            "List<int>&\n"
+            "List<label>&\n"
         ")\n"
     )   << notImplementedMessage << exit(FatalError);
 

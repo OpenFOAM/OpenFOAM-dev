@@ -266,7 +266,7 @@ bool Foam::GAMGProcAgglomeration::agglomerate
     const label fineLevelIndex,
     const labelList& procAgglomMap,
     const labelList& masterProcs,
-    const List<int>& agglomProcIDs,
+    const List<label>& agglomProcIDs,
     const label procAgglomComm
 )
 {

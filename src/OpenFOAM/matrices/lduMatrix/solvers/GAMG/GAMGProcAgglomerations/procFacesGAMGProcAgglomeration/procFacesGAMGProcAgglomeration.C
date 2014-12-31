@@ -151,7 +151,7 @@ Foam::procFacesGAMGProcAgglomeration::processorAgglomeration
     label singleCellMeshComm = UPstream::allocateCommunicator
     (
         mesh.comm(),
-        labelList(1, 0)            // only processor 0
+        labelList(1, label(0))            // only processor 0
     );
 
     scalarField faceWeights;
@@ -283,7 +283,7 @@ bool Foam::procFacesGAMGProcAgglomeration::agglomerate()
                     labelList masterProcs;
                     // Local processors that agglomerate. agglomProcIDs[0] is in
                     // masterProc.
-                    List<int> agglomProcIDs;
+                    List<label> agglomProcIDs;
                     GAMGAgglomeration::calculateRegionMaster
                     (
                         levelComm,

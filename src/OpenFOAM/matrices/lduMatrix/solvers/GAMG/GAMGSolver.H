@@ -194,7 +194,7 @@ class GAMGSolver
             PtrList<FieldField<Field, scalar> >& otherBouCoeffs,
             PtrList<FieldField<Field, scalar> >& otherIntCoeffs,
             List<boolList>& otherTransforms,
-            List<List<int> >& otherRanks
+            List<List<label> >& otherRanks
         ) const;
 
         //- Agglomerate processor matrices
@@ -202,7 +202,7 @@ class GAMGSolver
         (
             // Agglomeration information
             const labelList& procAgglomMap,
-            const List<int>& agglomProcIDs,
+            const List<label>& agglomProcIDs,
 
             const label levelI,
 
@@ -218,7 +218,7 @@ class GAMGSolver
         void procAgglomerateMatrix
         (
             const labelList& procAgglomMap,
-            const List<int>& agglomProcIDs,
+            const List<label>& agglomProcIDs,
             const label levelI
         );
 

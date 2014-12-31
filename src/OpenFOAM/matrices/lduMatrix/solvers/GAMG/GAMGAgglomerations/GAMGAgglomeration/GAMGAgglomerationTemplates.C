@@ -34,7 +34,6 @@ void Foam::GAMGAgglomeration::gatherList
 (
     const label comm,
     const labelList& procIDs,
-
     const Type& myVal,
     List<Type>& allVals,
     const int tag
@@ -123,7 +122,7 @@ void Foam::GAMGAgglomeration::restrictField
     {
         label fineComm = UPstream::parent(procCommunicator_[coarseLevelIndex]);
 
-        const List<int>& procIDs = agglomProcIDs(coarseLevelIndex);
+        const List<label>& procIDs = agglomProcIDs(coarseLevelIndex);
         const labelList& offsets = cellOffsets(coarseLevelIndex);
 
         globalIndex::gather
@@ -196,7 +195,7 @@ void Foam::GAMGAgglomeration::prolongField
             procCommunicator_[coarseLevelIndex]
         );
 
-        const List<int>& procIDs = agglomProcIDs(coarseLevelIndex);
+        const List<label>& procIDs = agglomProcIDs(coarseLevelIndex);
         const labelList& offsets = cellOffsets(coarseLevelIndex);
 
         label localSize = nCells_[levelIndex];

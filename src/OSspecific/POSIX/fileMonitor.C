@@ -327,7 +327,7 @@ void Foam::fileMonitor::checkFiles() const
             else if (FD_ISSET(watcher_->inotifyFd_, &fdSet))
             {
                 // Read events
-                ssize_t nBytes = read
+                ssize_t nBytes = ::read
                 (
                     watcher_->inotifyFd_,
                     buffer,

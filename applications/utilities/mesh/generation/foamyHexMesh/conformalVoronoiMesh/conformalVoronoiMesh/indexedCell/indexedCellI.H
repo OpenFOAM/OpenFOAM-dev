@@ -94,14 +94,14 @@ CGAL::indexedCell<Gt, Cb>::indexedCell
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Gt, class Cb>
-int& CGAL::indexedCell<Gt, Cb>::cellIndex()
+Foam::label& CGAL::indexedCell<Gt, Cb>::cellIndex()
 {
     return index_;
 }
 
 
 template<class Gt, class Cb>
-int CGAL::indexedCell<Gt, Cb>::cellIndex() const
+Foam::label CGAL::indexedCell<Gt, Cb>::cellIndex() const
 {
     return index_;
 }

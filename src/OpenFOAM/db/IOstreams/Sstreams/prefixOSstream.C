@@ -137,7 +137,14 @@ Foam::Ostream& Foam::prefixOSstream::writeQuoted
 }
 
 
-Foam::Ostream& Foam::prefixOSstream::write(const label val)
+Foam::Ostream& Foam::prefixOSstream::write(const int32_t val)
+{
+    checkWritePrefix();
+    return OSstream::write(val);
+}
+
+
+Foam::Ostream& Foam::prefixOSstream::write(const int64_t val)
 {
     checkWritePrefix();
     return OSstream::write(val);

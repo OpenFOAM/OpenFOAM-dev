@@ -299,7 +299,7 @@ bool Foam::autoDensity::fillBox
 {
     const conformationSurfaces& geometry = geometryToConformTo();
 
-    unsigned int initialSize = initialPoints.size();
+    label initialSize = initialPoints.size();
 
     scalar maxCellSize = -GREAT;
 

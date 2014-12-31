@@ -16,11 +16,16 @@ $(chars)/char/charIO.C
 $(chars)/wchar/wcharIO.C
 
 ints = primitives/ints
-$(ints)/int/intIO.C
+$(ints)/uint32/uint32.C
+$(ints)/uint32/uint32IO.C
+$(ints)/uint64/uint64.C
+$(ints)/uint64/uint64IO.C
 $(ints)/uint/uintIO.C
-$(ints)/long/longIO.C
-$(ints)/longLong/longLongIO.C
-$(ints)/ulong/ulongIO.C
+$(ints)/int32/int32.C
+$(ints)/int32/int32IO.C
+$(ints)/int64/int64.C
+$(ints)/int64/int64IO.C
+$(ints)/int/intIO.C
 $(ints)/label/label.C
 $(ints)/uLabel/uLabel.C
 $(ints)/lists/labelIOList.C

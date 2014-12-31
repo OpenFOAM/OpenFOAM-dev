@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,32 +21,28 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Reads a long from an input stream, for a given version
-    number and File format. If an ascii File is being read, then the line
-    numbers are counted and an erroneous read ised.
-
 \*---------------------------------------------------------------------------*/
 
 #include "error.H"
 
-#include "long.H"
+#include "int32.H"
 #include "IOstreams.H"
 
 #include <sstream>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::word Foam::name(const long val)
+Foam::word Foam::name(const int32_t val)
 {
     std::ostringstream buf;
     buf << val;
     return buf.str();
 }
 
+
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-Foam::Istream& Foam::operator>>(Istream& is, long& l)
+Foam::Istream& Foam::operator>>(Istream& is, int32_t& i)
 {
     token t(is);
 
@@ -58,45 +54,47 @@ Foam::Istream& Foam::operator>>(Istream& is, long& l)
 
     if (t.isLabel())
     {
-        l = long(t.labelToken());
+        i = int32_t(t.labelToken());
     }
     else
     {
         is.setBad();
-        FatalIOErrorIn("operator>>(Istream&, long&)", is)
-            << "wrong token type - expected long, found " << t.info()
+        FatalIOErrorIn("operator>>(Istream&, int32_t&)", is)
+            << "wrong token type - expected int32_t, found " << t.info()
             << exit(FatalIOError);
 
         return is;
     }
 
     // Check state of Istream
-    is.check("Istream& operator>>(Istream&, long&)");
+    is.check("Istream& operator>>(Istream&, int32_t&)");
 
     return is;
 }
 
 
-long Foam::readLong(Istream& is)
+int32_t Foam::readInt32(Istream& is)
 {
-    long val;
+    int32_t val;
     is >> val;
 
     return val;
 }
 
-bool Foam::readLong(const char* buf, long& s)
+
+bool Foam::read(const char* buf, int32_t& s)
 {
     char *endptr = NULL;
-    s = strtol(buf, &endptr, 10);
+    long l = strtol(buf, &endptr, 10);
+    s = int32_t(l);
     return (*endptr == 0);
 }
 
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const long l)
+Foam::Ostream& Foam::operator<<(Ostream& os, const int32_t i)
 {
-    os.write(label(l));
-    os.check("Ostream& operator<<(Ostream&, const long)");
+    os.write(label(i));
+    os.check("Ostream& operator<<(Ostream&, const int32_t)");
     return os;
 }
 

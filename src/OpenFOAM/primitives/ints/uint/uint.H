@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Primitive
     uint
 
 Description
-    System unsigned integer
+    System uinteger
 
 SourceFiles
     uintIO.C
@@ -35,26 +35,40 @@ SourceFiles
 #ifndef uint_H
 #define uint_H
 
-#include "word.H"
+#include "uint32.H"
+#include "uint64.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class Istream;
-class Ostream;
+#define MAXMIN(retType, type1, type2)              \
+                                                   \
+inline retType max(const type1 s1, const type2 s2) \
+{                                                  \
+    return (s1 > s2)? s1: s2;                      \
+}                                                  \
+                                                   \
+inline retType min(const type1 s1, const type2 s2) \
+{                                                  \
+    return (s1 < s2)? s1: s2;                      \
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Return a string representation of an uint
-word name(const unsigned int);
+MAXMIN(uint8_t, uint8_t, uint8_t)
+MAXMIN(uint16_t, uint16_t, uint16_t)
+
+MAXMIN(uint32_t, uint32_t, uint32_t)
+MAXMIN(uint64_t, uint64_t, uint32_t)
+MAXMIN(uint64_t, uint32_t, uint64_t)
+MAXMIN(uint64_t, uint64_t, uint64_t)
+
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-unsigned int readUint(Istream&);
-Istream& operator>>(Istream&, unsigned int&);
-Ostream& operator<<(Ostream&, const unsigned int);
+uint readUint(Istream&);
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

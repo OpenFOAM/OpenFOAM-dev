@@ -85,7 +85,7 @@ public:
         // Access
 
             //- Return communicator used for parallel communication
-            virtual int comm() const = 0;
+            virtual label comm() const = 0;
 
             //- Return processor number (rank in communicator)
             virtual int myProcNo() const = 0;

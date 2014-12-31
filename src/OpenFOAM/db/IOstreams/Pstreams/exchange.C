@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,16 +31,10 @@ Description
 #include "PstreamCombineReduceOps.H"
 #include "UPstream.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//template<template<class> class ListType, class T>
 template<class Container, class T>
-void Pstream::exchange
+void Foam::Pstream::exchange
 (
     const List<Container>& sendBufs,
     List<Container>& recvBufs,
@@ -55,7 +49,7 @@ void Pstream::exchange
         FatalErrorIn
         (
             "Pstream::exchange(..)"
-        )   << "Continuous data only." << Foam::abort(FatalError);
+        )   << "Continuous data only." << sizeof(T) << Foam::abort(FatalError);
     }
 
     if (sendBufs.size() != UPstream::nProcs(comm))
@@ -152,9 +146,5 @@ void Pstream::exchange
     recvBufs[Pstream::myProcNo(comm)] = sendBufs[Pstream::myProcNo(comm)];
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

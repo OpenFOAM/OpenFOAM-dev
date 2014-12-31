@@ -677,7 +677,7 @@ void Foam::GAMGAgglomeration::calculateRegionMaster
     const label comm,
     const labelList& procAgglomMap,
     labelList& masterProcs,
-    List<int>& agglomProcIDs
+    List<label>& agglomProcIDs
 )
 {
     // Determine the master processors

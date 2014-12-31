@@ -90,7 +90,7 @@ inline Foam::scalar Foam::conformalVoronoiMesh::averageAnyCellSize
     label nProducts = 0;
 
     const Cell_handle c(fit->first);
-    const int oppositeVertex = fit->second;
+    const label oppositeVertex = fit->second;
 
     for (label i = 0; i < 3; i++)
     {
@@ -456,7 +456,7 @@ inline Foam::List<Foam::label> Foam::conformalVoronoiMesh::processorsAttached
     DynamicList<label> procsAttached(8);
 
     const Cell_handle c1(fit->first);
-    const int oppositeVertex = fit->second;
+    const label oppositeVertex = fit->second;
     const Cell_handle c2(c1->neighbor(oppositeVertex));
 
     FixedList<label, 4> c1Procs(CGAL::indexedCellOps::processorsAttached(c1));
@@ -486,7 +486,7 @@ inline bool Foam::conformalVoronoiMesh::isParallelDualEdge
 ) const
 {
     const Cell_handle c1(fit->first);
-    const int oppositeVertex = fit->second;
+    const label oppositeVertex = fit->second;
 
     return
     (

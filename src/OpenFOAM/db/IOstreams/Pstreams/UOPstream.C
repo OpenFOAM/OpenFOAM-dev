@@ -254,7 +254,15 @@ Foam::Ostream& Foam::UOPstream::writeQuoted
 }
 
 
-Foam::Ostream& Foam::UOPstream::write(const label val)
+Foam::Ostream& Foam::UOPstream::write(const int32_t val)
+{
+    write(char(token::LABEL));
+    writeToBuffer(val);
+    return *this;
+}
+
+
+Foam::Ostream& Foam::UOPstream::write(const int64_t val)
 {
     write(char(token::LABEL));
     writeToBuffer(val);

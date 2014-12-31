@@ -65,7 +65,7 @@ template
 <
     class PrimitivePatchType,
     class Type,
-    class TrackingData = int
+    class TrackingData = label
 >
 class PatchEdgeFaceWave
 :

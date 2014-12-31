@@ -83,7 +83,7 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
         const labelListList& edgeNormals = feMesh.edgeNormals();
 
         label concaveEdgeI = -1;
-        labelList convexEdgesI(2, -1);
+        labelList convexEdgesI(2, label(-1));
         label nConvex = 0;
 
         forAll(pEds, i)
@@ -521,7 +521,7 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
         const labelListList& edgeNormals = feMesh.edgeNormals();
 
         label convexEdgeI = -1;
-        labelList concaveEdgesI(2, -1);
+        labelList concaveEdgesI(2, label(-1));
         label nConcave = 0;
 
         forAll(pEds, i)

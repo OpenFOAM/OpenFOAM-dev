@@ -922,7 +922,7 @@ void Foam::conformalVoronoiMesh::createMultipleEdgePointGroup
     const List<extendedFeatureEdgeMesh::sideVolumeType>& normalVolumeTypes =
         feMesh.normalVolumeTypes();
 
-    labelList nNormalTypes(4, 0);
+    labelList nNormalTypes(4, label(0));
 
     forAll(edNormalIs, edgeNormalI)
     {

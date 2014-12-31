@@ -296,7 +296,7 @@ void Foam::GAMGSolver::gatherMatrices
     PtrList<FieldField<Field, scalar> >& otherBouCoeffs,
     PtrList<FieldField<Field, scalar> >& otherIntCoeffs,
     List<boolList>& otherTransforms,
-    List<List<int> >& otherRanks
+    List<List<label> >& otherRanks
 ) const
 {
     if (debug)
@@ -332,7 +332,7 @@ void Foam::GAMGSolver::gatherMatrices
 
             // Receive number of/valid interfaces
             boolList& procTransforms = otherTransforms[otherI];
-            List<int>& procRanks = otherRanks[otherI];
+            List<label>& procRanks = otherRanks[otherI];
 
             fromSlave >> procTransforms;
             fromSlave >> procRanks;
@@ -372,7 +372,7 @@ void Foam::GAMGSolver::gatherMatrices
 
         // Count valid interfaces
         boolList procTransforms(interfaceBouCoeffs.size(), false);
-        List<int> procRanks(interfaceBouCoeffs.size(), -1);
+        List<label> procRanks(interfaceBouCoeffs.size(), -1);
         forAll(interfaces, intI)
         {
             if (interfaces.set(intI))
@@ -415,7 +415,7 @@ void Foam::GAMGSolver::procAgglomerateMatrix
 (
     // Agglomeration information
     const labelList& procAgglomMap,
-    const List<int>& agglomProcIDs,
+    const List<label>& agglomProcIDs,
 
     const label levelI,
 
@@ -451,7 +451,7 @@ void Foam::GAMGSolver::procAgglomerateMatrix
     PtrList<FieldField<Field, scalar> > otherBouCoeffs;
     PtrList<FieldField<Field, scalar> > otherIntCoeffs;
     List<boolList> otherTransforms;
-    List<List<int> > otherRanks;
+    List<List<label> > otherRanks;
     gatherMatrices
     (
         agglomProcIDs,
@@ -745,7 +745,7 @@ void Foam::GAMGSolver::procAgglomerateMatrix
 void Foam::GAMGSolver::procAgglomerateMatrix
 (
     const labelList& procAgglomMap,
-    const List<int>& agglomProcIDs,
+    const List<label>& agglomProcIDs,
 
     const label levelI
 )

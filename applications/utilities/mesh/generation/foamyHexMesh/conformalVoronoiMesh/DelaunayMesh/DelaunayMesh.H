@@ -115,7 +115,7 @@ private:
         {
             typedef typename Triangulation::Geom_traits Gt;
 
-            typedef std::pair<const typename Triangulation::Point*, int>
+            typedef std::pair<const typename Triangulation::Point*, label>
                 Point_3;
 
             struct Less_x_3

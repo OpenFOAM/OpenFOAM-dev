@@ -131,7 +131,7 @@ Foam::searchablePlateFeatures::features() const
             surface().points()()[edges[eI].end()]
           - surface().points()()[edges[eI].start()];
 
-        normalDirections[eI] = labelList(2, 0);
+        normalDirections[eI] = labelList(2, label(0));
         for (label j = 0; j < 2; ++j)
         {
             const vector cross =

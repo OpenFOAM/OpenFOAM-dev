@@ -122,8 +122,11 @@ public:
                 const bool quoted=true
             ) = 0;
 
-            //- Write label
-            virtual Ostream& write(const label) = 0;
+            //- Write int32_t
+            virtual Ostream& write(const int32_t) = 0;
+
+            //- Write int64_t
+            virtual Ostream& write(const int64_t) = 0;
 
             //- Write floatScalar
             virtual Ostream& write(const floatScalar) = 0;

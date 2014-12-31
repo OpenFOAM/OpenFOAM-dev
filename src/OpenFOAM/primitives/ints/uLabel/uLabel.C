@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,40 +23,62 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "uLabel.H"
 #include "error.H"
+#include "uLabel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
+#if WM_LABEL_SIZE == 32
+const char* const Foam::pTraits<uint64_t>::typeName = "uint64";
+const char* const Foam::pTraits<uint32_t>::typeName = "uLabel";
+#elif WM_LABEL_SIZE == 64
+const char* const Foam::pTraits<uint64_t>::typeName = "uLabel";
+const char* const Foam::pTraits<uint32_t>::typeName = "uint32";
+#endif
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-const char* const pTraits<uLabel>::typeName = "uLabel";
-const uLabel pTraits<uLabel>::zero = 0;
-const uLabel pTraits<uLabel>::one = 1;
-const uLabel pTraits<uLabel>::min = uLabelMin;
-const uLabel pTraits<uLabel>::max = uLabelMax;
-const uLabel pTraits<uLabel>::rootMin = pTraits<uLabel>::min;
-const uLabel pTraits<uLabel>::rootMax = pTraits<uLabel>::max;
-
-const char* pTraits<uLabel>::componentNames[] = { "x" };
-
-pTraits<uLabel>::pTraits(const uLabel& p)
-:
-    p_(p)
-{}
-
-
-pTraits<uLabel>::pTraits(Istream& is)
+Foam::uLabel Foam::pow(uLabel a, uLabel b)
 {
-    is >> p_;
+    register uLabel ans = 1;
+    for (register uLabel i=0; i<b; i++)
+    {
+        ans *= a;
+    }
+
+    #ifdef FULLDEBUG
+    if (b < 0)
+    {
+        FatalErrorIn("pow(uLabel a, uLabel b)")
+            << "negative value for b is not supported"
+            << abort(FatalError);
+    }
+    #endif
+
+    return ans;
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Foam::uLabel Foam::factorial(uLabel n)
+{
+    static uLabel factTable[13] =
+    {
+        1, 1, 2, 6, 24, 120, 720, 5040, 40320,
+        362880, 3628800, 39916800, 479001600
+    };
 
-} // End namespace Foam
+    #ifdef FULLDEBUG
+    if (n > 12 && n < 0)
+    {
+        FatalErrorIn("factorial(uLabel n)")
+            << "n value out of range"
+            << abort(FatalError);
+    }
+    #endif
+
+    return factTable[n];
+}
+
 
 // ************************************************************************* //

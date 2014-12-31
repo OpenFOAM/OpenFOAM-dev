@@ -61,11 +61,11 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 Foam::label Foam::ptscotchDecomp::decompose
 (
     const fileName& meshPath,
-    const List<int>& initxadj,
-    const List<int>& initadjncy,
+    const List<label>& initxadj,
+    const List<label>& initadjncy,
     const scalarField& initcWeights,
 
-    List<int>& finalDecomp
+    List<label>& finalDecomp
 ) const
 {
     FatalErrorIn
@@ -73,24 +73,26 @@ Foam::label Foam::ptscotchDecomp::decompose
         "label ptscotchDecomp::decompose"
         "("
             "onst fileName&,"
-            "const List<int>&, "
-            "const List<int>&, "
+            "const List<label>&, "
+            "const List<label>&, "
             "const scalarField&, "
-            "List<int>&"
+            "List<label>&"
         ")"
     )   << notImplementedMessage << exit(FatalError);
 
     return -1;
 }
+
+
 Foam::label Foam::ptscotchDecomp::decompose
 (
     const fileName& meshPath,
-    const int adjncySize,
-    const int adjncy[],
-    const int xadjSize,
-    const int xadj[],
+    const label adjncySize,
+    const label adjncy[],
+    const label xadjSize,
+    const label xadj[],
     const scalarField& cWeights,
-    List<int>& finalDecomp
+    List<label>& finalDecomp
 ) const
 {
     FatalErrorIn
@@ -103,7 +105,7 @@ Foam::label Foam::ptscotchDecomp::decompose
             "const int,"
             "const int,"
             "const scalarField&,"
-            "List<int>&"
+            "List<label>&"
         ")"
     )   << notImplementedMessage << exit(FatalError);
 

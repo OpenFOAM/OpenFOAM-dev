@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,8 @@ Description
 
 #ifndef contiguous_H
 #define contiguous_H
+
+#include <stdint.h>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,67 +72,60 @@ template<>
 inline bool contiguous<Pair<char> >()                       {return true;}
 
 template<>
-inline bool contiguous<unsigned char>()                     {return true;}
+inline bool contiguous<int8_t>()                            {return true;}
 template<>
-inline bool contiguous<FixedList<unsigned char, 2> >()      {return true;}
+inline bool contiguous<FixedList<int8_t, 2> >()             {return true;}
 template<>
-inline bool contiguous<Pair<unsigned char> >()              {return true;}
+inline bool contiguous<Pair<int8_t> >()                     {return true;}
 
 template<>
-inline bool contiguous<short>()                             {return true;}
+inline bool contiguous<uint8_t>()                           {return true;}
 template<>
-inline bool contiguous<FixedList<short, 2> >()              {return true;}
+inline bool contiguous<FixedList<uint8_t, 2> >()            {return true;}
 template<>
-inline bool contiguous<Pair<short> >()                      {return true;}
+inline bool contiguous<Pair<uint8_t> >()                    {return true;}
 
 template<>
-inline bool contiguous<unsigned short>()                    {return true;}
+inline bool contiguous<int16_t>()                           {return true;}
 template<>
-inline bool contiguous<FixedList<unsigned short, 2> >()     {return true;}
+inline bool contiguous<FixedList<int16_t, 2> >()            {return true;}
 template<>
-inline bool contiguous<Pair<unsigned short> >()             {return true;}
+inline bool contiguous<Pair<int16_t> >()                    {return true;}
 
 template<>
-inline bool contiguous<int>()                               {return true;}
+inline bool contiguous<uint16_t>()                          {return true;}
 template<>
-inline bool contiguous<FixedList<int, 2> >()                {return true;}
+inline bool contiguous<FixedList<uint16_t, 2> >()           {return true;}
 template<>
-inline bool contiguous<Pair<int> >()                        {return true;}
+inline bool contiguous<Pair<uint16_t> >()                   {return true;}
 
 template<>
-inline bool contiguous<unsigned int>()                      {return true;}
+inline bool contiguous<int32_t>()                           {return true;}
 template<>
-inline bool contiguous<FixedList<unsigned int, 2> >()       {return true;}
+inline bool contiguous<FixedList<int32_t, 2> >()            {return true;}
 template<>
-inline bool contiguous<Pair<unsigned int> >()               {return true;}
+inline bool contiguous<Pair<int32_t> >()                    {return true;}
 
 template<>
-inline bool contiguous<long>()                              {return true;}
+inline bool contiguous<uint32_t>()                          {return true;}
 template<>
-inline bool contiguous<FixedList<long, 2> >()               {return true;}
+inline bool contiguous<FixedList<uint32_t, 2> >()           {return true;}
 template<>
-inline bool contiguous<Pair<long> >()                       {return true;}
+inline bool contiguous<Pair<uint32_t> >()                   {return true;}
 
 template<>
-inline bool contiguous<unsigned long>()                     {return true;}
+inline bool contiguous<int64_t>()                           {return true;}
 template<>
-inline bool contiguous<FixedList<unsigned long, 2> >()      {return true;}
+inline bool contiguous<FixedList<int64_t, 2> >()            {return true;}
 template<>
-inline bool contiguous<Pair<unsigned long> >()              {return true;}
+inline bool contiguous<Pair<int64_t> >()                    {return true;}
 
 template<>
-inline bool contiguous<long long>()                         {return true;}
+inline bool contiguous<uint64_t>()                          {return true;}
 template<>
-inline bool contiguous<FixedList<long long, 2> >()          {return true;}
+inline bool contiguous<FixedList<uint64_t, 2> >()           {return true;}
 template<>
-inline bool contiguous<Pair<long long> >()                  {return true;}
-
-template<>
-inline bool contiguous<unsigned long long>()                {return true;}
-template<>
-inline bool contiguous<FixedList<unsigned long long, 2> >() {return true;}
-template<>
-inline bool contiguous<Pair<unsigned long long> >()         {return true;}
+inline bool contiguous<Pair<uint64_t> >()                   {return true;}
 
 template<>
 inline bool contiguous<float>()                             {return true;}

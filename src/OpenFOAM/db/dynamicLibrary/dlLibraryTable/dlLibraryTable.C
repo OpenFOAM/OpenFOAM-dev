@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,13 @@ License
 
 #include "dlLibraryTable.H"
 #include "OSspecific.H"
-#include "long.H"
+#include "int.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(dlLibraryTable, 0);
+    defineTypeNameAndDebug(dlLibraryTable, 0);
 }
 
 
@@ -63,7 +63,7 @@ Foam::dlLibraryTable::~dlLibraryTable()
             {
                 Info<< "dlLibraryTable::~dlLibraryTable() : closing "
                     << libNames_[i]
-                    << " with handle " << long(libPtrs_[i]) << endl;
+                    << " with handle " << uintptr_t(libPtrs_[i]) << endl;
             }
             dlClose(libPtrs_[i]);
         }
@@ -86,7 +86,7 @@ bool Foam::dlLibraryTable::open
         if (debug)
         {
             Info<< "dlLibraryTable::open : opened " << functionLibName
-                << " resulting in handle " << long(functionLibPtr) << endl;
+                << " resulting in handle " << uintptr_t(functionLibPtr) << endl;
         }
 
         if (!functionLibPtr)
@@ -137,7 +137,7 @@ bool Foam::dlLibraryTable::close
         if (debug)
         {
             Info<< "dlLibraryTable::close : closing " << functionLibName
-                << " with handle " << long(libPtrs_[index]) << endl;
+                << " with handle " << uintptr_t(libPtrs_[index]) << endl;
         }
 
         bool ok = dlClose(libPtrs_[index]);

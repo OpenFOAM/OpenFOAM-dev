@@ -26,6 +26,7 @@ INCLUDE_DIRECTORIES(
 
 ADD_DEFINITIONS(
     -DWM_$ENV{WM_PRECISION_OPTION}
+    -DWM_LABEL_SIZE=$ENV{WM_LABEL_SIZE}
 )
 
 # Set output library destination to plugin directory

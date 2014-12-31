@@ -196,7 +196,7 @@ void Foam::autoSnapDriver::smoothAndConstrain
             pp.meshPoints(),
             dispCount,
             plusEqOp<label>(),
-            0,
+            label(0),
             mapDistribute::transform()
         );
 

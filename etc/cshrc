@@ -74,6 +74,10 @@ setenv WM_ARCH_OPTION 64
 #    WM_PRECISION_OPTION = DP | SP
 setenv WM_PRECISION_OPTION DP
 
+#- Label size:
+#    WM_LABEL_SIZE = 32 | 64
+setenv WM_LABEL_SIZE 32
+
 #- Optimised, debug, profiling:
 #    WM_COMPILE_OPTION = Opt | Debug | Prof
 setenv WM_COMPILE_OPTION Opt

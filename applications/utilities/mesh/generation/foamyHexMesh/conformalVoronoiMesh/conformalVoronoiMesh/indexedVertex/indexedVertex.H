@@ -112,7 +112,7 @@ class indexedVertex
         //- The index for this Delaunay vertex.  For referred vertices, the
         //  index is negative for vertices that are the outer (slave) of point
         //  pairs
-        int index_;
+        Foam::label index_;
 
         //- Number of the processor that owns this vertex
         int processor_;
@@ -154,7 +154,7 @@ public:
         inline indexedVertex
         (
             const Point& p,
-            int index,
+            Foam::label index,
             vertexType type,
             int processor
         );
@@ -162,7 +162,7 @@ public:
         inline indexedVertex
         (
             const Foam::point& p,
-            int index,
+            Foam::label index,
             vertexType type,
             int processor
         );
@@ -174,9 +174,9 @@ public:
 
     // Member Functions
 
-        inline int& index();
+        inline Foam::label& index();
 
-        inline int index() const;
+        inline Foam::label index() const;
 
         inline vertexType& type();
 

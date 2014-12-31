@@ -27,7 +27,6 @@ License
 
 #include "DLListBase.H"
 #include "IOstreams.H"
-#include "long.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

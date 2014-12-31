@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,48 +21,30 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Primitive
-    long
-
-Description
-    A long integer
-
-SourceFiles
-    longIO.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef long_H
-#define long_H
-
-#include "word.H"
+#include "int64.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
+const int64_t Foam::pTraits<int64_t>::zero = 0;
+const int64_t Foam::pTraits<int64_t>::one = 1;
+const int64_t Foam::pTraits<int64_t>::min = INT64_MIN;
+const int64_t Foam::pTraits<int64_t>::max = INT64_MAX;
+const int64_t Foam::pTraits<int64_t>::rootMin = pTraits<int64_t>::min;
+const int64_t Foam::pTraits<int64_t>::rootMax = pTraits<int64_t>::max;
+
+const char* Foam::pTraits<int64_t>::componentNames[] = { "x" };
+
+Foam::pTraits<int64_t>::pTraits(const int64_t& p)
+:
+    p_(p)
+{}
+
+Foam::pTraits<int64_t>::pTraits(Istream& is)
 {
+    is >> p_;
+}
 
-class Istream;
-class Ostream;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-//- Return a string representation of a long
-word name(const long);
-
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-long readLong(Istream&);
-bool readLong(const char*, long&);
-Istream& operator>>(Istream&, long&);
-Ostream& operator<<(Ostream&, const long);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

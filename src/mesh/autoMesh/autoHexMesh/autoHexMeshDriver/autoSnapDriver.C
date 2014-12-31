@@ -2656,8 +2656,18 @@ void Foam::autoSnapDriver::doSnap
             (
                 regionSide
             );
-            meshRefinement::updateList(mapPtr().faceMap(), -1, filterFace);
-            meshRefinement::updateList(mapPtr().faceMap(), -1, duplicateFace);
+            meshRefinement::updateList
+            (
+                mapPtr().faceMap(),
+                label(-1),
+                filterFace
+            );
+            meshRefinement::updateList
+            (
+                mapPtr().faceMap(),
+                label(-1),
+                duplicateFace
+            );
 
             // Update baffles and baffle-to-baffle addressing
 
@@ -3187,7 +3197,12 @@ void Foam::autoSnapDriver::doSnap
             adaptPatchIDs,
             duplicateFace
         );
-        meshRefinement::updateList(mapPtr().faceMap(), -1, duplicateFace);
+        meshRefinement::updateList
+        (
+            mapPtr().faceMap(),
+            label(-1),
+            duplicateFace
+        );
     }
 
     // Repatching might have caused faces to be on same patch and hence

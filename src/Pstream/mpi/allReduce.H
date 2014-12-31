@@ -53,7 +53,7 @@ void allReduce
     MPI_Op op,
     const BinaryOp& bop,
     const int tag,
-    const int communicator
+    const label communicator
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -450,7 +450,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
     }
 
     label faceI = 0;
-    labelList verticesOnTriFace(3, -1);
+    labelList verticesOnTriFace(3, label(-1));
     face newFace(verticesOnTriFace);
 
     for
@@ -461,7 +461,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
     )
     {
         const Cell_handle c1(fit->first);
-        const int oppositeVertex = fit->second;
+        const label oppositeVertex = fit->second;
         const Cell_handle c2(c1->neighbor(oppositeVertex));
 
         // Do not output if face has neither opposite vertex as an internal

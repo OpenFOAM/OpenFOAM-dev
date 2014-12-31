@@ -53,10 +53,10 @@ class metisDecomp
 
         label decompose
         (
-            const List<int>& adjncy,
-            const List<int>& xadj,
+            const List<label>& adjncy,
+            const List<label>& xadj,
             const scalarField& cellWeights,
-            List<int>& finalDecomp
+            List<label>& finalDecomp
         );
 
         //- Disallow default bitwise copy construct and assignment

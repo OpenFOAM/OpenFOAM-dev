@@ -212,7 +212,7 @@ TMP_UNARY_FUNCTION(Type, average)
 #define G_UNARY_FUNCTION(ReturnType, gFunc, Func, rFunc)                      \
                                                                               \
 template<class Type>                                                          \
-ReturnType gFunc(const UList<Type>& f, const int comm = UPstream::worldComm); \
+ReturnType gFunc(const UList<Type>& f, const label comm = UPstream::worldComm);\
 TMP_UNARY_FUNCTION(ReturnType, gFunc)
 
 G_UNARY_FUNCTION(Type, gMax, max, max)
@@ -231,7 +231,7 @@ scalar gSumProd
 (
     const UList<Type>& f1,
     const UList<Type>& f2,
-    const int comm = UPstream::worldComm
+    const label comm = UPstream::worldComm
 );
 
 template<class Type>
@@ -239,14 +239,14 @@ Type gSumCmptProd
 (
     const UList<Type>& f1,
     const UList<Type>& f2,
-    const int comm = UPstream::worldComm
+    const label comm = UPstream::worldComm
 );
 
 template<class Type>
 Type gAverage
 (
     const UList<Type>& f,
-    const int comm = UPstream::worldComm
+    const label comm = UPstream::worldComm
 );
 
 TMP_UNARY_FUNCTION(Type, gAverage)

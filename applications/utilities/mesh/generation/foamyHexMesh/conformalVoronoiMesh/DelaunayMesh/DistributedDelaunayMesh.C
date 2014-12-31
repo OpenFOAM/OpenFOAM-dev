@@ -287,7 +287,7 @@ void Foam::DistributedDelaunayMesh<Triangulation>::findProcessorBoundaryCells
 //        Cell_handle cit = *vcit;
 //
 //        // Index of infinite vertex in this cell.
-//        int i = cit->index(Triangulation::infinite_vertex());
+//        label i = cit->index(Triangulation::infinite_vertex());
 //
 //        Cell_handle c = cit->neighbor(i);
 //
@@ -333,7 +333,7 @@ void Foam::DistributedDelaunayMesh<Triangulation>::findProcessorBoundaryCells
         if (Triangulation::is_infinite(cit))
         {
             // Index of infinite vertex in this cell.
-            int i = cit->index(Triangulation::infinite_vertex());
+            label i = cit->index(Triangulation::infinite_vertex());
 
             Cell_handle c = cit->neighbor(i);
 

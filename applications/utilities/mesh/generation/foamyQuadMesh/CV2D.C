@@ -28,7 +28,6 @@ License
 #include "transform.H"
 #include "IFstream.H"
 #include "uint.H"
-#include "ulong.H"
 
 namespace Foam
 {

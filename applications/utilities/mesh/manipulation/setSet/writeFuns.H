@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,12 @@ Class
 Description
     Various functions for collecting and writing binary data.
 
+    The LITTLE_ENDIAN is based on 32bit words.
+    It is not clear how 64bit labels should be handled, currently they are
+    split into two 32bit words and swapWord applied to these two.
+
+    writeFuns should be a namespace rather than a class.
+
 SourceFiles
     writeFuns.C
 
@@ -41,13 +47,10 @@ SourceFiles
 #include "DynamicList.H"
 #include "point.H"
 
-using namespace Foam;
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
 
 /*---------------------------------------------------------------------------*\
                            Class writeFuns Declaration
@@ -55,29 +58,43 @@ namespace Foam
 
 class writeFuns
 {
-    //- Swap halves of word.
-    static void swapWord(label& word32);
-    static void swapWords(const label nWords, label* words32);
+    // Private member functions
+
+        //- Swap halves of word
+        static void swapWord(int32_t& word32);
+
+        //- Swap halves of word
+        static void swapWords(const label nWords, int32_t* words32);
+
 
 public:
 
-    //- Write ascii or binary. If binary optionally in-place swaps argument
+    //- Write floats ascii or binary.
+    //  If binary optionally in-place swaps argument
     static void write(std::ostream&, const bool, DynamicList<floatScalar>&);
+
+    //- Write labels ascii or binary.
+    //  If binary optionally in-place swaps argument
     static void write(std::ostream&, const bool, DynamicList<label>&);
 
-    //- Write ascii or binary. If binary optionally in-place swaps argument
+    //- Write floats ascii or binary.
+    //  If binary optionally in-place swaps argument
     static void write(std::ostream&, const bool, List<floatScalar>&);
+
+    //- Write labels ascii or binary.
+    //  If binary optionally in-place swaps argument
     static void write(std::ostream&, const bool, labelList&);
 
-    //- Append point to DynamicList
+    //- Append point to given DynamicList
     static void insert(const point&, DynamicList<floatScalar>& dest);
 
-    //- Append elements of labelList to DynamicList
+    //- Append elements of labelList to given DynamicList
     static void insert(const labelList&, DynamicList<label>&);
-    //- Append elements of scalarList to DynamicList
+
+    //- Append elements of scalarList to given DynamicList
     static void insert(const List<scalar>&, DynamicList<floatScalar>&);
 
-    //- Append elements of scalarList to DynamicList using map
+    //- Append elements of scalarList to given DynamicList using map
     static void insert
     (
         const labelList& map,
@@ -85,16 +102,16 @@ public:
         DynamicList<floatScalar>&
     );
 
-    //- Append points to DynamicList of floats
+    //- Append points to given DynamicList of floats
     static void insert(const List<point>& source, DynamicList<floatScalar>&);
-    //- As above but using map
+
+    //- Append points to given DynamicList of floats using map
     static void insert
     (
         const labelList& map,
         const List<point>& source,
         DynamicList<floatScalar>&
     );
-
 };
 
 

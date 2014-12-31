@@ -248,7 +248,7 @@ public:
         //- Processor coupled interface functions
 
             //- Return communicator used for comms
-            virtual int comm() const
+            virtual label comm() const
             {
                 return procPatch_.comm();
             }

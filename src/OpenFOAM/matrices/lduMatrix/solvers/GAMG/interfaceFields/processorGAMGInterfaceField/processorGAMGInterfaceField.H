@@ -155,7 +155,7 @@ public:
         //- Processor interface functions
 
             //- Return communicator used for comms
-            virtual int comm() const
+            virtual label comm() const
             {
                 return procInterface_.comm();
             }

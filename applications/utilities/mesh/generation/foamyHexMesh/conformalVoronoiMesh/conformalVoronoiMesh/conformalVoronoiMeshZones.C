@@ -218,7 +218,7 @@ Foam::labelList Foam::conformalVoronoiMesh::calcCellZones
     const pointField& cellCentres
 ) const
 {
-    labelList cellToSurface(cellCentres.size(), -1);
+    labelList cellToSurface(cellCentres.size(), label(-1));
 
     const PtrList<surfaceZonesInfo>& surfZones =
         geometryToConformTo().surfZones();
@@ -327,7 +327,7 @@ void Foam::conformalVoronoiMesh::calcFaceZones
     const labelList& faceOwner = mesh.faceOwner();
     const labelList& faceNeighbour = mesh.faceNeighbour();
 
-    labelList neiFaceOwner(mesh.nFaces() - mesh.nInternalFaces(), -1);
+    labelList neiFaceOwner(mesh.nFaces() - mesh.nInternalFaces(), label(-1));
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Primitive
-    ulong
+    int32
 
 Description
-    System unsigned long
+    32bit integer
 
 SourceFiles
-    ulongIO.C
+    int32.C
+    int32IO.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ulong_H
-#define ulong_H
+#ifndef int32_H
+#define int32_H
+
+#include <stdint.h>
+#include <climits>
+#include <cstdlib>
 
 #include "word.H"
+#include "pTraits.H"
+#include "direction.H"
+
+#ifndef UINT32_MIN
+#define UINT32_MIN 0
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,14 +58,73 @@ class Ostream;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Return a string representation of a ulong
-word name(const unsigned long);
+//- Return a word representation of an int32
+word name(const int32_t);
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-unsigned long readUlong(Istream&);
-Istream& operator>>(Istream&, unsigned long&);
-Ostream& operator<<(Ostream&, const unsigned long);
+int32_t readInt32(Istream&);
+bool read(const char*, int32_t&);
+Istream& operator>>(Istream&, int32_t&);
+Ostream& operator<<(Ostream&, const int32_t);
+
+//- template specialization for pTraits<int32_t>
+template<>
+class pTraits<int32_t>
+{
+    int32_t p_;
+
+public:
+
+    //- Component type
+    typedef int32_t cmptType;
+
+    // Member constants
+
+        enum
+        {
+            dim = 3,         //!< Dimensionality of space
+            rank = 0,        //!< Rank of int32_t is 0
+            nComponents = 1  //!< Number of components in int32_t is 1
+        };
+
+
+    // Static data members
+
+        static const char* const typeName;
+        static const char* componentNames[];
+        static const int32_t zero;
+        static const int32_t one;
+        static const int32_t min;
+        static const int32_t max;
+        static const int32_t rootMax;
+        static const int32_t rootMin;
+
+
+    // Constructors
+
+        //- Construct from primitive
+        explicit pTraits(const int32_t&);
+
+        //- Construct from Istream
+        pTraits(Istream&);
+
+
+    // Member Functions
+
+        //- Access to the int32_t value
+        operator int32_t() const
+        {
+            return p_;
+        }
+
+        //- Access to the int value
+        operator int32_t&()
+        {
+            return p_;
+        }
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

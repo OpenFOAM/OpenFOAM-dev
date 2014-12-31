@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Primitive
-    long long
+    int64
 
 Description
-    A long long (64 bits on many systems)
+    64bit integer
 
 SourceFiles
-    longLongIO.C
+    int64.C
+    int64IO.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef longLong_H
-#define longLong_H
+#ifndef int64_H
+#define int64_H
+
+#include <stdint.h>
+#include <climits>
+#include <cstdlib>
 
 #include "word.H"
+#include "pTraits.H"
+#include "direction.H"
+
+#ifndef UINT64_MIN
+#define UINT64_MIN 0
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,15 +58,73 @@ class Ostream;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Return a string representation of a long long
-word name(long long);
+//- Return a word representation of an int64
+word name(const int64_t);
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-long long readLongLong(Istream&);
-bool readLongLong(const char*, long long&);
-Istream& operator>>(Istream&, long long&);
-Ostream& operator<<(Ostream&, const long long);
+int64_t readInt64(Istream&);
+bool read(const char*, int64_t&);
+Istream& operator>>(Istream&, int64_t&);
+Ostream& operator<<(Ostream&, const int64_t);
+
+//- template specialization for pTraits<int64_t>
+template<>
+class pTraits<int64_t>
+{
+    int64_t p_;
+
+public:
+
+    //- Component type
+    typedef int64_t cmptType;
+
+    // Member constants
+
+        enum
+        {
+            dim = 3,         //!< Dimensionality of space
+            rank = 0,        //!< Rank of int64_t is 0
+            nComponents = 1  //!< Number of components in int64_t is 1
+        };
+
+
+    // Static data members
+
+        static const char* const typeName;
+        static const char* componentNames[];
+        static const int64_t zero;
+        static const int64_t one;
+        static const int64_t min;
+        static const int64_t max;
+        static const int64_t rootMax;
+        static const int64_t rootMin;
+
+
+    // Constructors
+
+        //- Construct from primitive
+        explicit pTraits(const int64_t&);
+
+        //- Construct from Istream
+        pTraits(Istream&);
+
+
+    // Member Functions
+
+        //- Access to the int64_t value
+        operator int64_t() const
+        {
+            return p_;
+        }
+
+        //- Access to the int value
+        operator int64_t&()
+        {
+            return p_;
+        }
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

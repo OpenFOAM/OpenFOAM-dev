@@ -351,7 +351,13 @@ void Foam::UPstream::allocatePstreamCommunicator
         // Set the number of processes to the actual number
         int numProcs;
         MPI_Comm_size(PstreamGlobals::MPICommunicators_[index], &numProcs);
-        procIDs_[index] = identity(numProcs);
+
+        //procIDs_[index] = identity(numProcs);
+        procIDs_[index].setSize(numProcs);
+        forAll(procIDs_[index], i)
+        {
+            procIDs_[index][i] = i;
+        }
     }
     else
     {

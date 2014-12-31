@@ -542,7 +542,7 @@ void Foam::conformalVoronoiMesh::reorderPoints
     Info<< incrIndent << indent << "Reordering points into internal/external"
         << endl;
 
-    labelList oldToNew(points.size(), 0);
+    labelList oldToNew(points.size(), label(0));
 
     // Find points that are internal
     for (label fI = nInternalFaces; fI < faces.size(); ++fI)
@@ -645,8 +645,8 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
 //    }
 
     // Rotation on new faces.
-    labelList rotation(faces.size(), 0);
-    labelList faceMap(faces.size(), -1);
+    labelList rotation(faces.size(), label(0));
+    labelList faceMap(faces.size(), label(-1));
 
     PstreamBuffers pBufs(Pstream::nonBlocking);
 
@@ -692,8 +692,8 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
             const label patchStartFace =
                 readLabel(patchDicts[patchI].lookup("startFace"));
 
-            labelList patchFaceMap(nPatchFaces, -1);
-            labelList patchFaceRotation(nPatchFaces, 0);
+            labelList patchFaceMap(nPatchFaces, label(-1));
+            labelList patchFaceRotation(nPatchFaces, label(0));
 
             bool changed = refCast<const processorPolyPatch>(pp).order
             (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,30 +21,28 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Reads a ulong from an input stream.
-
 \*---------------------------------------------------------------------------*/
 
 #include "error.H"
 
-#include "ulong.H"
+#include "uint64.H"
 #include "IOstreams.H"
 
 #include <sstream>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::word Foam::name(const unsigned long val)
+Foam::word Foam::name(const uint64_t val)
 {
     std::ostringstream buf;
     buf << val;
     return buf.str();
 }
 
+
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-Foam::Istream& Foam::operator>>(Istream& is, unsigned long& val)
+Foam::Istream& Foam::operator>>(Istream& is, uint64_t& i)
 {
     token t(is);
 
@@ -56,38 +54,47 @@ Foam::Istream& Foam::operator>>(Istream& is, unsigned long& val)
 
     if (t.isLabel())
     {
-        val = static_cast<unsigned long>(t.labelToken());
+        i = uint64_t(t.labelToken());
     }
     else
     {
         is.setBad();
-        FatalIOErrorIn("operator>>(Istream&, unsigned long&)", is)
-            << "wrong token type - expected unsigned long, found " << t.info()
+        FatalIOErrorIn("operator>>(Istream&, uint64_t&)", is)
+            << "wrong token type - expected uint64_t, found " << t.info()
             << exit(FatalIOError);
 
         return is;
     }
 
     // Check state of Istream
-    is.check("Istream& operator>>(Istream&, unsigned long&)");
+    is.check("Istream& operator>>(Istream&, uint64_t&)");
 
     return is;
 }
 
 
-unsigned long Foam::readUlong(Istream& is)
+uint64_t Foam::readUint64(Istream& is)
 {
-    unsigned long val;
+    uint64_t val;
     is >> val;
 
     return val;
 }
 
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const unsigned long val)
+bool Foam::read(const char* buf, uint64_t& s)
 {
-    os.write(label(val));
-    os.check("Ostream& operator<<(Ostream&, const unsigned long)");
+    char *endptr = NULL;
+    long l = strtol(buf, &endptr, 10);
+    s = uint64_t(l);
+    return (*endptr == 0);
+}
+
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const uint64_t i)
+{
+    os.write(label(i));
+    os.check("Ostream& operator<<(Ostream&, const uint64_t)");
     return os;
 }
 

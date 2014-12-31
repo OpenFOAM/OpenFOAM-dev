@@ -91,7 +91,7 @@ template<class Gt, class Vb>
 inline CGAL::indexedVertex<Gt, Vb>::indexedVertex
 (
     const Point& p,
-    int index,
+    Foam::label index,
     vertexType type,
     int processor
 )
@@ -110,7 +110,7 @@ template<class Gt, class Vb>
 inline CGAL::indexedVertex<Gt, Vb>::indexedVertex
 (
     const Foam::point& p,
-    int index,
+    Foam::label index,
     vertexType type,
     int processor
 )
@@ -154,14 +154,14 @@ inline CGAL::indexedVertex<Gt, Vb>::indexedVertex(Cell_handle f)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Gt, class Vb>
-inline int& CGAL::indexedVertex<Gt, Vb>::index()
+inline Foam::label& CGAL::indexedVertex<Gt, Vb>::index()
 {
     return index_;
 }
 
 
 template<class Gt, class Vb>
-inline int CGAL::indexedVertex<Gt, Vb>::index() const
+inline Foam::label CGAL::indexedVertex<Gt, Vb>::index() const
 {
     return index_;
 }

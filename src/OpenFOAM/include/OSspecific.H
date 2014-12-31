@@ -37,7 +37,6 @@ SourceFiles
 #define OSspecific_H
 
 #include "fileNameList.H"
-#include "long.H"
 
 #include <sys/types.h>
 

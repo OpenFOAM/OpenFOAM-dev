@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::writeFuns::swapWord(label& word32)
+void Foam::writeFuns::swapWord(int32_t& word32)
 {
-    char* mem =  reinterpret_cast<char*>(&word32);
+    char* mem = reinterpret_cast<char*>(&word32);
 
     char a = mem[0];
     mem[0] = mem[3];
@@ -57,9 +57,9 @@ void Foam::writeFuns::swapWord(label& word32)
 }
 
 
-void Foam::writeFuns::swapWords(const label nWords, label* words32)
+void Foam::writeFuns::swapWords(const label nWords, int32_t* words32)
 {
-    for (label i = 0; i < nWords; i++)
+    for (label i=0; i<nWords; i++)
     {
         swapWord(words32[i]);
     }
@@ -75,9 +75,9 @@ void Foam::writeFuns::write
 {
     if (binary)
     {
-#       ifdef LITTLEENDIAN
-        swapWords(fField.size(),  reinterpret_cast<label*>(fField.begin()));
-#       endif
+        #ifdef LITTLEENDIAN
+        swapWords(fField.size(), reinterpret_cast<int32_t*>(fField.begin()));
+        #endif
 
         os.write
         (
@@ -111,7 +111,6 @@ void Foam::writeFuns::write
 )
 {
     List<floatScalar>& fld = fField.shrink();
-
     write(os, binary, fld);
 }
 
@@ -125,9 +124,13 @@ void Foam::writeFuns::write
 {
     if (binary)
     {
-#       ifdef LITTLEENDIAN
-        swapWords(elems.size(),  reinterpret_cast<label*>(elems.begin()));
-#       endif
+        #ifdef LITTLEENDIAN
+        swapWords
+        (
+            (sizeof(label)/4)*elems.size(),
+            reinterpret_cast<int32_t*>(elems.begin())
+        );
+        #endif
         os.write
         (
             reinterpret_cast<char*>(elems.begin()),
@@ -160,12 +163,10 @@ void Foam::writeFuns::write
 )
 {
     labelList& fld = elems.shrink();
-
     write(os, binary, fld);
 }
 
 
-// Store vector in dest.
 void Foam::writeFuns::insert(const point& pt, DynamicList<floatScalar>& dest)
 {
     dest.append(float(pt.x()));
@@ -174,7 +175,6 @@ void Foam::writeFuns::insert(const point& pt, DynamicList<floatScalar>& dest)
 }
 
 
-// Store labelList in dest.
 void Foam::writeFuns::insert(const labelList& source, DynamicList<label>& dest)
 {
     forAll(source, i)
@@ -184,7 +184,6 @@ void Foam::writeFuns::insert(const labelList& source, DynamicList<label>& dest)
 }
 
 
-// Store scalarField in dest
 void Foam::writeFuns::insert
 (
     const List<scalar>& source,
@@ -198,7 +197,6 @@ void Foam::writeFuns::insert
 }
 
 
-// Store scalarField (indexed through map) in dest
 void Foam::writeFuns::insert
 (
     const labelList& map,

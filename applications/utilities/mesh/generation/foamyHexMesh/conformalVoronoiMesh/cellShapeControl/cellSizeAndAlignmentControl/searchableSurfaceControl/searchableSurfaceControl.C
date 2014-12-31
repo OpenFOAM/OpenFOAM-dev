@@ -497,7 +497,7 @@ void Foam::searchableSurfaceControl::cellSizeFunctionVertices
     List<pointIndexHit> infoList(1, pointIndexHit());
 
     vectorField normals(1);
-    labelList region(1, -1);
+    labelList region(1, label(-1));
 
     forAll(points, pI)
     {

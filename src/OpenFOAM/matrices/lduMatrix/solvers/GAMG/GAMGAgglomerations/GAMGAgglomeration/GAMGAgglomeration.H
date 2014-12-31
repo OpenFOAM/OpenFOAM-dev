@@ -435,7 +435,7 @@ public:
                 const label comm,
                 const labelList& procAgglomMap,
                 labelList& masterProcs,
-                List<int>& agglomProcIDs
+                List<label>& agglomProcIDs
             );
 
             //- Whether to agglomerate across processors

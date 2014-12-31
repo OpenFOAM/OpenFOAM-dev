@@ -409,7 +409,12 @@ Foam::UPstream::treeCommunication_(10);
 
 // Allocate a serial communicator. This gets overwritten in parallel mode
 // (by UPstream::setParRun())
-Foam::UPstream::communicator serialComm(-1, Foam::labelList(1, 0), false);
+Foam::UPstream::communicator serialComm
+(
+    -1,
+    Foam::labelList(1, Foam::label(0)),
+    false
+);
 
 
 

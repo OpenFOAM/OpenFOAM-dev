@@ -80,7 +80,7 @@ public:
             virtual lduInterfacePtrsList interfaces() const = 0;
 
             //- Return communicator used for parallel communication
-            virtual int comm() const = 0;
+            virtual label comm() const = 0;
 
             //- Helper: reduce with current communicator
             template<class T, class BinaryOp>

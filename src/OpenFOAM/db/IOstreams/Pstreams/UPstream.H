@@ -413,7 +413,7 @@ public:
         }
 
         //- Process ID of given process index
-        static List<int>& procID(int communicator)
+        static List<int>& procID(label communicator)
         {
             return procIDs_[communicator];
         }

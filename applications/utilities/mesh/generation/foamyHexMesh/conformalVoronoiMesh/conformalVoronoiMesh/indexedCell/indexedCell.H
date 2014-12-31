@@ -97,7 +97,7 @@ class indexedCell
         //  < 0 && > ctFar : the (global) index of a dual point on a processor
         //                   face
 
-        int index_;
+        Foam::label index_;
 
         //- The number of times that this Delaunay cell has been limited
         //  during filtering
@@ -154,9 +154,9 @@ public:
 
     // Member Functions
 
-        inline int& cellIndex();
+        inline Foam::label& cellIndex();
 
-        inline int cellIndex() const;
+        inline Foam::label cellIndex() const;
 
 #ifdef CGAL_INEXACT
         inline const Foam::point& dual();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ Foam::searchableBoxFeatures::features() const
             surfacePoints[treeBoundBox::edges[eI].end()]
           - surfacePoints[treeBoundBox::edges[eI].start()];
 
-        normalDirections[eI] = labelList(2, 0);
+        normalDirections[eI] = labelList(2, label(0));
         for (label j = 0; j < 2; ++j)
         {
             const vector cross =

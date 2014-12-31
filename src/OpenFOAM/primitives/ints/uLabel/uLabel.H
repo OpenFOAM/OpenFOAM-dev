@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,156 +25,56 @@ Typedef
     Foam::uLabel
 
 Description
-    A uLabel is an unsigned label.
+    A uLabel is an uint32_t or uint64_t as specified by the pre-processor macro
+    WM_LABEL_SIZE.
 
-SeeAlso
-    label.H
+    A readLabel function is defined so that uLabel can be constructed from
+    Istream.
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef uLabel_H
 #define uLabel_H
 
-#include <climits>
-#include <cstdlib>
+#include "uint.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#define UINT_ADD_SIZE(x,s,y) x ## s ## y
+#define UINT_ADD_DEF_SIZE(x,s,y) UINT_ADD_SIZE(x,s,y)
+#define UINT_SIZE(x,y) UINT_ADD_DEF_SIZE(x,WM_LABEL_SIZE,y)
 
-#if FOAM_LABEL64
-#    define FOAM_ULABEL_MAX 18000000000000000000u
-#else
-#    define FOAM_ULABEL_MAX 4000000000u
-#endif
-
-
-#if UINT_MAX > FOAM_ULABEL_MAX
-
-// Define uLabel as an unsigned int
-
-# undef  FOAM_ULABEL_MAX
-# define FOAM_ULABEL_MAX UINT_MAX
-
-# include "uint.H"
-
-namespace Foam
-{
-    typedef unsigned int uLabel;
-
-    static const uLabel uLabelMin = 0;
-    static const uLabel uLabelMax = UINT_MAX;
-
-    inline uLabel readULabel(Istream& is)
-    {
-        return readUint(is);
-    }
-
-} // End namespace Foam
-
-
-#elif ULONG_MAX > FOAM_ULABEL_MAX
-
-// Define uLabel as an unsigned long
-
-# undef  FOAM_ULABEL_MAX
-# define FOAM_ULABEL_MAX ULONG_MAX
-
-# include "uint.H"
-# include "ulong.H"
-
-namespace Foam
-{
-    typedef unsigned long uLabel;
-
-    static const uLabel uLabelMin = 0;
-    static const uLabel uLabelMax = ULONG_MAX;
-
-    inline uLabel readULabel(Istream& is)
-    {
-        return readUlong(is);
-    }
-
-} // End namespace Foam
-
-
-#elif ULLONG_MAX > FOAM_ULABEL_MAX
-
-// Define uLabel as an unsigned long long
-
-# undef  FOAM_ULABEL_MAX
-
-# error "Not implemented yet"
-
+#if WM_LABEL_SIZE != 32 && WM_LABEL_SIZE != 64
+    #error "uLabel.H: WM_LABEL_SIZE must be set to either 32 or 64"
 #endif
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "pTraits.H"
-#include "direction.H"
-
 namespace Foam
 {
 
-//- template specialization for pTraits<uLabel>
-template<>
-class pTraits<uLabel>
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+typedef UINT_SIZE(uint, _t) uLabel;
+
+static const uLabel uLabelMin = UINT_SIZE(UINT, _MIN);
+static const uLabel uLabelMax = UINT_SIZE(UINT, _MAX);
+
+inline uLabel readULabel(Istream& is)
 {
-    uLabel p_;
-
-public:
-
-    //- Component type
-    typedef uLabel cmptType;
-
-    // Member constants
-
-        enum
-        {
-            dim = 3,         //!< Dimensionality of space
-            rank = 0,        //!< Rank of uLabel is 0
-            nComponents = 1  //!< Number of components in uLabel is 1
-        };
-
-
-    // Static data members
-
-        static const char* const typeName;
-        static const char* componentNames[];
-        static const uLabel zero;
-        static const uLabel one;
-        static const uLabel max;
-        static const uLabel min;
-        static const uLabel rootMax;
-        static const uLabel rootMin;
-
-
-    // Constructors
-
-        //- Construct from primitive
-        explicit pTraits(const uLabel&);
-
-        //- Construct from Istream
-        pTraits(Istream&);
-
-
-    // Member Functions
-
-        //- Access to the uLabel value
-        operator uLabel() const
-        {
-            return p_;
-        }
-
-        //- Access to the uLabel value
-        operator uLabel&()
-        {
-            return p_;
-        }
-};
+    return UINT_SIZE(readUint,) (is);
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//- Raise one uLabel to the power of another
+uLabel pow(uLabel a, uLabel b);
+
+//- Evaluate n! : 0 < n <= 12
+uLabel factorial(uLabel n);
+
 
 inline uLabel& setComponent(uLabel& l, const direction)
 {
@@ -186,12 +86,17 @@ inline uLabel component(const uLabel l, const direction)
     return l;
 }
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "uLabelSpecific.H"
+
+#undef UINT_ADD_SIZE
+#undef UINT_ADD_DEF_SIZE
+#undef UINT_SIZE
 
 #endif
 

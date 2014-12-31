@@ -71,7 +71,7 @@ protected:
             const label fineLevelIndex,
             const labelList& procAgglomMap,
             const labelList& masterProcs,
-            const List<int>& agglomProcIDs,
+            const List<label>& agglomProcIDs,
             const label procAgglomComm
         );
 

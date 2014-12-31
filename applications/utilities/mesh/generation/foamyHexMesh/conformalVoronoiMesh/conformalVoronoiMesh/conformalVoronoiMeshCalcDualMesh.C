@@ -172,7 +172,7 @@ void Foam::conformalVoronoiMesh::calcTetMesh
 
     label faceI = 0;
 
-    labelList verticesOnTriFace(3, -1);
+    labelList verticesOnTriFace(3, label(-1));
 
     face newFace(verticesOnTriFace);
 
@@ -184,7 +184,7 @@ void Foam::conformalVoronoiMesh::calcTetMesh
     )
     {
         const Cell_handle c1(fit->first);
-        const int oppositeVertex = fit->second;
+        const label oppositeVertex = fit->second;
         const Cell_handle c2(c1->neighbor(oppositeVertex));
 
         if (c1->hasFarPoint() && c2->hasFarPoint())
@@ -347,7 +347,7 @@ Foam::label Foam::conformalVoronoiMesh::mergeIdenticalDualVertices
     )
     {
         const Cell_handle c1(fit->first);
-        const int oppositeVertex = fit->second;
+        const label oppositeVertex = fit->second;
         const Cell_handle c2(c1->neighbor(oppositeVertex));
 
         if (is_infinite(c1) || is_infinite(c2))
@@ -1070,7 +1070,7 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::checkPolyMeshQuality
 
         // Check for cells with one internal face only
 
-        labelList nInternalFaces(pMesh.nCells(), 0);
+        labelList nInternalFaces(pMesh.nCells(), label(0));
 
         for (label fI = 0; fI < pMesh.nInternalFaces(); fI++)
         {
@@ -1737,7 +1737,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
 
     const label nPatches = patchNames.size();
 
-    labelList procNeighbours(nPatches, -1);
+    labelList procNeighbours(nPatches, label(-1));
     forAll(procNeighbours, patchI)
     {
         if (patchDicts[patchI].found("neighbProcNo"))
@@ -2580,7 +2580,7 @@ void Foam::conformalVoronoiMesh::removeUnusedPoints
 
     label pointI = 0;
 
-    labelList oldToNew(pts.size(), -1);
+    labelList oldToNew(pts.size(), label(-1));
 
     // Move all of the used points to the start of the pointField and
     // truncate it
@@ -2637,7 +2637,7 @@ Foam::labelList Foam::conformalVoronoiMesh::removeUnusedCells
 
     label cellI = 0;
 
-    labelList oldToNew(cellUsed.size(), -1);
+    labelList oldToNew(cellUsed.size(), label(-1));
 
     // Move all of the used cellCentres to the start of the pointField and
     // truncate it
