@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,8 +35,8 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        phi          | flux field name         | no          | phi
-        inletValue   | inlet value for reverse flow | yes    |
+        phi          | Flux field name         | no          | phi
+        inletValue   | Inlet value for reverse flow | yes    |
     \endtable
 
     Example of the boundary condition specification:
@@ -55,12 +55,13 @@ Description
 
 Note
     Sign conventions:
-    - positive flux (out of domain): apply zero-gradient condition
-    - negative flux (into of domain): apply the user-specified fixed value
+    - Positive flux (out of domain): apply zero-gradient condition
+    - Negative flux (into of domain): apply the "inletValue" fixed-value
 
 SeeAlso
     Foam::mixedFvPatchField
     Foam::zeroGradientFvPatchField
+    Foam::outletInletFvPatchField
 
 SourceFiles
     inletOutletFvPatchField.C

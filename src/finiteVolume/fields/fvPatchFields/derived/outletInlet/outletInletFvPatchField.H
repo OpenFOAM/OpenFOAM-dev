@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,14 +29,14 @@ Group
 
 Description
     This boundary condition provides a generic inflow condition, with
-    specified outflow for the case of return flow.
+    specified outflow for the case of reverse flow.
 
     \heading Patch usage
 
     \table
         Property     | Description             | Required    | Default value
-        phi          | flux field name         | no          | phi
-        inletValue   | inlet value             | yes         |
+        phi          | Flux field name         | no          | phi
+        outletValue  | Outlet value for reverse flow | yes   |
     \endtable
 
     Example of the boundary condition specification:
@@ -44,9 +44,9 @@ Description
     myPatch
     {
         type            outletInlet;
-        phi             phi;        // name of flux field (default = phi)
-        outletValue     uniform 0;  // reverse flow (inlet) value
-        value           uniform 0;  // initial value
+        phi             phi;
+        outletValue     uniform 0;
+        value           uniform 0;
     }
     \endverbatim
 
@@ -55,8 +55,13 @@ Description
 
 Note
     Sign conventions:
-    - positive flux (out of domain): apply the user-specified fixed value
-    - negative flux (into of domain): apply zero-gradient condition
+    - Positive flux (out of domain): apply the "outletValue" fixed-value
+    - Negative flux (into of domain): apply zero-gradient condition
+
+SeeAlso
+    Foam::mixedFvPatchField
+    Foam::zeroGradientFvPatchField
+    Foam::inletOutletFvPatchField
 
 SourceFiles
     outletInletFvPatchField.C
