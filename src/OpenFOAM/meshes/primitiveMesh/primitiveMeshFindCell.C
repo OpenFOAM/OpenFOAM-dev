@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ bool Foam::primitiveMesh::pointInCellBB
 (
     const point& p,
     label celli,
-    scalar tol
+    scalar inflationFraction
 ) const
 {
     boundBox bb
@@ -46,13 +46,10 @@ bool Foam::primitiveMesh::pointInCellBB
         false
     );
 
-    if (tol > SMALL)
+    if (inflationFraction > SMALL)
     {
-        bb = boundBox
-        (
-            bb.min() - tol*bb.span(),
-            bb.max() + tol*bb.span()
-        );
+        vector inflation = inflationFraction*vector::one*mag(bb.span());
+        bb = boundBox(bb.min() - inflation, bb.max() + inflation);
     }
 
     return bb.contains(p);

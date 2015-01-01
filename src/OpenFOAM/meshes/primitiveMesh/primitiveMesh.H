@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -755,16 +755,17 @@ public:
 
         // Useful derived info
 
-            //- Is the point in the cell bounding box, option relative
-            //  tolerance to increase the effective size of the boundBox
+            //- Return true if the point in the cell bounding box.
+            //  The bounding box may be isotropically inflated by the fraction
+            //  inflationFraction
             bool pointInCellBB
             (
                 const point& p,
                 label celli,
-                scalar tol = 0
+                scalar inflationFraction = 0
             ) const;
 
-            //- Is the point in the cell
+            //- Return true if the  point is in the cell
             bool pointInCell(const point& p, label celli) const;
 
             //- Find the cell with the nearest cell centre to location
