@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  dev                                   |
+|  \\    /   O peration     | Version:  2.3.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -17,19 +17,20 @@ FoamFile
 
 interpolationScheme cellPoint;
 
-surfaceFormat   dx;
+surfaceFormat   vtk;
 
 surfaces
 (
     constantPlane
     {
+        type plane;
         name plate;
         basePoint ( 0 0 0.25 );
         normalVector ( 0 0 1 );
     }
 );
 
-fields          ( sigmaxx );
+fields          ( sigmaEq );
 
 
 // ************************************************************************* //
