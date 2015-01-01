@@ -42,8 +42,14 @@ Description
 
             coordinateSystem
             {
-                e1  (0.70710678 0.70710678 0);
-                e2  (0 0 1);
+                type    cartesian;
+                origin  (0 0 0);
+                coordinateRotation
+                {
+                    type    axesRotation;
+                    e1  (0.70710678 0.70710678 0);
+                    e2  (0 0 1);
+                }
             }
         }
     }
