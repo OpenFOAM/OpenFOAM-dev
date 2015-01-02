@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 
         for (int corr=0; corr<nCorr; corr++)
         {
-            volScalarField rAU = 1.0/UEqn.A();
+            volScalarField rAU(1.0/UEqn.A());
 
             U = rAU*UEqn.H();
             phi = (fvc::interpolate(U) & mesh.Sf())

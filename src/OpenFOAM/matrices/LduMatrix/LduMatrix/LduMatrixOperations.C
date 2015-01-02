@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -412,23 +412,20 @@ void Foam::LduMatrix<Type, DType, LUType>::operator*=
         *sourcePtr_ *= sf;
     }
 
-    if (upperPtr_)
+    // Non-uniform scaling causes a symmetric matrix
+    // to become asymmetric
+    if (symmetric() || asymmetric())
     {
-        Field<LUType>& upper = *upperPtr_;
+        Field<LUType>& upper = this->upper();
+        Field<LUType>& lower = this->lower();
 
         const unallocLabelList& l = lduAddr().lowerAddr();
+        const unallocLabelList& u = lduAddr().upperAddr();
 
         for (register label face=0; face<upper.size(); face++)
         {
             upper[face] *= sf[l[face]];
         }
-    }
-
-    if (lowerPtr_)
-    {
-        Field<LUType>& lower = *lowerPtr_;
-
-        const unallocLabelList& u = lduAddr().upperAddr();
 
         for (register label face=0; face<lower.size(); face++)
         {
