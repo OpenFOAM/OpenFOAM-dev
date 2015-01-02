@@ -72,7 +72,7 @@ void surfaceIntegrate
         }
     }
 
-    ivf /= mesh.V();
+    ivf /= mesh.Vsc();
 }
 
 
