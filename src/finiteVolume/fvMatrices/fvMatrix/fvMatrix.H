@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -473,7 +473,6 @@ public:
 
         void operator*=(const DimensionedField<scalar, volMesh>&);
         void operator*=(const tmp<DimensionedField<scalar, volMesh> >&);
-        void operator*=(const volScalarField&);
         void operator*=(const tmp<volScalarField>&);
 
         void operator*=(const dimensioned<scalar>&);
