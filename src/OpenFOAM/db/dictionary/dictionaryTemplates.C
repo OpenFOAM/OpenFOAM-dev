@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,14 @@ T Foam::dictionary::lookupOrDefault
     }
     else
     {
+        if (writeOptionalEntries)
+        {
+            IOInfoIn("dictionary::lookupOrDefault", *this)
+                << "Optional entry '" << keyword << "' is not present,"
+                << " returning the default value '" << deflt
+                << endl;
+        }
+
         return deflt;
     }
 }
@@ -67,6 +75,14 @@ T Foam::dictionary::lookupOrAddDefault
     }
     else
     {
+        if (writeOptionalEntries)
+        {
+            IOInfoIn("dictionary::lookupOrAddDefault", *this)
+                << "Optional entry '" << keyword << "' is not present,"
+                << " adding and returning the default value '" << deflt
+                << endl;
+        }
+
         add(new primitiveEntry(keyword, deflt));
         return deflt;
     }
@@ -76,13 +92,13 @@ T Foam::dictionary::lookupOrAddDefault
 template<class T>
 bool Foam::dictionary::readIfPresent
 (
-    const word& k,
+    const word& keyword,
     T& val,
     bool recursive,
     bool patternMatch
 ) const
 {
-    const entry* entryPtr = lookupEntryPtr(k, recursive, patternMatch);
+    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
 
     if (entryPtr)
     {
@@ -91,6 +107,14 @@ bool Foam::dictionary::readIfPresent
     }
     else
     {
+        if (writeOptionalEntries)
+        {
+            IOInfoIn("dictionary::readIfPresent", *this)
+                << "Optional entry '" << keyword << "' is not present,"
+                << " the default value '" << val << "' will be used."
+                << endl;
+        }
+
         return false;
     }
 }

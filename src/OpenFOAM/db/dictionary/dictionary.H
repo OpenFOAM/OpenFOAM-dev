@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,6 +141,10 @@ class dictionary
     public IDLList<entry>
 {
     // Private data
+
+        //- If true write optional keywords and values
+        //  if not present in dictionary
+        static bool writeOptionalEntries;
 
         //- HashTable of the entries held on the DL-list for quick lookup
         HashTable<entry*> hashedEntries_;
