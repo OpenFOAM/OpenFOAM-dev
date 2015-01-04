@@ -242,7 +242,25 @@ case "${foamCompiler}" in
 OpenFOAM | ThirdParty)
     case "$WM_COMPILER" in
     Gcc | Gcc48)
-        gcc_version=gcc-4.8.3
+        gcc_version=gcc-4.8.4
+        gmp_version=gmp-5.1.2
+        mpfr_version=mpfr-3.1.2
+        mpc_version=mpc-1.0.1
+        ;;
+    Gcc45)
+        gcc_version=gcc-4.5.4
+        gmp_version=gmp-5.1.2
+        mpfr_version=mpfr-3.1.2
+        mpc_version=mpc-1.0.1
+        ;;
+    Gcc46)
+        gcc_version=gcc-4.6.4
+        gmp_version=gmp-5.1.2
+        mpfr_version=mpfr-3.1.2
+        mpc_version=mpc-1.0.1
+        ;;
+    Gcc47)
+        gcc_version=gcc-4.7.4
         gmp_version=gmp-5.1.2
         mpfr_version=mpfr-3.1.2
         mpc_version=mpc-1.0.1
