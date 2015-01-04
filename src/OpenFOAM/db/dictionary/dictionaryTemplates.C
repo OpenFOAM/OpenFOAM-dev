@@ -49,7 +49,7 @@ T Foam::dictionary::lookupOrDefault
         {
             IOInfoIn("dictionary::lookupOrDefault", *this)
                 << "Optional entry '" << keyword << "' is not present,"
-                << " returning the default value '" << deflt
+                << " returning the default value '" << deflt << "'"
                 << endl;
         }
 
@@ -79,7 +79,7 @@ T Foam::dictionary::lookupOrAddDefault
         {
             IOInfoIn("dictionary::lookupOrAddDefault", *this)
                 << "Optional entry '" << keyword << "' is not present,"
-                << " adding and returning the default value '" << deflt
+                << " adding and returning the default value '" << deflt << "'"
                 << endl;
         }
 

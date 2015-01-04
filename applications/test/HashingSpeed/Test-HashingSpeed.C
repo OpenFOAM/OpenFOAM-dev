@@ -1,6 +1,7 @@
 // code taken more-or-less from Paul Hsieh's tests
 
 #include "Hasher.H"
+#include "int.H"
 
 #include <stdio.h>
 #include <time.h>
@@ -52,7 +53,6 @@ on 1 byte), but shoehorning those bytes into integers efficiently is messy.
 
 #include <stdio.h>      /* defines printf for tests */
 #include <time.h>       /* defines time_t for timings in the test */
-#include <stdint.h>     /* defines uint32_t etc */
 #include <sys/param.h>  /* attempt to define endianness */
 #ifdef linux
 # include <endian.h>    /* attempt to define endianness */

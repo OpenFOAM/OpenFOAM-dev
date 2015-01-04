@@ -36,6 +36,7 @@ SourceFiles
 #ifndef int64_H
 #define int64_H
 
+#define __STDC_LIMIT_MACROS
 #include <stdint.h>
 #include <climits>
 #include <cstdlib>

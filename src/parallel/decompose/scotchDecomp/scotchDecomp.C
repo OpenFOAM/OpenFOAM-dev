@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -403,11 +403,11 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
 
         scalar rangeScale(1.0);
 
-        if (velotabSum > scalar(INT_MAX - 1))
+        if (velotabSum > scalar(labelMax - 1))
         {
             // 0.9 factor of safety to avoid floating point round-off in
             // rangeScale tipping the subsequent sum over the integer limit.
-            rangeScale = 0.9*scalar(INT_MAX - 1)/velotabSum;
+            rangeScale = 0.9*scalar(labelMax - 1)/velotabSum;
 
             WarningIn
             (
