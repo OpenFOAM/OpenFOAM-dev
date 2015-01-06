@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,54 +37,58 @@ Foam::patchDist::patchDist
     const bool correctWalls
 )
 :
-    volScalarField
-    (
-        IOobject
-        (
-            "y",
-            mesh.time().timeName(),
-            mesh
-        ),
-        mesh,
-        dimensionedScalar("y", dimLength, GREAT)
-    ),
+    mesh_(mesh),
     patchIDs_(patchIDs),
     correctWalls_(correctWalls),
     nUnset_(0)
-{
-    patchDist::correct();
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::patchDist::~patchDist()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::patchDist::correct()
+Foam::tmp<Foam::volScalarField> Foam::patchDist::y() const
 {
+    tmp<volScalarField> ty
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "y",
+                mesh_.time().timeName(),
+                mesh_,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh_,
+            dimensionedScalar("y", dimLength, GREAT)
+        )
+    );
+
+    volScalarField& y = ty();
+
     // Calculate distance starting from patch faces
-    patchWave wave(mesh(), patchIDs_, correctWalls_);
+    patchWave wave(mesh_, patchIDs_, correctWalls_);
 
     // Transfer cell values from wave into *this
-    transfer(wave.distance());
+    y.transfer(wave.distance());
 
     // Transfer values on patches into boundaryField of *this
-    forAll(boundaryField(), patchI)
+    forAll(y.boundaryField(), patchI)
     {
-        if (!isA<emptyFvPatchScalarField>(boundaryField()[patchI]))
+        if (!isA<emptyFvPatchScalarField>(y.boundaryField()[patchI]))
         {
             scalarField& waveFld = wave.patchDistance()[patchI];
 
-            boundaryField()[patchI].transfer(waveFld);
+            y.boundaryField()[patchI].transfer(waveFld);
         }
     }
 
     // Transfer number of unset values
     nUnset_ = wave.nUnset();
+
+    return ty;
 }
 
 

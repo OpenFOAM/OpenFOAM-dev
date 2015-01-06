@@ -47,8 +47,6 @@ const Foam::volScalarField& Foam::wallDependentModel::yWall() const
 {
     if (!mesh_.foundObject<volScalarField>("yWall"))
     {
-        wallDist w(mesh_);
-
         volScalarField* yPtr
         (
             new volScalarField
@@ -62,7 +60,7 @@ const Foam::volScalarField& Foam::wallDependentModel::yWall() const
                     IOobject::NO_WRITE,
                     true
                 ),
-                w.y()
+                wallDist(mesh_).y()
             )
         );
 

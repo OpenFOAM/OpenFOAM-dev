@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,9 +60,6 @@ class wallPointYPlus
 :
     public wallPointData<scalar>
 {
-
-private:
-
     // Private Member Functions
 
         //- Evaluate distance to point. Update distSqr, origin from whomever
@@ -76,6 +73,7 @@ private:
             const scalar tol,
             TrackingData& td
         );
+
 
 public:
 
@@ -153,7 +151,6 @@ inline bool contiguous<wallPointYPlus>()
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 
 } // End namespace Foam
 

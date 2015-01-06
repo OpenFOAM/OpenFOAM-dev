@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
         if (timeI == 0 || state != fvMesh::UNCHANGED)
         {
             Info<< "Calculating wall distance\n" << endl;
-            wallDist y(mesh, true);
+            wallDist y(mesh);
             Info<< "Writing wall distance to field " << y.name() << nl << endl;
             y.write();
         }

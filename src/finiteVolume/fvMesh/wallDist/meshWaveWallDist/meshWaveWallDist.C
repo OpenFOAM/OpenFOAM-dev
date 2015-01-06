@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "wallDist.H"
+#include "meshWaveWallDist.H"
 #include "fvMesh.H"
 #include "wallPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallDist::wallDist
+Foam::meshWaveWallDist::meshWaveWallDist
 (
     const fvMesh& mesh,
     const bool correctWalls
@@ -46,7 +46,7 @@ Foam::wallDist::wallDist
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallDist::~wallDist()
+Foam::meshWaveWallDist::~meshWaveWallDist()
 {}
 
 

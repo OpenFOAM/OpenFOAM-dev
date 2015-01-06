@@ -68,7 +68,7 @@ void contactAngleForce::initialise()
 
         patchDist dist(owner_.regionMesh(), patchIDs);
 
-        mask_ = pos(dist - dimensionedScalar("dLim", dimLength, dLim));
+        mask_ = pos(dist.y() - dimensionedScalar("dLim", dimLength, dLim));
     }
 }
 

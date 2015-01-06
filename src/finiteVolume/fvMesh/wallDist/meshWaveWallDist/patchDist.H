@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallDist
+    Foam::patchDist
 
 Description
-    Specialisation of patchDist for wall distance calculation
+    Calculation of distance to nearest patch for all cells and boundary
+    using meshWave.
+
+    Distance correction (correctWalls = true):
+        For each cell with face on wall calculate the true nearest point (by
+        triangle decomposition) on that face and do the same for that face's
+        pointNeighbours. This will find the true nearest distance in almost all
+        cases. Only very skewed cells or cells close to another wall might be
+        missed.
+
+        For each cell with only one point on wall the same is done except now it
+        takes the pointFaces() of the wall point to look for the nearest point.
 
 SourceFiles
-    wallDist.C
+    patchDist.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef wallDist_H
-#define wallDist_H
+#ifndef patchDist_H
+#define patchDist_H
 
-#include "patchDist.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,23 +56,33 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                          Class wallDist Declaration
+                          Class patchDist Declaration
 \*---------------------------------------------------------------------------*/
 
-class wallDist
-:
-    public patchDist
+class patchDist
 {
+    // Private Member Data
 
-private:
+        //- Reference to the mesh
+        const fvMesh& mesh_;
+
+        //- Set of patch IDs
+        const labelHashSet patchIDs_;
+
+        //- Do accurate distance calculation for near-wall cells.
+        const bool correctWalls_;
+
+        //- Number of unset cells and faces.
+        mutable label nUnset_;
+
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        wallDist(const wallDist&);
+        patchDist(const patchDist&);
 
         //- Disallow default bitwise assignment
-        void operator=(const wallDist&);
+        void operator=(const patchDist&);
 
 
 public:
@@ -71,15 +92,24 @@ public:
         //- Construct from mesh and flag whether or not to correct wall.
         //  Calculate for all cells. correctWalls : correct wall (face&point)
         //  cells for correct distance, searching neighbours.
-        wallDist
+        patchDist
         (
             const fvMesh& mesh,
+            const labelHashSet& patchIDs,
             const bool correctWalls = true
         );
 
 
-    //- Destructor
-    virtual ~wallDist();
+    // Member Functions
+
+        //- Calculate and return the distance to nearest patch
+        //  for all cells and boundary
+        tmp<volScalarField> y() const;
+
+        label nUnset() const
+        {
+            return nUnset_;
+        }
 };
 
 

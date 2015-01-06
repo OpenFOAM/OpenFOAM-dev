@@ -38,13 +38,14 @@ $(derivedFvPatches)/regionCoupled/regionCoupledWallFvPatch.C
 
 
 wallDist = fvMesh/wallDist
-$(wallDist)/patchDist.C
 $(wallDist)/wallPointYPlus/wallPointYPlus.C
-$(wallDist)/nearWallDistNoSearch.C
-$(wallDist)/nearWallDist.C
-$(wallDist)/wallDist.C
-$(wallDist)/reflectionVectors.C
-$(wallDist)/wallDistReflection.C
+$(wallDist)/nearWallDist/nearWallDistNoSearch.C
+$(wallDist)/nearWallDist/nearWallDist.C
+$(wallDist)/wallDist/wallDist.C
+$(wallDist)/meshWaveWallDist/patchDist.C
+$(wallDist)/meshWaveWallDist/meshWaveWallDist.C
+$(wallDist)/wallDistReflection/reflectionVectors.C
+$(wallDist)/wallDistReflection/wallDistReflection.C
 
 
 fvMeshMapper = fvMesh/fvMeshMapper
