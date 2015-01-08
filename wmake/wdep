@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -35,6 +35,9 @@
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
+
+# Source the wdep functions
+. ${0%/*}/wdepFunctions
 
 usage() {
     exec 1>&2
@@ -70,6 +73,9 @@ do
     esac
 done
 
+# Check environment variables
+checkEnv
+
 
 #------------------------------------------------------------------------------
 # Check <file> is is the current directory
@@ -83,68 +89,13 @@ fi
 
 
 #------------------------------------------------------------------------------
-# Check environment variables
+# Search up directories tree for the Make sub-directory containing dep files
+# and echo path for the dep file corresponding to the specified source file
 #------------------------------------------------------------------------------
 
-for envar in WM_OPTIONS WM_DIR WM_PROJECT_DIR
-do
-    eval test "\$$envar" || {
-        echo "$Script error: environment variable \$$envar not set" 1>&2
-        exit 1
-    }
-done
-
-
-#------------------------------------------------------------------------------
-# Search up directories tree for the Make sub-directory
-#------------------------------------------------------------------------------
-
-expandPath()
-{
-    dir=$(dirname $1)
-    cwd=$PWD
-    cd $dir
-    exPath=$PWD
-    cd $cwd
-}
-
-findTarget()
-{
-    expandPath $1
-
-    if [ "$exPath" = "$WM_PROJECT_DIR" \
-                   -o "$exPath" = "$HOME" \
-                   -o "$exPath" = "/" \
-       ]
-    then
-        echo "$Script error: could not find Make directory" 1>&2
-        exit 1
-    elif [ -d "$1/Make" ]; then
-        dir=$1
-    else
-        findTarget "$1/.."
-    fi
-}
+findObjectDir $1
 
 fileName=${1##*/}
-
-expandPath $1
-
-if echo $exPath | grep "$WM_PROJECT_DIR" > /dev/null
-then
-    platformPath=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}
-    objectsDir=$platformPath$(echo $exPath | sed s%$WM_PROJECT_DIR%% )
-else
-    path=$exPath
-    dir=.
-    if [ ! -d Make ]
-    then
-        findTarget .
-    fi
-    appDir=$dir
-    expandPath $appDir/.
-    objectsDir=$appDir/Make/${WM_OPTIONS}$(echo $path | sed s%$exPath%% )
-fi
 
 echo $objectsDir/$fileName.dep
 
@@ -153,7 +104,7 @@ echo $objectsDir/$fileName.dep
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage expandPath findTarget
+unset Script usage
 
 
 #------------------------------------------------------------------------------

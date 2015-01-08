@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -23,16 +23,24 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     rmdepall
+#     wrmdep [file]
 #
 # Description
-#     Remove all .dep files or remove .dep files referring to <file>
+#     Remove all .dep files from the object directory tree corresponding to the
+#     current source derectory or remove only the .dep files referring to the
+#     optionally specified [file].
+#
 #------------------------------------------------------------------------------
+Script=${0##*/}
+
+# Source the wdep functions
+. ${0%/*}/wdepFunctions
+
 usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-Usage: ${0##*/} [file]
+Usage: $Script [file]
 
 Remove all .dep files or remove .dep files referring to <file>
 
@@ -40,7 +48,11 @@ USAGE
     exit 1
 }
 
-# parse options
+
+#------------------------------------------------------------------------------
+# Parse arguments and options
+#------------------------------------------------------------------------------
+
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -56,14 +68,31 @@ do
     esac
 done
 
+# Check environment variables
+checkEnv
+
+
+#------------------------------------------------------------------------------
+# Remove the selected .dep files from the object tree
+#------------------------------------------------------------------------------
+
+findObjectDir .
 
 if [ "$#" -eq 0 ]
 then
     echo "removing all .dep files ..."
-    find . -name '*.dep' -print | xargs -t rm 2>/dev/null
+    find $objectsDir -name '*.dep' -print | xargs -t rm 2>/dev/null
 else
     echo "removing .dep files referring to $1 ..."
-    find . -name '*.dep' -exec grep "$1" '{}' \; -exec rm '{}' \;
+    find $objectsDir -name '*.dep' -exec grep "$1" '{}' \; -exec rm '{}' \;
 fi
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script usage
+
 
 #------------------------------------------------------------------------------
