@@ -25,7 +25,6 @@ License
 
 #include "Antal.H"
 #include "phasePair.H"
-#include "fvc.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
