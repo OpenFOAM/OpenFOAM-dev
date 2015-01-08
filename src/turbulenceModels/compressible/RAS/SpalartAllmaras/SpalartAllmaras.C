@@ -126,7 +126,7 @@ tmp<volScalarField> SpalartAllmaras::fw(const volScalarField& Stilda) const
                    Stilda,
                    dimensionedScalar("SMALL", Stilda.dimensions(), SMALL)
                )
-              *sqr(kappa_*d_)
+              *sqr(kappa_*y_)
             ),
             scalar(10.0)
         )
@@ -276,7 +276,7 @@ SpalartAllmaras::SpalartAllmaras
         autoCreateAlphat("alphat", mesh_)
     ),
 
-    d_(mesh_)
+    y_(wallDist::New(mesh_).y())
 {
     alphat_ = mut_/Prt_;
     alphat_.correctBoundaryConditions();
@@ -435,18 +435,13 @@ void SpalartAllmaras::correct()
 
     RASModel::correct();
 
-    if (mesh_.changing())
-    {
-        d_.correct();
-    }
-
     const volScalarField chi(this->chi());
     const volScalarField fv1(this->fv1(chi));
 
     const volScalarField Stilda
     (
         fv3(chi, fv1)*::sqrt(2.0)*mag(skew(fvc::grad(U_)))
-      + fv2(chi, fv1)*nuTilda_/sqr(kappa_*d_)
+      + fv2(chi, fv1)*nuTilda_/sqr(kappa_*y_)
     );
 
     tmp<fvScalarMatrix> nuTildaEqn
@@ -457,7 +452,7 @@ void SpalartAllmaras::correct()
       - Cb2_/sigmaNut_*rho_*magSqr(fvc::grad(nuTilda_))
      ==
         Cb1_*rho_*Stilda*nuTilda_
-      - fvm::Sp(Cw1_*fw(Stilda)*nuTilda_*rho_/sqr(d_), nuTilda_)
+      - fvm::Sp(Cw1_*fw(Stilda)*nuTilda_*rho_/sqr(y_), nuTilda_)
     );
 
     nuTildaEqn().relax();

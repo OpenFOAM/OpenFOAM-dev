@@ -23,22 +23,47 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchDist.H"
-#include "patchWave.H"
+#include "meshWavePatchDistMethod.H"
 #include "fvMesh.H"
+#include "volFields.H"
+#include "patchWave.H"
 #include "emptyFvPatchFields.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace patchDistMethods
+{
+    defineTypeNameAndDebug(meshWave, 0);
+    addToRunTimeSelectionTable(patchDistMethod, meshWave, dictionary);
+}
+}
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::patchDist::patchDist
+Foam::patchDistMethods::meshWave::meshWave
+(
+    const dictionary& dict,
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs
+)
+:
+    patchDistMethod(mesh, patchIDs),
+    correctWalls_(dict.lookupOrDefault<Switch>("correctWalls", true)),
+    nUnset_(0)
+{}
+
+
+Foam::patchDistMethods::meshWave::meshWave
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const bool correctWalls
 )
 :
-    mesh_(mesh),
-    patchIDs_(patchIDs),
+    patchDistMethod(mesh, patchIDs),
     correctWalls_(correctWalls),
     nUnset_(0)
 {}
@@ -46,28 +71,8 @@ Foam::patchDist::patchDist
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::patchDist::y() const
+bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
 {
-    tmp<volScalarField> ty
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "y",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar("y", dimLength, GREAT)
-        )
-    );
-
-    volScalarField& y = ty();
-
     // Calculate distance starting from patch faces
     patchWave wave(mesh_, patchIDs_, correctWalls_);
 
@@ -88,7 +93,7 @@ Foam::tmp<Foam::volScalarField> Foam::patchDist::y() const
     // Transfer number of unset values
     nUnset_ = wave.nUnset();
 
-    return ty;
+    return nUnset_ > 0;
 }
 
 

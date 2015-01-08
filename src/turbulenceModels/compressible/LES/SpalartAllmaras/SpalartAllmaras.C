@@ -111,7 +111,11 @@ tmp<volScalarField> SpalartAllmaras::fv3() const
 }
 
 
-tmp<volScalarField> SpalartAllmaras::fw(const volScalarField& Stilda) const
+tmp<volScalarField> SpalartAllmaras::fw
+(
+    const volScalarField& Stilda,
+    const volScalarField& dTilda
+) const
 {
     volScalarField r
     (
@@ -124,7 +128,7 @@ tmp<volScalarField> SpalartAllmaras::fw(const volScalarField& Stilda) const
                    Stilda,
                    dimensionedScalar("SMALL", Stilda.dimensions(), SMALL)
                )
-              *sqr(kappa_*dTilda_)
+              *sqr(kappa_*dTilda)
             ),
             scalar(10.0)
         )
@@ -134,6 +138,14 @@ tmp<volScalarField> SpalartAllmaras::fw(const volScalarField& Stilda) const
     volScalarField g(r + Cw2_*(pow6(r) - r));
 
     return g*pow((1.0 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0);
+}
+
+
+tmp<volScalarField> SpalartAllmaras::dTilda() const
+{
+    tmp<volScalarField> tdTilda(CDES_*delta());
+    min(tdTilda().dimensionedInternalField(), tdTilda(), y_);
+    return tdTilda;
 }
 
 
@@ -255,6 +267,8 @@ SpalartAllmaras::SpalartAllmaras
 
     ashfordCorrection_(coeffDict_.lookupOrDefault("ashfordCorrection", true)),
 
+    y_(wallDist::New(mesh_).y()),
+
     nuTilda_
     (
         IOobject
@@ -268,7 +282,6 @@ SpalartAllmaras::SpalartAllmaras
         mesh_
     ),
 
-    dTilda_(min(CDES_*delta(), wallDist(mesh_).y())),
     muSgs_
     (
         IOobject
@@ -340,14 +353,10 @@ void SpalartAllmaras::correct(const tmp<volTensorField>& tgradU)
     const volTensorField& gradU = tgradU();
     LESModel::correct(gradU);
 
-    if (mesh_.changing())
-    {
-        dTilda_ = min(CDES_*delta(), wallDist(mesh_).y());
-    }
-
+    const volScalarField dTilda(this->dTilda());
     volScalarField Stilda
     (
-        fv3()*::sqrt(2.0)*mag(skew(gradU)) + fv2()*nuTilda_/sqr(kappa_*dTilda_)
+        fv3()*::sqrt(2.0)*mag(skew(gradU)) + fv2()*nuTilda_/sqr(kappa_*dTilda)
     );
 
     tmp<fvScalarMatrix> nuTildaEqn
@@ -363,7 +372,7 @@ void SpalartAllmaras::correct(const tmp<volTensorField>& tgradU)
       - rho()*Cb2_/sigmaNut_*magSqr(fvc::grad(nuTilda_))
      ==
         rho()*Cb1_*Stilda*nuTilda_
-      - fvm::Sp(rho()*Cw1_*fw(Stilda)*nuTilda_/sqr(dTilda_), nuTilda_)
+      - fvm::Sp(rho()*Cw1_*fw(Stilda, dTilda)*nuTilda_/sqr(dTilda), nuTilda_)
     );
 
     nuTildaEqn().relax();
@@ -407,8 +416,6 @@ bool SpalartAllmaras::read()
 
 tmp<volScalarField> SpalartAllmaras::LESRegion() const
 {
-    volScalarField wd(wallDist(mesh_).y());
-
     tmp<volScalarField> tLESRegion
     (
         new volScalarField
@@ -421,9 +428,7 @@ tmp<volScalarField> SpalartAllmaras::LESRegion() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            neg(min(CDES_*delta(), wd) - wd)
-//            mesh_,
-//            dimensionedScalar("zero", dimless, 0.0)
+            neg(dTilda() - y_)
         )
     );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,45 +26,35 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "Time.H"
+#include "fvMesh.H"
 #include "wallDist.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Main program:
 
 int main(int argc, char *argv[])
 {
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
     Info<< "Mesh read in = "
         << runTime.cpuTimeIncrement()
         << " s\n" << endl << endl;
 
-
     Info<< "Time now = " << runTime.timeName() << endl;
 
     // Wall distance
-
-    wallDist y(mesh, true);
-
-    if (y.nUnset() != 0)
-    {
-        WarningIn(args.executable())
-            << "There are " << y.nUnset()
-            << " remaining unset cells and/or boundary values" << endl;
-    }
-
-
-
+    const volScalarField& y = wallDist::New(mesh).y();
     y.write();
-
 
     runTime++;
 
     Info<< "Time now = " << runTime.timeName() << endl;
-
 
     // Move points
 
@@ -83,13 +73,10 @@ int main(int argc, char *argv[])
     }
 
     mesh.movePoints(newPoints);
-
     mesh.write();
 
     y.correct();
-
     y.write();
-
 
     Info<< "End\n" << endl;
 

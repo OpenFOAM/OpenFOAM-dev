@@ -242,7 +242,7 @@ kOmegaSST::kOmegaSST
         )
     ),
 
-    y_(mesh_),
+    y_(wallDist::New(mesh_).y()),
 
     k_
     (
@@ -402,11 +402,6 @@ void kOmegaSST::correct()
     if (!turbulence_)
     {
         return;
-    }
-
-    if (mesh_.changing())
-    {
-        y_.correct();
     }
 
     const volScalarField S2(2*magSqr(symm(fvc::grad(U_))));

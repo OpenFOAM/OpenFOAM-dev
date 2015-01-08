@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,13 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
+namespace Foam
+{
+    defineTypeNameAndDebug(twoDPointCorrector, 0);
+}
+
 const Foam::scalar Foam::twoDPointCorrector::edgeOrthogonalityTol = 1.0 - 1e-4;
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

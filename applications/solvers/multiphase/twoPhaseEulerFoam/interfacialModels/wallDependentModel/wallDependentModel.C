@@ -45,29 +45,7 @@ Foam::wallDependentModel::~wallDependentModel()
 
 const Foam::volScalarField& Foam::wallDependentModel::yWall() const
 {
-    if (!mesh_.foundObject<volScalarField>("yWall"))
-    {
-        volScalarField* yPtr
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "yWall",
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    true
-                ),
-                wallDist(mesh_).y()
-            )
-        );
-
-        yPtr->checkIn();
-    }
-
-    return mesh_.lookupObject<volScalarField>("yWall");
+    return wallDist::New(mesh_).y();
 }
 
 
@@ -76,28 +54,6 @@ const Foam::volVectorField& Foam::wallDependentModel::nWall() const
     if (!mesh_.foundObject<volVectorField>("nWall"))
     {
         wallDistReflection w(mesh_);
-
-        if (!mesh_.foundObject<volScalarField>("yWall"))
-        {
-            volScalarField* yPtr
-            (
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        "yWall",
-                        mesh_.time().timeName(),
-                        mesh_,
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        true
-                    ),
-                    w.y()
-                )
-            );
-
-            yPtr->checkIn();
-        }
 
         volVectorField* nPtr
         (

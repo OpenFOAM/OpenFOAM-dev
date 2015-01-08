@@ -60,7 +60,7 @@ solvers
         nSweeps         1;
     }
 
-    "(k|B|nuTilda)"
+    "(k|omega|B|nuTilda).*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;

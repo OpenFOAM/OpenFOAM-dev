@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-RASModel        laminar;
+RASModel        kOmegaSST;
 
 turbulence      on;
 

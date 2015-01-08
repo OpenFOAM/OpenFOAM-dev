@@ -504,7 +504,7 @@ kkLOmega::kkLOmega
         ),
         autoCreateNut("nut", mesh_)
     ),
-    y_(mesh_)
+    y_(wallDist::New(mesh_).y())
 {
     bound(kt_, kMin_);
     bound(kl_, kMin_);
@@ -637,12 +637,6 @@ void kkLOmega::correct()
         return;
     }
 
-    if (mesh_.changing())
-    {
-        y_.correct();
-        y_.boundaryField() = max(y_.boundaryField(), VSMALL);
-    }
-
 
     const volScalarField kT(kt_ + kl_);
 
@@ -773,7 +767,9 @@ void kkLOmega::correct()
           , omega_
         )
       - fvm::Sp(Cw2_*omega_, omega_)
-      + Cw3_*fOmega(lambdaEff, lambdaT)*alphaTEff*sqr(fw)*sqrt(kt_)/pow3(y_)
+      + (
+            Cw3_*fOmega(lambdaEff, lambdaT)*alphaTEff*sqr(fw)*sqrt(kt_)
+        )().dimensionedInternalField()/pow3(y_.dimensionedInternalField())
     );
 
 

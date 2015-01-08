@@ -119,7 +119,10 @@ protected:
             volScalarField nuTilda_;
             volScalarField nut_;
 
-            wallDist d_;
+            //- Wall distance
+            //  Note: different to wall distance in parent RASModel
+            //  which is for near-wall cells only
+            const volScalarField& y_;
 
 
     // Protected Member Functions

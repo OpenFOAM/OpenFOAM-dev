@@ -218,7 +218,7 @@ LienCubicKELowRe::LienCubicKELowRe
         mesh_
     ),
 
-    y_(mesh_),
+    y_(wallDist::New(mesh_).y()),
 
     eta_
     (
@@ -418,11 +418,6 @@ void LienCubicKELowRe::correct()
     if (!turbulence_)
     {
         return;
-    }
-
-    if (mesh_.changing())
-    {
-        y_.correct();
     }
 
     tmp<volTensorField> tgradU = fvc::grad(U_);

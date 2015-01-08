@@ -251,7 +251,7 @@ kOmegaSST::kOmegaSST
         )
     ),
 
-    y_(mesh_),
+    y_(wallDist::New(mesh_).y()),
 
     k_
     (
@@ -423,11 +423,6 @@ void kOmegaSST::correct()
     RASModel::correct();
 
     volScalarField divU(fvc::div(phi_/fvc::interpolate(rho_)));
-
-    if (mesh_.changing())
-    {
-        y_.correct();
-    }
 
     if (mesh_.moving())
     {

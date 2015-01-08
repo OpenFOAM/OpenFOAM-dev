@@ -43,8 +43,6 @@ Description
 #include "compressible/RAS/RASModel/RASModel.H"
 #include "mutWallFunction/mutWallFunctionFvPatchScalarField.H"
 
-#include "wallDist.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 void calcIncompressibleYPlus
@@ -203,15 +201,6 @@ int main(int argc, char *argv[])
         runTime.setTime(timeDirs[timeI], timeI);
         Info<< "Time = " << runTime.timeName() << endl;
         fvMesh::readUpdateState state = mesh.readUpdate();
-
-        // Wall distance
-        if (timeI == 0 || state != fvMesh::UNCHANGED)
-        {
-            Info<< "Calculating wall distance\n" << endl;
-            wallDist y(mesh);
-            Info<< "Writing wall distance to field " << y.name() << nl << endl;
-            y.write();
-        }
 
         volScalarField yPlus
         (

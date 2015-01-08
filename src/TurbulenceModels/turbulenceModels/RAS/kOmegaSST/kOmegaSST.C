@@ -261,7 +261,7 @@ kOmegaSST<BasicTurbulenceModel>::kOmegaSST
         )
     ),
 
-    y_(this->mesh_),
+    y_(wallDist::New(this->mesh_).y()),
 
     k_
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,19 @@ namespace Foam
 
 void Foam::fvMesh::clearGeomNotOldVol()
 {
-    meshObject::clear<fvMesh, GeometricMeshObject>(*this);
-    meshObject::clear<lduMesh, GeometricMeshObject>(*this);
+    meshObject::clearUpto
+    <
+        fvMesh,
+        GeometricMeshObject,
+        MoveableMeshObject
+    >(*this);
+
+    meshObject::clearUpto
+    <
+        lduMesh,
+        GeometricMeshObject,
+        MoveableMeshObject
+    >(*this);
 
     slicedVolScalarField::DimensionedInternalField* VPtr =
         static_cast<slicedVolScalarField::DimensionedInternalField*>(VPtr_);

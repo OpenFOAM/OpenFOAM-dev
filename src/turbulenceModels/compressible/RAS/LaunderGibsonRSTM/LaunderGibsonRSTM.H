@@ -109,7 +109,7 @@ protected:
 
         // Fields
 
-            wallDistReflection y_;
+            wallDistReflection yr_;
 
             volSymmTensorField R_;
             volScalarField k_;

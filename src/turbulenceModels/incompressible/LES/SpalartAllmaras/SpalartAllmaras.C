@@ -168,7 +168,9 @@ tmp<volScalarField> SpalartAllmaras::fw
 
 tmp<volScalarField> SpalartAllmaras::dTilda(const volScalarField&) const
 {
-    return min(CDES_*delta(), y_);
+    tmp<volScalarField> tdTilda(CDES_*delta());
+    min(tdTilda().dimensionedInternalField(), tdTilda(), y_);
+    return tdTilda;
 }
 
 
@@ -279,7 +281,7 @@ SpalartAllmaras::SpalartAllmaras
 
     ashfordCorrection_(coeffDict_.lookupOrDefault("ashfordCorrection", true)),
 
-    y_(mesh_),
+    y_(wallDist::New(mesh_).y()),
 
     nuTilda_
     (
@@ -321,12 +323,6 @@ SpalartAllmaras::SpalartAllmaras
 void SpalartAllmaras::correct(const tmp<volTensorField>& gradU)
 {
     LESModel::correct(gradU);
-
-    if (mesh_.changing())
-    {
-        y_.correct();
-        y_.boundaryField() = max(y_.boundaryField(), VSMALL);
-    }
 
     const volScalarField S(this->S(gradU));
     const volScalarField dTilda(this->dTilda(S));
@@ -451,8 +447,6 @@ tmp<volScalarField> SpalartAllmaras::LESRegion() const
                 IOobject::NO_WRITE
             ),
             neg(dTilda(S(fvc::grad(U_))) - y_)
-//            mesh_,
-//            dimensionedScalar("zero", dimless, 0.0)
         )
     );
 

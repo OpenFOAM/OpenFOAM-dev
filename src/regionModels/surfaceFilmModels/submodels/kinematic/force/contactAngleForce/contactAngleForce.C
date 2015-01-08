@@ -28,7 +28,7 @@ License
 #include "fvcGrad.H"
 #include "unitConversion.H"
 #include "fvPatchField.H"
-#include "patchDist.H"
+#include "meshWavePatchDistMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,9 +66,25 @@ void contactAngleForce::initialise()
             Info<< "            " << pbm[patchI].name() << endl;
         }
 
-        patchDist dist(owner_.regionMesh(), patchIDs);
+        // Temporary implementation until run-time selection covers this case
+        patchDistMethods::meshWave dist(owner_.regionMesh(), patchIDs);
+        volScalarField y
+        (
+            IOobject
+            (
+                "y",
+                owner_.regionMesh().time().timeName(),
+                owner_.regionMesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            owner_.regionMesh(),
+            dimensionedScalar("y", dimLength, GREAT)
+        );
+        dist.correct(y);
 
-        mask_ = pos(dist.y() - dimensionedScalar("dLim", dimLength, dLim));
+        mask_ = pos(y - dimensionedScalar("dLim", dimLength, dLim));
     }
 }
 

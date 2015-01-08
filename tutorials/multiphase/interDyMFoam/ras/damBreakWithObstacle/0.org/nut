@@ -9,57 +9,30 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      fvSchemes;
+    class       volScalarField;
+    location    "0";
+    object      nut;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
-{
-    default         Euler;
-}
+dimensions      [0 2 -1 0 0 0 0];
 
-gradSchemes
-{
-    default         Gauss linear;
-}
+internalField   uniform 5e-07;
 
-divSchemes
+boundaryField
 {
-    div(rhoPhi,U)   Gauss upwind;
-    div(phi,alpha)  Gauss vanLeer;
-    div(phirb,alpha) Gauss linear;
-    div(phi,k)      Gauss upwind;
-    div(phi,omega)  Gauss upwind;
-    div((muEff*dev(T(grad(U))))) Gauss linear;
-}
+    atmosphere
+    {
+        type            zeroGradient;
+    }
 
-laplacianSchemes
-{
-    default         Gauss linear corrected;
-}
-
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         corrected;
-}
-
-fluxRequired
-{
-    default         no;
-    p_rgh;
-    pcorr;
-}
-
-wallDist
-{
-    method meshWave;
+    walls
+    {
+        type            nutkRoughWallFunction;
+        Ks              uniform 100e-6;
+        Cs              uniform 0.5;
+        value           $internalField;
+    }
 }
 
 

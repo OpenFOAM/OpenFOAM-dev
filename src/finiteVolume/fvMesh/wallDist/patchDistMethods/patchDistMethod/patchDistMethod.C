@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,74 +23,64 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "PrandtlDelta.H"
-#include "wallDist.H"
-#include "addToRunTimeSelectionTable.H"
+#include "patchDistMethod.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(PrandtlDelta, 0);
-    addToRunTimeSelectionTable(LESdelta, PrandtlDelta, dictionary);
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::PrandtlDelta::calcDelta()
-{
-    delta_ = min
-    (
-        static_cast<const volScalarField&>(geometricDelta_()),
-        (kappa_/Cdelta_)*wallDist::New(mesh_).y()
-    );
+    defineTypeNameAndDebug(patchDistMethod, 0);
+    defineRunTimeSelectionTable(patchDistMethod, dictionary);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::PrandtlDelta::PrandtlDelta
+Foam::patchDistMethod::patchDistMethod
 (
-    const word& name,
     const fvMesh& mesh,
-    const dictionary& dict
+    const labelHashSet& patchIDs
 )
 :
-    LESdelta(name, mesh),
-    geometricDelta_(LESdelta::New(name, mesh, dict.subDict(type() + "Coeffs"))),
-    kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
-    Cdelta_
-    (
-        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>("Cdelta", 0.158)
-    )
+    mesh_(mesh),
+    patchIDs_(patchIDs)
+{}
+
+
+// * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::patchDistMethod> Foam::patchDistMethod::New
+(
+    const dictionary& dict,
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs
+)
 {
-    calcDelta();
-}
+    word patchDistMethodType(dict.lookup("method"));
 
+    Info<< "Selecting patchDistMethod " << patchDistMethodType << endl;
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(patchDistMethodType);
 
-void Foam::PrandtlDelta::read(const dictionary& dict)
-{
-    const dictionary& coeffDict(dict.subDict(type() + "Coeffs"));
-
-    geometricDelta_().read(coeffDict);
-    dict.readIfPresent<scalar>("kappa", kappa_);
-    coeffDict.readIfPresent<scalar>("Cdelta", Cdelta_);
-    calcDelta();
-}
-
-
-void Foam::PrandtlDelta::correct()
-{
-    geometricDelta_().correct();
-
-    if (mesh_.changing())
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        calcDelta();
+        FatalErrorIn("patchDistMethod::New")
+            << "Unknown patchDistMethodType type "
+            << patchDistMethodType << endl << endl
+            << "Valid patchDistMethod types are : " << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
+
+    return cstrIter()(dict, mesh, patchIDs);
 }
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::patchDistMethod::~patchDistMethod()
+{}
 
 
 // ************************************************************************* //

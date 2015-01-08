@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ SourceFiles
 
 #include "DESModel.H"
 #include "volFields.H"
+#include "wallDist.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -92,8 +93,12 @@ class SpalartAllmaras
 
         // Fields
 
+            //- Wall distance
+            //  Note: different to wall distance in parent RASModel
+            //  which is for near-wall cells only
+            const volScalarField& y_;
+
             volScalarField nuTilda_;
-            volScalarField dTilda_;
             volScalarField muSgs_;
             volScalarField alphaSgs_;
 
@@ -106,7 +111,15 @@ class SpalartAllmaras
         tmp<volScalarField> fv1() const;
         tmp<volScalarField> fv2() const;
         tmp<volScalarField> fv3() const;
-        tmp<volScalarField> fw(const volScalarField& Stilda) const;
+
+        tmp<volScalarField> fw
+        (
+            const volScalarField& Stilda,
+            const volScalarField& dTilda
+        ) const;
+
+        //- Length scale
+        tmp<volScalarField> dTilda() const;
 
         // Disallow default bitwise copy construct and assignment
         SpalartAllmaras(const SpalartAllmaras&);
@@ -148,7 +161,7 @@ public:
         //- Return SGS kinetic energy
         virtual tmp<volScalarField> k() const
         {
-            return sqr(muSgs()/rho()/ck_/dTilda_);
+            return sqr(muSgs()/rho()/ck_/dTilda());
         }
 
         //- Return sub-grid disipation rate

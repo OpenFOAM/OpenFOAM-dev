@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,25 +24,43 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallDist.H"
-#include "meshWaveWallDist.H"
+#include "wallPolyPatch.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(wallDist, 0);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::wallDist::wallDist(const fvMesh& mesh)
 :
-    volScalarField
+    MeshObject<fvMesh, Foam::UpdateableMeshObject, wallDist>(mesh),
+    pdm_
+    (
+        patchDistMethod::New
+        (
+            static_cast<const fvSchemes&>(mesh).subDict("wallDist"),
+            mesh,
+            mesh.boundaryMesh().findPatchIDs<wallPolyPatch>()
+        )
+    ),
+    y_
     (
         IOobject
         (
-            "y",
+            "yWall",
             mesh.time().timeName(),
             mesh
         ),
         mesh,
-        dimensionedScalar("y", dimLength, GREAT)
+        dimensionedScalar("yWall", dimLength, GREAT)
     )
 {
-    correct();
+    movePoints();
 }
 
 
@@ -54,9 +72,23 @@ Foam::wallDist::~wallDist()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::wallDist::correct()
+bool Foam::wallDist::movePoints()
 {
-    volScalarField::operator=(meshWaveWallDist(mesh()).y());
+    if (pdm_->movePoints())
+    {
+        return pdm_->correct(y_);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+void Foam::wallDist::updateMesh(const mapPolyMesh& mpm)
+{
+    pdm_->updateMesh(mpm);
+    pdm_->correct(y_);
 }
 
 

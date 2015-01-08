@@ -42,8 +42,8 @@ $(wallDist)/wallPointYPlus/wallPointYPlus.C
 $(wallDist)/nearWallDist/nearWallDistNoSearch.C
 $(wallDist)/nearWallDist/nearWallDist.C
 $(wallDist)/wallDist/wallDist.C
-$(wallDist)/meshWaveWallDist/patchDist.C
-$(wallDist)/meshWaveWallDist/meshWaveWallDist.C
+$(wallDist)/patchDistMethods/patchDistMethod/patchDistMethod.C
+$(wallDist)/patchDistMethods/meshWave/meshWavePatchDistMethod.C
 $(wallDist)/wallDistReflection/reflectionVectors.C
 $(wallDist)/wallDistReflection/wallDistReflection.C
 

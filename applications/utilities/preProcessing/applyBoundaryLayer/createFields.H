@@ -38,7 +38,7 @@ volVectorField U
 );
 
 Info<< "Calculating wall distance field" << endl;
-volScalarField y(wallDist(mesh).y());
+const volScalarField& y(wallDist::New(mesh).y());
 
 // Set the mean boundary-layer thickness
 dimensionedScalar ybl("ybl", dimLength, 0);

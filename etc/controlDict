@@ -610,6 +610,7 @@ DebugSwitches
     meshCutAndRemove    0;
     meshCutter          0;
     meshModifier        0;
+    meshObject          0;
     meshRefinement      0;
     meshSearch          0;
     meshToMesh          0;

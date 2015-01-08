@@ -22,84 +22,122 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallDist
+    Foam::patchDistMethod
 
 Description
-    Interface to run-time selectable methods to calculate the distance-to-wall
-    field.
+    Specialisation of patchDist for wall distance calculation
 
 SourceFiles
-    wallDist.C
+    patchDistMethod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef wallDist_H
-#define wallDist_H
+#ifndef patchDistMethod_H
+#define patchDistMethod_H
 
-#include "MeshObject.H"
-#include "patchDistMethod.H"
-#include "fvMesh.H"
-#include "volFields.H"
+#include "dictionary.H"
+#include "HashSet.H"
+#include "volFieldsFwd.H"
+#include "mapPolyMesh.H"
+#include "runTimeSelectionTables.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class fvMesh;
+
 /*---------------------------------------------------------------------------*\
-                          Class wallDist Declaration
+                          Class patchDistMethod Declaration
 \*---------------------------------------------------------------------------*/
 
-class wallDist
-:
-    public MeshObject<fvMesh, UpdateableMeshObject, wallDist>
+class patchDistMethod
 {
-    // Private data
 
-        //- Run-time selected method to generate the distance-to-wall field
-        autoPtr<patchDistMethod> pdm_;
+protected:
 
-        //- Distance-to-wall field
-        volScalarField y_;
+    // Protected Member Data
 
+        //- Reference to the mesh
+        const fvMesh& mesh_;
+
+        //- Set of patch IDs
+        const labelHashSet patchIDs_;
+
+
+private:
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        wallDist(const wallDist&);
+        patchDistMethod(const patchDistMethod&);
 
         //- Disallow default bitwise assignment
-        void operator=(const wallDist&);
+        void operator=(const patchDistMethod&);
 
 
 public:
 
-    // Declare name of the class and its debug switch
-    ClassName("wallDist");
+    //- Runtime type information
+    TypeName("patchDistMethod");
+
+
+    // Declare runtime construction
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            patchDistMethod,
+            dictionary,
+            (
+                const dictionary& dict,
+                const fvMesh& mesh,
+                const labelHashSet& patchIDs
+            ),
+            (dict, mesh, patchIDs)
+        );
 
 
     // Constructors
 
-        //- Construct from mesh
-        wallDist(const fvMesh& mesh);
+        //- Construct from mesh and patch ID set
+        patchDistMethod
+        (
+            const fvMesh& mesh,
+            const labelHashSet& patchIDs
+        );
+
+
+    // Selectors
+
+        static autoPtr<patchDistMethod> New
+        (
+            const dictionary& dict,
+            const fvMesh& mesh,
+            const labelHashSet& patchIDs
+        );
 
 
     //- Destructor
-    virtual ~wallDist();
+    virtual ~patchDistMethod();
 
 
     // Member Functions
 
-        const volScalarField& y() const
+        //- Update cached geometry when the mesh moves
+        virtual bool movePoints()
         {
-            return y_;
+            return true;
         }
 
-        //- Update the y-field when the mesh moves
-        virtual bool movePoints();
+        //- Update cached topology and geometry when the mesh changes
+        virtual void updateMesh(const mapPolyMesh&)
+        {}
 
-        //- Update the y-field when the mesh changes
-        virtual void updateMesh(const mapPolyMesh&);
+        //- Correct the given distance-to-patch field
+        virtual bool correct(volScalarField& y) = 0;
 };
 
 

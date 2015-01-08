@@ -39,35 +39,31 @@ Description
         takes the pointFaces() of the wall point to look for the nearest point.
 
 SourceFiles
-    patchDist.C
+    meshWavePatchDistMethod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchDist_H
-#define patchDist_H
+#ifndef meshWavePatchDistMethod_H
+#define meshWavePatchDistMethod_H
 
-#include "volFields.H"
+#include "patchDistMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class fvMesh;
+namespace patchDistMethods
+{
 
 /*---------------------------------------------------------------------------*\
-                          Class patchDist Declaration
+                          Class meshWave Declaration
 \*---------------------------------------------------------------------------*/
 
-class patchDist
+class meshWave
+:
+    public patchDistMethod
 {
     // Private Member Data
-
-        //- Reference to the mesh
-        const fvMesh& mesh_;
-
-        //- Set of patch IDs
-        const labelHashSet patchIDs_;
 
         //- Do accurate distance calculation for near-wall cells.
         const bool correctWalls_;
@@ -79,20 +75,33 @@ class patchDist
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        patchDist(const patchDist&);
+        meshWave(const meshWave&);
 
         //- Disallow default bitwise assignment
-        void operator=(const patchDist&);
+        void operator=(const meshWave&);
 
 
 public:
 
+    //- Runtime type information
+    TypeName("meshWave");
+
+
     // Constructors
+
+        //- Construct from mesh and flag whether or not to correct wall.
+        //  Calculate for all cells.
+        meshWave
+        (
+            const dictionary& dict,
+            const fvMesh& mesh,
+            const labelHashSet& patchIDs
+        );
 
         //- Construct from mesh and flag whether or not to correct wall.
         //  Calculate for all cells. correctWalls : correct wall (face&point)
         //  cells for correct distance, searching neighbours.
-        patchDist
+        meshWave
         (
             const fvMesh& mesh,
             const labelHashSet& patchIDs,
@@ -102,19 +111,19 @@ public:
 
     // Member Functions
 
-        //- Calculate and return the distance to nearest patch
-        //  for all cells and boundary
-        tmp<volScalarField> y() const;
-
         label nUnset() const
         {
             return nUnset_;
         }
+
+        //- Correct the given distance-to-patch field
+        virtual bool correct(volScalarField& y);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace patchDistMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

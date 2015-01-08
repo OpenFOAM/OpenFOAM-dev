@@ -72,7 +72,11 @@ protected:
         volScalarField k_;
         volScalarField epsilon_;
 
-        wallDist y_;
+        //- Wall distance
+        //  Note: different to wall distance in parent RASModel
+        //  which is for near-wall cells only
+        const volScalarField& y_;
+
         volScalarField Rt_;
 
         volScalarField fMu_;
