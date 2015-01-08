@@ -25,7 +25,6 @@ License
 
 #include "IDDESDelta.H"
 #include "addToRunTimeSelectionTable.H"
-#include "wallDistReflection.H"
 #include "wallDist.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -43,10 +42,8 @@ void Foam::IDDESDelta::calcDelta()
 {
     const volScalarField& hmax = hmax_();
 
-    // initialise wallNorm
-    wallDistReflection wallNorm(mesh());
-
-    const volVectorField& n = wallNorm.n();
+    // Wall-reflection vectors
+    const volVectorField& n = wallDist::New(mesh()).n();
 
     tmp<volScalarField> tfaceToFacenMax
     (

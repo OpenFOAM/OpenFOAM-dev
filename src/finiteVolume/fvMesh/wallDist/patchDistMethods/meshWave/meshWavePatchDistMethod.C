@@ -27,6 +27,8 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "patchWave.H"
+#include "patchDataWave.H"
+#include "wallPointData.H"
 #include "emptyFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -76,10 +78,10 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
     // Calculate distance starting from patch faces
     patchWave wave(mesh_, patchIDs_, correctWalls_);
 
-    // Transfer cell values from wave into *this
+    // Transfer cell values from wave into y
     y.transfer(wave.distance());
 
-    // Transfer values on patches into boundaryField of *this
+    // Transfer values on patches into boundaryField of y
     forAll(y.boundaryField(), patchI)
     {
         if (!isA<emptyFvPatchScalarField>(y.boundaryField()[patchI]))
@@ -87,6 +89,56 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
             scalarField& waveFld = wave.patchDistance()[patchI];
 
             y.boundaryField()[patchI].transfer(waveFld);
+        }
+    }
+
+    // Transfer number of unset values
+    nUnset_ = wave.nUnset();
+
+    return nUnset_ > 0;
+}
+
+
+bool Foam::patchDistMethods::meshWave::correct
+(
+    volScalarField& y,
+    volVectorField& n
+)
+{
+    // Collect pointers to data on patches
+    UPtrList<vectorField> patchData(mesh_.boundaryMesh().size());
+
+    forAll(n.boundaryField(), patchI)
+    {
+        patchData.set(patchI, &n.boundaryField()[patchI]);
+    }
+
+    // Do mesh wave
+    patchDataWave<wallPointData<vector> > wave
+    (
+        mesh_,
+        patchIDs_,
+        patchData,
+        correctWalls_
+    );
+
+    // Transfer cell values from wave into y and n
+    y.transfer(wave.distance());
+
+    n.transfer(wave.cellData());
+
+    // Transfer values on patches into boundaryField of y and n
+    forAll(y.boundaryField(), patchI)
+    {
+        scalarField& waveFld = wave.patchDistance()[patchI];
+
+        if (!isA<emptyFvPatchScalarField>(y.boundaryField()[patchI]))
+        {
+            y.boundaryField()[patchI].transfer(waveFld);
+
+            vectorField& wavePatchData = wave.patchData()[patchI];
+
+            n.boundaryField()[patchI].transfer(wavePatchData);
         }
     }
 

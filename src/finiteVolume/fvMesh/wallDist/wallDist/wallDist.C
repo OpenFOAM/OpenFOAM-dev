@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallDist.H"
-#include "wallPolyPatch.H"
+#include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -58,8 +58,36 @@ Foam::wallDist::wallDist(const fvMesh& mesh)
         ),
         mesh,
         dimensionedScalar("yWall", dimLength, GREAT)
-    )
+    ),
+    n_(NULL)
 {
+    // Temporarily always construct n
+    // until the demand-driven interface is complete
+    n_ = tmp<volVectorField>
+    (
+        new volVectorField
+        (
+            IOobject
+            (
+                "nWall",
+                mesh.time().timeName(),
+                mesh
+            ),
+            mesh,
+            dimensionedVector("nWall", dimless, vector::zero)
+        )
+    );
+
+    const fvPatchList& patches = mesh.boundary();
+
+    forAll(patches, patchi)
+    {
+        if (isA<wallFvPatch>(patches[patchi]))
+        {
+            n_().boundaryField()[patchi] = patches[patchi].nf();
+        }
+    }
+
     movePoints();
 }
 
@@ -76,7 +104,7 @@ bool Foam::wallDist::movePoints()
 {
     if (pdm_->movePoints())
     {
-        return pdm_->correct(y_);
+        return pdm_->correct(y_, n_());
     }
     else
     {
@@ -88,7 +116,7 @@ bool Foam::wallDist::movePoints()
 void Foam::wallDist::updateMesh(const mapPolyMesh& mpm)
 {
     pdm_->updateMesh(mpm);
-    pdm_->correct(y_);
+    pdm_->correct(y_, n_());
 }
 
 

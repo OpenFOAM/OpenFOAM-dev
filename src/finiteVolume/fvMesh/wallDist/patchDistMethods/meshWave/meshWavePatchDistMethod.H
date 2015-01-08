@@ -118,6 +118,9 @@ public:
 
         //- Correct the given distance-to-patch field
         virtual bool correct(volScalarField& y);
+
+        //- Correct the given distance-to-patch and normal-to-patch fields
+        virtual bool correct(volScalarField& y, volVectorField& n);
 };
 
 

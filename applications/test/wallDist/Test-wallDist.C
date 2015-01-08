@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,80 +22,43 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Calculate distance to wall.
+    Calculate and write the distance-to-wall field for a moving mesh.
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
-#include "wallDistData.H"
-#include "wallPointData.H"
+#include "argList.H"
+#include "Time.H"
+#include "fvMesh.H"
+#include "wallDist.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Main program:
 
 int main(int argc, char *argv[])
 {
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
     Info<< "Mesh read in = "
         << runTime.cpuTimeIncrement()
         << " s\n" << endl << endl;
 
-
     Info<< "Time now = " << runTime.timeName() << endl;
 
-    // wall distance and reflection vectors
+    // Wall-reflection vectors
+    const volVectorField& n = wallDist::New(mesh).n();
+    n.write();
 
-    volVectorField n
-    (
-        IOobject
-        (
-            "n",
-            mesh.time().timeName(),
-            mesh
-        ),
-        mesh,
-        dimensionedVector("n", dimLength, point::max)
-    );
-
-    // Fill wall patches with unit normal
-    forAll(mesh.boundary(), patchI)
-    {
-        const fvPatch& patch = mesh.boundary()[patchI];
-
-        if (isA<wallFvPatch>(patch))
-        {
-            fvPatchVectorField& wallData = n.boundaryField()[patchI];
-
-            forAll(patch.Cf(), patchFaceI)
-            {
-                wallData[patchFaceI] = patch.Cf()[patchFaceI];
-                wallData[patchFaceI] /= Foam::mag(wallData[patchFaceI]);
-            }
-        }
-    }
-
-
-    // Do distance calculation, transporting values of n.
-    wallDistData<wallPointData<vector> > y(mesh, n, true);
-
-    if (y.nUnset() != 0)
-    {
-        WarningIn(args.executable())
-            << "There are " << y.nUnset()
-            << " remaining unset cells and/or boundary values" << endl;
-    }
-
-
+    // Wall distance
+    const volScalarField& y = wallDist::New(mesh).y();
     y.write();
-    y.data().write();
 
     runTime++;
 
     Info<< "Time now = " << runTime.timeName() << endl;
-
 
     // Move points
 
@@ -114,21 +77,13 @@ int main(int argc, char *argv[])
     }
 
     mesh.movePoints(newPoints);
-
     mesh.write();
-
-    y.correct();
-
+    n.write();
     y.write();
-    y.data().write();
-
 
     Info<< "End\n" << endl;
 
     return 0;
-
-
-
 }
 
 

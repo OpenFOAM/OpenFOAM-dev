@@ -60,7 +60,7 @@ SourceFiles
 #define compressibleLaunderGibsonRSTM_H
 
 #include "RASModel.H"
-#include "wallDistReflection.H"
+#include "wallDist.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -109,7 +109,8 @@ protected:
 
         // Fields
 
-            wallDistReflection yr_;
+            const volVectorField& n_;
+            const volScalarField& y_;
 
             volSymmTensorField R_;
             volScalarField k_;

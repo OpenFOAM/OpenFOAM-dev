@@ -25,7 +25,6 @@ License
 
 #include "wallDependentModel.H"
 #include "wallDist.H"
-#include "wallDistReflection.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -51,31 +50,7 @@ const Foam::volScalarField& Foam::wallDependentModel::yWall() const
 
 const Foam::volVectorField& Foam::wallDependentModel::nWall() const
 {
-    if (!mesh_.foundObject<volVectorField>("nWall"))
-    {
-        wallDistReflection w(mesh_);
-
-        volVectorField* nPtr
-        (
-            new volVectorField
-            (
-                IOobject
-                (
-                    "nWall",
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    true
-                ),
-                w.n()
-            )
-        );
-
-        nPtr->checkIn();
-    }
-
-    return mesh_.lookupObject<volVectorField>("nWall");
+    return wallDist::New(mesh_).n();
 }
 
 

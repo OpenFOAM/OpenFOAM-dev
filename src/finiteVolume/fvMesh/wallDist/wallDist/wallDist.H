@@ -62,6 +62,9 @@ class wallDist
         //- Distance-to-wall field
         volScalarField y_;
 
+        //- Distance-to-wall field
+        tmp<volVectorField> n_;
+
 
     // Private Member Functions
 
@@ -90,9 +93,16 @@ public:
 
     // Member Functions
 
+        //- Return reference to cached distance-to-wall field
         const volScalarField& y() const
         {
             return y_;
+        }
+
+        //- Return reference to cached normal-to-wall field
+        const volVectorField& n() const
+        {
+            return n_();
         }
 
         //- Update the y-field when the mesh moves

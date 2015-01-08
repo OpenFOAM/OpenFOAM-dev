@@ -44,8 +44,6 @@ $(wallDist)/nearWallDist/nearWallDist.C
 $(wallDist)/wallDist/wallDist.C
 $(wallDist)/patchDistMethods/patchDistMethod/patchDistMethod.C
 $(wallDist)/patchDistMethods/meshWave/meshWavePatchDistMethod.C
-$(wallDist)/wallDistReflection/reflectionVectors.C
-$(wallDist)/wallDistReflection/wallDistReflection.C
 
 
 fvMeshMapper = fvMesh/fvMeshMapper
