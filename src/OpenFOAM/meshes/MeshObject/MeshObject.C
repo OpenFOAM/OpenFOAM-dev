@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,8 +62,9 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     {
         if (meshObject::debug)
         {
-            Pout<< "MeshObject::New(const Mesh&) : constructing new "
-                << Type::typeName << endl;
+            Pout<< "MeshObject::New(const " << Mesh::typeName
+                << "&) : constructing " << Type::typeName
+                << " for region " << mesh.name() << endl;
         }
 
         Type* objectPtr = new Type(mesh);
@@ -100,8 +101,9 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     {
         if (meshObject::debug)
         {
-            Pout<< "MeshObject::New(const Mesh&) : constructing new "
-                << Type::typeName << endl;
+           Pout<< "MeshObject::New(const " << Mesh::typeName
+                << "&, const Data1&) : constructing " << Type::typeName
+                << " for region " << mesh.name() << endl;
         }
 
         Type* objectPtr = new Type(mesh, d);
@@ -139,8 +141,9 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     {
         if (meshObject::debug)
         {
-            Pout<< "MeshObject(const Mesh&) : constructing new "
-                << Type::typeName << endl;
+           Pout<< "MeshObject::New(const " << Mesh::typeName
+                << "&, const Data[1-2]&) : constructing " << Type::typeName
+                << " for region " << mesh.name() << endl;
         }
 
         Type* objectPtr = new Type(mesh, d1, d2);
@@ -181,8 +184,9 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     {
         if (meshObject::debug)
         {
-            Pout<< "MeshObject(const Mesh&) : constructing new "
-                << Type::typeName << endl;
+           Pout<< "MeshObject::New(const " << Mesh::typeName
+                << "&, const Data[1-3]&) : constructing " << Type::typeName
+                << " for region " << mesh.name() << endl;
         }
         Type* objectPtr = new Type(mesh, d1, d2, d3);
 
@@ -221,8 +225,9 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     {
         if (meshObject::debug)
         {
-            Pout<< "MeshObject(const Mesh&) : constructing new "
-                << Type::typeName << endl;
+            Pout<< "MeshObject::New(const " << Mesh::typeName
+                << "&, const Data[1-4]&) : constructing " << Type::typeName
+                << " for region " << mesh.name() << endl;
         }
         Type* objectPtr = new Type(mesh, d1, d2, d3, d4);
 
@@ -285,6 +290,13 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
         obr.lookupClass<GeometricMeshObject<Mesh> >()
     );
 
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::movePoints(objectRegistry&) :"
+            << " moving " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
     forAllIter
     (
         typename HashTable<GeometricMeshObject<Mesh>*>,
@@ -296,9 +308,7 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
         {
             if (meshObject::debug)
             {
-                Pout<< "meshObject::movePoints(objectRegistry&) :"
-                    << " movePoints on "
-                    << iter()->name() << endl;
+                Pout<< "    Moving " << iter()->name() << endl;
             }
             dynamic_cast<MoveableMeshObject<Mesh>*>(iter())->movePoints();
         }
@@ -306,9 +316,7 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
         {
             if (meshObject::debug)
             {
-                Pout<< "meshObject::movePoints(objectRegistry&) :"
-                    << " destroying "
-                    << iter()->name() << endl;
+                Pout<< "    Destroying " << iter()->name() << endl;
             }
             obr.checkOut(*iter());
         }
@@ -324,6 +332,13 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
         obr.lookupClass<GeometricMeshObject<Mesh> >()
     );
 
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::updateMesh(objectRegistry&, "
+               "const mapPolyMesh& mpm) : updating " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
     forAllIter
     (
         typename HashTable<GeometricMeshObject<Mesh>*>,
@@ -335,9 +350,7 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
         {
             if (meshObject::debug)
             {
-                Pout<< "meshObject::updateMesh(objectRegistry&) :"
-                    << " updateMesh on "
-                    << iter()->name() << endl;
+                Pout<< "    Updating " << iter()->name() << endl;
             }
             dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->updateMesh(mpm);
         }
@@ -345,8 +358,7 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
         {
             if (meshObject::debug)
             {
-                Pout<< "meshObject::updateMesh(objectRegistry&) : destroying "
-                    << iter()->name() << endl;
+                Pout<< "    Destroying " << iter()->name() << endl;
             }
             obr.checkOut(*iter());
         }
@@ -362,12 +374,18 @@ void Foam::meshObject::clear(objectRegistry& obr)
         obr.lookupClass<MeshObjectType<Mesh> >()
     );
 
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::clear(objectRegistry&) :"
+            << " clearing " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
     forAllIter(typename HashTable<MeshObjectType<Mesh>*>, meshObjects, iter)
     {
         if (meshObject::debug)
         {
-            Pout<< "meshObject::clear(objectRegistry&) : destroying "
-                << iter()->name() << endl;
+            Pout<< "    Destroying " << iter()->name() << endl;
         }
         obr.checkOut(*iter());
     }
@@ -387,14 +405,20 @@ void Foam::meshObject::clearUpto(objectRegistry& obr)
         obr.lookupClass<FromType<Mesh> >()
     );
 
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::clearUpto(objectRegistry&) :"
+            << " clearing " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
     forAllIter(typename HashTable<FromType<Mesh>*>, meshObjects, iter)
     {
         if (!isA<ToType<Mesh> >(*iter()))
         {
             if (meshObject::debug)
             {
-                Pout<< "meshObject::clearUpto(objectRegistry&) : destroying "
-                    << iter()->name() << endl;
+                Pout<< "    Destroying " << iter()->name() << endl;
             }
             obr.checkOut(*iter());
         }
