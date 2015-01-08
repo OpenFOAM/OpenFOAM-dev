@@ -26,7 +26,7 @@ Class
 
 Description
     Calculation of approximate distance to nearest patch for all cells and
-    boundary using a Poisson equation.
+    boundary by solving Poisson's equation.
 
     References:
     \verbatim
@@ -127,7 +127,7 @@ class Poisson
         Poisson(const Poisson&);
 
         //- Disallow default bitwise assignment
-        void operatorconst Poisson&);
+        void operator=(const Poisson&);
 
 
 public:
