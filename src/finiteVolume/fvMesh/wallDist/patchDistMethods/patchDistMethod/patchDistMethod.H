@@ -126,6 +126,12 @@ public:
 
     // Member Functions
 
+        //- Return the patchIDs
+        const labelHashSet& patchIDs() const
+        {
+            return patchIDs_;
+        }
+
         //- Update cached geometry when the mesh moves
         virtual bool movePoints()
         {

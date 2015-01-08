@@ -24,13 +24,35 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallDist.H"
-#include "wallFvPatch.H"
+#include "wallPolyPatch.H"
+#include "fixedValueFvPatchFields.H"
+#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(wallDist, 0);
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Foam::wordList Foam::wallDist::patchTypes(const labelHashSet& patchIDs) const
+{
+    wordList yTypes
+    (
+        mesh().boundary().size(),
+        zeroGradientFvPatchField<Type>::typeName
+    );
+
+    forAllConstIter(labelHashSet, patchIDs, iter)
+    {
+        yTypes[iter.key()] = fixedValueFvPatchField<Type>::typeName;
+    }
+
+    return yTypes;
 }
 
 
@@ -57,7 +79,8 @@ Foam::wallDist::wallDist(const fvMesh& mesh)
             mesh
         ),
         mesh,
-        dimensionedScalar("yWall", dimLength, GREAT)
+        dimensionedScalar("yWall", dimLength, GREAT),
+        patchTypes<scalar>(pdm_->patchIDs())
     ),
     n_(NULL)
 {
@@ -74,18 +97,18 @@ Foam::wallDist::wallDist(const fvMesh& mesh)
                 mesh
             ),
             mesh,
-            dimensionedVector("nWall", dimless, vector::zero)
+            dimensionedVector("nWall", dimless, vector::zero),
+            patchTypes<vector>(pdm_->patchIDs())
         )
     );
 
+    const labelHashSet& patchIDs = pdm_->patchIDs();
     const fvPatchList& patches = mesh.boundary();
 
-    forAll(patches, patchi)
+    forAllConstIter(labelHashSet, patchIDs, iter)
     {
-        if (isA<wallFvPatch>(patches[patchi]))
-        {
-            n_().boundaryField()[patchi] = patches[patchi].nf();
-        }
+        label patchi = iter.key();
+        n_().boundaryField()[patchi] == patches[patchi].nf();
     }
 
     movePoints();
