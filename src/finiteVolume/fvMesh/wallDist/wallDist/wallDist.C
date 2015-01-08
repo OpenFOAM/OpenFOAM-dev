@@ -79,7 +79,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh)
             mesh
         ),
         mesh,
-        dimensionedScalar("yWall", dimLength, GREAT),
+        dimensionedScalar("yWall", dimLength, SMALL),
         patchTypes<scalar>(pdm_->patchIDs())
     ),
     n_(NULL)

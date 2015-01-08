@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,37 +22,81 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchDistMethods::meshWave
+    Foam::patchDistMethods::Poisson
 
 Description
-    Fast topological mesh-wave method for calculating the distance to nearest
-    patch for all cells and boundary.
+    Calculation of approximate distance to nearest patch for all cells and
+    boundary using a Poisson equation.
 
-    For regular/un-distorted meshes this method is accurate but for skewed,
-    non-orthogonal meshes it is approximate with the error increasing with the
-    degree of mesh distortion.  The distance from the near-wall cells to the
-    boundary may optionally be corrected for mesh distortion by setting
-    correctWalls = true.
+    References:
+    \verbatim
+        D.B.Spalding,
+        "Calculation of turbulent heat transfer in cluttered spaces",
+        Proc. 10th Int. Heat Transfer Conference, Brighton, UK, (1994).
+
+        E.Fares and W.Schroder,
+        "Differential Equation for Approximate Wall Distance",
+        Int.J.Numer.Meth., 39:743-762, (2002).
+
+        P. G. Tucker,
+        "Differential equation based wall distance computation for DES and
+         RANS",
+        J.Comp.Phys., Vol. 190, Issue 1, 1 st September, pp. 229-248 (2003)
+    \endverbatim
 
     Example of the wallDist specification in fvSchemes:
     \verbatim
+        laplacianSchemes
+        {
+            .
+            .
+            laplacian(yPsi) Gauss linear corrected;
+            .
+            .
+        }
+
         wallDist
         {
-            method meshWave;
+            method Poisson;
+        }
+    \endverbatim
+    Also the solver specification for yPsi is required in fvSolution, e.g.
+    for simple cases:
+    \verbatim
+        yPsi
+        {
+            solver          PCG;
+            preconditioner  DIC;
+            tolerance       1e-5;
+            relTol          0;
+        }
+
+    or for more complex cases:
+
+        yPsi
+        {
+            solver          GAMG;
+            smoother        GaussSeidel;
+            cacheAgglomeration true;
+            nCellsInCoarsestLevel 10;
+            agglomerator    faceAreaPair;
+            mergeLevels     1;
+            tolerance       1e-5;
+            relTol          0;
         }
     \endverbatim
 
 SeeAlso
-    Foam::patchDistMethod::Poisson
+    Foam::patchDistMethod::meshWave
     Foam::wallDist
 
 SourceFiles
-    meshWavePatchDistMethod.C
+    PoissonPatchDistMethod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef meshWavePatchDistMethod_H
-#define meshWavePatchDistMethod_H
+#ifndef PoissonPatchDistMethod_H
+#define PoissonPatchDistMethod_H
 
 #include "patchDistMethod.H"
 
@@ -64,66 +108,54 @@ namespace patchDistMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class meshWave Declaration
+                          Class Poisson Declaration
 \*---------------------------------------------------------------------------*/
 
-class meshWave
+class Poisson
 :
     public patchDistMethod
 {
     // Private Member Data
 
-        //- Do accurate distance calculation for near-wall cells.
-        const bool correctWalls_;
-
-        //- Number of unset cells and faces.
-        mutable label nUnset_;
+        //- Cache yPsi for moving meshes
+        tmp<volScalarField> tyPsi_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        meshWave(const meshWave&);
+        Poisson(const Poisson&);
 
         //- Disallow default bitwise assignment
-        void operator=(const meshWave&);
+        void operatorconst Poisson&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("meshWave");
+    TypeName("Poisson");
 
 
     // Constructors
 
         //- Construct from coefficients dictionary, mesh
         //  and fixed-value patch set
-        meshWave
+        Poisson
         (
             const dictionary& dict,
             const fvMesh& mesh,
             const labelHashSet& patchIDs
         );
 
-        //- Construct from mesh, fixed-value patch set and flag specifying
-        //  whether or not to correct wall.
-        //  Calculate for all cells. correctWalls : correct wall (face&point)
-        //  cells for correct distance, searching neighbours.
-        meshWave
+        //- Construct from mesh and fixed-value patch set
+        Poisson
         (
             const fvMesh& mesh,
-            const labelHashSet& patchIDs,
-            const bool correctWalls = true
+            const labelHashSet& patchIDs
         );
 
 
     // Member Functions
-
-        label nUnset() const
-        {
-            return nUnset_;
-        }
 
         //- Correct the given distance-to-patch field
         virtual bool correct(volScalarField& y);
