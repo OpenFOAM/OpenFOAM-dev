@@ -68,7 +68,8 @@ Foam::patchDistMethods::advectionDiffusion::advectionDiffusion
     ),
     epsilon_(coeffs_.lookupOrDefault<scalar>("epsilon", 0.1)),
     tolerance_(coeffs_.lookupOrDefault<scalar>("tolerance", 1e-3)),
-    maxIter_(coeffs_.lookupOrDefault<int>("maxIter", 10))
+    maxIter_(coeffs_.lookupOrDefault<int>("maxIter", 10)),
+    predicted_(false)
 {}
 
 
@@ -86,7 +87,11 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
     volVectorField& n
 )
 {
-    pdmPredictor_->correct(y);
+    if (!predicted_)
+    {
+        pdmPredictor_->correct(y);
+        predicted_ = true;
+    }
 
     volVectorField ny
     (
@@ -97,7 +102,7 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
             mesh_
         ),
         mesh_,
-        dimensionedVector("nWall", dimless, vector::zero),
+        dimensionedVector("ny", dimless, vector::zero),
         patchTypes<vector>(mesh_, patchIDs_)
     );
 
@@ -133,6 +138,7 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
 
         yEqn.relax();
         initialResidual = yEqn.solve().initialResidual();
+
     } while (initialResidual > tolerance_ && ++iter < maxIter_);
 
     // Only calculate n if the field is defined

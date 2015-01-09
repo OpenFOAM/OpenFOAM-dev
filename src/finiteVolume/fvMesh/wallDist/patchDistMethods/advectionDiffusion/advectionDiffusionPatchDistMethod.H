@@ -162,6 +162,9 @@ class advectionDiffusion
         //  to correct the distance-to-patch and normal-to-patch fields
         int maxIter_;
 
+        //- Flag to indicate the predictor step has been executed
+        bool predicted_;
+
 
     // Private Member Functions
 
