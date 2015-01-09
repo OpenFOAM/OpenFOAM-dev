@@ -39,6 +39,10 @@ Description
         wallDist
         {
             method meshWave;
+
+            // Optional entry enabling the calculation
+            // of the normal-to-wall field
+            nRequired false;
         }
     \endverbatim
 

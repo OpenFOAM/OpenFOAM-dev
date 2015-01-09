@@ -99,7 +99,10 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
         (
             "ny",
             mesh_.time().timeName(),
-            mesh_
+            mesh_,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
         ),
         mesh_,
         dimensionedVector("ny", dimless, vector::zero),

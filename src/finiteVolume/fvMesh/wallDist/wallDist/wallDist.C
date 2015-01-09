@@ -34,6 +34,37 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::wallDist::constructn() const
+{
+    n_ = tmp<volVectorField>
+    (
+        new volVectorField
+        (
+            IOobject
+            (
+                "nWall",
+                mesh().time().timeName(),
+                mesh()
+            ),
+            mesh(),
+            dimensionedVector("nWall", dimless, vector::zero),
+            patchDistMethod::patchTypes<vector>(mesh(), pdm_->patchIDs())
+        )
+    );
+
+    const labelHashSet& patchIDs = pdm_->patchIDs();
+    const fvPatchList& patches = mesh().boundary();
+
+    forAllConstIter(labelHashSet, patchIDs, iter)
+    {
+        label patchi = iter.key();
+        n_().boundaryField()[patchi] == patches[patchi].nf();
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::wallDist::wallDist(const fvMesh& mesh)
@@ -60,33 +91,16 @@ Foam::wallDist::wallDist(const fvMesh& mesh)
         dimensionedScalar("yWall", dimLength, SMALL),
         patchDistMethod::patchTypes<scalar>(mesh, pdm_->patchIDs())
     ),
-    n_(NULL)
-{
-    // Temporarily always construct n
-    // until the demand-driven interface is complete
-    n_ = tmp<volVectorField>
+    nRequired_
     (
-        new volVectorField
-        (
-            IOobject
-            (
-                "nWall",
-                mesh.time().timeName(),
-                mesh
-            ),
-            mesh,
-            dimensionedVector("nWall", dimless, vector::zero),
-            patchDistMethod::patchTypes<vector>(mesh, pdm_->patchIDs())
-        )
-    );
-
-    const labelHashSet& patchIDs = pdm_->patchIDs();
-    const fvPatchList& patches = mesh.boundary();
-
-    forAllConstIter(labelHashSet, patchIDs, iter)
+        static_cast<const fvSchemes&>(mesh).subDict("wallDist")
+       .lookupOrDefault<Switch>("nRequired", false)
+    ),
+    n_(volVectorField::null())
+{
+    if (nRequired_)
     {
-        label patchi = iter.key();
-        n_().boundaryField()[patchi] == patches[patchi].nf();
+        constructn();
     }
 
     movePoints();
@@ -100,6 +114,24 @@ Foam::wallDist::~wallDist()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::volVectorField& Foam::wallDist::n() const
+{
+    if (isNull(n_()))
+    {
+        WarningIn("Foam::wallDist::n()")
+            << "n requested but 'nRequired' not specified in the wallDist "
+               "dictionary" << nl
+            << "    Recalculating y and n fields." << endl;
+
+        nRequired_ = true;
+        constructn();
+        pdm_->correct(y_, n_());
+    }
+
+    return n_();
+}
+
 
 bool Foam::wallDist::movePoints()
 {

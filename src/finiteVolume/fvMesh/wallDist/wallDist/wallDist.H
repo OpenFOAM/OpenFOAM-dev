@@ -26,7 +26,24 @@ Class
 
 Description
     Interface to run-time selectable methods to calculate the distance-to-wall
-    field.
+    and normal-to-wall fields.
+
+    Example of the wallDist specification in fvSchemes:
+    \verbatim
+        wallDist
+        {
+            method meshWave;
+
+            // Optional entry enabling the calculation
+            // of the normal-to-wall field
+            nRequired false;
+        }
+    \endverbatim
+
+SeeAlso
+    Foam::patchDistMethod::meshWave
+    Foam::patchDistMethod::Poisson
+    Foam::patchDistMethod::advectionDiffusion
 
 SourceFiles
     wallDist.C
@@ -57,16 +74,22 @@ class wallDist
     // Private data
 
         //- Run-time selected method to generate the distance-to-wall field
-        autoPtr<patchDistMethod> pdm_;
+        mutable autoPtr<patchDistMethod> pdm_;
 
         //- Distance-to-wall field
-        volScalarField y_;
+        mutable volScalarField y_;
 
-        //- Distance-to-wall field
-        tmp<volVectorField> n_;
+        //- Flag to indicate if the distance-to-wall field is required
+        mutable bool nRequired_;
+
+        //- Normal-to-wall field
+        mutable tmp<volVectorField> n_;
 
 
     // Private Member Functions
+
+        //- Construct the normal-to-wall field as required
+        void constructn() const;
 
         //- Disallow default bitwise copy construct
         wallDist(const wallDist&);
@@ -100,10 +123,7 @@ public:
         }
 
         //- Return reference to cached normal-to-wall field
-        const volVectorField& n() const
-        {
-            return n_();
-        }
+        const volVectorField& n() const;
 
         //- Update the y-field when the mesh moves
         virtual bool movePoints();

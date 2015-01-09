@@ -58,6 +58,10 @@ Description
         {
             method advectionDiffusion;
 
+            // Optional entry enabling the calculation
+            // of the normal-to-wall field
+            nRequired false;
+
             advectionDiffusionCoeffs
             {
                 method    Poisson;

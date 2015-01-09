@@ -58,6 +58,10 @@ Description
         wallDist
         {
             method Poisson;
+
+            // Optional entry enabling the calculation
+            // of the normal-to-wall field
+            nRequired false;
         }
     \endverbatim
     Also the solver specification for yPsi is required in fvSolution, e.g.
