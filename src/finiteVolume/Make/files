@@ -45,6 +45,7 @@ $(wallDist)/wallDist/wallDist.C
 $(wallDist)/patchDistMethods/patchDistMethod/patchDistMethod.C
 $(wallDist)/patchDistMethods/meshWave/meshWavePatchDistMethod.C
 $(wallDist)/patchDistMethods/Poisson/PoissonPatchDistMethod.C
+$(wallDist)/patchDistMethods/advectionDiffusion/advectionDiffusionPatchDistMethod.C
 
 
 fvMeshMapper = fvMesh/fvMeshMapper

@@ -22,26 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchDistMethods::Poisson
+    Foam::patchDistMethods::advectionDiffusion
 
 Description
     Calculation of approximate distance to nearest patch for all cells and
-    boundary by solving Poisson's equation.
+    boundary by solving the Eikonal equation in advection form with diffusion
+    smoothing.
 
     References:
     \verbatim
-        D.B. Spalding,
-        "Calculation of turbulent heat transfer in cluttered spaces",
-        Proc. 10th Int. Heat Transfer Conference, Brighton, UK, (1994).
-
-        E. Fares and W. Schroder,
-        "Differential Equation for Approximate Wall Distance",
-        Int.J.Numer.Meth., 39:743-762, (2002).
-
-        P.G. Tucker,
-        "Differential equation based wall distance computation for DES and
-         RANS",
-        J.Comp.Phys., Vol. 190, Issue 1, 1 st September, pp. 229-248 (2003)
+        P.G. Tucker, C.L. Rumsey, R.E. Bartels, R.T. Biedron,
+        "Transport equation based wall distance computations aimed at flows
+         with time-dependent geometry",
+        NASA/TM-2003-212680, December 2003.
     \endverbatim
 
     Example of the wallDist specification in fvSchemes:
@@ -51,23 +44,40 @@ Description
             .
             .
             laplacian(yPsi) Gauss linear corrected;
+            laplacian(yWall) Gauss linear corrected;
             .
             .
         }
 
         wallDist
         {
-            method Poisson;
+            method advectionDiffusion;
+
+            advectionDiffusionCoeffs
+            {
+                method    Poisson;
+                epsilon   0.1;
+                tolerance 1e-3;
+                maxIter   10;
+            }
         }
     \endverbatim
-    Also the solver specification for yPsi is required in fvSolution, e.g.
+    Also the solver specification for yWall is required in fvSolution, e.g.
     for simple cases:
     \verbatim
         yPsi
         {
             solver          PCG;
             preconditioner  DIC;
-            tolerance       1e-5;
+            tolerance       1e-4;
+            relTol          0;
+        }
+
+        yWall
+        {
+            solver          PBiCG;
+            preconditioner  DILU;
+            tolerance       1e-4;
             relTol          0;
         }
 
@@ -81,7 +91,19 @@ Description
             nCellsInCoarsestLevel 10;
             agglomerator    faceAreaPair;
             mergeLevels     1;
-            tolerance       1e-5;
+            tolerance       1e-4;
+            relTol          0;
+        }
+
+        yWall
+        {
+            solver          GAMG;
+            smoother        symGaussSeidel;
+            cacheAgglomeration true;
+            nCellsInCoarsestLevel 10;
+            agglomerator    faceAreaPair;
+            mergeLevels     1;
+            tolerance       1e-4;
             relTol          0;
         }
     \endverbatim
@@ -91,12 +113,12 @@ SeeAlso
     Foam::wallDist
 
 SourceFiles
-    PoissonPatchDistMethod.C
+    advectionDiffusionPatchDistMethod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PoissonPatchDistMethod_H
-#define PoissonPatchDistMethod_H
+#ifndef advectionDiffusionPatchDistMethod_H
+#define advectionDiffusionPatchDistMethod_H
 
 #include "patchDistMethod.H"
 
@@ -108,48 +130,55 @@ namespace patchDistMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class Poisson Declaration
+                          Class advectionDiffusion Declaration
 \*---------------------------------------------------------------------------*/
 
-class Poisson
+class advectionDiffusion
 :
     public patchDistMethod
 {
     // Private Member Data
 
-        //- Cache yPsi for moving meshes
-        tmp<volScalarField> tyPsi_;
+        //- Sub-dictionary of coefficients
+        dictionary coeffs_;
+
+        //- Run-time selected method to predict the distance-to-wall field
+        autoPtr<patchDistMethod> pdmPredictor_;
+
+        //- Diffusion coefficient multiplying y*laplacian(y)
+        scalar epsilon_;
+
+        //- Convergence tolerance for the iterations of the advection-diffusion
+        //  equation to correct the distance-to-patch and normal-to-patch fields
+        scalar tolerance_;
+
+        //- Maximum number of iterations of the advection-diffusion equation
+        //  to correct the distance-to-patch and normal-to-patch fields
+        int maxIter_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        Poisson(const Poisson&);
+        advectionDiffusion(const advectionDiffusion&);
 
         //- Disallow default bitwise assignment
-        void operator=(const Poisson&);
+        void operator=(const advectionDiffusion&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("Poisson");
+    TypeName("advectionDiffusion");
 
 
     // Constructors
 
         //- Construct from coefficients dictionary, mesh
         //  and fixed-value patch set
-        Poisson
+        advectionDiffusion
         (
             const dictionary& dict,
-            const fvMesh& mesh,
-            const labelHashSet& patchIDs
-        );
-
-        //- Construct from mesh and fixed-value patch set
-        Poisson
-        (
             const fvMesh& mesh,
             const labelHashSet& patchIDs
         );
