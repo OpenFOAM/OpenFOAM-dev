@@ -29,6 +29,11 @@ Description
     boundary by solving the Eikonal equation in advection form with diffusion
     smoothing.
 
+    Convergence is accelerated by first generating an approximate solution
+    using one of the simpler methods, e.g. Poisson.  The method used for
+    this prediction step is specified in the 'advectionDiffusionCoeffs'
+    sub-dictionary, see below.
+
     References:
     \verbatim
         P.G. Tucker, C.L. Rumsey, R.E. Bartels, R.T. Biedron,
@@ -109,6 +114,7 @@ Description
     \endverbatim
 
 SeeAlso
+    Foam::patchDistMethod::Poisson
     Foam::patchDistMethod::meshWave
     Foam::wallDist
 
