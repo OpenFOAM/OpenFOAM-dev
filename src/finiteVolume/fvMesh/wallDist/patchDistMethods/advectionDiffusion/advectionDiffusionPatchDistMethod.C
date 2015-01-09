@@ -67,8 +67,8 @@ Foam::patchDistMethods::advectionDiffusion::advectionDiffusion
         )
     ),
     epsilon_(coeffs_.lookupOrDefault<scalar>("epsilon", 0.1)),
-    maxIter_(coeffs_.lookupOrDefault<int>("maxIter", 10)),
-    tolerance_(coeffs_.lookupOrDefault<scalar>("tolerance", 1e-3))
+    tolerance_(coeffs_.lookupOrDefault<scalar>("tolerance", 1e-3)),
+    maxIter_(coeffs_.lookupOrDefault<int>("maxIter", 10))
 {}
 
 
@@ -77,30 +77,6 @@ Foam::patchDistMethods::advectionDiffusion::advectionDiffusion
 bool Foam::patchDistMethods::advectionDiffusion::correct(volScalarField& y)
 {
     return correct(y, const_cast<volVectorField&>(volVectorField::null()));
-}
-
-namespace Foam
-{
-template<class Type>
-wordList patchTypes
-(
-    const fvMesh& mesh,
-    const labelHashSet& patchIDs
-)
-{
-    wordList yTypes
-    (
-        mesh.boundary().size(),
-        zeroGradientFvPatchField<Type>::typeName
-    );
-
-    forAllConstIter(labelHashSet, patchIDs, iter)
-    {
-        yTypes[iter.key()] = fixedValueFvPatchField<Type>::typeName;
-    }
-
-    return yTypes;
-}
 }
 
 
@@ -112,36 +88,38 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
 {
     pdmPredictor_->correct(y);
 
+    volVectorField ny
+    (
+        IOobject
+        (
+            "ny",
+            mesh_.time().timeName(),
+            mesh_
+        ),
+        mesh_,
+        dimensionedVector("nWall", dimless, vector::zero),
+        patchTypes<vector>(mesh_, patchIDs_)
+    );
+
+    const fvPatchList& patches = mesh_.boundary();
+
+    forAllConstIter(labelHashSet, patchIDs_, iter)
+    {
+        label patchi = iter.key();
+        ny.boundaryField()[patchi] == -patches[patchi].nf();
+    }
+
     int iter = 0;
     scalar initialResidual = 0;
 
     do
     {
-        volVectorField ny
-        (
-            IOobject
-            (
-                "ny",
-                mesh_.time().timeName(),
-                mesh_
-            ),
-            mesh_,
-            dimensionedVector("nWall", dimless, vector::zero),
-            patchTypes<vector>(mesh_, patchIDs_)
-        );
-
-        const fvPatchList& patches = mesh_.boundary();
-
-        forAllConstIter(labelHashSet, patchIDs_, iter)
-        {
-            label patchi = iter.key();
-            ny.boundaryField()[patchi] == -patches[patchi].nf();
-        }
-
         ny = fvc::grad(y);
         ny /= (mag(ny) + SMALL);
+
         surfaceVectorField nf(fvc::interpolate(ny));
         nf /= (mag(nf) + SMALL);
+
         surfaceScalarField yPhi("yPhi", mesh_.Sf() & nf);
 
         fvScalarMatrix yEqn
@@ -155,14 +133,13 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
 
         yEqn.relax();
         initialResidual = yEqn.solve().initialResidual();
-
-        // Only calculate n if the field is defined
-        if (notNull(n))
-        {
-            n = -ny;
-        }
-
     } while (initialResidual > tolerance_ && ++iter < maxIter_);
+
+    // Only calculate n if the field is defined
+    if (notNull(n))
+    {
+        n = -ny;
+    }
 
     return true;
 }

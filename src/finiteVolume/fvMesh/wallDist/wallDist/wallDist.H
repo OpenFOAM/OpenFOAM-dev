@@ -68,11 +68,6 @@ class wallDist
 
     // Private Member Functions
 
-        //- Return the patch types for y and n
-        //  These are fixedValue for the set provided otherwise zero-gradient
-        template<class Type>
-        wordList patchTypes(const labelHashSet& patchIDs) const;
-
         //- Disallow default bitwise copy construct
         wallDist(const wallDist&);
 

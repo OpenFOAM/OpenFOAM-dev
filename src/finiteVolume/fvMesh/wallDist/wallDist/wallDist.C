@@ -25,34 +25,12 @@ License
 
 #include "wallDist.H"
 #include "wallPolyPatch.H"
-#include "fixedValueFvPatchFields.H"
-#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(wallDist, 0);
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::wordList Foam::wallDist::patchTypes(const labelHashSet& patchIDs) const
-{
-    wordList yTypes
-    (
-        mesh().boundary().size(),
-        zeroGradientFvPatchField<Type>::typeName
-    );
-
-    forAllConstIter(labelHashSet, patchIDs, iter)
-    {
-        yTypes[iter.key()] = fixedValueFvPatchField<Type>::typeName;
-    }
-
-    return yTypes;
 }
 
 
@@ -80,7 +58,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh)
         ),
         mesh,
         dimensionedScalar("yWall", dimLength, SMALL),
-        patchTypes<scalar>(pdm_->patchIDs())
+        patchDistMethod::patchTypes<scalar>(mesh, pdm_->patchIDs())
     ),
     n_(NULL)
 {
@@ -98,7 +76,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh)
             ),
             mesh,
             dimensionedVector("nWall", dimless, vector::zero),
-            patchTypes<vector>(pdm_->patchIDs())
+            patchDistMethod::patchTypes<vector>(mesh, pdm_->patchIDs())
         )
     );
 
