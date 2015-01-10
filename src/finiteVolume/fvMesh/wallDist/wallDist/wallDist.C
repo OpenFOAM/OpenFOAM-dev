@@ -44,20 +44,19 @@ void Foam::wallDist::constructn() const
         (
             IOobject
             (
-                "nWall",
+                "n" & patchTypeName_,
                 mesh().time().timeName(),
                 mesh()
             ),
             mesh(),
-            dimensionedVector("nWall", dimless, vector::zero),
-            patchDistMethod::patchTypes<vector>(mesh(), pdm_->patchIDs())
+            dimensionedVector("n" & patchTypeName_, dimless, vector::zero),
+            patchDistMethod::patchTypes<vector>(mesh(), patchIDs_)
         )
     );
 
-    const labelHashSet& patchIDs = pdm_->patchIDs();
     const fvPatchList& patches = mesh().boundary();
 
-    forAllConstIter(labelHashSet, patchIDs, iter)
+    forAllConstIter(labelHashSet, patchIDs_, iter)
     {
         label patchi = iter.key();
         n_().boundaryField()[patchi] == patches[patchi].nf();
@@ -67,33 +66,84 @@ void Foam::wallDist::constructn() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallDist::wallDist(const fvMesh& mesh)
+Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
 :
     MeshObject<fvMesh, Foam::UpdateableMeshObject, wallDist>(mesh),
+    patchIDs_(mesh.boundaryMesh().findPatchIDs<wallPolyPatch>()),
+    patchTypeName_(patchTypeName),
     pdm_
     (
         patchDistMethod::New
         (
-            static_cast<const fvSchemes&>(mesh).subDict("wallDist"),
+            static_cast<const fvSchemes&>(mesh)
+           .subDict(patchTypeName_ & "Dist"),
             mesh,
-            mesh.boundaryMesh().findPatchIDs<wallPolyPatch>()
+            patchIDs_
         )
     ),
     y_
     (
         IOobject
         (
-            "yWall",
+            "y" & patchTypeName_,
             mesh.time().timeName(),
             mesh
         ),
         mesh,
-        dimensionedScalar("yWall", dimLength, SMALL),
-        patchDistMethod::patchTypes<scalar>(mesh, pdm_->patchIDs())
+        dimensionedScalar("y" & patchTypeName_, dimLength, SMALL),
+        patchDistMethod::patchTypes<scalar>(mesh, patchIDs_)
     ),
     nRequired_
     (
-        static_cast<const fvSchemes&>(mesh).subDict("wallDist")
+        static_cast<const fvSchemes&>(mesh).subDict(patchTypeName_ & "Dist")
+       .lookupOrDefault<Switch>("nRequired", false)
+    ),
+    n_(volVectorField::null())
+{
+    if (nRequired_)
+    {
+        constructn();
+    }
+
+    movePoints();
+}
+
+
+Foam::wallDist::wallDist
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const word& patchTypeName
+)
+:
+    MeshObject<fvMesh, Foam::UpdateableMeshObject, wallDist>(mesh),
+    patchIDs_(patchIDs),
+    patchTypeName_(patchTypeName),
+    pdm_
+    (
+        patchDistMethod::New
+        (
+            static_cast<const fvSchemes&>(mesh)
+           .subDict(patchTypeName_ & "Dist"),
+            mesh,
+            patchIDs_
+        )
+    ),
+    y_
+    (
+        IOobject
+        (
+            "y" & patchTypeName_,
+            mesh.time().timeName(),
+            mesh
+        ),
+        mesh,
+        dimensionedScalar("y" & patchTypeName_, dimLength, SMALL),
+        patchDistMethod::patchTypes<scalar>(mesh, patchIDs_)
+    ),
+    nRequired_
+    (
+        static_cast<const fvSchemes&>(mesh).subDict(patchTypeName_ & "Dist")
        .lookupOrDefault<Switch>("nRequired", false)
     ),
     n_(volVectorField::null())
@@ -120,8 +170,8 @@ const Foam::volVectorField& Foam::wallDist::n() const
     if (isNull(n_()))
     {
         WarningIn("Foam::wallDist::n()")
-            << "n requested but 'nRequired' not specified in the wallDist "
-               "dictionary" << nl
+            << "n requested but 'nRequired' not specified in the "
+            << (patchTypeName_ & "Dist") << " dictionary" << nl
             << "    Recalculating y and n fields." << endl;
 
         nRequired_ = true;

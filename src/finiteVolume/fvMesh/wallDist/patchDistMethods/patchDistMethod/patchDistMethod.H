@@ -77,7 +77,6 @@ private:
         //- Disallow default bitwise assignment
         void operator=(const patchDistMethod&);
 
-
 public:
 
     //- Runtime type information
@@ -129,7 +128,7 @@ public:
         //- Return the patch types for y and n
         //  These are fixedValue for the set provided otherwise zero-gradient
         template<class Type>
-        static inline wordList patchTypes
+        static wordList patchTypes
         (
             const fvMesh& mesh,
             const labelHashSet& patchIDs
@@ -166,30 +165,11 @@ public:
 
 } // End namespace Foam
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * Static Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-inline Foam::wordList Foam::patchDistMethod::patchTypes
-(
-    const fvMesh& mesh,
-    const labelHashSet& patchIDs
-)
-{
-    wordList yTypes
-    (
-        mesh.boundary().size(),
-        zeroGradientFvPatchField<Type>::typeName
-    );
-
-    forAllConstIter(labelHashSet, patchIDs, iter)
-    {
-        yTypes[iter.key()] = fixedValueFvPatchField<Type>::typeName;
-    }
-
-    return yTypes;
-}
-
+#ifdef NoRepository
+#   include "patchDistMethodTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

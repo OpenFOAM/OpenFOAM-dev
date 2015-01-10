@@ -55,7 +55,6 @@ SourceFiles
 
 #include "MeshObject.H"
 #include "patchDistMethod.H"
-#include "fvMesh.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,6 +71,12 @@ class wallDist
     public MeshObject<fvMesh, UpdateableMeshObject, wallDist>
 {
     // Private data
+
+        //- Set of patch IDs
+        const labelHashSet patchIDs_;
+
+        //- Name for the patch set, e.g. "wall"
+        const word patchTypeName_;
 
         //- Run-time selected method to generate the distance-to-wall field
         mutable autoPtr<patchDistMethod> pdm_;
@@ -106,8 +111,20 @@ public:
 
     // Constructors
 
-        //- Construct from mesh
-        wallDist(const fvMesh& mesh);
+        //- Construct from mesh and optional patch type name
+        wallDist
+        (
+            const fvMesh& mesh,
+            const word& patchTypeName = "wall"
+        );
+
+        //- Construct from mesh, patch IDs and optional patch type name
+        wallDist
+        (
+            const fvMesh& mesh,
+            const labelHashSet& patchIDs,
+            const word& patchTypeName = "patch"
+        );
 
 
     //- Destructor
@@ -115,6 +132,12 @@ public:
 
 
     // Member Functions
+
+        //- Return the patchIDs
+        const labelHashSet& patchIDs() const
+        {
+            return patchIDs_;
+        }
 
         //- Return reference to cached distance-to-wall field
         const volScalarField& y() const
