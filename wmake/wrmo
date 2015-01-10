@@ -23,12 +23,13 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     wrmo [file]
+#     wrmo [-a | -all | all] [file]
 #
 # Description
 #     Remove all .o files from the object directory tree corresponding to the
 #     current source derectory or remove only the .o file corresponding to the
-#     optionally specified [file].
+#     optionally specified [file].  With the -a/-all/all option the .o files
+#     are removed for all platforms rather than just the current platform.
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
@@ -53,11 +54,19 @@ USAGE
 # Parse arguments and options
 #------------------------------------------------------------------------------
 
+# Default to processing only the current platform
+all=
+
 while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
         usage
+        ;;
+    # Non-stop compilation, ignoring errors
+    -a | -all | all)
+        all="all"
+        shift
         ;;
     -*)
        usage "unknown option: '$*'"
@@ -77,6 +86,12 @@ checkEnv
 #------------------------------------------------------------------------------
 
 findObjectDir .
+
+# With the -a/-all option replace the current platform with a wildcard
+if [ "$all" = "all" ]
+then
+    objectsDir=$(echo $objectsDir | sed s%$WM_OPTIONS%*% )
+fi
 
 if [ "$#" -eq 0 ]
 then
