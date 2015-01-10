@@ -28,7 +28,7 @@
 # Description
 #     Remove all .dep files from the object directory tree corresponding to the
 #     current source derectory or remove only the .dep files referring to the
-#     optionally specified [file].  With the -a/-all/all option the dep files
+#     optionally specified [file].  With the -a/-all/all option the .dep files
 #     are removed for all platforms rather than just the current platform.
 #
 #------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ usage() {
 Usage: $Script [-a | -all | all] [file]
 
 Remove all .dep files or remove .dep files referring to <file>
-With the -a/-all/all option the dep files are removed for all platform
+With the -a/-all/all option the .dep files are removed for all platform
 rather than just the current platform.
 
 USAGE
