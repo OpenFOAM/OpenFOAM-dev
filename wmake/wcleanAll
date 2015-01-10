@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -64,10 +64,10 @@ done
 [ -d bin -a -d src ] || usage "not in the project top level directory"
 
 
-echo "Removing platforms/ subdirectores"
+echo "Removing platforms/sub-directories"
 rm -rf platforms/*
 
-echo "Cleaning Make subdirectories"
+echo "Cleaning Make sub-directories"
 find . -depth \( -name Make -o -name "Make.[A-Za-z]*" \) -type d -print | \
     xargs -i find '{}' -mindepth 1 -maxdepth 1 -type d -print | \
     xargs rm -rf
