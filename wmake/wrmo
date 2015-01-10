@@ -23,11 +23,11 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     wrmdep [file]
+#     wrmo [file]
 #
 # Description
-#     Remove all .dep files from the object directory tree corresponding to the
-#     current source derectory or remove only the .dep files referring to the
+#     Remove all .o files from the object directory tree corresponding to the
+#     current source derectory or remove only the .o file corresponding to the
 #     optionally specified [file].
 #
 #------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ usage() {
     cat<<USAGE
 Usage: $Script [file]
 
-Remove all .dep files or remove .dep files referring to <file>
+Remove all .o files or remove .o file corresponding to <file>
 
 USAGE
     exit 1
@@ -73,18 +73,18 @@ checkEnv
 
 
 #------------------------------------------------------------------------------
-# Remove the selected .dep files from the object tree
+# Remove the selected .o files from the object tree
 #------------------------------------------------------------------------------
 
 findObjectDir .
 
 if [ "$#" -eq 0 ]
 then
-    echo "removing all .dep files ..."
-    find $objectsDir -name '*.dep' -print | xargs -t rm 2>/dev/null
+    echo "removing all .o files ..."
+    find $objectsDir -name '*.o' -print | xargs -t rm 2>/dev/null
 else
-    echo "removing .dep files referring to $1 ..."
-    find $objectsDir -name '*.dep' -exec grep "$1" '{}' \; -exec rm '{}' \;
+    echo "removing .o files corresponding to $1 ..."
+    rm $objectsDir/${1%%.*}.o
 fi
 
 
