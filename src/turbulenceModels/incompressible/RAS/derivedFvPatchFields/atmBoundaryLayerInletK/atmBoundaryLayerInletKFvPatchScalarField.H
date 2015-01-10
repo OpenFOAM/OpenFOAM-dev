@@ -29,7 +29,7 @@ Group
 
 Description
     This boundary condition specifies an inlet value for the turbulence
-    kinetic energy, \f$\K\f$, appropriate for atmospheric boundary layers.
+    kinetic energy, \f$k\f$, appropriate for atmospheric boundary layers.
 
     See Foam::incompressible::atmBoundaryLayer for details.
 

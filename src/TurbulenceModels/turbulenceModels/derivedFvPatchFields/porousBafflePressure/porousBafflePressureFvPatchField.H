@@ -28,7 +28,7 @@ Group
     grpCoupledBoundaryConditions
 
 Description
-    This boundary condition provides a jump condition, using the \cyclic
+    This boundary condition provides a jump condition, using the \c cyclic
     condition as a base.
 
     The porous baffle introduces a pressure jump defined by:
