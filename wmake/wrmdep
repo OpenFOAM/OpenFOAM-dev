@@ -23,12 +23,13 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     wrmdep [file]
+#     wrmdep [-a | -all | all] [file]
 #
 # Description
 #     Remove all .dep files from the object directory tree corresponding to the
 #     current source derectory or remove only the .dep files referring to the
-#     optionally specified [file].
+#     optionally specified [file].  With the -a/-all/all option the dep files
+#     are removed for all platforms rather than just the current platform.
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
@@ -40,9 +41,11 @@ usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-Usage: $Script [file]
+Usage: $Script [-a | -all | all] [file]
 
 Remove all .dep files or remove .dep files referring to <file>
+With the -a/-all/all option the dep files are removed for all platform
+rather than just the current platform.
 
 USAGE
     exit 1
@@ -53,11 +56,20 @@ USAGE
 # Parse arguments and options
 #------------------------------------------------------------------------------
 
+# Default to processing only the current platform
+all=
+
 while [ "$#" -gt 0 ]
 do
     case "$1" in
+    # Print help
     -h | -help)
         usage
+        ;;
+    # Non-stop compilation, ignoring errors
+    -a | -all | all)
+        all="all"
+        shift
         ;;
     -*)
        usage "unknown option: '$*'"
@@ -77,6 +89,12 @@ checkEnv
 #------------------------------------------------------------------------------
 
 findObjectDir .
+
+# With the -a/-all option replace the current platform with a wildcard
+if [ "$all" = "all" ]
+then
+    objectsDir=$(echo $objectsDir | sed s%$WM_OPTIONS%*% )
+fi
 
 if [ "$#" -eq 0 ]
 then
