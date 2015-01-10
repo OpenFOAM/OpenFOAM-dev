@@ -114,7 +114,7 @@ do
             export WM_NCOMPPROCS=${1#-j}
             echo "Compiling enabled on $WM_NCOMPPROCS cores"
             ;;
-        # Non-stop compilatio, ignoring errors
+        # Non-stop compilation, ignoring errors
         -k | -non-stop)
             export WM_CONTINUE_ON_ERROR=1
             ;;
