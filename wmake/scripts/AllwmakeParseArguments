@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -142,6 +142,16 @@ do
     esac
     shift
 done
+
+
+#------------------------------------------------------------------------------
+# If WM_CONTINUE_ON_ERROR not set activate the shell option "stop on error"
+#------------------------------------------------------------------------------
+
+if [ -z "${WM_CONTINUE_ON_ERROR}" ]
+then
+    set -e
+fi
 
 
 #------------------------------------------------------------------------------
