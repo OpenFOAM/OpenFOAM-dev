@@ -37,7 +37,7 @@
 Script=${0##*/}
 
 # Source the wdep functions
-. ${0%/*}/wdepFunctions
+. ${0%/*}/wmakeFunctions
 
 usage() {
     exec 1>&2
