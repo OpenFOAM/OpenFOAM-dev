@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -44,9 +44,13 @@
 #     The disadvantage of the out-of-tree compilation is that the dependency
 #     files are harder to find but are sometimes useful to study which header
 #     files are included.  For those who need access to the dependency files the
-#     new wdep script is provided to locate them.
-#     See the wdep script header or run:
+#     new wdep script is provided to locate them.  See the wdep script header or
+#     run:
 #         wdep -h
+#
+# See also
+#     wclean, wcleanMachine, wcleanAll, wcleanLnInclude, wcleanLnIncludeAll,
+#     wdep, wrmdep, wrmo and wrmdepold
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
