@@ -1,21 +1,20 @@
 /* Radiation model */
-radiationModel/radiationModel/radiationModel.C
-radiationModel/radiationModel/radiationModelNew.C
-radiationModel/noRadiation/noRadiation.C
-radiationModel/P1/P1.C
-radiationModel/fvDOM/fvDOM/fvDOM.C
-radiationModel/fvDOM/radiativeIntensityRay/radiativeIntensityRay.C
-radiationModel/fvDOM/blackBodyEmission/blackBodyEmission.C
-radiationModel/fvDOM/absorptionCoeffs/absorptionCoeffs.C
-radiationModel/viewFactor/viewFactor.C
-radiationModel/opaqueSolid/opaqueSolid.C
+radiationModels/radiationModel/radiationModel.C
+radiationModels/radiationModel/radiationModelNew.C
+radiationModels/noRadiation/noRadiation.C
+radiationModels/P1/P1.C
+radiationModels/fvDOM/fvDOM/fvDOM.C
+radiationModels/fvDOM/radiativeIntensityRay/radiativeIntensityRay.C
+radiationModels/fvDOM/blackBodyEmission/blackBodyEmission.C
+radiationModels/fvDOM/absorptionCoeffs/absorptionCoeffs.C
+radiationModels/viewFactor/viewFactor.C
+radiationModels/opaqueSolid/opaqueSolid.C
 
 /* Scatter model */
 submodels/scatterModel/scatterModel/scatterModel.C
 submodels/scatterModel/scatterModel/scatterModelNew.C
 submodels/scatterModel/noScatter/noScatter.C
 submodels/scatterModel/constantScatter/constantScatter.C
-
 
 /* Absorption/Emission model */
 submodels/absorptionEmissionModel/absorptionEmissionModel/absorptionEmissionModel.C

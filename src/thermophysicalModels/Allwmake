@@ -22,6 +22,6 @@ wmake $targetType SLGThermo
 wmake $targetType solidThermo
 wmake $targetType solidChemistryModel
 
-wmake $targetType radiationModels
+wmake $targetType radiation
 
 # ----------------------------------------------------------------- end-of-file
