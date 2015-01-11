@@ -38,8 +38,6 @@ Script=${0##*/}
 # Source the wdep functions
 . ${0%/*}/wmakeFunctions
 
-set -x
-
 usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
