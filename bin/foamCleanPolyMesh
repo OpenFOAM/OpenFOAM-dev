@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -23,7 +23,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     foamClearPolyMesh
+#     foamCleanPolyMesh
 #
 # Description
 #    Remove the contents of the constant/polyMesh directory
@@ -116,7 +116,7 @@ fi
 # remove files (mesh itself, modifiers, snappyHexMesh ones) and subdirectories
 # also remove .gz versions of the same files
 #
-echo "Clearing ${caseDir:-.}/$meshDir" 1>&2
+echo "Cleaning ${caseDir:-.}/$meshDir" 1>&2
 
 for i in \
     points \

@@ -7,8 +7,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 cleanCase
 
-foamClearPolyMesh -region air
-foamClearPolyMesh -region porous
+foamCleanPolyMesh -region air
+foamCleanPolyMesh -region porous
 
 rm -f *.OpenFOAM
 
