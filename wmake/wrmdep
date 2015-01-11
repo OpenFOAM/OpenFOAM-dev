@@ -34,8 +34,8 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-# Source the wmakeFunctions
-. ${0%/*}/wmakeFunctions
+# Source the wmake functions
+. ${0%/*}/scripts/wmakeFunctions
 
 usage() {
     exec 1>&2

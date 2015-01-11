@@ -133,7 +133,7 @@ fi
 
 #------------------------------------------------------------------------------
 
-# get list of directories
+# Get list of directories
 dirList=$( $listBinDirs $packDir $archOptions )
 if [ $? -eq 0 -a -n "$dirList" ]
 then

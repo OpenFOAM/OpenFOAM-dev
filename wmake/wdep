@@ -27,17 +27,15 @@
 #     cat `wdep <file>`
 #
 # Description
-#     Find the dep-file corresponding to <file> and print the path.
-#
-#     Note: wdep MUST be run from the directory containing <file>.
-#     If it proves useful an option could be added to search the local
-#     source-tree for <file> if it is not in the current directory.
+#     Find the .dep file corresponding to <file> and print the path.
+#     If <file> is not in the current directory the tree is searched for
+#     the first occurrence.
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-# Source the wdep functions
-. ${0%/*}/wmakeFunctions
+# Source the wmake functions
+. ${0%/*}/scripts/wmakeFunctions
 
 usage() {
     exec 1>&2
@@ -78,13 +76,20 @@ checkEnv
 
 
 #------------------------------------------------------------------------------
-# Check <file> is is the current directory
+# Check <file> is is the current directory,
+# otherwise search tree for first occurrance
 #------------------------------------------------------------------------------
+
+sourceFile=$1
 
 if [ ! -e $1 ]
 then
-    echo "$Script error: source file $1 is not in the current directory" 1>&2
-    exit 1
+    sourceFile=$(find . -name $sourceFile -print -quit)
+    if [ -z "$sourceFile" ]
+    then
+        echo "$Script: cannot find source file $1" 1>&2
+        exit 1
+    fi
 fi
 
 
@@ -93,7 +98,7 @@ fi
 # and echo path for the dep file corresponding to the specified source file
 #------------------------------------------------------------------------------
 
-findObjectDir $1
+findObjectDir $sourceFile
 
 fileName=${1##*/}
 
