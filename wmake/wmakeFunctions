@@ -26,7 +26,7 @@
 #     wdepFunctions
 #
 # Description
-#     Functions to check wmake environment and find dep files
+#     Functions to check wmake environment and find .dep and .o files
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
@@ -51,11 +51,12 @@ checkEnv()
 
 expandPath()
 {
-    dir=$(dirname $1)
-    cwd=$PWD
-    cd $dir
-    exPath=$PWD
-    cd $cwd
+    if [ -d "$1" ]
+    then
+        exPath=$(cd "$1" && pwd -P)
+    else
+        exPath=$(cd $(dirname "$1") && pwd -P)
+    fi
 }
 
 findTarget()
@@ -97,5 +98,10 @@ findObjectDir()
     fi
 }
 
+depToSource()
+{
+    sourceFile=$(echo ${depFile%.dep} | \
+        sed -e s%platforms/${WM_OPTIONS}/%% -e s%Make/${WM_OPTIONS}/%% )
+}
 
 #------------------------------------------------------------------------------
