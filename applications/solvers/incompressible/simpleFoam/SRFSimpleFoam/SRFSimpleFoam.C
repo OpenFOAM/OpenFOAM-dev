@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
             #include "pEqn.H"
         }
 
+        laminarTransport.correct();
         turbulence->correct();
 
         if (runTime.outputTime())

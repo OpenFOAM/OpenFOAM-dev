@@ -46,7 +46,7 @@ turbulenceModel::turbulenceModel
 (
     const volVectorField& U,
     const surfaceScalarField& phi,
-    transportModel& transport,
+    const transportModel& transport,
     const word& turbulenceModelName
 )
 :
@@ -77,7 +77,7 @@ autoPtr<turbulenceModel> turbulenceModel::New
 (
     const volVectorField& U,
     const surfaceScalarField& phi,
-    transportModel& transport,
+    const transportModel& transport,
     const word& turbulenceModelName
 )
 {
@@ -128,8 +128,6 @@ autoPtr<turbulenceModel> turbulenceModel::New
 
 void turbulenceModel::correct()
 {
-    transportModel_.correct();
-
     if (mesh_.changing())
     {
         y_.correct();

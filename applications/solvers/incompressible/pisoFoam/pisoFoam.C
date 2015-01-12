@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
             }
         }
 
+        laminarTransport.correct();
         turbulence->correct();
 
         runTime.write();

@@ -146,7 +146,7 @@ SpalartAllmarasIDDES::SpalartAllmarasIDDES
 (
     const volVectorField& U,
     const surfaceScalarField& phi,
-    transportModel& transport,
+    const transportModel& transport,
     const word& turbulenceModelName,
     const word& modelName
 )

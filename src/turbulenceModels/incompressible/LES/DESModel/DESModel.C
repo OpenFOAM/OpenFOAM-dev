@@ -39,7 +39,7 @@ DESModel::DESModel
     const word& type,
     const volVectorField& U,
     const surfaceScalarField& phi,
-    transportModel& transport,
+    const transportModel& transport,
     const word& turbulenceModelName
 )
 :

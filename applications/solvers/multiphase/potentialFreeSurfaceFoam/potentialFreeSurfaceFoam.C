@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
 
             if (pimple.turbCorr())
             {
+                laminarTransport.correct();
                 turbulence->correct();
             }
         }

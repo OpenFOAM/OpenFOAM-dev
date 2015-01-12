@@ -82,7 +82,7 @@ protected:
         const volVectorField& U_;
         const surfaceScalarField& phi_;
 
-        transportModel& transportModel_;
+        const transportModel& transportModel_;
 
         //- Near wall distance boundary field
         nearWallDist y_;
@@ -115,7 +115,7 @@ public:
             (
                 const volVectorField& U,
                 const surfaceScalarField& phi,
-                transportModel& transport,
+                const transportModel& transport,
                 const word& turbulenceModelName
             ),
             (U, phi, transport, turbulenceModelName)
@@ -129,7 +129,7 @@ public:
         (
             const volVectorField& U,
             const surfaceScalarField& phi,
-            transportModel& transport,
+            const transportModel& transport,
             const word& turbulenceModelName = typeName
         );
 
@@ -141,7 +141,7 @@ public:
         (
             const volVectorField& U,
             const surfaceScalarField& phi,
-            transportModel& transport,
+            const transportModel& transport,
             const word& turbulenceModelName = typeName
         );
 
@@ -175,7 +175,7 @@ public:
         }
 
         //- Access function to incompressible transport model
-        inline transportModel& transport() const
+        inline const transportModel& transport() const
         {
             return transportModel_;
         }
