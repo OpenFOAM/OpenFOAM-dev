@@ -187,7 +187,14 @@ bool Foam::wallDist::movePoints()
 {
     if (pdm_->movePoints())
     {
-        return pdm_->correct(y_, n_());
+        if (nRequired_)
+        {
+            return pdm_->correct(y_, n_());
+        }
+        else
+        {
+            return pdm_->correct(y_);
+        }
     }
     else
     {
@@ -199,7 +206,7 @@ bool Foam::wallDist::movePoints()
 void Foam::wallDist::updateMesh(const mapPolyMesh& mpm)
 {
     pdm_->updateMesh(mpm);
-    pdm_->correct(y_, n_());
+    movePoints();
 }
 
 
