@@ -13,27 +13,25 @@ EXE_INC = \
     ${CGAL_INEXACT} \
     ${CGAL_INC} \
     ${c++CGALWARN} \
+    -I../conformalVoronoiMesh/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
     -I$(LIB_SRC)/edgeMesh/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
-    -I$(LIB_SRC)/surfMesh/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/mesh/autoMesh/lnInclude \
-    -IPrintTable \
-    -I../vectorTools \
-    -I/usr/include
+    -IvectorTools
 
-LIB_LIBS = \
-    ${CGAL_LIBS} \
+EXE_LIBS = \
+    -lconformalVoronoiMesh \
     -lmeshTools \
+    -ldecompositionMethods \
+    -L$(FOAM_LIBBIN)/dummy -lptscotchDecomp \
     -ledgeMesh \
     -lfileFormats \
     -ltriSurface \
     -ldynamicMesh \
-    -lsurfMesh \
-    -lsampling \
-    -lautoMesh
+    -lsampling
