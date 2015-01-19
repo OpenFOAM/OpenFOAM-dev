@@ -9,9 +9,7 @@ wmake -all snappyHexMesh
 
 if [ -n "$CGAL_ARCH_PATH" ]
 then
-    wmake libso foamyHexMesh/conformalVoronoiMesh
-    wmake -all foamyHexMesh
-    wmake -all foamyQuadMesh
+    foamyMesh/Allwmake
 fi
 
 
