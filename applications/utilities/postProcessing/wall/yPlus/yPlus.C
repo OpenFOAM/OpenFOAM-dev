@@ -22,14 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    yPlusRAS
+    yPlus
 
 Description
-    Calculates and reports yPlus for all wall patches, for the specified times
-    when using RAS turbulence models.
+    Calculates and reports yPlus for the near-wall cells of all wall patches,
+    for the specified times for laminar, LES and RAS.
+
+    For walls at which wall-functions are applied the wall-function provides
+    the y+ values otherwise they are obtained directly from the near-wall
+    velocity gradient and effective and laminar viscosities.
 
     Default behaviour assumes operating in incompressible mode.
-    Use the -compressible option for compressible RAS cases.
+    Use the -compressible option for compressible cases.
 
 \*---------------------------------------------------------------------------*/
 
@@ -38,8 +42,74 @@ Description
 #include "turbulentTransportModel.H"
 #include "turbulentFluidThermoModel.H"
 #include "nutWallFunctionFvPatchScalarField.H"
+#include "nearWallDist.H"
+#include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class TurbulenceModel>
+void calcYPlus
+(
+    const TurbulenceModel& turbulenceModel,
+    const fvMesh& mesh,
+    const Time& runTime,
+    const volVectorField& U,
+    volScalarField& yPlus
+)
+{
+    volScalarField::GeometricBoundaryField d = nearWallDist(mesh).y();
+
+    const volScalarField::GeometricBoundaryField nutBf =
+        turbulenceModel->nut()().boundaryField();
+
+    const volScalarField::GeometricBoundaryField nuEffBf =
+        turbulenceModel->nuEff()().boundaryField();
+
+    const volScalarField::GeometricBoundaryField nuBf =
+        turbulenceModel->nu()().boundaryField();
+
+    const fvPatchList& patches = mesh.boundary();
+
+    forAll(patches, patchi)
+    {
+        const fvPatch& patch = patches[patchi];
+
+        if (isA<nutWallFunctionFvPatchScalarField>(nutBf[patchi]))
+        {
+            const nutWallFunctionFvPatchScalarField& nutPf =
+                dynamic_cast<const nutWallFunctionFvPatchScalarField&>
+                (
+                    nutBf[patchi]
+                );
+
+            yPlus.boundaryField()[patchi] = nutPf.yPlus();
+            const scalarField& Yp = yPlus.boundaryField()[patchi];
+
+            Info<< "Patch " << patchi
+                << " named " << nutPf.patch().name()
+                << ", wall-function " << nutPf.type()
+                << ", y+ : min: " << gMin(Yp) << " max: " << gMax(Yp)
+                << " average: " << gAverage(Yp) << nl << endl;
+        }
+        else if (isA<wallFvPatch>(patch))
+        {
+            yPlus.boundaryField()[patchi] =
+                d[patchi]
+               *sqrt
+                (
+                    nuEffBf[patchi]
+                   *mag(U.boundaryField()[patchi].snGrad())
+                )/nuBf[patchi];
+            const scalarField& Yp = yPlus.boundaryField()[patchi];
+
+            Info<< "Patch " << patchi
+                << " named " << patch.name()
+                << " y+ : min: " << gMin(Yp) << " max: " << gMax(Yp)
+                << " average: " << gAverage(Yp) << nl << endl;
+        }
+    }
+}
+
 
 void calcIncompressibleYPlus
 (
@@ -49,46 +119,16 @@ void calcIncompressibleYPlus
     volScalarField& yPlus
 )
 {
-    typedef nutWallFunctionFvPatchScalarField wallFunctionPatchField;
-
     #include "createPhi.H"
 
     singlePhaseTransportModel laminarTransport(U, phi);
 
-    autoPtr<incompressible::RASModel> RASModel
+    autoPtr<incompressible::turbulenceModel> turbulenceModel
     (
-        incompressible::RASModel::New(U, phi, laminarTransport)
+        incompressible::turbulenceModel::New(U, phi, laminarTransport)
     );
 
-    const volScalarField::GeometricBoundaryField nutPatches =
-        RASModel->nut()().boundaryField();
-
-    bool foundNutPatch = false;
-    forAll(nutPatches, patchi)
-    {
-        if (isA<wallFunctionPatchField>(nutPatches[patchi]))
-        {
-            foundNutPatch = true;
-
-            const wallFunctionPatchField& nutPw =
-                dynamic_cast<const wallFunctionPatchField&>
-                    (nutPatches[patchi]);
-
-            yPlus.boundaryField()[patchi] = nutPw.yPlus();
-            const scalarField& Yp = yPlus.boundaryField()[patchi];
-
-            Info<< "Patch " << patchi
-                << " named " << nutPw.patch().name()
-                << " y+ : min: " << gMin(Yp) << " max: " << gMax(Yp)
-                << " average: " << gAverage(Yp) << nl << endl;
-        }
-    }
-
-    if (!foundNutPatch)
-    {
-        Info<< "    no " << wallFunctionPatchField::typeName << " patches"
-            << endl;
-    }
+    calcYPlus(turbulenceModel, mesh, runTime, U, yPlus);
 }
 
 
@@ -100,8 +140,6 @@ void calcCompressibleYPlus
     volScalarField& yPlus
 )
 {
-    typedef nutWallFunctionFvPatchScalarField wallFunctionPatchField;
-
     IOobject rhoHeader
     (
         "rho",
@@ -122,15 +160,12 @@ void calcCompressibleYPlus
 
     #include "compressibleCreatePhi.H"
 
-    autoPtr<fluidThermo> pThermo
-    (
-        fluidThermo::New(mesh)
-    );
+    autoPtr<fluidThermo> pThermo(fluidThermo::New(mesh));
     fluidThermo& thermo = pThermo();
 
-    autoPtr<compressible::RASModel> RASModel
+    autoPtr<compressible::turbulenceModel> turbulenceModel
     (
-        compressible::RASModel::New
+        compressible::turbulenceModel::New
         (
             rho,
             U,
@@ -139,35 +174,7 @@ void calcCompressibleYPlus
         )
     );
 
-    const volScalarField::GeometricBoundaryField nutPatches =
-        RASModel->nut()().boundaryField();
-
-    bool foundNutPatch = false;
-    forAll(nutPatches, patchi)
-    {
-        if (isA<wallFunctionPatchField>(nutPatches[patchi]))
-        {
-            foundNutPatch = true;
-
-            const wallFunctionPatchField& nutPw =
-                dynamic_cast<const wallFunctionPatchField&>
-                    (nutPatches[patchi]);
-
-            yPlus.boundaryField()[patchi] = nutPw.yPlus();
-            const scalarField& Yp = yPlus.boundaryField()[patchi];
-
-            Info<< "Patch " << patchi
-                << " named " << nutPw.patch().name()
-                << " y+ : min: " << gMin(Yp) << " max: " << gMax(Yp)
-                << " average: " << gAverage(Yp) << nl << endl;
-        }
-    }
-
-    if (!foundNutPatch)
-    {
-        Info<< "    no " << wallFunctionPatchField::typeName << " patches"
-            << endl;
-    }
+    calcYPlus(turbulenceModel, mesh, runTime, U, yPlus);
 }
 
 
