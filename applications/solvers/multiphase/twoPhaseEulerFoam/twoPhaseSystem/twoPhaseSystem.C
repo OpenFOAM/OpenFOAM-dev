@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -547,8 +547,8 @@ void Foam::twoPhaseSystem::solve()
 
         Info<< alpha1.name() << " volume fraction = "
             << alpha1.weightedAverage(mesh_.V()).value()
-            << "  Min(alpha1) = " << min(alpha1).value()
-            << "  Max(alpha1) = " << max(alpha1).value()
+            << "  Min(" << alpha1.name() << ") = " << min(alpha1).value()
+            << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
             << endl;
     }
 }

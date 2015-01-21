@@ -82,7 +82,7 @@
 
     Info<< "Liquid phase volume fraction = "
         << alpha1.weightedAverage(mesh.V()).value()
-        << "  Min(alpha1) = " << min(alpha1).value()
-        << "  Min(alpha2) = " << min(alpha2).value()
+        << "  Min(" << alpha1.name() << ") = " << min(alpha1).value()
+        << "  Min(" << alpha2.name() << ") = " << min(alpha2).value()
         << endl;
 }

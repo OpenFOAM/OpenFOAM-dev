@@ -163,13 +163,13 @@
 
     Info<< "Air phase volume fraction = "
         << alpha1.weightedAverage(mesh.V()).value()
-        << "  Min(alpha1) = " << min(alpha1).value()
-        << "  Max(alpha1) = " << max(alpha1).value()
+        << "  Min(" << alpha1.name() << ") = " << min(alpha1).value()
+        << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
         << endl;
 
     Info<< "Liquid phase volume fraction = "
         << alpha2.weightedAverage(mesh.V()).value()
-        << "  Min(alpha2) = " << min(alpha2).value()
-        << "  Max(alpha2) = " << max(alpha2).value()
+        << "  Min(" << alpha2.name() << ") = " << min(alpha2).value()
+        << "  Max(" << alpha2.name() << ") = " << max(alpha2).value()
         << endl;
 }
