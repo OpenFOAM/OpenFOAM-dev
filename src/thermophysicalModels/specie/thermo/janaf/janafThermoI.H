@@ -164,7 +164,7 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::cp
 ) const
 {
     const coeffArray& a = coeffs(T);
-    return this->RR*((((a[4]*T + a[3])*T + a[2])*T + a[1])*T + a[0]);
+    return RR*((((a[4]*T + a[3])*T + a[2])*T + a[1])*T + a[0]);
 }
 
 
@@ -176,7 +176,7 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::ha
 ) const
 {
     const coeffArray& a = coeffs(T);
-    return this->RR*
+    return RR*
     (
         ((((a[4]/5.0*T + a[3]/4.0)*T + a[2]/3.0)*T + a[1]/2.0)*T + a[0])*T
       + a[5]
@@ -199,8 +199,7 @@ template<class EquationOfState>
 inline Foam::scalar Foam::janafThermo<EquationOfState>::hc() const
 {
     const coeffArray& a = lowCpCoeffs_;
-    const scalar Tstd = specie::Tstd;
-    return this->RR*
+    return RR*
     (
         (
             (((a[4]/5.0*Tstd + a[3]/4.0)*Tstd + a[2]/3.0)*Tstd + a[1]/2.0)*Tstd
@@ -219,7 +218,7 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::s
 {
     const coeffArray& a = coeffs(T);
     return
-    this->RR*
+    RR*
     (
         (((a[4]/4.0*T + a[3]/3.0)*T + a[2]/2.0)*T + a[1])*T + a[0]*::log(T)
       + a[6]

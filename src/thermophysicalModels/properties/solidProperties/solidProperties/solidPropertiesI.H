@@ -53,7 +53,7 @@ inline Foam::scalar Foam::solidProperties::Hf() const
 
 inline Foam::scalar Foam::solidProperties::Hs(const scalar T) const
 {
-    return Cp_*(T - specie::Tstd);
+    return Cp_*(T - Tstd);
 }
 
 

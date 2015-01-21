@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Namespace
-    Foam::constant::physicoChemical
+    Foam::constant::thermodynamic
 
 Description
-    Physico-chemical constants
+    Thermodynamic scalar constants
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef physicoChemicalConstants_H
-#define physicoChemicalConstants_H
-
-#include "dimensionedScalar.H"
+#ifndef thermodynamicConstants_H
+#define thermodynamicConstants_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,37 +38,26 @@ namespace Foam
 {
 namespace constant
 {
-namespace physicoChemical
+namespace thermodynamic
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    //- Group name for physico-chemical constants
-    extern const char* const group;
+    //- Universal gas constant (default in [J/(kmol K)])
+    extern const scalar RR;
 
-    //- Universal gas constant: default SI units: [J/mol/K]
-    extern const dimensionedScalar R;
+    //- Standard pressure (default in [Pa])
+    extern const scalar Pstd;
 
-    //- Faraday constant: default SI units: [C/mol]
-    extern const dimensionedScalar F;
-
-    //- Stefan-Boltzmann constant: default SI units: [W/m2/K4]
-    extern const dimensionedScalar sigma;
-
-    //- Wien displacement law constant: default SI units: [m.K]
-    extern const dimensionedScalar b;
-
-    //- First radiation constant: default SI units: [W/m2]
-    extern const dimensionedScalar c1;
-
-    //- Second radiation constant: default SI units: [m.K]
-    extern const dimensionedScalar c2;
+    //- Standard temperature (default in [K])
+    extern const scalar Tstd;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace physicoChemical
+} // End namespace thermodynamic
 } // End namespace constant
 } // End namespace Foam
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

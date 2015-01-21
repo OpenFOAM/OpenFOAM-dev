@@ -55,7 +55,7 @@ Foam::PengRobinsonGas<Specie>::PengRobinsonGas
     Pc_(readScalar(dict.subDict("equationOfState").lookup("Pc"))),
     omega_(readScalar(dict.subDict("equationOfState").lookup("omega")))
 {
-    Zc_ = Pc_*Vc_/(specie::RR*Tc_);
+    Zc_ = Pc_*Vc_/(RR*Tc_);
 }
 
 

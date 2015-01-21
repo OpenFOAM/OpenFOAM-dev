@@ -143,7 +143,7 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::cpMcv
     scalar
 ) const
 {
-    return this->RR;
+    return RR;
 }
 
 

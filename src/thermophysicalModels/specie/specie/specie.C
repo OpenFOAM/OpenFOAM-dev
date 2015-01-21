@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,18 +29,9 @@ License
 
 /* * * * * * * * * * * * * * * public constants  * * * * * * * * * * * * * * */
 
-//- Universal gas constant (default in [J/(kmol K)])
-const Foam::scalar Foam::specie::RR = constant::physicoChemical::R.value()*1000;
-
-//- Standard pressure (default in [Pa])
-const Foam::scalar Foam::specie::Pstd = constant::standard::Pstd.value();
-
-//- Standard temperature (default in [K])
-const Foam::scalar Foam::specie::Tstd = constant::standard::Tstd.value();
-
 namespace Foam
 {
-defineTypeNameAndDebug(specie, 0);
+    defineTypeNameAndDebug(specie, 0);
 }
 
 

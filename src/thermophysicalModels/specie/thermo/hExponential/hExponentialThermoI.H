@@ -156,7 +156,7 @@ inline Foam::scalar Foam::hExponentialThermo<equationOfState>::ha
     const scalar p, const scalar T
 ) const
 {
-    scalar hOffset = integrateCp(specie::Tstd);
+    scalar hOffset = integrateCp(Tstd);
 
     return
     (
@@ -171,7 +171,7 @@ inline Foam::scalar Foam::hExponentialThermo<equationOfState>::hs
     const scalar p, const scalar T
 ) const
 {
-    scalar hOffset = integrateCp(specie::Tstd);
+    scalar hOffset = integrateCp(Tstd);
     return (integrateCp(T) - hOffset);
 }
 

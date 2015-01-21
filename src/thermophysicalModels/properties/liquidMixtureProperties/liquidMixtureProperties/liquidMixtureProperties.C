@@ -187,7 +187,7 @@ Foam::scalar Foam::liquidMixtureProperties::Ppc(const scalarField& x) const
         Zc += x[i]*properties_[i].Zc();
     }
 
-    return specie::RR*Zc*Tpc(x)/Vc;
+    return RR*Zc*Tpc(x)/Vc;
 }
 
 

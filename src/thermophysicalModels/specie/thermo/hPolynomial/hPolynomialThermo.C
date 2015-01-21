@@ -49,10 +49,10 @@ Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
     sCoeffs_ = CpCoeffs_.integralMinus1();
 
     // Offset h poly so that it is relative to the enthalpy at Tstd
-    hCoeffs_[0] += Hf_ - hCoeffs_.value(specie::Tstd);
+    hCoeffs_[0] += Hf_ - hCoeffs_.value(Tstd);
 
     // Offset s poly so that it is relative to the entropy at Tstd
-    sCoeffs_[0] += Sf_ - sCoeffs_.value(specie::Tstd);
+    sCoeffs_[0] += Sf_ - sCoeffs_.value(Tstd);
 }
 
 
@@ -83,10 +83,10 @@ Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
     sCoeffs_ = CpCoeffs_.integralMinus1();
 
     // Offset h poly so that it is relative to the enthalpy at Tstd
-    hCoeffs_[0] += Hf_ - hCoeffs_.value(specie::Tstd);
+    hCoeffs_[0] += Hf_ - hCoeffs_.value(Tstd);
 
     // Offset s poly so that it is relative to the entropy at Tstd
-    sCoeffs_[0] += Sf_ - sCoeffs_.value(specie::Tstd);
+    sCoeffs_[0] += Sf_ - sCoeffs_.value(Tstd);
 }
 
 

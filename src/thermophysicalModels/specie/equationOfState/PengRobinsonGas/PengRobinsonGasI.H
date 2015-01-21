@@ -201,7 +201,7 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::cpMcv
     scalar T
 ) const
 {
-    return this->RR*Z(p, T);
+    return RR*Z(p, T);
 }
 
 
@@ -222,7 +222,7 @@ inline void Foam::PengRobinsonGas<Specie>::operator+=
     Tc_ = molr1*Tc_ + molr2*pg.Tc_;
     Vc_ = molr1*Vc_ + molr2*pg.Vc_;
     Zc_ = molr1*Zc_ + molr2*pg.Zc_;
-    Pc_ = specie::RR*Zc_*Tc_/Vc_;
+    Pc_ = RR*Zc_*Tc_/Vc_;
     omega_ = molr1*omega_ + molr2*pg.omega_;
 }
 
@@ -243,7 +243,7 @@ inline void Foam::PengRobinsonGas<Specie>::operator-=
     Tc_ = molr1*Tc_ - molr2*pg.Tc_;
     Vc_ = molr1*Vc_ - molr2*pg.Vc_;
     Zc_ = molr1*Zc_ - molr2*pg.Zc_;
-    Pc_ = specie::RR*Zc_*Tc_/Vc_;
+    Pc_ = RR*Zc_*Tc_/Vc_;
     omega_ = molr1*omega_ - molr2*pg.omega_;
 }
 
@@ -280,7 +280,7 @@ Foam::PengRobinsonGas<Specie> Foam::operator+
         Tc,
         Vc,
         Zc,
-        specie::RR*Zc*Tc/Vc,
+        RR*Zc*Tc/Vc,
         molr1*pg1.omega_ + molr2*pg2.omega_
     );
 }
@@ -308,7 +308,7 @@ Foam::PengRobinsonGas<Specie> Foam::operator-
         Tc,
         Vc,
         Zc,
-        specie::RR*Zc*Tc/Vc,
+        RR*Zc*Tc/Vc,
         molr1*pg1.omega_ - molr2*pg2.omega_
     );
 }

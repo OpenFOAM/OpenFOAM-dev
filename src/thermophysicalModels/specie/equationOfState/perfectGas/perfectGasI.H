@@ -99,7 +99,7 @@ inline Foam::scalar Foam::perfectGas<Specie>::Z(scalar, scalar) const
 template<class Specie>
 inline Foam::scalar Foam::perfectGas<Specie>::cpMcv(scalar, scalar) const
 {
-    return this->RR;
+    return RR;
 }
 
 
