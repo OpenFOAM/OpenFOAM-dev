@@ -30,7 +30,6 @@ boundaryField
     ground
     {
         type            compressible::alphatWallFunction;
-        mut             muSgs;
         value           uniform 0;
     }
 
@@ -49,7 +48,6 @@ boundaryField
     region0_to_pyrolysisRegion_coupledWall
     {
         type            compressible::alphatWallFunction;
-        mut             muSgs;
         value           uniform 0;
     }
 }
