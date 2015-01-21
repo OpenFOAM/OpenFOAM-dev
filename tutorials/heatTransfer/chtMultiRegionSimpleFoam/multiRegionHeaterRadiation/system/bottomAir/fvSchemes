@@ -37,7 +37,7 @@ divSchemes
     div(phi,R)      bounded Gauss upwind;
     div(R)          Gauss linear;
     div(Ji,Ii_h)    Gauss linearUpwind grad(U);
-    div((muEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

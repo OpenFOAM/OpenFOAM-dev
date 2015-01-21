@@ -32,19 +32,21 @@ Description
 
     Turbulence model described in:
     \verbatim
-        Menter, F., Esch, T.
-        "Elements of Industrial Heat Transfer Prediction"
-        16th Brazilian Congress of Mechanical Engineering (COBEM),
-        Nov. 2001
+        Menter, F. R. & Esch, T. (2001).
+        Elements of Industrial Heat Transfer Prediction.
+        16th Brazilian Congress of Mechanical Engineering (COBEM).
+
+        Menter, F. R., Kuntz, M., and Langtry, R. (2003).
+        Ten Years of Industrial Experience with the SST Turbulence Model.
+        Turbulence, Heat and Mass Transfer 4, ed: K. Hanjalic, Y. Nagano,
+        & M. Tummers, Begell House, Inc., 625 - 632.
     \endverbatim
 
     with the addition of the optional F3 term for rough walls from
     \verbatim
-        Hellsten, A.
+        Hellsten, A. (1998).
         "Some Improvements in Menter’s k-omega-SST turbulence model"
-        29th AIAA Fluid Dynamics Conference,
-        AIAA-98-2554,
-        June 1998.
+        29th AIAA Fluid Dynamics Conference, AIAA-98-2554.
     \endverbatim
 
     Note that this implementation is written in terms of alpha diffusion

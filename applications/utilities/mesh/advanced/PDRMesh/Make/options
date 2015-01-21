@@ -4,7 +4,9 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 
 EXE_LIBS = \
+    -lturbulenceModels \
+    -lcompressibleTurbulenceModels \
+    -lfluidThermophysicalModels \
     -lmeshTools \
     -ldynamicMesh \
-    -lfiniteVolume \
-    -lcompressibleRASModels
+    -lfiniteVolume

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,25 +31,17 @@ License
 
 namespace Foam
 {
+namespace LESModels
+{
     defineTypeNameAndDebug(smoothDelta, 0);
     addToRunTimeSelectionTable(LESdelta, smoothDelta, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Fill changedFaces (with face labels) and changedFacesInfo (with delta)
-// This is the initial set of faces from which to start the waves.
-// Since there might be lots of places with delta jumps we can follow various
-// strategies for this initial 'seed'.
-// - start from single cell/face and let FaceCellWave pick up all others
-//   from there. might be quite a few waves before everything settles.
-// - start from all faces. Lots of initial transfers.
-// We do something inbetween:
-// - start from all faces where there is a jump. Since we cannot easily
-//   determine this across coupled patches (cyclic, processor) introduce
-//   all faces of these and let FaceCellWave sort it out.
-void Foam::smoothDelta::setChangedFaces
+void Foam::LESModels::smoothDelta::setChangedFaces
 (
     const polyMesh& mesh,
     const volScalarField& delta,
@@ -102,18 +94,20 @@ void Foam::smoothDelta::setChangedFaces
 }
 
 
-void Foam::smoothDelta::calcDelta()
+void Foam::LESModels::smoothDelta::calcDelta()
 {
+    const fvMesh& mesh = turbulenceModel_.mesh();
+
     const volScalarField& geometricDelta = geometricDelta_();
 
     // Fill changed faces with info
-    DynamicList<label> changedFaces(mesh_.nFaces()/100 + 100);
+    DynamicList<label> changedFaces(mesh.nFaces()/100 + 100);
     DynamicList<deltaData> changedFacesInfo(changedFaces.size());
 
-    setChangedFaces(mesh_, geometricDelta, changedFaces, changedFacesInfo);
+    setChangedFaces(mesh, geometricDelta, changedFaces, changedFacesInfo);
 
     // Set initial field on cells.
-    List<deltaData> cellDeltaData(mesh_.nCells());
+    List<deltaData> cellDeltaData(mesh.nCells());
 
     forAll(geometricDelta, cellI)
     {
@@ -121,18 +115,18 @@ void Foam::smoothDelta::calcDelta()
     }
 
     // Set initial field on faces.
-    List<deltaData> faceDeltaData(mesh_.nFaces());
+    List<deltaData> faceDeltaData(mesh.nFaces());
 
 
     // Propagate information over whole domain.
     FaceCellWave<deltaData, scalar> deltaCalc
     (
-        mesh_,
+        mesh,
         changedFaces,
         changedFacesInfo,
         faceDeltaData,
         cellDeltaData,
-        mesh_.globalData().nTotalCells()+1,  // max iterations
+        mesh.globalData().nTotalCells()+1,  // max iterations
         maxDeltaRatio_
     );
 
@@ -145,17 +139,22 @@ void Foam::smoothDelta::calcDelta()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::smoothDelta::smoothDelta
+Foam::LESModels::smoothDelta::smoothDelta
 (
     const word& name,
-    const fvMesh& mesh,
+    const turbulenceModel& turbulence,
     const dictionary& dict
 )
 :
-    LESdelta(name, mesh),
+    LESdelta(name, turbulence),
     geometricDelta_
     (
-        LESdelta::New("geometricDelta", mesh, dict.subDict(type() + "Coeffs"))
+        LESdelta::New
+        (
+            "geometricDelta",
+            turbulence,
+            dict.subDict(type() + "Coeffs")
+        )
     ),
     maxDeltaRatio_
     (
@@ -168,7 +167,7 @@ Foam::smoothDelta::smoothDelta
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::smoothDelta::read(const dictionary& dict)
+void Foam::LESModels::smoothDelta::read(const dictionary& dict)
 {
     const dictionary& coeffsDict(dict.subDict(type() + "Coeffs"));
 
@@ -178,11 +177,11 @@ void Foam::smoothDelta::read(const dictionary& dict)
 }
 
 
-void Foam::smoothDelta::correct()
+void Foam::LESModels::smoothDelta::correct()
 {
     geometricDelta_().correct();
 
-    if (mesh_.changing())
+    if (turbulenceModel_.mesh().changing())
     {
         calcDelta();
     }

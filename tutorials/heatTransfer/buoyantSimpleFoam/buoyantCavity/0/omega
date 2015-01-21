@@ -23,22 +23,22 @@ boundaryField
 {
     frontAndBack
     {
-        type            compressible::omegaWallFunction;
+        type            omegaWallFunction;
         value           uniform 0.12;
     }
     topAndBottom
     {
-        type            compressible::omegaWallFunction;
+        type            omegaWallFunction;
         value           uniform 0.12;
     }
     hot
     {
-        type            compressible::omegaWallFunction;
+        type            omegaWallFunction;
         value           uniform 0.12;
     }
     cold
     {
-        type            compressible::omegaWallFunction;
+        type            omegaWallFunction;
         value           uniform 0.12;
     }
 }

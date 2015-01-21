@@ -78,12 +78,12 @@ dictionaryReplacement
         {
             blockedFaces
             {
-                type            compressible::epsilonWallFunction;
+                type            epsilonWallFunction;
                 value           uniform 0.1;
             }
             baffleWall
             {
-                type            compressible::epsilonWallFunction;
+                type            epsilonWallFunction;
                 value           uniform 1e-5;
             }
             baffleCyclic_half0
@@ -103,12 +103,12 @@ dictionaryReplacement
         {
             blockedFaces
             {
-                type        compressible::kqRWallFunction;
+                type        kqRWallFunction;
                 value       uniform 1.5;
          }
             baffleWall
             {
-                type        compressible::kqRWallFunction;
+                type        kqRWallFunction;
                 value       uniform 1.5;
             }
             baffleCyclic_half0

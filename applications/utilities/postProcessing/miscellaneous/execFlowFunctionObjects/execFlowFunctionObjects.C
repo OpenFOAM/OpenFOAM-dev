@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,13 +46,8 @@ Description
 #include "fvIOoptionList.H"
 
 #include "incompressible/singlePhaseTransportModel/singlePhaseTransportModel.H"
-
-#include "incompressible/RAS/RASModel/RASModel.H"
-#include "incompressible/LES/LESModel/LESModel.H"
-
-#include "fluidThermo.H"
-#include "compressible/RAS/RASModel/RASModel.H"
-#include "compressible/LES/LESModel/LESModel.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 
 using namespace Foam;
 

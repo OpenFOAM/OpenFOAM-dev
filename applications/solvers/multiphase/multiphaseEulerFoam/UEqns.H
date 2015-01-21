@@ -10,7 +10,7 @@ forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
     const volScalarField& alpha = phase;
     volVectorField& U = phase.U();
 
-    volScalarField nuEff(sgsModel->nut() + iter().nu());
+    volScalarField nuEff(turbulence->nut() + iter().nu());
 
     UEqns.set
     (

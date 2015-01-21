@@ -23,13 +23,13 @@ boundaryField
 {
     rotor
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 20;
     }
 
     stator
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 20;
     }
 

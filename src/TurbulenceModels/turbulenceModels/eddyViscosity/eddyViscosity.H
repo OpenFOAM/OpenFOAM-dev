@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::eddyViscosity
 
 Group
-    grpRASTurbulence
+    grpTurbulence
 
 Description
     Eddy viscosity turbulence model base class
@@ -37,6 +37,8 @@ SourceFiles
 
 #ifndef eddyViscosity_H
 #define eddyViscosity_H
+
+#include "linearViscousStress.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,7 +52,7 @@ namespace Foam
 template<class BasicTurbulenceModel>
 class eddyViscosity
 :
-    public BasicTurbulenceModel
+    public linearViscousStress<BasicTurbulenceModel>
 {
 
 protected:
@@ -117,12 +119,6 @@ public:
 
         //- Return the Reynolds stress tensor
         virtual tmp<volSymmTensorField> R() const;
-
-        //- Return the effective stress tensor
-        virtual tmp<volSymmTensorField> devRhoReff() const;
-
-        //- Return the source term for the momentum equation
-        virtual tmp<fvVectorMatrix> divDevRhoReff(volVectorField& U) const;
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct() = 0;

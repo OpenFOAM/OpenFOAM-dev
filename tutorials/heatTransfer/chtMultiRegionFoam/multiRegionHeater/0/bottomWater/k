@@ -34,32 +34,32 @@ boundaryField
     }
     minY
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
     minZ
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
     maxZ
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
     bottomWater_to_rightSolid
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
     bottomWater_to_leftSolid
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
     bottomWater_to_heater
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
 }

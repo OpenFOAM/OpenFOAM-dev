@@ -34,14 +34,10 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-
-#include "incompressible/singlePhaseTransportModel/singlePhaseTransportModel.H"
-#include "incompressible/RAS/RASModel/RASModel.H"
-#include "nutWallFunction/nutWallFunctionFvPatchScalarField.H"
-
-#include "fluidThermo.H"
-#include "compressible/RAS/RASModel/RASModel.H"
-#include "mutWallFunction/mutWallFunctionFvPatchScalarField.H"
+#include "singlePhaseTransportModel.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
+#include "nutWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,8 +49,7 @@ void calcIncompressibleYPlus
     volScalarField& yPlus
 )
 {
-    typedef incompressible::nutWallFunctionFvPatchScalarField
-        wallFunctionPatchField;
+    typedef nutWallFunctionFvPatchScalarField wallFunctionPatchField;
 
     #include "createPhi.H"
 
@@ -105,8 +100,7 @@ void calcCompressibleYPlus
     volScalarField& yPlus
 )
 {
-    typedef compressible::mutWallFunctionFvPatchScalarField
-        wallFunctionPatchField;
+    typedef nutWallFunctionFvPatchScalarField wallFunctionPatchField;
 
     IOobject rhoHeader
     (
@@ -145,31 +139,31 @@ void calcCompressibleYPlus
         )
     );
 
-    const volScalarField::GeometricBoundaryField mutPatches =
-        RASModel->mut()().boundaryField();
+    const volScalarField::GeometricBoundaryField nutPatches =
+        RASModel->nut()().boundaryField();
 
-    bool foundMutPatch = false;
-    forAll(mutPatches, patchi)
+    bool foundNutPatch = false;
+    forAll(nutPatches, patchi)
     {
-        if (isA<wallFunctionPatchField>(mutPatches[patchi]))
+        if (isA<wallFunctionPatchField>(nutPatches[patchi]))
         {
-            foundMutPatch = true;
+            foundNutPatch = true;
 
-            const wallFunctionPatchField& mutPw =
+            const wallFunctionPatchField& nutPw =
                 dynamic_cast<const wallFunctionPatchField&>
-                    (mutPatches[patchi]);
+                    (nutPatches[patchi]);
 
-            yPlus.boundaryField()[patchi] = mutPw.yPlus();
+            yPlus.boundaryField()[patchi] = nutPw.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
 
             Info<< "Patch " << patchi
-                << " named " << mutPw.patch().name()
+                << " named " << nutPw.patch().name()
                 << " y+ : min: " << gMin(Yp) << " max: " << gMax(Yp)
                 << " average: " << gAverage(Yp) << nl << endl;
         }
     }
 
-    if (!foundMutPatch)
+    if (!foundNutPatch)
     {
         Info<< "    no " << wallFunctionPatchField::typeName << " patches"
             << endl;
@@ -200,7 +194,7 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timeI], timeI);
         Info<< "Time = " << runTime.timeName() << endl;
-        fvMesh::readUpdateState state = mesh.readUpdate();
+        mesh.readUpdate();
 
         volScalarField yPlus
         (

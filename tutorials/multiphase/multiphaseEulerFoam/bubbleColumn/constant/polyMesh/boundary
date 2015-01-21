@@ -32,6 +32,7 @@ FoamFile
     walls
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          150;
         startFace       3700;
     }

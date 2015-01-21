@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs            ("libincompressibleRASModels.so");
-
 application     simpleFoam;
 
 startFrom       latestTime;
@@ -34,7 +32,7 @@ writeInterval   50;
 
 purgeWrite      0;
 
-writeFormat     binary; //ascii;
+writeFormat     binary;
 
 writePrecision  12;
 

@@ -40,7 +40,7 @@ divSchemes
         CO2             limitedLinear01 1;
         h               limitedLinear 1;
     };
-    div((muEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
     div(Ji,Ii_h)    Gauss upwind;
 }
 

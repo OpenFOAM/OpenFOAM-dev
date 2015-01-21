@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,7 +162,7 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
 
     // Far field partial pressure O2 [Pa]
     // Note: Should really use the surface partial pressure
-    const scalar ppO2 = max(0.0, rhoc*YO2/WO2_*specie::RR*Tc);
+    const scalar ppO2 = max(0.0, rhoc*YO2/WO2_*RR*Tc);
 
     // Activation energy [kcal/mol]
     const scalar E = -5.94 + 0.355*charPrc;

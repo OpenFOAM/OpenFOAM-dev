@@ -20,12 +20,14 @@ FoamFile
     rotor
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          192;
         startFace       5952;
     }
     stator
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          192;
         startFace       6144;
     }

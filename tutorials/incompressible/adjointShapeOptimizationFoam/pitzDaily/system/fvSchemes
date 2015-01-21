@@ -32,10 +32,10 @@ divSchemes
     div(phi,U)      bounded Gauss upwind;
     div(phi,k)      bounded Gauss upwind;
     div(phi,epsilon) bounded Gauss upwind;
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 
     div(-phi,Ua)    bounded Gauss upwind;
-    div((nuEff*dev(T(grad(Ua))))) Gauss linear;
+    div((nuEff*dev2(T(grad(Ua))))) Gauss linear;
 }
 
 laplacianSchemes

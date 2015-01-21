@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,20 +36,24 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::LESdelta::LESdelta(const word& name, const fvMesh& mesh)
+Foam::LESdelta::LESdelta
+(
+    const word& name,
+    const turbulenceModel& turbulence
+)
 :
-    mesh_(mesh),
+    turbulenceModel_(turbulence),
     delta_
     (
         IOobject
         (
             name,
-            mesh.time().timeName(),
-            mesh,
+            turbulence.mesh().time().timeName(),
+            turbulence.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        mesh,
+        turbulence.mesh(),
         dimensionedScalar(name, dimLength, SMALL),
         calculatedFvPatchScalarField::typeName
     )
@@ -61,7 +65,7 @@ Foam::LESdelta::LESdelta(const word& name, const fvMesh& mesh)
 Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
 (
     const word& name,
-    const fvMesh& mesh,
+    const turbulenceModel& turbulence,
     const dictionary& dict
 )
 {
@@ -76,7 +80,7 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
     {
         FatalErrorIn
         (
-            "LESdelta::New(const fvMesh&, const dictionary&)"
+            "LESdelta::New(const word& name, const turbulenceModel& turbulence)"
         )   << "Unknown LESdelta type "
             << deltaType << nl << nl
             << "Valid LESdelta types are :" << endl
@@ -84,14 +88,14 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
             << exit(FatalError);
     }
 
-    return autoPtr<LESdelta>(cstrIter()(name, mesh, dict));
+    return autoPtr<LESdelta>(cstrIter()(name, turbulence, dict));
 }
 
 
 Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
 (
     const word& name,
-    const fvMesh& mesh,
+    const turbulenceModel& turbulence,
     const dictionary& dict,
     const dictionaryConstructorTable& additionalConstructors
 )
@@ -106,7 +110,7 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
 
     if (cstrIter != additionalConstructors.end())
     {
-        return autoPtr<LESdelta>(cstrIter()(name, mesh, dict));
+        return autoPtr<LESdelta>(cstrIter()(name, turbulence, dict));
     }
     else
     {
@@ -117,7 +121,9 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
         {
             FatalErrorIn
             (
-                "LESdelta::New(const fvMesh&, const dictionary&)"
+                "LESdelta::New(const word& name, "
+                "const turbulenceModel& turbulence, "
+                "const dictionaryConstructorTable&)"
             )   << "Unknown LESdelta type "
                 << deltaType << nl << nl
                 << "Valid LESdelta types are :" << endl
@@ -129,7 +135,7 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
         }
         else
         {
-            return autoPtr<LESdelta>(cstrIter()(name, mesh, dict));
+            return autoPtr<LESdelta>(cstrIter()(name, turbulence, dict));
         }
     }
 }

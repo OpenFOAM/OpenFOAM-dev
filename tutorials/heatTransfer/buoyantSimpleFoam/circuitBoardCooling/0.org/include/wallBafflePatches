@@ -14,19 +14,19 @@ alphat
 
 epsilon
 {
-    type            compressible::epsilonWallFunction;
+    type            epsilonWallFunction;
     value           uniform 0.01;
 }
 
 k
 {
-    type            compressible::kqRWallFunction;
+    type            kqRWallFunction;
     value           uniform 0.01;
 }
 
-mut
+nut
 {
-    type            mutkWallFunction;
+    type            nutkWallFunction;
     value           uniform 0;
 }
 

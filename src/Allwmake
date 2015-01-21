@@ -61,7 +61,6 @@ wmake $targetType randomProcesses
 
 transportModels/Allwmake $targetType $*
 thermophysicalModels/Allwmake $targetType $*
-turbulenceModels/Allwmake $targetType $*
 TurbulenceModels/Allwmake $targetType $*
 wmake $targetType combustionModels
 regionModels/Allwmake $targetType $*

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,8 @@ SourceFiles
 
 namespace Foam
 {
+namespace LESModels
+{
 
 /*---------------------------------------------------------------------------*\
                            Class cubeRootVolDelta Declaration
@@ -73,11 +75,11 @@ public:
 
     // Constructors
 
-        //- Construct from name, mesh and IOdictionary
+        //- Construct from name, turbulenceModel and dictionary
         cubeRootVolDelta
         (
             const word& name,
-            const fvMesh& mesh,
+            const turbulenceModel& turbulence,
             const dictionary&
         );
 
@@ -99,6 +101,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace LESModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

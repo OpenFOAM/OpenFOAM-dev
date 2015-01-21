@@ -32,12 +32,14 @@ FoamFile
     upperWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          223;
         startFace       24257;
     }
     lowerWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          250;
         startFace       24480;
     }

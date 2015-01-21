@@ -23,22 +23,22 @@ boundaryField
 {
     frontAndBack
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 4e-06;
     }
     topAndBottom
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 4e-06;
     }
     hot
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 4e-06;
     }
     cold
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 4e-06;
     }
 }

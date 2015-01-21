@@ -6,9 +6,7 @@ EXE_LIBS = \
     -lblockMesh \
     -lchemistryModel \
     -lcoalCombustion \
-    -lcompressibleLESModels \
-    -lcompressibleRASModels \
-    -lcompressibleTurbulenceModel \
+    -lcompressibleTurbulenceModels \
     -lconversion \
     -ldecompositionMethods \
     -ldistributed \
@@ -25,27 +23,21 @@ EXE_LIBS = \
     -lforces \
     -lfvMotionSolvers \
     -lgenericPatchFields \
-    -lincompressibleLESModels \
-    -lincompressibleRASModels \
     -lincompressibleTransportModels \
-    -lincompressibleTurbulenceModel \
+    -lincompressibleTurbulenceModels \
     -linterfaceProperties \
     -lIOFunctionObjects \
     -ljobControl \
     -llagrangian \
     -llagrangianIntermediate \
     -llaminarFlameSpeedModels \
-    -lLESdeltas \
-    -lLESfilters \
     -lliquidMixtureProperties \
     -lliquidProperties \
     -lmeshTools \
     -lmolecularMeasurements \
     -lmolecule \
-/*    -lmultiphaseInterFoam  */ \
     -lODE \
     -lOpenFOAM \
-/*    -lphaseModel  */ \
     -lpotential \
     -lradiationModels \
     -lrandomProcesses \
@@ -63,5 +55,6 @@ EXE_LIBS = \
     -lthermophysicalFunctions \
     -ltopoChangerFvMesh \
     -ltriSurface \
+    -lturbulenceModels \
     -ltwoPhaseProperties \
     -lutilityFunctionObjects

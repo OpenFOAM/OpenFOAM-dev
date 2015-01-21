@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,46 @@ namespace Foam
 {
 namespace RASModels
 {
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+void kEpsilon<BasicTurbulenceModel>::correctNut()
+{
+    this->nut_ = Cmu_*sqr(k_)/epsilon_;
+    this->nut_.correctBoundaryConditions();
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kEpsilon<BasicTurbulenceModel>::kSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            k_,
+            dimVolume*this->rho_.dimensions()*k_.dimensions()
+            /dimTime
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kEpsilon<BasicTurbulenceModel>::epsilonSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            epsilon_,
+            dimVolume*this->rho_.dimensions()*epsilon_.dimensions()
+            /dimTime
+        )
+    );
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -171,44 +211,6 @@ bool kEpsilon<BasicTurbulenceModel>::read()
     {
         return false;
     }
-}
-
-
-template<class BasicTurbulenceModel>
-void kEpsilon<BasicTurbulenceModel>::correctNut()
-{
-    this->nut_ = Cmu_*sqr(k_)/epsilon_;
-    this->nut_.correctBoundaryConditions();
-}
-
-
-template<class BasicTurbulenceModel>
-tmp<fvScalarMatrix> kEpsilon<BasicTurbulenceModel>::kSource() const
-{
-    return tmp<fvScalarMatrix>
-    (
-        new fvScalarMatrix
-        (
-            k_,
-            dimVolume*this->rho_.dimensions()*k_.dimensions()
-            /dimTime
-        )
-    );
-}
-
-
-template<class BasicTurbulenceModel>
-tmp<fvScalarMatrix> kEpsilon<BasicTurbulenceModel>::epsilonSource() const
-{
-    return tmp<fvScalarMatrix>
-    (
-        new fvScalarMatrix
-        (
-            epsilon_,
-            dimVolume*this->rho_.dimensions()*epsilon_.dimensions()
-            /dimTime
-        )
-    );
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "makeTurbulenceModel.H"
 
 #include "laminar.H"
-#include "RASModel.H"
+#include "turbulentTransportModel.H"
 #include "LESModel.H"
 
 makeBaseTurbulenceModel

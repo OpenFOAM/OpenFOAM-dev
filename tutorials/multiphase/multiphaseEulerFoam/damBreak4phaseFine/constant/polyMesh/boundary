@@ -20,18 +20,21 @@ FoamFile
     leftWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          195;
         startFace       68014;
     }
     rightWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          195;
         startFace       68209;
     }
     lowerWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          206;
         startFace       68404;
     }

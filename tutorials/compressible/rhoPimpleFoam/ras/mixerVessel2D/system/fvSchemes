@@ -32,7 +32,7 @@ divSchemes
     div(phi,h)      Gauss limitedLinear 1;
     div(phi,k)      Gauss limitedLinear 1;
     div(phi,epsilon) Gauss limitedLinear 1;
-    div((muEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
     div(phi,K)      Gauss linear;
 }
 

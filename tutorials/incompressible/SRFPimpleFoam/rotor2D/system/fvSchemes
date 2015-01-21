@@ -31,7 +31,7 @@ divSchemes
     div(phi,Urel)   Gauss limitedLinearV 1;
     div(phi,k)      Gauss limitedLinear 1;
     div(phi,epsilon) Gauss limitedLinear 1;
-    div((nuEff*dev(T(grad(Urel))))) Gauss linear;
+    div((nuEff*dev2(T(grad(Urel))))) Gauss linear;
 }
 
 laplacianSchemes

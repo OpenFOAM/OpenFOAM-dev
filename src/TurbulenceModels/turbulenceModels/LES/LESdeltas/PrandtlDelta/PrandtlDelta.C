@@ -31,34 +31,45 @@ License
 
 namespace Foam
 {
+namespace LESModels
+{
     defineTypeNameAndDebug(PrandtlDelta, 0);
     addToRunTimeSelectionTable(LESdelta, PrandtlDelta, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::PrandtlDelta::calcDelta()
+void Foam::LESModels::PrandtlDelta::calcDelta()
 {
     delta_ = min
     (
         static_cast<const volScalarField&>(geometricDelta_()),
-        (kappa_/Cdelta_)*wallDist::New(mesh_).y()
+        (kappa_/Cdelta_)*wallDist::New(turbulenceModel_.mesh()).y()
     );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::PrandtlDelta::PrandtlDelta
+Foam::LESModels::PrandtlDelta::PrandtlDelta
 (
     const word& name,
-    const fvMesh& mesh,
+    const turbulenceModel& turbulence,
     const dictionary& dict
 )
 :
-    LESdelta(name, mesh),
-    geometricDelta_(LESdelta::New(name, mesh, dict.subDict(type() + "Coeffs"))),
+    LESdelta(name, turbulence),
+    geometricDelta_
+    (
+        LESdelta::New
+        (
+            name,
+            turbulence,
+            dict.subDict(type() + "Coeffs")
+        )
+    ),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     Cdelta_
     (
@@ -71,7 +82,7 @@ Foam::PrandtlDelta::PrandtlDelta
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::PrandtlDelta::read(const dictionary& dict)
+void Foam::LESModels::PrandtlDelta::read(const dictionary& dict)
 {
     const dictionary& coeffDict(dict.subDict(type() + "Coeffs"));
 
@@ -82,11 +93,11 @@ void Foam::PrandtlDelta::read(const dictionary& dict)
 }
 
 
-void Foam::PrandtlDelta::correct()
+void Foam::LESModels::PrandtlDelta::correct()
 {
     geometricDelta_().correct();
 
-    if (mesh_.changing())
+    if (turbulenceModel_.mesh().changing())
     {
         calcDelta();
     }

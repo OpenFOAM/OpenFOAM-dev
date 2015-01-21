@@ -3,11 +3,8 @@ EXE_INC = \
 
 LIB_LIBS = \
     -lfiniteVolume \
-    -lincompressibleTurbulenceModel \
-    -lcompressibleTurbulenceModel \
-    -lincompressibleRASModels \
-    -lcompressibleRASModels \
-    -lincompressibleLESModels \
-    -lcompressibleLESModels \
+    -lturbulenceModels \
+    -lincompressibleTurbulenceModels \
+    -lcompressibleTurbulenceModels \
     -lradiationModels \
     -lfluidThermophysicalModels

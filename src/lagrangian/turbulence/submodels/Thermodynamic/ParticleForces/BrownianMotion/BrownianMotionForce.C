@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,8 @@ License
 #include "BrownianMotionForce.H"
 #include "mathematicalConstants.H"
 #include "demandDrivenData.H"
-#include "incompressible/turbulenceModel/turbulenceModel.H"
-#include "compressible/turbulenceModel/turbulenceModel.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 
 using namespace Foam::constant;
 
@@ -57,7 +57,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::BrownianMotionForce<CloudType>::kModel() const
 {
     const objectRegistry& obr = this->owner().mesh();
-    const word turbName = "turbulenceModel";
+    const word turbName = turbulenceModel::propertiesName;
 
     if (obr.foundObject<compressible::turbulenceModel>(turbName))
     {

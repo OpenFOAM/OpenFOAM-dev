@@ -15,13 +15,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs
-(
-    "libOpenFOAM.so"
-    "libincompressibleTurbulenceModel.so"
-    "libincompressibleRASModels.so"
-);
-
 application     pimpleFoam;
 
 startFrom       startTime;

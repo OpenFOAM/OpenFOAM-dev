@@ -46,7 +46,7 @@ boundaryField
     }
     prismWall
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 1000;
     }
     defaultFaces

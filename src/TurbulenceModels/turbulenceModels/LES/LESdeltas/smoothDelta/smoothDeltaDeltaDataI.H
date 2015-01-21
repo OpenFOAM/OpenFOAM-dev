@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,16 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Update this with w2 if applicable
 template<class TrackingData>
-inline bool smoothDelta::deltaData::update
+inline bool Foam::LESModels::smoothDelta::deltaData::update
 (
     const smoothDelta::deltaData& w2,
     const scalar scale,
@@ -67,15 +61,13 @@ inline bool smoothDelta::deltaData::update
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
-inline smoothDelta::deltaData::deltaData()
+inline Foam::LESModels::smoothDelta::deltaData::deltaData()
 :
     delta_(-GREAT)
 {}
 
 
-// Construct from components
-inline smoothDelta::deltaData::deltaData(const scalar delta)
+inline Foam::LESModels::smoothDelta::deltaData::deltaData(const scalar delta)
 :
     delta_(delta)
 {}
@@ -84,15 +76,17 @@ inline smoothDelta::deltaData::deltaData(const scalar delta)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class TrackingData>
-inline bool smoothDelta::deltaData::valid(TrackingData& td) const
+inline bool Foam::LESModels::smoothDelta::deltaData::valid
+(
+    TrackingData& td
+) const
 {
     return delta_ > -SMALL;
 }
 
 
-// Checks for cyclic faces
 template<class TrackingData>
-inline bool smoothDelta::deltaData::sameGeometry
+inline bool Foam::LESModels::smoothDelta::deltaData::sameGeometry
 (
     const polyMesh&,
     const deltaData&,
@@ -105,7 +99,7 @@ inline bool smoothDelta::deltaData::sameGeometry
 
 
 template<class TrackingData>
-inline void smoothDelta::deltaData::leaveDomain
+inline void Foam::LESModels::smoothDelta::deltaData::leaveDomain
 (
     const polyMesh&,
     const polyPatch&,
@@ -117,7 +111,7 @@ inline void smoothDelta::deltaData::leaveDomain
 
 
 template<class TrackingData>
-inline void smoothDelta::deltaData::transform
+inline void Foam::LESModels::smoothDelta::deltaData::transform
 (
     const polyMesh&,
     const tensor&,
@@ -126,9 +120,8 @@ inline void smoothDelta::deltaData::transform
 {}
 
 
-// Update absolute geometric quantities.
 template<class TrackingData>
-inline void smoothDelta::deltaData::enterDomain
+inline void Foam::LESModels::smoothDelta::deltaData::enterDomain
 (
     const polyMesh&,
     const polyPatch&,
@@ -139,9 +132,8 @@ inline void smoothDelta::deltaData::enterDomain
 {}
 
 
-// Update this (cellI) with face information.
 template<class TrackingData>
-inline bool smoothDelta::deltaData::updateCell
+inline bool Foam::LESModels::smoothDelta::deltaData::updateCell
 (
     const polyMesh&,
     const label,
@@ -156,9 +148,8 @@ inline bool smoothDelta::deltaData::updateCell
 }
 
 
-// Update this (face) with cell information.
 template<class TrackingData>
-inline bool smoothDelta::deltaData::updateFace
+inline bool Foam::LESModels::smoothDelta::deltaData::updateFace
 (
     const polyMesh&,
     const label,
@@ -173,9 +164,8 @@ inline bool smoothDelta::deltaData::updateFace
 }
 
 
-// Update this (face) with coupled face information.
 template<class TrackingData>
-inline bool smoothDelta::deltaData::updateFace
+inline bool Foam::LESModels::smoothDelta::deltaData::updateFace
 (
     const polyMesh&,
     const label,
@@ -190,7 +180,7 @@ inline bool smoothDelta::deltaData::updateFace
 
 
 template<class TrackingData>
-inline bool smoothDelta::deltaData::equal
+inline bool Foam::LESModels::smoothDelta::deltaData::equal
 (
     const deltaData& rhs,
     TrackingData& td
@@ -202,7 +192,7 @@ inline bool smoothDelta::deltaData::equal
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline bool smoothDelta::deltaData::operator==
+inline bool Foam::LESModels::smoothDelta::deltaData::operator==
 (
     const deltaData& rhs
 ) const
@@ -211,7 +201,7 @@ inline bool smoothDelta::deltaData::operator==
 }
 
 
-inline bool smoothDelta::deltaData::operator!=
+inline bool Foam::LESModels::smoothDelta::deltaData::operator!=
 (
     const deltaData& rhs
 ) const
@@ -219,9 +209,5 @@ inline bool smoothDelta::deltaData::operator!=
     return !(*this == rhs);
 }
 
-
-// ************************************************************************* //
-
-} // End namespace Foam
 
 // ************************************************************************* //

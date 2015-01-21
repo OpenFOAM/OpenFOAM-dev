@@ -47,7 +47,7 @@ Description
 
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
-#include "RASModel.H"
+#include "turbulentTransportModel.H"
 #include "fvIOoptionList.H"
 #include "simpleControl.H"
 #include "fixedFluxPressureFvPatchScalarField.H"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,10 +160,10 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
     const scalar D = D0_*(rho0_/rhoc)*pow(Tc/T0_, Dn_);
 
     // Far field partial pressure O2 [Pa]
-    const scalar ppO2 = rhoO2/WO2_*specie::RR*Tc;
+    const scalar ppO2 = rhoO2/WO2_*RR*Tc;
 
     // Total molar concentration of the carrier phase [kmol/m^3]
-    const scalar C = pc/(specie::RR*Tc);
+    const scalar C = pc/(RR*Tc);
 
     if (debug)
     {
@@ -191,7 +191,7 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
     {
         qCsOld = qCs;
         const scalar PO2Surface = ppO2*exp(-(qCs + N)*d/(2*C*D));
-        qCs = A_*exp(-E_/(specie::RR*T))*pow(PO2Surface, n_);
+        qCs = A_*exp(-E_/(RR*T))*pow(PO2Surface, n_);
         qCs = (100.0*qCs + iter*qCsOld)/(100.0 + iter);
         qCs = min(qCs, qCsLim);
 

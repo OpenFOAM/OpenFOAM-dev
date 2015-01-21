@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -242,17 +242,17 @@ void Foam::wallShearStress::execute()
 
 
         tmp<volSymmTensorField> Reff;
-        if (mesh.foundObject<cmpModel>("turbulenceModel"))
+        if (mesh.foundObject<cmpModel>(turbulenceModel::propertiesName))
         {
             const cmpModel& model =
-                mesh.lookupObject<cmpModel>("turbulenceModel");
+                mesh.lookupObject<cmpModel>(turbulenceModel::propertiesName);
 
             Reff = model.devRhoReff();
         }
-        else if (mesh.foundObject<icoModel>("turbulenceModel"))
+        else if (mesh.foundObject<icoModel>(turbulenceModel::propertiesName))
         {
             const icoModel& model =
-                mesh.lookupObject<icoModel>("turbulenceModel");
+                mesh.lookupObject<icoModel>(turbulenceModel::propertiesName);
 
             Reff = model.devReff();
         }

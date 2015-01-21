@@ -32,7 +32,7 @@ divSchemes
     div(phi,U)      Gauss linearUpwind grad(U);
     div(phi,k)      Gauss limitedLinear 1;
     div(phi,omega)  Gauss limitedLinear 1;
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

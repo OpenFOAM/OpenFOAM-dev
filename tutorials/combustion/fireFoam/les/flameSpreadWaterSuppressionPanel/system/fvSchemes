@@ -44,7 +44,7 @@ divSchemes
         h               limitedLinear 1;
     };
 
-    div((muEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
     div(phiU,p)     Gauss linear;
     div(Ji,Ii_h)    Gauss upwind;
 }

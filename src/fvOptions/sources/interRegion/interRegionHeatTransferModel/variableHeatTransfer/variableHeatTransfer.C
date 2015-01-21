@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "variableHeatTransfer.H"
-#include "turbulenceModel.H"
+#include "turbulentFluidThermoModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -103,7 +103,10 @@ void Foam::fv::variableHeatTransfer::calculateHtc()
         mesh_.time().lookupObject<fvMesh>(nbrRegionName());
 
     const compressible::turbulenceModel& nbrTurb =
-        nbrMesh.lookupObject<compressible::turbulenceModel>("turbulenceModel");
+        nbrMesh.lookupObject<compressible::turbulenceModel>
+        (
+            turbulenceModel::propertiesName
+        );
 
     const fluidThermo& nbrThermo =
         nbrMesh.lookupObject<fluidThermo>("thermophysicalProperties");

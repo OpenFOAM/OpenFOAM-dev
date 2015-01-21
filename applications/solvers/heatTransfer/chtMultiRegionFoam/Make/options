@@ -11,7 +11,8 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
-    -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
     -I$(LIB_SRC)/fvOptions/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude
@@ -21,9 +22,8 @@ EXE_LIBS = \
     -lfluidThermophysicalModels \
     -lsolidThermo \
     -lspecie \
-    -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lturbulenceModels \
+    -lcompressibleTurbulenceModels \
     -lmeshTools \
     -lfiniteVolume \
     -lradiationModels \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,12 +31,13 @@ template<class TransportModel>
 Foam::IncompressibleTurbulenceModel<TransportModel>::
 IncompressibleTurbulenceModel
 (
+    const word& type,
     const geometricOneField& alpha,
     const geometricOneField& rho,
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const TransportModel& transportModel,
+    const TransportModel& transport,
     const word& propertiesName
 )
 :
@@ -53,7 +54,7 @@ IncompressibleTurbulenceModel
         U,
         alphaRhoPhi,
         phi,
-        transportModel,
+        transport,
         propertiesName
     )
 {}
@@ -67,7 +68,7 @@ Foam::IncompressibleTurbulenceModel<TransportModel>::New
 (
     const volVectorField& U,
     const surfaceScalarField& phi,
-    const TransportModel& transportModel,
+    const TransportModel& transport,
     const word& propertiesName
 )
 {
@@ -87,7 +88,7 @@ Foam::IncompressibleTurbulenceModel<TransportModel>::New
             U,
             phi,
             phi,
-            transportModel,
+            transport,
             propertiesName
         ).ptr())
     );
@@ -142,6 +143,25 @@ divDevRhoReff
     (
         "IncompressibleTurbulenceModel<TransportModel>::"
         "divDevRhoReff(volVectorField& U)"
+    );
+
+    return divDevReff(U);
+}
+
+
+template<class TransportModel>
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::IncompressibleTurbulenceModel<TransportModel>::
+divDevRhoReff
+(
+    const volScalarField& rho,
+    volVectorField& U
+) const
+{
+    notImplemented
+    (
+        "IncompressibleTurbulenceModel<TransportModel>::"
+        "divDevRhoReff(const volScalarField& rho, volVectorField& U)"
     );
 
     return divDevReff(U);

@@ -53,7 +53,7 @@ divSchemes
     div(U)          Gauss linear;
     div((Su*grad(b))) Gauss linear;
     div((U+((Su*Xi)*grad(b)))) Gauss linear;
-    div((muEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

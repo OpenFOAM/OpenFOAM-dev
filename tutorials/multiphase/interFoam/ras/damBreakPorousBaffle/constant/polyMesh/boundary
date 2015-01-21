@@ -20,18 +20,21 @@ FoamFile
     leftWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          50;
         startFace       4419;
     }
     rightWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          50;
         startFace       4469;
     }
     lowerWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          62;
         startFace       4519;
     }
@@ -51,7 +54,13 @@ FoamFile
     porous_half0
     {
         type            cyclic;
-        inGroups        1(cyclic);
+        inGroups
+2
+(
+cyclic
+cyclicFaces
+)
+;
         nFaces          13;
         startFace       9163;
         matchTolerance  0.0001;
@@ -61,7 +70,13 @@ FoamFile
     porous_half1
     {
         type            cyclic;
-        inGroups        1(cyclic);
+        inGroups
+2
+(
+cyclic
+cyclicFaces
+)
+;
         nFaces          13;
         startFace       9176;
         matchTolerance  0.0001;

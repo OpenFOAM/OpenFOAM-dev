@@ -23,7 +23,7 @@ boundaryField
 {
     Default_Boundary_Region
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
@@ -31,7 +31,7 @@ boundaryField
     }
     inlet
     {
-        type            compressible::turbulentMixingLengthDissipationRateInlet;
+        type            turbulentMixingLengthDissipationRateInlet;
         mixingLength    0.005;
         value           uniform 200;
     }

@@ -23,7 +23,7 @@ boundaryField
 {
     walls
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 90;
     }
 }

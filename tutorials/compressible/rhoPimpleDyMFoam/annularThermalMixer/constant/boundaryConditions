@@ -22,7 +22,7 @@ calculated
         type            calculated;
         value           uniform 0;
     }
-    mut
+    nut
     {
         type            calculated;
         value           uniform 0;
@@ -99,19 +99,19 @@ wall
 
     k
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform $:innerInlet.k;
     }
 
     epsilon
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform $:innerInlet.epsilon;
     }
 
-    mut
+    nut
     {
-        type            mutkWallFunction;
+        type            nutkWallFunction;
         value           uniform 0;
     }
 

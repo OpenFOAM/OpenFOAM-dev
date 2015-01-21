@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ SourceFiles
 #ifndef compressiblePDRkEpsilon_H
 #define compressiblePDRkEpsilon_H
 
-
 #include "kEpsilon.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,7 +78,13 @@ namespace RASModels
 
 class PDRkEpsilon
 :
-    public kEpsilon
+    public Foam::RASModels::kEpsilon
+    <
+        eddyDiffusivity
+        <
+            compressible::turbulenceModel
+        >
+    >
 {
     // Private data
 
@@ -97,8 +103,10 @@ public:
         //- Construct from components
         PDRkEpsilon
         (
+            const geometricOneField& alpha,
             const volScalarField& rho,
             const volVectorField& U,
+            const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
             const fluidThermo& thermophysicalModel,
             const word& turbulenceModelName = turbulenceModel::typeName,

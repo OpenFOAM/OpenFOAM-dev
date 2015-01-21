@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,17 +35,14 @@ SourceFiles
 #ifndef LESdelta_H
 #define LESdelta_H
 
+#include "turbulenceModel.H"
 #include "volFields.H"
-#include "typeInfo.H"
-#include "autoPtr.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class fvMesh;
 
 /*---------------------------------------------------------------------------*\
                           Class LESdelta Declaration
@@ -58,7 +55,7 @@ protected:
 
     // Protected data
 
-        const fvMesh& mesh_;
+        const turbulenceModel& turbulenceModel_;
 
         volScalarField delta_;
 
@@ -87,17 +84,21 @@ public:
             dictionary,
             (
                 const word& name,
-                const fvMesh& mesh,
-                const dictionary& LESdeltaDict
+                const turbulenceModel& turbulence,
+                const dictionary& dict
             ),
-            (name, mesh, LESdeltaDict)
+            (name, turbulence, dict)
         );
 
 
     // Constructors
 
-        //- Construct from name and mesh
-        LESdelta(const word& name, const fvMesh&);
+        //- Construct from name, turbulenceModel and dictionary
+        LESdelta
+        (
+            const word& name,
+            const turbulenceModel& turbulence
+        );
 
 
     // Selectors
@@ -106,16 +107,16 @@ public:
         static autoPtr<LESdelta> New
         (
             const word& name,
-            const fvMesh&,
-            const dictionary&
+            const turbulenceModel& turbulence,
+            const dictionary& dict
         );
 
         //- Return a reference to the selected LES delta
         static autoPtr<LESdelta> New
         (
             const word& name,
-            const fvMesh&,
-            const dictionary&,
+            const turbulenceModel& turbulence,
+            const dictionary& dict,
             const dictionaryConstructorTable&
         );
 
@@ -127,10 +128,10 @@ public:
 
     // Member Functions
 
-        //- Return mesh reference
-        const fvMesh& mesh() const
+        //- Return turbulenceModel reference
+        const turbulenceModel& turbulence() const
         {
-            return mesh_;
+            return turbulenceModel_;
         }
 
         //- Read the LESdelta dictionary

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
 #include "dragModel.H"
 #include "heatTransferModel.H"
 #include "singlePhaseTransportModel.H"
-#include "LESModel.H"
+#include "turbulentTransportModel.H"
 #include "pimpleControl.H"
 #include "IOMRFZoneList.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            sgsModel->correct();
+            turbulence->correct();
             fluid.solve();
             rho = fluid.rho();
             #include "zonePhaseVolumes.H"

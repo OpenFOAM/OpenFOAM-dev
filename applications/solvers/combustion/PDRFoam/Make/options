@@ -8,8 +8,8 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
-    -I$(LIB_SRC)/turbulenceModels/compressible/RAS/lnInclude \
-    -I$(LIB_SRC)/turbulenceModels \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/laminarFlameSpeed/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
@@ -20,8 +20,8 @@ EXE_INC = \
 EXE_LIBS = \
     -lengine \
     -lmeshTools \
-    -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
+    -lturbulenceModels \
+    -lcompressibleTurbulenceModels \
     -lfluidThermophysicalModels \
     -lreactionThermophysicalModels \
     -lspecie \

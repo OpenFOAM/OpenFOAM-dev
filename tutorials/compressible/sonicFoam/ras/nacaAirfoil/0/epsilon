@@ -39,7 +39,7 @@ boundaryField
     }
     WALL10
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;

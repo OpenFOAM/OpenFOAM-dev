@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,10 +176,10 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
     const scalar rhoO2 = rhoc*YO2;
 
     // Partial pressure O2 [Pa]
-    const scalar ppO2 = rhoO2/WO2_*specie::RR*Tc;
+    const scalar ppO2 = rhoO2/WO2_*RR*Tc;
 
     // Intrinsic reactivity [1/s]
-    const scalar ki = Ai_*exp(-Ei_/specie::RR/T);
+    const scalar ki = Ai_*exp(-Ei_/RR/T);
 
     // Thiele modulus []
     const scalar phi =
@@ -195,7 +195,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
     const scalar Ap = constant::mathematical::pi*sqr(d);
 
     // Change in C mass [kg]
-    scalar dmC = Ap*rhoc*specie::RR*Tc*YO2/WO2_*D0*R/(D0 + R)*dt;
+    scalar dmC = Ap*rhoc*RR*Tc*YO2/WO2_*D0*R/(D0 + R)*dt;
 
     // Limit mass transfer by availability of C
     dmC = min(mass*Ychar, dmC);

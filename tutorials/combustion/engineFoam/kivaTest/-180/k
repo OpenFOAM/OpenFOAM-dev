@@ -23,17 +23,17 @@ boundaryField
 {
     piston
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 4;
     }
     liner
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 4;
     }
     cylinderHead
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 4;
     }
 }

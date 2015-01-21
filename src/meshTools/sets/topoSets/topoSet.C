@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ Foam::autoPtr<Foam::topoSet> Foam::topoSet::New
 }
 
 
-Foam::fileName Foam::topoSet::topoSet::localPath
+Foam::fileName Foam::topoSet::localPath
 (
     const polyMesh& mesh,
     const word& name
@@ -143,7 +143,7 @@ Foam::fileName Foam::topoSet::topoSet::localPath
 
 // Update stored cell numbers using map.
 // Do in two passes to prevent allocation if nothing changed.
-void Foam::topoSet::topoSet::updateLabels(const labelList& map)
+void Foam::topoSet::updateLabels(const labelList& map)
 {
     // Iterate over map to see if anything changed
     bool changed = false;
@@ -191,7 +191,7 @@ void Foam::topoSet::topoSet::updateLabels(const labelList& map)
 }
 
 
-void Foam::topoSet::topoSet::check(const label maxLabel)
+void Foam::topoSet::check(const label maxLabel)
 {
     forAllConstIter(topoSet, *this, iter)
     {

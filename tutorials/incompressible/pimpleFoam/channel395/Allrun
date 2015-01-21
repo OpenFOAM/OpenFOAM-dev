@@ -14,7 +14,7 @@ runApplication blockMesh
 
 #- Run parallel
 runApplication decomposePar -cellDist
-runParallel $application 5
+runParallel $application 4
 runApplication reconstructPar
 
 runApplication postChannel

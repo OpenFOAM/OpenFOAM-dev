@@ -23,12 +23,12 @@ boundaryField
 {
     walls
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 1e-5;
     }
     wallFilm
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 1e-5;
     }
 }

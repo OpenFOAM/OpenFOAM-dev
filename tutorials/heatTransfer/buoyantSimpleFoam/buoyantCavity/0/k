@@ -23,22 +23,22 @@ boundaryField
 {
     frontAndBack
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 3.75e-04;
     }
     topAndBottom
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 3.75e-04;
     }
     hot
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 3.75e-04;
     }
     cold
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 3.75e-04;
     }
 }

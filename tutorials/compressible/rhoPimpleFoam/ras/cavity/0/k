@@ -23,12 +23,12 @@ boundaryField
 {
     movingWall
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.00325;
     }
     fixedWalls
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.00325;
     }
     frontAndBack

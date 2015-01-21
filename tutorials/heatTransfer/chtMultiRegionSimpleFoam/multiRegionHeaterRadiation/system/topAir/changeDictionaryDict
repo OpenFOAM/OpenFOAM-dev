@@ -82,7 +82,7 @@ dictionaryReplacement
         {
             ".*"
             {
-                type            compressible::epsilonWallFunction;
+                type            epsilonWallFunction;
                 value           uniform 0.01;
             }
 
@@ -107,7 +107,7 @@ dictionaryReplacement
         {
             ".*"
             {
-                type            compressible::kqRWallFunction;
+                type            kqRWallFunction;
                 value           uniform 0.1;
             }
 

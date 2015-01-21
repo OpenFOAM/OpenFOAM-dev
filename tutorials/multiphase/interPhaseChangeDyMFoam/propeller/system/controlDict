@@ -15,12 +15,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs
-(
-    "libincompressibleTurbulenceModel.so"
-    "libincompressibleRASModels.so"
-);
-
 application     interPhaseChangeDyMFoam;
 
 startFrom       startTime;

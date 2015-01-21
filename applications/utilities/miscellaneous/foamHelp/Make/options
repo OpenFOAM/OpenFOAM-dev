@@ -5,11 +5,8 @@ EXE_INC = \
 EXE_LIBS = \
     -lhelpTypes \
     -lfiniteVolume \
-    -lincompressibleTurbulenceModel \
-    -lcompressibleTurbulenceModel \
-    -lincompressibleRASModels \
-    -lcompressibleRASModels \
-    -lincompressibleLESModels \
-    -lcompressibleLESModels \
+    -lturbulenceModels \
+    -lincompressibleTurbulenceModels \
+    -lcompressibleTurbulenceModels \
     -lradiationModels \
     -lfluidThermophysicalModels

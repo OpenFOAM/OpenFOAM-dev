@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,8 @@ License
 
 #include "yPlusRAS.H"
 #include "volFields.H"
-
-#include "incompressible/RAS/RASModel/RASModel.H"
-#include "nutWallFunction/nutWallFunctionFvPatchScalarField.H"
-#include "compressible/RAS/RASModel/RASModel.H"
-#include "mutWallFunction/mutWallFunctionFvPatchScalarField.H"
-#include "wallDist.H"
+#include "turbulenceModel.H"
+#include "nutWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -55,17 +51,16 @@ void Foam::yPlusRAS::writeFileHeader(const label i)
 }
 
 
-void Foam::yPlusRAS::calcIncompressibleYPlus
+void Foam::yPlusRAS::calcYPlus
 (
     const fvMesh& mesh,
     volScalarField& yPlus
 )
 {
-    typedef incompressible::nutWallFunctionFvPatchScalarField
-        wallFunctionPatchField;
-
-    const incompressible::RASModel& model =
-        mesh.lookupObject<incompressible::RASModel>("RASProperties");
+    const turbulenceModel& model = mesh.lookupObject<turbulenceModel>
+    (
+        turbulenceModel::propertiesName
+    );
 
     const volScalarField nut(model.nut());
     const volScalarField::GeometricBoundaryField& nutPatches =
@@ -74,12 +69,15 @@ void Foam::yPlusRAS::calcIncompressibleYPlus
     bool foundPatch = false;
     forAll(nutPatches, patchi)
     {
-        if (isA<wallFunctionPatchField>(nutPatches[patchi]))
+        if (isA<nutWallFunctionFvPatchScalarField>(nutPatches[patchi]))
         {
             foundPatch = true;
 
-            const wallFunctionPatchField& nutPw =
-                dynamic_cast<const wallFunctionPatchField&>(nutPatches[patchi]);
+            const nutWallFunctionFvPatchScalarField& nutPw =
+                dynamic_cast
+                <
+                    const nutWallFunctionFvPatchScalarField&
+                >(nutPatches[patchi]);
 
             yPlus.boundaryField()[patchi] = nutPw.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
@@ -106,65 +104,8 @@ void Foam::yPlusRAS::calcIncompressibleYPlus
 
     if (log_ && !foundPatch)
     {
-        Info<< "    no " << wallFunctionPatchField::typeName << " patches"
-            << endl;
-    }
-}
-
-
-void Foam::yPlusRAS::calcCompressibleYPlus
-(
-    const fvMesh& mesh,
-    volScalarField& yPlus
-)
-{
-    typedef compressible::mutWallFunctionFvPatchScalarField
-        wallFunctionPatchField;
-
-    const compressible::RASModel& model =
-        mesh.lookupObject<compressible::RASModel>("RASProperties");
-
-    const volScalarField mut(model.mut());
-    const volScalarField::GeometricBoundaryField& mutPatches =
-        mut.boundaryField();
-
-    bool foundPatch = false;
-    forAll(mutPatches, patchi)
-    {
-        if (isA<wallFunctionPatchField>(mutPatches[patchi]))
-        {
-            foundPatch = true;
-
-            const wallFunctionPatchField& mutPw =
-                dynamic_cast<const wallFunctionPatchField&>(mutPatches[patchi]);
-
-            yPlus.boundaryField()[patchi] = mutPw.yPlus();
-            const scalarField& Yp = yPlus.boundaryField()[patchi];
-
-            scalar minYp = gMin(Yp);
-            scalar maxYp = gMax(Yp);
-            scalar avgYp = gAverage(Yp);
-
-            if (Pstream::master())
-            {
-                Info(log_)<< "    patch " << mutPw.patch().name()
-                    << " y+ : min = " << minYp << ", max = " << maxYp
-                    << ", average = " << avgYp << nl;
-
-                file() << obr_.time().value()
-                    << token::TAB << mutPw.patch().name()
-                    << token::TAB << minYp
-                    << token::TAB << maxYp
-                    << token::TAB << avgYp
-                    << endl;
-            }
-        }
-    }
-
-    if (log_ && !foundPatch)
-    {
-        Info<< "    no " << wallFunctionPatchField::typeName << " patches"
-            << endl;
+        Info<< "    no " << nutWallFunctionFvPatchScalarField::typeName
+            << " patches" << endl;
     }
 }
 
@@ -253,9 +194,6 @@ void Foam::yPlusRAS::execute()
     {
         functionObjectFile::write();
 
-        const surfaceScalarField& phi =
-            obr_.lookupObject<surfaceScalarField>(phiName_);
-
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
         volScalarField& yPlusRAS =
@@ -266,14 +204,7 @@ void Foam::yPlusRAS::execute()
 
         Info(log_)<< type() << " " << name_ << " output:" << nl;
 
-        if (phi.dimensions() == dimMass/dimTime)
-        {
-            calcCompressibleYPlus(mesh, yPlusRAS);
-        }
-        else
-        {
-            calcIncompressibleYPlus(mesh, yPlusRAS);
-        }
+        calcYPlus(mesh, yPlusRAS);
     }
 }
 

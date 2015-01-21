@@ -20,18 +20,21 @@ FoamFile
     piston
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          1326;
         startFace       79522;
     }
     liner
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          2710;
         startFace       80848;
     }
     cylinderHead
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          2184;
         startFace       83558;
     }

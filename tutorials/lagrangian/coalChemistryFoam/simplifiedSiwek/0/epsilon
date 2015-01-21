@@ -23,17 +23,17 @@ boundaryField
 {
     top
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 5390.5;
     }
     bottom
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 5390.5;
     }
     walls
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 5390.5;
     }
     symmetry

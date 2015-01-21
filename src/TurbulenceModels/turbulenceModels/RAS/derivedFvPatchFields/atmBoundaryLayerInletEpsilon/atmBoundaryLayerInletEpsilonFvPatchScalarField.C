@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,33 +44,7 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    z_(vector::zero),
-    kappa_(0.41),
-    Uref_(0),
-    Href_(0),
-    z0_(0),
-    zGround_(0),
-    Ustar_(0)
-{}
-
-
-atmBoundaryLayerInletEpsilonFvPatchScalarField::
-atmBoundaryLayerInletEpsilonFvPatchScalarField
-(
-    const atmBoundaryLayerInletEpsilonFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    z_(ptf.z_),
-    kappa_(ptf.kappa_),
-    Uref_(ptf.Uref_),
-    Href_(ptf.Href_),
-    z0_(ptf.z0_, mapper),
-    zGround_(ptf.zGround_, mapper),
-    Ustar_(ptf.Ustar_, mapper)
+    atmBoundaryLayer()
 {}
 
 
@@ -83,56 +57,35 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    z_(dict.lookup("z")),
-    kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
-    Uref_(readScalar(dict.lookup("Uref"))),
-    Href_(readScalar(dict.lookup("Href"))),
-    z0_("z0", dict, p.size()),
-    zGround_("zGround", dict, p.size()),
-    Ustar_(p.size())
+    atmBoundaryLayer(patch().Cf(), dict)
 {
-    if (mag(z_) < SMALL)
-    {
-        FatalErrorIn
-        (
-            "atmBoundaryLayerInletEpsilonFvPatchScalarField"
-            "("
-                "const fvPatch&, "
-                "const DimensionedField<scalar, volMesh>&, "
-                "const dictionary&"
-            ")"
-        )
-            << "magnitude of z vector must be greater than zero"
-            << abort(FatalError);
-    }
-
-    forAll (Ustar_, i)
-    {
-        Ustar_[i] = kappa_*Uref_/(log((Href_  + z0_[i])/max(z0_[i] , 0.001)));
-    }
-
-    z_ /= mag(z_);
-
-    const vectorField& c = patch().Cf();
-    scalarField::operator=(pow3(Ustar_)/(kappa_*((c & z_) - zGround_ + z0_)));
+    scalarField::operator=(epsilon(patch().Cf()));
 }
 
 
 atmBoundaryLayerInletEpsilonFvPatchScalarField::
 atmBoundaryLayerInletEpsilonFvPatchScalarField
 (
-    const atmBoundaryLayerInletEpsilonFvPatchScalarField& blpsf,
+    const atmBoundaryLayerInletEpsilonFvPatchScalarField& psf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchScalarField(psf, p, iF, mapper),
+    atmBoundaryLayer(psf, mapper)
+{}
+
+
+atmBoundaryLayerInletEpsilonFvPatchScalarField::
+atmBoundaryLayerInletEpsilonFvPatchScalarField
+(
+    const atmBoundaryLayerInletEpsilonFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(blpsf, iF),
-    z_(blpsf.z_),
-    kappa_(blpsf.kappa_),
-    Uref_(blpsf.Uref_),
-    Href_(blpsf.Href_),
-    z0_(blpsf.z0_),
-    zGround_(blpsf.zGround_),
-    Ustar_(blpsf.Ustar_)
+    fixedValueFvPatchScalarField(psf, iF),
+    atmBoundaryLayer(psf)
 {}
 
 
@@ -144,42 +97,29 @@ void atmBoundaryLayerInletEpsilonFvPatchScalarField::autoMap
 )
 {
     fixedValueFvPatchScalarField::autoMap(m);
-    z0_.autoMap(m);
-    zGround_.autoMap(m);
-    Ustar_.autoMap(m);
+    atmBoundaryLayer::autoMap(m);
 }
 
 
 void atmBoundaryLayerInletEpsilonFvPatchScalarField::rmap
 (
-    const fvPatchScalarField& ptf,
+    const fvPatchScalarField& psf,
     const labelList& addr
 )
 {
-    fixedValueFvPatchScalarField::rmap(ptf, addr);
+    fixedValueFvPatchScalarField::rmap(psf, addr);
 
-    const atmBoundaryLayerInletEpsilonFvPatchScalarField& blptf =
-        refCast<const atmBoundaryLayerInletEpsilonFvPatchScalarField>(ptf);
+    const atmBoundaryLayerInletEpsilonFvPatchScalarField& blpsf =
+        refCast<const atmBoundaryLayerInletEpsilonFvPatchScalarField>(psf);
 
-    z0_.rmap(blptf.z0_, addr);
-    zGround_.rmap(blptf.zGround_, addr);
-    Ustar_.rmap(blptf.Ustar_, addr);
+    atmBoundaryLayer::rmap(blpsf, addr);
 }
 
 
 void atmBoundaryLayerInletEpsilonFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("z")
-        << z_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa")
-        << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Uref")
-        << Uref_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Href")
-        << Href_ << token::END_STATEMENT << nl;
-    z0_.writeEntry("z0", os);
-    zGround_.writeEntry("zGround", os);
+    atmBoundaryLayer::write(os);
     writeEntry("value", os);
 }
 

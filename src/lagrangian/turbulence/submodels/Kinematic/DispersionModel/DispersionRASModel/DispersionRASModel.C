@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ License
 
 #include "DispersionRASModel.H"
 #include "demandDrivenData.H"
-#include "incompressible/turbulenceModel/turbulenceModel.H"
-#include "compressible/turbulenceModel/turbulenceModel.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -35,7 +35,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::DispersionRASModel<CloudType>::kModel() const
 {
     const objectRegistry& obr = this->owner().mesh();
-    const word turbName = "turbulenceModel";
+    const word turbName = turbulenceModel::propertiesName;
 
     if (obr.foundObject<compressible::turbulenceModel>(turbName))
     {
@@ -70,7 +70,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::DispersionRASModel<CloudType>::epsilonModel() const
 {
     const objectRegistry& obr = this->owner().mesh();
-    const word turbName = "turbulenceModel";
+    const word turbName = turbulenceModel::propertiesName;
 
     if (obr.foundObject<compressible::turbulenceModel>(turbName))
     {

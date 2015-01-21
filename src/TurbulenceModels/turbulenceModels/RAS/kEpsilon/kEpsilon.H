@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,24 +28,24 @@ Group
     grpRASTurbulence
 
 Description
-    Standard k-epsilon turbulence model for compressible flows
-    including rapid distortion theory (RDT) based compression term.
+    Standard k-epsilon turbulence model for incompressible and compressible
+    flows including rapid distortion theory (RDT) based compression term.
 
     Reference:
     \verbatim
         Standard model:
-            Launder, B.E., and Spalding, D.B.,
-            "Mathematical Models of Turbulence",
-            Academic Press, 1972.
+            Launder, B. E., & Spalding, D. B. (1972).
+            Lectures in mathematical models of turbulence.
 
-            Launder, B.E., and Spalding, D.B.,
-            "Computational Methods for Turbulent Flows",
-            Comp. Meth in Appl Mech & Eng'g, Vol 3, 1974, pp 269-289.
+            Launder, B. E., & Spalding, D. B. (1974).
+            The numerical computation of turbulent flows.
+            Computer methods in applied mechanics and engineering,
+            3(2), 269-289.
 
-        Compressible form including RDT-based compression term:
-            "k-epsilon equations for compressible reciprocating engine flows"
-            El Tahry, S. H.,
-            AIAA Journal of Energy 7, 1983, pp 345-353.
+        For the RDT-based compression term:
+            El Tahry, S. H. (1983).
+            k-epsilon equation for compressible reciprocating engine flows.
+            Journal of Energy, 7(4), 345-353.
     \endverbatim
 
     The default model coefficients correspond to the following:

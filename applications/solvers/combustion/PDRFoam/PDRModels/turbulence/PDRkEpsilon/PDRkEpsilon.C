@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,6 @@ License
 #include "PDRDragModel.H"
 #include "addToRunTimeSelectionTable.H"
 
-#include "backwardsCompatibilityWallFunctions.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -47,15 +45,27 @@ addToRunTimeSelectionTable(RASModel, PDRkEpsilon, dictionary);
 
 PDRkEpsilon::PDRkEpsilon
 (
+    const geometricOneField& alpha,
     const volScalarField& rho,
     const volVectorField& U,
+    const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const fluidThermo& thermophysicalModel,
     const word& turbulenceModelName,
     const word& modelName
 )
 :
-    kEpsilon(rho, U, phi, thermophysicalModel, turbulenceModelName, modelName),
+    Foam::RASModels::kEpsilon<eddyDiffusivity<compressible::turbulenceModel> >
+    (
+        geometricOneField(),
+        rho,
+        U,
+        phi,
+        phi,
+        thermophysicalModel,
+        turbulenceModelName,
+        modelName
+    ),
 
     C4_
     (
@@ -96,12 +106,12 @@ void PDRkEpsilon::correct()
     if (!turbulence_)
     {
         // Re-calculate viscosity
-        mut_ = rho_*Cmu_*sqr(k_)/epsilon_;
-        mut_.correctBoundaryConditions();
+        nut_ = Cmu_*sqr(k_)/epsilon_;
+        nut_.correctBoundaryConditions();
 
         // Re-calculate thermal diffusivity
-        alphat_ = mut_/Prt_;
-        alphat_.correctBoundaryConditions();
+        //***HGWalphat_ = mut_/Prt_;
+        //alphat_.correctBoundaryConditions();
 
         return;
     }
@@ -116,7 +126,7 @@ void PDRkEpsilon::correct()
     }
 
     tmp<volTensorField> tgradU = fvc::grad(U_);
-    volScalarField G(GName(), mut_*(tgradU() && dev(twoSymm(tgradU()))));
+    volScalarField G(GName(), rho_*nut_*(tgradU() && dev(twoSymm(tgradU()))));
     tgradU.clear();
 
     // Update espsilon and G at the wall
@@ -143,7 +153,7 @@ void PDRkEpsilon::correct()
     (
         betav*fvm::ddt(rho_, epsilon_)
       + fvm::div(phi_, epsilon_)
-      - fvm::laplacian(DepsilonEff(), epsilon_)
+      - fvm::laplacian(rho_*DepsilonEff(), epsilon_)
      ==
         C1_*betav*G*epsilon_/k_
       + 1.5*pow(Cmu_, 3.0/4.0)*GR*sqrt(k_)/LI
@@ -165,7 +175,7 @@ void PDRkEpsilon::correct()
     (
         betav*fvm::ddt(rho_, k_)
       + fvm::div(phi_, k_)
-      - fvm::laplacian(DkEff(), k_)
+      - fvm::laplacian(rho_*DkEff(), k_)
      ==
         betav*G + GR
       - fvm::SuSp((2.0/3.0)*betav*rho_*divU, k_)
@@ -177,12 +187,12 @@ void PDRkEpsilon::correct()
     bound(k_, kMin_);
 
     // Re-calculate viscosity
-    mut_ = rho_*Cmu_*sqr(k_)/epsilon_;
-    mut_.correctBoundaryConditions();
+    nut_ = Cmu_*sqr(k_)/epsilon_;
+    nut_.correctBoundaryConditions();
 
     // Re-calculate thermal diffusivity
-    alphat_ = mut_/Prt_;
-    alphat_.correctBoundaryConditions();
+    //***HGWalphat_ = mut_/Prt_;
+    //alphat_.correctBoundaryConditions();
 }
 
 

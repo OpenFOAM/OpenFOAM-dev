@@ -23,13 +23,13 @@ boundaryField
 {
     rotor
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0;
     }
 
     stator
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0;
     }
 

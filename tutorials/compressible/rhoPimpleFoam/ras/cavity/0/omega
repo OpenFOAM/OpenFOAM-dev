@@ -23,7 +23,7 @@ boundaryField
 {
     movingWall
     {
-        type            compressible::omegaWallFunction;
+        type            omegaWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
@@ -31,7 +31,7 @@ boundaryField
     }
     fixedWalls
     {
-        type            compressible::omegaWallFunction;
+        type            omegaWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;

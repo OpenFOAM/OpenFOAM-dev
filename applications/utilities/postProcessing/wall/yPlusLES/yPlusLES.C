@@ -31,8 +31,10 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "incompressible/singlePhaseTransportModel/singlePhaseTransportModel.H"
-#include "LESModel.H"
+#include "singlePhaseTransportModel.H"
+#include "turbulentTransportModel.H"
+#include "nutWallFunctionFvPatchScalarField.H"
+
 #include "nearWallDist.H"
 #include "wallFvPatch.H"
 
@@ -50,7 +52,7 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timeI], timeI);
         Info<< "Time = " << runTime.timeName() << endl;
-        fvMesh::readUpdateState state = mesh.readUpdate();
+        mesh.readUpdate();
 
         volScalarField yPlus
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,81 +22,35 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::atmBoundaryLayerInletVelocityFvPatchVectorField
+    FoamFoam::atmBoundaryLayerInletVelocityFvPatchVectorField
 
 Group
     grpRASBoundaryConditions grpInletBoundaryConditions
 
 Description
     This boundary condition specifies a velocity inlet profile appropriate
-    for atmospheric boundary layers (ABL).  The profile is derived from the
-    friction velocity, flow direction and the direction of the parabolic
-    co-ordinate \c z.
+    for atmospheric boundary layers (ABL).
 
-        \f[
-            U = \frac{U^*}{K} ln\left(\frac{z - z_g + z_0}{z_0}\right)
-        \f]
-
-    where
-    \vartable
-        U^*     | frictional velocity
-        K       | Karman's constant
-        z       | vertical co-ordinate [m]
-        z_0     | surface roughness length [m]
-        z_g     | minimum vlaue in z direction [m]
-    \endvartable
-
-    and:
-
-        \f[
-            U^* = K \frac{U_{ref}}{ln\left(\frac{Z_{ref} + z_0}{z_0}\right)}
-        \f]
-
-    where:
-    \vartable
-        U_{ref} | reference velocity at \f$Z_{ref}\f$ [m/s]
-        Z_{ref} | reference height [m]
-    \endvartable
-
-    Reference:
-        D.M. Hargreaves and N.G. Wright,  "On the use of the k-epsilon model
-        in commercial CFD software to model the neutral atmospheric boundary
-        layer", Journal of Wind Engineering and Industrial Aerodynamics
-        95(2007), pp 355-369.
-
-    \heading Patch usage
-
-    \table
-        Property     | Description             | Required    | Default value
-        n            | flow direction          | yes         |
-        z            | vertical co-ordinate [m] | yes        |
-        kappa        | Karman's constanat      | no          | 0.41
-        Uref         | reference velocity [m/s] | yes        |
-        Href         | reference height [m]    | yes         |
-        z0           | surface roughness length [m] | yes    |
-        zGround      | minimum z co-ordinate [m] | yes       |
-    \endtable
+    See FoamFoam::atmBoundaryLayer for details.
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    ground
     {
         type            atmBoundaryLayerInletVelocity;
-        n               (0 1 0);
-        z               1.0;
-        kappa           0.41;
-        Uref            1.0;
-        Href            0.0;
-        z0              uniform 0.0;
+        n               (1 0 0);
+        z               (0 0 1);
+        Uref            10.0;
+        Zref            20.0;
+        z0              uniform 0.1;
         zGround         uniform 0.0;
     }
     \endverbatim
 
-Note
-    D.M. Hargreaves and N.G. Wright recommend Gamma epsilon in the
-    k-epsilon model should be changed from 1.3 to 1.11 for consistency.
-    The roughness height (Er) is given by Er = 20 z0 following the same
-    reference.
+SeeAlso
+    FoamFoam::atmBoundaryLayer,
+    FoamFoam::atmBoundaryLayerInletKFvPatchScalarField,
+    FoamFoam::atmBoundaryLayerInletEpsilonFvPatchScalarField
 
 SourceFiles
     atmBoundaryLayerInletVelocityFvPatchVectorField.C
@@ -108,6 +62,7 @@ SourceFiles
 
 #include "fvPatchFields.H"
 #include "fixedValueFvPatchFields.H"
+#include "atmBoundaryLayer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -120,34 +75,9 @@ namespace Foam
 
 class atmBoundaryLayerInletVelocityFvPatchVectorField
 :
-    public fixedValueFvPatchVectorField
+    public fixedValueFvPatchVectorField,
+    public atmBoundaryLayer
 {
-    // Private data
-
-        //- Frictional velocity
-        scalarField Ustar_;
-
-        //- Flow direction
-        vector n_;
-
-        //- Direction of the z-coordinate
-        vector z_;
-
-        //- Surface roughness lenght
-        scalarField z0_;
-
-        //- Von Karman constant
-        const scalar kappa_;
-
-        //- Reference velocity
-        const scalar Uref_;
-
-        //- Reference hight
-        const scalar Href_;
-
-        //- Minimum corrdinate value in z direction
-        scalarField zGround_;
-
 
 public:
 
@@ -212,27 +142,6 @@ public:
 
 
     // Member functions
-
-        // Access
-
-            //- Return Ustar
-            const scalarField& Ustar() const
-            {
-                return Ustar_;
-            }
-
-            //- Return flow direction
-            const vector& n() const
-            {
-                return n_;
-            }
-
-            //- Return z direction
-            const vector& z() const
-            {
-                return z_;
-            }
-
 
         // Mapping functions
 

@@ -23,7 +23,7 @@ boundaryField
 {
     walls
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           $internalField;
     }
     inlet
@@ -37,7 +37,7 @@ boundaryField
     }
     blades
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           $internalField;
     }
 }

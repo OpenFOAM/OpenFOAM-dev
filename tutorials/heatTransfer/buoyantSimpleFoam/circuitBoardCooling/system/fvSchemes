@@ -33,18 +33,18 @@ divSchemes
     div(phi,k)      bounded Gauss limitedLinear 0.2;
     div(phi,epsilon) bounded Gauss limitedLinear 0.2;
     div(phi,omega) bounded Gauss limitedLinear 0.2;
-    div((muEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
 {
     default         none;
-    laplacian(muEff,U) Gauss linear uncorrected;
+    laplacian((rho*nuEff),U) Gauss linear uncorrected;
     laplacian(rhorAUf,p_rgh) Gauss linear uncorrected;
     laplacian(alphaEff,h) Gauss linear uncorrected;
-    laplacian(DkEff,k) Gauss linear uncorrected;
-    laplacian(DepsilonEff,epsilon) Gauss linear uncorrected;
-    laplacian(DomegaEff,omega) Gauss linear uncorrected;
+    laplacian((rho*DkEff),k) Gauss linear uncorrected;
+    laplacian((rho*DepsilonEff),epsilon) Gauss linear uncorrected;
+    laplacian((rho*DomegaEff),omega) Gauss linear uncorrected;
 }
 
 interpolationSchemes

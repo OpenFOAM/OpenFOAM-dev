@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,8 +164,8 @@ void Foam::SprayParcel<ParcelType>::calcAtomization
         td.cloud().atomization();
 
     // Average molecular weight of carrier mix - assumes perfect gas
-    scalar Wc = this->rhoc_*specie::RR*this->Tc()/this->pc();
-    scalar R = specie::RR/Wc;
+    scalar Wc = this->rhoc_*RR*this->Tc()/this->pc();
+    scalar R = RR/Wc;
     scalar Tav = atomization.Taverage(this->T(), this->Tc());
 
     // Calculate average gas density based on average temperature
@@ -235,8 +235,8 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
     }
 
     // Average molecular weight of carrier mix - assumes perfect gas
-    scalar Wc = this->rhoc()*specie::RR*this->Tc()/this->pc();
-    scalar R = specie::RR/Wc;
+    scalar Wc = this->rhoc()*RR*this->Tc()/this->pc();
+    scalar R = RR/Wc;
     scalar Tav = td.cloud().atomization().Taverage(this->T(), this->Tc());
 
     // Calculate average gas density based on average temperature

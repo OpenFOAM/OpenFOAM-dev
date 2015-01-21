@@ -89,8 +89,8 @@
     scalar pRefValue = 0.0;
     setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
 
-
-    autoPtr<incompressible::LESModel> sgsModel
+    // Construct incompressible turbulence model
+    autoPtr<incompressible::turbulenceModel> turbulence
     (
-        incompressible::LESModel::New(U, phi, fluid)
+        incompressible::turbulenceModel::New(U, phi, fluid)
     );

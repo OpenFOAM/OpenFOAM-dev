@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ namespace Foam
     const NamedEnum<turbulenceFields::incompressibleField, 4>
         turbulenceFields::incompressibleFieldNames_;
 
-    const word turbulenceFields::modelName = "turbulenceModel";
+    const word turbulenceFields::modelName = turbulenceModel::propertiesName;
 }
 
 

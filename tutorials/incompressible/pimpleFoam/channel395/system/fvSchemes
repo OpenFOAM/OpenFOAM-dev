@@ -33,7 +33,7 @@ divSchemes
     div(phi,B)      Gauss limitedLinear 1;
     div(B)          Gauss linear;
     div(phi,nuTilda) Gauss limitedLinear 1;
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
@@ -55,6 +55,11 @@ fluxRequired
 {
     default         no;
     p               ;
+}
+
+wallDist
+{
+    method meshWave;
 }
 
 

@@ -46,7 +46,7 @@ boundaryField
     }
     prismWall
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 266000;
     }
     defaultFaces

@@ -23,7 +23,7 @@ boundaryField
 {
     Default_Boundary_Region
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 1;
     }
     inlet

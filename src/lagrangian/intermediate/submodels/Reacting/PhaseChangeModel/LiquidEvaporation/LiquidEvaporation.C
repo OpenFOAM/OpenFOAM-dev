@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -219,10 +219,10 @@ void Foam::LiquidEvaporation<CloudType>::calculate
         const scalar kc = Sh*Dab/(d + ROOTVSMALL);
 
         // vapour concentration at surface [kmol/m3] at film temperature
-        const scalar Cs = pSat/(specie::RR*Ts);
+        const scalar Cs = pSat/(RR*Ts);
 
         // vapour concentration in bulk gas [kmol/m3] at film temperature
-        const scalar Cinf = Xc[gid]*pc/(specie::RR*Ts);
+        const scalar Cinf = Xc[gid]*pc/(RR*Ts);
 
         // molar flux of vapour [kmol/m2/s]
         const scalar Ni = max(kc*(Cs - Cinf), 0.0);

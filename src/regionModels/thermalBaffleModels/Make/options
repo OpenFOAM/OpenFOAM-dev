@@ -7,16 +7,16 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
-    -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/mesh/extrudeModel/lnInclude
 
 LIB_LIBS = \
     -lregionModels \
     -lsolidThermo \
-    -lcompressibleTurbulenceModel \
+    -lturbulenceModels \
+    -lcompressibleTurbulenceModels \
     -lfiniteVolume \
     -lmeshTools \
-    -lOpenFOAM \
     -lradiationModels \
     -ldynamicMesh

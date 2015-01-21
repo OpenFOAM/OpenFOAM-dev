@@ -51,12 +51,5 @@ maxCo           1.0;
 
 maxDeltaT       1;
 
-libs
-(
-    "libOpenFOAM.so"
-    "libcompressibleTurbulenceModel.so"
-    "libcompressibleRASModels.so"
-    "libradiationModels.so"
-);
 
 // ************************************************************************* //

@@ -1,7 +1,8 @@
 EXE_INC = \
     -I$(LIB_SRC)/transportModels \
-    -I$(LIB_SRC)/turbulenceModels \
-    -I$(LIB_SRC)/turbulenceModels/LES/LESdeltas/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/fvOptions/lnInclude \
@@ -9,13 +10,12 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
+    -lturbulenceModels \
+    -lincompressibleTurbulenceModels \
+    -lcompressibleTurbulenceModels \
     -lincompressibleTransportModels \
-    -lincompressibleRASModels \
-    -lincompressibleLESModels \
     -lfluidThermophysicalModels \
     -lspecie \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools \

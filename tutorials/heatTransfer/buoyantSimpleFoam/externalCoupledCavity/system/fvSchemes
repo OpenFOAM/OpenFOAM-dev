@@ -34,7 +34,7 @@ divSchemes
     div(phi,k)      bounded Gauss limitedLinear 0.2;
     div(phi,epsilon) bounded Gauss limitedLinear 0.2;
     div(phi,omega) bounded Gauss limitedLinear 0.2;
-    div((muEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "energyRegionCoupledFvPatchScalarField.H"
 #include "Time.H"
-#include "turbulenceModel.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
@@ -63,7 +63,7 @@ void Foam::energyRegionCoupledFvPatchScalarField::setMethod() const
         (
             this->db().foundObject<compressible::turbulenceModel>
             (
-                "turbulenceModel"
+                turbulenceModel::propertiesName
             )
         )
         {
@@ -109,7 +109,7 @@ kappa() const
             const compressible::turbulenceModel& turbModel =
                 this->db().lookupObject<compressible::turbulenceModel>
                 (
-                    "turbulenceModel"
+                    turbulenceModel::propertiesName
                 );
 
             return turbModel.kappaEff(patch().index());

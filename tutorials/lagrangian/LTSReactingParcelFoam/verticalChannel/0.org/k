@@ -48,7 +48,7 @@ boundaryField
     }
     walls
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0;
     }
 }

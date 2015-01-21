@@ -29,17 +29,17 @@ boundaryField
     }
     ground
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 1.5;
     }
     blockedFaces
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 1.5;
     }
     baffleWall
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 1.5;
     }
     baffleCyclic_half0

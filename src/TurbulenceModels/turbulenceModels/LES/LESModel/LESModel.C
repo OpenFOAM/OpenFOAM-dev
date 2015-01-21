@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,7 @@ Foam::LESModel<BasicTurbulenceModel>::LESModel
 :
     BasicTurbulenceModel
     (
+        type,
         alpha,
         rho,
         U,
@@ -84,7 +85,7 @@ Foam::LESModel<BasicTurbulenceModel>::LESModel
         LESdelta::New
         (
             IOobject::groupName("delta", U.group()),
-            U.mesh(),
+            *this,
             LESDict_
         )
     )

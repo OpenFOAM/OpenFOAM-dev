@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,8 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -225,7 +227,19 @@ private:
         // Calculate the delta values
         void calcDelta();
 
-
+        //- Fill changedFaces (with face labels) and changedFacesInfo
+        //  (with delta).
+        //  This is the initial set of faces from which to start the waves.
+        //  Since there might be lots of places with delta jumps we can follow
+        //  various strategies for this initial 'seed'.
+        //  - start from single cell/face and let FaceCellWave pick up all
+        //    others from there. might be quite a few waves before everything
+        //    settles.
+        //  - start from all faces. Lots of initial transfers.
+        //  We do something in between:
+        //  - start from all faces where there is a jump. Since we cannot easily
+        //    determine this across coupled patches (cyclic, processor)
+        //    introduce all faces of these and let FaceCellWave sort it out.
         void setChangedFaces
         (
             const polyMesh& mesh,
@@ -243,11 +257,11 @@ public:
 
     // Constructors
 
-        //- Construct from name, mesh and IOdictionary
+        //- Construct from name, turbulenceModel and dictionary
         smoothDelta
         (
             const word& name,
-            const fvMesh& mesh,
+            const turbulenceModel& turbulence,
             const dictionary&
         );
 
@@ -267,13 +281,18 @@ public:
 };
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace LESModels
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 //- Data associated with deltaData type are contiguous
 template<>
-inline bool contiguous<smoothDelta::deltaData>()
+inline bool contiguous<LESModels::smoothDelta::deltaData>()
 {
     return true;
 }
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -48,12 +48,6 @@ adjustTimeStep  yes;
 
 maxCo           3;
 
-libs
-(
-    "libOpenFOAM.so"
-    "libincompressibleTurbulenceModel.so"
-    "libincompressibleRASModels.so"
-);
 
 functions
 {

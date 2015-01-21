@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,6 @@ SourceFiles
 #ifndef kEqn_H
 #define kEqn_H
 
-#include "LESModel.H"
 #include "LESeddyViscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -95,9 +94,14 @@ protected:
 
     // Protected data
 
-        volScalarField k_;
+        // Fields
 
-        dimensionedScalar Ck_;
+            volScalarField k_;
+
+
+        // Model constants
+
+            dimensionedScalar Ck_;
 
 
     // Protected Member Functions

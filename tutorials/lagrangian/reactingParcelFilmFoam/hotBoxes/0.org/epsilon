@@ -23,12 +23,12 @@ boundaryField
 {
     walls
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 1e-7;
     }
     wallFilm
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 1e-7;
     }
 }

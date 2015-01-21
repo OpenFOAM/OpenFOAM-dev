@@ -23,17 +23,17 @@ boundaryField
 {
     top
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 37.5;
     }
     bottom
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 37.5;
     }
     walls
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 37.5;
     }
     symmetry

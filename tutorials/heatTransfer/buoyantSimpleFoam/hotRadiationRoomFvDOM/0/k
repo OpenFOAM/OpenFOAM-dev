@@ -23,22 +23,22 @@ boundaryField
 {
     box
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
     floor
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
     ceiling
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
     fixedWalls
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform 0.1;
     }
 }

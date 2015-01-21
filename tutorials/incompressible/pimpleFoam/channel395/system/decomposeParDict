@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-numberOfSubdomains  5;
+numberOfSubdomains  4;
 
 //- Keep owner and neighbour on same processor for faces in zones:
 // preserveFaceZones (heater solid1 solid3);
@@ -38,9 +38,9 @@ numberOfSubdomains  5;
 //  for a balanced number of particles in a lagrangian simulation.
 // weightField dsmcRhoNMean;
 
-method          scotch;
-//method          hierarchical;
-// method          simple;
+// method          scotch;
+// method          hierarchical;
+method          simple;
 // method          metis;
 // method          manual;
 // method          multiLevel;
@@ -73,7 +73,7 @@ multiLevelCoeffs
 
 simpleCoeffs
 {
-    n           (2 1 1);
+    n           (1 2 2);
     delta       0.001;
 }
 

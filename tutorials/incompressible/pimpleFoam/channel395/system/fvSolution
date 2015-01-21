@@ -39,7 +39,7 @@ solvers
         relTol          0;
     }
 
-    "(U|k)"
+    "(U|k|nuTilda)"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
@@ -47,7 +47,7 @@ solvers
         relTol          0.1;
     }
 
-    "(U|k)Final"
+    "(U|k|nuTilda)Final"
     {
         $U;
         tolerance       1e-05;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 template<class BasicTurbulenceModel>
 Foam::eddyViscosity<BasicTurbulenceModel>::eddyViscosity
 (
-    const word& modelName,
+    const word& type,
     const alphaField& alpha,
     const rhoField& rho,
     const volVectorField& U,
@@ -42,9 +42,9 @@ Foam::eddyViscosity<BasicTurbulenceModel>::eddyViscosity
     const word& propertiesName
 )
 :
-    BasicTurbulenceModel
+    linearViscousStress<BasicTurbulenceModel>
     (
-        modelName,
+        type,
         alpha,
         rho,
         U,
@@ -72,6 +72,13 @@ Foam::eddyViscosity<BasicTurbulenceModel>::eddyViscosity
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
+bool Foam::eddyViscosity<BasicTurbulenceModel>::read()
+{
+    return BasicTurbulenceModel::read();
+}
+
+
+template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volSymmTensorField>
 Foam::eddyViscosity<BasicTurbulenceModel>::R() const
 {
@@ -93,51 +100,6 @@ Foam::eddyViscosity<BasicTurbulenceModel>::R() const
             tk().boundaryField().types()
         )
     );
-}
-
-
-template<class BasicTurbulenceModel>
-Foam::tmp<Foam::volSymmTensorField>
-Foam::eddyViscosity<BasicTurbulenceModel>::devRhoReff() const
-{
-    return tmp<volSymmTensorField>
-    (
-        new volSymmTensorField
-        (
-            IOobject
-            (
-                IOobject::groupName("devRhoReff", this->U_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            (-(this->alpha_*this->rho_*this->nuEff()))
-           *dev(twoSymm(fvc::grad(this->U_)))
-        )
-    );
-}
-
-
-template<class BasicTurbulenceModel>
-Foam::tmp<Foam::fvVectorMatrix>
-Foam::eddyViscosity<BasicTurbulenceModel>::divDevRhoReff
-(
-    volVectorField& U
-) const
-{
-    return
-    (
-      - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
-      - fvc::div((this->alpha_*this->rho_*this->nuEff())*dev2(T(fvc::grad(U))))
-    );
-}
-
-
-template<class BasicTurbulenceModel>
-bool Foam::eddyViscosity<BasicTurbulenceModel>::read()
-{
-    return BasicTurbulenceModel::read();
 }
 
 

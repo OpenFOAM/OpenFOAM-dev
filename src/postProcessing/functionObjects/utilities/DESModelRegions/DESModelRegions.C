@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,10 +153,10 @@ void Foam::DESModelRegions::execute()
 
 
         label DESpresent = false;
-        if (mesh.foundObject<icoModel>("turbulenceModel"))
+        if (mesh.foundObject<icoModel>(turbulenceModel::propertiesName))
         {
             const icoModel& model =
-                mesh.lookupObject<icoModel>("turbulenceModel");
+                mesh.lookupObject<icoModel>(turbulenceModel::propertiesName);
 
             if (isA<icoDESModel>(model))
             {
@@ -166,10 +166,10 @@ void Foam::DESModelRegions::execute()
                 DESpresent = true;
             }
         }
-        else if (mesh.foundObject<cmpModel>("turbulenceModel"))
+        else if (mesh.foundObject<cmpModel>(turbulenceModel::propertiesName))
         {
             const cmpModel& model =
-                mesh.lookupObject<cmpModel>("turbulenceModel");
+                mesh.lookupObject<cmpModel>(turbulenceModel::propertiesName);
 
             if (isA<cmpDESModel>(model))
             {

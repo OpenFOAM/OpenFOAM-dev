@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,8 @@ License
 #include "wordReList.H"
 #include "fvcGrad.H"
 #include "porosityModel.H"
-#include "fluidThermo.H"
-#include "incompressible/turbulenceModel/turbulenceModel.H"
-#include "compressible/turbulenceModel/turbulenceModel.H"
-#include "incompressible/transportModel/transportModel.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -209,17 +207,17 @@ Foam::tmp<Foam::volSymmTensorField> Foam::forces::devRhoReff() const
     typedef compressible::turbulenceModel cmpTurbModel;
     typedef incompressible::turbulenceModel icoTurbModel;
 
-    if (obr_.foundObject<cmpTurbModel>(cmpTurbModel::typeName))
+    if (obr_.foundObject<cmpTurbModel>(cmpTurbModel::propertiesName))
     {
         const cmpTurbModel& turb =
-            obr_.lookupObject<cmpTurbModel>(cmpTurbModel::typeName);
+            obr_.lookupObject<cmpTurbModel>(cmpTurbModel::propertiesName);
 
         return turb.devRhoReff();
     }
-    else if (obr_.foundObject<icoTurbModel>(icoTurbModel::typeName))
+    else if (obr_.foundObject<icoTurbModel>(icoTurbModel::propertiesName))
     {
         const incompressible::turbulenceModel& turb =
-            obr_.lookupObject<icoTurbModel>(icoTurbModel::typeName);
+            obr_.lookupObject<icoTurbModel>(icoTurbModel::propertiesName);
 
         return rho()*turb.devReff();
     }

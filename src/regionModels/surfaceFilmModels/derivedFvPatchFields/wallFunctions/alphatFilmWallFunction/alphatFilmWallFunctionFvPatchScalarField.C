@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphatFilmWallFunctionFvPatchScalarField.H"
-#include "RASModel.H"
+#include "turbulentFluidThermoModel.H"
 #include "surfaceFilmModel.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
@@ -150,27 +150,36 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     // Retrieve phase change mass from surface film model
     const modelType& filmModel =
         db().time().lookupObject<modelType>("surfaceFilmProperties");
 
-    const label filmPatchI = filmModel.regionPatchID(patchI);
+    const label filmPatchI = filmModel.regionPatchID(patchi);
 
     tmp<volScalarField> mDotFilm(filmModel.primaryMassTrans());
     scalarField mDotFilmp = mDotFilm().boundaryField()[filmPatchI];
     filmModel.toPrimary(filmPatchI, mDotFilmp);
 
     // Retrieve RAS turbulence model
-    const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
+    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
+    (
+        IOobject::groupName
+        (
+            turbulenceModel::propertiesName,
+            dimensionedInternalField().group()
+        )
+    );
 
-    const scalarField& y = rasModel.y()[patchI];
-    const scalarField& rhow = rasModel.rho().boundaryField()[patchI];
-    const tmp<volScalarField> tk = rasModel.k();
+    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
+    const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
-    const scalarField& muw = rasModel.mu().boundaryField()[patchI];
-    const scalarField& alphaw = rasModel.alpha().boundaryField()[patchI];
+    const tmp<scalarField> tmuw = turbModel.mu(patchi);
+    const scalarField& muw = tmuw();
+    const tmp<scalarField> talpha = turbModel.alpha(patchi);
+    const scalarField& alphaw = talpha();
 
     const scalar Cmu25 = pow(Cmu_, 0.25);
 

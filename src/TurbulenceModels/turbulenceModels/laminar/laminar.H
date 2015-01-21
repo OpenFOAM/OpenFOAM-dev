@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef laminar_H
 #define laminar_H
 
-#include "TurbulenceModel.H"
+#include "linearViscousStress.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,7 +49,7 @@ namespace Foam
 template<class BasicTurbulenceModel>
 class laminar
 :
-    public BasicTurbulenceModel
+    public linearViscousStress<BasicTurbulenceModel>
 {
 
 public:
@@ -103,6 +103,9 @@ public:
         //- Const access to the coefficients dictionary
         virtual const dictionary& coeffDict() const;
 
+        //- Read turbulenceProperties dictionary
+        virtual bool read();
+
         //- Return the turbulence viscosity, i.e. 0 for laminar flow
         virtual tmp<volScalarField> nut() const;
 
@@ -125,17 +128,8 @@ public:
         //- Return the Reynolds stress tensor, i.e. 0 for laminar flow
         virtual tmp<volSymmTensorField> R() const;
 
-        //- Return the effective stress tensor, i.e. the laminar stress
-        virtual tmp<volSymmTensorField> devRhoReff() const;
-
-        //- Return the source term for the momentum equation
-        virtual tmp<fvVectorMatrix> divDevRhoReff(volVectorField& U) const;
-
         //- Correct the laminar viscosity
         virtual void correct();
-
-        //- Read turbulenceProperties dictionary
-        virtual bool read();
 };
 
 

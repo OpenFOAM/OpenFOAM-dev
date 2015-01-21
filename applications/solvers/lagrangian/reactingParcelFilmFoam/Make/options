@@ -3,7 +3,8 @@ EXE_INC = \
     -I$(LIB_SRC)/fvOptions/lnInclude \
     -I${LIB_SRC}/sampling/lnInclude \
     -I${LIB_SRC}/meshTools/lnInclude \
-    -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/lagrangian/distributionModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
@@ -30,8 +31,8 @@ EXE_LIBS = \
     -lfvOptions \
     -lsampling \
     -lmeshTools \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lturbulenceModels \
+    -lcompressibleTurbulenceModels \
     -lspecie \
     -lfluidThermophysicalModels \
     -lsolidProperties \

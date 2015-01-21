@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,6 +92,8 @@ bool LESeddyViscosity<BasicTurbulenceModel>::read()
 template<class BasicTurbulenceModel>
 tmp<volScalarField> LESeddyViscosity<BasicTurbulenceModel>::epsilon() const
 {
+    tmp<volScalarField> tk(this->k());
+
     return tmp<volScalarField>
     (
         new volScalarField
@@ -104,7 +106,7 @@ tmp<volScalarField> LESeddyViscosity<BasicTurbulenceModel>::epsilon() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            Ce_*this->k()*sqrt(this->k())/this->delta()
+            Ce_*tk()*sqrt(tk())/this->delta()
         )
     );
 }

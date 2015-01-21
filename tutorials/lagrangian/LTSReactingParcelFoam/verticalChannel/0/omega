@@ -31,14 +31,14 @@ boundaryField
     }
     inletCentral
     {
-        type            compressible::turbulentMixingLengthFrequencyInlet;
+        type            turbulentMixingLengthFrequencyInlet;
         mixingLength    0.007;
         k               k;
         value           uniform 4.5e-3;
     }
     inletSides
     {
-        type            compressible::turbulentMixingLengthFrequencyInlet;
+        type            turbulentMixingLengthFrequencyInlet;
         mixingLength    0.007;
         k               k;
         value           uniform 4.5e-3;
@@ -50,7 +50,7 @@ boundaryField
     }
     walls
     {
-        type            compressible::omegaWallFunction;
+        type            omegaWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;

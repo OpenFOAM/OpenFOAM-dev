@@ -32,7 +32,7 @@ Description
 
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
-#include "RASModel.H"
+#include "turbulentTransportModel.H"
 #include "SRFModel.H"
 #include "simpleControl.H"
 #include "fvIOoptionList.H"

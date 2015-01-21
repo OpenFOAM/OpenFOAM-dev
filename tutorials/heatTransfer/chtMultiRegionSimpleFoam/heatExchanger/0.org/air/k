@@ -23,7 +23,7 @@ boundaryField
 {
     walls
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           $internalField;
     }
     inlet
@@ -37,7 +37,7 @@ boundaryField
     }
     blades
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           $internalField;
     }
 }

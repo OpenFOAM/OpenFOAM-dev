@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,16 +30,21 @@ License
 
 namespace Foam
 {
+namespace LESModels
+{
     defineTypeNameAndDebug(maxDeltaxyz, 0);
     addToRunTimeSelectionTable(LESdelta, maxDeltaxyz, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::maxDeltaxyz::calcDelta()
+void Foam::LESModels::maxDeltaxyz::calcDelta()
 {
-    label nD = mesh().nGeometricD();
+    const fvMesh& mesh = turbulenceModel_.mesh();
+
+    label nD = mesh.nGeometricD();
 
     tmp<volScalarField> hmax
     (
@@ -48,28 +53,28 @@ void Foam::maxDeltaxyz::calcDelta()
             IOobject
             (
                 "hmax",
-                mesh().time().timeName(),
-                mesh(),
+                mesh.time().timeName(),
+                mesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh(),
+            mesh,
             dimensionedScalar("zrero", dimLength, 0.0)
         )
     );
 
-    const cellList& cells = mesh().cells();
+    const cellList& cells = mesh.cells();
 
     forAll(cells,cellI)
     {
         scalar deltaMaxTmp = 0.0;
-        const labelList& cFaces = mesh().cells()[cellI];
-        const point& centrevector = mesh().cellCentres()[cellI];
+        const labelList& cFaces = mesh.cells()[cellI];
+        const point& centrevector = mesh.cellCentres()[cellI];
 
         forAll(cFaces, cFaceI)
         {
             label faceI = cFaces[cFaceI];
-            const point& facevector = mesh().faceCentres()[faceI];
+            const point& facevector = mesh.faceCentres()[faceI];
             scalar tmp = mag(facevector - centrevector);
             if (tmp > deltaMaxTmp)
             {
@@ -102,14 +107,14 @@ void Foam::maxDeltaxyz::calcDelta()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::maxDeltaxyz::maxDeltaxyz
+Foam::LESModels::maxDeltaxyz::maxDeltaxyz
 (
     const word& name,
-    const fvMesh& mesh,
+    const turbulenceModel& turbulence,
     const dictionary& dict
 )
 :
-    LESdelta(name, mesh),
+    LESdelta(name, turbulence),
     deltaCoeff_
     (
         dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>("deltaCoeff", 1)
@@ -121,21 +126,19 @@ Foam::maxDeltaxyz::maxDeltaxyz
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::maxDeltaxyz::read(const dictionary& dict)
+void Foam::LESModels::maxDeltaxyz::read(const dictionary& dict)
 {
-    dict.subDict(type() + "Coeffs").readIfPresent<scalar>
-    (
-        "deltaCoeff",
-        deltaCoeff_
-    );
+    const dictionary& coeffsDict(dict.subDict(type() + "Coeffs"));
+
+    coeffsDict.readIfPresent<scalar>("deltaCoeff", deltaCoeff_);
 
     calcDelta();
 }
 
 
-void Foam::maxDeltaxyz::correct()
+void Foam::LESModels::maxDeltaxyz::correct()
 {
-    if (mesh_.changing())
+    if (turbulenceModel_.mesh().changing())
     {
         calcDelta();
     }

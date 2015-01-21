@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,20 +128,29 @@ void Foam::Peclet::execute()
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
         tmp<volScalarField> nuEff;
-        if (mesh.foundObject<cmpTurbModel>("turbulenceModel"))
+        if (mesh.foundObject<cmpTurbModel>(turbulenceModel::propertiesName))
         {
             const cmpTurbModel& model =
-                mesh.lookupObject<cmpTurbModel>("turbulenceModel");
+                mesh.lookupObject<cmpTurbModel>
+                (
+                    turbulenceModel::propertiesName
+                );
 
             const volScalarField& rho =
                 mesh.lookupObject<volScalarField>(rhoName_);
 
             nuEff = model.muEff()/rho;
         }
-        else if (mesh.foundObject<icoTurbModel>("turbulenceModel"))
+        else if
+        (
+            mesh.foundObject<icoTurbModel>(turbulenceModel::propertiesName)
+        )
         {
             const icoTurbModel& model =
-                mesh.lookupObject<icoTurbModel>("turbulenceModel");
+                mesh.lookupObject<icoTurbModel>
+                (
+                    turbulenceModel::propertiesName
+                );
 
             nuEff = model.nuEff();
         }

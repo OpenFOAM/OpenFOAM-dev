@@ -52,11 +52,5 @@ maxAlphaCo      0.1;
 
 maxDeltaT       1;
 
-libs
-(
-    "libturbulenceDerivedFvPatchFields.so"
-    "libincompressibleTurbulenceModel.so"
-    "libincompressibleRASModels.so"
-);
 
 // ************************************************************************* //

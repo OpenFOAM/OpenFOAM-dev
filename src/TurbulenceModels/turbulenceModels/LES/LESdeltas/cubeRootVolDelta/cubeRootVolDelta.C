@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,20 +30,25 @@ License
 
 namespace Foam
 {
+namespace LESModels
+{
     defineTypeNameAndDebug(cubeRootVolDelta, 0);
     addToRunTimeSelectionTable(LESdelta, cubeRootVolDelta, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::cubeRootVolDelta::calcDelta()
+void Foam::LESModels::cubeRootVolDelta::calcDelta()
 {
-    label nD = mesh().nGeometricD();
+    const fvMesh& mesh = turbulenceModel_.mesh();
+
+    label nD = mesh.nGeometricD();
 
     if (nD == 3)
     {
-        delta_.internalField() = deltaCoeff_*pow(mesh().V(), 1.0/3.0);
+        delta_.internalField() = deltaCoeff_*pow(mesh.V(), 1.0/3.0);
     }
     else if (nD == 2)
     {
@@ -51,19 +56,19 @@ void Foam::cubeRootVolDelta::calcDelta()
             << "Case is 2D, LES is not strictly applicable\n"
             << endl;
 
-        const Vector<label>& directions = mesh().geometricD();
+        const Vector<label>& directions = mesh.geometricD();
 
         scalar thickness = 0.0;
         for (direction dir=0; dir<directions.nComponents; dir++)
         {
             if (directions[dir] == -1)
             {
-                thickness = mesh().bounds().span()[dir];
+                thickness = mesh.bounds().span()[dir];
                 break;
             }
         }
 
-        delta_.internalField() = deltaCoeff_*sqrt(mesh().V()/thickness);
+        delta_.internalField() = deltaCoeff_*sqrt(mesh.V()/thickness);
     }
     else
     {
@@ -76,14 +81,14 @@ void Foam::cubeRootVolDelta::calcDelta()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cubeRootVolDelta::cubeRootVolDelta
+Foam::LESModels::cubeRootVolDelta::cubeRootVolDelta
 (
     const word& name,
-    const fvMesh& mesh,
+    const turbulenceModel& turbulence,
     const dictionary& dict
 )
 :
-    LESdelta(name, mesh),
+    LESdelta(name, turbulence),
     deltaCoeff_
     (
         dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>("deltaCoeff", 1)
@@ -95,7 +100,7 @@ Foam::cubeRootVolDelta::cubeRootVolDelta
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::cubeRootVolDelta::read(const dictionary& dict)
+void Foam::LESModels::cubeRootVolDelta::read(const dictionary& dict)
 {
     dict.subDict(type() + "Coeffs").readIfPresent<scalar>
     (
@@ -107,9 +112,9 @@ void Foam::cubeRootVolDelta::read(const dictionary& dict)
 }
 
 
-void Foam::cubeRootVolDelta::correct()
+void Foam::LESModels::cubeRootVolDelta::correct()
 {
-    if (mesh_.changing())
+    if (turbulenceModel_.mesh().changing())
     {
         calcDelta();
     }

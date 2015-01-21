@@ -39,6 +39,7 @@ FoamFile
     WALL10
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          260;
         startFace       160170;
     }

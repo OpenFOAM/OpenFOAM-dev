@@ -15,13 +15,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs
-(
-    "libincompressibleTurbulenceModel.so"
-    "libincompressibleRASModels.so"
-    "libincompressibleTransportModels.so"
-);
-
 application     buoyantBoussinesqSimpleFoam;
 
 startFrom       startTime;

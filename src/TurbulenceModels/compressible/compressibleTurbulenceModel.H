@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,6 +97,12 @@ public:
 
 
     // Member functions
+
+        //- Return the density field
+        const volScalarField& rho() const
+        {
+            return rho_;
+        }
 
         //- Return the volumetric flux field
         virtual tmp<surfaceScalarField> phi() const;

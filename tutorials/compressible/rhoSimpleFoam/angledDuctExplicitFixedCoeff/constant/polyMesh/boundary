@@ -20,24 +20,28 @@ FoamFile
     front
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          700;
         startFace       63400;
     }
     back
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          700;
         startFace       64100;
     }
     walls
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          1400;
         startFace       64800;
     }
     porosityWall
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          1600;
         startFace       66200;
     }

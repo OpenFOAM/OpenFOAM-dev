@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ void Foam::SingleKineticRateDevolatilisation<CloudType>::calculate
         const scalar E = volatileData_[i].E();
 
         // Kinetic rate
-        const scalar kappa = A1*exp(-E/(specie::RR*T));
+        const scalar kappa = A1*exp(-E/(RR*T));
 
         // Mass transferred from particle to carrier gas phase
         dMassDV[id] = min(dt*kappa*massVolatile, massVolatile);

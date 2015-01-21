@@ -23,7 +23,7 @@ boundaryField
 {
     box
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
@@ -31,7 +31,7 @@ boundaryField
     }
     floor
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
@@ -39,7 +39,7 @@ boundaryField
     }
     ceiling
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
@@ -47,7 +47,7 @@ boundaryField
     }
     fixedWalls
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;

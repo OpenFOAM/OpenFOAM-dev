@@ -20,6 +20,7 @@ FoamFile
     rotor
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          144;
         startFace       5640;
     }
@@ -32,12 +33,14 @@ FoamFile
     front
     {
         type            empty;
+        inGroups        1(empty);
         nFaces          2880;
         startFace       5880;
     }
     back
     {
         type            empty;
+        inGroups        1(empty);
         nFaces          2880;
         startFace       8760;
     }

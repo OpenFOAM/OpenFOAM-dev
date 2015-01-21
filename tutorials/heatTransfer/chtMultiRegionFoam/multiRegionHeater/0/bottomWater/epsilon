@@ -34,32 +34,32 @@ boundaryField
     }
     minY
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 0.01;
     }
     minZ
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 0.01;
     }
     maxZ
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 0.01;
     }
     bottomWater_to_rightSolid
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 0.01;
     }
     bottomWater_to_leftSolid
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 0.01;
     }
     bottomWater_to_heater
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform 0.01;
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,11 +87,8 @@ class yPlusRAS
         //- File header information
         virtual void writeFileHeader(const label i);
 
-        //- Calculate incompressible form of y+
-        void calcIncompressibleYPlus(const fvMesh& mesh, volScalarField& yPlus);
-
-        //- Calculate compressible form of y+
-        void calcCompressibleYPlus(const fvMesh& mesh, volScalarField& yPlus);
+        //- Calculate y+
+        void calcYPlus(const fvMesh& mesh, volScalarField& yPlus);
 
         //- Disallow default bitwise copy construct
         yPlusRAS(const yPlusRAS&);

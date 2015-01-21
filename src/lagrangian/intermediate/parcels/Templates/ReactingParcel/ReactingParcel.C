@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
     if (td.cloud().heatTransfer().BirdCorrection())
     {
         // Average molecular weight of carrier mix - assumes perfect gas
-        const scalar Wc = this->rhoc_*specie::RR*this->Tc_/this->pc_;
+        const scalar Wc = this->rhoc_*RR*this->Tc_/this->pc_;
 
         forAll(dMassPC, i)
         {
@@ -341,10 +341,10 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
     Xinf /= sum(Xinf);
 
     // Molar fraction of far field species at particle surface
-    const scalar Xsff = 1.0 - min(sum(Cs)*specie::RR*this->T_/pc_, 1.0);
+    const scalar Xsff = 1.0 - min(sum(Cs)*RR*this->T_/pc_, 1.0);
 
     // Surface carrier total molar concentration
-    const scalar CsTot = pc_/(specie::RR*this->T_);
+    const scalar CsTot = pc_/(RR*this->T_);
 
     // Surface carrier composition (molar fraction)
     scalarField Xs(Xinf.size());
@@ -388,7 +388,7 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
 
     Cps = max(Cps, ROOTVSMALL);
 
-    rhos *= pc_/(specie::RR*T);
+    rhos *= pc_/(RR*T);
     rhos = max(rhos, ROOTVSMALL);
 
     mus /= sumYiSqrtW;
@@ -621,4 +621,3 @@ void Foam::ReactingParcel<ParcelType>::calc
 #include "ReactingParcelIO.C"
 
 // ************************************************************************* //
-
