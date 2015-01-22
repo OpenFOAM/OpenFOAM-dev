@@ -55,6 +55,9 @@ makeRASModel(SpalartAllmaras);
 #include "kEpsilon.H"
 makeRASModel(kEpsilon);
 
+#include "realizableKE.H"
+makeRASModel(realizableKE);
+
 #include "LaunderSharmaKE.H"
 makeRASModel(LaunderSharmaKE);
 
