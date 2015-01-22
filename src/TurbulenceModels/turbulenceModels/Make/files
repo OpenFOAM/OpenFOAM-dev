@@ -1,5 +1,6 @@
 turbulenceModel.C
 
+
 LESdelta = LES/LESdeltas
 
 $(LESdelta)/LESdelta/LESdelta.C
@@ -10,6 +11,7 @@ $(LESdelta)/smoothDelta/smoothDelta.C
 $(LESdelta)/maxDeltaxyz/maxDeltaxyz.C
 $(LESdelta)/IDDESDelta/IDDESDelta.C
 
+
 LESfilters = LES/LESfilters
 
 $(LESfilters)/LESfilter/LESfilter.C
@@ -18,11 +20,13 @@ $(LESfilters)/laplaceFilter/laplaceFilter.C
 $(LESfilters)/anisotropicFilter/anisotropicFilter.C
 
 
+/* Turbulence BCs */
 derivedFvPatchFields/fixedShearStress/fixedShearStressFvPatchVectorField.C
 derivedFvPatchFields/porousBafflePressure/porousBafflePressureFvPatchField.C
 
+
 /* Wall function BCs */
-wallFunctions = RAS/derivedFvPatchFields/wallFunctions
+wallFunctions = derivedFvPatchFields/wallFunctions
 
 nutWallFunctions = $(wallFunctions)/nutWallFunctions
 $(nutWallFunctions)/nutWallFunction/nutWallFunctionFvPatchScalarField.C
@@ -56,14 +60,18 @@ fWallFunctions = $(wallFunctions)/fWallFunctions
 $(fWallFunctions)/fWallFunction/fWallFunctionFvPatchScalarField.C
 */
 
+
+RASBCs = RAS/derivedFvPatchFields
+
 /* Inlet turbulence BCs */
-RAS/derivedFvPatchFields/turbulentMixingLengthDissipationRateInlet/turbulentMixingLengthDissipationRateInletFvPatchScalarField.C
-RAS/derivedFvPatchFields/turbulentMixingLengthFrequencyInlet/turbulentMixingLengthFrequencyInletFvPatchScalarField.C
+$(RASBCs)/turbulentMixingLengthDissipationRateInlet/turbulentMixingLengthDissipationRateInletFvPatchScalarField.C
+$(RASBCs)/turbulentMixingLengthFrequencyInlet/turbulentMixingLengthFrequencyInletFvPatchScalarField.C
 
 /* Atmospheric boundary layer BCs */
-RAS/derivedFvPatchFields/atmBoundaryLayer/atmBoundaryLayer.C
-RAS/derivedFvPatchFields/atmBoundaryLayerInletVelocity/atmBoundaryLayerInletVelocityFvPatchVectorField.C
-RAS/derivedFvPatchFields/atmBoundaryLayerInletK/atmBoundaryLayerInletKFvPatchScalarField.C
-RAS/derivedFvPatchFields/atmBoundaryLayerInletEpsilon/atmBoundaryLayerInletEpsilonFvPatchScalarField.C
+$(RASBCs)/atmBoundaryLayer/atmBoundaryLayer.C
+$(RASBCs)/atmBoundaryLayerInletVelocity/atmBoundaryLayerInletVelocityFvPatchVectorField.C
+$(RASBCs)/atmBoundaryLayerInletK/atmBoundaryLayerInletKFvPatchScalarField.C
+$(RASBCs)/atmBoundaryLayerInletEpsilon/atmBoundaryLayerInletEpsilonFvPatchScalarField.C
+
 
 LIB = $(FOAM_LIBBIN)/libturbulenceModels

@@ -25,7 +25,7 @@ Class
     Foam::RASModels::SpalartAllmaras
 
 Group
-    grpCmpRASTurbulence
+    grpRASTurbulence
 
 Description
     Spalart-Allmaras one-eqn mixing-length model for incompressible and

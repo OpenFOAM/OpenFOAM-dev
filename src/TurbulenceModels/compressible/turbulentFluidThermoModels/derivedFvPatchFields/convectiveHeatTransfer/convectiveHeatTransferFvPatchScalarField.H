@@ -25,7 +25,7 @@ Class
     Foam::compressible::convectiveHeatTransferFvPatchScalarField
 
 Group
-    grpCmpRASBoundaryConditions
+    grpCmpBoundaryConditions
 
 Description
     This boundary condition provides a convective heat transfer coefficient

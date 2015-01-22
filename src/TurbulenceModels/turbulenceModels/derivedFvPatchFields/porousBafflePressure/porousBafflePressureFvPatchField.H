@@ -25,7 +25,7 @@ Class
     Foam::porousBafflePressureFvPatchField
 
 Group
-    grpCoupledBoundaryConditions
+    grpCoupledBoundaryConditions grpTurbulenceBoundaryConditions
 
 Description
     This boundary condition provides a jump condition, using the \c cyclic
