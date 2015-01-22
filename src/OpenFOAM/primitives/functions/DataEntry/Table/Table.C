@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ template<class Type>
 Foam::Table<Type>::Table(const word& entryName, const dictionary& dict)
 :
     DataEntry<Type>(entryName),
-    TableBase<Type>(entryName, dictionary::null)
+    TableBase<Type>(entryName, dict)
 {
     Istream& is(dict.lookup(entryName));
     word entryType(is);
