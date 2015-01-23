@@ -56,14 +56,15 @@ OptimisationSwitches
     //  - inotify           : use inotify framework
     //  - timeStampMaster   : do time stamp (and file reading) only on master.
     //  - inotifyMaster     : do inotify (and file reading) only on master.
-    fileModificationChecking timeStampMaster;//inotify;timeStamp;inotifyMaster;
+    fileModificationChecking timeStamp;
 
     commsType       nonBlocking; //scheduled; //blocking;
     floatTransfer   0;
     nProcsSimpleSum 0;
 
     // Force dumping (at next timestep) upon signal (-1 to disable)
-    writeNowSignal              -1; //10;
+    writeNowSignal              -1; // 10;
+
     // Force dumping (at next timestep) upon signal (-1 to disable) and exit
     stopAtWriteNowSignal        -1;
 }
