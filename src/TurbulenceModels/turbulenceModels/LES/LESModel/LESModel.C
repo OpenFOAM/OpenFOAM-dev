@@ -163,13 +163,6 @@ Foam::LESModel<BasicTurbulenceModel>::New
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-void Foam::LESModel<BasicTurbulenceModel>::correct()
-{
-    BasicTurbulenceModel::correct();
-}
-
-
-template<class BasicTurbulenceModel>
 bool Foam::LESModel<BasicTurbulenceModel>::read()
 {
     if (turbulenceModel::read())
@@ -182,6 +175,8 @@ bool Foam::LESModel<BasicTurbulenceModel>::read()
             coeffDict_ <<= *dictPtr;
         }
 
+        delta_().read(LESDict_);
+
         kMin_.readIfPresent(LESDict_);
 
         return true;
@@ -190,6 +185,14 @@ bool Foam::LESModel<BasicTurbulenceModel>::read()
     {
         return false;
     }
+}
+
+
+template<class BasicTurbulenceModel>
+void Foam::LESModel<BasicTurbulenceModel>::correct()
+{
+    delta_().correct();
+    BasicTurbulenceModel::correct();
 }
 
 
