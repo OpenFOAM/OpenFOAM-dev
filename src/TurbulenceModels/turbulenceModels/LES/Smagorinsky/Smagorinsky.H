@@ -100,6 +100,7 @@ protected:
         //  calculated from the given velocity gradient
         tmp<volScalarField> k(const tmp<volTensorField>& gradU) const;
 
+        //- Update the SGS eddy viscosity
         virtual void correctNut();
 
 

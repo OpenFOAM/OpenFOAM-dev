@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,46 @@ namespace Foam
 {
 namespace LESModels
 {
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+tmp<volScalarField> Smagorinsky<BasicTurbulenceModel>::k
+(
+    const tmp<volTensorField>& gradU
+) const
+{
+    volSymmTensorField D(symm(gradU));
+
+    volScalarField a(this->Ce_/this->delta());
+    volScalarField b((2.0/3.0)*tr(D));
+    volScalarField c(2*Ck_*this->delta()*(dev(D) && D));
+
+    return tmp<volScalarField>
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("k", this->U_.group()),
+                this->runTime_.timeName(),
+                this->mesh_
+            ),
+            sqr((-b + sqrt(sqr(b) + 4*a*c))/(2*a))
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+void Smagorinsky<BasicTurbulenceModel>::correctNut()
+{
+    volScalarField k(this->k(fvc::grad(this->U_)));
+
+    this->nut_ = Ck_*this->delta()*sqrt(k);
+    this->nut_.correctBoundaryConditions();
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -96,24 +136,10 @@ bool Smagorinsky<BasicTurbulenceModel>::read()
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> Smagorinsky<BasicTurbulenceModel>::k
-(
-    const tmp<volTensorField>& gradU
-) const
-{
-    volSymmTensorField D(symm(gradU));
-
-    volScalarField a(this->Ce_/this->delta());
-    volScalarField b((2.0/3.0)*tr(D));
-    volScalarField c(2*Ck_*this->delta()*(dev(D) && D));
-
-    return sqr((-b + sqrt(sqr(b) + 4*a*c))/(2*a));
-}
-
-
-template<class BasicTurbulenceModel>
 tmp<volScalarField> Smagorinsky<BasicTurbulenceModel>::epsilon() const
 {
+    volScalarField k(this->k(fvc::grad(this->U_)));
+
     return tmp<volScalarField>
     (
         new volScalarField
@@ -122,23 +148,11 @@ tmp<volScalarField> Smagorinsky<BasicTurbulenceModel>::epsilon() const
             (
                 IOobject::groupName("epsilon", this->U_.group()),
                 this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
+                this->mesh_
             ),
-            this->Ce_*k()*sqrt(k())/this->delta()
+            this->Ce_*k*sqrt(k)/this->delta()
         )
     );
-}
-
-
-template<class BasicTurbulenceModel>
-void Smagorinsky<BasicTurbulenceModel>::correctNut()
-{
-    volScalarField k(this->k(fvc::grad(this->U_)));
-
-    this->nut_ = Ck_*this->delta()*sqrt(k);
-    this->nut_.correctBoundaryConditions();
 }
 
 

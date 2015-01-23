@@ -175,13 +175,6 @@ Foam::RASModel<BasicTurbulenceModel>::New
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-void Foam::RASModel<BasicTurbulenceModel>::correct()
-{
-    BasicTurbulenceModel::correct();
-}
-
-
-template<class BasicTurbulenceModel>
 bool Foam::RASModel<BasicTurbulenceModel>::read()
 {
     if (turbulenceModel::read())
@@ -204,6 +197,13 @@ bool Foam::RASModel<BasicTurbulenceModel>::read()
     {
         return false;
     }
+}
+
+
+template<class BasicTurbulenceModel>
+void Foam::RASModel<BasicTurbulenceModel>::correct()
+{
+    BasicTurbulenceModel::correct();
 }
 
 
