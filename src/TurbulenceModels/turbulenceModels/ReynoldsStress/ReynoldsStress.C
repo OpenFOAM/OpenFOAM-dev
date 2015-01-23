@@ -26,6 +26,82 @@ License
 #include "ReynoldsStress.H"
 #include "fvc.H"
 #include "fvm.H"
+#include "wallFvPatch.H"
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+void Foam::ReynoldsStress<BasicTurbulenceModel>::boundNormalStress
+(
+    volSymmTensorField& R
+) const
+{
+    scalar kMin = this->kMin_.value();
+
+    R.max
+    (
+        dimensionedSymmTensor
+        (
+            "zero",
+            R.dimensions(),
+            symmTensor
+            (
+                kMin, -GREAT, -GREAT,
+                kMin, -GREAT,
+                kMin
+            )
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+void Foam::ReynoldsStress<BasicTurbulenceModel>::correctWallShearStress
+(
+    volSymmTensorField& R
+) const
+{
+    const fvPatchList& patches = this->mesh_.boundary();
+
+    forAll(patches, patchi)
+    {
+        const fvPatch& curPatch = patches[patchi];
+
+        if (isA<wallFvPatch>(curPatch))
+        {
+            symmTensorField& Rw = R.boundaryField()[patchi];
+
+            const scalarField& nutw = this->nut_.boundaryField()[patchi];
+
+            const vectorField snGradU
+            (
+                this->U_.boundaryField()[patchi].snGrad()
+            );
+
+            const vectorField& faceAreas
+                = this->mesh_.Sf().boundaryField()[patchi];
+
+            const scalarField& magFaceAreas
+                = this->mesh_.magSf().boundaryField()[patchi];
+
+            forAll(curPatch, facei)
+            {
+                // Calculate near-wall velocity gradient
+                tensor gradUw
+                    = (faceAreas[facei]/magFaceAreas[facei])*snGradU[facei];
+
+                // Calculate near-wall shear-stress tensor
+                tensor tauw = -nutw[facei]*2*dev(symm(gradUw));
+
+                // Reset the shear components of the stress tensor
+                Rw[facei].xy() = tauw.xy();
+                Rw[facei].xz() = tauw.xz();
+                Rw[facei].yz() = tauw.yz();
+            }
+        }
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -113,7 +189,7 @@ template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
 Foam::ReynoldsStress<BasicTurbulenceModel>::k() const
 {
-    tmp<Foam::volScalarField> tk(tr(R_));
+    tmp<Foam::volScalarField> tk(0.5*tr(R_));
     tk().rename("k");
     return tk;
 }
@@ -168,7 +244,7 @@ Foam::ReynoldsStress<BasicTurbulenceModel>::divDevRhoReff
                 "laplacian(nuEff,U)"
             )
           - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
-          - fvc::div(this->alpha_*this->rho_*nu()*dev2(T(fvc::grad(U))))
+          - fvc::div(this->alpha_*this->rho_*this->nu()*dev2(T(fvc::grad(U))))
         );
     }
     else
@@ -183,7 +259,7 @@ Foam::ReynoldsStress<BasicTurbulenceModel>::divDevRhoReff
                 "laplacian(nuEff,U)"
             )
           - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
-          - fvc::div(this->alpha_*this->rho_*nu()*dev2(T(fvc::grad(U))))
+          - fvc::div(this->alpha_*this->rho_*this->nu()*dev2(T(fvc::grad(U))))
         );
     }
 

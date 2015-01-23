@@ -82,5 +82,8 @@ makeLESModel(SpalartAllmarasDDES);
 #include "SpalartAllmarasIDDES.H"
 makeLESModel(SpalartAllmarasIDDES);
 
+#include "DeardorffDiffStress.H"
+makeLESModel(DeardorffDiffStress);
+
 
 // ************************************************************************* //

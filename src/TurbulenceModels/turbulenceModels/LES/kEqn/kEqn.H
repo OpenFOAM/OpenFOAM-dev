@@ -50,7 +50,7 @@ Description
 
     The default model coefficients correspond to the following:
     \verbatim
-        NicenoKEqnCoeffs
+        kEqnCoeffs
         {
             Ck                  0.094;
             Ce                  1.048;
@@ -165,7 +165,7 @@ public:
             );
         }
 
-        //- Correct Eddy-Viscosity and related properties
+        //- Correct eddy-Viscosity and related properties
         virtual void correct();
 };
 

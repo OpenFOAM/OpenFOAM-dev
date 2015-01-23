@@ -69,6 +69,10 @@ protected:
 
     // Protected Member Functions
 
+        void boundNormalStress(volSymmTensorField& R) const;
+        void correctWallShearStress(volSymmTensorField& R) const;
+
+        //- Update the eddy-viscosity
         virtual void correctNut() = 0;
 
 

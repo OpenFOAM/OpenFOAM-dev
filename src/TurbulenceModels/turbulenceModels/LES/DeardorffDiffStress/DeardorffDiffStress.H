@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,42 +22,36 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::LESModels::WALE
+    Foam::LESModels::DeardorffDiffStress
 
 Group
     grpLESTurbulence
 
 Description
-    The Wall-adapting local eddy-viscosity (WALE) SGS model.
+    Differential SGS Stress Equation Model for incompressible and
+    compressible flows
 
     Reference:
     \verbatim
-        Nicoud, F., & Ducros, F. (1999).
-        Subgrid-scale stress modelling based on the square of the velocity
-        gradient tensor.
-        Flow, Turbulence and Combustion, 62(3), 183-200.
+        Deardorff, J. W. (1973).
+        The use of subgrid transport equations in a three-dimensional model
+        of atmospheric turbulence.
+        Journal of Fluids Engineering, 95(3), 429-438.
     \endverbatim
 
-    The default model coefficients correspond to the following:
-    \verbatim
-        WALECoeffs
-        {
-            Ck                  0.094;
-            Ce                  1.048;
-            Cw                  0.325;
-        }
-    \endverbatim
+    This SGS model uses a full balance equation for the SGS stress tensor to
+    simulate the behaviour of B.
 
 SourceFiles
-    WALE.C
+    DeardorffDiffStress.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef WALE_H
-#define WALE_H
+#ifndef DeardorffDiffStress_H
+#define DeardorffDiffStress_H
 
 #include "LESModel.H"
-#include "LESeddyViscosity.H"
+#include "ReynoldsStress.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,40 +61,36 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class WALE Declaration
+                    Class DeardorffDiffStress Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicTurbulenceModel>
-class WALE
+class DeardorffDiffStress
 :
-    public LESeddyViscosity<BasicTurbulenceModel>
+    public ReynoldsStress<LESModel<BasicTurbulenceModel> >
 {
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        WALE(const WALE&);
-        WALE& operator=(const WALE&);
+        DeardorffDiffStress(const DeardorffDiffStress&);
+        DeardorffDiffStress& operator=(const DeardorffDiffStress&);
 
 
 protected:
 
     // Protected data
 
-        dimensionedScalar Ck_;
-        dimensionedScalar Cw_;
+        // Model constants
+
+            dimensionedScalar Ck_;
+            dimensionedScalar Cm_;
+            dimensionedScalar Ce_;
+            dimensionedScalar Cs_;
 
 
     // Protected Member Functions
 
-        //- Return the deviatoric symmetric part of the square of the given
-        //  velocity gradient field
-        tmp<volSymmTensorField> Sd(const volTensorField& gradU) const;
-
-        //- Return SGS kinetic energy
-        //  calculated from the given velocity gradient
-        tmp<volScalarField> k(const volTensorField& gradU) const;
-
-        //- Update the SGS eddy-viscosity
+        //- Update the eddy-viscosity
         virtual void correctNut();
 
 
@@ -112,13 +102,13 @@ public:
 
 
     //- Runtime type information
-    TypeName("WALE");
+    TypeName("DeardorffDiffStress");
 
 
     // Constructors
 
-        //- Construct from components
-        WALE
+        //- Constructor from components
+        DeardorffDiffStress
         (
             const alphaField& alpha,
             const rhoField& rho,
@@ -132,7 +122,7 @@ public:
 
 
     //- Destructor
-    virtual ~WALE()
+    virtual ~DeardorffDiffStress()
     {}
 
 
@@ -141,16 +131,19 @@ public:
         //- Read model coefficients if they have changed
         virtual bool read();
 
-        //- Return SGS kinetic energy
-        virtual tmp<volScalarField> k() const
-        {
-            return k(fvc::grad(this->U_));
-        }
-
-        //- Return sub-grid disipation rate
+        //- Return the turbulence kinetic energy dissipation rate
         virtual tmp<volScalarField> epsilon() const;
 
-        //- Correct Eddy-Viscosity and related properties
+        //- Return the effective diffusivity for B
+        tmp<volScalarField> DBEff() const
+        {
+            return tmp<volScalarField>
+            (
+                new volScalarField("DBEff", this->nut_ + this->nu())
+            );
+        }
+
+        //- Correct sub-grid stress, eddy-Viscosity and related properties
         virtual void correct();
 };
 
@@ -163,7 +156,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "WALE.C"
+#   include "DeardorffDiffStress.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
