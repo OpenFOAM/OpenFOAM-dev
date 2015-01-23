@@ -19,13 +19,13 @@ simulationType LES;
 
 LES
 {
-    LESModel        SpalartAllmarasDDES; //kEqn;
+    LESModel        WALE;
 
     turbulence      on;
 
     printCoeffs     on;
 
-    delta           vanDriest;
+    delta           cubeRootVol;
 
     cubeRootVolCoeffs
     {

@@ -67,6 +67,9 @@ makeRASModel(kOmegaSST);
 #include "Smagorinsky.H"
 makeLESModel(Smagorinsky);
 
+#include "WALE.H"
+makeLESModel(WALE);
+
 #include "kEqn.H"
 makeLESModel(kEqn);
 
