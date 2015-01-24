@@ -57,6 +57,9 @@ makeRASModel(SpalartAllmaras);
 #include "kEpsilon.H"
 makeRASModel(kEpsilon);
 
+#include "RNGkEpsilon.H"
+makeRASModel(RNGkEpsilon);
+
 #include "realizableKE.H"
 makeRASModel(realizableKE);
 

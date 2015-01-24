@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "kEpsilon.H"
+#include "RNGkEpsilon.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -36,7 +36,7 @@ namespace RASModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-void kEpsilon<BasicTurbulenceModel>::correctNut()
+void RNGkEpsilon<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
@@ -44,7 +44,7 @@ void kEpsilon<BasicTurbulenceModel>::correctNut()
 
 
 template<class BasicTurbulenceModel>
-tmp<fvScalarMatrix> kEpsilon<BasicTurbulenceModel>::kSource() const
+tmp<fvScalarMatrix> RNGkEpsilon<BasicTurbulenceModel>::kSource() const
 {
     return tmp<fvScalarMatrix>
     (
@@ -59,7 +59,7 @@ tmp<fvScalarMatrix> kEpsilon<BasicTurbulenceModel>::kSource() const
 
 
 template<class BasicTurbulenceModel>
-tmp<fvScalarMatrix> kEpsilon<BasicTurbulenceModel>::epsilonSource() const
+tmp<fvScalarMatrix> RNGkEpsilon<BasicTurbulenceModel>::epsilonSource() const
 {
     return tmp<fvScalarMatrix>
     (
@@ -76,7 +76,7 @@ tmp<fvScalarMatrix> kEpsilon<BasicTurbulenceModel>::epsilonSource() const
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-kEpsilon<BasicTurbulenceModel>::kEpsilon
+RNGkEpsilon<BasicTurbulenceModel>::RNGkEpsilon
 (
     const alphaField& alpha,
     const rhoField& rho,
@@ -106,7 +106,7 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
         (
             "Cmu",
             this->coeffDict_,
-            0.09
+            0.0845
         )
     ),
     C1_
@@ -115,7 +115,7 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
         (
             "C1",
             this->coeffDict_,
-            1.44
+            1.42
         )
     ),
     C2_
@@ -124,7 +124,7 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
         (
             "C2",
             this->coeffDict_,
-            1.92
+            1.68
         )
     ),
     C3_
@@ -133,7 +133,7 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
         (
             "C3",
             this->coeffDict_,
-            0
+            -0.33
         )
     ),
     sigmak_
@@ -142,7 +142,7 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
         (
             "sigmak",
             this->coeffDict_,
-            1.0
+            0.71942
         )
     ),
     sigmaEps_
@@ -151,7 +151,25 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
         (
             "sigmaEps",
             this->coeffDict_,
-            1.3
+            0.71942
+        )
+    ),
+    eta0_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "eta0",
+            this->coeffDict_,
+            4.38
+        )
+    ),
+    beta_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "beta",
+            this->coeffDict_,
+            0.012
         )
     ),
 
@@ -194,7 +212,7 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-bool kEpsilon<BasicTurbulenceModel>::read()
+bool RNGkEpsilon<BasicTurbulenceModel>::read()
 {
     if (eddyViscosity<RASModel<BasicTurbulenceModel> >::read())
     {
@@ -204,6 +222,8 @@ bool kEpsilon<BasicTurbulenceModel>::read()
         C3_.readIfPresent(this->coeffDict());
         sigmak_.readIfPresent(this->coeffDict());
         sigmaEps_.readIfPresent(this->coeffDict());
+        eta0_.readIfPresent(this->coeffDict());
+        beta_.readIfPresent(this->coeffDict());
 
         return true;
     }
@@ -215,7 +235,7 @@ bool kEpsilon<BasicTurbulenceModel>::read()
 
 
 template<class BasicTurbulenceModel>
-void kEpsilon<BasicTurbulenceModel>::correct()
+void RNGkEpsilon<BasicTurbulenceModel>::correct()
 {
     if (!this->turbulence_)
     {
@@ -234,8 +254,18 @@ void kEpsilon<BasicTurbulenceModel>::correct()
     volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
 
     tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField G(this->GName(), nut*(tgradU() && dev(twoSymm(tgradU()))));
+    volScalarField S2((tgradU() && dev(twoSymm(tgradU()))));
     tgradU.clear();
+
+    volScalarField G(this->GName(), nut*S2);
+
+    volScalarField eta(sqrt(mag(S2))*k_/epsilon_);
+    volScalarField eta3(eta*sqr(eta));
+
+    volScalarField R
+    (
+        ((eta*(-eta/eta0_ + scalar(1)))/(beta_*eta3 + scalar(1)))
+    );
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();
@@ -247,7 +277,7 @@ void kEpsilon<BasicTurbulenceModel>::correct()
       + fvm::div(alphaRhoPhi, epsilon_)
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
-        C1_*alpha*rho*G*epsilon_/k_
+        (C1_ - R)*alpha*rho*G*epsilon_/k_
       - fvm::SuSp(((2.0/3.0)*C1_ + C3_)*alpha*rho*divU, epsilon_)
       - fvm::Sp(C2_*alpha*rho*epsilon_/k_, epsilon_)
       + epsilonSource()
@@ -267,6 +297,7 @@ void kEpsilon<BasicTurbulenceModel>::correct()
     (
         fvm::ddt(alpha, rho, k_)
       + fvm::div(alphaRhoPhi, k_)
+      - fvm::Sp(fvc::ddt(alpha, rho) + fvc::div(alphaRhoPhi), k_)
       - fvm::laplacian(alpha*rho*DkEff(), k_)
      ==
         alpha*rho*G
