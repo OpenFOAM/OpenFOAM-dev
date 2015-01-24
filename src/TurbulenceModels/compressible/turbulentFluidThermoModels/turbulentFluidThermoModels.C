@@ -69,6 +69,10 @@ makeRASModel(LaunderSharmaKE);
 #include "kOmegaSST.H"
 makeRASModel(kOmegaSST);
 
+#include "LRR.H"
+makeRASModel(LRR);
+
+
 #include "Smagorinsky.H"
 makeLESModel(Smagorinsky);
 
@@ -86,6 +90,9 @@ makeLESModel(SpalartAllmarasDDES);
 
 #include "SpalartAllmarasIDDES.H"
 makeLESModel(SpalartAllmarasIDDES);
+
+#include "DeardorffDiffStress.H"
+makeLESModel(DeardorffDiffStress);
 
 
 // ************************************************************************* //

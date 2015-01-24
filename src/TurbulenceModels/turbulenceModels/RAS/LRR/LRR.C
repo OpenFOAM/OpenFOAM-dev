@@ -23,21 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "DeardorffDiffStress.H"
+#include "LRR.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace LESModels
+namespace RASModels
 {
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-void DeardorffDiffStress<BasicTurbulenceModel>::correctNut()
+void LRR<BasicTurbulenceModel>::correctNut()
 {
-    this->nut_ = Ck_*sqrt(this->k())*this->delta();
+    this->nut_ = this->Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
 }
 
@@ -45,7 +45,7 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correctNut()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
+LRR<BasicTurbulenceModel>::LRR
 (
     const alphaField& alpha,
     const rhoField& rho,
@@ -57,7 +57,7 @@ DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
     const word& type
 )
 :
-    ReynoldsStress<LESModel<BasicTurbulenceModel> >
+    ReynoldsStress<RASModel<BasicTurbulenceModel> >
     (
         type,
         alpha,
@@ -69,31 +69,49 @@ DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
         propertiesName
     ),
 
-    Ck_
+    Cmu_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Ck",
+            "Cmu",
             this->coeffDict_,
-            0.094
+            0.09
         )
     ),
-    Cm_
+    Clrr1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Cm",
+            "Clrr1",
             this->coeffDict_,
-            4.13
+            1.8
         )
     ),
-    Ce_
+    Clrr2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Ce",
+            "Clrr2",
             this->coeffDict_,
-            1.05
+            0.6
+        )
+    ),
+    C1_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "C1",
+            this->coeffDict_,
+            1.44
+        )
+    ),
+    C2_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "C2",
+            this->coeffDict_,
+            1.92
         )
     ),
     Cs_
@@ -104,11 +122,47 @@ DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
             this->coeffDict_,
             0.25
         )
+    ),
+    Ceps_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Ceps",
+            this->coeffDict_,
+            0.15
+        )
+    ),
+
+    k_
+    (
+        IOobject
+        (
+            "k",
+            this->runTime_.timeName(),
+            this->mesh_,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        0.5*tr(this->R_)
+    ),
+    epsilon_
+    (
+        IOobject
+        (
+            "epsilon",
+            this->runTime_.timeName(),
+            this->mesh_,
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        this->mesh_
     )
 {
     if (type == typeName)
     {
         this->boundNormalStress(this->R_);
+        bound(epsilon_, this->epsilonMin_);
+        k_ = 0.5*tr(this->R_);
         correctNut();
         this->printCoeffs(type);
     }
@@ -118,14 +172,17 @@ DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-bool DeardorffDiffStress<BasicTurbulenceModel>::read()
+bool LRR<BasicTurbulenceModel>::read()
 {
-    if (ReynoldsStress<LESModel<BasicTurbulenceModel> >::read())
+    if (ReynoldsStress<RASModel<BasicTurbulenceModel> >::read())
     {
-        Ck_.readIfPresent(this->coeffDict());
-        Cm_.readIfPresent(this->coeffDict());
-        Ce_.readIfPresent(this->coeffDict());
+        Cmu_.readIfPresent(this->coeffDict());
+        Clrr1_.readIfPresent(this->coeffDict());
+        Clrr2_.readIfPresent(this->coeffDict());
+        C1_.readIfPresent(this->coeffDict());
+        C2_.readIfPresent(this->coeffDict());
         Cs_.readIfPresent(this->coeffDict());
+        Ceps_.readIfPresent(this->coeffDict());
 
         return true;
     }
@@ -137,30 +194,7 @@ bool DeardorffDiffStress<BasicTurbulenceModel>::read()
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> DeardorffDiffStress<BasicTurbulenceModel>::epsilon() const
-{
-    volScalarField k(this->k());
-
-    return tmp<volScalarField>
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("epsilon", this->U_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            this->Ce_*k*sqrt(k)/this->delta()
-        )
-    );
-}
-
-
-template<class BasicTurbulenceModel>
-void DeardorffDiffStress<BasicTurbulenceModel>::correct()
+void LRR<BasicTurbulenceModel>::correct()
 {
     if (!this->turbulence_)
     {
@@ -174,40 +208,88 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correct()
     const volVectorField& U = this->U_;
     volSymmTensorField& R = this->R_;
 
-    ReynoldsStress<LESModel<BasicTurbulenceModel> >::correct();
+    ReynoldsStress<RASModel<BasicTurbulenceModel> >::correct();
 
     tmp<volTensorField> tgradU(fvc::grad(U));
     const volTensorField& gradU = tgradU();
 
-    volSymmTensorField D(symm(gradU));
-
     volSymmTensorField P(-twoSymm(R & gradU));
+    volScalarField G(this->GName(), 0.5*mag(tr(P)));
 
-    volScalarField k(this->k());
+    // Update epsilon and G at the wall
+    epsilon_.boundaryField().updateCoeffs();
+
+    // Dissipation equation
+    tmp<fvScalarMatrix> epsEqn
+    (
+        fvm::ddt(alpha, rho, epsilon_)
+      + fvm::div(alphaRhoPhi, epsilon_)
+      - fvm::laplacian(Ceps_*alpha*rho*(k_/epsilon_)*R, epsilon_)
+     ==
+        C1_*alpha*rho*G*epsilon_/k_
+      - fvm::Sp(C2_*alpha*rho*epsilon_/k_, epsilon_)
+    );
+
+    epsEqn().relax();
+
+    epsEqn().boundaryManipulate(epsilon_.boundaryField());
+
+    solve(epsEqn);
+    bound(epsilon_, this->epsilonMin_);
+
+
+    // Reynolds stress equation
+
+    const fvPatchList& patches = this->mesh_.boundary();
+
+    forAll(patches, patchi)
+    {
+        const fvPatch& curPatch = patches[patchi];
+
+        if (isA<wallFvPatch>(curPatch))
+        {
+            forAll(curPatch, facei)
+            {
+                label faceCelli = curPatch.faceCells()[facei];
+                P[faceCelli] *= min
+                (
+                    G[faceCelli]/(0.5*mag(tr(P[faceCelli])) + SMALL),
+                    1.0
+                );
+            }
+        }
+    }
+
 
     tmp<fvSymmTensorMatrix> REqn
     (
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
-      - fvm::laplacian(I*this->nu() + Cs_*(k/this->epsilon())*R, R)
-      + fvm::Sp(Cm_*alpha*rho*sqrt(k)/this->delta(), R)
-     ==
+      - fvm::laplacian(Cs_*alpha*rho*(k_/epsilon_)*R, R)
+      + fvm::Sp(Clrr1_*alpha*rho*epsilon_/k_, R)
+      ==
         alpha*rho*P
-      + (4.0/5.0)*alpha*rho*k*D
-      - ((2.0/3.0)*(1.0 - Cm_/this->Ce_)*I)*(alpha*rho*this->epsilon())
+      - (2.0/3.0*(1 - Clrr1_)*I)*alpha*rho*epsilon_
+      - Clrr2_*alpha*rho*dev(P)
     );
 
     REqn().relax();
-    REqn().solve();
+    solve(REqn);
 
     this->boundNormalStress(R);
+
+    k_ = 0.5*tr(R);
+
     correctNut();
+
+    // Correct wall shear-stresses when applying wall-functions
+    this->correctWallShearStress(R);
 }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace LESModels
+} // End namespace RASModels
 } // End namespace Foam
 
 // ************************************************************************* //
