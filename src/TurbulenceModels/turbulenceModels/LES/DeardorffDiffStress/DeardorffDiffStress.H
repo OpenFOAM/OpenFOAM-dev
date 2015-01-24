@@ -42,6 +42,21 @@ Description
     This SGS model uses a full balance equation for the SGS stress tensor to
     simulate the behaviour of B.
 
+    This implementation is as described in the above paper except that the
+    triple correlation model of Donaldson is replaced with the generalized
+    gradient diffusion model of Daly and Harlow:
+    \verbatim
+        Daly, B. J., & Harlow, F. H. (1970).
+        Transport equations in turbulence.
+        Physics of Fluids (1958-1988), 13(11), 2634-2649.
+    \endverbatim
+    with the default value for the coefficient Cs of 0.25 from
+    \verbatim
+        Launder, B. E., Reece, G. J., & Rodi, W. (1975).
+        Progress in the development of a Reynolds-stress turbulence closure.
+        Journal of fluid mechanics, 68(03), 537-566.
+    \endverbatim
+
 SourceFiles
     DeardorffDiffStress.C
 
@@ -133,15 +148,6 @@ public:
 
         //- Return the turbulence kinetic energy dissipation rate
         virtual tmp<volScalarField> epsilon() const;
-
-        //- Return the effective diffusivity for B
-        tmp<volScalarField> DBEff() const
-        {
-            return tmp<volScalarField>
-            (
-                new volScalarField("DBEff", this->nut_ + this->nu())
-            );
-        }
 
         //- Correct sub-grid stress, eddy-Viscosity and related properties
         virtual void correct();

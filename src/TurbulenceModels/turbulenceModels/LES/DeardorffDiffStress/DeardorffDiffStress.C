@@ -93,7 +93,7 @@ DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
         (
             "Ce",
             this->coeffDict_,
-            1.048
+            1.05
         )
     ),
     Cs_
@@ -102,7 +102,7 @@ DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
         (
             "Cs",
             this->coeffDict_,
-            0.22
+            0.25
         )
     )
 {
@@ -189,12 +189,11 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correct()
     (
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
-      - fvm::laplacian(Cs_*(k/this->epsilon())*R, R)
+      - fvm::laplacian(I*this->nu() + Cs_*(k/this->epsilon())*R, R)
       + fvm::Sp(Cm_*alpha*rho*sqrt(k)/this->delta(), R)
      ==
         alpha*rho*P
-      + (4.0/5.0)*alpha*rho*k*D // Deardorff
-    //- 0.6*alpha*rho*dev(P) // LRR
+      + (4.0/5.0)*alpha*rho*k*D
       - ((2.0/3.0)*(1.0 - Cm_/this->Ce_)*I)*(alpha*rho*this->epsilon())
     );
 
@@ -203,7 +202,6 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correct()
 
     this->boundNormalStress(this->R_);
     correctNut();
-    this->correctWallShearStress(this->R_);
 }
 
 

@@ -165,7 +165,17 @@ Foam::ReynoldsStress<BasicTurbulenceModel>::ReynoldsStress
         ),
         this->mesh_
     )
-{}
+{
+    if (couplingFactor_.value() < 0.0 || couplingFactor_.value() > 1.0)
+    {
+        FatalErrorIn
+        (
+            "ReynoldsStress::ReynoldsStress"
+        )   << "couplingFactor = " << couplingFactor_
+            << " is not in range 0 - 1" << nl
+            << exit(FatalError);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
