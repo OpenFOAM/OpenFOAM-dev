@@ -203,7 +203,7 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
 
     // Retrieve turbulence properties from model
 
-    const turbulenceModel& turbulence = db().lookupObject<turbulenceModel>
+    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
     (
         IOobject::groupName
         (
@@ -213,11 +213,11 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     );
 
     const scalar Cmu25 = pow(Cmu_, 0.25);
-    const scalarField& y = turbulence.y()[patchi];
-    const tmp<volScalarField> tnu = turbulence.nu();
+    const scalarField& y = turbModel.y()[patchi];
+    const tmp<volScalarField> tnu = turbModel.nu();
     const volScalarField& nu = tnu();
     const scalarField& nuw = nu.boundaryField()[patchi];
-    const tmp<volScalarField> tk = turbulence.k();
+    const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
 
     const IOdictionary& transportProperties =

@@ -22,14 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::incompressible::RASModels::v2f
+    Foam::RASModels::v2f
 
 Group
-    grpIcoRASTurbulence
+    grpRASTurbulence
 
 Description
-    Lien and Kalitzin's v2-f turbulence model for incompressible flows, with
-    a limit imposed on the turbulent viscosity given by Davidson et al.
+    Lien and Kalitzin's v2-f turbulence model for incompressible and
+    compressible flows, with a limit imposed on the turbulent viscosity given
+    by Davidson et al.
 
     The model solves for turbulence kinetic energy k and turbulence dissipation
     rate epsilon, with additional equations for the turbulence stress normal to
@@ -74,6 +75,7 @@ Description
             CL          0.23;
             Ceta        70;
             Ceps2       1.9;
+            Ceps3       -0.33;
             sigmaEps    1.3;
             sigmaK      1;
         }
@@ -99,14 +101,12 @@ SourceFiles
 #ifndef v2f_H
 #define v2f_H
 
-#include "turbulentTransportModel.H"
+#include "RASModel.H"
 #include "eddyViscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
-{
-namespace incompressible
 {
 namespace RASModels
 {
@@ -115,9 +115,40 @@ namespace RASModels
                              Class v2f Declaration
 \*---------------------------------------------------------------------------*/
 
+class v2fBase
+{
+public:
+
+    //- Runtime type information
+    TypeName("v2fBase");
+
+
+    // Constructors
+
+        v2fBase()
+        {}
+
+
+    //- Destructor
+    virtual ~v2fBase()
+    {}
+
+
+    // Member Functions
+
+        //- Return turbulence stress normal to streamlines
+        virtual tmp<volScalarField> v2() const = 0;
+
+        //- Return the damping function
+        virtual tmp<volScalarField> f() const = 0;
+};
+
+
+template<class BasicTurbulenceModel>
 class v2f
 :
-    public eddyViscosity<incompressible::RASModel>
+    public eddyViscosity<RASModel<BasicTurbulenceModel> >,
+    public v2fBase
 {
 
 protected:
@@ -133,6 +164,7 @@ protected:
             dimensionedScalar CL_;
             dimensionedScalar Ceta_;
             dimensionedScalar Ceps2_;
+            dimensionedScalar Ceps3_;
             dimensionedScalar sigmaK_;
             dimensionedScalar sigmaEps_;
 
@@ -171,16 +203,22 @@ protected:
 
 public:
 
+    typedef typename BasicTurbulenceModel::alphaField alphaField;
+    typedef typename BasicTurbulenceModel::rhoField rhoField;
+    typedef typename BasicTurbulenceModel::transportModel transportModel;
+
+
     //- Runtime type information
     TypeName("v2f");
+
 
     // Constructors
 
         //- Construct from components
         v2f
         (
-            const geometricOneField& alpha,
-            const geometricOneField& rho,
+            const alphaField& alpha,
+            const rhoField& rho,
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
@@ -205,7 +243,11 @@ public:
         {
             return tmp<volScalarField>
             (
-                new volScalarField("DkEff", nut_/sigmaK_ + nu())
+                new volScalarField
+                (
+                    "DkEff",
+                    this->nut_/sigmaK_ + this->nu()
+                )
             );
         }
 
@@ -214,7 +256,11 @@ public:
         {
             return tmp<volScalarField>
             (
-                new volScalarField("DepsilonEff", nut_/sigmaEps_ + nu())
+                new volScalarField
+                (
+                    "DepsilonEff",
+                    this->nut_/sigmaEps_ + this->nu()
+                )
             );
         }
 
@@ -250,8 +296,13 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace RASModels
-} // End namespace incompressible
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#   include "v2f.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

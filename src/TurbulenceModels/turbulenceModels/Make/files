@@ -52,13 +52,11 @@ kqRWallFunctions = $(wallFunctions)/kqRWallFunctions
 $(kqRWallFunctions)/kqRWallFunction/kqRWallFunctionFvPatchFields.C
 $(kqRWallFunctions)/kLowReWallFunction/kLowReWallFunctionFvPatchScalarField.C
 
-/*
 v2WallFunctions = $(wallFunctions)/v2WallFunctions
 $(v2WallFunctions)/v2WallFunction/v2WallFunctionFvPatchScalarField.C
 
 fWallFunctions = $(wallFunctions)/fWallFunctions
 $(fWallFunctions)/fWallFunction/fWallFunctionFvPatchScalarField.C
-*/
 
 
 RASBCs = RAS/derivedFvPatchFields

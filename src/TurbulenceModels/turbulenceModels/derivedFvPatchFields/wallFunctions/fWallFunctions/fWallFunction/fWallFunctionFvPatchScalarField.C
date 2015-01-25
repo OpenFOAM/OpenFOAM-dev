@@ -37,6 +37,8 @@ namespace Foam
 namespace RASModels
 {
 
+    defineTypeNameAndDebug(v2fBase, 0);
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void fWallFunctionFvPatchScalarField::checkType()
@@ -173,7 +175,7 @@ void fWallFunctionFvPatchScalarField::updateCoeffs()
 
     const label patchi = patch().index();
 
-    const turbulenceModel& turbulence = db().lookupObject<turbulenceModel>
+    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
     (
         IOobject::groupName
         (
@@ -181,20 +183,20 @@ void fWallFunctionFvPatchScalarField::updateCoeffs()
             dimensionedInternalField().group()
         )
     );
-    const v2f& v2fModel = refCast<const v2f>(turbulence);
+    const v2fBase& v2fModel = refCast<const v2fBase>(turbModel);
 
-    const scalarField& y = v2fModel.y()[patchi];
+    const scalarField& y = turbModel.y()[patchi];
 
-    const tmp<volScalarField> tk = v2fModel.k();
+    const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
 
-    const tmp<volScalarField> tepsilon = v2fModel.epsilon();
+    const tmp<volScalarField> tepsilon = turbModel.epsilon();
     const volScalarField& epsilon = tepsilon();
 
     const tmp<volScalarField> tv2 = v2fModel.v2();
     const volScalarField& v2 = tv2();
 
-    const tmp<scalarField> tnuw = turbulence.nu(patchi);
+    const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
     const scalar Cmu25 = pow025(Cmu_);

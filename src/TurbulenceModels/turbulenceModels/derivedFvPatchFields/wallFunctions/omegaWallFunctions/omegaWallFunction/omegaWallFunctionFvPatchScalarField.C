@@ -173,7 +173,7 @@ omegaWallFunctionFvPatchScalarField::omegaPatch(const label patchi)
 
 void omegaWallFunctionFvPatchScalarField::calculateTurbulenceFields
 (
-    const turbulenceModel& turbulence,
+    const turbulenceModel& turbModel,
     scalarField& G0,
     scalarField& omega0
 )
@@ -187,7 +187,7 @@ void omegaWallFunctionFvPatchScalarField::calculateTurbulenceFields
 
             const List<scalar>& w = cornerWeights_[patchi];
 
-            opf.calculate(turbulence, w, opf.patch(), G0, omega0);
+            opf.calculate(turbModel, w, opf.patch(), G0, omega0);
         }
     }
 
@@ -206,7 +206,7 @@ void omegaWallFunctionFvPatchScalarField::calculateTurbulenceFields
 
 void omegaWallFunctionFvPatchScalarField::calculate
 (
-    const turbulenceModel& turbulence,
+    const turbulenceModel& turbModel,
     const List<scalar>& cornerWeights,
     const fvPatch& patch,
     scalarField& G,
@@ -215,20 +215,20 @@ void omegaWallFunctionFvPatchScalarField::calculate
 {
     const label patchi = patch.index();
 
-    const scalarField& y = turbulence.y()[patchi];
+    const scalarField& y = turbModel.y()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
 
-    const tmp<volScalarField> tk = turbulence.k();
+    const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
 
-    const tmp<scalarField> tnuw = turbulence.nu(patchi);
+    const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    const tmp<scalarField> tnutw = turbulence.nut(patchi);
+    const tmp<scalarField> tnutw = turbModel.nut(patchi);
     const scalarField& nutw = tnutw();
 
-    const fvPatchVectorField& Uw = turbulence.U().boundaryField()[patchi];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
@@ -413,7 +413,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const turbulenceModel& turbulence = db().lookupObject<turbulenceModel>
+    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
     (
         IOobject::groupName
         (
@@ -427,7 +427,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
     if (patch().index() == master_)
     {
         createAveragingWeights();
-        calculateTurbulenceFields(turbulence, G(true), omega(true));
+        calculateTurbulenceFields(turbModel, G(true), omega(true));
     }
 
     const scalarField& G0 = this->G();
@@ -438,7 +438,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
     FieldType& G =
         const_cast<FieldType&>
         (
-            db().lookupObject<FieldType>(turbulence.GName())
+            db().lookupObject<FieldType>(turbModel.GName())
         );
 
     FieldType& omega = const_cast<FieldType&>(dimensionedInternalField());
@@ -465,7 +465,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs
         return;
     }
 
-    const turbulenceModel& turbulence = db().lookupObject<turbulenceModel>
+    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
     (
         IOobject::groupName
         (
@@ -479,7 +479,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs
     if (patch().index() == master_)
     {
         createAveragingWeights();
-        calculateTurbulenceFields(turbulence, G(true), omega(true));
+        calculateTurbulenceFields(turbModel, G(true), omega(true));
     }
 
     const scalarField& G0 = this->G();
@@ -490,7 +490,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs
     FieldType& G =
         const_cast<FieldType&>
         (
-            db().lookupObject<FieldType>(turbulence.GName())
+            db().lookupObject<FieldType>(turbModel.GName())
         );
 
     FieldType& omega = const_cast<FieldType&>(dimensionedInternalField());

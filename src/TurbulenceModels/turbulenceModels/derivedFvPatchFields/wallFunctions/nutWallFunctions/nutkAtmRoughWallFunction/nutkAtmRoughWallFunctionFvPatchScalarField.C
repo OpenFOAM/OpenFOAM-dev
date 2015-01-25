@@ -40,7 +40,7 @@ tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::calcNut() const
 {
     const label patchi = patch().index();
 
-    const turbulenceModel& turbulence = db().lookupObject<turbulenceModel>
+    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
     (
         IOobject::groupName
         (
@@ -48,10 +48,10 @@ tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::calcNut() const
             dimensionedInternalField().group()
         )
     );
-    const scalarField& y = turbulence.y()[patchi];
-    const tmp<volScalarField> tk = turbulence.k();
+    const scalarField& y = turbModel.y()[patchi];
+    const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
-    const tmp<scalarField> tnuw = turbulence.nu(patchi);
+    const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
     const scalar Cmu25 = pow025(Cmu_);
