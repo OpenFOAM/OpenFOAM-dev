@@ -106,6 +106,46 @@ tmp<volScalarField> kOmegaSST<BasicTurbulenceModel>::kOmegaSST::F23() const
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+void kOmegaSST<BasicTurbulenceModel>::correctNut()
+{
+    this->nut_ =
+        a1_*k_/max(a1_*omega_, F23()*sqrt(2.0)*mag(symm(fvc::grad(this->U_))));
+    this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kOmegaSST<BasicTurbulenceModel>::kSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            k_,
+            dimVolume*this->rho_.dimensions()*k_.dimensions()/dimTime
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kOmegaSST<BasicTurbulenceModel>::omegaSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            omega_,
+            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
+        )
+    );
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -332,43 +372,6 @@ bool kOmegaSST<BasicTurbulenceModel>::read()
     {
         return false;
     }
-}
-
-
-template<class BasicTurbulenceModel>
-void kOmegaSST<BasicTurbulenceModel>::correctNut()
-{
-    this->nut_ =
-        a1_*k_/max(a1_*omega_, F23()*sqrt(2.0)*mag(symm(fvc::grad(this->U_))));
-    this->nut_.correctBoundaryConditions();
-}
-
-
-template<class BasicTurbulenceModel>
-tmp<fvScalarMatrix> kOmegaSST<BasicTurbulenceModel>::kSource() const
-{
-    return tmp<fvScalarMatrix>
-    (
-        new fvScalarMatrix
-        (
-            k_,
-            dimVolume*this->rho_.dimensions()*k_.dimensions()/dimTime
-        )
-    );
-}
-
-
-template<class BasicTurbulenceModel>
-tmp<fvScalarMatrix> kOmegaSST<BasicTurbulenceModel>::omegaSource() const
-{
-    return tmp<fvScalarMatrix>
-    (
-        new fvScalarMatrix
-        (
-            omega_,
-            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
-        )
-    );
 }
 
 

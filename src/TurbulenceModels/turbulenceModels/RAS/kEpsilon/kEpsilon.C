@@ -40,6 +40,8 @@ void kEpsilon<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 
@@ -133,7 +135,7 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
         (
             "C3",
             this->coeffDict_,
-            0
+            -0.33
         )
     ),
     sigmak_
@@ -185,8 +187,8 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
 
     if (type == typeName)
     {
-        correctNut();
         this->printCoeffs(type);
+        correctNut();
     }
 }
 

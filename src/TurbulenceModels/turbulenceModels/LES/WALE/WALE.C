@@ -89,6 +89,8 @@ void WALE<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Ck_*this->delta()*sqrt(this->k(fvc::grad(this->U_)));
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 

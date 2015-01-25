@@ -170,6 +170,8 @@ void SpalartAllmarasDES<BasicTurbulenceModel>::correctNut
 {
     this->nut_ = nuTilda_*fv1;
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 

@@ -39,6 +39,8 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Ck_*sqrt(this->k())*this->delta();
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 

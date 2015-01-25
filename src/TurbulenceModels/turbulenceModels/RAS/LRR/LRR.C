@@ -39,6 +39,8 @@ void LRR<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = this->Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 

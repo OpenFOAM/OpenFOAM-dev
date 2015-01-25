@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-void Foam::eddyDiffusivity<BasicTurbulenceModel>::correctAlphat()
+void Foam::eddyDiffusivity<BasicTurbulenceModel>::correctNut()
 {
     alphat_ = this->rho_*this->nut()/Prt_;
     alphat_.correctBoundaryConditions();
@@ -132,14 +132,6 @@ bool Foam::eddyDiffusivity<BasicTurbulenceModel>::read()
     {
         return false;
     }
-}
-
-
-template<class BasicTurbulenceModel>
-void Foam::eddyDiffusivity<BasicTurbulenceModel>::correct()
-{
-    BasicTurbulenceModel::correct();
-    correctAlphat();
 }
 
 

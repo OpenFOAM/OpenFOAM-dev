@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,33 @@ namespace Foam
 {
 namespace LESModels
 {
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+void kEqn<BasicTurbulenceModel>::correctNut()
+{
+    this->nut_ = Ck_*sqrt(k_)*this->delta();
+    this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kEqn<BasicTurbulenceModel>::kSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            k_,
+            dimVolume*this->rho_.dimensions()*k_.dimensions()
+            /dimTime
+        )
+    );
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -124,29 +151,6 @@ tmp<volScalarField> kEqn<BasicTurbulenceModel>::epsilon() const
                 IOobject::NO_WRITE
             ),
             this->Ce_*k()*sqrt(k())/this->delta()
-        )
-    );
-}
-
-
-template<class BasicTurbulenceModel>
-void kEqn<BasicTurbulenceModel>::correctNut()
-{
-    this->nut_ = Ck_*sqrt(k_)*this->delta();
-    this->nut_.correctBoundaryConditions();
-}
-
-
-template<class BasicTurbulenceModel>
-tmp<fvScalarMatrix> kEqn<BasicTurbulenceModel>::kSource() const
-{
-    return tmp<fvScalarMatrix>
-    (
-        new fvScalarMatrix
-        (
-            k_,
-            dimVolume*this->rho_.dimensions()*k_.dimensions()
-            /dimTime
         )
     );
 }

@@ -78,6 +78,8 @@ void realizableKE<BasicTurbulenceModel>::correctNut
 {
     this->nut_ = rCmu(gradU, S2, magS)*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 

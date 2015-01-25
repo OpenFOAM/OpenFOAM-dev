@@ -56,6 +56,8 @@ void LaunderSharmaKE<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Cmu_*fMu()*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 

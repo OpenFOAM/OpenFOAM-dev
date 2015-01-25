@@ -25,8 +25,6 @@ License
 
 #include "v2f.H"
 #include "bound.H"
-#include "fixedValueFvPatchField.H"
-#include "zeroGradientFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,6 +56,8 @@ void v2f<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = min(CmuKEps_*sqr(k_)/epsilon_, this->Cmu_*v2_*Ts());
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 

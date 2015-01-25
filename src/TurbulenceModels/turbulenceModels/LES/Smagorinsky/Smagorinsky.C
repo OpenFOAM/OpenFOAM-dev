@@ -69,6 +69,8 @@ void Smagorinsky<BasicTurbulenceModel>::correctNut()
 
     this->nut_ = Ck_*this->delta()*sqrt(k);
     this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
 }
 
 

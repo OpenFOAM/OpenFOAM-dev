@@ -68,7 +68,7 @@ protected:
 
     // Protected Member Functions
 
-        virtual void correctAlphat();
+        virtual void correctNut();
 
 
 public:
@@ -157,9 +157,6 @@ public:
         {
             return this->transport_.alphaEff(alphat(patchi), patchi);
         }
-
-        //- Correct the turbulent thermal diffusivity for enthalpy
-        virtual void correct();
 };
 
 
