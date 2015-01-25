@@ -33,12 +33,13 @@ Description
 
     Turbulence model described in:
     \verbatim
-        D. Keith Walters, Davor Cokljat
-        "A Three-Equation Eddy-Viscosity Model for Reynold-Averaged
-        Navier-Stokes Simulations of Transitional Flow"
+        Walters, D. K., & Cokljat, D. (2008).
+        A three-equation eddy-viscosity model for Reynolds-averaged
+        Navier–Stokes simulations of transitional flow.
+        Journal of Fluids Engineering, 130(12), 121401.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         kkLOmegaCoeffs
         {

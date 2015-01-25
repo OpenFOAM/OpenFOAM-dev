@@ -31,24 +31,17 @@ Description
     One Equation Eddy Viscosity Model
 
     Eddy viscosity SGS model using a modeled balance equation to simulate the
-    behaviour of k, hence,
+    behaviour of k.
+
+    Reference:
     \verbatim
-        d/dt(rho*k) + div(rho*U*k) - div(rho*nuEff*grad(k))
-        =
-        -rho*D:B - Ce*rho*k^(3/2)/delta
-
-    and
-
-        B = 2/3*k*I - 2*nuSgs*dev(D)
-
-    where
-
-        D = symm(grad(U));
-        nuSgs = Ck*sqrt(k)*delta
-        nuEff = nuSgs + nu
+        Yoshizawa, A. (1986).
+        Statistical theory for compressible turbulent shear flows,
+        with the application to subgrid modeling.
+        Physics of Fluids (1958-1988), 29(7), 2152-2164.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         kEqnCoeffs
         {

@@ -38,15 +38,18 @@ Description
         Flow, Turbulence and Combustion, 62(3), 183-200.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         WALECoeffs
         {
             Ck                  0.094;
-            Ce                  1.048;
+            Ce                  1.048;e
             Cw                  0.325;
         }
     \endverbatim
+
+SeeAlso
+    Foam::LESModels::Smagorinsky
 
 SourceFiles
     WALE.C

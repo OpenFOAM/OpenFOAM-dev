@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,13 +32,12 @@ Description
 
     Reference:
     \verbatim
-        "The simulation of multidimensional multiphase flows",
-        Lahey R.T.,
-        Nucl. Eng. & Design
-        2005 (235) pp.1043-1060.
+        Lahey Jr, R. T. (2005).
+        The simulation of multidimensional multiphase flows.
+        Nuclear Engineering and Design, 235(10), 1043-1060.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         LaheyKEpsilonCoeffs
         {

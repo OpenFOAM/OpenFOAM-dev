@@ -33,7 +33,7 @@ Description
 
     Reference:
     \verbatim
-        Yakhot, V. S. A. S. T. B. C. G., Orszag, S. A., Thangam, S.,
+        Yakhot, V., Orszag, S. A., Thangam, S.,
         Gatski, T. B., & Speziale, C. G. (1992).
         Development of turbulence models for shear flows
         by a double expansion technique.
@@ -45,7 +45,7 @@ Description
         Journal of Energy, 7(4), 345-353.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         RNGkEpsilonCoeffs
         {

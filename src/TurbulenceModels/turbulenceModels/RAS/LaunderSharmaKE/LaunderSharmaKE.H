@@ -45,7 +45,7 @@ Description
         Journal of Energy, 7(4), 345-353.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         LaunderSharmaKECoeffs
         {

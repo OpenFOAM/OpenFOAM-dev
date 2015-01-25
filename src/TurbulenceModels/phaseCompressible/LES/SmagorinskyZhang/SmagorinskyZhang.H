@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,15 +32,13 @@ Description
 
     Reference:
     \verbatim
-        "Numerical simulation of the dynamic flow behavior in a bubble column:
-        A study of closures for turbulence and interface forces"
-        D. Zhang,
-        N.G. Deen,
-        J.A.M. Kuipers,
-        Chemical Engineering Science 61 (2006) pp 7593-7608.
+        Zhang, D., Deen, N. G., & Kuipers, J. A. M. (2006).
+        Numerical simulation of the dynamic flow behavior in a bubble column:
+        a study of closures for turbulence and interface forces.
+        Chemical Engineering Science, 61(23), 7593-7608.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         SmagorinskyZhangCoeffs
         {

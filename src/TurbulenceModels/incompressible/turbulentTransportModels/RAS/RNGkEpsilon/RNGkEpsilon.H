@@ -38,7 +38,7 @@ Description
         Physics of Fluids A, Vol. 4, No. 7, 1992, pp 1510-1520.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         RNGkEpsilonCoeffs
         {

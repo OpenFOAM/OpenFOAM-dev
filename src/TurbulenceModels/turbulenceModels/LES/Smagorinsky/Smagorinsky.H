@@ -30,11 +30,19 @@ Group
 Description
     The Smagorinsky SGS model.
 
-    Algebraic eddy viscosity SGS model founded on the assumption that
-    local equilibrium prevails.
-    Thus,
+    Reference:
     \verbatim
+        Smagorinsky, J. (1963).
+        General circulation experiments with the primitive equations: I.
+        The basic experiment*.
+        Monthly weather review, 91(3), 99-164.
+    \endverbatim
 
+    The form of the Smagorinsky model implemented is obtained from the
+    k-equation model assuming local equilibrium which provides estimates of both
+    k and epsilon separate from the sub-grid scale viscosity:
+
+    \verbatim
         B = 2/3*k*I - 2*nuSgs*dev(D)
 
     where
@@ -44,7 +52,7 @@ Description
         nuSgs = Ck*sqrt(k)*delta
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         SmagorinskyCoeffs
         {
@@ -52,6 +60,9 @@ Description
             Ce                  1.048;
         }
     \endverbatim
+
+SeeAlso
+    Foam::LESModels::kEqn
 
 SourceFiles
     Smagorinsky.C

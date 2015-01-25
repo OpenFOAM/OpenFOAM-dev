@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,15 +33,13 @@ Description
 
     Reference:
     \verbatim
-        "One-equation sub-grid scale (SGS) modelling for Euler-Euler
-        large eddy simulation (EELES) of dispersed bubbly flow"
-        B. Niceno,
-        M.T. Dhotre,
-        N.G. Dee
-        Chemical Engineering Science 63 (2008) pp. 3923-3931.
+        Niceno, B., Dhotre, M. T., & Deen, N. G. (2008).
+        One-equation sub-grid scale (SGS) modelling for
+        Euler–Euler large eddy simulation (EELES) of dispersed bubbly flow.
+        Chemical Engineering Science, 63(15), 3923-3931.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are:
     \verbatim
         NicenoKEqnCoeffs
         {

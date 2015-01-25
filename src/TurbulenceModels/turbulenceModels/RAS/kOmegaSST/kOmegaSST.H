@@ -65,7 +65,7 @@ Description
     uncertainty in their origin, range of applicability and that if y+ becomes
     sufficiently small blending u_tau in this manner clearly becomes nonsense.
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         kOmegaSSTCoeffs
         {

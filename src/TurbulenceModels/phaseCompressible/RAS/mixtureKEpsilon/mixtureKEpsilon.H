@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,21 +32,20 @@ Description
 
     The basic structure of the model is based on:
     \verbatim
-        "Modelling of dispersed bubble and droplet ow at high phase fractions"
-        A. Behzadi, R.I. Issa , H. Rusche,
-        Chemical Engineering Science (59) 2004 pp.759-770.
+        Behzadi, A., Issa, R. I., & Rusche, H. (2004).
+        Modelling of dispersed bubble and droplet flow at high phase fractions.
+        Chemical Engineering Science, 59(4), 759-770.
     \endverbatim
 
     but an effective density for the gas is used in the averaging and an
     alternative model for bubble-generated turbulence from:
     \verbatim
-        "The simulation of multidimensional multiphase flows",
-        Lahey R.T.,
-        Nucl. Eng. & Design
-        (235) 2005 pp.1043-1060.
+        Lahey Jr, R. T. (2005).
+        The simulation of multidimensional multiphase flows.
+        Nuclear Engineering and Design, 235(10), 1043-1060.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         mixtureKEpsilonCoeffs
         {

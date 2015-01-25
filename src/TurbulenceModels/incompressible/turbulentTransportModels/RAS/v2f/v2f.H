@@ -53,17 +53,17 @@ Description
 
     References:
     \verbatim
-        Lien F-S, Kalitzin G,
-        "Computations of transonic flow with the v2-f turbulence model",
-        Int. J. Heat Fluid Flow 22, 2001, pp 53-61
+        Lien, F. S., & Kalitzin, G. (2001).
+        Computations of transonic flow with the v2f turbulence model.
+        International Journal of Heat and Fluid Flow, 22(1), 53-61.
 
-        Davidson L, Nielsen P, Sveningsson A,
-        "Modifications of the v2-f model for computing the flow in a
-         3D wall jet",
-        Turbulence, Heat and Mass Transfer 4, 2003, pp 577-584
+        Davidson, L., Nielsen, P., & Sveningsson, A. (2003).
+        Modifications of the v2-f model for computing the flow in a
+        3D wall jet.
+        Turbulence, Heat and Mass Transfer, 4, 577-584
     \endverbatim
 
-    The default model coefficients are given as:
+    The default model coefficients are
     \verbatim
         v2fCoeffs
         {
@@ -85,7 +85,7 @@ Note
     k variants (nutk...) for this case will not behave correctly.
 
 SeeAlso
-    Foam::incompressible::RASModels::kEpsilon
+    Foam::RASModels::kEpsilon
     Foam::kLowReWallFunctionFvPatchScalarField
     Foam::epsilonLowReWallFunctionFvPatchScalarField
     Foam::v2WallFunctionFvPatchScalarField

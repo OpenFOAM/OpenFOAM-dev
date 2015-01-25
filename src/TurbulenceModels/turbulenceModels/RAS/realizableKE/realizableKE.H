@@ -31,18 +31,20 @@ Description
     Realizable k-epsilon turbulence model for incompressible and compressible
     flows.
 
-    Model described in the paper:
+    References:
     \verbatim
-        "A New k-epsilon Eddy Viscosity Model for High Reynolds Number
-        Turbulent Flows"
+        Shih, T. H., Liou, W. W., Shabbir, A., Yang, Z., & Zhu, J. (1994).
+        A new k-epsilon eddy viscosity model for high Reynolds number
+        turbulent flows: Model development and validation.
+        NASA STI/Recon Technical Report N, 95, 11442.
 
-        Tsan-Hsing Shih, William W. Liou, Aamir Shabbir, Zhigang Tang and
-        Jiang Zhu
-
-        Computers and Fluids Vol. 24, No. 3, pp. 227-238, 1995
+        Shih, T. H., Liou, W. W., Shabbir, A., Yang, Z., & Zhu, J. (1995).
+        A New k-epsilon Eddy Viscosity Model for High Reynolds Number
+        Turbulent Flows.
+        Computers and Fluids, 24(3), 227-238.
     \endverbatim
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         realizableKECoeffs
         {

@@ -48,7 +48,7 @@ Description
     is implemented in which Stilda is clipped at Cs*Omega with the default value
     of Cs = 0.3.
 
-    The default model coefficients correspond to the following:
+    The default model coefficients are
     \verbatim
         SpalartAllmarasCoeffs
         {
