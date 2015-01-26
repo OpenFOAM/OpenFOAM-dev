@@ -21,10 +21,28 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::RASModels::v2fBase
+
+Group
+    grpRASTurbulence
+
+Description
+    Abstract base-class for v2-f models to provide BCs access to the v2 and f
+    fields.
+
+SeeAlso
+    Foam::RASModels::v2f
+
+SourceFiles
+    v2fBase.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "v2fBase.H"
-#include "addToRunTimeSelectionTable.H"
+#ifndef v2fBase_H
+#define v2fBase_H
+
+#include "RASModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -33,9 +51,46 @@ namespace Foam
 namespace RASModels
 {
 
-    defineTypeNameAndDebug(v2fBase, 0);
+/*---------------------------------------------------------------------------*\
+                            Class v2fBase Declaration
+\*---------------------------------------------------------------------------*/
+
+class v2fBase
+{
+public:
+
+    //- Runtime type information
+    TypeName("v2fBase");
+
+
+    // Constructors
+
+        v2fBase()
+        {}
+
+
+    //- Destructor
+    virtual ~v2fBase()
+    {}
+
+
+    // Member Functions
+
+        //- Return turbulence stress normal to streamlines
+        virtual tmp<volScalarField> v2() const = 0;
+
+        //- Return the damping function
+        virtual tmp<volScalarField> f() const = 0;
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace RASModels
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

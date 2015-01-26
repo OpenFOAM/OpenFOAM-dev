@@ -87,6 +87,7 @@ Note
     k variants (nutk...) for this case will not behave correctly.
 
 SeeAlso
+    Foam::RASModels::v2fBase
     Foam::RASModels::kEpsilon
     Foam::kLowReWallFunctionFvPatchScalarField
     Foam::epsilonLowReWallFunctionFvPatchScalarField
@@ -101,6 +102,7 @@ SourceFiles
 #ifndef v2f_H
 #define v2f_H
 
+#include "v2fBase.H"
 #include "RASModel.H"
 #include "eddyViscosity.H"
 
@@ -114,35 +116,6 @@ namespace RASModels
 /*---------------------------------------------------------------------------*\
                              Class v2f Declaration
 \*---------------------------------------------------------------------------*/
-
-class v2fBase
-{
-public:
-
-    //- Runtime type information
-    TypeName("v2fBase");
-
-
-    // Constructors
-
-        v2fBase()
-        {}
-
-
-    //- Destructor
-    virtual ~v2fBase()
-    {}
-
-
-    // Member Functions
-
-        //- Return turbulence stress normal to streamlines
-        virtual tmp<volScalarField> v2() const = 0;
-
-        //- Return the damping function
-        virtual tmp<volScalarField> f() const = 0;
-};
-
 
 template<class BasicTurbulenceModel>
 class v2f
