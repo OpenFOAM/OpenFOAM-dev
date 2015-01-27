@@ -531,7 +531,8 @@ kkLOmega::kkLOmega
             mesh_
         ),
         kt_*omega_ + D(kl_) + D(kt_)
-    ),    y_(wallDist::New(mesh_).y())
+    ),
+    y_(wallDist::New(mesh_).y())
 {
     bound(kt_, kMin_);
     bound(kl_, kMin_);
