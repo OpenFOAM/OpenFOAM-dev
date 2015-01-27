@@ -61,6 +61,9 @@ protected:
 
         geometricOneField rho_;
 
+
+    // Protected member functions
+
         //- ***HGW Temporary function to be removed when the run-time selectable
         //  thermal transport layer is complete
         virtual void correctNut()
