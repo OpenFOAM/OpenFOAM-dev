@@ -2,7 +2,6 @@ incompressibleTurbulenceModel.C
 
 turbulentTransportModels/turbulentTransportModels.C
 turbulentTransportModels/RAS/kOmega/kOmega.C
-turbulentTransportModels/RAS/RNGkEpsilon/RNGkEpsilon.C
 turbulentTransportModels/RAS/qZeta/qZeta.C
 turbulentTransportModels/RAS/kkLOmega/kkLOmega.C
 turbulentTransportModels/RAS/LamBremhorstKE/LamBremhorstKE.C
@@ -12,10 +11,6 @@ turbulentTransportModels/RAS/LienLeschzinerLowRe/LienLeschzinerLowRe.C
 turbulentTransportModels/RAS/nonlinearKEShih/nonlinearKEShih.C
 
 BCs = turbulentTransportModels/RAS/derivedFvPatchFields
-/*
-$(BCs)/wallFunctions/v2WallFunction/v2WallFunctionFvPatchScalarField.C
-$(BCs)/wallFunctions/fWallFunction/fWallFunctionFvPatchScalarField.C
-*/
 
 turbulentTransportModels/derivedFvPatchFields/wallFunctions/alphatWallFunctions/alphatJayatillekeWallFunction/alphatJayatillekeWallFunctionFvPatchScalarField.C
 
