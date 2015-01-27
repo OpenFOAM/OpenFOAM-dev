@@ -1,8 +1,11 @@
 // All rays expressed as start face (local) index end end face (global)
 // Pre-size by assuming a certain percentage is visible.
 
-// Maximum lenght for dynamicList
-const label maxDynListLength = 100000;
+// Maximum length for dynamicList
+const label maxDynListLength
+(
+    viewFactorDict.lookupOrDefault<label>("maxDynListLength", 100000)
+);
 
 for (label procI = 0; procI < Pstream::nProcs(); procI++)
 {
@@ -36,7 +39,7 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
             const vector& fA = myArea[i];
             const label& fAgg = myAgg[i];
 
-            for (; j < remoteFc.size(); j++)//
+            for (; j < remoteFc.size(); j++)
             {
                 if (procI != Pstream::myProcNo() || i != j)
                 {
@@ -75,7 +78,7 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
             }
         }
 
-    }while (returnReduce(i < myFc.size(), orOp<bool>()));
+    } while (returnReduce(i < myFc.size(), orOp<bool>()));
 
     List<pointIndexHit> hitInfo(startIndex.size());
     surfacesMesh.findLine(start, end, hitInfo);
@@ -88,7 +91,7 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
 
     // Collect the rays which has not abstacle in bettween in rayStartFace
     // and rayEndFace. If the ray hit itself get stored in dRayIs
-    forAll (hitInfo, rayI)
+    forAll(hitInfo, rayI)
     {
         if (!hitInfo[rayI].hit())
         {
@@ -117,7 +120,7 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
         labelField rayIs;
         rayIs.transfer(dRayIs);
         dRayIs.clear();
-        forAll (rayIs, rayI)
+        forAll(rayIs, rayI)
         {
             const label rayID = rayIs[rayI];
             label hitIndex = -1;
@@ -166,7 +169,7 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
         firstLoop = false;
         iter ++;
 
-    }while (returnReduce(hitInfo.size(), orOp<bool>()) > 0 && iter < 10);
+    } while (returnReduce(hitInfo.size(), orOp<bool>()) > 0 && iter < 10);
 
     startIndex.clear();
     end.clear();
