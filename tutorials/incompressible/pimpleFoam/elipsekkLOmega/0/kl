@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 2 -2 0 0 0 0 ];
+dimensions      [0 2 -2 0 0 0 0];
 
 internalField   uniform 0;
 
@@ -23,23 +23,23 @@ boundaryField
 {
     inlet
     {
-        type           fixedValue;
-        value          uniform 0;
+        type            fixedValue;
+        value           uniform 0;
     }
     outlet
     {
-       type            inletOutlet;
-       inletValue      uniform 0;
-       value           uniform 0;
+        type            inletOutlet;
+        inletValue      uniform 0;
+        value           uniform 0;
     }
     up
     {
-        type           symmetry;
+        type            symmetry;
     }
     hole
     {
-        type           fixedValue;
-        value          uniform 0;
+        type            fixedValue;
+        value           uniform 0;
     }
     frontAndBack
     {

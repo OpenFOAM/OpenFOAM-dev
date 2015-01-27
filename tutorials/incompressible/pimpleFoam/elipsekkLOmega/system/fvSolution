@@ -21,7 +21,7 @@ solvers
     {
         solver          GAMG;
         tolerance       1e-06;
-        relTol          0.1;
+        relTol          0.01;
         smoother        DICGaussSeidel;
         cacheAgglomeration true;
         nCellsInCoarsestLevel 10;
@@ -63,15 +63,9 @@ PIMPLE
 
 relaxationFactors
 {
-    fields
-    {
-    }
     equations
     {
-        "U.*"           1;
-        "kl.*"          1;
-        "kt.*"          1;
-        "omega.*"       1;
+        ".*"            1;
     }
 }
 
