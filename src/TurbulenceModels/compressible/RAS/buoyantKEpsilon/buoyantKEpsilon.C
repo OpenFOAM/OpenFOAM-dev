@@ -116,7 +116,18 @@ template<class BasicTurbulenceModel>
 tmp<fvScalarMatrix>
 buoyantKEpsilon<BasicTurbulenceModel>::kSource() const
 {
-    return -fvm::SuSp(Gcoef(), this->k_);
+    const uniformDimensionedVectorField& g =
+        this->mesh_.objectRegistry::template
+        lookupObject<uniformDimensionedVectorField>("g");
+
+    if (mag(g.value()) > SMALL)
+    {
+        return -fvm::SuSp(Gcoef(), this->k_);
+    }
+    else
+    {
+        return kEpsilon<BasicTurbulenceModel>::kSource();
+    }
 }
 
 
@@ -128,15 +139,23 @@ buoyantKEpsilon<BasicTurbulenceModel>::epsilonSource() const
         this->mesh_.objectRegistry::template
         lookupObject<uniformDimensionedVectorField>("g");
 
-    vector gHat(g.value()/mag(g.value()));
+    if (mag(g.value()) > SMALL)
+    {
+        vector gHat(g.value()/mag(g.value()));
 
-    volScalarField v(gHat & this->U_);
-    volScalarField u
-    (
-        mag(this->U_ - gHat*v) + dimensionedScalar("SMALL", dimVelocity, SMALL)
-    );
+        volScalarField v(gHat & this->U_);
+        volScalarField u
+        (
+            mag(this->U_ - gHat*v)
+          + dimensionedScalar("SMALL", dimVelocity, SMALL)
+        );
 
-    return -fvm::SuSp(this->C1_*tanh(mag(v)/u)*Gcoef(), this->epsilon_);
+        return -fvm::SuSp(this->C1_*tanh(mag(v)/u)*Gcoef(), this->epsilon_);
+    }
+    else
+    {
+        return kEpsilon<BasicTurbulenceModel>::epsilonSource();
+    }
 }
 
 
