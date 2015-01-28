@@ -2,8 +2,7 @@ SUFFIXES += .C
 
 c++WARN     = -wd327,525,654,819,1125,1476,1505,1572
 
-#CC          = icpc -gcc-version=400
-CC          = icpc -std=c++0x
+CC          = icpc -std=c++0x -fp-trap=common -fp-model precise
 
 include $(RULES)/c++$(WM_COMPILE_OPTION)
 
@@ -16,7 +15,6 @@ cxxtoo      = $(Ctoo)
 cctoo       = $(Ctoo)
 cpptoo      = $(Ctoo)
 
-#LINK_LIBS   = $(c++DBUG) -lstdc++
 LINK_LIBS   = $(c++DBUG) -L$(IA32ROOT)/lib
 
 LINKLIBSO   = $(CC) $(c++FLAGS) -shared -Xlinker --add-needed -Xlinker --no-as-needed
