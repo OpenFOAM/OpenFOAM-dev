@@ -328,20 +328,14 @@ kOmegaSST<BasicTurbulenceModel>::kOmegaSST
         this->mesh_
     )
 {
-
     bound(k_, this->kMin_);
     bound(omega_, this->omegaMin_);
 
-    this->nut_ =
-    (
-        a1_*k_
-       /max
-        (
-            a1_*omega_,
-            b1_*F23()*sqrt(2.0)*mag(symm(fvc::grad(this->U_)))
-        )
-    );
-    this->nut_.correctBoundaryConditions();
+    if (type == typeName)
+    {
+        correctNut();
+        this->printCoeffs(type);
+    }
 }
 
 
@@ -396,8 +390,8 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
 
     tmp<volTensorField> tgradU = fvc::grad(U);
     volScalarField S2(2*magSqr(symm(tgradU())));
-    volScalarField GbyMu((tgradU() && dev(twoSymm(tgradU()))));
-    volScalarField G(this->GName(), nut*GbyMu);
+    volScalarField GbyNu((tgradU() && dev(twoSymm(tgradU()))));
+    volScalarField G(this->GName(), nut*GbyNu);
     tgradU.clear();
 
     // Update omega and G at the wall
@@ -416,10 +410,9 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
     (
         fvm::ddt(alpha, rho, omega_)
       + fvm::div(alphaRhoPhi, omega_)
-      - fvm::Sp(fvc::ddt(alpha, rho) + fvc::div(alphaRhoPhi), omega_)
       - fvm::laplacian(alpha*rho*DomegaEff(F1), omega_)
      ==
-        alpha*rhoGammaF1*GbyMu
+        alpha*rhoGammaF1*GbyNu
       - fvm::SuSp((2.0/3.0)*alpha*rhoGammaF1*divU, omega_)
       - fvm::Sp(alpha*rho*beta(F1)*omega_, omega_)
       - fvm::SuSp
@@ -442,7 +435,6 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
     (
         fvm::ddt(alpha, rho, k_)
       + fvm::div(alphaRhoPhi, k_)
-      - fvm::Sp(fvc::ddt(alpha, rho) + fvc::div(alphaRhoPhi), k_)
       - fvm::laplacian(alpha*rho*DkEff(F1), k_)
      ==
         min(alpha*rho*G, (c1_*betaStar_)*alpha*rho*k_*omega_)

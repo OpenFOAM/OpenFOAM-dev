@@ -1,7 +1,6 @@
 incompressibleTurbulenceModel.C
 
 turbulentTransportModels/turbulentTransportModels.C
-turbulentTransportModels/RAS/kOmega/kOmega.C
 turbulentTransportModels/RAS/qZeta/qZeta.C
 turbulentTransportModels/RAS/kkLOmega/kkLOmega.C
 turbulentTransportModels/RAS/LamBremhorstKE/LamBremhorstKE.C

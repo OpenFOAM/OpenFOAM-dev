@@ -25,37 +25,32 @@ License
 
 #include "kOmega.H"
 #include "bound.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace incompressible
-{
 namespace RASModels
 {
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-defineTypeNameAndDebug(kOmega, 0);
-addToRunTimeSelectionTable(RASModel, kOmega, dictionary);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void kOmega::correctNut()
+template<class BasicTurbulenceModel>
+void kOmega<BasicTurbulenceModel>::correctNut()
 {
-    nut_ = k_/omega_;
-    nut_.correctBoundaryConditions();
+    this->nut_ = k_/omega_;
+    this->nut_.correctBoundaryConditions();
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-kOmega::kOmega
+template<class BasicTurbulenceModel>
+kOmega<BasicTurbulenceModel>::kOmega
 (
-    const geometricOneField& alpha,
-    const geometricOneField& rho,
+    const alphaField& alpha,
+    const rhoField& rho,
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
@@ -64,7 +59,7 @@ kOmega::kOmega
     const word& type
 )
 :
-    eddyViscosity<incompressible::RASModel>
+    eddyViscosity<RASModel<BasicTurbulenceModel> >
     (
         type,
         alpha,
@@ -81,7 +76,7 @@ kOmega::kOmega
         dimensioned<scalar>::lookupOrAddToDict
         (
             "betaStar",
-            coeffDict_,
+            this->coeffDict_,
             0.09
         )
     ),
@@ -90,16 +85,16 @@ kOmega::kOmega
         dimensioned<scalar>::lookupOrAddToDict
         (
             "beta",
-            coeffDict_,
+            this->coeffDict_,
             0.072
         )
     ),
-    alpha_
+    gamma_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "alpha",
-            coeffDict_,
+            "gamma",
+            this->coeffDict_,
             0.52
         )
     ),
@@ -108,7 +103,7 @@ kOmega::kOmega
         dimensioned<scalar>::lookupOrAddToDict
         (
             "alphaK",
-            coeffDict_,
+            this->coeffDict_,
             0.5
         )
     ),
@@ -117,7 +112,7 @@ kOmega::kOmega
         dimensioned<scalar>::lookupOrAddToDict
         (
             "alphaOmega",
-            coeffDict_,
+            this->coeffDict_,
             0.5
         )
     ),
@@ -127,47 +122,49 @@ kOmega::kOmega
         IOobject
         (
             IOobject::groupName("k", U.group()),
-            runTime_.timeName(),
-            mesh_,
+            this->runTime_.timeName(),
+            this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        this->mesh_
     ),
     omega_
     (
         IOobject
         (
             IOobject::groupName("omega", U.group()),
-            runTime_.timeName(),
-            mesh_,
+            this->runTime_.timeName(),
+            this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        this->mesh_
     )
 {
-    bound(k_, kMin_);
-    bound(omega_, omegaMin_);
+    bound(k_, this->kMin_);
+    bound(omega_, this->omegaMin_);
 
     if (type == typeName)
     {
         correctNut();
-        printCoeffs(type);
+        this->printCoeffs(type);
     }
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool kOmega::read()
+template<class BasicTurbulenceModel>
+bool kOmega<BasicTurbulenceModel>::read()
 {
-    if (eddyViscosity<incompressible::RASModel>::read())
+    if (eddyViscosity<RASModel<BasicTurbulenceModel> >::read())
     {
-        Cmu_.readIfPresent(coeffDict());
-        beta_.readIfPresent(coeffDict());
-        alphaK_.readIfPresent(coeffDict());
-        alphaOmega_.readIfPresent(coeffDict());
+        Cmu_.readIfPresent(this->coeffDict());
+        beta_.readIfPresent(this->coeffDict());
+        gamma_.readIfPresent(this->coeffDict());
+        alphaK_.readIfPresent(this->coeffDict());
+        alphaOmega_.readIfPresent(this->coeffDict());
 
         return true;
     }
@@ -178,16 +175,32 @@ bool kOmega::read()
 }
 
 
-void kOmega::correct()
+template<class BasicTurbulenceModel>
+void kOmega<BasicTurbulenceModel>::correct()
 {
-    eddyViscosity<incompressible::RASModel>::correct();
-
-    if (!turbulence_)
+    if (!this->turbulence_)
     {
         return;
     }
 
-    volScalarField G(GName(), nut_*2*magSqr(symm(fvc::grad(U_))));
+    // Local references
+    const alphaField& alpha = this->alpha_;
+    const rhoField& rho = this->rho_;
+    const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
+    const volVectorField& U = this->U_;
+    volScalarField& nut = this->nut_;
+
+    eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
+
+    volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
+
+    tmp<volTensorField> tgradU = fvc::grad(U);
+    volScalarField G
+    (
+        this->GName(),
+        nut*(tgradU() && dev(twoSymm(tgradU())))
+    );
+    tgradU.clear();
 
     // Update omega and G at the wall
     omega_.boundaryField().updateCoeffs();
@@ -195,12 +208,13 @@ void kOmega::correct()
     // Turbulence specific dissipation rate equation
     tmp<fvScalarMatrix> omegaEqn
     (
-        fvm::ddt(omega_)
-      + fvm::div(phi_, omega_)
-      - fvm::laplacian(DomegaEff(), omega_)
+        fvm::ddt(alpha, rho, omega_)
+      + fvm::div(alphaRhoPhi, omega_)
+      - fvm::laplacian(alpha*rho*DomegaEff(), omega_)
      ==
-        alpha_*G*omega_/k_
-      - fvm::Sp(beta_*omega_, omega_)
+        gamma_*alpha*rho*G*omega_/k_
+      - fvm::SuSp(((2.0/3.0)*gamma_)*alpha*rho*divU, omega_)
+      - fvm::Sp(beta_*alpha*rho*omega_, omega_)
     );
 
     omegaEqn().relax();
@@ -208,23 +222,24 @@ void kOmega::correct()
     omegaEqn().boundaryManipulate(omega_.boundaryField());
 
     solve(omegaEqn);
-    bound(omega_, omegaMin_);
+    bound(omega_, this->omegaMin_);
 
 
     // Turbulent kinetic energy equation
     tmp<fvScalarMatrix> kEqn
     (
-        fvm::ddt(k_)
-      + fvm::div(phi_, k_)
-      - fvm::laplacian(DkEff(), k_)
+        fvm::ddt(alpha, rho, k_)
+      + fvm::div(alphaRhoPhi, k_)
+      - fvm::laplacian(alpha*rho*DkEff(), k_)
      ==
-        G
-      - fvm::Sp(Cmu_*omega_, k_)
+        alpha*rho*G
+      - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
+      - fvm::Sp(Cmu_*alpha*rho*omega_, k_)
     );
 
     kEqn().relax();
     solve(kEqn);
-    bound(k_, kMin_);
+    bound(k_, this->kMin_);
 
     correctNut();
 }
@@ -233,7 +248,6 @@ void kOmega::correct()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace RASModels
-} // End namespace incompressible
 } // End namespace Foam
 
 // ************************************************************************* //

@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::incompressible::RASModels::kOmega
+    Foam::RASModels::kOmega
 
 Group
-    grpIcoRASTurbulence
+    grpRASTurbulence
 
 Description
     Standard high Reynolds-number k-omega turbulence model for
-    incompressible flows.
+    incompressible and compressible flows.
 
     References:
     \verbatim
@@ -58,14 +58,12 @@ SourceFiles
 #ifndef kOmega_H
 #define kOmega_H
 
-#include "turbulentTransportModel.H"
+#include "RASModel.H"
 #include "eddyViscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
-{
-namespace incompressible
 {
 namespace RASModels
 {
@@ -74,9 +72,10 @@ namespace RASModels
                            Class kOmega Declaration
 \*---------------------------------------------------------------------------*/
 
+template<class BasicTurbulenceModel>
 class kOmega
 :
-    public eddyViscosity<incompressible::RASModel>
+    public eddyViscosity<RASModel<BasicTurbulenceModel> >
 {
 
 protected:
@@ -87,7 +86,7 @@ protected:
 
             dimensionedScalar Cmu_;
             dimensionedScalar beta_;
-            dimensionedScalar alpha_;
+            dimensionedScalar gamma_;
             dimensionedScalar alphaK_;
             dimensionedScalar alphaOmega_;
 
@@ -105,6 +104,11 @@ protected:
 
 public:
 
+    typedef typename BasicTurbulenceModel::alphaField alphaField;
+    typedef typename BasicTurbulenceModel::rhoField rhoField;
+    typedef typename BasicTurbulenceModel::transportModel transportModel;
+
+
     //- Runtime type information
     TypeName("kOmega");
 
@@ -114,8 +118,8 @@ public:
         //- Construct from components
         kOmega
         (
-            const geometricOneField& alpha,
-            const geometricOneField& rho,
+            const alphaField& alpha,
+            const rhoField& rho,
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
@@ -140,7 +144,11 @@ public:
         {
             return tmp<volScalarField>
             (
-                new volScalarField("DkEff", alphaK_*nut_ + nu())
+                new volScalarField
+                (
+                    "DkEff",
+                    alphaK_*this->nut_ + this->nu()
+                )
             );
         }
 
@@ -149,7 +157,11 @@ public:
         {
             return tmp<volScalarField>
             (
-                new volScalarField("DomegaEff", alphaOmega_*nut_ + nu())
+                new volScalarField
+                (
+                    "DomegaEff",
+                    alphaOmega_*this->nut_ + this->nu()
+                )
             );
         }
 
@@ -175,8 +187,8 @@ public:
                     IOobject
                     (
                         "epsilon",
-                        mesh_.time().timeName(),
-                        mesh_
+                        this->mesh_.time().timeName(),
+                        this->mesh_
                     ),
                     Cmu_*k_*omega_,
                     omega_.boundaryField().types()
@@ -192,8 +204,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace RASModels
-} // End namespace incompressible
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#ifdef NoRepository
+#   include "kOmega.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -28,7 +28,8 @@ Group
     grpRASTurbulence
 
 Description
-    Implementation of the k-omega-SST turbulence model for compressible flows.
+    Implementation of the k-omega-SST turbulence model for
+    incompressible and compressible flows.
 
     Turbulence model described in:
     \verbatim
@@ -96,7 +97,6 @@ SourceFiles
 
 #include "RASModel.H"
 #include "eddyViscosity.H"
-#include "wallDist.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
