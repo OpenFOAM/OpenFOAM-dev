@@ -8,14 +8,30 @@
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// pattern, string
+// Pattern, String
 (
-    ( "a.*" "abc" )
-    ( "a.*" "bac" )
-    ( "a.*" "abcd" )
-    ( "a.*" "def" )
-    ( "d(.*)f" "def" )
-    ( " *([A-Za-z]+) *= *([^ /]+) *(//.*)?"   " keyword = value // settings" )
+    ( "a.*"  "abc" )        // true
+    ( "a.*"  "bac" )        // false - partial match only
+    ( "a.*"  "abcd" )       // true
+    ( "a.*"  "def" )        // false
+    ( ".*a.*"  "Abc" )      // false
+    ( "(?i).*a.*"  "Abc" )  // true
+    ( "d(.*)f"  "def" )     // true
+    (
+        " *([A-Za-z]+) *= *([^ /]+) *(//.*)?"
+        "   keyword  = value // comment"
+    )   // true
+
+    (
+        "[[:digit:]]"
+        "contains 1 or more digits"
+    )   // false - partial match only
+
+    (
+        "[[:digit:]]+-[[:digit:]]+-[[:digit:]]+-[[:digit:]]+"
+        "1-905-123-2234"
+    )   // true
+
 )
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

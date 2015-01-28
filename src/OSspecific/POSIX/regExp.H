@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,9 @@ Class
 
 Description
     Wrapper around POSIX extended regular expressions.
+
+    The PCRE '(?i)' extension is provided to compile the regular expression
+    as being case-insensitive.
 
 SeeAlso
     The manpage regex(7) for more information about POSIX regular expressions.
@@ -51,6 +54,7 @@ namespace Foam
 class string;
 template<class T> class List;
 
+
 /*---------------------------------------------------------------------------*\
                            Class regExp Declaration
 \*---------------------------------------------------------------------------*/
@@ -70,6 +74,16 @@ class regExp
 
         //- Disallow default bitwise assignment
         void operator=(const regExp&);
+
+        //- Return true if it matches and sets the sub-groups matched.
+        //  Templated to support both std::string and Foam::string
+        template<class StringType>
+        bool matchGrouping
+        (
+            const std::string&,
+            List<StringType>& groups
+        ) const;
+
 
 public:
 
@@ -135,14 +149,13 @@ public:
 
         // Editing
 
-            //- Compile pattern into a regular expression, optionally ignoring
-            //  case
+            //- Compile pattern into a regular expression,
+            //  optionally ignoring case
             void set(const char*, const bool ignoreCase=false) const;
 
-            //- Compile pattern into a regular expression, optionally ignoring
-            //  case
+            //- Compile pattern into a regular expression,
+            //  optionally ignoring case
             void set(const std::string&, const bool ignoreCase=false) const;
-
 
             //- Release precompiled expression.
             //  Returns true if precompiled expression existed before clear
@@ -161,7 +174,11 @@ public:
 
             //- Return true if it matches and sets the sub-groups matched
             //  The begin-of-line (^) and end-of-line ($) anchors are implicit
-            bool match(const string&, List<string>& groups) const;
+            bool match(const std::string&, List<std::string>& groups) const;
+
+            //- Return true if it matches and sets the sub-groups matched
+            //  The begin-of-line (^) and end-of-line ($) anchors are implicit
+            bool match(const std::string&, List<string>& groups) const;
 
             //- Return true if the regex was found within string
             bool search(const std::string& str) const

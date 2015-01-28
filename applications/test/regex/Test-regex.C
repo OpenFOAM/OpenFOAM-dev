@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
+    Tests for regular expressions
 
 \*---------------------------------------------------------------------------*/
 
@@ -39,14 +40,13 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-
     List<Tuple2<string, string> > rawList(IFstream("testRegexps")());
-    Info<< "input list:" << rawList << endl;
+    Info<< "Test expressions:" << rawList << endl;
     IOobject::writeDivider(Info) << endl;
 
     List<string> groups;
 
-    // report matches:
+    // Report matches:
     forAll(rawList, elemI)
     {
         const string& pat = rawList[elemI].first();
@@ -60,49 +60,86 @@ int main(int argc, char *argv[])
             Info<< "true";
             if (re.ngroups())
             {
-                Info<< " groups:" << groups;
+                Info<< nl << "groups: " << groups;
             }
         }
         else
         {
-            Info<< "false";
             if (re.search(str))
             {
                 Info<< " partial match";
+            }
+            else
+            {
+                Info<< "false";
             }
         }
         Info<< endl;
     }
 
-    Info<<"test regExp(const char*) ..." << endl;
+    Info<< nl << "test regExp(const char*) ..." << endl;
     string me("Mark");
 
-    if (regExp("[Mm]ar[ck]").match(me))
-    {
-        Info<< "matched: " << me << endl;
-    }
-    else
-    {
-        Info<< "no match" << endl;
-    }
-
-    if (regExp("").match(me))
-    {
-        Info<< "matched: " << me << endl;
-    }
-    else
-    {
-        Info<< "no match" << endl;
-    }
-
+    // Handling of null strings
     if (regExp(NULL).match(me))
     {
-        Info<< "matched: " << me << endl;
+        Info<< "fail - matched: " << me << endl;
+    }
+    else
+    {
+        Info<< "pass - null pointer is no expression" << endl;
+    }
+
+    // Normal match
+    if (regExp("[Mm]ar[ck]").match(me))
+    {
+        Info<< "pass - matched: " << me << endl;
     }
     else
     {
         Info<< "no match" << endl;
     }
+
+    // Match ignore case
+    if (regExp("mar[ck]", true).match(me))
+    {
+        Info<< "pass - matched: " << me << endl;
+    }
+    else
+    {
+        Info<< "no match" << endl;
+    }
+
+    // Embedded prefix for match ignore case
+    if (regExp("(?i)mar[ck]").match(me))
+    {
+        Info<< "pass - matched: " << me << endl;
+    }
+    else
+    {
+        Info<< "no match" << endl;
+    }
+
+    // Handling of empty expression
+    if (regExp("").match(me))
+    {
+        Info<< "fail - matched: " << me << endl;
+    }
+    else
+    {
+        Info<< "pass - no match on empty expression" << endl;
+    }
+
+    // Embedded prefix - but expression is empty
+    if (regExp("(?i)").match(me))
+    {
+        Info<< "fail - matched: " << me << endl;
+    }
+    else
+    {
+        Info<< "pass - no match on empty expression" << endl;
+    }
+
 
     Info<< endl;
 
