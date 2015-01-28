@@ -28,12 +28,11 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(phi,U)      bounded Gauss upwind;
-    div(phi,k)      bounded Gauss upwind;
-    div(phi,epsilon) bounded Gauss upwind;
-    div(phi,R)      bounded Gauss upwind;
-    div(R)          Gauss linear;
-    div(phi,nuTilda) bounded Gauss upwind;
+    div(phi,U)      bounded Gauss linearUpwind grad(U);
+    div(phi,k)      bounded Gauss limitedLinear 1;
+    div(phi,epsilon) bounded Gauss limitedLinear 1;
+    div(phi,omega)  bounded Gauss limitedLinear 1;
+    div(phi,v2)     bounded Gauss limitedLinear 1;
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
@@ -56,6 +55,11 @@ fluxRequired
 {
     default         no;
     p               ;
+}
+
+wallDist
+{
+    method meshWave;
 }
 
 
