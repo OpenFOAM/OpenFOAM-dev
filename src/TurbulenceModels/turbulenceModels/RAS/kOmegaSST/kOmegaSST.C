@@ -25,6 +25,7 @@ License
 
 #include "kOmegaSST.H"
 #include "bound.H"
+#include "wallDist.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
