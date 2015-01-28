@@ -204,7 +204,7 @@ export FOAM_UTILITIES=$FOAM_APP/utilities
 export FOAM_SOLVERS=$FOAM_APP/solvers
 export FOAM_RUN=$WM_PROJECT_USER_DIR/run
 
-# add wmake to the path - not required for runtime only environment
+# add wmake to the path - not required for runtime-only environment
 [ -d "$WM_DIR" ] && PATH=$WM_DIR:$PATH
 # add OpenFOAM scripts to the path
 export PATH=$WM_PROJECT_DIR/bin:$PATH
