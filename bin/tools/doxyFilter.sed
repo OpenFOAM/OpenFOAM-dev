@@ -58,9 +58,19 @@ s/^    /\\relates /
 # =>
 # \\class Foam::className
 #
+# Class
+#     Foam::namespaceName::
+#         className
+# =>
+# \\class Foam::namespaceName::className
+#
 /^Class *$/,/^[^ ]/{
-s/^Class *$//
-s/^    /\\class /
+N
+/.*:: *$/{
+N
+s/Class *\n *\(.*\) *\n *\(.*\) */\\class \1\2/
+}
+s/Class *\n *\(.*\) */\\class \1/
 }
 
 
