@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -232,7 +232,7 @@ reportExecutable()
         echo "`fixlen "$1" 9`" "*** not installed ***"
         VERSION=""
         case "$1" in
-        gcc | $foamTestApp)
+        gcc* | $foamTestApp)
             echo "          CRITICAL ERROR"
             criticalError=`expr $criticalError + 1`
             ;;
@@ -249,9 +249,18 @@ reportExecutable()
         VERSION=`$1 --version /dev/null 2>&1      \
             | sed -ne 's/flex \([0-9][0-9.]*\).*/\1/p' `
         ;;
-    gcc)
+    gcc* | g++*)
         VERSION=`$1 -v 2>&1 \
             | sed -ne 's/^gcc version \([0-9][0-9.]*\).*/\1/p' `
+
+        case "$1" in
+        gcc*)
+            BINARYCODENAME=gcc
+            ;;
+        g++*)
+            BINARYCODENAME=g++
+            ;;
+        esac
 
         MINV1=`echo $MIN_VERSION_GCC | cut -d. -f1`
         MINV2=`echo $MIN_VERSION_GCC | cut -d. -f2`
@@ -285,13 +294,12 @@ reportExecutable()
         fi
 
         if [ "$gccOk" != "" ]; then
-            echo "ERROR: gcc version is too old for this release of OpenFOAM"
+            echo "ERROR: $BINARYCODENAME version is too old for this release of OpenFOAM"
             echo "    User version    : $VERSION"
             echo "    Minimum required: $MIN_VERSION_GCC"
             echo ""
             fatalError=`expr $fatalError + 1`
         fi
-
 
         ;;
     gtar)
@@ -458,6 +466,7 @@ echo "$COL1 $COL2 $COL3"
 hline
 reportExecutable flex
 reportExecutable "$WM_CC"
+reportExecutable "$WM_CXX"
 reportExecutable gzip
 if [ "$OSTYPE" = Linux ]
 then
