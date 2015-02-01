@@ -102,6 +102,13 @@ public:
         //- Re-read model coefficients if they have changed
         virtual bool read() = 0;
 
+        //- Return non-const access to the turbulence viscosity
+        //  to allow modification by means other than derivation
+        volScalarField& evNut()
+        {
+            return nut_;
+        }
+
         //- Return the turbulence viscosity
         virtual tmp<volScalarField> nut() const
         {
