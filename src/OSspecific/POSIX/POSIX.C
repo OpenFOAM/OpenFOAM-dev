@@ -277,11 +277,23 @@ Foam::fileNameList Foam::findEtcFiles
 {
     fileNameList results;
 
+    // Search for user files in ./system
+    // Assumes the application is executed in the case directory
+    fileName searchDir = "system";
+    if (isDir(searchDir))
+    {
+        fileName fullName = searchDir/name;
+        if (isFile(fullName))
+        {
+            results.append(fullName);
+        }
+    }
+
     // Search for user files in
     // * ~/.OpenFOAM/VERSION
     // * ~/.OpenFOAM
     //
-    fileName searchDir = home()/".OpenFOAM";
+    searchDir = home()/".OpenFOAM";
     if (isDir(searchDir))
     {
         fileName fullName = searchDir/FOAMversion/name;
