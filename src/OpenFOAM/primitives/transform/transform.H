@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,10 +50,29 @@ inline tensor rotationTensor
 {
     const scalar s = n1 & n2;
     const vector n3 = n1 ^ n2;
-    return
-        s*I
-      + (1 - s)*sqr(n3)/(magSqr(n3) + VSMALL)
-      + (n2*n1 - n1*n2);
+    const scalar magSqrN3 = magSqr(n3);
+
+    // n1 and n2 define a plane n3
+    if (magSqrN3 > SMALL)
+    {
+        // Return rotational transformation tensor in the n3-plane
+        return
+            s*I
+          + (1 - s)*sqr(n3)/magSqrN3
+          + (n2*n1 - n1*n2);
+    }
+    // n1 and n2 are contradirectional
+    else if (s < 0)
+    {
+        // Return mirror transformation tensor
+        return I + 2*n1*n2;
+    }
+    // n1 and n2 are codirectional
+    else
+    {
+        // Return null transformation tensor
+        return I;
+    }
 }
 
 
@@ -85,7 +104,6 @@ inline Vector<Cmpt> transform(const tensor& tt, const Vector<Cmpt>& v)
 template<class Cmpt>
 inline Tensor<Cmpt> transform(const tensor& tt, const Tensor<Cmpt>& t)
 {
-    //return tt & t & tt.T();
     return Tensor<Cmpt>
     (
         (tt.xx()*t.xx() + tt.xy()*t.yx() + tt.xz()*t.zx())*tt.xx()
@@ -190,15 +208,16 @@ inline symmTensor transformMask<symmTensor>(const tensor& t)
     return symm(t);
 }
 
+
 //- Estimate angle of vec in coordinate system (e0, e1, e0^e1).
 //  Is guaranteed to return increasing number but is not correct
 //  angle. Used for sorting angles.  All input vectors need to be normalized.
 //
-// Calculates scalar which increases with angle going from e0 to vec in
-// the coordinate system e0, e1, e0^e1
+//  Calculates scalar which increases with angle going from e0 to vec in
+//  the coordinate system e0, e1, e0^e1
 //
-// Jumps from 2PI -> 0 at -SMALL so parallel vectors with small rounding errors
-// should hopefully still get the same quadrant.
+//  Jumps from 2*pi -> 0 at -SMALL so hopefully parallel vectors with small
+//  rounding errors should still get the same quadrant.
 //
 inline scalar pseudoAngle
 (

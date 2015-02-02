@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Application
     rotateMesh
 
 Description
-    Rotates the mesh and fields from the direcion n1 to the direction n2.
+    Rotates the mesh and fields from the direction n1 to direction n2.
 
 \*---------------------------------------------------------------------------*/
 
@@ -71,16 +71,16 @@ int main(int argc, char *argv[])
     argList::validArgs.append("n1");
     argList::validArgs.append("n2");
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
-    vector n1 = args.argRead<vector>(1);
+    vector n1(args.argRead<vector>(1));
     n1 /= mag(n1);
 
-    vector n2 = args.argRead<vector>(2);
+    vector n2(args.argRead<vector>(2));
     n2 /= mag(n2);
 
-    tensor T = rotationTensor(n1, n2);
+    tensor T(rotationTensor(n1, n2));
 
     {
         pointIOField points
@@ -109,8 +109,7 @@ int main(int argc, char *argv[])
 
     instantList timeDirs = timeSelector::select0(runTime, args);
 
-#   include "createMesh.H"
-
+    #include "createMesh.H"
 
     forAll(timeDirs, timeI)
     {
