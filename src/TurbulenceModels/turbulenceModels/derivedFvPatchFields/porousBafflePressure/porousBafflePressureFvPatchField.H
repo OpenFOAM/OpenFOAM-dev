@@ -25,7 +25,7 @@ Class
     Foam::porousBafflePressureFvPatchField
 
 Group
-    grpCoupledBoundaryConditions grpTurbulenceBoundaryConditions
+    grpCoupledBoundaryConditions
 
 Description
     This boundary condition provides a jump condition, using the \c cyclic
@@ -34,7 +34,7 @@ Description
     The porous baffle introduces a pressure jump defined by:
 
         \f[
-            \Delta p = -(I \mu U + 0.5 D \rho |U|^2 )L
+            \Delta p = -(D \mu U + 0.5 I \rho |U|^2 )L
         \f]
 
     where
@@ -42,7 +42,7 @@ Description
     \vartable
         p      | pressure [Pa]
         \rho   | density [kg/m3]
-        \mu    | viscosity [Pa s]
+        \mu    | laminar viscosity [Pa s]
         I      | inertial coefficient
         D      | Darcy coefficient
         L      | porous media length in the flow direction
@@ -54,6 +54,8 @@ Description
     \table
         Property     | Description             | Required    | Default value
         patchType    | underlying patch type should be \c cyclic| yes |
+        phi          | flux field name         | no          | phi
+        rho          | density field name      | no          | rho
         D            | Darcy coefficient       | yes         |
         I            | inertial coefficient    | yes         |
         L            | porous media length in the flow direction | yes |
@@ -66,8 +68,8 @@ Description
         type            porousBafflePressure;
         patchType       cyclic;
         jump            uniform 0;
-        D               1000000;
-        I               0.001;
+        D               0.001;
+        I               1000000;
         L               0.1;
         value           uniform 0;
     }
@@ -100,6 +102,12 @@ class porousBafflePressureFvPatchField
     public fixedJumpFvPatchField<scalar>
 {
     // Private data
+
+        //- Name of flux field (default = phi)
+        const word phiName_;
+
+        //- Name of density field (default = rho)
+        const word rhoName_;
 
         //- Darcy pressure loss coefficient
         scalar D_;
