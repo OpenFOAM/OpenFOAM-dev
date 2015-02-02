@@ -56,12 +56,6 @@ class fixedShearStressFvPatchVectorField
 {
     // Private data
 
-        //- Name of flux field (default = phi)
-        const word phiName_;
-
-        //- Name of density field (default = rho)
-        const word rhoName_;
-
         //- Constant shear stress
         const vector tau0_;
 

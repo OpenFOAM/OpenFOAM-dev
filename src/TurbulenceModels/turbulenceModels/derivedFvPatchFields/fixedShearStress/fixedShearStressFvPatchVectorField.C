@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,6 @@ Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    phiName_("phi"),
-    rhoName_("rho"),
     tau0_(vector::zero)
 {}
 
@@ -53,8 +51,6 @@ Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     tau0_(dict.lookupOrDefault<vector>("tau", vector::zero))
 {
     fvPatchField<vector>::operator=(patchInternalField());
@@ -70,8 +66,6 @@ Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_),
     tau0_(ptf.tau0_)
 {}
 
@@ -82,8 +76,6 @@ Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_),
     tau0_(ptf.tau0_)
 {}
 
@@ -95,8 +87,6 @@ Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, iF),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_),
     tau0_(ptf.tau0_)
 {}
 
@@ -136,8 +126,6 @@ void Foam::fixedShearStressFvPatchVectorField::updateCoeffs()
 void Foam::fixedShearStressFvPatchVectorField::write(Ostream& os) const
 {
     fixedValueFvPatchVectorField::write(os);
-    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
-    writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
     os.writeKeyword("tau") << tau0_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
 }
