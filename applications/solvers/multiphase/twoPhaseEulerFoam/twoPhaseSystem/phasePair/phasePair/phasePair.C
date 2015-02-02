@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::EoH
     const volScalarField& d
 ) const
 {
-    return 
+    return
         mag(dispersed().rho() - continuous().rho())
        *mag(g())
        *sqr(d)
@@ -163,7 +163,7 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::EoH2() const
         EoH
         (
             dispersed().d()
-           /cbrt(Eo())
+           /cbrt(E())
         );
 }
 
