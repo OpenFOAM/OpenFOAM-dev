@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,62 +22,64 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineDivide
+    Foam::gradingDescriptors
 
 Description
-    Divides a line into segments
+    List of gradingDescriptor for the sections of a block with additional IO
+    functionality
 
 SourceFiles
-    lineDivide.C
+    gradingDescriptors.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef lineDivide_H
-#define lineDivide_H
+#ifndef gradingDescriptors_H
+#define gradingDescriptors_H
 
-#include "pointField.H"
-#include "scalarList.H"
-#include "gradingDescriptors.H"
+#include "gradingDescriptor.H"
+#include "List.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class curvedEdge;
+class Istream;
+class Ostream;
+
+// Forward declaration of friend functions and operators
+class gradingDescriptors;
+Istream& operator>>(Istream&, gradingDescriptors&);
 
 /*---------------------------------------------------------------------------*\
-                         Class lineDivide Declaration
+                     Class gradingDescriptors Declaration
 \*---------------------------------------------------------------------------*/
 
-class lineDivide
+class gradingDescriptors
+:
+    public List<gradingDescriptor>
 {
-    // Private data
-
-        pointField points_;
-
-        scalarList divisions_;
 
 public:
 
     // Constructors
 
-        //- Construct from components
-        lineDivide
-        (
-            const curvedEdge&,
-            const label ndiv,
-            const gradingDescriptors& gd = gradingDescriptors()
-        );
+        //- Default constructor
+        gradingDescriptors();
+
+        //- Construct from a gradingDescriptor
+        gradingDescriptors(const gradingDescriptor& gd);
 
 
-    // Member Functions
+    // Member functions
 
-        //- Return the points
-        const pointField& points() const;
+        //- Return the inverse gradingDescriptors with 1/expansionRatio
+        gradingDescriptors inv() const;
 
-        //- Return the list of lambda values
-        const scalarList& lambdaDivisions() const;
+
+    // IOstream Operators
+
+        friend Istream& operator>>(Istream&, gradingDescriptors&);
 };
 
 

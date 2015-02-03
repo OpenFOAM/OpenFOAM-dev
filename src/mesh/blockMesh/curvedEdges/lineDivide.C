@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-
 #include "lineDivide.H"
 #include "curvedEdge.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    //- Calculate the geometric expension factor from the expansion ratio
+    inline scalar calcGexp(const scalar expRatio, const label nDiv)
+    {
+        return nDiv > 1 ? pow(expRatio, 1.0/(nDiv - 1)) : 0.0;
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -34,34 +43,75 @@ License
 Foam::lineDivide::lineDivide
 (
     const curvedEdge& cedge,
-    const label ndiv,
-    const scalar xratio
+    const label nDiv,
+    const gradingDescriptors& gd
 )
 :
-    points_(ndiv + 1),
-    divisions_(ndiv + 1)
+    points_(nDiv + 1),
+    divisions_(nDiv + 1)
 {
     divisions_[0]    = 0.0;
-    divisions_[ndiv] = 1.0;
+    divisions_[nDiv] = 1.0;
 
-    // calculate the spacing
-    if (xratio == 1.0)
+    scalar secStart = divisions_[0];
+    label secnStart = 1;
+
+    // Check that there are more divisions than sections
+    if (nDiv >= gd.size())
     {
-        for (label i=1; i < ndiv; i++)
+        forAll(gd, sectioni)
         {
-            divisions_[i] = scalar(i)/ndiv;
+            scalar blockFrac = gd[sectioni].blockFraction();
+            scalar nDivFrac = gd[sectioni].nDivFraction();
+            scalar expRatio = gd[sectioni].expansionRatio();
+
+            label secnDiv = label(nDivFrac*nDiv + 0.5);
+            if (sectioni == gd.size() - 1)
+            {
+                secnDiv = nDiv - secnStart + 1;
+            }
+            label secnEnd = secnStart + secnDiv;
+
+            // Calculate the spacing
+            if (expRatio == 1.0)
+            {
+                for (label i = secnStart; i < secnEnd; i++)
+                {
+                    divisions_[i] =
+                        secStart
+                      + blockFrac*scalar(i - secnStart + 1)/secnDiv;
+                }
+            }
+            else
+            {
+                // Calculate geometric expansion factor from the expansion ratio
+                const scalar expFact = calcGexp(expRatio, secnDiv);
+
+                for (label i = secnStart; i < secnEnd; i++)
+                {
+                    divisions_[i] =
+                        secStart
+                      + blockFrac*(1.0 - pow(expFact, i - secnStart + 1))
+                    /(1.0 - pow(expFact, secnDiv));
+                }
+            }
+
+            secStart = divisions_[secnEnd - 1];
+            secnStart = secnEnd;
         }
     }
+    // Otherwise mesh uniformly
     else
     {
-        for (label i=1; i < ndiv; i++)
+        for (label i=1; i < nDiv; i++)
         {
-            divisions_[i] = (1.0 - pow(xratio, i))/(1.0 - pow(xratio, ndiv));
+            divisions_[i] = scalar(i)/nDiv;
         }
     }
 
-    // calculate the points
-    for (label i=0; i <= ndiv; i++)
+
+    // Calculate the points
+    for (label i = 0; i <= nDiv; i++)
     {
         points_[i] = cedge.position(divisions_[i]);
     }
