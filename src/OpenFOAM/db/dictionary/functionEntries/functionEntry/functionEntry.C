@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ bool Foam::functionEntry::execute
 
     if (!executedictionaryIstreamMemberFunctionTablePtr_)
     {
-        cerr<<"functionEntry::execute"
+        cerr<< "functionEntry::execute"
             << "(const word&, dictionary&, Istream&)"
             << " not yet initialized, function = "
             << functionName.c_str() << std::endl;
@@ -108,7 +108,7 @@ bool Foam::functionEntry::execute
 
     if (!executeprimitiveEntryIstreamMemberFunctionTablePtr_)
     {
-        cerr<<"functionEntry::execute"
+        cerr<< "functionEntry::execute"
             << "(const word&, const dictionary&, primitiveEntry&, Istream&)"
             << " not yet initialized, function = "
             << functionName.c_str() << std::endl;
@@ -136,5 +136,6 @@ bool Foam::functionEntry::execute
 
     return mfIter()(parentDict, entry, is);
 }
+
 
 // ************************************************************************* //
