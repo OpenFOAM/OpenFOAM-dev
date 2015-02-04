@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ void Foam::isoSurfaceCell::generateTriPoints
         triIndex |= 8;
     }
 
-    /* Form the vertices of the triangles for each case */
+    // Form the vertices of the triangles for each case
     switch (triIndex)
     {
         case 0x00:
@@ -303,6 +303,7 @@ void Foam::isoSurfaceCell::generateTriPoints
 ) const
 {
     tetMatcher tet;
+    label countNotFoundTets = 0;
 
     forAll(mesh_.cells(), cellI)
     {
@@ -395,16 +396,22 @@ void Foam::isoSurfaceCell::generateTriPoints
             }
             else
             {
-                const cell& cFaces = mesh_.cells()[cellI];
-
                 forAll(cFaces, cFaceI)
                 {
                     label faceI = cFaces[cFaceI];
                     const face& f = mesh_.faces()[faceI];
 
-                    const label fp0 = mesh_.tetBasePtIs()[faceI];
+                    label fp0 = mesh_.tetBasePtIs()[faceI];
+
+                    // Skip undefined tets
+                    if (fp0 < 0)
+                    {
+                        fp0 = 0;
+                        countNotFoundTets++;
+                    }
 
                     label fp = f.fcIndex(fp0);
+
                     for (label i = 2; i < f.size(); i++)
                     {
                         label nextFp = f.fcIndex(fp);
@@ -484,6 +491,14 @@ void Foam::isoSurfaceCell::generateTriPoints
                 triMeshCells.append(cellI);
             }
         }
+    }
+
+    if (countNotFoundTets > 0)
+    {
+        WarningIn("Foam::isoSurfaceCell::generateTriPoints")
+            << "Could not find " << countNotFoundTets
+            << " tet base points, which may lead to inverted triangles."
+            << endl;
     }
 
     triPoints.shrink();
