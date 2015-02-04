@@ -71,8 +71,6 @@ int main(int argc, char * argv[])
     sha.clear();
     sha.append(str);
 
-    SHA1Digest shaDig_A = sha;
-
     SHA1 sha_A = sha;
 
     sha.append("\n");

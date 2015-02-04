@@ -57,8 +57,7 @@ int main(int argc, char *argv[])
     //linearInterpolationWeights interpolator
     splineInterpolationWeights interpolator
     (
-        samples,
-        interpolationWeights::WARN
+        samples
     );
     labelList indices;
     scalarField weights;

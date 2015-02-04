@@ -47,7 +47,7 @@ scalar sumReduce
     const scalar localValue
 )
 {
-    scalar sum;
+    scalar sum = 0;
     if (Pstream::parRun())
     {
         if (UPstream::master(comm))
