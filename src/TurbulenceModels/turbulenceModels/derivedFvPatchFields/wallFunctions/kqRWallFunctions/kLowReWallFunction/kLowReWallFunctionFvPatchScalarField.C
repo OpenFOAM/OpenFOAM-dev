@@ -215,6 +215,9 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
         kw[faceI] *= sqr(uTau);
     }
 
+    // Limit kw to avoid failure of the turbulence model due to division by kw
+    kw = max(kw, SMALL);
+
     fixedValueFvPatchField<scalar>::updateCoeffs();
 
     // TODO: perform averaging for cells sharing more than one boundary face
