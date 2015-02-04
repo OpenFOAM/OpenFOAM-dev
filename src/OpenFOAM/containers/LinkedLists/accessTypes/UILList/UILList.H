@@ -259,21 +259,21 @@ public:
 
     // STL const_reverse_iterator
 
-        typedef typename LListBase::const_reverse_iterator
-            LListBase_const_reverse_iterator;
-
         //- An STL-conforming const_reverse_iterator
         class const_reverse_iterator
         :
-            public LListBase_const_reverse_iterator
+            public LListBase::const_reverse_iterator
         {
 
         public:
 
             //- Construct from base const_reverse_iterator
-            const_reverse_iterator(LListBase_const_reverse_iterator baseIter)
+            const_reverse_iterator
+            (
+                typename LListBase::const_reverse_iterator baseIter
+            )
             :
-                LListBase_const_reverse_iterator(baseIter)
+                LListBase::const_reverse_iterator(baseIter)
             {}
 
 
@@ -283,7 +283,7 @@ public:
                 {
                     return
                         static_cast<const T&>
-                        (LListBase_const_reverse_iterator::operator*());
+                        (LListBase::const_reverse_iterator::operator*());
                 }
 
                 const T& operator()()
@@ -293,7 +293,7 @@ public:
 
                 const_reverse_iterator& operator++()
                 {
-                    LListBase_const_reverse_iterator::operator++();
+                    LListBase::const_reverse_iterator::operator++();
                     return *this;
                 }
         };
