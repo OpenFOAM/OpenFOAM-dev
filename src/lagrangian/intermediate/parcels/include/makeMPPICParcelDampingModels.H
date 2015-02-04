@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,11 +38,9 @@ License
                                                                               \
     makeDampingModel(CloudType);                                              \
                                                                               \
-    namespace DampingModels                                                   \
-    {                                                                         \
-        makeDampingModelType(NoDamping, CloudType);                           \
-        makeDampingModelType(Relaxation, CloudType);                          \
-    }
+    makeDampingModelType(NoDamping, CloudType);                               \
+    makeDampingModelType(Relaxation, CloudType);
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

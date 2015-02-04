@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,13 +212,20 @@ public:
 // Add the patch constructor functions to the hash tables
 
 #define makeFvLaplacianTypeScheme(SS, GType, Type)                             \
-                                                                               \
-    typedef SS<Type, GType> SS##Type##GType;                                   \
+    typedef Foam::fv::SS<Foam::Type, Foam::GType> SS##Type##GType;             \
     defineNamedTemplateTypeNameAndDebug(SS##Type##GType, 0);                   \
                                                                                \
-    laplacianScheme<Type, GType>::                                             \
-        addIstreamConstructorToTable<SS<Type, GType> >                         \
-    add##SS##Type##GType##IstreamConstructorToTable_;
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace fv                                                           \
+        {                                                                      \
+            typedef SS<Type, GType> SS##Type##GType;                           \
+                                                                               \
+            laplacianScheme<Type, GType>::                                     \
+                addIstreamConstructorToTable<SS<Type, GType> >                 \
+                add##SS##Type##GType##IstreamConstructorToTable_;              \
+        }                                                                      \
+    }
 
 
 #define makeFvLaplacianScheme(SS)                                              \

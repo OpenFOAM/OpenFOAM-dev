@@ -32,8 +32,8 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define makeSootTypesThermo(sootModelType, Thermo)                            \
-                                                                              \
-    typedef sootModelType<Thermo> sootModelType##Thermo;                      \
+    typedef Foam::radiation::sootModelType<Foam::Thermo>                      \
+        sootModelType##Thermo;                                                \
                                                                               \
     defineTemplateTypeNameAndDebugWithName                                    \
     (                                                                         \
@@ -42,12 +42,20 @@ License
         0                                                                     \
     );                                                                        \
                                                                               \
-    addToRunTimeSelectionTable                                                \
-    (                                                                         \
-        sootModel,                                                            \
-        sootModelType##Thermo,                                                \
-        dictionary                                                            \
-    );
+    namespace Foam                                                            \
+    {                                                                         \
+        namespace radiation                                                   \
+        {                                                                     \
+            typedef sootModelType<Thermo> sootModelType##Thermo;              \
+                                                                              \
+            addToRunTimeSelectionTable                                        \
+            (                                                                 \
+                sootModel,                                                    \
+                sootModelType##Thermo,                                        \
+                dictionary                                                    \
+            );                                                                \
+        }                                                                     \
+    }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

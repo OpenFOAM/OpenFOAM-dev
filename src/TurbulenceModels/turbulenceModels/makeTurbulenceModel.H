@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,13 +88,14 @@ License
 
 
 #define makeTemplatedTurbulenceModel(BaseModel, SType, Type)                   \
+    defineNamedTemplateTypeNameAndDebug                                        \
+        (Foam::SType##Models::Type<Foam::BaseModel>, 0);                       \
+                                                                               \
     namespace Foam                                                             \
     {                                                                          \
         namespace SType##Models                                                \
         {                                                                      \
             typedef Type<BaseModel> Type##SType##BaseModel;                    \
-                                                                               \
-            defineNamedTemplateTypeNameAndDebug(Type##SType##BaseModel, 0);    \
                                                                                \
             addToRunTimeSelectionTable                                         \
             (                                                                  \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,28 +166,33 @@ public:
 
 #define makeSurfaceReactionModel(CloudType)                                   \
                                                                               \
-    typedef CloudType::reactingMultiphaseCloudType                            \
+    typedef Foam::CloudType::reactingMultiphaseCloudType                      \
         reactingMultiphaseCloudType;                                          \
     defineNamedTemplateTypeNameAndDebug                                       \
     (                                                                         \
-        SurfaceReactionModel<reactingMultiphaseCloudType>,                    \
+        Foam::SurfaceReactionModel<reactingMultiphaseCloudType>,              \
         0                                                                     \
     );                                                                        \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        SurfaceReactionModel<reactingMultiphaseCloudType>,                    \
-        dictionary                                                            \
-    );
+    namespace Foam                                                            \
+    {                                                                         \
+        defineTemplateRunTimeSelectionTable                                   \
+        (                                                                     \
+            SurfaceReactionModel<reactingMultiphaseCloudType>,                \
+            dictionary                                                        \
+        );                                                                    \
+    }
 
 
 #define makeSurfaceReactionModelType(SS, CloudType)                           \
                                                                               \
-    typedef CloudType::reactingMultiphaseCloudType                            \
+    typedef Foam::CloudType::reactingMultiphaseCloudType                      \
         reactingMultiphaseCloudType;                                          \
-    defineNamedTemplateTypeNameAndDebug(SS<reactingMultiphaseCloudType>, 0);  \
+    defineNamedTemplateTypeNameAndDebug                                       \
+        (Foam::SS<reactingMultiphaseCloudType>, 0);                           \
                                                                               \
-    SurfaceReactionModel<reactingMultiphaseCloudType>::                       \
-        adddictionaryConstructorToTable<SS<reactingMultiphaseCloudType> >     \
+    Foam::SurfaceReactionModel<reactingMultiphaseCloudType>::                 \
+        adddictionaryConstructorToTable                                       \
+        <Foam::SS<reactingMultiphaseCloudType> >                              \
         add##SS##CloudType##reactingMultiphaseCloudType##ConstructorToTable_;
 
 

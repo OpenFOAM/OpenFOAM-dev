@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,24 +142,35 @@ public:
 
 // Add the patch constructor functions to the hash tables
 
-#define makeLeastSquaresGradTypeScheme(SS, STENCIL, TYPE)                     \
-                                                                              \
-typedef LeastSquaresGrad<TYPE, STENCIL> LeastSquaresGrad##TYPE##STENCIL##_;   \
-defineTemplateTypeNameAndDebugWithName                                        \
-    (LeastSquaresGrad##TYPE##STENCIL##_, #SS, 0);                             \
-                                                                              \
-gradScheme<TYPE>::addIstreamConstructorToTable                                \
-<LeastSquaresGrad<TYPE, STENCIL> >                                            \
-    add##SS##STENCIL##TYPE##IstreamConstructorToTable_;
+#define makeLeastSquaresGradTypeScheme(SS, STENCIL, TYPE)                      \
+    typedef Foam::fv::LeastSquaresGrad<Foam::TYPE, Foam::STENCIL>              \
+        LeastSquaresGrad##TYPE##STENCIL##_;                                    \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+        (LeastSquaresGrad##TYPE##STENCIL##_, #SS, 0);                          \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace fv                                                           \
+        {                                                                      \
+            typedef LeastSquaresGrad<Foam::TYPE, Foam::STENCIL>                \
+                LeastSquaresGrad##TYPE##STENCIL##_;                            \
+                                                                               \
+            gradScheme<Foam::TYPE>::addIstreamConstructorToTable               \
+                <LeastSquaresGrad<Foam::TYPE, Foam::STENCIL> >                 \
+                add##SS##STENCIL##TYPE##IstreamConstructorToTable_;            \
+        }                                                                      \
+    }
 
-#define makeLeastSquaresGradScheme(SS, STENCIL)                               \
-                                                                              \
-typedef LeastSquaresVectors<STENCIL> LeastSquaresVectors##STENCIL##_;         \
-defineTemplateTypeNameAndDebugWithName                                        \
-    (LeastSquaresVectors##STENCIL##_, #SS, 0);                                \
-                                                                              \
-makeLeastSquaresGradTypeScheme(SS,STENCIL,scalar)                             \
-makeLeastSquaresGradTypeScheme(SS,STENCIL,vector)
+#define makeLeastSquaresGradScheme(SS, STENCIL)                                \
+    typedef Foam::fv::LeastSquaresVectors<Foam::STENCIL>                       \
+        LeastSquaresVectors##STENCIL##_;                                       \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+        (LeastSquaresVectors##STENCIL##_, #SS, 0);                             \
+                                                                               \
+    makeLeastSquaresGradTypeScheme(SS,STENCIL,scalar)                          \
+    makeLeastSquaresGradTypeScheme(SS,STENCIL,vector)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

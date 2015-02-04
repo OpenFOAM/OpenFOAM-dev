@@ -35,10 +35,10 @@ License
 
 #define makeParcelTurbulenceDispersionModels(CloudType)                       \
                                                                               \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
     defineNamedTemplateTypeNameAndDebug                                       \
     (                                                                         \
-        DispersionRASModel<kinematicCloudType>,                               \
+        Foam::DispersionRASModel<kinematicCloudType>,                         \
         0                                                                     \
     );                                                                        \
                                                                               \

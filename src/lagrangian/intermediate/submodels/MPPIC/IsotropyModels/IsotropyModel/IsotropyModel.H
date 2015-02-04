@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,28 +129,34 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeIsotropyModel(CloudType)                                          \
-                                                                              \
-    typedef CloudType::MPPICCloudType MPPICCloudType;                         \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        IsotropyModel<MPPICCloudType>,                                        \
-        0                                                                     \
-    );                                                                        \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        IsotropyModel<MPPICCloudType>,                                        \
-        dictionary                                                            \
-    );
+#define makeIsotropyModel(CloudType)                                           \
+                                                                               \
+    typedef Foam::CloudType::MPPICCloudType MPPICCloudType;                    \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::IsotropyModel<MPPICCloudType>,                                   \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            IsotropyModel<MPPICCloudType>,                                     \
+            dictionary                                                         \
+        );                                                                     \
+    }
 
 
-#define makeIsotropyModelType(SS, CloudType)                                  \
-                                                                              \
-    typedef CloudType::MPPICCloudType MPPICCloudType;                         \
-    defineNamedTemplateTypeNameAndDebug(SS<MPPICCloudType>, 0);               \
-                                                                              \
-    IsotropyModel<MPPICCloudType>::                                           \
-        adddictionaryConstructorToTable<SS<MPPICCloudType> >                  \
+#define makeIsotropyModelType(SS, CloudType)                                   \
+                                                                               \
+    typedef Foam::CloudType::MPPICCloudType MPPICCloudType;                    \
+    defineNamedTemplateTypeNameAndDebug                                        \
+        (Foam::IsotropyModels::SS<MPPICCloudType>, 0);                         \
+                                                                               \
+    Foam::IsotropyModel<MPPICCloudType>::                                      \
+        adddictionaryConstructorToTable                                        \
+        <Foam::IsotropyModels::SS<MPPICCloudType> >                            \
             add##SS##CloudType##MPPICCloudType##ConstructorToTable_;
 
 

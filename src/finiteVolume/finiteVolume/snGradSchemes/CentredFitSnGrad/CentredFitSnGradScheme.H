@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,24 +156,31 @@ public:
 
 // Add the patch constructor functions to the hash tables
 
-#define makeCentredFitSnGradTypeScheme(SS, POLYNOMIAL, STENCIL, TYPE) \
-                                                                      \
-typedef CentredFitSnGradScheme<TYPE, POLYNOMIAL, STENCIL>             \
-    CentredFitSnGradScheme##TYPE##POLYNOMIAL##STENCIL##_;             \
-defineTemplateTypeNameAndDebugWithName                                \
-    (CentredFitSnGradScheme##TYPE##POLYNOMIAL##STENCIL##_, #SS, 0);   \
-                                                                      \
-snGradScheme<TYPE>::addMeshConstructorToTable                         \
-<CentredFitSnGradScheme<TYPE, POLYNOMIAL, STENCIL> >                  \
-    add##SS##STENCIL##TYPE##MeshConstructorToTable_;
+#define makeCentredFitSnGradTypeScheme(SS, POLYNOMIAL, STENCIL, TYPE)          \
+    typedef Foam::fv::CentredFitSnGradScheme                                   \
+        <Foam::TYPE, Foam::POLYNOMIAL, Foam::STENCIL>                          \
+        CentredFitSnGradScheme##TYPE##POLYNOMIAL##STENCIL##_;                  \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+        (CentredFitSnGradScheme##TYPE##POLYNOMIAL##STENCIL##_, #SS, 0);        \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace fv                                                           \
+        {                                                                      \
+            snGradScheme<TYPE>::addMeshConstructorToTable                      \
+                <CentredFitSnGradScheme<TYPE, POLYNOMIAL, STENCIL> >           \
+                add##SS##STENCIL##TYPE##MeshConstructorToTable_;               \
+        }                                                                      \
+    }
 
-#define makeCentredFitSnGradScheme(SS, POLYNOMIAL, STENCIL)           \
-                                                                      \
-makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,scalar)          \
-makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,vector)          \
-makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,sphericalTensor) \
-makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,symmTensor)      \
-makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,tensor)
+#define makeCentredFitSnGradScheme(SS, POLYNOMIAL, STENCIL)                    \
+                                                                               \
+    makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,scalar)               \
+    makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,vector)               \
+    makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,sphericalTensor)      \
+    makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,symmTensor)           \
+    makeCentredFitSnGradTypeScheme(SS,POLYNOMIAL,STENCIL,tensor)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,12 +181,16 @@ public:
 // Add the patch constructor functions to the hash tables
 
 #define makeFvD2dt2TypeScheme(SS, Type)                                        \
+    defineNamedTemplateTypeNameAndDebug(Foam::fv::SS<Foam::Type>, 0);          \
                                                                                \
-defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
-                                                                               \
-d2dt2Scheme<Type>::addIstreamConstructorToTable<SS<Type> >                     \
-    add##SS##Type##IstreamConstructorToTable_;
-
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace fv                                                           \
+        {                                                                      \
+            d2dt2Scheme<Type>::addIstreamConstructorToTable<SS<Type> >         \
+                add##SS##Type##IstreamConstructorToTable_;                     \
+        }                                                                      \
+    }
 
 #define makeFvD2dt2Scheme(SS)                                                  \
                                                                                \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,78 +32,72 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-namespace combustionModels
-{
-    // Combustion models based on sensibleEnthalpy
-    makeCombustionTypesThermo
-    (
-        diffusion,
-        psiThermoCombustion,
-        gasHThermoPhysics,
-        psiCombustionModel
-    );
+// Combustion models based on sensibleEnthalpy
+makeCombustionTypesThermo
+(
+    diffusion,
+    psiThermoCombustion,
+    gasHThermoPhysics,
+    psiCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        diffusion,
-        psiThermoCombustion,
-        constGasHThermoPhysics,
-        psiCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    diffusion,
+    psiThermoCombustion,
+    constGasHThermoPhysics,
+    psiCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        diffusion,
-        rhoThermoCombustion,
-        gasHThermoPhysics,
-        rhoCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    diffusion,
+    rhoThermoCombustion,
+    gasHThermoPhysics,
+    rhoCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        diffusion,
-        rhoThermoCombustion,
-        constGasHThermoPhysics,
-        rhoCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    diffusion,
+    rhoThermoCombustion,
+    constGasHThermoPhysics,
+    rhoCombustionModel
+);
 
-     // Combustion models based on sensibleInternalEnergy
+ // Combustion models based on sensibleInternalEnergy
 
-    makeCombustionTypesThermo
-    (
-        diffusion,
-        psiThermoCombustion,
-        gasEThermoPhysics,
-        psiCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    diffusion,
+    psiThermoCombustion,
+    gasEThermoPhysics,
+    psiCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        diffusion,
-        psiThermoCombustion,
-        constGasEThermoPhysics,
-        psiCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    diffusion,
+    psiThermoCombustion,
+    constGasEThermoPhysics,
+    psiCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        diffusion,
-        rhoThermoCombustion,
-        gasEThermoPhysics,
-        rhoCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    diffusion,
+    rhoThermoCombustion,
+    gasEThermoPhysics,
+    rhoCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        diffusion,
-        rhoThermoCombustion,
-        constGasEThermoPhysics,
-        rhoCombustionModel
-    );
-}
-}
+makeCombustionTypesThermo
+(
+    diffusion,
+    rhoThermoCombustion,
+    constGasEThermoPhysics,
+    rhoCombustionModel
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

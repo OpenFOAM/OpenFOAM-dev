@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,25 +193,30 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeParticleForceModel(CloudType)                                     \
-                                                                              \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug(ParticleForce<kinematicCloudType>, 0);\
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        ParticleForce<kinematicCloudType>,                                    \
-        dictionary                                                            \
-    );
+#define makeParticleForceModel(CloudType)                                      \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineNamedTemplateTypeNameAndDebug                                        \
+        (Foam::ParticleForce<kinematicCloudType>, 0);                          \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            ParticleForce<kinematicCloudType>,                                 \
+            dictionary                                                         \
+        );                                                                     \
+    }
 
 
-#define makeParticleForceModelType(SS, CloudType)                             \
-                                                                              \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);           \
-                                                                              \
-    ParticleForce<kinematicCloudType>::                                       \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >              \
-        add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
+#define makeParticleForceModelType(SS, CloudType)                              \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);      \
+                                                                               \
+    Foam::ParticleForce<kinematicCloudType>::                                  \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType> >         \
+            add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

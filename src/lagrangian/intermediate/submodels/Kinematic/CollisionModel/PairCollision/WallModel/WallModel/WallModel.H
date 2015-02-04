@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,21 +156,25 @@ public:
 
 #define makeWallModel(CloudType)                                              \
                                                                               \
-    defineNamedTemplateTypeNameAndDebug(WallModel<CloudType>, 0);             \
+    defineNamedTemplateTypeNameAndDebug(Foam::WallModel<Foam::CloudType>, 0); \
                                                                               \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        WallModel<CloudType>,                                                 \
-        dictionary                                                            \
-    );
+    namespace Foam                                                            \
+    {                                                                         \
+        defineTemplateRunTimeSelectionTable                                   \
+        (                                                                     \
+            WallModel<Foam::CloudType>,                                       \
+            dictionary                                                        \
+        );                                                                    \
+    }
 
 
 #define makeWallModelType(SS, CloudType)                                      \
                                                                               \
-    defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                    \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<Foam::CloudType>, 0);        \
                                                                               \
-    WallModel<CloudType>::adddictionaryConstructorToTable<SS<CloudType> >     \
-        add##SS##CloudType##ConstructorToTable_;
+    Foam::WallModel<Foam::CloudType>::                                        \
+        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType> >           \
+            add##SS##CloudType##ConstructorToTable_;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

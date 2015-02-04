@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -209,26 +209,29 @@ public:
 
 #define makePhaseChangeModel(CloudType)                                       \
                                                                               \
-    typedef CloudType::reactingCloudType reactingCloudType;                   \
+    typedef Foam::CloudType::reactingCloudType reactingCloudType;             \
     defineNamedTemplateTypeNameAndDebug                                       \
     (                                                                         \
-        PhaseChangeModel<reactingCloudType>,                                  \
+        Foam::PhaseChangeModel<reactingCloudType>,                            \
         0                                                                     \
     );                                                                        \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        PhaseChangeModel<reactingCloudType>,                                  \
-        dictionary                                                            \
-    );
+    namespace Foam                                                            \
+    {                                                                         \
+        defineTemplateRunTimeSelectionTable                                   \
+        (                                                                     \
+            PhaseChangeModel<reactingCloudType>,                              \
+            dictionary                                                        \
+        );                                                                    \
+    }
 
 
 #define makePhaseChangeModelType(SS, CloudType)                               \
                                                                               \
-    typedef CloudType::reactingCloudType reactingCloudType;                   \
-    defineNamedTemplateTypeNameAndDebug(SS<reactingCloudType>, 0);            \
+    typedef Foam::CloudType::reactingCloudType reactingCloudType;             \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<reactingCloudType>, 0);      \
                                                                               \
-    PhaseChangeModel<reactingCloudType>::                                     \
-        adddictionaryConstructorToTable<SS<reactingCloudType> >               \
+    Foam::PhaseChangeModel<reactingCloudType>::                               \
+        adddictionaryConstructorToTable<Foam::SS<reactingCloudType> >         \
             add##SS##CloudType##reactingCloudType##ConstructorToTable_;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,60 +31,87 @@ License
 #include "Dual.H"
 #include "Moment.H"
 
+// Scalar interpolation
+defineNamedTemplateTypeNameAndDebug(Foam::AveragingMethod<Foam::scalar>, 0);
 namespace Foam
 {
-    // Scalar interpolation
-    defineNamedTemplateTypeNameAndDebug(AveragingMethod<scalar>, 0);
     defineTemplateRunTimeSelectionTable
     (
-        AveragingMethod<scalar>,
+        AveragingMethod<Foam::scalar>,
         dictionary
     );
-
-    // Vector interpolation
-    defineNamedTemplateTypeNameAndDebug(AveragingMethod<vector>, 0);
-    defineTemplateRunTimeSelectionTable
-    (
-        AveragingMethod<vector>,
-        dictionary
-    );
-
-    namespace AveragingMethods
-    {
-        // Basic interpolation
-        defineNamedTemplateTypeNameAndDebug(Basic<scalar>, 0);
-        AveragingMethod<scalar>::
-            adddictionaryConstructorToTable<Basic<scalar> >
-            addBasicscalarConstructorToTable_;
-
-        defineNamedTemplateTypeNameAndDebug(Basic<vector>, 0);
-        AveragingMethod<vector>::
-            adddictionaryConstructorToTable<Basic<vector> >
-            addBasicvectorConstructorToTable_;
-
-        // Dual interpolation
-        defineNamedTemplateTypeNameAndDebug(Dual<scalar>, 0);
-        AveragingMethod<scalar>::
-            adddictionaryConstructorToTable<Dual<scalar> >
-            addDualscalarConstructorToTable_;
-
-        defineNamedTemplateTypeNameAndDebug(Dual<vector>, 0);
-        AveragingMethod<vector>::
-            adddictionaryConstructorToTable<Dual<vector> >
-            addDualvectorConstructorToTable_;
-
-        // Moment interpolation
-        defineNamedTemplateTypeNameAndDebug(Moment<scalar>, 0);
-        AveragingMethod<scalar>::
-            adddictionaryConstructorToTable<Moment<scalar> >
-            addMomentscalarConstructorToTable_;
-
-        defineNamedTemplateTypeNameAndDebug(Moment<vector>, 0);
-        AveragingMethod<vector>::
-            adddictionaryConstructorToTable<Moment<vector> >
-            addMomentvectorConstructorToTable_;
-    }
 }
+
+// Vector interpolation
+defineNamedTemplateTypeNameAndDebug(Foam::AveragingMethod<Foam::vector>, 0);
+namespace Foam
+{
+    defineTemplateRunTimeSelectionTable
+    (
+        Foam::AveragingMethod<Foam::vector>,
+        dictionary
+    );
+}
+
+
+// Basic interpolation
+defineNamedTemplateTypeNameAndDebug
+(
+    Foam::AveragingMethods::Basic<Foam::scalar>,
+    0
+);
+Foam::AveragingMethod<Foam::scalar>::
+adddictionaryConstructorToTable<Foam::AveragingMethods::Basic<Foam::scalar> >
+    addBasicscalarConstructorToTable_;
+
+defineNamedTemplateTypeNameAndDebug
+(
+    Foam::AveragingMethods::Basic<Foam::vector>,
+    0
+);
+Foam::AveragingMethod<Foam::vector>::
+adddictionaryConstructorToTable<Foam::AveragingMethods::Basic<Foam::vector> >
+    addBasicvectorConstructorToTable_;
+
+
+// Dual interpolation
+defineNamedTemplateTypeNameAndDebug
+(
+    Foam::AveragingMethods::Dual<Foam::scalar>,
+    0
+);
+Foam::AveragingMethod<Foam::scalar>::
+adddictionaryConstructorToTable<Foam::AveragingMethods::Dual<Foam::scalar> >
+    addDualscalarConstructorToTable_;
+
+defineNamedTemplateTypeNameAndDebug
+(
+    Foam::AveragingMethods::Dual<Foam::vector>,
+    0
+);
+Foam::AveragingMethod<Foam::vector>::
+adddictionaryConstructorToTable<Foam::AveragingMethods::Dual<Foam::vector> >
+    addDualvectorConstructorToTable_;
+
+
+// Moment interpolation
+defineNamedTemplateTypeNameAndDebug
+(
+    Foam::AveragingMethods::Moment<Foam::scalar>,
+    0
+);
+Foam::AveragingMethod<Foam::scalar>::
+adddictionaryConstructorToTable<Foam::AveragingMethods::Moment<Foam::scalar> >
+    addMomentscalarConstructorToTable_;
+
+defineNamedTemplateTypeNameAndDebug
+(
+    Foam::AveragingMethods::Moment<Foam::vector>,
+    0
+);
+Foam::AveragingMethod<Foam::vector>::
+adddictionaryConstructorToTable<Foam::AveragingMethods::Moment<Foam::vector> >
+    addMomentvectorConstructorToTable_;
 
 
 // ************************************************************************* //

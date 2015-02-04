@@ -90,13 +90,15 @@ License
 
 
 #define makeTemplatedTurbulenceModel(BaseModel, SType, Type)                   \
+    typedef Foam::SType##Models::Type<Foam::eddyDiffusivity<Foam::BaseModel> > \
+        Type##SType##BaseModel;                                                \
+    defineNamedTemplateTypeNameAndDebug(Type##SType##BaseModel, 0);            \
+                                                                               \
     namespace Foam                                                             \
     {                                                                          \
         namespace SType##Models                                                \
         {                                                                      \
             typedef Type<eddyDiffusivity<BaseModel> > Type##SType##BaseModel;  \
-                                                                               \
-            defineNamedTemplateTypeNameAndDebug(Type##SType##BaseModel, 0);    \
                                                                                \
             addToRunTimeSelectionTable                                         \
             (                                                                  \

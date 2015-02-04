@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,28 +140,34 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makePackingModel(CloudType)                                           \
-                                                                              \
-    typedef CloudType::MPPICCloudType MPPICCloudType;                         \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        PackingModel<MPPICCloudType>,                                         \
-        0                                                                     \
-    );                                                                        \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        PackingModel<MPPICCloudType>,                                         \
-        dictionary                                                            \
-    );
+#define makePackingModel(CloudType)                                            \
+                                                                               \
+    typedef Foam::CloudType::MPPICCloudType MPPICCloudType;                    \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::PackingModel<MPPICCloudType>,                                    \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            PackingModel<MPPICCloudType>,                                      \
+            dictionary                                                         \
+        );                                                                     \
+    }
 
 
-#define makePackingModelType(SS, CloudType)                                   \
-                                                                              \
-    typedef CloudType::MPPICCloudType MPPICCloudType;                         \
-    defineNamedTemplateTypeNameAndDebug(SS<MPPICCloudType>, 0);               \
-                                                                              \
-    PackingModel<MPPICCloudType>::                                            \
-        adddictionaryConstructorToTable<SS<MPPICCloudType> >                  \
+#define makePackingModelType(SS, CloudType)                                    \
+                                                                               \
+    typedef Foam::CloudType::MPPICCloudType MPPICCloudType;                    \
+    defineNamedTemplateTypeNameAndDebug                                        \
+        (Foam::PackingModels::SS<MPPICCloudType>, 0);                          \
+                                                                               \
+    Foam::PackingModel<MPPICCloudType>::                                       \
+        adddictionaryConstructorToTable                                        \
+        <Foam::PackingModels::SS<MPPICCloudType> >                             \
             add##SS##CloudType##MPPICCloudType##ConstructorToTable_;
 
 

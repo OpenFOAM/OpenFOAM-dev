@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,46 @@ Description
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // definitions (debug information only)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+namespace Foam
+{
+
+//- Define the debug information, lookup as \a Name
+template<class Type>
+class AddToDebug
+:
+    public ::Foam::simpleRegIOobject
+{
+public:
+
+    //- The unique AddToDebug object
+    static const AddToDebug addToDebug;
+
+    AddToDebug(const char* name)
+    :
+        ::Foam::simpleRegIOobject(Foam::debug::addDebugObject, name)
+    {}
+
+    virtual ~AddToDebug()
+    {}
+
+    virtual void readData(Foam::Istream& is)
+    {
+        Type::debug = readLabel(is);
+    }
+
+    virtual void writeData(Foam::Ostream& os) const
+    {
+        os << Type::debug;
+    }
+};
+
+} // End namespace Foam
+
+#define registerTemplateDebugSwitchWithName(Type,Name)                        \
+    template<>                                                                \
+    const Foam::AddToDebug<Type> Foam::AddToDebug<Type>::addToDebug(Name)
+
 
 //- Define the debug information, lookup as \a Name
 #define registerDebugSwitchWithName(Type,Tag,Name)                            \
@@ -135,11 +175,13 @@ Description
 //- Define the debug information for templates, lookup as \a Name
 # define defineTemplateDebugSwitchWithName(Type, Name, DebugSwitch)           \
     template<>                                                                \
-    defineDebugSwitchWithName(Type, Name, DebugSwitch)
+    defineDebugSwitchWithName(Type, Name, DebugSwitch);                       \
+    registerTemplateDebugSwitchWithName(Type, Name)
 //- Define the debug information for templates sub-classes, lookup as \a Name
 # define defineTemplate2DebugSwitchWithName(Type, Name, DebugSwitch)          \
     template<>                                                                \
-    defineDebugSwitchWithName(Type, Name, DebugSwitch)
+    defineDebugSwitchWithName(Type, Name, DebugSwitch);                       \
+    registerTemplateDebugSwitchWithName(Type, Name)
 #endif
 
 //- Define the debug information for templates

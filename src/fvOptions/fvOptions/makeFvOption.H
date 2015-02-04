@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,12 +35,13 @@ License
                                                                               \
     defineTemplateTypeNameAndDebugWithName                                    \
     (                                                                         \
-        Option<Type>,                                                         \
+        Foam::fv::Option<Foam::Type>,                                         \
         #Type#Option,                                                         \
         0                                                                     \
     );                                                                        \
                                                                               \
-    option::adddictionaryConstructorToTable<Option<Type> >                    \
+    Foam::fv::option::adddictionaryConstructorToTable                         \
+        <Foam::fv::Option<Foam::Type> >                                       \
         add##Option##Type##dictionary##ConstructorTooptionTable_
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,34 +40,32 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    makeSolidChemistryModel
-    (
-        solidChemistryModel,
-        pyrolysisChemistryModel,
-        basicSolidChemistryModel,
-        hConstSolidThermoPhysics,
-        gasHThermoPhysics
-    );
+makeSolidChemistryModel
+(
+    solidChemistryModel,
+    pyrolysisChemistryModel,
+    basicSolidChemistryModel,
+    hConstSolidThermoPhysics,
+    gasHThermoPhysics
+);
 
-    makeSolidChemistryModel
-    (
-        solidChemistryModel,
-        pyrolysisChemistryModel,
-        basicSolidChemistryModel,
-        hExponentialSolidThermoPhysics,
-        gasHThermoPhysics
-    );
+makeSolidChemistryModel
+(
+    solidChemistryModel,
+    pyrolysisChemistryModel,
+    basicSolidChemistryModel,
+    hExponentialSolidThermoPhysics,
+    gasHThermoPhysics
+);
 
-    makeSolidChemistryModel
-    (
-        solidChemistryModel,
-        pyrolysisChemistryModel,
-        basicSolidChemistryModel,
-        hExpKappaConstSolidThermoPhysics,
-        gasHThermoPhysics
-    );
-}
+makeSolidChemistryModel
+(
+    solidChemistryModel,
+    pyrolysisChemistryModel,
+    basicSolidChemistryModel,
+    hExpKappaConstSolidThermoPhysics,
+    gasHThermoPhysics
+);
+
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,11 +37,8 @@ License
                                                                               \
     makeIsotropyModel(CloudType);                                             \
                                                                               \
-    namespace IsotropyModels                                                  \
-    {                                                                         \
-        makeIsotropyModelType(NoIsotropy, CloudType);                         \
-        makeIsotropyModelType(Stochastic, CloudType);                         \
-    }
+    makeIsotropyModelType(NoIsotropy, CloudType);                             \
+    makeIsotropyModelType(Stochastic, CloudType);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

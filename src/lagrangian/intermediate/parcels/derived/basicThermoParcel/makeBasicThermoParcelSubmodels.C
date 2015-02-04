@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,21 +40,18 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    makeParcelCloudFunctionObjects(basicThermoCloud);
+makeParcelCloudFunctionObjects(basicThermoCloud);
 
-    // Kinematic sub-models
-    makeThermoParcelForces(basicThermoCloud);
-    makeParcelDispersionModels(basicThermoCloud);
-    makeParcelInjectionModels(basicThermoCloud);
-    makeParcelPatchInteractionModels(basicThermoCloud);
-    makeParcelStochasticCollisionModels(basicThermoCloud);
-    makeParcelSurfaceFilmModels(basicThermoCloud);
+// Kinematic sub-models
+makeThermoParcelForces(basicThermoCloud);
+makeParcelDispersionModels(basicThermoCloud);
+makeParcelInjectionModels(basicThermoCloud);
+makeParcelPatchInteractionModels(basicThermoCloud);
+makeParcelStochasticCollisionModels(basicThermoCloud);
+makeParcelSurfaceFilmModels(basicThermoCloud);
 
-    // Thermo sub-models
-    makeParcelHeatTransferModels(basicThermoCloud);
-}
+// Thermo sub-models
+makeParcelHeatTransferModels(basicThermoCloud);
 
 
 // ************************************************************************* //

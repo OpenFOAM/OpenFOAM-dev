@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,26 +141,29 @@ public:
 
 #define makeCollisionModel(CloudType)                                         \
                                                                               \
-    typedef CloudType::collidingCloudType collidingCloudType;                 \
+    typedef Foam::CloudType::collidingCloudType collidingCloudType;           \
     defineNamedTemplateTypeNameAndDebug                                       \
     (                                                                         \
-        CollisionModel<collidingCloudType>,                                   \
+        Foam::CollisionModel<collidingCloudType>,                             \
         0                                                                     \
     );                                                                        \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        CollisionModel<collidingCloudType>,                                   \
-        dictionary                                                            \
-    );
+    namespace Foam                                                            \
+    {                                                                         \
+        defineTemplateRunTimeSelectionTable                                   \
+        (                                                                     \
+            CollisionModel<collidingCloudType>,                               \
+            dictionary                                                        \
+        );                                                                    \
+    }
 
 
 #define makeCollisionModelType(SS, CloudType)                                 \
                                                                               \
-    typedef CloudType::collidingCloudType collidingCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug(SS<collidingCloudType>, 0);           \
+    typedef Foam::CloudType::collidingCloudType collidingCloudType;           \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<collidingCloudType>, 0);     \
                                                                               \
-    CollisionModel<collidingCloudType>::                                      \
-        adddictionaryConstructorToTable<SS<collidingCloudType> >              \
+    Foam::CollisionModel<collidingCloudType>::                                \
+        adddictionaryConstructorToTable<Foam::SS<collidingCloudType> >        \
             add##SS##CloudType##collidingCloudType##ConstructorToTable_;
 
 

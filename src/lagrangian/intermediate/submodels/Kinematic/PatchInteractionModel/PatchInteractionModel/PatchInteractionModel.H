@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,26 +174,30 @@ public:
 
 #define makePatchInteractionModel(CloudType)                                  \
                                                                               \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
     defineNamedTemplateTypeNameAndDebug                                       \
     (                                                                         \
-        PatchInteractionModel<kinematicCloudType>,                            \
+        Foam::PatchInteractionModel<kinematicCloudType>,                      \
         0                                                                     \
     );                                                                        \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        PatchInteractionModel<kinematicCloudType>,                            \
-        dictionary                                                            \
-    );
+                                                                              \
+    namespace Foam                                                            \
+    {                                                                         \
+        defineTemplateRunTimeSelectionTable                                   \
+        (                                                                     \
+            PatchInteractionModel<kinematicCloudType>,                        \
+            dictionary                                                        \
+        );                                                                    \
+    }
 
 
 #define makePatchInteractionModelType(SS, CloudType)                          \
                                                                               \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);           \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);     \
                                                                               \
-    PatchInteractionModel<kinematicCloudType>::                               \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >              \
+    Foam::PatchInteractionModel<kinematicCloudType>::                         \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType> >        \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

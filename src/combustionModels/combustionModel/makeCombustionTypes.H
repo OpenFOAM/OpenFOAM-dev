@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,43 +30,61 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeCombustionTypesThermo(CombModel, CombType, Thermo, Table)         \
-                                                                              \
-    typedef CombModel<CombType, Thermo> CombModel##CombType##Thermo;          \
-                                                                              \
-    defineTemplateTypeNameAndDebugWithName                                    \
-    (                                                                         \
-        CombModel##CombType##Thermo,                                          \
-        #CombModel"<"#CombType","#Thermo">",                                  \
-        0                                                                     \
-    );                                                                        \
-                                                                              \
-    addToRunTimeSelectionTable                                                \
-    (                                                                         \
-        Table,                                                                \
-        CombModel##CombType##Thermo,                                          \
-        dictionary                                                            \
-    );
+#define makeCombustionTypesThermo(CombModel, CombType, Thermo, Table)          \
+                                                                               \
+    typedef Foam::combustionModels::CombModel                                  \
+        <Foam::combustionModels::CombType, Foam::Thermo>                       \
+        CombModel##CombType##Thermo;                                           \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        CombModel##CombType##Thermo,                                           \
+        #CombModel"<"#CombType","#Thermo">",                                   \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace combustionModels                                             \
+        {                                                                      \
+            typedef CombModel<CombType, Thermo> CombModel##CombType##Thermo;   \
+            addToRunTimeSelectionTable                                         \
+            (                                                                  \
+                Table,                                                         \
+                CombModel##CombType##Thermo,                                   \
+                dictionary                                                     \
+            );                                                                 \
+        }                                                                      \
+    }
 
 
-#define makeCombustionTypes(CombModel, CombType, Table)                       \
-                                                                              \
-    typedef CombModel<CombType> CombModel##CombType;                          \
-                                                                              \
-    defineTemplateTypeNameAndDebugWithName                                    \
-    (                                                                         \
-        CombModel##CombType,                                                  \
-        #CombModel"<"#CombType">",                                            \
-        0                                                                     \
-    );                                                                        \
-                                                                              \
-    addToRunTimeSelectionTable                                                \
-    (                                                                         \
-        Table,                                                                \
-        CombModel##CombType,                                                  \
-        dictionary                                                            \
-    );
-
+#define makeCombustionTypes(CombModel, CombType, Table)                        \
+                                                                               \
+    typedef Foam::combustionModels::CombModel                                  \
+        <Foam::combustionModels::CombType>                                     \
+        CombModel##CombType;                                                   \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        CombModel##CombType,                                                   \
+        #CombModel"<"#CombType">",                                             \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace combustionModels                                             \
+        {                                                                      \
+            typedef CombModel<CombType> CombModel##CombType;                   \
+                                                                               \
+            addToRunTimeSelectionTable                                         \
+            (                                                                  \
+                Table,                                                         \
+                CombModel##CombType,                                           \
+                dictionary                                                     \
+            );                                                                 \
+        }                                                                      \
+    }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

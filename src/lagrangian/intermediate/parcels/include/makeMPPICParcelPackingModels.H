@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,12 +38,9 @@ License
                                                                               \
     makePackingModel(CloudType);                                              \
                                                                               \
-    namespace PackingModels                                                   \
-    {                                                                         \
-        makePackingModelType(NoPacking, CloudType);                           \
-        makePackingModelType(Explicit, CloudType);                            \
-        makePackingModelType(Implicit, CloudType);                            \
-    }
+    makePackingModelType(NoPacking, CloudType);                               \
+    makePackingModelType(Explicit, CloudType);                                \
+    makePackingModelType(Implicit, CloudType);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

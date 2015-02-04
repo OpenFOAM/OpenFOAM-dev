@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,77 +34,71 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-namespace combustionModels
-{
-    // Combustion models based on sensibleEnthalpy
-    makeCombustionTypesThermo
-    (
-        FSD,
-        psiThermoCombustion,
-        gasHThermoPhysics,
-        psiCombustionModel
-    );
+// Combustion models based on sensibleEnthalpy
+makeCombustionTypesThermo
+(
+    FSD,
+    psiThermoCombustion,
+    gasHThermoPhysics,
+    psiCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        FSD,
-        psiThermoCombustion,
-        constGasHThermoPhysics,
-        psiCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    FSD,
+    psiThermoCombustion,
+    constGasHThermoPhysics,
+    psiCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        FSD,
-        rhoThermoCombustion,
-        gasHThermoPhysics,
-        rhoCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    FSD,
+    rhoThermoCombustion,
+    gasHThermoPhysics,
+    rhoCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        FSD,
-        rhoThermoCombustion,
-        constGasHThermoPhysics,
-        rhoCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    FSD,
+    rhoThermoCombustion,
+    constGasHThermoPhysics,
+    rhoCombustionModel
+);
 
-    // Combustion models based on sensibleInternalEnergy
-    makeCombustionTypesThermo
-    (
-        FSD,
-        psiThermoCombustion,
-        gasEThermoPhysics,
-        psiCombustionModel
-    );
+// Combustion models based on sensibleInternalEnergy
+makeCombustionTypesThermo
+(
+    FSD,
+    psiThermoCombustion,
+    gasEThermoPhysics,
+    psiCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        FSD,
-        psiThermoCombustion,
-        constGasEThermoPhysics,
-        psiCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    FSD,
+    psiThermoCombustion,
+    constGasEThermoPhysics,
+    psiCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        FSD,
-        rhoThermoCombustion,
-        gasEThermoPhysics,
-        rhoCombustionModel
-    );
+makeCombustionTypesThermo
+(
+    FSD,
+    rhoThermoCombustion,
+    gasEThermoPhysics,
+    rhoCombustionModel
+);
 
-    makeCombustionTypesThermo
-    (
-        FSD,
-        rhoThermoCombustion,
-        constGasEThermoPhysics,
-        rhoCombustionModel
-    );
-}
-}
+makeCombustionTypesThermo
+(
+    FSD,
+    rhoThermoCombustion,
+    constGasEThermoPhysics,
+    rhoCombustionModel
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

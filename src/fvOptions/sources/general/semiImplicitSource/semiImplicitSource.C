@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,17 +28,11 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-namespace fv
-{
-    makeFvOption(SemiImplicitSource, scalar);
-    makeFvOption(SemiImplicitSource, vector);
-    makeFvOption(SemiImplicitSource, sphericalTensor);
-    makeFvOption(SemiImplicitSource, symmTensor);
-    makeFvOption(SemiImplicitSource, tensor);
-}
-}
+makeFvOption(SemiImplicitSource, scalar);
+makeFvOption(SemiImplicitSource, vector);
+makeFvOption(SemiImplicitSource, sphericalTensor);
+makeFvOption(SemiImplicitSource, symmTensor);
+makeFvOption(SemiImplicitSource, tensor);
 
 
 // ************************************************************************* //

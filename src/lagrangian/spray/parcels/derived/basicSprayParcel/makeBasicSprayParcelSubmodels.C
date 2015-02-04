@@ -51,32 +51,29 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    makeParcelCloudFunctionObjects(basicSprayCloud);
+makeParcelCloudFunctionObjects(basicSprayCloud);
 
-    // Kinematic sub-models
-    makeThermoParcelForces(basicSprayCloud);
-    makeThermoParcelTurbulenceForces(basicSprayCloud);
-    makeParcelDispersionModels(basicSprayCloud);
-    makeParcelTurbulenceDispersionModels(basicSprayCloud);
-    makeSprayParcelInjectionModels(basicSprayCloud);
-    makeParcelPatchInteractionModels(basicSprayCloud);
-    makeSprayParcelStochasticCollisionModels(basicSprayCloud);
+// Kinematic sub-models
+makeThermoParcelForces(basicSprayCloud);
+makeThermoParcelTurbulenceForces(basicSprayCloud);
+makeParcelDispersionModels(basicSprayCloud);
+makeParcelTurbulenceDispersionModels(basicSprayCloud);
+makeSprayParcelInjectionModels(basicSprayCloud);
+makeParcelPatchInteractionModels(basicSprayCloud);
+makeSprayParcelStochasticCollisionModels(basicSprayCloud);
 
-    // Thermo sub-models
-    makeParcelHeatTransferModels(basicSprayCloud);
+// Thermo sub-models
+makeParcelHeatTransferModels(basicSprayCloud);
 
-    // Reacting sub-models
-    makeReactingParcelCompositionModels(basicSprayCloud);
-    makeReactingParcelPhaseChangeModels(basicSprayCloud);
-    makeReactingParcelSurfaceFilmModels(basicSprayCloud);
+// Reacting sub-models
+makeReactingParcelCompositionModels(basicSprayCloud);
+makeReactingParcelPhaseChangeModels(basicSprayCloud);
+makeReactingParcelSurfaceFilmModels(basicSprayCloud);
 
-    // Spray sub-models
-    makeParticleForceModelType(DistortedSphereDragForce, basicSprayCloud);
-    makeSprayParcelAtomizationModels(basicSprayCloud);
-    makeSprayParcelBreakupModels(basicSprayCloud);
-};
+// Spray sub-models
+makeParticleForceModelType(DistortedSphereDragForce, basicSprayCloud);
+makeSprayParcelAtomizationModels(basicSprayCloud);
+makeSprayParcelBreakupModels(basicSprayCloud);
 
 
 // ************************************************************************* //

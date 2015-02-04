@@ -28,20 +28,9 @@ License
 #include "makeSootTypes.H"
 #include "thermoPhysicsTypes.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace radiation
-{
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 makeSootTypesThermo(mixtureFractionSoot, gasHThermoPhysics);
 makeSootTypesThermo(mixtureFractionSoot, gasEThermoPhysics);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-} // End namespace radiation
 
 // ************************************************************************* //

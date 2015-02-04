@@ -152,26 +152,30 @@ public:
 
 #define makeAtomizationModel(CloudType)                                       \
                                                                               \
-    typedef CloudType::sprayCloudType sprayCloudType;                         \
+    typedef Foam::CloudType::sprayCloudType sprayCloudType;                   \
     defineNamedTemplateTypeNameAndDebug                                       \
     (                                                                         \
-        AtomizationModel<sprayCloudType>,                                     \
+        Foam::AtomizationModel<sprayCloudType>,                               \
         0                                                                     \
     );                                                                        \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        AtomizationModel<sprayCloudType>,                                     \
-        dictionary                                                            \
-    );
+                                                                              \
+    namespace Foam                                                            \
+    {                                                                         \
+        defineTemplateRunTimeSelectionTable                                   \
+        (                                                                     \
+            AtomizationModel<sprayCloudType>,                                 \
+            dictionary                                                        \
+        );                                                                    \
+    }
 
 
 #define makeAtomizationModelType(SS, CloudType)                               \
                                                                               \
-    typedef CloudType::sprayCloudType sprayCloudType;                         \
-    defineNamedTemplateTypeNameAndDebug(SS<sprayCloudType>, 0);               \
+    typedef Foam::CloudType::sprayCloudType sprayCloudType;                   \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<sprayCloudType>, 0);         \
                                                                               \
-    AtomizationModel<sprayCloudType>::                                        \
-        adddictionaryConstructorToTable<SS<sprayCloudType> >                  \
+    Foam::AtomizationModel<sprayCloudType>::                                  \
+        adddictionaryConstructorToTable<Foam::SS<sprayCloudType> >            \
             add##SS##CloudType##sprayCloudType##ConstructorToTable_;
 
 

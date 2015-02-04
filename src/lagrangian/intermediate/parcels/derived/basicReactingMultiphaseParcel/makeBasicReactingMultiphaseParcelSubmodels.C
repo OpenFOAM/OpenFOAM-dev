@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,41 +48,38 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    makeParcelCloudFunctionObjects(basicReactingMultiphaseCloud);
+makeParcelCloudFunctionObjects(basicReactingMultiphaseCloud);
 
-    // Kinematic sub-models
-    makeThermoParcelForces(basicReactingMultiphaseCloud);
-    makeParcelDispersionModels(basicReactingMultiphaseCloud);
-    makeReactingMultiphaseParcelInjectionModels(basicReactingMultiphaseCloud);
-    makeParcelPatchInteractionModels(basicReactingMultiphaseCloud);
-    makeReactingMultiphaseParcelStochasticCollisionModels
-    (
-        basicReactingMultiphaseCloud
-    );
-    makeReactingParcelSurfaceFilmModels(basicReactingMultiphaseCloud);
+// Kinematic sub-models
+makeThermoParcelForces(basicReactingMultiphaseCloud);
+makeParcelDispersionModels(basicReactingMultiphaseCloud);
+makeReactingMultiphaseParcelInjectionModels(basicReactingMultiphaseCloud);
+makeParcelPatchInteractionModels(basicReactingMultiphaseCloud);
+makeReactingMultiphaseParcelStochasticCollisionModels
+(
+    basicReactingMultiphaseCloud
+);
+makeReactingParcelSurfaceFilmModels(basicReactingMultiphaseCloud);
 
-    // Thermo sub-models
-    makeParcelHeatTransferModels(basicReactingMultiphaseCloud);
+// Thermo sub-models
+makeParcelHeatTransferModels(basicReactingMultiphaseCloud);
 
-    // Reacting sub-models
-    makeReactingMultiphaseParcelCompositionModels
-    (
-        basicReactingMultiphaseCloud
-    );
-    makeReactingParcelPhaseChangeModels(basicReactingMultiphaseCloud);
+// Reacting sub-models
+makeReactingMultiphaseParcelCompositionModels
+(
+    basicReactingMultiphaseCloud
+);
+makeReactingParcelPhaseChangeModels(basicReactingMultiphaseCloud);
 
-    // Reacting multiphase sub-models
-    makeReactingMultiphaseParcelDevolatilisationModels
-    (
-        basicReactingMultiphaseCloud
-    );
-    makeReactingMultiphaseParcelSurfaceReactionModels
-    (
-        basicReactingMultiphaseCloud
-    );
-}
+// Reacting multiphase sub-models
+makeReactingMultiphaseParcelDevolatilisationModels
+(
+    basicReactingMultiphaseCloud
+);
+makeReactingMultiphaseParcelSurfaceReactionModels
+(
+    basicReactingMultiphaseCloud
+);
 
 
 // ************************************************************************* //

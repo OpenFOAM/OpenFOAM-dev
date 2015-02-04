@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,20 +146,24 @@ public:
 
 #define makePairModel(CloudType)                                              \
                                                                               \
-    defineNamedTemplateTypeNameAndDebug(PairModel<CloudType>, 0);             \
+    defineNamedTemplateTypeNameAndDebug(Foam::PairModel<Foam::CloudType>, 0); \
                                                                               \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        PairModel<CloudType>,                                                 \
-        dictionary                                                            \
-    );
+    namespace Foam                                                            \
+    {                                                                         \
+        defineTemplateRunTimeSelectionTable                                   \
+        (                                                                     \
+            PairModel<Foam::CloudType>,                                       \
+            dictionary                                                        \
+        );                                                                    \
+    }
 
 
 #define makePairModelType(SS, CloudType)                                      \
                                                                               \
-    defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                    \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<Foam::CloudType>, 0);        \
                                                                               \
-    PairModel<CloudType>::adddictionaryConstructorToTable<SS<CloudType> >     \
+    Foam::PairModel<Foam::CloudType>::                                        \
+        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType> >           \
         add##SS##CloudType##ConstructorToTable_;
 
 

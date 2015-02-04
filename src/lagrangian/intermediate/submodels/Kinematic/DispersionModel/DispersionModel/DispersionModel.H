@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,22 +132,26 @@ public:
 
 #define makeDispersionModel(CloudType)                                        \
                                                                               \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
-    defineTemplateTypeNameAndDebug(DispersionModel<kinematicCloudType>, 0);   \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        DispersionModel<kinematicCloudType>,                                  \
-        dictionary                                                            \
-    );
-
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
+    defineTemplateTypeNameAndDebug                                            \
+        (Foam::DispersionModel<kinematicCloudType>, 0);                       \
+                                                                              \
+    namespace Foam                                                            \
+    {                                                                         \
+        defineTemplateRunTimeSelectionTable                                   \
+        (                                                                     \
+            DispersionModel<kinematicCloudType>,                              \
+            dictionary                                                        \
+        );                                                                    \
+    }
 
 #define makeDispersionModelType(SS, CloudType)                                \
                                                                               \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);           \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);     \
                                                                               \
-    DispersionModel<kinematicCloudType>::                                     \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >              \
+    Foam::DispersionModel<kinematicCloudType>::                               \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType> >        \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

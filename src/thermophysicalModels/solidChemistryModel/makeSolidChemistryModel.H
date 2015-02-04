@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,42 +29,35 @@ Description
 #ifndef makeSolidChemistryModel_H
 #define makeSolidChemistryModel_H
 
-#include "addToRunTimeSelectionTable.H"
 #include "solidChemistryModel.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define makeSolidChemistryModel(sChemistry, SS, Comp, SThermo, GThermo)       \
                                                                               \
-    typedef SS<Comp, SThermo, GThermo> SS##Comp##SThermo##GThermo;            \
+    typedef Foam::SS<Foam::Comp, Foam::SThermo, Foam::GThermo>                \
+        SS##Comp##SThermo##GThermo;                                           \
                                                                               \
-    typedef sChemistry<Comp, SThermo> sChemistryl##Comp##SThermo;             \
+    typedef Foam::sChemistry<Foam::Comp, Foam::SThermo>                       \
+        sChemistryl##Comp##SThermo;                                           \
                                                                               \
     defineTemplateTypeNameAndDebugWithName                                    \
     (                                                                         \
         sChemistryl##Comp##SThermo,                                           \
-        (word(sChemistry::typeName_()) + "<"#Comp"," + SThermo::typeName() +  \
-        + ">").c_str(),                                                       \
+        (Foam::word(sChemistryl##Comp##SThermo::typeName_()) + "<"#Comp","    \
+        + SThermo::typeName() + ">").c_str(),                                 \
         0                                                                     \
     );                                                                        \
                                                                               \
     defineTemplateTypeNameAndDebugWithName                                    \
     (                                                                         \
         SS##Comp##SThermo##GThermo,                                           \
-        (word(SS::typeName_()) + "<"#Comp"," + SThermo::typeName() + "," +    \
-        GThermo::typeName() + ">").c_str(),                                   \
+        (Foam::word(SS##Comp##SThermo##GThermo::typeName_()) + "<"#Comp","    \
+        + SThermo::typeName() + "," + GThermo::typeName() + ">").c_str(),     \
         0                                                                     \
     );
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

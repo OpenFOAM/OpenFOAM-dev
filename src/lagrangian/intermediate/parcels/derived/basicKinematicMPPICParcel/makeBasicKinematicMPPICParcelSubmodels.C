@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 
 #include "makeParcelCloudFunctionObjects.H"
 
-// kinematic sub-models
+// Kinematic sub-models
 #include "makeParcelForces.H"
 #include "makeParcelDispersionModels.H"
 #include "makeParcelInjectionModels.H"
@@ -42,23 +42,21 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    makeParcelCloudFunctionObjects(basicKinematicMPPICCloud);
+makeParcelCloudFunctionObjects(basicKinematicMPPICCloud);
 
-    // kinematic sub-models
-    makeParcelForces(basicKinematicMPPICCloud);
-    makeParcelDispersionModels(basicKinematicMPPICCloud);
-    makeParcelInjectionModels(basicKinematicMPPICCloud);
-    makeParcelPatchInteractionModels(basicKinematicMPPICCloud);
-    makeParcelStochasticCollisionModels(basicKinematicMPPICCloud);
-    makeParcelSurfaceFilmModels(basicKinematicMPPICCloud);
+// Kinematic sub-models
+makeParcelForces(basicKinematicMPPICCloud);
 
-    // MPPIC sub-models
-    makeMPPICParcelDampingModels(basicKinematicMPPICCloud);
-    makeMPPICParcelIsotropyModels(basicKinematicMPPICCloud);
-    makeMPPICParcelPackingModels(basicKinematicMPPICCloud);
-}
+makeParcelDispersionModels(basicKinematicMPPICCloud);
+makeParcelInjectionModels(basicKinematicMPPICCloud);
+makeParcelPatchInteractionModels(basicKinematicMPPICCloud);
+makeParcelStochasticCollisionModels(basicKinematicMPPICCloud);
+makeParcelSurfaceFilmModels(basicKinematicMPPICCloud);
+
+// MPPIC sub-models
+makeMPPICParcelDampingModels(basicKinematicMPPICCloud);
+makeMPPICParcelIsotropyModels(basicKinematicMPPICCloud);
+makeMPPICParcelPackingModels(basicKinematicMPPICCloud);
 
 
 // ************************************************************************* //

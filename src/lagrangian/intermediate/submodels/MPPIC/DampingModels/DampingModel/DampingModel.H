@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,26 +137,32 @@ public:
 
 #define makeDampingModel(CloudType)                                            \
                                                                                \
-    typedef CloudType::MPPICCloudType MPPICCloudType;                          \
+    typedef Foam::CloudType::MPPICCloudType MPPICCloudType;                    \
     defineNamedTemplateTypeNameAndDebug                                        \
     (                                                                          \
-        DampingModel<MPPICCloudType>,                                          \
+        Foam::DampingModel<MPPICCloudType>,                                    \
         0                                                                      \
     );                                                                         \
-    defineTemplateRunTimeSelectionTable                                        \
-    (                                                                          \
-        DampingModel<MPPICCloudType>,                                          \
-        dictionary                                                             \
-    );
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            DampingModel<MPPICCloudType>,                                      \
+            dictionary                                                         \
+        );                                                                     \
+    }
 
 
 #define makeDampingModelType(SS, CloudType)                                    \
                                                                                \
-    typedef CloudType::MPPICCloudType MPPICCloudType;                          \
-    defineNamedTemplateTypeNameAndDebug(SS<MPPICCloudType>, 0);                \
+    typedef Foam::CloudType::MPPICCloudType MPPICCloudType;                    \
+    defineNamedTemplateTypeNameAndDebug                                        \
+        (Foam::DampingModels::SS<MPPICCloudType>, 0);                          \
                                                                                \
-    DampingModel<MPPICCloudType>::                                             \
-        adddictionaryConstructorToTable<SS<MPPICCloudType> >                   \
+    Foam::DampingModel<MPPICCloudType>::                                       \
+        adddictionaryConstructorToTable                                        \
+        <Foam::DampingModels::SS<MPPICCloudType> >                             \
             add##SS##CloudType##MPPICCloudType##ConstructorToTable_;
 
 

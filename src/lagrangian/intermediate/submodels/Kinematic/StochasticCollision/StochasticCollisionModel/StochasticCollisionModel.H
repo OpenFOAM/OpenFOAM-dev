@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,28 +131,31 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeStochasticCollisionModel(CloudType)                                         \
-                                                                              \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        StochasticCollisionModel<kinematicCloudType>,                         \
-        0                                                                     \
-    );                                                                        \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        StochasticCollisionModel<kinematicCloudType>,                         \
-        dictionary                                                            \
-    );
+#define makeStochasticCollisionModel(CloudType)                                \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::StochasticCollisionModel<kinematicCloudType>,                    \
+        0                                                                      \
+    );                                                                         \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            StochasticCollisionModel<kinematicCloudType>,                      \
+            dictionary                                                         \
+        );                                                                     \
+    }
 
 
 #define makeStochasticCollisionModelType(SS, CloudType)                       \
                                                                               \
-    typedef CloudType::kinematicCloudType kinematicCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);           \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);     \
                                                                               \
-    StochasticCollisionModel<kinematicCloudType>::                            \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >              \
+    Foam::StochasticCollisionModel<kinematicCloudType>::                      \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType> >        \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 
