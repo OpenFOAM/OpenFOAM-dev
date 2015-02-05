@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -92,12 +92,6 @@ export ParaView_VERSION ParaView_MAJOR
 
 paraviewInstDir=$WM_THIRD_PARTY_DIR/ParaView-$ParaView_VERSION
 paraviewArchName=ParaView-$ParaView_VERSION
-
-# Reset the name of the binary install directory for version 3
-if [ `echo $ParaView_VERSION | sed -e 's/^\([0-9][0-9]*\).*$/\1/'` -eq 3 ]
-then
-    paraviewArchName=paraview-$ParaView_VERSION
-fi
 
 export ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$paraviewArchName
 
