@@ -131,7 +131,7 @@ Foam::Istream& Foam::operator>>(Istream& is, gradingDescriptor& gd)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const gradingDescriptor& gd)
 {
-    if (equal(gd.blockFraction_, 1.0))
+    if (equal(gd.blockFraction_, 1))
     {
         os  << gd.expansionRatio_;
     }
