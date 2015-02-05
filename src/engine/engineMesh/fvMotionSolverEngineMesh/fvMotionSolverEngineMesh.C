@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,18 +46,7 @@ Foam::fvMotionSolverEngineMesh::fvMotionSolverEngineMesh(const IOobject& io)
     motionSolver_
     (
         *this,
-        IOdictionary
-        (
-            IOobject
-            (
-                "dynamicMeshDict",
-                time().constant(),
-                *this,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            engineDB_.engineDict()
-        )
+        engineDB_.engineDict()
     )
 {
     engineDB_.engineDict().readIfPresent("pistonLayers", pistonLayers_);
