@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "volFields.H"
 #include "directFvPatchFieldMapper.H"
 #include "calculatedFvPatchField.H"
+#include "weightedFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -347,8 +348,33 @@ void Foam::meshToMesh::mapSrcToTgt
         label srcPatchI = srcPatchID_[i];
         label tgtPatchI = tgtPatchID_[i];
 
-        const Field<Type>& srcField = field.boundaryField()[srcPatchI];
-        Field<Type>& tgtField = result.boundaryField()[tgtPatchI];
+        const fvPatchField<Type>& srcField = field.boundaryField()[srcPatchI];
+        fvPatchField<Type>& tgtField = result.boundaryField()[tgtPatchI];
+
+        // 2.3 does not do distributed mapping yet so only do if
+        // running on single processor
+        if (AMIList[i].singlePatchProc() != -1)
+        {
+            // Clone and map (since rmap does not do general mapping)
+            tmp<fvPatchField<Type> > tnewTgt
+            (
+                fvPatchField<Type>::New
+                (
+                    srcField,
+                    tgtField.patch(),
+                    result.dimensionedInternalField(),
+                    weightedFvPatchFieldMapper
+                    (
+                        AMIList[i].tgtAddress(),
+                        AMIList[i].tgtWeights()
+                    )
+                )
+            );
+
+            // Transfer all mapped quantities (value and e.g. gradient) onto
+            // tgtField. Value will get overwritten below.
+            tgtField.rmap(tnewTgt(), identity(tgtField.size()));
+        }
 
         tgtField = pTraits<Type>::zero;
 
@@ -511,8 +537,33 @@ void Foam::meshToMesh::mapTgtToSrc
         label srcPatchI = srcPatchID_[i];
         label tgtPatchI = tgtPatchID_[i];
 
-        Field<Type>& srcField = result.boundaryField()[srcPatchI];
-        const Field<Type>& tgtField = field.boundaryField()[tgtPatchI];
+        fvPatchField<Type>& srcField = result.boundaryField()[srcPatchI];
+        const fvPatchField<Type>& tgtField = field.boundaryField()[tgtPatchI];
+
+        // 2.3 does not do distributed mapping yet so only do if
+        // running on single processor
+        if (AMIList[i].singlePatchProc() != -1)
+        {
+            // Clone and map (since rmap does not do general mapping)
+            tmp<fvPatchField<Type> > tnewSrc
+            (
+                fvPatchField<Type>::New
+                (
+                    tgtField,
+                    srcField.patch(),
+                    result.dimensionedInternalField(),
+                    weightedFvPatchFieldMapper
+                    (
+                        AMIList[i].srcAddress(),
+                        AMIList[i].srcWeights()
+                    )
+                )
+            );
+
+            // Transfer all mapped quantities (value and e.g. gradient) onto
+            // srcField. Value will get overwritten below
+            srcField.rmap(tnewSrc(), identity(srcField.size()));
+        }
 
         srcField = pTraits<Type>::zero;
 
