@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::scalar Foam::primitiveMeshTools::faceSkewness
     // Skewness vector
     vector sv =
         Cpf
-      - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + SMALL))*d;
+      - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + VSMALL))*d;
     vector svHat = sv/(mag(sv) + VSMALL);
 
     // Normalisation distance calculated as the approximate distance
@@ -63,6 +63,7 @@ Foam::scalar Foam::primitiveMeshTools::faceSkewness
     // Normalised skewness
     return mag(sv)/fd;
 }
+
 
 Foam::scalar Foam::primitiveMeshTools::boundaryFaceSkewness
 (
@@ -195,6 +196,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceSkewness
 
     return tskew;
 }
+
 
 void Foam::primitiveMeshTools::facePyramidVolume
 (
@@ -440,7 +442,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
                 sumA += mag(n);
             }
 
-            faceFlatness[faceI] = magAreas[faceI] / (sumA+VSMALL);
+            faceFlatness[faceI] = magAreas[faceI]/(sumA + VSMALL);
         }
     }
 
@@ -448,116 +450,6 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
 }
 
 
-//Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::edgeAlignment
-//(
-//    const primitiveMesh& mesh,
-//    const Vector<label>& meshD,
-//    const pointField& p
-//)
-//{
-//    label nDirs = 0;
-//    for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
-//    {
-//        if (meshD[cmpt] == 1)
-//        {
-//            nDirs++;
-//        }
-//        else if (meshD[cmpt] != 0)
-//        {
-//            FatalErrorIn
-//            (
-//                "primitiveMeshTools::edgeAlignment"
-//                "(const primitiveMesh&, const Vector<label>&"
-//                ", const pointField&)"
-//            )   << "directions should contain 0 or 1 but is now " << meshD
-//                << exit(FatalError);
-//        }
-//    }
-//
-//    tmp<scalarField> tedgeAlignment(new scalarField(mesh.nFaces(), 0.0));
-//    scalarField& edgeAlignment = tedgeAlignment();
-//
-//    if (nDirs != vector::nComponents)
-//    {
-//        const faceList& fcs = mesh.faces();
-//
-//        forAll(fcs, faceI)
-//        {
-//            const face& f = fcs[faceI];
-//
-//            forAll(f, fp)
-//            {
-//                label p0 = f[fp];
-//                label p1 = f.nextLabel(fp);
-//                if (p0 < p1)
-//                {
-//                    vector d(p[p1]-p[p0]);
-//                    scalar magD = mag(d);
-//
-//                    if (magD > ROOTVSMALL)
-//                    {
-//                        d /= magD;
-//
-//                        // Check how many empty directions are used by the
-//                        // edge.
-//                        label nEmptyDirs = 0;
-//                        label nNonEmptyDirs = 0;
-//                        for
-//                        (
-//                              direction cmpt=0;
-//                              cmpt<vector::nComponents;
-//                              cmpt++
-//                        )
-//                        {
-//                            if (mag(d[cmpt]) > 1e-6)
-//                            {
-//                                if (meshD[cmpt] == 0)
-//                                {
-//                                    nEmptyDirs++;
-//                                }
-//                                else
-//                                {
-//                                    nNonEmptyDirs++;
-//                                }
-//                            }
-//                        }
-//
-//                        if (nEmptyDirs == 0)
-//                        {
-//                            // Purely in ok directions.
-//                        }
-//                        else if (nEmptyDirs == 1)
-//                        {
-//                            // Ok if purely in empty directions.
-//                            if (nNonEmptyDirs > 0)
-//                            {
-//                                edgeAlignment[faceI] = max
-//                                (
-//                                    edgeAlignment[faceI],
-//                                    1
-//                                );
-//                            }
-//                        }
-//                        else if (nEmptyDirs > 1)
-//                        {
-//                            // Always an error
-//                            edgeAlignment[faceI] = max
-//                            (
-//                                edgeAlignment[faceI],
-//                                2
-//                            );
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    return tedgeAlignment;
-//}
-
-
-// Checks cells with 1 or less internal faces. Give numerical problems.
 Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
 (
     const primitiveMesh& mesh,
@@ -580,8 +472,6 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
             twoD = dir;
         }
     }
-
-
 
     tmp<scalarField> tcellDeterminant(new scalarField(mesh.nCells()));
     scalarField& cellDeterminant = tcellDeterminant();
