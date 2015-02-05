@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,16 +29,13 @@ Description
 #ifndef className_H
 #define className_H
 
-#include "word.H"
-#include "debug.H"
-#include "debugName.H"
+#include "defineDebugSwitch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declarations (without debug information)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 //- Add typeName information from argument \a TypeNameString to a class.
 //  Without debug information
@@ -63,11 +60,9 @@ public:                                                                       \
 }
 
 
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declarations (with debug information)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 //- Add typeName information from argument \a TypeNameString to a class.
 //  Also declares debug information.
@@ -92,11 +87,9 @@ public:                                                                       \
 }
 
 
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // definitions (without debug information)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 //- Define the typeName, with alternative lookup as \a Name
 #define defineTypeNameWithName(Type, Name)                                    \
@@ -133,11 +126,9 @@ public:                                                                       \
     defineTemplateTypeNameWithName(Type, Type::typeName_())
 
 
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // definitions (with debug information)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 //- Define the typeName and debug information
 #define defineTypeNameAndDebug(Type, DebugSwitch)                             \
@@ -170,7 +161,6 @@ public:                                                                       \
 //  with typedefs
 #define defineTemplate2TypeNameAndDebug(Type, DebugSwitch)                    \
     defineTemplate2TypeNameAndDebugWithName(Type, #Type, DebugSwitch)
-
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

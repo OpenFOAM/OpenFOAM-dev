@@ -22,15 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Macro definitions for debug symbols etc.
+    Macro definitions for debug switches.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef debugName_H
-#define debugName_H
+#ifndef defineDebugSwitch_H
+#define defineDebugSwitch_H
 
 #include "simpleRegIOobject.H"
-#include "word.H"
 #include "debug.H"
 #include "label.H"
 
@@ -45,21 +44,21 @@ namespace Foam
 
 //- Define the debug information, lookup as \a Name
 template<class Type>
-class AddToDebug
+class RegisterDebugSwitch
 :
     public ::Foam::simpleRegIOobject
 {
 public:
 
-    //- The unique AddToDebug object
-    static const AddToDebug addToDebug;
+    //- The unique RegisterDebugSwitch object
+    static const RegisterDebugSwitch registerDebugSwitch;
 
-    AddToDebug(const char* name)
+    RegisterDebugSwitch(const char* name)
     :
         ::Foam::simpleRegIOobject(Foam::debug::addDebugObject, name)
     {}
 
-    virtual ~AddToDebug()
+    virtual ~RegisterDebugSwitch()
     {}
 
     virtual void readData(Foam::Istream& is)
@@ -77,7 +76,8 @@ public:
 
 #define registerTemplateDebugSwitchWithName(Type,Name)                        \
     template<>                                                                \
-    const Foam::AddToDebug<Type> Foam::AddToDebug<Type>::addToDebug(Name)
+    const Foam::RegisterDebugSwitch<Type>                                     \
+        Foam::RegisterDebugSwitch<Type>::registerDebugSwitch(Name)
 
 
 //- Define the debug information, lookup as \a Name
@@ -103,56 +103,6 @@ public:
         }                                                                     \
     };                                                                        \
     add##Tag##ToDebug add##Tag##ToDebug_(Name)
-
-
-//- Register info switch (if int), lookup as \a Name
-#define registerInfoSwitchWithName(Switch,Tag,Name)                           \
-    class add##Tag##ToInfo                                                    \
-    :                                                                         \
-        public ::Foam::simpleRegIOobject                                      \
-    {                                                                         \
-    public:                                                                   \
-        add##Tag##ToInfo(const char* name)                                    \
-        :                                                                     \
-            ::Foam::simpleRegIOobject(Foam::debug::addInfoObject, name)       \
-        {}                                                                    \
-        virtual ~add##Tag##ToInfo()                                           \
-        {}                                                                    \
-        virtual void readData(Foam::Istream& is)                              \
-        {                                                                     \
-            Switch = readLabel(is);                                           \
-        }                                                                     \
-        virtual void writeData(Foam::Ostream& os) const                       \
-        {                                                                     \
-            os << Switch;                                                     \
-        }                                                                     \
-    };                                                                        \
-    add##Tag##ToInfo add##Tag##ToInfo_(Name)
-
-
-//- Register optimisation switch (if int), lookup as \a Name
-#define registerOptSwitchWithName(Switch,Tag,Name)                            \
-    class add##Tag##ToOpt                                                     \
-    :                                                                         \
-        public ::Foam::simpleRegIOobject                                      \
-    {                                                                         \
-    public:                                                                   \
-        add##Tag##ToOpt(const char* name)                                     \
-        :                                                                     \
-            ::Foam::simpleRegIOobject(Foam::debug::addOptimisationObject,name)\
-        {}                                                                    \
-        virtual ~add##Tag##ToOpt()                                            \
-        {}                                                                    \
-        virtual void readData(Foam::Istream& is)                              \
-        {                                                                     \
-            Switch = readLabel(is);                                           \
-        }                                                                     \
-        virtual void writeData(Foam::Ostream& os) const                       \
-        {                                                                     \
-            os << Switch;                                                     \
-        }                                                                     \
-    };                                                                        \
-    add##Tag##ToOpt add##Tag##ToOpt_(Name)
 
 
 //- Define the debug information, lookup as \a Name
@@ -194,7 +144,7 @@ public:
     defineTemplateDebugSwitchWithName(Type, Type::typeName_(), DebugSwitch)
 
 
-// for templated sub-classes
+// For templated sub-classes
 
 //- Define the debug information for templates
 //  Useful with typedefs
@@ -204,7 +154,6 @@ public:
 //- Define the debug information directly for templates
 #define defineNamedTemplate2DebugSwitch(Type, DebugSwitch)                    \
     defineTemplate2DebugSwitchWithName(Type, Type::typeName_(), DebugSwitch)
-
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

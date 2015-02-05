@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,6 @@ SourceFiles
 #ifndef simpleObjectRegistry_H
 #define simpleObjectRegistry_H
 
-//#include "UPtrDictionary.H"
 #include "Dictionary.H"
 #include "simpleRegIOobject.H"
 
