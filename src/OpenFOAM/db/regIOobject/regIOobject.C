@@ -26,25 +26,13 @@ License
 #include "regIOobject.H"
 #include "Time.H"
 #include "polyMesh.H"
-#include "registerOptSwitch.H"
+#include "registerSwitch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(regIOobject, 0);
-
-    int regIOobject::fileModificationSkew
-    (
-        debug::optimisationSwitch("fileModificationSkew", 30)
-    );
-    registerOptSwitchWithName
-    (
-        Foam::regIOobject::fileModificationSkew,
-        fileModificationSkew,
-        "fileModificationSkew"
-    );
-
 
     template<>
     const char* NamedEnum
@@ -59,6 +47,17 @@ namespace Foam
         "inotifyMaster"
     };
 }
+
+int Foam::regIOobject::fileModificationSkew
+(
+    Foam::debug::optimisationSwitch("fileModificationSkew", 30)
+);
+registerOptSwitch
+(
+    "fileModificationSkew",
+    int,
+    Foam::regIOobject::fileModificationSkew
+);
 
 
 const Foam::NamedEnum<Foam::regIOobject::fileCheckTypes, 4>

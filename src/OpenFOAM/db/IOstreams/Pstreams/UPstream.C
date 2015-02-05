@@ -25,7 +25,7 @@ License
 
 #include "UPstream.H"
 #include "debug.H"
-#include "registerOptSwitch.H"
+#include "registerSwitch.H"
 #include "dictionary.H"
 #include "IOstreams.H"
 
@@ -424,32 +424,32 @@ Foam::UPstream::communicator serialComm
 // in accuracy
 bool Foam::UPstream::floatTransfer
 (
-    debug::optimisationSwitch("floatTransfer", 0)
+    Foam::debug::optimisationSwitch("floatTransfer", 0)
 );
-registerOptSwitchWithName
+registerOptSwitch
 (
-    Foam::UPstream::floatTransfer,
-    floatTransfer,
-    "floatTransfer"
+    "floatTransfer",
+    bool,
+    Foam::UPstream::floatTransfer
 );
 
 // Number of processors at which the reduce algorithm changes from linear to
 // tree
 int Foam::UPstream::nProcsSimpleSum
 (
-    debug::optimisationSwitch("nProcsSimpleSum", 16)
+    Foam::debug::optimisationSwitch("nProcsSimpleSum", 16)
 );
-registerOptSwitchWithName
+registerOptSwitch
 (
-    Foam::UPstream::nProcsSimpleSum,
-    nProcsSimpleSum,
-    "nProcsSimpleSum"
+    "nProcsSimpleSum",
+    int,
+    Foam::UPstream::nProcsSimpleSum
 );
 
 // Default commsType
 Foam::UPstream::commsTypes Foam::UPstream::defaultCommsType
 (
-    commsTypeNames.read(debug::optimisationSwitches().lookup("commsType"))
+    commsTypeNames.read(Foam::debug::optimisationSwitches().lookup("commsType"))
 );
 // Register re-reader
 class addcommsTypeToOpt
@@ -489,13 +489,14 @@ Foam::label Foam::UPstream::warnComm(-1);
 // Number of polling cycles in processor updates
 int Foam::UPstream::nPollProcInterfaces
 (
-    debug::optimisationSwitch("nPollProcInterfaces", 0)
+    Foam::debug::optimisationSwitch("nPollProcInterfaces", 0)
 );
-registerOptSwitchWithName
+registerOptSwitch
 (
-    Foam::UPstream::nPollProcInterfaces,
-    nPollProcInterfaces,
-    "nPollProcInterfaces"
+    "nPollProcInterfaces",
+    int,
+    Foam::UPstream::nPollProcInterfaces
 );
+
 
 // ************************************************************************* //
