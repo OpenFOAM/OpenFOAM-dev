@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,24 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polynomial.H"
-#include "Time.H"
-#include "addToRunTimeSelectionTable.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    defineTypeNameAndDebug(polynomial, 0);
-    addToRunTimeSelectionTable(scalarDataEntry, polynomial, dictionary);
-}
-
+#include "PolynomialEntry.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polynomial::polynomial(const word& entryName, const dictionary& dict)
+template<class Type>
+Foam::PolynomialEntry<Type>::PolynomialEntry
+(
+    const word& entryName,
+    const dictionary& dict
+)
 :
-    scalarDataEntry(entryName),
+    DataEntry<Type>(entryName),
     coeffs_(),
     canIntegrate_(true),
     dimensions_(dimless)
@@ -61,14 +55,15 @@ Foam::polynomial::polynomial(const word& entryName, const dictionary& dict)
     {
         FatalErrorIn
         (
-            "Foam::polynomial::polynomial(const word&, const dictionary&)"
-        )   << "polynomial coefficients for entry " << this->name_
+            "PolynomialEntry<Type>::"
+            "PolynomialEntry(const word&, const dictionary&)"
+        )   << "PolynomialEntry coefficients for entry " << this->name_
             << " are invalid (empty)" << nl << exit(FatalError);
     }
 
     forAll(coeffs_, i)
     {
-        if (mag(coeffs_[i].second() + 1) < ROOTVSMALL)
+        if (mag(coeffs_[i].second() + pTraits<Type>::one) < ROOTVSMALL)
         {
             canIntegrate_ = false;
             break;
@@ -81,21 +76,23 @@ Foam::polynomial::polynomial(const word& entryName, const dictionary& dict)
         {
             WarningIn
             (
-                "Foam::polynomial::polynomial(const word&, const dictionary&)"
-            )   << "Polynomial " << this->name_ << " cannot be integrated"
+                "PolynomialEntry<Type>::PolynomialEntry"
+                "(const word&, const dictionary&)"
+            )   << "PolynomialEntry " << this->name_ << " cannot be integrated"
                 << endl;
         }
     }
 }
 
 
-Foam::polynomial::polynomial
+template<class Type>
+Foam::PolynomialEntry<Type>::PolynomialEntry
 (
     const word& entryName,
-    const List<Tuple2<scalar, scalar> >& coeffs
+    const List<Tuple2<Type, Type> >& coeffs
 )
 :
-    scalarDataEntry(entryName),
+    DataEntry<Type>(entryName),
     coeffs_(coeffs),
     canIntegrate_(true),
     dimensions_(dimless)
@@ -104,9 +101,9 @@ Foam::polynomial::polynomial
     {
         FatalErrorIn
         (
-            "Foam::polynomial::polynomial"
-            "(const word&, const List<Tuple2<scalar, scalar> >&)"
-        )   << "polynomial coefficients for entry " << this->name_
+            "Foam::PolynomialEntry<Type>::PolynomialEntry"
+            "(const word&, const List<Tuple2<Type, Type> >&)"
+        )   << "PolynomialEntry coefficients for entry " << this->name_
             << " are invalid (empty)" << nl << exit(FatalError);
     }
 
@@ -125,18 +122,19 @@ Foam::polynomial::polynomial
         {
             WarningIn
             (
-                "Foam::polynomial::polynomial"
-                "(const word&, const List<Tuple2<scalar, scalar> >&)"
-            )   << "Polynomial " << this->name_ << " cannot be integrated"
+                "Foam::PolynomialEntry<Type>::PolynomialEntry"
+                "(const word&, const List<Tuple2<Type, Type> >&)"
+            )   << "PolynomialEntry " << this->name_ << " cannot be integrated"
                 << endl;
         }
     }
 }
 
 
-Foam::polynomial::polynomial(const polynomial& poly)
+template<class Type>
+Foam::PolynomialEntry<Type>::PolynomialEntry(const PolynomialEntry& poly)
 :
-    scalarDataEntry(poly),
+    DataEntry<Type>(poly),
     coeffs_(poly.coeffs_),
     canIntegrate_(poly.canIntegrate_),
     dimensions_(poly.dimensions_)
@@ -145,48 +143,76 @@ Foam::polynomial::polynomial(const polynomial& poly)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::polynomial::~polynomial()
+template<class Type>
+Foam::PolynomialEntry<Type>::~PolynomialEntry()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::polynomial::convertTimeBase(const Time& t)
+template<class Type>
+void Foam::PolynomialEntry<Type>::convertTimeBase(const Time& t)
 {
     forAll(coeffs_, i)
     {
-        scalar value = coeffs_[i].first();
-        coeffs_[i].first() = t.userTimeToTime(value);
+        Type value = coeffs_[i].first();
+        for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
+        {
+            setComponent(coeffs_[i].first(), cmpt) =
+                t.userTimeToTime(component(value, cmpt));
+        }
     }
 }
 
 
-Foam::scalar Foam::polynomial::value(const scalar x) const
+template<class Type>
+Type Foam::PolynomialEntry<Type>::value(const scalar x) const
 {
-    scalar y = 0.0;
+    Type y(pTraits<Type>::zero);
     forAll(coeffs_, i)
     {
-        y += coeffs_[i].first()*pow(x, coeffs_[i].second());
+        y += cmptMultiply
+        (
+            coeffs_[i].first(),
+            cmptPow(pTraits<Type>::one*x, coeffs_[i].second())
+        );
     }
 
     return y;
 }
 
 
-Foam::scalar Foam::polynomial::integrate(const scalar x1, const scalar x2) const
+template<class Type>
+Type Foam::PolynomialEntry<Type>::integrate
+(
+    const scalar x1,
+    const scalar x2
+) const
 {
-    scalar intx = 0.0;
+    Type intx(pTraits<Type>::zero);
 
     if (canIntegrate_)
     {
         forAll(coeffs_, i)
         {
-            intx +=
-                coeffs_[i].first()/(coeffs_[i].second() + 1)
-               *(
-                    pow(x2, coeffs_[i].second() + 1)
-                  - pow(x1, coeffs_[i].second() + 1)
-                );
+            intx += cmptMultiply
+            (
+                cmptDivide
+                (
+                    coeffs_[i].first(),
+                    coeffs_[i].second() + pTraits<Type>::one
+                ),
+                cmptPow
+                (
+                    pTraits<Type>::one*x2,
+                    coeffs_[i].second() + pTraits<Type>::one
+                )
+              - cmptPow
+                (
+                    pTraits<Type>::one*x1,
+                    coeffs_[i].second() + pTraits<Type>::one
+                )
+            );
         }
     }
 
@@ -194,28 +220,35 @@ Foam::scalar Foam::polynomial::integrate(const scalar x1, const scalar x2) const
 }
 
 
-Foam::dimensioned<Foam::scalar> Foam::polynomial::dimValue
+template<class Type>
+Foam::dimensioned<Type> Foam::PolynomialEntry<Type>::dimValue
 (
     const scalar x
 ) const
 {
-    return dimensioned<scalar>("dimensionedValue", dimensions_, value(x));
+    return dimensioned<Type>("dimensionedValue", dimensions_, value(x));
 }
 
 
-Foam::dimensioned<Foam::scalar> Foam::polynomial::dimIntegrate
+template<class Type>
+Foam::dimensioned<Type> Foam::PolynomialEntry<Type>::dimIntegrate
 (
     const scalar x1,
     const scalar x2
 ) const
 {
-    return dimensioned<scalar>
+    return dimensioned<Type>
     (
         "dimensionedValue",
         dimensions_,
         integrate(x1, x2)
     );
 }
+
+
+// * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
+
+#include "PolynomialEntryIO.C"
 
 
 // ************************************************************************* //

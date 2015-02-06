@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -342,6 +342,19 @@ inline VectorSpace<Form, Cmpt, nCmpt> cmptMultiply
 {
     Form v;
     VectorSpaceOps<nCmpt,0>::op(v, vs1, vs2, cmptMultiplyOp<Cmpt>());
+    return v;
+}
+
+
+template<class Form, class Cmpt, int nCmpt>
+inline VectorSpace<Form, Cmpt, nCmpt> cmptPow
+(
+    const VectorSpace<Form, Cmpt, nCmpt>& vs1,
+    const VectorSpace<Form, Cmpt, nCmpt>& vs2
+)
+{
+    Form v;
+    VectorSpaceOps<nCmpt,0>::op(v, vs1, vs2, cmptPowOp<Cmpt>());
     return v;
 }
 

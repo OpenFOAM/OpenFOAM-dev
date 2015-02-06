@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "CompatibilityConstant.H"
 #include "Constant.H"
+#include "PolynomialEntry.H"
 #include "CSV.H"
 #include "DataEntry.H"
 #include "Table.H"
@@ -42,13 +43,15 @@ namespace Foam
     makeDataEntry(label);
     makeDataEntryType(CompatibilityConstant, label);
     makeDataEntryType(Constant, label);
-//    makeDataEntryType(CSV, label);
+    //makeDataEntryType(PolynomialEntry, label);
+    makeDataEntryType(CSV, label);
     makeDataEntryType(Table, label);
     makeDataEntryType(TableFile, label);
 
     makeDataEntry(scalar);
     makeDataEntryType(CompatibilityConstant, scalar);
     makeDataEntryType(Constant, scalar);
+    makeDataEntryType(PolynomialEntry, scalar);
     makeDataEntryType(CSV, scalar);
     makeDataEntryType(Table, scalar);
     makeDataEntryType(TableFile, scalar);
@@ -56,6 +59,7 @@ namespace Foam
     makeDataEntry(vector);
     makeDataEntryType(CompatibilityConstant, vector);
     makeDataEntryType(Constant, vector);
+    makeDataEntryType(PolynomialEntry, vector);
     makeDataEntryType(CSV, vector);
     makeDataEntryType(Table, vector);
     makeDataEntryType(TableFile, vector);
@@ -63,6 +67,7 @@ namespace Foam
     makeDataEntry(sphericalTensor);
     makeDataEntryType(CompatibilityConstant, sphericalTensor);
     makeDataEntryType(Constant, sphericalTensor);
+    makeDataEntryType(PolynomialEntry, sphericalTensor);
     makeDataEntryType(CSV, sphericalTensor);
     makeDataEntryType(Table, sphericalTensor);
     makeDataEntryType(TableFile, sphericalTensor);
@@ -70,6 +75,7 @@ namespace Foam
     makeDataEntry(symmTensor);
     makeDataEntryType(CompatibilityConstant, symmTensor);
     makeDataEntryType(Constant, symmTensor);
+    makeDataEntryType(PolynomialEntry, symmTensor);
     makeDataEntryType(CSV, symmTensor);
     makeDataEntryType(Table, symmTensor);
     makeDataEntryType(TableFile, symmTensor);
@@ -77,6 +83,7 @@ namespace Foam
     makeDataEntry(tensor);
     makeDataEntryType(CompatibilityConstant, tensor);
     makeDataEntryType(Constant, tensor);
+    makeDataEntryType(PolynomialEntry, tensor);
     makeDataEntryType(CSV, tensor);
     makeDataEntryType(Table, tensor);
     makeDataEntryType(TableFile, tensor);

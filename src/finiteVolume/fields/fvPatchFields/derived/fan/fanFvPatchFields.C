@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "Tuple2.H"
-#include "polynomial.H"
+#include "PolynomialEntry.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -107,7 +107,7 @@ Foam::fanFvPatchField<Foam::scalar>::fanFvPatchField
 
             this->jumpTable_.reset
             (
-                new polynomial("jumpTable", coeffs)
+                new PolynomialEntry<scalar>("jumpTable", coeffs)
             );
         }
         else

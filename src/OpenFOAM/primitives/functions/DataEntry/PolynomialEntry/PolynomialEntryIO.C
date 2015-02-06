@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,24 +23,25 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polynomial.H"
+#include "PolynomialEntry.H"
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
+template<class Type>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const polynomial& poly
+    const PolynomialEntry<Type>& poly
 )
 {
     if (os.format() == IOstream::ASCII)
     {
-        os  << static_cast<const DataEntry<scalar>& >(poly)
+        os  << static_cast<const DataEntry<Type>& >(poly)
             << token::SPACE << poly.coeffs_;
     }
     else
     {
-        os  << static_cast<const DataEntry<scalar>& >(poly);
+        os  << static_cast<const DataEntry<Type>& >(poly);
         os.write
         (
             reinterpret_cast<const char*>(&poly.coeffs_),
@@ -51,16 +52,17 @@ Foam::Ostream& Foam::operator<<
     // Check state of Ostream
     os.check
     (
-        "Ostream& operator<<(Ostream&, const polynomial&)"
+        "Ostream& operator<<(Ostream&, const PolynomialEntry&)"
     );
 
     return os;
 }
 
 
-void Foam::polynomial::writeData(Ostream& os) const
+template<class Type>
+void Foam::PolynomialEntry<Type>::writeData(Ostream& os) const
 {
-    DataEntry<scalar>::writeData(os);
+    DataEntry<Type>::writeData(os);
 
     os  << nl << indent << coeffs_ << token::END_STATEMENT << nl;
 }

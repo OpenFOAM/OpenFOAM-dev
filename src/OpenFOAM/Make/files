@@ -73,8 +73,6 @@ primitives/triad/triad.C
 
 /* functions, data entries */
 primitives/functions/DataEntry/makeDataEntries.C
-primitives/functions/DataEntry/polynomial/polynomial.C
-primitives/functions/DataEntry/polynomial/polynomialIO.C
 
 primitives/functions/Polynomial/polynomialFunction.C
 

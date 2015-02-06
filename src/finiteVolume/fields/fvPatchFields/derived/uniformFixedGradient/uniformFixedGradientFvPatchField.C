@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "uniformFixedGradientFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
+Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -45,7 +40,7 @@ uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 
 
 template<class Type>
-uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
+Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -58,7 +53,7 @@ uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 
 
 template<class Type>
-uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
+Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 (
     const uniformFixedGradientFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -76,7 +71,7 @@ uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 
 
 template<class Type>
-uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
+Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -99,7 +94,7 @@ uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 
 
 template<class Type>
-uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
+Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 (
     const uniformFixedGradientFvPatchField<Type>& ptf
 )
@@ -115,7 +110,7 @@ uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 
 
 template<class Type>
-uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
+Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 (
     const uniformFixedGradientFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -142,7 +137,7 @@ uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void uniformFixedGradientFvPatchField<Type>::updateCoeffs()
+void Foam::uniformFixedGradientFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -157,16 +152,12 @@ void uniformFixedGradientFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void uniformFixedGradientFvPatchField<Type>::write(Ostream& os) const
+void Foam::uniformFixedGradientFvPatchField<Type>::write(Ostream& os) const
 {
     fixedGradientFvPatchField<Type>::write(os);
     uniformGradient_->writeData(os);
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,20 @@ License
 
 namespace Foam
 {
-    // doesn't recognize specialization otherwise
+    template<>
+    label CSV<label>::readValue(const List<string>& splitted)
+    {
+        if (componentColumns_[0] >= splitted.size())
+        {
+            FatalErrorIn("CSV<label>::readValue(const List<string>&)")
+                << "No column " << componentColumns_[0] << " in "
+                << splitted << endl
+                << exit(FatalError);
+        }
+
+        return readLabel(IStringStream(splitted[componentColumns_[0]])());
+    }
+
     template<>
     scalar CSV<scalar>::readValue(const List<string>& splitted)
     {

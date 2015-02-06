@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,6 +223,12 @@ inline Scalar dot(const Scalar s1, const Scalar s2)
 inline Scalar cmptMultiply(const Scalar s1, const Scalar s2)
 {
     return s1*s2;
+}
+
+
+inline Scalar cmptPow(const Scalar s1, const Scalar s2)
+{
+    return pow(s1, s2);
 }
 
 

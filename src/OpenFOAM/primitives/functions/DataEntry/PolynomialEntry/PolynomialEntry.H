@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,15 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::polynomial
+    Foam::PolynomialEntry
 
 Description
-    Polynomial container data entry for scalars. Items are stored in a list of
-    Tuple2's. Data is input in the form, e.g. for an entry \<entryName\> that
-    describes y = x^2 + 2x^3
+    PolynomialEntry container data entry for scalars. Items are stored in a
+    list of Tuple2's. Data is input in the form,
+    e.g. for an entry \<entryName\> that describes y = x^2 + 2x^3
 
     \verbatim
-        <entryName>   polynomial  [0 0 1 0 0] // optional dimensions
+        <entryName>  polynomial  [0 0 1 0 0] // optional dimensions
         (
             (1    2)
             (2    3)
@@ -38,12 +38,12 @@ Description
     \endverbatim
 
 SourceFiles
-    polynomial.C
+    PolynomialEntry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef polynomial_H
-#define polynomial_H
+#ifndef PolynomialEntry_H
+#define PolynomialEntry_H
 
 #include "DataEntry.H"
 #include "Tuple2.H"
@@ -56,27 +56,27 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class polynomial;
+
+template<class Type>
+class PolynomialEntry;
 
 // Forward declaration of friend functions
-Ostream& operator<<
-(
-    Ostream&,
-    const polynomial&
-);
+template<class Type>
+Ostream& operator<<(Ostream&, const PolynomialEntry<Type>&);
 
 /*---------------------------------------------------------------------------*\
-                        Class polynomial Declaration
+                        Class PolynomialEntry Declaration
 \*---------------------------------------------------------------------------*/
 
-class polynomial
+template<class Type>
+class PolynomialEntry
 :
-    public scalarDataEntry
+    public DataEntry<Type>
 {
     // Private data
 
-        //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<scalar, scalar> > coeffs_;
+        //- PolynomialEntry coefficients - list of prefactor, exponent
+        List<Tuple2<Type, Type> > coeffs_;
 
         //- Flag to indicate whether poly can be integrated
         bool canIntegrate_;
@@ -88,7 +88,7 @@ class polynomial
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const polynomial&);
+        void operator=(const PolynomialEntry<Type>&);
 
 
 public:
@@ -99,23 +99,27 @@ public:
 
     // Constructors
 
-        polynomial(const word& entryName, const dictionary& dict);
+        PolynomialEntry(const word& entryName, const dictionary& dict);
 
         //- Construct from components
-        polynomial(const word& entryName, const List<Tuple2<scalar, scalar> >&);
+        PolynomialEntry
+        (
+            const word& entryName,
+            const List<Tuple2<Type, Type> >&
+        );
 
         //- Copy constructor
-        polynomial(const polynomial& poly);
+        PolynomialEntry(const PolynomialEntry& poly);
 
         //- Construct and return a clone
-        virtual tmp<scalarDataEntry> clone() const
+        virtual tmp<DataEntry<Type> > clone() const
         {
-            return tmp<scalarDataEntry>(new polynomial(*this));
+            return tmp<DataEntry<Type> >(new PolynomialEntry(*this));
         }
 
 
     //- Destructor
-    virtual ~polynomial();
+    virtual ~PolynomialEntry();
 
 
     // Member Functions
@@ -128,17 +132,17 @@ public:
 
         // Evaluation
 
-            //- Return polynomial value
-            scalar value(const scalar x) const;
+            //- Return PolynomialEntry value
+            Type value(const scalar x) const;
 
             //- Integrate between two (scalar) values
-            scalar integrate(const scalar x1, const scalar x2) const;
+            Type integrate(const scalar x1, const scalar x2) const;
 
             //- Return dimensioned constant value
-            dimensioned<scalar> dimValue(const scalar) const;
+            dimensioned<Type> dimValue(const scalar) const;
 
             //- Integrate between two values and return dimensioned type
-            dimensioned<scalar> dimIntegrate
+            dimensioned<Type> dimIntegrate
             (
                 const scalar x1,
                 const scalar x2
@@ -148,10 +152,10 @@ public:
     // I/O
 
         //- Ostream Operator
-        friend Ostream& operator<<
+        friend Ostream& operator<< <Type>
         (
             Ostream& os,
-            const polynomial& cnst
+            const PolynomialEntry<Type>& cnst
         );
 
         //- Write in dictionary format
@@ -162,6 +166,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#   include "PolynomialEntry.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
