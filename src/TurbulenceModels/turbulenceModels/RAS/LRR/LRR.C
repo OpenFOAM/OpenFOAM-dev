@@ -278,8 +278,8 @@ void LRR<BasicTurbulenceModel>::correct()
     bound(epsilon_, this->epsilonMin_);
 
 
-    // Reynolds stress equation
-
+    // Correct the trace of the tensorial production to be consistent
+    // with the near-wall generation from the wall-functions
     const fvPatchList& patches = this->mesh_.boundary();
 
     forAll(patches, patchi)
@@ -300,7 +300,7 @@ void LRR<BasicTurbulenceModel>::correct()
         }
     }
 
-
+    // Reynolds stress equation
     tmp<fvSymmTensorMatrix> REqn
     (
         fvm::ddt(alpha, rho, R)
