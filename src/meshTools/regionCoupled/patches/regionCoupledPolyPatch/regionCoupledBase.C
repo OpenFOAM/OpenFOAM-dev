@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -337,7 +337,7 @@ void Foam::regionCoupledBase::write(Ostream& os) const
 {
     os.writeKeyword("neighbourPatch") << nbrPatchName_
     << token::END_STATEMENT << nl;
-    os.writeKeyword("nbrRegionName") << nbrRegionName_
+    os.writeKeyword("neighbourRegion") << nbrRegionName_
     << token::END_STATEMENT << nl;
 
     if (AMIReverse_)
