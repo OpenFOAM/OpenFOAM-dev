@@ -76,6 +76,9 @@ makeRASModel(v2f);
 #include "LRR.H"
 makeRASModel(LRR);
 
+#include "SSG.H"
+makeRASModel(SSG);
+
 
 #include "Smagorinsky.H"
 makeLESModel(Smagorinsky);
