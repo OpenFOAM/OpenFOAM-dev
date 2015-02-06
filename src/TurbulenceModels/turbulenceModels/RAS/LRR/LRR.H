@@ -25,7 +25,7 @@ Class
     Foam::RASModels::LRR
 
 Group
-    grpIcoRASTurbulence
+    grpRASTurbulence
 
 Description
     Launder, Reece and Rodi Reynolds-stress turbulence model for

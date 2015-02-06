@@ -224,6 +224,11 @@ bool LRR<BasicTurbulenceModel>::read()
         Cs_.readIfPresent(this->coeffDict());
         Ceps_.readIfPresent(this->coeffDict());
 
+        wallReflection_.readIfPresent("wallReflection", this->coeffDict());
+        kappa_.readIfPresent(this->coeffDict());
+        Cref1_.readIfPresent(this->coeffDict());
+        Cref2_.readIfPresent(this->coeffDict());
+
         return true;
     }
     else
