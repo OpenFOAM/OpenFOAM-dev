@@ -46,17 +46,31 @@ Description
         Physics of Fluids (1958-1988), 13(11), 2634-2649.
     \endverbatim
 
+    Optional Gibson-Launder wall-reflection is also provided:
+    \verbatim
+        Gibson, M. M., & Launder, B. E. (1978).
+        Ground effects on pressure fluctuations in the
+        atmospheric boundary layer.
+        Journal of Fluid Mechanics, 86(03), 491-511.
+    \endverbatim
+
     The default model coefficients are:
     \verbatim
         LRRCoeffs
         {
-            Cmu         0.09;
-            Clrr1       1.8;
-            Clrr2       0.6;
-            C1          1.44;
-            C2          1.92;
-            Cs          0.25;
-            Ceps        0.15;
+            Cmu             0.09;
+            C1              1.8;
+            C2              0.6;
+            Ceps1           1.44;
+            Ceps2           1.92;
+            Cs              0.25;
+            Ceps            0.15;
+
+            wallReflection  yes;
+            kappa           0.41
+            Cref1           0.5;
+            Cref2           0.3;
+
             couplingFactor  0.0;
         }
     \endverbatim
@@ -103,13 +117,21 @@ protected:
 
             dimensionedScalar Cmu_;
 
-            dimensionedScalar Clrr1_;
-            dimensionedScalar Clrr2_;
-
             dimensionedScalar C1_;
             dimensionedScalar C2_;
+
+            dimensionedScalar Ceps1_;
+            dimensionedScalar Ceps2_;
             dimensionedScalar Cs_;
             dimensionedScalar Ceps_;
+
+
+        // Wall-refection coefficients
+
+            Switch wallReflection_;
+            dimensionedScalar kappa_;
+            dimensionedScalar Cref1_;
+            dimensionedScalar Cref2_;
 
 
         // Fields

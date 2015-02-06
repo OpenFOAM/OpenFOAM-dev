@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LRR.H"
+#include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,31 +81,13 @@ LRR<BasicTurbulenceModel>::LRR
             0.09
         )
     ),
-    Clrr1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Clrr1",
-            this->coeffDict_,
-            1.8
-        )
-    ),
-    Clrr2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Clrr2",
-            this->coeffDict_,
-            0.6
-        )
-    ),
     C1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
             "C1",
             this->coeffDict_,
-            1.44
+            1.8
         )
     ),
     C2_
@@ -112,6 +95,24 @@ LRR<BasicTurbulenceModel>::LRR
         dimensioned<scalar>::lookupOrAddToDict
         (
             "C2",
+            this->coeffDict_,
+            0.6
+        )
+    ),
+    Ceps1_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Ceps1",
+            this->coeffDict_,
+            1.44
+        )
+    ),
+    Ceps2_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Ceps2",
             this->coeffDict_,
             1.92
         )
@@ -132,6 +133,43 @@ LRR<BasicTurbulenceModel>::LRR
             "Ceps",
             this->coeffDict_,
             0.15
+        )
+    ),
+
+    wallReflection_
+    (
+        Switch::lookupOrAddToDict
+        (
+            "wallReflection",
+            this->coeffDict_,
+            true
+        )
+    ),
+    kappa_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "kappa",
+            this->coeffDict_,
+            0.41
+        )
+    ),
+    Cref1_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Cref1",
+            this->coeffDict_,
+            0.5
+        )
+    ),
+    Cref2_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Cref2",
+            this->coeffDict_,
+            0.3
         )
     ),
 
@@ -179,10 +217,10 @@ bool LRR<BasicTurbulenceModel>::read()
     if (ReynoldsStress<RASModel<BasicTurbulenceModel> >::read())
     {
         Cmu_.readIfPresent(this->coeffDict());
-        Clrr1_.readIfPresent(this->coeffDict());
-        Clrr2_.readIfPresent(this->coeffDict());
         C1_.readIfPresent(this->coeffDict());
         C2_.readIfPresent(this->coeffDict());
+        Ceps1_.readIfPresent(this->coeffDict());
+        Ceps2_.readIfPresent(this->coeffDict());
         Cs_.readIfPresent(this->coeffDict());
         Ceps_.readIfPresent(this->coeffDict());
 
@@ -228,8 +266,8 @@ void LRR<BasicTurbulenceModel>::correct()
       + fvm::div(alphaRhoPhi, epsilon_)
       - fvm::laplacian(Ceps_*alpha*rho*(k_/epsilon_)*R, epsilon_)
      ==
-        C1_*alpha*rho*G*epsilon_/k_
-      - fvm::Sp(C2_*alpha*rho*epsilon_/k_, epsilon_)
+        Ceps1_*alpha*rho*G*epsilon_/k_
+      - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
     );
 
     epsEqn().relax();
@@ -268,12 +306,28 @@ void LRR<BasicTurbulenceModel>::correct()
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
       - fvm::laplacian(Cs_*alpha*rho*(k_/epsilon_)*R, R)
-      + fvm::Sp(Clrr1_*alpha*rho*epsilon_/k_, R)
+      + fvm::Sp(C1_*alpha*rho*epsilon_/k_, R)
       ==
         alpha*rho*P
-      - (2.0/3.0*(1 - Clrr1_)*I)*alpha*rho*epsilon_
-      - Clrr2_*alpha*rho*dev(P)
+      - (2.0/3.0*(1 - C1_)*I)*alpha*rho*epsilon_
+      - C2_*alpha*rho*dev(P)
     );
+
+    // Optionally add wall-refection term
+    if (wallReflection_)
+    {
+        const volVectorField& n_(wallDist::New(this->mesh_).n());
+        const volScalarField& y_(wallDist::New(this->mesh_).y());
+
+        const volSymmTensorField reflect
+        (
+            Cref1_*R - ((Cref2_*C2_)*(k_/epsilon_))*dev(P)
+        );
+
+        REqn() +=
+            ((3*pow(Cmu_, 0.75)/kappa_)*(alpha*rho*sqrt(k_)/y_))
+           *dev(symm((n_ & reflect)*n_));
+    }
 
     REqn().relax();
     solve(REqn);
