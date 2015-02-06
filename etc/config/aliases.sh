@@ -38,6 +38,9 @@ alias wm32='wmSET WM_ARCH_OPTION=32'
 alias wmSP='wmSET WM_PRECISION_OPTION=SP'
 alias wmDP='wmSET WM_PRECISION_OPTION=DP'
 
+# refresh the environment
+alias wmREFRESH='wmSET $FOAM_SETTINGS'
+
 # clear env
 alias wmUNSET='. $WM_PROJECT_DIR/etc/config/unset.sh'
 

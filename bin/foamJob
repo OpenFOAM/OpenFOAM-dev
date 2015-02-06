@@ -40,6 +40,7 @@ options:
   -case <dir>       specify alternative case directory, default is the cwd
   -parallel         parallel run of processors
   -screen           also sends output to screen
+  -wait             wait for execution to complete (when not using -screen)
   -version <ver>    specify an alternative OpenFOAM version
   -help             print the usage
 
@@ -108,7 +109,7 @@ findExec() {
 
 # MAIN SCRIPT
 #~~~~~~~~~~~~
-unset parallelOpt screenOpt
+unset parallelOpt screenOpt waitOpt
 
 
 # parse options
@@ -129,6 +130,10 @@ do
       ;;
    -s | -screen)
       screenOpt=true
+      shift
+      ;;
+   -w | -wait)
+      waitOpt=true
       shift
       ;;
    -v | -version)
@@ -231,6 +236,13 @@ then
                 break
             fi
         done
+
+        #
+        # Send FOAM_SETTINGS to parallel processes, so that the proper
+        # definitions are sent as well.
+        #
+        mpiopts="$mpiopts -x FOAM_SETTINGS"
+
         ;;
     esac
 
@@ -244,6 +256,12 @@ then
     else
         echo "Executing: $mpirun $mpiopts $APPLICATION $(echoArgs "$@") -parallel > log 2>&1"
         $mpirun $mpiopts $APPLICATION "$@" -parallel > log 2>&1 &
+
+        pid=$!
+        if [ "$waitOpt" = true ]
+        then
+            wait $pid
+        fi
     fi
 
 else
@@ -258,6 +276,12 @@ else
     else
         echo "Executing: $APPLICATION $(echoArgs "$@") > log 2>&1 &"
         $APPLICATION "$@" > log 2>&1 &
+
+        pid=$!
+        if [ "$waitOpt" = true ]
+        then
+            wait $pid
+        fi
     fi
 fi
 
