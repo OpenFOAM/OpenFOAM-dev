@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    FoamFoam::atmBoundaryLayer
+    Foam::atmBoundaryLayer
 
 Group
     grpRASBoundaryConditions grpInletBoundaryConditions

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    FoamFoam::atmBoundaryLayerInletEpsilonFvPatchScalarField
+    Foam::atmBoundaryLayerInletEpsilonFvPatchScalarField
 
 Group
     grpRASBoundaryConditions grpInletBoundaryConditions
@@ -31,7 +31,7 @@ Description
     This boundary condition specifies an inlet value for the turbulence
     dissipation, \f$\epsilon\f$, appropriate for atmospheric boundary layers.
 
-    See FoamFoam::atmBoundaryLayer for details.
+    See Foam::atmBoundaryLayer for details.
 
     Example of the boundary condition specification:
     \verbatim
@@ -47,9 +47,9 @@ Description
     \endverbatim
 
 SeeAlso
-    FoamFoam::atmBoundaryLayer,
-    FoamFoam::atmBoundaryLayerInletVelocityFvPatchVectorField,
-    FoamFoam::atmBoundaryLayerInletKFvPatchScalarField
+    Foam::atmBoundaryLayer,
+    Foam::atmBoundaryLayerInletVelocityFvPatchVectorField,
+    Foam::atmBoundaryLayerInletKFvPatchScalarField
 
 SourceFiles
     atmBoundaryLayerInletEpsilonFvPatchScalarField.C

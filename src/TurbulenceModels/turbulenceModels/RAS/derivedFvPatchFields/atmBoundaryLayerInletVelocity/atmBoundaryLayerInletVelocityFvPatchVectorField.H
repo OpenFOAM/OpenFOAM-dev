@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    FoamFoam::atmBoundaryLayerInletVelocityFvPatchVectorField
+    Foam::atmBoundaryLayerInletVelocityFvPatchVectorField
 
 Group
     grpRASBoundaryConditions grpInletBoundaryConditions
@@ -31,7 +31,7 @@ Description
     This boundary condition specifies a velocity inlet profile appropriate
     for atmospheric boundary layers (ABL).
 
-    See FoamFoam::atmBoundaryLayer for details.
+    See Foam::atmBoundaryLayer for details.
 
     Example of the boundary condition specification:
     \verbatim
@@ -48,9 +48,9 @@ Description
     \endverbatim
 
 SeeAlso
-    FoamFoam::atmBoundaryLayer,
-    FoamFoam::atmBoundaryLayerInletKFvPatchScalarField,
-    FoamFoam::atmBoundaryLayerInletEpsilonFvPatchScalarField
+    Foam::atmBoundaryLayer,
+    Foam::atmBoundaryLayerInletKFvPatchScalarField,
+    Foam::atmBoundaryLayerInletEpsilonFvPatchScalarField
 
 SourceFiles
     atmBoundaryLayerInletVelocityFvPatchVectorField.C
