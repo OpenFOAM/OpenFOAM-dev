@@ -72,11 +72,12 @@ int main(int argc, char *argv[])
 
     #include "createTime.H"
     #include "createMesh.H"
+
+    simpleControl simple(mesh);
+
     #include "createFields.H"
     #include "initContinuityErrs.H"
     #include "initAdjointContinuityErrs.H"
-
-    simpleControl simple(mesh);
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

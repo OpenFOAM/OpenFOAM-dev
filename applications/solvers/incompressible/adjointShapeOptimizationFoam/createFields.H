@@ -31,7 +31,7 @@
 
     label pRefCell = 0;
     scalar pRefValue = 0.0;
-    setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
+    setRefCell(p, simple.dict(), pRefCell, pRefValue);
 
 
     Info<< "Reading field pa\n" << endl;
@@ -70,7 +70,7 @@
     setRefCell
     (
         pa,
-        mesh.solutionDict().subDict("SIMPLE"),
+        simple.dict(),
         paRefCell,
         paRefValue
     );

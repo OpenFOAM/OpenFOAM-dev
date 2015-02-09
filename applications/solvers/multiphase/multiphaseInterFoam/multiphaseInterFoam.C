@@ -46,12 +46,12 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-    #include "initContinuityErrs.H"
-    #include "createFields.H"
-    #include "readTimeControls.H"
 
     pimpleControl pimple(mesh);
 
+    #include "initContinuityErrs.H"
+    #include "createFields.H"
+    #include "readTimeControls.H"
     #include "createPrghCorrTypes.H"
     #include "correctPhi.H"
     #include "CourantNo.H"

@@ -46,14 +46,15 @@ int main(int argc, char *argv[])
 
     #include "createTime.H"
     #include "createMesh.H"
+
+    pimpleControl pimple(mesh);
+
     #include "readThermodynamicProperties.H"
     #include "readControls.H"
     #include "createFields.H"
     #include "initContinuityErrs.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
-
-    pimpleControl pimple(mesh);
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

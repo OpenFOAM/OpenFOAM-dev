@@ -60,7 +60,7 @@
     (
         "rhoMax",
         dimDensity,
-        mesh.solutionDict().subDict("PIMPLE")
+        pimple.dict()
        .lookupOrDefault<scalar>("rhoMax", GREAT)
     );
 
@@ -68,7 +68,7 @@
     (
         "rhoMin",
         dimDensity,
-        mesh.solutionDict().subDict("PIMPLE")
+        pimple.dict()
        .lookupOrDefault<scalar>("rhoMin", -GREAT)
     );
 

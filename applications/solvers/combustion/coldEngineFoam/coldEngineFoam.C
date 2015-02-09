@@ -46,6 +46,9 @@ int main(int argc, char *argv[])
 
     #include "createEngineTime.H"
     #include "createEngineMesh.H"
+
+    pimpleControl pimple(mesh);
+
     #include "createFields.H"
     #include "createFvOptions.H"
     #include "createRhoUf.H"
@@ -54,8 +57,6 @@ int main(int argc, char *argv[])
     #include "compressibleCourantNo.H"
     #include "setInitialDeltaT.H"
     #include "startSummary.H"
-
-    pimpleControl pimple(mesh);
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

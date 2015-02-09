@@ -77,7 +77,7 @@
     (
         p,
         p_rgh,
-        mesh.solutionDict().subDict("SIMPLE"),
+        simple.dict(),
         pRefCell,
         pRefValue
     );

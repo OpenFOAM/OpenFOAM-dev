@@ -77,7 +77,7 @@
     (
         p,
         p_rgh,
-        mesh.solutionDict().subDict("PIMPLE"),
+        pimple.dict(),
         pRefCell,
         pRefValue
     );

@@ -42,11 +42,12 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
+
+    simpleControl simple(mesh);
+
     #include "createFields.H"
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
-
-    simpleControl simple(mesh);
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
