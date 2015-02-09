@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,9 +30,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Specialist version of face comparison to deal with
-// PROSTAR boundary format idiosyncracies
-bool sammMesh::sammEqualFace
+bool Foam::sammMesh::sammEqualFace
 (
     const face& boundaryFace,
     const face& cellFace
@@ -70,7 +68,7 @@ bool sammMesh::sammEqualFace
 }
 
 
-void sammMesh::createBoundaryFaces()
+void Foam::sammMesh::createBoundaryFaces()
 {
     forAll(boundary_, patchI)
     {

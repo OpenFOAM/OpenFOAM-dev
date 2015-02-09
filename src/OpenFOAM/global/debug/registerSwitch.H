@@ -21,6 +21,9 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::RegisterSwitch
+
 Description
     Class and registration macros for InfoSwitches and OptimisationSwitches
     to support reading from system/controlDict and dynamic update.
@@ -34,10 +37,17 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
+/*---------------------------------------------------------------------------*\
+                         Class RegisterSwitch Declaration
+\*---------------------------------------------------------------------------*/
+
 template<class Type>
 class RegisterSwitch
 :
-    public ::Foam::simpleRegIOobject
+    public simpleRegIOobject
 {
     Type& optSwitch_;
 
@@ -50,7 +60,7 @@ public:
         Type& optSwitch
     )
     :
-        ::Foam::simpleRegIOobject(registryFn, name),
+        simpleRegIOobject(registryFn, name),
         optSwitch_(optSwitch)
     {}
 
@@ -69,17 +79,23 @@ public:
 };
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 #define CONCAT(x, y) x ## y
 #define CONCAT2(x, y) CONCAT(x, y)
 #define FILE_UNIQUE(x) CONCAT2(x, __LINE__)
 
 #define registerOptSwitch(Name, Type, Switch)                                  \
-    static RegisterSwitch<Type> FILE_UNIQUE(_addToOpt_)                        \
+    static Foam::RegisterSwitch<Type> FILE_UNIQUE(_addToOpt_)                  \
         (Foam::debug::addOptimisationObject, Name, Switch)
 
 
 #define registerInfoSwitch(Name, Type, Switch)                                 \
-    static RegisterSwitch<Type> FILE_UNIQUE(_addToOpt_)                        \
+    static Foam::RegisterSwitch<Type> FILE_UNIQUE(_addToOpt_)                  \
         (Foam::debug::addInfoObject, Name, Switch)
 
 

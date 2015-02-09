@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    COxidationIntrinsicRate
+    Foam::COxidationIntrinsicRate
 
 Description
     Intrinsic char surface reaction mndel
@@ -40,12 +40,15 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 // Forward class declarations
 template<class CloudType>
 class COxidationIntrinsicRate;
 
-namespace Foam
-{
 /*---------------------------------------------------------------------------*\
                    Class COxidationIntrinsicRate Declaration
 \*---------------------------------------------------------------------------*/

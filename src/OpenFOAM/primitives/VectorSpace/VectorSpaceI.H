@@ -25,7 +25,7 @@ License
 
 #include "error.H"
 #include "products.H"
-#include "VectorSpaceM.H"
+#include "VectorSpaceOps.H"
 #include "ops.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

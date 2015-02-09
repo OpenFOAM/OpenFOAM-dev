@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,10 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-
-    Foam::
-    compressible::
-    filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
+    Foam::compressible::
+        filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
 
 Description
     Mixed boundary condition for temperature, to be used in the flow and

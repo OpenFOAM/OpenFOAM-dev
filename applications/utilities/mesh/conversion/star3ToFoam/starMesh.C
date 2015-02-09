@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,33 +31,41 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 // Merge tolerances
-// Moni, tolerances:
-const scalar starMesh::smallMergeTol_ = 1e-3;
-const scalar starMesh::cpMergePointTol_ = 1e-4;
-
-// const scalar starMesh::smallMergeTol_ = 4e-4;
-// const scalar starMesh::cpMergePointTol_ = 1e-3;
+const Foam::scalar Foam::starMesh::smallMergeTol_ = 1e-3;
+const Foam::scalar Foam::starMesh::cpMergePointTol_ = 1e-4;
 
 // Cell shape models
-const cellModel* starMesh::unknownPtr_ = cellModeller::lookup("unknown");
-const cellModel* starMesh::tetPtr_ = cellModeller::lookup("tet");
-const cellModel* starMesh::pyrPtr_ = cellModeller::lookup("pyr");
-const cellModel* starMesh::tetWedgePtr_ = cellModeller::lookup("tetWedge");
-const cellModel* starMesh::prismPtr_ = cellModeller::lookup("prism");
-const cellModel* starMesh::wedgePtr_ = cellModeller::lookup("wedge");
-const cellModel* starMesh::hexPtr_ = cellModeller::lookup("hex");
+const Foam::cellModel* Foam::starMesh::unknownPtr_ =
+    Foam::cellModeller::lookup("unknown");
+const Foam::cellModel* Foam::starMesh::tetPtr_ =
+    Foam::cellModeller::lookup("tet");
+const Foam::cellModel* Foam::starMesh::pyrPtr_ =
+    Foam::cellModeller::lookup("pyr");
+const Foam::cellModel* Foam::starMesh::tetWedgePtr_ =
+    Foam::cellModeller::lookup("tetWedge");
+const Foam::cellModel* Foam::starMesh::prismPtr_ =
+    Foam::cellModeller::lookup("prism");
+const Foam::cellModel* Foam::starMesh::wedgePtr_ =
+    Foam::cellModeller::lookup("wedge");
+const Foam::cellModel* Foam::starMesh::hexPtr_ =
+    Foam::cellModeller::lookup("hex");
 
-const cellModel* starMesh::sammTrim1Ptr_ = cellModeller::lookup("sammTrim1");
-const cellModel* starMesh::sammTrim2Ptr_ = cellModeller::lookup("sammTrim2");
-const cellModel* starMesh::sammTrim3Ptr_ = cellModeller::lookup("sammTrim3");
-const cellModel* starMesh::sammTrim4Ptr_ = cellModeller::lookup("sammTrim4");
-const cellModel* starMesh::sammTrim5Ptr_ = cellModeller::lookup("sammTrim5");
-const cellModel* starMesh::sammTrim8Ptr_ =
-    cellModeller::lookup("hexagonalPrism");
+const Foam::cellModel* Foam::starMesh::sammTrim1Ptr_ =
+    Foam::cellModeller::lookup("sammTrim1");
+const Foam::cellModel* Foam::starMesh::sammTrim2Ptr_ =
+    Foam::cellModeller::lookup("sammTrim2");
+const Foam::cellModel* Foam::starMesh::sammTrim3Ptr_ =
+    Foam::cellModeller::lookup("sammTrim3");
+const Foam::cellModel* Foam::starMesh::sammTrim4Ptr_ =
+    Foam::cellModeller::lookup("sammTrim4");
+const Foam::cellModel* Foam::starMesh::sammTrim5Ptr_ =
+    Foam::cellModeller::lookup("sammTrim5");
+const Foam::cellModel* Foam::starMesh::sammTrim8Ptr_ =
+    Foam::cellModeller::lookup("hexagonalPrism");
 
 // Regular cell point addressing
 // SAMM point addressing
-const label starMesh::regularAddressingTable[6][8] =
+const Foam::label Foam::starMesh::regularAddressingTable[6][8] =
 {
     { 0,  1,  2,  4, -1, -1, -1, -1},    // tet
     { 0,  1,  2,  3,  4, -1, -1, -1},    // pyramid
@@ -69,7 +77,7 @@ const label starMesh::regularAddressingTable[6][8] =
 
 
 // SAMM point addressing
-const label starMesh::sammAddressingTable[9][12] =
+const Foam::label Foam::starMesh::sammAddressingTable[9][12] =
 {
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},    // samm0 - empty
     { 3,  2,  6,  7, 11,  9,  1,  5,  4, 12, -1, -1},    // samm1+
@@ -97,7 +105,7 @@ const label starMesh::sammAddressingTable[9][12] =
 // Additionally, have in mind that this silliness does not allow matches
 // on face 7 and 8 of the samm cell.
 
-const label starMesh::sammFacePermutationTable[24][8] =
+const Foam::label Foam::starMesh::sammFacePermutationTable[24][8] =
 {
   {-1, 1, 2, 3, 4, 5, 6, 7},    // permutation   0
   {-1, 3, 4, 5, 6, 1, 2, 7},    // permutation   1
@@ -125,7 +133,7 @@ const label starMesh::sammFacePermutationTable[24][8] =
   {-1, 6, 5, 2, 1, 3, 4, 7}     // permutation  23
 };
 
-const label starMesh::shapeFaceLookup[19][9] =
+const Foam::label Foam::starMesh::shapeFaceLookup[19][9] =
 {
     {-1, -1, -1, -1, -1, -1, -1, -1, -1},    // shape  0 - empty+
     {-1, -1, -1, -1, -1, -1, -1, -1, -1},    // shape  1 - empty+
@@ -185,8 +193,7 @@ const label starMesh::shapeFaceLookup[19][9] =
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Make polyhedral mesh data (packing)
-void starMesh::createPolyMeshData()
+void Foam::starMesh::createPolyMeshData()
 {
     Info<< "Creating a polyMesh" << endl;
 
@@ -199,9 +206,7 @@ void starMesh::createPolyMeshData()
 }
 
 
-// Clear extra storage before creation of the mesh to remove
-// a memory peak
-void starMesh::clearExtraStorage()
+void Foam::starMesh::clearExtraStorage()
 {
     Info<< "Clearing extra storage" << endl;
 
@@ -218,10 +223,10 @@ void starMesh::clearExtraStorage()
     deleteDemandDrivenData(pointCellsPtr_);
 }
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
-starMesh::starMesh
+Foam::starMesh::starMesh
 (
     const fileName& prefix,
     const Time& rt,
@@ -281,13 +286,10 @@ starMesh::starMesh
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-starMesh::~starMesh()
+Foam::starMesh::~starMesh()
 {
     deleteDemandDrivenData(pointCellsPtr_);
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

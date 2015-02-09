@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,17 +28,11 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "coupledFacePair.H"
-#include "error.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
+#include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
-coupledFacePair::coupledFacePair
+Foam::coupledFacePair::coupledFacePair
 (
     const label coupleNo,
     const label mC, const label mF,
@@ -55,12 +49,9 @@ coupledFacePair::coupledFacePair
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-Ostream& operator<<(Ostream& os, const coupledFacePair& c)
+Foam::Ostream& Foam::operator<<(Ostream& os, const coupledFacePair& c)
 {
     os  << "Master cell: " << c.masterCellID_
         << " face: " << c.masterFaceID_ << endl
@@ -71,9 +62,5 @@ Ostream& operator<<(Ostream& os, const coupledFacePair& c)
     return os;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -22,9 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::
-    compressible::
-    turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
+    Foam::compressible::
+        turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 
 Description
     Mixed boundary condition for temperature, to be used for heat-transfer

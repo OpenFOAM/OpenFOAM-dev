@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
 #include "sammMesh.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void sammMesh::fillSammAddressingTable()
+void Foam::sammMesh::fillSammAddressingTable()
 {
     // SAMM trim type 1: 8 models
     static label SammTrim1Rot0[10] = {1, 5, 6, 2, 8, 10, 4, 7, 3, 9};

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void sammMesh::addRegularCell
+void Foam::sammMesh::addRegularCell
 (
     const labelList& labels,
     const label nCreatedCells
@@ -135,7 +135,7 @@ void sammMesh::addRegularCell
 }
 
 
-void sammMesh::addSAMMcell
+void Foam::sammMesh::addSAMMcell
 (
     const label typeFlag,
     const labelList& globalLabels,
@@ -171,7 +171,7 @@ void sammMesh::addSAMMcell
 }
 
 
-void sammMesh::readCells()
+void Foam::sammMesh::readCells()
 {
     label nCells = 0;
     label maxLabel = -1;

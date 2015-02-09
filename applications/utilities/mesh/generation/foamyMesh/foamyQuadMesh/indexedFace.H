@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    indexedFace
+    CGAL::indexedFace
 
 Description
     An indexed form of CGAL::Triangulation_face_base_2<K> used to keep

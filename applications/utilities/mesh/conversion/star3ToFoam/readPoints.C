@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-label starMesh::readVtxLabel(IFstream& is)
+Foam::label Foam::starMesh::readVtxLabel(IFstream& is)
 {
     char lcs[16];
 
@@ -46,7 +46,7 @@ label starMesh::readVtxLabel(IFstream& is)
 }
 
 
-scalar starMesh::readVtxCmpt(IFstream& is)
+Foam::scalar Foam::starMesh::readVtxCmpt(IFstream& is)
 {
     char lcs[17];
 
@@ -61,7 +61,7 @@ scalar starMesh::readVtxCmpt(IFstream& is)
 }
 
 
-void starMesh::readToNl(IFstream& is)
+void Foam::starMesh::readToNl(IFstream& is)
 {
     char c;
     do
@@ -71,7 +71,7 @@ void starMesh::readToNl(IFstream& is)
 }
 
 
-void starMesh::readPoints(const scalar scaleFactor)
+void Foam::starMesh::readPoints(const scalar scaleFactor)
 {
     label nPoints = 0;
     label maxLabel = -1;
@@ -117,12 +117,12 @@ void starMesh::readPoints(const scalar scaleFactor)
 
     points_.setSize(nPoints);
 
-#   ifdef starMesh_H
+    #ifdef starMesh_H
     starPointID_.setSize(nPoints);
 
     // Reset STAR point ID, just in case
     starPointID_ = -1;
-#   endif
+    #endif
 
     starPointLabelLookup_.setSize(maxLabel+1);
 
@@ -146,9 +146,9 @@ void starMesh::readPoints(const scalar scaleFactor)
 
             readToNl(pointsFile);
 
-#           ifdef starMesh_H
+            #ifdef starMesh_H
             starPointID_[p] = pointLabel;
-#           endif
+            #endif
 
             starPointLabelLookup_[pointLabel] = p;
         }

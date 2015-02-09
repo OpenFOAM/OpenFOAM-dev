@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    radiationCoupledBase
+    Foam::radiationCoupledBase
 
 Description
     Common functions to emissivity. It gets supplied from lookup into a

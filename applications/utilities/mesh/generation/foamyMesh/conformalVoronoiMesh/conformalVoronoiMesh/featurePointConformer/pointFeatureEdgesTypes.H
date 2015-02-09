@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    pointFeatureEdgesTypes
+    Foam::pointFeatureEdgesTypes
 
 Description
     Holds information on the types of feature edges attached to feature points.

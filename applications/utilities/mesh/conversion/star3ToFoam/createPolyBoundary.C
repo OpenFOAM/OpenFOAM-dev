@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void starMesh::createPolyBoundary()
+void Foam::starMesh::createPolyBoundary()
 {
     label nBoundaryFacesFound = 0;
 
@@ -294,7 +294,8 @@ void starMesh::createPolyBoundary()
 }
 
 
-List<polyPatch*> starMesh::polyBoundaryPatches(const polyMesh& pMesh)
+Foam::List<Foam::polyPatch*>
+Foam::starMesh::polyBoundaryPatches(const polyMesh& pMesh)
 {
     List<polyPatch*> p(boundary_.size());
 

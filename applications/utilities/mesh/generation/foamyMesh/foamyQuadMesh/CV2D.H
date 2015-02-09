@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    CV2D
+    Foam::CV2D
 
 Description
     Conformal-Voronoi 2D automatic mesher with grid or read initial points

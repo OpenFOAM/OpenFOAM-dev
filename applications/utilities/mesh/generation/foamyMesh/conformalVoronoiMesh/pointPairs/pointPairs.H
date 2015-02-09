@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    pointPairs
+    Foam::pointPairs
 
 Description
     HashSet of unique edges. The edges are stored as a pair of pairs:

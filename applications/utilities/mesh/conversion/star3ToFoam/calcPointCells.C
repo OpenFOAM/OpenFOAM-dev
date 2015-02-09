@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void starMesh::calcPointCells() const
+void Foam::starMesh::calcPointCells() const
 {
     static const label UNIT_POINT_CELLS = 12;
 
@@ -125,7 +125,7 @@ void starMesh::calcPointCells() const
 }
 
 
-const labelListList& starMesh::pointCells() const
+const Foam::labelListList& Foam::starMesh::pointCells() const
 {
     if (!pointCellsPtr_)
     {

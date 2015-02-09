@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    pointConversion
+    Foam::pointConversion
 
 Description
     Conversion functions between point (Foam::) and Point (CGAL::)

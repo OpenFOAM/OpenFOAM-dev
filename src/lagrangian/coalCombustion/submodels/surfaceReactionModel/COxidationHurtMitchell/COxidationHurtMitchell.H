@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    COxidationHurtMitchell
+    Foam::COxidationHurtMitchell
 
 Description
     Char oxidation model given by Hurt and Mitchell:
@@ -41,7 +41,7 @@ Description
     Model validity:
         Gas temperature: Tc > 1500 K
         Particle sizes:  75 um -> 200 um
-        Pox > 0.3 atm        
+        Pox > 0.3 atm
 
 \*---------------------------------------------------------------------------*/
 

@@ -451,32 +451,40 @@ Foam::UPstream::commsTypes Foam::UPstream::defaultCommsType
 (
     commsTypeNames.read(Foam::debug::optimisationSwitches().lookup("commsType"))
 );
-// Register re-reader
-class addcommsTypeToOpt
-:
-    public ::Foam::simpleRegIOobject
-{
-public:
-    addcommsTypeToOpt(const char* name)
-    :
-        ::Foam::simpleRegIOobject(Foam::debug::addOptimisationObject, name)
-    {}
-    virtual ~addcommsTypeToOpt()
-    {}
-    virtual void readData(Foam::Istream& is)
-    {
-        Foam::UPstream::defaultCommsType = Foam::UPstream::commsTypeNames.read
-        (
-            is
-        );
-    }
-    virtual void writeData(Foam::Ostream& os) const
-    {
-        os << Foam::UPstream::commsTypeNames[Foam::UPstream::defaultCommsType];
-    }
-};
-addcommsTypeToOpt addcommsTypeToOpt_("commsType");
 
+namespace Foam
+{
+    // Register re-reader
+    class addcommsTypeToOpt
+    :
+        public ::Foam::simpleRegIOobject
+    {
+    public:
+
+        addcommsTypeToOpt(const char* name)
+        :
+            ::Foam::simpleRegIOobject(Foam::debug::addOptimisationObject, name)
+        {}
+
+        virtual ~addcommsTypeToOpt()
+        {}
+
+        virtual void readData(Foam::Istream& is)
+        {
+            UPstream::defaultCommsType = UPstream::commsTypeNames.read
+            (
+                is
+            );
+        }
+
+        virtual void writeData(Foam::Ostream& os) const
+        {
+            os << UPstream::commsTypeNames[UPstream::defaultCommsType];
+        }
+    };
+
+    addcommsTypeToOpt addcommsTypeToOpt_("commsType");
+}
 
 // Default communicator
 Foam::label Foam::UPstream::worldComm(0);

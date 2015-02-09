@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    temperatureCoupledBase
+    Foam::temperatureCoupledBase
 
 Description
     Common functions for use in temperature coupled boundaries. For now only

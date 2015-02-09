@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void starMesh::addRegularCell
+void Foam::starMesh::addRegularCell
 (
     const labelList& labels,
     const label nCreatedCells
@@ -116,7 +116,7 @@ void starMesh::addRegularCell
 }
 
 
-void starMesh::addSAMMcell
+void Foam::starMesh::addSAMMcell
 (
     const labelList& labels,
     const label nCreatedCells
@@ -205,7 +205,7 @@ void starMesh::addSAMMcell
 }
 
 
-void starMesh::readCells()
+void Foam::starMesh::readCells()
 {
     label nCells = 0;
     label maxLabel = -1;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void sammMesh::calcPointCells() const
+void Foam::sammMesh::calcPointCells() const
 {
     static const label UNIT_POINT_CELLS = 12;
 
@@ -125,7 +125,7 @@ void sammMesh::calcPointCells() const
 }
 
 
-const labelListList& sammMesh::pointCells() const
+const Foam::labelListList& Foam::sammMesh::pointCells() const
 {
     if (!pointCellsPtr_)
     {

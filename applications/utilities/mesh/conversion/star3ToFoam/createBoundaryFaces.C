@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
 
 // Specialist version of face comparison to deal with
 // PROSTAR boundary format idiosyncracies
-bool starMesh::starEqualFace
+bool Foam::starMesh::starEqualFace
 (
     const face& boundaryFace,
     const face& cellFace
@@ -91,7 +91,7 @@ bool starMesh::starEqualFace
 }
 
 
-void starMesh::markBoundaryFaces()
+void Foam::starMesh::markBoundaryFaces()
 {
     // set size of mark lists for the boundary
     boundaryCellIDs_.setSize(boundary_.size());
@@ -175,7 +175,7 @@ void starMesh::markBoundaryFaces()
 }
 
 
-void starMesh::collectBoundaryFaces()
+void Foam::starMesh::collectBoundaryFaces()
 {
     Info<< "Collecting boundary faces" << endl;
     forAll(boundary_, patchI)

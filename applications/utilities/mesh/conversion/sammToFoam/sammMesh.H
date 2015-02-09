@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,14 +42,10 @@ SourceFiles
 #include "cellList.H"
 #include "polyPatchList.H"
 
-#ifndef namespaceFoam
-#define namespaceFoam
-    using namespace Foam;
-#endif
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Forward declaration of classes
+namespace Foam
+{
 
 /*---------------------------------------------------------------------------*\
                            Class sammMesh Declaration
@@ -224,9 +220,6 @@ class sammMesh
 
 public:
 
-    // Static data members
-
-
     // Constructors
 
         //- Construct from case name
@@ -246,17 +239,12 @@ public:
 
         //- Write mesh
         void writeMesh();
-
-    // Member Operators
-
-    // Friend Functions
-
-    // Friend Operators
-
-    // IOstream Operators
-    // Ostream Operator
 };
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

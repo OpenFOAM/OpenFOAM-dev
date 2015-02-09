@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,21 +31,33 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 // Cell shape models
-const cellModel* sammMesh::unknownPtr_ = cellModeller::lookup("unknown");
-const cellModel* sammMesh::hexPtr_ = cellModeller::lookup("hex");
-const cellModel* sammMesh::wedgePtr_ = cellModeller::lookup("wedge");
-const cellModel* sammMesh::prismPtr_ = cellModeller::lookup("prism");
-const cellModel* sammMesh::pyrPtr_ = cellModeller::lookup("pyr");
-const cellModel* sammMesh::tetPtr_ = cellModeller::lookup("tet");
-const cellModel* sammMesh::tetWedgePtr_ = cellModeller::lookup("tetWedge");
+const Foam::cellModel* Foam::sammMesh::unknownPtr_ =
+    Foam::cellModeller::lookup("unknown");
+const Foam::cellModel* Foam::sammMesh::hexPtr_ =
+    Foam::cellModeller::lookup("hex");
+const Foam::cellModel* Foam::sammMesh::wedgePtr_ =
+    Foam::cellModeller::lookup("wedge");
+const Foam::cellModel* Foam::sammMesh::prismPtr_ =
+    Foam::cellModeller::lookup("prism");
+const Foam::cellModel* Foam::sammMesh::pyrPtr_ =
+    Foam::cellModeller::lookup("pyr");
+const Foam::cellModel* Foam::sammMesh::tetPtr_ =
+    Foam::cellModeller::lookup("tet");
+const Foam::cellModel* Foam::sammMesh::tetWedgePtr_ =
+    Foam::cellModeller::lookup("tetWedge");
 
-const cellModel* sammMesh::sammTrim1Ptr_ = cellModeller::lookup("sammTrim1");
-const cellModel* sammMesh::sammTrim2Ptr_ = cellModeller::lookup("sammTrim2");
-const cellModel* sammMesh::sammTrim3Ptr_ = cellModeller::lookup("sammTrim3");
-const cellModel* sammMesh::sammTrim4Ptr_ = cellModeller::lookup("sammTrim4");
-const cellModel* sammMesh::sammTrim5Ptr_ = cellModeller::lookup("sammTrim5");
-const cellModel* sammMesh::sammTrim8Ptr_ =
-    cellModeller::lookup("hexagonalPrism");
+const Foam::cellModel* Foam::sammMesh::sammTrim1Ptr_ =
+    Foam::cellModeller::lookup("sammTrim1");
+const Foam::cellModel* Foam::sammMesh::sammTrim2Ptr_ =
+    Foam::cellModeller::lookup("sammTrim2");
+const Foam::cellModel* Foam::sammMesh::sammTrim3Ptr_ =
+    Foam::cellModeller::lookup("sammTrim3");
+const Foam::cellModel* Foam::sammMesh::sammTrim4Ptr_ =
+    Foam::cellModeller::lookup("sammTrim4");
+const Foam::cellModel* Foam::sammMesh::sammTrim5Ptr_ =
+    Foam::cellModeller::lookup("sammTrim5");
+const Foam::cellModel* Foam::sammMesh::sammTrim8Ptr_ =
+    Foam::cellModeller::lookup("hexagonalPrism");
 
 // lookup table giving OpenFOAM face number when looked up with shape index
 // (first index) and STAR face number
@@ -59,7 +71,7 @@ const cellModel* sammMesh::sammTrim8Ptr_ =
 // However, at the moment I haven't got enough info to complete the toble and
 // there are no cases that break it. Please reconsider in the light of mode
 // information.
-const label sammMesh::shapeFaceLookup[19][9] =
+const Foam::label Foam::sammMesh::shapeFaceLookup[19][9] =
 {
     {-1, -1, -1, -1, -1, -1, -1, -1, -1},    // shape  0 - empty+
     {-1, -1, -1, -1, -1, -1, -1, -1, -1},    // shape  1 - empty+
@@ -87,22 +99,22 @@ const label sammMesh::shapeFaceLookup[19][9] =
 
 // List of pointers used instead of pointer list o avoid
 // de-allocation problems
-List<const cellModel*> sammMesh::sammShapeLookup
+Foam::List<const Foam::cellModel*> Foam::sammMesh::sammShapeLookup
 (
     256,
     reinterpret_cast<cellModel*>(0)
 );
 
-List<const label*> sammMesh::sammAddressingTable
+Foam::List<const Foam::label*> Foam::sammMesh::sammAddressingTable
 (
     256,
     reinterpret_cast<label*>(0)
 );
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Make polyhedral mesh data (packing)
-void sammMesh::createPolyMeshData()
+void Foam::sammMesh::createPolyMeshData()
 {
     Info<< "Creating a polyMesh" << endl;
 
@@ -146,10 +158,10 @@ void sammMesh::createPolyMeshData()
     }
 }
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
-sammMesh::sammMesh
+Foam::sammMesh::sammMesh
 (
     const fileName& prefix,
     const Time& rt,
@@ -199,13 +211,10 @@ sammMesh::sammMesh
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-sammMesh::~sammMesh()
+Foam::sammMesh::~sammMesh()
 {
     deleteDemandDrivenData(pointCellsPtr_);
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

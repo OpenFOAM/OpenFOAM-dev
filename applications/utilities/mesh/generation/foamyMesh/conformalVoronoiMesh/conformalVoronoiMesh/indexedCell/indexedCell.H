@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    indexedCell
+    CGAL::indexedCell
 
 Description
     An indexed form of CGAL::Triangulation_cell_base_3<K> used to keep
