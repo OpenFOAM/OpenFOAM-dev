@@ -8,6 +8,39 @@ cd ${0%/*} || exit 1    # Run from this directory
     exit 1
 }
 
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [OPTION]
+options:
+  -online    use the links to the Github repositories instead of the local source code
+  -help
+
+USAGE
+    exit 1
+}
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -online)
+        export FOAM_ONLINE_REPO="https://github.com/$WM_PROJECT/$WM_PROJECT-$WM_PROJECT_VERSION/tree/master"
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+#------------------------------------------------------------------------------
+
 set -x
 
 rm -rf latex man

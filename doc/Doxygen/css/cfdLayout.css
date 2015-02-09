@@ -71,7 +71,7 @@ p:after {
     border:3px solid rgb(175,175,175);
     border-bottom-width: 0;
     margin-top:10px;
-    background:#d5e1f0;
+    background:#e1f0e1;
     overflow:visible !important /*Firefox*/;
     overflow:hidden /*IE6*/;
 }
@@ -265,12 +265,12 @@ p:after {
 }
 
 div.contents a {
-    color:rgb(70,122,167);
+    color:rgb(85,144,112);
     font-weight:bold;
     text-decoration:none;
 }
 div.contents a:hover {
-    color:rgb(42,90,138);
+    color:rgb(56,94,73);
     text-decoration:underline;
 }
 /*
@@ -342,4 +342,3 @@ div.crosslinks {
 }
 
 } /* end media print */
-

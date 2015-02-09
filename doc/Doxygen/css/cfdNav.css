@@ -271,7 +271,7 @@ nav3-bullet
     padding:0 0 0 10px;
     background:url(img/bg_bullet_full_1.gif) no-repeat 0px 50%;
     text-decoration:none;
-    color:rgb(70,122,167);
+    color:rgb(56,94,73);
     font-weight:bold;
     font-size:120%;
 }
@@ -282,7 +282,7 @@ nav3-bullet
     padding:0 0 0 10px;
     background:url(img/bg_bullet_half_1.gif) no-repeat 0px 50%;
     text-decoration:none;
-    color:rgb(70,122,167);
+    color:rgb(56,94,73);
     font-weight:normal;
     font-size:120%;
 }
@@ -570,5 +570,3 @@ div.navpath, div.summary
 {
     background-color:#d5e1f0 !important;
 }
-
-

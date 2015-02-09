@@ -9,6 +9,8 @@
 <link href="search/search.css" rel="stylesheet" type="text/css" />
 <link href="../css/openfoam.css" rel="stylesheet" type="text/css" />
 <script type="text/javaScript" src="search/search.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
 
 <!-- meta info -->
 <meta
