@@ -56,7 +56,7 @@ OptimisationSwitches
     //  - inotify           : use inotify framework
     //  - timeStampMaster   : do time stamp (and file reading) only on master.
     //  - inotifyMaster     : do inotify (and file reading) only on master.
-    fileModificationChecking timeStamp;
+    fileModificationChecking timeStampMaster;
 
     commsType       nonBlocking; //scheduled; //blocking;
     floatTransfer   0;
