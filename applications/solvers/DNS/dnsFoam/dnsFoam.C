@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ Description
 #include "fft.H"
 #include "calcEk.H"
 #include "graph.H"
+#include "pisoControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,6 +45,9 @@ int main(int argc, char *argv[])
 
     #include "createTime.H"
     #include "createMeshNoClear.H"
+
+    pisoControl piso(mesh);
+
     #include "readTransportProperties.H"
     #include "createFields.H"
     #include "readTurbulenceProperties.H"
@@ -56,8 +60,6 @@ int main(int argc, char *argv[])
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
-
-        #include "readPISOControls.H"
 
         force.internalField() = ReImSum
         (
@@ -82,8 +84,7 @@ int main(int argc, char *argv[])
 
 
         // --- PISO loop
-
-        for (int corr=1; corr<=1; corr++)
+        while (piso.correct())
         {
             volScalarField rAU(1.0/UEqn.A());
             surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU));
@@ -102,7 +103,7 @@ int main(int argc, char *argv[])
                 fvm::laplacian(rAUf, p) == fvc::div(phiHbyA)
             );
 
-            pEqn.solve();
+            pEqn.solve(mesh.solver(p.select(piso.finalInnerIter())));
 
             phi = phiHbyA - pEqn.flux();
 

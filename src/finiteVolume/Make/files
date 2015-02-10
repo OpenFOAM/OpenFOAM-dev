@@ -397,6 +397,7 @@ solutionControl = $(general)/solutionControl
 $(solutionControl)/solutionControl/solutionControl.C
 $(solutionControl)/simpleControl/simpleControl.C
 $(solutionControl)/pimpleControl/pimpleControl.C
+$(solutionControl)/pisoControl/pisoControl.C
 
 porosity = $(general)/porosityModel
 $(porosity)/porosityModel/porosityModel.C
