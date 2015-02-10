@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,16 +111,16 @@ void writeWeights(const polyMesh& mesh)
 
 int main(int argc, char *argv[])
 {
-#   include "addRegionOption.H"
+    #include "addRegionOption.H"
     argList::addBoolOption
     (
         "checkAMI",
         "check AMI weights"
     );
 
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createNamedDynamicFvMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createNamedDynamicFvMesh.H"
 
     const bool checkAMI  = args.optionFound("checkAMI");
 

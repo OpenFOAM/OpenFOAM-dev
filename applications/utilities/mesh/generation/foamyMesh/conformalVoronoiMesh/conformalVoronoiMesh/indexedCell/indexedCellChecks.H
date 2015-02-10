@@ -67,7 +67,7 @@ namespace foamyHexMeshChecks
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "indexedCellChecks.C"
+    #include "indexedCellChecks.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

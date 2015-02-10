@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,14 +70,14 @@ void collectFeatureEdges(const boundaryMesh& bMesh, labelList& markedEdges)
 
 int main(int argc, char *argv[])
 {
-#   include "addOverwriteOption.H"
+    #include "addOverwriteOption.H"
     argList::noParallel();
     argList::validArgs.append("feature angle[0-180]");
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     runTime.functionObjects().off();
-#   include "createPolyMesh.H"
+    #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
     Info<< "Mesh read in = "

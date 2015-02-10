@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,8 +149,8 @@ int main(int argc, char *argv[])
         "exclude the 'constant/' dir in the times list"
     );
 
-#   include "addRegionOption.H"
-#   include "setRootCase.H"
+    #include "addRegionOption.H"
+    #include "setRootCase.H"
 
     // enable noConstant by switching
     if (!args.optionFound("noConstant"))
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     }
 
 
-#   include "createTime.H"
+    #include "createTime.H"
 
 
     // Make sure we do not use the master-only reading since we read

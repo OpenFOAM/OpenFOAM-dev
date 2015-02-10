@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,9 @@ int main(int argc, char *argv[])
 {
     argList::validArgs.append("patch");
 
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 

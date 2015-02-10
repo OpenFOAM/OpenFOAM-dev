@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,12 +200,12 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-#   include "addTimeOptions.H"
+    #include "addTimeOptions.H"
     argList::validArgs.append("patch");
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
-#   include "createMesh.H"
+    #include "createMesh.H"
 
     const word patchName = args[1];
     label patchI = mesh.boundaryMesh().findPatchID(patchName);

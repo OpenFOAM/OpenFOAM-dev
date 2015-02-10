@@ -66,7 +66,7 @@ Foam::FixedList<Foam::label, 4> processorsAttached(const CellType& c);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "indexedCellOpsTemplates.C"
+    #include "indexedCellOpsTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

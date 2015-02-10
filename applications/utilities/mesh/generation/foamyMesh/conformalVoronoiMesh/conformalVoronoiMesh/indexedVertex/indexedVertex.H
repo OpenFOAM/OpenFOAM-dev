@@ -359,7 +359,7 @@ namespace Foam
 #include "indexedVertexI.H"
 
 #ifdef NoRepository
-#   include "indexedVertex.C"
+    #include "indexedVertex.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,14 +48,14 @@ int main(int argc, char *argv[])
     argList::noParallel();
     timeSelector::addOptions();
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
     // Get times list
     instantList timeDirs = timeSelector::select0(runTime, args);
 
-#   include "createMesh.H"
-#   include "readTransportProperties.H"
+    #include "createMesh.H"
+    #include "readTransportProperties.H"
 
     const word& gFormat = runTime.graphFormat();
 
@@ -81,11 +81,11 @@ int main(int argc, char *argv[])
         runTime.setTime(timeDirs[timeI], timeI);
         Info<< "Collapsing fields for time " << runTime.timeName() << endl;
 
-#       include "readFields.H"
-#       include "calculateFields.H"
+        #include "readFields.H"
+        #include "calculateFields.H"
 
         // Average fields over channel down to a line
-#       include "collapse.H"
+        #include "collapse.H"
     }
 
     Info<< "\nEnd\n" << endl;

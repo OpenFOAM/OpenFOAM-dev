@@ -32,15 +32,15 @@ int USERD_get_var_by_component
     {
         if (which_part == 1)
         {
-#           include "getFieldScalar.H"
+            #include "getFieldScalar.H"
         }
         else if (which_part < nPatches+2)
         {
-#           include "getPatchFieldScalar.H"
+            #include "getPatchFieldScalar.H"
         }
         else if (which_part == nPatches+2)
         {
-#           include "getLagrangianScalar.H"
+            #include "getLagrangianScalar.H"
         }
         else
         {
@@ -51,15 +51,15 @@ int USERD_get_var_by_component
     {
         if (which_part == 1)
         {
-#           include "getFieldVector.H"
+            #include "getFieldVector.H"
         }
         else if (which_part < nPatches+2)
         {
-#           include "getPatchFieldVector.H"
+            #include "getPatchFieldVector.H"
         }
         else if (which_part == nPatches+2)
         {
-#           include "getLagrangianVector.H"
+            #include "getLagrangianVector.H"
         }
         else
         {
@@ -73,11 +73,11 @@ int USERD_get_var_by_component
 
         if (which_part == 1)
         {
-#           include "getFieldTensor.H"
+            #include "getFieldTensor.H"
         }
         else if (which_part < nPatches+2)
         {
-#           include "getPatchFieldTensor.H"
+            #include "getPatchFieldTensor.H"
         }
         else if (which_part == nPatches+2)
         {

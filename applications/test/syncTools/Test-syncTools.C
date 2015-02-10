@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -592,9 +592,9 @@ void testFaceSync(const polyMesh& mesh, Random& rndGen)
 
 int main(int argc, char *argv[])
 {
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createPolyMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createPolyMesh.H"
 
 
     Random rndGen(5341*(Pstream::myProcNo()+1));

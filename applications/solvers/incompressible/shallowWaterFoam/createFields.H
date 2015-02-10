@@ -68,7 +68,7 @@ volScalarField hTotal
 );
 hTotal.write();
 
-#   include "createPhi.H"
+    #include "createPhi.H"
 
 Info<< "Creating Coriolis Force" << endl;
 const dimensionedVector F("F", ((2.0*Omega) & gHat)*gHat);

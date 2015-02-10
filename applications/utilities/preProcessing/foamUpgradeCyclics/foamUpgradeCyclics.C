@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -399,10 +399,10 @@ int main(int argc, char *argv[])
         "enableFunctionEntries",
         "enable expansion of dictionary directives - #include, #codeStream etc"
     );
-#   include "addRegionOption.H"
+    #include "addRegionOption.H"
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
 
     // Make sure we do not use the master-only reading since we read

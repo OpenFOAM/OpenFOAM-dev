@@ -266,7 +266,7 @@ public:
 #include "indexedCellI.H"
 
 #ifdef NoRepository
-#   include "indexedCell.C"
+    #include "indexedCell.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

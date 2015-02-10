@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,10 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
     argList::validArgs.append("fieldName");
     argList::validArgs.append("patchName");
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     instantList timeDirs = timeSelector::select0(runTime, args);
-#   include "createNamedMesh.H"
+    #include "createNamedMesh.H"
 
     const word fieldName = args[1];
     const word patchName = args[2];

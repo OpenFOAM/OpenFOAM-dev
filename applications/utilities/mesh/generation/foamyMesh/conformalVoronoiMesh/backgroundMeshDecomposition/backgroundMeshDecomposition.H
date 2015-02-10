@@ -338,7 +338,7 @@ public:
 #include "backgroundMeshDecompositionI.H"
 
 #ifdef NoRepository
-#   include "backgroundMeshDecompositionTemplates.C"
+    #include "backgroundMeshDecompositionTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,19 +145,19 @@ void ReadAndMapFields
 
 int main(int argc, char *argv[])
 {
-#   include "addOverwriteOption.H"
-#   include "addTimeOptions.H"
+    #include "addOverwriteOption.H"
+    #include "addTimeOptions.H"
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     // Get times list
     instantList Times = runTime.times();
-#   include "checkTimeOptions.H"
+    #include "checkTimeOptions.H"
     runTime.setTime(Times[startTime], startTime);
 
 
     // Read the mesh
-#   include "createMesh.H"
+    #include "createMesh.H"
 
     // Read the tetDualMesh
     Info<< "Create tetDualMesh for time = "

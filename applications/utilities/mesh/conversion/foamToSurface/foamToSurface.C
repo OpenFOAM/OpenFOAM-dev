@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         "triangulate surface"
     );
 
-#   include "setRootCase.H"
+    #include "setRootCase.H"
 
     fileName exportName = args[1];
 
@@ -85,14 +85,14 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-#   include "createTime.H"
+    #include "createTime.H"
     instantList timeDirs = timeSelector::select0(runTime, args);
-#   include "createPolyMesh.H"
+    #include "createPolyMesh.H"
 
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
-#       include "getTimeIndex.H"
+        #include "getTimeIndex.H"
 
         polyMesh::readUpdateState state = mesh.readUpdate();
 

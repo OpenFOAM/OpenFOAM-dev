@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,13 +40,13 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-#   include "addOverwriteOption.H"
+    #include "addOverwriteOption.H"
     argList::noParallel();
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     runTime.functionObjects().off();
-#   include "createPolyMesh.H"
+    #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
     const bool overwrite = args.optionFound("overwrite");

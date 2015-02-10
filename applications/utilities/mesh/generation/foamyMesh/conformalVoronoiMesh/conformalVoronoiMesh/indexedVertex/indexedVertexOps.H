@@ -67,7 +67,7 @@ inline bool uninitialised(const VertexType& v);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "indexedVertexOpsTemplates.C"
+    #include "indexedVertexOpsTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

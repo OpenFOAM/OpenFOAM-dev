@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,15 +124,15 @@ void writeStencilStats(const labelListList& stencil)
 
 int main(int argc, char *argv[])
 {
-#   include "addTimeOptions.H"
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "addTimeOptions.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
     // Get times list
     instantList Times = runTime.times();
-#   include "checkTimeOptions.H"
+    #include "checkTimeOptions.H"
     runTime.setTime(Times[startTime], startTime);
-#   include "createMesh.H"
+    #include "createMesh.H"
 
     // Force calculation of extended edge addressing
     const labelListList& edgeFaces = mesh.edgeFaces();

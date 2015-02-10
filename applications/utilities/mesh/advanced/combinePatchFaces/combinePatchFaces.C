@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -342,7 +342,7 @@ label mergeEdges(const scalar minCos, polyMesh& mesh)
 
 int main(int argc, char *argv[])
 {
-#   include "addOverwriteOption.H"
+    #include "addOverwriteOption.H"
 
     argList::validArgs.append("featureAngle [0..180]");
     argList::addOption
@@ -357,10 +357,10 @@ int main(int argc, char *argv[])
         "read user-defined mesh quality criterions from system/meshQualityDict"
     );
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     runTime.functionObjects().off();
-#   include "createPolyMesh.H"
+    #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
     const scalar featureAngle = args.argRead<scalar>(1);

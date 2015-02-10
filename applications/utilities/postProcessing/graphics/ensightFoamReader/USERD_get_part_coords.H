@@ -6,17 +6,13 @@ int USERD_get_part_coords
     float **coord_array
 )
 {
-
-#ifdef ENSIGHTDEBUG
+    #ifdef ENSIGHTDEBUG
     Info<< "Entering: USERD_get_part_coords" << endl <<
         "part_number = " << part_number << endl << flush;
-#endif
+    #endif
 
     if (part_number == 1)
     {
-
-        //#       include "checkForNewMesh.H"
-
         const vectorField& points = meshPtr->points();
         label nPoints = points.size();
 
@@ -29,9 +25,6 @@ int USERD_get_part_coords
     }
     else if (part_number < nPatches+2)
     {
-
-        //#       include "checkForNewMesh.H"
-
         label patchi = part_number-2;
         const polyBoundaryMesh& bMesh = meshPtr->boundaryMesh();
         const vectorField& points = bMesh[patchi].points();
@@ -63,9 +56,9 @@ int USERD_get_part_coords
         return Z_ERR;
     }
 
-#ifdef ENSIGHTDEBUG
+    #ifdef ENSIGHTDEBUG
     Info<< "Leaving: USERD_get_part_coords" << endl << flush;
-#endif
+    #endif
 
     return Z_OK;
 }

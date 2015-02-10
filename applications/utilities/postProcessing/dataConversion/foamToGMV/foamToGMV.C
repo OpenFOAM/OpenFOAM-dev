@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,12 +54,12 @@ int main(int argc, char *argv[])
         cloud::prefix
     };
 
-#   include "setRootCase.H"
+    #include "setRootCase.H"
 
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
-#   include "readConversionProperties.H"
+    #include "readConversionProperties.H"
 
     // get the available time-steps
     instantList TimeList = runTime.times();
@@ -78,15 +78,15 @@ int main(int argc, char *argv[])
 
             IOobjectList objects(mesh, runTime.timeName());
 
-#           include "moveMesh.H"
+            #include "moveMesh.H"
 
             // set the filename of the GMV file
             fileName gmvFileName = "plotGMV." + itoa(n);
             OFstream gmvFile(args.rootPath()/args.caseName()/gmvFileName);
 
-#           include "gmvOutputHeader.H"
-#           include "gmvOutput.H"
-#           include "gmvOutputTail.H"
+            #include "gmvOutputHeader.H"
+            #include "gmvOutput.H"
+            #include "gmvOutputTail.H"
         }
     }
 

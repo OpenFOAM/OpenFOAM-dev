@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,12 +46,12 @@ int main(int argc, char *argv[])
 {
    argList::validArgs.append("patch");
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
     const word patchName = args[1];
 
-#   include "createPolyMesh.H"
+    #include "createPolyMesh.H"
 
     Info<< "Mesh read in = "
         << runTime.cpuTimeIncrement()

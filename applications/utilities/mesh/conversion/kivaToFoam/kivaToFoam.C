@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,8 +77,8 @@ int main(int argc, char *argv[])
         "minimum z-height for transferring liner faces to cylinder-head"
     );
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
     const fileName kivaFileName =
         args.optionLookupOrDefault<fileName>("file", "otape17");
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
     scalar zHeadMin = -GREAT;
     args.optionReadIfPresent("zHeadMin", zHeadMin);
 
-#   include "readKivaGrid.H"
+    #include "readKivaGrid.H"
 
     Info<< "End\n" << endl;
 

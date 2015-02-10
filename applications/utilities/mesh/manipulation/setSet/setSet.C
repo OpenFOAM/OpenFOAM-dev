@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ Description
 
 
 #ifdef HAS_READLINE
-# include <readline/readline.h>
-# include <readline/history.h>
+    #include <readline/readline.h>
+    #include <readline/history.h>
 #endif
 
 using namespace Foam;
@@ -813,7 +813,7 @@ commandStatus parseAction(const word& actionName)
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions(true, false);
-#   include "addRegionOption.H"
+    #include "addRegionOption.H"
     argList::addBoolOption("noVTK", "do not write VTK files");
     argList::addBoolOption("loop", "execute batch commands for all timesteps");
     argList::addOption
@@ -828,8 +828,8 @@ int main(int argc, char *argv[])
         "do not synchronise selection across coupled patches"
     );
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     instantList timeDirs = timeSelector::select0(runTime, args);
 
     const bool writeVTK = !args.optionFound("noVTK");
@@ -845,7 +845,7 @@ int main(int argc, char *argv[])
     }
 
 
-#   include "createNamedPolyMesh.H"
+    #include "createNamedPolyMesh.H"
 
     // Print some mesh info
     printMesh(runTime, mesh);

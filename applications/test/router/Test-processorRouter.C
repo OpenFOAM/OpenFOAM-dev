@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,9 +95,9 @@ point meshCentre(const polyMesh& mesh)
 
 int main(int argc, char *argv[])
 {
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
     word procLabel = '[' + word(name(Pstream::myProcNo())) + "]-";
 

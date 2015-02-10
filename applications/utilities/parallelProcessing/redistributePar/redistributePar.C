@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -425,8 +425,8 @@ void compareFields
 
 int main(int argc, char *argv[])
 {
-#   include "addRegionOption.H"
-#   include "addOverwriteOption.H"
+    #include "addRegionOption.H"
+    #include "addOverwriteOption.H"
     argList::addOption
     (
         "mergeTol",
@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
     // Include explicit constant options, have zero from time range
     timeSelector::addOptions();
 
-#   include "setRootCase.H"
+    #include "setRootCase.H"
 
     if (env("FOAM_SIGFPE"))
     {
@@ -459,7 +459,7 @@ int main(int argc, char *argv[])
 
     // Make sure we do not use the master-only reading.
     regIOobject::fileModificationChecking = regIOobject::timeStamp;
-#   include "createTime.H"
+    #include "createTime.H"
     // Allow override of time
     instantList times = timeSelector::selectIfPresent(runTime, args);
     runTime.setTime(times[0], 0);

@@ -12,7 +12,7 @@
         mesh
     );
 
-#   include "createPhi.H"
+    #include "createPhi.H"
 
     singlePhaseTransportModel laminarTransport(U, phi);
 

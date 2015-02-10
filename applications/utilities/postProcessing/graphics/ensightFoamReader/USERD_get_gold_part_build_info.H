@@ -12,11 +12,9 @@ int USERD_get_gold_part_build_info
     int *iblanking_options[6]
 )
 {
-#ifdef ENSIGHTDEBUG
+    #ifdef ENSIGHTDEBUG
     Info<< "Entering: USERD_get_gold_part_build_info" << endl << flush;
-#endif
-
-    //#   include "checkForNewMesh.H"
+    #endif
 
     const cellShapeList& cellShapes = meshPtr->cellShapes();
     const cellList& cells = meshPtr->cells();
@@ -153,4 +151,3 @@ int USERD_get_gold_part_build_info
 
     return Z_OK;
 }
-

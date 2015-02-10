@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ void readAndRotateFields
 
 void rotateFields(const argList& args, const Time& runTime, const tensor& T)
 {
-#   include "createNamedMesh.H"
+    #include "createNamedMesh.H"
 
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
@@ -178,9 +178,9 @@ int main(int argc, char *argv[])
         "uniform [mm] to [m] scaling"
     );
 
-#   include "addRegionOption.H"
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "addRegionOption.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
     word regionName = polyMesh::defaultRegion;
     fileName meshDir;

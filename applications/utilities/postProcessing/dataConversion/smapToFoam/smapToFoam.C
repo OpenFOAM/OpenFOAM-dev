@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         FatalError.exit();
     }
 
-#   include "createTime.H"
+    #include "createTime.H"
 
     fileNameList fieldNames = readDir(runTime.timePath(), fileName::FILE);
     dictionary fieldNameDict;
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     if (fieldNameDict.found("epsilon")) nameMap.add("ED", word("epsilon"));
     if (fieldNameDict.found("nuEff")) nameMap.add("VIS", word("nuEff"));
 
-#   include "createMesh.H"
+    #include "createMesh.H"
 
     IFstream smapFile(args[1]);
 

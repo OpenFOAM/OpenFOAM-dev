@@ -55,7 +55,7 @@ on 1 byte), but shoehorning those bytes into integers efficiently is messy.
 #include <time.h>       /* defines time_t for timings in the test */
 #include <sys/param.h>  /* attempt to define endianness */
 #ifdef linux
-# include <endian.h>    /* attempt to define endianness */
+    #include <endian.h> /* attempt to define endianness */
 #endif
 
 /*

@@ -142,7 +142,7 @@ namespace DelaunayMeshTools
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "DelaunayMeshToolsTemplates.C"
+    #include "DelaunayMeshToolsTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

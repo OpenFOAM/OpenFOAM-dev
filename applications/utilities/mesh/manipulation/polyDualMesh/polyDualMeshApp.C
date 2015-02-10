@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -354,7 +354,7 @@ void dumpFeatures
 
 int main(int argc, char *argv[])
 {
-#   include "addOverwriteOption.H"
+    #include "addOverwriteOption.H"
     argList::noParallel();
 
     argList::validArgs.append("featureAngle [0-180]");
@@ -375,9 +375,9 @@ int main(int argc, char *argv[])
         " multiple faces inbetween cells"
     );
 
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
     const word oldInstance = mesh.pointsInstance();
 

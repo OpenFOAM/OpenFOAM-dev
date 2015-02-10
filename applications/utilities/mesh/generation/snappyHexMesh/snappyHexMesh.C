@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -607,7 +607,7 @@ void writeMesh
 
 int main(int argc, char *argv[])
 {
-#   include "addOverwriteOption.H"
+    #include "addOverwriteOption.H"
     Foam::argList::addBoolOption
     (
         "checkGeometry",
@@ -631,10 +631,10 @@ int main(int argc, char *argv[])
         "fileName",
         "name of the file to save the simplified surface to"
     );
-#   include "addDictOption.H"
+    #include "addDictOption.H"
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     runTime.functionObjects().off();
 
     const bool overwrite = args.optionFound("overwrite");

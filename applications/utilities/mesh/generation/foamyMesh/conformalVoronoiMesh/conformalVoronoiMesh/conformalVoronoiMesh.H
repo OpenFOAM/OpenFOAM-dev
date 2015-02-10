@@ -1029,7 +1029,7 @@ public:
 #include "conformalVoronoiMeshI.H"
 
 #ifdef NoRepository
-#   include "conformalVoronoiMeshTemplates.C"
+    #include "conformalVoronoiMeshTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

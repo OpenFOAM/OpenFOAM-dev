@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
-#   include "addRegionOption.H"
+    #include "addRegionOption.H"
     argList::addBoolOption
     (
         "noTopology",
@@ -85,10 +85,10 @@ int main(int argc, char *argv[])
         "read user-defined mesh quality criterions from system/meshQualityDict"
     );
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     instantList timeDirs = timeSelector::select0(runTime, args);
-#   include "createNamedPolyMesh.H"
+    #include "createNamedPolyMesh.H"
 
     const bool noTopology  = args.optionFound("noTopology");
     const bool allGeometry = args.optionFound("allGeometry");

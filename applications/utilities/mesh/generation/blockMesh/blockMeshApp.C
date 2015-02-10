@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,9 +81,9 @@ int main(int argc, char *argv[])
         "specify alternative dictionary for the blockMesh description"
     );
 
-#   include "addRegionOption.H"
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "addRegionOption.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
     const word dictName("blockMeshDict");
 
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
             meshDict.lookup("mergePatchPairs")
         );
 
-#       include "mergePatchPairs.H"
+        #include "mergePatchPairs.H"
     }
     else
     {

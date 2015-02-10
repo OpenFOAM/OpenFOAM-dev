@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,11 +55,11 @@ bool notEqual(const scalar s1, const scalar s2, const scalar tol)
 
 int main(int argc, char *argv[])
 {
-#   include "addTimeOptions.H"
+    #include "addTimeOptions.H"
     argList::validArgs.append("inflate (true|false)");
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
     const Switch inflate(args.args()[1]);
 

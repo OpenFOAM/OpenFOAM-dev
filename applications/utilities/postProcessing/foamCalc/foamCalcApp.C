@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,13 +43,13 @@ Description
 int main(int argc, char *argv[])
 {
     Foam::timeSelector::addOptions();
-#   include "addRegionOption.H"
+    #include "addRegionOption.H"
     Foam::argList::addBoolOption
     (
         "noWrite",
         "suppress writing results"
     );
-#   include "addDictOption.H"
+    #include "addDictOption.H"
 
     if (argc < 2)
     {
@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
 
     utility().tryInit();
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
     Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
-#   include "createNamedMesh.H"
+    #include "createNamedMesh.H"
 
     utility().tryPreCalc(args, runTime, mesh);
 

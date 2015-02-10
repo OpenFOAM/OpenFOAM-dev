@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
         "suppress writing a boundary (.bnd) file"
     );
 
-#   include "setRootCase.H"
-#   include "createTime.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
 
     instantList timeDirs = timeSelector::select0(runTime, args);
 
@@ -101,13 +101,13 @@ int main(int argc, char *argv[])
         }
     }
 
-#   include "createPolyMesh.H"
+    #include "createPolyMesh.H"
 
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
 
-#       include "getTimeIndex.H"
+        #include "getTimeIndex.H"
 
         polyMesh::readUpdateState state = mesh.readUpdate();
 

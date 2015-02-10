@@ -250,7 +250,7 @@ for (label i=0; i<nPoints; i++)
             quadFace[2] = i8tab[i];
             quadFace[3] = i3tab[i8tab[i]];
 
-#           include "checkPatch.H"
+            #include "checkPatch.H"
         }
 
         // right
@@ -262,7 +262,7 @@ for (label i=0; i<nPoints; i++)
             quadFace[2] = i8tab[i3tab[i1tab[i]]];
             quadFace[3] = i8tab[i1tab[i]];
 
-#           include "checkPatch.H"
+            #include "checkPatch.H"
         }
 
         // front
@@ -274,7 +274,7 @@ for (label i=0; i<nPoints; i++)
             quadFace[2] = i8tab[i1tab[i]];
             quadFace[3] = i8tab[i];
 
-#           include "checkPatch.H"
+            #include "checkPatch.H"
         }
 
         // derriere (back)
@@ -286,7 +286,7 @@ for (label i=0; i<nPoints; i++)
             quadFace[2] = i8tab[i1tab[i3tab[i]]];
             quadFace[3] = i1tab[i3tab[i]];
 
-#           include "checkPatch.H"
+            #include "checkPatch.H"
         }
 
         // bottom
@@ -298,7 +298,7 @@ for (label i=0; i<nPoints; i++)
             quadFace[2] = i1tab[i3tab[i]];
             quadFace[3] = i1tab[i];
 
-#           include "checkPatch.H"
+            #include "checkPatch.H"
         }
 
         // top
@@ -310,7 +310,7 @@ for (label i=0; i<nPoints; i++)
             quadFace[2] = i3tab[i1tab[i8tab[i]]];
             quadFace[3] = i3tab[i8tab[i]];
 
-#           include "checkPatch.H"
+            #include "checkPatch.H"
         }
     }
 }
