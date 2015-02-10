@@ -105,5 +105,3 @@
         );
         p_rgh = p - rho*gh;
     }
-
-    fv::IOoptionList fvOptions(mesh);

@@ -91,5 +91,3 @@
             pRefValue - getRefCellValue(p, pRefCell)
         );
     }
-
-    fv::IOoptionList fvOptions(mesh);

@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     pimpleControl pimple(mesh);
 
     #include "createFields.H"
+    #include "createFvOptions.H"
     #include "readTimeControls.H"
     #include "createPrghCorrTypes.H"
 
