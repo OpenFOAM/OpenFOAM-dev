@@ -78,8 +78,8 @@ class threePhaseInterfaceProperties
         void operator=(const threePhaseInterfaceProperties&);
 
         //- Correction for the boundary condition on the unit normal nHat on
-        //  walls to produce the correct contact dynamic angle
-        //  calculated from the component of U parallel to the wall
+        //  walls to produce the correct contact dynamic angle.
+        //  Calculated from the component of U parallel to the wall
         void correctContactAngle
         (
             surfaceVectorField::GeometricBoundaryField& nHat
