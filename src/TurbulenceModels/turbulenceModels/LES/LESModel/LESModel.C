@@ -165,7 +165,7 @@ Foam::LESModel<BasicTurbulenceModel>::New
 template<class BasicTurbulenceModel>
 bool Foam::LESModel<BasicTurbulenceModel>::read()
 {
-    if (turbulenceModel::read())
+    if (BasicTurbulenceModel::read())
     {
         LESDict_ <<= this->subDict("LES");
         LESDict_.lookup("turbulence") >> turbulence_;

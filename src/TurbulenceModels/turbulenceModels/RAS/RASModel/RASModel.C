@@ -177,7 +177,7 @@ Foam::RASModel<BasicTurbulenceModel>::New
 template<class BasicTurbulenceModel>
 bool Foam::RASModel<BasicTurbulenceModel>::read()
 {
-    if (turbulenceModel::read())
+    if (BasicTurbulenceModel::read())
     {
         RASDict_ <<= this->subDict("RAS");
         RASDict_.lookup("turbulence") >> turbulence_;
