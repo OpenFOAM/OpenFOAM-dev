@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 
     Info<< "End" << endl;
 
-    return(0);
+    return 0;
 }
 
 

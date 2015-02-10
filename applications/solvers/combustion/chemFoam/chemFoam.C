@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     Info << "Number of steps = " << runTime.timeIndex() << endl;
     Info << "End" << nl << endl;
 
-    return(0);
+    return 0;
 }
 
 
