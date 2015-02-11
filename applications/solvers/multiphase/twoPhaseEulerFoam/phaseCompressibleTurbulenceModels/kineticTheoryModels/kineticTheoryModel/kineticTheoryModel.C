@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -406,7 +406,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         // Particle viscosity (Table 3.2, p.47)
         nut_ = viscosityModel_->nu(alpha, Theta_, gs0_, rho, da, e_);
 
-        volScalarField ThetaSqrt(sqrt(Theta_));
+        volScalarField ThetaSqrt("sqrtTheta", sqrt(Theta_));
 
         // Bulk viscosity  p. 45 (Lun et al. 1984).
         lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0_*(1.0 + e_)*ThetaSqrt/sqrtPi;
@@ -420,6 +420,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         // Dissipation (Eq. 3.24, p.50)
         volScalarField gammaCoeff
         (
+            "gammaCoeff",
             12.0*(1.0 - sqr(e_))
            *max(sqr(alpha), residualAlpha_)
            *rho*gs0_*(1.0/da)*ThetaSqrt/sqrtPi
@@ -429,9 +430,10 @@ void Foam::RASModels::kineticTheoryModel::correct()
         volScalarField beta(phase_.fluid().drag(phase_).K());
 
         // Eq. 3.25, p. 50 Js = J1 - J2
-        volScalarField J1(3.0*beta);
+        volScalarField J1("J1", 3.0*beta);
         volScalarField J2
         (
+            "J2",
             0.25*sqr(beta)*da*magSqr(U - Uc_)
            /(
                max(alpha, residualAlpha_)*rho
@@ -482,9 +484,10 @@ void Foam::RASModels::kineticTheoryModel::correct()
     {
         // Equilibrium => dissipation == production
         // Eq. 4.14, p.82
-        volScalarField K1(2.0*(1.0 + e_)*rho*gs0_);
+        volScalarField K1("K1", 2.0*(1.0 + e_)*rho*gs0_);
         volScalarField K3
         (
+            "K3",
             0.5*da*rho*
             (
                 (sqrtPi/(3.0*(3.0 - e_)))
@@ -495,24 +498,27 @@ void Foam::RASModels::kineticTheoryModel::correct()
 
         volScalarField K2
         (
+            "K2",
             4.0*da*rho*(1.0 + e_)*alpha*gs0_/(3.0*sqrtPi) - 2.0*K3/3.0
         );
 
-        volScalarField K4(12.0*(1.0 - sqr(e_))*rho*gs0_/(da*sqrtPi));
+        volScalarField K4("K4", 12.0*(1.0 - sqr(e_))*rho*gs0_/(da*sqrtPi));
 
         volScalarField trD
         (
+            "trD",
             alpha/(alpha + residualAlpha_)
            *fvc::div(this->phi_)
         );
-        volScalarField tr2D(sqr(trD));
-        volScalarField trD2(tr(D & D));
+        volScalarField tr2D("tr2D", sqr(trD));
+        volScalarField trD2("trD2", tr(D & D));
 
-        volScalarField t1(K1*alpha + rho);
-        volScalarField l1(-t1*trD);
-        volScalarField l2(sqr(t1)*tr2D);
+        volScalarField t1("t1", K1*alpha + rho);
+        volScalarField l1("l1", -t1*trD);
+        volScalarField l2("l2", sqr(t1)*tr2D);
         volScalarField l3
         (
+            "l3",
             4.0
            *K4
            *alpha
@@ -535,7 +541,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         // particle viscosity (Table 3.2, p.47)
         nut_ = viscosityModel_->nu(alpha, Theta_, gs0_, rho, da, e_);
 
-        volScalarField ThetaSqrt(sqrt(Theta_));
+        volScalarField ThetaSqrt("sqrtTheta", sqrt(Theta_));
 
         // Bulk viscosity  p. 45 (Lun et al. 1984).
         lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0_*(1.0 + e_)*ThetaSqrt/sqrtPi;
@@ -571,5 +577,6 @@ void Foam::RASModels::kineticTheoryModel::correct()
             << "    max(nut) = " << max(nut_).value() << endl;
     }
 }
+
 
 // ************************************************************************* //
