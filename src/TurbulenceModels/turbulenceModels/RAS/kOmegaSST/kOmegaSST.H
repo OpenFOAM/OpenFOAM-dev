@@ -36,14 +36,23 @@ Description
         Menter, F. R. & Esch, T. (2001).
         Elements of Industrial Heat Transfer Prediction.
         16th Brazilian Congress of Mechanical Engineering (COBEM).
+    \endverbatim
 
+    with updated coefficients from
+    \verbatim
         Menter, F. R., Kuntz, M., and Langtry, R. (2003).
         Ten Years of Industrial Experience with the SST Turbulence Model.
         Turbulence, Heat and Mass Transfer 4, ed: K. Hanjalic, Y. Nagano,
         & M. Tummers, Begell House, Inc., 625 - 632.
     \endverbatim
 
-    with the addition of the optional F3 term for rough walls from
+    but with the consistent production terms from the 2001 paper as form in the
+    2003 paper is a typo, see
+    \verbatim
+        http://turbmodels.larc.nasa.gov/sst.html
+    \endverbatim
+
+    and the addition of the optional F3 term for rough walls from
     \verbatim
         Hellsten, A. (1998).
         "Some Improvements in Menter’s k-omega-SST turbulence model"
@@ -70,16 +79,15 @@ Description
     \verbatim
         kOmegaSSTCoeffs
         {
-            alphaK1     0.85034;
+            alphaK1     0.85;
             alphaK2     1.0;
             alphaOmega1 0.5;
-            alphaOmega2 0.85616;
-            Prt         1.0;    // only for compressible
+            alphaOmega2 0.856;
             beta1       0.075;
             beta2       0.0828;
             betaStar    0.09;
-            gamma1      0.5532;
-            gamma2      0.4403;
+            gamma1      5/9;
+            gamma2      0.44;
             a1          0.31;
             b1          1.0;
             c1          10.0;
@@ -161,13 +169,6 @@ protected:
             volScalarField omega_;
 
 
-    // Protected Member Functions
-
-        virtual void correctNut();
-        virtual tmp<fvScalarMatrix> kSource() const;
-        virtual tmp<fvScalarMatrix> omegaSource() const;
-
-
     // Private Member Functions
 
         tmp<volScalarField> F1(const volScalarField& CDkOmega) const;
@@ -204,6 +205,15 @@ protected:
         {
             return blend(F1, gamma1_, gamma2_);
         }
+
+        void correctNut(const volScalarField& S2);
+
+
+    // Protected Member Functions
+
+        virtual void correctNut();
+        virtual tmp<fvScalarMatrix> kSource() const;
+        virtual tmp<fvScalarMatrix> omegaSource() const;
 
 
 public:

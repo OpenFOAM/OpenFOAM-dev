@@ -107,16 +107,22 @@ tmp<volScalarField> kOmegaSST<BasicTurbulenceModel>::kOmegaSST::F23() const
 }
 
 
+template<class BasicTurbulenceModel>
+void kOmegaSST<BasicTurbulenceModel>::correctNut(const volScalarField& S2)
+{
+    this->nut_ = a1_*k_/max(a1_*omega_, b1_*F23()*sqrt(S2));
+    this->nut_.correctBoundaryConditions();
+
+    BasicTurbulenceModel::correctNut();
+}
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
 void kOmegaSST<BasicTurbulenceModel>::correctNut()
 {
-    this->nut_ =
-        a1_*k_/max(a1_*omega_, F23()*sqrt(2.0)*mag(symm(fvc::grad(this->U_))));
-    this->nut_.correctBoundaryConditions();
-
-    BasicTurbulenceModel::correctNut();
+    correctNut(2*magSqr(symm(fvc::grad(this->U_))));
 }
 
 
@@ -181,7 +187,7 @@ kOmegaSST<BasicTurbulenceModel>::kOmegaSST
         (
             "alphaK1",
             this->coeffDict_,
-            0.85034
+            0.85
         )
     ),
     alphaK2_
@@ -208,16 +214,7 @@ kOmegaSST<BasicTurbulenceModel>::kOmegaSST
         (
             "alphaOmega2",
             this->coeffDict_,
-            0.85616
-        )
-    ),
-    Prt_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Prt",
-            this->coeffDict_,
-            1.0
+            0.856
         )
     ),
     gamma1_
@@ -226,7 +223,7 @@ kOmegaSST<BasicTurbulenceModel>::kOmegaSST
         (
             "gamma1",
             this->coeffDict_,
-            0.5532
+            5.0/9.0
         )
     ),
     gamma2_
@@ -235,7 +232,7 @@ kOmegaSST<BasicTurbulenceModel>::kOmegaSST
         (
             "gamma2",
             this->coeffDict_,
-            0.4403
+            0.44
         )
     ),
     beta1_
@@ -351,11 +348,11 @@ bool kOmegaSST<BasicTurbulenceModel>::read()
         alphaK2_.readIfPresent(this->coeffDict());
         alphaOmega1_.readIfPresent(this->coeffDict());
         alphaOmega2_.readIfPresent(this->coeffDict());
+        gamma1_.readIfPresent(this->coeffDict());
+        gamma2_.readIfPresent(this->coeffDict());
         beta1_.readIfPresent(this->coeffDict());
         beta2_.readIfPresent(this->coeffDict());
         betaStar_.readIfPresent(this->coeffDict());
-        gamma1_.readIfPresent(this->coeffDict());
-        gamma2_.readIfPresent(this->coeffDict());
         a1_.readIfPresent(this->coeffDict());
         b1_.readIfPresent(this->coeffDict());
         c1_.readIfPresent(this->coeffDict());
@@ -413,7 +410,12 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
       + fvm::div(alphaRhoPhi, omega_)
       - fvm::laplacian(alpha*rho*DomegaEff(F1), omega_)
      ==
-        alpha*rhoGammaF1*GbyNu
+        alpha*rhoGammaF1
+       *min
+        (
+            GbyNu,
+            (c1_/a1_)*betaStar_*omega_*max(a1_*omega_, b1_*F23()*sqrt(S2))
+        )
       - fvm::SuSp((2.0/3.0)*alpha*rhoGammaF1*divU, omega_)
       - fvm::Sp(alpha*rho*beta(F1)*omega_, omega_)
       - fvm::SuSp
