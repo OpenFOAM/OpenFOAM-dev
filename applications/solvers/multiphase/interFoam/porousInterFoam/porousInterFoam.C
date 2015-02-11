@@ -46,6 +46,7 @@ Description
 #include "IOporosityModelList.H"
 #include "pimpleControl.H"
 #include "fvIOoptionList.H"
+#include "CorrectPhi.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -63,7 +64,6 @@ int main(int argc, char *argv[])
     #include "createFvOptions.H"
     #include "createPorousZones.H"
     #include "readTimeControls.H"
-    #include "createPrghCorrTypes.H"
     #include "correctPhi.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"

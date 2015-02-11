@@ -50,6 +50,7 @@ Description
 #include "turbulentTransportModel.H"
 #include "pimpleControl.H"
 #include "fvIOoptionList.H"
+#include "CorrectPhi.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -67,7 +68,6 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createFvOptions.H"
     #include "readTimeControls.H"
-    #include "createPcorrTypes.H"
 
     volScalarField rAU
     (
@@ -128,8 +128,7 @@ int main(int argc, char *argv[])
                     // Calculate absolute flux from the mapped surface velocity
                     phi = mesh.Sf() & Uf;
 
-                    #define divUCorr -divU
-                    #include "../interFoam/interDyMFoam/correctPhi.H"
+                    #include "correctPhi.H"
 
                     // Make the flux relative to the mesh motion
                     fvc::makeRelative(phi, U);

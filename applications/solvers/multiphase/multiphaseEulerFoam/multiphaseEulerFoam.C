@@ -39,8 +39,8 @@ Description
 #include "turbulentTransportModel.H"
 #include "pimpleControl.H"
 #include "IOMRFZoneList.H"
+#include "CorrectPhi.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
     #include "createMRFZones.H"
     #include "initContinuityErrs.H"
     #include "readTimeControls.H"
-    #include "createPcorrTypes.H"
     #include "correctPhi.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"

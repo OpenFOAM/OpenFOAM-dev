@@ -38,6 +38,7 @@ Description
 #include "psiThermo.H"
 #include "turbulentFluidThermoModel.H"
 #include "pimpleControl.H"
+#include "CorrectPhi.H"
 #include "fvIOoptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,7 +55,6 @@ int main(int argc, char *argv[])
     #include "readControls.H"
     #include "createFields.H"
     #include "createFvOptions.H"
-    #include "createPcorrTypes.H"
     #include "createRhoUf.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"

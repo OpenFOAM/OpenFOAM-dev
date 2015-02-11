@@ -4,7 +4,7 @@ CorrectPhi
     phi,
     p_rgh,
     surfaceScalarField("rAUf", fvc::interpolate(rAU)),
-    geometricZeroField(),
+    divU,
     pimple
 );
 
