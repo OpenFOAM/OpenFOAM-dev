@@ -29,7 +29,7 @@
     #include "createPhi.H"
 
 
-    Info<< "Reading transportProperties\n" << endl;
+    Info<< "Reading incompressibleTwoPhaseInteractingMixture\n" << endl;
     incompressibleTwoPhaseInteractingMixture mixture(U, phi);
 
     volScalarField& alpha1(mixture.alpha1());
@@ -37,18 +37,6 @@
 
     const dimensionedScalar& rho1 = mixture.rhod();
     const dimensionedScalar& rho2 = mixture.rhoc();
-
-    IOdictionary transportProperties
-    (
-        IOobject
-        (
-            "transportProperties",
-            runTime.constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    );
 
     // Mixture density
     volScalarField rho
@@ -84,7 +72,7 @@
     (
         relativeVelocityModel::New
         (
-            transportProperties,
+            mixture,
             mixture
         )
     );
@@ -104,7 +92,7 @@
 
     Info<< "Calculating field (g.h)f\n" << endl;
     volScalarField gh("gh", g & mesh.C());
-    surfaceScalarField ghf("gh", g & mesh.Cf());
+    surfaceScalarField ghf("ghf", g & mesh.Cf());
 
     volScalarField p
     (
