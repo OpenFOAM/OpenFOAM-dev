@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,10 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::constant::d() const
             (
                 "d",
                 phase_.U().time().timeName(),
-                phase_.U().mesh()
+                phase_.U().mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
             ),
             phase_.U().mesh(),
             d_
