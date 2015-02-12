@@ -134,7 +134,10 @@ public:
                     (
                         vf.name() + "BlendingFactor",
                         this->mesh().time().timeName(),
-                        this->mesh()
+                        this->mesh(),
+                        IOobject::NO_READ,
+                        IOobject::NO_WRITE,
+                        false
                     ),
                     this->mesh(),
                     dimensionedScalar
@@ -161,7 +164,10 @@ public:
                     (
                         "blendedLimiter",
                         this->mesh().time().timeName(),
-                        this->mesh()
+                        this->mesh(),
+                        IOobject::NO_READ,
+                        IOobject::NO_WRITE,
+                        false
                     ),
                     this->mesh(),
                     dimensionedScalar
