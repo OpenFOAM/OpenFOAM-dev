@@ -173,7 +173,7 @@ Foam::searchableBoxFeatures::features() const
         (
             IOobject
             (
-                surface().name(),
+                surface().name() + ".extendedFeatureEdgeMesh",
                 surface().instance(),
                 "extendedFeatureEdgeMesh",
                 surface().db(),

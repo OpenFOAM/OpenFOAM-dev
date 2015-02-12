@@ -401,7 +401,8 @@ Foam::cellShapeControlMesh::cellShapeControlMesh(const Time& runTime)
                     meshSubDir,
                     runTime,
                     IOobject::READ_IF_PRESENT,
-                    IOobject::NO_WRITE
+                    IOobject::NO_WRITE,
+                    false
                 ),
                 pointMesh::New(mesh)
             );
@@ -415,7 +416,8 @@ Foam::cellShapeControlMesh::cellShapeControlMesh(const Time& runTime)
                     meshSubDir,
                     mesh.time(),
                     IOobject::READ_IF_PRESENT,
-                    IOobject::AUTO_WRITE
+                    IOobject::AUTO_WRITE,
+                    false
                 )
             );
 
