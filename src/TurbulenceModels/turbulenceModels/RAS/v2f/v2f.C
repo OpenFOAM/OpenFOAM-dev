@@ -297,12 +297,12 @@ void v2f<BasicTurbulenceModel>::correct()
     const volScalarField S2(2*magSqr(dev(symm(gradU))));
 
     const volScalarField G(this->GName(), nut*S2);
-    const volScalarField T(Ts());
+    const volScalarField Ts(this->Ts());
     const volScalarField L2(type() + ":L2", sqr(Ls()));
     const volScalarField v2fAlpha
     (
         type() + ":alpha",
-        1.0/T*((C1_ - N)*v2_ - 2.0/3.0*k_*(C1_ - 1.0))
+        1.0/Ts*((C1_ - N)*v2_ - 2.0/3.0*k_*(C1_ - 1.0))
     );
 
     const volScalarField Ceps1
@@ -321,9 +321,9 @@ void v2f<BasicTurbulenceModel>::correct()
       + fvm::div(alphaRhoPhi, epsilon_)
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
-        Ceps1*alpha*rho*G/T
+        Ceps1*alpha*rho*G/Ts
       - fvm::SuSp(((2.0/3.0)*Ceps1 + Ceps3_)*alpha*rho*divU, epsilon_)
-      - fvm::Sp(Ceps2_*alpha*rho/T, epsilon_)
+      - fvm::Sp(Ceps2_*alpha*rho/Ts, epsilon_)
     );
 
     epsEqn().relax();
