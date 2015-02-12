@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,8 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
                 p.time().timeName(),
                 p.db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             p.mesh(),
             dimensionedScalar("Su0", dimVelocity, 0.0)
@@ -172,7 +173,8 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
                 p.time().timeName(),
                 p.db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             p.mesh(),
             dimensionedScalar("Su0", dimVelocity, 0.0)

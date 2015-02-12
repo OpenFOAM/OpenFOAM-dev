@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -218,8 +218,8 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::RaviPetersen::THatPowB
 {
     return pow
     (
-        Tu/TRef_,                                                     
-        polynomial(beta_[EqRIndex][pIndex],EqR)                       
+        Tu/TRef_,
+        polynomial(beta_[EqRIndex][pIndex],EqR)
     );
 }
 
@@ -238,7 +238,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::correlationInRange
         polynomial(alpha_[EqRIndex][pIndex],EqR)
        *THatPowB(EqRIndex, pIndex, EqR, Tu);
 }
- 
+
 
 inline Foam::scalar
 Foam::laminarFlameSpeedModels::RaviPetersen::correlationOutOfRange
@@ -313,7 +313,8 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
             p.time().timeName(),
             p.db(),
             IOobject::NO_READ,
-            IOobject::NO_WRITE
+            IOobject::NO_WRITE,
+            false
         ),
         p.mesh(),
         dimensionedScalar("EqR", dimless, 0.0)
@@ -344,7 +345,8 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
                 p.time().timeName(),
                 p.db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             p.mesh(),
             dimensionedScalar("Su0", dimVelocity, 0.0)

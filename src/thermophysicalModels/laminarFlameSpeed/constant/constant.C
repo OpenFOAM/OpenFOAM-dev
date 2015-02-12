@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,8 @@ Foam::laminarFlameSpeedModels::constant::operator()() const
                 psiuReactionThermo_.T().time().timeName(),
                 psiuReactionThermo_.T().db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             psiuReactionThermo_.T().mesh(),
             Su_
