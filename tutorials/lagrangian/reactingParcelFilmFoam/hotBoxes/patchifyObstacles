@@ -26,7 +26,7 @@ rm -f patchify.setSet >/dev/null 2>&1
 
 initialiseFaceSet()
 {
-    echo "faceSet cubeFaces clear" >> $tmpSetSet;
+    echo "faceSet cubeFaceSet clear" >> $tmpSetSet;
 }
 
 addToFaceSet()
@@ -39,7 +39,7 @@ addToFaceSet()
     z1=$6
     z2=$7
 
-    echo "faceSet cubeFaces add boxToFace ($x1 $y1 $z1) ($x2 $y2 $z2)" >> $tmpSetSet
+    echo "faceSet cubeFaceSet add boxToFace ($x1 $y1 $z1) ($x2 $y2 $z2)" >> $tmpSetSet
     echo "   $name: (x1=$x1 y1=$y1 z1=$z1) (x2=$x2 y2=$y2 z2=$z2)"
 }
 
@@ -146,8 +146,8 @@ for xi in $(seq 1 1 $nx); do
    x=`echo $x $offset | awk '{print $1 + $2}'`
 done
 
-echo "cellSet cubeFacesCells new faceToCell cubeFaces owner" >> $tmpSetSet
-echo "faceZoneSet cubeFaces new setsToFaceZone cubeFaces cubeFacesCells" >> $tmpSetSet
+echo "cellSet cubeFacesCells new faceToCell cubeFaceSet owner" >> $tmpSetSet
+echo "faceZoneSet cubeFaces new setsToFaceZone cubeFaceSet cubeFacesCells" >> $tmpSetSet
 
 echo "processing floor"
 floorMax=`echo 1 $tol | awk '{print $1 + $2}'`
@@ -156,6 +156,5 @@ echo "cellSet floorCells new faceToCell floorFaces owner" >> $tmpSetSet
 echo "faceZoneSet floorFaces new setsToFaceZone floorFaces floorCells" >> $tmpSetSet
 
 setSet -batch $tmpSetSet > log.setSet.patchifyObstacles 2>&1
-
 
 # *************************************************************************
