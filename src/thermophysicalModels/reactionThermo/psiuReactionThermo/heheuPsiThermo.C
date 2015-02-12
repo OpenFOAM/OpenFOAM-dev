@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -278,7 +278,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
                 this->T_.time().timeName(),
                 this->T_.db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->T_
         )
@@ -334,7 +335,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
                 this->psi_.time().timeName(),
                 this->psi_.db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->psi_.mesh(),
             this->psi_.dimensions()
@@ -385,7 +387,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
                 this->psi_.time().timeName(),
                 this->psi_.db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->psi_.mesh(),
             this->psi_.dimensions()
@@ -437,7 +440,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
                 this->T_.time().timeName(),
                 this->T_.db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->T_.mesh(),
             dimensionSet(1, -1, -1, 0, 0)
@@ -492,7 +496,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
                 this->T_.time().timeName(),
                 this->T_.db(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->T_.mesh(),
             dimensionSet(1, -1, -1, 0, 0)

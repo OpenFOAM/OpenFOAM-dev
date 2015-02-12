@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,7 +176,8 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<BasicThermo, MixtureType>::he
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             mesh,
             he_.dimensions()
@@ -268,7 +269,8 @@ Foam::heThermo<BasicThermo, MixtureType>::hc() const
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             mesh,
             he_.dimensions()
@@ -334,7 +336,8 @@ Foam::heThermo<BasicThermo, MixtureType>::Cp() const
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             mesh,
             dimEnergy/dimMass/dimTemperature
@@ -404,7 +407,8 @@ Foam::heThermo<BasicThermo, MixtureType>::Cv() const
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             mesh,
             dimEnergy/dimMass/dimTemperature
@@ -470,7 +474,8 @@ Foam::heThermo<BasicThermo, MixtureType>::gamma() const
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             mesh,
             dimless
@@ -542,7 +547,8 @@ Foam::heThermo<BasicThermo, MixtureType>::Cpv() const
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             mesh,
             dimEnergy/dimMass/dimTemperature
@@ -611,7 +617,8 @@ Foam::heThermo<BasicThermo, MixtureType>::CpByCpv() const
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             mesh,
             dimless

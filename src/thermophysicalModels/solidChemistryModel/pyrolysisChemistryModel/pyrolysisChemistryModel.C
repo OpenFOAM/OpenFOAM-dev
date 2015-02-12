@@ -628,7 +628,8 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
                 this->mesh_.time().timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->mesh_,
             dimensionedScalar("zero", dimEnergy/dimMass, 0.0),

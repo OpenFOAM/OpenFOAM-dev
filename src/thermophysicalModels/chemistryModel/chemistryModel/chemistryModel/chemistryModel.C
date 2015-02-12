@@ -489,7 +489,8 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
                 this->time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->mesh(),
             dimensionedScalar("zero", dimTime, SMALL),
