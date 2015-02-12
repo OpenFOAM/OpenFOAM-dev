@@ -68,7 +68,7 @@ Foam::XiEqModels::basicSubGrid::basicSubGrid
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::XiEqModels::basicSubGrid::~basicSubGrid()
 {}

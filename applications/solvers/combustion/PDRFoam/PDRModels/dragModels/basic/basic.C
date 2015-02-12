@@ -82,7 +82,7 @@ Foam::PDRDragModels::basic::basic
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::PDRDragModels::basic::~basic()
 {}

@@ -55,7 +55,7 @@ Foam::XiGModels::basicSubGrid::basicSubGrid
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::XiGModels::basicSubGrid::~basicSubGrid()
 {}

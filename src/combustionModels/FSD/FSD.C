@@ -77,7 +77,7 @@ FSD<CombThermoType, ThermoType>::FSD
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class CombThermoType, class ThermoType>
 FSD<CombThermoType, ThermoType>::~FSD()

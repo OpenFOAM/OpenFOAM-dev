@@ -66,7 +66,7 @@ Foam::XiEqModels::SCOPEXiEq::SCOPEXiEq
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::XiEqModels::SCOPEXiEq::~SCOPEXiEq()
 {}

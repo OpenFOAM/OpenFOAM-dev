@@ -63,7 +63,7 @@ Foam::XiModels::transport::transport
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::XiModels::transport::~transport()
 {}

@@ -58,7 +58,7 @@ Foam::XiEqModel::XiEqModel
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::XiEqModel::~XiEqModel()
 {}
