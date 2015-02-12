@@ -450,7 +450,7 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
     solve(kEqn);
     bound(k_, this->kMin_);
 
-    correctNut();
+    correctNut(S2);
 }
 
 
