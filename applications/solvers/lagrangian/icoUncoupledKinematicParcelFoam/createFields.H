@@ -1,36 +1,3 @@
-    Info<< "\nReading transportProperties\n" << endl;
-
-    IOdictionary transportProperties
-    (
-        IOobject
-        (
-            "transportProperties",
-            runTime.constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    );
-
-    dimensionedScalar rhoInfValue
-    (
-        transportProperties.lookup("rhoInf")
-    );
-
-    volScalarField rhoInf
-    (
-        IOobject
-        (
-            "rho",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        rhoInfValue
-    );
-
     Info<< "Reading field U\n" << endl;
     volVectorField U
     (
@@ -48,6 +15,25 @@
     #include "createPhi.H"
 
     singlePhaseTransportModel laminarTransport(U, phi);
+
+    dimensionedScalar rhoInfValue
+    (
+        laminarTransport.lookup("rhoInf")
+    );
+
+    volScalarField rhoInf
+    (
+        IOobject
+        (
+            "rho",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        rhoInfValue
+    );
 
     autoPtr<incompressible::turbulenceModel> turbulence
     (

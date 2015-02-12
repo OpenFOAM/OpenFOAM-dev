@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,16 +60,7 @@ Foam::XiEqModels::SCOPEXiEq::SCOPEXiEq
     ),
     MaModel
     (
-        IOdictionary
-        (
-            IOobject
-            (
-                "combustionProperties",
-                Su.mesh().time().constant(),
-                Su.mesh(),
-                IOobject::MUST_READ
-            )
-        ),
+        Su.mesh().lookupObject<IOdictionary>("combustionProperties"),
         thermo
     )
 {}

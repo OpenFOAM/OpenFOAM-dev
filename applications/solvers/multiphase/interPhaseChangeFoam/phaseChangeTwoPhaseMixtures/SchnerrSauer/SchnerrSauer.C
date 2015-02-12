@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,9 +112,9 @@ Foam::Pair<Foam::tmp<Foam::volScalarField> >
 Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotAlphal() const
 {
     const volScalarField& p = alpha1_.db().lookupObject<volScalarField>("p");
-    volScalarField limitedAlpha1(min(max(alpha1_, scalar(0)), scalar(1)));
-
     volScalarField pCoeff(this->pCoeff(p));
+
+    volScalarField limitedAlpha1(min(max(alpha1_, scalar(0)), scalar(1)));
 
     return Pair<tmp<volScalarField> >
     (
@@ -129,9 +129,10 @@ Foam::Pair<Foam::tmp<Foam::volScalarField> >
 Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotP() const
 {
     const volScalarField& p = alpha1_.db().lookupObject<volScalarField>("p");
-    volScalarField limitedAlpha1(min(max(alpha1_, scalar(0)), scalar(1)));
+    volScalarField pCoeff(this->pCoeff(p));
 
-    volScalarField apCoeff(limitedAlpha1*pCoeff(p));
+    volScalarField limitedAlpha1(min(max(alpha1_, scalar(0)), scalar(1)));
+    volScalarField apCoeff(limitedAlpha1*pCoeff);
 
     return Pair<tmp<volScalarField> >
     (

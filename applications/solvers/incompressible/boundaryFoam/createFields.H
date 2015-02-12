@@ -36,20 +36,7 @@
         incompressible::RASModel::New(U, phi, laminarTransport)
     );
 
-
-    IOdictionary transportProperties
-    (
-        IOobject
-        (
-            "transportProperties",
-            runTime.constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    );
-
-    dimensionedVector Ubar(transportProperties.lookup("Ubar"));
+    dimensionedVector Ubar(laminarTransport.lookup("Ubar"));
 
     vector flowDirection = (Ubar/mag(Ubar)).value();
     tensor flowMask = sqr(flowDirection);

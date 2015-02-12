@@ -1,42 +1,15 @@
-    Info<< "\nReading transportProperties\n" << endl;
-
-    IOdictionary transportProperties
+    word contiuousPhaseName
     (
-        IOobject
+        IOdictionary
         (
-            "transportProperties",
-            runTime.constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE,
-            false
-        )
-    );
-
-    word contiuousPhaseName(transportProperties.lookup("contiuousPhaseName"));
-
-    dimensionedScalar rhocValue
-    (
-        IOobject::groupName("rho", contiuousPhaseName),
-        dimDensity,
-        transportProperties.lookup
-        (
-            IOobject::groupName("rho", contiuousPhaseName)
-        )
-    );
-
-    volScalarField rhoc
-    (
-        IOobject
-        (
-            rhocValue.name(),
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        rhocValue
+            IOobject
+            (
+                "transportProperties",
+                runTime.constant(),
+                mesh,
+                IOobject::MUST_READ
+            )
+        ).lookup("contiuousPhaseName")
     );
 
     Info<< "Reading field U\n" << endl;
@@ -91,6 +64,30 @@
     Info<< "Creating turbulence model\n" << endl;
 
     singlePhaseTransportModel continuousPhaseTransport(Uc, phic);
+
+    dimensionedScalar rhocValue
+    (
+        IOobject::groupName("rho", contiuousPhaseName),
+        dimDensity,
+        continuousPhaseTransport.lookup
+        (
+            IOobject::groupName("rho", contiuousPhaseName)
+        )
+    );
+
+    volScalarField rhoc
+    (
+        IOobject
+        (
+            rhocValue.name(),
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        rhocValue
+    );
 
     volScalarField muc
     (

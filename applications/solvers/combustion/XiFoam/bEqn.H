@@ -2,7 +2,7 @@ if (ign.ignited())
 {
     // progress variable
     // ~~~~~~~~~~~~~~~~~
-    volScalarField c(scalar(1) - b);
+    volScalarField c("c", scalar(1) - b);
 
     // Unburnt gas density
     // ~~~~~~~~~~~~~~~~~~~
@@ -11,7 +11,7 @@ if (ign.ignited())
     // Calculate flame normal etc.
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    volVectorField n(fvc::grad(b));
+    volVectorField n("n", fvc::grad(b));
 
     volScalarField mgb(mag(n));
 

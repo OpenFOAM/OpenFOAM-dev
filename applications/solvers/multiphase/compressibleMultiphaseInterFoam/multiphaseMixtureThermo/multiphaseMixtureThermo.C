@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -957,6 +957,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             phasei,
             new surfaceScalarField
             (
+                phi_.name() + alpha.name(),
                 fvc::flux
                 (
                     phi_,

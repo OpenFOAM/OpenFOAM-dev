@@ -54,31 +54,7 @@ Foam::XiEqModel::XiEqModel
     ),
     thermo_(thermo),
     turbulence_(turbulence),
-    Su_(Su),
-    Nv_
-    (
-        IOobject
-        (
-            "Nv",
-            Su.mesh().facesInstance(),
-            Su.mesh(),
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
-        ),
-        Su.mesh()
-    ),
-    nsv_
-    (
-        IOobject
-        (
-            "nsv",
-            Su.mesh().facesInstance(),
-            Su.mesh(),
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
-        ),
-        Su.mesh()
-    )
+    Su_(Su)
 {}
 
 
@@ -100,8 +76,7 @@ bool Foam::XiEqModel::read(const dictionary& XiEqProperties)
 
 void Foam::XiEqModel::writeFields() const
 {
-    Nv_.write();
-    nsv_.write();
+    //***HGW It is not clear why B is written here
     if (Su_.mesh().foundObject<volSymmTensorField>("B"))
     {
         const volSymmTensorField& B =
@@ -110,13 +85,13 @@ void Foam::XiEqModel::writeFields() const
     }
 }
 
+
 Foam::tmp<Foam::volScalarField>
 Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
 {
     const fvMesh& mesh = Su_.mesh();
 
     const volVectorField& U = mesh.lookupObject<volVectorField>("U");
-
     const volSymmTensorField& CT = mesh.lookupObject<volSymmTensorField>("CT");
     const volScalarField& Nv = mesh.lookupObject<volScalarField>("Nv");
     const volSymmTensorField& nsv =
@@ -184,11 +159,11 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
 
     const scalarField deltaUp(upLocal*(max(scalar(1.0), pow(nr, 0.5)) - 1.0));
 
-    //Re use tN
+    // Re use tN
     N.internalField() = upLocal*(max(scalar(1.0), pow(nr, 0.5)) - 1.0);
 
     return tN;
-
 }
+
 
 // ************************************************************************* //

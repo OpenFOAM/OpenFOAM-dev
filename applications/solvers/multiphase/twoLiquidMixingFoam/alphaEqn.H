@@ -3,6 +3,7 @@
 
     surfaceScalarField phiAlpha
     (
+        phi.name() + alpha1.name(),
         fvc::flux
         (
             phi,
