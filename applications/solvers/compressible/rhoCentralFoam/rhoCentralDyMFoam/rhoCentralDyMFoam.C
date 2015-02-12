@@ -31,6 +31,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "psiThermo.H"
 #include "turbulentFluidThermoModel.H"
 #include "zeroGradientFvPatchFields.H"
@@ -42,9 +43,8 @@ Description
 int main(int argc, char *argv[])
 {
     #include "setRootCase.H"
-
     #include "createTime.H"
-    #include "createMesh.H"
+    #include "createDynamicFvMesh.H"
     #include "createFields.H"
     #include "readTimeControls.H"
 
@@ -54,107 +54,14 @@ int main(int argc, char *argv[])
 
     dimensionedScalar v_zero("v_zero", dimVolume/dimTime, 0.0);
 
-    Info<< "\nStarting time loop\n" << endl;
+    // Courant numbers used to adjust the time-step
+    scalar CoNum = 0.0;
+    scalar meanCoNum = 0.0;
 
-    autoPtr<Foam::motionSolver> motionPtr = motionSolver::New(mesh);
+    Info<< "\nStarting time loop\n" << endl;
 
     while (runTime.run())
     {
-        // --- upwind interpolation of primitive fields on faces
-
-        surfaceScalarField rho_pos
-        (
-            fvc::interpolate(rho, pos, "reconstruct(rho)")
-        );
-        surfaceScalarField rho_neg
-        (
-            fvc::interpolate(rho, neg, "reconstruct(rho)")
-        );
-
-        surfaceVectorField rhoU_pos
-        (
-            fvc::interpolate(rhoU, pos, "reconstruct(U)")
-        );
-        surfaceVectorField rhoU_neg
-        (
-            fvc::interpolate(rhoU, neg, "reconstruct(U)")
-        );
-
-        volScalarField rPsi(1.0/psi);
-        surfaceScalarField rPsi_pos
-        (
-            fvc::interpolate(rPsi, pos, "reconstruct(T)")
-        );
-        surfaceScalarField rPsi_neg
-        (
-            fvc::interpolate(rPsi, neg, "reconstruct(T)")
-        );
-
-        surfaceScalarField e_pos
-        (
-            fvc::interpolate(e, pos, "reconstruct(T)")
-        );
-        surfaceScalarField e_neg
-        (
-            fvc::interpolate(e, neg, "reconstruct(T)")
-        );
-
-        surfaceVectorField U_pos(rhoU_pos/rho_pos);
-        surfaceVectorField U_neg(rhoU_neg/rho_neg);
-
-        surfaceScalarField p_pos(rho_pos*rPsi_pos);
-        surfaceScalarField p_neg(rho_neg*rPsi_neg);
-
-        surfaceScalarField phiv_pos(U_pos & mesh.Sf());
-        surfaceScalarField phiv_neg(U_neg & mesh.Sf());
-
-        fvc::makeRelative(phiv_pos, U);
-        fvc::makeRelative(phiv_neg, U);
-
-        volScalarField c(sqrt(thermo.Cp()/thermo.Cv()*rPsi));
-        surfaceScalarField cSf_pos
-        (
-            fvc::interpolate(c, pos, "reconstruct(T)")*mesh.magSf()
-        );
-        surfaceScalarField cSf_neg
-        (
-            fvc::interpolate(c, neg, "reconstruct(T)")*mesh.magSf()
-        );
-
-        surfaceScalarField ap
-        (
-            max(max(phiv_pos + cSf_pos, phiv_neg + cSf_neg), v_zero)
-        );
-        surfaceScalarField am
-        (
-            min(min(phiv_pos - cSf_pos, phiv_neg - cSf_neg), v_zero)
-        );
-
-        surfaceScalarField a_pos(ap/(ap - am));
-
-        surfaceScalarField amaxSf("amaxSf", max(mag(am), mag(ap)));
-
-        surfaceScalarField aSf(am*a_pos);
-
-        if (fluxScheme == "Tadmor")
-        {
-            aSf = -0.5*amaxSf;
-            a_pos = 0.5;
-        }
-
-        surfaceScalarField a_neg(1.0 - a_pos);
-
-        phiv_pos *= a_pos;
-        phiv_neg *= a_neg;
-
-        surfaceScalarField aphiv_pos(phiv_pos - aSf);
-        surfaceScalarField aphiv_neg(phiv_neg + aSf);
-
-        // Reuse amaxSf for the maximum positive and negative fluxes
-        // estimated by the central scheme
-        amaxSf = max(mag(aphiv_pos), mag(aphiv_neg));
-
-        #include "compressibleCourantNo.H"
         #include "readTimeControls.H"
         #include "setDeltaT.H"
 
@@ -162,7 +69,113 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        mesh.movePoints(motionPtr->newPoints());
+        // Do any mesh changes
+        mesh.update();
+
+        // --- upwind interpolation of primitive fields on faces
+
+        surfaceScalarField rho_pos
+        (
+            "rho_pos",
+            fvc::interpolate(rho, pos, "reconstruct(rho)")
+        );
+        surfaceScalarField rho_neg
+        (
+            "rho_neg",
+            fvc::interpolate(rho, neg, "reconstruct(rho)")
+        );
+
+        surfaceVectorField rhoU_pos
+        (
+            "rhoU_pos",
+            fvc::interpolate(rhoU, pos, "reconstruct(U)")
+        );
+        surfaceVectorField rhoU_neg
+        (
+            "rhoU_neg",
+            fvc::interpolate(rhoU, neg, "reconstruct(U)")
+        );
+
+        volScalarField rPsi(1.0/psi);
+        surfaceScalarField rPsi_pos
+        (
+            "rPsi_pos",
+            fvc::interpolate(rPsi, pos, "reconstruct(T)")
+        );
+        surfaceScalarField rPsi_neg
+        (
+            "rPsi_neg",
+            fvc::interpolate(rPsi, neg, "reconstruct(T)")
+        );
+
+        surfaceScalarField e_pos
+        (
+            "e_pos",
+            fvc::interpolate(e, pos, "reconstruct(T)")
+        );
+        surfaceScalarField e_neg
+        (
+            "e_neg",
+            fvc::interpolate(e, neg, "reconstruct(T)")
+        );
+
+        surfaceVectorField U_pos("U_pos", rhoU_pos/rho_pos);
+        surfaceVectorField U_neg("U_neg", rhoU_neg/rho_neg);
+
+        surfaceScalarField p_pos("p_pos", rho_pos*rPsi_pos);
+        surfaceScalarField p_neg("p_neg", rho_neg*rPsi_neg);
+
+        surfaceScalarField phiv_pos("phiv_pos", U_pos & mesh.Sf());
+        surfaceScalarField phiv_neg("phiv_neg", U_neg & mesh.Sf());
+
+        volScalarField c(sqrt(thermo.Cp()/thermo.Cv()*rPsi));
+        surfaceScalarField cSf_pos
+        (
+            "cSf_pos",
+            fvc::interpolate(c, pos, "reconstruct(T)")*mesh.magSf()
+        );
+        surfaceScalarField cSf_neg
+        (
+            "cSf_neg",
+            fvc::interpolate(c, neg, "reconstruct(T)")*mesh.magSf()
+        );
+
+        surfaceScalarField ap
+        (
+            "ap",
+            max(max(phiv_pos + cSf_pos, phiv_neg + cSf_neg), v_zero)
+        );
+        surfaceScalarField am
+        (
+            "am",
+            min(min(phiv_pos - cSf_pos, phiv_neg - cSf_neg), v_zero)
+        );
+
+        surfaceScalarField a_pos("a_pos", ap/(ap - am));
+
+        surfaceScalarField amaxSf("amaxSf", max(mag(am), mag(ap)));
+
+        surfaceScalarField aSf("aSf", am*a_pos);
+
+        if (fluxScheme == "Tadmor")
+        {
+            aSf = -0.5*amaxSf;
+            a_pos = 0.5;
+        }
+
+        surfaceScalarField a_neg("a_neg", 1.0 - a_pos);
+
+        phiv_pos *= a_pos;
+        phiv_neg *= a_neg;
+
+        surfaceScalarField aphiv_pos("aphiv_pos", phiv_pos - aSf);
+        surfaceScalarField aphiv_neg("aphiv_neg", phiv_neg + aSf);
+
+        // Reuse amaxSf for the maximum positive and negative fluxes
+        // estimated by the central scheme
+        amaxSf = max(mag(aphiv_pos), mag(aphiv_neg));
+
+        #include "centralCourantNo.H"
 
         phi = aphiv_pos*rho_pos + aphiv_neg*rho_neg;
 
@@ -174,11 +187,16 @@ int main(int argc, char *argv[])
 
         surfaceScalarField phiEp
         (
+            "phiEp",
             aphiv_pos*(rho_pos*(e_pos + 0.5*magSqr(U_pos)) + p_pos)
           + aphiv_neg*(rho_neg*(e_neg + 0.5*magSqr(U_neg)) + p_neg)
-          + mesh.phi()*(a_pos*p_pos + a_neg*p_neg)
           + aSf*p_pos - aSf*p_neg
         );
+
+        if (mesh.moving())
+        {
+            phiEp += mesh.phi()*(a_pos*p_pos + a_neg*p_neg);
+        }
 
         volScalarField muEff(turbulence->muEff());
         volTensorField tauMC("tauMC", muEff*dev2(Foam::T(fvc::grad(U))));
@@ -209,6 +227,7 @@ int main(int argc, char *argv[])
         // --- Solve energy
         surfaceScalarField sigmaDotU
         (
+            "sigmaDotU",
             (
                 fvc::interpolate(muEff)*mesh.magSf()*fvc::snGrad(U)
               + (mesh.Sf() & fvc::interpolate(tauMC))
