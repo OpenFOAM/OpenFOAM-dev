@@ -125,7 +125,7 @@ void Foam::displacementSBRStressFvMotionSolver::solve()
 
     surfaceScalarField Df(diffusivityPtr_->operator()());
 
-    volTensorField gradCd(fvc::grad(cellDisplacement_));
+    volTensorField gradCd("gradCd", fvc::grad(cellDisplacement_));
 
     Foam::solve
     (
