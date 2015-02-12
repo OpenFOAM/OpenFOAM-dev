@@ -94,7 +94,8 @@ Foam::eddyViscosity<BasicTurbulenceModel>::R() const
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             ((2.0/3.0)*I)*tk() - (nut_)*dev(twoSymm(fvc::grad(this->U_))),
             tk().boundaryField().types()

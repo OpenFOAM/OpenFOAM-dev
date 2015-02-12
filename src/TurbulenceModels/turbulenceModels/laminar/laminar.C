@@ -120,7 +120,8 @@ Foam::laminar<BasicTurbulenceModel>::nut() const
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->mesh_,
             dimensionedScalar("nut", dimViscosity, 0.0)
@@ -182,7 +183,8 @@ Foam::laminar<BasicTurbulenceModel>::k() const
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->mesh_,
             dimensionedScalar("k", sqr(this->U_.dimensions()), 0.0)
@@ -205,7 +207,8 @@ Foam::laminar<BasicTurbulenceModel>::epsilon() const
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->mesh_,
             dimensionedScalar
@@ -231,7 +234,8 @@ Foam::laminar<BasicTurbulenceModel>::R() const
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::NO_WRITE,
+                false
             ),
             this->mesh_,
             dimensionedSymmTensor
