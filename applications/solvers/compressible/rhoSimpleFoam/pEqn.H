@@ -31,8 +31,6 @@
             // Relax the pressure equation to ensure diagonal-dominance
             pEqn.relax();
 
-            fvOptions.constrain(pEqn);
-
             pEqn.setReference(pRefCell, pRefValue);
 
             pEqn.solve();
@@ -66,8 +64,6 @@
             );
 
             pEqn.setReference(pRefCell, pRefValue);
-
-            fvOptions.constrain(pEqn);
 
             pEqn.solve();
 

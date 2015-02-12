@@ -52,8 +52,6 @@
           - fvm::laplacian(rAUf, p_rgh)
         );
 
-        fvOptions.constrain(p_rghEqn);
-
         p_rghEqn.solve(mesh.solver(p_rgh.select(pimple.finalInnerIter())));
 
         if (pimple.finalNonOrthogonalIter())

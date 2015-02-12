@@ -45,8 +45,6 @@ while (pimple.correctNonOrthogonal())
       + fvOptions(psi, p_rgh, rho.name())
     );
 
-    fvOptions.constrain(p_rghEqn);
-
     p_rghEqn.solve(mesh.solver(p_rgh.select(pimple.finalInnerIter())));
 
     if (pimple.finalNonOrthogonalIter())

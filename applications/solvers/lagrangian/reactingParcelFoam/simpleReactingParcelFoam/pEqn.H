@@ -28,8 +28,6 @@
           + fvOptions(psi, p, rho.name())
         );
 
-        fvOptions.constrain(pEqn);
-
         pEqn.solve();
 
         if (simple.finalNonOrthogonalIter())

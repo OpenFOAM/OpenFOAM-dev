@@ -44,8 +44,6 @@
                 fvOptions(psi, p, rho.name())
             );
 
-            fvOptions.constrain(pEqn);
-
             pEqn.solve(mesh.solver(p.select(pimple.finalInnerIter())));
 
             if (pimple.finalNonOrthogonalIter())
@@ -82,8 +80,6 @@
                 pDDtEqn
               - fvm::laplacian(rhorAUf, p)
             );
-
-            fvOptions.constrain(pEqn);
 
             pEqn.solve(mesh.solver(p.select(pimple.finalInnerIter())));
 
