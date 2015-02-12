@@ -8,7 +8,6 @@ psiThermo& thermo = pThermo();
 
 volScalarField& p = thermo.p();
 volScalarField& e = thermo.he();
-const volScalarField& T = thermo.T();
 const volScalarField& psi = thermo.psi();
 const volScalarField& mu = thermo.mu();
 

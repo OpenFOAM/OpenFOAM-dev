@@ -72,15 +72,14 @@ void Foam::combustionModels::PaSR<Type>::correct()
 
         if (turbulentReaction_)
         {
-            tmp<volScalarField> trho(this->rho());
-            const volScalarField& rho = trho();
             tmp<volScalarField> tepsilon(this->turbulence().epsilon());
             const volScalarField& epsilon = tepsilon();
             tmp<volScalarField> tmuEff(this->turbulence().muEff());
             const volScalarField& muEff = tmuEff();
-
             tmp<volScalarField> ttc(this->tc());
             const volScalarField& tc = ttc();
+            tmp<volScalarField> trho(this->rho());
+            const volScalarField& rho = trho();
 
             forAll(epsilon, i)
             {

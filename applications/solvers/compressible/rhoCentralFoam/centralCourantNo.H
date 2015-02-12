@@ -22,15 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Global
-    compressibleCourantNo
+    centralCourantNo
 
 Description
     Calculates the mean and maximum wave speed based Courant Numbers.
 
 \*---------------------------------------------------------------------------*/
-
-scalar CoNum = 0.0;
-scalar meanCoNum = 0.0;
 
 if (mesh.nInternalFaces())
 {
