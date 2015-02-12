@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
         RotateFields<surfaceTensorField>(mesh, objects, T);
     }
 
-    Info<< "\nEnd.\n" << endl;
+    Info<< "\nEnd\n" << endl;
 
     return 0;
 }
