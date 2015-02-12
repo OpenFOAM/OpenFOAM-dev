@@ -151,9 +151,9 @@ echo "faceZoneSet cubeFaces new setsToFaceZone cubeFaceSet cubeFacesCells" >> $t
 
 echo "processing floor"
 floorMax=`echo 1 $tol | awk '{print $1 + $2}'`
-createSetsAndZone floor -$tol $floorMax -$tol $floorMax -$tol $tol
-echo "cellSet floorCells new faceToCell floorFaces owner" >> $tmpSetSet
-echo "faceZoneSet floorFaces new setsToFaceZone floorFaces floorCells" >> $tmpSetSet
+createSetsAndZone Floor -$tol $floorMax -$tol $floorMax -$tol $tol
+echo "cellSet floorCells new faceToCell FloorFaces owner" >> $tmpSetSet
+echo "faceZoneSet floorFaces new setsToFaceZone FloorFaces floorCells" >> $tmpSetSet
 
 setSet -batch $tmpSetSet > log.setSet.patchifyObstacles 2>&1
 
