@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,10 @@ public:
         (
             const objectRegistry& db,
             const fileName& instance,
-            const fileName& local = ""
+            const fileName& local = "",
+            IOobject::readOption r = IOobject::MUST_READ,
+            IOobject::writeOption w = IOobject::NO_WRITE,
+            bool registerObject = true
         );
 
         //- Construct as copy

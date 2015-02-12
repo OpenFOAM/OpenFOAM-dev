@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,10 @@ Foam::IOobjectList::IOobjectList
 (
     const objectRegistry& db,
     const fileName& instance,
-    const fileName& local
+    const fileName& local,
+    IOobject::readOption r,
+    IOobject::writeOption w,
+    bool registerObject
 )
 :
     HashPtrTable<IOobject>()
@@ -69,8 +72,9 @@ Foam::IOobjectList::IOobjectList
             newInstance,
             local,
             db,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
+            r,
+            w,
+            registerObject
         );
 
         if (objectPtr->headerOk())
@@ -91,7 +95,7 @@ Foam::IOobjectList::IOobjectList(const IOobjectList& ioOL)
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::IOobjectList::~IOobjectList()
 {}
