@@ -19,7 +19,7 @@ actions
 (
     // actuationDisk1
     {
-        name    actuationDisk1;
+        name    actuationDisk1CellSet;
         type    cellSet;
         action  new;
         source  boxToCell;
@@ -35,13 +35,13 @@ actions
         source  setToCellZone;
         sourceInfo
         {
-            set actuationDisk1;
+            set actuationDisk1CellSet;
         }
     }
 
     // actuationDisk2
     {
-        name    actuationDisk2;
+        name    actuationDisk2CellSet;
         type    cellSet;
         action  new;
         source  boxToCell;
@@ -57,7 +57,7 @@ actions
         source  setToCellZone;
         sourceInfo
         {
-            set actuationDisk2;
+            set actuationDisk2CellSet;
         }
     }
 

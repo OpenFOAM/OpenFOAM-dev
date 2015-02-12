@@ -18,7 +18,7 @@ FoamFile
 actions
 (
     {
-        name    wallFilmFaces;
+        name    wallFilmFaceSet;
         type    faceSet;
         action  new;
         source  patchToFace;
@@ -34,9 +34,10 @@ actions
         source  setToFaceZone;
         sourceInfo
         {
-            faceSet wallFilmFaces;
+            faceSet wallFilmFaceSet;
         }
     }
 );
+
 
 // ************************************************************************* //

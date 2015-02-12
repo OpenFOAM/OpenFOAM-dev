@@ -35,7 +35,7 @@ actions
     }
 
     {
-        name    f0;
+        name    f0FaceSet;
         type    faceSet;
         action  new;
         source  patchToFace;
@@ -46,7 +46,7 @@ actions
     }
 
     {
-        name    f0;
+        name    f0FaceSet;
         type    faceSet;
         action  subset;
         source  boxToFace;
@@ -63,9 +63,10 @@ actions
         source  setToFaceZone;
         sourceInfo
         {
-            faceSet    f0;
+            faceSet    f0FaceSet;
         }
     }
 );
+
 
 // ************************************************************************* //

@@ -18,7 +18,7 @@ FoamFile
 actions
 (
     {
-        name    cyclicFaces;
+        name    cyclicFacesFaceSet;
         type    faceSet;
         action  new;
         source  boxToFace;
@@ -46,7 +46,7 @@ actions
         source  setsToFaceZone;
         sourceInfo
         {
-            faceSet cyclicFaces;
+            faceSet cyclicFacesFaceSet;
             cellSet cyclicFacesSlaveCells;
         }
     }

@@ -19,7 +19,7 @@ actions
 (
     // Heater
     {
-        name    heater;
+        name    heaterCellSet;
         type    cellSet;
         action  new;
         source  boxToCell;
@@ -29,7 +29,7 @@ actions
         }
     }
     {
-        name    heater;
+        name    heaterCellSet;
         type    cellSet;
         action  add;
         source  boxToCell;
@@ -45,13 +45,13 @@ actions
         source  setToCellZone;
         sourceInfo
         {
-            set heater;           // name of cellSet
+            set heaterCellSet;
         }
     }
 
     // leftSolid
     {
-        name    leftSolid;
+        name    leftSolidCellSet;
         type    cellSet;
         action  new;
         source  boxToCell;
@@ -67,13 +67,13 @@ actions
         source  setToCellZone;
         sourceInfo
         {
-            set leftSolid;
+            set leftSolidCellSet;
         }
     }
 
     // rightSolid
     {
-        name    rightSolid;
+        name    rightSolidCellSet;
         type    cellSet;
         action  new;
         source  boxToCell;
@@ -89,13 +89,13 @@ actions
         source  setToCellZone;
         sourceInfo
         {
-            set rightSolid;
+            set rightSolidCellSet;
         }
     }
 
     // topAir
     {
-        name    topAir;
+        name    topAirCellSet;
         type    cellSet;
         action  new;
         source  boxToCell;
@@ -111,59 +111,54 @@ actions
         source  setToCellZone;
         sourceInfo
         {
-            set topAir;
+            set topAirCellSet;
         }
     }
 
 
     // bottomWater is all the other cells
     {
-        name    bottomWater;
-        type    cellZoneSet;
-        action  clear;
+        name    bottomWaterCellSet;
+        type    cellSet;
+        action  new;
+        source  cellToCell;
+        sourceInfo
+        {
+            set heaterCellSet;
+        }
     }
     {
-        name    bottomWater;
+        name    bottomWaterCellSet;
         type    cellSet;
         action  add;
         source  cellToCell;
         sourceInfo
         {
-            set heater;
+            set leftSolidCellSet;
         }
     }
     {
-        name    bottomWater;
+        name    bottomWaterCellSet;
         type    cellSet;
         action  add;
         source  cellToCell;
         sourceInfo
         {
-            set leftSolid;
+            set rightSolidCellSet;
         }
     }
     {
-        name    bottomWater;
+        name    bottomWaterCellSet;
         type    cellSet;
         action  add;
         source  cellToCell;
         sourceInfo
         {
-            set rightSolid;
+            set topAirCellSet;
         }
     }
     {
-        name    bottomWater;
-        type    cellSet;
-        action  add;
-        source  cellToCell;
-        sourceInfo
-        {
-            set topAir;
-        }
-    }
-    {
-        name    bottomWater;
+        name    bottomWaterCellSet;
         type    cellSet;
         action  invert;
     }
@@ -174,9 +169,10 @@ actions
         source  setToCellZone;
         sourceInfo
         {
-            set bottomWater;
+            set bottomWaterCellSet;
         }
     }
 );
+
 
 // ************************************************************************* //
