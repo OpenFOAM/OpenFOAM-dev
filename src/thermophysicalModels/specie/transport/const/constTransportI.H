@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,15 +203,27 @@ inline Foam::constTransport<Thermo> Foam::operator+
         static_cast<const Thermo&>(ct1) + static_cast<const Thermo&>(ct2)
     );
 
-    scalar molr1 = ct1.nMoles()/t.nMoles();
-    scalar molr2 = ct2.nMoles()/t.nMoles();
+    if (mag(ct1.nMoles()) + mag(ct2.nMoles()) < SMALL)
+    {
+        return constTransport<Thermo>
+        (
+            t,
+            0,
+            ct1.rPr_
+        );
+    }
+    else
+    {
+        scalar molr1 = ct1.nMoles()/t.nMoles();
+        scalar molr2 = ct2.nMoles()/t.nMoles();
 
-    return constTransport<Thermo>
-    (
-        t,
-        molr1*ct1.mu_ + molr2*ct2.mu_,
-        1.0/(molr1/ct1.rPr_ + molr2/ct2.rPr_)
-    );
+        return constTransport<Thermo>
+        (
+            t,
+            molr1*ct1.mu_ + molr2*ct2.mu_,
+            1.0/(molr1/ct1.rPr_ + molr2/ct2.rPr_)
+        );
+    }
 }
 
 
@@ -227,15 +239,27 @@ inline Foam::constTransport<Thermo> Foam::operator-
         static_cast<const Thermo&>(ct1) - static_cast<const Thermo&>(ct2)
     );
 
-    scalar molr1 = ct1.nMoles()/t.nMoles();
-    scalar molr2 = ct2.nMoles()/t.nMoles();
+    if (mag(ct1.nMoles()) + mag(ct2.nMoles()) < SMALL)
+    {
+        return constTransport<Thermo>
+        (
+            t,
+            0,
+            ct1.rPr_
+        );
+    }
+    else
+    {
+        scalar molr1 = ct1.nMoles()/t.nMoles();
+        scalar molr2 = ct2.nMoles()/t.nMoles();
 
-    return constTransport<Thermo>
-    (
-        t,
-        molr1*ct1.mu_ - molr2*ct2.mu_,
-        1.0/(molr1/ct1.rPr_ - molr2/ct2.rPr_)
-    );
+        return constTransport<Thermo>
+        (
+            t,
+            molr1*ct1.mu_ - molr2*ct2.mu_,
+            1.0/(molr1/ct1.rPr_ - molr2/ct2.rPr_)
+        );
+    }
 }
 
 
