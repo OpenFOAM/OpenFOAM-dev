@@ -376,7 +376,7 @@ void Foam::meshToMesh::mapSrcToTgt
             tgtField.rmap(tnewTgt(), identity(tgtField.size()));
         }
 
-        tgtField = pTraits<Type>::zero;
+        tgtField == pTraits<Type>::zero;
 
         AMIList[i].interpolateToTarget
         (
@@ -565,7 +565,7 @@ void Foam::meshToMesh::mapTgtToSrc
             srcField.rmap(tnewSrc(), identity(srcField.size()));
         }
 
-        srcField = pTraits<Type>::zero;
+        srcField == pTraits<Type>::zero;
 
         AMIList[i].interpolateToSource
         (
