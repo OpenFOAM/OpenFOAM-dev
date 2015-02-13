@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,6 +104,7 @@ public:
     //- Runtime type information
     TypeName("DimensionedField");
 
+
     // Static Member Functions
 
         //- Return a null DimensionedField
@@ -168,18 +169,26 @@ public:
         );
 
         //- Construct as copy of tmp<DimensionedField> deleting argument
-#       ifdef ConstructFromTmp
+        #ifdef ConstructFromTmp
         DimensionedField
         (
             const tmp<DimensionedField<Type, GeoMesh> >&
         );
-#       endif
+        #endif
 
         //- Construct as copy resetting IO parameters
         DimensionedField
         (
             const IOobject&,
             const DimensionedField<Type, GeoMesh>&
+        );
+
+        //- Construct as copy resetting IO parameters and re-use as specified.
+        DimensionedField
+        (
+            const IOobject&,
+            DimensionedField<Type, GeoMesh>&,
+            bool reUse
         );
 
         //- Construct as copy resetting name
@@ -205,13 +214,13 @@ public:
         );
 
         //- Construct as copy resetting name
-#       ifdef ConstructFromTmp
+        #ifdef ConstructFromTmp
         DimensionedField
         (
             const word& newName,
             const tmp<DimensionedField<Type, GeoMesh> >&
         );
-#       endif
+        #endif
 
         //- Clone
         tmp<DimensionedField<Type, GeoMesh> > clone() const;

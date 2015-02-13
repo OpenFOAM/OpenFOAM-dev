@@ -173,6 +173,47 @@ Foam::regIOobject::regIOobject(const regIOobject& rio, bool registerCopy)
 }
 
 
+Foam::regIOobject::regIOobject
+(
+    const word& newName,
+    const regIOobject& rio,
+    bool registerCopy
+)
+:
+    IOobject(newName, rio.instance(), rio.local(), rio.db()),
+    registered_(false),
+    ownedByRegistry_(false),
+    watchIndex_(-1),
+    eventNo_(db().getEvent()),
+    isPtr_(NULL)
+{
+    if (registerCopy)
+    {
+        checkIn();
+    }
+}
+
+
+Foam::regIOobject::regIOobject
+(
+    const IOobject& io,
+    const regIOobject& rio
+)
+:
+    IOobject(io),
+    registered_(false),
+    ownedByRegistry_(false),
+    watchIndex_(-1),
+    eventNo_(db().getEvent()),
+    isPtr_(NULL)
+{
+    if (registerObject())
+    {
+        checkIn();
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 // Delete read stream, checkout from objectRegistry and destroy
