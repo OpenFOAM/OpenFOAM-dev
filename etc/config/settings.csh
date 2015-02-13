@@ -233,7 +233,7 @@ case ThirdParty:
         # using clang - not gcc
         setenv WM_CC 'clang'
         setenv WM_CXX 'clang++'
-        set clang_version=llvm-3.5.0
+        set clang_version=llvm-3.5.1
         breaksw
     default:
         echo
@@ -352,7 +352,7 @@ case SYSTEMOPENMPI:
     breaksw
 
 case OPENMPI:
-    setenv FOAM_MPI openmpi-1.8.3
+    setenv FOAM_MPI openmpi-1.8.4
     # optional configuration tweaks:
     _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/openmpi.csh`
 

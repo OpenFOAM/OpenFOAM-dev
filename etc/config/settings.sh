@@ -275,7 +275,7 @@ OpenFOAM | ThirdParty)
         # using clang - not gcc
         export WM_CC='clang'
         export WM_CXX='clang++'
-        clang_version=llvm-3.5.0
+        clang_version=llvm-3.5.1
         ;;
     *)
         echo 1>&2
@@ -393,7 +393,7 @@ SYSTEMOPENMPI)
     ;;
 
 OPENMPI)
-    export FOAM_MPI=openmpi-1.8.3
+    export FOAM_MPI=openmpi-1.8.4
     # optional configuration tweaks:
     _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/openmpi.sh`
 
