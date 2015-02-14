@@ -156,9 +156,7 @@ void dynamicLagrangian<BasicTurbulenceModel>::correct()
     }
 
     // Local references
-    const alphaField& alpha = this->alpha_;
-    const rhoField& rho = this->rho_;
-    const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
+    const surfaceScalarField& phi = this->phi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
 
@@ -167,7 +165,7 @@ void dynamicLagrangian<BasicTurbulenceModel>::correct()
     tmp<volTensorField> tgradU(fvc::grad(U));
     const volTensorField& gradU = tgradU();
 
-    volSymmTensorField S(dev(symm(gradU())));
+    volSymmTensorField S(dev(symm(gradU)));
     volScalarField magS(mag(S));
 
     volVectorField Uf(filter_(U));
@@ -190,7 +188,7 @@ void dynamicLagrangian<BasicTurbulenceModel>::correct()
     fvScalarMatrix flmEqn
     (
         fvm::ddt(flm_)
-      + fvm::div(phi(), flm_)
+      + fvm::div(phi, flm_)
      ==
         invT*LM
       - fvm::Sp(invT, flm_)
@@ -206,7 +204,7 @@ void dynamicLagrangian<BasicTurbulenceModel>::correct()
     fvScalarMatrix fmmEqn
     (
         fvm::ddt(fmm_)
-      + fvm::div(phi(), fmm_)
+      + fvm::div(phi, fmm_)
      ==
         invT*MM
       - fvm::Sp(invT, fmm_)
