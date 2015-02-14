@@ -28,11 +28,8 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(phi,U)      Gauss linear;
+    div(phi,U)      Gauss LUST grad(U);
     div(phi,k)      Gauss limitedLinear 1;
-    div(phi,B)      Gauss limitedLinear 1;
-    div(phi,nuTilda) Gauss limitedLinear 1;
-    div(B)          Gauss linear;
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 

@@ -89,6 +89,9 @@ makeLESModel(WALE);
 #include "kEqn.H"
 makeLESModel(kEqn);
 
+#include "dynamicKEqn.H"
+makeLESModel(dynamicKEqn);
+
 #include "SpalartAllmarasDES.H"
 makeLESModel(SpalartAllmarasDES);
 

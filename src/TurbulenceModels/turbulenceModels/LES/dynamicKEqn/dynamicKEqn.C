@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "kEqn.H"
+#include "dynamicKEqn.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -32,20 +32,98 @@ namespace Foam
 namespace LESModels
 {
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-void kEqn<BasicTurbulenceModel>::correctNut()
+volScalarField dynamicKEqn<BasicTurbulenceModel>::Ck
+(
+    const volSymmTensorField& D,
+    const volScalarField& KK
+) const
 {
-    this->nut_ = Ck_*sqrt(k_)*this->delta();
-    this->nut_.correctBoundaryConditions();
+    const volSymmTensorField LL
+    (
+        simpleFilter_(dev(filter_(sqr(this->U_)) - (sqr(filter_(this->U_)))))
+    );
 
-    BasicTurbulenceModel::correctNut();
+    const volSymmTensorField MM
+    (
+        simpleFilter_(-2.0*this->delta()*sqrt(KK)*filter_(D))
+    );
+
+    const volScalarField Ck
+    (
+        simpleFilter_(0.5*(LL && MM))
+       /(
+            simpleFilter_(magSqr(MM))
+          + dimensionedScalar("small", sqr(MM.dimensions()), VSMALL)
+        )
+    );
+
+    tmp<volScalarField> tfld = 0.5*(mag(Ck) + Ck);
+    return tfld();
 }
 
 
 template<class BasicTurbulenceModel>
-tmp<fvScalarMatrix> kEqn<BasicTurbulenceModel>::kSource() const
+volScalarField dynamicKEqn<BasicTurbulenceModel>::Ce
+(
+    const volSymmTensorField& D,
+    const volScalarField& KK
+) const
+{
+    const volScalarField Ce
+    (
+        simpleFilter_(this->nuEff()*(filter_(magSqr(D)) - magSqr(filter_(D))))
+       /simpleFilter_(pow(KK, 1.5)/(2.0*this->delta()))
+    );
+
+    tmp<volScalarField> tfld = 0.5*(mag(Ce) + Ce);
+    return tfld();
+}
+
+
+template<class BasicTurbulenceModel>
+volScalarField dynamicKEqn<BasicTurbulenceModel>::Ce() const
+{
+    const volSymmTensorField D(dev(symm(fvc::grad(this->U_))));
+
+    volScalarField KK
+    (
+        0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_)))
+    );
+    KK.max(dimensionedScalar("small", KK.dimensions(), SMALL));
+
+    return Ce(D, KK);
+}
+
+
+template<class BasicTurbulenceModel>
+void dynamicKEqn<BasicTurbulenceModel>::correctNut
+(
+    const volSymmTensorField& D,
+    const volScalarField& KK
+)
+{
+    this->nut_ = Ck(D, KK)*sqrt(k_)*this->delta();
+    this->nut_.correctBoundaryConditions();
+}
+
+
+template<class BasicTurbulenceModel>
+void dynamicKEqn<BasicTurbulenceModel>::correctNut()
+{
+    const volScalarField KK
+    (
+        0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_)))
+    );
+
+    correctNut(symm(fvc::grad(this->U_)), KK);
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> dynamicKEqn<BasicTurbulenceModel>::kSource() const
 {
     return tmp<fvScalarMatrix>
     (
@@ -62,7 +140,7 @@ tmp<fvScalarMatrix> kEqn<BasicTurbulenceModel>::kSource() const
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-kEqn<BasicTurbulenceModel>::kEqn
+dynamicKEqn<BasicTurbulenceModel>::dynamicKEqn
 (
     const alphaField& alpha,
     const rhoField& rho,
@@ -99,15 +177,9 @@ kEqn<BasicTurbulenceModel>::kEqn
         this->mesh_
     ),
 
-    Ck_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ck",
-            this->coeffDict_,
-            0.094
-        )
-    )
+    simpleFilter_(this->mesh_),
+    filterPtr_(LESfilter::New(this->mesh_, this->coeffDict())),
+    filter_(filterPtr_())
 {
     bound(k_, this->kMin_);
 
@@ -122,11 +194,11 @@ kEqn<BasicTurbulenceModel>::kEqn
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-bool kEqn<BasicTurbulenceModel>::read()
+bool dynamicKEqn<BasicTurbulenceModel>::read()
 {
     if (LESeddyViscosity<BasicTurbulenceModel>::read())
     {
-        Ck_.readIfPresent(this->coeffDict());
+        filter_.read(this->coeffDict());
 
         return true;
     }
@@ -138,7 +210,7 @@ bool kEqn<BasicTurbulenceModel>::read()
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> kEqn<BasicTurbulenceModel>::epsilon() const
+tmp<volScalarField> dynamicKEqn<BasicTurbulenceModel>::epsilon() const
 {
     return tmp<volScalarField>
     (
@@ -152,14 +224,14 @@ tmp<volScalarField> kEqn<BasicTurbulenceModel>::epsilon() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            this->Ce_*k()*sqrt(k())/this->delta()
+            Ce()*k()*sqrt(k())/this->delta()
         )
     );
 }
 
 
 template<class BasicTurbulenceModel>
-void kEqn<BasicTurbulenceModel>::correct()
+void dynamicKEqn<BasicTurbulenceModel>::correct()
 {
     if (!this->turbulence_)
     {
@@ -178,26 +250,30 @@ void kEqn<BasicTurbulenceModel>::correct()
     volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
 
     tmp<volTensorField> tgradU(fvc::grad(U));
-    volScalarField G(this->GName(), nut*(tgradU() && dev(twoSymm(tgradU()))));
+    const volSymmTensorField D(dev(symm(tgradU())));
+    const volScalarField G(this->GName(), 2.0*nut*(tgradU() && D));
     tgradU.clear();
+
+    volScalarField KK(0.5*(filter_(magSqr(U)) - magSqr(filter_(U))));
+    KK.max(dimensionedScalar("small", KK.dimensions(), SMALL));
 
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(alpha, rho, k_)
       + fvm::div(alphaRhoPhi, k_)
       - fvm::laplacian(alpha*rho*DkEff(), k_)
-     ==
+    ==
         alpha*rho*G
       - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
-      - fvm::Sp(this->Ce_*alpha*rho*sqrt(k_)/this->delta(), k_)
+      - fvm::Sp(Ce(D, KK)*alpha*rho*sqrt(k_)/this->delta(), k_)
       + kSource()
     );
 
     kEqn().relax();
-    solve(kEqn);
+    kEqn().solve();
     bound(k_, this->kMin_);
 
-    correctNut();
+    correctNut(D, KK);
 }
 
 

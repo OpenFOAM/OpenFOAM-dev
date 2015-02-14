@@ -22,43 +22,46 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::LESModels::kEqn
+     Foam::LESModels::dynamicKEqn
 
 Group
     grpLESTurbulence
 
 Description
-    One equation eddy-viscosity model
+    Dynamic one equation eddy-viscosity model
 
-    Eddy viscosity SGS model using a modeled balance equation to simulate the
-    behaviour of k.
+    Eddy viscosity SGS model using a modeled balance equation to simulate
+    the behaviour of k in which a dynamic procedure is applied to evaluate the
+    coefficients.
 
     Reference:
     \verbatim
-        Yoshizawa, A. (1986).
-        Statistical theory for compressible turbulent shear flows,
-        with the application to subgrid modeling.
-        Physics of Fluids (1958-1988), 29(7), 2152-2164.
+        Kim, W and Menon, S. (1995).
+        A new dynamic one-equation subgrid-scale model for
+        large eddy simulation.
+        In 33rd Aerospace Sciences Meeting and Exhibit, Reno, NV, 1995.
     \endverbatim
 
-    The default model coefficients are
+    There are no default model coefficients but the filter used for KK must be
+    supplied, e.g.
     \verbatim
-        kEqnCoeffs
+        dynamicKEqnCoeffs
         {
-            Ck                  0.094;
-            Ce                  1.048;
+            filter simple;
         }
     \endverbatim
 
 SourceFiles
-    kEqn.C
+    dynamicKEqn.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef kEqn_H
-#define kEqn_H
+#ifndef dynamicKEqn_H
+#define dynamicKEqn_H
 
 #include "LESeddyViscosity.H"
+#include "simpleFilter.H"
+#include "LESfilter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,19 +71,19 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class kEqn Declaration
+                           Class dynamicKEqn Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicTurbulenceModel>
-class kEqn
+class dynamicKEqn
 :
     public LESeddyViscosity<BasicTurbulenceModel>
 {
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        kEqn(const kEqn&);
-        kEqn& operator=(const kEqn&);
+        dynamicKEqn(const dynamicKEqn&);
+        dynamicKEqn& operator=(const dynamicKEqn&);
 
 
 protected:
@@ -92,14 +95,40 @@ protected:
             volScalarField k_;
 
 
-        // Model constants
+        // Filters
 
-            dimensionedScalar Ck_;
+            simpleFilter simpleFilter_;
+            autoPtr<LESfilter> filterPtr_;
+            LESfilter& filter_;
 
 
     // Protected Member Functions
 
+        //- Calculate Ck by filtering the velocity field U
+        volScalarField Ck
+        (
+            const volSymmTensorField& D,
+            const volScalarField& KK
+        ) const;
+
+        //- Calculate Ce by filtering the velocity field U
+        volScalarField Ce
+        (
+            const volSymmTensorField& D,
+            const volScalarField& KK
+        ) const;
+
+        volScalarField Ce() const;
+
+        //- Update sub-grid eddy-viscosity
+        void correctNut
+        (
+            const volSymmTensorField& D,
+            const volScalarField& KK
+        );
+
         virtual void correctNut();
+
         virtual tmp<fvScalarMatrix> kSource() const;
 
 
@@ -111,13 +140,13 @@ public:
 
 
     //- Runtime type information
-    TypeName("kEqn");
+    TypeName("dynamicKEqn");
 
 
     // Constructors
 
-        //- Constructor from components
-        kEqn
+        //- Construct from components
+        dynamicKEqn
         (
             const alphaField& alpha,
             const rhoField& rho,
@@ -131,7 +160,7 @@ public:
 
 
     //- Destructor
-    virtual ~kEqn()
+    virtual ~dynamicKEqn()
     {}
 
 
@@ -158,7 +187,7 @@ public:
             );
         }
 
-        //- Correct eddy-Viscosity and related properties
+        //- Correct Eddy-Viscosity and related properties
         virtual void correct();
 };
 
@@ -171,7 +200,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "kEqn.C"
+#   include "dynamicKEqn.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
