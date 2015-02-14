@@ -342,11 +342,11 @@ meshQualityControls
     minArea -1;
 
     //- Minimum face twist. Set to <-1 to disable. dot product of face normal
-    //- and face centre triangles normal
+    //  and face centre triangles normal
     minTwist 0.05;
 
     //- minimum normalised cell determinant
-    //- 1 = hex, <= 0 = folded or flattened illegal cell
+    //  1 = hex, <= 0 = folded or flattened illegal cell
     minDeterminant 0.001;
 
     //- minFaceWeight (0 -> 0.5)

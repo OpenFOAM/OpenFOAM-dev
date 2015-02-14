@@ -454,7 +454,7 @@ meshQualityControls
     minArea -1;
 
     //- Minimum face twist. Set to <-1 to disable. dot product of face normal
-    //- and face centre triangles normal
+    //  and face centre triangles normal
     minTwist 0.02;
 
     //- minimum normalised cell determinant
