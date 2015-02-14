@@ -99,7 +99,7 @@ $(sha1)/SHA1.C
 $(sha1)/SHA1Digest.C
 
 primitives/random/Random/Random.C
-primitives/random/cachedRandom/cachedRandom.H
+primitives/random/cachedRandom/cachedRandom.C
 
 ranges = primitives/ranges
 $(ranges)/labelRange/labelRange.C
