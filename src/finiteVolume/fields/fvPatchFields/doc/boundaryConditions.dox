@@ -41,8 +41,7 @@ thermophysical types.
     - \ref grpWallBoundaryConditions
 
 \subsection secBC2 Turbulent flow boundary conditions
-    - \ref grpIcoRASBoundaryConditions
-    - \ref grpCmpRASBoundaryConditions
+    - \ref grpRASBoundaryConditions
 
 \subsection secBC3 Thermophysical boundary conditions
     - \ref grpThermoBoundaryConditions
