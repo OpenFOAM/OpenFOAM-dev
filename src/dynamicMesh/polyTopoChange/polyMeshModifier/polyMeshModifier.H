@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,10 +63,10 @@ class polyMeshModifier
 {
     // Private data
 
-        //- Name of zone
+        //- Name of modifier
         word name_;
 
-        //- Index of zone
+        //- Index of modifier
         label index_;
 
         //- Reference to morph engine
@@ -140,13 +140,13 @@ public:
 
     // Member Functions
 
-        //- Return name
+        //- Return name of this modifier
         const word& name() const
         {
             return name_;
         }
 
-        //- Return the index of this patch in the boundaryMesh
+        //- Return the index of this modifier
         label index() const
         {
             return index_;
