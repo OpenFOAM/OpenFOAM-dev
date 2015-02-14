@@ -258,7 +258,7 @@ void Foam::InjectionModel<CloudType>::postInjectCheck
     if (allParcelsAdded > 0)
     {
         Info<< nl
-            << "--> Cloud: " << this->owner().name()
+            << "Cloud: " << this->owner().name()
             << " injector: " << this->modelName() << nl
             << "    Added " << allParcelsAdded << " new parcels" << nl << endl;
     }
