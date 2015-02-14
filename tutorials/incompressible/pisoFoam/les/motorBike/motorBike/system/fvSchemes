@@ -55,7 +55,8 @@ snGradSchemes
 fluxRequired
 {
     default         no;
-    p               ;
+    p;
+    Phi;
 }
 
 wallDist

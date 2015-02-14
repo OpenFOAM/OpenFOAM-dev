@@ -37,6 +37,11 @@ solvers
         maxIter          50;
     };
 
+    Phi
+    {
+        $p;
+    }
+
     "(U|Yi|h|k|omega)"
     {
         solver          smoothSolver;

@@ -68,6 +68,11 @@ solvers
         relTol          0;
     }
 
+    Phi
+    {
+        $p;
+    }
+
     "(Yi|O2|N2|H2O)"
     {
         solver          PBiCG;
@@ -88,7 +93,7 @@ solvers
 
 potentialFlow
 {
-    // used for potentialFoam initialisation
+    // Used for potentialFoam initialisation
     nNonOrthogonalCorrectors 5;
 }
 

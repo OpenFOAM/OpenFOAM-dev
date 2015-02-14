@@ -30,6 +30,11 @@ solvers
         mergeLevels      1;
     }
 
+    Phi
+    {
+        $p;
+    }
+
     U
     {
         solver           smoothSolver;

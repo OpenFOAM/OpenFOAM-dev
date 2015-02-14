@@ -53,6 +53,7 @@ fluxRequired
 {
     default         no;
     p;
+    Phi;
 }
 
 wallDist

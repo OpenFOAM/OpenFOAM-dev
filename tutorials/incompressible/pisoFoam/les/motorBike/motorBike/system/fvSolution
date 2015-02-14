@@ -38,6 +38,11 @@ solvers
         relTol          0;
     };
 
+    Phi
+    {
+        $p;
+    }
+
     "(U|nuTilda)"
     {
         solver          smoothSolver;
