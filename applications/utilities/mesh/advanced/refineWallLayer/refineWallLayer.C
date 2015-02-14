@@ -27,17 +27,26 @@ Application
 Description
     Utility to refine cells next to patches.
 
-    Takes a patchName and number of layers to refine. Works out cells within
-    these layers and refines those in the wall-normal direction.
+    Arguments:
+        1: List of patch name regular expressions
+        2: The size of the refined cells as a fraction of the edge-length.
+
+    Examples:
+        Split the near-wall cells of patch Wall in the middle
+            refineWallLayer "(Wall)" 0.5
+
+        Split the near-wall cells of patches Wall1 and Wall2 in the middle
+            refineWallLayer "(Wall1 Wall2)" 0.5
+
+        Split the near-wall cells of all patches with names beginning with wall
+        with the near-wall cells 10% of the thickness of the original cells
+            refineWallLayer '("Wall.*")' 0.1
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "Time.H"
 #include "polyTopoChange.H"
-#include "polyTopoChanger.H"
-#include "mapPolyMesh.H"
-#include "polyMesh.H"
 #include "cellCuts.H"
 #include "cellSet.H"
 #include "meshCutter.H"
@@ -50,8 +59,8 @@ int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
     argList::noParallel();
-    argList::validArgs.append("patchName");
-    argList::validArgs.append("edgeWeight");
+    argList::validArgs.append("patches");
+    argList::validArgs.append("edgeFraction");
 
     argList::addOption
     (
@@ -64,50 +73,61 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     runTime.functionObjects().off();
+
     #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
-    const word patchName = args[1];
+    // Find set of patches from the list of regular expressions provided
+    const wordReList patches((IStringStream(args[1])()));
+    const labelHashSet patchSet(mesh.boundaryMesh().patchSet(patches));
+
     const scalar weight  = args.argRead<scalar>(2);
     const bool overwrite = args.optionFound("overwrite");
 
-    label patchID = mesh.boundaryMesh().findPatchID(patchName);
-
-    if (patchID == -1)
+    if (!patchSet.size())
     {
         FatalErrorIn(args.executable())
-            << "Cannot find patch " << patchName << endl
+            << "Cannot find any patches in set " << patches << endl
             << "Valid patches are " << mesh.boundaryMesh().names()
             << exit(FatalError);
     }
-    const polyPatch& pp = mesh.boundaryMesh()[patchID];
 
+    label nPatchFaces = 0;
+    label nPatchEdges = 0;
 
-    // Cells cut
-
-    labelHashSet cutCells(4*pp.size());
-
-    const labelList& meshPoints = pp.meshPoints();
-
-    forAll(meshPoints, pointI)
+    forAllConstIter(labelHashSet, patchSet, iter)
     {
-        label meshPointI = meshPoints[pointI];
+        nPatchFaces += mesh.boundaryMesh()[iter.key()].size();
+        nPatchEdges += mesh.boundaryMesh()[iter.key()].nEdges();
+    }
 
-        const labelList& pCells = mesh.pointCells()[meshPointI];
+    // Construct from estimate for the number of cells to refine
+    labelHashSet cutCells(4*nPatchFaces);
 
-        forAll(pCells, pCellI)
+    // Construct from total patch edges in selected patches
+    DynamicList<label> allCutEdges(nPatchEdges);
+    DynamicList<scalar> allCutEdgeWeights(nPatchEdges);
+
+    // Find cells to refine
+    forAllConstIter(labelHashSet, patchSet, iter)
+    {
+        const polyPatch& pp = mesh.boundaryMesh()[iter.key()];
+        const labelList& meshPoints = pp.meshPoints();
+
+        forAll(meshPoints, pointI)
         {
-            cutCells.insert(pCells[pCellI]);
+            label meshPointI = meshPoints[pointI];
+
+            const labelList& pCells = mesh.pointCells()[meshPointI];
+
+            forAll(pCells, pCellI)
+            {
+                cutCells.insert(pCells[pCellI]);
+            }
         }
     }
 
-    Info<< "Selected " << cutCells.size()
-        << " cells connected to patch " << pp.name() << endl << endl;
-
-    //
-    // List of cells to refine
-    //
-
+    // Edit list of cells to refine according to specified set
     word setName;
     if (args.optionReadIfPresent("useSet", setName))
     {
@@ -128,48 +148,50 @@ int main(int argc, char *argv[])
             << setName << nl << endl;
     }
 
-    // Mark all meshpoints on patch
-
+    // Mark all mesh points on patch
     boolList vertOnPatch(mesh.nPoints(), false);
 
-    forAll(meshPoints, pointI)
+    forAllConstIter(labelHashSet, patchSet, iter)
     {
-        const label meshPointI = meshPoints[pointI];
+        const polyPatch& pp = mesh.boundaryMesh()[iter.key()];
+        const labelList& meshPoints = pp.meshPoints();
 
-        vertOnPatch[meshPointI] = true;
+        forAll(meshPoints, pointI)
+        {
+            vertOnPatch[meshPoints[pointI]] = true;
+        }
     }
 
-
-    // Mark cut edges.
-
-    DynamicList<label> allCutEdges(pp.nEdges());
-
-    DynamicList<scalar> allCutEdgeWeights(pp.nEdges());
-
-    forAll(meshPoints, pointI)
+    forAllConstIter(labelHashSet, patchSet, iter)
     {
-        label meshPointI = meshPoints[pointI];
+        const polyPatch& pp = mesh.boundaryMesh()[iter.key()];
+        const labelList& meshPoints = pp.meshPoints();
 
-        const labelList& pEdges = mesh.pointEdges()[meshPointI];
-
-        forAll(pEdges, pEdgeI)
+        forAll(meshPoints, pointI)
         {
-            const label edgeI = pEdges[pEdgeI];
-            const edge& e = mesh.edges()[edgeI];
+            label meshPointI = meshPoints[pointI];
 
-            label otherPointI = e.otherVertex(meshPointI);
+            const labelList& pEdges = mesh.pointEdges()[meshPointI];
 
-            if (!vertOnPatch[otherPointI])
+            forAll(pEdges, pEdgeI)
             {
-                allCutEdges.append(edgeI);
+                const label edgeI = pEdges[pEdgeI];
+                const edge& e = mesh.edges()[edgeI];
 
-                if (e.start() == meshPointI)
+                label otherPointI = e.otherVertex(meshPointI);
+
+                if (!vertOnPatch[otherPointI])
                 {
-                    allCutEdgeWeights.append(weight);
-                }
-                else
-                {
-                    allCutEdgeWeights.append(1 - weight);
+                    allCutEdges.append(edgeI);
+
+                    if (e.start() == meshPointI)
+                    {
+                        allCutEdgeWeights.append(weight);
+                    }
+                    else
+                    {
+                        allCutEdgeWeights.append(1 - weight);
+                    }
                 }
             }
         }
@@ -178,10 +200,9 @@ int main(int argc, char *argv[])
     allCutEdges.shrink();
     allCutEdgeWeights.shrink();
 
-    Info<< "Cutting:" << nl
+    Info<< "Refining:" << nl
         << "    cells:" << cutCells.size() << nl
-        << "    edges:" << allCutEdges.size() << nl
-        << endl;
+        << "    edges:" << allCutEdges.size() << endl;
 
     // Transfer DynamicLists to straight ones.
     scalarField cutEdgeWeights;
@@ -207,9 +228,6 @@ int main(int argc, char *argv[])
     // Insert mesh refinement into polyTopoChange.
     cutter.setRefinement(cuts, meshMod);
 
-    // Do all changes
-    Info<< "Morphing ..." << endl;
-
     if (!overwrite)
     {
         runTime++;
@@ -225,13 +243,15 @@ int main(int argc, char *argv[])
     // Update stored labels on meshCutter.
     cutter.updateMesh(morphMap());
 
+    Info<< "Finished refining" << endl;
+
     if (overwrite)
     {
         mesh.setInstance(oldInstance);
     }
 
     // Write resulting mesh
-    Info<< "Writing refined morphMesh to time " << runTime.timeName() << endl;
+    Info<< "Writing refined mesh to time " << runTime.timeName() << endl;
 
     mesh.write();
 
