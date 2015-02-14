@@ -22,6 +22,27 @@ USAGE
     exit 1
 }
 
+defineURL() {
+
+  case "$WM_PROJECT_VERSION" in
+  [0-9].[0-9].x)
+    FOAM_BRANCH_NAME="master"
+    FOAM_REPO_VERSION="$WM_PROJECT-$WM_PROJECT_VERSION"
+    ;;
+  [0-9].[0-9].[0-9])
+    FOAM_BRANCH_NAME="version-$WM_PROJECT_VERSION"
+    FOAM_REPO_VERSION="$WM_PROJECT-${WM_PROJECT_VERSION%.*}.x"
+    ;;
+  *)
+    FOAM_BRANCH_NAME="master"
+    FOAM_REPO_VERSION="$WM_PROJECT-$WM_PROJECT_VERSION"
+    ;;
+  esac
+
+  export FOAM_BASE_REPO="https://github.com/$WM_PROJECT/$FOAM_REPO_VERSION"
+  export FOAM_ONLINE_REPO="$FOAM_BASE_REPO/tree/$FOAM_BRANCH_NAME"
+}
+
 # parse options
 while [ "$#" -gt 0 ]
 do
@@ -30,7 +51,7 @@ do
         usage
         ;;
     -online)
-        export FOAM_ONLINE_REPO="https://github.com/$WM_PROJECT/$WM_PROJECT-$WM_PROJECT_VERSION/tree/master"
+        defineURL
         shift
         ;;
     *)
