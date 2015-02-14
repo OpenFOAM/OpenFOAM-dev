@@ -32,6 +32,8 @@ License
 #include "RASModel.H"
 #include "LESModel.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 makeBaseTurbulenceModel
 (
     geometricOneField,
@@ -48,6 +50,11 @@ makeBaseTurbulenceModel
 #define makeLESModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
     (transportModelIncompressibleTurbulenceModel, LES, Type)
+
+
+// -------------------------------------------------------------------------- //
+// RAS models
+// -------------------------------------------------------------------------- //
 
 #include "SpalartAllmaras.H"
 makeRASModel(SpalartAllmaras);
@@ -80,11 +87,18 @@ makeRASModel(LRR);
 makeRASModel(SSG);
 
 
+// -------------------------------------------------------------------------- //
+// LES models
+// -------------------------------------------------------------------------- //
+
 #include "Smagorinsky.H"
 makeLESModel(Smagorinsky);
 
 #include "WALE.H"
 makeLESModel(WALE);
+
+#include "dynamicLagrangian.H"
+makeLESModel(dynamicLagrangian);
 
 #include "kEqn.H"
 makeLESModel(kEqn);

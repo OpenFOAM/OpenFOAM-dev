@@ -22,42 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-     Foam::LESModels::dynamicKEqn
+    Foam::LESModels::dynamicLagrangian
 
 Group
     grpLESTurbulence
 
 Description
-    Dynamic one equation eddy-viscosity model
-
-    Eddy viscosity SGS model using a modeled balance equation to simulate
-    the behaviour of k in which a dynamic procedure is applied to evaluate the
-    coefficients.
+    Dynamic SGS model with Lagrangian averaging
 
     Reference:
     \verbatim
-        Kim, W and Menon, S. (1995).
-        A new dynamic one-equation subgrid-scale model for
-        large eddy simulation.
-        In 33rd Aerospace Sciences Meeting and Exhibit, Reno, NV, 1995.
-    \endverbatim
-
-    There are no default model coefficients but the filter used for KK must be
-    supplied, e.g.
-    \verbatim
-        dynamicKEqnCoeffs
-        {
-            filter simple;
-        }
+        Meneveau, C., Lund, T. S., & Cabot, W. H. (1996).
+        A Lagrangian dynamic subgrid-scale model of turbulence.
+        Journal of Fluid Mechanics, 319, 353-385.
     \endverbatim
 
 SourceFiles
-    dynamicKEqn.C
+    dynamicLagrangian.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef dynamicKEqn_H
-#define dynamicKEqn_H
+#ifndef dynamicLagrangian_H
+#define dynamicLagrangian_H
 
 #include "LESeddyViscosity.H"
 #include "simpleFilter.H"
@@ -70,65 +56,44 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class dynamicKEqn Declaration
+                       Class dynamicLagrangian Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicTurbulenceModel>
-class dynamicKEqn
+class dynamicLagrangian
 :
     public LESeddyViscosity<BasicTurbulenceModel>
 {
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        dynamicKEqn(const dynamicKEqn&);
-        dynamicKEqn& operator=(const dynamicKEqn&);
+        dynamicLagrangian(const dynamicLagrangian&);
+        dynamicLagrangian& operator=(const dynamicLagrangian&);
 
 
 protected:
 
     // Protected data
 
-        // Fields
+        volScalarField flm_;
+        volScalarField fmm_;
 
-            volScalarField k_;
+        dimensionedScalar theta_;
 
+        simpleFilter simpleFilter_;
+        autoPtr<LESfilter> filterPtr_;
+        LESfilter& filter_;
 
-        // Filters
-
-            simpleFilter simpleFilter_;
-            autoPtr<LESfilter> filterPtr_;
-            LESfilter& filter_;
+        dimensionedScalar flm0_;
+        dimensionedScalar fmm0_;
 
 
     // Protected Member Functions
 
-        //- Calculate Ck by filtering the velocity field U
-        volScalarField Ck
-        (
-            const volSymmTensorField& D,
-            const volScalarField& KK
-        ) const;
-
-        //- Calculate Ce by filtering the velocity field U
-        volScalarField Ce
-        (
-            const volSymmTensorField& D,
-            const volScalarField& KK
-        ) const;
-
-        volScalarField Ce() const;
-
         //- Update sub-grid eddy-viscosity
-        void correctNut
-        (
-            const volSymmTensorField& D,
-            const volScalarField& KK
-        );
+        void correctNut(const tmp<volTensorField>& gradU);
 
         virtual void correctNut();
-
-        virtual tmp<fvScalarMatrix> kSource() const;
 
 
 public:
@@ -137,15 +102,14 @@ public:
     typedef typename BasicTurbulenceModel::rhoField rhoField;
     typedef typename BasicTurbulenceModel::transportModel transportModel;
 
-
     //- Runtime type information
-    TypeName("dynamicKEqn");
+    TypeName("dynamicLagrangian");
 
 
     // Constructors
 
         //- Construct from components
-        dynamicKEqn
+        dynamicLagrangian
         (
             const alphaField& alpha,
             const rhoField& rho,
@@ -159,7 +123,7 @@ public:
 
 
     //- Destructor
-    virtual ~dynamicKEqn()
+    virtual ~dynamicLagrangian()
     {}
 
 
@@ -169,13 +133,19 @@ public:
         virtual bool read();
 
         //- Return SGS kinetic energy
-        virtual tmp<volScalarField> k() const
+        tmp<volScalarField> k(const tmp<volTensorField>& gradU) const
         {
-            return k_;
+            return
+                pow(2.0*flm_/fmm_, 2.0/3.0)
+              * pow(this->Ce_, -2.0/3.0)
+              * sqr(this->delta())*magSqr(dev(symm(gradU)));
         }
 
-        //- Return sub-grid disipation rate
-        virtual tmp<volScalarField> epsilon() const;
+        //- Return SGS kinetic energy
+        virtual tmp<volScalarField> k() const
+        {
+            return k(fvc::grad(this->U_));
+        }
 
         //- Return the effective diffusivity for k
         tmp<volScalarField> DkEff() const
@@ -195,12 +165,6 @@ public:
 
 } // End namespace LESModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-#   include "dynamicKEqn.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
