@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     and sway (y-translation) motions with changing amplitude and phase.
 
 See Also
-    SKA (Sea Keeping Analysis) for 6DoF motion.
+    Foam::solidBodyMotionFunctions::tabulated6DoFMotion
 
 SourceFiles
     SDA.C
