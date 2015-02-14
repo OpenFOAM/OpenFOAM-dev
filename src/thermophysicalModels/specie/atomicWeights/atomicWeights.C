@@ -34,7 +34,7 @@ Foam::atomicWeightTable::atomicWeights[atomicWeightTable::nElements] =
     {"e",    5.45e-4},
     {"H",    1.00797},
     {"D",    2.01410},
-    {"T",    3.01604}
+    {"T",    3.01604},
     {"He",   4.00260},
     {"Li",   6.93900},
     {"Be",   9.01220},
