@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,13 +119,13 @@ private:
         //- Lifetime of particle. Particle dies when reaches 0.
         label lifeTime_;
 
-        //- sampled positions
+        //- Sampled positions
         DynamicList<point> sampledPositions_;
 
-        //- sampled scalars
+        //- Sampled scalars
         List<DynamicList<scalar> > sampledScalars_;
 
-        //- sampled vectors
+        //- Sampled vectors
         List<DynamicList<vector> > sampledVectors_;
 
 

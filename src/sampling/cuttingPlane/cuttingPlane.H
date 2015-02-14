@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ protected:
 
     // Protected Member Functions
 
-        //- recut mesh with existing planeDesc, restricted to a list of cells
+        //- Recut mesh with existing planeDesc, restricted to a list of cells
         void reCut
         (
             const primitiveMesh&,
@@ -128,7 +128,7 @@ protected:
             const labelUList& cellIdLabels = labelUList::null()
         );
 
-        //- remap action on triangulation or cleanup
+        //- Remap action on triangulation or cleanup
         virtual void remapFaces(const labelUList& faceMap);
 
 

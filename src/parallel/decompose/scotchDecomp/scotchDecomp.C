@@ -497,7 +497,7 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
         //    "SCOTCH_archVcmplt"
         //);
         //
-        ////- stategy flags: go for quality or load balance (or leave default)
+        ////- Stategy flags: go for quality or load balance (or leave default)
         //SCOTCH_Num straval = 0;
         ////straval |= SCOTCH_STRATQUALITY;
         ////straval |= SCOTCH_STRATQUALITY;

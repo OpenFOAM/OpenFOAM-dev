@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ public:
 
         int bit();
 
-        //- scalar [0..1] (so including 0,1)
+        //- Scalar [0..1] (so including 0,1)
         scalar scalar01();
 
-        //- vector with every component scalar01
+        //- Vector with every component scalar01
         vector vector01();
 
         //- sphericalTensor with every component scalar01
@@ -79,10 +79,10 @@ public:
         //- symmTensor with every component scalar01
         symmTensor symmTensor01();
 
-        //- tensor with every component scalar01
+        //- Tensor with every component scalar01
         tensor tensor01();
 
-        //- label [lower..upper]
+        //- Label [lower..upper]
         label integer(const label lower, const label upper);
 
         vector position(const vector&, const vector&);

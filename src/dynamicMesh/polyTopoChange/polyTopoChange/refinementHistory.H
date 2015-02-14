@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ public:
         // -2: free splitCell (so should also be in freeSplitCells_)
         label parent_;
 
-        //- cells this cell was refined into
+        //- Cells this cell was refined into
         autoPtr<FixedList<label, 8> > addedCellsPtr_;
 
         //- Construct null (parent = -1)

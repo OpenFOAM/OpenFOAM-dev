@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,14 +90,14 @@ public:
 };
 
 
-//- reduce operator
+//- Reduce operator
 class combineConstraintsEqOp
 {
 public:
     inline void operator()(pointConstraint&, const pointConstraint&) const;
 };
 
-//- transformation function
+//- Transformation function
 inline pointConstraint transform(const tensor& tt, const pointConstraint& v);
 
 //- contiguous

@@ -82,7 +82,7 @@ Description
             {
                 label faceCelli = curPatch.faceCells()[facei];
 
-                //- using local Cmu !
+                //- Using local Cmu !
                 scalar Cmu25 = pow025(Cmu_[faceCelli]);
                 scalar Cmu75 = pow(Cmu_[faceCelli], 0.75);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,13 +111,13 @@ public:
             return cellI_;
         }
 
-        //- interpolation weights
+        //- Interpolation weights
         inline const List<scalar>& weights() const
         {
             return weights_;
         }
 
-        //- interpolation addressing for points on face
+        //- Interpolation addressing for points on face
         inline const List<label>& faceVertices() const
         {
             return faceVertices_;

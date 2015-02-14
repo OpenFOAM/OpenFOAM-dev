@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,11 +136,11 @@ private:
             //- Communicator used for parallel communication
             label comm_;
 
-            //- vector of non-constrained directions in mesh
+            //- Vector of non-constrained directions in mesh
             //  defined according to the presence of empty and wedge patches
             mutable Vector<label> geometricD_;
 
-            //- vector of valid directions in mesh
+            //- Vector of valid directions in mesh
             //  defined according to the presence of empty patches
             mutable Vector<label> solutionD_;
 

@@ -131,7 +131,7 @@ public:
 
     // Constructors
 
-        //- construct from components
+        //- Construct from components
         inline thermo(const Thermo& sp);
 
         //- Construct from Istream
@@ -190,7 +190,7 @@ public:
                 //- Heat capacity at constant pressure/volume [J/(kmol K)]
                 inline scalar cpv(const scalar p, const scalar T) const;
 
-                //- gamma = cp/cv []
+                //- Gamma = cp/cv []
                 inline scalar gamma(const scalar p, const scalar T) const;
 
                 //- Ratio of heat capacity at constant pressure to that at

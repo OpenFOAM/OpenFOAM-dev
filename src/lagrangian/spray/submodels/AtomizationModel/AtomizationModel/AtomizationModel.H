@@ -114,13 +114,13 @@ public:
 
     // Member Functions
 
-        //- initial value of liquidCore
+        //- Initial value of liquidCore
         virtual scalar initLiquidCore() const;
 
         //- Average temperature calculation
         scalar Taverage(const scalar& Tliq, const scalar& Tc) const;
 
-        //- flag to indicate if chi needs to be calculated
+        //- Flag to indicate if chi needs to be calculated
         virtual bool calcChi() const;
 
         virtual void update

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,10 +65,10 @@ class wallPoint
 {
     // Private data
 
-        //- position of nearest wall center
+        //- Position of nearest wall center
         point origin_;
 
-        //- normal distance (squared) from cellcenter to origin
+        //- Normal distance (squared) from cellcenter to origin
         scalar distSqr_;
 
 

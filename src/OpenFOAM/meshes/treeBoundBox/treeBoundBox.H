@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,7 +202,7 @@ public:
             //- Typical dimension length,height,width
             inline scalar typDim() const;
 
-            //- vertex coordinates. In octant coding.
+            //- Vertex coordinates. In octant coding.
             tmp<pointField> points() const;
 
 

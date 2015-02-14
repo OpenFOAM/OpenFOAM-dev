@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,10 +134,10 @@ class codedMixedFvPatchField
         //- Set the rewrite vars controlling the Type
         static void setFieldTemplates(dynamicCode& dynCode);
 
-        //- get the loaded dynamic libraries
+        //- Get the loaded dynamic libraries
         virtual dlLibraryTable& libs() const;
 
-        //- adapt the context for the current object
+        //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
         // Return a description (type + name) for the output

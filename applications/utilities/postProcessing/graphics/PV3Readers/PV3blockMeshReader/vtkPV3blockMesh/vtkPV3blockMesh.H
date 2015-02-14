@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,7 +243,7 @@ class vtkPV3blockMesh
             //- Internal block info
             void updateInfoBlocks(vtkDataArraySelection*);
 
-            //- block curved edges info
+            //- Block curved edges info
             void updateInfoEdges(vtkDataArraySelection*);
 
         // Update helper functions
@@ -253,13 +253,13 @@ class vtkPV3blockMesh
 
         // Mesh conversion functions
 
-            //- mesh blocks
+            //- Mesh blocks
             void convertMeshBlocks(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- mesh curved edges
+            //- Mesh curved edges
             void convertMeshEdges(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- mesh corners
+            //- Mesh corners
             void convertMeshCorners(vtkMultiBlockDataSet*, int& blockNo);
 
 

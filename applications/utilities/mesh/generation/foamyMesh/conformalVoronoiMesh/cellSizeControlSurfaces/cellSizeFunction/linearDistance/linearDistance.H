@@ -54,13 +54,13 @@ private:
 
     // Private data
 
-        //- cell size at distance_ from the surface
+        //- Cell size at distance_ from the surface
         scalar distanceCellSize_;
 
-        //- distance from the surface to control over
+        //- Distance from the surface to control over
         scalar distance_;
 
-        //- distance squared
+        //- Distance squared
         scalar distanceSqr_;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,11 +78,11 @@ class medialAxisMeshMover
 
     // Pre-calculated medial axis information
 
-        //- normal of nearest wall. Where this normal changes direction
+        //- Normal of nearest wall. Where this normal changes direction
         //  defines the medial axis
         pointVectorField dispVec_;
 
-        //- ratio of medial distance to wall distance.
+        //- Ratio of medial distance to wall distance.
         //  (1 at wall, 0 at medial axis)
         pointScalarField medialRatio_;
 

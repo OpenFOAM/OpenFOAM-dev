@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -340,7 +340,7 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
             break;
         }
         //- Problem: usually specified translation is not accurate enough
-        //- to get proper match so keep automatic determination over here.
+        //- To get proper match so keep automatic determination over here.
         //case TRANSLATIONAL:
         //{
         //    // Transform 0 points.

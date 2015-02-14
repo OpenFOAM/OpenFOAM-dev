@@ -58,7 +58,7 @@ class pointFeatureEdgesTypes
         //- Reference to the feature edge mesh
         const extendedFeatureEdgeMesh& feMesh_;
 
-        //- label of the point
+        //- Label of the point
         label pointLabel_;
 
 

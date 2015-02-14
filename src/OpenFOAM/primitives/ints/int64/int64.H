@@ -69,7 +69,7 @@ bool read(const char*, int64_t&);
 Istream& operator>>(Istream&, int64_t&);
 Ostream& operator<<(Ostream&, const int64_t);
 
-//- template specialization for pTraits<int64_t>
+//- Template specialization for pTraits<int64_t>
 template<>
 class pTraits<int64_t>
 {

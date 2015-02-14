@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,16 +72,16 @@ private:
 
     // Private data
 
-        //- default matching tolerance
+        //- Default matching tolerance
         static const scalar defaultMatchTol_;
 
-        //- local matching tolerance
+        //- Local matching tolerance
         const scalar matchTolerance_;
 
         //- Type of transformation
         transformType transform_;
 
-        //- offset (distance) vector from one side of the couple to the other
+        //- Offset (distance) vector from one side of the couple to the other
         mutable vectorField separation_;
 
         //- Face transformation tensor

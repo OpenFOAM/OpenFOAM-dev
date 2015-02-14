@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ public:
         //- Null
         refineCell();
 
-        //- from components. Vector will be normalized upon construction.
+        //- From components. Vector will be normalized upon construction.
         refineCell(const label, const vector&);
 
-        //- from Istream. Vector will be normalized upon construction.
+        //- From Istream. Vector will be normalized upon construction.
         refineCell(Istream& is);
 
 

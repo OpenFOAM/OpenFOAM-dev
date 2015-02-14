@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,7 +149,7 @@ void Foam::meshReaders::STARCD::readPoints
     points_.setSize(nPoints);
     mapToFoamPointId_.setSize(maxId+1);
 
-    //- original Point number for a given vertex
+    //- Original Point number for a given vertex
     // might need again in the future
     ////     labelList origPointId(nPoints);
     ////     origPointId = -1;

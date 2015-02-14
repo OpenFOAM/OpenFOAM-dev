@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class surfacePatch
 {
     // Private data
 
-        //- size of this patch in the triSurface face list
+        //- Size of this patch in the triSurface face list
         label size_;
 
         //- Start label of this patch in the triSurface face list

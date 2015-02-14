@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class oldCyclicPolyPatch
             //- Axis of rotation for rotational cyclics
             vector rotationAxis_;
 
-            //- point on axis of rotation for rotational cyclics
+            //- Point on axis of rotation for rotational cyclics
             point rotationCentre_;
 
         // For translation

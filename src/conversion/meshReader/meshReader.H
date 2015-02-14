@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,10 +154,10 @@ private:
         labelList patchStarts_;
         labelList patchSizes_;
 
-        //- association between two faces
+        //- Association between two faces
         List<labelPair> interfaces_;
 
-        //- list of cells/faces id pairs for each baffle
+        //- List of cells/faces id pairs for each baffle
         List<List<cellFaceIdentifier> > baffleIds_;
 
         //- Global face list for polyMesh

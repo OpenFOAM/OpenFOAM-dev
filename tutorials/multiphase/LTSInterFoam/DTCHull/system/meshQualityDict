@@ -48,7 +48,7 @@ minArea -1;
 //  and face centre triangles normal
 minTwist 0.05;
 
-//- minimum normalised cell determinant
+//- Minimum normalised cell determinant
 //  1 = hex, <= 0 = folded or flattened illegal cell
 minDeterminant 0.001;
 
@@ -61,7 +61,7 @@ minVolRatio 0.01;
 //must be >0 for Fluent compatibility
 minTriangleTwist -1;
 
-//- if >0 : preserve single cells with all points on the surface if the
+//- If >0 : preserve single cells with all points on the surface if the
 //  resulting volume after snapping (by approximation) is larger than
 //  minVolCollapseRatio times old volume (i.e. not collapsed to flat cell).
 //  If <0 : delete always.
@@ -72,7 +72,7 @@ minTriangleTwist -1;
 
 //- Number of error distribution iterations
 nSmoothScale 4;
-//- amount to scale back displacement at error points
+//- Amount to scale back displacement at error points
 errorReduction 0.75;
 
 

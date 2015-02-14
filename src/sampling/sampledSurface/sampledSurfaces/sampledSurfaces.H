@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ class sampledSurfaces
 
     // Static data members
 
-        //- output verbosity
+        //- Output verbosity
         static bool verbose_;
 
         //- Tolerance for merging points (fraction of mesh bounding box)
@@ -102,7 +102,7 @@ class sampledSurfaces
         //- Load fields from files (not from objectRegistry)
         const bool loadFromFiles_;
 
-        //- output path
+        //- Output path
         fileName outputPath_;
 
 
@@ -212,7 +212,7 @@ public:
             return name_;
         }
 
-        //- set verbosity level
+        //- Set verbosity level
         void verbose(const bool verbosity = true);
 
         //- Execute, currently does nothing

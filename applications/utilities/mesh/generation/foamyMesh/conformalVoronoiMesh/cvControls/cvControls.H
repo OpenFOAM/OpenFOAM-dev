@@ -163,7 +163,7 @@ class cvControls
         //- Allowed relative load unbalance
         scalar maxLoadUnbalance_;
 
-        //- cosine of angle of alignment with required direction within which a
+        //- Cosine of angle of alignment with required direction within which a
         //  face will be accepted for rotation
         scalar cosAlignmentAcceptanceAngle_;
 
@@ -179,7 +179,7 @@ class cvControls
             //  size
             scalar faceAreaRatioCoeff_;
 
-            //- cosine of the angle of alignment with the required direction
+            //- Cosine of the angle of alignment with the required direction
             //  within which a long De will be accepted for a new Dv insertion
             scalar cosInsertionAcceptanceAngle_;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,25 +67,25 @@ protected:
 
     // Protected data
 
-        //- part number
+        //- Part number
         label number_;
 
-        //- part name (or description)
+        //- Part name (or description)
         string name_;
 
-        //- simple labelList with a name
+        //- Simple labelList with a name
         labelListList elemLists_;
 
-        //- start offset for elemLists_
+        //- Start offset for elemLists_
         label offset_;
 
-        //- number of elements in this part
+        //- Number of elements in this part
         label size_;
 
-        //- cell or face data
+        //- Cell or face data
         bool isCellData_;
 
-        //- material id (numeric)
+        //- Material id (numeric)
         label matId_;
 
         //- pointField referenced
@@ -94,24 +94,24 @@ protected:
 
     // Protected Classes
 
-        //- track the points used by the part and map global to local indices
+        //- Track the points used by the part and map global to local indices
         class localPoints
         {
         public:
-            //- number of points used
+            //- Number of points used
             label nPoints;
 
-            //- map global to local indices
+            //- Map global to local indices
             labelList list;
 
-            //- null constructor
+            //- Null constructor
             localPoints()
             :
                 nPoints(0),
                 list(0)
             {}
 
-            //- construct for mesh points
+            //- Construct for mesh points
             localPoints(const pointField& pts)
             :
                 nPoints(0),
@@ -127,13 +127,13 @@ protected:
         //  but cannot be used to write a new geometry
         void reconstruct(Istream&);
 
-        //- check for fully defined fields
+        //- Check for fully defined fields
         bool isFieldDefined(const List<scalar>&) const;
 
-        //- write the part header
+        //- Write the part header
         void writeHeader(ensightFile&, bool withDescription=false) const;
 
-        //- write a scalar field for idList
+        //- Write a scalar field for idList
         //  A null reference for idList writes the perNode values
         void writeFieldList
         (
@@ -142,13 +142,13 @@ protected:
             const labelUList& idList
         ) const;
 
-        //- track points used
+        //- Track points used
         virtual localPoints calcLocalPoints() const
         {
             return localPoints();
         }
 
-        //- write connectivities
+        //- Write connectivities
         virtual void writeConnectivity
         (
             ensightGeoFile&,
@@ -224,37 +224,37 @@ public:
 
     // Access
 
-        //- number of elements in this part
+        //- Number of elements in this part
         label size() const
         {
             return size_;
         }
 
-        //- represents cell data
+        //- Represents cell data
         bool isCellData() const
         {
             return isCellData_;
         }
 
-        //- represents face data
+        //- Represents face data
         bool isFaceData() const
         {
             return !isCellData_;
         }
 
-        //- part number
+        //- Part number
         label number() const
         {
             return number_;
         }
 
-        //- part name or description
+        //- Part name or description
         const string& name() const
         {
             return name_;
         }
 
-        //- material id
+        //- Material id
         label materialId() const
         {
             return matId_;
@@ -272,13 +272,13 @@ public:
             matId_ = value;
         }
 
-        //- simple labelList with a name
+        //- Simple labelList with a name
         const labelListList& elemLists() const
         {
             return elemLists_;
         }
 
-        //- offset for element ids
+        //- Offset for element ids
         label offset() const
         {
             return offset_;
@@ -287,13 +287,13 @@ public:
 
     // Edit
 
-        //- renumber elements
+        //- Renumber elements
         void renumber(const labelUList&);
 
-        //- write summary information about the object
+        //- Write summary information about the object
         bool writeSummary(Ostream&) const;
 
-        //- write reconstruction information for the object
+        //- Write reconstruction information for the object
         bool writeData(Ostream&) const;
 
         //- Write geometry
@@ -303,7 +303,7 @@ public:
         //- Helper: write geometry given the pointField
         void writeGeometry(ensightGeoFile&, const pointField&) const;
 
-        //- write scalar field
+        //- Write scalar field
         //  optionally write data per node
         void writeScalarField
         (
@@ -312,7 +312,7 @@ public:
             const bool perNode = false
         ) const;
 
-        //- write vector field components
+        //- Write vector field components
         //  optionally write data per node
         void writeVectorField
         (
@@ -324,7 +324,7 @@ public:
         ) const;
 
 
-        //- write generalized field components
+        //- Write generalized field components
         //  optionally write data per node
         template<class Type>
         void writeField
@@ -346,10 +346,10 @@ public:
 
     // IOstream Operators
 
-        //- write data (reconstruction information)
+        //- Write data (reconstruction information)
         friend Ostream& operator<<(Ostream&, const ensightPart&);
 
-        //- write geometry
+        //- Write geometry
         friend ensightGeoFile& operator<<(ensightGeoFile&, const ensightPart&);
 
 };

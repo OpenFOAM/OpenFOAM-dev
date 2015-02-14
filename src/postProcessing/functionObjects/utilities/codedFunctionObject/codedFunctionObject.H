@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,10 +118,10 @@ protected:
 
     // Protected Member Functions
 
-        //- get the loaded dynamic libraries
+        //- Get the loaded dynamic libraries
         virtual dlLibraryTable& libs() const;
 
-        //- adapt the context for the current object
+        //- Adapt the context for the current object
         virtual void prepare(dynamicCode &,const dynamicCodeContext&) const;
 
         // Return a description (type + name) for the output

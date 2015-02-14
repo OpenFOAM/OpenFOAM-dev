@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ public:
         //- Sort the axes such that they are closest to the x, y and z axes
         triad sortxyz() const;
 
-        //- convert to a quaternion
+        //- Convert to a quaternion
         operator quaternion() const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ namespace Foam
     };
 
 
-    //- template specialization for pTraits<labelList> so we can have fields
+    //- Template specialization for pTraits<labelList> so we can have fields
     template<>
     class pTraits<labelList>
     {
@@ -94,7 +94,7 @@ namespace Foam
         typedef labelList cmptType;
     };
 
-    //- template specialization for pTraits<labelList> so we can have fields
+    //- Template specialization for pTraits<labelList> so we can have fields
     template<>
     class pTraits<vectorList>
     {
@@ -1519,7 +1519,7 @@ bool Foam::meshRefinement::isGap
     const vector& normal1
 ) const
 {
-    //- hits differ and angles are oppositeish and
+    //- Hits differ and angles are oppositeish and
     //  hits have a normal distance
     vector d = point1-point0;
     scalar magD = mag(d);
@@ -1576,7 +1576,7 @@ bool Foam::meshRefinement::isNormalGap
     const vector& normal1
 ) const
 {
-    //- hits differ and angles are oppositeish and
+    //- Hits differ and angles are oppositeish and
     //  hits have a normal distance
     vector d = point1-point0;
     scalar magD = mag(d);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ public:
             List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >&
         );
 
-        //- write the remaining parameters
+        //- Write the remaining parameters
         virtual void write(Ostream& os) const;
 };
 

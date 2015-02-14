@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,13 +53,13 @@ class linearNormal
 {
     // Private data
 
-        //- layer thickness
+        //- Layer thickness
         scalar thickness_;
 
-        //- first cell thickness
+        //- First cell thickness
         scalar firstCellThickness_;
 
-        //- layer cell distibution
+        //- Layer cell distibution
         scalarList layerPoints_;
 
 

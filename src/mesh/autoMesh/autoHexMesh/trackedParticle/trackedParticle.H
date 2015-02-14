@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,19 +56,19 @@ class trackedParticle
 {
     // Private data
 
-        //- end point to track to
+        //- End point to track to
         point end_;
 
-        //- level of this particle
+        //- Level of this particle
         label level_;
 
-        //- passive label (used to store feature edge mesh)
+        //- Passive label (used to store feature edge mesh)
         label i_;
 
-        //- passive label (used to store feature edge point)
+        //- Passive label (used to store feature edge point)
         label j_;
 
-        //- passive label (used to store feature edge label)
+        //- Passive label (used to store feature edge label)
         label k_;
 
 
@@ -162,43 +162,43 @@ public:
 
     // Member Functions
 
-        //- point to track to
+        //- Point to track to
         point& end()
         {
             return end_;
         }
 
-        //- transported label
+        //- Transported label
         label i() const
         {
             return i_;
         }
 
-        //- transported label
+        //- Transported label
         label& i()
         {
             return i_;
         }
 
-        //- transported label
+        //- Transported label
         label j() const
         {
             return j_;
         }
 
-        //- transported label
+        //- Transported label
         label& j()
         {
             return j_;
         }
 
-        //- transported label
+        //- Transported label
         label k() const
         {
             return k_;
         }
 
-        //- transported label
+        //- Transported label
         label& k()
         {
             return k_;

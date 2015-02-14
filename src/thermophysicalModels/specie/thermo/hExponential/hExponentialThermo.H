@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ public:
             //- Sensible enthalpy [J/kg]
             inline scalar hs(const scalar p, const scalar T) const;
 
-            //- chemical enthalpy [J/kg]
+            //- Chemical enthalpy [J/kg]
             inline scalar hc() const;
 
             //- Entropy [J/(kmol K)]

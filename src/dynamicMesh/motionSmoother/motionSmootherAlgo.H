@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,7 +213,7 @@ class motionSmootherAlgo
         //- Calculate per-edge weight
         tmp<scalarField> calcEdgeWeights(const pointField&) const;
 
-        //- explicit smoothing and min on all affected internal points
+        //- Explicit smoothing and min on all affected internal points
         void minSmooth
         (
             const scalarField& edgeWeights,
@@ -222,7 +222,7 @@ class motionSmootherAlgo
             pointScalarField& newFld
         ) const;
 
-        //- same but only on selected points (usually patch points)
+        //- Same but only on selected points (usually patch points)
         void minSmooth
         (
             const scalarField& edgeWeights,

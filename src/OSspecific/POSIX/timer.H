@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ SourceFiles
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- check it a timeout has occured
+//- Check it a timeout has occured
 //  keep setjmp in same stack frame so no function calls
 #define timedOut(x) \
     (((x).newTimeOut_ > 0) ? setjmp(Foam::timer::envAlarm) : false)
@@ -83,16 +83,16 @@ class timer
 {
     // Private data
 
-        //- old signal masks
+        //- Old signal masks
         static struct sigaction oldAction_;
 
-        //- old alarm() value
+        //- Old alarm() value
         static unsigned int oldTimeOut_;
 
 
     // Private Member Functions
 
-        //- alarm handler
+        //- Alarm handler
         static void signalHandler(int);
 
 
@@ -103,10 +103,10 @@ public:
         //- Declare name of the class and its debug switch
         ClassName("timer");
 
-        //- current time out value. Needed by macro timedOut
+        //- Current time out value. Needed by macro timedOut
         unsigned int newTimeOut_;
 
-        //- state for setjmp. Needed by macro timedOut
+        //- State for setjmp. Needed by macro timedOut
         static jmp_buf envAlarm;
 
 

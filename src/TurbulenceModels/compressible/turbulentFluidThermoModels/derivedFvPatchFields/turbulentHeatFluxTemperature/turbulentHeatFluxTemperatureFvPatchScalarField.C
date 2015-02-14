@@ -198,7 +198,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 
     scalarField qr(this->size(), 0.0);
 
-    //- qr is negative going into the domain
+    //- Qr is negative going into the domain
     if (QrName_ != "none")
     {
         qr = patch().lookupPatchField<volScalarField, scalar>(QrName_);

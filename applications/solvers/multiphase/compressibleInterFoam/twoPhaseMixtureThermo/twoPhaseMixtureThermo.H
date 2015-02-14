@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,10 +203,10 @@ public:
                 const label patchi
             ) const;
 
-            //- gamma = Cp/Cv []
+            //- Gamma = Cp/Cv []
             virtual tmp<volScalarField> gamma() const;
 
-            //- gamma = Cp/Cv for patch []
+            //- Gamma = Cp/Cv for patch []
             virtual tmp<scalarField> gamma
             (
                 const scalarField& p,

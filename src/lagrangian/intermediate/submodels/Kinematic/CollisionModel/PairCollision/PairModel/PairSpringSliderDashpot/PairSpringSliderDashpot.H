@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ class PairSpringSliderDashpot
     // Private Member Functions
 
         //- Find the appropriate properties for determining the minimum
-        //- allowable timestep
+        //- Allowable timestep
         void findMinMaxProperties
         (
             scalar& RMin,

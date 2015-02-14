@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -284,7 +284,7 @@ private:
                     List<extrudeMode>& extrudeStatus
                 ) const;
 
-                //- for truncateDisplacement: find strings of edges
+                //- For truncateDisplacement: find strings of edges
                 bool sameEdgeNeighbour
                 (
                     const labelListList& globalEdgeFaces,
@@ -293,7 +293,7 @@ private:
                     const label edgeI
                 ) const;
 
-                //- for truncateDisplacement: find strings of edges
+                //- For truncateDisplacement: find strings of edges
                 void getVertexString
                 (
                     const indirectPrimitivePatch& pp,

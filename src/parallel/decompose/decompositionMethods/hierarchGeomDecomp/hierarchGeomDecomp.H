@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ class hierarchGeomDecomp
         );
 
         //- Recursively sort in x,y,z (or rather acc. to decompOrder_)
-        //- using weighted points.
+        //- Using weighted points.
         void sortComponent
         (
             const label sizeTol,
@@ -178,7 +178,7 @@ public:
 
     // Member Functions
 
-        //- hierarchgeom is aware of processor boundaries
+        //- Hierarchgeom is aware of processor boundaries
         virtual bool parallelAware() const
         {
             return true;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,10 +61,10 @@ class fieldToCell
         //- Name of volScalarField
         word fieldName_;
 
-        //- min to subset field values with
+        //- Min to subset field values with
         scalar min_;
 
-        //- max ,,
+        //- Max ,,
         scalar max_;
 
 

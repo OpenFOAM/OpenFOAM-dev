@@ -92,7 +92,7 @@ class engineTime
         //- Disallow default bitwise assignment
         void operator=(const engineTime&);
 
-        //- adjust read time values
+        //- Adjust read time values
         void timeAdjustment();
 
 public:

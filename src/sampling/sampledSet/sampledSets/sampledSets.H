@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ class sampledSets
 
     // Static data members
 
-        //- output verbosity
+        //- Output verbosity
         static bool verbose_;
 
 
@@ -279,7 +279,7 @@ public:
             return name_;
         }
 
-        //- set verbosity level
+        //- Set verbosity level
         void verbose(const bool verbosity = true);
 
         //- Execute, currently does nothing

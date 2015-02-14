@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ class topoCellLooper
             DynamicList<T>& lst
         );
 
-        //- walk across superface discarding non-feature points.
+        //- Walk across superface discarding non-feature points.
         void walkFace
         (
             const cellFeatures& features,
@@ -158,7 +158,7 @@ public:
 
     // Static data members
 
-        //- cos of angle for feature recognition (of splitHexes)
+        //- Cos of angle for feature recognition (of splitHexes)
         static const scalar featureCos;
 
 

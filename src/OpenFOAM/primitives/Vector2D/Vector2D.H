@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ public:
 
         // Operators
 
-            //- perp dot product (dot product with perpendicular vector)
+            //- Perp dot product (dot product with perpendicular vector)
             inline scalar perp(const Vector2D<Cmpt>& b) const;
 };
 

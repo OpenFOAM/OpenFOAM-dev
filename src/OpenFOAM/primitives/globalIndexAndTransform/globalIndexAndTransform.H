@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ private:
         void determineTransformPermutations();
 
         //- Determine which patch uses which transform (if any) and which
-        //- sign to use
+        //- Sign to use
         void determinePatchTransformSign();
 
         //- Test a list of reference transforms to see if the test

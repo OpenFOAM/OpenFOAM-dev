@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ public:
 
     // Member Functions
 
-        //- from neighbour processor to index in boundaryMesh. Local information
+        //- From neighbour processor to index in boundaryMesh. Local information
         //  (so not same over all processors)
         const labelList& procPatchMap() const
         {

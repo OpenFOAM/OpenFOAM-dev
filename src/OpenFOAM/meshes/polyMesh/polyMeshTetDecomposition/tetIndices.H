@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,26 +75,26 @@ class tetIndices
 {
     // Private data
 
-    //- cell that this is a decomposed tet of
+    //- Cell that this is a decomposed tet of
     label cellI_;
 
-    //- face that holds this decomposed tet
+    //- Face that holds this decomposed tet
     label faceI_;
 
-    //- base point on the face
+    //- Base point on the face
     label faceBasePtI_;
 
-    //- point on the face such that the right-hand circulation
+    //- Point on the face such that the right-hand circulation
     //      {faceBasePtI_, facePtAI_, facePtBI_}
     //  forms a triangle that points out of the tet
     label facePtAI_;
 
-    //- point on the face such that the right-hand circulation
+    //- Point on the face such that the right-hand circulation
     //      {faceBasePtI_, facePtAI_, facePtBI_}
     //  forms a triangle that points out of the tet
     label facePtBI_;
 
-    //- point on the face, *relative to the base point*, which
+    //- Point on the face, *relative to the base point*, which
     //  characterises this tet on the face.
     label tetPtI_;
 

@@ -149,7 +149,7 @@ public:
 
     // Member Functions
 
-        //- test function
+        //- Test function
         virtual bool need_refine( const Cube &c )
         {
             int l = c.lv() ;
@@ -352,7 +352,7 @@ public:
             //}
         }
 
-        //- data function
+        //- Data function
         virtual real value_at( const Cube &c )
         {
             return signedDistance(converter_.toGlobal(c)) - _iso_val;

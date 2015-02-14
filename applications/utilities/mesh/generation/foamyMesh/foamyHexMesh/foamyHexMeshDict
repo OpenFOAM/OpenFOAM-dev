@@ -457,7 +457,7 @@ meshQualityControls
     //  and face centre triangles normal
     minTwist 0.02;
 
-    //- minimum normalised cell determinant
+    //- Minimum normalised cell determinant
     //- 1 = hex, <= 0 = folded or flattened illegal cell
     minDeterminant 0.001;
 

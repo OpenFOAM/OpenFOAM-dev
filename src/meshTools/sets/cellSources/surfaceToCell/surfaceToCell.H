@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,21 +87,21 @@ class surfaceToCell
         //  (does not allow includeCut)
         const bool useSurfaceOrientation_;
 
-        //- if > 0 : include cells with distance from cellCentre to surface
+        //- If > 0 : include cells with distance from cellCentre to surface
         //  less than nearDist.
         const scalar nearDist_;
 
-        //- if > -1 : include cells with normals at nearest surface points
+        //- If > -1 : include cells with normals at nearest surface points
         //  varying more than curvature_.
         const scalar curvature_;
 
         //- triSurface to search on. On pointer since can be external.
         const triSurface* surfPtr_;
 
-        //- search engine on surface.
+        //- Search engine on surface.
         const triSurfaceSearch* querySurfPtr_;
 
-        //- whether I allocated above surface ptrs or whether they are
+        //- Whether I allocated above surface ptrs or whether they are
         //  external.
         const bool IOwnPtrs_;
 

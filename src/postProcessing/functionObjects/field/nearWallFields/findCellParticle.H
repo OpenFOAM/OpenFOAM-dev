@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,10 @@ class findCellParticle
 {
     // Private data
 
-        //- end point to track to
+        //- End point to track to
         point end_;
 
-        //- passive data
+        //- Passive data
         label data_;
 
 
@@ -158,13 +158,13 @@ public:
 
     // Member Functions
 
-        //- point to track to
+        //- Point to track to
         const point& end() const
         {
             return end_;
         }
 
-        //- transported label
+        //- Transported label
         label data() const
         {
             return data_;

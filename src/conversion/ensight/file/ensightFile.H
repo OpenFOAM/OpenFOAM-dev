@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,10 +51,10 @@ class ensightFile
 {
     // Private data
 
-        //- allow undef in results
+        //- Allow undef in results
         static bool allowUndef_;
 
-        //- value to represent undef in results
+        //- Value to represent undef in results
         static scalar undefValue_;
 
         //- The '*' mask appropriate for subDir
@@ -120,28 +120,28 @@ public:
 
     // Output
 
-        //- binary write
+        //- Binary write
         virtual Ostream& write(const char* buf, std::streamsize count);
 
-        //- write element keyword with trailing newline, optionally with undef
+        //- Write element keyword with trailing newline, optionally with undef
         virtual Ostream& writeKeyword(const string& key);
 
-        //- write "C Binary" for binary files (eg, geometry/measured)
+        //- Write "C Binary" for binary files (eg, geometry/measured)
         Ostream& writeBinaryHeader();
 
-        //- write undef value
+        //- Write undef value
         Ostream& writeUndef();
 
-        //- write string as "%80s" or as binary
+        //- Write string as "%80s" or as binary
         Ostream& write(const string& value);
 
-        //- write integer as "%10d" or as binary
+        //- Write integer as "%10d" or as binary
         Ostream& write(const label value);
 
-        //- write integer with specified width or as binary
+        //- Write integer with specified width or as binary
         Ostream& write(const label value, const label fieldWidth);
 
-        //- write float as "%12.5e" or as binary
+        //- Write float as "%12.5e" or as binary
         Ostream& write(const scalar value);
 
         //- Add carriage return to ascii stream

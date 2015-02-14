@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 # -----------------------------------------------------------------------------
 # License
@@ -28,7 +28,7 @@
 #     Converts cocoon style sentinel strings into doxygen style strings
 #
 #     Assumes comment strings are formatted as follows
-#         //- general description
+#         //- General description
 #         //  more information
 #         //  and even more information
 #     This should be re-formatted as the following

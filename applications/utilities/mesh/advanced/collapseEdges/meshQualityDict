@@ -50,7 +50,7 @@ minArea             -1;
 //  and face centre triangles normal
 minTwist            0.0;
 
-//- minimum normalised cell determinant
+//- Minimum normalised cell determinant
 //  1 = hex, <= 0 = folded or flattened illegal cell
 minDeterminant      0.001;
 

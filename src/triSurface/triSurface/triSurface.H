@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,7 +192,7 @@ class triSurface
             const label defaultRegion = 0
         );
 
-        //- helper function to print triangle info
+        //- Helper function to print triangle info
         static void printTriangle
         (
             Ostream&,
@@ -201,7 +201,7 @@ class triSurface
             const pointField&
         );
 
-        //- read non-comment line
+        //- Read non-comment line
         static string getLineNoComment(IFstream&);
 
 

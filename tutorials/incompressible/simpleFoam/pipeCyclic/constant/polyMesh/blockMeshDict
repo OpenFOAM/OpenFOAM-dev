@@ -16,7 +16,7 @@ FoamFile
 
 convertToMeters 1;
 
-//- half angle of wedge in degrees
+//- Half angle of wedge in degrees
 halfAngle 45.0;
 
 //- Radius of pipe [m]

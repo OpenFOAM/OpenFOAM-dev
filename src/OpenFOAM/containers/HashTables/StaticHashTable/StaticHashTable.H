@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -350,10 +350,10 @@ public:
         };
 
 
-        //- iterator set to the beginning of the StaticHashTable
+        //- Iterator set to the beginning of the StaticHashTable
         inline iterator begin();
 
-        //- iterator set to beyond the end of the StaticHashTable
+        //- Iterator set to beyond the end of the StaticHashTable
         inline const iterator& end();
 
         //- const_iterator set to the beginning of the StaticHashTable
@@ -385,7 +385,7 @@ public:
 
 private:
 
-        //- iterator returned by end()
+        //- Iterator returned by end()
         iterator endIter_;
 
         //- const_iterator returned by end()

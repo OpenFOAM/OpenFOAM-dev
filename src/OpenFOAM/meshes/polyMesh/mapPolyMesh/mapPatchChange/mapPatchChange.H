@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ public:
 
         // Utility functions
 
-            //- labels of added patches
+            //- Labels of added patches
             labelList addedPatches() const
             {
                 labelList added(patchMap_.size());
@@ -108,7 +108,7 @@ public:
                 return added;
             }
 
-            //- labels (on old mesh) of deleted patches
+            //- Labels (on old mesh) of deleted patches
             labelList deletedPatches() const
             {
                 labelList oldToNew(nOldPatches_, -1);

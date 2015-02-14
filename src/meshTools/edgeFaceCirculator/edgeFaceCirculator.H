@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ class edgeFaceCirculator
 {
     // Static data members
 
-        //- end iterator
+        //- End iterator
         static const edgeFaceCirculator endConstIter;
 
 
@@ -187,13 +187,13 @@ public:
         //- Step to next face. Uses no edge addressing!
         inline edgeFaceCirculator& operator++();
 
-        //- iterator set to the beginning face. For internal edges this is
+        //- Iterator set to the beginning face. For internal edges this is
         //  the current face. For boundary edges this is the first boundary face
         //  reached from walking back (i.e. in opposite direction to ++)
         inline edgeFaceCirculator begin() const;
         inline edgeFaceCirculator cbegin() const;
 
-        //- iterator set to beyond the end of the walk.
+        //- Iterator set to beyond the end of the walk.
         inline const edgeFaceCirculator& end() const;
         inline const edgeFaceCirculator& cend() const;
 };

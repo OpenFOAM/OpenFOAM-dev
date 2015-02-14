@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,10 +63,10 @@ private:
         //- 'right' point
         const point point2_;
 
-        //- length of vector point2-point1
+        //- Length of vector point2-point1
         const scalar magDir_;
 
-        //- normalised vector point2-point1
+        //- Normalised vector point2-point1
         const vector unitDir_;
 
         //- Radius squared

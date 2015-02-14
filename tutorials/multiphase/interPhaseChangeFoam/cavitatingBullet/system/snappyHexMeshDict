@@ -310,7 +310,7 @@ meshQualityControls
     //  and face centre triangles normal
     minTwist 0.02;
 
-    //- minimum normalised cell determinant
+    //- Minimum normalised cell determinant
     //  1 = hex, <= 0 = folded or flattened illegal cell
     minDeterminant 0.001;
 
@@ -328,7 +328,7 @@ meshQualityControls
 
     //- Number of error distribution iterations
     nSmoothScale 4;
-    //- amount to scale back displacement at error points
+    //- Amount to scale back displacement at error points
     errorReduction 0.75;
 }
 

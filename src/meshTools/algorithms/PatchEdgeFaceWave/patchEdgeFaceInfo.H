@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,10 +59,10 @@ class patchEdgeFaceInfo
 {
     // Private data
 
-        //- position of nearest wall center
+        //- Position of nearest wall center
         point origin_;
 
-        //- normal distance (squared) from point to origin
+        //- Normal distance (squared) from point to origin
         scalar distSqr_;
 
 

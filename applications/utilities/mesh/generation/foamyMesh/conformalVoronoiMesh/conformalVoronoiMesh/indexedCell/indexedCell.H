@@ -88,7 +88,7 @@ class indexedCell
     // Private data
 
         //- The index for this Delaunay tetrahedral cell.  Type information is
-        //- also carried:
+        //- Also carried:
 
         //  ctFar : the dual point of this cell does not form part of the
         //          internal or boundary of the dual mesh

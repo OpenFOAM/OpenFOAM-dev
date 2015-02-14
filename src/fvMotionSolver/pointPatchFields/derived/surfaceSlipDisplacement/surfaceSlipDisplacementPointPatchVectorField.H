@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,19 +85,19 @@ private:
 
     // Private data
 
-        //- project mode names
+        //- Project mode names
         static const NamedEnum<projectMode, 3> projectModeNames_;
 
-        //- names of surfaces
+        //- Names of surfaces
         const dictionary surfacesDict_;
 
         //- How to project/project onto surface
         const projectMode projectMode_;
 
-        //- direction to project
+        //- Direction to project
         const vector projectDir_;
 
-        //- plane for 2D wedge case or -1.
+        //- Plane for 2D wedge case or -1.
         const label wedgePlane_;
 
         //- pointZone with frozen points

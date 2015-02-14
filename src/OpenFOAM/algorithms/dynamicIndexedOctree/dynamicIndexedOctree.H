@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ public:
             //- Bounding box of this node
             treeBoundBox bb_;
 
-            //- parent node (index into nodes_ of tree)
+            //- Parent node (index into nodes_ of tree)
             label parent_;
 
             //- IDs of the 8 nodes on all sides of the mid point

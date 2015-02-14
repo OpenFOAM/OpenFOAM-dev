@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class treeDataCell
         //- How to decide if point is inside cell
         const polyMesh::cellRepresentation decompMode_;
 
-        //- cell bounding boxes (valid only if cacheBb_)
+        //- Cell bounding boxes (valid only if cacheBb_)
         treeBoundBoxList bbs_;
 
 

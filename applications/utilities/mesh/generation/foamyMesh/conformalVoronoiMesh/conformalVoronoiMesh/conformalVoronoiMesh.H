@@ -546,7 +546,7 @@ private:
         ) const;
 
         //- Check if a location is in the exclusion range of an existing feature
-        //- edge conformation location
+        //- Edge conformation location
         bool nearFeatureEdgeLocation
         (
             const pointIndexHit& pHit,
@@ -731,7 +731,7 @@ private:
         label classifyBoundaryPoint(Cell_handle cit) const;
 
         //- Index all of the the Delaunay cells and calculate their
-        //- dual points
+        //- Dual points
         void indexDualVertices
         (
             pointField& pts,

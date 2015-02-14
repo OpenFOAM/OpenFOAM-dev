@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,13 +168,13 @@ private:
 
     // Data
 
-        //- cell based fields
+        //- Cell based fields
         objectRegistry cellData_;
 
-        //- point based fields
+        //- Point based fields
         objectRegistry pointData_;
 
-        //- other fields
+        //- Other fields
         objectRegistry otherData_;
 
 
@@ -317,7 +317,7 @@ public:
             return lineMap_;
         }
 
-        //- cell based fields
+        //- Cell based fields
         const objectRegistry& cellData() const
         {
             return cellData_;
@@ -328,7 +328,7 @@ public:
             return cellData_;
         }
 
-        //- point based fields
+        //- Point based fields
         const objectRegistry& pointData() const
         {
             return pointData_;
@@ -339,7 +339,7 @@ public:
             return pointData_;
         }
 
-        //- other fields
+        //- Other fields
         const objectRegistry& otherData() const
         {
             return otherData_;

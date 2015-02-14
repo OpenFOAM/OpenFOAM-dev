@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,16 +109,16 @@ class DsmcCloud
         //- Force density at surface field
         volVectorField fD_;
 
-        //- number density field
+        //- Number density field
         volScalarField rhoN_;
 
         //- Mass density field
         volScalarField rhoM_;
 
-        //- dsmc particle density field
+        //- Dsmc particle density field
         volScalarField dsmcRhoN_;
 
-        //- linear kinetic energy density field
+        //- Linear kinetic energy density field
         volScalarField linearKE_;
 
         //- Internal energy density field
@@ -139,10 +139,10 @@ class DsmcCloud
 
         // boundary value fields
 
-            //- boundary temperature
+            //- Boundary temperature
             volScalarField boundaryT_;
 
-            //- boundary velocity
+            //- Boundary velocity
             volVectorField boundaryU_;
 
 

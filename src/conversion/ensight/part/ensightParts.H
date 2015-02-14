@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class ensightParts
 {
     // Private Data
 
-        //- list of parts
+        //- List of parts
         PtrList<ensightPart> partsList_;
 
     // Private Member Functions
@@ -83,32 +83,32 @@ public:
 
     // Member functions
 
-        //- clear old information and construct anew from polyMesh
+        //- Clear old information and construct anew from polyMesh
         void recalculate(const polyMesh&);
 
-        //- renumber elements
+        //- Renumber elements
         void renumber
         (
             const labelUList& origCellId,
             const labelUList& origFaceId
         );
 
-        //- number of parts
+        //- Number of parts
         label size() const
         {
             return partsList_.size();
         }
 
-        //- write the geometry
+        //- Write the geometry
         void writeGeometry(ensightGeoFile&) const;
 
-        //- write summary information about the objects
+        //- Write summary information about the objects
         bool writeSummary(Ostream&) const;
 
-        //- write the lists
+        //- Write the lists
         void writeData(Ostream&) const;
 
-        //- write (volume) scalar field
+        //- Write (volume) scalar field
         //  optionally write data for face parts
         //  optionally write data per node
         void writeScalarField
@@ -119,7 +119,7 @@ public:
             const bool perNode = false
         ) const;
 
-        //- write (volume) vector field components
+        //- Write (volume) vector field components
         //  optionally write data for face parts
         //  optionally write data per node
         void writeVectorField
@@ -133,7 +133,7 @@ public:
         ) const;
 
 
-        //- write generalized volume field components
+        //- Write generalized volume field components
         template<class Type>
         void writeField
         (
@@ -144,7 +144,7 @@ public:
 
     // Friend Operators
 
-        //- write geometry
+        //- Write geometry
         friend ensightGeoFile& operator<<(ensightGeoFile&, const ensightParts&);
 };
 

@@ -137,7 +137,7 @@ class atmBoundaryLayer
         //- Direction of the z-coordinate
         vector zDir_;
 
-        //- von Karman constant
+        //- Von Karman constant
         const scalar kappa_;
 
         //- Turbulent viscosity coefficient

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ public:
 
     // Static data members
 
-        //- cosine between edge and face normal when considered parallel
+        //- Cosine between edge and face normal when considered parallel
         //  (note: should be private and make access- and set- function)
         static scalar alignedCos_;
 

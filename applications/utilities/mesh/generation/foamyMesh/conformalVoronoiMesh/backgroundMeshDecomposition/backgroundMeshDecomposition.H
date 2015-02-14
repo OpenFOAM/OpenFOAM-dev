@@ -133,7 +133,7 @@ class backgroundMeshDecomposition
         //- Decomposition method
         autoPtr<decompositionMethod> decomposerPtr_;
 
-        //- merge distance required by fvMeshDistribute
+        //- Merge distance required by fvMeshDistribute
         scalar mergeDist_;
 
         //- Scale of a cell span vs cell size used to decide to refine a cell

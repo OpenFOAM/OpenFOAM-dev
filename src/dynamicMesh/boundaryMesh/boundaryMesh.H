@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,16 +87,16 @@ class boundaryMesh
         // Edge handling
         //
 
-        //- points referenced by feature edges.
+        //- Points referenced by feature edges.
         pointField featurePoints_;
 
-        //- feature edges. Indices into featurePoints.
+        //- Feature edges. Indices into featurePoints.
         edgeList featureEdges_;
 
-        //- from feature edge to mesh edge.
+        //- From feature edge to mesh edge.
         labelList featureToEdge_;
 
-        //- from mesh edges to featureEdges_;
+        //- From mesh edges to featureEdges_;
         labelList edgeToFeature_;
 
         //- Feature 'segments'. Collections of connected featureEdges.

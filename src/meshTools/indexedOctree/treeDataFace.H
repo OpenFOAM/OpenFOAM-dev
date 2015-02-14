@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ class treeDataFace
 {
     // Static data
 
-        //- tolerance on linear dimensions
+        //- Tolerance on linear dimensions
         static scalar tolSqr;
 
 
@@ -78,7 +78,7 @@ class treeDataFace
         //- Whether to precalculate and store face bounding box
         const bool cacheBb_;
 
-        //- face bounding boxes (valid only if cacheBb_)
+        //- Face bounding boxes (valid only if cacheBb_)
         treeBoundBoxList bbs_;
 
 

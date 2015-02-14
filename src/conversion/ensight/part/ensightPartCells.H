@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,13 +63,13 @@ class ensightPartCells
             const labelUList& idLabels = labelUList::null()
         );
 
-        //- track points used
+        //- Track points used
         virtual localPoints calcLocalPoints() const;
 
-        //- track the points used
+        //- Track the points used
         // virtual void makeLocalPointMap();
 
-        //- element connectivity
+        //- Element connectivity
         virtual void writeConnectivity
         (
             ensightGeoFile&,
@@ -81,7 +81,7 @@ class ensightPartCells
 
 protected:
 
-        //- addressable ensight element types
+        //- Addressable ensight element types
         enum elemType
         {
             tetra4Elements,
@@ -99,7 +99,7 @@ protected:
 
     // Protected data
 
-        //- mesh referenced
+        //- Mesh referenced
         const polyMesh& mesh_;
 
 
@@ -154,10 +154,10 @@ public:
 
     // Member Functions
 
-        //- write geometry
+        //- Write geometry
         virtual void writeGeometry(ensightGeoFile&) const;
 
-        //- static listing of the element types
+        //- Static listing of the element types
         virtual const List<word>& elementTypes() const
         {
             return elemTypes_;

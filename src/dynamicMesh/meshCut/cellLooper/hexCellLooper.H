@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ private:
 
     // Private Member Functions
 
-        //- walk across faces of hex. Update loop/loopWeights with edges cut.
+        //- Walk across faces of hex. Update loop/loopWeights with edges cut.
         //  Return true if successful walk. (should be always!)
         bool walkHex
         (

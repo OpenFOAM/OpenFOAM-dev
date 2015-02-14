@@ -192,10 +192,10 @@ class starMesh
         void operator=(const starMesh&);
 
 
-        //- read fixed format vertex label
+        //- Read fixed format vertex label
         static label readVtxLabel(IFstream&);
 
-        //- read fixed format vertex coordinate component
+        //- Read fixed format vertex coordinate component
         static scalar readVtxCmpt(IFstream&);
 
         //- Read to nl

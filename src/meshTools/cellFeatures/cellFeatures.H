@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class cellFeatures
 
         const primitiveMesh& mesh_;
 
-        //- cos of angle between two connected faces or two connected edges on
+        //- Cos of angle between two connected faces or two connected edges on
         //  same face before edge/point is 'feature'.
         scalar minCos_;
 

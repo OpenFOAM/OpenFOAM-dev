@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,10 +100,10 @@ class syringePressureFvPatchScalarField
 {
     // Private data
 
-        //- syringe piston area
+        //- Syringe piston area
         scalar Ap_;
 
-        //- syringe piston speed
+        //- Syringe piston speed
         scalar Sp_;
 
         //- Initial syringe volume
@@ -118,7 +118,7 @@ class syringePressureFvPatchScalarField
         //- Start of piston deceleration
         scalar tds_;
 
-        //- end of piston deceleration
+        //- End of piston deceleration
         scalar tde_;
 
         //- Initial syringe pressure

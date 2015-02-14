@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ class triSurfaceTools
                 labelList& faceStatus
             );
 
-            //- faces to collapse because of edge collapse
+            //- Faces to collapse because of edge collapse
             static labelHashSet getCollapsedFaces
             (
                 const triSurface& surf,
@@ -433,7 +433,7 @@ public:
             const point& nearestPt
         );
 
-        //- on which side of surface
+        //- On which side of surface
         enum sideType
         {
             UNKNOWN,    // cannot be determined (e.g. non-manifold)
@@ -441,7 +441,7 @@ public:
             OUTSIDE     // outside
         };
 
-        //- if nearest point is on edgeI, determine on which side of surface
+        //- If nearest point is on edgeI, determine on which side of surface
         //  sample is.
         static sideType edgeSide
         (

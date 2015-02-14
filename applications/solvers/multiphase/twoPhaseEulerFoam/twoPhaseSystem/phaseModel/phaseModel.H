@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ class phaseModel
         //- Diameter model
         autoPtr<diameterModel> dPtr_;
 
-        //- turbulence model
+        //- Turbulence model
         autoPtr<PhaseCompressibleTurbulenceModel<phaseModel> > turbulence_;
 
 

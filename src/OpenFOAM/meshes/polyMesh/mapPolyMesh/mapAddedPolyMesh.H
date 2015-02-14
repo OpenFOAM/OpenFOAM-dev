@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,16 +83,16 @@ class mapAddedPolyMesh
         //- From added mesh cells to new cells
         labelList addedCellMap_;
 
-        //- original mesh to new mesh patch map. -1 for deleted patches.
+        //- Original mesh to new mesh patch map. -1 for deleted patches.
         labelList oldPatchMap_;
 
-        //- added mesh to new mesh patch map. -1 for deleted patches.
+        //- Added mesh to new mesh patch map. -1 for deleted patches.
         labelList addedPatchMap_;
 
-        //- original patch sizes on old mesh
+        //- Original patch sizes on old mesh
         labelList oldPatchSizes_;
 
-        //- original patch starts
+        //- Original patch starts
         labelList oldPatchStarts_;
 
 

@@ -64,7 +64,7 @@ void ensightParticlePositions
 );
 
 
-//- write lagrangian parcels
+//- Write lagrangian parcels
 template<class Type>
 void ensightLagrangianField
 (
@@ -75,7 +75,7 @@ void ensightLagrangianField
     IOstream::streamFormat format
 );
 
-//- write generalized field components
+//- Write generalized field components
 template<class Type>
 void ensightVolField
 (

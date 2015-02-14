@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ namespace electromagnetic
     //- Magnetic flux quantum: default SI units: [Wb]
     extern const dimensionedScalar phi0;
 
-    //- von Klitzing constant: default SI units: [ohm]
+    //- Von Klitzing constant: default SI units: [ohm]
     extern const dimensionedScalar RK;
 
 

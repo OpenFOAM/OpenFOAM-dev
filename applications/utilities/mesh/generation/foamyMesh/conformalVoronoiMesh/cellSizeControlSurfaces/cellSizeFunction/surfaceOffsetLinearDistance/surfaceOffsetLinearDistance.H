@@ -54,7 +54,7 @@ private:
 
     // Private data
 
-        //- cell size at distance_ from the surface
+        //- Cell size at distance_ from the surface
         scalar distanceCellSize_;
 
         //- Offset distance from surface for constant size portion

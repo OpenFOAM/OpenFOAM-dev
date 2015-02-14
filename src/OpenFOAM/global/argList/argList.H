@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ class argList
             const string& str
         );
 
-        //- get rootPath_ / globalCase_ from one of the following forms
+        //- Get rootPath_ / globalCase_ from one of the following forms
         //   * [-case dir]
         //   * cwd
         //

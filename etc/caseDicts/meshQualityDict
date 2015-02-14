@@ -69,7 +69,7 @@ minVolRatio 0.01;
 minTriangleTwist -1;
 
 
-//- if >0 : preserve cells with all points on the surface if the
+//- If >0 : preserve cells with all points on the surface if the
 //  resulting volume after snapping (by approximation) is larger than
 //  minVolCollapseRatio times old volume (i.e. not collapsed to flat cell).
 //  If <0 : delete always.

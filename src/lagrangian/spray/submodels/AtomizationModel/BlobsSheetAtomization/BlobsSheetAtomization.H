@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,10 +97,10 @@ public:
 
     // Member Functions
 
-        //- initial value of liquidCore
+        //- Initial value of liquidCore
         virtual scalar initLiquidCore() const;
 
-        //- flag to indicate if chi needs to be calculated
+        //- Flag to indicate if chi needs to be calculated
         virtual bool calcChi() const;
 
         virtual void update

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class treeDataPrimitivePatch
         //- Tolerance to use for intersection tests
         const scalar planarTol_;
 
-        //- face bounding boxes (valid only if cacheBb_)
+        //- Face bounding boxes (valid only if cacheBb_)
         treeBoundBoxList bbs_;
 
 

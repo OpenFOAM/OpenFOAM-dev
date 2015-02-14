@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,7 +182,7 @@ public:
                     return index_ > vn.index_;
                 }
 
-                //- this version the same as or newer than the one given
+                //- This version the same as or newer than the one given
                 bool operator>=(const versionNumber& vn)
                 {
                     return index_ >= vn.index_;

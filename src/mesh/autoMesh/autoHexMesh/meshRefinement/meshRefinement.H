@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,10 +159,10 @@ private:
         //- Reference to mesh
         fvMesh& mesh_;
 
-        //- tolerance used for sorting coordinates (used in 'less' routine)
+        //- Tolerance used for sorting coordinates (used in 'less' routine)
         const scalar mergeDistance_;
 
-        //- overwrite the mesh?
+        //- Overwrite the mesh?
         const bool overwrite_;
 
         //- Instance of mesh upon construction. Used when in overwrite_ mode.
@@ -177,13 +177,13 @@ private:
         //- All shell-refinement interaction
         const shellSurfaces& shells_;
 
-        //- refinement engine
+        //- Refinement engine
         hexRef8 meshCutter_;
 
-        //- per cc-cc vector the index of the surface hit
+        //- Per cc-cc vector the index of the surface hit
         labelIOList surfaceIndex_;
 
-        //- user supplied face based data.
+        //- User supplied face based data.
         List<Tuple2<mapType, labelList> > userFaceData_;
 
         //- Meshed patches - are treated differently. Stored as wordList since
@@ -605,7 +605,7 @@ public:
 
         // Access
 
-            //- reference to mesh
+            //- Reference to mesh
             const fvMesh& mesh() const
             {
                 return mesh_;
@@ -632,31 +632,31 @@ public:
                 return oldInstance_;
             }
 
-            //- reference to surface search engines
+            //- Reference to surface search engines
             const refinementSurfaces& surfaces() const
             {
                 return surfaces_;
             }
 
-            //- reference to feature edge mesh
+            //- Reference to feature edge mesh
             const refinementFeatures& features() const
             {
                 return features_;
             }
 
-            //- reference to refinement shells (regions)
+            //- Reference to refinement shells (regions)
             const shellSurfaces& shells() const
             {
                 return shells_;
             }
 
-            //- reference to meshcutting engine
+            //- Reference to meshcutting engine
             const hexRef8& meshCutter() const
             {
                 return meshCutter_;
             }
 
-            //- per start-end edge the index of the surface hit
+            //- Per start-end edge the index of the surface hit
             const labelList& surfaceIndex() const
             {
                 return surfaceIndex_;

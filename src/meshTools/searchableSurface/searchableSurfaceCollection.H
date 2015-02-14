@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,10 +63,10 @@ private:
 
         // Per instance data
 
-            //- instance name
+            //- Instance name
             wordList instance_;
 
-            //- scaling vector
+            //- Scaling vector
             vectorField scale_;
 
             //- transformation
@@ -76,7 +76,7 @@ private:
 
             Switch mergeSubRegions_;
 
-            //- offsets for indices coming from different surfaces
+            //- Offsets for indices coming from different surfaces
             //  (sized with size() of each surface)
             labelList indexOffset_;
 
@@ -136,25 +136,25 @@ public:
 
     // Member Functions
 
-        //- scaling vector per subsurface
+        //- Scaling vector per subsurface
         const vectorField& scale() const
         {
             return scale_;
         }
 
-        //- scaling vector per subsurface
+        //- Scaling vector per subsurface
         vectorField& scale()
         {
             return scale_;
         }
 
-        //- coordinate system per subsurface
+        //- Coordinate system per subsurface
         const PtrList<coordinateSystem>& transform() const
         {
             return transform_;
         }
 
-        //- coordinate system per subsurface
+        //- Coordinate system per subsurface
         PtrList<coordinateSystem>& transform()
         {
             return transform_;

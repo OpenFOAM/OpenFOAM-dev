@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ protected:
         //- Transfer points/zones and transcribe face -> triFace
         void transcribe(MeshedSurface<face>&);
 
-        //- basic sanity check on zones
+        //- Basic sanity check on zones
         void checkZones();
 
         //- Non-const access to global points
@@ -142,7 +142,7 @@ protected:
             return zones_;
         }
 
-        //- sort faces by zones and store sorted faces
+        //- Sort faces by zones and store sorted faces
         void sortFacesAndStore
         (
             const Xfer<List<Face> >& unsortedFaces,

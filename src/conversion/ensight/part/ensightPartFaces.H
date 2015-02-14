@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,10 @@ class ensightPartFaces
         //- Disallow default bitwise assignment
         void operator=(const ensightPartFaces&);
 
-        //- track points used
+        //- Track points used
         virtual localPoints calcLocalPoints() const;
 
-        //- element connectivity
+        //- Element connectivity
         virtual void writeConnectivity
         (
             ensightGeoFile&,
@@ -70,7 +70,7 @@ class ensightPartFaces
 
 protected:
 
-        //- addressable ensight element types
+        //- Addressable ensight element types
         enum elemType
         {
             tria3Elements,
@@ -86,7 +86,7 @@ protected:
 
     // Protected data
 
-        //- faces referenced
+        //- Faces referenced
         const faceList& faces_;
 
         //- Can skip local point renumbering when points are contiguous
@@ -160,10 +160,10 @@ public:
 
     // Member Functions
 
-        //- write geometry
+        //- Write geometry
         virtual void writeGeometry(ensightGeoFile&) const;
 
-        //- static listing of the element types
+        //- Static listing of the element types
         virtual const List<word>& elementTypes() const
         {
             return elemTypes_;

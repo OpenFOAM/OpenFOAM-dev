@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ namespace Foam
 {
     defineTypeNameAndDebug(regionSizeDistribution, 0);
 
-    //- plus op for FixedList<scalar>
+    //- Plus op for FixedList<scalar>
     template<class T, unsigned Size>
     class ListPlusEqOp
     {

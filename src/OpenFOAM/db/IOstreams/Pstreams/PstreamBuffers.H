@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,13 +101,13 @@ class PstreamBuffers
 
         const IOstream::versionNumber version_;
 
-        //- send buffer
+        //- Send buffer
         List<DynamicList<char> > sendBuf_;
 
-        //- receive buffer
+        //- Receive buffer
         List<DynamicList<char> > recvBuf_;
 
-        //- read position in recvBuf_
+        //- Read position in recvBuf_
         labelList recvBufPos_;
 
         bool finishedSendsCalled_;

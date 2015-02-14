@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class sampledPlane
 
     // Private Member Functions
 
-        //- sample field on faces
+        //- Sample field on faces
         template<class Type>
         tmp<Field<Type> > sampleField
         (
@@ -145,64 +145,64 @@ public:
             return cuttingPlane::cutCells();
         }
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<scalarField> sample
         (
             const volScalarField&
         ) const;
 
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<vectorField> sample
         (
             const volVectorField&
         ) const;
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<sphericalTensorField> sample
         (
             const volSphericalTensorField&
         ) const;
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<symmTensorField> sample
         (
             const volSymmTensorField&
         ) const;
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<tensorField> sample
         (
             const volTensorField&
         ) const;
 
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<scalarField> interpolate
         (
             const interpolation<scalar>&
         ) const;
 
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<vectorField> interpolate
         (
             const interpolation<vector>&
         ) const;
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<sphericalTensorField> interpolate
         (
             const interpolation<sphericalTensor>&
         ) const;
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<symmTensorField> interpolate
         (
             const interpolation<symmTensor>&
         ) const;
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<tensorField> interpolate
         (
             const interpolation<tensor>&

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ public:
 
 private:
 
-    //- label and scalar; used in path walking
+    //- Label and scalar; used in path walking
     class labelScalar
     {
     public:
@@ -242,13 +242,13 @@ public:
                 return featureEdges_;
             }
 
-            //- start of external edges
+            //- Start of external edges
             inline label externalStart() const
             {
                 return externalStart_;
             }
 
-            //- start of internal edges
+            //- Start of internal edges
             inline label internalStart() const
             {
                 return internalStart_;

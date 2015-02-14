@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ class meshTriangulation
             const label faceI
         );
 
-        //- find boundary faces of subset.
+        //- Find boundary faces of subset.
         static void getFaces
         (
             const primitiveMesh&,
@@ -127,13 +127,13 @@ public:
 
     // Member Functions
 
-        //- number of triangles in *this which are internal to the surface
+        //- Number of triangles in *this which are internal to the surface
         label nInternalFaces() const
         {
             return nInternalFaces_;
         }
 
-        //- from triangle to mesh face
+        //- From triangle to mesh face
         const labelList& faceMap() const
         {
             return faceMap_;
