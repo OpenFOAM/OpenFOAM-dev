@@ -43,8 +43,27 @@
     scalar pRefValue = 0.0;
     setRefCell(p, simple.dict(), pRefCell, pRefValue);
 
-    dimensionedScalar rhoMax(simple.dict().lookup("rhoMax"));
-    dimensionedScalar rhoMin(simple.dict().lookup("rhoMin"));
+    dimensionedScalar rhoMax
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "rhoMax",
+            simple.dict(),
+            GREAT,
+            dimDensity
+        )
+    );
+
+    dimensionedScalar rhoMin
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "rhoMin",
+            simple.dict(),
+            0,
+            dimDensity
+        )
+    );
 
     Info<< "Creating turbulence model\n" << endl;
     autoPtr<compressible::RASModel> turbulence

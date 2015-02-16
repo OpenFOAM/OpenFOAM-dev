@@ -39,8 +39,27 @@
 
     #include "compressibleCreatePhi.H"
 
-    dimensionedScalar rhoMax(pimple.dict().lookup("rhoMax"));
-    dimensionedScalar rhoMin(pimple.dict().lookup("rhoMin"));
+    dimensionedScalar rhoMax
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "rhoMax",
+            pimple.dict(),
+            GREAT,
+            dimDensity
+        )
+    );
+
+    dimensionedScalar rhoMin
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "rhoMin",
+            pimple.dict(),
+            0,
+            dimDensity
+        )
+    );
 
     Info<< "Creating turbulence model\n" << endl;
     autoPtr<compressible::turbulenceModel> turbulence

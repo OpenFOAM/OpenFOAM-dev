@@ -58,18 +58,24 @@
 
     dimensionedScalar rhoMax
     (
-        "rhoMax",
-        dimDensity,
-        pimple.dict()
-       .lookupOrDefault<scalar>("rhoMax", GREAT)
+        dimensionedScalar::lookupOrDefault
+        (
+            "rhoMax",
+            pimple.dict(),
+            GREAT,
+            dimDensity
+        )
     );
 
     dimensionedScalar rhoMin
     (
-        "rhoMin",
-        dimDensity,
-        pimple.dict()
-       .lookupOrDefault<scalar>("rhoMin", -GREAT)
+        dimensionedScalar::lookupOrDefault
+        (
+            "rhoMin",
+            pimple.dict(),
+            0,
+            dimDensity
+        )
     );
 
     Info<< "Creating turbulence model\n" << endl;

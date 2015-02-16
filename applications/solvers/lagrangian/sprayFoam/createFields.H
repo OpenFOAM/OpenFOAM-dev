@@ -34,7 +34,7 @@
             "rho",
             runTime.timeName(),
             mesh,
-            IOobject::NO_READ,
+            IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         thermo.rho()
@@ -55,6 +55,28 @@
     );
 
     #include "compressibleCreatePhi.H"
+
+    dimensionedScalar rhoMax
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "rhoMax",
+            pimple.dict(),
+            GREAT,
+            dimDensity
+        )
+    );
+
+    dimensionedScalar rhoMin
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "rhoMin",
+            pimple.dict(),
+            0,
+            dimDensity
+        )
+    );
 
     Info<< "Creating turbulence model\n" << endl;
     autoPtr<compressible::turbulenceModel> turbulence
