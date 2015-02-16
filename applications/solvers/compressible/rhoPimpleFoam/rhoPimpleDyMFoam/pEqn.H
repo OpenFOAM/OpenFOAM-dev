@@ -36,7 +36,7 @@ if (pimple.transonic())
             fvm::ddt(psi, p)
           + fvm::div(phid, p)
           - fvm::laplacian(rhorAUf, p)
-          ==
+         ==
             fvOptions(psi, p, rho.name())
         );
 
@@ -68,7 +68,7 @@ else
             fvm::ddt(psi, p)
           + fvc::div(phiHbyA)
           - fvm::laplacian(rhorAUf, p)
-          ==
+         ==
             fvOptions(psi, p, rho.name())
         );
 

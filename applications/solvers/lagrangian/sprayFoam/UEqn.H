@@ -1,22 +1,24 @@
-    fvVectorMatrix UEqn
-    (
-        fvm::ddt(rho, U)
-      + fvm::div(phi, U)
-      + turbulence->divDevRhoReff(U)
-     ==
-        rho.dimensionedInternalField()*g
-      + parcels.SU(U)
-      + fvOptions(rho, U)
-    );
+// Solve the Momentum equation
 
-    UEqn.relax();
+tmp<fvVectorMatrix> UEqn
+(
+    fvm::ddt(rho, U)
+  + fvm::div(phi, U)
+  + turbulence->divDevRhoReff(U)
+ ==
+    rho.dimensionedInternalField()*g
+  + parcels.SU(U)
+  + fvOptions(rho, U)
+);
 
-    fvOptions.constrain(UEqn);
+UEqn().relax();
 
-    if (pimple.momentumPredictor())
-    {
-        solve(UEqn == -fvc::grad(p));
+fvOptions.constrain(UEqn());
 
-        fvOptions.correct(U);
-        K = 0.5*magSqr(U);
-    }
+if (pimple.momentumPredictor())
+{
+    solve(UEqn() == -fvc::grad(p));
+
+    fvOptions.correct(U);
+    K = 0.5*magSqr(U);
+}
