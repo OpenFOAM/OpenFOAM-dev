@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -250,7 +250,7 @@ void Foam::seulex::solve
         firstk = false;
         step.reject = false;
 
-        if (mag(dx) <= mag(x)*SMALL)
+        if (mag(dx) <= mag(x)*sqr(SMALL))
         {
              WarningIn("seulex::solve(scalar& x, scalarField& y, stepState&")
                     << "step size underflow :"  << dx << endl;
