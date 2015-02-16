@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,22 +223,25 @@ int main(int argc, char *argv[])
     {
         pointField cornerPts(boundBox(surf.points(), false).points());
 
-        Info<<"// blockMeshDict info" << nl
-            <<"vertices\n(" << nl;
+        Info<< "// blockMeshDict info" << nl << nl;
+
+        Info<< "vertices\n(" << nl;
         forAll(cornerPts, ptI)
         {
-            Info << "    " << cornerPts[ptI] << nl;
+            Info<< "    " << cornerPts[ptI] << nl;
         }
 
         // number of divisions needs adjustment later
-        Info<<");\n" << nl
-            <<"blocks\n"
-            <<"(\n"
-            <<"    hex (0 1 2 3 4 5 6 7) (10 10 10) simpleGrading (1 1 1)\n"
-            <<");\n" << nl;
+        Info<< ");\n" << nl
+            << "blocks\n"
+            << "(\n"
+            << "    hex (0 1 2 3 4 5 6 7) (10 10 10) simpleGrading (1 1 1)\n"
+            << ");\n" << nl;
 
-        Info<<"edges\n();" << nl
-            <<"patches\n();" << endl;
+        Info<< "edges\n();" << nl
+            << "patches\n();" << endl;
+
+        Info<< nl << "// end blockMeshDict info" << nl << endl;
     }
 
 
