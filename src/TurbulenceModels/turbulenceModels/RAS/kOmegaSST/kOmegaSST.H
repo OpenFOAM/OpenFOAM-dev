@@ -214,6 +214,12 @@ protected:
         virtual void correctNut();
         virtual tmp<fvScalarMatrix> kSource() const;
         virtual tmp<fvScalarMatrix> omegaSource() const;
+        virtual tmp<fvScalarMatrix> Qsas
+        (
+            const volScalarField& S2,
+            const volScalarField& gamma,
+            const volScalarField& beta
+        ) const;
 
 
 public:

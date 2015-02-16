@@ -154,6 +154,25 @@ tmp<fvScalarMatrix> kOmegaSST<BasicTurbulenceModel>::omegaSource() const
 }
 
 
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kOmegaSST<BasicTurbulenceModel>::Qsas
+(
+    const volScalarField& S2,
+    const volScalarField& gamma,
+    const volScalarField& beta
+) const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            omega_,
+            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
+        )
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
@@ -401,37 +420,42 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
     );
 
     volScalarField F1(this->F1(CDkOmega));
-    volScalarField rhoGammaF1(rho*gamma(F1));
 
-    // Turbulent frequency equation
-    tmp<fvScalarMatrix> omegaEqn
-    (
-        fvm::ddt(alpha, rho, omega_)
-      + fvm::div(alphaRhoPhi, omega_)
-      - fvm::laplacian(alpha*rho*DomegaEff(F1), omega_)
-     ==
-        alpha*rhoGammaF1
-       *min
+    {
+        volScalarField gamma(this->gamma(F1));
+        volScalarField beta(this->beta(F1));
+
+        // Turbulent frequency equation
+        tmp<fvScalarMatrix> omegaEqn
         (
-            GbyNu,
-            (c1_/a1_)*betaStar_*omega_*max(a1_*omega_, b1_*F23()*sqrt(S2))
-        )
-      - fvm::SuSp((2.0/3.0)*alpha*rhoGammaF1*divU, omega_)
-      - fvm::Sp(alpha*rho*beta(F1)*omega_, omega_)
-      - fvm::SuSp
-        (
-            alpha*rho*(F1 - scalar(1))*CDkOmega/omega_,
-            omega_
-        )
-      + omegaSource()
-    );
+            fvm::ddt(alpha, rho, omega_)
+          + fvm::div(alphaRhoPhi, omega_)
+          - fvm::laplacian(alpha*rho*DomegaEff(F1), omega_)
+         ==
+            alpha*rho*gamma
+           *min
+            (
+                GbyNu,
+                (c1_/a1_)*betaStar_*omega_*max(a1_*omega_, b1_*F23()*sqrt(S2))
+            )
+          - fvm::SuSp((2.0/3.0)*alpha*rho*gamma*divU, omega_)
+          - fvm::Sp(alpha*rho*beta*omega_, omega_)
+          - fvm::SuSp
+            (
+                alpha*rho*(F1 - scalar(1))*CDkOmega/omega_,
+                omega_
+            )
+          + Qsas(S2, gamma, beta)
+          + omegaSource()
+        );
 
-    omegaEqn().relax();
+        omegaEqn().relax();
 
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+        omegaEqn().boundaryManipulate(omega_.boundaryField());
 
-    solve(omegaEqn);
-    bound(omega_, this->omegaMin_);
+        solve(omegaEqn);
+        bound(omega_, this->omegaMin_);
+    }
 
     // Turbulent kinetic energy equation
     tmp<fvScalarMatrix> kEqn
