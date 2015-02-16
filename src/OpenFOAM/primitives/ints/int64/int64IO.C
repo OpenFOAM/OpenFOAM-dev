@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 #include "IOstreams.H"
 
 #include <sstream>
+#include <cerrno>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -85,9 +86,10 @@ int64_t Foam::readInt64(Istream& is)
 bool Foam::read(const char* buf, int64_t& s)
 {
     char *endptr = NULL;
+    errno = 0;
     long l = strtol(buf, &endptr, 10);
     s = int64_t(l);
-    return (*endptr == 0);
+    return (*endptr == 0) && (errno == 0);
 }
 
 
