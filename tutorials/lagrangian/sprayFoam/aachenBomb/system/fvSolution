@@ -98,10 +98,6 @@ PIMPLE
 
 relaxationFactors
 {
-    fields
-    {
-        ".*Final"       1;
-    }
     equations
     {
         ".*Final"       1;

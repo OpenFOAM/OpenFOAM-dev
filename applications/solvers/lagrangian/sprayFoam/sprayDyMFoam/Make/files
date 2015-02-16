@@ -1,0 +1,3 @@
+sprayDyMFoam.C
+
+EXE = $(FOAM_APPBIN)/sprayDyMFoam
