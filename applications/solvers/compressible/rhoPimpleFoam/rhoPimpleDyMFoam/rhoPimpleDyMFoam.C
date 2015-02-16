@@ -70,17 +70,19 @@ int main(int argc, char *argv[])
     while (runTime.run())
     {
         #include "readControls.H"
-        #include "compressibleCourantNo.H"
-
-        #include "setDeltaT.H"
 
         {
-            // Store divrhoU from the previous time-step/mesh for the correctPhi
+            // Store divrhoU from the previous mesh so that it can be mapped
+            // and used in correctPhi to ensure the corrected phi has the
+            // same divergence
             volScalarField divrhoU
             (
                 "divrhoU",
                 fvc::div(fvc::absolute(phi, rho, U))
             );
+
+            #include "compressibleCourantNo.H"
+            #include "setDeltaT.H"
 
             runTime++;
 
