@@ -175,8 +175,35 @@
 
         simpleDict.readIfPresent("frozenFlow", frozenFlowFluid[i]);
 
-        rhoMax.set(i, new dimensionedScalar(simpleDict.lookup("rhoMax")));
-        rhoMin.set(i, new dimensionedScalar(simpleDict.lookup("rhoMin")));
+        rhoMax.set
+        (
+            i,
+            new dimensionedScalar
+            (
+                dimensionedScalar::lookupOrDefault
+                (
+                    "rhoMax",
+                    simpleDict,
+                    GREAT,
+                    dimDensity
+                )
+            )
+        );
+
+        rhoMin.set
+        (
+            i,
+            new dimensionedScalar
+            (
+                dimensionedScalar::lookupOrDefault
+                (
+                    "rhoMin",
+                    simpleDict,
+                    0,
+                    dimDensity
+                )
+            )
+        );
 
         Info<< "    Adding fvOptions\n" << endl;
         fluidFvOptions.set
@@ -185,5 +212,3 @@
             new fv::IOoptionList(fluidRegions[i])
         );
     }
-
-
