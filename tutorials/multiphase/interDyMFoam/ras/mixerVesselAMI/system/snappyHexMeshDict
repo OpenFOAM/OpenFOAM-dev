@@ -384,9 +384,10 @@ addLayersControls
         // Expansion factor for layer mesh
         expansionRatio 1.0;
 
-        // Wanted thickness of the layer furthest away from the wall.
-        // If relativeSizes this is relative to undistorted size of cell
-        // outside layer.
+        // Wanted thickness of final added cell layer. If multiple layers
+        // is the thickness of the layer furthest away from the wall.
+        // Relative to undistorted size of cell outside layer.
+        // See relativeSizes parameter.
         finalLayerThickness 0.3;
 
         // Wanted thickness of the layer next to the wall.

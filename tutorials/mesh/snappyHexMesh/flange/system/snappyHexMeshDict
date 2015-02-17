@@ -216,6 +216,7 @@ addLayersControls
 
     // Wanted thickness of final added cell layer. If multiple layers
     // is the thickness of the layer furthest away from the wall.
+    // Relative to undistorted size of cell outside layer.
     // See relativeSizes parameter.
     finalLayerThickness 0.3;
 
