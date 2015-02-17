@@ -11,6 +11,7 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lmultiphaseMixtureThermo \
+    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
     -linterfaceProperties \

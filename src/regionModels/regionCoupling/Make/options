@@ -1,7 +1,6 @@
 EXE_INC = \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/AMIInterpolation/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
@@ -21,6 +20,8 @@ EXE_INC = \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
     -I$(LIB_SRC)/regionModels/pyrolysisModels/lnInclude \
     -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
     -lregionModels \
@@ -29,7 +30,7 @@ LIB_LIBS = \
     -lsolidChemistryModel \
     -lreactionThermophysicalModels \
     -lSLGThermo \
-    -lfiniteVolume \
-    -lmeshTools \
     -lturbulenceModels \
-    -lcompressibleTurbulenceModels
+    -lcompressibleTurbulenceModels \
+    -lfiniteVolume \
+    -lmeshTools

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,10 +140,10 @@ public:
         // Access to transport state variables
 
             //- Dynamic viscosity of mixture [kg/m/s]
-            virtual const volScalarField& mu() const;
+            virtual tmp<volScalarField> mu() const;
 
             //- Dynamic viscosity of mixture for patch [kg/m/s]
-            virtual const scalarField& mu(const label patchi) const;
+            virtual tmp<scalarField> mu(const label patchi) const;
 };
 
 

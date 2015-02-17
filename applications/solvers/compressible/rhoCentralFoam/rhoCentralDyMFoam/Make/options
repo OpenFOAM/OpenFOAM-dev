@@ -2,6 +2,7 @@ EXE_INC = \
     -I.. \
     -I../BCs/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
@@ -12,6 +13,7 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lfiniteVolume \
+    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
     -lrhoCentralFoam \

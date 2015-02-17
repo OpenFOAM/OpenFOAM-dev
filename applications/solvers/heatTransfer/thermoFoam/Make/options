@@ -3,6 +3,7 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/fvOptions/lnInclude \
+    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
@@ -13,6 +14,7 @@ EXE_LIBS = \
     -lsampling \
     -lmeshTools \
     -lfvOptions \
+    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lradiationModels \
     -lspecie \

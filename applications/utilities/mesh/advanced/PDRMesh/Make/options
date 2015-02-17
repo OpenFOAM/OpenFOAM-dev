@@ -6,6 +6,7 @@ EXE_INC = \
 EXE_LIBS = \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
+    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lmeshTools \
     -ldynamicMesh \

@@ -35,8 +35,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::transportModel::transportModel
-()
+Foam::transportModel::transportModel()
 {}
 
 

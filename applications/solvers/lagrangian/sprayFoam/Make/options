@@ -10,6 +10,7 @@ EXE_INC = \
     -I$(LIB_SRC)/lagrangian/spray/lnInclude \
     -I$(LIB_SRC)/lagrangian/distributionModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
+    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/properties/liquidProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/properties/liquidMixtureProperties/lnInclude \
@@ -34,6 +35,7 @@ EXE_LIBS = \
     -llagrangianTurbulence \
     -llagrangianSpray \
     -lspecie \
+    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lliquidProperties \
     -lliquidMixtureProperties \

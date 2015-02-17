@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define fluidThermo_H
 
 #include "basicThermo.H"
+#include "compressibleTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,7 +49,8 @@ namespace Foam
 
 class fluidThermo
 :
-    public basicThermo
+    public basicThermo,
+    public compressibleTransportModel
 {
 
 public:
@@ -108,10 +110,10 @@ public:
         // Access to transport state variables
 
             //- Dynamic viscosity of mixture [kg/m/s]
-            virtual const volScalarField& mu() const = 0;
+            virtual tmp<volScalarField> mu() const = 0;
 
             //- Dynamic viscosity of mixture for patch [kg/m/s]
-            virtual const scalarField& mu(const label patchi) const = 0;
+            virtual tmp<scalarField> mu(const label patchi) const = 0;
 
             //- Kinematic viscosity of mixture [m^2/s]
             virtual tmp<volScalarField> nu() const;

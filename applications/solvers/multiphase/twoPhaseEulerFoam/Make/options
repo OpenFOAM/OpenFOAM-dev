@@ -15,6 +15,7 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
+    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
     -lturbulenceModels \

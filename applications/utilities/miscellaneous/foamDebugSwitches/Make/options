@@ -2,6 +2,7 @@ EXE_LIBS = \
     -lautoMesh \
     -lbarotropicCompressibilityModel \
     -lsolidThermo \
+    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lblockMesh \
     -lchemistryModel \

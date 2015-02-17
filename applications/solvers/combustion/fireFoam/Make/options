@@ -8,6 +8,7 @@ EXE_INC = \
     -I$(LIB_SRC)/lagrangian/distributionModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solid/lnInclude \
+    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
@@ -38,6 +39,7 @@ EXE_LIBS = \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
     -lspecie \
+    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lsolidProperties \
     -lsolidMixtureProperties \
