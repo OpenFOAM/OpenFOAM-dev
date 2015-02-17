@@ -56,8 +56,8 @@ PIMPLE
     nOuterCorrectors 50;
     nCorrectors     1;
     nNonOrthogonalCorrectors 0;
-    rhoMin          rhoMin [ 1 -3 0 0 0 ] 0.5;
-    rhoMax          rhoMax [ 1 -3 0 0 0 ] 2.0;
+    rhoMin          0.5;
+    rhoMax          2.0;
 
     residualControl
     {

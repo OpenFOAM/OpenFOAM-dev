@@ -44,8 +44,8 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-    rhoMax          rhoMax [ 1 -3 0 0 0 ] 1100;
-    rhoMin          rhoMin [ 1 -3 0 0 0 ] 900;
+    rhoMax          1100;
+    rhoMin          900;
 }
 
 relaxationFactors

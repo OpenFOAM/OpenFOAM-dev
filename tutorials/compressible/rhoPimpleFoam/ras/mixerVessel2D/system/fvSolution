@@ -94,8 +94,8 @@ PIMPLE
     nCorrectors     2;
     nNonOrthogonalCorrectors 0;
     momentumPredictor yes;
-    rhoMin          rhoMin [ 1 -3 0 0 0 ] 0.5;
-    rhoMax          rhoMax [ 1 -3 0 0 0 ] 2.0;
+    rhoMin          0.5;
+    rhoMax          2.0;
     pRefCell        0;
     pRefValue       1e5;
 }

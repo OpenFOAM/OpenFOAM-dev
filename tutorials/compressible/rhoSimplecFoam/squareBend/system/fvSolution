@@ -51,8 +51,8 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-    rhoMin          rhoMin [1 -3 0 0 0] 0.1;
-    rhoMax          rhoMax [1 -3 0 0 0] 1.0;
+    rhoMin          0.1;
+    rhoMax          1.0;
     transonic       yes;
 
     residualControl
