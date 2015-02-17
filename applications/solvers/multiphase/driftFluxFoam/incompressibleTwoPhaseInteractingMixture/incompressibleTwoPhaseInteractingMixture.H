@@ -37,7 +37,7 @@ SourceFiles
 #ifndef incompressibleTwoPhaseInteractingMixture_H
 #define incompressibleTwoPhaseInteractingMixture_H
 
-#include "incompressible/transportModel/transportModel.H"
+#include "compressibleTransportModel.H"
 #include "incompressible/viscosityModels/viscosityModel/viscosityModel.H"
 #include "mixtureViscosityModel.H"
 #include "twoPhaseMixture.H"
@@ -56,7 +56,7 @@ namespace Foam
 class incompressibleTwoPhaseInteractingMixture
 :
     public IOdictionary,
-    public transportModel,
+    public compressibleTransportModel,
     public twoPhaseMixture
 {
 protected:
