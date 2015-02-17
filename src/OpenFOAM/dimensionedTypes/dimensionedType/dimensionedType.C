@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,14 @@ Foam::dimensioned<Type> Foam::dimensioned<Type>::lookupOrDefault
     const dimensionSet& dims
 )
 {
-    Type value = dict.lookupOrDefault<Type>(name, defaultValue);
-    return dimensioned<Type>(name, dims, value);
+    if (dict.found(name))
+    {
+        return dimensioned<Type>(name, dims, dict.lookup(name));
+    }
+    else
+    {
+        return dimensioned<Type>(name, dims, defaultValue);
+    }
 }
 
 
