@@ -12,9 +12,10 @@ if (pimple.transonic())
         "phid",
         fvc::interpolate(psi)
        *(
-            (fvc::interpolate(rho*HbyA) & mesh.Sf())
+            (fvc::interpolate(HbyA) & mesh.Sf())
           + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi)
-        )/fvc::interpolate(rho)
+           /fvc::interpolate(rho)
+        )
     );
 
     while (pimple.correctNonOrthogonal())

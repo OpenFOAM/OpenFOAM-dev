@@ -17,9 +17,9 @@
         (
             "phiHbyA",
             (
-                (fvc::interpolate(rho*HbyA) & mesh.Sf())
-              + rhorAUf*fvc::ddtCorr(rho, U, phi)
-            )/fvc::interpolate(rho)
+                (fvc::interpolate(HbyA) & mesh.Sf())
+              + rhorAUf*fvc::ddtCorr(rho, U, phi)/fvc::interpolate(rho)
+            )
         );
 
         fvOptions.makeRelative(phiHbyA);

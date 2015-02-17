@@ -13,9 +13,9 @@ if (pimple.transonic())
         "phid",
         fvc::interpolate(psi)
        *(
-            (fvc::interpolate(rho*HbyA) & mesh.Sf())
-          + rhorAUf*fvc::ddtCorr(rho, U, phi)
-        )/fvc::interpolate(rho)
+            (fvc::interpolate(HbyA) & mesh.Sf())
+          + rhorAUf*fvc::ddtCorr(rho, U, phi)/fvc::interpolate(rho)
+        )
     );
 
     fvOptions.makeRelative(fvc::interpolate(psi), phid);
