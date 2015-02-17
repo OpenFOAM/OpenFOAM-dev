@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ void Foam::outletInletFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const fvsPatchField<scalar>& phip =
+    const Field<scalar>& phip =
         this->patch().template lookupPatchField<surfaceScalarField, scalar>
         (
             phiName_
