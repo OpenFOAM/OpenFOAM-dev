@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,6 +115,17 @@ void Foam::PtrList<T>::read(Istream& is, const INew& inewt)
         )
         {
             is.putBack(lastToken);
+
+            if (is.eof())
+            {
+                FatalIOErrorIn
+                (
+                    "PtrList<T>::read(Istream&, const INew&)",
+                    is
+                )   << "Premature EOF after reading " << lastToken.info()
+                    << exit(FatalIOError);
+            }
+
             sllPtrs.append(inewt(is).ptr());
             is >> lastToken;
         }
