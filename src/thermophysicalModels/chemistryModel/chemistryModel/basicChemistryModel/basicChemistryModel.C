@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,13 +44,17 @@ void Foam::basicChemistryModel::correct()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::basicChemistryModel::basicChemistryModel(const fvMesh& mesh)
+Foam::basicChemistryModel::basicChemistryModel
+(
+    const fvMesh& mesh,
+    const word& phaseName
+)
 :
     IOdictionary
     (
         IOobject
         (
-            "chemistryProperties",
+            IOobject::groupName("chemistryProperties", phaseName),
             mesh.time().constant(),
             mesh,
             IOobject::MUST_READ_IF_MODIFIED,
@@ -64,7 +68,7 @@ Foam::basicChemistryModel::basicChemistryModel(const fvMesh& mesh)
     (
         IOobject
         (
-            "deltaTChem",
+            IOobject::groupName("deltaTChem", phaseName),
             mesh.time().constant(),
             mesh,
             IOobject::NO_READ,

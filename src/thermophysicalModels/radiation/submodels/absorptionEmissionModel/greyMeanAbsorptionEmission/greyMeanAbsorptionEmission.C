@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "unitConversion.H"
 #include "zeroGradientFvPatchFields.H"
-#include "basicMultiComponentMixture.H"
+#include "basicSpecieMixture.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -64,7 +64,7 @@ Foam::radiation::greyMeanAbsorptionEmission::greyMeanAbsorptionEmission
     EhrrCoeff_(readScalar(coeffsDict_.lookup("EhrrCoeff"))),
     Yj_(nSpecies_)
 {
-    if (!isA<basicMultiComponentMixture>(thermo_))
+    if (!isA<basicSpecieMixture>(thermo_))
     {
         FatalErrorIn
         (
@@ -203,8 +203,8 @@ Foam::radiation::greyMeanAbsorptionEmission::~greyMeanAbsorptionEmission()
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
 {
-    const basicMultiComponentMixture& mixture =
-        dynamic_cast<const basicMultiComponentMixture&>(thermo_);
+    const basicSpecieMixture& mixture =
+        dynamic_cast<const basicSpecieMixture&>(thermo_);
 
     const volScalarField& T = thermo_.T();
     const volScalarField& p = thermo_.p();

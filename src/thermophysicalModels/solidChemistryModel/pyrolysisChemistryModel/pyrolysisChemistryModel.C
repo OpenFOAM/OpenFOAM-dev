@@ -32,10 +32,11 @@ template<class CompType, class SolidThermo, class GasThermo>
 Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::
 pyrolysisChemistryModel
 (
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    solidChemistryModel<CompType, SolidThermo>(mesh),
+    solidChemistryModel<CompType, SolidThermo>(mesh, phaseName),
     pyrolisisGases_(this->reactions_[0].gasSpecies()),
     gasThermo_(pyrolisisGases_.size()),
     nGases_(pyrolisisGases_.size()),

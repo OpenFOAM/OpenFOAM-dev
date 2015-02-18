@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,14 +30,15 @@ License
 Foam::autoPtr<Foam::basicSolidChemistryModel> Foam::basicSolidChemistryModel::
 New
 (
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 {
     IOdictionary chemistryDict
     (
         IOobject
         (
-            "chemistryProperties",
+            IOobject::groupName("chemistryProperties", phaseName),
             mesh.time().constant(),
             mesh,
             IOobject::MUST_READ,
@@ -163,7 +164,7 @@ New
         FatalError<< exit(FatalError);
     }
 
-    return autoPtr<basicSolidChemistryModel>(cstrIter()(mesh));
+    return autoPtr<basicSolidChemistryModel>(cstrIter()(mesh, phaseName));
 }
 
 

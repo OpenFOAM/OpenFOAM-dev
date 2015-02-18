@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,10 @@ Foam::SLGThermo::SLGThermo(const fvMesh& mesh, fluidThermo& thermo)
 {
     Info<< "Creating component thermo properties:" << endl;
 
-    if (isA<basicMultiComponentMixture>(thermo))
+    if (isA<basicSpecieMixture>(thermo))
     {
-        basicMultiComponentMixture& mcThermo =
-            dynamic_cast<basicMultiComponentMixture&>(thermo);
+        basicSpecieMixture& mcThermo =
+            dynamic_cast<basicSpecieMixture&>(thermo);
         carrier_ = &mcThermo;
 
         Info<< "    multi-component carrier - " << mcThermo.species().size()
@@ -105,13 +105,13 @@ const Foam::fluidThermo& Foam::SLGThermo::thermo() const
 }
 
 
-const Foam::basicMultiComponentMixture& Foam::SLGThermo::carrier() const
+const Foam::basicSpecieMixture& Foam::SLGThermo::carrier() const
 {
     if (carrier_ == NULL)
     {
         FatalErrorIn
         (
-            "const Foam::basicMultiComponentMixture& "
+            "const Foam::basicSpecieMixture& "
             "Foam::SLGThermo::carrier() const"
         )   << "carrier requested, but object is not allocated"
             << abort(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,21 +87,23 @@ public:
         autoPtr,
         rhoChemistryModel,
         fvMesh,
-        (
-            const fvMesh& mesh
-        ),
-        (mesh)
+        (const fvMesh& mesh, const word& phaseName),
+        (mesh, phaseName)
     );
 
 
     // Constructors
 
-        //- Construct from mesh
-        rhoChemistryModel(const fvMesh& mesh);
+        //- Construct from mesh and phase name
+        rhoChemistryModel(const fvMesh& mesh, const word& phaseName);
 
 
     //- Selector
-    static autoPtr<rhoChemistryModel> New(const fvMesh& mesh);
+    static autoPtr<rhoChemistryModel> New
+    (
+        const fvMesh& mesh,
+        const word& phaseName=word::null
+    );
 
 
     //- Destructor

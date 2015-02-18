@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,30 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "pureMixture.H"
-#include "fvMesh.H"
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class ThermoType>
-Foam::pureMixture<ThermoType>::pureMixture
+inline Foam::scalar Foam::basicCombustionMixture::fres
 (
-    const dictionary& thermoDict,
-    const fvMesh& mesh,
-    const word& phaseName
-)
-:
-    basicMixture(thermoDict, mesh, phaseName),
-    mixture_(thermoDict.subDict("mixture"))
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ThermoType>
-void Foam::pureMixture<ThermoType>::read(const dictionary& thermoDict)
+    const scalar ft,
+    const scalar stoicRatio
+) const
 {
-    mixture_ = ThermoType(thermoDict.subDict("mixture"));
+    return max(ft - (scalar(1) - ft)/stoicRatio, scalar(0));
+}
+
+
+inline Foam::tmp<Foam::volScalarField> Foam::basicCombustionMixture::fres
+(
+    const volScalarField& ft,
+    const dimensionedScalar& stoicRatio
+) const
+{
+    return max(ft - (scalar(1) - ft)/stoicRatio.value(), scalar(0));
 }
 
 

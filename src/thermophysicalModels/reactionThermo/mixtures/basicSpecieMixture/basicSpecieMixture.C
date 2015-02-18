@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,30 +23,61 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "pureMixture.H"
-#include "fvMesh.H"
+#include "basicSpecieMixture.H"
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(basicSpecieMixture, 0);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::pureMixture<ThermoType>::pureMixture
+Foam::basicSpecieMixture::basicSpecieMixture
 (
     const dictionary& thermoDict,
+    const wordList& specieNames,
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    basicMixture(thermoDict, mesh, phaseName),
-    mixture_(thermoDict.subDict("mixture"))
+    basicMultiComponentMixture(thermoDict, specieNames, mesh, phaseName)
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::pureMixture<ThermoType>::read(const dictionary& thermoDict)
+Foam::tmp<Foam::volScalarField> Foam::basicSpecieMixture::W() const
 {
-    mixture_ = ThermoType(thermoDict.subDict("mixture"));
+    const PtrList<volScalarField>& Y(basicMultiComponentMixture::Y());
+
+    tmp<volScalarField> trW
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("W", Y[0].group()),
+                Y[0].time().timeName(),
+                Y[0].mesh()
+            ),
+            Y[0].mesh(),
+            dimensionedScalar("zero", dimless, 0)
+        )
+    );
+
+    volScalarField& rW = trW();
+
+    forAll(Y, i)
+    {
+        rW += Y[i]/W(i);
+    }
+
+    rW = 1.0/rW;
+
+    return trW;
 }
 
 

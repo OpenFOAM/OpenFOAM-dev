@@ -89,7 +89,7 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
 )
 :
     BasicThermo(mesh, phaseName),
-    MixtureType(*this, mesh),
+    MixtureType(*this, mesh, phaseName),
 
     he_
     (
@@ -123,7 +123,7 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
 )
 :
     BasicThermo(mesh, dict, phaseName),
-    MixtureType(*this, mesh),
+    MixtureType(*this, mesh, phaseName),
 
     he_
     (

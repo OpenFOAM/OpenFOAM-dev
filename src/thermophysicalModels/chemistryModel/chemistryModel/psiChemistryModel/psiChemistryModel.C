@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,11 +39,12 @@ namespace Foam
 
 Foam::psiChemistryModel::psiChemistryModel
 (
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    basicChemistryModel(mesh),
-    thermo_(psiReactionThermo::New(mesh))
+    basicChemistryModel(mesh, phaseName),
+    thermo_(psiReactionThermo::New(mesh, phaseName))
 {}
 
 
@@ -51,10 +52,11 @@ Foam::psiChemistryModel::psiChemistryModel
 
 Foam::autoPtr<Foam::psiChemistryModel> Foam::psiChemistryModel::New
 (
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 {
-    return basicChemistryModel::New<psiChemistryModel>(mesh);
+    return basicChemistryModel::New<psiChemistryModel>(mesh, phaseName);
 }
 
 

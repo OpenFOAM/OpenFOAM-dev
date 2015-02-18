@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef multiComponentMixture_H
 #define multiComponentMixture_H
 
-#include "basicMultiComponentMixture.H"
+#include "basicSpecieMixture.H"
 #include "HashPtrTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,7 +50,7 @@ namespace Foam
 template<class ThermoType>
 class multiComponentMixture
 :
-    public basicMultiComponentMixture
+    public basicSpecieMixture
 {
     // Private data
 
@@ -86,17 +86,19 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary, specie names, thermo database and mesh
+        //- Construct from dictionary, specie names, thermo database,
+        //  mesh and phase name
         multiComponentMixture
         (
             const dictionary&,
             const wordList& specieNames,
             const HashPtrTable<ThermoType>& thermoData,
-            const fvMesh&
+            const fvMesh&,
+            const word&
         );
 
-        //- Construct from dictionary and mesh
-        multiComponentMixture(const dictionary&, const fvMesh&);
+        //- Construct from dictionary, mesh and phase name
+        multiComponentMixture(const dictionary&, const fvMesh&, const word&);
 
 
     //- Destructor

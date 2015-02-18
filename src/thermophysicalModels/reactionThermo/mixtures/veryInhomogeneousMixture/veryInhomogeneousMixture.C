@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,11 @@ License
 
 template<class ThermoType>
 const char* Foam::veryInhomogeneousMixture<ThermoType>::specieNames_[3] =
-    {"ft", "fu", "b"};
+{
+    "ft",
+    "fu",
+    "b"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -39,14 +43,16 @@ template<class ThermoType>
 Foam::veryInhomogeneousMixture<ThermoType>::veryInhomogeneousMixture
 (
     const dictionary& thermoDict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    basicMultiComponentMixture
+    basicCombustionMixture
     (
         thermoDict,
         speciesTable(nSpecies_, specieNames_),
-        mesh
+        mesh,
+        phaseName
     ),
 
     stoicRatio_(thermoDict.lookup("stoichiometricAirFuelMassRatio")),
@@ -105,18 +111,18 @@ void Foam::veryInhomogeneousMixture<ThermoType>::read
 template<class ThermoType>
 const ThermoType& Foam::veryInhomogeneousMixture<ThermoType>::getLocalThermo
 (
-    const label specieI
+    const label speciei
 ) const
 {
-    if (specieI == 0)
+    if (speciei == 0)
     {
         return fuel_;
     }
-    else if (specieI == 1)
+    else if (speciei == 1)
     {
         return oxidant_;
     }
-    else if (specieI == 2)
+    else if (speciei == 2)
     {
         return products_;
     }
@@ -129,7 +135,7 @@ const ThermoType& Foam::veryInhomogeneousMixture<ThermoType>::getLocalThermo
             "("
                 "const label "
             ") const"
-        )   << "Unknown specie index " << specieI << ". Valid indices are 0..2"
+        )   << "Unknown specie index " << speciei << ". Valid indices are 0..2"
             << abort(FatalError);
 
         return fuel_;

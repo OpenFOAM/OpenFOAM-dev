@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::EulerImplicit
+    Foam::basicCombustionMixture
 
 Description
-    An Euler implicit solver for chemistry
+    Specialization of the basicSpecieMixture for combustion.
 
 SourceFiles
-    EulerImplicit.C
+    basicCombustionMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef EulerImplicit_H
-#define EulerImplicit_H
+#ifndef basicCombustionMixture_H
+#define basicCombustionMixture_H
 
-#include "chemistrySolver.H"
+#include "basicSpecieMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,71 +43,49 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class EulerImplicit Declaration
+                 Class basicCombustionMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ChemistryModel>
-class EulerImplicit
+class basicCombustionMixture
 :
-    public chemistrySolver<ChemistryModel>
+    public basicSpecieMixture
 {
-    // Private data
-
-        //- Coefficients dictionary
-        dictionary coeffsDict_;
-
-
-        // Model constants
-
-            //- Chemistry timescale
-            scalar cTauChem_;
-
-            //- Equilibrium rate limiter flag (on/off)
-            Switch eqRateLimiter_;
-
-        // Solver data
-        mutable scalarField cTp_;
-
 
 public:
 
-    //- Runtime type information
-    TypeName("EulerImplicit");
+    //- Run time type information
+    TypeName("basicCombustionMixture");
+
+
+    //- The base class of the mixture
+    typedef basicCombustionMixture basicMixtureType;
 
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        EulerImplicit(const fvMesh& mesh, const word& phaseName);
+        //- Construct from dictionary, specie names, mesh and phase name
+        basicCombustionMixture
+        (
+            const dictionary&,
+            const wordList& specieNames,
+            const fvMesh&,
+            const word&
+        );
 
 
     //- Destructor
-    virtual ~EulerImplicit();
+    virtual ~basicCombustionMixture()
+    {}
 
 
-    // Member Functions
+    // Member functions
 
-    void updateRRInReactionI
-    (
-        const label index,
-        const scalar pr,
-        const scalar pf,
-        const scalar corr,
-        const label lRef,
-        const label rRef,
-        const scalar p,
-        const scalar T,
-        simpleMatrix<scalar>& RR
-    ) const;
+        inline scalar fres(const scalar ft, const scalar stoicRatio) const;
 
-        //- Update the concentrations and return the chemical time
-        virtual void solve
+        inline tmp<volScalarField> fres
         (
-            scalarField& c,
-            scalar& T,
-            scalar& p,
-            scalar& deltaT,
-            scalar& subDeltaT
+            const volScalarField& ft,
+            const dimensionedScalar& stoicRatio
         ) const;
 };
 
@@ -118,9 +96,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#ifdef NoRepository
-#   include "EulerImplicit.C"
-#endif
+#include "basicCombustionMixtureI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

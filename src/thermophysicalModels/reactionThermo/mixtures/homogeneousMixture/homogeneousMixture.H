@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef homogeneousMixture_H
 #define homogeneousMixture_H
 
-#include "basicMultiComponentMixture.H"
+#include "basicCombustionMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,7 +49,7 @@ namespace Foam
 template<class ThermoType>
 class homogeneousMixture
 :
-    public basicMultiComponentMixture
+    public basicCombustionMixture
 {
     // Private data
 
@@ -76,8 +76,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and mesh
-        homogeneousMixture(const dictionary&, const fvMesh&);
+        //- Construct from dictionary, mesh and phase name
+        homogeneousMixture(const dictionary&, const fvMesh&, const word&);
 
 
     //- Destructor
@@ -127,7 +127,7 @@ public:
         void read(const dictionary&);
 
         //- Return thermo based on index
-        const ThermoType& getLocalThermo(const label specieI) const;
+        const ThermoType& getLocalThermo(const label speciei) const;
 };
 
 

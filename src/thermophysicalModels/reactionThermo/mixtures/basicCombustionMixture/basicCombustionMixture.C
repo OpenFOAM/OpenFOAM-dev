@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,28 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "basicMixture.H"
+#include "basicCombustionMixture.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 namespace Foam
 {
+    defineTypeNameAndDebug(basicCombustionMixture, 0);
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Foam
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::basicCombustionMixture::basicCombustionMixture
+(
+    const dictionary& thermoDict,
+    const wordList& specieNames,
+    const fvMesh& mesh,
+    const word& phaseName
+)
+:
+    basicSpecieMixture(thermoDict, specieNames, mesh, phaseName)
+{}
+
 
 // ************************************************************************* //

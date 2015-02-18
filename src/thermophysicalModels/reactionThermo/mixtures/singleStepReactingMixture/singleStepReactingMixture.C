@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,19 +36,19 @@ void Foam::singleStepReactingMixture<ThermoType>::calculateqFuel()
 
     forAll(reaction.lhs(), i)
     {
-        const label specieI = reaction.lhs()[i].index;
+        const label speciei = reaction.lhs()[i].index;
         const scalar stoichCoeff = reaction.lhs()[i].stoichCoeff;
-        specieStoichCoeffs_[specieI] = -stoichCoeff;
-        qFuel_.value() += this->speciesData()[specieI].hc()*stoichCoeff/Wu;
+        specieStoichCoeffs_[speciei] = -stoichCoeff;
+        qFuel_.value() += this->speciesData()[speciei].hc()*stoichCoeff/Wu;
     }
 
     forAll(reaction.rhs(), i)
     {
-        const label specieI = reaction.rhs()[i].index;
+        const label speciei = reaction.rhs()[i].index;
         const scalar stoichCoeff = reaction.rhs()[i].stoichCoeff;
-        specieStoichCoeffs_[specieI] = stoichCoeff;
-        qFuel_.value() -= this->speciesData()[specieI].hc()*stoichCoeff/Wu;
-        specieProd_[specieI] = -1;
+        specieStoichCoeffs_[speciei] = stoichCoeff;
+        qFuel_.value() -= this->speciesData()[speciei].hc()*stoichCoeff/Wu;
+        specieProd_[speciei] = -1;
     }
 
     Info << "Fuel heat of combustion :" << qFuel_.value() << endl;
@@ -88,24 +88,24 @@ void Foam::singleStepReactingMixture<ThermoType>::calculateMaxProducts()
     scalar totalMol = 0.0;
     forAll(reaction.rhs(), i)
     {
-        label specieI = reaction.rhs()[i].index;
-        totalMol += mag(specieStoichCoeffs_[specieI]);
+        label speciei = reaction.rhs()[i].index;
+        totalMol += mag(specieStoichCoeffs_[speciei]);
     }
 
     scalarList Xi(reaction.rhs().size());
 
     forAll(reaction.rhs(), i)
     {
-        const label specieI = reaction.rhs()[i].index;
-        Xi[i] = mag(specieStoichCoeffs_[specieI])/totalMol;
+        const label speciei = reaction.rhs()[i].index;
+        Xi[i] = mag(specieStoichCoeffs_[speciei])/totalMol;
 
-        Wm += Xi[i]*this->speciesData()[specieI].W();
+        Wm += Xi[i]*this->speciesData()[speciei].W();
     }
 
     forAll(reaction.rhs(), i)
     {
-        const label specieI = reaction.rhs()[i].index;
-        Yprod0_[specieI] =  this->speciesData()[specieI].W()/Wm*Xi[i];
+        const label speciei = reaction.rhs()[i].index;
+        Yprod0_[speciei] =  this->speciesData()[speciei].W()/Wm*Xi[i];
     }
 
     Info << "Maximum products mass concentrations:" << nl;
@@ -141,14 +141,14 @@ void Foam::singleStepReactingMixture<ThermoType>::fresCorrect()
     // reactants
     forAll(reaction.lhs(), i)
     {
-        const label specieI = reaction.lhs()[i].index;
-        if (specieI == fuelIndex_)
+        const label speciei = reaction.lhs()[i].index;
+        if (speciei == fuelIndex_)
         {
-            fres_[specieI] =  max(YFuel - YO2/s_, scalar(0.0));
+            fres_[speciei] =  max(YFuel - YO2/s_, scalar(0.0));
         }
-        else if (specieI == O2Index)
+        else if (speciei == O2Index)
         {
-            fres_[specieI] =  max(YO2 - YFuel*s_, scalar(0.0));
+            fres_[speciei] =  max(YO2 - YFuel*s_, scalar(0.0));
         }
     }
 
@@ -156,23 +156,23 @@ void Foam::singleStepReactingMixture<ThermoType>::fresCorrect()
     // products
     forAll(reaction.rhs(), i)
     {
-        const label specieI = reaction.rhs()[i].index;
-        if (specieI != inertIndex_)
+        const label speciei = reaction.rhs()[i].index;
+        if (speciei != inertIndex_)
         {
-            forAll(fres_[specieI], cellI)
+            forAll(fres_[speciei], cellI)
             {
                 if (fres_[fuelIndex_][cellI] > 0.0)
                 {
                     // rich mixture
-                    fres_[specieI][cellI] =
-                        Yprod0_[specieI]
+                    fres_[speciei][cellI] =
+                        Yprod0_[speciei]
                       * (1.0 + YO2[cellI]/s_.value() - YFuel[cellI]);
                 }
                 else
                 {
                     // lean mixture
-                    fres_[specieI][cellI] =
-                        Yprod0_[specieI]
+                    fres_[speciei][cellI] =
+                        Yprod0_[speciei]
                       * (
                             1.0
                           - YO2[cellI]/s_.value()*stoicRatio_.value()
@@ -191,10 +191,11 @@ template<class ThermoType>
 Foam::singleStepReactingMixture<ThermoType>::singleStepReactingMixture
 (
     const dictionary& thermoDict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    reactingMixture<ThermoType>(thermoDict, mesh),
+    reactingMixture<ThermoType>(thermoDict, mesh, phaseName),
     stoicRatio_(dimensionedScalar("stoicRatio", dimless, 0.0)),
     s_(dimensionedScalar("s", dimless, 0.0)),
     qFuel_(dimensionedScalar("qFuel", sqr(dimVelocity), 0.0)),

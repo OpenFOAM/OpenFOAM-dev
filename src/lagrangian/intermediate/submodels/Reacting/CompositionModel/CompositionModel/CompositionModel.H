@@ -138,7 +138,7 @@ public:
             // Composition lists
 
                 //- Return the carrier components (wrapper function)
-                const basicMultiComponentMixture& carrier() const;
+                const basicSpecieMixture& carrier() const;
 
                 //- Return the global (additional) liquids
                 const liquidMixtureProperties& liquids() const;

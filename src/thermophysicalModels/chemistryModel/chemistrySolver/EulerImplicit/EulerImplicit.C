@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,10 +32,11 @@ License
 template<class ChemistryModel>
 Foam::EulerImplicit<ChemistryModel>::EulerImplicit
 (
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    chemistrySolver<ChemistryModel>(mesh),
+    chemistrySolver<ChemistryModel>(mesh, phaseName),
     coeffsDict_(this->subDict("EulerImplicitCoeffs")),
     cTauChem_(readScalar(coeffsDict_.lookup("cTauChem"))),
     eqRateLimiter_(coeffsDict_.lookup("equilibriumRateLimiter")),

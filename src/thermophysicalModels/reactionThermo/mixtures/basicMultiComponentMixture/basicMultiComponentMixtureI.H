@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+inline const Foam::speciesTable&
+Foam::basicMultiComponentMixture::species() const
+{
+    return species_;
+}
+
 
 inline Foam::PtrList<Foam::volScalarField>&
 Foam::basicMultiComponentMixture::Y()
@@ -76,26 +83,6 @@ inline bool Foam::basicMultiComponentMixture::contains
 ) const
 {
     return species_.contains(specieName);
-}
-
-
-inline Foam::scalar Foam::basicMultiComponentMixture::fres
-(
-    const scalar ft,
-    const scalar stoicRatio
-) const
-{
-    return max(ft - (1.0 - ft)/stoicRatio, 0.0);
-}
-
-
-inline Foam::tmp<Foam::volScalarField> Foam::basicMultiComponentMixture::fres
-(
-    const volScalarField& ft,
-    const dimensionedScalar& stoicRatio
-) const
-{
-    return max(ft - (scalar(1) - ft)/stoicRatio.value(), scalar(0));
 }
 
 

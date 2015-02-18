@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,14 +31,15 @@ License
 template<class ChemistryModel>
 Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
 (
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 {
     IOdictionary chemistryDict
     (
         IOobject
         (
-            "chemistryProperties",
+            IOobject::groupName("chemistryProperties", phaseName),
             mesh.time().constant(),
             mesh,
             IOobject::MUST_READ,
@@ -74,7 +75,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
         (
             IOobject
             (
-                "thermophysicalProperties",
+                IOobject::groupName("thermophysicalProperties", phaseName),
                 mesh.time().constant(),
                 mesh,
                 IOobject::MUST_READ_IF_MODIFIED,
@@ -158,7 +159,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
             FatalError<< exit(FatalError);
         }
 
-        return autoPtr<ChemistryModel>(cstrIter()(mesh));
+        return autoPtr<ChemistryModel>(cstrIter()(mesh, phaseName));
     }
     else
     {
@@ -180,7 +181,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
                 << exit(FatalError);
         }
 
-        return autoPtr<ChemistryModel>(cstrIter()(mesh));
+        return autoPtr<ChemistryModel>(cstrIter()(mesh, phaseName));
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,51 +22,59 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::SpecieMixture
+    Foam::basicSpecieMixture
 
 Description
-    Foam::SpecieMixture
+    Specialization of basicMultiComponentMixture for a mixture consisting
+    of a number for molecular species.
 
 SourceFiles
-    SpecieMixture.C
+    basicSpecieMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef SpecieMixture_H
-#define SpecieMixture_H
+#ifndef basicSpecieMixture_H
+#define basicSpecieMixture_H
 
-#include "scalar.H"
+#include "basicMultiComponentMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward declaration of classes
-class dictionary;
-class fvMesh;
-
-
 /*---------------------------------------------------------------------------*\
-                     Class SpecieMixture Declaration
+                 Class basicSpecieMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MixtureType>
-class SpecieMixture
+class basicSpecieMixture
 :
-    public MixtureType
+    public basicMultiComponentMixture
 {
 
 public:
 
+    //- Run time type information
+    TypeName("basicSpecieMixture");
+
+    //- The base class of the mixture
+    typedef basicSpecieMixture basicMixtureType;
+
+
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        SpecieMixture(const dictionary&, const fvMesh&, const word& phaseName);
+        //- Construct from dictionary, species names, mesh and phase name
+        basicSpecieMixture
+        (
+            const dictionary&,
+            const wordList& specieNames,
+            const fvMesh&,
+            const word&
+        );
 
 
     //- Destructor
-    virtual ~SpecieMixture()
+    virtual ~basicSpecieMixture()
     {}
 
 
@@ -75,10 +83,13 @@ public:
         // Per specie properties
 
             //- Number of moles of the given specie []
-            virtual scalar nMoles(const label speciei) const;
+            virtual scalar nMoles(const label speciei) const = 0;
 
             //- Molecular weight of the given specie [kg/kmol]
-            virtual scalar W(const label speciei) const;
+            virtual scalar W(const label speciei) const = 0;
+
+            //- Molecular weight of the mixture [kg/kmol]
+            tmp<volScalarField> W() const;
 
 
         // Per specie thermo properties
@@ -89,7 +100,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Heat capacity at constant volume [J/(kg K)]
             virtual scalar Cv
@@ -97,7 +108,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Absolute enthalpy [J/kg]
             virtual scalar Ha
@@ -105,7 +116,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Sensible enthalpy [J/kg]
             virtual scalar Hs
@@ -113,10 +124,10 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Chemical enthalpy [J/kg]
-            virtual scalar Hc(const label speciei) const;
+            virtual scalar Hc(const label speciei) const = 0;
 
             //- Entropy [J/(kg K)]
             virtual scalar S
@@ -124,7 +135,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Sensible internal energy [J/kg]
             virtual scalar Es
@@ -132,7 +143,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Gibbs free energy [J/kg]
             virtual scalar G
@@ -140,7 +151,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Helmholtz free energy [J/kg]
             virtual scalar A
@@ -148,7 +159,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
 
         // Per specie transport properties
@@ -159,7 +170,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Thermal conductivity [W/m/K]
             virtual scalar kappa
@@ -167,7 +178,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Thermal diffusivity of enthalpy [kg/m/s]
             virtual scalar alphah
@@ -175,7 +186,7 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 
             //- Density [kg/m3]
             virtual scalar rho
@@ -183,19 +194,13 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
-            ) const;
+            ) const = 0;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-#ifdef NoRepository
-#   include "SpecieMixture.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

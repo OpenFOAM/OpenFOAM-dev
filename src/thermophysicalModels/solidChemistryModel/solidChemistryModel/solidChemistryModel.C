@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,10 +33,11 @@ template<class CompType, class SolidThermo>
 Foam::solidChemistryModel<CompType, SolidThermo>::
 solidChemistryModel
 (
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    CompType(mesh),
+    CompType(mesh, phaseName),
     ODESystem(),
     Ys_(this->solidThermo().composition().Y()),
     reactions_

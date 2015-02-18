@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,8 +73,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and mesh
-        reactingMixture(const dictionary&, const fvMesh&);
+        //- Construct from dictionary, mesh and phase name
+        reactingMixture(const dictionary&, const fvMesh&, const word&);
 
 
     //- Destructor

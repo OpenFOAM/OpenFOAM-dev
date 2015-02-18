@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,14 +104,14 @@ public:
     // Constructors
 
         //- Construct from mesh
-        basicChemistryModel(const fvMesh& mesh);
+        basicChemistryModel(const fvMesh& mesh, const word& phaseName);
 
 
     // Selectors
 
         //- Generic New for each of the related chemistry model
         template<class Thermo>
-        static autoPtr<Thermo> New(const fvMesh&);
+        static autoPtr<Thermo> New(const fvMesh& mesh, const word& phaseName);
 
 
     //- Destructor
@@ -146,11 +146,11 @@ public:
                     const label i
                 ) = 0;
 
-                //- Return reaction rate of the specieI in reactionI
+                //- Return reaction rate of the speciei in reactioni
                 virtual tmp<DimensionedField<scalar, volMesh> > calculateRR
                 (
-                    const label reactionI,
-                    const label specieI
+                    const label reactioni,
+                    const label speciei
                 ) const = 0;
 
 

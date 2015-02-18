@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,8 +105,8 @@ public:
 
     // Constructors
 
-        //- Construct from mesh
-        pyrolysisChemistryModel(const fvMesh& mesh);
+        //- Construct from mesh and phase name
+        pyrolysisChemistryModel(const fvMesh& mesh, const word& phaseName);
 
 
     //- Destructor

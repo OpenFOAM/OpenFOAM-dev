@@ -109,8 +109,8 @@ Foam::radiation::mixtureFractionSoot<ThermoType>::mixtureFractionSoot
     scalar totalMol = 0.0;
     forAll(reaction.rhs(), i)
     {
-        label specieI = reaction.rhs()[i].index;
-        totalMol += mag(specieStoichCoeffs[specieI]);
+        label speciei = reaction.rhs()[i].index;
+        totalMol += mag(specieStoichCoeffs[speciei]);
     }
 
     totalMol += nuSoot_;
@@ -120,9 +120,9 @@ Foam::radiation::mixtureFractionSoot<ThermoType>::mixtureFractionSoot
     scalar Wm = 0.0;
     forAll(reaction.rhs(), i)
     {
-        const label specieI = reaction.rhs()[i].index;
-        Xi[i] = mag(specieStoichCoeffs[specieI])/totalMol;
-        Wm += Xi[i]*mixture_.speciesData()[specieI].W();
+        const label speciei = reaction.rhs()[i].index;
+        Xi[i] = mag(specieStoichCoeffs[speciei])/totalMol;
+        Wm += Xi[i]*mixture_.speciesData()[speciei].W();
     }
 
     const scalar XSoot = nuSoot_/totalMol;

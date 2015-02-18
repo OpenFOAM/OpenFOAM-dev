@@ -32,10 +32,11 @@ License
 template<class CompType, class ThermoType>
 Foam::chemistryModel<CompType, ThermoType>::chemistryModel
 (
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    CompType(mesh),
+    CompType(mesh, phaseName),
     ODESystem(),
     Y_(this->thermo().composition().Y()),
     reactions_
@@ -632,7 +633,7 @@ Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
 Foam::chemistryModel<CompType, ThermoType>::calculateRR
 (
     const label reactionI,
-    const label specieI
+    const label speciei
 ) const
 {
     scalar pf, cf, pr, cr;
@@ -701,7 +702,7 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
             rRef
         );
 
-        RR[celli] = w*specieThermo_[specieI].W();
+        RR[celli] = w*specieThermo_[speciei].W();
 
     }
 

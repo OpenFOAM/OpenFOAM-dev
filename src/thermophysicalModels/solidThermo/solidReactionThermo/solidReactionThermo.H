@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef solidReactionThermo_H
 #define solidReactionThermo_H
 
-#include "basicMultiComponentMixture.H"
+#include "basicSpecieMixture.H"
 #include "solidThermo.H"
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
@@ -124,10 +124,10 @@ public:
     // Member functions
 
         //- Return the composition of the multi-component mixture
-        virtual basicMultiComponentMixture& composition() = 0;
+        virtual basicSpecieMixture& composition() = 0;
 
         //- Return the composition of the multi-component mixture
-        virtual const basicMultiComponentMixture& composition() const = 0;
+        virtual const basicSpecieMixture& composition() const = 0;
 
 };
 

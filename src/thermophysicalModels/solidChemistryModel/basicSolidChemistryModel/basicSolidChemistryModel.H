@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,19 +88,23 @@ public:
         autoPtr,
         basicSolidChemistryModel,
         fvMesh,
-        (const fvMesh& mesh),
-        (mesh)
+        (const fvMesh& mesh, const word& phaseName),
+        (mesh, phaseName)
     );
 
 
     // Constructors
 
         //- Construct from mesh
-        basicSolidChemistryModel(const fvMesh& mesh);
+        basicSolidChemistryModel(const fvMesh& mesh, const word& phaseName);
 
 
     //- Selector
-    static autoPtr<basicSolidChemistryModel> New(const fvMesh& mesh);
+    static autoPtr<basicSolidChemistryModel> New
+    (
+        const fvMesh& mesh,
+        const word& phaseName=word::null
+    );
 
 
     //- Destructor
@@ -133,11 +137,11 @@ public:
             const label i
         ) const = 0;
 
-        //- Returns the reaction rate of the specieI in reactionI
+        //- Returns the reaction rate of the speciei in reactionI
         virtual tmp<DimensionedField<scalar, volMesh> > calculateRR
         (
             const label reactionI,
-            const label specieI
+            const label speciei
         ) const;
 
         //- Return sensible enthalpy for gas i [J/Kg]

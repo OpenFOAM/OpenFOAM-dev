@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,22 @@ License
 
 #include "basicMultiComponentMixture.H"
 
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(basicMultiComponentMixture, 0);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::basicMultiComponentMixture::basicMultiComponentMixture
 (
     const dictionary& thermoDict,
     const wordList& specieNames,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
     species_(specieNames),
@@ -41,13 +50,13 @@ Foam::basicMultiComponentMixture::basicMultiComponentMixture
     {
         IOobject header
         (
-            species_[i],
+            IOobject::groupName(species_[i], phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ
         );
 
-        // check if field exists and can be read
+        // Check if field exists and can be read
         if (header.headerOk())
         {
             Y_.set
@@ -57,7 +66,7 @@ Foam::basicMultiComponentMixture::basicMultiComponentMixture
                 (
                     IOobject
                     (
-                        species_[i],
+                        IOobject::groupName(species_[i], phaseName),
                         mesh.time().timeName(),
                         mesh,
                         IOobject::MUST_READ,
@@ -89,7 +98,7 @@ Foam::basicMultiComponentMixture::basicMultiComponentMixture
                 (
                     IOobject
                     (
-                        species_[i],
+                        IOobject::groupName(species_[i], phaseName),
                         mesh.time().timeName(),
                         mesh,
                         IOobject::NO_READ,
