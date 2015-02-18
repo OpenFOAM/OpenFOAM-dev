@@ -4,7 +4,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# copy bullet surface from resources directory
+# Copy bullet surface from resources directory
 cp $FOAM_TUTORIALS/resources/geometry/bullet.stl.gz constant/triSurface/
 
 # Generate the base block mesh
@@ -12,6 +12,11 @@ runApplication blockMesh
 
 # Generate the snappy mesh
 runApplication snappyHexMesh -overwrite
+
+cp -r 0.org 0
+
+# Initialise with potentialFoam solution
+runApplication potentialFoam -pName p_rgh
 
 # Run the solver
 runApplication `getApplication`

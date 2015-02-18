@@ -59,12 +59,6 @@ solvers
         maxIter         50;
     };
 
-    pcorr
-    {
-        $p_rgh;
-        relTol          0;
-    };
-
     p_rghFinal
     {
         solver          PCG;
@@ -91,6 +85,23 @@ solvers
         relTol          0;
         maxIter         50;
     };
+
+    pcorr
+    {
+        $p_rgh;
+        relTol          0;
+    };
+
+    Phi
+    {
+        $p_rgh;
+        relTol          0;
+    };
+}
+
+potentialFlow
+{
+    nNonOrthogonalCorrectors   3;
 }
 
 PIMPLE
@@ -103,12 +114,9 @@ PIMPLE
 
 relaxationFactors
 {
-    fields
-    {
-    }
     equations
     {
-        "U.*"                      1;
+        "U.*"                   1;
     }
 }
 

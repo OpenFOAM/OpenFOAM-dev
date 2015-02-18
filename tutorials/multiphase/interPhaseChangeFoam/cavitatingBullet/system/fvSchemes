@@ -16,43 +16,44 @@ FoamFile
 
 ddtSchemes
 {
-    default              Euler;
+    default             Euler;
 }
 
 interpolationSchemes
 {
-    default              linear;
+    default             linear;
 }
 
 divSchemes
 {
-    default              none;
-    div(rhoPhi,U)        Gauss linearUpwind grad(U);
-    div(phi,omega)       Gauss linearUpwind grad(omega);
-    div(phi,k)           Gauss linearUpwind grad(k);
-    div(phi,alpha)       Gauss vanLeer;
-    div(phirb,alpha)     Gauss linear;
+    default             none;
+    div(rhoPhi,U)       Gauss linearUpwind grad(U);
+    div(phi,omega)      Gauss linearUpwind grad(omega);
+    div(phi,k)          Gauss linearUpwind grad(k);
+    div(phi,alpha)      Gauss vanLeer;
+    div(phirb,alpha)    Gauss linear;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 gradSchemes
 {
-    default              Gauss linear;
+    default             Gauss linear;
 }
 
 laplacianSchemes
 {
-    default              Gauss linear limited corrected 0.5;
+    default             Gauss linear limited corrected 0.5;
 }
 
 snGradSchemes
 {
-    default              limited corrected 0.5;
+    default             limited corrected 0.5;
 }
 
 fluxRequired
 {
-    default              none;
+    default             none;
+    Phi;
     p_rgh;
     pcorr;
     alpha.water;
