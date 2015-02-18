@@ -28,6 +28,7 @@ License
 #include "int32.H"
 #include "IOstreams.H"
 
+#include <inttypes.h>
 #include <sstream>
 #include <cerrno>
 
@@ -87,9 +88,11 @@ bool Foam::read(const char* buf, int32_t& s)
 {
     char *endptr = NULL;
     errno = 0;
-    long l = strtol(buf, &endptr, 10);
+    intmax_t l = strtoimax(buf, &endptr, 10);
     s = int32_t(l);
-    return (*endptr == 0) && (errno == 0);
+    return
+        (*endptr == 0) && (errno == 0)
+     && (l >= INT32_MIN) && (l <= INT32_MAX);
 }
 
 
