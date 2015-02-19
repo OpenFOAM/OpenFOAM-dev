@@ -13,12 +13,13 @@ refineMeshByCellSet()
    do
       if [ ! -e log.refineMesh.$1 ]
       then
-          echo "creating cell set for primary zone - $1"
+          echo "Creating cell set for primary zone - $1"
           cp system/topoSetDict.$1 system/topoSetDict
           topoSet > log.topoSet.$1 2>&1
 
-          echo "refining primary zone - $1"
-          refineMesh -dict system/refineMeshDict -overwrite > log.refineMesh.$1 2>&1
+          echo "Refining primary zone - $1"
+          refineMesh -dict system/refineMeshDict -overwrite \
+              > log.refineMesh.$1 2>&1
       fi
       shift
    done

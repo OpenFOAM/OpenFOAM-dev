@@ -13,7 +13,7 @@ runAnsysToFoam()
     then
         echo "ansysToFoam already run on $PWD: remove log file to re-run"
     else
-        echo "ansysToFoam: converting mesh $1"
+        echo "ansysToFoam: converting mesh $1" > log.ansysToFoam 2>&1
         ansysToFoam $1 -scale $2 > log.ansysToFoam 2>&1
     fi
 }

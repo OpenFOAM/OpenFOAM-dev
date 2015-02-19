@@ -182,10 +182,10 @@ all)
     if [ -f constant/polyMesh/blockMeshDict ]
     then
         touch "$caseName.blockMesh"
-        echo "created '$caseName.blockMesh'"
+        echo "Created '$caseName.blockMesh'"
     fi
     touch "$caseName.$extension"
-    echo "created '$caseName.$extension'"
+    echo "Created '$caseName.$extension'"
     # discover probable regions
     for region in constant/*
     do
@@ -193,14 +193,14 @@ all)
         then
             regionName=${region##*/}
             touch "$caseName{$regionName}.$extension"
-            echo "created '$caseName{$regionName}.$extension'"
+            echo "Created '$caseName{$regionName}.$extension'"
         fi
     done
     exit 0
     ;;
 true)
     touch "$caseFile"
-    echo "created '$caseFile'"
+    echo "Created '$caseFile'"
     exit 0
     ;;
 esac
@@ -258,7 +258,7 @@ else
     [ -e $caseFile ] || {
         trap "rm -f $caseFile 2>/dev/null; exit 0" EXIT TERM INT
         touch "$caseFile"
-        echo "created temporary '$caseFile'"
+        echo "Created temporary '$caseFile'"
     }
 
     # For now filter out any ld.so errors. Caused by non-system compiler?
