@@ -19,17 +19,26 @@ solvers
 {
     Phi
     {
-        solver          PCG;
-        preconditioner  DIC;
+        solver          GAMG;
+        smoother        DIC;
+        cacheAgglomeration on;
+        agglomerator    faceAreaPair;
+        nCellsInCoarsestLevel 10;
+        mergeLevels     1;
+
         tolerance       1e-06;
-        relTol          0;
+        relTol          0.01;
+    }
+
+    p
+    {
+        $Phi;
     }
 }
 
 potentialFlow
 {
-    nNonOrthogonalCorrectors 0;
+    nNonOrthogonalCorrectors 2;
 }
-
 
 // ************************************************************************* //

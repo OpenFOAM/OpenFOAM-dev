@@ -8,7 +8,7 @@ application=`getApplication`
 
 cp -r 0.org 0 > /dev/null 2>&1
 runApplication blockMesh
-runApplication $application
+runApplication $application -writePhi -writep
 runApplication streamFunction
 
 # ----------------------------------------------------------------- end-of-file

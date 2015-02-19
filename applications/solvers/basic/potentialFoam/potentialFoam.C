@@ -35,8 +35,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "fvIOoptionList.H"
 #include "pisoControl.H"
+#include "fvIOoptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,6 +59,12 @@ int main(int argc, char *argv[])
     (
         "writePhi",
         "Write the velocity potential field"
+    );
+
+    argList::addBoolOption
+    (
+        "writep",
+        "Calculate and write the pressure field"
     );
 
     #include "setRootCase.H"
@@ -123,6 +129,53 @@ int main(int argc, char *argv[])
     if (args.optionFound("writePhi"))
     {
         Phi.write();
+    }
+
+    // Calculate the pressure field
+    if (args.optionFound("writep"))
+    {
+        Info<< nl << "Calculating approximate pressure field" << endl;
+
+        label pRefCell = 0;
+        scalar pRefValue = 0.0;
+        setRefCell
+        (
+            p,
+            potentialFlow.dict(),
+            pRefCell,
+            pRefValue
+        );
+
+        // Calculate the flow-direction filter tensor
+        volScalarField magSqrU(magSqr(U));
+        volSymmTensorField F(sqr(U)/(magSqrU + SMALL*average(magSqrU)));
+
+        // Calculate the divergence of the flow-direction filtered div(U*U)
+        // Filtering with the flow-direction generates a more reasonable
+        // pressure distribution in regions of high velocity gradient in the
+        // direction of the flow
+        volScalarField divDivUU
+        (
+            fvc::div
+            (
+                F & fvc::div(phi, U),
+                "div(div(phi,U))"
+            )
+        );
+
+        // Solve a Poisson equation for the approximate pressure
+        while (potentialFlow.correctNonOrthogonal())
+        {
+            fvScalarMatrix pEqn
+            (
+                fvm::laplacian(p) + divDivUU
+            );
+
+            pEqn.setReference(pRefCell, pRefValue);
+            pEqn.solve();
+        }
+
+        p.write();
     }
 
     runTime.functionObjects().end();

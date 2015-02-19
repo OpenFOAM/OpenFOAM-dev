@@ -28,6 +28,8 @@ gradSchemes
 divSchemes
 {
     default         none;
+    div(phi,U)      bounded Gauss linear;
+    div(div(phi,U)) Gauss linear;
 }
 
 laplacianSchemes
