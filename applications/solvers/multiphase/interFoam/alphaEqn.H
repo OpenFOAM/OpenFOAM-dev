@@ -2,6 +2,43 @@
     word alphaScheme("div(phi,alpha)");
     word alpharScheme("div(phirb,alpha)");
 
+    tmp<fv::ddtScheme<scalar> > ddtAlpha
+    (
+        fv::ddtScheme<scalar>::New
+        (
+            mesh,
+            mesh.ddtScheme("ddt(alpha)")
+        )
+    );
+
+    // Set the off-centering coefficient according to ddt scheme
+    scalar ocCoeff = 0;
+    if (isType<fv::EulerDdtScheme<scalar> >(ddtAlpha()))
+    {
+        ocCoeff = 0;
+    }
+    else if (isType<fv::CrankNicolsonDdtScheme<scalar> >(ddtAlpha()))
+    {
+        if (nAlphaSubCycles > 1)
+        {
+            FatalErrorIn(args.executable())
+                << "Sub-cycling is not supported "
+                   "with the CrankNicolson ddt scheme"
+                << exit(FatalError);
+        }
+
+        ocCoeff =
+            refCast<fv::CrankNicolsonDdtScheme<scalar> >(ddtAlpha()).ocCoeff();
+    }
+    else
+    {
+        FatalErrorIn(args.executable())
+            << "Only Euler and CrankNicolson ddt schemes are supported"
+            << exit(FatalError);
+    }
+
+    scalar cnCoeff = ocCoeff/2.0;
+
     // Standard face-flux compression coefficient
     surfaceScalarField phic(mixture.cAlpha()*mag(phi/mesh.magSf()));
 
@@ -24,10 +61,16 @@
         }
     }
 
-    tmp<surfaceScalarField> tphiAlpha;
-
     if (MULESCorr)
     {
+        tmp<surfaceScalarField> phiCN(phi);
+
+        // Calculate the Crank-Nicolson off-centred volumetric flux
+        if (ocCoeff > 0)
+        {
+            phiCN = (1.0 - cnCoeff)*phi + cnCoeff*phi.oldTime();
+        }
+
         fvScalarMatrix alpha1Eqn
         (
             #ifdef LTSSOLVE
@@ -38,9 +81,9 @@
           + fv::gaussConvectionScheme<scalar>
             (
                 mesh,
-                phi,
-                upwind<scalar>(mesh, phi)
-            ).fvmDiv(phi, alpha1)
+                phiCN,
+                upwind<scalar>(mesh, phiCN)
+            ).fvmDiv(phiCN, alpha1)
         );
 
         alpha1Eqn.solve();
@@ -52,21 +95,18 @@
             << endl;
 
         tmp<surfaceScalarField> tphiAlphaUD(alpha1Eqn.flux());
-        tphiAlpha = tmp<surfaceScalarField>
-        (
-            new surfaceScalarField(tphiAlphaUD())
-        );
+        phiAlpha = tphiAlphaUD();
 
         if (alphaApplyPrevCorr && tphiAlphaCorr0.valid())
         {
             Info<< "Applying the previous iteration compression flux" << endl;
             #ifdef LTSSOLVE
-            MULES::LTScorrect(alpha1, tphiAlpha(), tphiAlphaCorr0(), 1, 0);
+            MULES::LTScorrect(alpha1, phiAlpha, tphiAlphaCorr0(), 1, 0);
             #else
-            MULES::correct(alpha1, tphiAlpha(), tphiAlphaCorr0(), 1, 0);
+            MULES::correct(alpha1, phiAlpha, tphiAlphaCorr0(), 1, 0);
             #endif
 
-            tphiAlpha() += tphiAlphaCorr0();
+            phiAlpha += tphiAlphaCorr0();
         }
 
         // Cache the upwind-flux
@@ -76,6 +116,7 @@
 
         mixture.correct();
     }
+
 
     for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
     {
@@ -97,9 +138,17 @@
             )
         );
 
+        // Calculate the Crank-Nicolson off-centred alpha flux
+        if (ocCoeff > 0)
+        {
+            tphiAlphaUn =
+                (1.0 - cnCoeff)*tphiAlphaUn
+              + cnCoeff*phiAlpha.oldTime();
+        }
+
         if (MULESCorr)
         {
-            tmp<surfaceScalarField> tphiAlphaCorr(tphiAlphaUn() - tphiAlpha());
+            tmp<surfaceScalarField> tphiAlphaCorr(tphiAlphaUn() - phiAlpha);
             volScalarField alpha10("alpha10", alpha1);
 
             #ifdef LTSSOLVE
@@ -111,22 +160,22 @@
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)
             {
-                tphiAlpha() += tphiAlphaCorr();
+                phiAlpha += tphiAlphaCorr();
             }
             else
             {
                 alpha1 = 0.5*alpha1 + 0.5*alpha10;
-                tphiAlpha() += 0.5*tphiAlphaCorr();
+                phiAlpha += 0.5*tphiAlphaCorr();
             }
         }
         else
         {
-            tphiAlpha = tphiAlphaUn;
+            phiAlpha = tphiAlphaUn;
 
             #ifdef LTSSOLVE
-            MULES::explicitLTSSolve(alpha1, phi, tphiAlpha(), 1, 0);
+            MULES::explicitLTSSolve(alpha1, phi, phiAlpha, 1, 0);
             #else
-            MULES::explicitSolve(alpha1, phi, tphiAlpha(), 1, 0);
+            MULES::explicitSolve(alpha1, phi, phiAlpha, 1, 0);
             #endif
         }
 
@@ -135,11 +184,47 @@
         mixture.correct();
     }
 
-    rhoPhi = tphiAlpha()*(rho1 - rho2) + phi*rho2;
-
     if (alphaApplyPrevCorr && MULESCorr)
     {
-        tphiAlphaCorr0 = tphiAlpha() - tphiAlphaCorr0;
+        tphiAlphaCorr0 = phiAlpha - tphiAlphaCorr0;
+    }
+
+    if
+    (
+        word(mesh.ddtScheme("ddt(rho,U)"))
+     == fv::EulerDdtScheme<vector>::typeName
+    )
+    {
+        if (ocCoeff > 0)
+        {
+            // Calculate the Crank-Nicolson off-centred volumetric flux
+            surfaceScalarField phiCN
+            (
+                "phiCN",
+                (1.0 - cnCoeff)*phi + cnCoeff*phi.oldTime()
+            );
+
+            Info<< "Calculate the Crank-Nicolson off-centred mass flux" << endl;
+            // Calculate the Crank-Nicolson off-centred mass flux
+            rhoPhi = phiAlpha*(rho1 - rho2) + phiCN*rho2;
+        }
+        else
+        {
+            // Calculate the end-of-time-step mass flux
+            rhoPhi = phiAlpha*(rho1 - rho2) + phi*rho2;
+        }
+    }
+    else
+    {
+        if (ocCoeff > 0)
+        {
+            Info<< "Calculate the end-of-time-step alpha flux" << endl;
+            // Calculate the end-of-time-step alpha flux
+            phiAlpha = (phiAlpha - cnCoeff*phiAlpha.oldTime())/(1.0 - cnCoeff);
+        }
+
+        // Calculate the end-of-time-step mass flux
+        rhoPhi = phiAlpha*(rho1 - rho2) + phi*rho2;
     }
 
     Info<< "Phase-1 volume fraction = "
