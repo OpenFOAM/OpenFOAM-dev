@@ -1,0 +1,13 @@
+/* Parcels */
+parcels/derived/dsmcParcel/dsmcParcel.C
+
+/* Cloud base classes */
+clouds/baseClasses/DSMCBaseCloud/DSMCBaseCloud.C
+
+/* Sub-models */
+parcels/derived/dsmcParcel/defineDSMCParcel.C
+parcels/derived/dsmcParcel/makeDSMCParcelBinaryCollisionModels.C
+parcels/derived/dsmcParcel/makeDSMCParcelWallInteractionModels.C
+parcels/derived/dsmcParcel/makeDSMCParcelInflowBoundaryModels.C
+
+LIB = $(FOAM_LIBBIN)/libDSMC

@@ -12,7 +12,7 @@ EXE_LIBS = \
     -ldecompositionMethods \
     -ldistributed \
     -ldistributionModels \
-    -ldsmc \
+    -lDSMC \
     -ldynamicFvMesh \
     -ldynamicMesh \
     -ledgeMesh \
