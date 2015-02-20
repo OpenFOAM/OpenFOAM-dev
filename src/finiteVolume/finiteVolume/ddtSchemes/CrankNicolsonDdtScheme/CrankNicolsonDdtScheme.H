@@ -188,6 +188,12 @@ public:
             return fv::ddtScheme<Type>::mesh();
         }
 
+        //- Return the off-centreing coefficient
+        scalar ocCoeff() const
+        {
+            return ocCoeff_;
+        }
+
         tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const dimensioned<Type>&
