@@ -13,7 +13,11 @@
 
     // Set the off-centering coefficient according to ddt scheme
     scalar ocCoeff = 0;
-    if (isType<fv::EulerDdtScheme<scalar> >(ddtAlpha()))
+    if
+    (
+        isType<fv::EulerDdtScheme<scalar> >(ddtAlpha())
+     || isType<fv::localEulerDdtScheme<scalar> >(ddtAlpha())
+    )
     {
         ocCoeff = 0;
     }
