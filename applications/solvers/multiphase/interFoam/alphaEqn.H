@@ -179,7 +179,7 @@
             #ifdef LTSSOLVE
             MULES::explicitLTSSolve(alpha1, phi, phiAlpha, 1, 0);
             #else
-            MULES::explicitSolve(alpha1, phi, phiAlpha, 1, 0);
+            MULES::explicitSolve(alpha1, phiCN, phiAlpha, 1, 0);
             #endif
         }
 
