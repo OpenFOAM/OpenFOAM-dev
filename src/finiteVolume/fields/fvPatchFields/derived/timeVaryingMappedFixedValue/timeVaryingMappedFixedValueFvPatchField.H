@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,17 +51,19 @@ Description
         perturb      | perturb points for regular geometries | no | 1e-5
         fieldTableName | alternative field name to sample | no| this field name
         mapMethod    | type of mapping | no | planarInterpolation
+        offset   | for applying offset to mapped values  | no | constant 0.0
     \endtable
 
-    /verbatim
+    \verbatim
     myPatch
     {
         type            timeVaryingMappedFixedValue;
         setAverage      false;
         //perturb       0.0;
         //fieldTableName samples;
+        //offset    constant 0.2;
     }
-    /endverbatim
+    \endverbatim
 
 SeeAlso
     Foam::fixedValueFvPatchField
