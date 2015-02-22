@@ -5,26 +5,33 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-FoamFile
+
+cuttingPlane
 {
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      dynamicMeshDict;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    type            surfaces;
+    functionObjectLibs ("libsampling.so");
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
+    outputControl   outputTime;
 
-motionSolverLibs ( "libfvMotionSolvers.so" );
+    surfaceFormat   vtk;
+    fields          ( p U );
 
-solver          velocityComponentLaplacian;
+    interpolationScheme cellPoint;
 
-velocityComponentLaplacianCoeffs
-{
-    component       x;
-    diffusivity     directional (1 200 0);
+    surfaces
+    (
+        zNormal
+        {
+            type            cuttingPlane;
+            planeType       pointAndNormal;
+            pointAndNormalDict
+            {
+                basePoint       (0 0 0);
+                normalVector    (0 0 1);
+            }
+            interpolate     true;
+        }
+    );
 }
 
 

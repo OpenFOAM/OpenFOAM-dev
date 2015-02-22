@@ -28,6 +28,7 @@ gradSchemes
 divSchemes
 {
     default         none;
+
     div(phi,U)      Gauss linear;
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
@@ -35,6 +36,7 @@ divSchemes
 laplacianSchemes
 {
     default         Gauss linear corrected;
+
     laplacian(diffusivity,cellMotionU) Gauss linear uncorrected;
 }
 

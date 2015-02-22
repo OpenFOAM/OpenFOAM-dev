@@ -9,56 +9,58 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    object      U;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0 0 0);
-
-boundaryField
+ddtSchemes
 {
-    movingWall
-    {
-        type            movingWallVelocity;
-        value           $internalField;
-    }
-
-    farFieldMoving
-    {
-        type            fixedValue;
-        value           uniform (0 0 0);
-    }
-
-    fixedWall
-    {
-        type            fixedValue;
-        value           uniform (0 0 0);
-    }
-
-    left
-    {
-        type            pressureInletOutletVelocity;
-        value           $internalField;
-    }
-
-    farField
-    {
-        type            fixedValue;
-        value           uniform (0 0 0);
-    }
-
-    back
-    {
-        type            wedge;
-    }
-
-    front
-    {
-        type            wedge;
-    }
+    default         Euler;
 }
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    default         none;
+
+    div(phi,U)      Gauss vanLeerV;
+    div(phid,p)     Gauss vanLeer;
+    div(phi,K)      Gauss vanLeer;
+    div(phi,e)      Gauss vanLeer;
+
+    div(phiv,p)     Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+
+    laplacian(diffusivity,cellMotionU) Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
+fluxRequired
+{
+    default         no;
+    p               ;
+    pcorr           ;
+}
+
 
 // ************************************************************************* //

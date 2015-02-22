@@ -11,21 +11,11 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      dynamicMeshDict;
+    object      turbulenceProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
-
-motionSolverLibs ( "libfvMotionSolvers.so" );
-
-solver          velocityComponentLaplacian;
-
-velocityComponentLaplacianCoeffs
-{
-    component       x;
-    diffusivity     directional (1 200 0);
-}
+simulationType  laminar;
 
 
 // ************************************************************************* //

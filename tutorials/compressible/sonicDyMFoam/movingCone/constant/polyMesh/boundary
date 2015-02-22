@@ -8,57 +8,68 @@
 FoamFile
 {
     version     2.0;
-    format      ascii;
-    class       volVectorField;
-    object      U;
+    format      binary;
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0 0 0);
-
-boundaryField
-{
+8
+(
     movingWall
     {
-        type            movingWallVelocity;
-        value           $internalField;
+        type            wall;
+        inGroups        1(wall);
+        nFaces          85;
+        startFace       3665;
     }
-
     farFieldMoving
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            patch;
+        nFaces          50;
+        startFace       3750;
     }
-
     fixedWall
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            wall;
+        inGroups        1(wall);
+        nFaces          35;
+        startFace       3800;
     }
-
+    axis
+    {
+        type            empty;
+        inGroups        1(empty);
+        nFaces          0;
+        startFace       3835;
+    }
     left
     {
-        type            pressureInletOutletVelocity;
-        value           $internalField;
+        type            patch;
+        nFaces          30;
+        startFace       3835;
     }
-
     farField
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            patch;
+        nFaces          35;
+        startFace       3865;
     }
-
     back
     {
         type            wedge;
+        inGroups        1(wedge);
+        nFaces          1900;
+        startFace       3900;
     }
-
     front
     {
         type            wedge;
+        inGroups        1(wedge);
+        nFaces          1900;
+        startFace       5800;
     }
-}
+)
 
 // ************************************************************************* //

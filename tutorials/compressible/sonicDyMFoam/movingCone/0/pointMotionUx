@@ -9,52 +9,44 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    object      U;
+    class       pointScalarField;
+    object      pointMotionU;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (0 0 0);
+internalField   uniform 0;
 
 boundaryField
 {
     movingWall
     {
-        type            movingWallVelocity;
-        value           $internalField;
+        type            uniformFixedValue;
+        uniformValue    constant 160;
     }
-
     farFieldMoving
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            slip;
     }
-
     fixedWall
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            uniformFixedValue;
+        uniformValue    constant 0;
     }
-
     left
     {
-        type            pressureInletOutletVelocity;
-        value           $internalField;
+        type            uniformFixedValue;
+        uniformValue    constant 0;
     }
-
     farField
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            slip;
     }
-
     back
     {
         type            wedge;
     }
-
     front
     {
         type            wedge;
