@@ -32,9 +32,6 @@ SIMPLE
 
 relaxationFactors
 {
-    fields
-    {
-    }
     equations
     {
         h               0.7;

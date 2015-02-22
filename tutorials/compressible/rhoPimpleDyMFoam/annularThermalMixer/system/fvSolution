@@ -73,9 +73,6 @@ PIMPLE
 
 relaxationFactors
 {
-    fields
-    {
-    }
     equations
     {
         "(U|h|k|epsilon|omega).*" 1;

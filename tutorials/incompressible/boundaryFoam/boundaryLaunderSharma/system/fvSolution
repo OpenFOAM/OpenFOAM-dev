@@ -42,9 +42,6 @@ PISO
 
 relaxationFactors
 {
-    fields
-    {
-    }
     equations
     {
         U               0.5;

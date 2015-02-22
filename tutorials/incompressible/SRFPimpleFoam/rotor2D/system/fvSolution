@@ -74,9 +74,6 @@ PIMPLE
 
 relaxationFactors
 {
-    fields
-    {
-    }
     equations
     {
         "Urel.*"        1;
