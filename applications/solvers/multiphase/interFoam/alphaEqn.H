@@ -41,7 +41,7 @@
             << exit(FatalError);
     }
 
-    scalar cnCoeff = ocCoeff/2.0;
+    scalar cnCoeff = 1.0/(1.0 + ocCoeff);
 
     // Standard face-flux compression coefficient
     surfaceScalarField phic(mixture.cAlpha()*mag(phi/mesh.magSf()));
@@ -70,7 +70,7 @@
     // Calculate the Crank-Nicolson off-centred volumetric flux
     if (ocCoeff > 0)
     {
-        phiCN = (1.0 - cnCoeff)*phi + cnCoeff*phi.oldTime();
+        phiCN = cnCoeff*phi + (1.0 - cnCoeff)*phi.oldTime();
     }
 
     if (MULESCorr)
@@ -146,8 +146,7 @@
         if (ocCoeff > 0)
         {
             tphiAlphaUn =
-                (1.0 - cnCoeff)*tphiAlphaUn
-              + cnCoeff*phiAlpha.oldTime();
+                cnCoeff*tphiAlphaUn + (1.0 - cnCoeff)*phiAlpha.oldTime();
         }
 
         if (MULESCorr)
@@ -199,32 +198,14 @@
      == fv::EulerDdtScheme<vector>::typeName
     )
     {
-        if (ocCoeff > 0)
-        {
-            // Calculate the Crank-Nicolson off-centred volumetric flux
-            surfaceScalarField phiCN
-            (
-                "phiCN",
-                (1.0 - cnCoeff)*phi + cnCoeff*phi.oldTime()
-            );
-
-            Info<< "Calculate the Crank-Nicolson off-centred mass flux" << endl;
-            // Calculate the Crank-Nicolson off-centred mass flux
-            rhoPhi = phiAlpha*(rho1 - rho2) + phiCN*rho2;
-        }
-        else
-        {
-            // Calculate the end-of-time-step mass flux
-            rhoPhi = phiAlpha*(rho1 - rho2) + phi*rho2;
-        }
+        rhoPhi = phiAlpha*(rho1 - rho2) + phiCN*rho2;
     }
     else
     {
         if (ocCoeff > 0)
         {
-            Info<< "Calculate the end-of-time-step alpha flux" << endl;
             // Calculate the end-of-time-step alpha flux
-            phiAlpha = (phiAlpha - cnCoeff*phiAlpha.oldTime())/(1.0 - cnCoeff);
+            phiAlpha = (phiAlpha - (1.0 - cnCoeff)*phiAlpha.oldTime())/cnCoeff;
         }
 
         // Calculate the end-of-time-step mass flux
