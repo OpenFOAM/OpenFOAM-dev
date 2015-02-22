@@ -65,16 +65,16 @@
         }
     }
 
+    tmp<surfaceScalarField> phiCN(phi);
+
+    // Calculate the Crank-Nicolson off-centred volumetric flux
+    if (ocCoeff > 0)
+    {
+        phiCN = (1.0 - cnCoeff)*phi + cnCoeff*phi.oldTime();
+    }
+
     if (MULESCorr)
     {
-        tmp<surfaceScalarField> phiCN(phi);
-
-        // Calculate the Crank-Nicolson off-centred volumetric flux
-        if (ocCoeff > 0)
-        {
-            phiCN = (1.0 - cnCoeff)*phi + cnCoeff*phi.oldTime();
-        }
-
         fvScalarMatrix alpha1Eqn
         (
             #ifdef LTSSOLVE
