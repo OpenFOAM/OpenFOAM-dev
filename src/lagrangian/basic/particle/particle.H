@@ -80,6 +80,15 @@ class particle
 :
     public IDLList<particle>::link
 {
+    // Private member data
+
+        //- Size in bytes of the position data
+        static const std::size_t sizeofPosition_;
+
+        //- Size in bytes of the fields
+        static const std::size_t sizeofFields_;
+
+
 public:
 
     template<class CloudType>
@@ -358,7 +367,6 @@ public:
             return autoPtr<particle>(new particle(*this));
         }
 
-
         //- Factory class to read-construct particles used for
         //  parallel transfer
         class iNew
@@ -556,8 +564,8 @@ public:
         template<class CloudType>
         static void writeFields(const CloudType& c);
 
-        //- Write the particle data
-        void write(Ostream& os, bool writeFields) const;
+        //- Write the particle position and cell
+        void writePosition(Ostream&) const;
 
 
     // Friend Operators

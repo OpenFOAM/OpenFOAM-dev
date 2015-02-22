@@ -41,7 +41,6 @@ SourceFiles
 #include "IOstream.H"
 #include "autoPtr.H"
 #include "contiguous.H"
-
 #include "DSMCCloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -70,6 +69,12 @@ class DSMCParcel
 :
     public ParcelType
 {
+    // Private member data
+
+        //- Size in bytes of the fields
+        static const std::size_t sizeofFields_;
+
+
 public:
 
     //- Class to hold DSMC particle constant properties
@@ -92,7 +97,7 @@ public:
 
     public:
 
-        // Constrcutors
+        // Constructors
 
             //- Null constructor, allows List of constantProperties to be
             //  created before the contents is initialised
@@ -104,10 +109,10 @@ public:
 
         // Member functions
 
-            //- Return const access to the particle density
+            //- Return const access to the particle mass [kg]
             inline scalar mass() const;
 
-            //- Return const access to the minimum particle mass
+            //- Return const access to the hard sphere diameter [m]
             inline scalar d() const;
 
             //- Return the reference total collision cross section
@@ -152,7 +157,7 @@ protected:
             vector U_;
 
             //- Internal energy of the Parcel, covering all non-translational
-            // degrees of freedom [J]
+            //  degrees of freedom [J]
             scalar Ei_;
 
             //- Parcel type id
@@ -196,7 +201,6 @@ public:
             return autoPtr<particle>(new DSMCParcel<ParcelType>(*this));
         }
 
-
         //- Factory class to read-construct particles used for
         //  parallel transfer
         class iNew
@@ -232,6 +236,7 @@ public:
 
             //- Return const access to internal energy
             inline scalar Ei() const;
+
 
         // Edit
 

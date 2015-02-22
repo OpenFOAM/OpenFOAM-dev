@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,21 +29,10 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class ParcelType>
-Foam::string Foam::SprayParcel<ParcelType>::propHeader =
-    ParcelType::propHeader
-  + " d0"
-  + " position0"
-  + " sigma"
-  + " mu"
-  + " liquidCore"
-  + " KHindex"
-  + " y"
-  + " yDot"
-  + " tc"
-  + " ms"
-  + " injector"
-  + " tMom"
-  + " user";
+const std::size_t Foam::SprayParcel<ParcelType>::sizeofFields_
+(
+    sizeof(SprayParcel<ParcelType>) - sizeof(ParcelType)
+);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -73,7 +62,6 @@ Foam::SprayParcel<ParcelType>::SprayParcel
 {
     if (readFields)
     {
-
         if (is.format() == IOstream::ASCII)
         {
             d0_ = readScalar(is);
@@ -92,23 +80,7 @@ Foam::SprayParcel<ParcelType>::SprayParcel
         }
         else
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&d0_),
-                sizeof(d0_)
-              + sizeof(position0_)
-              + sizeof(sigma_)
-              + sizeof(mu_)
-              + sizeof(liquidCore_)
-              + sizeof(KHindex_)
-              + sizeof(y_)
-              + sizeof(yDot_)
-              + sizeof(tc_)
-              + sizeof(ms_)
-              + sizeof(injector_)
-              + sizeof(tMom_)
-              + sizeof(user_)
-            );
+            is.read(reinterpret_cast<char*>(&d0_), sizeofFields_);
         }
     }
 
@@ -334,19 +306,7 @@ Foam::Ostream& Foam::operator<<
         os.write
         (
             reinterpret_cast<const char*>(&p.d0_),
-            sizeof(p.d0())
-          + sizeof(p.position0())
-          + sizeof(p.sigma())
-          + sizeof(p.mu())
-          + sizeof(p.liquidCore())
-          + sizeof(p.KHindex())
-          + sizeof(p.y())
-          + sizeof(p.yDot())
-          + sizeof(p.tc())
-          + sizeof(p.ms())
-          + sizeof(p.injector())
-          + sizeof(p.tMom())
-          + sizeof(p.user())
+            SprayParcel<ParcelType>::sizeofFields_
         );
     }
 

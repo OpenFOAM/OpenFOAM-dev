@@ -28,6 +28,15 @@ License
 #include "IOField.H"
 #include "Cloud.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+template<class ParcelType>
+const std::size_t Foam::DSMCParcel<ParcelType>::sizeofFields_
+(
+    sizeof(DSMCParcel<ParcelType>) - sizeof(ParcelType)
+);
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParcelType>
@@ -53,13 +62,7 @@ Foam::DSMCParcel<ParcelType>::DSMCParcel
         }
         else
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&U_),
-                sizeof(U_)
-              + sizeof(Ei_)
-              + sizeof(typeId_)
-            );
+            is.read(reinterpret_cast<char*>(&U_), sizeofFields_);
         }
     }
 
@@ -157,9 +160,7 @@ Foam::Ostream& Foam::operator<<
         os.write
         (
             reinterpret_cast<const char*>(&p.U_),
-            sizeof(p.U())
-          + sizeof(p.Ei())
-          + sizeof(p.typeId())
+            DSMCParcel<ParcelType>::sizeofFields_
         );
     }
 

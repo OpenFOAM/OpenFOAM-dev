@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,13 @@ template<class ParcelType>
 Foam::string Foam::CollidingParcel<ParcelType>::propertyList_ =
     Foam::CollidingParcel<ParcelType>::propertyList();
 
+template<class ParcelType>
+const std::size_t Foam::CollidingParcel<ParcelType>::sizeofFields_
+(
+    offsetof(CollidingParcel<ParcelType>, collisionRecords_)
+  - offsetof(CollidingParcel<ParcelType>, f_)
+);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -60,13 +67,7 @@ Foam::CollidingParcel<ParcelType>::CollidingParcel
         }
         else
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&f_),
-              + sizeof(f_)
-              + sizeof(angularMomentum_)
-              + sizeof(torque_)
-            );
+            is.read(reinterpret_cast<char*>(&f_), sizeofFields_);
         }
 
         is >> collisionRecords_;
@@ -285,10 +286,10 @@ Foam::Ostream& Foam::operator<<
     if (os.format() == IOstream::ASCII)
     {
         os  << static_cast<const ParcelType&>(p)
-            << token::SPACE << p.f()
-            << token::SPACE << p.angularMomentum()
-            << token::SPACE << p.torque()
-            << token::SPACE << p.collisionRecords();
+            << token::SPACE << p.f_
+            << token::SPACE << p.angularMomentum_
+            << token::SPACE << p.torque_
+            << token::SPACE << p.collisionRecords_;
     }
     else
     {
@@ -296,9 +297,7 @@ Foam::Ostream& Foam::operator<<
         os.write
         (
             reinterpret_cast<const char*>(&p.f_),
-          + sizeof(p.f())
-          + sizeof(p.angularMomentum())
-          + sizeof(p.torque())
+            CollidingParcel<ParcelType>::sizeofFields_
         );
         os  << p.collisionRecords();
     }

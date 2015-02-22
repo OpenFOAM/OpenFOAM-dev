@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,13 @@ template<class ParcelType>
 Foam::string Foam::ThermoParcel<ParcelType>::propertyList_ =
     Foam::ThermoParcel<ParcelType>::propertyList();
 
+template<class ParcelType>
+const std::size_t Foam::ThermoParcel<ParcelType>::sizeofFields_
+(
+    offsetof(ThermoParcel<ParcelType>, Tc_)
+  - offsetof(ThermoParcel<ParcelType>, T_)
+);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -58,8 +65,7 @@ Foam::ThermoParcel<ParcelType>::ThermoParcel
         }
         else
         {
-            label size = long(&Cp_) - long(&T_) + sizeof(Cp_);
-            is.read(reinterpret_cast<char*>(&T_), size);
+            is.read(reinterpret_cast<char*>(&T_), sizeofFields_);
         }
     }
 
@@ -145,9 +151,11 @@ Foam::Ostream& Foam::operator<<
     else
     {
         os  << static_cast<const ParcelType&>(p);
-
-        label size = long(&p.Cp_) - long(&p.T_) + sizeof(p.Cp_);
-        os.write(reinterpret_cast<const char*>(&p.T_), size);
+        os.write
+        (
+            reinterpret_cast<const char*>(&p.T_),
+            ThermoParcel<ParcelType>::sizeofFields_
+        );
     }
 
     // Check state of Ostream

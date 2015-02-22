@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,11 +25,20 @@ License
 
 #include "particle.H"
 #include "IOstreams.H"
-#include "IOPosition.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 Foam::string Foam::particle::propertyList_ = Foam::particle::propertyList();
+
+const std::size_t Foam::particle::sizeofPosition_
+(
+    offsetof(particle, faceI_) - offsetof(particle, position_)
+);
+
+const std::size_t Foam::particle::sizeofFields_
+(
+    sizeof(particle) - offsetof(particle, position_)
+);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -46,45 +55,29 @@ Foam::particle::particle(const polyMesh& mesh, Istream& is, bool readFields)
     origProc_(Pstream::myProcNo()),
     origId_(-1)
 {
-    // readFields : read additional data. Should be consistent with writeFields.
-
     if (is.format() == IOstream::ASCII)
     {
         is  >> position_ >> cellI_;
 
         if (readFields)
         {
-            is  >> tetFaceI_ >> tetPtI_ >> origProc_ >> origId_;
+            is  >> faceI_
+                >> stepFraction_
+                >> tetFaceI_
+                >> tetPtI_
+                >> origProc_
+                >> origId_;
         }
     }
     else
     {
-        // In binary read all particle data - needed for parallel transfer
         if (readFields)
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&position_),
-                sizeof(position_)
-              + sizeof(cellI_)
-              + sizeof(faceI_)
-              + sizeof(stepFraction_)
-              + sizeof(tetFaceI_)
-              + sizeof(tetPtI_)
-              + sizeof(origProc_)
-              + sizeof(origId_)
-            );
+            is.read(reinterpret_cast<char*>(&position_), sizeofFields_);
         }
         else
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&position_),
-                sizeof(position_)
-              + sizeof(cellI_)
-              + sizeof(faceI_)
-              + sizeof(stepFraction_)
-            );
+            is.read(reinterpret_cast<char*>(&position_), sizeofPosition_);
         }
     }
 
@@ -93,66 +86,43 @@ Foam::particle::particle(const polyMesh& mesh, Istream& is, bool readFields)
 }
 
 
-void Foam::particle::write(Ostream& os, bool writeFields) const
+void Foam::particle::writePosition(Ostream& os) const
 {
     if (os.format() == IOstream::ASCII)
     {
-        if (writeFields)
-        {
-            // Write the additional entries
-            os  << position_
-                << token::SPACE << cellI_
-                << token::SPACE << tetFaceI_
-                << token::SPACE << tetPtI_
-                << token::SPACE << origProc_
-                << token::SPACE << origId_;
-        }
-        else
-        {
-            os  << position_
-                << token::SPACE << cellI_;
-        }
+        os  << position_ << token::SPACE << cellI_;
     }
     else
     {
-        // In binary write both cellI_ and faceI_, needed for parallel transfer
-        if (writeFields)
-        {
-            os.write
-            (
-                reinterpret_cast<const char*>(&position_),
-                sizeof(position_)
-              + sizeof(cellI_)
-              + sizeof(faceI_)
-              + sizeof(stepFraction_)
-              + sizeof(tetFaceI_)
-              + sizeof(tetPtI_)
-              + sizeof(origProc_)
-              + sizeof(origId_)
-            );
-        }
-        else
-        {
-            os.write
-            (
-                reinterpret_cast<const char*>(&position_),
-                sizeof(position_)
-              + sizeof(cellI_)
-              + sizeof(faceI_)
-              + sizeof(stepFraction_)
-            );
-        }
+        os.write(reinterpret_cast<const char*>(&position_), sizeofPosition_);
     }
 
     // Check state of Ostream
-    os.check("particle::write(Ostream& os, bool) const");
+    os.check("particle::writePosition(Ostream& os, bool) const");
 }
 
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const particle& p)
 {
-    // Write all data
-    p.write(os, true);
+    if (os.format() == IOstream::ASCII)
+    {
+        os  << p.position_
+            << token::SPACE << p.cellI_
+            << token::SPACE << p.faceI_
+            << token::SPACE << p.stepFraction_
+            << token::SPACE << p.tetFaceI_
+            << token::SPACE << p.tetPtI_
+            << token::SPACE << p.origProc_
+            << token::SPACE << p.origId_;
+    }
+    else
+    {
+        os.write
+        (
+            reinterpret_cast<const char*>(&p.position_),
+            particle::sizeofFields_
+        );
+    }
 
     return os;
 }

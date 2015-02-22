@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,12 @@ License
 template<class ParcelType>
 Foam::string Foam::ReactingMultiphaseParcel<ParcelType>::propertyList_ =
     Foam::ReactingMultiphaseParcel<ParcelType>::propertyList();
+
+template<class ParcelType>
+const std::size_t Foam::ReactingMultiphaseParcel<ParcelType>::sizeofFields_
+(
+    0
+);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

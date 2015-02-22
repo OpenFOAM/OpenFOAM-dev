@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,14 @@ License
 #include "solidParticle.H"
 #include "IOstreams.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+const std::size_t Foam::solidParticle::sizeofFields_
+(
+    sizeof(solidParticle) - sizeof(particle)
+);
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solidParticle::solidParticle
@@ -46,11 +54,7 @@ Foam::solidParticle::solidParticle
         }
         else
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&d_),
-                sizeof(d_) + sizeof(U_)
-            );
+            is.read(reinterpret_cast<char*>(&d_), sizeofFields_);
         }
     }
 
@@ -126,7 +130,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const solidParticle& p)
         os.write
         (
             reinterpret_cast<const char*>(&p.d_),
-            sizeof(p.d_) + sizeof(p.U_)
+            solidParticle::sizeofFields_
         );
     }
 

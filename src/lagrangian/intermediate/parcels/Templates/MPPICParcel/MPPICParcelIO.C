@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,12 @@ template<class ParcelType>
 Foam::string Foam::MPPICParcel<ParcelType>::propertyList_ =
     Foam::MPPICParcel<ParcelType>::propertyList();
 
+template<class ParcelType>
+const std::size_t Foam::MPPICParcel<ParcelType>::sizeofFields_
+(
+    sizeof(MPPICParcel<ParcelType>) - sizeof(ParcelType)
+);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -55,11 +61,7 @@ Foam::MPPICParcel<ParcelType>::MPPICParcel
         }
         else
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&UCorrect_),
-              + sizeof(UCorrect_)
-            );
+            is.read(reinterpret_cast<char*>(&UCorrect_), sizeofFields_);
         }
     }
 
@@ -144,7 +146,7 @@ Foam::Ostream& Foam::operator<<
         os.write
         (
             reinterpret_cast<const char*>(&p.UCorrect_),
-          + sizeof(p.UCorrect())
+            MPPICParcel<ParcelType>::sizeofFields_
         );
     }
 

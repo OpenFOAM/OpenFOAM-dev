@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,11 +38,9 @@ SourceFiles
 #define CollidingParcel_H
 
 #include "particle.H"
-
 #include "CollisionRecordList.H"
 #include "labelFieldIOField.H"
 #include "vectorFieldIOField.H"
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,6 +72,12 @@ class CollidingParcel
 :
     public ParcelType
 {
+    // Private member data
+
+        //- Size in bytes of the fields
+        static const std::size_t sizeofFields_;
+
+
 public:
 
     //- Class to hold thermo particle constant properties

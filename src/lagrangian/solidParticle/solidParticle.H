@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,10 @@ class solidParticle
 :
     public particle
 {
-    // Private member data
+    // Private data
+
+        //- Size in bytes of the fields
+        static const std::size_t sizeofFields_;
 
         //- Diameter
         scalar d_;

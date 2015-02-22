@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,11 @@ class wallBoundedParticle
 :
     public particle
 {
+    // Private data
+
+        //- Size in bytes of the fields
+        static const std::size_t sizeofFields_;
+
 
 public:
 
@@ -316,9 +321,6 @@ public:
             //- Write
             template<class CloudType>
             static void writeFields(const CloudType&);
-
-            //- Write the particle data
-            void write(Ostream& os, bool writeFields) const;
 
 
     // Ostream Operator

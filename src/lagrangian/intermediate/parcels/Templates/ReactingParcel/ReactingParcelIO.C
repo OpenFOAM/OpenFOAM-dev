@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,12 @@ template<class ParcelType>
 Foam::string Foam::ReactingParcel<ParcelType>::propertyList_ =
     Foam::ReactingParcel<ParcelType>::propertyList();
 
+template<class ParcelType>
+const std::size_t Foam::ReactingParcel<ParcelType>::sizeofFields_
+(
+    sizeof(scalar)
+);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -58,11 +64,7 @@ Foam::ReactingParcel<ParcelType>::ReactingParcel
         }
         else
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&mass0_),
-              + sizeof(mass0_)
-            );
+            is.read(reinterpret_cast<char*>(&mass0_), sizeofFields_);
             is >> Ymix;
         }
 
@@ -249,7 +251,7 @@ Foam::Ostream& Foam::operator<<
         os.write
         (
             reinterpret_cast<const char*>(&p.mass0_),
-            sizeof(p.mass0())
+            ReactingParcel<ParcelType>::sizeofFields_
         );
         os  << p.Y();
     }

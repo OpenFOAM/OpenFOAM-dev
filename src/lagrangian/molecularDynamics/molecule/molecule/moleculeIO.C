@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,14 @@ License
 #include "molecule.H"
 #include "IOstreams.H"
 #include "moleculeCloud.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+const std::size_t Foam::molecule::sizeofFields_
+(
+    offsetof(molecule, siteForces_) - offsetof(molecule, Q_)
+);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -59,31 +67,17 @@ Foam::molecule::molecule
             is  >> a_;
             is  >> pi_;
             is  >> tau_;
-            is  >> siteForces_;
+            is  >> specialPosition_;
             potentialEnergy_ = readScalar(is);
             is  >> rf_;
             special_ = readLabel(is);
             id_ = readLabel(is);
+            is  >> siteForces_;
             is  >> sitePositions_;
-            is  >> specialPosition_;
         }
         else
         {
-            is.read
-            (
-                reinterpret_cast<char*>(&Q_),
-                sizeof(Q_)
-              + sizeof(v_)
-              + sizeof(a_)
-              + sizeof(pi_)
-              + sizeof(tau_)
-              + sizeof(specialPosition_)
-              + sizeof(potentialEnergy_)
-              + sizeof(rf_)
-              + sizeof(special_)
-              + sizeof(id_)
-            );
-
+            is.read(reinterpret_cast<char*>(&Q_), sizeofFields_);
             is  >> siteForces_ >> sitePositions_;
         }
     }
@@ -263,8 +257,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const molecule& mol)
     if (os.format() == IOstream::ASCII)
     {
         os  << token::SPACE << static_cast<const particle&>(mol)
-            << token::SPACE << mol.face()
-            << token::SPACE << mol.stepFraction()
             << token::SPACE << mol.Q_
             << token::SPACE << mol.v_
             << token::SPACE << mol.a_
@@ -284,16 +276,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const molecule& mol)
         os.write
         (
             reinterpret_cast<const char*>(&mol.Q_),
-            sizeof(mol.Q_)
-          + sizeof(mol.v_)
-          + sizeof(mol.a_)
-          + sizeof(mol.pi_)
-          + sizeof(mol.tau_)
-          + sizeof(mol.specialPosition_)
-          + sizeof(mol.potentialEnergy_)
-          + sizeof(mol.rf_)
-          + sizeof(mol.special_)
-          + sizeof(mol.id_)
+            molecule::sizeofFields_
         );
         os  << mol.siteForces_ << mol.sitePositions_;
     }
