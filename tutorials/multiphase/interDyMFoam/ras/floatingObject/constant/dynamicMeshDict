@@ -59,7 +59,7 @@ sixDoFRigidBodyMotionCoeffs
     };
 
     report          on;
-    accelerationRelaxation 0.5;
+    accelerationRelaxation 0.3;
 
     constraints
     {

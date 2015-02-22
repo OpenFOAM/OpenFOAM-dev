@@ -19,7 +19,7 @@ solvers
 {
     "alpha.water.*"
     {
-        nAlphaCorr      1;
+        nAlphaCorr      2;
         nAlphaSubCycles 1;
         cAlpha          1;
 
@@ -116,19 +116,16 @@ solvers
 
 PIMPLE
 {
-    momentumPredictor no;
-    nOuterCorrectors 5;
-    nCorrectors      1;
+    momentumPredictor   no;
+    nOuterCorrectors    5;
+    nCorrectors         1;
     nNonOrthogonalCorrectors 0;
-    correctPhi      yes;
+    correctPhi          yes;
     moveMeshOuterCorrectors yes;
 }
 
 relaxationFactors
 {
-    fields
-    {
-    }
     equations
     {
         ".*" 1;
