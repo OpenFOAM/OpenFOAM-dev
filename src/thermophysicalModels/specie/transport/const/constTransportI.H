@@ -111,7 +111,7 @@ inline Foam::scalar Foam::constTransport<Thermo>::kappa
     const scalar T
 ) const
 {
-    return this->Cpv(p, T)*mu(p, T)*rPr_;
+    return this->Cp(p, T)*mu(p, T)*rPr_;
 }
 
 
