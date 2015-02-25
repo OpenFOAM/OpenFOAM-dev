@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ void Foam::patchSeedSet::calcSamples
         (
             mesh(),
             faceI,
-            polyMesh::FACEDIAGTETS
+            polyMesh::FACE_DIAG_TRIS
         );
         label cellI = mesh().faceOwner()[faceI];
 

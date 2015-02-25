@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -645,7 +645,7 @@ bool Foam::sampledTriSurfaceMesh::update()
     }
 
     // Mesh search engine, no triangulation of faces.
-    meshSearch meshSearcher(mesh(), polyMesh::FACEPLANES);
+    meshSearch meshSearcher(mesh(), polyMesh::FACE_PLANES);
 
     return update(meshSearcher);
 }
@@ -659,7 +659,7 @@ bool Foam::sampledTriSurfaceMesh::update(const treeBoundBox& bb)
     }
 
     // Mesh search engine on subset, no triangulation of faces.
-    meshSearch meshSearcher(mesh(), bb, polyMesh::FACEPLANES);
+    meshSearch meshSearcher(mesh(), bb, polyMesh::FACE_PLANES);
 
     return update(meshSearcher);
 }

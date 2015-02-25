@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::meshSearchFACECENTRETETSMeshObject
+    Foam::meshSearchFACE_CENTRE_TRISMeshObject
 
 Description
-    MeshObject wrapper around meshSearch(mesh,  polyMesh::FACECENTRETETS).
+    MeshObject wrapper around meshSearch(mesh,  polyMesh::FACE_CENTRE_TRIS).
 
 SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef meshSearchFACECENTRETETSMeshObject_H
-#define meshSearchFACECENTRETETSMeshObject_H
+#ifndef meshSearchFACE_CENTRE_TRISMeshObject_H
+#define meshSearchFACE_CENTRE_TRISMeshObject_H
 
 #include "MeshObject.H"
 #include "meshSearch.H"
@@ -43,16 +43,16 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class meshSearchFACECENTRETETSMeshObject Declaration
+              Class meshSearchFACE_CENTRE_TRISMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
-class meshSearchFACECENTRETETSMeshObject
+class meshSearchFACE_CENTRE_TRISMeshObject
 :
     public MeshObject
     <
         polyMesh,
         GeometricMeshObject,
-        meshSearchFACECENTRETETSMeshObject
+        meshSearchFACE_CENTRE_TRISMeshObject
     >,
     public meshSearch
 {
@@ -60,16 +60,16 @@ class meshSearchFACECENTRETETSMeshObject
 public:
 
     // Declare name of the class and its debug switch
-    TypeName("meshSearchFACECENTRETETSMeshObject");
+    TypeName("meshSearchFACE_CENTRE_TRISMeshObject");
 
 
     // Constructors
 
         //- Constructor given polyMesh
-        explicit meshSearchFACECENTRETETSMeshObject(const polyMesh& mesh);
+        explicit meshSearchFACE_CENTRE_TRISMeshObject(const polyMesh& mesh);
 
     //- Destructor
-    virtual ~meshSearchFACECENTRETETSMeshObject()
+    virtual ~meshSearchFACE_CENTRE_TRISMeshObject()
     {}
 };
 

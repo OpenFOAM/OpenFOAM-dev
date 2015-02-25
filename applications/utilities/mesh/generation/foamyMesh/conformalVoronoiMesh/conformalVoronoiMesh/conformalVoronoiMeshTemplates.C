@@ -81,7 +81,7 @@ bool Foam::conformalVoronoiMesh::distributeBackground(const Triangulation& mesh)
             zeroGradientFvPatchScalarField::typeName
         );
 
-        meshSearch cellSearch(bMesh, polyMesh::FACEPLANES);
+        meshSearch cellSearch(bMesh, polyMesh::FACE_PLANES);
 
         labelList cellVertices(bMesh.nCells(), label(0));
 

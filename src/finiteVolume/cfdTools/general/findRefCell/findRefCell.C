@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,13 +55,13 @@ void Foam::setRefCell
                     FatalIOErrorIn
                     (
                         "void Foam::setRefCell\n"
-                         "(\n"
-                         "    const volScalarField&,\n"
-                         "    const volScalarField&,\n"
-                         "    const dictionary&,\n"
-                         "    label& scalar&,\n"
-                         "    bool\n"
-                         ")",
+                        "    (\n"
+                        "        const volScalarField&,\n"
+                        "        const volScalarField&,\n"
+                        "        const dictionary&,\n"
+                        "        label& scalar&,\n"
+                        "        bool\n"
+                        ")",
                         dict
                     )   << "Illegal master cellID " << refCelli
                         << ". Should be 0.." << field.mesh().nCells()
@@ -77,30 +77,34 @@ void Foam::setRefCell
         {
             point refPointi(dict.lookup(refPointName));
 
-            // Note: find reference cell using facePlanes to avoid constructing
-            //       face decomposition structure. Most likely the reference
-            //       cell is an undistorted one so this should not be a
-            //       problem.
+            // Try fast approximate search avoiding octree construction
+            refCelli = field.mesh().findCell(refPointi, polyMesh::FACE_PLANES);
 
-            refCelli = field.mesh().findCell
-            (
-                refPointi,
-                polyMesh::FACEPLANES
-            );
             label hasRef = (refCelli >= 0 ? 1 : 0);
             label sumHasRef = returnReduce<label>(hasRef, sumOp<label>());
+
+            // If reference cell no found use octree search
+            // with cell tet-decompositoin
+            if (sumHasRef != 1)
+            {
+                refCelli = field.mesh().findCell(refPointi);
+
+                hasRef = (refCelli >= 0 ? 1 : 0);
+                sumHasRef = returnReduce<label>(hasRef, sumOp<label>());
+            }
+
             if (sumHasRef != 1)
             {
                 FatalIOErrorIn
                 (
                     "void Foam::setRefCell\n"
-                     "(\n"
-                     "    const volScalarField&,\n"
-                     "    const volScalarField&,\n"
-                     "    const dictionary&,\n"
-                     "    label& scalar&,\n"
-                     "    bool\n"
-                     ")",
+                    "    (\n"
+                    "        const volScalarField&,\n"
+                    "        const volScalarField&,\n"
+                    "        const dictionary&,\n"
+                    "        label& scalar&,\n"
+                    "        bool\n"
+                    "    )",
                     dict
                 )   << "Unable to set reference cell for field " << field.name()
                     << nl << "    Reference point " << refPointName
@@ -114,13 +118,13 @@ void Foam::setRefCell
             FatalIOErrorIn
             (
                 "void Foam::setRefCell\n"
-                 "(\n"
-                 "    const volScalarField&,\n"
-                 "    const volScalarField&,\n"
-                 "    const dictionary&,\n"
-                 "    label& scalar&,\n"
-                 "    bool\n"
-                 ")",
+                "    (\n"
+                "        const volScalarField&,\n"
+                "        const volScalarField&,\n"
+                "        const dictionary&,\n"
+                "        label& scalar&,\n"
+                "        bool\n"
+                "    )",
                 dict
             )   << "Unable to set reference cell for field " << field.name()
                 << nl

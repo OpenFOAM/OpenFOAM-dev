@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::facePoints
         (
             mesh,
             pp.start()+faceI,
-            polyMesh::FACEDIAGTETS
+            polyMesh::FACE_DIAG_TRIS
         ).rawPoint();
     }
 
@@ -1349,15 +1349,15 @@ Foam::pointIndexHit Foam::mappedPatchBase::facePoint
 (
     const polyMesh& mesh,
     const label faceI,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 {
     const point& fc = mesh.faceCentres()[faceI];
 
     switch (decompMode)
     {
-        case polyMesh::FACEPLANES:
-        case polyMesh::FACECENTRETETS:
+        case polyMesh::FACE_PLANES:
+        case polyMesh::FACE_CENTRE_TRIS:
         {
             // For both decompositions the face centre is guaranteed to be
             // on the face
@@ -1365,10 +1365,10 @@ Foam::pointIndexHit Foam::mappedPatchBase::facePoint
         }
         break;
 
-        case polyMesh::FACEDIAGTETS:
+        case polyMesh::FACE_DIAG_TRIS:
+        case polyMesh::CELL_TETS:
         {
-            // Find the intersection of a ray from face centre to cell
-            // centre
+            // Find the intersection of a ray from face centre to cell centre
             // Find intersection of (face-centre-decomposition) centre to
             // cell-centre with face-diagonal-decomposition triangles.
 

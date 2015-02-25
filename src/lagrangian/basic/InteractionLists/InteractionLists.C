@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,10 +165,10 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
     (
         treeDataCell
         (
-            true,                   // cache cell bb
+            true,                   // Cache cell bb
             mesh_,
-            coupledPatchRangeCells, // subset of mesh
-            polyMesh::FACEDIAGTETS  // consistent with tracking
+            coupledPatchRangeCells, // Subset of mesh
+            polyMesh::CELL_TETS     // Consistent with tracking
         ),
         procBbRndExt,
         8,              // maxLevel,
@@ -388,7 +388,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
     indexedOctree<treeDataCell> allCellsTree
     (
-        treeDataCell(true, mesh_, polyMesh::FACEDIAGTETS),
+        treeDataCell(true, mesh_, polyMesh::CELL_TETS),
         procBbRndExt,
         8,              // maxLevel,
         10,             // leafSize,

@@ -63,7 +63,7 @@ class meshSearch
         const polyMesh& mesh_;
 
         //- Whether to use cell decomposition for all geometric tests
-        const polyMesh::cellRepresentation cellDecompMode_;
+        const polyMesh::cellDecomposition cellDecompMode_;
 
         //- Data bounding box
         mutable autoPtr<treeBoundBox> overallBbPtr_;
@@ -171,7 +171,7 @@ public:
         meshSearch
         (
             const polyMesh& mesh,
-            const polyMesh::cellRepresentation = polyMesh::FACEDIAGTETS
+            const polyMesh::cellDecomposition = polyMesh::CELL_TETS
         );
 
         //- Construct with a custom bounding box. Any mesh element outside
@@ -181,7 +181,7 @@ public:
         (
             const polyMesh& mesh,
             const treeBoundBox& bb,
-            const polyMesh::cellRepresentation = polyMesh::FACEDIAGTETS
+            const polyMesh::cellDecomposition = polyMesh::CELL_TETS
         );
 
     //- Destructor
@@ -197,7 +197,7 @@ public:
                 return mesh_;
             }
 
-            polyMesh::cellRepresentation decompMode() const
+            polyMesh::cellDecomposition decompMode() const
             {
                 return cellDecompMode_;
             }

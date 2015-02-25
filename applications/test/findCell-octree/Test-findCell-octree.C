@@ -44,13 +44,11 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMesh.H"
 
-    //label nReps = 100000;
     label nReps = 10000;
 
     const point sample = args.argRead<point>(1);
 
-    //const polyMesh::cellRepresentation decompMode = polyMesh::FACEPLANES;
-    const polyMesh::cellRepresentation decompMode = polyMesh::FACEDIAGTETS;
+    const polyMesh::cellDecomposition decompMode = polyMesh::CELL_TETS;
 
     treeBoundBox meshBb(mesh.bounds());
 

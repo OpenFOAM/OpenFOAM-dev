@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -452,9 +452,9 @@ Foam::polyMesh::polyMesh
     oldPointsPtr_(NULL)
 {
     // Check if the faces and cells are valid
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
-        const face& curFace = faces_[faceI];
+        const face& curFace = faces_[facei];
 
         if (min(curFace) < 0 || max(curFace) > points_.size())
         {
@@ -467,7 +467,7 @@ Foam::polyMesh::polyMesh
                 "    const faceList& faces,\n"
                 "    const cellList& cells\n"
                 ")\n"
-            )   << "Face " << faceI << "contains vertex labels out of range: "
+            )   << "Face " << facei << "contains vertex labels out of range: "
                 << curFace << " Max point index = " << points_.size()
                 << abort(FatalError);
         }
@@ -611,9 +611,9 @@ Foam::polyMesh::polyMesh
     oldPointsPtr_(NULL)
 {
     // Check if faces are valid
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
-        const face& curFace = faces_[faceI];
+        const face& curFace = faces_[facei];
 
         if (min(curFace) < 0 || max(curFace) > points_.size())
         {
@@ -626,7 +626,7 @@ Foam::polyMesh::polyMesh
                 "    const Xfer<faceList>&,\n"
                 "    const Xfer<cellList>&\n"
                 ")\n"
-            )   << "Face " << faceI << "contains vertex labels out of range: "
+            )   << "Face " << facei << "contains vertex labels out of range: "
                 << curFace << " Max point index = " << points_.size()
                 << abort(FatalError);
         }
@@ -636,9 +636,9 @@ Foam::polyMesh::polyMesh
     cellList cLst(cells);
 
     // Check if cells are valid
-    forAll(cLst, cellI)
+    forAll(cLst, celli)
     {
-        const cell& curCell = cLst[cellI];
+        const cell& curCell = cLst[celli];
 
         if (min(curCell) < 0 || max(curCell) > faces_.size())
         {
@@ -651,7 +651,7 @@ Foam::polyMesh::polyMesh
                 "    const Xfer<faceList>&,\n"
                 "    const Xfer<cellList>&\n"
                 ")\n"
-            )   << "Cell " << cellI << "contains face labels out of range: "
+            )   << "Cell " << celli << "contains face labels out of range: "
                 << curCell << " Max face index = " << faces_.size()
                 << abort(FatalError);
         }
@@ -718,9 +718,9 @@ void Foam::polyMesh::resetPrimitives
     setInstance(time().timeName());
 
     // Check if the faces and cells are valid
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
-        const face& curFace = faces_[faceI];
+        const face& curFace = faces_[facei];
 
         if (min(curFace) < 0 || max(curFace) > points_.size())
         {
@@ -736,7 +736,7 @@ void Foam::polyMesh::resetPrimitives
                 "    const labelList& patchStarts\n"
                 "    const bool validBoundary\n"
                 ")\n"
-            )   << "Face " << faceI << " contains vertex labels out of range: "
+            )   << "Face " << facei << " contains vertex labels out of range: "
                 << curFace << " Max point index = " << points_.size()
                 << abort(FatalError);
         }
@@ -905,9 +905,9 @@ Foam::polyMesh::cellTree() const
             (
                 treeDataCell
                 (
-                    false,          // not cache bb
+                    false,      // not cache bb
                     *this,
-                    FACEDIAGTETS    // use tetDecomposition for any inside test
+                    CELL_TETS   // use tet-decomposition for any inside test
                 ),
                 overallBb,
                 8,              // maxLevel
@@ -1259,34 +1259,33 @@ void Foam::polyMesh::removeFiles() const
 
 void Foam::polyMesh::findCellFacePt
 (
-    const point& pt,
-    label& cellI,
-    label& tetFaceI,
-    label& tetPtI
+    const point& p,
+    label& celli,
+    label& tetFacei,
+    label& tetPti
 ) const
 {
-    cellI = -1;
-    tetFaceI = -1;
-    tetPtI = -1;
+    celli = -1;
+    tetFacei = -1;
+    tetPti = -1;
 
     const indexedOctree<treeDataCell>& tree = cellTree();
 
     // Find nearest cell to the point
-
-    pointIndexHit info = tree.findNearest(pt, sqr(GREAT));
+    pointIndexHit info = tree.findNearest(p, sqr(GREAT));
 
     if (info.hit())
     {
         label nearestCellI = tree.shapes().cellLabels()[info.index()];
 
         // Check the nearest cell to see if the point is inside.
-        findTetFacePt(nearestCellI, pt, tetFaceI, tetPtI);
+        findTetFacePt(nearestCellI, p, tetFacei, tetPti);
 
-        if (tetFaceI != -1)
+        if (tetFacei != -1)
         {
             // Point was in the nearest cell
 
-            cellI = nearestCellI;
+            celli = nearestCellI;
 
             return;
         }
@@ -1294,7 +1293,7 @@ void Foam::polyMesh::findCellFacePt
         {
             // Check the other possible cells that the point may be in
 
-            labelList testCells = tree.findIndices(pt);
+            labelList testCells = tree.findIndices(p);
 
             forAll(testCells, pCI)
             {
@@ -1308,13 +1307,13 @@ void Foam::polyMesh::findCellFacePt
                 }
 
                 // Check the test cell to see if the point is inside.
-                findTetFacePt(testCellI, pt, tetFaceI, tetPtI);
+                findTetFacePt(testCellI, p, tetFacei, tetPti);
 
-                if (tetFaceI != -1)
+                if (tetFacei != -1)
                 {
                     // Point was in the test cell
 
-                    cellI = testCellI;
+                    celli = testCellI;
 
                     return;
                 }
@@ -1327,10 +1326,10 @@ void Foam::polyMesh::findCellFacePt
         (
             "void Foam::polyMesh::findCellFacePt"
             "("
-                "const point&, "
-                "label&, "
-                "label&, "
-                "label&"
+                "const point& p, "
+                "label& celli, "
+                "label& tetFacei, "
+                "label& tetPti"
             ") const"
         )   << "Did not find nearest cell in search tree."
             << abort(FatalError);
@@ -1340,47 +1339,47 @@ void Foam::polyMesh::findCellFacePt
 
 void Foam::polyMesh::findTetFacePt
 (
-    const label cellI,
-    const point& pt,
-    label& tetFaceI,
-    label& tetPtI
+    const label celli,
+    const point& p,
+    label& tetFacei,
+    label& tetPti
 ) const
 {
     const polyMesh& mesh = *this;
 
-    tetIndices tet(polyMeshTetDecomposition::findTet(mesh, cellI, pt));
-    tetFaceI = tet.face();
-    tetPtI = tet.tetPt();
+    tetIndices tet(polyMeshTetDecomposition::findTet(mesh, celli, p));
+    tetFacei = tet.face();
+    tetPti = tet.tetPt();
 }
 
 
 bool Foam::polyMesh::pointInCell
 (
     const point& p,
-    label cellI,
-    const cellRepresentation decompMode
+    label celli,
+    const cellDecomposition decompMode
 ) const
 {
     switch (decompMode)
     {
-        case FACEPLANES:
+        case FACE_PLANES:
         {
-            return primitiveMesh::pointInCell(p, cellI);
+            return primitiveMesh::pointInCell(p, celli);
         }
         break;
 
-        case FACECENTRETETS:
+        case FACE_CENTRE_TRIS:
         {
             // only test that point is on inside of plane defined by cell face
             // triangles
-            const cell& cFaces = cells()[cellI];
+            const cell& cFaces = cells()[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label faceI = cFaces[cFaceI];
-                const face& f = faces_[faceI];
-                const point& fc = faceCentres()[faceI];
-                bool isOwn = (owner_[faceI] == cellI);
+                label facei = cFaces[cFacei];
+                const face& f = faces_[facei];
+                const point& fc = faceCentres()[facei];
+                bool isOwn = (owner_[facei] == celli);
 
                 forAll(f, fp)
                 {
@@ -1417,18 +1416,18 @@ bool Foam::polyMesh::pointInCell
         }
         break;
 
-        case FACEDIAGTETS:
+        case FACE_DIAG_TRIS:
         {
             // only test that point is on inside of plane defined by cell face
             // triangles
-            const cell& cFaces = cells()[cellI];
+            const cell& cFaces = cells()[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label faceI = cFaces[cFaceI];
-                const face& f = faces_[faceI];
+                label facei = cFaces[cFacei];
+                const face& f = faces_[facei];
 
-                for (label tetPtI = 1; tetPtI < f.size() - 1; tetPtI++)
+                for (label tetPti = 1; tetPti < f.size() - 1; tetPti++)
                 {
                     // Get tetIndices of face triangle
                     tetIndices faceTetIs
@@ -1436,9 +1435,9 @@ bool Foam::polyMesh::pointInCell
                         polyMeshTetDecomposition::triangleTetIndices
                         (
                             *this,
-                            faceI,
-                            cellI,
-                            tetPtI
+                            facei,
+                            celli,
+                            tetPti
                         )
                     );
 
@@ -1456,49 +1455,83 @@ bool Foam::polyMesh::pointInCell
             return true;
         }
         break;
+
+        case CELL_TETS:
+        {
+            label tetFacei;
+            label tetPti;
+
+            findTetFacePt(celli, p, tetFacei, tetPti);
+
+            return tetFacei != -1;
+        }
+        break;
     }
+
     return false;
 }
 
 
 Foam::label Foam::polyMesh::findCell
 (
-    const point& location,
-    const cellRepresentation decompMode
+    const point& p,
+    const cellDecomposition decompMode
 ) const
 {
-    if (Pstream::parRun() && decompMode == FACEDIAGTETS)
-    {
-        // Force construction of face-diagonal decomposition before testing
-        // for zero cells. If parallel running a local domain might have zero
-        // cells so never construct the face-diagonal decomposition (which
-        // uses parallel transfers)
-        (void)tetBasePtIs();
-    }
-
     if (nCells() == 0)
     {
         return -1;
     }
 
-    // Find the nearest cell centre to this location
-    label cellI = findNearestCell(location);
+    if (decompMode == CELL_TETS)
+    {
+        // Advanced search method utilizing an octree
+        // and tet-decomposition of the cells
 
-    // If point is in the nearest cell return
-    if (pointInCell(location, cellI, decompMode))
-    {
-        return cellI;
+        label celli;
+        label tetFacei;
+        label tetPti;
+
+        findCellFacePt(p, celli, tetFacei, tetPti);
+
+        return celli;
     }
-    else // point is not in the nearest cell so search all cells
+    else
     {
-        for (label cellI = 0; cellI < nCells(); cellI++)
+        // Approximate search avoiding the construction of an octree
+        // and cell decomposition
+
+        if (Pstream::parRun() && decompMode == FACE_DIAG_TRIS)
         {
-            if (pointInCell(location, cellI, decompMode))
-            {
-                return cellI;
-            }
+            // Force construction of face-diagonal decomposition before testing
+            // for zero cells. If parallel running a local domain might have
+            // zero cells so never construct the face-diagonal decomposition
+            // (which uses parallel transfers)
+            (void)tetBasePtIs();
         }
-        return -1;
+
+        // Find the nearest cell centre to this location
+        label celli = findNearestCell(p);
+
+        // If point is in the nearest cell return
+        if (pointInCell(p, celli, decompMode))
+        {
+            return celli;
+        }
+        else
+        {
+            // Point is not in the nearest cell so search all cells
+
+            for (label celli = 0; celli < nCells(); celli++)
+            {
+                if (pointInCell(p, celli, decompMode))
+                {
+                    return celli;
+                }
+            }
+
+            return -1;
+        }
     }
 }
 

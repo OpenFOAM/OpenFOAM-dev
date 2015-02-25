@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ Foam::treeDataCell::treeDataCell
     const bool cacheBb,
     const polyMesh& mesh,
     const labelUList& cellLabels,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),
@@ -105,7 +105,7 @@ Foam::treeDataCell::treeDataCell
     const bool cacheBb,
     const polyMesh& mesh,
     const Xfer<labelList>& cellLabels,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),
@@ -121,7 +121,7 @@ Foam::treeDataCell::treeDataCell
 (
     const bool cacheBb,
     const polyMesh& mesh,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),

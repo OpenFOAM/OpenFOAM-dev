@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "meshSearchFACECENTRETETSMeshObject.H"
+#include "meshSearchFACE_CENTRE_TRISMeshObject.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(meshSearchFACECENTRETETSMeshObject, 0);
+    defineTypeNameAndDebug(meshSearchFACE_CENTRE_TRISMeshObject, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::meshSearchFACECENTRETETSMeshObject::meshSearchFACECENTRETETSMeshObject
+Foam::meshSearchFACE_CENTRE_TRISMeshObject::meshSearchFACE_CENTRE_TRISMeshObject
 (
     const polyMesh& mesh
 )
@@ -44,9 +44,9 @@ Foam::meshSearchFACECENTRETETSMeshObject::meshSearchFACECENTRETETSMeshObject
     <
         polyMesh,
         Foam::GeometricMeshObject,
-        meshSearchFACECENTRETETSMeshObject
+        meshSearchFACE_CENTRE_TRISMeshObject
     >(mesh),
-    meshSearch(mesh, polyMesh::FACECENTRETETS)
+    meshSearch(mesh, polyMesh::FACE_CENTRE_TRIS)
 {}
 
 

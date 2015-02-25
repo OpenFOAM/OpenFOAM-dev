@@ -719,7 +719,7 @@ int main(int argc, char *argv[])
     triSurfaceSearch querySurf(surf);
 
     // Search engine on mesh. No face decomposition since mesh unwarped.
-    meshSearch queryMesh(mesh, polyMesh::FACEPLANES);
+    meshSearch queryMesh(mesh, polyMesh::FACE_PLANES);
 
     // Check all 'outside' points
     forAll(outsidePts, outsideI)

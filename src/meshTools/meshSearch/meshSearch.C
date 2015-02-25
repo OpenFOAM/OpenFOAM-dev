@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -502,17 +502,16 @@ Foam::vector Foam::meshSearch::offset
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::meshSearch::meshSearch
 (
     const polyMesh& mesh,
-    const polyMesh::cellRepresentation cellDecompMode
+    const polyMesh::cellDecomposition cellDecompMode
 )
 :
     mesh_(mesh),
     cellDecompMode_(cellDecompMode)
 {
-    if (cellDecompMode_ == polyMesh::FACEDIAGTETS)
+    if (cellDecompMode_ == polyMesh::FACE_DIAG_TRIS)
     {
         // Force construction of face diagonals
         (void)mesh.tetBasePtIs();
@@ -525,7 +524,7 @@ Foam::meshSearch::meshSearch
 (
     const polyMesh& mesh,
     const treeBoundBox& bb,
-    const polyMesh::cellRepresentation cellDecompMode
+    const polyMesh::cellDecomposition cellDecompMode
 )
 :
     mesh_(mesh),
@@ -533,7 +532,7 @@ Foam::meshSearch::meshSearch
 {
     overallBbPtr_.reset(new treeBoundBox(bb));
 
-    if (cellDecompMode_ == polyMesh::FACEDIAGTETS)
+    if (cellDecompMode_ == polyMesh::FACE_DIAG_TRIS)
     {
         // Force construction of face diagonals
         (void)mesh.tetBasePtIs();

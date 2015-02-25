@@ -94,13 +94,18 @@ public:
             TOPO_PATCH_CHANGE
         };
 
-        //- Enumeration defining the representation of the cell for
-        //  inside checking
-        enum cellRepresentation
+        //- Enumeration defining the decomposition of the cell for
+        //  inside/outside test
+        enum cellDecomposition
         {
-            FACEPLANES,     // cell bound by planes of faces
-            FACECENTRETETS, // tet decomposition using facectr and cellctr
-            FACEDIAGTETS    // tet decomposition using face diagonal and cellctr
+            FACE_PLANES,      //- Faces considered as planes
+
+            FACE_CENTRE_TRIS, //- Faces decomposed into triangles
+                              //  using face-centre
+
+            FACE_DIAG_TRIS,   //- Faces decomposed into triangles diagonally
+
+            CELL_TETS         //- Cell decomposed into tets
         };
 
 
@@ -667,40 +672,41 @@ public:
             ) const;
 
 
-        // Helper functions
+        // Position search functions
 
-            //- Find the cell, tetFaceI and tetPtI for the given position
+            //- Find the cell, tetFacei and tetPti for point p
             void findCellFacePt
             (
-                const point& pt,
-                label& cellI,
-                label& tetFaceI,
-                label& tetPtI
+                const point& p,
+                label& celli,
+                label& tetFacei,
+                label& tetPti
             ) const;
 
-            //- Find the tetFaceI and tetPtI for the given position in
-            //  the supplied cell, tetFaceI and tetPtI = -1 if not found
+            //- Find the tetFacei and tetPti for point p in celli.
+            //  tetFaceI and tetPtI are set to -1 if not found
             void findTetFacePt
             (
-                const label cellI,
-                const point& pt,
-                label& tetFaceI,
-                label& tetPtI
+                const label celli,
+                const point& p,
+                label& tetFacei,
+                label& tetPti
             ) const;
 
-            //- Is the point in the cell
+            //- Test if point p is in the celli
             bool pointInCell
             (
-                const point&,
-                label cellI,
-                const cellRepresentation = FACEDIAGTETS
+                const point& p,
+                label celli,
+                const cellDecomposition = CELL_TETS
             ) const;
 
-            //- Find cell enclosing this location (-1 if not in mesh)
+            //- Find cell enclosing this location and return index
+            //  If not found -1 is returned
             label findCell
             (
-                const point&,
-                const cellRepresentation = FACEDIAGTETS
+                const point& p,
+                const cellDecomposition = CELL_TETS
             ) const;
 };
 
