@@ -127,7 +127,7 @@ void Foam::cyclicACMIPolyPatch::setNeighbourFaceAreas() const
     }
     else
     {
-        WarningIn("cyclicAMIPolyPatch::setNeighbourFaceAreas() const")
+        WarningIn("cyclicACMIPolyPatch::setNeighbourFaceAreas() const")
             << "Target mask size differs to that of the neighbour patch\n"
             << "    May occur when decomposing." << endl;
     }
