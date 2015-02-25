@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,8 +169,8 @@ public:
 
 
         //- Calculate the mean molecular weight [kg/kmol]
-        // from mole fractions
-        scalar W(const scalarField& x) const;
+        //  from mole fractions
+        scalar W(const scalarField& X) const;
 
         //- Returns the mass fractions, given mole fractions
         scalarField Y(const scalarField& X) const;
@@ -227,7 +227,7 @@ public:
         ) const;
 
         //- Estimate thermal conductivity  [W/(m K)]
-        // Li's method, Eq. 10-12.27 - 10.12-19
+        //  Li's method, Eq. 10-12.27 - 10.12-19
         scalar K
         (
             const scalar p,
@@ -235,6 +235,7 @@ public:
             const scalarField& x
         ) const;
 
+        //- Vapour diffussivity [m2/s]
         scalar D
         (
             const scalar p,
