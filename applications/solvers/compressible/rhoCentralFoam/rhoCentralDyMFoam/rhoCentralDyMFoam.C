@@ -128,6 +128,13 @@ int main(int argc, char *argv[])
         surfaceScalarField phiv_pos("phiv_pos", U_pos & mesh.Sf());
         surfaceScalarField phiv_neg("phiv_neg", U_neg & mesh.Sf());
 
+        // Make fluxes relative to mesh-motion
+        if (mesh.moving())
+        {
+            phiv_pos -= mesh.phi();
+            phiv_neg -= mesh.phi();
+        }
+
         volScalarField c(sqrt(thermo.Cp()/thermo.Cv()*rPsi));
         surfaceScalarField cSf_pos
         (
@@ -193,6 +200,7 @@ int main(int argc, char *argv[])
           + aSf*p_pos - aSf*p_neg
         );
 
+        // Make flux for pressure-work absolute
         if (mesh.moving())
         {
             phiEp += mesh.phi()*(a_pos*p_pos + a_neg*p_neg);
