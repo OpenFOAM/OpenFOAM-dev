@@ -153,11 +153,14 @@ inline void Foam::constTransport<Thermo>::operator+=
 
     Thermo::operator+=(st);
 
-    molr1 /= this->nMoles();
-    scalar molr2 = st.nMoles()/this->nMoles();
+    if (mag(molr1) + mag(st.nMoles()) > SMALL)
+    {
+        molr1 /= this->nMoles();
+        scalar molr2 = st.nMoles()/this->nMoles();
 
-    mu_ = molr1*mu_ + molr2*st.mu_;
-    rPr_ = 1.0/(molr1/rPr_ + molr2/st.rPr_);
+        mu_ = molr1*mu_ + molr2*st.mu_;
+        rPr_ = 1.0/(molr1/rPr_ + molr2/st.rPr_);
+    }
 }
 
 
@@ -171,11 +174,14 @@ inline void Foam::constTransport<Thermo>::operator-=
 
     Thermo::operator-=(st);
 
-    molr1 /= this->nMoles();
-    scalar molr2 = st.nMoles()/this->nMoles();
+    if (mag(molr1) + mag(st.nMoles()) > SMALL)
+    {
+        molr1 /= this->nMoles();
+        scalar molr2 = st.nMoles()/this->nMoles();
 
-    mu_ = molr1*mu_ - molr2*st.mu_;
-    rPr_ = 1.0/(molr1/rPr_ - molr2/st.rPr_);
+        mu_ = molr1*mu_ - molr2*st.mu_;
+        rPr_ = 1.0/(molr1/rPr_ - molr2/st.rPr_);
+    }
 }
 
 
