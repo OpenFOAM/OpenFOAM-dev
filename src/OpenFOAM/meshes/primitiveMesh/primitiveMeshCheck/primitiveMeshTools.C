@@ -47,13 +47,13 @@ Foam::scalar Foam::primitiveMeshTools::faceSkewness
     // Skewness vector
     vector sv =
         Cpf
-      - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + VSMALL))*d;
-    vector svHat = sv/(mag(sv) + VSMALL);
+      - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + ROOTVSMALL))*d;
+    vector svHat = sv/(mag(sv) + ROOTVSMALL);
 
     // Normalisation distance calculated as the approximate distance
     // from the face centre to the edge of the face in the direction
     // of the skewness
-    scalar fd = 0.2*mag(d) + VSMALL;
+    scalar fd = 0.2*mag(d) + ROOTVSMALL;
     const face& f = mesh.faces()[faceI];
     forAll(f, pi)
     {
@@ -79,20 +79,20 @@ Foam::scalar Foam::primitiveMeshTools::boundaryFaceSkewness
     vector Cpf = fCtrs[faceI] - ownCc;
 
     vector normal = fAreas[faceI];
-    normal /= mag(normal) + VSMALL;
+    normal /= mag(normal) + ROOTVSMALL;
     vector d = normal*(normal & Cpf);
 
 
     // Skewness vector
     vector sv =
         Cpf
-      - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + VSMALL))*d;
-    vector svHat = sv/(mag(sv) + VSMALL);
+      - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + ROOTVSMALL))*d;
+    vector svHat = sv/(mag(sv) + ROOTVSMALL);
 
     // Normalisation distance calculated as the approximate distance
     // from the face centre to the edge of the face in the direction
     // of the skewness
-    scalar fd = 0.4*mag(d) + VSMALL;
+    scalar fd = 0.4*mag(d) + ROOTVSMALL;
     const face& f = mesh.faces()[faceI];
     forAll(f, pi)
     {
@@ -113,7 +113,7 @@ Foam::scalar Foam::primitiveMeshTools::faceOrthogonality
 {
     vector d = neiCc - ownCc;
 
-    return (d & s)/(mag(d)*mag(s) + VSMALL);
+    return (d & s)/(mag(d)*mag(s) + ROOTVSMALL);
 }
 
 
@@ -296,7 +296,7 @@ void Foam::primitiveMeshTools::cellClosedness
             (
                 maxOpenness,
                 mag(sumClosed[cellI][cmpt])
-               /(sumMagClosed[cellI][cmpt] + VSMALL)
+               /(sumMagClosed[cellI][cmpt] + ROOTVSMALL)
             );
         }
         openness[cellI] = maxOpenness;
@@ -314,10 +314,10 @@ void Foam::primitiveMeshTools::cellClosedness
             }
         }
 
-        scalar aspectRatio = maxCmpt/(minCmpt + VSMALL);
+        scalar aspectRatio = maxCmpt/(minCmpt + ROOTVSMALL);
         if (nDims == 3)
         {
-            scalar v = max(VSMALL, vols[cellI]);
+            scalar v = max(ROOTVSMALL, vols[cellI]);
 
             aspectRatio = max
             (
@@ -342,7 +342,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
     const faceList& fcs = mesh.faces();
 
     vectorField faceNormals(faceAreas);
-    faceNormals /= mag(faceNormals) + VSMALL;
+    faceNormals /= mag(faceNormals) + ROOTVSMALL;
 
     tmp<scalarField> tfaceAngles(new scalarField(mesh.nFaces()));
     scalarField& faceAngles = tfaceAngles();
@@ -355,7 +355,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
         // Get edge from f[0] to f[size-1];
         vector ePrev(p[f.first()] - p[f.last()]);
         scalar magEPrev = mag(ePrev);
-        ePrev /= magEPrev + VSMALL;
+        ePrev /= magEPrev + ROOTVSMALL;
 
         scalar maxEdgeSin = 0.0;
 
@@ -367,7 +367,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
             // Normalized vector between two consecutive points
             vector e10(p[f[fp1]] - p[f[fp0]]);
             scalar magE10 = mag(e10);
-            e10 /= magE10 + VSMALL;
+            e10 /= magE10 + ROOTVSMALL;
 
             if (magEPrev > SMALL && magE10 > SMALL)
             {
@@ -423,7 +423,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
     {
         const face& f = fcs[faceI];
 
-        if (f.size() > 3 && magAreas[faceI] > VSMALL)
+        if (f.size() > 3 && magAreas[faceI] > ROOTVSMALL)
         {
             const point& fc = fCtrs[faceI];
 
@@ -442,7 +442,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
                 sumA += mag(n);
             }
 
-            faceFlatness[faceI] = magAreas[faceI]/(sumA + VSMALL);
+            faceFlatness[faceI] = magAreas[faceI]/(sumA + ROOTVSMALL);
         }
     }
 
