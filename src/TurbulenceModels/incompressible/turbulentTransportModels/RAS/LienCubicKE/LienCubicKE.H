@@ -30,6 +30,17 @@ Group
 Description
     Lien cubic non-linear k-epsilon turbulence model for incompressible flows.
 
+    This turbulence model is described in:
+    \verbatim
+        Lien, F.S., Chen, W.L. & Leschziner, M.A. (1996).
+        Low-Reynolds-number eddy-viscosity modeling based on non-linear
+        stress-strain/vorticity relations.
+        Engineering Turbulence Modelling and Experiments 3, 91-100.
+    \endverbatim
+
+See Also
+    Foam::incompressible::RASModels::LienCubicKELowRe
+
 SourceFiles
     LienCubicKE.C
 

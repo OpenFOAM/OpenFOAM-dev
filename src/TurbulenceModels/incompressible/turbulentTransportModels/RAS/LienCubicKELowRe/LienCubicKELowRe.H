@@ -31,19 +31,16 @@ Description
     Lien cubic non-linear low-Reynolds k-epsilon turbulence models for
     incompressible flows.
 
-    References:
+    This turbulence model is described in:
     \verbatim
-        Lien, F.S., Chen, W.L., Leschziner, M.A.,
-        "Low-Reynolds-number eddy-viscosity modeling based on non-linear
-         stress-strain/vorticity relations"
-        Engineering Turbulence Modelling and Experiments 3
-        (Edited by Rodi, W. and Bergeles, G.), 91-100. 1996.
-        Elsevier Science Publishers.
-
-        Etemad, S., et al.,
-        "Turbulent flow and heat transfer in a square-sectioned U bend"
-        Progress in compuational fluid dynamics 6, 89-100. 2006.
+        Lien, F.S., Chen, W.L. & Leschziner, M.A. (1996).
+        Low-Reynolds-number eddy-viscosity modeling based on non-linear
+        stress-strain/vorticity relations.
+        Engineering Turbulence Modelling and Experiments 3, 91-100.
     \endverbatim
+
+See Also
+    Foam::incompressible::RASModels::LienCubicKE
 
 SourceFiles
     LienCubicKELowRe.C

@@ -31,6 +31,15 @@ Description
     Lien and Leschziner low-Reynolds k-epsilon turbulence model for
     incompressible flows.
 
+    This turbulence model is described in:
+    \verbatim
+        Lien, F. S., & Leschziner, M. A. (1993).
+        A pressure-velocity solution strategy for compressible flow
+        and its application to shock/boundary-layer interaction
+        using second-moment turbulence closure.
+        Journal of fluids engineering, 115(4), 717-725.
+    \endverbatim
+
 SourceFiles
     LienLeschzinerLowRe.C
 
