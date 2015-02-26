@@ -35,6 +35,7 @@ Description
 #include "turbulentFluidThermoModel.H"
 #include "zeroGradientFvPatchFields.H"
 #include "fixedRhoFvPatchScalarField.H"
+#include "directionInterpolate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,52 +62,20 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        // --- upwind interpolation of primitive fields on faces
+        // --- Directed interpolation of primitive fields onto faces
 
-        surfaceScalarField rho_pos
-        (
-            "rho_pos",
-            fvc::interpolate(rho, pos, "reconstruct(rho)")
-        );
-        surfaceScalarField rho_neg
-        (
-            "rho_neg",
-            fvc::interpolate(rho, neg, "reconstruct(rho)")
-        );
+        surfaceScalarField rho_pos(interpolate(rho, pos));
+        surfaceScalarField rho_neg(interpolate(rho, neg));
 
-        surfaceVectorField rhoU_pos
-        (
-            "rhoU_pos",
-            fvc::interpolate(rhoU, pos, "reconstruct(U)")
-        );
-        surfaceVectorField rhoU_neg
-        (
-            "rhoU_neg",
-            fvc::interpolate(rhoU, neg, "reconstruct(U)")
-        );
+        surfaceVectorField rhoU_pos(interpolate(rhoU, pos, U.name()));
+        surfaceVectorField rhoU_neg(interpolate(rhoU, neg, U.name()));
 
-        volScalarField rPsi(1.0/psi);
-        surfaceScalarField rPsi_pos
-        (
-            "rPsi_pos",
-            fvc::interpolate(rPsi, pos, "reconstruct(T)")
-        );
-        surfaceScalarField rPsi_neg
-        (
-            "rPsi_neg",
-            fvc::interpolate(rPsi, neg, "reconstruct(T)")
-        );
+        volScalarField rPsi("rPsi", 1.0/psi);
+        surfaceScalarField rPsi_pos(interpolate(rPsi, pos, T.name()));
+        surfaceScalarField rPsi_neg(interpolate(rPsi, neg, T.name()));
 
-        surfaceScalarField e_pos
-        (
-            "e_pos",
-            fvc::interpolate(e, pos, "reconstruct(T)")
-        );
-        surfaceScalarField e_neg
-        (
-            "e_neg",
-            fvc::interpolate(e, neg, "reconstruct(T)")
-        );
+        surfaceScalarField e_pos(interpolate(e, pos, T.name()));
+        surfaceScalarField e_neg(interpolate(e, neg, T.name()));
 
         surfaceVectorField U_pos("U_pos", rhoU_pos/rho_pos);
         surfaceVectorField U_neg("U_neg", rhoU_neg/rho_neg);
@@ -117,16 +86,16 @@ int main(int argc, char *argv[])
         surfaceScalarField phiv_pos("phiv_pos", U_pos & mesh.Sf());
         surfaceScalarField phiv_neg("phiv_neg", U_neg & mesh.Sf());
 
-        volScalarField c(sqrt(thermo.Cp()/thermo.Cv()*rPsi));
+        volScalarField c("c", sqrt(thermo.Cp()/thermo.Cv()*rPsi));
         surfaceScalarField cSf_pos
         (
             "cSf_pos",
-            fvc::interpolate(c, pos, "reconstruct(T)")*mesh.magSf()
+            interpolate(c, pos, T.name())*mesh.magSf()
         );
         surfaceScalarField cSf_neg
         (
             "cSf_neg",
-            fvc::interpolate(c, neg, "reconstruct(T)")*mesh.magSf()
+            interpolate(c, neg, T.name())*mesh.magSf()
         );
 
         surfaceScalarField ap
@@ -188,7 +157,7 @@ int main(int argc, char *argv[])
           + aSf*p_pos - aSf*p_neg
         );
 
-        volScalarField muEff(turbulence->muEff());
+        volScalarField muEff("muEff", turbulence->muEff());
         volTensorField tauMC("tauMC", muEff*dev2(Foam::T(fvc::grad(U))));
 
         // --- Solve density
