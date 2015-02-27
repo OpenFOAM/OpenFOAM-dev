@@ -272,6 +272,7 @@ void ShihQuadraticKE::correct()
         (nut_*twoSymm(gradU) - nonlinearStress_) && gradU
     );
 
+
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();
 
@@ -287,9 +288,7 @@ void ShihQuadraticKE::correct()
     );
 
     epsEqn().relax();
-
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
-
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
 

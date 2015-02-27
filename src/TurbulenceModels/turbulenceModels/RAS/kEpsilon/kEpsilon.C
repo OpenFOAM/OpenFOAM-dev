@@ -256,15 +256,12 @@ void kEpsilon<BasicTurbulenceModel>::correct()
     );
 
     epsEqn().relax();
-
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
-
     solve(epsEqn);
     bound(epsilon_, this->epsilonMin_);
 
 
     // Turbulent kinetic energy equation
-
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(alpha, rho, k_)

@@ -83,29 +83,30 @@ void epsilonLowReWallFunctionFvPatchScalarField::calculate
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     // Set epsilon and G
-    forAll(nutw, faceI)
+    forAll(nutw, facei)
     {
-        label cellI = patch.faceCells()[faceI];
+        label celli = patch.faceCells()[facei];
 
-        scalar yPlus = Cmu25*sqrt(k[cellI])*y[faceI]/nuw[faceI];
+        scalar yPlus = Cmu25*sqrt(k[celli])*y[facei]/nuw[facei];
 
-        scalar w = cornerWeights[faceI];
+        scalar w = cornerWeights[facei];
 
         if (yPlus > yPlusLam_)
         {
-            epsilon[cellI] = w*Cmu75*pow(k[cellI], 1.5)/(kappa_*y[faceI]);
+            epsilon[celli] = w*Cmu75*pow(k[celli], 1.5)/(kappa_*y[facei]);
         }
         else
         {
-            epsilon[cellI] = w*2.0*k[cellI]*nuw[faceI]/sqr(y[faceI]);
+            epsilon[celli] = w*2.0*k[celli]*nuw[facei]/sqr(y[facei]);
         }
 
-        G[cellI] =
+        // It is not clear that G should be adjusted for low-Re BCs
+        G[celli] +=
             w
-           *(nutw[faceI] + nuw[faceI])
-           *magGradUw[faceI]
-           *Cmu25*sqrt(k[cellI])
-           /(kappa_*y[faceI]);
+           *(nutw[facei] + nuw[facei])
+           *magGradUw[facei]
+           *Cmu25*sqrt(k[celli])
+           /(kappa_*y[facei]);
     }
 }
 

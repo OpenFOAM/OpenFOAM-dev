@@ -33,6 +33,7 @@ divSchemes
     div(phi,R)      bounded Gauss linear;
     div(phi,nuTilda) bounded Gauss linear;
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(nonlinearStress) Gauss linear;
 }
 
 laplacianSchemes

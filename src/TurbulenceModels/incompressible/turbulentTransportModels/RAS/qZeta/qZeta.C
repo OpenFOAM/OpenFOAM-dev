@@ -253,7 +253,6 @@ void qZeta::correct()
 
 
     // Zeta equation
-
     tmp<fvScalarMatrix> zetaEqn
     (
         fvm::ddt(zeta_)
@@ -271,7 +270,6 @@ void qZeta::correct()
 
 
     // q equation
-
     tmp<fvScalarMatrix> qEqn
     (
         fvm::ddt(q_)
