@@ -306,14 +306,12 @@ void LienCubicKE::correct()
     tmp<volTensorField> tgradU = fvc::grad(U_);
     const volTensorField& gradU = tgradU();
 
-    // generation term
-    tmp<volScalarField> S2 = symm(gradU) && gradU;
-
     volScalarField G
     (
         GName(),
-        Cmu_*sqr(k_)/epsilon_*S2 - (nonlinearStress_ && gradU)
+        (nut_*twoSymm(gradU) - nonlinearStress_) && gradU
     );
+
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();
@@ -330,15 +328,12 @@ void LienCubicKE::correct()
     );
 
     epsEqn().relax();
-
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
-
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
 
 
     // Turbulent kinetic energy equation
-
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(k_)

@@ -371,9 +371,6 @@ void LienCubicKELowRe::correct()
     tmp<volTensorField> tgradU = fvc::grad(U_);
     const volTensorField& gradU = tgradU();
 
-    // generation term
-    tmp<volScalarField> S2 = symm(gradU) && gradU;
-
     yStar_ = sqrt(k_)*y_/nu() + SMALL;
     tmp<volScalarField> Rt = sqr(k_)/(nu()*epsilon_);
 
@@ -385,7 +382,7 @@ void LienCubicKELowRe::correct()
     volScalarField G
     (
         GName(),
-        Cmu_*fMu()*sqr(k_)/epsilon_*S2 - (nonlinearStress_ && gradU)
+        (nut_*twoSymm(gradU) - nonlinearStress_) && gradU
     );
 
     // Dissipation equation
@@ -404,16 +401,11 @@ void LienCubicKELowRe::correct()
     );
 
     epsEqn().relax();
-
-    #include "LienCubicKELowReSetWallDissipation.H"
-    #include "wallDissipationI.H"
-
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
 
 
     // Turbulent kinetic energy equation
-
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(k_)

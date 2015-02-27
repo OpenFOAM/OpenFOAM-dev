@@ -243,20 +243,14 @@ void LienLeschzinerLowRe::correct()
         return;
     }
 
+    tmp<volTensorField> tgradU = fvc::grad(U_);
+    volScalarField G(GName(), nut_*(tgradU() && twoSymm(tgradU())));
+    tgradU.clear();
+
     scalar Cmu75 = pow(Cmu_.value(), 0.75);
-
-    const volTensorField gradU(fvc::grad(U_));
-
-    // generation term
-    tmp<volScalarField> S2 = symm(gradU) && gradU;
-
     yStar_ = sqrt(k_)*y_/nu() + SMALL;
     tmp<volScalarField> Rt = sqr(k_)/(nu()*epsilon_);
-
     const volScalarField f2(scalar(1) - 0.3*exp(-sqr(Rt)));
-
-    volScalarField G(GName(), Cmu_*fMu()*sqr(k_)/epsilon_*S2);
-
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -266,24 +260,21 @@ void LienLeschzinerLowRe::correct()
       - fvm::laplacian(DepsilonEff(), epsilon_)
       ==
         C1_*G*epsilon_/k_
+
         // E-term
         + C2_*f2*Cmu75*sqrt(k_)
-        /(kappa_*y_*(scalar(1) - exp(-Aepsilon_*yStar_)))
-       *exp(-Amu_*sqr(yStar_))*epsilon_
+         /(kappa_*y_*(scalar(1) - exp(-Aepsilon_*yStar_)))
+         *exp(-Amu_*sqr(yStar_))*epsilon_
+
       - fvm::Sp(C2_*f2*epsilon_/k_, epsilon_)
     );
 
     epsEqn().relax();
-
-    #include "LienLeschzinerLowReSetWallDissipation.H"
-    #include "wallDissipationI.H"
-
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
 
 
     // Turbulent kinetic energy equation
-
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(k_)
