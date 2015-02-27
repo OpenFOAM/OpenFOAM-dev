@@ -47,26 +47,30 @@ addToRunTimeSelectionTable(RASModel, ShihQuadraticKE, dictionary);
 
 void ShihQuadraticKE::correctNut()
 {
-    nut_ = Cmu_*sqr(k_)/epsilon_;
-    #include "wallNonlinearViscosityI.H"
+    correctNonlinearStress(fvc::grad(U_));
 }
 
 
 void ShihQuadraticKE::correctNonlinearStress(const volTensorField& gradU)
 {
-    nonlinearStress_ = symm
-    (
-        pow(k_, 3.0)/sqr(epsilon_)
+    volSymmTensorField S(symm(gradU));
+    volTensorField W(skew(gradU));
+
+    volScalarField sBar((k_/epsilon_)*sqrt(2.0)*mag(symm(gradU)));
+    volScalarField wBar((k_/epsilon_)*sqrt(2.0)*mag(skew(gradU)));
+
+    volScalarField Cmu(2.0/(3.0*(Cmu1_ + sBar + Cmu2_*wBar)));
+
+    nut_ = Cmu*sqr(k_)/epsilon_;
+    nut_.correctBoundaryConditions();
+
+    nonlinearStress_ =
+        pow3(k_)/((A1_ + pow3(sBar))*sqr(epsilon_))
        *(
-            Ctau1_/fEta_
-           *(
-                (gradU & gradU)
-              + (gradU & gradU)().T()
-            )
-          + Ctau2_/fEta_*(gradU & T(gradU))
-          + Ctau3_/fEta_*(T(gradU) & gradU)
-        )
-    );
+           beta1_*dev(symm(S&S))
+         + beta2_*symm((W&S) - (S&W))
+         + beta3_*dev(symm(W&W))
+        );
 }
 
 
@@ -132,7 +136,7 @@ ShihQuadraticKE::ShihQuadraticKE
             1.3
         )
     ),
-    A1_
+    Cmu1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
@@ -141,43 +145,7 @@ ShihQuadraticKE::ShihQuadraticKE
             1.25
         )
     ),
-    A2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "A2",
-            coeffDict_,
-            1000.0
-        )
-    ),
-    Ctau1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ctau1",
-            coeffDict_,
-            -4.0
-        )
-    ),
-    Ctau2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ctau2",
-            coeffDict_,
-            13.0
-        )
-    ),
-    Ctau3_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ctau3",
-            coeffDict_,
-            -2.0
-        )
-    ),
-    alphaKsi_
+    Cmu2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
@@ -186,23 +154,40 @@ ShihQuadraticKE::ShihQuadraticKE
             0.9
         )
     ),
-
-    kappa_
+    A1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "kappa_",
+            "A2",
             coeffDict_,
-            0.41
+            1000.0
         )
     ),
-    E_
+    beta1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "E",
+            "beta1",
             coeffDict_,
-            9.8
+            3.0
+        )
+    ),
+    beta2_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "beta2",
+            coeffDict_,
+            15.0
+        )
+    ),
+    beta3_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "beta3",
+            coeffDict_,
+            -19.0
         )
     ),
 
@@ -230,28 +215,14 @@ ShihQuadraticKE::ShihQuadraticKE
             IOobject::AUTO_WRITE
         ),
         mesh_
-    ),
-
-    eta_
-    (
-        k_/bound(epsilon_, epsilonMin_)
-       *sqrt(2.0*magSqr(0.5*(fvc::grad(U) + T(fvc::grad(U)))))
-    ),
-    ksi_
-    (
-        k_/epsilon_
-       *sqrt(2.0*magSqr(0.5*(fvc::grad(U) - T(fvc::grad(U)))))
-    ),
-    Cmu_(2.0/(3.0*(A1_ + eta_ + alphaKsi_*ksi_))),
-    fEta_(A2_ + pow(eta_, 3.0))
+    )
 {
     bound(k_, kMin_);
-    // already bounded: bound(epsilon_, epsilonMin_);
+    bound(epsilon_, epsilonMin_);
 
     if (type == typeName)
     {
         correctNut();
-        correctNonlinearStress(fvc::grad(U));
         printCoeffs(type);
     }
 }
@@ -267,15 +238,12 @@ bool ShihQuadraticKE::read()
         C2_.readIfPresent(coeffDict());
         sigmak_.readIfPresent(coeffDict());
         sigmaEps_.readIfPresent(coeffDict());
+        Cmu1_.readIfPresent(coeffDict());
+        Cmu2_.readIfPresent(coeffDict());
         A1_.readIfPresent(coeffDict());
-        A2_.readIfPresent(coeffDict());
-        Ctau1_.readIfPresent(coeffDict());
-        Ctau2_.readIfPresent(coeffDict());
-        Ctau3_.readIfPresent(coeffDict());
-        alphaKsi_.readIfPresent(coeffDict());
-
-        kappa_.readIfPresent(coeffDict());
-        E_.readIfPresent(coeffDict());
+        beta1_.readIfPresent(coeffDict());
+        beta2_.readIfPresent(coeffDict());
+        beta3_.readIfPresent(coeffDict());
 
         return true;
     }
@@ -298,16 +266,14 @@ void ShihQuadraticKE::correct()
     tmp<volTensorField> tgradU = fvc::grad(U_);
     const volTensorField& gradU = tgradU();
 
-    // generation term
-    tmp<volScalarField> S2 = symm(gradU) && gradU;
-
     volScalarField G
     (
         GName(),
-        Cmu_*sqr(k_)/epsilon_*S2 - (nonlinearStress_ && gradU)
+        (nut_*twoSymm(gradU) - nonlinearStress_) && gradU
     );
 
-    #include "nonLinearWallFunctionsI.H"
+    // Update epsilon and G at the wall
+    epsilon_.boundaryField().updateCoeffs();
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -322,14 +288,13 @@ void ShihQuadraticKE::correct()
 
     epsEqn().relax();
 
-    #include "wallDissipationI.H"
+    epsEqn().boundaryManipulate(epsilon_.boundaryField());
 
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
 
 
     // Turbulent kinetic energy equation
-
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(k_)
@@ -345,14 +310,7 @@ void ShihQuadraticKE::correct()
     bound(k_, kMin_);
 
 
-    // Re-calculate viscosity
-
-    eta_ = k_/epsilon_*sqrt(2.0*magSqr(0.5*(gradU + T(gradU))));
-    ksi_ = k_/epsilon_*sqrt(2.0*magSqr(0.5*(gradU - T(gradU))));
-    Cmu_ = 2.0/(3.0*(A1_ + eta_ + alphaKsi_*ksi_));
-    fEta_ = A2_ + pow(eta_, 3.0);
-
-    correctNut();
+    // Re-calculate viscosity and non-linear stress
     correctNonlinearStress(gradU);
 }
 

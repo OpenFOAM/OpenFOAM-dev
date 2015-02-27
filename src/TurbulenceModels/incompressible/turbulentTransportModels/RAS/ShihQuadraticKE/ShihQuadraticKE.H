@@ -77,26 +77,18 @@ protected:
             dimensionedScalar C2_;
             dimensionedScalar sigmak_;
             dimensionedScalar sigmaEps_;
+            dimensionedScalar Cmu1_;
+            dimensionedScalar Cmu2_;
             dimensionedScalar A1_;
-            dimensionedScalar A2_;
-            dimensionedScalar Ctau1_;
-            dimensionedScalar Ctau2_;
-            dimensionedScalar Ctau3_;
-            dimensionedScalar alphaKsi_;
-
-            dimensionedScalar kappa_;
-            dimensionedScalar E_;
+            dimensionedScalar beta1_;
+            dimensionedScalar beta2_;
+            dimensionedScalar beta3_;
 
 
         // Fields
 
             volScalarField k_;
             volScalarField epsilon_;
-
-            volScalarField eta_;
-            volScalarField ksi_;
-            volScalarField Cmu_;
-            volScalarField fEta_;
 
 
     // Protected Member Functions

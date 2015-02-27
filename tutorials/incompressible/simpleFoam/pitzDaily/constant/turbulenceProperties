@@ -19,7 +19,9 @@ simulationType RAS;
 
 RAS
 {
-    RASModel        v2f; //kEpsilon; //realizableKE; //kOmega; //kOmegaSST;
+    // Tested with ShihQuadraticKE, v2f, kEpsilon, realizableKE,
+    // kOmega, kOmegaSST;
+    RASModel        v2f;
 
     turbulence      on;
 
