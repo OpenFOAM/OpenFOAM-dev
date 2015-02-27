@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "nonlinearKEShih.H"
+#include "ShihQuadraticKE.H"
 #include "bound.H"
 #include "wallFvPatch.H"
 #include "nutkWallFunctionFvPatchScalarField.H"
@@ -40,19 +40,19 @@ namespace RASModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(nonlinearKEShih, 0);
-addToRunTimeSelectionTable(RASModel, nonlinearKEShih, dictionary);
+defineTypeNameAndDebug(ShihQuadraticKE, 0);
+addToRunTimeSelectionTable(RASModel, ShihQuadraticKE, dictionary);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void nonlinearKEShih::correctNut()
+void ShihQuadraticKE::correctNut()
 {
     nut_ = Cmu_*sqr(k_)/epsilon_;
     #include "wallNonlinearViscosityI.H"
 }
 
 
-void nonlinearKEShih::correctNonlinearStress(const volTensorField& gradU)
+void ShihQuadraticKE::correctNonlinearStress(const volTensorField& gradU)
 {
     nonlinearStress_ = symm
     (
@@ -72,7 +72,7 @@ void nonlinearKEShih::correctNonlinearStress(const volTensorField& gradU)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-nonlinearKEShih::nonlinearKEShih
+ShihQuadraticKE::ShihQuadraticKE
 (
     const geometricOneField& alpha,
     const geometricOneField& rho,
@@ -259,7 +259,7 @@ nonlinearKEShih::nonlinearKEShih
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool nonlinearKEShih::read()
+bool ShihQuadraticKE::read()
 {
     if (nonlinearEddyViscosity<incompressible::RASModel>::read())
     {
@@ -286,7 +286,7 @@ bool nonlinearKEShih::read()
 }
 
 
-void nonlinearKEShih::correct()
+void ShihQuadraticKE::correct()
 {
     nonlinearEddyViscosity<incompressible::RASModel>::correct();
 

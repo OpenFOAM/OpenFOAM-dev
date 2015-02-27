@@ -7,7 +7,7 @@ turbulentTransportModels/RAS/LamBremhorstKE/LamBremhorstKE.C
 turbulentTransportModels/RAS/LienCubicKE/LienCubicKE.C
 turbulentTransportModels/RAS/LienCubicKELowRe/LienCubicKELowRe.C
 turbulentTransportModels/RAS/LienLeschzinerLowRe/LienLeschzinerLowRe.C
-turbulentTransportModels/RAS/nonlinearKEShih/nonlinearKEShih.C
+turbulentTransportModels/RAS/ShihQuadraticKE/ShihQuadraticKE.C
 
 BCs = turbulentTransportModels/RAS/derivedFvPatchFields
 

@@ -22,22 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::incompressible::RASModels::nonlinearKEShih
+    Foam::incompressible::RASModels::ShihQuadraticKE
 
 Group
     grpIcoRASTurbulence
 
 Description
-    Shih's quadratic non-linear k-epsilon turbulence model for
+    Shih's quadratic algebraic Reynolds stress k-epsilon turbulence model for
     incompressible flows
 
+    This turbulence model is described in:
+    \verbatim
+        Shih, T. H., Zhu, J., & Lumley, J. L. (1993).
+        A realizable Reynolds stress algebraic equation model.
+        NASA technical memorandum 105993.
+    \endverbatim
+
 SourceFiles
-    nonlinearKEShih.C
+    ShihQuadraticKE.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef nonlinearKEShih_H
-#define nonlinearKEShih_H
+#ifndef ShihQuadraticKE_H
+#define ShihQuadraticKE_H
 
 #include "turbulentTransportModel.H"
 #include "nonlinearEddyViscosity.H"
@@ -52,10 +59,10 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class nonlinearKEShih Declaration
+                      Class ShihQuadraticKE Declaration
 \*---------------------------------------------------------------------------*/
 
-class nonlinearKEShih
+class ShihQuadraticKE
 :
     public nonlinearEddyViscosity<incompressible::RASModel>
 {
@@ -101,13 +108,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("nonlinearKEShih");
+    TypeName("ShihQuadraticKE");
 
 
     // Constructors
 
         //- Construct from components
-        nonlinearKEShih
+        ShihQuadraticKE
         (
             const geometricOneField& alpha,
             const geometricOneField& rho,
@@ -121,7 +128,7 @@ public:
 
 
     //- Destructor
-    virtual ~nonlinearKEShih()
+    virtual ~ShihQuadraticKE()
     {}
 
 
