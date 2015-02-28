@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -244,6 +244,25 @@ operator&(const Vector<Cmpt>& v, const SymmTensor<Cmpt>& st)
         v.x()*st.xx() + v.y()*st.xy() + v.z()*st.xz(),
         v.x()*st.xy() + v.y()*st.yy() + v.z()*st.yz(),
         v.x()*st.xz() + v.y()*st.yz() + v.z()*st.zz()
+    );
+}
+
+
+//- Inner-sqr of a symmetric tensor
+template<class Cmpt>
+inline SymmTensor<Cmpt>
+innerSqr(const SymmTensor<Cmpt>& st)
+{
+    return SymmTensor<Cmpt>
+    (
+        st.xx()*st.xx() + st.xy()*st.xy() + st.xz()*st.xz(),
+        st.xx()*st.xy() + st.xy()*st.yy() + st.xz()*st.yz(),
+        st.xx()*st.xz() + st.xy()*st.yz() + st.xz()*st.zz(),
+
+        st.xy()*st.xy() + st.yy()*st.yy() + st.yz()*st.yz(),
+        st.xy()*st.xz() + st.yy()*st.yz() + st.yz()*st.zz(),
+
+        st.xz()*st.xz() + st.yz()*st.yz() + st.zz()*st.zz()
     );
 }
 

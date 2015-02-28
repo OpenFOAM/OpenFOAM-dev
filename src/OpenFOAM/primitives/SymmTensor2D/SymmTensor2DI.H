@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,6 +185,20 @@ operator&(const Vector2D<Cmpt>& v, const SymmTensor2D<Cmpt>& st)
     (
         v.x()*st.xx() + v.y()*st.xy(),
         v.x()*st.xy() + v.y()*st.yy()
+    );
+}
+
+
+//- Inner-sqr of a symmetric tensor
+template<class Cmpt>
+inline SymmTensor2D<Cmpt>
+innerSqr(const SymmTensor2D<Cmpt>& st)
+{
+    return SymmTensor2D<Cmpt>
+    (
+        st.xx()*st.xx() + st.xy()*st.xy(),
+        st.xx()*st.xy() + st.xy()*st.yy(),
+        st.xy()*st.xy() + st.yy()*st.yy()
     );
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,7 @@ typedef dimensioned<symmTensor> dimensionedSymmTensor;
 // global functions
 
 dimensionedSymmTensor sqr(const dimensionedVector&);
+dimensionedSymmTensor innerSqr(const dimensionedSymmTensor&);
 
 dimensionedScalar tr(const dimensionedSymmTensor&);
 dimensionedSymmTensor symm(const dimensionedSymmTensor&);
@@ -77,4 +78,3 @@ dimensionedVector operator*(const dimensionedSymmTensor&);
 #endif
 
 // ************************************************************************* //
-

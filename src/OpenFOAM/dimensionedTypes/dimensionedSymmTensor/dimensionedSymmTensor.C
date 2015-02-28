@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,17 @@ dimensionedSymmTensor sqr(const dimensionedVector& dv)
         "sqr("+dv.name()+')',
         sqr(dv.dimensions()),
         sqr(dv.value())
+    );
+}
+
+
+dimensionedSymmTensor innerSqr(const dimensionedSymmTensor& dt)
+{
+    return dimensionedSymmTensor
+    (
+        "innerSqr("+dt.name()+')',
+        sqr(dt.dimensions()),
+        innerSqr(dt.value())
     );
 }
 

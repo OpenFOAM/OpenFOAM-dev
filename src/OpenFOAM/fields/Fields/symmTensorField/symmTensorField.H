@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,7 @@ typedef Field<symmTensor> symmTensorField;
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 UNARY_FUNCTION(symmTensor, vector, sqr)
+UNARY_FUNCTION(symmTensor, symmTensor, innerSqr)
 
 UNARY_FUNCTION(scalar, symmTensor, tr)
 UNARY_FUNCTION(sphericalTensor, symmTensor, sph)
