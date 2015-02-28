@@ -67,8 +67,8 @@ void ShihQuadraticKE::correctNonlinearStress(const volTensorField& gradU)
     nonlinearStress_ =
         pow3(k_)/((A1_ + pow3(sBar))*sqr(epsilon_))
        *(
-           beta1_*dev(symm(S&S))
-         + beta2_*symm((W&S) - (S&W))
+           beta1_*dev(innerSqr(S))
+         + beta2_*twoSymm(S&W)
          + beta3_*dev(symm(W&W))
         );
 }
