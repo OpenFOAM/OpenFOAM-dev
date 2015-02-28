@@ -249,6 +249,34 @@ bool SSG<BasicTurbulenceModel>::read()
 
 
 template<class BasicTurbulenceModel>
+tmp<volSymmTensorField> SSG<BasicTurbulenceModel>::DREff() const
+{
+    return tmp<volSymmTensorField>
+    (
+        new volSymmTensorField
+        (
+            "DREff",
+            (Cs_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<volSymmTensorField> SSG<BasicTurbulenceModel>::DepsilonEff() const
+{
+    return tmp<volSymmTensorField>
+    (
+        new volSymmTensorField
+        (
+            "DepsilonEff",
+            (Ceps_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
 void SSG<BasicTurbulenceModel>::correct()
 {
     if (!this->turbulence_)
@@ -279,7 +307,7 @@ void SSG<BasicTurbulenceModel>::correct()
     (
         fvm::ddt(alpha, rho, epsilon_)
       + fvm::div(alphaRhoPhi, epsilon_)
-      - fvm::laplacian(Ceps_*alpha*rho*(k_/epsilon_)*R, epsilon_)
+      - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
         Ceps1_*alpha*rho*G*epsilon_/k_
       - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
@@ -324,15 +352,15 @@ void SSG<BasicTurbulenceModel>::correct()
     (
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
-      - fvm::laplacian(Cs_*alpha*rho*(k_/epsilon_)*R, R)
+      - fvm::laplacian(alpha*rho*DREff(), R)
       + fvm::Sp(((C1_/2)*epsilon_ + (C1s_/2)*G)*alpha*rho/k_, R)
      ==
         alpha*rho*P
       - ((1.0/3.0)*I)*(((2.0 - C1_)*epsilon_ - C1s_*G)*alpha*rho)
-      + (C2_*(alpha*rho*epsilon_))*dev(symm(b&b)) // symm should not be needed
+      + (C2_*(alpha*rho*epsilon_))*dev(innerSqr(b))
       + alpha*rho*k_
        *(
-            (C3_ - C3s_*mag(b))*S
+            (C3_ - C3s_*mag(b))*dev(S)
           + C4_*dev(twoSymm(b&S))
           + C5_*twoSymm(b&Omega)
         )

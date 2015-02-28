@@ -239,6 +239,34 @@ bool LRR<BasicTurbulenceModel>::read()
 
 
 template<class BasicTurbulenceModel>
+tmp<volSymmTensorField> LRR<BasicTurbulenceModel>::DREff() const
+{
+    return tmp<volSymmTensorField>
+    (
+        new volSymmTensorField
+        (
+            "DREff",
+            (Cs_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<volSymmTensorField> LRR<BasicTurbulenceModel>::DepsilonEff() const
+{
+    return tmp<volSymmTensorField>
+    (
+        new volSymmTensorField
+        (
+            "DepsilonEff",
+            (Ceps_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
 void LRR<BasicTurbulenceModel>::correct()
 {
     if (!this->turbulence_)
@@ -269,7 +297,7 @@ void LRR<BasicTurbulenceModel>::correct()
     (
         fvm::ddt(alpha, rho, epsilon_)
       + fvm::div(alphaRhoPhi, epsilon_)
-      - fvm::laplacian(Ceps_*alpha*rho*(k_/epsilon_)*R, epsilon_)
+      - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
         Ceps1_*alpha*rho*G*epsilon_/k_
       - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
@@ -310,7 +338,7 @@ void LRR<BasicTurbulenceModel>::correct()
     (
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
-      - fvm::laplacian(Cs_*alpha*rho*(k_/epsilon_)*R, R)
+      - fvm::laplacian(alpha*rho*DREff(), R)
       + fvm::Sp(C1_*alpha*rho*epsilon_/k_, R)
       ==
         alpha*rho*P

@@ -195,6 +195,12 @@ public:
             return epsilon_;
         }
 
+        //- Return the effective diffusivity for R
+        tmp<volSymmTensorField> DREff() const;
+
+        //- Return the effective diffusivity for epsilon
+        tmp<volSymmTensorField> DepsilonEff() const;
+
         //- Solve the turbulence equations and correct eddy-Viscosity and
         //  related properties
         virtual void correct();
