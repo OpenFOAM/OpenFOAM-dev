@@ -239,18 +239,15 @@ bool qZeta::read()
 
 void qZeta::correct()
 {
-    eddyViscosity<incompressible::RASModel>::correct();
-
     if (!turbulence_)
     {
         return;
     }
 
-    tmp<volScalarField> S2 = 2*magSqr(symm(fvc::grad(U_)));
+    eddyViscosity<incompressible::RASModel>::correct();
 
-    volScalarField G(GName(), nut_/(2.0*q_)*S2);
+    volScalarField G(GName(), nut_/(2.0*q_)*2*magSqr(symm(fvc::grad(U_))));
     const volScalarField E(nu()*nut_/q_*fvc::magSqrGradGrad(U_));
-
 
     // Zeta equation
     tmp<fvScalarMatrix> zetaEqn

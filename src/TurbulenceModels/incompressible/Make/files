@@ -4,13 +4,11 @@ turbulentTransportModels/turbulentTransportModels.C
 turbulentTransportModels/RAS/qZeta/qZeta.C
 turbulentTransportModels/RAS/kkLOmega/kkLOmega.C
 turbulentTransportModels/RAS/LamBremhorstKE/LamBremhorstKE.C
-turbulentTransportModels/RAS/LienCubicKE/LienCubicKE.C
-turbulentTransportModels/RAS/LienCubicKELowRe/LienCubicKELowRe.C
-turbulentTransportModels/RAS/LienLeschzinerLowRe/LienLeschzinerLowRe.C
+turbulentTransportModels/RAS/LienLeschziner/LienLeschziner.C
 turbulentTransportModels/RAS/ShihQuadraticKE/ShihQuadraticKE.C
+turbulentTransportModels/RAS/LienCubicKE/LienCubicKE.C
 
 BCs = turbulentTransportModels/RAS/derivedFvPatchFields
-
 turbulentTransportModels/derivedFvPatchFields/wallFunctions/alphatWallFunctions/alphatJayatillekeWallFunction/alphatJayatillekeWallFunctionFvPatchScalarField.C
 
 LIB = $(FOAM_LIBBIN)/libincompressibleTurbulenceModels

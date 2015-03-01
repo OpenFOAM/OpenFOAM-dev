@@ -85,7 +85,6 @@ protected:
         const volScalarField& y_;
 
         volScalarField Rt_;
-
         volScalarField fMu_;
 
 

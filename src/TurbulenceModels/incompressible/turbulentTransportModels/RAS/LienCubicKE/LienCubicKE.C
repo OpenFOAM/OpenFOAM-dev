@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------*\
+/*---------------------------------------------------------------------------* \
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LienCubicKE.H"
+#include "wallDist.H"
 #include "bound.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -43,52 +44,76 @@ addToRunTimeSelectionTable(RASModel, LienCubicKE, dictionary);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+tmp<volScalarField> LienCubicKE::fMu() const
+{
+    const volScalarField yStar(sqrt(k_)*y_/nu());
+
+    return
+        (scalar(1) - exp(-Anu_*yStar))
+       *(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + SMALL)));
+}
+
+
+tmp<volScalarField> LienCubicKE::f2() const
+{
+    tmp<volScalarField> Rt = sqr(k_)/(nu()*epsilon_);
+
+    return scalar(1) - 0.3*exp(-sqr(Rt));
+}
+
+
+tmp<volScalarField> LienCubicKE::E(const volScalarField& f2) const
+{
+    const volScalarField yStar(sqrt(k_)*y_/nu());
+    const volScalarField le
+    (
+        kappa_*y_/(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + SMALL)))
+    );
+
+    return
+        (Ceps2_*pow(Cmu_, 0.75))
+       *(f2*sqrt(k_)*epsilon_/le)*exp(-AE_*sqr(yStar));
+}
+
+
 void LienCubicKE::correctNut()
 {
-    nut_ =
-        Cmu_*sqr(k_)/epsilon_
-        // C5 term, implicit
-      + max
-        (
-            C5viscosity_,
-            dimensionedScalar("0", C5viscosity_.dimensions(), 0.0)
-        );
-
-    nut_.correctBoundaryConditions();
+    correctNonlinearStress(fvc::grad(U_));
 }
 
 
 void LienCubicKE::correctNonlinearStress(const volTensorField& gradU)
 {
-    nonlinearStress_ = symm
-    (
-        // quadratic terms
-        pow3(k_)/sqr(epsilon_)
+    volSymmTensorField S(symm(gradU));
+    volTensorField W(skew(gradU));
+
+    volScalarField sBar((k_/epsilon_)*sqrt(2.0)*mag(S));
+    volScalarField wBar((k_/epsilon_)*sqrt(2.0)*mag(W));
+
+    volScalarField Cmu((2.0/3.0)/(Cmu1_ + sBar + Cmu2_*wBar));
+    volScalarField fMu(this->fMu());
+
+    nut_ = Cmu*fMu*sqr(k_)/epsilon_;
+    nut_.correctBoundaryConditions();
+
+    nonlinearStress_ =
+        fMu*k_
        *(
-            Ctau1_/fEta_
+            // Quadratic terms
+            sqr(k_/epsilon_)/(Cbeta_ + pow3(sBar))
            *(
-                (gradU & gradU)
-              + (gradU & gradU)().T()
+                Cbeta1_*dev(innerSqr(S))
+              + Cbeta2_*twoSymm(S&W)
+              + Cbeta3_*dev(symm(W&W))
             )
-          + Ctau2_/fEta_*(gradU & gradU.T())
-          + Ctau3_/fEta_*(gradU.T() & gradU)
-        )
-        // cubic term C4
-      - 20.0*pow4(k_)/pow3(epsilon_)
-       *pow3(Cmu_)
-       *(
-            ((gradU & gradU) & gradU.T())
-          + ((gradU & gradU.T()) & gradU.T())
-          - ((gradU.T() & gradU) & gradU)
-          - ((gradU.T() & gradU.T()) & gradU)
-        )
-        // cubic term C5, explicit part
-      + min
-        (
-            C5viscosity_,
-            dimensionedScalar("0", C5viscosity_.dimensions(), 0.0)
-        )*gradU
-    );
+
+            // Cubic terms
+          - pow3(Cmu*k_/epsilon_)
+           *(
+                (Cgamma1_*magSqr(S) - Cgamma2_*magSqr(W))*S
+              + Cgamma4_*twoSymm((innerSqr(S)&W))
+            )
+        );
 }
 
 
@@ -118,20 +143,20 @@ LienCubicKE::LienCubicKE
         propertiesName
     ),
 
-    C1_
+    Ceps1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C1",
+            "Ceps1",
             coeffDict_,
             1.44
         )
     ),
-    C2_
+    Ceps2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C2",
+            "Ceps2",
             coeffDict_,
             1.92
         )
@@ -154,58 +179,121 @@ LienCubicKE::LienCubicKE
             1.3
         )
     ),
-    A1_
+    Cmu1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "A1",
+            "Cmu1",
             coeffDict_,
             1.25
         )
     ),
-    A2_
+    Cmu2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "A2",
+            "Cmu2",
+            coeffDict_,
+            0.9
+        )
+    ),
+    Cbeta_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Cbeta",
             coeffDict_,
             1000.0
         )
     ),
-    Ctau1_
+    Cbeta1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Ctau1",
+            "Cbeta1",
             coeffDict_,
-            -4.0
+            3.0
         )
     ),
-    Ctau2_
+    Cbeta2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Ctau2",
+            "Cbeta2",
             coeffDict_,
-            13.0
+            15.0
         )
     ),
-    Ctau3_
+    Cbeta3_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Ctau3",
+            "Cbeta3",
             coeffDict_,
-            -2.0
+            -19.0
         )
     ),
-    alphaKsi_
+    Cgamma1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "alphaKsi",
+            "Cgamma1",
             coeffDict_,
-            0.9
+            16.0
+        )
+    ),
+    Cgamma2_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Cgamma2",
+            coeffDict_,
+            16.0
+        )
+    ),
+    Cgamma4_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Cgamma4",
+            coeffDict_,
+            -80.0
+        )
+    ),
+    Cmu_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Cmu",
+            coeffDict_,
+            0.09
+        )
+    ),
+    kappa_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "kappa",
+            coeffDict_,
+            0.41
+        )
+    ),
+    Anu_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Anu",
+            coeffDict_,
+            0.0198
+        )
+    ),
+    AE_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "AE",
+            coeffDict_,
+            0.00375
         )
     ),
 
@@ -221,6 +309,7 @@ LienCubicKE::LienCubicKE
         ),
         mesh_
     ),
+
     epsilon_
     (
         IOobject
@@ -234,35 +323,14 @@ LienCubicKE::LienCubicKE
         mesh_
     ),
 
-    eta_
-    (
-        k_/bound(epsilon_, epsilonMin_)
-       *sqrt(2.0*magSqr(0.5*(fvc::grad(U) + T(fvc::grad(U)))))
-    ),
-    ksi_
-    (
-        k_/epsilon_
-       *sqrt(2.0*magSqr(0.5*(fvc::grad(U) - T(fvc::grad(U)))))
-    ),
-    Cmu_(2.0/(3.0*(A1_ + eta_ + alphaKsi_*ksi_))),
-    fEta_(A2_ + pow3(eta_)),
-
-    C5viscosity_
-    (
-       -2.0*pow3(Cmu_)*pow4(k_)/pow3(epsilon_)
-       *(
-            magSqr(fvc::grad(U) + T(fvc::grad(U)))
-          - magSqr(fvc::grad(U) - T(fvc::grad(U)))
-        )
-    )
+    y_(wallDist::New(mesh_).y())
 {
     bound(k_, kMin_);
-    // already bounded: bound(epsilon_, epsilonMin_);
+    bound(epsilon_, epsilonMin_);
 
     if (type == typeName)
     {
         correctNut();
-        correctNonlinearStress(fvc::grad(U));
         printCoeffs(type);
     }
 }
@@ -274,16 +342,23 @@ bool LienCubicKE::read()
 {
     if (nonlinearEddyViscosity<incompressible::RASModel>::read())
     {
-        C1_.readIfPresent(coeffDict());
-        C2_.readIfPresent(coeffDict());
+        Ceps1_.readIfPresent(coeffDict());
+        Ceps2_.readIfPresent(coeffDict());
         sigmak_.readIfPresent(coeffDict());
         sigmaEps_.readIfPresent(coeffDict());
-        A1_.readIfPresent(coeffDict());
-        A2_.readIfPresent(coeffDict());
-        Ctau1_.readIfPresent(coeffDict());
-        Ctau2_.readIfPresent(coeffDict());
-        Ctau3_.readIfPresent(coeffDict());
-        alphaKsi_.readIfPresent(coeffDict());
+        Cmu1_.readIfPresent(coeffDict());
+        Cmu2_.readIfPresent(coeffDict());
+        Cbeta_.readIfPresent(coeffDict());
+        Cbeta1_.readIfPresent(coeffDict());
+        Cbeta2_.readIfPresent(coeffDict());
+        Cbeta3_.readIfPresent(coeffDict());
+        Cgamma1_.readIfPresent(coeffDict());
+        Cgamma2_.readIfPresent(coeffDict());
+        Cgamma4_.readIfPresent(coeffDict());
+        Cmu_.readIfPresent(coeffDict());
+        kappa_.readIfPresent(coeffDict());
+        Anu_.readIfPresent(coeffDict());
+        AE_.readIfPresent(coeffDict());
 
         return true;
     }
@@ -296,12 +371,12 @@ bool LienCubicKE::read()
 
 void LienCubicKE::correct()
 {
-    nonlinearEddyViscosity<incompressible::RASModel>::correct();
-
     if (!turbulence_)
     {
         return;
     }
+
+    nonlinearEddyViscosity<incompressible::RASModel>::correct();
 
     tmp<volTensorField> tgradU = fvc::grad(U_);
     const volTensorField& gradU = tgradU();
@@ -316,6 +391,8 @@ void LienCubicKE::correct()
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();
 
+    const volScalarField f2(this->f2());
+
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
     (
@@ -323,8 +400,9 @@ void LienCubicKE::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(DepsilonEff(), epsilon_)
       ==
-        C1_*G*epsilon_/k_
-      - fvm::Sp(C2_*epsilon_/k_, epsilon_)
+        Ceps1_*G*epsilon_/k_
+      - fvm::Sp(Ceps2_*f2*epsilon_/k_, epsilon_)
+      + E(f2)
     );
 
     epsEqn().relax();
@@ -349,18 +427,7 @@ void LienCubicKE::correct()
     bound(k_, kMin_);
 
 
-    // Re-calculate viscosity
-
-    eta_ = k_/epsilon_*sqrt(2.0*magSqr(0.5*(gradU + gradU.T())));
-    ksi_ = k_/epsilon_*sqrt(2.0*magSqr(0.5*(gradU - gradU.T())));
-    Cmu_ = 2.0/(3.0*(A1_ + eta_ + alphaKsi_*ksi_));
-    fEta_ = A2_ + pow3(eta_);
-
-    C5viscosity_ =
-       -2.0*pow3(Cmu_)*pow4(k_)/pow3(epsilon_)
-       *(magSqr(gradU + gradU.T()) - magSqr(gradU - gradU.T()));
-
-    correctNut();
+    // Re-calculate viscosity and non-linear stress
     correctNonlinearStress(gradU);
 }
 

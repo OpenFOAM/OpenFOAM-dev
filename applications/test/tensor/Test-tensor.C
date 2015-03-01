@@ -57,19 +57,18 @@ int main()
     Info<< "Check symmetric transformation "
         << transform(t1, st1) << endl;
 
-    Info<< "Check for dot product of symmetric tensors "
+    Info<< "Check dot product of symmetric tensors "
         << (st1 & st2) << endl;
 
-    Info<< "Check for inner sqr of a symmetric tensor "
+    Info<< "Check inner sqr of a symmetric tensor "
         << innerSqr(st1) << " " << innerSqr(st1) - (st1 & st1) << endl;
 
-    Info<< "Check for symmetric part of dot product of symmetric tensors "
+    Info<< "Check symmetric part of dot product of symmetric tensors "
         << twoSymm(st1&st2) - ((st1&st2) + (st2&st1)) << endl;
 
     tensor sk1 = skew(t6);
-    tensor sk2 = skew(t7);
-    Info<< "Check for symmetric part of dot product of skew tensors "
-        << twoSymm(sk1&sk2) - ((sk1&sk2) - (sk2&sk1)) << endl;
+    Info<< "Check dot product of symmetric and skew tensors "
+        << twoSymm(st1&sk1) - ((st1&sk1) - (sk1&st1)) << endl;
 
     vector v1(1, 2, 3);
 

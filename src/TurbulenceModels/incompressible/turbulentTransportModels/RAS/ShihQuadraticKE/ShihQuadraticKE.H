@@ -38,6 +38,11 @@ Description
         NASA technical memorandum 105993.
     \endverbatim
 
+    Implemented according to the specification in:
+    <a href=
+    "http://personalpages.manchester.ac.uk/staff/david.d.apsley/specturb.pdf"
+    >Apsley: Turbulence Models 2002</a>
+
 SourceFiles
     ShihQuadraticKE.C
 
@@ -73,16 +78,16 @@ protected:
 
         // Model coefficients
 
-            dimensionedScalar C1_;
-            dimensionedScalar C2_;
+            dimensionedScalar Ceps1_;
+            dimensionedScalar Ceps2_;
             dimensionedScalar sigmak_;
             dimensionedScalar sigmaEps_;
             dimensionedScalar Cmu1_;
             dimensionedScalar Cmu2_;
-            dimensionedScalar A1_;
-            dimensionedScalar beta1_;
-            dimensionedScalar beta2_;
-            dimensionedScalar beta3_;
+            dimensionedScalar Cbeta_;
+            dimensionedScalar Cbeta1_;
+            dimensionedScalar Cbeta2_;
+            dimensionedScalar Cbeta3_;
 
 
         // Fields

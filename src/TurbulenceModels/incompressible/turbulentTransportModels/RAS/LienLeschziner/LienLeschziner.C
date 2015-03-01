@@ -23,9 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "LienLeschzinerLowRe.H"
+#include "LienLeschziner.H"
 #include "wallDist.H"
-#include "wallFvPatch.H"
 #include "bound.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -40,20 +39,44 @@ namespace RASModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(LienLeschzinerLowRe, 0);
-addToRunTimeSelectionTable(RASModel, LienLeschzinerLowRe, dictionary);
+defineTypeNameAndDebug(LienLeschziner, 0);
+addToRunTimeSelectionTable(RASModel, LienLeschziner, dictionary);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-tmp<volScalarField> LienLeschzinerLowRe::fMu()
+tmp<volScalarField> LienLeschziner::fMu() const
 {
+    const volScalarField yStar(sqrt(k_)*y_/nu());
+
     return
-        (scalar(1) - exp(-Am_*yStar_))
-       /(scalar(1) - exp(-Aepsilon_*yStar_) + SMALL);
+        (scalar(1) - exp(-Anu_*yStar))
+       /((scalar(1) + SMALL) - exp(-Aeps_*yStar));
 }
 
 
-void LienLeschzinerLowRe::correctNut()
+tmp<volScalarField> LienLeschziner::f2() const
+{
+    tmp<volScalarField> Rt = sqr(k_)/(nu()*epsilon_);
+
+    return scalar(1) - 0.3*exp(-sqr(Rt));
+}
+
+
+tmp<volScalarField> LienLeschziner::E(const volScalarField& f2) const
+{
+    const volScalarField yStar(sqrt(k_)*y_/nu());
+    const volScalarField le
+    (
+        kappa_*y_*((scalar(1) + SMALL) - exp(-Aeps_*yStar))
+    );
+
+    return
+        (Ceps2_*pow(Cmu_, 0.75))
+       *(f2*sqrt(k_)*epsilon_/le)*exp(-AE_*sqr(yStar));
+}
+
+
+void LienLeschziner::correctNut()
 {
     nut_ = Cmu_*fMu()*sqr(k_)/epsilon_;
     nut_.correctBoundaryConditions();
@@ -62,7 +85,7 @@ void LienLeschzinerLowRe::correctNut()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-LienLeschzinerLowRe::LienLeschzinerLowRe
+LienLeschziner::LienLeschziner
 (
     const geometricOneField& alpha,
     const geometricOneField& rho,
@@ -86,20 +109,20 @@ LienLeschzinerLowRe::LienLeschzinerLowRe
         propertiesName
     ),
 
-    C1_
+    Ceps1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C1",
+            "Ceps1",
             coeffDict_,
             1.44
         )
     ),
-    C2_
+    Ceps2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C2",
+            "Ceps2",
             coeffDict_,
             1.92
         )
@@ -140,29 +163,29 @@ LienLeschzinerLowRe::LienLeschzinerLowRe
             0.41
         )
     ),
-    Am_
+    Anu_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Am",
+            "Anu",
             coeffDict_,
             0.016
         )
     ),
-    Aepsilon_
+    Aeps_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Aepsilon",
+            "Aeps",
             coeffDict_,
             0.263
         )
     ),
-    Amu_
+    AE_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "Amu",
+            "AE",
             coeffDict_,
             0.00222
         )
@@ -194,9 +217,7 @@ LienLeschzinerLowRe::LienLeschzinerLowRe
         mesh_
     ),
 
-    y_(wallDist::New(mesh_).y()),
-
-    yStar_(sqrt(k_)*y_/nu() + SMALL)
+    y_(wallDist::New(mesh_).y())
 {
     bound(k_, kMin_);
     bound(epsilon_, epsilonMin_);
@@ -211,19 +232,19 @@ LienLeschzinerLowRe::LienLeschzinerLowRe
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool LienLeschzinerLowRe::read()
+bool LienLeschziner::read()
 {
     if (eddyViscosity<incompressible::RASModel>::read())
     {
-        C1_.readIfPresent(coeffDict());
-        C2_.readIfPresent(coeffDict());
+        Ceps1_.readIfPresent(coeffDict());
+        Ceps2_.readIfPresent(coeffDict());
         sigmak_.readIfPresent(coeffDict());
         sigmaEps_.readIfPresent(coeffDict());
         Cmu_.readIfPresent(coeffDict());
         kappa_.readIfPresent(coeffDict());
-        Am_.readIfPresent(coeffDict());
-        Aepsilon_.readIfPresent(coeffDict());
-        Amu_.readIfPresent(coeffDict());
+        Anu_.readIfPresent(coeffDict());
+        Aeps_.readIfPresent(coeffDict());
+        AE_.readIfPresent(coeffDict());
 
         return true;
     }
@@ -234,23 +255,27 @@ bool LienLeschzinerLowRe::read()
 }
 
 
-void LienLeschzinerLowRe::correct()
+void LienLeschziner::correct()
 {
-    eddyViscosity<incompressible::RASModel>::correct();
-
     if (!turbulence_)
     {
         return;
     }
 
+    eddyViscosity<incompressible::RASModel>::correct();
+
     tmp<volTensorField> tgradU = fvc::grad(U_);
-    volScalarField G(GName(), nut_*(tgradU() && twoSymm(tgradU())));
+    volScalarField G
+    (
+        GName(),
+        nut_*(tgradU() && twoSymm(tgradU()))
+    );
     tgradU.clear();
 
-    scalar Cmu75 = pow(Cmu_.value(), 0.75);
-    yStar_ = sqrt(k_)*y_/nu() + SMALL;
-    tmp<volScalarField> Rt = sqr(k_)/(nu()*epsilon_);
-    const volScalarField f2(scalar(1) - 0.3*exp(-sqr(Rt)));
+    // Update epsilon and G at the wall
+    epsilon_.boundaryField().updateCoeffs();
+
+    const volScalarField f2(this->f2());
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -258,18 +283,14 @@ void LienLeschzinerLowRe::correct()
         fvm::ddt(epsilon_)
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(DepsilonEff(), epsilon_)
-      ==
-        C1_*G*epsilon_/k_
-
-        // E-term
-        + C2_*f2*Cmu75*sqrt(k_)
-         /(kappa_*y_*(scalar(1) - exp(-Aepsilon_*yStar_)))
-         *exp(-Amu_*sqr(yStar_))*epsilon_
-
-      - fvm::Sp(C2_*f2*epsilon_/k_, epsilon_)
+     ==
+        Ceps1_*G*epsilon_/k_
+      - fvm::Sp(Ceps2_*f2*epsilon_/k_, epsilon_)
+      + E(f2)
     );
 
     epsEqn().relax();
+    epsEqn().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
 
@@ -280,7 +301,7 @@ void LienLeschzinerLowRe::correct()
         fvm::ddt(k_)
       + fvm::div(phi_, k_)
       - fvm::laplacian(DkEff(), k_)
-      ==
+     ==
         G
       - fvm::Sp(epsilon_/k_, k_)
     );

@@ -28,7 +28,8 @@ Group
     grpIcoRASTurbulence
 
 Description
-    Lien cubic non-linear k-epsilon turbulence model for incompressible flows.
+    Lien cubic non-linear low-Reynolds k-epsilon turbulence models for
+    incompressible flows.
 
     This turbulence model is described in:
     \verbatim
@@ -38,8 +39,17 @@ Description
         Engineering Turbulence Modelling and Experiments 3, 91-100.
     \endverbatim
 
+    Implemented according to the specification in:
+    <a href=
+    "http://personalpages.manchester.ac.uk/staff/david.d.apsley/specturb.pdf"
+    >Apsley: Turbulence Models 2002</a>
+
+    In addition to the low-Reynolds number damping functions support for
+    wall-functions is also included to allow for low- and high-Reynolds number
+    operation.
+
 See Also
-    Foam::incompressible::RASModels::LienCubicKELowRe
+    Foam::incompressible::RASModels::ShihQuadraticKE
 
 SourceFiles
     LienCubicKE.C
@@ -76,16 +86,25 @@ protected:
 
         // Model coefficients
 
-            dimensionedScalar C1_;
-            dimensionedScalar C2_;
+            dimensionedScalar Ceps1_;
+            dimensionedScalar Ceps2_;
             dimensionedScalar sigmak_;
             dimensionedScalar sigmaEps_;
-            dimensionedScalar A1_;
-            dimensionedScalar A2_;
-            dimensionedScalar Ctau1_;
-            dimensionedScalar Ctau2_;
-            dimensionedScalar Ctau3_;
-            dimensionedScalar alphaKsi_;
+            dimensionedScalar Cmu1_;
+            dimensionedScalar Cmu2_;
+            dimensionedScalar Cbeta_;
+            dimensionedScalar Cbeta1_;
+            dimensionedScalar Cbeta2_;
+            dimensionedScalar Cbeta3_;
+            dimensionedScalar Cgamma1_;
+            dimensionedScalar Cgamma2_;
+            dimensionedScalar Cgamma4_;
+
+            dimensionedScalar Cmu_;
+            dimensionedScalar kappa_;
+
+            dimensionedScalar Anu_;
+            dimensionedScalar AE_;
 
 
         // Fields
@@ -93,14 +112,17 @@ protected:
             volScalarField k_;
             volScalarField epsilon_;
 
-            volScalarField eta_;
-            volScalarField ksi_;
-            volScalarField Cmu_;
-            volScalarField fEta_;
-            volScalarField C5viscosity_;
+            //- Wall distance
+            //  Note: different to wall distance in parent RASModel
+            //  which is for near-wall cells only
+            const volScalarField& y_;
 
 
     // Protected Member Functions
+
+        tmp<volScalarField> fMu() const;
+        tmp<volScalarField> f2() const;
+        tmp<volScalarField> E(const volScalarField& f2) const;
 
         virtual void correctNut();
         virtual void correctNonlinearStress(const volTensorField& gradU);
@@ -175,7 +197,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace RASModels
-} // End namespace incompressible
+} // Edn namespace incompressible
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

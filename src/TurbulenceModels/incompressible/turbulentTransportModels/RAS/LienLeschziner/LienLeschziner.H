@@ -22,36 +22,43 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::incompressible::RASModels::LienCubicKELowRe
+    Foam::incompressible::RASModels::LienLeschziner
 
 Group
     grpIcoRASTurbulence
 
 Description
-    Lien cubic non-linear low-Reynolds k-epsilon turbulence models for
+    Lien and Leschziner low-Reynolds number k-epsilon turbulence model for
     incompressible flows.
 
     This turbulence model is described in:
     \verbatim
-        Lien, F.S., Chen, W.L. & Leschziner, M.A. (1996).
-        Low-Reynolds-number eddy-viscosity modeling based on non-linear
-        stress-strain/vorticity relations.
-        Engineering Turbulence Modelling and Experiments 3, 91-100.
+        Lien, F. S., & Leschziner, M. A. (1993).
+        A pressure-velocity solution strategy for compressible flow
+        and its application to shock/boundary-layer interaction
+        using second-moment turbulence closure.
+        Journal of fluids engineering, 115(4), 717-725.
     \endverbatim
 
-See Also
-    Foam::incompressible::RASModels::LienCubicKE
+    Implemented according to the specification in:
+    <a href=
+    "http://personalpages.manchester.ac.uk/staff/david.d.apsley/specturb.pdf"
+    >Apsley: Turbulence Models 2002</a>
+
+    In addition to the low-Reynolds number damping functions support for
+    wall-functions is also included to allow for low- and high-Reynolds number
+    operation.
 
 SourceFiles
-    LienCubicKELowRe.C
+    LienLeschziner.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef LienCubicKELowRe_H
-#define LienCubicKELowRe_H
+#ifndef LienLeschziner_H
+#define LienLeschziner_H
 
 #include "turbulentTransportModel.H"
-#include "nonlinearEddyViscosity.H"
+#include "eddyViscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,12 +70,12 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LienCubicKELowRe Declaration
+                           Class LienLeschziner Declaration
 \*---------------------------------------------------------------------------*/
 
-class LienCubicKELowRe
+class LienLeschziner
 :
-    public nonlinearEddyViscosity<incompressible::RASModel>
+    public eddyViscosity<incompressible::RASModel>
 {
 
 protected:
@@ -77,23 +84,17 @@ protected:
 
         // Model coefficients
 
-            dimensionedScalar C1_;
-            dimensionedScalar C2_;
+            dimensionedScalar Ceps1_;
+            dimensionedScalar Ceps2_;
             dimensionedScalar sigmak_;
             dimensionedScalar sigmaEps_;
-            dimensionedScalar A1_;
-            dimensionedScalar A2_;
-            dimensionedScalar Ctau1_;
-            dimensionedScalar Ctau2_;
-            dimensionedScalar Ctau3_;
-            dimensionedScalar alphaKsi_;
 
-            dimensionedScalar CmuWall_;
+            dimensionedScalar Cmu_;
             dimensionedScalar kappa_;
 
-            dimensionedScalar Am_;
-            dimensionedScalar Aepsilon_;
-            dimensionedScalar Amu_;
+            dimensionedScalar Anu_;
+            dimensionedScalar Aeps_;
+            dimensionedScalar AE_;
 
 
         // Fields
@@ -106,32 +107,24 @@ protected:
             //  which is for near-wall cells only
             const volScalarField& y_;
 
-            volScalarField eta_;
-            volScalarField ksi_;
-            volScalarField Cmu_;
-            volScalarField fEta_;
-            volScalarField C5viscosity_;
-
-            volScalarField yStar_;
-
 
     // Protected Member Functions
 
-        tmp<volScalarField> fMu();
+        tmp<volScalarField> fMu() const;
+        tmp<volScalarField> f2() const;
+        tmp<volScalarField> E(const volScalarField& f2) const;
 
         virtual void correctNut();
-        virtual void correctNonlinearStress(const volTensorField& gradU);
 
 
 public:
 
-    //- Runtime type information
-    TypeName("LienCubicKELowRe");
+    TypeName("LienLeschziner");
 
     // Constructors
 
         //- Construct from components
-        LienCubicKELowRe
+        LienLeschziner
         (
             const geometricOneField& alpha,
             const geometricOneField& rho,
@@ -145,7 +138,7 @@ public:
 
 
     //- Destructor
-    virtual ~LienCubicKELowRe()
+    virtual ~LienLeschziner()
     {}
 
 
@@ -192,7 +185,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace RASModels
-} // Edn namespace incompressible
+} // End namespace incompressible
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

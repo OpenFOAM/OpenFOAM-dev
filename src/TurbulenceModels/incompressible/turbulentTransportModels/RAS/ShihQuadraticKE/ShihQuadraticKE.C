@@ -56,20 +56,20 @@ void ShihQuadraticKE::correctNonlinearStress(const volTensorField& gradU)
     volSymmTensorField S(symm(gradU));
     volTensorField W(skew(gradU));
 
-    volScalarField sBar((k_/epsilon_)*sqrt(2.0)*mag(symm(gradU)));
-    volScalarField wBar((k_/epsilon_)*sqrt(2.0)*mag(skew(gradU)));
+    volScalarField sBar((k_/epsilon_)*sqrt(2.0)*mag(S));
+    volScalarField wBar((k_/epsilon_)*sqrt(2.0)*mag(W));
 
-    volScalarField Cmu(2.0/(3.0*(Cmu1_ + sBar + Cmu2_*wBar)));
+    volScalarField Cmu((2.0/3.0)/(Cmu1_ + sBar + Cmu2_*wBar));
 
     nut_ = Cmu*sqr(k_)/epsilon_;
     nut_.correctBoundaryConditions();
 
     nonlinearStress_ =
-        pow3(k_)/((A1_ + pow3(sBar))*sqr(epsilon_))
+        k_*sqr(k_/epsilon_)/(Cbeta_ + pow3(sBar))
        *(
-           beta1_*dev(innerSqr(S))
-         + beta2_*twoSymm(S&W)
-         + beta3_*dev(symm(W&W))
+           Cbeta1_*dev(innerSqr(S))
+         + Cbeta2_*twoSymm(S&W)
+         + Cbeta3_*dev(symm(W&W))
         );
 }
 
@@ -100,20 +100,20 @@ ShihQuadraticKE::ShihQuadraticKE
         propertiesName
     ),
 
-    C1_
+    Ceps1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C1",
+            "Ceps1",
             coeffDict_,
             1.44
         )
     ),
-    C2_
+    Ceps2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C2",
+            "Ceps2",
             coeffDict_,
             1.92
         )
@@ -140,7 +140,7 @@ ShihQuadraticKE::ShihQuadraticKE
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "A1",
+            "Cmu1",
             coeffDict_,
             1.25
         )
@@ -149,43 +149,43 @@ ShihQuadraticKE::ShihQuadraticKE
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "alphaKsi",
+            "Cmu2",
             coeffDict_,
             0.9
         )
     ),
-    A1_
+    Cbeta_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "A2",
+            "Cbeta",
             coeffDict_,
             1000.0
         )
     ),
-    beta1_
+    Cbeta1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "beta1",
+            "Cbeta1",
             coeffDict_,
             3.0
         )
     ),
-    beta2_
+    Cbeta2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "beta2",
+            "Cbeta2",
             coeffDict_,
             15.0
         )
     ),
-    beta3_
+    Cbeta3_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "beta3",
+            "Cbeta3",
             coeffDict_,
             -19.0
         )
@@ -234,16 +234,16 @@ bool ShihQuadraticKE::read()
 {
     if (nonlinearEddyViscosity<incompressible::RASModel>::read())
     {
-        C1_.readIfPresent(coeffDict());
-        C2_.readIfPresent(coeffDict());
+        Ceps1_.readIfPresent(coeffDict());
+        Ceps2_.readIfPresent(coeffDict());
         sigmak_.readIfPresent(coeffDict());
         sigmaEps_.readIfPresent(coeffDict());
         Cmu1_.readIfPresent(coeffDict());
         Cmu2_.readIfPresent(coeffDict());
-        A1_.readIfPresent(coeffDict());
-        beta1_.readIfPresent(coeffDict());
-        beta2_.readIfPresent(coeffDict());
-        beta3_.readIfPresent(coeffDict());
+        Cbeta_.readIfPresent(coeffDict());
+        Cbeta1_.readIfPresent(coeffDict());
+        Cbeta2_.readIfPresent(coeffDict());
+        Cbeta3_.readIfPresent(coeffDict());
 
         return true;
     }
@@ -256,12 +256,12 @@ bool ShihQuadraticKE::read()
 
 void ShihQuadraticKE::correct()
 {
-    nonlinearEddyViscosity<incompressible::RASModel>::correct();
-
     if (!turbulence_)
     {
         return;
     }
+
+    nonlinearEddyViscosity<incompressible::RASModel>::correct();
 
     tmp<volTensorField> tgradU = fvc::grad(U_);
     const volTensorField& gradU = tgradU();
@@ -283,8 +283,8 @@ void ShihQuadraticKE::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(DepsilonEff(), epsilon_)
       ==
-        C1_*G*epsilon_/k_
-      - fvm::Sp(C2_*epsilon_/k_, epsilon_)
+        Ceps1_*G*epsilon_/k_
+      - fvm::Sp(Ceps2_*epsilon_/k_, epsilon_)
     );
 
     epsEqn().relax();

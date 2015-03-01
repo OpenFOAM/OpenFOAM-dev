@@ -183,12 +183,12 @@ bool LamBremhorstKE::read()
 
 void LamBremhorstKE::correct()
 {
-    eddyViscosity<incompressible::RASModel>::correct();
-
     if (!turbulence_)
     {
         return;
     }
+
+    eddyViscosity<incompressible::RASModel>::correct();
 
     volScalarField G(GName(), nut_*2*magSqr(symm(fvc::grad(U_))));
 
@@ -205,7 +205,6 @@ void LamBremhorstKE::correct()
 
 
     // Dissipation equation
-
     tmp<fvScalarMatrix> epsEqn
     (
         fvm::ddt(epsilon_)
@@ -222,7 +221,6 @@ void LamBremhorstKE::correct()
 
 
     // Turbulent kinetic energy equation
-
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(k_)
