@@ -31,18 +31,13 @@ License
 #include "wallFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-scalar epsilonWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
+Foam::scalar Foam::epsilonWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void epsilonWallFunctionFvPatchScalarField::checkType()
+void Foam::epsilonWallFunctionFvPatchScalarField::checkType()
 {
     if (!isA<wallFvPatch>(patch()))
     {
@@ -56,7 +51,10 @@ void epsilonWallFunctionFvPatchScalarField::checkType()
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
+void Foam::epsilonWallFunctionFvPatchScalarField::writeLocalEntries
+(
+    Ostream& os
+) const
 {
     os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
     os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
@@ -64,7 +62,7 @@ void epsilonWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::setMaster()
+void Foam::epsilonWallFunctionFvPatchScalarField::setMaster()
 {
     if (master_ != -1)
     {
@@ -94,7 +92,7 @@ void epsilonWallFunctionFvPatchScalarField::setMaster()
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::createAveragingWeights()
+void Foam::epsilonWallFunctionFvPatchScalarField::createAveragingWeights()
 {
     const volScalarField& epsilon =
         static_cast<const volScalarField&>(this->dimensionedInternalField());
@@ -153,8 +151,8 @@ void epsilonWallFunctionFvPatchScalarField::createAveragingWeights()
 }
 
 
-epsilonWallFunctionFvPatchScalarField&
-epsilonWallFunctionFvPatchScalarField::epsilonPatch(const label patchi)
+Foam::epsilonWallFunctionFvPatchScalarField&
+Foam::epsilonWallFunctionFvPatchScalarField::epsilonPatch(const label patchi)
 {
     const volScalarField& epsilon =
         static_cast<const volScalarField&>(this->dimensionedInternalField());
@@ -168,7 +166,7 @@ epsilonWallFunctionFvPatchScalarField::epsilonPatch(const label patchi)
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::calculateTurbulenceFields
+void Foam::epsilonWallFunctionFvPatchScalarField::calculateTurbulenceFields
 (
     const turbulenceModel& turbulence,
     scalarField& G0,
@@ -201,7 +199,7 @@ void epsilonWallFunctionFvPatchScalarField::calculateTurbulenceFields
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::calculate
+void Foam::epsilonWallFunctionFvPatchScalarField::calculate
 (
     const turbulenceModel& turbulence,
     const List<scalar>& cornerWeights,
@@ -251,7 +249,8 @@ void epsilonWallFunctionFvPatchScalarField::calculate
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
+Foam::epsilonWallFunctionFvPatchScalarField::
+epsilonWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -271,7 +270,8 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 }
 
 
-epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
+Foam::epsilonWallFunctionFvPatchScalarField::
+epsilonWallFunctionFvPatchScalarField
 (
     const epsilonWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
@@ -293,7 +293,8 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 }
 
 
-epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
+Foam::epsilonWallFunctionFvPatchScalarField::
+epsilonWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -317,7 +318,8 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 }
 
 
-epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
+Foam::epsilonWallFunctionFvPatchScalarField::
+epsilonWallFunctionFvPatchScalarField
 (
     const epsilonWallFunctionFvPatchScalarField& ewfpsf
 )
@@ -336,7 +338,8 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 }
 
 
-epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
+Foam::epsilonWallFunctionFvPatchScalarField::
+epsilonWallFunctionFvPatchScalarField
 (
     const epsilonWallFunctionFvPatchScalarField& ewfpsf,
     const DimensionedField<scalar, volMesh>& iF
@@ -358,7 +361,7 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-scalarField& epsilonWallFunctionFvPatchScalarField::G(bool init)
+Foam::scalarField& Foam::epsilonWallFunctionFvPatchScalarField::G(bool init)
 {
     if (patch().index() == master_)
     {
@@ -374,7 +377,10 @@ scalarField& epsilonWallFunctionFvPatchScalarField::G(bool init)
 }
 
 
-scalarField& epsilonWallFunctionFvPatchScalarField::epsilon(bool init)
+Foam::scalarField& Foam::epsilonWallFunctionFvPatchScalarField::epsilon
+(
+    bool init
+)
 {
     if (patch().index() == master_)
     {
@@ -390,7 +396,7 @@ scalarField& epsilonWallFunctionFvPatchScalarField::epsilon(bool init)
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
+void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
 {
     if (updated())
     {
@@ -439,7 +445,7 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::updateCoeffs
+void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs
 (
     const scalarField& weights
 )
@@ -500,7 +506,7 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::manipulateMatrix
+void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
 (
     fvMatrix<scalar>& matrix
 )
@@ -516,7 +522,7 @@ void epsilonWallFunctionFvPatchScalarField::manipulateMatrix
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::manipulateMatrix
+void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
 (
     fvMatrix<scalar>& matrix,
     const Field<scalar>& weights
@@ -569,7 +575,7 @@ void epsilonWallFunctionFvPatchScalarField::manipulateMatrix
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::write(Ostream& os) const
+void Foam::epsilonWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     writeLocalEntries(os);
     fixedValueFvPatchField<scalar>::write(os);
@@ -578,14 +584,14 @@ void epsilonWallFunctionFvPatchScalarField::write(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makePatchTypeField
-(
-    fvPatchScalarField,
-    epsilonWallFunctionFvPatchScalarField
-);
+namespace Foam
+{
+    makePatchTypeField
+    (
+        fvPatchScalarField,
+        epsilonWallFunctionFvPatchScalarField
+    );
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

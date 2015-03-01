@@ -29,14 +29,9 @@ License
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-scalar epsilonLowReWallFunctionFvPatchScalarField::yPlusLam
+Foam::scalar Foam::epsilonLowReWallFunctionFvPatchScalarField::yPlusLam
 (
     const scalar kappa,
     const scalar E
@@ -53,34 +48,42 @@ scalar epsilonLowReWallFunctionFvPatchScalarField::yPlusLam
 }
 
 
-void epsilonLowReWallFunctionFvPatchScalarField::calculate
+void Foam::epsilonLowReWallFunctionFvPatchScalarField::calculate
 (
-    const turbulenceModel& turbulence,
+    const turbulenceModel& turbModel,
     const List<scalar>& cornerWeights,
     const fvPatch& patch,
-    scalarField& G,
-    scalarField& epsilon
+    scalarField& G0,
+    scalarField& epsilon0
 )
 {
     const label patchi = patch.index();
 
-    const scalarField& y = turbulence.y()[patchi];
+    const scalarField& y = turbModel.y()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
     const scalar Cmu75 = pow(Cmu_, 0.75);
 
-    const tmp<volScalarField> tk = turbulence.k();
+    const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
 
-    const tmp<scalarField> tnuw = turbulence.nu(patchi);
+    const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    const tmp<scalarField> tnutw = turbulence.nut(patchi);
+    const tmp<scalarField> tnutw = turbModel.nut(patchi);
     const scalarField& nutw = tnutw();
 
-    const fvPatchVectorField& Uw = turbulence.U().boundaryField()[patchi];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
 
     const scalarField magGradUw(mag(Uw.snGrad()));
+
+    typedef DimensionedField<scalar, volMesh> FieldType;
+
+    const DimensionedField<scalar, volMesh>& G =
+        db().lookupObject<DimensionedField<scalar, volMesh> >
+        (
+            turbModel.GName()
+        );
 
     // Set epsilon and G
     forAll(nutw, facei)
@@ -93,27 +96,27 @@ void epsilonLowReWallFunctionFvPatchScalarField::calculate
 
         if (yPlus > yPlusLam_)
         {
-            epsilon[celli] = w*Cmu75*pow(k[celli], 1.5)/(kappa_*y[facei]);
+            epsilon0[celli] += w*Cmu75*pow(k[celli], 1.5)/(kappa_*y[facei]);
+
+            G0[celli] +=
+                w
+               *(nutw[facei] + nuw[facei])
+               *magGradUw[facei]
+               *Cmu25*sqrt(k[celli])
+               /(kappa_*y[facei]);
         }
         else
         {
-            epsilon[celli] = w*2.0*k[celli]*nuw[facei]/sqr(y[facei]);
+            epsilon0[celli] += w*2.0*k[celli]*nuw[facei]/sqr(y[facei]);
+            G0[celli] += G[celli];
         }
-
-        // It is not clear that G should be adjusted for low-Re BCs
-        G[celli] +=
-            w
-           *(nutw[facei] + nuw[facei])
-           *magGradUw[facei]
-           *Cmu25*sqrt(k[celli])
-           /(kappa_*y[facei]);
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-epsilonLowReWallFunctionFvPatchScalarField::
+Foam::epsilonLowReWallFunctionFvPatchScalarField::
 epsilonLowReWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
@@ -125,7 +128,7 @@ epsilonLowReWallFunctionFvPatchScalarField
 {}
 
 
-epsilonLowReWallFunctionFvPatchScalarField::
+Foam::epsilonLowReWallFunctionFvPatchScalarField::
 epsilonLowReWallFunctionFvPatchScalarField
 (
     const epsilonLowReWallFunctionFvPatchScalarField& ptf,
@@ -139,7 +142,7 @@ epsilonLowReWallFunctionFvPatchScalarField
 {}
 
 
-epsilonLowReWallFunctionFvPatchScalarField::
+Foam::epsilonLowReWallFunctionFvPatchScalarField::
 epsilonLowReWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
@@ -152,7 +155,7 @@ epsilonLowReWallFunctionFvPatchScalarField
 {}
 
 
-epsilonLowReWallFunctionFvPatchScalarField::
+Foam::epsilonLowReWallFunctionFvPatchScalarField::
 epsilonLowReWallFunctionFvPatchScalarField
 (
     const epsilonLowReWallFunctionFvPatchScalarField& ewfpsf
@@ -163,7 +166,7 @@ epsilonLowReWallFunctionFvPatchScalarField
 {}
 
 
-epsilonLowReWallFunctionFvPatchScalarField::
+Foam::epsilonLowReWallFunctionFvPatchScalarField::
 epsilonLowReWallFunctionFvPatchScalarField
 (
     const epsilonLowReWallFunctionFvPatchScalarField& ewfpsf,
@@ -177,14 +180,14 @@ epsilonLowReWallFunctionFvPatchScalarField
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makePatchTypeField
-(
-    fvPatchScalarField,
-    epsilonLowReWallFunctionFvPatchScalarField
-);
+namespace Foam
+{
+    makePatchTypeField
+    (
+        fvPatchScalarField,
+        epsilonLowReWallFunctionFvPatchScalarField
+    );
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //
