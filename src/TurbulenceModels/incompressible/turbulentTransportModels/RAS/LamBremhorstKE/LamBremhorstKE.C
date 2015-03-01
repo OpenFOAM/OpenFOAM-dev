@@ -42,12 +42,45 @@ namespace RASModels
 defineTypeNameAndDebug(LamBremhorstKE, 0);
 addToRunTimeSelectionTable(RASModel, LamBremhorstKE, dictionary);
 
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+tmp<volScalarField> LamBremhorstKE::Rt() const
+{
+    return sqr(k_)/(nu()*epsilon_);
+}
+
+
+tmp<volScalarField> LamBremhorstKE::fMu(const volScalarField& Rt) const
+{
+    tmp<volScalarField> Ry(sqrt(k_)*y_/nu());
+    return sqr(scalar(1) - exp(-0.0165*Ry))*(scalar(1) + 20.5/(Rt + SMALL));
+}
+
+
+tmp<volScalarField> LamBremhorstKE::f1(const volScalarField& fMu) const
+{
+    return scalar(1) + pow3(0.05/(fMu + SMALL));
+}
+
+
+tmp<volScalarField> LamBremhorstKE::f2(const volScalarField& Rt) const
+{
+    return scalar(1) - exp(-sqr(Rt));
+}
+
+
+void LamBremhorstKE::correctNut(const volScalarField& fMu)
+{
+    nut_ = Cmu_*fMu*sqr(k_)/epsilon_;
+    nut_.correctBoundaryConditions();
+}
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void LamBremhorstKE::correctNut()
 {
-    nut_ = Cmu_*fMu_*sqr(k_)/epsilon_;
-    nut_.correctBoundaryConditions();
+    correctNut(fMu(Rt()));
 }
 
 
@@ -86,20 +119,20 @@ LamBremhorstKE::LamBremhorstKE
             0.09
         )
     ),
-    C1_
+    Ceps1_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C1",
+            "Ceps1",
             coeffDict_,
             1.44
         )
     ),
-    C2_
+    Ceps2_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C2",
+            "Ceps2",
             coeffDict_,
             1.92
         )
@@ -140,18 +173,10 @@ LamBremhorstKE::LamBremhorstKE
         mesh_
     ),
 
-    y_(wallDist::New(mesh_).y()),
-
-    Rt_(sqr(k_)/(nu()*bound(epsilon_, epsilonMin_))),
-
-    fMu_
-    (
-        sqr(scalar(1) - exp(-0.0165*(sqrt(k_)*y_/nu())))
-       *(scalar(1) + 20.5/(Rt_ + SMALL))
-    )
+    y_(wallDist::New(mesh_).y())
 {
     bound(k_, kMin_);
-    // already bounded: bound(epsilon_, epsilonMin_);
+    bound(epsilon_, epsilonMin_);
 
     if (type == typeName)
     {
@@ -168,8 +193,8 @@ bool LamBremhorstKE::read()
     if (eddyViscosity<incompressible::RASModel>::read())
     {
         Cmu_.readIfPresent(coeffDict());
-        C1_.readIfPresent(coeffDict());
-        C2_.readIfPresent(coeffDict());
+        Ceps1_.readIfPresent(coeffDict());
+        Ceps2_.readIfPresent(coeffDict());
         sigmaEps_.readIfPresent(coeffDict());
 
         return true;
@@ -190,19 +215,15 @@ void LamBremhorstKE::correct()
 
     eddyViscosity<incompressible::RASModel>::correct();
 
-    volScalarField G(GName(), nut_*2*magSqr(symm(fvc::grad(U_))));
+    tmp<volTensorField> tgradU = fvc::grad(U_);
+    volScalarField G(GName(), nut_*(twoSymm(tgradU()) && tgradU()));
+    tgradU.clear();
 
+    // Update epsilon and G at the wall
+    epsilon_.boundaryField().updateCoeffs();
 
-    // Calculate parameters and coefficients for low-Reynolds number model
-
-    Rt_ = sqr(k_)/(nu()*epsilon_);
-    tmp<volScalarField> Ry = sqrt(k_)*y_/nu();
-
-    fMu_ = sqr(scalar(1) - exp(-0.0165*Ry))*(scalar(1) + 20.5/(Rt_ + SMALL));
-
-    tmp<volScalarField> f1 = scalar(1) + pow(0.05/(fMu_ + SMALL), 3);
-    tmp<volScalarField> f2 = scalar(1) - exp(-sqr(Rt_));
-
+    const volScalarField Rt(this->Rt());
+    const volScalarField fMu(this->fMu(Rt));
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -211,14 +232,14 @@ void LamBremhorstKE::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(DepsilonEff(), epsilon_)
      ==
-        C1_*f1*G*epsilon_/k_
-      - fvm::Sp(C2_*f2*epsilon_/k_, epsilon_)
+        Ceps1_*f1(fMu)*G*epsilon_/k_
+      - fvm::Sp(Ceps2_*f2(Rt)*epsilon_/k_, epsilon_)
     );
 
     epsEqn().relax();
+    epsEqn().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
-
 
     // Turbulent kinetic energy equation
     tmp<fvScalarMatrix> kEqn
@@ -234,7 +255,7 @@ void LamBremhorstKE::correct()
     solve(kEqn);
     bound(k_, kMin_);
 
-    correctNut();
+    correctNut(fMu);
 }
 
 
