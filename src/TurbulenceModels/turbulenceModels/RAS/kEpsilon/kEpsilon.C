@@ -236,7 +236,7 @@ void kEpsilon<BasicTurbulenceModel>::correct()
     volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
 
     tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField G(this->GName(), nut*(tgradU() && dev(twoSymm(tgradU()))));
+    volScalarField G(this->GName(), nut*(dev(twoSymm(tgradU())) && tgradU()));
     tgradU.clear();
 
     // Update epsilon and G at the wall
@@ -259,7 +259,6 @@ void kEpsilon<BasicTurbulenceModel>::correct()
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
     bound(epsilon_, this->epsilonMin_);
-
 
     // Turbulent kinetic energy equation
     tmp<fvScalarMatrix> kEqn
