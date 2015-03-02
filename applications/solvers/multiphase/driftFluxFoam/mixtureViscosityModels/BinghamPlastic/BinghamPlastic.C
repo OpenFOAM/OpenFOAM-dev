@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ Foam::mixtureViscosityModels::BinghamPlastic::mu
     (
         tauy
        /(
-            mag(fvc::grad(U_))
+            sqrt(2.0)*mag(symm(fvc::grad(U_)))
           + 1.0e-4*(tauy + tauySmall)/mup
         )
       + mup,

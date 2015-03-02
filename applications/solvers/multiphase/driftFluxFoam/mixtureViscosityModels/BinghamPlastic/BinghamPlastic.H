@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,8 @@ Class
 
 Description
      Viscosity correction model for Bingham plastics.
+
+    The strain-rate used is defined as sqrt(2.0)*mag(symm(grad(U)))
 
 SourceFiles
     BinghamPlastic.C

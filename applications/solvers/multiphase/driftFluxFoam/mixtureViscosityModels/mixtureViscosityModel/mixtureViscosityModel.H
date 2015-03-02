@@ -33,11 +33,6 @@ Class
 Description
     An abstract base class for incompressible mixtureViscosityModels.
 
-    The strain rate is defined by:
-
-        mag(symm(grad(U)))
-
-
 SourceFiles
     mixtureViscosityModel.C
     mixtureViscosityModelNew.C

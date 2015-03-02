@@ -26,7 +26,7 @@ sludge
         coeff       0.00023143;
         exponent    179.26;
 
-        BinghamCoeff    0.00042189;
+        BinghamCoeff    0.0005966;
         BinghamExponent 1050.8;
         BinghamOffset   0;
 
