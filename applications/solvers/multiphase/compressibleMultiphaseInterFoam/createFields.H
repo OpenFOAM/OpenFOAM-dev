@@ -46,8 +46,6 @@
         mixture.rho()
     );
 
-    Info<< max(rho) << min(rho);
-
     dimensionedScalar pMin(mixture.lookup("pMin"));
 
 
