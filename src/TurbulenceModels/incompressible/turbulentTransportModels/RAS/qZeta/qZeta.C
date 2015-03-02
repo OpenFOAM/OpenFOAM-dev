@@ -49,7 +49,7 @@ tmp<volScalarField> qZeta::fMu() const
 
     if (anisotropic_)
     {
-        return exp((-scalar(2.5) + Rt/20.0)/pow(scalar(1) + Rt/130.0, 3.0));
+        return exp((-scalar(2.5) + Rt/20.0)/pow3(scalar(1) + Rt/130.0));
     }
     else
     {
