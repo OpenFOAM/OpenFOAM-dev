@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,13 +38,12 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(meshCutter, 0);
+    defineTypeNameAndDebug(meshCutter, 0);
 }
 
 
 // * * * * * * * * * * * * * Private Static Functions  * * * * * * * * * * * //
 
-// Returns true if lst1 and lst2 share elements
 bool Foam::meshCutter::uses(const labelList& elems1, const labelList& elems2)
 {
     forAll(elems1, elemI)
@@ -58,7 +57,6 @@ bool Foam::meshCutter::uses(const labelList& elems1, const labelList& elems2)
 }
 
 
-// Check if twoCuts at two consecutive position in cuts.
 bool Foam::meshCutter::isIn
 (
     const edge& twoCuts,
@@ -82,7 +80,6 @@ bool Foam::meshCutter::isIn
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Returns the cell in cellLabels that is cut. Or -1.
 Foam::label Foam::meshCutter::findCutCell
 (
     const cellCuts& cuts,
@@ -102,10 +99,6 @@ Foam::label Foam::meshCutter::findCutCell
 }
 
 
-//- Returns first pointI in pointLabels that uses an internal
-//  face. Used to find point to inflate cell/face from (has to be
-//  connected to internal face). Returns -1 (so inflate from nothing) if
-//  none found.
 Foam::label Foam::meshCutter::findInternalFacePoint
 (
     const labelList& pointLabels
@@ -138,8 +131,6 @@ Foam::label Foam::meshCutter::findInternalFacePoint
 }
 
 
-// Get new owner and neighbour of face. Checks anchor points to see if
-// need to get original or added cell.
 void Foam::meshCutter::faceCells
 (
     const cellCuts& cuts,
@@ -202,7 +193,6 @@ void Foam::meshCutter::getFaceInfo
 }
 
 
-// Adds a face on top of existing faceI.
 void Foam::meshCutter::addFace
 (
     polyTopoChange& meshMod,
@@ -281,7 +271,6 @@ void Foam::meshCutter::addFace
 }
 
 
-// Modifies existing faceI for either new owner/neighbour or new face points.
 void Foam::meshCutter::modFace
 (
     polyTopoChange& meshMod,
@@ -357,7 +346,6 @@ void Foam::meshCutter::modFace
 }
 
 
-// Copies face starting from startFp up to and including endFp.
 void Foam::meshCutter::copyFace
 (
     const face& f,
@@ -380,10 +368,6 @@ void Foam::meshCutter::copyFace
 }
 
 
-// Actually split face in two along splitEdge v0, v1 (the two vertices in new
-// vertex numbering). Generates faces in same ordering
-// as original face. Replaces cutEdges by the points introduced on them
-// (addedPoints_).
 void Foam::meshCutter::splitFace
 (
     const face& f,
@@ -430,8 +414,6 @@ void Foam::meshCutter::splitFace
 }
 
 
-// Adds additional vertices (from edge cutting) to face. Used for faces which
-// are not split but still might use edge that has been cut.
 Foam::face Foam::meshCutter::addEdgeCutsToFace(const label faceI) const
 {
     const face& f = mesh().faces()[faceI];
@@ -464,9 +446,6 @@ Foam::face Foam::meshCutter::addEdgeCutsToFace(const label faceI) const
 }
 
 
-// Walk loop (loop of cuts) across circumference of cellI. Returns face in
-// new vertices.
-// Note: tricky bit is that it can use existing edges which have been split.
 Foam::face Foam::meshCutter::loopToFace
 (
     const label cellI,
@@ -529,7 +508,6 @@ Foam::face Foam::meshCutter::loopToFace
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::meshCutter::meshCutter(const polyMesh& mesh)
 :
     edgeVertex(mesh),
@@ -647,7 +625,7 @@ void Foam::meshCutter::setRefinement
                         -1,                 // master edge
                         -1,                 // master face
                         cellI,              // master cell
-                        -1                  // zone for cell
+                        mesh().cellZones().whichZone(cellI) // zone for cell
                     )
                 );
 
@@ -672,7 +650,6 @@ void Foam::meshCutter::setRefinement
 
         if (loop.size())
         {
-            //
             // Convert loop (=list of cuts) into proper face.
             // Orientation should already be ok. (done by cellCuts)
             //

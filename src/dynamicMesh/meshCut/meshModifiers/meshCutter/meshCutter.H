@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -263,10 +263,12 @@ class meshCutter
         //- Disallow default bitwise assignment
         void operator=(const meshCutter&);
 
+
 public:
 
     //- Runtime type information
     ClassName("meshCutter");
+
 
     // Constructors
 
@@ -288,6 +290,7 @@ public:
 
             //- Force recalculation of locally stored data on topological change
             void updateMesh(const mapPolyMesh&);
+
 
         // Access
 
