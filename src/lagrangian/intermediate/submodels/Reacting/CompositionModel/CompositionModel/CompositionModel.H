@@ -63,6 +63,7 @@ class CompositionModel
     public CloudSubModelBase<CloudType>
 {
     // Private data
+
         //- Reference to the thermo database
         const SLGThermo& thermo_;
 

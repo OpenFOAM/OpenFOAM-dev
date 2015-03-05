@@ -51,31 +51,38 @@ const Foam::NamedEnum<Foam::phaseProperties::phaseType, 4>
 
 void Foam::phaseProperties::reorder(const wordList& specieNames)
 {
-    if (names_.size() != specieNames.size())
+    // ***HGW Unfortunately in the current implementation it is assumed that
+    // if no species are specified the phase is not present and this MUST
+    // be checked at the point of use.  This needs a rewrite.
+    if (!names_.size())
     {
-        FatalErrorIn
-        (
-            "void phaseProperties::reorder(const wordList& specieNames)"
-        )   << "Number of specie specifications "
-            << names_.size() << nl
-            << "    is not equal to the number of species "
-            << specieNames.size()
-            << exit(FatalError);
+        return;
     }
 
+    // Store the current sames and mass-fractions
     List<word> names0(names_);
     scalarField Y0(Y_);
 
+    // Update the specie names to those given
     names_ = specieNames;
 
-    forAll(names_, i)
+    // Re-size mass-fractions if necessary, initialize to 0
+    if (names_.size() != names0.size())
+    {
+        Y_.setSize(names_.size());
+        Y_ = 0;
+    }
+
+    // Set the mass-fraction for each specie in the list to the corresponding
+    // value in the original list
+    forAll(names0, i)
     {
         bool found = false;
-        forAll(names0, j)
+        forAll(names_, j)
         {
-            if (names0[j] == names_[i])
+            if (names_[j] == names0[i])
             {
-                Y_[i] = Y0[j];
+                Y_[j] = Y0[i];
                 found = true;
                 break;
             }
@@ -86,8 +93,9 @@ void Foam::phaseProperties::reorder(const wordList& specieNames)
             FatalErrorIn
             (
                 "void phaseProperties::reorder(const wordList&)"
-            )   << "Could not find specie " << names_[i]
-                << " in species properties " <<  names0
+            )   << "Could not find specie " << names0[i]
+                << " in list " <<  names_
+                << " for phase " << phaseTypeNames[phase_]
                 << exit(FatalError);
         }
     }
