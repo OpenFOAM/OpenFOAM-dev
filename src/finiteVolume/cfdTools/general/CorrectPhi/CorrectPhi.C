@@ -32,6 +32,7 @@ License
 #include "fvcDiv.H"
 #include "fixedValueFvPatchFields.H"
 #include "adjustPhi.H"
+#include "fvcMeshPhi.H"
 #include "pimpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -81,7 +82,12 @@ void Foam::CorrectPhi
         pcorrTypes
     );
 
-    adjustPhi(phi, U, pcorr);
+    if (pcorr.needReference())
+    {
+        fvc::makeRelative(phi, U);
+        adjustPhi(phi, U, pcorr);
+        fvc::makeAbsolute(phi, U);
+    }
 
     while (pimple.correctNonOrthogonal())
     {

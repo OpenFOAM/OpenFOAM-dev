@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "adjustPhi.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "processorFvsPatchFields.H"
 #include "inletOutletFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
@@ -40,9 +39,6 @@ bool Foam::adjustPhi
 {
     if (p.needReference())
     {
-        // p coefficients should not be updated here
-        // p.boundaryField().updateCoeffs();
-
         scalar massIn = 0.0;
         scalar fixedMassOut = 0.0;
         scalar adjustableMassOut = 0.0;
@@ -54,7 +50,7 @@ bool Foam::adjustPhi
             const fvPatchVectorField& Up = U.boundaryField()[patchi];
             const fvsPatchScalarField& phip = bphi[patchi];
 
-            if (!isA<processorFvsPatchScalarField>(phip))
+            if (!phip.coupled())
             {
                 if (Up.fixesValue() && !isA<inletOutletFvPatchVectorField>(Up))
                 {
@@ -130,7 +126,7 @@ bool Foam::adjustPhi
             const fvPatchVectorField& Up = U.boundaryField()[patchi];
             fvsPatchScalarField& phip = bphi[patchi];
 
-            if (!isA<processorFvsPatchScalarField>(phip))
+            if (!phip.coupled())
             {
                 if
                 (
