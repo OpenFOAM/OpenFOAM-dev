@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(tetOverlapVolume, 0);
+    defineTypeNameAndDebug(tetOverlapVolume, 0);
 }
 
 
@@ -64,7 +64,7 @@ Foam::scalar Foam::tetOverlapVolume::tetTetOverlapVol
     tetPointRef::sumVolOp volInside;
     tetPointRef::dummyOp outside;
 
-    if ((tetA.tet().mag() < SMALL) || (tetB.tet().mag() < SMALL))
+    if ((tetA.tet().mag() < SMALL*SMALL) || (tetB.tet().mag() < SMALL*SMALL))
     {
         return 0.0;
     }
@@ -268,7 +268,6 @@ Foam::scalar Foam::tetOverlapVolume::cellCellOverlapVolumeMinDecomp
 (
     const primitiveMesh& meshA,
     const label cellAI,
-
     const primitiveMesh& meshB,
     const label cellBI,
     const treeBoundBox& cellBbB
