@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,14 +51,14 @@ Foam::patchInjectionBase::patchInjectionBase
     {
         FatalErrorIn
         (
-            "Foam::patchInjectionBase::patchInjectionBase"
+            "patchInjectionBase::patchInjectionBase"
             "("
-                "const polyMesh&, "
-                "const word&"
+                "const polyMesh& mesh, "
+                "const word& patchName"
             ")"
         )   << "Requested patch " << patchName_ << " not found" << nl
-            << "Available patches are: " << mesh.boundaryMesh().names()
-            << nl << exit(FatalError);
+            << "Available patches are: " << mesh.boundaryMesh().names() << nl
+            << exit(FatalError);
     }
 
     updateMesh(mesh);
@@ -95,13 +95,13 @@ void Foam::patchInjectionBase::updateMesh(const polyMesh& mesh)
 
     cellOwners_ = patch.faceCells();
 
-    // triangulate the patch faces and create addressing
+    // Triangulate the patch faces and create addressing
     DynamicList<label> triToFace(2*patch.size());
     DynamicList<scalar> triMagSf(2*patch.size());
     DynamicList<face> triFace(2*patch.size());
     DynamicList<face> tris(5);
 
-    // set zero value at the start of the tri area list
+    // Set zero value at the start of the tri area list
     triMagSf.append(0.0);
 
     forAll(patch, faceI)
@@ -134,12 +134,12 @@ void Foam::patchInjectionBase::updateMesh(const polyMesh& mesh)
         triMagSf[i] += triMagSf[i-1];
     }
 
-    // transfer to persistent storage
+    // Transfer to persistent storage
     triFace_.transfer(triFace);
     triToFace_.transfer(triToFace);
     triCumulativeMagSf_.transfer(triMagSf);
 
-    // convert sumTriMagSf_ into cumulative sum of areas per proc
+    // Convert sumTriMagSf_ into cumulative sum of areas per proc
     for (label i = 1; i < sumTriMagSf_.size(); i++)
     {
         sumTriMagSf_[i] += sumTriMagSf_[i-1];
@@ -162,15 +162,22 @@ void Foam::patchInjectionBase::setPositionAndCell
     label& tetPtI
 )
 {
+    scalar areaFraction = 0;
+
+    if (Pstream::master())
+    {
+        areaFraction = rnd.position<scalar>(0, patchArea_);
+    }
+
+    Pstream::scatter(areaFraction);
+
     if (cellOwners_.size() > 0)
     {
-        // determine which processor to inject from
-        scalar areaFraction = rnd.position<scalar>(0, patchArea_);
-
+        // Determine which processor to inject from
         label procI = 0;
         forAllReverse(sumTriMagSf_, i)
         {
-            if (areaFraction > sumTriMagSf_[i])
+            if (areaFraction >= sumTriMagSf_[i])
             {
                 procI = i;
                 break;
@@ -179,7 +186,7 @@ void Foam::patchInjectionBase::setPositionAndCell
 
         if (Pstream::myProcNo() == procI)
         {
-            // find corresponding decomposed face triangle
+            // Find corresponding decomposed face triangle
             label triI = 0;
             scalar offset = sumTriMagSf_[procI];
             forAllReverse(triCumulativeMagSf_, i)
@@ -191,18 +198,18 @@ void Foam::patchInjectionBase::setPositionAndCell
                 }
             }
 
-            // set cellOwner
+            // Set cellOwner
             label faceI = triToFace_[triI];
             cellOwner = cellOwners_[faceI];
 
-            // find random point in triangle
+            // Find random point in triangle
             const polyPatch& patch = mesh.boundaryMesh()[patchId_];
             const pointField& points = patch.points();
             const face& tf = triFace_[triI];
             const triPointRef tri(points[tf[0]], points[tf[1]], points[tf[2]]);
             const point pf(tri.randomPoint(rnd));
 
-            // position perturbed away from face (into domain)
+            // Position perturbed away from face (into domain)
             const scalar a = rnd.position(scalar(0.1), scalar(0.5));
             const vector& pc = mesh.cellCentres()[cellOwner];
             const vector d = mag(pf - pc)*patchNormal_[faceI];
@@ -223,7 +230,7 @@ void Foam::patchInjectionBase::setPositionAndCell
             tetFaceI = -1;
             tetPtI = -1;
 
-            // dummy position
+            // Dummy position
             position = pTraits<vector>::max;
         }
     }
@@ -233,7 +240,7 @@ void Foam::patchInjectionBase::setPositionAndCell
         tetFaceI = -1;
         tetPtI = -1;
 
-        // dummy position
+        // Dummy position
         position = pTraits<vector>::max;
     }
 }
