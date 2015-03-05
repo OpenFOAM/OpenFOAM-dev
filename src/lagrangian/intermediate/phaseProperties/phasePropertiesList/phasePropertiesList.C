@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::phasePropertiesList::phasePropertiesList
 {
     forAll(props_, i)
     {
-        props_[i].initialiseGlobalIds(gasNames, liquidNames, solidNames);
+        props_[i].reorder(gasNames, liquidNames, solidNames);
     }
 
     phaseTypeNames_.setSize(props_.size());

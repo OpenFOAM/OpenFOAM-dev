@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,43 +44,62 @@ namespace Foam
 }
 
 const Foam::NamedEnum<Foam::phaseProperties::phaseType, 4>
-    Foam::phaseProperties::phaseTypeNames_;
+    Foam::phaseProperties::phaseTypeNames;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::phaseProperties::setGlobalIds(const wordList& globalNames)
+void Foam::phaseProperties::reorder(const wordList& specieNames)
 {
+    if (names_.size() != specieNames.size())
+    {
+        FatalErrorIn
+        (
+            "void phaseProperties::reorder(const wordList& specieNames)"
+        )   << "Number of specie specifications "
+            << names_.size() << nl
+            << "    is not equal to the number of species "
+            << specieNames.size()
+            << exit(FatalError);
+    }
+
+    List<word> names0(names_);
+    scalarField Y0(Y_);
+
+    names_ = specieNames;
+
     forAll(names_, i)
     {
-        forAll(globalNames, j)
+        bool found = false;
+        forAll(names0, j)
         {
-            if (globalNames[j] == names_[i])
+            if (names0[j] == names_[i])
             {
-                globalIds_[i] = j;
+                Y_[i] = Y0[j];
+                found = true;
                 break;
             }
         }
-        if (globalIds_[i] == -1)
+
+        if (!found)
         {
             FatalErrorIn
             (
-                "void Foam::phaseProperties::setGlobalIds(const wordList&)"
+                "void phaseProperties::reorder(const wordList&)"
             )   << "Could not find specie " << names_[i]
-                << " in species list" <<  nl
-                << "Available species are: " << nl << globalNames << nl
+                << " in species properties " <<  names0
                 << exit(FatalError);
         }
     }
 }
 
 
-void Foam::phaseProperties::setGlobalCarrierIds
+void Foam::phaseProperties::setCarrierIds
 (
     const wordList& carrierNames
 )
 {
-    globalCarrierIds_ = -1;
+    carrierIds_ = -1;
 
     forAll(names_, i)
     {
@@ -88,18 +107,16 @@ void Foam::phaseProperties::setGlobalCarrierIds
         {
             if (carrierNames[j] == names_[i])
             {
-                globalCarrierIds_[i] = j;
+                carrierIds_[i] = j;
                 break;
             }
         }
-        if (globalCarrierIds_[i] == -1)
+        if (carrierIds_[i] == -1)
         {
             FatalErrorIn
             (
-                "void Foam::phaseProperties::setGlobalCarrierIds"
-                "("
-                    "const wordList&"
-                ")"
+                "void phaseProperties::setCarrierIds"
+                "(const wordList& carrierNames)"
             )   << "Could not find carrier specie " << names_[i]
                 << " in species list" <<  nl
                 << "Available species are: " << nl << carrierNames << nl
@@ -121,10 +138,11 @@ void Foam::phaseProperties::checkTotalMassFraction() const
     {
         FatalErrorIn
         (
-            "void Foam::phaseProperties::checkTotalMassFraction() const"
+            "void phaseProperties::checkTotalMassFraction() const"
         )   << "Component fractions must total to unity for phase "
-            << phaseTypeNames_[phase_] << nl
-            << "Components: " << nl << names_ << nl << exit(FatalError);
+            << phaseTypeNames[phase_] << nl
+            << "Components: " << nl << names_ << nl
+            << exit(FatalError);
     }
 }
 
@@ -153,8 +171,8 @@ Foam::word Foam::phaseProperties::phaseToStateLabel(const phaseType pt) const
         {
             FatalErrorIn
             (
-                "Foam::phaseProperties::phaseToStateLabel(phaseType pt)"
-            )   << "Invalid phase: " << phaseTypeNames_[pt] << nl
+                "phaseProperties::phaseToStateLabel(phaseType pt)"
+            )   << "Invalid phase: " << phaseTypeNames[pt] << nl
                 << "    phase must be gas, liquid or solid" << nl
                 << exit(FatalError);
         }
@@ -172,8 +190,7 @@ Foam::phaseProperties::phaseProperties()
     stateLabel_("(unknown)"),
     names_(0),
     Y_(0),
-    globalIds_(0),
-    globalCarrierIds_(0)
+    carrierIds_(0)
 {}
 
 
@@ -183,8 +200,7 @@ Foam::phaseProperties::phaseProperties(const phaseProperties& pp)
     stateLabel_(pp.stateLabel_),
     names_(pp.names_),
     Y_(pp.Y_),
-    globalIds_(pp.globalIds_),
-    globalCarrierIds_(pp.globalCarrierIds_)
+    carrierIds_(pp.carrierIds_)
 {}
 
 
@@ -196,54 +212,58 @@ Foam::phaseProperties::~phaseProperties()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::phaseProperties::initialiseGlobalIds
+void Foam::phaseProperties::reorder
 (
     const wordList& gasNames,
     const wordList& liquidNames,
     const wordList& solidNames
 )
 {
-    // determine the addressing to map between components listed in the phase
+    // Determine the addressing to map between components listed in the phase
     // with those given in the (main) thermo properties
     switch (phase_)
     {
         case GAS:
         {
-            setGlobalIds(gasNames);
-            forAll(globalCarrierIds_, i)
+            reorder(gasNames);
+            forAll(carrierIds_, i)
             {
-                globalCarrierIds_[i] = globalIds_[i];
+                carrierIds_[i] = i;
             }
             break;
         }
         case LIQUID:
         {
-            setGlobalIds(liquidNames);
-            setGlobalCarrierIds(gasNames);
+            reorder(liquidNames);
+            setCarrierIds(gasNames);
             break;
         }
         case SOLID:
         {
-            setGlobalIds(solidNames);
+            reorder(solidNames);
             WarningIn
             (
-                "phaseProperties::initialiseGlobalIds(...)"
+                "phaseProperties::reorder"
+                "("
+                    "const wordList& gasNames, "
+                    "const wordList& liquidNames, "
+                    "const wordList& solidNames"
+                ")"
             )   << "Assuming no mapping between solid and carrier species"
                 << endl;
-//            setGlobalCarrierIds(gasNames);
             break;
         }
         default:
         {
             FatalErrorIn
             (
-                "Foam::phaseProperties::setGlobalIds"
+                "phaseProperties::reorder"
                 "("
-                    "const PtrList<volScalarField>&, "
-                    "const wordList&, "
-                    "const wordList&"
+                    "const wordList& gasNames, "
+                    "const wordList& liquidNames, "
+                    "const wordList& solidNames"
                 ")"
-            )   << "Invalid phase: " << phaseTypeNames_[phase_] << nl
+            )   << "Invalid phase: " << phaseTypeNames[phase_] << nl
                 << "    phase must be gas, liquid or solid" << nl
                 << exit(FatalError);
         }
@@ -265,7 +285,7 @@ const Foam::word& Foam::phaseProperties::stateLabel() const
 
 Foam::word Foam::phaseProperties::phaseTypeName() const
 {
-    return phaseTypeNames_[phase_];
+    return phaseTypeNames[phase_];
 }
 
 
@@ -281,10 +301,7 @@ const Foam::word& Foam::phaseProperties::name(const label cmptI) const
     {
         FatalErrorIn
         (
-            "const Foam::word& Foam::phaseProperties::name"
-            "("
-                "const label"
-            ") const"
+            "const word& phaseProperties::name(const label) const"
         )   << "Requested component " << cmptI << "out of range" << nl
             << "Available phase components:" << nl << names_ << nl
             << exit(FatalError);
@@ -306,10 +323,7 @@ Foam::scalar& Foam::phaseProperties::Y(const label cmptI)
     {
         FatalErrorIn
         (
-            "const Foam::scalar& Foam::phaseProperties::Y"
-            "("
-                "const label"
-            ") const"
+            "const scalar& phaseProperties::Y(const label) const"
         )   << "Requested component " << cmptI << "out of range" << nl
             << "Available phase components:" << nl << names_ << nl
             << exit(FatalError);
@@ -319,31 +333,9 @@ Foam::scalar& Foam::phaseProperties::Y(const label cmptI)
 }
 
 
-Foam::label Foam::phaseProperties::globalId(const word& cmptName) const
+const Foam::labelList& Foam::phaseProperties::carrierIds() const
 {
-    label id = this->id(cmptName);
-
-    if (id < 0)
-    {
-        return id;
-    }
-    else
-    {
-        return globalIds_[id];
-    }
-
-}
-
-
-const Foam::labelList& Foam::phaseProperties::globalIds() const
-{
-    return globalIds_;
-}
-
-
-const Foam::labelList& Foam::phaseProperties::globalCarrierIds() const
-{
-    return globalCarrierIds_;
+    return carrierIds_;
 }
 
 
@@ -362,4 +354,3 @@ Foam::label Foam::phaseProperties::id(const word& cmptName) const
 
 
 // ************************************************************************* //
-

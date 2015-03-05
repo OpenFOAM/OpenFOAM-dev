@@ -129,13 +129,7 @@ public:
         PhaseChangeModel(const PhaseChangeModel<CloudType>& pcm);
 
         //- Construct and return a clone
-        virtual autoPtr<PhaseChangeModel<CloudType> > clone() const
-        {
-            return autoPtr<PhaseChangeModel<CloudType> >
-            (
-                new PhaseChangeModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<PhaseChangeModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -171,9 +165,9 @@ public:
             const scalar Ts,
             const scalar pc,
             const scalar Tc,
-            const scalarField& Yl,
+            const scalarField& X,
             scalarField& dMassPC
-        ) const;
+        ) const = 0;
 
         //- Return the enthalpy per unit mass
         virtual scalar dh
@@ -185,10 +179,10 @@ public:
         ) const;
 
         //- Return vapourisation temperature
-        virtual scalar Tvap(const scalarField& Y) const;
+        virtual scalar Tvap(const scalarField& X) const;
 
         //- Return maximum/limiting temperature
-        virtual scalar TMax(const scalar p, const scalarField& Y) const;
+        virtual scalar TMax(const scalar p, const scalarField& X) const;
 
         //- Add to phase change mass
         void addToPhaseChangeMass(const scalar dMass);

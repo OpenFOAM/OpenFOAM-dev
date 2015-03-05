@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------*\
+/*---------------------------------------------------------------------------* \
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -73,7 +73,8 @@ Foam::liquidMixtureProperties::liquidMixtureProperties
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::liquidMixtureProperties> Foam::liquidMixtureProperties::New
+Foam::autoPtr<Foam::liquidMixtureProperties>
+Foam::liquidMixtureProperties::New
 (
     const dictionary& thermophysicalProperties
 )
@@ -87,14 +88,14 @@ Foam::autoPtr<Foam::liquidMixtureProperties> Foam::liquidMixtureProperties::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::liquidMixtureProperties::Tc(const scalarField& x) const
+Foam::scalar Foam::liquidMixtureProperties::Tc(const scalarField& X) const
 {
     scalar vTc = 0.0;
     scalar vc = 0.0;
 
     forAll(properties_, i)
     {
-        scalar x1 = x[i]*properties_[i].Vc();
+        scalar x1 = X[i]*properties_[i].Vc();
         vc += x1;
         vTc += x1*properties_[i].Tc();
     }
@@ -103,12 +104,13 @@ Foam::scalar Foam::liquidMixtureProperties::Tc(const scalarField& x) const
 }
 
 
-Foam::scalar Foam::liquidMixtureProperties::Tpt(const scalarField& x) const
+Foam::scalar Foam::liquidMixtureProperties::Tpt(const scalarField& X) const
 {
     scalar Tpt = 0.0;
+
     forAll(properties_, i)
     {
-        Tpt += x[i]*properties_[i].Tt();
+        Tpt += X[i]*properties_[i].Tt();
     }
 
     return Tpt;
@@ -118,19 +120,19 @@ Foam::scalar Foam::liquidMixtureProperties::Tpt(const scalarField& x) const
 Foam::scalar Foam::liquidMixtureProperties::pvInvert
 (
     const scalar p,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
     // Set upper and lower bounds
-    scalar Thi = Tc(x);
-    scalar Tlo = Tpt(x);
+    scalar Thi = Tc(X);
+    scalar Tlo = Tpt(X);
 
     // Check for critical and solid phase conditions
-    if (p >= pv(p, Thi, x))
+    if (p >= pv(p, Thi, X))
     {
         return Thi;
     }
-    else if (p < pv(p, Tlo, x))
+    else if (p < pv(p, Tlo, X))
     {
         WarningIn
         (
@@ -140,7 +142,7 @@ Foam::scalar Foam::liquidMixtureProperties::pvInvert
             "    const scalarField&"
             ") const"
         )   << "Pressure below triple point pressure: "
-            << "p = " << p << " < Pt = " << pv(p, Tlo, x) <<  nl << endl;
+            << "p = " << p << " < Pt = " << pv(p, Tlo, X) <<  nl << endl;
         return -1;
     }
 
@@ -149,7 +151,7 @@ Foam::scalar Foam::liquidMixtureProperties::pvInvert
 
     while ((Thi - Tlo) > 1.0e-4)
     {
-        if ((pv(p, T, x) - p) <= 0.0)
+        if ((pv(p, T, X) - p) <= 0.0)
         {
             Tlo = T;
         }
@@ -165,38 +167,41 @@ Foam::scalar Foam::liquidMixtureProperties::pvInvert
 }
 
 
-Foam::scalar Foam::liquidMixtureProperties::Tpc(const scalarField& x) const
+Foam::scalar Foam::liquidMixtureProperties::Tpc(const scalarField& X) const
 {
     scalar Tpc = 0.0;
+
     forAll(properties_, i)
     {
-        Tpc += x[i]*properties_[i].Tc();
+        Tpc += X[i]*properties_[i].Tc();
     }
 
     return Tpc;
 }
 
 
-Foam::scalar Foam::liquidMixtureProperties::Ppc(const scalarField& x) const
+Foam::scalar Foam::liquidMixtureProperties::Ppc(const scalarField& X) const
 {
     scalar Vc = 0.0;
     scalar Zc = 0.0;
+
     forAll(properties_, i)
     {
-        Vc += x[i]*properties_[i].Vc();
-        Zc += x[i]*properties_[i].Zc();
+        Vc += X[i]*properties_[i].Vc();
+        Zc += X[i]*properties_[i].Zc();
     }
 
-    return RR*Zc*Tpc(x)/Vc;
+    return RR*Zc*Tpc(X)/Vc;
 }
 
 
-Foam::scalar Foam::liquidMixtureProperties::omega(const scalarField& x) const
+Foam::scalar Foam::liquidMixtureProperties::omega(const scalarField& X) const
 {
     scalar omega = 0.0;
+
     forAll(properties_, i)
     {
-        omega += x[i]*properties_[i].omega();
+        omega += X[i]*properties_[i].omega();
     }
 
     return omega;
@@ -208,28 +213,30 @@ Foam::scalarField Foam::liquidMixtureProperties::Xs
     const scalar p,
     const scalar Tg,
     const scalar Tl,
-    const scalarField& xg,
-    const scalarField& xl
+    const scalarField& Xg,
+    const scalarField& Xl
 ) const
 {
-    scalarField xs(xl.size(), 0.0);
+    scalarField Xs(Xl.size());
 
     // Raoult's Law
-    forAll(xs, i)
+    forAll(Xs, i)
     {
         scalar Ti = min(TrMax*properties_[i].Tc(), Tl);
-        xs[i] = properties_[i].pv(p, Ti)*xl[i]/p;
+        Xs[i] = properties_[i].pv(p, Ti)*Xl[i]/p;
     }
-    return xs;
+
+    return Xs;
 }
 
 
-Foam::scalar Foam::liquidMixtureProperties::W(const scalarField& x) const
+Foam::scalar Foam::liquidMixtureProperties::W(const scalarField& X) const
 {
     scalar W = 0.0;
+
     forAll(properties_, i)
     {
-        W += x[i]*properties_[i].W();
+        W += X[i]*properties_[i].W();
     }
 
     return W;
@@ -238,12 +245,16 @@ Foam::scalar Foam::liquidMixtureProperties::W(const scalarField& x) const
 
 Foam::scalarField Foam::liquidMixtureProperties::Y(const scalarField& X) const
 {
-    scalarField Y(X/W(X));
+    scalarField Y(X.size());
+    scalar sumY = 0.0;
 
     forAll(Y, i)
     {
-        Y[i] *= properties_[i].W();
+        Y[i] = X[i]*properties_[i].W();
+        sumY += Y[i];
     }
+
+    Y /= sumY;
 
     return Y;
 }
@@ -252,15 +263,17 @@ Foam::scalarField Foam::liquidMixtureProperties::Y(const scalarField& X) const
 Foam::scalarField Foam::liquidMixtureProperties::X(const scalarField& Y) const
 {
     scalarField X(Y.size());
-    scalar Winv = 0.0;
+    scalar sumX = 0.0;
+
     forAll(X, i)
     {
-        Winv += Y[i]/properties_[i].W();
         X[i] = Y[i]/properties_[i].W();
+        sumX += X[i];
     }
 
-    tmp<scalarField> tfld = X/Winv;
-    return tfld();
+    X /= sumX;
+
+    return X;
 }
 
 
@@ -268,22 +281,29 @@ Foam::scalar Foam::liquidMixtureProperties::rho
 (
     const scalar p,
     const scalar T,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
+    scalar sumY = 0.0;
     scalar v = 0.0;
 
     forAll(properties_, i)
     {
-        if (x[i] > SMALL)
+        if (X[i] > SMALL)
         {
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
-            scalar rho = SMALL + properties_[i].rho(p, Ti);
-            v += x[i]*properties_[i].W()/rho;
+            scalar rho = properties_[i].rho(p, Ti);
+
+            if (rho > SMALL)
+            {
+                scalar Yi = X[i]*properties_[i].W();
+                sumY += Yi;
+                v += Yi/rho;
+            }
         }
     }
 
-    return W(x)/v;
+    return sumY/v;
 }
 
 
@@ -291,21 +311,25 @@ Foam::scalar Foam::liquidMixtureProperties::pv
 (
     const scalar p,
     const scalar T,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
+    scalar sumY = 0.0;
     scalar pv = 0.0;
 
     forAll(properties_, i)
     {
-        if (x[i] > SMALL)
+        if (X[i] > SMALL)
         {
+            scalar Yi = X[i]*properties_[i].W();
+            sumY += Yi;
+
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
-            pv += x[i]*properties_[i].pv(p, Ti)*properties_[i].W();
+            pv += Yi*properties_[i].pv(p, Ti);
         }
     }
 
-    return pv/W(x);
+    return pv/sumY;
 }
 
 
@@ -313,21 +337,25 @@ Foam::scalar Foam::liquidMixtureProperties::hl
 (
     const scalar p,
     const scalar T,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
+    scalar sumY = 0.0;
     scalar hl = 0.0;
 
     forAll(properties_, i)
     {
-        if (x[i] > SMALL)
+        if (X[i] > SMALL)
         {
+            scalar Yi = X[i]*properties_[i].W();
+            sumY += Yi;
+
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
-            hl += x[i]*properties_[i].hl(p, Ti)*properties_[i].W();
+            hl += Yi*properties_[i].hl(p, Ti);
         }
     }
 
-    return hl/W(x);
+    return hl/sumY;
 }
 
 
@@ -335,21 +363,25 @@ Foam::scalar Foam::liquidMixtureProperties::Cp
 (
     const scalar p,
     const scalar T,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
+    scalar sumY = 0.0;
     scalar Cp = 0.0;
 
     forAll(properties_, i)
     {
-        if (x[i] > SMALL)
+        if (X[i] > SMALL)
         {
+            scalar Yi = X[i]*properties_[i].W();
+            sumY += Yi;
+
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
-            Cp += x[i]*properties_[i].Cp(p, Ti)*properties_[i].W();
+            Cp += Yi*properties_[i].Cp(p, Ti);
         }
     }
 
-    return Cp/W(x);
+    return Cp/sumY;
 }
 
 
@@ -357,29 +389,32 @@ Foam::scalar Foam::liquidMixtureProperties::sigma
 (
     const scalar p,
     const scalar T,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
     // sigma is based on surface mole fractions
-    // which is estimated from Raoult's Law
+    // which are estimated from Raoult's Law
     scalar sigma = 0.0;
-    scalarField Xs(x.size(), 0.0);
+    scalarField Xs(X.size());
     scalar XsSum = 0.0;
+
     forAll(properties_, i)
     {
         scalar Ti = min(TrMax*properties_[i].Tc(), T);
         scalar Pvs = properties_[i].pv(p, Ti);
-        scalar xs = x[i]*Pvs/p;
-        XsSum += xs;
-        Xs[i] = xs;
+
+        Xs[i] = X[i]*Pvs/p;
+        XsSum += Xs[i];
     }
+
+    Xs /= XsSum;
 
     forAll(properties_, i)
     {
         if (Xs[i] > SMALL)
         {
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
-            sigma += (Xs[i]/XsSum)*properties_[i].sigma(p, Ti);
+            sigma += Xs[i]*properties_[i].sigma(p, Ti);
         }
     }
 
@@ -391,17 +426,17 @@ Foam::scalar Foam::liquidMixtureProperties::mu
 (
     const scalar p,
     const scalar T,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
     scalar mu = 0.0;
 
     forAll(properties_, i)
     {
-        if (x[i] > SMALL)
+        if (X[i] > SMALL)
         {
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
-            mu += x[i]*log(properties_[i].mu(p, Ti));
+            mu += X[i]*log(properties_[i].mu(p, Ti));
         }
     }
 
@@ -413,11 +448,11 @@ Foam::scalar Foam::liquidMixtureProperties::K
 (
     const scalar p,
     const scalar T,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
-    // calculate superficial volume fractions phii
-    scalarField phii(x.size(), 0.0);
+    // Calculate superficial volume fractions phii
+    scalarField phii(X.size());
     scalar pSum = 0.0;
 
     forAll(properties_, i)
@@ -425,14 +460,11 @@ Foam::scalar Foam::liquidMixtureProperties::K
         scalar Ti = min(TrMax*properties_[i].Tc(), T);
 
         scalar Vi = properties_[i].W()/properties_[i].rho(p, Ti);
-        phii[i] = x[i]*Vi;
+        phii[i] = X[i]*Vi;
         pSum += phii[i];
     }
 
-    forAll(phii, i)
-    {
-        phii[i] /= pSum;
-    }
+    phii /= pSum;
 
     scalar K = 0.0;
 
@@ -462,7 +494,7 @@ Foam::scalar Foam::liquidMixtureProperties::D
 (
     const scalar p,
     const scalar T,
-    const scalarField& x
+    const scalarField& X
 ) const
 {
     // Blanc's law
@@ -470,10 +502,10 @@ Foam::scalar Foam::liquidMixtureProperties::D
 
     forAll(properties_, i)
     {
-        if (x[i] > SMALL)
+        if (X[i] > SMALL)
         {
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
-            Dinv += x[i]/properties_[i].D(p, Ti);
+            Dinv += X[i]/properties_[i].D(p, Ti);
         }
     }
 

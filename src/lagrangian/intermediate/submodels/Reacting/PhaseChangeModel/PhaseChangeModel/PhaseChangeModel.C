@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,44 +128,6 @@ Foam::PhaseChangeModel<CloudType>::enthalpyTransfer() const
 
 
 template<class CloudType>
-void Foam::PhaseChangeModel<CloudType>::calculate
-(
-    const scalar,
-    const label,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalarField&,
-    scalarField&
-) const
-{
-    notImplemented
-    (
-        "void Foam::PhaseChangeModel<CloudType>::calculate"
-        "("
-            "const scalar, "
-            "const label, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalarField&,"
-            "scalarField&"
-        ") const"
-    );
-}
-
-
-template<class CloudType>
 Foam::scalar Foam::PhaseChangeModel<CloudType>::dh
 (
     const label idc,
@@ -181,8 +143,8 @@ Foam::scalar Foam::PhaseChangeModel<CloudType>::dh
 template<class CloudType>
 Foam::scalar Foam::PhaseChangeModel<CloudType>::TMax
 (
-    const scalar,
-    const scalarField&
+    const scalar p,
+    const scalarField& X
 ) const
 {
     return GREAT;
@@ -190,7 +152,7 @@ Foam::scalar Foam::PhaseChangeModel<CloudType>::TMax
 
 
 template<class CloudType>
-Foam::scalar Foam::PhaseChangeModel<CloudType>::Tvap(const scalarField& Y) const
+Foam::scalar Foam::PhaseChangeModel<CloudType>::Tvap(const scalarField& X) const
 {
     return -GREAT;
 }
@@ -224,4 +186,3 @@ void Foam::PhaseChangeModel<CloudType>::info(Ostream& os)
 #include "PhaseChangeModelNew.C"
 
 // ************************************************************************* //
-

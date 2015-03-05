@@ -88,7 +88,6 @@ class liquidMixtureProperties
 
 public:
 
-
     // Constructors
 
         //- Construct from dictionary
@@ -139,23 +138,23 @@ public:
         }
 
         //- Calculate the critical temperature of mixture
-        scalar Tc(const scalarField& x) const;
+        scalar Tc(const scalarField& X) const;
 
         //- Invert the vapour pressure relationship to retrieve the boiling
         //  temperature of the mixture as a function of pressure
-        scalar pvInvert(const scalar p, const scalarField& x) const;
+        scalar pvInvert(const scalar p, const scalarField& X) const;
 
         //- Return pseudocritical temperature according to Kay's rule
-        scalar Tpc(const scalarField& x) const;
+        scalar Tpc(const scalarField& X) const;
 
         //- Return pseudocritical pressure (modified Prausnitz and Gunn)
-        scalar Ppc(const scalarField& x) const;
+        scalar Ppc(const scalarField& X) const;
 
         //- Return pseudo triple point temperature (mole averaged formulation)
-        scalar Tpt(const scalarField& x) const;
+        scalar Tpt(const scalarField& X) const;
 
         //- Return mixture accentric factor
-        scalar omega(const scalarField& x) const;
+        scalar omega(const scalarField& X) const;
 
         //- Return the surface molar fractions
         scalarField Xs
@@ -163,19 +162,18 @@ public:
             const scalar p,
             const scalar Tg,
             const scalar Tl,
-            const scalarField& xg,
-            const scalarField& xl
+            const scalarField& Xg,
+            const scalarField& Xl
         ) const;
-
 
         //- Calculate the mean molecular weight [kg/kmol]
         //  from mole fractions
         scalar W(const scalarField& X) const;
 
-        //- Returns the mass fractions, given mole fractions
+        //- Returns the mass fractions corresponding to the given mole fractions
         scalarField Y(const scalarField& X) const;
 
-        //- Returns the mole fractions, given mass fractions
+        //- Returns the mole fractions corresponding to the given mass fractions
         scalarField X(const scalarField& Y) const;
 
         //- Calculate the mixture density [kg/m^3]
@@ -183,7 +181,7 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& x
+            const scalarField& X
         ) const;
 
         //- Calculate the mixture vapour pressure [Pa]
@@ -191,7 +189,7 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& x
+            const scalarField& X
         ) const;
 
         //- Calculate the mixture latent heat [J/kg]
@@ -199,7 +197,7 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& x
+            const scalarField& X
         ) const;
 
         //- Calculate the mixture heat capacity [J/(kg K)]
@@ -207,7 +205,7 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& x
+            const scalarField& X
         ) const;
 
         //- Estimate mixture surface tension [N/m]
@@ -215,7 +213,7 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& x
+            const scalarField& X
         ) const;
 
         //- Calculate the mixture viscosity [Pa s]
@@ -223,7 +221,7 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& x
+            const scalarField& X
         ) const;
 
         //- Estimate thermal conductivity  [W/(m K)]
@@ -232,7 +230,7 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& x
+            const scalarField& X
         ) const;
 
         //- Vapour diffussivity [m2/s]
@@ -240,7 +238,7 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& x
+            const scalarField& X
         ) const;
 };
 

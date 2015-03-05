@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ public:
         };
 
         //- Corresponding word representations for phase type enumerations
-        static const NamedEnum<phaseType, 4> phaseTypeNames_;
+        static const NamedEnum<phaseType, 4> phaseTypeNames;
 
 
 private:
@@ -85,21 +85,17 @@ private:
         //- List of component mass fractions
         scalarField Y_;
 
-        //- Global ids
-        labelList globalIds_;
-
-        //- Map to carrier global id
-        labelList globalCarrierIds_;
+        //- Map to carrier id
+        labelList carrierIds_;
 
 
     // Private Member Functions
 
-        //- Set global ids
-        void setGlobalIds(const wordList& globalNames);
+        //- Reorder species to be consistent with the given specie name list
+        void reorder(const wordList& specieNames);
 
-        //- Set global carrier ids - attempts to map component names to global
-        //  carrier species
-        void setGlobalCarrierIds(const wordList& carrierNames);
+        //- Set carrier ids
+        void setCarrierIds(const wordList& carrierNames);
 
         //- Check the total mass fraction
         void checkTotalMassFraction() const;
@@ -128,8 +124,9 @@ public:
 
     // Public Member Functions
 
-        //- Initialise the global ids
-        void initialiseGlobalIds
+        //- Reorder species to be consistent with the corresponding
+        //  phase specie name list
+        void reorder
         (
             const wordList& gasNames,
             const wordList& liquidNames,
@@ -160,15 +157,8 @@ public:
             //- Return non-const access to a component mass fraction
             scalar& Y(const label cmptI);
 
-            //- Return const access to the global ids
-            const labelList& globalIds() const;
-
-            //- Return const access to the map to the carrier global ids
-            const labelList& globalCarrierIds() const;
-
-            //- Return the global id of a component in the local list by name
-            //  Returns -1 if not found
-            label globalId(const word& cmptName) const;
+            //- Return const access to the map to the carrier ids
+            const labelList& carrierIds() const;
 
             //- Return the id of a component in the local list by name
             //  Returns -1 if not found

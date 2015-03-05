@@ -42,8 +42,8 @@ COxidationKineticDiffusionLimitedRate
     C2_(readScalar(this->coeffDict().lookup("C2"))),
     E_(readScalar(this->coeffDict().lookup("E"))),
     CsLocalId_(-1),
-    O2GlobalId_(owner.composition().globalCarrierId("O2")),
-    CO2GlobalId_(owner.composition().globalCarrierId("CO2")),
+    O2GlobalId_(owner.composition().carrierId("O2")),
+    CO2GlobalId_(owner.composition().carrierId("CO2")),
     WC_(0.0),
     WO2_(0.0),
     HcCO2_(0.0)

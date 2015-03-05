@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,14 +34,13 @@ Foam::phaseProperties::phaseProperties(Istream& is)
     stateLabel_("(unknown)"),
     names_(0),
     Y_(0),
-    globalIds_(0),
-    globalCarrierIds_(0)
+    carrierIds_(0)
 {
     is.check("Foam::phaseProperties::phaseProperties(Istream& is)");
 
     dictionaryEntry phaseInfo(dictionary::null, is);
 
-    phase_ = phaseTypeNames_[phaseInfo.keyword()];
+    phase_ = phaseTypeNames[phaseInfo.keyword()];
     stateLabel_ = phaseToStateLabel(phase_);
 
     if (phaseInfo.size() > 0)
@@ -49,8 +48,7 @@ Foam::phaseProperties::phaseProperties(Istream& is)
         label nComponents = phaseInfo.size();
         names_.setSize(nComponents, "unknownSpecie");
         Y_.setSize(nComponents, 0.0);
-        globalIds_.setSize(nComponents, -1);
-        globalCarrierIds_.setSize(nComponents, -1);
+        carrierIds_.setSize(nComponents, -1);
 
         label cmptI = 0;
         forAllConstIter(IDLList<entry>, phaseInfo, iter)
@@ -76,7 +74,7 @@ Foam::Istream& Foam::operator>>(Istream& is, phaseProperties& pp)
 
     dictionaryEntry phaseInfo(dictionary::null, is);
 
-    pp.phase_ = pp.phaseTypeNames_[phaseInfo.keyword()];
+    pp.phase_ = pp.phaseTypeNames[phaseInfo.keyword()];
     pp.stateLabel_ = pp.phaseToStateLabel(pp.phase_);
 
     if (phaseInfo.size() > 0)
@@ -85,8 +83,7 @@ Foam::Istream& Foam::operator>>(Istream& is, phaseProperties& pp)
 
         pp.names_.setSize(nComponents, "unknownSpecie");
         pp.Y_.setSize(nComponents, 0.0);
-        pp.globalIds_.setSize(nComponents, -1);
-        pp.globalCarrierIds_.setSize(nComponents, -1);
+        pp.carrierIds_.setSize(nComponents, -1);
 
         label cmptI = 0;
         forAllConstIter(IDLList<entry>, phaseInfo, iter)
@@ -110,7 +107,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const phaseProperties& pp)
         "Foam::Ostream& Foam::operator<<(Ostream&, const phaseProperties&)"
     );
 
-    os  << pp.phaseTypeNames_[pp.phase_] << nl << token::BEGIN_BLOCK << nl
+    os  << pp.phaseTypeNames[pp.phase_] << nl << token::BEGIN_BLOCK << nl
         << incrIndent;
 
     forAll(pp.names_, cmptI)

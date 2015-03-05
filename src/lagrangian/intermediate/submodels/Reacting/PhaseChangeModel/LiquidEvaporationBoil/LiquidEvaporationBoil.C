@@ -97,7 +97,7 @@ Foam::LiquidEvaporationBoil<CloudType>::LiquidEvaporationBoil
         {
             Info<< "    " << activeLiquids_[i] << endl;
             liqToCarrierMap_[i] =
-                owner.composition().globalCarrierId(activeLiquids_[i]);
+                owner.composition().carrierId(activeLiquids_[i]);
         }
 
         // Determine mapping between model active liquids and global liquids
@@ -147,13 +147,10 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
     const scalar Ts,
     const scalar pc,
     const scalar Tc,
-    const scalarField& Yl,
+    const scalarField& X,
     scalarField& dMassPC
 ) const
 {
-    // liquid volume fraction
-    const scalarField X(liquids_.X(Yl));
-
     // immediately evaporate mass that has reached critical condition
     if ((liquids_.Tc(X) - T) < SMALL)
     {
@@ -378,11 +375,9 @@ Foam::scalar Foam::LiquidEvaporationBoil<CloudType>::dh
 template<class CloudType>
 Foam::scalar Foam::LiquidEvaporationBoil<CloudType>::Tvap
 (
-    const scalarField& Y
+    const scalarField& X
 ) const
 {
-    const scalarField X(liquids_.X(Y));
-
     return liquids_.Tpt(X);
 }
 
@@ -391,11 +386,9 @@ template<class CloudType>
 Foam::scalar Foam::LiquidEvaporationBoil<CloudType>::TMax
 (
     const scalar p,
-    const scalarField& Y
+    const scalarField& X
 ) const
 {
-    const scalarField X(liquids_.X(Y));
-
     return liquids_.pvInvert(p, X);
 }
 

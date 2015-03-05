@@ -49,7 +49,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
     const scalar mass,
     const label idPhase,
     const scalar YPhase,
-    const scalarField& YComponents,
+    const scalarField& Y,
     scalarField& dMassPC,
     scalar& Sh,
     scalar& N,
@@ -58,6 +58,8 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
 )
 {
     typedef typename TrackData::cloudType::reactingCloudType reactingCloudType;
+    const CompositionModel<reactingCloudType>& composition =
+        td.cloud().composition();
     PhaseChangeModel<reactingCloudType>& phaseChange = td.cloud().phaseChange();
 
     if (!phaseChange.active() || (YPhase < SMALL))
@@ -65,16 +67,20 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
         return;
     }
 
-    scalar Tvap = phaseChange.Tvap(YComponents);
+    scalarField X(composition.liquids().X(Y));
+
+    scalar Tvap = phaseChange.Tvap(X);
 
     if (T < Tvap)
     {
         return;
     }
 
-    const scalar TMax = phaseChange.TMax(pc_, YComponents);
+    const scalar TMax = phaseChange.TMax(pc_, X);
     const scalar Tdash = min(T, TMax);
     const scalar Tsdash = min(Ts, TMax);
+
+    scalarField hmm(dMassPC);
 
     // Calculate mass transfer due to phase change
     phaseChange.calculate
@@ -89,27 +95,23 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
         Tsdash,
         pc_,
         this->Tc_,
-        YComponents,
+        X,
         dMassPC
     );
 
     // Limit phase change mass by availability of each specie
-    dMassPC = min(mass*YPhase*YComponents, dMassPC);
+    dMassPC = min(mass*YPhase*Y, dMassPC);
 
     const scalar dMassTot = sum(dMassPC);
 
     // Add to cumulative phase change mass
     phaseChange.addToPhaseChangeMass(this->nParticle_*dMassTot);
 
-    const CompositionModel<reactingCloudType>& composition =
-        td.cloud().composition();
-
     forAll(dMassPC, i)
     {
-        const label idc = composition.localToGlobalCarrierId(idPhase, i);
-        const label idl = composition.globalIds(idPhase)[i];
+        const label cid = composition.localToCarrierId(idPhase, i);
 
-        const scalar dh = phaseChange.dh(idc, idl, pc_, Tdash);
+        const scalar dh = phaseChange.dh(cid, i, pc_, Tdash);
         Sh -= dMassPC[i]*dh/dt;
     }
 
@@ -122,15 +124,14 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
 
         forAll(dMassPC, i)
         {
-            const label idc = composition.localToGlobalCarrierId(idPhase, i);
-            const label idl = composition.globalIds(idPhase)[i];
+            const label cid = composition.localToCarrierId(idPhase, i);
 
-            const scalar Cp = composition.carrier().Cp(idc, pc_, Tsdash);
-            const scalar W = composition.carrier().W(idc);
+            const scalar Cp = composition.carrier().Cp(cid, pc_, Tsdash);
+            const scalar W = composition.carrier().W(cid);
             const scalar Ni = dMassPC[i]/(this->areaS(d)*dt*W);
 
             const scalar Dab =
-                composition.liquids().properties()[idl].D(pc_, Tsdash, Wc);
+                composition.liquids().properties()[i].D(pc_, Tsdash, Wc);
 
             // Molar flux of species coming from the particle (kmol/m^2/s)
             N += Ni;
@@ -139,7 +140,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
             NCpW += Ni*Cp*W;
 
             // Concentrations of emission species
-            Cs[idc] += Ni*d/(2.0*Dab);
+            Cs[cid] += Ni*d/(2.0*Dab);
         }
     }
 }
@@ -526,7 +527,7 @@ void Foam::ReactingParcel<ParcelType>::calc
             forAll(Y_, i)
             {
                 scalar dmi = dm*Y_[i];
-                label gid = composition.localToGlobalCarrierId(0, i);
+                label gid = composition.localToCarrierId(0, i);
                 scalar hs = composition.carrier().Hs(gid, pc_, T0);
 
                 td.cloud().rhoTrans(gid)[cellI] += dmi;
@@ -587,7 +588,7 @@ void Foam::ReactingParcel<ParcelType>::calc
         forAll(dMass, i)
         {
             scalar dm = np0*dMass[i];
-            label gid = composition.localToGlobalCarrierId(0, i);
+            label gid = composition.localToCarrierId(0, i);
             scalar hs = composition.carrier().Hs(gid, pc_, T0);
 
             td.cloud().rhoTrans(gid)[cellI] += dm;
