@@ -84,7 +84,7 @@ void Foam::combustionModels::PaSR<Type>::correct()
             forAll(epsilon, i)
             {
                 scalar tk =
-                    Cmix_*Foam::sqrt(muEff[i]/rho[i]/(epsilon[i] + SMALL));
+                    Cmix_*sqrt(max(muEff[i]/rho[i]/(epsilon[i] + SMALL), 0));
 
                 if (tk > SMALL)
                 {
