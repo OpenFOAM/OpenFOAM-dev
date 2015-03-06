@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,45 +115,6 @@ Foam::SinglePhaseMixture<CloudType>::~SinglePhaseMixture()
 
 template<class CloudType>
 const Foam::scalarField&
-Foam::SinglePhaseMixture<CloudType>::YGas0() const
-{
-    notImplemented
-    (
-        "const Foam::scalarField& "
-        "Foam::SinglePhaseMixture<CloudType>::YGas0() const"
-    );
-    return this->phaseProps()[0].Y();
-}
-
-
-template<class CloudType>
-const Foam::scalarField&
-Foam::SinglePhaseMixture<CloudType>::YLiquid0() const
-{
-    notImplemented
-    (
-        "const Foam::scalarField& "
-        "Foam::SinglePhaseMixture<CloudType>::YLiquid0() const"
-    );
-    return this->phaseProps()[0].Y();
-}
-
-
-template<class CloudType>
-const Foam::scalarField&
-Foam::SinglePhaseMixture<CloudType>::YSolid0() const
-{
-    notImplemented
-    (
-        "const Foam::scalarField& "
-        "Foam::SinglePhaseMixture<CloudType>::YSolid0() const"
-    );
-    return this->phaseProps()[0].Y();
-}
-
-
-template<class CloudType>
-const Foam::scalarField&
 Foam::SinglePhaseMixture<CloudType>::YMixture0() const
 {
     return this->phaseProps()[0].Y();
@@ -182,4 +143,3 @@ Foam::label Foam::SinglePhaseMixture<CloudType>::idSolid() const
 
 
 // ************************************************************************* //
-

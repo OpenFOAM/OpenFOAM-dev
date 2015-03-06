@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,26 +76,6 @@ const Foam::Switch& Foam::HeatTransferModel<CloudType>::BirdCorrection() const
 
 
 template<class CloudType>
-Foam::scalar Foam::HeatTransferModel<CloudType>::Nu
-(
-    const scalar Re,
-    const scalar Pr
-) const
-{
-    notImplemented
-    (
-        "Foam::scalar Foam::HeatTransferModel<CloudType>::Nu"
-        "("
-            "const scalar, "
-            "const scalar"
-        ") const"
-    );
-
-    return 0.0;
-}
-
-
-template<class CloudType>
 Foam::scalar Foam::HeatTransferModel<CloudType>::htc
 (
     const scalar dp,
@@ -126,6 +106,4 @@ Foam::scalar Foam::HeatTransferModel<CloudType>::htc
 
 #include "HeatTransferModelNew.C"
 
-
 // ************************************************************************* //
-

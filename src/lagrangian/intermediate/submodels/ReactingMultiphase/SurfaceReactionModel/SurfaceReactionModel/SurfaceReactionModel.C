@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,56 +72,6 @@ Foam::SurfaceReactionModel<CloudType>::~SurfaceReactionModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::scalar Foam::SurfaceReactionModel<CloudType>::calculate
-(
-    const scalar,
-    const label,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalarField&,
-    const scalarField&,
-    const scalarField&,
-    const scalarField&,
-    const scalar,
-    scalarField&,
-    scalarField&,
-    scalarField&,
-    scalarField&
-) const
-{
-    notImplemented
-    (
-        "Foam::scalar Foam::SurfaceReactionModel<CloudType>::calculate"
-        "("
-            "const scalar, "
-            "const label, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalarField&, "
-            "const scalarField&, "
-            "const scalarField&, "
-            "const scalarField&, "
-            "const scalar, "
-            "scalarField&, "
-            "scalarField&, "
-            "scalarField&, "
-            "scalarField&"
-        ") const"
-    );
-
-    return 0.0;
-}
-
-
-template<class CloudType>
 void Foam::SurfaceReactionModel<CloudType>::addToSurfaceReactionMass
 (
     const scalar dMass
@@ -152,4 +102,3 @@ void Foam::SurfaceReactionModel<CloudType>::info(Ostream& os)
 #include "SurfaceReactionModelNew.C"
 
 // ************************************************************************* //
-

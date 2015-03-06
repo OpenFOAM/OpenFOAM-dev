@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,59 +144,60 @@ public:
         inline scalar& mDot();
 
 
+    // Friend Operators
+
+        friend bool operator==
+        (
+            const kinematicParcelInjectionData& a,
+            const kinematicParcelInjectionData& b
+        )
+        {
+            notImplemented
+            (
+                "operator=="
+                "("
+                    "const kinematicParcelInjectionData&, "
+                    "const kinematicParcelInjectionData&"
+                ")"
+            );
+
+            return false;
+        }
+
+        friend bool operator!=
+        (
+            const kinematicParcelInjectionData& a,
+            const kinematicParcelInjectionData& b
+        )
+        {
+            notImplemented
+            (
+                "operator=="
+                "("
+                    "const kinematicParcelInjectionData&, "
+                    "const kinematicParcelInjectionData&"
+                ")"
+            );
+
+            return false;
+        }
+
+
     // I-O
 
-        // Friend Operators
+        //- Ostream operator
+        friend Ostream& operator<<
+        (
+            Ostream& os,
+            const kinematicParcelInjectionData& data
+        );
 
-            friend bool operator==
-            (
-                const kinematicParcelInjectionData& a,
-                const kinematicParcelInjectionData& b
-            )
-            {
-                notImplemented
-                (
-                    "operator=="
-                    "("
-                        "const kinematicParcelInjectionData&, "
-                        "const kinematicParcelInjectionData&"
-                    ")"
-                );
-
-                return false;
-            }
-
-            friend bool operator!=
-            (
-                const kinematicParcelInjectionData& a,
-                const kinematicParcelInjectionData& b
-            )
-            {
-                notImplemented
-                (
-                    "operator=="
-                    "("
-                        "const kinematicParcelInjectionData&, "
-                        "const kinematicParcelInjectionData&"
-                    ")"
-                );
-
-                return false;
-            }
-
-            //- Ostream operator
-            friend Ostream& operator<<
-            (
-                Ostream& os,
-                const kinematicParcelInjectionData& data
-            );
-
-            //- Istream operator
-            friend Istream& operator>>
-            (
-                Istream& is,
-                kinematicParcelInjectionData& data
-            );
+        //- Istream operator
+        friend Istream& operator>>
+        (
+            Istream& is,
+            kinematicParcelInjectionData& data
+        );
 };
 
 

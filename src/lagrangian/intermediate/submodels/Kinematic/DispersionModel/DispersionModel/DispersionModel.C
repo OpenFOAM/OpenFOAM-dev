@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::DispersionModel<CloudType>::DispersionModel
 template<class CloudType>
 Foam::DispersionModel<CloudType>::DispersionModel
 (
-    DispersionModel<CloudType>& dm
+    const DispersionModel<CloudType>& dm
 )
 :
     CloudSubModelBase<CloudType>(dm)
@@ -61,36 +61,6 @@ Foam::DispersionModel<CloudType>::DispersionModel
 template<class CloudType>
 Foam::DispersionModel<CloudType>::~DispersionModel()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::vector Foam::DispersionModel<CloudType>::update
-(
-    const scalar,
-    const label,
-    const vector&,
-    const vector& Uc,
-    vector&,
-    scalar&
-)
-{
-    notImplemented
-    (
-        "Foam::vector Foam::DispersionModel<CloudType>::update"
-        "("
-            "const scalar, "
-            "const label, "
-            "const vector&, "
-            "const vector&, "
-            "vector&, "
-            "scalar&"
-        ")"
-    );
-
-    return Uc;
-}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

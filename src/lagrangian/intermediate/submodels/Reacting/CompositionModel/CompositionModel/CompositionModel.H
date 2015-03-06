@@ -107,13 +107,7 @@ public:
         CompositionModel(const CompositionModel<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CompositionModel<CloudType> > clone() const
-        {
-            return autoPtr<CompositionModel<CloudType> >
-            (
-                new CompositionModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<CompositionModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -201,19 +195,19 @@ public:
 
                 //- Return the list of mixture mass fractions
                 //  If only 1 phase, return component fractions of that phase
-                virtual const scalarField& YMixture0() const;
+                virtual const scalarField& YMixture0() const = 0;
 
                 // Indices of gas, liquid and solid phases in phase properties
                 // list - returns -1 if not applicable
 
                     //- Gas id
-                    virtual label idGas() const;
+                    virtual label idGas() const = 0;
 
                     //- Liquid id
-                    virtual label idLiquid() const;
+                    virtual label idLiquid() const = 0;
 
                     //- Solid id
-                    virtual label idSolid() const;
+                    virtual label idSolid() const = 0;
 
 
         // Evaluation

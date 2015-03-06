@@ -120,7 +120,7 @@ Foam::DispersionRASModel<CloudType>::DispersionRASModel
 template<class CloudType>
 Foam::DispersionRASModel<CloudType>::DispersionRASModel
 (
-    DispersionRASModel<CloudType>& dm
+    const DispersionRASModel<CloudType>& dm
 )
 :
     DispersionModel<CloudType>(dm),

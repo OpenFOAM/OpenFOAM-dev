@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Foam::GradientDispersionRAS<CloudType>::GradientDispersionRAS
 template<class CloudType>
 Foam::GradientDispersionRAS<CloudType>::GradientDispersionRAS
 (
-    GradientDispersionRAS<CloudType>& dm
+    const GradientDispersionRAS<CloudType>& dm
 )
 :
     DispersionRASModel<CloudType>(dm),

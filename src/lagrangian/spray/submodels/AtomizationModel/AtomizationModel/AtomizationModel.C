@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,19 +69,6 @@ Foam::AtomizationModel<CloudType>::~AtomizationModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::scalar Foam::AtomizationModel<CloudType>::initLiquidCore() const
-{
-    notImplemented
-    (
-        "Foam::scalar "
-        "Foam::AtomizationModel<CloudType>::initLiquidCore() const"
-    );
-
-    return 0.0;
-}
-
-
-template<class CloudType>
 Foam::scalar Foam::AtomizationModel<CloudType>::Taverage
 (
     const scalar& Tl,
@@ -92,62 +79,8 @@ Foam::scalar Foam::AtomizationModel<CloudType>::Taverage
 }
 
 
-template<class CloudType>
-bool Foam::AtomizationModel<CloudType>::calcChi() const
-{
-    notImplemented("bool Foam::AtomizationModel<CloudType>::calcChi()");
-
-    return false;
-}
-
-
-template<class CloudType>
-void Foam::AtomizationModel<CloudType>::update
-(
-    const scalar dt,
-    scalar& d,
-    scalar& liquidCore,
-    scalar& tc,
-    const scalar rho,
-    const scalar mu,
-    const scalar sigma,
-    const scalar volFlowRate,
-    const scalar rhoAv,
-    const scalar Urel,
-    const vector& pos,
-    const vector& injectionPos,
-    const scalar pAmbient,
-    const scalar chi,
-    cachedRandom& rndGen
-) const
-{
-    notImplemented
-    (
-        "void Foam::AtomizationModel<CloudType>::update"
-        "("
-            "const scalar, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const vector&, "
-            "const vector&, "
-            "const scalar, "
-            "const scalar, "
-            "cachedRandom&"
-        ") const"
-    );
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "AtomizationModelNew.C"
 
 // ************************************************************************* //
-

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,10 +64,10 @@ public:
         NoCollision(const dictionary& dict, CloudType& owner);
 
         //- Construct copy
-        NoCollision(NoCollision<CloudType>& cm);
+        NoCollision(const NoCollision<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CollisionModel<CloudType> > clone()
+        virtual autoPtr<CollisionModel<CloudType> > clone() const
         {
             return autoPtr<CollisionModel<CloudType> >
             (

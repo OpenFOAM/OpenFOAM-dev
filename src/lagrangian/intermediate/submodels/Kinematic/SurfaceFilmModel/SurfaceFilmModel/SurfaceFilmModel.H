@@ -161,13 +161,7 @@ public:
         SurfaceFilmModel(const SurfaceFilmModel<CloudType>& sfm);
 
         //- Construct and return a clone
-        virtual autoPtr<SurfaceFilmModel<CloudType> > clone() const
-        {
-            return autoPtr<SurfaceFilmModel<CloudType> >
-            (
-                new SurfaceFilmModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<SurfaceFilmModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -215,7 +209,7 @@ public:
                 parcelType& p,
                 const polyPatch& pp,
                 bool& keepParticle
-            );
+            ) = 0;
 
             //- Inject parcels into the cloud
             template<class TrackData>

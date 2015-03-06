@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,57 +119,19 @@ public:
 
     // I-O
 
-        // Friend Operators
+        //- Ostream operator
+        friend Ostream& operator<<
+        (
+            Ostream& os,
+            const thermoParcelInjectionData& data
+        );
 
-            friend bool operator==
-            (
-                const thermoParcelInjectionData& a,
-                const thermoParcelInjectionData& b
-            )
-            {
-                notImplemented
-                (
-                    "operator=="
-                    "("
-                        "const thermoParcelInjectionData&, "
-                        "const thermoParcelInjectionData&"
-                    ")"
-                );
-
-                return false;
-            }
-
-            friend bool operator!=
-            (
-                const thermoParcelInjectionData& a,
-                const thermoParcelInjectionData& b
-            )
-            {
-                notImplemented
-                (
-                    "operator=="
-                    "("
-                        "const thermoParcelInjectionData&, "
-                        "const thermoParcelInjectionData&"
-                    ")"
-                );
-
-                return false;
-            }
-
-            //- Ostream operator
-            friend Ostream& operator<<
-            (
-                Ostream& os,
-                const thermoParcelInjectionData& data
-            );
-
-            //- Istream operator
-            friend Istream& operator>>
-            (
-                Istream& is,
-                thermoParcelInjectionData& data
-            );
+        //- Istream operator
+        friend Istream& operator>>
+        (
+            Istream& is,
+            thermoParcelInjectionData& data
+        );
 };
 
 

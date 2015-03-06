@@ -85,16 +85,10 @@ public:
         );
 
         //- Construct copy
-        DispersionModel(DispersionModel<CloudType>& dm);
+        DispersionModel(const DispersionModel<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DispersionModel<CloudType> > clone()
-        {
-            return autoPtr<DispersionModel<CloudType> >
-            (
-                new DispersionModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<DispersionModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -120,7 +114,7 @@ public:
             const vector& Uc,
             vector& UTurb,
             scalar& tTurb
-        );
+        ) = 0;
 };
 
 

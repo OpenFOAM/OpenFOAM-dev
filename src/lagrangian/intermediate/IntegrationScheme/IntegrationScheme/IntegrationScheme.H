@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,13 +154,7 @@ public:
         IntegrationScheme(const IntegrationScheme& is);
 
         //- Construct and return clone
-        virtual autoPtr<IntegrationScheme<Type> > clone() const
-        {
-            return autoPtr<IntegrationScheme<Type> >
-            (
-                new IntegrationScheme<Type>(*this)
-            );
-        }
+        virtual autoPtr<IntegrationScheme<Type> > clone() const = 0;
 
 
     // Selectors
@@ -186,7 +180,7 @@ public:
             const scalar dt,
             const Type& alphaBeta,
             const scalar beta
-        ) const;
+        ) const = 0;
 };
 
 

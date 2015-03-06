@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,13 +59,13 @@ protected:
             const volScalarField* kPtr_;
 
             //- Take ownership of the k field
-            bool ownK_;
+            mutable bool ownK_;
 
             //- Turbulence epsilon
             const volScalarField* epsilonPtr_;
 
             //- Take ownership of the epsilon field
-            bool ownEpsilon_;
+            mutable bool ownEpsilon_;
 
 
     // Protected Functions
@@ -89,10 +89,10 @@ public:
         DispersionRASModel(const dictionary& dict, CloudType& owner);
 
         //- Construct copy
-        DispersionRASModel(DispersionRASModel<CloudType>& dm);
+        DispersionRASModel(const DispersionRASModel<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DispersionModel<CloudType> > clone()
+        virtual autoPtr<DispersionModel<CloudType> > clone() const
         {
             return autoPtr<DispersionModel<CloudType> >
             (

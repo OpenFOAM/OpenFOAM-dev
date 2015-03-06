@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,57 +128,19 @@ public:
 
     // I-O
 
-        // Friend Operators
+        //- Ostream operator
+        friend Ostream& operator<<
+        (
+            Ostream& os,
+            const reactingMultiphaseParcelInjectionData& data
+        );
 
-            friend bool operator==
-            (
-                const reactingMultiphaseParcelInjectionData& a,
-                const reactingMultiphaseParcelInjectionData& b
-            )
-            {
-                notImplemented
-                (
-                    "operator=="
-                    "("
-                        "const reactingMultiphaseParcelInjectionData&, "
-                        "const reactingMultiphaseParcelInjectionData&"
-                    ")"
-                );
-
-                return false;
-            }
-
-            friend bool operator!=
-            (
-                const reactingMultiphaseParcelInjectionData& a,
-                const reactingMultiphaseParcelInjectionData& b
-            )
-            {
-                notImplemented
-                (
-                    "operator=="
-                    "("
-                        "const reactingMultiphaseParcelInjectionData&, "
-                        "const reactingMultiphaseParcelInjectionData&"
-                    ")"
-                );
-
-                return false;
-            }
-
-            //- Ostream operator
-            friend Ostream& operator<<
-            (
-                Ostream& os,
-                const reactingMultiphaseParcelInjectionData& data
-            );
-
-            //- Istream operator
-            friend Istream& operator>>
-            (
-                Istream& is,
-                reactingMultiphaseParcelInjectionData& data
-            );
+        //- Istream operator
+        friend Istream& operator>>
+        (
+            Istream& is,
+            reactingMultiphaseParcelInjectionData& data
+        );
 };
 
 

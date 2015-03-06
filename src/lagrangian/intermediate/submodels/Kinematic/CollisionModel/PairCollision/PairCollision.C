@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -597,13 +597,17 @@ Foam::PairCollision<CloudType>::PairCollision
 
 
 template<class CloudType>
-Foam::PairCollision<CloudType>::PairCollision(PairCollision<CloudType>& cm)
+Foam::PairCollision<CloudType>::PairCollision
+(
+    const PairCollision<CloudType>& cm
+)
 :
     CollisionModel<CloudType>(cm),
     pairModel_(NULL),
     wallModel_(NULL),
     il_(cm.owner().mesh())
 {
+    // Need to clone to PairModel and WallModel
     notImplemented
     (
         "Foam::PairCollision<CloudType>::PairCollision"

@@ -94,16 +94,10 @@ public:
         );
 
         //- Construct copy
-        CollisionModel(CollisionModel<CloudType>& cm);
+        CollisionModel(const CollisionModel<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CollisionModel<CloudType> > clone()
-        {
-            return autoPtr<CollisionModel<CloudType> >
-            (
-                new CollisionModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<CollisionModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -122,14 +116,14 @@ public:
 
         //- Return the number of times to subcycle the current
         //  timestep to meet the criteria of the collision model
-        virtual label nSubCycles() const;
+        virtual label nSubCycles() const = 0;
 
         //- Indicates whether model determines wall collisions or not,
         //  used to determine what value to use for wallImpactDistance
-        virtual bool controlsWallInteraction() const;
+        virtual bool controlsWallInteraction() const = 0;
 
         // Collision function
-        virtual void collide();
+        virtual void collide() = 0;
 };
 
 

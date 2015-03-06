@@ -97,13 +97,7 @@ public:
         HeatTransferModel(const HeatTransferModel<CloudType>& htm);
 
         //- Construct and return a clone
-        virtual autoPtr<HeatTransferModel<CloudType> > clone() const
-        {
-            return autoPtr<HeatTransferModel<CloudType> >
-            (
-                new HeatTransferModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<HeatTransferModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -133,7 +127,7 @@ public:
             (
                 const scalar Re,
                 const scalar Pr
-            ) const;
+            ) const = 0;
 
             //- Return heat transfer coefficient
             virtual scalar htc

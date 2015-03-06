@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,33 +109,6 @@ public:
     // Member Functions
 
         // Access
-
-            // Gas properties
-
-                //- Return the list of gas mass fractions
-                const scalarField& YGas0() const;
-
-                //- Return the total gas mass fraction
-                scalar YGasTot0() const;
-
-
-            // Liquid properties
-
-                //- Return the list of liquid mass fractions
-                const scalarField& YLiquid0() const;
-
-                //- Return the total liquid mass fraction
-                scalar YLiquidTot0() const;
-
-
-            // Solid properties
-
-                //- Return the list of solid mass fractions
-                const scalarField& YSolid0() const;
-
-                //- Return the total solid mass fraction
-                scalar YSolidTot0() const;
-
 
             // Mixture properties
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,38 +52,6 @@ Foam::IntegrationScheme<Type>::IntegrationScheme(const IntegrationScheme& is)
 template<class Type>
 Foam::IntegrationScheme<Type>::~IntegrationScheme()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-typename Foam::IntegrationScheme<Type>::integrationResult
-Foam::IntegrationScheme<Type>::integrate
-(
-    const Type& phi,
-    const scalar dt,
-    const Type& alphaBeta,
-    const scalar beta
-) const
-{
-    notImplemented
-    (
-        "Foam::IntegrationScheme<Type>::integrationResult"
-        "Foam::IntegrationScheme<Type>::integrate"
-        "("
-            "const Type&, "
-            "const scalar, "
-            "const Type&, "
-            "const scalar"
-        ") const"
-    );
-
-    typename IntegrationScheme<Type>::integrationResult retValue;
-    retValue.average() = pTraits<Type>::zero;
-    retValue.value() = pTraits<Type>::zero;
-
-    return retValue;
-}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

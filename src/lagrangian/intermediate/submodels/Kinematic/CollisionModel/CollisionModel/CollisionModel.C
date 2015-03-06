@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,10 @@ Foam::CollisionModel<CloudType>::CollisionModel
 
 
 template<class CloudType>
-Foam::CollisionModel<CloudType>::CollisionModel(CollisionModel<CloudType>& cm)
+Foam::CollisionModel<CloudType>::CollisionModel
+(
+    const CollisionModel<CloudType>& cm
+)
 :
     CloudSubModelBase<CloudType>(cm)
 {}
@@ -58,36 +61,6 @@ Foam::CollisionModel<CloudType>::CollisionModel(CollisionModel<CloudType>& cm)
 template<class CloudType>
 Foam::CollisionModel<CloudType>::~CollisionModel()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::label Foam::CollisionModel<CloudType>::nSubCycles() const
-{
-    notImplemented
-    (
-        "Foam::label Foam::CollisionModel<CloudType>::nSubCycles() const"
-    );
-    return 0;
-}
-
-
-template<class CloudType>
-bool Foam::CollisionModel<CloudType>::controlsWallInteraction() const
-{
-    notImplemented
-    (
-        "bool Foam::CollisionModel<CloudType>::controlsWallInteraction()"
-    );
-    return false;
-}
-
-template<class CloudType>
-void Foam::CollisionModel<CloudType>::collide()
-{
-    notImplemented("void Foam::CollisionModel<CloudType>::collide()");
-}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

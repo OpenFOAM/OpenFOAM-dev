@@ -299,55 +299,6 @@ Foam::scalarField Foam::CompositionModel<CloudType>::X
 
 
 template<class CloudType>
-const Foam::scalarField& Foam::CompositionModel<CloudType>::YMixture0() const
-{
-    notImplemented
-    (
-        "const scalarField& Foam::CompositionModel<CloudType>::YMixture0() "
-        "const"
-    );
-
-    return scalarField::null();
-}
-
-
-template<class CloudType>
-Foam::label Foam::CompositionModel<CloudType>::idGas() const
-{
-    notImplemented
-    (
-        "Foam::label Foam::CompositionModel<CloudType>::idGas() const"
-    );
-
-    return -1;
-}
-
-
-template<class CloudType>
-Foam::label Foam::CompositionModel<CloudType>::idLiquid() const
-{
-    notImplemented
-    (
-        "Foam::label Foam::CompositionModel<CloudType>::idLiquid() const"
-    );
-
-    return -1;
-}
-
-
-template<class CloudType>
-Foam::label Foam::CompositionModel<CloudType>::idSolid() const
-{
-    notImplemented
-    (
-        "Foam::label Foam::CompositionModel<CloudType>::idSolid() const"
-    );
-
-    return -1;
-}
-
-
-template<class CloudType>
 Foam::scalar Foam::CompositionModel<CloudType>::H
 (
     const label phaseI,

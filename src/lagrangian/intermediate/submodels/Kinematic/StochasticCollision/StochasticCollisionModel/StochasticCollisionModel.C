@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,18 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "StochasticCollisionModel.H"
-
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-template<class CloudType>
-void Foam::StochasticCollisionModel<CloudType>::collide(const scalar dt)
-{
-    notImplemented
-    (
-        "void Foam::NoStochasticCollision<CloudType>::collide(const scalar)"
-    );
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

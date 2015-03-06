@@ -91,13 +91,7 @@ public:
         AtomizationModel(const AtomizationModel<CloudType>& am);
 
         //- Construct and return a clone
-        virtual autoPtr<AtomizationModel<CloudType> > clone() const
-        {
-            return autoPtr<AtomizationModel<CloudType> >
-            (
-                new AtomizationModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<AtomizationModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -114,14 +108,14 @@ public:
 
     // Member Functions
 
-        //- Initial value of liquidCore
-        virtual scalar initLiquidCore() const;
-
         //- Average temperature calculation
         scalar Taverage(const scalar& Tliq, const scalar& Tc) const;
 
+        //- Initial value of liquidCore
+        virtual scalar initLiquidCore() const = 0;
+
         //- Flag to indicate if chi needs to be calculated
-        virtual bool calcChi() const;
+        virtual bool calcChi() const = 0;
 
         virtual void update
         (
@@ -140,7 +134,7 @@ public:
             const scalar pAmbient,
             const scalar chi,
             cachedRandom& rndGen
-        ) const;
+        ) const = 0;
 };
 
 

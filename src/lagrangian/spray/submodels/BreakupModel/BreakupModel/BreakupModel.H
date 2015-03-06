@@ -106,13 +106,7 @@ public:
         BreakupModel(const BreakupModel<CloudType>& bum);
 
         //- Construct and return a clone
-        virtual autoPtr<BreakupModel<CloudType> > clone() const
-        {
-            return autoPtr<BreakupModel<CloudType> >
-            (
-                new BreakupModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<BreakupModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -187,7 +181,7 @@ public:
             const scalar tMom,
             scalar& dChild,
             scalar& massChild
-        );
+        ) = 0;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,10 +121,7 @@ public:
         distributionModel(const distributionModel& p);
 
         //- Construct and return a clone
-        virtual autoPtr<distributionModel> clone() const
-        {
-            return autoPtr<distributionModel>(new distributionModel(*this));
-        }
+        virtual autoPtr<distributionModel> clone() const = 0;
 
 
     //- Selector
@@ -142,16 +139,16 @@ public:
     // Member Functions
 
         //- Sample the distributionModel
-        virtual scalar sample() const;
+        virtual scalar sample() const = 0;
 
         //- Return the minimum value
-        virtual scalar minValue() const;
+        virtual scalar minValue() const = 0;
 
         //- Return the maximum value
-        virtual scalar maxValue() const;
+        virtual scalar maxValue() const = 0;
 
         //- Return the maximum value
-        virtual scalar meanValue() const;
+        virtual scalar meanValue() const = 0;
 };
 
 

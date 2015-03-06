@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,66 +92,6 @@ Foam::BreakupModel<CloudType>::BreakupModel
 template<class CloudType>
 Foam::BreakupModel<CloudType>::~BreakupModel()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class CloudType>
-bool Foam::BreakupModel<CloudType>::update
-(
-    const scalar dt,
-    const vector& g,
-    scalar& d,
-    scalar& tc,
-    scalar& ms,
-    scalar& nParticle,
-    scalar& KHindex,
-    scalar& y,
-    scalar& yDot,
-    const scalar d0,
-    const scalar rho,
-    const scalar mu,
-    const scalar sigma,
-    const vector& U,
-    const scalar rhoc,
-    const scalar muc,
-    const vector& Urel,
-    const scalar Urmag,
-    const scalar tMom,
-    scalar& dChild,
-    scalar& massChild
-)
-{
-    notImplemented
-    (
-        "bool Foam::BreakupModel<CloudType>::update"
-        "("
-            "const scalar, "
-            "const vector&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const vector&, "
-            "const scalar, "
-            "const scalar, "
-            "const vector&, "
-            "const scalar, "
-            "const scalar, "
-            "scalar&, "
-            "scalar&"
-        ");"
-    );
-
-    return false;
-}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

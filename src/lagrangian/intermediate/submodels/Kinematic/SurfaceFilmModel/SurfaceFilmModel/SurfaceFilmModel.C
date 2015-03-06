@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,28 +98,6 @@ Foam::SurfaceFilmModel<CloudType>::~SurfaceFilmModel()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class CloudType>
-bool Foam::SurfaceFilmModel<CloudType>::transferParcel
-(
-    parcelType& p,
-    const polyPatch& pp,
-    bool& keepParticle
-)
-{
-    notImplemented
-    (
-        "bool Foam::SurfaceFilmModel<CloudType>::transferParcel"
-        "("
-            "parcelType&, "
-            "const polyPatch&, "
-            "bool&"
-        ")"
-    );
-
-    return false;
-}
-
 
 template<class CloudType>
 template<class TrackData>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,5 +55,34 @@ Foam::NoComposition<CloudType>::~NoComposition()
 {}
 
 
-// ************************************************************************* //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+template<class CloudType>
+const Foam::scalarField& Foam::NoComposition<CloudType>::YMixture0() const
+{
+    return scalarField::null();
+}
+
+
+template<class CloudType>
+Foam::label Foam::NoComposition<CloudType>::idGas() const
+{
+    return -1;
+}
+
+
+template<class CloudType>
+Foam::label Foam::NoComposition<CloudType>::idLiquid() const
+{
+    return -1;
+}
+
+
+template<class CloudType>
+Foam::label Foam::NoComposition<CloudType>::idSolid() const
+{
+    return -1;
+}
+
+
+// ************************************************************************* //

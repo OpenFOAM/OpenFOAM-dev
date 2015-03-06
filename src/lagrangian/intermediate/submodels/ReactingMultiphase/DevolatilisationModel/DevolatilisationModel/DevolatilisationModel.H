@@ -99,13 +99,7 @@ public:
         DevolatilisationModel(const DevolatilisationModel<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DevolatilisationModel<CloudType> > clone() const
-        {
-            return autoPtr<DevolatilisationModel<CloudType> >
-            (
-                new DevolatilisationModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<DevolatilisationModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -135,7 +129,7 @@ public:
             const scalarField& YSolidEff,
             label& canCombust,
             scalarField& dMassDV
-        ) const;
+        ) const = 0;
 
         //- Add to devolatilisation mass
         void addToDevolatilisationMass(const scalar dMass);

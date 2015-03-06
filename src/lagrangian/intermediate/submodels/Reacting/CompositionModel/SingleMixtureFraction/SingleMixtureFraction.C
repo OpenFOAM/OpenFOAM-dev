@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,30 +160,6 @@ Foam::SingleMixtureFraction<CloudType>::~SingleMixtureFraction()
 
 template<class CloudType>
 const Foam::scalarField&
-Foam::SingleMixtureFraction<CloudType>::YGas0() const
-{
-    return this->phaseProps()[idGas_].Y();
-}
-
-
-template<class CloudType>
-const Foam::scalarField&
-Foam::SingleMixtureFraction<CloudType>::YLiquid0() const
-{
-    return this->phaseProps()[idLiquid_].Y();
-}
-
-
-template<class CloudType>
-const Foam::scalarField&
-Foam::SingleMixtureFraction<CloudType>::YSolid0() const
-{
-    return this->phaseProps()[idSolid_].Y();
-}
-
-
-template<class CloudType>
-const Foam::scalarField&
 Foam::SingleMixtureFraction<CloudType>::YMixture0() const
 {
     return YMixture0_;
@@ -212,4 +188,3 @@ Foam::label Foam::SingleMixtureFraction<CloudType>::idSolid() const
 
 
 // ************************************************************************* //
-

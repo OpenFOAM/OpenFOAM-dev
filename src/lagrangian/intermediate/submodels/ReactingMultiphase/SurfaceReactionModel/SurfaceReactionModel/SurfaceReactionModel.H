@@ -101,13 +101,7 @@ public:
         SurfaceReactionModel(const SurfaceReactionModel<CloudType>& srm);
 
         //- Construct and return a clone
-        virtual autoPtr<SurfaceReactionModel<CloudType> > clone() const
-        {
-            return autoPtr<SurfaceReactionModel<CloudType> >
-            (
-                new SurfaceReactionModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<SurfaceReactionModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -145,7 +139,7 @@ public:
             scalarField& dMassLiquid,
             scalarField& dMassSolid,
             scalarField& dMassSRCarrier
-        ) const;
+        ) const = 0;
 
         //- Add to devolatilisation mass
         void addToSurfaceReactionMass(const scalar dMass);

@@ -33,18 +33,6 @@ using namespace Foam::constant::mathematical;
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::InjectionModel<CloudType>::validInjection(const label parcelI)
-{
-    notImplemented
-    (
-        "bool Foam::InjectionModel<CloudType>::validInjection(const label)"
-    );
-
-    return false;
-}
-
-
-template<class CloudType>
 bool Foam::InjectionModel<CloudType>::prepareForNextTimeStep
 (
     const scalar time,
@@ -420,58 +408,6 @@ void Foam::InjectionModel<CloudType>::updateMesh()
 
 
 template<class CloudType>
-Foam::scalar Foam::InjectionModel<CloudType>::timeEnd() const
-{
-    notImplemented
-    (
-        "Foam::scalar Foam::InjectionModel<CloudType>::timeEnd() const"
-    );
-
-    return 0.0;
-}
-
-
-template<class CloudType>
-Foam::label Foam::InjectionModel<CloudType>::parcelsToInject
-(
-    const scalar time0,
-    const scalar time1
-)
-{
-    notImplemented
-    (
-        "Foam::label Foam::InjectionModel<CloudType>::parcelsToInject"
-        "("
-            "const scalar, "
-            "const scalar"
-        ")"
-    );
-
-    return 0;
-}
-
-
-template<class CloudType>
-Foam::scalar Foam::InjectionModel<CloudType>::volumeToInject
-(
-    const scalar time0,
-    const scalar time1
-)
-{
-    notImplemented
-    (
-        "Foam::scalar Foam::InjectionModel<CloudType>::volumeToInject"
-        "("
-            "const scalar, "
-            "const scalar"
-        ")"
-    );
-
-    return 0.0;
-}
-
-
-template<class CloudType>
 Foam::scalar Foam::InjectionModel<CloudType>::averageParcelMass()
 {
     label nTotal = 0.0;
@@ -707,68 +643,6 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
     }
 
     postInjectCheck(parcelsAdded, massAdded);
-}
-
-
-template<class CloudType>
-void Foam::InjectionModel<CloudType>::setPositionAndCell
-(
-    const label parcelI,
-    const label nParcels,
-    const scalar time,
-    vector& position,
-    label& cellOwner,
-    label& tetFaceI,
-    label& tetPtI
-)
-{
-    notImplemented
-    (
-        "void Foam::InjectionModel<CloudType>::setPositionAndCell"
-        "("
-            "const label, "
-            "const label, "
-            "const scalar, "
-            "vector&, "
-            "label&, "
-            "label&, "
-            "label&"
-        ")"
-    );
-}
-
-
-template<class CloudType>
-void Foam::InjectionModel<CloudType>::setProperties
-(
-    const label parcelI,
-    const label nParcels,
-    const scalar time,
-    typename CloudType::parcelType& parcel
-)
-{
-    notImplemented
-    (
-        "void Foam::InjectionModel<CloudType>::setProperties"
-        "("
-            "const label, "
-            "const label, "
-            "const scalar, "
-            "typename CloudType::parcelType&"
-        ")"
-    );
-}
-
-
-template<class CloudType>
-bool Foam::InjectionModel<CloudType>::fullyDescribed() const
-{
-    notImplemented
-    (
-        "bool Foam::InjectionModel<CloudType>::fullyDescribed() const"
-    );
-
-    return false;
 }
 
 

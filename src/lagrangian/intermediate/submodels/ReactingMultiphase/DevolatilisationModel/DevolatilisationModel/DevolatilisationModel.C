@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,40 +70,6 @@ Foam::DevolatilisationModel<CloudType>::~DevolatilisationModel()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class CloudType>
-void Foam::DevolatilisationModel<CloudType>::calculate
-(
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalar,
-    const scalarField&,
-    const scalarField&,
-    const scalarField&,
-    label&,
-    scalarField&
-) const
-{
-    notImplemented
-    (
-        "void Foam::DevolatilisationModel<CloudType>::calculate"
-        "("
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalar, "
-            "const scalarField&, "
-            "const scalarField&, "
-            "const scalarField&, "
-            "label&, "
-            "scalarField&"
-        ") const"
-    );
-}
-
 
 template<class CloudType>
 void Foam::DevolatilisationModel<CloudType>::addToDevolatilisationMass

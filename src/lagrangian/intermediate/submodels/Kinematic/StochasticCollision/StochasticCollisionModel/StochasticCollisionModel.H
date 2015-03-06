@@ -58,7 +58,7 @@ class StochasticCollisionModel
 protected:
 
     //- Main collision routine
-    virtual void collide(const scalar dt);
+    virtual void collide(const scalar dt) = 0;
 
 
 public:
@@ -97,13 +97,7 @@ public:
         StochasticCollisionModel(const StochasticCollisionModel<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<StochasticCollisionModel<CloudType> > clone() const
-        {
-            return autoPtr<StochasticCollisionModel<CloudType> >
-            (
-                new StochasticCollisionModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<StochasticCollisionModel<CloudType> > clone() const = 0;
 
 
     //- Destructor

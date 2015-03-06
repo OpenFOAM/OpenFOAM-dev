@@ -143,7 +143,7 @@ protected:
 
         //- Additional flag to identify whether or not injection of parcelI is
         //  permitted
-        virtual bool validInjection(const label parcelI);
+        virtual bool validInjection(const label parcelI) = 0;
 
         //- Determine properties for next time step/injection interval
         virtual bool prepareForNextTimeStep
@@ -220,13 +220,7 @@ public:
         InjectionModel(const InjectionModel<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModel<CloudType> > clone() const
-        {
-            return autoPtr<InjectionModel<CloudType> >
-            (
-                new InjectionModel<CloudType>(*this)
-            );
-        }
+        virtual autoPtr<InjectionModel<CloudType> > clone() const = 0;
 
 
     //- Destructor
@@ -275,21 +269,21 @@ public:
             inline scalar massInjected() const;
 
             //- Return the end-of-injection time
-            virtual scalar timeEnd() const;
+            virtual scalar timeEnd() const = 0;
 
             //- Number of parcels to introduce relative to SOI
             virtual label parcelsToInject
             (
                 const scalar time0,
                 const scalar time1
-            );
+            ) = 0;
 
             //- Volume of parcels to introduce relative to SOI
             virtual scalar volumeToInject
             (
                 const scalar time0,
                 const scalar time1
-            );
+            ) = 0;
 
             //- Return the average parcel mass over the injection period
             virtual scalar averageParcelMass();
@@ -327,7 +321,7 @@ public:
                 label& cellOwner,
                 label& tetFaceI,
                 label& tetPtI
-            );
+            ) = 0;
 
             //- Set the parcel properties
             virtual void setProperties
@@ -336,10 +330,10 @@ public:
                 const label nParcels,
                 const scalar time,
                 parcelType& parcel
-            );
+            ) = 0;
 
             //- Flag to identify whether model fully describes the parcel
-            virtual bool fullyDescribed() const;
+            virtual bool fullyDescribed() const = 0;
 
 
         // I-O

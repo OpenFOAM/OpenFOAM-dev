@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ namespace Foam
         defineRunTimeSelectionTable(distributionModel, dictionary);
     }
 }
+
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -87,52 +88,6 @@ Foam::distributionModels::distributionModel::distributionModel
 
 Foam::distributionModels::distributionModel::~distributionModel()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::scalar Foam::distributionModels::distributionModel::sample() const
-{
-    notImplemented
-    (
-        "Foam::scalar "
-        "Foam::distributionModels::distributionModel::sample() const"
-    );
-    return 0.0;
-}
-
-
-Foam::scalar Foam::distributionModels::distributionModel::minValue() const
-{
-    notImplemented
-    (
-        "Foam::scalar "
-        "Foam::distributionModels::distributionModel::minValue() const"
-    );
-    return 0.0;
-}
-
-
-Foam::scalar Foam::distributionModels::distributionModel::maxValue() const
-{
-    notImplemented
-    (
-        "Foam::scalar "
-        "Foam::distributionModels::distributionModel::maxValue() const"
-    );
-    return 0.0;
-}
-
-
-Foam::scalar Foam::distributionModels::distributionModel::meanValue() const
-{
-    notImplemented
-    (
-        "Foam::scalar "
-        "Foam::distributionModels::distributionModel::meanValue() const"
-    );
-    return 0.0;
-}
 
 
 // ************************************************************************* //
