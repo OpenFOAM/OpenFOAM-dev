@@ -168,6 +168,9 @@ public:
             //- Return density [kg/m^3]
             inline scalar rho(scalar p, scalar T) const;
 
+            //- Return entropy [J/(kmol K)]
+            inline scalar s(const scalar p, const scalar T) const;
+
             //- Return compressibility rho/p [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 

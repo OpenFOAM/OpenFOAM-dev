@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,33 +23,33 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "hExponentialThermo.H"
+#include "hPowerThermo.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class equationOfState>
-Foam::hExponentialThermo<equationOfState>::hExponentialThermo(Istream& is)
+template<class EquationOfState>
+Foam::hPowerThermo<EquationOfState>::hPowerThermo(Istream& is)
 :
-    equationOfState(is),
+    EquationOfState(is),
     n0_(readScalar(is)),
     Tref_(readScalar(is)),
     Hf_(readScalar(is))
 {
-    is.check("hExponentialThermo::hExponentialThermo(Istream& is)");
+    is.check("hPowerThermo::hPowerThermo(Istream& is)");
 
     c0_ *= this->W();
     Hf_ *= this->W();
 }
 
 
-template<class equationOfState>
-Foam::hExponentialThermo<equationOfState>::hExponentialThermo
+template<class EquationOfState>
+Foam::hPowerThermo<EquationOfState>::hPowerThermo
 (
     const dictionary& dict
 )
 :
-    equationOfState(dict),
+    EquationOfState(dict),
     c0_(readScalar(dict.subDict("thermodynamics").lookup("C0"))),
     n0_(readScalar(dict.subDict("thermodynamics").lookup("n0"))),
     Tref_(readScalar(dict.subDict("thermodynamics").lookup("Tref"))),
@@ -62,14 +62,14 @@ Foam::hExponentialThermo<equationOfState>::hExponentialThermo
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
-template<class equationOfState>
+template<class EquationOfState>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const hExponentialThermo<equationOfState>& et
+    const hPowerThermo<EquationOfState>& et
 )
 {
-    os  << static_cast<const equationOfState&>(et) << nl
+    os  << static_cast<const EquationOfState&>(et) << nl
         << "    " << et.c0_
         << tab << et.n0_
         << tab << et.Tref_
@@ -81,7 +81,7 @@ Foam::Ostream& Foam::operator<<
 
     os.check
     (
-        "operator<<(Ostream& os, const hExponentialThermo<equationOfState>& et)"
+        "operator<<(Ostream& os, const hPowerThermo<EquationOfState>& et)"
     );
 
     return os;

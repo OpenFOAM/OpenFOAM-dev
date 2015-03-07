@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,11 +79,11 @@ makeChemistryReaderType(foamChemistryReader, icoPoly8EThermoPhysics);
 // Solid chemistry readers for solids based on sensibleInternalEnergy
 
 makeChemistryReader(hConstSolidThermoPhysics);
-makeChemistryReader(hExponentialSolidThermoPhysics);
+makeChemistryReader(hPowerSolidThermoPhysics);
 makeChemistryReader(hExpKappaConstSolidThermoPhysics);
 
 makeChemistryReaderType(foamChemistryReader, hConstSolidThermoPhysics);
-makeChemistryReaderType(foamChemistryReader, hExponentialSolidThermoPhysics);
+makeChemistryReaderType(foamChemistryReader, hPowerSolidThermoPhysics);
 makeChemistryReaderType(foamChemistryReader, hExpKappaConstSolidThermoPhysics);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

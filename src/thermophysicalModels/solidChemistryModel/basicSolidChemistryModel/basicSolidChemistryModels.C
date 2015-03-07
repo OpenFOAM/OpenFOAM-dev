@@ -54,7 +54,7 @@ makeSolidChemistryModel
     solidChemistryModel,
     pyrolysisChemistryModel,
     basicSolidChemistryModel,
-    hExponentialSolidThermoPhysics,
+    hPowerSolidThermoPhysics,
     gasHThermoPhysics
 );
 

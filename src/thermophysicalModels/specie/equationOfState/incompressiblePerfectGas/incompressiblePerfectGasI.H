@@ -115,37 +115,47 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::rho
 
 
 template<class Specie>
-inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::psi
+inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::s
 (
-    scalar,
+    scalar p,
     scalar T
 ) const
 {
-    return 0.0;
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::psi
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
 }
 
 
 template<class Specie>
 inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::Z
 (
-    scalar,
-    scalar
+    scalar p,
+    scalar T
 ) const
 {
-    return 0.0;
+    return 0;
 }
 
 
 template<class Specie>
 inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::cpMcv
 (
-    scalar,
-    scalar
+    scalar p,
+    scalar T
 ) const
 {
     return RR;
 }
-
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //

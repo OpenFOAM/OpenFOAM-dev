@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,12 +146,7 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::s
     const scalar T
 ) const
 {
-    notImplemented
-    (
-        "scalar eConstThermo<EquationOfState>::"
-        "s(const scalar p, const scalar) const"
-    );
-    return T;
+    return cp()*log(T/Tstd) + EquationOfState::s(p, T);
 }
 
 

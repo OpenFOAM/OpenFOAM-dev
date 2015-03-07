@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ template<class Specie>
 inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::rho
 (
     scalar p,
-    scalar
+    scalar T
 ) const
 {
     return rho0_*pow((p + B_)/(p0_ + B_), 1.0/gamma_);
@@ -112,10 +112,24 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::rho
 
 
 template<class Specie>
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::s
+(
+    scalar p,
+    scalar T
+) const
+{
+    scalar n = 1 - 1.0/gamma_;
+    return
+       -pow(p0_ + B_, 1.0/gamma_)*(pow((p + B_), n) - pow((Pstd + B_), n))
+       /(rho0_*T*n);
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::psi
 (
     scalar p,
-    scalar
+    scalar T
 ) const
 {
     return
@@ -127,15 +141,15 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::psi
 template<class Specie>
 inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::Z(scalar, scalar) const
 {
-    return 1.0;
+    return 1;
 }
 
 
 template<class Specie>
 inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::cpMcv
 (
-    scalar,
-    scalar
+    scalar p,
+    scalar T
 ) const
 {
     return 0;

@@ -117,6 +117,19 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::rho
 
 
 template<class Specie>
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::s
+(
+    scalar p,
+    scalar T
+) const
+{
+    //***HGW This is the expression for a perfect gas
+    // Need to add the entropy defect for Peng-Robinson
+    return -RR*log(p/Pstd);
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::PengRobinsonGas<Specie>::psi
 (
     scalar p,

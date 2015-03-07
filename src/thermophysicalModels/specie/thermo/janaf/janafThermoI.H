@@ -220,9 +220,10 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::s
     return
     RR*
     (
-        (((a[4]/4.0*T + a[3]/3.0)*T + a[2]/2.0)*T + a[1])*T + a[0]*::log(T)
+        (((a[4]/4.0*T + a[3]/3.0)*T + a[2]/2.0)*T + a[1])*T + a[0]*log(T)
       + a[6]
-    );
+    )
+  + EquationOfState::s(p, T);
 }
 
 

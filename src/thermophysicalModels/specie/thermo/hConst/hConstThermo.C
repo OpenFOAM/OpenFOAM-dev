@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,10 +28,10 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class equationOfState>
-Foam::hConstThermo<equationOfState>::hConstThermo(Istream& is)
+template<class EquationOfState>
+Foam::hConstThermo<EquationOfState>::hConstThermo(Istream& is)
 :
-    equationOfState(is),
+    EquationOfState(is),
     Cp_(readScalar(is)),
     Hf_(readScalar(is))
 {
@@ -42,10 +42,10 @@ Foam::hConstThermo<equationOfState>::hConstThermo(Istream& is)
 }
 
 
-template<class equationOfState>
-Foam::hConstThermo<equationOfState>::hConstThermo(const dictionary& dict)
+template<class EquationOfState>
+Foam::hConstThermo<EquationOfState>::hConstThermo(const dictionary& dict)
 :
-    equationOfState(dict),
+    EquationOfState(dict),
     Cp_(readScalar(dict.subDict("thermodynamics").lookup("Cp"))),
     Hf_(readScalar(dict.subDict("thermodynamics").lookup("Hf")))
 {
@@ -56,10 +56,10 @@ Foam::hConstThermo<equationOfState>::hConstThermo(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class equationOfState>
-void Foam::hConstThermo<equationOfState>::write(Ostream& os) const
+template<class EquationOfState>
+void Foam::hConstThermo<EquationOfState>::write(Ostream& os) const
 {
-    equationOfState::write(os);
+    EquationOfState::write(os);
 
     dictionary dict("thermodynamics");
     dict.add("Cp", Cp_/this->W());
@@ -70,14 +70,14 @@ void Foam::hConstThermo<equationOfState>::write(Ostream& os) const
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
-template<class equationOfState>
+template<class EquationOfState>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const hConstThermo<equationOfState>& ct
+    const hConstThermo<EquationOfState>& ct
 )
 {
-    os  << static_cast<const equationOfState&>(ct) << tab
+    os  << static_cast<const EquationOfState&>(ct) << tab
         << ct.Cp_/ct.W() << tab << ct.Hf_/ct.W();
 
     os.check("Ostream& operator<<(Ostream& os, const hConstThermo& ct)");

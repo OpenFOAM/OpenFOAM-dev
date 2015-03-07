@@ -22,59 +22,65 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::hExponentialThermo
+    Foam::hPowerThermo
 
 Description
-    Exponential properties thermodynamics package
-    templated into the equationOfState.
+    Power-function based thermodynamics package templated on EquationOfState.
+
+    In this thermodynamics package the heat capacity is a simple power of
+    temperature:
+
+        Cp(T) = c0*(T/Tref)^n0;
+
+    which is particularly suitable for solids.
 
 SourceFiles
-    hExponentialThermoI.H
-    hExponentialThermo.C
+    hPowerThermoI.H
+    hPowerThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hExponentialThermo_H
-#define hExponentialThermo_H
+#ifndef hPowerThermo_H
+#define hPowerThermo_H
 
 #include "scalar.H"
-#include "dictionary.H"
-#include "specie.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template<class EquationOfState> class hExponentialThermo;
+// Forward declaration of friend functions and operators
+
+template<class EquationOfState> class hPowerThermo;
 
 template<class EquationOfState>
-inline hExponentialThermo<EquationOfState> operator+
+inline hPowerThermo<EquationOfState> operator+
 (
-    const hExponentialThermo<EquationOfState>&,
-    const hExponentialThermo<EquationOfState>&
+    const hPowerThermo<EquationOfState>&,
+    const hPowerThermo<EquationOfState>&
 );
 
 template<class EquationOfState>
-inline hExponentialThermo<EquationOfState> operator-
+inline hPowerThermo<EquationOfState> operator-
 (
-    const hExponentialThermo<EquationOfState>&,
-    const hExponentialThermo<EquationOfState>&
+    const hPowerThermo<EquationOfState>&,
+    const hPowerThermo<EquationOfState>&
 );
 
 template<class EquationOfState>
-inline hExponentialThermo<EquationOfState> operator*
+inline hPowerThermo<EquationOfState> operator*
 (
     const scalar,
-    const hExponentialThermo<EquationOfState>&
+    const hPowerThermo<EquationOfState>&
 );
 
 
 template<class EquationOfState>
-inline hExponentialThermo<EquationOfState> operator==
+inline hPowerThermo<EquationOfState> operator==
 (
-    const hExponentialThermo<EquationOfState>&,
-    const hExponentialThermo<EquationOfState>&
+    const hPowerThermo<EquationOfState>&,
+    const hPowerThermo<EquationOfState>&
 );
 
 
@@ -82,20 +88,19 @@ template<class EquationOfState>
 Ostream& operator<<
 (
     Ostream&,
-    const hExponentialThermo<EquationOfState>&
+    const hPowerThermo<EquationOfState>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                         Class hExponentialThermo Declaration
+                         Class hPowerThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class EquationOfState>
-class hExponentialThermo
+class hPowerThermo
 :
     public EquationOfState
 {
-
     // Private data
 
         scalar c0_;
@@ -109,11 +114,8 @@ class hExponentialThermo
         //- Check given temperature is within the range of the fitted coeffs
         inline void checkT(const scalar T) const;
 
-        //- Integrate Cp expression
-        inline scalar integrateCp(const scalar T) const;
-
         //- Construct from components
-        inline hExponentialThermo
+        inline hPowerThermo
         (
             const EquationOfState& st,
             const scalar c0,
@@ -122,31 +124,32 @@ class hExponentialThermo
             const scalar Hf
         );
 
+
 public:
 
     // Constructors
 
         //- Construct from Istream
-        hExponentialThermo(Istream&);
+        hPowerThermo(Istream&);
 
         //- Construct from dictionary
-        hExponentialThermo(const dictionary&);
+        hPowerThermo(const dictionary&);
 
         //- Construct as a named copy
-        inline hExponentialThermo
+        inline hPowerThermo
         (
             const word&,
-            const hExponentialThermo&
+            const hPowerThermo&
         );
 
          //- Construct and return a clone
-        inline autoPtr<hExponentialThermo> clone() const;
+        inline autoPtr<hPowerThermo> clone() const;
 
         //- Selector from Istream
-        inline static autoPtr<hExponentialThermo> New(Istream& is);
+        inline static autoPtr<hPowerThermo> New(Istream& is);
 
         //- Selector from dictionary
-        inline static autoPtr<hExponentialThermo> New(const dictionary& dict);
+        inline static autoPtr<hPowerThermo> New(const dictionary& dict);
 
 
     // Member Functions
@@ -154,7 +157,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "hExponential<" + EquationOfState::typeName() + '>';
+            return "hPower<" + EquationOfState::typeName() + '>';
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_
@@ -181,35 +184,35 @@ public:
 
     // Member operators
 
-        inline void operator+=(const hExponentialThermo&);
-        inline void operator-=(const hExponentialThermo&);
+        inline void operator+=(const hPowerThermo&);
+        inline void operator-=(const hPowerThermo&);
 
 
     // Friend operators
 
-        friend hExponentialThermo operator+ <EquationOfState>
+        friend hPowerThermo operator+ <EquationOfState>
         (
-            const hExponentialThermo&,
-            const hExponentialThermo&
+            const hPowerThermo&,
+            const hPowerThermo&
         );
 
-        friend hExponentialThermo operator- <EquationOfState>
+        friend hPowerThermo operator- <EquationOfState>
         (
-            const hExponentialThermo&,
-            const hExponentialThermo&
+            const hPowerThermo&,
+            const hPowerThermo&
         );
 
-        friend hExponentialThermo operator* <EquationOfState>
+        friend hPowerThermo operator* <EquationOfState>
         (
             const scalar,
-            const hExponentialThermo&
+            const hPowerThermo&
         );
 
 
-        friend hExponentialThermo operator== <EquationOfState>
+        friend hPowerThermo operator== <EquationOfState>
         (
-            const hExponentialThermo&,
-            const hExponentialThermo&
+            const hPowerThermo&,
+            const hPowerThermo&
         );
 
 
@@ -218,7 +221,7 @@ public:
         friend Ostream& operator<< <EquationOfState>
         (
             Ostream&,
-            const hExponentialThermo&
+            const hPowerThermo&
         );
 };
 
@@ -229,10 +232,9 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
 #ifdef NoRepository
-#   include "hExponentialThermoI.H"
-#   include "hExponentialThermo.C"
+#   include "hPowerThermoI.H"
+#   include "hPowerThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

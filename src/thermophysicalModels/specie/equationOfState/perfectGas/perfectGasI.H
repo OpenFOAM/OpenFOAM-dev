@@ -83,21 +83,28 @@ inline Foam::scalar Foam::perfectGas<Specie>::rho(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectGas<Specie>::psi(scalar, scalar T) const
+inline Foam::scalar Foam::perfectGas<Specie>::s(scalar p, scalar T) const
+{
+    return -RR*log(p/Pstd);
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::perfectGas<Specie>::psi(scalar p, scalar T) const
 {
     return 1.0/(this->R()*T);
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectGas<Specie>::Z(scalar, scalar) const
+inline Foam::scalar Foam::perfectGas<Specie>::Z(scalar p, scalar T) const
 {
-    return 1.0;
+    return 1;
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectGas<Specie>::cpMcv(scalar, scalar) const
+inline Foam::scalar Foam::perfectGas<Specie>::cpMcv(scalar p, scalar T) const
 {
     return RR;
 }

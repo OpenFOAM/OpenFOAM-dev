@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 #include "specie.H"
 #include "rhoConst.H"
 #include "hConstThermo.H"
-#include "hExponentialThermo.H"
+#include "hPowerThermo.H"
 #include "constIsoSolidTransport.H"
 #include "constAnIsoSolidTransport.H"
 #include "exponentialSolidTransport.H"
@@ -69,7 +69,7 @@ makeReactingSolidThermo
     reactingMixture,
     constIsoSolidTransport,
     sensibleEnthalpy,
-    hExponentialThermo,
+    hPowerThermo,
     rhoConst,
     specie
 );

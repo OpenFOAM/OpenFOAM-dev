@@ -39,7 +39,7 @@ defineTemplateTypeNameAndDebugWithName
 defineTemplateTypeNameAndDebugWithName
 (
     Foam::compressible::expoSolid_thermalBaffle1DFvPatchScalarField,
-    "compressible::thermalBaffle1D<hExponentialSolidThermoPhysics>",
+    "compressible::thermalBaffle1D<hPowerSolidThermoPhysics>",
     0
 );
 

@@ -45,7 +45,7 @@ namespace compressible
 
     typedef thermalBaffle1DFvPatchScalarField
     <
-        hExponentialSolidThermoPhysics
+        hPowerSolidThermoPhysics
     >expoSolid_thermalBaffle1DFvPatchScalarField;
 
 

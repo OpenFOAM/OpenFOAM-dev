@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ Foam::icoPolynomial<Specie, PolySize>::New(const dictionary& dict)
 template<class Specie, int PolySize>
 inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::rho
 (
-    scalar,
+    scalar p,
     scalar T
 ) const
 {
@@ -111,24 +111,35 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::rho
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::psi
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::s
 (
-    scalar,
-    scalar
+    scalar p,
+    scalar T
 ) const
 {
-    return 0.0;
+    return 0;
+}
+
+
+template<class Specie, int PolySize>
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::psi
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
 }
 
 
 template<class Specie, int PolySize>
 inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Z
 (
-    scalar,
-    scalar
+    scalar p,
+    scalar T
 ) const
 {
-    return 0.0;
+    return 0;
 }
 
 
