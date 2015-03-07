@@ -137,9 +137,9 @@ void Foam::phaseProperties::setCarrierIds
 void Foam::phaseProperties::checkTotalMassFraction() const
 {
     scalar total = 0.0;
-    forAll(Y_, cmptI)
+    forAll(Y_, speciei)
     {
-        total += Y_[cmptI];
+        total += Y_[speciei];
     }
 
     if (Y_.size() != 0 && mag(total - 1.0) > SMALL)
@@ -147,9 +147,9 @@ void Foam::phaseProperties::checkTotalMassFraction() const
         FatalErrorIn
         (
             "void phaseProperties::checkTotalMassFraction() const"
-        )   << "Component fractions must total to unity for phase "
+        )   << "Specie fractions must total to unity for phase "
             << phaseTypeNames[phase_] << nl
-            << "Components: " << nl << names_ << nl
+            << "Species: " << nl << names_ << nl
             << exit(FatalError);
     }
 }
@@ -227,38 +227,33 @@ void Foam::phaseProperties::reorder
     const wordList& solidNames
 )
 {
-    // Determine the addressing to map between components listed in the phase
+    // Determine the addressing to map between species listed in the phase
     // with those given in the (main) thermo properties
     switch (phase_)
     {
         case GAS:
         {
-            reorder(gasNames);
-            forAll(carrierIds_, i)
-            {
-                carrierIds_[i] = i;
-            }
+            // The list of gaseous species in the mixture may be a sub-set of
+            // the gaseous species in the carrier phase
+            setCarrierIds(gasNames);
             break;
         }
         case LIQUID:
         {
+            // Set the list of liquid species to correspond to the complete list
+            // defined in the thermodynamics package.
             reorder(liquidNames);
+            // Set the ids of the corresponding species in the carrier phase
             setCarrierIds(gasNames);
             break;
         }
         case SOLID:
         {
+            // Set the list of solid species to correspond to the complete list
+            // defined in the thermodynamics package.
             reorder(solidNames);
-            WarningIn
-            (
-                "phaseProperties::reorder"
-                "("
-                    "const wordList& gasNames, "
-                    "const wordList& liquidNames, "
-                    "const wordList& solidNames"
-                ")"
-            )   << "Assuming no mapping between solid and carrier species"
-                << endl;
+            // Assume there is no correspondence between the solid species and
+            // the species in the carrier phase (no sublimation).
             break;
         }
         default:
@@ -303,19 +298,19 @@ const Foam::List<Foam::word>& Foam::phaseProperties::names() const
 }
 
 
-const Foam::word& Foam::phaseProperties::name(const label cmptI) const
+const Foam::word& Foam::phaseProperties::name(const label speciei) const
 {
-    if (cmptI >= names_.size())
+    if (speciei >= names_.size())
     {
         FatalErrorIn
         (
             "const word& phaseProperties::name(const label) const"
-        )   << "Requested component " << cmptI << "out of range" << nl
-            << "Available phase components:" << nl << names_ << nl
+        )   << "Requested specie " << speciei << "out of range" << nl
+            << "Available phase species:" << nl << names_ << nl
             << exit(FatalError);
     }
 
-    return names_[cmptI];
+    return names_[speciei];
 }
 
 
@@ -325,19 +320,19 @@ const Foam::scalarField& Foam::phaseProperties::Y() const
 }
 
 
-Foam::scalar& Foam::phaseProperties::Y(const label cmptI)
+Foam::scalar& Foam::phaseProperties::Y(const label speciei)
 {
-    if (cmptI >= Y_.size())
+    if (speciei >= Y_.size())
     {
         FatalErrorIn
         (
             "const scalar& phaseProperties::Y(const label) const"
-        )   << "Requested component " << cmptI << "out of range" << nl
-            << "Available phase components:" << nl << names_ << nl
+        )   << "Requested specie " << speciei << "out of range" << nl
+            << "Available phase species:" << nl << names_ << nl
             << exit(FatalError);
     }
 
-    return Y_[cmptI];
+    return Y_[speciei];
 }
 
 
@@ -347,13 +342,13 @@ const Foam::labelList& Foam::phaseProperties::carrierIds() const
 }
 
 
-Foam::label Foam::phaseProperties::id(const word& cmptName) const
+Foam::label Foam::phaseProperties::id(const word& specieName) const
 {
-    forAll(names_, cmptI)
+    forAll(names_, speciei)
     {
-        if (names_[cmptI] == cmptName)
+        if (names_[speciei] == specieName)
         {
-            return cmptI;
+            return speciei;
         }
     }
 

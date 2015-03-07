@@ -25,7 +25,7 @@ Class
     Foam::phaseProperties
 
 Description
-    Helper class to manage multi-component phase properties
+    Helper class to manage multi-specie phase properties
 
 SourceFiles
     phaseProperties.C
@@ -79,10 +79,10 @@ private:
         //- State label (s), (l), (g) etc.
         word stateLabel_;
 
-        //- List of component names
+        //- List of specie names
         List<word> names_;
 
-        //- List of component mass fractions
+        //- List of specie mass fractions
         scalarField Y_;
 
         //- Map to carrier id
@@ -145,24 +145,24 @@ public:
             //- Return word representation of the phase type
             word phaseTypeName() const;
 
-            //- Return the list of component names
+            //- Return the list of specie names
             const List<word>& names() const;
 
-            //- Return const access to a component name
-            const word& name(const label cmptI) const;
+            //- Return const access to a specie name
+            const word& name(const label speciei) const;
 
-            //- Return const access to all component mass fractions
+            //- Return const access to all specie mass fractions
             const scalarField& Y() const;
 
-            //- Return non-const access to a component mass fraction
-            scalar& Y(const label cmptI);
+            //- Return non-const access to a specie mass fraction
+            scalar& Y(const label speciei);
 
             //- Return const access to the map to the carrier ids
             const labelList& carrierIds() const;
 
-            //- Return the id of a component in the local list by name
+            //- Return the id of a specie in the local list by name
             //  Returns -1 if not found
-            label id(const word& cmptName) const;
+            label id(const word& specieName) const;
 
 
     // IOstream Operators

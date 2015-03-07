@@ -142,11 +142,6 @@ subModels
                 CH4             0.604;
                 H2              0.099;
                 CO2             0.297;
-
-                // Temporarily add entries for remaining gas species
-                N2  0;
-                O2  0;
-                H2O 0;
             }
             liquid
             {
