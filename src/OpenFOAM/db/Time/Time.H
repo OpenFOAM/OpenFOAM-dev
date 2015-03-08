@@ -172,6 +172,9 @@ protected:
         //- Time directory name precision
         static int precision_;
 
+        //- Maximum time directory name precision
+        static const int maxPrecision_;
+
         //- Adjust the time step so that writing occurs at the specified time
         void adjustDeltaT();
 
