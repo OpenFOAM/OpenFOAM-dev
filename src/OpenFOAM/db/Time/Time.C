@@ -1097,45 +1097,50 @@ Foam::Time& Foam::Time::operator++()
 
 
     // Time value obtained by reading timeName
-    scalar timeNameValue;
+    scalar timeNameValue = -VGREAT;
+
+    // Tolerance used when testing time equivalence
+    scalar timeTol = max(min(pow(10.0, -precision_), 0.1*deltaT_), SMALL);
 
     // Check that new time representation differs from old one
     // reinterpretation of the word
     if
     (
         readScalar(dimensionedScalar::name().c_str(), timeNameValue)
-     && (mag(timeNameValue - oldTimeValue - deltaT_) > 100*SMALL)
+     && (mag(timeNameValue - oldTimeValue - deltaT_) > timeTol)
     )
     {
         int oldPrecision = precision_;
-        do
-        {
-            precision_++;
-            setTime(value(), timeIndex());
-        }
         while
         (
             precision_ < maxPrecision_
          && readScalar(dimensionedScalar::name().c_str(), timeNameValue)
-         && (mag(timeNameValue - oldTimeValue - deltaT_) > 100*SMALL)
-        );
-
-        WarningIn("Time::operator++()")
-            << "Increased the timePrecision from " << oldPrecision
-            << " to " << precision_
-            << " to distinguish between timeNames at time "
-            << dimensionedScalar::name()
-            << endl;
-
-        if (precision_ == maxPrecision_ && precision_ != oldPrecision)
+         && (mag(timeNameValue - oldTimeValue - deltaT_) > timeTol)
+        )
         {
-            // Reached maxPrecision limit
+            precision_++;
+            setTime(value(), timeIndex());
+        }
+
+        if (precision_ != oldPrecision)
+        {
             WarningIn("Time::operator++()")
-                << "Current time name " << dimensionedScalar::name()
-                << " is the old as the previous one " << oldTimeName
-                << endl
-                << "    This might result in overwriting old results."
+                << "Increased the timePrecision from " << oldPrecision
+                << " to " << precision_
+                << " to distinguish between timeNames at time "
+                << dimensionedScalar::name()
                 << endl;
+
+            if (precision_ == maxPrecision_)
+            {
+                // Reached maxPrecision limit
+                WarningIn("Time::operator++()")
+                    << "Current time name " << dimensionedScalar::name()
+                    << " is the old as the previous one " << oldTimeName
+                    << endl
+                    << "    This might result in overwriting old results."
+                    << endl;
+            }
         }
     }
 
