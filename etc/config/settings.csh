@@ -30,11 +30,11 @@
 #
 #------------------------------------------------------------------------------
 
-# prefix to PATH
+# Prefix to PATH
 alias _foamAddPath 'setenv PATH \!*\:${PATH}'
-# prefix to LD_LIBRARY_PATH
+# Prefix to LD_LIBRARY_PATH
 alias _foamAddLib 'setenv LD_LIBRARY_PATH \!*\:${LD_LIBRARY_PATH}'
-# prefix to MANPATH
+# Prefix to MANPATH
 alias _foamAddMan 'setenv MANPATH \!*\:${MANPATH}'
 
 #------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ endsw
 
 #------------------------------------------------------------------------------
 
-# location of the jobControl directory
+# Location of the jobControl directory
 setenv FOAM_JOB_DIR $WM_PROJECT_INST_DIR/jobControl
 
 # wmake configuration
@@ -145,34 +145,34 @@ setenv WM_LINK_LANGUAGE c++
 setenv WM_LABEL_OPTION Int$WM_LABEL_SIZE
 setenv WM_OPTIONS $WM_ARCH$WM_COMPILER$WM_PRECISION_OPTION$WM_LABEL_OPTION$WM_COMPILE_OPTION
 
-# base executables/libraries
+# Base executables/libraries
 setenv FOAM_APPBIN $WM_PROJECT_DIR/platforms/$WM_OPTIONS/bin
 setenv FOAM_LIBBIN $WM_PROJECT_DIR/platforms/$WM_OPTIONS/lib
 
-# external (ThirdParty) libraries
+# External (ThirdParty) libraries
 setenv FOAM_EXT_LIBBIN $WM_THIRD_PARTY_DIR/platforms/$WM_OPTIONS/lib
 
-# site-specific directory
+# Site-specific directory
 if ( $?WM_PROJECT_SITE ) then
     set siteDir=$WM_PROJECT_SITE
 else
     set siteDir=$WM_PROJECT_INST_DIR/site
 endif
 
-# shared site executables/libraries
-# similar naming convention as ~OpenFOAM expansion
+# Shared site executables/libraries
+# Similar naming convention as ~OpenFOAM expansion
 setenv FOAM_SITE_APPBIN $siteDir/$WM_PROJECT_VERSION/platforms/$WM_OPTIONS/bin
 setenv FOAM_SITE_LIBBIN $siteDir/$WM_PROJECT_VERSION/platforms/$WM_OPTIONS/lib
 
-# user executables/libraries
+# User executables/libraries
 setenv FOAM_USER_APPBIN $WM_PROJECT_USER_DIR/platforms/$WM_OPTIONS/bin
 setenv FOAM_USER_LIBBIN $WM_PROJECT_USER_DIR/platforms/$WM_OPTIONS/lib
 
-# dynamicCode templates
+# DynamicCode templates
 # - default location is the "~OpenFOAM/codeTemplates/dynamicCode" expansion
 # setenv FOAM_CODE_TEMPLATES $WM_PROJECT_DIR/etc/codeTemplates/dynamicCode
 
-# convenience
+# Convenience
 setenv FOAM_APP $WM_PROJECT_DIR/applications
 setenv FOAM_SRC $WM_PROJECT_DIR/src
 setenv FOAM_TUTORIALS $WM_PROJECT_DIR/tutorials
@@ -180,12 +180,12 @@ setenv FOAM_UTILITIES $FOAM_APP/utilities
 setenv FOAM_SOLVERS $FOAM_APP/solvers
 setenv FOAM_RUN $WM_PROJECT_USER_DIR/run
 
-# add wmake to the path - not required for runtime-only environment
+# Add wmake to the path - not required for runtime-only environment
 if ( -d "${WM_DIR}" ) setenv PATH ${WM_DIR}:${PATH}
-# add OpenFOAM scripts to the path
+# Add OpenFOAM scripts to the path
 setenv PATH ${WM_PROJECT_DIR}/bin:${PATH}
 
-# add site-specific scripts to path - only if they exist
+# Add site-specific scripts to path - only if they exist
 if ( -d "$siteDir/bin" ) then                       # generic
     _foamAddPath "$siteDir/bin"
 endif
@@ -254,7 +254,7 @@ case ThirdParty:
         set mpc_version=mpc-1.0.1
         breaksw
     case Clang:
-        # using clang - not gcc
+        # Using clang - not gcc
         setenv WM_CC 'clang'
         setenv WM_CXX 'clang++'
         set clang_version=llvm-3.5.1
@@ -268,7 +268,7 @@ case ThirdParty:
         breaksw
     endsw
 
-    # optional configuration tweaks:
+    # Optional configuration tweaks:
     _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/compiler.csh`
 
     if ( $?gcc_version ) then
@@ -284,7 +284,8 @@ case ThirdParty:
             echo
             echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
             echo "    Cannot find $gccDir installation."
-            echo "    Please install this compiler version or if you wish to use the system compiler,"
+            echo "    Please install this compiler version or if you wish to" \
+                 " use the system compiler,"
             echo "    change the 'foamCompiler' setting to 'system'"
             echo
         endif
@@ -292,19 +293,19 @@ case ThirdParty:
         _foamAddMan     $gccDir/man
         _foamAddPath    $gccDir/bin
 
-        # add compiler libraries to run-time environment
+        # Add compiler libraries to run-time environment
         _foamAddLib     $gccDir/lib$WM_COMPILER_LIB_ARCH
 
-        # add gmp/mpfr libraries to run-time environment
+        # Add gmp/mpfr libraries to run-time environment
         _foamAddLib     $gmpDir/lib
         _foamAddLib     $mpfrDir/lib
 
-        # add mpc libraries (not need for older gcc) to run-time environment
+        # Add mpc libraries (not need for older gcc) to run-time environment
         if ( $?mpc_version ) then
             _foamAddLib     $mpcDir/lib
         endif
 
-        # used by boost/CGAL:
+        # Used by boost/CGAL:
         setenv MPFR_ARCH_PATH $mpfrDir
         setenv GMP_ARCH_PATH $gmpDir
     endif
@@ -319,7 +320,8 @@ case ThirdParty:
             echo
             echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
             echo "    Cannot find $clangDir installation."
-            echo "    Please install this compiler version or if you wish to use the system compiler,"
+            echo "    Please install this compiler version or if you wish to" \
+                 " use the system compiler,"
             echo "    change the 'foamCompiler' setting to 'system'"
             echo
         endif
@@ -332,7 +334,7 @@ case ThirdParty:
     breaksw
 
 case system:
-    # okay, use system compiler
+    # Use system compiler
     breaksw
 
 default:
@@ -343,7 +345,7 @@ endsw
 
 
 #
-# add c++0x flags for external programs
+# Add c++0x flags for external programs
 #
 if ( $?WM_CXXFLAGS ) then
     switch ("$WM_COMPILER")
@@ -368,7 +370,7 @@ case SYSTEMOPENMPI:
     set libDir=`mpicc --showme:link | sed -e 's/.*-L\([^ ]*\).*/\1/'`
 
     # Bit of a hack: strip off 'lib' and hope this is the path to openmpi
-    # include files and libraries.
+    # Include files and libraries.
     setenv MPI_ARCH_PATH "${libDir:h}"
 
     _foamAddLib     $libDir
@@ -377,7 +379,7 @@ case SYSTEMOPENMPI:
 
 case OPENMPI:
     setenv FOAM_MPI openmpi-1.8.4
-    # optional configuration tweaks:
+    # Optional configuration tweaks:
     _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/openmpi.csh`
 
     setenv MPI_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
@@ -392,6 +394,50 @@ case OPENMPI:
     _foamAddLib     $MPI_ARCH_PATH/lib
 
     _foamAddMan     $MPI_ARCH_PATH/share/man
+    breaksw
+
+case SYSTEMMPI:
+    setenv FOAM_MPI mpi-system
+
+    if ( ! ($?MPI_ROOT) ) then
+        echo
+        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+        echo "    Please set the environment variable MPI_ROOT to point to" \
+             " the base folder for the system MPI in use."
+        echo "    Example:"
+        echo
+        echo "        setenv MPI_ROOT /opt/mpi"
+        echo
+    else
+        setenv MPI_ARCH_PATH $MPI_ROOT
+
+        if ( ! ($?MPI_ARCH_FLAGS) ) then
+            echo
+            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+            echo "    MPI_ARCH_FLAGS is not set. Example:"
+            echo
+            echo '        setenv MPI_ARCH_FLAGS "-DOMPI_SKIP_MPICXX"'
+            echo
+        endif
+
+        if ( ! ($?MPI_ARCH_INC) ) then
+            echo
+            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+            echo "    MPI_ARCH_INC is not set. Example:"
+            echo
+            echo '        setenv MPI_ARCH_INC "-I$MPI_ROOT/include"'
+            echo
+        endif
+
+        if ( ! ($?MPI_ARCH_LIBS) ) then
+            echo
+            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+            echo "    MPI_ARCH_LIBS is not set. Example:"
+            echo
+            echo '        setenv MPI_ARCH_LIBS "-L$MPI_ROOT/lib -lmpi"'
+            echo
+        endif
+    endif
     breaksw
 
 case MPICH:
@@ -444,11 +490,6 @@ case HPMPI:
         echo Unknown processor type `uname -m` for Linux
         breaksw
     endsw
-    breaksw
-
-case GAMMA:
-    setenv FOAM_MPI gamma
-    setenv MPI_ARCH_PATH /usr
     breaksw
 
 case MPI:
@@ -540,8 +581,8 @@ default:
 endsw
 
 
-# add (non-dummy) MPI implementation
-# dummy MPI already added to LD_LIBRARY_PATH and has no external libraries
+# Add (non-dummy) MPI implementation
+# Dummy MPI already added to LD_LIBRARY_PATH and has no external libraries
 if ( "$FOAM_MPI" != dummy ) then
     _foamAddLib ${FOAM_LIBBIN}/${FOAM_MPI}:${FOAM_EXT_LIBBIN}/${FOAM_MPI}
 endif
@@ -561,7 +602,7 @@ else
 endif
 
 
-# cleanup environment:
+# Cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
 #- keep _foamAddPath _foamAddLib _foamAddMan
 unset minBufferSize

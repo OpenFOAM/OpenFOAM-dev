@@ -1,0 +1,5 @@
+# Use the system installed mpi - depends on specific environment variables
+
+PFLAGS     = $(MPI_ARCH_FLAGS)
+PINC       = $(MPI_ARCH_INC)
+PLIBS      = $(MPI_ARCH_LIBS)

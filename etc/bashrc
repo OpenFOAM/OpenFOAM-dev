@@ -83,8 +83,8 @@ export WM_LABEL_SIZE=32
 export WM_COMPILE_OPTION=Opt
 
 #- MPI implementation:
-#    WM_MPLIB = SYSTEMOPENMPI | OPENMPI | MPICH | MPICH-GM | HPMPI
-#               | GAMMA | MPI | QSMPI | SGIMPI
+#    WM_MPLIB = SYSTEMOPENMPI | OPENMPI | SYSTEMMPI | MPICH | MPICH-GM | HPMPI
+#               | MPI | QSMPI | SGIMPI
 export WM_MPLIB=SYSTEMOPENMPI
 
 #- Operating System:
