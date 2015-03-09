@@ -375,7 +375,7 @@ void Foam::forces::applyBins
 
         forAll(dd, i)
         {
-            label bini = min(max(floor(dd[i]/binDx_), 0), force_[0].size());
+            label bini = min(max(floor(dd[i]/binDx_), 0), force_[0].size() - 1);
 
             force_[0][bini] += fN[i];
             force_[1][bini] += fT[i];
