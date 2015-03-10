@@ -83,12 +83,12 @@ subModels
                 ((0.6 0.35 1.45) (0 0 -1))
             );
 
-            massTotal       5;
+            massTotal       10;
             parcelsPerInjector 20000;
             parcelsPerSecond 500;
             parcelBasisType mass;
-            flowRateProfile constant 1;
-            Umag            constant 1;
+            flowRateProfile constant 0.1;
+            Umag            constant 3.0;
             thetaInner      constant 0;
             thetaOuter      constant 45;
 
