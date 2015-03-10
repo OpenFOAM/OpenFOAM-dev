@@ -47,16 +47,17 @@ thermophysical types.
     - \ref grpThermoBoundaryConditions
 
 
-\section secWallFunctions Wall functions
-Wall functions in OpenFOAM are modelled as boundary conditions, applied to
-the viscosity for momentum, and thermal diffusivity for energy.  Two groups of
-wall functions are available, which vary in terms of the underlying
-compressibility assumption.
+\section secWallFunctions Wall-functions
+Wall-functions in OpenFOAM are modelled as boundary conditions, applied to
+the viscosity for momentum, and thermal diffusivity for energy.
 
-Wall functions for incompressible flow
+Wall-functions
+    - \ref grpWallFunctions
+
+Thermal wall-functions for incompressible flow
     - \ref grpIcoWallFunctions
 
-Wall functions for compressible flow
+Thermal wall-functions for compressible flow
     - \ref grpCmpWallFunctions
 
 
