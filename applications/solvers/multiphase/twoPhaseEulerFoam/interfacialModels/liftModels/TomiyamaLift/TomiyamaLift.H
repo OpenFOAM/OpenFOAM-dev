@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,10 @@ Description
         Chemical Engineering Science
         Volume 57, Issue 11, June 2002, pp. 1849-1858
     \endverbatim
+
+    The coefficient for pow3(EoH) proposed by Tomiyama (2002) has been modified
+    to make the model continuous at EoH = 10.7 while maintaining the
+    lift coefficient proposed by Tomiyama (2002) when EoH >= 10.7.
 
 SourceFiles
     TomiyamaLift.C
