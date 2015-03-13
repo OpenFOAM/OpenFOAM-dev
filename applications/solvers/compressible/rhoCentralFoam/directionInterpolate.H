@@ -27,15 +27,17 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > interpolate
     sf.rename(vf.name() + '_' + dir.name());
 
     // Correct BCs of the positive (outgoing) fluxes
-    if (dir[0] > 0)
+    forAll(sf.boundaryField(), patchi)
     {
-        forAll(sf.boundaryField(), patchi)
+        if
+        (
+           !sf.boundaryField()[patchi].coupled()
+         && sf.boundaryField()[patchi].size()
+         && dir.boundaryField()[patchi][0] > 0
+        )
         {
-            if (!sf.boundaryField()[patchi].coupled())
-            {
-                sf.boundaryField()[patchi] =
-                    vf.boundaryField()[patchi].patchInternalField();
-            }
+            sf.boundaryField()[patchi] =
+                vf.boundaryField()[patchi].patchInternalField();
         }
     }
 
