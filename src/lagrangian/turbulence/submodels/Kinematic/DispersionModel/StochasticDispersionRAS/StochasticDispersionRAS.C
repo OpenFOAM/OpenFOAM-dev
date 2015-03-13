@@ -24,6 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "StochasticDispersionRAS.H"
+#include "constants.H"
+
+using namespace Foam::constant::mathematical;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -89,29 +92,40 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
 
         if (tTurb > tTurbLoc)
         {
-            tTurb = 0.0;
+            tTurb = 0;
 
-            scalar sigma = sqrt(2.0*k/3.0);
-            vector dir = 2.0*rnd.sample01<vector>() - vector::one;
-            dir /= mag(dir) + SMALL;
+            const scalar sigma = sqrt(2*k/3.0);
+
+            // Calculate a random direction dir distributed uniformly
+            // in spherical coordinates
+
+            const scalar theta = rnd.sample01<scalar>()*pi;
+            const scalar phi = rnd.sample01<scalar>()*twoPi;
+
+            // Optimising compilers will use the sincos function
+            const scalar sinTheta = sin(theta);
+            const scalar cosTheta = cos(theta);
+
+            const scalar sinPhi = sin(phi);
+            const scalar cosPhi = cos(phi);
+
+            const vector dir(sinTheta*cosPhi, sinTheta*sinPhi, cosTheta);
 
             // Numerical Recipes... Ch. 7. Random Numbers...
-            scalar x1 = 0.0;
-            scalar x2 = 0.0;
-            scalar rsq = 10.0;
-            while ((rsq > 1.0) || (rsq == 0.0))
+            scalar x1 = 0;
+            scalar x2 = 0;
+            scalar rsq = 10;
+            while ((rsq > 1) || (rsq == 0))
             {
-                x1 = 2.0*rnd.sample01<scalar>() - 1.0;
-                x2 = 2.0*rnd.sample01<scalar>() - 1.0;
+                x1 = 2*rnd.sample01<scalar>() - 1;
+                x2 = 2*rnd.sample01<scalar>() - 1;
                 rsq = x1*x1 + x2*x2;
             }
 
-            scalar fac = sqrt(-2.0*log(rsq)/rsq);
-
+            scalar fac = sqrt(-2*log(rsq)/rsq);
             fac *= mag(x1);
 
             UTurb = sigma*fac*dir;
-
         }
     }
     else
