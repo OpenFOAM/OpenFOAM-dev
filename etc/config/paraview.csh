@@ -39,7 +39,7 @@ if ( $status == 0 ) setenv PATH $cleaned
 
 # determine the cmake to be used
 unsetenv CMAKE_HOME
-foreach cmake ( cmake-2.8.12.1 cmake-2.8.8 cmake-2.8.4 cmake-2.8.3 cmake-2.8.1 )
+foreach cmake ( cmake-3.2.1 cmake-2.8.12.1 cmake-2.8.8 cmake-2.8.4 cmake-2.8.3 cmake-2.8.1 )
     set cmake=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cmake
     if ( -r $cmake ) then
         setenv CMAKE_HOME $cmake
@@ -51,7 +51,8 @@ end
 #- ParaView version, automatically determine major version:
 #setenv ParaView_VERSION 3.12.0
 #setenv ParaView_VERSION 4.0.1
-setenv ParaView_VERSION 4.1.0
+#setenv ParaView_VERSION 4.1.0
+setenv ParaView_VERSION 4.3.1
 setenv ParaView_MAJOR detect
 
 

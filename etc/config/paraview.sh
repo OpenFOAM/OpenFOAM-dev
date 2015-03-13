@@ -38,7 +38,7 @@ cleaned=`$WM_PROJECT_DIR/bin/foamCleanPath "$PATH" "$WM_THIRD_PARTY_DIR/platform
 
 # determine the cmake to be used
 unset CMAKE_HOME
-for cmake in cmake-2.8.12.1 cmake-2.8.8 cmake-2.8.4 cmake-2.8.3 cmake-2.8.1
+for cmake in cmake-3.2.1 cmake-2.8.12.1 cmake-2.8.8 cmake-2.8.4 cmake-2.8.3 cmake-2.8.1
 do
     cmake=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cmake
     if [ -r $cmake ]
@@ -53,7 +53,8 @@ done
 #- ParaView version, automatically determine major version
 #export ParaView_VERSION=3.12.0
 #export ParaView_VERSION=4.0.1
-export ParaView_VERSION=4.1.0
+#export ParaView_VERSION=4.1.0
+export ParaView_VERSION=4.3.1
 export ParaView_MAJOR=detect
 
 
