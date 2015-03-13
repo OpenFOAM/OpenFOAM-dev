@@ -26,12 +26,12 @@ volScalarField h0
     dimensionedScalar("h0", dimLength, 0.0)
 );
 
-Info<< "Reading field U\n" << endl;
-volVectorField U
+Info<< "Creating field hU\n" << endl;
+volVectorField hU
 (
     IOobject
     (
-        "U",
+        "hU",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
@@ -40,17 +40,18 @@ volVectorField U
     mesh
 );
 
-Info<< "Creating field hU\n" << endl;
-volVectorField hU
+Info<< "Reading field U\n" << endl;
+volVectorField U
 (
     IOobject
     (
-        "hU",
+        "U",
         runTime.timeName(),
-        mesh
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
     ),
-    h*U,
-    U.boundaryField().types()
+    hU/h
 );
 
 Info<< "Creating field hTotal for post processing\n" << endl;
@@ -68,7 +69,7 @@ volScalarField hTotal
 );
 hTotal.write();
 
-    #include "createPhi.H"
+#include "createPhi.H"
 
 Info<< "Creating Coriolis Force" << endl;
 const dimensionedVector F("F", ((2.0*Omega) & gHat)*gHat);
