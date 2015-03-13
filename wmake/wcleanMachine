@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -79,7 +79,7 @@ do
     echo "Cleaning machine type: $machType"
 
     find . -depth \( -name Make -o -name "Make.[A-Za-z]*" \) -type d -print | \
-        xargs -i find '{}' -mindepth 1 -maxdepth 1 \
+        xargs -I find '{}' -mindepth 1 -maxdepth 1 \
               \( -type d -name "*$machType" -o -name "*$machType$WM_MPLIB" \) \
               -print | xargs rm -rf
 
