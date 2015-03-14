@@ -732,11 +732,11 @@ void Foam::Time::setUnmodified(const label watchFd) const
 }
 
 
-Foam::word Foam::Time::timeName(const scalar t)
+Foam::word Foam::Time::timeName(const scalar t, const int precision)
 {
     std::ostringstream buf;
     buf.setf(ios_base::fmtflags(format_), ios_base::floatfield);
-    buf.precision(precision_);
+    buf.precision(precision);
     buf << t;
     return buf.str();
 }
@@ -1137,8 +1137,24 @@ Foam::Time& Foam::Time::operator++()
                 WarningIn("Time::operator++()")
                     << "Current time name " << dimensionedScalar::name()
                     << " is the old as the previous one " << oldTimeName
-                    << endl
+                    << nl
                     << "    This might result in overwriting old results."
+                    << endl;
+            }
+
+            // Check if round-off error caused time-reversal
+            scalar oldTimeNameValue = -VGREAT;
+            if
+            (
+                readScalar(oldTimeName.c_str(), oldTimeNameValue)
+             && (sign(timeNameValue - oldTimeNameValue) != sign(deltaT_))
+            )
+            {
+                WarningIn("Time::operator++()")
+                    << "Current time name " << dimensionedScalar::name()
+                    << " is set to an instance prior to the previous one "
+                    << oldTimeName << nl
+                    << "    This might result in temporal discontinuities."
                     << endl;
             }
         }

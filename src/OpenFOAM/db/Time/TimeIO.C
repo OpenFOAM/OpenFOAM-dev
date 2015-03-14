@@ -508,7 +508,7 @@ bool Foam::Time::writeObject
             )
         );
 
-        timeDict.add("value", timeToUserTime(value()));
+        timeDict.add("value", timeName(timeToUserTime(value()), maxPrecision_));
         timeDict.add("name", string(tmName));
         timeDict.add("index", timeIndex_);
         timeDict.add("deltaT", timeToUserTime(deltaT_));

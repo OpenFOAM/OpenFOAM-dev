@@ -406,7 +406,12 @@ public:
         // Access
 
             //- Return time name of given scalar time
-            static word timeName(const scalar);
+            //  formatted with given precision
+            static word timeName
+            (
+                const scalar,
+                const int precision = precision_
+            );
 
             //- Return current time name
             virtual word timeName() const;
