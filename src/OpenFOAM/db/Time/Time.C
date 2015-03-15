@@ -1093,76 +1093,7 @@ Foam::Time& Foam::Time::operator++()
         {
             setTime(0.0, timeIndex_);
         }
-    }
 
-
-    // Time value obtained by reading timeName
-    scalar timeNameValue = -VGREAT;
-
-    // Tolerance used when testing time equivalence
-    scalar timeTol = max(min(pow(10.0, -precision_), 0.1*deltaT_), SMALL);
-
-    // Check that new time representation differs from old one
-    // reinterpretation of the word
-    if
-    (
-        readScalar(dimensionedScalar::name().c_str(), timeNameValue)
-     && (mag(timeNameValue - oldTimeValue - deltaT_) > timeTol)
-    )
-    {
-        int oldPrecision = precision_;
-        while
-        (
-            precision_ < maxPrecision_
-         && readScalar(dimensionedScalar::name().c_str(), timeNameValue)
-         && (mag(timeNameValue - oldTimeValue - deltaT_) > timeTol)
-        )
-        {
-            precision_++;
-            setTime(value(), timeIndex());
-        }
-
-        if (precision_ != oldPrecision)
-        {
-            WarningIn("Time::operator++()")
-                << "Increased the timePrecision from " << oldPrecision
-                << " to " << precision_
-                << " to distinguish between timeNames at time "
-                << dimensionedScalar::name()
-                << endl;
-
-            if (precision_ == maxPrecision_)
-            {
-                // Reached maxPrecision limit
-                WarningIn("Time::operator++()")
-                    << "Current time name " << dimensionedScalar::name()
-                    << " is the old as the previous one " << oldTimeName
-                    << nl
-                    << "    This might result in overwriting old results."
-                    << endl;
-            }
-
-            // Check if round-off error caused time-reversal
-            scalar oldTimeNameValue = -VGREAT;
-            if
-            (
-                readScalar(oldTimeName.c_str(), oldTimeNameValue)
-             && (sign(timeNameValue - oldTimeNameValue) != sign(deltaT_))
-            )
-            {
-                WarningIn("Time::operator++()")
-                    << "Current time name " << dimensionedScalar::name()
-                    << " is set to an instance prior to the previous one "
-                    << oldTimeName << nl
-                    << "    This might result in temporal discontinuities."
-                    << endl;
-            }
-        }
-    }
-
-
-    if (!subCycling_)
-    {
         if (sigStopAtWriteNow_.active() || sigWriteNow_.active())
         {
             // A signal might have been sent on one processor only
@@ -1309,7 +1240,7 @@ Foam::Time& Foam::Time::operator++()
         outputTime_ = primaryOutputTime_ || secondaryOutputTime_;
 
 
-        // see if endTime needs adjustment to stop at the next run()/end() check
+        // Check if endTime needs adjustment to stop at the next run()/end()
         if (!end())
         {
             if (stopAt_ == saNoWriteNow)
@@ -1334,6 +1265,81 @@ Foam::Time& Foam::Time::operator++()
             primaryOutputTime_ = true;
             outputTime_ = true;
             writeOnce_ = false;
+        }
+
+        // Adjust the precision of the time directory name if necessary
+        if (outputTime_)
+        {
+            // Time value obtained by reading timeName
+            scalar timeNameValue = -VGREAT;
+
+            // Tolerance used when testing time equivalence
+            scalar timeTol =
+                max(min(pow(10.0, -precision_), 0.1*deltaT_), SMALL);
+
+            // Check that new time representation differs from old one
+            // reinterpretation of the word
+            if
+            (
+                readScalar(dimensionedScalar::name().c_str(), timeNameValue)
+             && (mag(timeNameValue - oldTimeValue - deltaT_) > timeTol)
+            )
+            {
+                int oldPrecision = precision_;
+                while
+                (
+                    precision_ < maxPrecision_
+                 && readScalar(dimensionedScalar::name().c_str(), timeNameValue)
+                 && (mag(timeNameValue - oldTimeValue - deltaT_) > timeTol)
+                )
+                {
+                    precision_++;
+                    setTime(value(), timeIndex());
+                }
+
+                if (precision_ != oldPrecision)
+                {
+                    WarningIn("Time::operator++()")
+                        << "Increased the timePrecision from " << oldPrecision
+                        << " to " << precision_
+                        << " to distinguish between timeNames at time "
+                        << dimensionedScalar::name()
+                        << endl;
+
+                    if (precision_ == maxPrecision_)
+                    {
+                        // Reached maxPrecision limit
+                        WarningIn("Time::operator++()")
+                            << "Current time name " << dimensionedScalar::name()
+                            << " is the old as the previous one " << oldTimeName
+                            << nl
+                            << "    This might result in overwriting old "
+                               "results."
+                            << endl;
+                    }
+
+                    // Check if round-off error caused time-reversal
+                    scalar oldTimeNameValue = -VGREAT;
+                    if
+                    (
+                        readScalar(oldTimeName.c_str(), oldTimeNameValue)
+                     && (
+                            sign(timeNameValue - oldTimeNameValue)
+                         != sign(deltaT_)
+                        )
+                    )
+                    {
+                        WarningIn("Time::operator++()")
+                            << "Current time name " << dimensionedScalar::name()
+                            << " is set to an instance prior to the "
+                               "previous one "
+                            << oldTimeName << nl
+                            << "    This might result in temporal "
+                               "discontinuities."
+                            << endl;
+                    }
+                }
+            }
         }
 
         functionObjects_.timeSet();
