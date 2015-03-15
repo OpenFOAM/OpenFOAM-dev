@@ -17,8 +17,8 @@ runParallel snappyHexMesh 6 -overwrite
 #cp -r 0.org 0 > /dev/null 2>&1
 
 #- For parallel running
-ls -d processor* | xargs -I rm -rf ./{}/0
-ls -d processor* | xargs -I cp -r 0.org ./{}/0
+ls -d processor* | xargs -I {} rm -rf ./{}/0
+ls -d processor* | xargs -I {} cp -r 0.org ./{}/0
 
 runParallel patchSummary 6
 runParallel potentialFoam 6 -noFunctionObjects
