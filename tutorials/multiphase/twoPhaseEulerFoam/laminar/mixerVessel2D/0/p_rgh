@@ -10,31 +10,37 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      p;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions          [ 1 -1 -2 0 0 0 0 ];
+dimensions      [1 -1 -2 0 0 0 0];
 
-internalField       uniform 1e5;
+internalField   uniform 1e5;
 
 boundaryField
 {
-    inlet
+    rotor
     {
-        type               calculated;
-        value              $internalField;
+        type            fixedFluxPressure;
+        value           $internalField;
     }
-    outlet
+
+    stator
     {
-        type               calculated;
-        value              $internalField;
+        type            fixedFluxPressure;
+        value           $internalField;
     }
-    walls
+
+    front
     {
-        type               calculated;
-        value              $internalField;
+        type            empty;
+    }
+
+    back
+    {
+        type            empty;
     }
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

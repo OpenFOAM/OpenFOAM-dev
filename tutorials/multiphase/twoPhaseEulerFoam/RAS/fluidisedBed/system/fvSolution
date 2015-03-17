@@ -30,7 +30,7 @@ solvers
         minIter         1;
     }
 
-    p
+    p_rgh
     {
         solver          GAMG;
         smoother        DIC;
@@ -45,9 +45,9 @@ solvers
         relTol          0.01;
     }
 
-    pFinal
+    p_rghFinal
     {
-        $p;
+        $p_rgh;
         relTol          0;
     }
 

@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      p;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -20,19 +20,21 @@ internalField       uniform 1e5;
 
 boundaryField
 {
-    inlet
-    {
-        type               calculated;
-        value              $internalField;
-    }
     outlet
     {
-        type               calculated;
-        value              $internalField;
+        type            totalPressure;
+        p0              $internalField;
+        U               U.air;
+        phi             phi.air;
+        rho             thermo:rho.air;
+        psi             none;
+        gamma           1;
+        value           $internalField;
     }
+
     walls
     {
-        type               calculated;
+        type               fixedFluxPressure;
         value              $internalField;
     }
 }

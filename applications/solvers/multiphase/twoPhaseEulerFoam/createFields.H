@@ -1,3 +1,6 @@
+    #include "readGravitationalAcceleration.H"
+    #include "readhRef.H"
+
     Info<< "Creating twoPhaseSystem\n" << endl;
 
     twoPhaseSystem fluid(mesh, g);
@@ -27,6 +30,13 @@
         fluid.lookup("pMin")
     );
 
+
+    Info<< "Calculating field g.h\n" << endl;
+    dimensionedScalar ghRef(g & (cmptMag(g.value())/mag(g.value()))*hRef);
+    volScalarField gh("gh", (g & mesh.C()) - ghRef);
+    surfaceScalarField ghf("ghf", (g & mesh.Cf()) - ghRef);
+
+
     rhoThermo& thermo1 = phase1.thermo();
     rhoThermo& thermo2 = phase2.thermo();
 
@@ -37,6 +47,20 @@
 
     volScalarField& rho2 = thermo2.rho();
     const volScalarField& psi2 = thermo2.psi();
+
+    Info<< "Reading field p_rgh\n" << endl;
+    volScalarField p_rgh
+    (
+        IOobject
+        (
+            "p_rgh",
+            runTime.timeName(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh
+    );
 
     volVectorField U
     (
@@ -99,7 +123,14 @@
 
     label pRefCell = 0;
     scalar pRefValue = 0.0;
-    setRefCell(p, pimple.dict(), pRefCell, pRefValue);
+    setRefCell
+    (
+        p,
+        p_rgh,
+        pimple.dict(),
+        pRefCell,
+        pRefValue
+    );
 
     Info<< "Creating field dpdt\n" << endl;
     volScalarField dpdt

@@ -22,13 +22,13 @@ boundaryField
 {
     rotor
     {
-        type            fixedFluxPressure;
+        type            calculated;
         value           $internalField;
     }
 
     stator
     {
-        type            fixedFluxPressure;
+        type            calculated;
         value           $internalField;
     }
 
