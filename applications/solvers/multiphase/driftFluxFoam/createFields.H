@@ -90,9 +90,15 @@
         ::New(rho, U, rhoPhi, mixture)
     );
 
-    Info<< "Calculating field (g.h)f\n" << endl;
-    volScalarField gh("gh", g & mesh.C());
-    surfaceScalarField ghf("ghf", g & mesh.Cf());
+
+    #include "readGravitationalAcceleration.H"
+    #include "readhRef.H"
+
+    Info<< "Calculating field g.h\n" << endl;
+    dimensionedScalar ghRef(g & (cmptMag(g.value())/mag(g.value()))*hRef);
+    volScalarField gh("gh", (g & mesh.C()) - ghRef);
+    surfaceScalarField ghf("ghf", (g & mesh.Cf()) - ghRef);
+
 
     volScalarField p
     (

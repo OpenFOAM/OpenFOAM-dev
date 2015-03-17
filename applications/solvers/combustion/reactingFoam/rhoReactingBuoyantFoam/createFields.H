@@ -63,9 +63,14 @@ autoPtr<compressible::turbulenceModel> turbulence
 reaction->setTurbulence(turbulence());
 
 
+#include "readGravitationalAcceleration.H"
+#include "readhRef.H"
+
 Info<< "Calculating field g.h\n" << endl;
-volScalarField gh("gh", g & mesh.C());
-surfaceScalarField ghf("ghf", g & mesh.Cf());
+dimensionedScalar ghRef(g & (cmptMag(g.value())/mag(g.value()))*hRef);
+volScalarField gh("gh", (g & mesh.C()) - ghRef);
+surfaceScalarField ghf("ghf", (g & mesh.Cf()) - ghRef);
+
 
 Info<< "Reading field p_rgh\n" << endl;
 volScalarField p_rgh

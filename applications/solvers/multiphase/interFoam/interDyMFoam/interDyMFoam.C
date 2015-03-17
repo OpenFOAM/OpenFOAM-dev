@@ -110,8 +110,8 @@ int main(int argc, char *argv[])
                         << runTime.elapsedCpuTime() - timeBeforeMeshUpdate
                         << " s" << endl;
 
-                    gh = g & mesh.C();
-                    ghf = g & mesh.Cf();
+                    gh = (g & mesh.C()) - ghRef;
+                    ghf = (g & mesh.Cf()) - ghRef;
                 }
 
                 if (mesh.changing() && correctPhi)

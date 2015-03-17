@@ -80,10 +80,15 @@
     Info<< "Creating field kinetic energy K\n" << endl;
     volScalarField K("K", 0.5*magSqr(U));
 
-    Info<< "Calculating field g.h\n" << endl;
-    volScalarField gh("gh", g & mesh.C());
 
-    surfaceScalarField ghf("ghf", g & mesh.Cf());
+    #include "readGravitationalAcceleration.H"
+    #include "readhRef.H"
+
+    Info<< "Calculating field g.h\n" << endl;
+    dimensionedScalar ghRef(g & (cmptMag(g.value())/mag(g.value()))*hRef);
+    volScalarField gh("gh", (g & mesh.C()) - ghRef);
+    surfaceScalarField ghf("ghf", (g & mesh.Cf()) - ghRef);
+
 
     volScalarField p_rgh
     (

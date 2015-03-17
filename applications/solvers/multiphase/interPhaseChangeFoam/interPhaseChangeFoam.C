@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
-    #include "readGravitationalAcceleration.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createFvOptions.H"
