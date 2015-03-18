@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,21 +54,21 @@ Foam::RASModels::phasePressureModel::phasePressureModel
 
     phase_(phase),
 
-    alphaMax_(readScalar(this->coeffDict_.lookup("alphaMax"))),
-    preAlphaExp_(readScalar(this->coeffDict_.lookup("preAlphaExp"))),
-    expMax_(readScalar(this->coeffDict_.lookup("expMax"))),
+    alphaMax_(readScalar(coeffDict_.lookup("alphaMax"))),
+    preAlphaExp_(readScalar(coeffDict_.lookup("preAlphaExp"))),
+    expMax_(readScalar(coeffDict_.lookup("expMax"))),
     g0_
     (
         "g0",
         dimensionSet(1, -1, -2, 0, 0),
-        this->coeffDict_.lookup("g0")
+        coeffDict_.lookup("g0")
     )
 {
-    this->nut_ == dimensionedScalar("zero", this->nut_.dimensions(), 0.0);
+    nut_ == dimensionedScalar("zero", nut_.dimensions(), 0.0);
 
     if (type == typeName)
     {
-        this->printCoeffs(type);
+        printCoeffs(type);
     }
 }
 
@@ -91,10 +91,10 @@ bool Foam::RASModels::phasePressureModel::read()
         >::read()
     )
     {
-        this->coeffDict().lookup("alphaMax") >> alphaMax_;
-        this->coeffDict().lookup("preAlphaExp") >> preAlphaExp_;
-        this->coeffDict().lookup("expMax") >> expMax_;
-        g0_.readIfPresent(this->coeffDict());
+        coeffDict().lookup("alphaMax") >> alphaMax_;
+        coeffDict().lookup("preAlphaExp") >> preAlphaExp_;
+        coeffDict().lookup("expMax") >> expMax_;
+        g0_.readIfPresent(coeffDict());
 
         return true;
     }
@@ -130,13 +130,13 @@ Foam::RASModels::phasePressureModel::R() const
         (
             IOobject
             (
-                IOobject::groupName("R", this->U_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
+                IOobject::groupName("R", U_.group()),
+                runTime_.timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            this->mesh_,
+            mesh_,
             dimensioned<symmTensor>
             (
                 "R",
@@ -151,26 +151,55 @@ Foam::RASModels::phasePressureModel::R() const
 Foam::tmp<Foam::volScalarField>
 Foam::RASModels::phasePressureModel::pPrime() const
 {
-    return
+    tmp<volScalarField> tpPrime
+    (
         g0_
        *min
         (
-            exp(preAlphaExp_*(this->alpha_ - alphaMax_)),
+            exp(preAlphaExp_*(alpha_ - alphaMax_)),
             expMax_
-        );
+        )
+    );
+
+    volScalarField::GeometricBoundaryField& bpPrime = tpPrime().boundaryField();
+
+    forAll(bpPrime, patchi)
+    {
+        if (!bpPrime[patchi].coupled())
+        {
+            bpPrime[patchi] == 0;
+        }
+    }
+
+    return tpPrime;
 }
 
 
 Foam::tmp<Foam::surfaceScalarField>
 Foam::RASModels::phasePressureModel::pPrimef() const
 {
-    return
+    tmp<surfaceScalarField> tpPrime
+    (
         g0_
        *min
         (
-            exp(preAlphaExp_*(fvc::interpolate(this->alpha_) - alphaMax_)),
+            exp(preAlphaExp_*(fvc::interpolate(alpha_) - alphaMax_)),
             expMax_
-        );
+        )
+    );
+
+   surfaceScalarField::GeometricBoundaryField& bpPrime =
+       tpPrime().boundaryField();
+
+    forAll(bpPrime, patchi)
+    {
+        if (!bpPrime[patchi].coupled())
+        {
+            bpPrime[patchi] == 0;
+        }
+    }
+
+    return tpPrime;
 }
 
 
@@ -183,17 +212,17 @@ Foam::RASModels::phasePressureModel::devRhoReff() const
         (
             IOobject
             (
-                IOobject::groupName("devRhoReff", this->U_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
+                IOobject::groupName("devRhoReff", U_.group()),
+                runTime_.timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            this->mesh_,
+            mesh_,
             dimensioned<symmTensor>
             (
                 "R",
-                this->rho_.dimensions()*dimensionSet(0, 2, -2, 0, 0),
+                rho_.dimensions()*dimensionSet(0, 2, -2, 0, 0),
                 symmTensor::zero
             )
         )
@@ -212,7 +241,7 @@ Foam::RASModels::phasePressureModel::divDevRhoReff
         new fvVectorMatrix
         (
             U,
-            this->rho_.dimensions()*dimensionSet(0, 4, -2, 0, 0)
+            rho_.dimensions()*dimensionSet(0, 4, -2, 0, 0)
         )
     );
 }

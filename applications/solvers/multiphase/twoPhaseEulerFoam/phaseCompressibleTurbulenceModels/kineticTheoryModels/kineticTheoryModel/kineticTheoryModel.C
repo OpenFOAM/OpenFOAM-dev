@@ -59,52 +59,52 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         kineticTheoryModels::viscosityModel::New
         (
-            this->coeffDict_
+            coeffDict_
         )
     ),
     conductivityModel_
     (
         kineticTheoryModels::conductivityModel::New
         (
-            this->coeffDict_
+            coeffDict_
         )
     ),
     radialModel_
     (
         kineticTheoryModels::radialModel::New
         (
-            this->coeffDict_
+            coeffDict_
         )
     ),
     granularPressureModel_
     (
         kineticTheoryModels::granularPressureModel::New
         (
-            this->coeffDict_
+            coeffDict_
         )
     ),
     frictionalStressModel_
     (
         kineticTheoryModels::frictionalStressModel::New
         (
-            this->coeffDict_
+            coeffDict_
         )
     ),
 
-    equilibrium_(this->coeffDict_.lookup("equilibrium")),
-    e_("e", dimless, this->coeffDict_.lookup("e")),
-    alphaMax_("alphaMax", dimless, this->coeffDict_.lookup("alphaMax")),
+    equilibrium_(coeffDict_.lookup("equilibrium")),
+    e_("e", dimless, coeffDict_.lookup("e")),
+    alphaMax_("alphaMax", dimless, coeffDict_.lookup("alphaMax")),
     alphaMinFriction_
     (
         "alphaMinFriction",
         dimless,
-        this->coeffDict_.lookup("alphaMinFriction")
+        coeffDict_.lookup("alphaMinFriction")
     ),
     residualAlpha_
     (
         "residualAlpha",
         dimless,
-        this->coeffDict_.lookup("residualAlpha")
+        coeffDict_.lookup("residualAlpha")
     ),
 
     Theta_
@@ -164,7 +164,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
 {
     if (type == typeName)
     {
-        this->printCoeffs(type);
+        printCoeffs(type);
     }
 }
 
@@ -187,10 +187,10 @@ bool Foam::RASModels::kineticTheoryModel::read()
         >::read()
     )
     {
-        this->coeffDict().lookup("equilibrium") >> equilibrium_;
-        e_.readIfPresent(this->coeffDict());
-        alphaMax_.readIfPresent(this->coeffDict());
-        alphaMinFriction_.readIfPresent(this->coeffDict());
+        coeffDict().lookup("equilibrium") >> equilibrium_;
+        e_.readIfPresent(coeffDict());
+        alphaMax_.readIfPresent(coeffDict());
+        alphaMinFriction_.readIfPresent(coeffDict());
 
         viscosityModel_->read();
         conductivityModel_->read();
@@ -232,107 +232,61 @@ Foam::RASModels::kineticTheoryModel::R() const
         (
             IOobject
             (
-                IOobject::groupName("R", this->U_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
+                IOobject::groupName("R", U_.group()),
+                runTime_.timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-          - (this->nut_)*dev(twoSymm(fvc::grad(this->U_)))
-          - (lambda_*fvc::div(this->phi_))*symmTensor::I
+          - (nut_)*dev(twoSymm(fvc::grad(U_)))
+          - (lambda_*fvc::div(phi_))*symmTensor::I
         )
     );
 }
-
-
-/*
-Foam::tmp<Foam::volScalarField>
-Foam::RASModels::kineticTheoryModel::pp() const
-{
-
-    // Particle pressure coefficient
-    // Coefficient in front of Theta (Eq. 3.22, p. 45)
-    volScalarField PsCoeff
-    (
-        granularPressureModel_->granularPressureCoeff
-        (
-            alpha,
-            gs0,
-            rho,
-            e_
-        )
-    );
-
-    // Frictional pressure
-    volScalarField pf
-    (
-        frictionalStressModel_->frictionalPressure
-        (
-            alpha,
-            alphaMinFriction_,
-            alphaMax_
-        )
-    );
-
-    // Return total particle pressure
-    return PsCoeff*Theta_ + pf;
-}
-*/
 
 
 Foam::tmp<Foam::volScalarField>
 Foam::RASModels::kineticTheoryModel::pPrime() const
 {
-    // Local references
-    const volScalarField& alpha = this->alpha_;
     const volScalarField& rho = phase_.rho();
 
-    return
+    tmp<volScalarField> tpPrime
     (
         Theta_
        *granularPressureModel_->granularPressureCoeffPrime
         (
-            alpha,
-            radialModel_->g0(alpha, alphaMinFriction_, alphaMax_),
-            radialModel_->g0prime(alpha, alphaMinFriction_, alphaMax_),
+            alpha_,
+            radialModel_->g0(alpha_, alphaMinFriction_, alphaMax_),
+            radialModel_->g0prime(alpha_, alphaMinFriction_, alphaMax_),
             rho,
             e_
         )
      +  frictionalStressModel_->frictionalPressurePrime
         (
-            alpha,
+            alpha_,
             alphaMinFriction_,
             alphaMax_
         )
     );
+
+    volScalarField::GeometricBoundaryField& bpPrime = tpPrime().boundaryField();
+
+    forAll(bpPrime, patchi)
+    {
+        if (!bpPrime[patchi].coupled())
+        {
+            bpPrime[patchi] == 0;
+        }
+    }
+
+    return tpPrime;
 }
 
 
 Foam::tmp<Foam::surfaceScalarField>
 Foam::RASModels::kineticTheoryModel::pPrimef() const
 {
-    // Local references
-    const volScalarField& alpha = this->alpha_;
-    const volScalarField& rho = phase_.rho();
-
-    return fvc::interpolate
-    (
-        Theta_
-       *granularPressureModel_->granularPressureCoeffPrime
-        (
-            alpha,
-            radialModel_->g0(alpha, alphaMinFriction_, alphaMax_),
-            radialModel_->g0prime(alpha, alphaMinFriction_, alphaMax_),
-            rho,
-            e_
-        )
-     +  frictionalStressModel_->frictionalPressurePrime
-        (
-            alpha,
-            alphaMinFriction_,
-            alphaMax_
-        )
-    );
+    return fvc::interpolate(pPrime());
 }
 
 
@@ -345,15 +299,15 @@ Foam::RASModels::kineticTheoryModel::devRhoReff() const
         (
             IOobject
             (
-                IOobject::groupName("devRhoReff", this->U_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
+                IOobject::groupName("devRhoReff", U_.group()),
+                runTime_.timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-          - (this->rho_*this->nut_)
-           *dev(twoSymm(fvc::grad(this->U_)))
-          - ((this->rho_*lambda_)*fvc::div(this->phi_))*symmTensor::I
+          - (rho_*nut_)
+           *dev(twoSymm(fvc::grad(U_)))
+          - ((rho_*lambda_)*fvc::div(phi_))*symmTensor::I
         )
     );
 }
@@ -367,11 +321,11 @@ Foam::RASModels::kineticTheoryModel::divDevRhoReff
 {
     return
     (
-      - fvm::laplacian(this->rho_*this->nut_, U)
+      - fvm::laplacian(rho_*nut_, U)
       - fvc::div
         (
-            (this->rho_*this->nut_)*dev2(T(fvc::grad(U)))
-          + ((this->rho_*lambda_)*fvc::div(this->phi_))
+            (rho_*nut_)*dev2(T(fvc::grad(U)))
+          + ((rho_*lambda_)*fvc::div(phi_))
            *dimensioned<symmTensor>("I", dimless, symmTensor::I)
         )
     );
@@ -381,10 +335,10 @@ Foam::RASModels::kineticTheoryModel::divDevRhoReff
 void Foam::RASModels::kineticTheoryModel::correct()
 {
     // Local references
-    volScalarField alpha(max(this->alpha_, scalar(0)));
+    volScalarField alpha(max(alpha_, scalar(0)));
     const volScalarField& rho = phase_.rho();
-    const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
-    const volVectorField& U = this->U_;
+    const surfaceScalarField& alphaRhoPhi = alphaRhoPhi_;
+    const volVectorField& U = U_;
     const volVectorField& Uc_ = phase_.fluid().otherPhase(phase_).U();
 
     const scalar sqrtPi = sqrt(constant::mathematical::pi);
@@ -394,7 +348,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
     tmp<volScalarField> tda(phase_.d());
     const volScalarField& da = tda();
 
-    tmp<volTensorField> tgradU(fvc::grad(this->U_));
+    tmp<volTensorField> tgradU(fvc::grad(U_));
     const volTensorField& gradU(tgradU());
     volSymmTensorField D(symm(gradU));
 
@@ -508,7 +462,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         (
             "trD",
             alpha/(alpha + residualAlpha_)
-           *fvc::div(this->phi_)
+           *fvc::div(phi_)
         );
         volScalarField tr2D("tr2D", sqr(trD));
         volScalarField trD2("trD2", tr(D & D));

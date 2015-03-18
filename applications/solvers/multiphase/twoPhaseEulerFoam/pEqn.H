@@ -34,7 +34,6 @@
         fvc::interpolate(rAU1*phase1.turbulence().pPrime())
        *fvc::snGrad(alpha1)*mesh.magSf()
     );
-    phiF1.boundaryField() == 0;
 
     // Phase-2 pressure flux (e.g. due to particle-particle pressure)
     surfaceScalarField phiF2
@@ -43,7 +42,6 @@
         fvc::interpolate(rAU2*phase2.turbulence().pPrime())
        *fvc::snGrad(alpha2)*mesh.magSf()
     );
-    phiF2.boundaryField() == 0;
 
     volScalarField rho("rho", fluid.rho());
     surfaceScalarField ghSnGradRho(ghf*fvc::snGrad(rho)*mesh.magSf());
