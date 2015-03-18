@@ -62,7 +62,7 @@ JohnsonJackson
     eta_("eta", dimless, coeffDict_.lookup("eta")),
     p_("p", dimless, coeffDict_.lookup("p")),
     phi_("phi", dimless, coeffDict_.lookup("phi")),
-    alphaDeltaMax_("alphaDeltaMax", dimless, coeffDict_.lookup("alphaDeltaMax"))
+    alphaDeltaMin_("alphaDeltaMin", dimless, coeffDict_.lookup("alphaDeltaMin"))
 {
     phi_ *= constant::mathematical::pi/180.0;
 }
@@ -89,7 +89,7 @@ frictionalPressure
 
     return
         Fr_*pow(max(alpha1 - alphaMinFriction, scalar(0)), eta_)
-       /pow(max(alphaMax - alpha1, alphaDeltaMax_), p_);
+       /pow(max(alphaMax - alpha1, alphaDeltaMin_), p_);
 }
 
 
@@ -107,7 +107,7 @@ frictionalPressurePrime
         eta_*pow(max(alpha1 - alphaMinFriction, scalar(0)), eta_ - 1.0)
        *(alphaMax-alpha1)
       + p_*pow(max(alpha1 - alphaMinFriction, scalar(0)), eta_)
-    )/pow(max(alphaMax - alpha1, alphaDeltaMax_), p_ + 1.0);
+    )/pow(max(alphaMax - alpha1, alphaDeltaMin_), p_ + 1.0);
 }
 
 
@@ -135,7 +135,7 @@ bool Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::read()
     phi_.read(coeffDict_);
     phi_ *= constant::mathematical::pi/180.0;
 
-    alphaDeltaMax_.read(coeffDict_);
+    alphaDeltaMin_.read(coeffDict_);
 
     return true;
 }

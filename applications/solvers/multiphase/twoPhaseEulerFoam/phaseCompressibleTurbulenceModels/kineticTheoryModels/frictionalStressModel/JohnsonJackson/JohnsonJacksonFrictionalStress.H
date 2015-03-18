@@ -69,8 +69,8 @@ class JohnsonJackson
         //- Angle of internal friction
         dimensionedScalar phi_;
 
-        //- Limit of alphaMax - alpha1 (~5e-2 or higher)
-        dimensionedScalar alphaDeltaMax_;
+        //- Lower limit for (alphaMax - alpha1)
+        dimensionedScalar alphaDeltaMin_;
 
 
 public:
