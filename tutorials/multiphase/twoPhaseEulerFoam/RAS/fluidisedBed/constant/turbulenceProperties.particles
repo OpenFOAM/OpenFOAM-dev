@@ -45,6 +45,7 @@ RAS
             eta                     2;
             p                       5;
             phi                     28.5;
+            alphaDeltaMax           0.05;
         }
     }
 

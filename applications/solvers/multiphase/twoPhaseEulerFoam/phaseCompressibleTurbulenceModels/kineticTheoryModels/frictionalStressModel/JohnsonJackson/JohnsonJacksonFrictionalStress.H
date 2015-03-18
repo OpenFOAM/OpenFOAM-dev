@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,9 @@ class JohnsonJackson
 
         //- Angle of internal friction
         dimensionedScalar phi_;
+
+        //- Limit of alphaMax - alpha1 (~5e-2 or higher)
+        dimensionedScalar alphaDeltaMax_;
 
 
 public:
