@@ -89,7 +89,7 @@ public:
             scalar d_;
 
             //- Internal degrees of freedom
-            scalar internalDegreesOfFreedom_;
+            direction internalDegreesOfFreedom_;
 
             //- Viscosity index
             scalar omega_;
@@ -119,7 +119,7 @@ public:
             inline scalar sigmaT() const;
 
             //- Return the internalDegreesOfFreedom
-            inline scalar internalDegreesOfFreedom() const;
+            inline direction internalDegreesOfFreedom() const;
 
             //- Return the viscosity index
             inline scalar omega() const;

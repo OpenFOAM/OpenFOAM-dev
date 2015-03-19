@@ -350,7 +350,7 @@ public:
                 scalar equipartitionInternalEnergy
                 (
                     scalar temperature,
-                    scalar internalDegreesOfFreedom
+                    direction internalDegreesOfFreedom
                 );
 
 

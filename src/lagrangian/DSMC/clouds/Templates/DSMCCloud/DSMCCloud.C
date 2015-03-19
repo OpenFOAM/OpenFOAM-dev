@@ -120,9 +120,7 @@ void Foam::DSMCCloud<ParcelType>::initialise
         forAll(cellTets, tetI)
         {
             const tetIndices& cellTetIs = cellTets[tetI];
-
             tetPointRef tet = cellTetIs.tet(mesh_);
-
             scalar tetVolume = tet.mag();
 
             forAll(molecules, i)
@@ -239,7 +237,6 @@ void Foam::DSMCCloud<ParcelType>::collisions()
 
         if (nC > 1)
         {
-
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             // Assign particles to one of 8 Cartesian subCells
 
@@ -257,14 +254,12 @@ void Foam::DSMCCloud<ParcelType>::collisions()
             forAll(cellParcels, i)
             {
                 const ParcelType& p = *cellParcels[i];
-
                 vector relPos = p.position() - cC;
 
                 label subCell =
                     pos(relPos.x()) + 2*pos(relPos.y()) + 4*pos(relPos.z());
 
                 subCells[subCell].append(i);
-
                 whichSubCell[i] = subCell;
             }
 
@@ -278,9 +273,7 @@ void Foam::DSMCCloud<ParcelType>::collisions()
                /mesh_.cellVolumes()[cellI];
 
             label nCandidates(selectedPairs);
-
             collisionSelectionRemainder_[cellI] = selectedPairs - nCandidates;
-
             collisionCandidates += nCandidates;
 
             for (label c = 0; c < nCandidates; c++)
@@ -295,7 +288,6 @@ void Foam::DSMCCloud<ParcelType>::collisions()
                 label candidateQ = -1;
 
                 List<label> subCellPs = subCells[whichSubCell[candidateP]];
-
                 label nSC = subCellPs.size();
 
                 if (nSC > 1)
@@ -307,7 +299,6 @@ void Foam::DSMCCloud<ParcelType>::collisions()
                     do
                     {
                         candidateQ = subCellPs[rndGen_.integer(0, nSC - 1)];
-
                     } while (candidateP == candidateQ);
                 }
                 else
@@ -319,7 +310,6 @@ void Foam::DSMCCloud<ParcelType>::collisions()
                     do
                     {
                         candidateQ = rndGen_.integer(0, nC - 1);
-
                     } while (candidateP == candidateQ);
                 }
 
@@ -406,15 +396,10 @@ void Foam::DSMCCloud<ParcelType>::resetFields()
     );
 
     rhoN_ = dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), VSMALL);
-
     rhoM_ =  dimensionedScalar("zero",  dimensionSet(1, -3, 0, 0, 0), VSMALL);
-
     dsmcRhoN_ = dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), 0.0);
-
     linearKE_ = dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0.0);
-
     internalE_ = dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0.0);
-
     iDof_ = dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), VSMALL);
 
     momentum_ = dimensionedVector
@@ -430,17 +415,11 @@ template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::calculateFields()
 {
     scalarField& rhoN = rhoN_.internalField();
-
     scalarField& rhoM = rhoM_.internalField();
-
     scalarField& dsmcRhoN = dsmcRhoN_.internalField();
-
     scalarField& linearKE = linearKE_.internalField();
-
     scalarField& internalE = internalE_.internalField();
-
     scalarField& iDof = iDof_.internalField();
-
     vectorField& momentum = momentum_.internalField();
 
     forAllConstIter(typename DSMCCloud<ParcelType>, *this, iter)
@@ -449,17 +428,11 @@ void Foam::DSMCCloud<ParcelType>::calculateFields()
         const label cellI = p.cell();
 
         rhoN[cellI]++;
-
         rhoM[cellI] += constProps(p.typeId()).mass();
-
         dsmcRhoN[cellI]++;
-
         linearKE[cellI] += 0.5*constProps(p.typeId()).mass()*(p.U() & p.U());
-
         internalE[cellI] += p.Ei();
-
         iDof[cellI] += constProps(p.typeId()).internalDegreesOfFreedom();
-
         momentum[cellI] += constProps(p.typeId()).mass()*p.U();
     }
 
@@ -732,7 +705,6 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
     )
 {
     buildConstProps();
-
     buildCellOccupancy();
 
     // Initialise the collision selection remainder to a random value between 0
@@ -971,9 +943,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
     inflowBoundaryModel_()
 {
     clear();
-
     buildConstProps();
-
     initialise(dsmcInitialiseDict);
 }
 
@@ -1082,7 +1052,7 @@ template<class ParcelType>
 Foam::scalar Foam::DSMCCloud<ParcelType>::equipartitionInternalEnergy
 (
     scalar temperature,
-    scalar iDof
+    direction iDof
 )
 {
     scalar Ei = 0.0;
@@ -1099,17 +1069,13 @@ Foam::scalar Foam::DSMCCloud<ParcelType>::equipartitionInternalEnergy
     else
     {
         scalar a = 0.5*iDof - 1;
-
         scalar energyRatio;
-
         scalar P = -1;
 
         do
         {
             energyRatio = 10*rndGen_.scalar01();
-
             P = pow((energyRatio/a), a)*exp(a - energyRatio);
-
         } while (P < rndGen_.scalar01());
 
         Ei = energyRatio*physicoChemical::k.value()*temperature;

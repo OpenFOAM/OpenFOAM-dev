@@ -110,7 +110,7 @@ void Foam::MixedDiffuseSpecular<CloudType>::correct
 
         scalar mass = cloud.constProps(typeId).mass();
 
-        scalar iDof = cloud.constProps(typeId).internalDegreesOfFreedom();
+        direction iDof = cloud.constProps(typeId).internalDegreesOfFreedom();
 
         U =
             sqrt(physicoChemical::k.value()*T/mass)

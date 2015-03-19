@@ -45,7 +45,7 @@ inline Foam::DSMCParcel<ParcelType>::constantProperties::constantProperties
     d_(readScalar(dict.lookup("diameter"))),
     internalDegreesOfFreedom_
     (
-        readScalar(dict.lookup("internalDegreesOfFreedom"))
+        readInt(dict.lookup("internalDegreesOfFreedom"))
     ),
     omega_(readScalar(dict.lookup("omega")))
 {}
@@ -97,7 +97,7 @@ Foam::DSMCParcel<ParcelType>::constantProperties::sigmaT() const
 
 
 template<class ParcelType>
-inline Foam::scalar
+inline Foam::direction
 Foam::DSMCParcel<ParcelType>::constantProperties::internalDegreesOfFreedom()
 const
 {

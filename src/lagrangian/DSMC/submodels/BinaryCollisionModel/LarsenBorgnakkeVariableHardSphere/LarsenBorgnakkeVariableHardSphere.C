@@ -42,7 +42,6 @@ Foam::scalar Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::energyRatio
     Random& rndGen(cloud.rndGen());
 
     scalar ChiAMinusOne = ChiA - 1;
-
     scalar ChiBMinusOne = ChiB - 1;
 
     if (ChiAMinusOne < SMALL && ChiBMinusOne < SMALL)
@@ -51,7 +50,6 @@ Foam::scalar Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::energyRatio
     }
 
     scalar energyRatio;
-
     scalar P;
 
     do
@@ -159,9 +157,7 @@ Foam::scalar Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::sigmaTcR
     }
 
     scalar mP = cloud.constProps(typeIdP).mass();
-
     scalar mQ = cloud.constProps(typeIdQ).mass();
-
     scalar mR = mP*mQ/(mP + mQ);
 
     // calculating cross section = pi*dPQ^2, where dPQ is from Bird, eq. 4.79
@@ -199,12 +195,10 @@ void Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::collide
     // DSMC0R.FOR
 
     scalar preCollisionEiP = EiP;
-
     scalar preCollisionEiQ = EiQ;
 
-    scalar iDofP = cloud.constProps(typeIdP).internalDegreesOfFreedom();
-
-    scalar iDofQ = cloud.constProps(typeIdQ).internalDegreesOfFreedom();
+    direction iDofP = cloud.constProps(typeIdP).internalDegreesOfFreedom();
+    direction iDofQ = cloud.constProps(typeIdQ).internalDegreesOfFreedom();
 
     scalar omegaPQ =
         0.5
@@ -214,17 +208,11 @@ void Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::collide
         );
 
     scalar mP = cloud.constProps(typeIdP).mass();
-
     scalar mQ = cloud.constProps(typeIdQ).mass();
-
     scalar mR = mP*mQ/(mP + mQ);
-
     vector Ucm = (mP*UP + mQ*UQ)/(mP + mQ);
-
     scalar cRsqr = magSqr(UP - UQ);
-
     scalar availableEnergy = 0.5*mR*cRsqr;
-
     scalar ChiB = 2.5 - omegaPQ;
 
     if (iDofP > 0)
@@ -233,9 +221,16 @@ void Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::collide
         {
             availableEnergy += preCollisionEiP;
 
-            scalar ChiA = 0.5*iDofP;
-
-            EiP = energyRatio(ChiA, ChiB)*availableEnergy;
+            if (iDofP == 2)
+            {
+                scalar energyRatio = 1.0 - pow(rndGen.scalar01(), (1.0/ChiB));
+                EiP = energyRatio*availableEnergy;
+            }
+            else
+            {
+                scalar ChiA = 0.5*iDofP;
+                EiP = energyRatio(ChiA, ChiB)*availableEnergy;
+            }
 
             availableEnergy -= EiP;
         }
@@ -247,10 +242,16 @@ void Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::collide
         {
             availableEnergy += preCollisionEiQ;
 
-            // Change to general LB ratio calculation
-            scalar energyRatio = 1.0 - pow(rndGen.scalar01(),(1.0/ChiB));
-
-            EiQ = energyRatio*availableEnergy;
+            if (iDofQ == 2)
+            {
+                scalar energyRatio = 1.0 - pow(rndGen.scalar01(), (1.0/ChiB));
+                EiQ = energyRatio*availableEnergy;
+            }
+            else
+            {
+                scalar ChiA = 0.5*iDofQ;
+                EiQ = energyRatio(ChiA, ChiB)*availableEnergy;
+            }
 
             availableEnergy -= EiQ;
         }
@@ -260,11 +261,8 @@ void Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::collide
     scalar cR = sqrt(2.0*availableEnergy/mR);
 
     // Variable Hard Sphere collision part
-
     scalar cosTheta = 2.0*rndGen.scalar01() - 1.0;
-
     scalar sinTheta = sqrt(1.0 - cosTheta*cosTheta);
-
     scalar phi = twoPi*rndGen.scalar01();
 
     vector postCollisionRelU =
@@ -277,7 +275,6 @@ void Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::collide
         );
 
     UP = Ucm + postCollisionRelU*mQ/(mP + mQ);
-
     UQ = Ucm - postCollisionRelU*mP/(mP + mQ);
 }
 
