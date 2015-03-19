@@ -10,31 +10,33 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      nut.water;
+    object      epsilonm;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -1 0 0 0 0];
+dimensions      [0 2 -3 0 0 0 0];
 
-internalField   uniform 1e-8;
+internalField   uniform 1.5e-4;
 
 boundaryField
 {
     inlet
     {
-        type            calculated;
+        type            fixedValue;
         value           $internalField;
     }
 
     outlet
     {
-        type            calculated;
+        type            inletOutlet;
+        phi             phim;
+        inletValue      $internalField;
         value           $internalField;
     }
 
     walls
     {
-        type            nutkWallFunction;
+        type            zeroGradient;
         value           $internalField;
     }
 
