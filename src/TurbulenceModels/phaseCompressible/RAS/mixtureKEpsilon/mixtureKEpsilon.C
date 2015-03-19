@@ -231,6 +231,11 @@ void mixtureKEpsilon<BasicTurbulenceModel>::initMixtureFields()
     const volScalarField& kl = turbc.k_;
     const volScalarField& epsilonl = turbc.epsilon_;
 
+    word startTimeName
+    (
+        this->runTime_.timeName(this->runTime_.startTime().value())
+    );
+
     Ct2_.set
     (
         new volScalarField
@@ -238,7 +243,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::initMixtureFields()
             IOobject
             (
                 "Ct2",
-                this->runTime_.timeName(),
+                startTimeName,
                 this->mesh_,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -254,7 +259,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::initMixtureFields()
             IOobject
             (
                 "rhom",
-                this->runTime_.timeName(),
+                startTimeName,
                 this->mesh_,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -270,7 +275,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::initMixtureFields()
             IOobject
             (
                 "km",
-                this->runTime_.timeName(),
+                startTimeName,
                 this->mesh_,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -288,7 +293,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::initMixtureFields()
             IOobject
             (
                 "epsilonm",
-                this->runTime_.timeName(),
+                startTimeName,
                 this->mesh_,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
