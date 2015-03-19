@@ -22,7 +22,7 @@ solvers
         nAlphaSubCycles 3;
     }
 
-    p
+    p_rgh
     {
         solver          GAMG;
         tolerance       1e-7;
@@ -37,7 +37,7 @@ solvers
         mergeLevels     1;
     }
 
-    pFinal
+    p_rghFinal
     {
         solver          PCG;
         preconditioner
@@ -62,7 +62,7 @@ solvers
 
     pcorr
     {
-        $pFinal;
+        $p_rghFinal;
         tolerance       1e-5;
         relTol          0;
     }

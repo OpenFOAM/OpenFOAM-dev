@@ -22,7 +22,7 @@ solvers
         nAlphaSubCycles 2;
     }
 
-    p
+    p_rgh
     {
         solver          GAMG;
         smoother        DIC;
@@ -37,16 +37,16 @@ solvers
         relTol          0.01;
     }
 
-    pFinal
+    p_rghFinal
     {
-        $p;
+        $p_rgh;
         tolerance       1e-9;
         relTol          0;
     }
 
     pcorr
     {
-        $p;
+        $p_rgh;
         tolerance       1e-5;
         relTol          0;
     }

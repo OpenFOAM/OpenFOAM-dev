@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      p;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -20,24 +20,37 @@ internalField   uniform 0;
 
 boundaryField
 {
-    rotor
+    leftWall
     {
         type            fixedFluxPressure;
-        value           $internalField;
+        value           uniform 0;
     }
 
-    stator
+    rightWall
     {
         type            fixedFluxPressure;
-        value           $internalField;
+        value           uniform 0;
     }
 
-    front
+    lowerWall
     {
-        type            empty;
+        type            fixedFluxPressure;
+        value           uniform 0;
     }
 
-    back
+    atmosphere
+    {
+        type            totalPressure;
+        p0              uniform 0;
+        U               U.air;
+        phi             phi.air;
+        rho             rho;
+        psi             none;
+        gamma           1;
+        value           uniform 0;
+    }
+
+    defaultFaces
     {
         type            empty;
     }

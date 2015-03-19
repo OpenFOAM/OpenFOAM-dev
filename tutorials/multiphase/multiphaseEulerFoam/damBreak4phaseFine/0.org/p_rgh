@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      p;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -42,8 +42,8 @@ boundaryField
     {
         type            totalPressure;
         p0              uniform 0;
-        U               U.air;
-        phi             phi.air;
+        U               U;
+        phi             phi;
         rho             rho;
         psi             none;
         gamma           1;
