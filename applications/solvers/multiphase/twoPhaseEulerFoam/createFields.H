@@ -30,12 +30,7 @@
         fluid.lookup("pMin")
     );
 
-
-    Info<< "Calculating field g.h\n" << endl;
-    dimensionedScalar ghRef(g & (cmptMag(g.value())/mag(g.value()))*hRef);
-    volScalarField gh("gh", (g & mesh.C()) - ghRef);
-    surfaceScalarField ghf("ghf", (g & mesh.Cf()) - ghRef);
-
+    #include "gh.H"
 
     rhoThermo& thermo1 = phase1.thermo();
     rhoThermo& thermo2 = phase2.thermo();
