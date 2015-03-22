@@ -1311,10 +1311,10 @@ Foam::Time& Foam::Time::operator++()
                         // Reached maxPrecision limit
                         WarningIn("Time::operator++()")
                             << "Current time name " << dimensionedScalar::name()
-                            << " is the old as the previous one " << oldTimeName
                             << nl
-                            << "    This might result in overwriting old "
-                               "results."
+                            << "    The maximum time precision has been reached"
+                               " which might result in overwriting previous"
+                               " results."
                             << endl;
                     }
 
