@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ bool Foam::triSurface::readSTLBINARY(const fileName& STLfileName)
         STLpoints[pointI++] = stlTri.a();
         STLpoints[pointI++] = stlTri.b();
         STLpoints[pointI++] = stlTri.c();
-        operator[](i).region() = stlTri.region();
+        operator[](i).region() = stlTri.attrib();
     }
 
     // Stitch points
