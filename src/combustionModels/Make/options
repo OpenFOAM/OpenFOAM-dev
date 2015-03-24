@@ -6,11 +6,13 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
-    -I$(LIB_SRC)/finiteVolume/lnInclude
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
     -lcompressibleTransportModels \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
     -lchemistryModel \
-    -lfiniteVolume
+    -lfiniteVolume \
+    -lmeshTools

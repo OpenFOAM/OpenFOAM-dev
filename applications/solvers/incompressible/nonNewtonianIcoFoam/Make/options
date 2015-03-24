@@ -1,8 +1,10 @@
 EXE_INC = \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/transportModels \
-    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel
+    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
+    -lincompressibleTransportModels \
     -lfiniteVolume \
-    -lincompressibleTransportModels
+    -lmeshTools

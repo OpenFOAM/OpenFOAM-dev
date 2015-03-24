@@ -1,5 +1,4 @@
 EXE_INC = \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
@@ -10,10 +9,10 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/laminarFlameSpeed/lnInclude \
     -I$(LIB_SRC)/ODE/lnInclude\
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
-
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
-    -lfiniteVolume \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
     -lreactionThermophysicalModels \
@@ -22,4 +21,6 @@ EXE_LIBS = \
     -lchemistryModel \
     -lODE \
     -lthermophysicalFunctions \
-    -lspecie
+    -lspecie \
+    -lfiniteVolume \
+    -lmeshTools
