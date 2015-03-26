@@ -281,7 +281,7 @@ void Foam::reduce
     requestID = PstreamGlobals::outstandingRequests_.size();
     PstreamGlobals::outstandingRequests_.append(request);
 
-    if (debug)
+    if (UPstream::debug)
     {
         Pout<< "UPstream::allocateRequest for non-blocking reduce"
             << " : request:" << requestID
