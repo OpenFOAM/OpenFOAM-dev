@@ -71,7 +71,7 @@ atmBoundaryLayer::atmBoundaryLayer(const vectorField& p, const dictionary& dict)
     flowDir_ /= mag(flowDir_);
     zDir_ /= mag(zDir_);
 
-    Ustar_ = kappa_*Uref_/(log((Zref_ + z0_)/max(z0_, scalar(0.001))));
+    Ustar_ = kappa_*Uref_/(log((Zref_ + z0_)/z0_));
 }
 
 
@@ -134,7 +134,7 @@ tmp<vectorField> atmBoundaryLayer::U(const vectorField& p) const
     scalarField Un
     (
         (Ustar_/kappa_)
-       *log(((zDir_ & p) - zGround_ + z0_)/max(z0_, scalar(0.001)))
+       *log(((zDir_ & p) - zGround_ + z0_)/z0_)
     );
 
     return flowDir_*Un;
