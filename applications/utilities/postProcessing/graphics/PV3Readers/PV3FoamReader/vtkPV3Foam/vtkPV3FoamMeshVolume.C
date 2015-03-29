@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,14 +221,14 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
         }
         else if (cellModel == tetWedge)
         {
-            // Treat as squeezed prism
+            // Treat as squeezed prism (VTK_WEDGE)
 
             nodeIds[0] = cellShape[0];
             nodeIds[1] = cellShape[2];
             nodeIds[2] = cellShape[1];
             nodeIds[3] = cellShape[3];
             nodeIds[4] = cellShape[4];
-            nodeIds[5] = cellShape[4];
+            nodeIds[5] = cellShape[3];
 
             vtkmesh->InsertNextCell
             (
