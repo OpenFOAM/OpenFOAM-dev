@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,12 +53,11 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
 // Max cos angle for edges to be considered aligned with axis.
 static const scalar edgeTol = 1e-3;
 
 
-// Calculate some edge statistics on mesh.
+// Print edge statistics on mesh.
 void printEdgeStats(const primitiveMesh& mesh)
 {
     label nX = 0;
@@ -130,167 +129,6 @@ void printEdgeStats(const primitiveMesh& mesh)
 }
 
 
-// Return index of coordinate axis.
-label axis(const vector& normal)
-{
-    label axisIndex = -1;
-
-    if (mag(normal & point(1, 0, 0)) > (1-edgeTol))
-    {
-        axisIndex = 0;
-    }
-    else if (mag(normal & point(0, 1, 0)) > (1-edgeTol))
-    {
-        axisIndex = 1;
-    }
-    else if (mag(normal & point(0, 0, 1)) > (1-edgeTol))
-    {
-        axisIndex = 2;
-    }
-
-    return axisIndex;
-}
-
-
-//- Returns -1 or cartesian coordinate component (0=x, 1=y, 2=z) of normal
-//  in case of 2D mesh
-label twoDNess(const polyMesh& mesh)
-{
-    const pointField& ctrs = mesh.cellCentres();
-
-    if (ctrs.size() < 2)
-    {
-        return -1;
-    }
-
-
-    //
-    // 1. All cell centres on single plane aligned with x, y or z
-    //
-
-    // Determine 3 points to base plane on.
-    vector vec10 = ctrs[1] - ctrs[0];
-    vec10 /= mag(vec10);
-
-    label otherCellI = -1;
-
-    for (label cellI = 2; cellI < ctrs.size(); cellI++)
-    {
-        vector vec(ctrs[cellI] - ctrs[0]);
-        vec /= mag(vec);
-
-        if (mag(vec & vec10) < 0.9)
-        {
-            // ctrs[cellI] not in line with n
-            otherCellI = cellI;
-
-            break;
-        }
-    }
-
-    if (otherCellI == -1)
-    {
-        // Cannot find cell to make decent angle with cell0-cell1 vector.
-        // Note: what to do here? All cells (almost) in one line. Maybe 1D case?
-        return -1;
-    }
-
-    plane cellPlane(ctrs[0], ctrs[1], ctrs[otherCellI]);
-
-
-    forAll(ctrs, cellI)
-    {
-        const labelList& cEdges = mesh.cellEdges()[cellI];
-
-        scalar minLen = GREAT;
-
-        forAll(cEdges, i)
-        {
-            minLen = min(minLen, mesh.edges()[cEdges[i]].mag(mesh.points()));
-        }
-
-        if (cellPlane.distance(ctrs[cellI]) > 1e-6*minLen)
-        {
-            // Centres not in plane
-            return  -1;
-        }
-    }
-
-    label axisIndex = axis(cellPlane.normal());
-
-    if (axisIndex == -1)
-    {
-        return axisIndex;
-    }
-
-
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
-
-
-    //
-    // 2. No edges without points on boundary
-    //
-
-    // Mark boundary points
-    boolList boundaryPoint(mesh.points().size(), false);
-
-    forAll(patches, patchI)
-    {
-        const polyPatch& patch = patches[patchI];
-
-        forAll(patch, patchFaceI)
-        {
-            const face& f = patch[patchFaceI];
-
-            forAll(f, fp)
-            {
-                boundaryPoint[f[fp]] = true;
-            }
-        }
-    }
-
-
-    const edgeList& edges = mesh.edges();
-
-    forAll(edges, edgeI)
-    {
-        const edge& e = edges[edgeI];
-
-        if (!boundaryPoint[e.start()] && !boundaryPoint[e.end()])
-        {
-            // Edge has no point on boundary.
-            return -1;
-        }
-    }
-
-
-    // 3. For all non-wedge patches: all faces either perp or aligned with
-    //    cell-plane normal. (wedge patches already checked upon construction)
-
-    forAll(patches, patchI)
-    {
-        const polyPatch& patch = patches[patchI];
-
-        if (!isA<wedgePolyPatch>(patch))
-        {
-            const vectorField& n = patch.faceAreas();
-
-            const scalarField cosAngle(mag(n/mag(n) & cellPlane.normal()));
-
-            if (mag(min(cosAngle) - max(cosAngle)) > 1e-6)
-            {
-                // cosAngle should be either ~1 over all faces (2D front and
-                // back) or ~0 (all other patches perp to 2D)
-                return -1;
-            }
-        }
-    }
-
-    return axisIndex;
-}
-
-
-
 int main(int argc, char *argv[])
 {
     argList::addNote
@@ -353,11 +191,7 @@ int main(int argc, char *argv[])
             refCells[cellI] = cellI;
         }
 
-
-        // Set refinement directions based on 2D/3D
-        label axisIndex = twoDNess(mesh);
-
-        if (axisIndex == -1)
+        if (mesh.nGeometricD() == 3)
         {
             Info<< "3D case; refining all directions" << nl << endl;
 
@@ -372,15 +206,17 @@ int main(int argc, char *argv[])
         }
         else
         {
+            const Vector<label> dirs(mesh.geometricD());
+
             wordList directions(2);
 
-            if (axisIndex == 0)
+            if (dirs.x() == -1)
             {
                 Info<< "2D case; refining in directions y,z\n" << endl;
                 directions[0] = "tan2";
                 directions[1] = "normal";
             }
-            else if (axisIndex == 1)
+            else if (dirs.y() == -1)
             {
                 Info<< "2D case; refining in directions x,z\n" << endl;
                 directions[0] = "tan1";
@@ -504,9 +340,6 @@ int main(int argc, char *argv[])
         << newToOld.objectPath() << nl << endl;
 
     newToOld.write();
-
-
-    // Some statistics.
 
     printEdgeStats(mesh);
 
