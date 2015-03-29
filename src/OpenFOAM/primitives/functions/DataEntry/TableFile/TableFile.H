@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,8 @@ Description
     that is (scalar, vector):
     \verbatim
         (
-            0.0 (1 2 3)
-            1.0 (4 5 6)
+            (0.0 (1 2 3))
+            (1.0 (4 5 6))
         );
     \endverbatim
 
