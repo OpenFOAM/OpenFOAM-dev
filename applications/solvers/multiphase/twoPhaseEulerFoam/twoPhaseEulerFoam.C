@@ -90,16 +90,10 @@ int main(int argc, char *argv[])
               - (fvOptions(alpha2, rho2)&rho2)
             );
 
-
             #include "UEqns.H"
             #include "EEqns.H"
-
-            // --- Pressure corrector loop
-            while (pimple.correct())
-            {
-                #include "pEqn.H"
-            }
-
+            //#include "pEqn.H"
+            #include "pEqnElim.H"
             #include "DDtU.H"
 
             if (pimple.turbCorr())

@@ -1,3 +1,5 @@
+// --- Pressure corrector loop
+while (pimple.correct())
 {
     surfaceScalarField alpha1f("alpha1f", fvc::interpolate(alpha1));
     surfaceScalarField alpha2f("alpha2f", scalar(1) - alpha1f);

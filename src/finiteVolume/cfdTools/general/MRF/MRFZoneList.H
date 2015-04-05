@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,11 +118,14 @@ public:
         //- Make the given absolute velocity relative within the MRF region
         void makeRelative(volVectorField& U) const;
 
-        //- Make the given relative velocity absolute within the MRF region
-        void makeAbsolute(volVectorField& U) const;
-
         //- Make the given absolute flux relative within the MRF region
         void makeRelative(surfaceScalarField& phi) const;
+
+        //- Return the given absolute flux relative within the MRF region
+        tmp<surfaceScalarField> relative
+        (
+            const tmp<surfaceScalarField>& phi
+        ) const;
 
         //- Return the given absolute boundary flux relative within
         //  the MRF region
@@ -138,8 +141,17 @@ public:
             surfaceScalarField& phi
         ) const;
 
+        //- Make the given relative velocity absolute within the MRF region
+        void makeAbsolute(volVectorField& U) const;
+
         //- Make the given relative flux absolute within the MRF region
         void makeAbsolute(surfaceScalarField& phi) const;
+
+        //- Return the given relative flux absolute within the MRF region
+        tmp<surfaceScalarField> absolute
+        (
+            const tmp<surfaceScalarField>& phi
+        ) const;
 
         //- Make the given relative mass-flux absolute within the MRF region
         void makeAbsolute

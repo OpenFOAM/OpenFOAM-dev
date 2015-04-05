@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -218,6 +218,17 @@ void Foam::MRFZoneList::makeRelative(surfaceScalarField& phi) const
 }
 
 
+Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::relative
+(
+    const tmp<surfaceScalarField>& phi
+) const
+{
+    tmp<surfaceScalarField> rphi(phi.ptr());
+    makeRelative(rphi());
+    return rphi;
+}
+
+
 Foam::tmp<Foam::FieldField<Foam::fvsPatchField, Foam::scalar> >
 Foam::MRFZoneList::relative
 (
@@ -263,6 +274,17 @@ void Foam::MRFZoneList::makeAbsolute(surfaceScalarField& phi) const
     {
         operator[](i).makeAbsolute(phi);
     }
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::absolute
+(
+    const tmp<surfaceScalarField>& phi
+) const
+{
+    tmp<surfaceScalarField> rphi(phi.ptr());
+    makeAbsolute(rphi());
+    return rphi;
 }
 
 
