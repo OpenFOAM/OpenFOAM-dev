@@ -204,8 +204,8 @@ Foam::CSV<Type>::CSV
 )
 :
     DataEntry<Type>(entryName),
-    TableBase<Type>(entryName, dict.subDict(type() + ext)),
-    coeffs_(dict.subDict(type() + ext)),
+    TableBase<Type>(entryName, dict.subDict(entryName + ext)),
+    coeffs_(dict.subDict(entryName + ext)),
     nHeaderLine_(readLabel(coeffs_.lookup("nHeaderLine"))),
     refColumn_(readLabel(coeffs_.lookup("refColumn"))),
     componentColumns_(coeffs_.lookup("componentColumns")),

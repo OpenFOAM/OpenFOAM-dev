@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ void Foam::CSV<Type>::writeData(Ostream& os) const
 {
     DataEntry<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;
-    os  << indent << word(type() + "Coeffs") << nl;
+    os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
 
     // Note: for TableBase write the dictionary entries it needs but not

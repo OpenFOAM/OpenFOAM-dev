@@ -53,7 +53,7 @@ void Foam::TableFile<Type>::writeData(Ostream& os) const
     DataEntry<Type>::writeData(os);
 
     os  << token::END_STATEMENT << nl
-        << indent << word(type() + "Coeffs") << nl
+        << indent << word(this->name() + "Coeffs") << nl
         << indent << token::BEGIN_BLOCK << nl << incrIndent;
 
     // Note: for TableBase write the dictionary entries it needs but not

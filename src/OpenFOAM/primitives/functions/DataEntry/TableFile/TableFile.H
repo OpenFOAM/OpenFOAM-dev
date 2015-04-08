@@ -28,8 +28,8 @@ Description
     Templated table container data entry where data is read from file.
 
     \verbatim
-        <entryName>   tableFile;
-        tableFileCoeffs
+        <entryName> tableFile;
+        <entryName>Coeffs
         {
             dimensions          [0 0 1 0 0]; // optional dimensions
             fileName            dataFile;    // name of data file
