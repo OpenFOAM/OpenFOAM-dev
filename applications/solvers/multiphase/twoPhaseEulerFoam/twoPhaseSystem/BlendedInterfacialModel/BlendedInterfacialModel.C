@@ -227,6 +227,61 @@ Foam::BlendedInterfacialModel<modelType>::F() const
 
 
 template<class modelType>
+Foam::tmp<Foam::volScalarField>
+Foam::BlendedInterfacialModel<modelType>::D() const
+{
+    tmp<volScalarField> f1, f2;
+
+    if (model_.valid() || model1In2_.valid())
+    {
+        f1 = blending_.f1(pair1In2_.dispersed(), pair2In1_.dispersed());
+    }
+
+    if (model_.valid() || model2In1_.valid())
+    {
+        f2 = blending_.f2(pair1In2_.dispersed(), pair2In1_.dispersed());
+    }
+
+    tmp<volScalarField> x
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                modelType::typeName + "Coeff",
+                pair_.phase1().mesh().time().timeName(),
+                pair_.phase1().mesh()
+            ),
+            pair_.phase1().mesh(),
+            dimensionedScalar("zero", modelType::dimD, 0)
+        )
+    );
+
+    if (model_.valid())
+    {
+        x() += model_->D()*(f1() - f2());
+    }
+
+    if (model1In2_.valid())
+    {
+        x() += model1In2_->D()*(1 - f1);
+    }
+
+    if (model2In1_.valid())
+    {
+        x() += model2In1_->D()*f2;
+    }
+
+    if (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    {
+        correctFixedFluxBCs(x());
+    }
+
+    return x;
+}
+
+
+template<class modelType>
 const modelType& Foam::BlendedInterfacialModel<modelType>::phaseModel
 (
     const class phaseModel& phase

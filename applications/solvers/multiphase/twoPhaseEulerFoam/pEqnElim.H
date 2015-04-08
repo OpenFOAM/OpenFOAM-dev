@@ -4,8 +4,8 @@ surfaceScalarField alpha2f("alpha2f", scalar(1) - alpha1f);
 rAU1 = 1.0/U1Eqn.A();
 rAU2 = 1.0/U2Eqn.A();
 
-surfaceScalarField rAlphaAU1f(fvc::interpolate(alpha1*rho1*rAU1));
-surfaceScalarField rAlphaAU2f(fvc::interpolate(alpha2*rho2*rAU2));
+surfaceScalarField alpharAU1f(fvc::interpolate(alpha1*rAU1));
+surfaceScalarField alpharAU2f(fvc::interpolate(alpha2*rAU2));
 
 // --- Pressure corrector loop
 while (pimple.correct())
@@ -24,21 +24,43 @@ while (pimple.correct())
     );
     HbyA2 = rAU2*U2Eqn.H();
 
-    // Phase pressure flux (e.g. due to particle-particle pressure)
-    surfaceScalarField phiF1
-    (
-        "phiF1",
-        fvc::interpolate(rAU1*phase1.turbulence().pPrime())
-       *fvc::snGrad(alpha1)*mesh.magSf()
-    );
+    // Face force fluxes
+    tmp<surfaceScalarField> phiF1;
+    tmp<surfaceScalarField> phiF2;
 
-    // Phase-2 pressure flux (e.g. due to particle-particle pressure)
-    surfaceScalarField phiF2
-    (
-        "phiF2",
-        fvc::interpolate(rAU2*phase2.turbulence().pPrime())
-       *fvc::snGrad(alpha2)*mesh.magSf()
-    );
+    // Turbulent diffusion, particle-pressure lift and wall-lubrication fluxes
+    {
+        volScalarField turbulentDiffusivity(fluid.turbulentDiffusivity());
+        volVectorField liftForce(fluid.liftForce());
+        volVectorField wallLubricationForce(fluid.wallLubricationForce());
+        surfaceScalarField snGradAlpha1(fvc::snGrad(alpha1)*mesh.magSf());
+
+        phiF1 =
+        (
+            fvc::interpolate
+            (
+                rAU1*(turbulentDiffusivity + phase1.turbulence().pPrime())
+            )*snGradAlpha1
+
+          + (
+                fvc::interpolate(rAU1*(wallLubricationForce + liftForce))
+              & mesh.Sf()
+            )
+        );
+
+        phiF2 =
+        (
+          - fvc::interpolate
+            (
+                rAU2*(turbulentDiffusivity + phase2.turbulence().pPrime())
+            )*snGradAlpha1
+
+          - (
+                fvc::interpolate(rAU2*(wallLubricationForce + liftForce))
+              & mesh.Sf()
+            )
+        );
+    }
 
     // Mean density for buoyancy force and p_rgh -> p
     volScalarField rho("rho", fluid.rho());
@@ -47,19 +69,19 @@ while (pimple.correct())
     {
         surfaceScalarField ghSnGradRho(ghf*fvc::snGrad(rho)*mesh.magSf());
 
-        phiF1 +=
-            rAlphaAU1f
+        phiF1() +=
+            alpharAU1f
            *(
                 ghSnGradRho
               - alpha2f*fvc::interpolate(rho1 - rho2)*(g & mesh.Sf())
-            )/fvc::interpolate(rho1);
+            );
 
-        phiF2 +=
-            rAlphaAU2f
+        phiF2() +=
+            alpharAU2f
            *(
                 ghSnGradRho
               - alpha1f*fvc::interpolate(rho2 - rho1)*(g & mesh.Sf())
-            )/fvc::interpolate(rho2);
+            );
     }
 
     // ddtPhiCorr filter -- only apply in pure(ish) phases
@@ -86,12 +108,12 @@ while (pimple.correct())
     (
         IOobject::groupName("phiHbyA", phase1.name()),
         (fvc::interpolate(HbyA1) & mesh.Sf())
-      + phiCorrCoeff1*rAlphaAU1f
+      + phiCorrCoeff1*fvc::interpolate(alpha1.oldTime()*rho1.oldTime()*rAU1)
        *(
             mrfZones.absolute(phi1.oldTime())
           - (fvc::interpolate(U1.oldTime()) & mesh.Sf())
         )/runTime.deltaT()
-      - phiF1
+      - phiF1()
     );
 
     // Phase-2 predicted flux
@@ -99,12 +121,12 @@ while (pimple.correct())
     (
         IOobject::groupName("phiHbyA", phase2.name()),
         (fvc::interpolate(HbyA2) & mesh.Sf())
-      + phiCorrCoeff2*rAlphaAU2f
+      + phiCorrCoeff2*fvc::interpolate(alpha2.oldTime()*rho2.oldTime()*rAU2)
        *(
             mrfZones.absolute(phi2.oldTime())
           - (fvc::interpolate(U2.oldTime()) & mesh.Sf())
         )/runTime.deltaT()
-      - phiF2
+      - phiF2()
     );
 
     // Face-drag coefficients
@@ -125,11 +147,7 @@ while (pimple.correct())
     surfaceScalarField rAUf
     (
         "rAUf",
-        mag
-        (
-            alpha1f*rAlphaAU1f/fvc::interpolate(rho1)
-          + alpha2f*rAlphaAU2f/fvc::interpolate(rho2)
-        )
+        mag(alpha1f*alpharAU1f + alpha2f*alpharAU2f)
     );
 
     // Update the fixedFluxPressure BCs to ensure flux consistency
@@ -238,12 +256,12 @@ while (pimple.correct())
             {
                 surfaceScalarField phi1s
                 (
-                    phiHbyA1 + rAlphaAU1f*mSfGradp/fvc::interpolate(rho1)
+                    phiHbyA1 + alpharAU1f*mSfGradp
                 );
 
                 surfaceScalarField phi2s
                 (
-                    phiHbyA2 + rAlphaAU2f*mSfGradp/fvc::interpolate(rho2)
+                    phiHbyA2 + alpharAU2f*mSfGradp
                 );
 
                 surfaceScalarField phir
@@ -286,22 +304,12 @@ while (pimple.correct())
             {
                 volVectorField U1s
                 (
-                    HbyA1
-                  + fvc::reconstruct
-                    (
-                        rAlphaAU1f*mSfGradp/fvc::interpolate(rho1)
-                      - phiF1
-                    )
+                    HbyA1 + fvc::reconstruct(alpharAU1f*mSfGradp - phiF1)
                 );
 
                 volVectorField U2s
                 (
-                    HbyA2
-                  + fvc::reconstruct
-                    (
-                        rAlphaAU2f*mSfGradp/fvc::interpolate(rho2)
-                      - phiF2
-                    )
+                    HbyA2 + fvc::reconstruct(alpharAU2f*mSfGradp - phiF2)
                 );
 
                 volScalarField D1(rAU1*dragCoeff);

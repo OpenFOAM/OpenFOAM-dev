@@ -155,7 +155,11 @@ public:
         //- Return the wall lubrication force
         tmp<volVectorField> wallLubricationForce() const;
 
-        //- Return the wall lubrication force
+        //- Return the turbulent diffusivity
+        //  Multiplies the phase-fraction gradient
+        tmp<volScalarField> turbulentDiffusivity() const;
+
+        //- Return the turbulent dispersion force
         tmp<volVectorField> turbulentDispersionForce() const;
 
         //- Solve for the two-phase-fractions

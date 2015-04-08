@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ namespace Foam
     defineRunTimeSelectionTable(turbulentDispersionModel, dictionary);
 }
 
+const Foam::dimensionSet Foam::turbulentDispersionModel::dimD(1, -1, -2, 0, 0);
 const Foam::dimensionSet Foam::turbulentDispersionModel::dimF(1, -2, -2, 0, 0);
 
 
@@ -61,8 +62,7 @@ Foam::turbulentDispersionModel::~turbulentDispersionModel()
 Foam::tmp<Foam::volVectorField>
 Foam::turbulentDispersionModel::F() const
 {
-    return Fprime()*fvc::grad(pair_.dispersed());
-
+    return D()*fvc::grad(pair_.dispersed());
 }
 
 

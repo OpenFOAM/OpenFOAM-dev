@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,12 +76,12 @@ public:
 
     // Member Functions
 
+        //- Turbulent diffusivity
+        //  multiplying the gradient of the phase-fraction
+        virtual tmp<volScalarField> D() const;
+
         //- Turbulent dispersion force
         virtual tmp<volVectorField> F() const;
-
-        //- Turbulent dispersion force coefficient
-        //  multiplying the gradient of the phase-fraction
-        virtual tmp<volScalarField> Fprime() const;
 };
 
 

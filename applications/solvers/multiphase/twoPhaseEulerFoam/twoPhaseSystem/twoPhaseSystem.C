@@ -336,6 +336,13 @@ Foam::twoPhaseSystem::turbulentDispersionForce() const
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::twoPhaseSystem::turbulentDiffusivity() const
+{
+    return turbulentDispersion_->D();
+}
+
+
 void Foam::twoPhaseSystem::solve()
 {
     const Time& runTime = mesh_.time();

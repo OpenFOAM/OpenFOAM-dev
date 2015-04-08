@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,36 @@ Foam::turbulentDispersionModels::noTurbulentDispersion::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::volScalarField>
+Foam::turbulentDispersionModels::noTurbulentDispersion::D() const
+{
+    const fvMesh& mesh(this->pair_.phase1().mesh());
+
+    return tmp<volScalarField>
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "zero",
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dimensionedScalar
+            (
+                "zero",
+                dimensionSet(1, -2, 1, 0, 0),
+                0
+            )
+        )
+    );
+}
+
+
 Foam::tmp<Foam::volVectorField>
 Foam::turbulentDispersionModels::noTurbulentDispersion::F() const
 {
@@ -87,34 +117,6 @@ Foam::turbulentDispersionModels::noTurbulentDispersion::F() const
                     "zero",
                     dimensionSet(1, -2, -2, 0, 0),
                     vector::zero
-                )
-            )
-        );
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::turbulentDispersionModels::noTurbulentDispersion::Fprime() const
-{
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
-    return
-        tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "zero",
-                    mesh.time().timeName(),
-                    mesh
-                ),
-                mesh,
-                dimensionedScalar
-                (
-                    "zero",
-                    dimensionSet(1, -2, 1, 0, 0),
-                    0
                 )
             )
         );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,12 +67,13 @@ Foam::turbulentDispersionModels::LopezDeBertodano::~LopezDeBertodano()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::turbulentDispersionModels::LopezDeBertodano::Fprime() const
+Foam::turbulentDispersionModels::LopezDeBertodano::D() const
 {
     return
         Ctd_
        *pair_.continuous().rho()
        *pair_.continuous().turbulence().k();
 }
+
 
 // ************************************************************************* //

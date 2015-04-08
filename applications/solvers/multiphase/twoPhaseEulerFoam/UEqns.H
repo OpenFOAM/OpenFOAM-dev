@@ -9,9 +9,6 @@ volScalarField dragCoeff(fluid.dragCoeff());
 
 {
     volScalarField virtualMassCoeff(fluid.virtualMassCoeff());
-    volVectorField liftForce(fluid.liftForce());
-    volVectorField wallLubricationForce(fluid.wallLubricationForce());
-    volVectorField turbulentDispersionForce(fluid.turbulentDispersionForce());
 
     {
         U1Eqn =
@@ -21,9 +18,6 @@ volScalarField dragCoeff(fluid.dragCoeff());
           + mrfZones(alpha1*rho1 + virtualMassCoeff, U1)
           + phase1.turbulence().divDevRhoReff(U1)
          ==
-          - liftForce
-          - wallLubricationForce
-          - turbulentDispersionForce
           - virtualMassCoeff
            *(
                 fvm::ddt(U1)
@@ -46,9 +40,6 @@ volScalarField dragCoeff(fluid.dragCoeff());
           + mrfZones(alpha2*rho2 + virtualMassCoeff, U2)
           + phase2.turbulence().divDevRhoReff(U2)
          ==
-            liftForce
-          + wallLubricationForce
-          + turbulentDispersionForce
           - virtualMassCoeff
            *(
                 fvm::ddt(U2)

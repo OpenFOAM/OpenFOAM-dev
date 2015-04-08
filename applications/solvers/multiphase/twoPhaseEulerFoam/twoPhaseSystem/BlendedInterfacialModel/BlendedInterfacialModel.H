@@ -113,12 +113,15 @@ public:
 
     // Member Functions
 
-        //- Return the implicit coefficient
+        //- Return the blended force coefficient
         tmp<volScalarField> K() const;
 
-        //- Return the explicit value
+        //- Return the blended force
         template<class Type>
         tmp<GeometricField<Type, fvPatchField, volMesh> > F() const;
+
+        //- Return the blended diffusivity
+        tmp<volScalarField> D() const;
 
         //- Return the model for the supplied phase
         const modelType& phaseModel(const phaseModel& phase) const;
