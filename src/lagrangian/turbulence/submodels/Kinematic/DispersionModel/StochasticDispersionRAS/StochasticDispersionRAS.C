@@ -99,17 +99,11 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
             // Calculate a random direction dir distributed uniformly
             // in spherical coordinates
 
-            const scalar theta = rnd.sample01<scalar>()*pi;
-            const scalar phi = rnd.sample01<scalar>()*twoPi;
+            const scalar theta = rnd.sample01<scalar>()*twoPi;
+            const scalar u = 2*rnd.sample01<scalar>() - 1;
 
-            // Optimising compilers will use the sincos function
-            const scalar sinTheta = sin(theta);
-            const scalar cosTheta = cos(theta);
-
-            const scalar sinPhi = sin(phi);
-            const scalar cosPhi = cos(phi);
-
-            const vector dir(sinTheta*cosPhi, sinTheta*sinPhi, cosTheta);
+            const scalar a = sqrt(1 - sqr(u));
+            const vector dir(a*cos(theta), a*sin(theta), u);
 
             // Numerical Recipes... Ch. 7. Random Numbers...
             scalar x1 = 0;
