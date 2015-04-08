@@ -92,8 +92,7 @@ int main(int argc, char *argv[])
 
             #include "UEqns.H"
             #include "EEqns.H"
-            //#include "pEqn.H"
-            #include "pEqnElim.H"
+            #include "pEqn.H"
             #include "DDtU.H"
 
             if (pimple.turbCorr())
