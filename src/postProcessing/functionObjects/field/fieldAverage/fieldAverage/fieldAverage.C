@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(fieldAverage, 0);
+    defineTypeNameAndDebug(fieldAverage, 0);
 }
 
 
@@ -50,6 +50,7 @@ void Foam::fieldAverage::resetFields()
                 obr_.checkOut(*obr_[faItems_[i].meanFieldName()]);
             }
         }
+
         if (faItems_[i].prime2Mean())
         {
             if (obr_.found(faItems_[i].prime2MeanFieldName()))
@@ -66,7 +67,6 @@ void Foam::fieldAverage::initialize()
     resetFields();
 
     Info<< type() << " " << name_ << ":" << nl;
-
 
     // Add mean fields to the field lists
     forAll(faItems_, fieldI)
@@ -195,7 +195,7 @@ void Foam::fieldAverage::readAveragingProperties()
     totalTime_.clear();
     totalTime_.setSize(faItems_.size(), obr_.time().deltaTValue());
 
-    if (resetOnRestart_)
+    if (resetOnRestart_ || resetOnOutput_)
     {
         Info<< "    Starting averaging at time " << obr_.time().timeName()
             << nl;
@@ -348,10 +348,13 @@ void Foam::fieldAverage::write()
             Info<< "    Restarting averaging at time " << obr_.time().timeName()
                 << nl << endl;
 
-            initialize();
+            totalIter_.clear();
+            totalIter_.setSize(faItems_.size(), 1);
 
-            // ensure first averaging works unconditionally
-            prevTimeIndex_ = -1;
+            totalTime_.clear();
+            totalTime_.setSize(faItems_.size(), obr_.time().deltaTValue());
+
+            initialize();
         }
 
         Info<< endl;
