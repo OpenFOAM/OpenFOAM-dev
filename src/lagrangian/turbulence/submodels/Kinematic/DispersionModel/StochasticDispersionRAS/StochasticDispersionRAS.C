@@ -105,21 +105,7 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
             const scalar a = sqrt(1 - sqr(u));
             const vector dir(a*cos(theta), a*sin(theta), u);
 
-            // Numerical Recipes... Ch. 7. Random Numbers...
-            scalar x1 = 0;
-            scalar x2 = 0;
-            scalar rsq = 10;
-            while ((rsq > 1) || (rsq == 0))
-            {
-                x1 = 2*rnd.sample01<scalar>() - 1;
-                x2 = 2*rnd.sample01<scalar>() - 1;
-                rsq = x1*x1 + x2*x2;
-            }
-
-            scalar fac = sqrt(-2*log(rsq)/rsq);
-            fac *= mag(x1);
-
-            UTurb = sigma*fac*dir;
+            UTurb = sigma*mag(rnd.GaussNormal<scalar>())*dir;
         }
     }
     else

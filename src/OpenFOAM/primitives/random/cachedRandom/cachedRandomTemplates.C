@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,19 @@ Type Foam::cachedRandom::sample01()
 
 
 template<class Type>
+Type Foam::cachedRandom::GaussNormal()
+{
+    Type value;
+    for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
+    {
+        value.component(cmpt) = GaussNormal<scalar>();
+    }
+
+    return value;
+}
+
+
+template<class Type>
 Type Foam::cachedRandom::position(const Type& start, const Type& end)
 {
     Type value(start);
@@ -72,7 +85,23 @@ Type Foam::cachedRandom::globalSample01()
         value = sample01<Type>();
     }
 
-    reduce(value, maxOp<Type>());
+    Pstream::scatter(value);
+
+    return value;
+}
+
+
+template<class Type>
+Type Foam::cachedRandom::globalGaussNormal()
+{
+    Type value = -GREAT*pTraits<Type>::one;
+
+    if (Pstream::master())
+    {
+        value = GaussNormal<Type>();
+    }
+
+    Pstream::scatter(value);
 
     return value;
 }
@@ -88,7 +117,7 @@ Type Foam::cachedRandom::globalPosition(const Type& start, const Type& end)
         value = position<Type>(start, end);
     }
 
-    reduce(value, maxOp<Type>());
+    Pstream::scatter(value);
 
     return value;
 }
@@ -104,7 +133,7 @@ void Foam::cachedRandom::globalRandomise01(Type& value)
         value = sample01<Type>();
     }
 
-    reduce(value, maxOp<Type>());
+    Pstream::scatter(value);
 }
 
 

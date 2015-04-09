@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,9 @@ Foam::cachedRandom::cachedRandom(const label seed, const label count)
 :
     seed_(1),
     samples_(0),
-    sampleI_(-1)
+    sampleI_(-1),
+    hasGaussSample_(false),
+    gaussSample_(0)
 {
     if (seed > 1)
     {
@@ -84,8 +86,15 @@ Foam::cachedRandom::cachedRandom(const cachedRandom& cr, const bool reset)
 :
     seed_(cr.seed_),
     samples_(cr.samples_),
-    sampleI_(cr.sampleI_)
+    sampleI_(cr.sampleI_),
+    hasGaussSample_(cr.hasGaussSample_),
+    gaussSample_(cr.gaussSample_)
 {
+    if (reset)
+    {
+        hasGaussSample_ = false;
+        gaussSample_ = 0;
+    }
     if (sampleI_ == -1)
     {
         WarningIn
@@ -113,13 +122,6 @@ Foam::cachedRandom::~cachedRandom()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<>
-Foam::label Foam::cachedRandom::sample01()
-{
-    return round(scalar01());
-}
-
-
-template<>
 Foam::scalar Foam::cachedRandom::sample01()
 {
     return scalar01();
@@ -127,9 +129,44 @@ Foam::scalar Foam::cachedRandom::sample01()
 
 
 template<>
-Foam::label Foam::cachedRandom::position(const label& start, const label& end)
+Foam::label Foam::cachedRandom::sample01()
 {
-    return start + round(scalar01()*(end - start));
+    return round(scalar01());
+}
+
+
+template<>
+Foam::scalar Foam::cachedRandom::GaussNormal()
+{
+    if (hasGaussSample_)
+    {
+        hasGaussSample_ = false;
+        return gaussSample_;
+    }
+    else
+    {
+        scalar rsq, v1, v2;
+        do
+        {
+            v1 = 2*scalar01() - 1;
+            v2 = 2*scalar01() - 1;
+            rsq = sqr(v1) + sqr(v2);
+        } while (rsq >= 1 || rsq == 0);
+
+        scalar fac = sqrt(-2*log(rsq)/rsq);
+
+        gaussSample_ = v1*fac;
+        hasGaussSample_ = true;
+
+        return v2*fac;
+    }
+}
+
+
+template<>
+Foam::label Foam::cachedRandom::GaussNormal()
+{
+    return round(GaussNormal<scalar>());
 }
 
 
@@ -145,18 +182,9 @@ Foam::scalar Foam::cachedRandom::position
 
 
 template<>
-Foam::label Foam::cachedRandom::globalSample01()
+Foam::label Foam::cachedRandom::position(const label& start, const label& end)
 {
-    scalar value = -GREAT;
-
-    if (Pstream::master())
-    {
-        value = scalar01();
-    }
-
-    reduce(value, maxOp<scalar>());
-
-    return round(value);
+    return start + round(scalar01()*(end - start));
 }
 
 
@@ -170,29 +198,57 @@ Foam::scalar Foam::cachedRandom::globalSample01()
         value = scalar01();
     }
 
-    reduce(value, maxOp<scalar>());
+    Pstream::scatter(value);
 
     return value;
 }
 
 
 template<>
-Foam::label Foam::cachedRandom::globalPosition
-(
-    const label& start,
-    const label& end
-)
+Foam::label Foam::cachedRandom::globalSample01()
 {
-    label value = labelMin;
+    scalar value = -GREAT;
 
     if (Pstream::master())
     {
-        value = round(scalar01()*(end - start));
+        value = scalar01();
     }
 
-    reduce(value, maxOp<label>());
+    Pstream::scatter(value);
 
-    return start + value;
+    return round(value);
+}
+
+
+template<>
+Foam::scalar Foam::cachedRandom::globalGaussNormal()
+{
+    scalar value = -GREAT;
+
+    if (Pstream::master())
+    {
+        value = GaussNormal<scalar>();
+    }
+
+    Pstream::scatter(value);
+
+    return value;
+}
+
+
+template<>
+Foam::label Foam::cachedRandom::globalGaussNormal()
+{
+    scalar value = -GREAT;
+
+    if (Pstream::master())
+    {
+        value = GaussNormal<scalar>();
+    }
+
+    Pstream::scatter(value);
+
+    return round(value);
 }
 
 
@@ -210,17 +266,29 @@ Foam::scalar Foam::cachedRandom::globalPosition
         value = scalar01()*(end - start);
     }
 
-    reduce(value, maxOp<scalar>());
+    Pstream::scatter(value);
 
     return start + value;
 }
 
 
-void Foam::cachedRandom::operator=(const cachedRandom& cr)
+template<>
+Foam::label Foam::cachedRandom::globalPosition
+(
+    const label& start,
+    const label& end
+)
 {
-    seed_ = cr.seed_;
-    samples_ = cr.samples_;
-    sampleI_ = cr.sampleI_;
+    label value = labelMin;
+
+    if (Pstream::master())
+    {
+        value = round(scalar01()*(end - start));
+    }
+
+    Pstream::scatter(value);
+
+    return start + value;
 }
 
 
