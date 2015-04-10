@@ -84,12 +84,7 @@ Foam::turbulentDispersionModels::noTurbulentDispersion::D() const
                 false
             ),
             mesh,
-            dimensionedScalar
-            (
-                "zero",
-                dimensionSet(1, -2, 1, 0, 0),
-                0
-            )
+            dimensionedScalar("zero", dimD, 0)
         )
     );
 }
@@ -112,12 +107,7 @@ Foam::turbulentDispersionModels::noTurbulentDispersion::F() const
                     mesh
                 ),
                 mesh,
-                dimensionedVector
-                (
-                    "zero",
-                    dimensionSet(1, -2, -2, 0, 0),
-                    vector::zero
-                )
+                dimensionedVector("zero", dimF, vector::zero)
             )
         );
 }
