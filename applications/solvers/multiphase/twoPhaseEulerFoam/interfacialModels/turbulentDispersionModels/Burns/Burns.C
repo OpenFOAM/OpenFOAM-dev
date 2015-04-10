@@ -83,7 +83,7 @@ Foam::turbulentDispersionModels::Burns::D() const
         );
 
     return
-      - 0.75
+        0.75
        *drag.CdRe()
        *pair_.continuous().nu()
        *pair_.continuous().turbulence().nut()
