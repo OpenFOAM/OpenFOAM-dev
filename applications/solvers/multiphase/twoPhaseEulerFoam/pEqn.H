@@ -10,6 +10,9 @@ surfaceScalarField alpharAU2f(fvc::interpolate(alpha2*rAU2));
 // --- Pressure corrector loop
 while (pimple.correct())
 {
+    // Update continuity errors due to temperature changes
+    #include "correctContErrs.H"
+
     volVectorField HbyA1
     (
         IOobject::groupName("HbyA", phase1.name()),
