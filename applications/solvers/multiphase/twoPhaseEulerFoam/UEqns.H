@@ -30,6 +30,7 @@ volScalarField dragCoeff(fluid.dragCoeff());
         U1Eqn.relax();
         U1Eqn += fvm::Sp(dragCoeff, U1);
         fvOptions.constrain(U1Eqn);
+        U1.correctBoundaryConditions();
     }
 
     {
@@ -52,5 +53,6 @@ volScalarField dragCoeff(fluid.dragCoeff());
         U2Eqn.relax();
         U2Eqn += fvm::Sp(dragCoeff, U2);
         fvOptions.constrain(U2Eqn);
+        U2.correctBoundaryConditions();
     }
 }

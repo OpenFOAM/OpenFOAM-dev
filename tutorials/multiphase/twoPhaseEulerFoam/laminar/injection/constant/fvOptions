@@ -23,7 +23,7 @@ injector1
     selectionMode   points;
     points
     (
-        (0.075 0.1 0.05)
+        (0.075 0.2 0.05)
     );
 }
 

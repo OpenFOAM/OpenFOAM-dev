@@ -28,7 +28,7 @@ boundaryField
     {
         type               inletOutlet;
         phi                phi.water;
-        inletValue         uniform 300;
+        inletValue         $internalField;
         value              $internalField;
     }
     inlet

@@ -60,13 +60,15 @@ Foam::BlendedInterfacialModel<modelType>::BlendedInterfacialModel
     const blendingMethod& blending,
     const phasePair& pair,
     const orderedPhasePair& pair1In2,
-    const orderedPhasePair& pair2In1
+    const orderedPhasePair& pair2In1,
+    const bool correctFixedFluxBCs
 )
 :
     pair_(pair),
     pair1In2_(pair1In2),
     pair2In1_(pair2In1),
-    blending_(blending)
+    blending_(blending),
+    correctFixedFluxBCs_(correctFixedFluxBCs)
 {
     if (modelTable.found(pair_))
     {
@@ -161,7 +163,11 @@ Foam::BlendedInterfacialModel<modelType>::K() const
         x() += model2In1_->K()*f2;
     }
 
-    if (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    if
+    (
+        correctFixedFluxBCs_
+     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    )
     {
         correctFixedFluxBCs(x());
     }
@@ -217,7 +223,11 @@ Foam::BlendedInterfacialModel<modelType>::F() const
         x() -= model2In1_->F()*f2; // note : subtraction
     }
 
-    if (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    if
+    (
+        correctFixedFluxBCs_
+     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    )
     {
         correctFixedFluxBCs(x());
     }
@@ -272,7 +282,11 @@ Foam::BlendedInterfacialModel<modelType>::D() const
         x() += model2In1_->D()*f2;
     }
 
-    if (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    if
+    (
+        correctFixedFluxBCs_
+     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    )
     {
         correctFixedFluxBCs(x());
     }

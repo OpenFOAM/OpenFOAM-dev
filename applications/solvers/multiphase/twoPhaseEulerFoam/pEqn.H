@@ -13,6 +13,12 @@ while (pimple.correct())
     // Update continuity errors due to temperature changes
     #include "correctContErrs.H"
 
+    // Correct flux BCs to be consistent with the velocity BCs
+    phi1.boundaryField() ==
+        mrfZones.relative(mesh.Sf().boundaryField() & U1.boundaryField());
+    phi2.boundaryField() ==
+        mrfZones.relative(mesh.Sf().boundaryField() & U2.boundaryField());
+
     volVectorField HbyA1
     (
         IOobject::groupName("HbyA", phase1.name()),
@@ -92,9 +98,9 @@ while (pimple.correct())
     surfaceScalarField phiCorrCoeff1(pos(alpha1fBar - 0.99));
     surfaceScalarField phiCorrCoeff2(pos(0.01 - alpha1fBar));
 
-    // Set ddtPhiCorr to 0 on non-coupled boundaries
     forAll(mesh.boundary(), patchi)
     {
+        // Set ddtPhiCorr to 0 on non-coupled boundaries
         if
         (
             !mesh.boundary()[patchi].coupled()
@@ -272,18 +278,7 @@ while (pimple.correct())
                     ((phi1s + D1f*phi2s) - (phi2s + D2f*phi1s))/(1 - D1f*D2f)
                 );
 
-                phi1.boundaryField() ==
-                    mrfZones.relative
-                    (
-                        mesh.Sf().boundaryField() & U1.boundaryField()
-                    );
                 phi1 = phi + alpha2f*phir;
-
-                phi2.boundaryField() ==
-                    mrfZones.relative
-                    (
-                        mesh.Sf().boundaryField() & U2.boundaryField()
-                    );
                 phi2 = phi - alpha1f*phir;
             }
 

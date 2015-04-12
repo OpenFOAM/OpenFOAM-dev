@@ -75,6 +75,9 @@ class BlendedInterfacialModel
         //- Blending model
         const blendingMethod& blending_;
 
+        //- If true set coefficients and forces to 0 at fixed-flux BCs
+        bool correctFixedFluxBCs_;
+
 
     // Private Member Functions
 
@@ -103,7 +106,8 @@ public:
             const blendingMethod& blending,
             const phasePair& pair,
             const orderedPhasePair& pair1In2,
-            const orderedPhasePair& pair2In1
+            const orderedPhasePair& pair2In1,
+            const bool correctFixedFluxBCs = true
         );
 
 
