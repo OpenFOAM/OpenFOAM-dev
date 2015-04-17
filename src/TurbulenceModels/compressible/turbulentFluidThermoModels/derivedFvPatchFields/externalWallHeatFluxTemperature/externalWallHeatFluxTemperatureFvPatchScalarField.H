@@ -39,9 +39,9 @@ Description
 
     where:
     \vartable
-        h  | heat transfer coefficient [W/m2/K]
+        h  | heat transfer coefficient [W/m^2/K]
         Ta | ambient temperature [K]
-        q  | heat flux [W/m2]
+        q  | heat flux [W/m^2]
     \endvartable
 
     The thermal conductivity, \c kappa, can either be retrieved from the
@@ -52,11 +52,11 @@ Description
     \heading Patch usage
 
     \table
-        Property     | Description             | Required    | Default value
-        kappa        | thermal conductivity option | yes     |
-        q            | heat flux [W/m2]            | yes*    |
-        Ta           | ambient temperature [K]     | yes*    |
-        h            | heat transfer coefficient [W/m/K] | yes*|
+        Property     | Description                 | Required | Default value
+        kappa        | thermal conductivity option | yes      |
+        q            | heat flux [W/m^2]           | yes*     |
+        Ta           | ambient temperature [K]     | yes*     |
+        h            | heat transfer coefficient [W/m^2/K] | yes*|
         thicknessLayers | list of thicknesses per layer [m] | yes |
         kappaLayers  | list of thermal conductivites per layer [W/m/K] | yes |
         kappaName    | name of thermal conductivity field | yes  |

@@ -27,14 +27,14 @@ Class
 Description
     Fixed heat boundary condition to specify temperature gradient. Input
     heat source either specified in terms of an absolute power [W], or as a
-    flux [W/m2].
+    flux [W/m^2].
 
     Example usage:
 
         hotWall
         {
             type            compressible::turbulentHeatFluxTemperature;
-            heatSource      flux;        // power [W]; flux [W/m2]
+            heatSource      flux;        // power [W]; flux [W/m^2]
             q               uniform 10;  // heat power or flux
             kappa           fluidThermo; // calculate kappa=alphaEff*thermo.Cp
             Qr              none;        // name of the radiative flux
