@@ -16,4 +16,7 @@ $(REACTINGPARCEL)/makeBasicReactingParcelSubmodels.C
 REACTINGMPPARCEL=$(DERIVEDPARCELS)/basicReactingMultiphaseParcel
 $(REACTINGMPPARCEL)/makeBasicReactingMultiphaseParcelSubmodels.C
 
+KINEMATICMPPICPARCEL=$(DERIVEDPARCELS)/basicKinematicMPPICParcel
+$(KINEMATICMPPICPARCEL)/makeBasicKinematicMPPICParcelSubmodels.C
+
 LIB = $(FOAM_LIBBIN)/liblagrangianTurbulence
