@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
     calculated as:
 
         \f[
-            p_rgh = p - \rho g h
+            p_rgh = p - \rho g (h - hRef)
         \f]
 
     where
@@ -40,8 +40,9 @@ Description
         p_rgh   | Pseudo hydrostatic pressure [Pa]
         p       | Static pressure [Pa]
         h       | Height in the opposite direction to gravity
+        hRef    | Reference height in the opposite direction to gravity
         \rho    | density
-        g       | acceleration due to gravity [m/s2]
+        g       | acceleration due to gravity [m/s^2]
     \endtable
 
     \heading Patch usage

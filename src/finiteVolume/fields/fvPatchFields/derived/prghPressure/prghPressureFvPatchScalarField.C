@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,17 @@ void Foam::prghPressureFvPatchScalarField::updateCoeffs()
     const uniformDimensionedVectorField& g =
         db().lookupObject<uniformDimensionedVectorField>("g");
 
-    operator==(p_ - rhop*((g.value() & patch().Cf())));
+    const uniformDimensionedScalarField& hRef =
+        db().lookupObject<uniformDimensionedScalarField>("hRef");
+
+    dimensionedScalar ghRef
+    (
+        mag(g.value()) > SMALL
+      ? g & (cmptMag(g.value())/mag(g.value()))*hRef
+      : dimensionedScalar("ghRef", g.dimensions()*dimLength, 0)
+    );
+
+    operator==(p_ - rhop*((g.value() & patch().Cf()) - ghRef.value()));
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }
