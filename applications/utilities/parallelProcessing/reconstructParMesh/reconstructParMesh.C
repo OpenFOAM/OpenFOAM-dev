@@ -454,7 +454,6 @@ int main(int argc, char *argv[])
         "decomposition method or as a volScalarField for post-processing."
     );
 
-    #include "addTimeOptions.H"
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
@@ -564,38 +563,26 @@ int main(int argc, char *argv[])
         );
     }
 
-
     // Use the times list from the master processor
     // and select a subset based on the command-line options
-    instantList Times = timeSelector::select
+    instantList timeDirs = timeSelector::select
     (
         databases[0].times(),
         args
     );
 
-    // Set startTime and endTime depending on -time and -latestTime options
-    #include "checkTimeOptions.H"
-
-    if (Times.empty())
-    {
-        FatalErrorIn(args.executable())
-            << "No times selected"
-            << exit(FatalError);
-    }
-
-
     // Loop over all times
-    for (label timeI = startTime; timeI < endTime; timeI++)
+    forAll(timeDirs, timeI)
     {
         // Set time for global database
-        runTime.setTime(Times[timeI], timeI);
+        runTime.setTime(timeDirs[timeI], timeI);
 
-        Info<< "Time = " << runTime.timeName() << endl << endl;
+        Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Set time for all databases
         forAll(databases, procI)
         {
-            databases[procI].setTime(Times[timeI], timeI);
+            databases[procI].setTime(timeDirs[timeI], timeI);
         }
 
         const fileName meshPath =
