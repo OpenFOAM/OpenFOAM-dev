@@ -292,10 +292,6 @@ while (pimple.correct())
             // Optionally relax pressure for velocity correction
             p_rgh.relax();
 
-            // Update the static pressure
-            p = max(p_rgh + rho*gh, pMin);
-            p_rgh = p - rho*gh;
-
             mSfGradp = pEqnIncomp.flux()/rAUf;
 
             // Partial-elimination phase-velocity corrector
@@ -329,17 +325,28 @@ while (pimple.correct())
         }
     }
 
-    // Update densities from change in p
+    // Update and limit the static pressure
+    p = max(p_rgh + rho*gh, pMin);
+
+    // Limit p_rgh
+    p_rgh = p - rho*gh;
+
+    // Update densities from change in p_rgh
     rho1 += psi1*(p_rgh - p_rgh_0);
     rho2 += psi2*(p_rgh - p_rgh_0);
 
-    // Update the phase kinetic energies
-    K1 = 0.5*magSqr(U1);
-    K2 = 0.5*magSqr(U2);
+    // Correct p_rgh for consistency with p and the updated densities
+    rho = fluid.rho();
+    p_rgh = p - rho*gh;
+    p_rgh.correctBoundaryConditions();
+}
 
-    // Update the pressure time-derivative if required
-    if (thermo1.dpdt() || thermo2.dpdt())
-    {
-        dpdt = fvc::ddt(p);
-    }
+// Update the phase kinetic energies
+K1 = 0.5*magSqr(U1);
+K2 = 0.5*magSqr(U2);
+
+// Update the pressure time-derivative if required
+if (thermo1.dpdt() || thermo2.dpdt())
+{
+    dpdt = fvc::ddt(p);
 }
