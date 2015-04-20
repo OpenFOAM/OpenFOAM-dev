@@ -124,33 +124,22 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
         {
             tTurb = 0.0;
 
-            scalar sigma = sqrt(2.0*k/3.0);
-            vector dir = -gradk/(mag(gradk) + SMALL);
+            const scalar sigma = sqrt(2.0*k/3.0);
+            const vector dir = -gradk/(mag(gradk) + SMALL);
 
-            // Numerical Recipes... Ch. 7. Random Numbers...
-            scalar x1 = 0.0;
-            scalar x2 = 0.0;
-            scalar rsq = 10.0;
-            while ((rsq > 1.0) || (rsq == 0.0))
-            {
-                x1 = 2.0*rnd.sample01<scalar>() - 1.0;
-                x2 = 2.0*rnd.sample01<scalar>() - 1.0;
-                rsq = x1*x1 + x2*x2;
-            }
-
-            scalar fac = sqrt(-2.0*log(rsq)/rsq);
+            scalar fac = 0.0;
 
             // In 2D calculations the -grad(k) is always
             // away from the axis of symmetry
             // This creates a 'hole' in the spray and to
-            // prevent this we let x1 be both negative/positive
+            // prevent this we let fac be both negative/positive
             if (this->owner().mesh().nSolutionD() == 2)
             {
-                fac *= x1;
+                fac = rnd.GaussNormal<scalar>();
             }
             else
             {
-                fac *= mag(x1);
+                fac = mag(rnd.GaussNormal<scalar>());
             }
 
             UTurb = sigma*fac*dir;
