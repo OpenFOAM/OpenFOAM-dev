@@ -114,7 +114,6 @@ inline Foam::scalar Foam::particle::tetLambda
             // parallel to it.  +-tol/+-tol is not a good
             // comparison, return 0.0, in anticipation of tet
             // centre correction.
-
             return 0.0;
         }
         else
@@ -124,13 +123,11 @@ inline Foam::scalar Foam::particle::tetLambda
                 // 'Zero' length track (compared to the tolerance, which is
                 // based on the cell volume, divided by the tet face area), not
                 // along the face, face cannot be crossed.
-
                 return GREAT;
             }
             else
             {
                 // Trajectory is non-zero and parallel to face
-
                 lambdaDenominator = sign(lambdaDenominator)*SMALL;
             }
         }
@@ -174,10 +171,10 @@ inline Foam::scalar Foam::particle::movingTetLambda
     {
         tetIndices tetIs(cellI, tetFaceI, tetPtI, mesh_);
 
-        // tet at timestep start
+        // Tet at timestep start
         tetPointRef tet00 = tetIs.oldTet(mesh_);
 
-        // tet at timestep end
+        // Tet at timestep end
         tetPointRef tet = tetIs.tet(mesh_);
 
         point tet0PtA = tet00.a() + stepFraction_*(tet.a() - tet00.a());
@@ -221,7 +218,6 @@ inline Foam::scalar Foam::particle::movingTetLambda
     {
         // If the old normal is zero (for example in layer addition)
         // then use the current normal;
-
         n0 = n;
     }
 
@@ -252,20 +248,12 @@ inline Foam::scalar Foam::particle::movingTetLambda
             }
             else
             {
-                // Numerical Recipes in C,
-                // Second Edition (1992),
-                // Section 5.6.
-                // q = -0.5*(b + sgn(b)*sqrt(b^2 - 4ac))
-                // x1 = q/a
-                // x2 = c/q
-
                 scalar q = -0.5*(b + sign(b)*Foam::sqrt(discriminant));
 
                 if (mag(q) < VSMALL)
                 {
                     // If q is zero, then l1 = q/a is the required
                     // value of lambda, and is zero.
-
                     return 0.0;
                 }
 
@@ -287,19 +275,16 @@ inline Foam::scalar Foam::particle::movingTetLambda
         }
         {
             // When a is zero, solve the first order polynomial
-
             lambdaNumerator = -c;
             lambdaDenominator = b;
         }
     }
     else
     {
-        // when n = n0 is zero, there is no plane rotation, solve the
+        // When n = n0 is zero, there is no plane rotation, solve the
         // first order polynomial
-
         lambdaNumerator = -(dS & n0);
         lambdaDenominator = ((dP - dB) & n0);
-
     }
 
     if (mag(lambdaDenominator) < tol)
@@ -310,7 +295,6 @@ inline Foam::scalar Foam::particle::movingTetLambda
             // parallel to it.  +-tol)/+-tol is not a good
             // comparison, return 0.0, in anticipation of tet
             // centre correction.
-
             return 0.0;
         }
         else
@@ -319,13 +303,11 @@ inline Foam::scalar Foam::particle::movingTetLambda
             {
                 // Zero length track, not along the face, face
                 // cannot be crossed.
-
                 return GREAT;
             }
             else
             {
                 // Trajectory is non-zero and parallel to face
-
                 lambdaDenominator = sign(lambdaDenominator)*SMALL;
             }
         }
@@ -521,7 +503,6 @@ inline void Foam::particle::crossEdgeConnectedFace
             // the face with the same vertices since we might enter a tracking
             // loop where it never exits. This test should be cheap
             // for most meshes so can be left in for 'normal' meshes.
-
             continue;
         }
         else
@@ -535,7 +516,6 @@ inline void Foam::particle::crossEdgeConnectedFace
             {
                 // Edge is in the forward circulation of this face, so
                 // work with the start point of the edge
-
                 eIndex = findIndex(otherFace, e.start());
             }
             else
@@ -543,7 +523,6 @@ inline void Foam::particle::crossEdgeConnectedFace
                 // edDir == -1, so the edge is in the reverse
                 // circulation of this face, so work with the end
                 // point of the edge
-
                 eIndex = findIndex(otherFace, e.end());
             }
 
@@ -580,14 +559,12 @@ inline void Foam::particle::crossEdgeConnectedFace
             {
                 // The point is the base point, so this is first tet
                 // in the face circulation
-
                 tetPtI = 1;
             }
             else if (eIndex == otherFace.size() - 1)
             {
                 // The point is the last before the base point, so
                 // this is the last tet in the face circulation
-
                 tetPtI = otherFace.size() - 2;
             }
             else
