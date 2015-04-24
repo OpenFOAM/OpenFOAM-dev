@@ -1,6 +1,6 @@
 #!/bin/sh
 
-m4 < constant/polyMesh/blockMeshDict.m4 > constant/polyMesh/blockMeshDict
+m4 < system/blockMeshDict.m4 > system/blockMeshDict
 blockMesh
 topoSet
 setsToZones -noFlipMap

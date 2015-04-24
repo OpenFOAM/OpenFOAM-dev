@@ -28,8 +28,10 @@ Description
     A multi-block mesh generator.
 
     Uses the block mesh description found in
-    \a constant/polyMesh/blockMeshDict
-    (or \a constant/\<region\>/polyMesh/blockMeshDict).
+    \a system/blockMeshDict
+    or \a system/\<region\>/blockMeshDict
+    or \a constant/polyMesh/blockMeshDict
+    or \a constant/\<region\>/polyMesh/blockMeshDict
 
 Usage
 
@@ -88,49 +90,59 @@ int main(int argc, char *argv[])
     const word dictName("blockMeshDict");
 
     word regionName;
-    fileName polyMeshDir;
+    word regionPath;
 
+    // Check if the region is specified otherwise mesh the default region
     if (args.optionReadIfPresent("region", regionName, polyMesh::defaultRegion))
     {
-        // constant/<region>/polyMesh/blockMeshDict
-        polyMeshDir = regionName/polyMesh::meshSubDir;
-
         Info<< nl << "Generating mesh for region " << regionName << endl;
+        regionPath = regionName;
     }
+
+    // Search for the appropriate blockMesh dictionary....
+
+    fileName dictPath;
+
+    // Check if the dictionary is specified on the command-line
+    if (args.optionFound("dict"))
+    {
+        dictPath = args["dict"];
+
+        dictPath =
+        (
+            isDir(dictPath)
+          ? dictPath/dictName
+          : dictPath
+        );
+    }
+    // Check if dictionary is present in the constant directory
+    else if
+    (
+        exists
+        (
+            runTime.path()/runTime.constant()
+           /regionPath/polyMesh::meshSubDir/dictName
+        )
+    )
+    {
+        dictPath =
+            runTime.path()/runTime.constant()
+           /regionPath/polyMesh::meshSubDir/dictName;
+    }
+    // Otherwise assume the dictionary is present in the system directory
     else
     {
-        // constant/polyMesh/blockMeshDict
-        polyMeshDir = polyMesh::meshSubDir;
+        dictPath = runTime.path()/runTime.system()/regionPath/dictName;
     }
 
     IOobject meshDictIO
     (
-        dictName,
-        runTime.constant(),
-        polyMeshDir,
+        dictPath,
         runTime,
         IOobject::MUST_READ,
         IOobject::NO_WRITE,
         false
     );
-
-    if (args.optionFound("dict"))
-    {
-        const fileName dictPath = args["dict"];
-
-        meshDictIO = IOobject
-        (
-            (
-                isDir(dictPath)
-              ? dictPath/dictName
-              : dictPath
-            ),
-            runTime,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE,
-            false
-        );
-    }
 
     if (!meshDictIO.headerOk())
     {

@@ -26,7 +26,7 @@ copySolutionDirs()
 
 setCavityFine()
 {
-    blockMeshDict="$caseName/constant/polyMesh/blockMeshDict"
+    blockMeshDict="$caseName/system/blockMeshDict"
     controlDict="$caseName/system/controlDict"
     sed s/"20 20 1"/"41 41 1"/g $blockMeshDict > temp.$$
     mv temp.$$ $blockMeshDict

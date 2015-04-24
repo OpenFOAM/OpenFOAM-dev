@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 setDecompressionTankFine()
 {
-    blockMeshDict="constant/polyMesh/blockMeshDict"
+    blockMeshDict="system/blockMeshDict"
     controlDict="system/controlDict"
 
     sed \

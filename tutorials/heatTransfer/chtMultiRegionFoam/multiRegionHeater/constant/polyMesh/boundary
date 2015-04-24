@@ -8,7 +8,7 @@
 FoamFile
 {
     version     2.0;
-    format      binary;
+    format      ascii;
     class       polyBoundaryMesh;
     location    "constant/polyMesh";
     object      boundary;
@@ -20,6 +20,7 @@ FoamFile
     maxY
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          300;
         startFace       8300;
     }
@@ -38,18 +39,21 @@ FoamFile
     minY
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          300;
         startFace       8800;
     }
     minZ
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          300;
         startFace       9100;
     }
     maxZ
     {
         type            wall;
+        inGroups        1(wall);
         nFaces          300;
         startFace       9400;
     }

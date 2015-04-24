@@ -14,66 +14,66 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
+convertToMeters 0.001;
 
 vertices
 (
-
-    (0 0 0)
-    (30 0 0)
-    (30 1 0)
-    (0 1 0)
-    (0 0 1)
-    (30 0 1)
-    (30 1 1)
-    (0 1 1)
-
-);
-
-blocks
-(
-    hex (0 1 2 3 4 5 6 7) (6 2 1) simpleGrading (1.0 1.0 1.0)
+    ( 0     0  -260)
+    (76     0  -260)
+    (76  2180  -260)
+    ( 0  2180  -260)
+    ( 0     0   260)
+    (76     0   260)
+    (76  2180   260)
+    ( 0  2180   260)
 );
 
 edges
 (
 );
 
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (35 150 15) simpleGrading (1 1 1)
+);
+
 boundary
 (
-    topSurface
+    frontAndBack
     {
-        type patch;
+        type wall;
         faces
         (
-            (3 7 6 2)
+            (0 1 5 4)
+            (2 3 7 6)
         );
     }
 
-    bottomSurface
+    topAndBottom
     {
-        type patch;
+        type wall;
         faces
         (
-            (4 0 1 5)
+            (4 5 6 7)
+            (3 2 1 0)
         );
     }
 
-    fixedEnd
+    hot
     {
-        type patch;
+        type wall;
         faces
         (
-            (0 4 7 3)
+            (6 5 1 2)
         );
     }
 
-    tractionEnd
+    cold
     {
-        type patch;
+        type wall;
         faces
         (
-            (1 2 6 5)
+            (4 7 3 0)
         );
     }
 );
@@ -81,6 +81,3 @@ boundary
 mergePatchPairs
 (
 );
-
-// ************************************************************************* //
-

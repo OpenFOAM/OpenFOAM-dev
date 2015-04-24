@@ -3,7 +3,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 set -x
 
-m4 < constant/polyMesh/blockMeshDict.m4 > constant/polyMesh/blockMeshDict
+m4 < system/blockMeshDict.m4 > system/blockMeshDict
 blockMesh > log.blockMesh 2>&1
 
 # ----------------------------------------------------------------- end-of-file
