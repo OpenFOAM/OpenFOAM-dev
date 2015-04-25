@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,10 +83,12 @@ void Foam::codedFunctionObject::prepare
         (
             "EXE_INC = -g \\\n"
             "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
+            "-I$(LIB_SRC)/meshTools/lnInclude \\\n"
             + context.options()
             + "\n\nLIB_LIBS = \\\n"
             + "    -lOpenFOAM \\\n"
             + "    -lfiniteVolume \\\n"
+            + "    -lmeshTools \\\n"
             + context.libs()
         );
 }
