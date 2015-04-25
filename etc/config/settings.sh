@@ -198,6 +198,7 @@ export FOAM_USER_LIBBIN=$WM_PROJECT_USER_DIR/platforms/$WM_OPTIONS/lib
 # export FOAM_CODE_TEMPLATES=$WM_PROJECT_DIR/etc/codeTemplates/dynamicCode
 
 # Convenience
+export FOAM_ETC=$WM_PROJECT_DIR/etc
 export FOAM_APP=$WM_PROJECT_DIR/applications
 export FOAM_SRC=$WM_PROJECT_DIR/src
 export FOAM_TUTORIALS=$WM_PROJECT_DIR/tutorials
