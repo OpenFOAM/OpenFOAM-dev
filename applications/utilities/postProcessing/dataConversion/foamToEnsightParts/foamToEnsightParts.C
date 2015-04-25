@@ -79,7 +79,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     // enable -constant
-    // probably don't need -zeroTime though, since the fields are vetted
+    // probably don't need -withZero though, since the fields are vetted
     // afterwards anyhow
     timeSelector::addOptions(true, false);
     argList::noParallel();

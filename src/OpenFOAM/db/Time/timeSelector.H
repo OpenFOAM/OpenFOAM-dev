@@ -59,7 +59,7 @@ Description
     \endverbatim
 
     The first argument avoids adding the \b -constant option. The second
-    argument adds an additional \b -zeroTime option and also prevents the
+    argument adds an additional \b -withZero option and also prevents the
     \c 0/ directory from being included in the default time range and in the
     \b -latestTime selection.
 
@@ -122,16 +122,16 @@ public:
         // \param constant
         //   Add the \b -constant option to include the \c constant/ directory
         //
-        // \param zeroTime
-        //   Enable the \b -zeroTime option and alter the normal time selection
+        // \param withZero
+        //   Enable the \b -withZero option and alter the normal time selection
         //   behaviour (and \b -latestTime behaviour) to exclude the \c 0/
         //   directory. The \c 0/ directory will only be included when
-        //   \b -zeroTime is specified.
-        //   The \b -noZero option has precedence over the @b -zeroTime option.
+        //   \b -withZero is specified.
+        //   The \b -noZero option has precedence over the @b -withZero option.
         static void addOptions
         (
             const bool constant=true,
-            const bool zeroTime=false
+            const bool withZero=false
         );
 
         //- Return the set of times selected based on the argList options

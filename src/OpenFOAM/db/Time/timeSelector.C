@@ -113,7 +113,7 @@ void Foam::timeSelector::inplaceSelect(instantList& Times) const
 void Foam::timeSelector::addOptions
 (
     const bool constant,
-    const bool zeroTime
+    const bool withZero
 )
 {
     if (constant)
@@ -124,11 +124,11 @@ void Foam::timeSelector::addOptions
             "include the 'constant/' dir in the times list"
         );
     }
-    if (zeroTime)
+    if (withZero)
     {
         argList::addBoolOption
         (
-            "zeroTime",
+            "withZero",
             "include the '0/' dir in the times list"
         );
     }
@@ -136,7 +136,7 @@ void Foam::timeSelector::addOptions
     (
         "noZero",
         "exclude the '0/' dir from the times list, "
-        "has precedence over the -zeroTime option"
+        "has precedence over the -withZero option"
     );
     argList::addBoolOption
     (
@@ -228,10 +228,10 @@ Foam::List<Foam::instant> Foam::timeSelector::select
                 // Exclude 0/ if specifically requested
                 selectTimes[zeroIdx] = false;
             }
-            else if (argList::validOptions.found("zeroTime"))
+            else if (argList::validOptions.found("withZero"))
             {
-                // With -zeroTime enabled, drop 0/ unless specifically requested
-                selectTimes[zeroIdx] = args.optionFound("zeroTime");
+                // With -withZero enabled, drop 0/ unless specifically requested
+                selectTimes[zeroIdx] = args.optionFound("withZero");
             }
         }
 
@@ -284,7 +284,7 @@ Foam::List<Foam::instant> Foam::timeSelector::selectIfPresent
      || args.optionFound("time")
      || args.optionFound("constant")
      || args.optionFound("noZero")
-     || args.optionFound("zeroTime")
+     || args.optionFound("withZero")
     )
     {
         return select0(runTime, args);

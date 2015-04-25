@@ -432,7 +432,7 @@ int main(int argc, char *argv[])
     );
 
     // Enable -constant ... if someone really wants it
-    // Enable -zeroTime to prevent accidentally trashing the initial fields
+    // Enable -withZero to prevent accidentally trashing the initial fields
     timeSelector::addOptions(true, true);
     argList::noParallel();
     argList::addOption
