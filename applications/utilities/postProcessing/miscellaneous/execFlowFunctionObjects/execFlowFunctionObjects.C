@@ -45,7 +45,7 @@ Description
 #include "ReadFields.H"
 #include "fvIOoptionList.H"
 
-#include "incompressible/singlePhaseTransportModel/singlePhaseTransportModel.H"
+#include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
 #include "turbulentFluidThermoModel.H"
 
@@ -298,9 +298,9 @@ void calc
 
         if (phi.dimensions() == dimVolume/dimTime)
         {
-            IOobject RASPropertiesHeader
+            IOobject turbulencePropertiesHeader
             (
-                "RASProperties",
+                "turbulenceProperties",
                 runTime.constant(),
                 mesh,
                 IOobject::MUST_READ_IF_MODIFIED,
@@ -308,43 +308,18 @@ void calc
                 false
             );
 
-            IOobject LESPropertiesHeader
-            (
-                "LESProperties",
-                runTime.constant(),
-                mesh,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            );
-
-            if (RASPropertiesHeader.headerOk())
+            if (turbulencePropertiesHeader.headerOk())
             {
-                IOdictionary RASProperties(RASPropertiesHeader);
-
                 singlePhaseTransportModel laminarTransport(U, phi);
 
-                autoPtr<incompressible::RASModel> RASModel
+                autoPtr<incompressible::turbulenceModel> turbulenceModel
                 (
-                    incompressible::RASModel::New
+                    incompressible::turbulenceModel::New
                     (
                         U,
                         phi,
                         laminarTransport
                     )
-                );
-
-                fol.execute(true);
-            }
-            else if (LESPropertiesHeader.headerOk())
-            {
-                IOdictionary LESProperties(LESPropertiesHeader);
-
-                singlePhaseTransportModel laminarTransport(U, phi);
-
-                autoPtr<incompressible::LESModel> sgsModel
-                (
-                    incompressible::LESModel::New(U, phi, laminarTransport)
                 );
 
                 fol.execute(true);
@@ -381,9 +356,9 @@ void calc
                 thermo->rho()
             );
 
-            IOobject RASPropertiesHeader
+            IOobject turbulencePropertiesHeader
             (
-                "RASProperties",
+                "turbulenceProperties",
                 runTime.constant(),
                 mesh,
                 IOobject::MUST_READ_IF_MODIFIED,
@@ -391,40 +366,17 @@ void calc
                 false
             );
 
-            IOobject LESPropertiesHeader
-            (
-                "LESProperties",
-                runTime.constant(),
-                mesh,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            );
-
-            if (RASPropertiesHeader.headerOk())
+            if (turbulencePropertiesHeader.headerOk())
             {
-                IOdictionary RASProperties(RASPropertiesHeader);
-
-                autoPtr<compressible::RASModel> RASModel
+                autoPtr<compressible::turbulenceModel> turbulenceModel
                 (
-                    compressible::RASModel::New
+                    compressible::turbulenceModel::New
                     (
                         rho,
                         U,
                         phi,
                         thermo()
                     )
-                );
-
-                fol.execute(true);
-            }
-            else if (LESPropertiesHeader.headerOk())
-            {
-                IOdictionary LESProperties(LESPropertiesHeader);
-
-                autoPtr<compressible::LESModel> sgsModel
-                (
-                    compressible::LESModel::New(rho, U, phi, thermo())
                 );
 
                 fol.execute(true);

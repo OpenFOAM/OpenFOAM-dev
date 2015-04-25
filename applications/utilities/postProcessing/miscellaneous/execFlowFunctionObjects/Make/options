@@ -1,5 +1,7 @@
 EXE_INC = \
     -I$(LIB_SRC)/transportModels \
+    -I$(LIB_SRC)/transportModels \
+    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
@@ -20,6 +22,6 @@ EXE_LIBS = \
     -lspecie \
     -lfiniteVolume \
     -lfvOptions \
+    -lgenericPatchFields \
     -lmeshTools \
-    -lsampling \
-    -lgenericPatchFields
+    -lsampling
