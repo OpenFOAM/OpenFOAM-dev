@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,7 +143,8 @@ public:
         );
 
         //- Return the set of times selected based on the argList options
-        //  also set the runTime to the first instance
+        //  also set the runTime to the first instance or the
+        //  \c constant/ directory if no instances are specified or available
         static instantList select0
         (
             Time& runTime,
