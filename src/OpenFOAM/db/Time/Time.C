@@ -486,7 +486,13 @@ Foam::Time::Time
     graphFormat_("raw"),
     runTimeModifiable_(false),
 
-    functionObjects_(*this, !args.optionFound("noFunctionObjects"))
+    functionObjects_
+    (
+        *this,
+        argList::validOptions.found("withFunctionObjects")
+      ? args.optionFound("withFunctionObjects")
+      : !args.optionFound("noFunctionObjects")
+    )
 {
     libs_.open(controlDict_, "libs");
 

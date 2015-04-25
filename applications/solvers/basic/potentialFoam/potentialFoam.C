@@ -67,6 +67,12 @@ int main(int argc, char *argv[])
         "Calculate and write the pressure field"
     );
 
+    argList::addBoolOption
+    (
+        "withFunctionObjects",
+        "execute functionObjects"
+    );
+
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
