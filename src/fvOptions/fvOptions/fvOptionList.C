@@ -107,13 +107,13 @@ Foam::fv::optionList::optionList(const fvMesh& mesh)
 
 void Foam::fv::optionList::reset(const dictionary& dict)
 {
+    // Count number of active fvOptions
     label count = 0;
     forAllConstIter(dictionary, dict, iter)
     {
-        // safety:
         if (iter().isDict())
         {
-            count ++;
+            count++;
         }
     }
 

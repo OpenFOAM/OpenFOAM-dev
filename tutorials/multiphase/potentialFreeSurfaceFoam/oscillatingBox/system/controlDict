@@ -75,6 +75,7 @@ functions
         outputControl   timeStep;
         outputInterval  1;
         log             yes;
+        writeTotalArea  no;
         valueOutput     no;
         source          faceZone;
         sourceName      f0;

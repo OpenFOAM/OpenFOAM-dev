@@ -378,6 +378,23 @@ void Foam::fieldValues::faceSource::combineSurfaceGeometry
 }
 
 
+Foam::scalar Foam::fieldValues::faceSource::totalArea() const
+{
+    scalar totalArea;
+
+    if (surfacePtr_.valid())
+    {
+        totalArea = gSum(surfacePtr_().magSf());
+    }
+    else
+    {
+        totalArea = gSum(filterField(mesh().magSf(), false));
+    }
+
+    return totalArea;
+}
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::fieldValues::faceSource::initialise(const dictionary& dict)
@@ -423,22 +440,15 @@ void Foam::fieldValues::faceSource::initialise(const dictionary& dict)
         return;
     }
 
-    scalar totalArea;
-
     if (surfacePtr_.valid())
     {
         surfacePtr_().update();
-        totalArea = gSum(surfacePtr_().magSf());
-    }
-    else
-    {
-        totalArea = gSum(filterField(mesh().magSf(), false));
     }
 
     Info<< type() << " " << name_ << ":" << nl
         << "    total faces  = " << nFaces_
         << nl
-        << "    total area   = " << totalArea
+        << "    total area   = " << totalArea()
         << nl;
 
     if (dict.readIfPresent("weightField", weightFieldName_))
@@ -517,10 +527,18 @@ void Foam::fieldValues::faceSource::initialise(const dictionary& dict)
 
 void Foam::fieldValues::faceSource::writeFileHeader(const label i)
 {
-    file()
-        << "# Source : " << sourceTypeNames_[source_] << " "
-        << sourceName_ <<  nl << "# Faces  : " << nFaces_ << nl
-        << "# Time" << tab << "sum(magSf)";
+    writeCommented(file(), "Source : ");
+    file() << sourceTypeNames_[source_] << " " << sourceName_ << endl;
+    writeCommented(file(), "Faces  : ");
+    file() << nFaces_ << endl;
+    writeCommented(file(), "Area   : ");
+    file() << totalArea() << endl;
+    writeCommented(file(), "Time");
+
+    if (writeTotalArea_)
+    {
+        file() << tab << "Area";
+    }
 
     forAll(fields_, i)
     {
@@ -621,6 +639,7 @@ Foam::fieldValues::faceSource::faceSource
 :
     fieldValue(name, obr, dict, typeName, loadFromFiles),
     surfaceWriterPtr_(NULL),
+    writeTotalArea_(dict.lookupOrDefault("writeTotalArea", false)),
     source_(sourceTypeNames_.read(dict.lookup("source"))),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldName_("none"),
@@ -661,21 +680,22 @@ void Foam::fieldValues::faceSource::write()
 
     if (active_)
     {
-        scalar totalArea;
-
         if (surfacePtr_.valid())
         {
             surfacePtr_().update();
-            totalArea = gSum(surfacePtr_().magSf());
-        }
-        else
-        {
-            totalArea = gSum(filterField(mesh().magSf(), false));
         }
 
         if (Pstream::master())
         {
-            file() << obr_.time().value() << tab << totalArea;
+            file() << obr_.time().value();
+        }
+
+        if (writeTotalArea_)
+        {
+            if (Pstream::master())
+            {
+                file() << tab << totalArea();
+            }
         }
 
         // construct weight field. Note: zero size means weight = 1
