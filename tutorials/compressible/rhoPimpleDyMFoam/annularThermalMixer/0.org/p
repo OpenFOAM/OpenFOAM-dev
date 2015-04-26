@@ -28,7 +28,7 @@ boundaryField
     staticWalls { $:wall.p; }
     movingWalls { $staticWalls; }
 
-    #include "${WM_PROJECT_DIR}/etc/caseDicts/setConstraintTypes"
+    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 // ************************************************************************* //

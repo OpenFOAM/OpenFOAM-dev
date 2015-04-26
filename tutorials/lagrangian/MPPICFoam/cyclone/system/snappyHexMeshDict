@@ -267,7 +267,7 @@ addLayersControls
 // where to undo.
 meshQualityControls
 {
-    #include "$WM_PROJECT_DIR/etc/caseDicts/meshQualityDict"
+    #includeEtc "caseDicts/meshQualityDict"
 
 
     // Advanced

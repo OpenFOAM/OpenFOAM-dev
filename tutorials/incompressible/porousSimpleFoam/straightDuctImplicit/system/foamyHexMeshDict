@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "$WM_PROJECT_DIR/etc/caseDicts/foamyHexMeshDict"
+#includeEtc "caseDicts/foamyHexMeshDict"
 
 geometry
 {

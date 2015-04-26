@@ -22,7 +22,7 @@ internalField   uniform 0.1;
 boundaryField
 {
     //- Set patchGroups for constraint patches
-    #include "${WM_PROJECT_DIR}/etc/caseDicts/setConstraintTypes"
+    #includeEtc "caseDicts/setConstraintTypes"
 
     floor
     {
