@@ -399,6 +399,8 @@ Foam::scalar Foam::fieldValues::faceSource::totalArea() const
 
 void Foam::fieldValues::faceSource::initialise(const dictionary& dict)
 {
+    dict.lookup("sourceName") >> sourceName_;
+
     switch (source_)
     {
         case stFaceZone:
@@ -533,9 +535,9 @@ void Foam::fieldValues::faceSource::writeFileHeader(const label i)
     file() << nFaces_ << endl;
     writeCommented(file(), "Area   : ");
     file() << totalArea() << endl;
-    writeCommented(file(), "Time");
 
-    if (writeTotalArea_)
+    writeCommented(file(), "Time");
+    if (writeArea_)
     {
         file() << tab << "Area";
     }
@@ -639,13 +641,13 @@ Foam::fieldValues::faceSource::faceSource
 :
     fieldValue(name, obr, dict, typeName, loadFromFiles),
     surfaceWriterPtr_(NULL),
-    writeTotalArea_(dict.lookupOrDefault("writeTotalArea", false)),
     source_(sourceTypeNames_.read(dict.lookup("source"))),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldName_("none"),
     orientWeightField_(false),
     orientedFieldsStart_(labelMax),
     scaleFactor_(1.0),
+    writeArea_(dict.lookupOrDefault("writeArea", false)),
     nFaces_(0),
     faceId_(),
     facePatchId_(),
@@ -690,7 +692,7 @@ void Foam::fieldValues::faceSource::write()
             file() << obr_.time().value();
         }
 
-        if (writeTotalArea_)
+        if (writeArea_)
         {
             if (Pstream::master())
             {

@@ -66,6 +66,7 @@ Description
         type         | type name: faceSource   | yes         |
         log          | write data to standard output | no    | no
         valueOutput  | write the output values | yes         |
+        writeArea    | Write the area of the faceSource | no |
         surfaceFormat | output value format    | no          |
         source       | face source: see below  | yes         |
         sourceName   | name of face source if required  | no |
@@ -239,9 +240,6 @@ protected:
         //- Surface writer
         autoPtr<surfaceWriter> surfaceWriterPtr_;
 
-        //- Optionally write the totalArea
-        bool writeTotalArea_;
-
         //- Source type
         sourceType source_;
 
@@ -259,6 +257,9 @@ protected:
 
         //- Scale factor - optional
         scalar scaleFactor_;
+
+        //- Optionally write the area of the faceSource
+        bool writeArea_;
 
         //- Global number of faces
         label nFaces_;

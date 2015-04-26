@@ -354,7 +354,7 @@ bool Foam::fieldValues::faceSource::writeValues
             file()<< tab << result;
 
             Info(log_)<< "    " << operationTypeNames_[operation_]
-                << "(" << sourceName_ << ") for " << fieldName
+                << "(" << sourceName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }
     }
@@ -447,4 +447,3 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::faceSource::filterField
 
 
 // ************************************************************************* //
-
