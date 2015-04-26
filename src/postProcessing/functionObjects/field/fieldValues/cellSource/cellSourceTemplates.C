@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,6 +88,11 @@ Type Foam::fieldValues::cellSource::processValues
         case opSum:
         {
             result = sum(values);
+            break;
+        }
+        case opSumMag:
+        {
+            result = sum(cmptMag(values));
             break;
         }
         case opAverage:
@@ -201,7 +206,7 @@ bool Foam::fieldValues::cellSource::writeValues(const word& fieldName)
             file()<< tab << result;
 
             Info(log_)<< "    " << operationTypeNames_[operation_]
-                << "(" << sourceName_ << ") for " << fieldName
+                << "(" << sourceName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }
     }
@@ -221,4 +226,3 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::cellSource::filterField
 
 
 // ************************************************************************* //
-

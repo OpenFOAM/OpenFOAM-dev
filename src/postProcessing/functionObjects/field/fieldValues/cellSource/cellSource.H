@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,9 +58,10 @@ Description
     \heading Function object usage
     \table
         Property     | Description             | Required    | Default value
-        type         | type name: cellSource   | yes         |
-        log          | write data to standard output | no    | no
-        valueOutput  | write the raw output values | yes     |
+        type         | Type name: cellSource   | yes         |
+        log          | Write data to standard output | no    | no
+        valueOutput  | Write the raw output values | yes     |
+        writeVolume  | Write the volume of the cellSource | no |
         source       | cell source: see below  | yes         |
         sourceName   | name of cell source if required  | no |
         operation    | operation to perform    | yes         |
@@ -80,6 +81,7 @@ Description
     \plaintable
        none          | no operation
        sum           | sum
+       sumMag        | sum of component magnitudes
        average       | ensemble average
        weightedAverage | weighted average
        volAverage    | volume weighted average
@@ -143,6 +145,7 @@ public:
         {
             opNone,
             opSum,
+            opSumMag,
             opAverage,
             opWeightedAverage,
             opVolAverage,
@@ -153,7 +156,7 @@ public:
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 9> operationTypeNames_;
+        static const NamedEnum<operationType, 10> operationTypeNames_;
 
 
 private:
@@ -165,6 +168,9 @@ private:
 
         //- Set cells to evaluate based on a patch
         void setPatchCells();
+
+        //- Calculate and return volume of the cellSource: sum(V)
+        scalar volume() const;
 
 
 protected:
@@ -185,6 +191,9 @@ protected:
 
         //- Weight field name - only used for opWeightedAverage mode
         word weightFieldName_;
+
+        //- Optionally write the volume of the cellSource
+        bool writeVolume_;
 
 
     // Protected Member Functions

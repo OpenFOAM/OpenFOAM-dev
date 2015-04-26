@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,10 +41,11 @@ namespace Foam
 
 
     template<>
-    const char* NamedEnum<fieldValues::cellSource::operationType, 9>::names[] =
+    const char* NamedEnum<fieldValues::cellSource::operationType, 10>::names[] =
     {
         "none",
         "sum",
+        "sumMag",
         "average",
         "weightedAverage",
         "volAverage",
@@ -65,7 +66,7 @@ namespace Foam
 const Foam::NamedEnum<Foam::fieldValues::cellSource::sourceType, 2>
     Foam::fieldValues::cellSource::sourceTypeNames_;
 
-const Foam::NamedEnum<Foam::fieldValues::cellSource::operationType, 9>
+const Foam::NamedEnum<Foam::fieldValues::cellSource::operationType, 10>
     Foam::fieldValues::cellSource::operationTypeNames_;
 
 
@@ -77,6 +78,8 @@ void Foam::fieldValues::cellSource::setCellZoneCells()
     {
         case stCellZone:
         {
+            dict().lookup("sourceName") >> sourceName_;
+
             label zoneId = mesh().cellZones().findZoneID(sourceName_);
 
             if (zoneId < 0)
@@ -114,6 +117,12 @@ void Foam::fieldValues::cellSource::setCellZoneCells()
 }
 
 
+Foam::scalar Foam::fieldValues::cellSource::volume() const
+{
+    return gSum(filterField(mesh().V()));
+}
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::fieldValues::cellSource::initialise(const dictionary& dict)
@@ -125,8 +134,7 @@ void Foam::fieldValues::cellSource::initialise(const dictionary& dict)
         WarningIn
         (
             "Foam::fieldValues::cellSource::initialise(const dictionary&)"
-        )
-            << type() << " " << name_ << ": "
+        )   << type() << " " << name_ << ": "
             << sourceTypeNames_[source_] << "(" << sourceName_ << "):" << nl
             << "    Source has no cells - deactivating" << endl;
 
@@ -151,10 +159,18 @@ void Foam::fieldValues::cellSource::initialise(const dictionary& dict)
 
 void Foam::fieldValues::cellSource::writeFileHeader(const label i)
 {
-    file()
-        << "# Source : " << sourceTypeNames_[source_] << " "
-        << sourceName_ <<  nl << "# Cells  : " << nCells_ << nl
-        << "# Time" << tab << "sum(V)";
+    writeCommented(file(), "Source : ");
+    file() << sourceTypeNames_[source_] << " " << sourceName_ << endl;
+    writeCommented(file(), "Cells  : ");
+    file() << nCells_ << endl;
+    writeCommented(file(), "Volume : ");
+    file() << volume() << endl;
+
+    writeCommented(file(), "Time");
+    if (writeVolume_)
+    {
+        file() << tab << "Volume";
+    }
 
     forAll(fields_, i)
     {
@@ -182,7 +198,8 @@ Foam::fieldValues::cellSource::cellSource
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     nCells_(0),
     cellId_(),
-    weightFieldName_("none")
+    weightFieldName_("none"),
+    writeVolume_(dict.lookupOrDefault("writeVolume", false))
 {
     read(dict);
 }
@@ -214,10 +231,17 @@ void Foam::fieldValues::cellSource::write()
 
     if (active_)
     {
-        scalar totalVolume = gSum(filterField(mesh().V()));
         if (Pstream::master())
         {
-            file() << obr_.time().value() << tab << totalVolume;
+            file() << obr_.time().value();
+        }
+
+        if (writeVolume_)
+        {
+            if (Pstream::master())
+            {
+                file() << tab << volume();
+            }
         }
 
         forAll(fields_, i)
