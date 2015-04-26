@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,7 @@ Foam::SRF::SRFModel::SRFModel
     ),
     Urel_(Urel),
     mesh_(Urel_.mesh()),
+    origin_("origin", dimLength, lookup("origin")),
     axis_(lookup("axis")),
     SRFModelCoeffs_(subDict(type + "Coeffs")),
     omega_(dimensionedVector("omega", dimless/dimTime, vector::zero))
@@ -80,6 +81,9 @@ bool Foam::SRF::SRFModel::read()
 {
     if (regIOobject::read())
     {
+        // Re-read origin
+        lookup("origin") >> origin_;
+
         // Re-read axis
         lookup("axis") >> axis_;
         axis_ /= mag(axis_);
@@ -93,6 +97,12 @@ bool Foam::SRF::SRFModel::read()
     {
         return false;
     }
+}
+
+
+const Foam::dimensionedVector& Foam::SRF::SRFModel::origin() const
+{
+    return origin_;
 }
 
 
@@ -144,7 +154,7 @@ Foam::SRF::SRFModel::Fcentrifugal() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            omega_ ^ (omega_ ^ mesh_.C())
+            omega_ ^ (omega_ ^ (mesh_.C() - origin_))
         )
     );
 }
@@ -163,7 +173,11 @@ Foam::vectorField Foam::SRF::SRFModel::velocity
 ) const
 {
     tmp<vectorField> tfld =
-        omega_.value() ^ (positions - axis_*(axis_ & positions));
+        omega_.value()
+      ^ (
+            (positions - origin_.value())
+          - axis_*(axis_ & (positions - origin_.value()))
+        );
 
     return tfld();
 }
@@ -183,7 +197,8 @@ Foam::tmp<Foam::volVectorField> Foam::SRF::SRFModel::U() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            omega_ ^ (mesh_.C() - axis_*(axis_ & mesh_.C()))
+            omega_
+          ^ ((mesh_.C() - origin_) - axis_*(axis_ & (mesh_.C() - origin_)))
         )
     );
 }

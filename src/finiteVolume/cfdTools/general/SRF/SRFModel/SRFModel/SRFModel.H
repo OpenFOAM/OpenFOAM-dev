@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,9 @@ protected:
 
         //- Reference to the mesh
         const fvMesh& mesh_;
+
+        //- Origin of the axis
+        dimensionedVector origin_;
 
         //- Axis of rotation, a direction vector which passes through the origin
         vector axis_;
@@ -148,6 +151,9 @@ public:
 
 
         // Access
+
+            //- Return the origin of rotation
+            const dimensionedVector& origin() const;
 
             //- Return the axis of rotation
             const vector& axis() const;

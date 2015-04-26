@@ -17,6 +17,7 @@ FoamFile
 
 SRFModel        rpm;
 
+origin          (0 0 0);
 axis            (0 0 1);
 
 rpmCoeffs
