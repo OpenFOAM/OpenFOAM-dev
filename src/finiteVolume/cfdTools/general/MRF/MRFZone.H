@@ -85,7 +85,8 @@ class MRFZone
         //- Cell zone ID
         label cellZoneID_;
 
-        const wordList excludedPatchNames_;
+        const wordReList excludedPatchNames_;
+
         labelList excludedPatchLabels_;
 
         //- Internal faces that are part of MRF

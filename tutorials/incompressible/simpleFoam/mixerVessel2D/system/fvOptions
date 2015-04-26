@@ -24,6 +24,7 @@ MRF1
 
     MRFSourceCoeffs
     {
+        active      true;
         origin      (0 0 0);
         axis        (0 0 1);
         omega       104.72;
