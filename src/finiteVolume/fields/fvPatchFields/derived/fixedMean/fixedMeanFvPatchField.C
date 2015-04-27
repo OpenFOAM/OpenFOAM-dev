@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,15 +26,10 @@ License
 #include "fixedMeanFvPatchField.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
+Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -46,7 +41,7 @@ fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 
 
 template<class Type>
-fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
+Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 (
     const fixedMeanFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -60,7 +55,7 @@ fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 
 
 template<class Type>
-fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
+Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -73,7 +68,7 @@ fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 
 
 template<class Type>
-fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
+Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 (
     const fixedMeanFvPatchField<Type>& ptf
 )
@@ -84,7 +79,7 @@ fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 
 
 template<class Type>
-fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
+Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 (
     const fixedMeanFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -98,7 +93,7 @@ fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void fixedMeanFvPatchField<Type>::updateCoeffs()
+void Foam::fixedMeanFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -127,16 +122,12 @@ void fixedMeanFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void fixedMeanFvPatchField<Type>::write(Ostream& os) const
+void Foam::fixedMeanFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     os.writeKeyword("meanValue") << meanValue_ << token::END_STATEMENT << nl;
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //
