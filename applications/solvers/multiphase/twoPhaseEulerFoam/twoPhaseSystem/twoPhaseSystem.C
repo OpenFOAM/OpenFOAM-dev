@@ -26,7 +26,6 @@ License
 #include "twoPhaseSystem.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "BlendedInterfacialModel.H"
-#include "dragModel.H"
 #include "virtualMassModel.H"
 #include "heatTransferModel.H"
 #include "liftModel.H"
@@ -47,6 +46,15 @@ License
 
 #include "blendingMethod.H"
 #include "HashPtrTable.H"
+
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+Foam::dimensionedScalar Foam::twoPhaseSystem::zeroResidualAlpha_
+(
+    "zeroResidualAlpha", dimless, 0
+);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -299,46 +307,49 @@ Foam::tmp<Foam::surfaceScalarField> Foam::twoPhaseSystem::calcPhi() const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::twoPhaseSystem::dragCoeff() const
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseSystem::Kd() const
 {
     return drag_->K();
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::twoPhaseSystem::virtualMassCoeff() const
+Foam::tmp<Foam::surfaceScalarField> Foam::twoPhaseSystem::Kdf() const
+{
+    return drag_->Kf();
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseSystem::Vm() const
 {
     return virtualMass_->K();
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::twoPhaseSystem::heatTransferCoeff() const
+Foam::tmp<Foam::surfaceScalarField> Foam::twoPhaseSystem::Vmf() const
+{
+    return virtualMass_->Kf();
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseSystem::Kh() const
 {
     return heatTransfer_->K();
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::twoPhaseSystem::liftForce() const
+Foam::tmp<Foam::volVectorField> Foam::twoPhaseSystem::F() const
 {
-    return lift_->F<vector>();
+    return lift_->F<vector>() + wallLubrication_->F<vector>();
 }
 
 
-Foam::tmp<Foam::volVectorField>
-Foam::twoPhaseSystem::wallLubricationForce() const
+Foam::tmp<Foam::surfaceScalarField> Foam::twoPhaseSystem::Ff() const
 {
-    return wallLubrication_->F<vector>();
+    return lift_->Ff() + wallLubrication_->Ff();
 }
 
 
-Foam::tmp<Foam::volVectorField>
-Foam::twoPhaseSystem::turbulentDispersionForce() const
-{
-    return turbulentDispersion_->F<vector>();
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::twoPhaseSystem::turbulentDiffusivity() const
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseSystem::D() const
 {
     return turbulentDispersion_->D();
 }
@@ -353,6 +364,13 @@ void Foam::twoPhaseSystem::solve()
 
     const surfaceScalarField& phi1 = phase1_.phi();
     const surfaceScalarField& phi2 = phase2_.phi();
+
+    Switch faceMomentum
+    (
+        //pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
+        mesh_.solutionDict().subDict("PIMPLE")
+           .lookupOrDefault<Switch>("faceMomentum", false)
+    );
 
     const dictionary& alphaControls = mesh_.solverDict
     (
@@ -381,18 +399,40 @@ void Foam::twoPhaseSystem::solve()
 
     if (implicitPhasePressure)
     {
-        const volScalarField& rAU1 = mesh_.lookupObject<volScalarField>
-        (
-            IOobject::groupName("rAU", phase1_.name())
-        );
-        const volScalarField& rAU2 = mesh_.lookupObject<volScalarField>
-        (
-            IOobject::groupName("rAU", phase2_.name())
-        );
+        if (faceMomentum)
+        {
+            const surfaceScalarField& rAU1f =
+                mesh_.lookupObject<surfaceScalarField>
+                (
+                    IOobject::groupName("rAUf", phase1_.name())
+                );
+            const surfaceScalarField& rAU2f =
+                mesh_.lookupObject<surfaceScalarField>
+                (
+                    IOobject::groupName("rAUf", phase2_.name())
+                );
 
-        pPrimeByA =
-            fvc::interpolate(rAU1*phase1_.turbulence().pPrime())
-          + fvc::interpolate(rAU2*phase2_.turbulence().pPrime());
+            volScalarField D(this->D());
+
+            pPrimeByA =
+                rAU1f*fvc::interpolate(D + phase1_.turbulence().pPrime())
+              + rAU2f*fvc::interpolate(D + phase2_.turbulence().pPrime());
+        }
+        else
+        {
+            const volScalarField& rAU1 = mesh_.lookupObject<volScalarField>
+            (
+                IOobject::groupName("rAU", phase1_.name())
+            );
+            const volScalarField& rAU2 = mesh_.lookupObject<volScalarField>
+            (
+                IOobject::groupName("rAU", phase2_.name())
+            );
+
+            pPrimeByA =
+                fvc::interpolate(rAU1*phase1_.turbulence().pPrime())
+              + fvc::interpolate(rAU2*phase2_.turbulence().pPrime());
+        }
 
         surfaceScalarField phiP
         (
@@ -596,8 +636,21 @@ bool Foam::twoPhaseSystem::read()
 }
 
 
-const Foam::dragModel&
-Foam::twoPhaseSystem::drag(const phaseModel& phase) const
+const Foam::dimensionedScalar&
+Foam::twoPhaseSystem::residualAlpha(const phaseModel& phase) const
+{
+    if (drag_->hasModel(phase))
+    {
+        return drag_->phaseModel(phase).residualAlpha();
+    }
+    else
+    {
+        return zeroResidualAlpha_;
+    }
+}
+
+
+const Foam::dragModel& Foam::twoPhaseSystem::drag(const phaseModel& phase) const
 {
     return drag_->phaseModel(phase);
 }

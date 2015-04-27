@@ -88,11 +88,8 @@ class BlendedInterfacialModel
         void operator=(const BlendedInterfacialModel<modelType>&);
 
         //- Correct coeff/value on fixed flux boundary conditions
-        template<class Type>
-        void correctFixedFluxBCs
-        (
-            GeometricField<Type, fvPatchField, volMesh>& field
-        ) const;
+        template<class GeometricField>
+        void correctFixedFluxBCs(GeometricField& field) const;
 
 
 public:
@@ -117,18 +114,27 @@ public:
 
     // Member Functions
 
+        //- Return true if a model is specified for the supplied phase
+        bool hasModel(const phaseModel& phase) const;
+
+        //- Return the model for the supplied phase
+        const modelType& phaseModel(const phaseModel& phase) const;
+
         //- Return the blended force coefficient
         tmp<volScalarField> K() const;
+
+        //- Return the face blended force coefficient
+        tmp<surfaceScalarField> Kf() const;
 
         //- Return the blended force
         template<class Type>
         tmp<GeometricField<Type, fvPatchField, volMesh> > F() const;
 
+        //- Return the face blended force
+        tmp<surfaceScalarField> Ff() const;
+
         //- Return the blended diffusivity
         tmp<volScalarField> D() const;
-
-        //- Return the model for the supplied phase
-        const modelType& phaseModel(const phaseModel& phase) const;
 };
 
 

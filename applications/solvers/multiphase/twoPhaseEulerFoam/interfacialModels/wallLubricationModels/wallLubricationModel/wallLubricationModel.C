@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ License
 
 #include "wallLubricationModel.H"
 #include "phasePair.H"
-
-const Foam::dimensionSet Foam::wallLubricationModel::dimF(1, -2, -2, 0, 0);
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,6 +34,8 @@ namespace Foam
     defineTypeNameAndDebug(wallLubricationModel, 0);
     defineRunTimeSelectionTable(wallLubricationModel, dictionary);
 }
+
+const Foam::dimensionSet Foam::wallLubricationModel::dimF(1, -2, -2, 0, 0);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -54,6 +55,24 @@ Foam::wallLubricationModel::wallLubricationModel
 
 Foam::wallLubricationModel::~wallLubricationModel()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volVectorField> Foam::wallLubricationModel::F() const
+{
+    return pair_.dispersed()*Fi();
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::wallLubricationModel::Ff() const
+{
+    const fvMesh& mesh(this->pair_.phase1().mesh());
+
+    return
+        fvc::interpolate(pair_.dispersed())
+       *(fvc::interpolate(Fi()) & mesh.Sf());
+}
 
 
 // ************************************************************************* //

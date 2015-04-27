@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,13 +116,24 @@ public:
 
     // Member Functions
 
-        //- Virtual mass coefficient
+        //- Return the virtual mass coefficient
         virtual tmp<volScalarField> Cvm() const = 0;
 
-        //- The virtual mass function K used in the momentum equation
+        //- Return the phase-intensive virtual mass coefficient Ki
+        //  used in the momentum equation
+        //    ddt(alpha1*rho1*U1) + ... = ... alphad*K*(DU1_Dt - DU2_Dt)
+        //    ddt(alpha2*rho2*U2) + ... = ... alphad*K*(DU1_Dt - DU2_Dt)
+        virtual tmp<volScalarField> Ki() const;
+
+        //- Return the virtual mass coefficient K
+        //  used in the momentum equation
         //    ddt(alpha1*rho1*U1) + ... = ... K*(DU1_Dt - DU2_Dt)
         //    ddt(alpha2*rho2*U2) + ... = ... K*(DU1_Dt - DU2_Dt)
         virtual tmp<volScalarField> K() const;
+
+        //- Return the virtual mass coefficient Kf
+        //  used in the face-momentum equations
+        virtual tmp<surfaceScalarField> Kf() const;
 
         // Dummy write for regIOobject
         bool writeData(Ostream& os) const;

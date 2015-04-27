@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,13 +130,31 @@ public:
 
     // Member Functions
 
+        //- Return the residual phase-fraction
+        //  used to stabilize the phase momentum as the phase-fraction -> 0
+        const dimensionedScalar& residualAlpha() const
+        {
+            return residualAlpha_;
+        }
+
         //- Drag coefficient
         virtual tmp<volScalarField> CdRe() const = 0;
 
-        //- The drag function K used in the momentum equation
+        //- Return the phase-intensive drag coefficient Ki
+        //  used in the momentum equations
+        //    ddt(alpha1*rho1*U1) + ... = ... alphad*K*(U1-U2)
+        //    ddt(alpha2*rho2*U2) + ... = ... alphad*K*(U2-U1)
+        virtual tmp<volScalarField> Ki() const;
+
+        //- Return the drag coefficient K
+        //  used in the momentum equations
         //    ddt(alpha1*rho1*U1) + ... = ... K*(U1-U2)
         //    ddt(alpha2*rho2*U2) + ... = ... K*(U2-U1)
         virtual tmp<volScalarField> K() const;
+
+        //- Return the drag coefficient Kf
+        //  used in the face-momentum equations
+        virtual tmp<surfaceScalarField> Kf() const;
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;

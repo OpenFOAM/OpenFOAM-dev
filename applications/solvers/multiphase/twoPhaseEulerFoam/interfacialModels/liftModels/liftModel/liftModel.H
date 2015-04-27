@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,11 +112,17 @@ public:
 
     // Member Functions
 
-        //- Lift coefficient
+        //- Return lift coefficient
         virtual tmp<volScalarField> Cl() const = 0;
 
-        //- Lift force
+        //- Return phase-intensive lift force
+        virtual tmp<volVectorField> Fi() const;
+
+        //- Return lift force
         virtual tmp<volVectorField> F() const;
+
+        //- Return face lift force
+        virtual tmp<surfaceScalarField> Ff() const;
 };
 
 

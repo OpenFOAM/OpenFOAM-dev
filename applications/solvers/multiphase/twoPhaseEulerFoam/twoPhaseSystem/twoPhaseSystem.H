@@ -40,13 +40,13 @@ SourceFiles
 #include "orderedPhasePair.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "dragModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class dragModel;
 class virtualMassModel;
 class heatTransferModel;
 class liftModel;
@@ -113,6 +113,9 @@ class twoPhaseSystem
         autoPtr<BlendedInterfacialModel<turbulentDispersionModel> >
             turbulentDispersion_;
 
+        //-
+        static dimensionedScalar zeroResidualAlpha_;
+
 
     // Private member functions
 
@@ -141,26 +144,29 @@ public:
         tmp<volVectorField> U() const;
 
         //- Return the drag coefficient
-        tmp<volScalarField> dragCoeff() const;
+        tmp<volScalarField> Kd() const;
+
+        //- Return the face drag coefficient
+        tmp<surfaceScalarField> Kdf() const;
 
         //- Return the virtual mass coefficient
-        tmp<volScalarField> virtualMassCoeff() const;
+        tmp<volScalarField> Vm() const;
+
+        //- Return the face virtual mass coefficient
+        tmp<surfaceScalarField> Vmf() const;
 
         //- Return the heat transfer coefficient
-        tmp<volScalarField> heatTransferCoeff() const;
+        tmp<volScalarField> Kh() const;
 
-        //- Return the lift force
-        tmp<volVectorField> liftForce() const;
+        //- Return the combined force (lift + wall-lubrication)
+        tmp<volVectorField> F() const;
 
-        //- Return the wall lubrication force
-        tmp<volVectorField> wallLubricationForce() const;
+        //- Return the combined face-force (lift + wall-lubrication)
+        tmp<surfaceScalarField> Ff() const;
 
         //- Return the turbulent diffusivity
         //  Multiplies the phase-fraction gradient
-        tmp<volScalarField> turbulentDiffusivity() const;
-
-        //- Return the turbulent dispersion force
-        tmp<volVectorField> turbulentDispersionForce() const;
+        tmp<volScalarField> D() const;
 
         //- Solve for the two-phase-fractions
         void solve();
@@ -176,10 +182,17 @@ public:
 
         // Access
 
-            //- Return the drag model for the supplied phase
+            //- Return the residual phase-fraction for given phase
+            //  Used to stabilize the phase momentum as the phase-fraction -> 0
+            const dimensionedScalar& residualAlpha
+            (
+                const phaseModel& phase
+            ) const;
+
+            //- Return the drag model for the given phase
             const dragModel& drag(const phaseModel& phase) const;
 
-            //- Return the virtual mass model for the supplied phase
+            //- Return the virtual mass model for the given phase
             const virtualMassModel& virtualMass(const phaseModel& phase) const;
 
             //- Return the surface tension coefficient

@@ -50,6 +50,11 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
+    Switch faceMomentum
+    (
+        pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
+    );
+
     #include "createFields.H"
     #include "createMRFZones.H"
     #include "createFvOptions.H"
@@ -57,6 +62,9 @@ int main(int argc, char *argv[])
     #include "readTimeControls.H"
     #include "CourantNos.H"
     #include "setInitialDeltaT.H"
+
+    #include "pUf/createDDtU.H"
+    #include "pU/createDDtU.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,10 +86,21 @@ int main(int argc, char *argv[])
             fluid.correct();
 
             #include "contErrs.H"
-            #include "UEqns.H"
             #include "EEqns.H"
-            #include "pEqn.H"
-            #include "DDtU.H"
+
+            if (faceMomentum)
+            {
+                Info<< "Constructing face momentum equations" << endl;
+                #include "pUf/UEqns.H"
+                #include "pUf/pEqn.H"
+            }
+            else
+            {
+                Info<< "Constructing momentum equations" << endl;
+                #include "pU/UEqns.H"
+                #include "pU/pEqn.H"
+                #include "pU/DDtU.H"
+            }
 
             if (pimple.turbCorr())
             {

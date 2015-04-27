@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,6 +99,9 @@ public:
 
         //- The drag function used in the momentum equation
         virtual tmp<volScalarField> K() const;
+
+        //- The drag function Kf used in the face-momentum equations
+        virtual tmp<surfaceScalarField> Kf() const;
 };
 
 

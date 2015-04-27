@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "virtualMassModel.H"
 #include "phasePair.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -70,9 +71,22 @@ Foam::virtualMassModel::~virtualMassModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::volScalarField> Foam::virtualMassModel::Ki() const
+{
+    return Cvm()*pair_.continuous().rho();
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::virtualMassModel::K() const
 {
-    return Cvm()*pair_.dispersed()*pair_.continuous().rho();
+    return pair_.dispersed()*Ki();
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::virtualMassModel::Kf() const
+{
+    return
+        fvc::interpolate(pair_.dispersed())*fvc::interpolate(Ki());
 }
 
 

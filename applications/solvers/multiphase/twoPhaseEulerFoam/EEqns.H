@@ -5,7 +5,7 @@
     volScalarField Cpv1("Cpv1", thermo1.Cpv());
     volScalarField Cpv2("Cpv2", thermo2.Cpv());
 
-    volScalarField heatTransferCoeff(fluid.heatTransferCoeff());
+    volScalarField Kh(fluid.Kh());
 
     fvScalarMatrix he1Eqn
     (
@@ -32,9 +32,9 @@
 
     he1Eqn -=
     (
-        heatTransferCoeff*(thermo2.T() - thermo1.T())
-      + heatTransferCoeff*he1/Cpv1
-      - fvm::Sp(heatTransferCoeff/Cpv1, he1)
+        Kh*(thermo2.T() - thermo1.T())
+      + Kh*he1/Cpv1
+      - fvm::Sp(Kh/Cpv1, he1)
       + fvOptions(alpha1, rho1, he1)
     );
 
@@ -63,9 +63,9 @@
 
     he2Eqn -=
     (
-        heatTransferCoeff*(thermo1.T() - thermo2.T())
-      + heatTransferCoeff*he2/Cpv2
-      - fvm::Sp(heatTransferCoeff/Cpv2, he2)
+        Kh*(thermo1.T() - thermo2.T())
+      + Kh*he2/Cpv2
+      - fvm::Sp(Kh/Cpv2, he2)
       + fvOptions(alpha2, rho2, he2)
     );
 

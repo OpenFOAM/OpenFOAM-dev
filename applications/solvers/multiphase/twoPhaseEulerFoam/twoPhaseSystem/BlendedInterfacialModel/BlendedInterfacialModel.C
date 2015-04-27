@@ -25,14 +25,15 @@ License
 
 #include "BlendedInterfacialModel.H"
 #include "fixedValueFvsPatchFields.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class modelType>
-template<class Type>
+template<class GeometricField>
 void Foam::BlendedInterfacialModel<modelType>::correctFixedFluxBCs
 (
-    GeometricField<Type, fvPatchField, volMesh>& field
+    GeometricField& field
 ) const
 {
     forAll(pair_.phase1().phi().boundaryField(), patchI)
@@ -45,7 +46,8 @@ void Foam::BlendedInterfacialModel<modelType>::correctFixedFluxBCs
             )
         )
         {
-            field.boundaryField()[patchI] = pTraits<Type>::zero;
+            field.boundaryField()[patchI]
+              = pTraits<typename GeometricField::value_type>::zero;
         }
     }
 }
@@ -139,9 +141,12 @@ Foam::BlendedInterfacialModel<modelType>::K() const
         (
             IOobject
             (
-                modelType::typeName + "Coeff",
+                modelType::typeName + ":K",
                 pair_.phase1().mesh().time().timeName(),
-                pair_.phase1().mesh()
+                pair_.phase1().mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
             ),
             pair_.phase1().mesh(),
             dimensionedScalar("zero", modelType::dimK, 0)
@@ -161,6 +166,74 @@ Foam::BlendedInterfacialModel<modelType>::K() const
     if (model2In1_.valid())
     {
         x() += model2In1_->K()*f2;
+    }
+
+    if
+    (
+        correctFixedFluxBCs_
+     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    )
+    {
+        correctFixedFluxBCs(x());
+    }
+
+    return x;
+}
+
+
+template<class modelType>
+Foam::tmp<Foam::surfaceScalarField>
+Foam::BlendedInterfacialModel<modelType>::Kf() const
+{
+    tmp<surfaceScalarField> f1, f2;
+
+    if (model_.valid() || model1In2_.valid())
+    {
+        f1 = fvc::interpolate
+        (
+            blending_.f1(pair1In2_.dispersed(), pair2In1_.dispersed())
+        );
+    }
+
+    if (model_.valid() || model2In1_.valid())
+    {
+        f2 = fvc::interpolate
+        (
+            blending_.f2(pair1In2_.dispersed(), pair2In1_.dispersed())
+        );
+    }
+
+    tmp<surfaceScalarField> x
+    (
+        new surfaceScalarField
+        (
+            IOobject
+            (
+                modelType::typeName + ":Kf",
+                pair_.phase1().mesh().time().timeName(),
+                pair_.phase1().mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            pair_.phase1().mesh(),
+            dimensionedScalar("zero", modelType::dimK, 0)
+        )
+    );
+
+    if (model_.valid())
+    {
+        x() += model_->Kf()*(f1() - f2());
+    }
+
+    if (model1In2_.valid())
+    {
+        x() += model1In2_->Kf()*(1 - f1);
+    }
+
+    if (model2In1_.valid())
+    {
+        x() += model2In1_->Kf()*f2;
     }
 
     if
@@ -199,9 +272,12 @@ Foam::BlendedInterfacialModel<modelType>::F() const
         (
             IOobject
             (
-                modelType::typeName + "Coeff",
+                modelType::typeName + ":F",
                 pair_.phase1().mesh().time().timeName(),
-                pair_.phase1().mesh()
+                pair_.phase1().mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
             ),
             pair_.phase1().mesh(),
             dimensioned<Type>("zero", modelType::dimF, pTraits<Type>::zero)
@@ -221,6 +297,74 @@ Foam::BlendedInterfacialModel<modelType>::F() const
     if (model2In1_.valid())
     {
         x() -= model2In1_->F()*f2; // note : subtraction
+    }
+
+    if
+    (
+        correctFixedFluxBCs_
+     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    )
+    {
+        correctFixedFluxBCs(x());
+    }
+
+    return x;
+}
+
+
+template<class modelType>
+Foam::tmp<Foam::surfaceScalarField>
+Foam::BlendedInterfacialModel<modelType>::Ff() const
+{
+    tmp<surfaceScalarField> f1, f2;
+
+    if (model_.valid() || model1In2_.valid())
+    {
+        f1 = fvc::interpolate
+        (
+            blending_.f1(pair1In2_.dispersed(), pair2In1_.dispersed())
+        );
+    }
+
+    if (model_.valid() || model2In1_.valid())
+    {
+        f2 = fvc::interpolate
+        (
+            blending_.f2(pair1In2_.dispersed(), pair2In1_.dispersed())
+        );
+    }
+
+    tmp<surfaceScalarField> x
+    (
+        new surfaceScalarField
+        (
+            IOobject
+            (
+                modelType::typeName + ":Ff",
+                pair_.phase1().mesh().time().timeName(),
+                pair_.phase1().mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            pair_.phase1().mesh(),
+            dimensionedScalar("zero", modelType::dimF*dimArea, 0)
+        )
+    );
+
+    if (model_.valid())
+    {
+        x() += model_->Ff()*(f1() - f2());
+    }
+
+    if (model1In2_.valid())
+    {
+        x() += model1In2_->Ff()*(1 - f1);
+    }
+
+    if (model2In1_.valid())
+    {
+        x() -= model2In1_->Ff()*f2; // note : subtraction
     }
 
     if
@@ -258,9 +402,12 @@ Foam::BlendedInterfacialModel<modelType>::D() const
         (
             IOobject
             (
-                modelType::typeName + "Coeff",
+                modelType::typeName + ":D",
                 pair_.phase1().mesh().time().timeName(),
-                pair_.phase1().mesh()
+                pair_.phase1().mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
             ),
             pair_.phase1().mesh(),
             dimensionedScalar("zero", modelType::dimD, 0)
@@ -292,6 +439,19 @@ Foam::BlendedInterfacialModel<modelType>::D() const
     }
 
     return x;
+}
+
+
+template<class modelType>
+bool Foam::BlendedInterfacialModel<modelType>::hasModel
+(
+    const class phaseModel& phase
+) const
+{
+    return
+       &phase == &(pair_.phase1())
+      ? model1In2_.valid()
+      : model2In1_.valid();
 }
 
 

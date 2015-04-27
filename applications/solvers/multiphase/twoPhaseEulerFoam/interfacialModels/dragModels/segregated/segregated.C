@@ -26,6 +26,7 @@ License
 #include "segregated.H"
 #include "phasePair.H"
 #include "fvcGrad.H"
+#include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -144,6 +145,12 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
     volScalarField lambda(m_*ReI + n_*muAlphaI/muI);
 
     return lambda*sqr(magGradI)*muI;
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::dragModels::segregated::Kf() const
+{
+    return fvc::interpolate(K());
 }
 
 

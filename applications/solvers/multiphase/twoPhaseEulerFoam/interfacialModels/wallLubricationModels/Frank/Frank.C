@@ -67,7 +67,7 @@ Foam::wallLubricationModels::Frank::~Frank()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Frank::F() const
+Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Frank::Fi() const
 {
     volVectorField Ur(pair_.Ur());
 
@@ -88,7 +88,6 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Frank::F() const
             dimensionedScalar("zero", dimless/dimLength, 0.0),
             (1.0 - yTilde)/(Cwd_*y*pow(yTilde, p_ - 1.0))
         )
-       *pair_.dispersed()
        *pair_.continuous().rho()
        *magSqr(Ur - (Ur & n)*n)
        *n;

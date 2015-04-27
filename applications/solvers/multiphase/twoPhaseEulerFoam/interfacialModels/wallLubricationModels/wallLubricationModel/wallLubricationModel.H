@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,8 +115,14 @@ public:
 
     // Member Functions
 
-        //- Wall lubrication force
-        virtual tmp<volVectorField> F() const = 0;
+        //- Return phase-intensive wall lubrication force
+        virtual tmp<volVectorField> Fi() const = 0;
+
+        //- Return wall lubrication force
+        virtual tmp<volVectorField> F() const;
+
+        //- Return face wall lubrication force
+        virtual tmp<surfaceScalarField> Ff() const;
 };
 
 

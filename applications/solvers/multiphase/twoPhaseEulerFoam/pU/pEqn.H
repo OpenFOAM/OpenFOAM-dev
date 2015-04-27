@@ -39,35 +39,26 @@ while (pimple.correct())
 
     // Turbulent diffusion, particle-pressure lift and wall-lubrication fluxes
     {
-        volScalarField turbulentDiffusivity(fluid.turbulentDiffusivity());
-        volVectorField liftForce(fluid.liftForce());
-        volVectorField wallLubricationForce(fluid.wallLubricationForce());
+        volScalarField D(fluid.D());
+        volVectorField F(fluid.F());
         surfaceScalarField snGradAlpha1(fvc::snGrad(alpha1)*mesh.magSf());
 
         phiF1 =
         (
             fvc::interpolate
             (
-                rAU1*(turbulentDiffusivity + phase1.turbulence().pPrime())
+                rAU1*(D + phase1.turbulence().pPrime())
             )*snGradAlpha1
-
-          + (
-                fvc::interpolate(rAU1*(wallLubricationForce + liftForce))
-              & mesh.Sf()
-            )
+          + (fvc::interpolate(rAU1*F) & mesh.Sf())
         );
 
         phiF2 =
         (
           - fvc::interpolate
             (
-                rAU2*(turbulentDiffusivity + phase2.turbulence().pPrime())
+                rAU2*(D + phase2.turbulence().pPrime())
             )*snGradAlpha1
-
-          - (
-                fvc::interpolate(rAU2*(wallLubricationForce + liftForce))
-              & mesh.Sf()
-            )
+          - (fvc::interpolate(rAU2*F) & mesh.Sf())
         );
     }
 
@@ -139,8 +130,8 @@ while (pimple.correct())
     );
 
     // Face-drag coefficients
-    surfaceScalarField D1f(fvc::interpolate(rAU1*dragCoeff));
-    surfaceScalarField D2f(fvc::interpolate(rAU2*dragCoeff));
+    surfaceScalarField D1f(fvc::interpolate(rAU1*Kd));
+    surfaceScalarField D2f(fvc::interpolate(rAU2*Kd));
 
     // Construct the mean predicted flux
     // including explicit drag contributions based on absolute fluxes
@@ -306,8 +297,8 @@ while (pimple.correct())
                     HbyA2 + fvc::reconstruct(alpharAU2f*mSfGradp - phiF2)
                 );
 
-                volScalarField D1(rAU1*dragCoeff);
-                volScalarField D2(rAU2*dragCoeff);
+                volScalarField D1(rAU1*Kd);
+                volScalarField D2(rAU2*Kd);
 
                 U = alpha1*(U1s + D1*U2) + alpha2*(U2s + D2*U1);
                 volVectorField Ur(((1 - D2)*U1s - (1 - D1)*U2s)/(1 - D1*D2));

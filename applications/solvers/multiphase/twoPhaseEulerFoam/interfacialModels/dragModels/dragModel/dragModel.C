@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "dragModel.H"
 #include "phasePair.H"
 #include "swarmCorrection.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -102,16 +103,29 @@ Foam::dragModel::~dragModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::dragModel::K() const
+Foam::tmp<Foam::volScalarField> Foam::dragModel::Ki() const
 {
     return
         0.75
        *CdRe()
-       *max(pair_.dispersed(), residualAlpha_)
        *swarmCorrection_->Cs()
        *pair_.continuous().rho()
        *pair_.continuous().nu()
        /sqr(pair_.dispersed().d());
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::dragModel::K() const
+{
+    return max(pair_.dispersed(), residualAlpha_)*Ki();
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::dragModel::Kf() const
+{
+    return
+        max(fvc::interpolate(pair_.dispersed()), residualAlpha_)
+       *fvc::interpolate(Ki());
 }
 
 

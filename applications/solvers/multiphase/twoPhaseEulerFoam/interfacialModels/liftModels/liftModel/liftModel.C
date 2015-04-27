@@ -26,7 +26,7 @@ License
 #include "liftModel.H"
 #include "phasePair.H"
 #include "fvcCurl.H"
-#include "addToRunTimeSelectionTable.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -59,15 +59,30 @@ Foam::liftModel::~liftModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volVectorField> Foam::liftModel::F() const
+Foam::tmp<Foam::volVectorField> Foam::liftModel::Fi() const
 {
     return
         Cl()
-       *pair_.dispersed()
        *pair_.continuous().rho()
        *(
             pair_.Ur() ^ fvc::curl(pair_.continuous().U())
         );
+}
+
+
+Foam::tmp<Foam::volVectorField> Foam::liftModel::F() const
+{
+    return pair_.dispersed()*Fi();
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::liftModel::Ff() const
+{
+    const fvMesh& mesh(this->pair_.phase1().mesh());
+
+    return
+        fvc::interpolate(pair_.dispersed())
+       *(fvc::interpolate(Fi()) & mesh.Sf());
 }
 
 

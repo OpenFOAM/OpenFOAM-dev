@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,30 +65,52 @@ Foam::wallLubricationModels::noWallLubrication::~noWallLubrication()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volVectorField>
+Foam::wallLubricationModels::noWallLubrication::Fi() const
+{
+    const fvMesh& mesh(this->pair_.phase1().mesh());
+
+    return tmp<volVectorField>
+    (
+        new volVectorField
+        (
+            IOobject
+            (
+                "noWallLubrication:Fi",
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dimensionedVector("zero", dimF, vector::zero)
+        )
+    );
+}
+
+
+Foam::tmp<Foam::volVectorField>
 Foam::wallLubricationModels::noWallLubrication::F() const
 {
     const fvMesh& mesh(this->pair_.phase1().mesh());
 
-    return
-        tmp<volVectorField>
+    return tmp<volVectorField>
+    (
+        new volVectorField
         (
-            new volVectorField
+            IOobject
             (
-                IOobject
-                (
-                    "zero",
-                    mesh.time().timeName(),
-                    mesh
-                ),
+                "noWallLubrication:F",
+                mesh.time().timeName(),
                 mesh,
-                dimensionedVector
-                (
-                    "zero",
-                    dimensionSet(1, -2, -2, 0, 0),
-                    vector::zero
-                )
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dimensionedVector("zero", dimF, vector::zero)
+        )
+    );
 }
 
 

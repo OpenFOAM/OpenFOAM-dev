@@ -66,7 +66,7 @@ Foam::wallLubricationModels::Antal::~Antal()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Antal::F() const
+Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Antal::Fi() const
 {
     volVectorField Ur(pair_.Ur());
 
@@ -78,7 +78,6 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Antal::F() const
             dimensionedScalar("zero", dimless/dimLength, 0),
             Cw1_/pair_.dispersed().d() + Cw2_/yWall()
         )
-       *pair_.dispersed()
        *pair_.continuous().rho()
        *magSqr(Ur - (Ur & n)*n)
        *n;

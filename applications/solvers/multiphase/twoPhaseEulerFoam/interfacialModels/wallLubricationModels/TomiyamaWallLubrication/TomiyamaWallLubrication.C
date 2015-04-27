@@ -66,7 +66,7 @@ Foam::wallLubricationModels::TomiyamaWallLubrication::~TomiyamaWallLubrication()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volVectorField>
-Foam::wallLubricationModels::TomiyamaWallLubrication::F() const
+Foam::wallLubricationModels::TomiyamaWallLubrication::Fi() const
 {
     volVectorField Ur(pair_.Ur());
 
@@ -87,7 +87,6 @@ Foam::wallLubricationModels::TomiyamaWallLubrication::F() const
             1/sqr(y)
           - 1/sqr(D_ - y)
         )
-       *pair_.dispersed()
        *pair_.continuous().rho()
        *magSqr(Ur - (Ur & n)*n)
        *n;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,34 +63,71 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::noLift::Cl() const
 {
     const fvMesh& mesh(this->pair_.phase1().mesh());
 
-    return
-        tmp<volScalarField>
+    return tmp<volScalarField>
+    (
+        new volScalarField
         (
-            new volScalarField
+            IOobject
             (
-                IOobject
-                (
-                    "Cl",
-                    mesh.time().timeName(),
-                    mesh
-                ),
+                "Cl",
+                mesh.time().timeName(),
                 mesh,
-                dimensionedScalar("Cl", dimless, 0)
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dimensionedScalar("Cl", dimless, 0)
+        )
+    );
 }
 
 
 Foam::tmp<Foam::volVectorField> Foam::liftModels::noLift::F() const
 {
-    return
-        Cl()
-       *dimensionedVector
+    const fvMesh& mesh(this->pair_.phase1().mesh());
+
+    return tmp<volVectorField>
+    (
+        new volVectorField
         (
-            "zero",
-            dimensionSet(1, -2, -2, 0, 0),
-            vector::zero
-        );
+            IOobject
+            (
+                "noLift:F",
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dimensionedVector("zero", dimF, vector::zero)
+        )
+    );
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::liftModels::noLift::Ff() const
+{
+    const fvMesh& mesh(this->pair_.phase1().mesh());
+
+    return tmp<surfaceScalarField>
+    (
+        new surfaceScalarField
+        (
+            IOobject
+            (
+                "noLift:Ff",
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dimensionedScalar("zero", dimF*dimArea, 0)
+        )
+    );
 }
 
 
