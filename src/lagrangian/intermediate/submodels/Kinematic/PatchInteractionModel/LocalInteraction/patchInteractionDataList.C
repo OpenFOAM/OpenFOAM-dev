@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "patchInteractionDataList.H"
 #include "stringListOps.H"
-#include "wallPolyPatch.H"
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
@@ -70,18 +69,18 @@ Foam::patchInteractionDataList::patchInteractionDataList
         patchGroupIDs_[i].transfer(patchIDs);
     }
 
-    // check that all walls are specified
-    DynamicList<word> badWalls;
+    // Check that all patches are specified
+    DynamicList<word> badPatches;
     forAll(bMesh, patchI)
     {
         const polyPatch& pp = bMesh[patchI];
-        if (isA<wallPolyPatch>(pp) && applyToPatch(pp.index()) < 0)
+        if (!pp.coupled() && applyToPatch(pp.index()) < 0)
         {
-            badWalls.append(pp.name());
+            badPatches.append(pp.name());
         }
     }
 
-    if (badWalls.size() > 0)
+    if (badPatches.size() > 0)
     {
         FatalErrorIn
         (
@@ -90,9 +89,9 @@ Foam::patchInteractionDataList::patchInteractionDataList
                 "const polyMesh&, "
                 "const dictionary&"
             ")"
-        )    << "All wall patches must be specified when employing local patch "
+        )    << "All patches must be specified when employing local patch "
             << "interaction. Please specify data for patches:" << nl
-            << badWalls << nl << exit(FatalError);
+            << badPatches << nl << exit(FatalError);
     }
 }
 
