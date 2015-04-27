@@ -40,6 +40,7 @@ options:
   -case <dir>       specify alternative case directory, default is the cwd
   -parallel         parallel run of processors
   -screen           also sends output to screen
+  -append           append to log file instead of overwriting it
   -wait             wait for execution to complete (when not using -screen)
   -version <ver>    specify an alternative OpenFOAM version
   -help             print the usage
@@ -51,7 +52,7 @@ USAGE
     exit 1
 }
 
-#for being able to echo strings that have single quotes
+# Echo strings that have single quotes
 echoArgs() {
     addSpace=""
 
@@ -75,7 +76,7 @@ echoArgs() {
 
 unset version
 
-# replacement for possibly buggy 'which'
+# Replacement for possibly buggy 'which'
 findExec() {
     case "$1" in
     */*)
@@ -107,12 +108,12 @@ findExec() {
 
 
 
-# MAIN SCRIPT
+# Main script
 #~~~~~~~~~~~~
 unset parallelOpt screenOpt waitOpt
 
 
-# parse options
+# Parse options
 while [ "$#" -gt 0 ]
 do
    case "$1" in
@@ -130,6 +131,10 @@ do
       ;;
    -s | -screen)
       screenOpt=true
+      shift
+      ;;
+   -a | -append)
+      appendOpt=true
       shift
       ;;
    -w | -wait)
@@ -157,22 +162,22 @@ done
 [ "$#" -ge 1 ] || usage "No application specified"
 
 
-# use foamExec for a specified version
-# also need foamExec for remote (parallel) runs
+# Use foamExec for a specified version
+# Also need foamExec for remote (parallel) runs
 if [ -n "$version" -o "$parallelOpt" = true ]
 then
-    # when possible, determine if application even exists
+    # When possible, determine if application even exists
     if [ -z "$version" ]
     then
         findExec $1 >/dev/null || usage "Application '$1' not found"
     fi
 
-    # use foamExec for dispatching
+    # Use foamExec for dispatching
     APPLICATION=`findExec foamExec` || usage "'foamExec' not found"
 
     [ -n "$version" ] && APPLICATION="$APPLICATION -version $version"
 
-    # attempt to preserve the installation directory 'FOAM_INST_DIR'
+    # Attempt to preserve the installation directory 'FOAM_INST_DIR'
     if [ -d "$FOAM_INST_DIR" ]
     then
         APPLICATION="$APPLICATION -prefix $FOAM_INST_DIR"
@@ -191,7 +196,7 @@ then
     # ~~~~~~~~
 
     #
-    # is the case decomposed?
+    # Check if the case decomposed
     #
     if [ -r "processor0" ]
     then
@@ -211,13 +216,13 @@ then
     fi
 
     #
-    # locate mpirun
+    # Find mpirun
     #
     mpirun=`findExec mpirun` || usage "'mpirun' not found"
     mpiopts="-np $NPROCS"
 
     #
-    # is the machine ready to run parallel?
+    # Check if the machine ready to run parallel
     #
     echo "Parallel processing using $WM_MPLIB with $NPROCS processors"
     case "$WM_MPLIB" in
@@ -247,15 +252,22 @@ then
     esac
 
     #
-    # run (in parallel)
+    # Run (in parallel)
     #
     if [ "$screenOpt" = true ]
     then
-        echo "Executing: $mpirun $mpiopts $APPLICATION $(echoArgs "$@") -parallel | tee log"
-        $mpirun $mpiopts $APPLICATION "$@" -parallel | tee log
+        [ "$appendOpt" = true ] && teeOpts=" -a"
+        echo "Executing: $mpirun $mpiopts $APPLICATION $(echoArgs "$@") -parallel | tee $teeOpts log"
+        $mpirun $mpiopts $APPLICATION "$@" -parallel | tee $teeOpts log
     else
-        echo "Executing: $mpirun $mpiopts $APPLICATION $(echoArgs "$@") -parallel > log 2>&1"
-        $mpirun $mpiopts $APPLICATION "$@" -parallel > log 2>&1 &
+        if [ "$appendOpt" = true ]
+        then
+            echo "Executing: $mpirun $mpiopts $APPLICATION $(echoArgs "$@") -parallel >> log 2>&1"
+            $mpirun $mpiopts $APPLICATION "$@" -parallel >> log 2>&1 &
+        else
+            echo "Executing: $mpirun $mpiopts $APPLICATION $(echoArgs "$@") -parallel > log 2>&1"
+            $mpirun $mpiopts $APPLICATION "$@" -parallel > log 2>&1 &
+        fi
 
         pid=$!
         if [ "$waitOpt" = true ]
@@ -266,16 +278,23 @@ then
 
 else
     #
-    # run (on single processor)
+    # Run (on single processor)
     #
     if [ "$screenOpt" = true ]
     then
-        echo "Executing: $APPLICATION $(echoArgs "$@") | tee log &"
-        $APPLICATION "$@" | tee log &
+        [ "$appendOpt" = true ] && teeOpts=" -a"
+        echo "Executing: $APPLICATION $(echoArgs "$@") | tee $teeOpts log &"
+        $APPLICATION "$@" | tee $teeOpts log &
         wait $!
     else
-        echo "Executing: $APPLICATION $(echoArgs "$@") > log 2>&1 &"
-        $APPLICATION "$@" > log 2>&1 &
+        if [ "$appendOpt" = true ]
+        then
+            echo "Executing: $APPLICATION $(echoArgs "$@") >> log 2>&1 &"
+            $APPLICATION "$@" >> log 2>&1 &
+        else
+            echo "Executing: $APPLICATION $(echoArgs "$@") > log 2>&1 &"
+            $APPLICATION "$@" > log 2>&1 &
+        fi
 
         pid=$!
         if [ "$waitOpt" = true ]
@@ -284,5 +303,6 @@ else
         fi
     fi
 fi
+
 
 #------------------------------------------------------------------------------
