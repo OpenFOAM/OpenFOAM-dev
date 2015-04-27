@@ -79,7 +79,7 @@ protected:
         const SourcePatch& srcPatch_;
 
         //- Reference to target patch
-        const SourcePatch& tgtPatch_;
+        const TargetPatch& tgtPatch_;
 
         //- Flag to indicate that the two patches are co-directional and
         //  that the orientation of the target patch should be reversed
