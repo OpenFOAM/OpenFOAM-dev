@@ -25,7 +25,31 @@ Class
     Foam::PrandtlDelta
 
 Description
-    Simple cube-root of cell volume delta used in LES models.
+    Apply Prandtl mixing-length based damping function to the specified
+    geometric delta to improve near-wall behavior or LES models.
+
+    \verbatim
+        delta = min(geometricDelta, (kappa/Cdelta)*y)
+    \endverbatim
+
+    Example specification in the turbulenceProperties dictionary:
+    \verbatim
+    delta           Prandtl;
+
+    PrandtlCoeffs
+    {
+        delta   cubeRootVol;
+
+        cubeRootVolCoeffs
+        {
+            deltaCoeff      1;
+        }
+
+        // Default coefficients
+        kappa           0.41;
+        Cdelta          0.158;
+    }
+    \endverbatim
 
 SourceFiles
     PrandtlDelta.C
