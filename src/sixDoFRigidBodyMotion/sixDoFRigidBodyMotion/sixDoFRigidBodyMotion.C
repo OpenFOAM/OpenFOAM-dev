@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -268,8 +268,8 @@ void Foam::sixDoFRigidBodyMotion::updatePosition
 
     if (Pstream::master())
     {
-        v() = tConstraints_ & aDamp_*(v0() + 0.5*deltaT0*a());
-        pi() = rConstraints_ & aDamp_*(pi0() + 0.5*deltaT0*tau());
+        v() = tConstraints_ & (v0() + aDamp_*0.5*deltaT0*a());
+        pi() = rConstraints_ & (pi0() + aDamp_*0.5*deltaT0*tau());
 
         // Leapfrog move part
         centreOfRotation() = centreOfRotation0() + deltaT*v();
