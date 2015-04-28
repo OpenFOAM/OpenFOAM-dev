@@ -78,8 +78,11 @@ class twoPhaseSystem
         //- Total volumetric flux
         surfaceScalarField phi_;
 
-        //-  Dilatation term
+        //- Dilatation term
         volScalarField dgdt_;
+
+        //- Optional dispersion diffusivity
+        tmp<surfaceScalarField> pPrimeByA_;
 
         //- Unordered phase pair
         autoPtr<phasePair> pair_;
@@ -113,7 +116,7 @@ class twoPhaseSystem
         autoPtr<BlendedInterfacialModel<turbulentDispersionModel> >
             turbulentDispersion_;
 
-        //-
+        //- Default residual alpha (0)
         static dimensionedScalar zeroResidualAlpha_;
 
 
@@ -227,6 +230,9 @@ public:
 
             //- Return non-const access to the dilatation parameter
             inline volScalarField& dgdt();
+
+            //- Return non-const access to the dispersion diffusivity
+            inline tmp<surfaceScalarField>& pPrimeByA();
 };
 
 

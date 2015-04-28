@@ -365,13 +365,6 @@ void Foam::twoPhaseSystem::solve()
     const surfaceScalarField& phi1 = phase1_.phi();
     const surfaceScalarField& phi2 = phase2_.phi();
 
-    Switch faceMomentum
-    (
-        //pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
-        mesh_.solutionDict().subDict("PIMPLE")
-           .lookupOrDefault<Switch>("faceMomentum", false)
-    );
-
     const dictionary& alphaControls = mesh_.solverDict
     (
         alpha1.name()
@@ -379,10 +372,6 @@ void Foam::twoPhaseSystem::solve()
 
     label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
     label nAlphaCorr(readLabel(alphaControls.lookup("nAlphaCorr")));
-    Switch implicitPhasePressure
-    (
-        alphaControls.lookupOrDefault<Switch>("implicitPhasePressure", false)
-    );
 
     word alphaScheme("div(phi," + alpha1.name() + ')');
     word alpharScheme("div(phir," + alpha1.name() + ')');
@@ -395,48 +384,11 @@ void Foam::twoPhaseSystem::solve()
 
     surfaceScalarField alpha1f(fvc::interpolate(max(alpha1, scalar(0))));
 
-    tmp<surfaceScalarField> pPrimeByA;
-
-    if (implicitPhasePressure)
+    if (pPrimeByA_.valid())
     {
-        if (faceMomentum)
-        {
-            const surfaceScalarField& rAU1f =
-                mesh_.lookupObject<surfaceScalarField>
-                (
-                    IOobject::groupName("rAUf", phase1_.name())
-                );
-            const surfaceScalarField& rAU2f =
-                mesh_.lookupObject<surfaceScalarField>
-                (
-                    IOobject::groupName("rAUf", phase2_.name())
-                );
-
-            volScalarField D(this->D());
-
-            pPrimeByA =
-                rAU1f*fvc::interpolate(D + phase1_.turbulence().pPrime())
-              + rAU2f*fvc::interpolate(D + phase2_.turbulence().pPrime());
-        }
-        else
-        {
-            const volScalarField& rAU1 = mesh_.lookupObject<volScalarField>
-            (
-                IOobject::groupName("rAU", phase1_.name())
-            );
-            const volScalarField& rAU2 = mesh_.lookupObject<volScalarField>
-            (
-                IOobject::groupName("rAU", phase2_.name())
-            );
-
-            pPrimeByA =
-                fvc::interpolate(rAU1*phase1_.turbulence().pPrime())
-              + fvc::interpolate(rAU2*phase2_.turbulence().pPrime());
-        }
-
         surfaceScalarField phiP
         (
-            pPrimeByA()*fvc::snGrad(alpha1, "bounded")*mesh_.magSf()
+            pPrimeByA_()*fvc::snGrad(alpha1, "bounded")*mesh_.magSf()
         );
 
         phic += alpha1f*phiP;
@@ -571,12 +523,12 @@ void Foam::twoPhaseSystem::solve()
             phase1_.alphaPhi() = alphaPhic1;
         }
 
-        if (implicitPhasePressure)
+        if (pPrimeByA_.valid())
         {
             fvScalarMatrix alpha1Eqn
             (
                 fvm::ddt(alpha1) - fvc::ddt(alpha1)
-              - fvm::laplacian(alpha1f*pPrimeByA(), alpha1, "bounded")
+              - fvm::laplacian(alpha1f*pPrimeByA_(), alpha1, "bounded")
             );
 
             alpha1Eqn.relax();

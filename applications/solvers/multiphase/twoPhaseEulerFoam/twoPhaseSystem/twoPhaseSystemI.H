@@ -95,4 +95,10 @@ inline Foam::volScalarField& Foam::twoPhaseSystem::dgdt()
 }
 
 
+inline Foam::tmp<Foam::surfaceScalarField>& Foam::twoPhaseSystem::pPrimeByA()
+{
+    return pPrimeByA_;
+}
+
+
 // ************************************************************************* //

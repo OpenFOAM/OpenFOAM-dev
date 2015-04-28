@@ -50,11 +50,6 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
-    Switch faceMomentum
-    (
-        pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
-    );
-
     #include "createFields.H"
     #include "createMRFZones.H"
     #include "createFvOptions.H"
@@ -62,6 +57,19 @@ int main(int argc, char *argv[])
     #include "readTimeControls.H"
     #include "CourantNos.H"
     #include "setInitialDeltaT.H"
+
+    Switch faceMomentum
+    (
+        pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
+    );
+
+    Switch implicitPhasePressure
+    (
+        mesh.solverDict(alpha1.name()).lookupOrDefault<Switch>
+        (
+            "implicitPhasePressure", false
+        )
+    );
 
     #include "pUf/createDDtU.H"
     #include "pU/createDDtU.H"
