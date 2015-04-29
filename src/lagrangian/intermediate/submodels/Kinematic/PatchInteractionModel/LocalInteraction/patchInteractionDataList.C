@@ -25,6 +25,7 @@ License
 
 #include "patchInteractionDataList.H"
 #include "stringListOps.H"
+#include "emptyPolyPatch.H"
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
@@ -74,7 +75,12 @@ Foam::patchInteractionDataList::patchInteractionDataList
     forAll(bMesh, patchI)
     {
         const polyPatch& pp = bMesh[patchI];
-        if (!pp.coupled() && applyToPatch(pp.index()) < 0)
+        if
+        (
+            !pp.coupled()
+         && !isA<emptyPolyPatch>(pp)
+         && applyToPatch(pp.index()) < 0
+        )
         {
             badPatches.append(pp.name());
         }
@@ -89,7 +95,7 @@ Foam::patchInteractionDataList::patchInteractionDataList
                 "const polyMesh&, "
                 "const dictionary&"
             ")"
-        )    << "All patches must be specified when employing local patch "
+        )   << "All patches must be specified when employing local patch "
             << "interaction. Please specify data for patches:" << nl
             << badPatches << nl << exit(FatalError);
     }

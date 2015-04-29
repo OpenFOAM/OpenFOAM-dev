@@ -115,6 +115,11 @@ subModels
             {
                 type        rebound;
             }
+
+            "inlet|outlet"
+            {
+                type escape;
+            }
         );
     }
 
