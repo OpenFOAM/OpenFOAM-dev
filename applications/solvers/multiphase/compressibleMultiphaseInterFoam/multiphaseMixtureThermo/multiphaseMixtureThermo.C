@@ -996,7 +996,6 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             zeroField(),
             1,
             0,
-            3,
             true
         );
 

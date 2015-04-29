@@ -129,8 +129,7 @@ void limiterCorr
     const SpType& Sp,
     const SuType& Su,
     const scalar psiMax,
-    const scalar psiMin,
-    const label nLimiterIter
+    const scalar psiMin
 );
 
 template<class RdeltaTType, class RhoType, class SpType, class SuType>
@@ -144,8 +143,7 @@ void limitCorr
     const SpType& Sp,
     const SuType& Su,
     const scalar psiMax,
-    const scalar psiMin,
-    const label nLimiterIter
+    const scalar psiMin
 );
 
 

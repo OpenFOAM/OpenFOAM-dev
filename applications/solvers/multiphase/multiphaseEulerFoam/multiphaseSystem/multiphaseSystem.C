@@ -158,7 +158,6 @@ void Foam::multiphaseSystem::solveAlphas()
             zeroField(),
             1,
             0,
-            3,
             true
         );
 

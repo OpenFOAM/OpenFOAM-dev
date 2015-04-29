@@ -83,8 +83,7 @@
             zeroField(),
             zeroField(),
             1,
-            0,
-            3
+            0
         );
 
         // Create the complete flux for alpha2
@@ -125,8 +124,7 @@
             zeroField(),
             zeroField(),
             1,
-            0,
-            3
+            0
         );
 
         // Construct the limited fluxes

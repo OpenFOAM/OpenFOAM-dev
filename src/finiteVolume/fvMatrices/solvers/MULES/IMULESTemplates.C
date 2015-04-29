@@ -77,11 +77,6 @@ void Foam::MULES::implicitSolve
         readLabel(MULEScontrols.lookup("maxIter"))
     );
 
-    label nLimiterIter
-    (
-        readLabel(MULEScontrols.lookup("nLimiterIter"))
-    );
-
     scalar maxUnboundedness
     (
         readScalar(MULEScontrols.lookup("maxUnboundedness"))
@@ -187,8 +182,7 @@ void Foam::MULES::implicitSolve
             Sp,
             Su,
             psiMax,
-            psiMin,
-            nLimiterIter
+            psiMin
         );
 
         solve

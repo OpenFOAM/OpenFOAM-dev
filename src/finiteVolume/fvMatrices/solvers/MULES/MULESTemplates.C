@@ -108,8 +108,23 @@ void Foam::MULES::explicitSolve
 {
     const fvMesh& mesh = psi.mesh();
     const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
+
     psi.correctBoundaryConditions();
-    limit(rDeltaT, rho, psi, phi, phiPsi, Sp, Su, psiMax, psiMin, 3, false);
+
+    limit
+    (
+        rDeltaT,
+        rho,
+        psi,
+        phi,
+        phiPsi,
+        Sp,
+        Su,
+        psiMax,
+        psiMin,
+        false
+    );
+
     explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
 }
 
@@ -133,7 +148,21 @@ void Foam::MULES::explicitLTSSolve
         mesh.objectRegistry::lookupObject<volScalarField>("rSubDeltaT");
 
     psi.correctBoundaryConditions();
-    limit(rDeltaT, rho, psi, phi, phiPsi, Sp, Su, psiMax, psiMin, 3, false);
+
+    limit
+    (
+        rDeltaT,
+        rho,
+        psi,
+        phi,
+        phiPsi,
+        Sp,
+        Su,
+        psiMax,
+        psiMin,
+        false
+    );
+
     explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
 }
 
@@ -150,16 +179,27 @@ void Foam::MULES::limiter
     const SpType& Sp,
     const SuType& Su,
     const scalar psiMax,
-    const scalar psiMin,
-    const label nLimiterIter
+    const scalar psiMin
 )
 {
     const scalarField& psiIf = psi;
     const volScalarField::GeometricBoundaryField& psiBf = psi.boundaryField();
 
-    const scalarField& psi0 = psi.oldTime();
-
     const fvMesh& mesh = psi.mesh();
+
+    const dictionary& MULEScontrols = mesh.solverDict(psi.name());
+
+    label nLimiterIter
+    (
+        MULEScontrols.lookupOrDefault<label>("nLimiterIter", 3)
+    );
+
+    scalar smoothLimiter
+    (
+        MULEScontrols.lookupOrDefault<scalar>("smoothLimiter", 0)
+    );
+
+    const scalarField& psi0 = psi.oldTime();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighb = mesh.neighbour();
@@ -284,9 +324,13 @@ void Foam::MULES::limiter
     psiMaxn = min(psiMaxn, psiMax);
     psiMinn = max(psiMinn, psiMin);
 
-    //scalar smooth = 0.5;
-    //psiMaxn = min((1.0 - smooth)*psiIf + smooth*psiMaxn, psiMax);
-    //psiMinn = max((1.0 - smooth)*psiIf + smooth*psiMinn, psiMin);
+    if (smoothLimiter > SMALL)
+    {
+        psiMaxn =
+            min(smoothLimiter*psiIf + (1.0 - smoothLimiter)*psiMaxn, psiMax);
+        psiMinn =
+            max(smoothLimiter*psiIf + (1.0 - smoothLimiter)*psiMinn, psiMin);
+    }
 
     if (mesh.moving())
     {
@@ -502,7 +546,6 @@ void Foam::MULES::limit
     const SuType& Su,
     const scalar psiMax,
     const scalar psiMin,
-    const label nLimiterIter,
     const bool returnCorr
 )
 {
@@ -543,8 +586,7 @@ void Foam::MULES::limit
         Sp,
         Su,
         psiMax,
-        psiMin,
-        nLimiterIter
+        psiMin
     );
 
     if (returnCorr)
