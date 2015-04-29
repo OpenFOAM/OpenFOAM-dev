@@ -83,7 +83,7 @@ solvers
         maxIter         20;
     }
 
-    "(U|alpha)"
+    U
     {
         solver          smoothSolver;
         smoother        GaussSeidel;

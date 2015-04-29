@@ -48,7 +48,7 @@ solvers
         relTol          0;
     }
 
-    "(U|alpha)"
+    U
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
