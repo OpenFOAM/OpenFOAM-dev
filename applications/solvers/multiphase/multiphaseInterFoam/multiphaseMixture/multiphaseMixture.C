@@ -624,7 +624,6 @@ void Foam::multiphaseMixture::solveAlphas
             zeroField(),
             1,
             0,
-            3,
             true
         );
 
