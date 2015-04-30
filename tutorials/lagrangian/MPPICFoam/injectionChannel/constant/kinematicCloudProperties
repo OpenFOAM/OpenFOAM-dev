@@ -141,11 +141,17 @@ subModels
                 e    1;
                 mu   0;
             }
+
             walls
             {
                 type rebound;
                 e    1;
                 mu   0;
+            }
+
+            "lowerInlet|upperInlet|outlet"
+            {
+                type escape;
             }
         );
     }
