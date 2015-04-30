@@ -25,8 +25,7 @@ License
 
 #include "DispersionRASModel.H"
 #include "demandDrivenData.H"
-#include "turbulentTransportModel.H"
-#include "turbulentFluidThermoModel.H"
+#include "turbulenceModel.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -35,18 +34,17 @@ Foam::tmp<Foam::volScalarField>
 Foam::DispersionRASModel<CloudType>::kModel() const
 {
     const objectRegistry& obr = this->owner().mesh();
-    const word turbName = turbulenceModel::propertiesName;
+    const word turbName =
+        IOobject::groupName
+        (
+            turbulenceModel::propertiesName,
+            this->owner().U().group()
+        );
 
-    if (obr.foundObject<compressible::turbulenceModel>(turbName))
+    if (obr.foundObject<turbulenceModel>(turbName))
     {
-        const compressible::turbulenceModel& model =
-            obr.lookupObject<compressible::turbulenceModel>(turbName);
-        return model.k();
-    }
-    else if (obr.foundObject<incompressible::turbulenceModel>(turbName))
-    {
-        const incompressible::turbulenceModel& model =
-            obr.lookupObject<incompressible::turbulenceModel>(turbName);
+        const turbulenceModel& model =
+            obr.lookupObject<turbulenceModel>(turbName);
         return model.k();
     }
     else
@@ -70,18 +68,17 @@ Foam::tmp<Foam::volScalarField>
 Foam::DispersionRASModel<CloudType>::epsilonModel() const
 {
     const objectRegistry& obr = this->owner().mesh();
-    const word turbName = turbulenceModel::propertiesName;
+    const word turbName =
+        IOobject::groupName
+        (
+            turbulenceModel::propertiesName,
+            this->owner().U().group()
+        );
 
-    if (obr.foundObject<compressible::turbulenceModel>(turbName))
+    if (obr.foundObject<turbulenceModel>(turbName))
     {
-        const compressible::turbulenceModel& model =
-            obr.lookupObject<compressible::turbulenceModel>(turbName);
-        return model.epsilon();
-    }
-    else if (obr.foundObject<incompressible::turbulenceModel>(turbName))
-    {
-        const incompressible::turbulenceModel& model =
-            obr.lookupObject<incompressible::turbulenceModel>(turbName);
+        const turbulenceModel& model =
+            obr.lookupObject<turbulenceModel>(turbName);
         return model.epsilon();
     }
     else
