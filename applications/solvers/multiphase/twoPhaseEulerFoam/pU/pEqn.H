@@ -1,11 +1,37 @@
 surfaceScalarField alphaf1("alphaf1", fvc::interpolate(alpha1));
 surfaceScalarField alphaf2("alphaf2", scalar(1) - alphaf1);
 
-volScalarField rAU1(IOobject::groupName("rAU", phase1.name()), 1.0/U1Eqn.A());
-volScalarField rAU2(IOobject::groupName("rAU", phase2.name()), 1.0/U2Eqn.A());
+volScalarField rAU1
+(
+    IOobject::groupName("rAU", phase1.name()),
+    1.0
+   /(
+        U1Eqn.A()
+      + max(fluid.residualAlpha(phase1) - alpha1, scalar(0))
+       *rho1/runTime.deltaT()
+    )
+);
+volScalarField rAU2
+(
+    IOobject::groupName("rAU", phase2.name()),
+    1.0
+   /(
+        U2Eqn.A()
+      + max(fluid.residualAlpha(phase2) - alpha2, scalar(0))
+       *rho2/runTime.deltaT()
+    )
+);
 
-surfaceScalarField alpharAUf1(fvc::interpolate(alpha1*rAU1));
-surfaceScalarField alpharAUf2(fvc::interpolate(alpha2*rAU2));
+//surfaceScalarField alpharAUf1(fvc::interpolate(alpha1*rAU1));
+//surfaceScalarField alpharAUf2(fvc::interpolate(alpha2*rAU2));
+surfaceScalarField alpharAUf1
+(
+    fvc::interpolate(max(alpha1, fluid.residualAlpha(phase1))*rAU1)
+);
+surfaceScalarField alpharAUf2
+(
+    fvc::interpolate(max(alpha2, fluid.residualAlpha(phase2))*rAU2)
+);
 
 // Turbulent diffusion, particle-pressure, lift and wall-lubrication fluxes
 tmp<surfaceScalarField> phiF1;
@@ -78,14 +104,26 @@ while (pimple.correct())
         IOobject::groupName("HbyA", phase1.name()),
         U1
     );
-    HbyA1 = rAU1*U1Eqn.H();
+    HbyA1 =
+        rAU1
+       *(
+            U1Eqn.H()
+          + max(fluid.residualAlpha(phase1) - alpha1, scalar(0))
+           *rho1*U1.oldTime()/runTime.deltaT()
+        );
 
     volVectorField HbyA2
     (
         IOobject::groupName("HbyA", phase2.name()),
         U2
     );
-    HbyA2 = rAU2*U2Eqn.H();
+    HbyA2 =
+        rAU2
+       *(
+            U2Eqn.H()
+         +  max(fluid.residualAlpha(phase2) - alpha2, scalar(0))
+           *rho2*U2.oldTime()/runTime.deltaT()
+        );
 
     // Mean density for buoyancy force and p_rgh -> p
     volScalarField rho("rho", fluid.rho());
