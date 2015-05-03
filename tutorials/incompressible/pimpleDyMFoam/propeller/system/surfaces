@@ -13,7 +13,7 @@ surfaces
     outputControl   outputTime;
 
     surfaceFormat   vtk;
-    fields          ( p U Q);
+    fields          (p U Q);
 
     interpolationScheme cellPoint;
 
@@ -42,7 +42,7 @@ surfaces
         propeller
         {
             type            patch;
-            patches         ( "propeller.*" );
+            patches         ("propeller.*");
             interpolate     true;
         }
     );
