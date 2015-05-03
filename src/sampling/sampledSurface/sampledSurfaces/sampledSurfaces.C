@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,12 +35,10 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(sampledSurfaces, 0);
+    defineTypeNameAndDebug(sampledSurfaces, 0);
 }
 
-
 bool Foam::sampledSurfaces::verbose_ = false;
-
 Foam::scalar Foam::sampledSurfaces::mergeTol_ = 1e-10;
 
 
@@ -49,7 +47,7 @@ Foam::scalar Foam::sampledSurfaces::mergeTol_ = 1e-10;
 void Foam::sampledSurfaces::writeGeometry() const
 {
     // Write to time directory under outputPath_
-    // skip surface without faces (eg, a failed cut-plane)
+    // Skip surface without faces (eg, a failed cut-plane)
 
     const fileName outputDir = outputPath_/mesh_.time().timeName();
 
@@ -153,7 +151,7 @@ void Foam::sampledSurfaces::write()
 {
     if (size())
     {
-        // finalize surfaces, merge points etc.
+        // Finalize surfaces, merge points etc.
         update();
 
         const label nFields = classifyFields();
@@ -170,7 +168,7 @@ void Foam::sampledSurfaces::write()
             mkDir(outputPath_/mesh_.time().timeName());
         }
 
-        // write geometry first if required,
+        // Write geometry first if required,
         // or when no fields would otherwise be written
         if (nFields == 0 || formatter_->separateGeometry())
         {
@@ -205,8 +203,8 @@ void Foam::sampledSurfaces::read(const dictionary& dict)
         dict.lookup("interpolationScheme") >> interpolationScheme_;
         const word writeType(dict.lookup("surfaceFormat"));
 
-        // define the surface formatter
-        // optionally defined extra controls for the output formats
+        // Define the surface formatter
+        // Optionally defined extra controls for the output formats
         formatter_ = surfaceWriter::New
         (
             writeType,
@@ -225,7 +223,7 @@ void Foam::sampledSurfaces::read(const dictionary& dict)
             mergeList_.setSize(size());
         }
 
-        // ensure all surfaces and merge information are expired
+        // Ensure all surfaces and merge information are expired
         expire();
 
         if (this->size())
@@ -301,7 +299,7 @@ bool Foam::sampledSurfaces::expire()
             justExpired = true;
         }
 
-        // clear merge information
+        // Clear merge information
         if (Pstream::parRun())
         {
             mergeList_[surfI].clear();
@@ -322,7 +320,7 @@ bool Foam::sampledSurfaces::update()
         return updated;
     }
 
-    // serial: quick and easy, no merging required
+    // Serial: quick and easy, no merging required
     if (!Pstream::parRun())
     {
         forAll(*this, surfI)
@@ -336,7 +334,7 @@ bool Foam::sampledSurfaces::update()
         return updated;
     }
 
-    // dimension as fraction of mesh bounding box
+    // Dimension as fraction of mesh bounding box
     scalar mergeDim = mergeTol_ * mesh_.bounds().mag();
 
     if (Pstream::master() && debug)
