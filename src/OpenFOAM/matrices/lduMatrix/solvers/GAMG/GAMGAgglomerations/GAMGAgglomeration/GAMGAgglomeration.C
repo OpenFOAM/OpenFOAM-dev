@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 #include "Time.H"
 #include "GAMGInterface.H"
 #include "GAMGProcAgglomeration.H"
+#include "pairGAMGAgglomeration.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -229,7 +230,7 @@ Foam::GAMGAgglomeration::GAMGAgglomeration
 
     nCellsInCoarsestLevel_
     (
-        readLabel(controlDict.lookup("nCellsInCoarsestLevel"))
+        controlDict.lookupOrDefault<label>("nCellsInCoarsestLevel", 10)
     ),
     meshInterfaces_(mesh.interfaces()),
     procAgglomeratorPtr_
@@ -284,7 +285,10 @@ const Foam::GAMGAgglomeration& Foam::GAMGAgglomeration::New
         )
     )
     {
-        const word agglomeratorType(controlDict.lookup("agglomerator"));
+        const word agglomeratorType
+        (
+            controlDict.lookupOrDefault<word>("agglomerator", "faceAreaPair")
+        );
 
         const_cast<Time&>(mesh.thisDb().time()).libs().open
         (
@@ -339,7 +343,10 @@ const Foam::GAMGAgglomeration& Foam::GAMGAgglomeration::New
         )
     )
     {
-        const word agglomeratorType(controlDict.lookup("agglomerator"));
+        const word agglomeratorType
+        (
+            controlDict.lookupOrDefault<word>("agglomerator", "faceAreaPair")
+        );
 
         const_cast<Time&>(mesh.thisDb().time()).libs().open
         (
@@ -382,7 +389,10 @@ Foam::autoPtr<Foam::GAMGAgglomeration> Foam::GAMGAgglomeration::New
     const dictionary& controlDict
 )
 {
-    const word agglomeratorType(controlDict.lookup("agglomerator"));
+    const word agglomeratorType
+    (
+        controlDict.lookupOrDefault<word>("agglomerator", "faceAreaPair")
+    );
 
     const_cast<Time&>(mesh.thisDb().time()).libs().open
     (

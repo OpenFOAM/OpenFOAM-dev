@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Foam::GAMGSolver::GAMGSolver
 
     // Default values for all controls
     // which may be overridden by those in controlDict
-    cacheAgglomeration_(false),
+    cacheAgglomeration_(true),
     nPreSweeps_(0),
     preSweepsLevelMultiplier_(1),
     maxPreSweeps_(4),
@@ -313,7 +313,6 @@ void Foam::GAMGSolver::readControls()
 {
     lduMatrix::solver::readControls();
 
-    // we could also consider supplying defaults here too
     controlDict_.readIfPresent("cacheAgglomeration", cacheAgglomeration_);
     controlDict_.readIfPresent("nPreSweeps", nPreSweeps_);
     controlDict_.readIfPresent
