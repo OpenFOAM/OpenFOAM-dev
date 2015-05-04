@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -446,8 +446,10 @@ public:
 
             //- Is point removed?
             inline bool pointRemoved(const label pointI) const;
+
             //- Is face removed?
             inline bool faceRemoved(const label faceI) const;
+
             //- Is cell removed?
             inline bool cellRemoved(const label cellI) const;
 
