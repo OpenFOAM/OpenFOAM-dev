@@ -22,19 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::extrudeModels::linearNormal
+    Foam::extrudeModels::sector
 
 Description
-    Extrudes by transforming points normal to the surface by a given distance.
+    Extrudes by rotating a surface around an axis
+    - extrusion is opposite the surface/patch normal so inwards the source
+      mesh
+    - axis direction has to be consistent with this.
+    - use -mergeFaces option if doing full 360 and want to merge front and back
+    - note direction of axis. This should be consistent with rotating against
+      the patch normal direction. If you get it wrong you'll see all cells
+      with extreme aspect ratio and internal faces wrong way around in
+      checkMesh
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef linearNormal_H
-#define linearNormal_H
+#ifndef sector_H
+#define sector_H
 
-#include "point.H"
 #include "extrudeModel.H"
-#include "scalarList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,39 +50,38 @@ namespace extrudeModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class linearNormal Declaration
+                         Class sector Declaration
 \*---------------------------------------------------------------------------*/
 
-class linearNormal
+class sector
 :
     public extrudeModel
 {
     // Private data
 
-        //- Layer thickness
-        scalar thickness_;
+        //- Point on axis
+        const point axisPt_;
 
-        //- First cell thickness
-        scalar firstCellThickness_;
+        //- Normalized direction of axis
+        const vector axis_;
 
-        //- Layer cell distibution
-        scalarList layerPoints_;
-
+        //- Overall angle (radians)
+        const scalar angle_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("linearNormal");
+    TypeName("sector");
 
     // Constructors
 
         //- Construct from dictionary
-        linearNormal(const dictionary& dict);
+        sector(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~linearNormal();
+    virtual ~sector();
 
 
     // Member Operators

@@ -26,8 +26,10 @@ constructFrom patch;
 // If construct from patch/mesh:
 sourceCase "../cavity";
 sourcePatches (movingWall);
+
 // If construct from patch: patch to use for back (can be same as sourcePatch)
 exposedPatchName movingWall;
+
 // If construct from surface:
 surface "movingWall.stl";
 
@@ -38,10 +40,18 @@ flipNormals false;
 //- Linear extrusion in point-normal direction
 //extrudeModel        linearNormal;
 
+//- Single layer linear extrusion in point-normal direction
+//  with empty patches on front and back
+//extrudeModel        plane;
+
 //- Linear extrusion in specified direction
 //extrudeModel        linearDirection;
 
-//- Wedge extrusion. If nLayers is 1 assumes symmetry around plane.
+//- Sector extrusion
+//extrudeModel        sector;
+
+//- Wedge extrusion of a single layer
+//  with wedge patches on front and back
 extrudeModel        wedge;
 
 //- Extrudes into sphere around (0 0 0)
@@ -55,9 +65,9 @@ extrudeModel        wedge;
 
 nLayers             10;
 
-expansionRatio      1.0;    //0.9;
+expansionRatio      1.0;
 
-wedgeCoeffs
+sectorCoeffs
 {
     axisPt      (0 0.1 -0.05);
     axis        (-1 0 0);
@@ -88,7 +98,6 @@ radialCoeffs
     R               table ((0 0.01)(3 0.03)(10 0.1));
 }
 
-
 sigmaRadialCoeffs
 {
     RTbyg           1;
@@ -98,7 +107,7 @@ sigmaRadialCoeffs
 
 // Do front and back need to be merged? Usually only makes sense for 360
 // degree wedges.
-mergeFaces false;   //true;
+mergeFaces false;
 
 // Merge small edges. Fraction of bounding box.
 mergeTol 0;

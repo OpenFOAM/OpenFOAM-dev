@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,20 +21,10 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::extrudeModels::linearNormal
-
-Description
-    Extrudes by transforming points normal to the surface by a given distance.
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef linearNormal_H
-#define linearNormal_H
-
-#include "point.H"
-#include "extrudeModel.H"
-#include "scalarList.H"
+#include "plane.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,60 +33,38 @@ namespace Foam
 namespace extrudeModels
 {
 
-/*---------------------------------------------------------------------------*\
-                    Class linearNormal Declaration
-\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-class linearNormal
+defineTypeNameAndDebug(plane, 0);
+
+addToRunTimeSelectionTable(extrudeModel, plane, dictionary);
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+plane::plane(const dictionary& dict)
 :
-    public extrudeModel
+    linearNormal(dict)
 {
-    // Private data
-
-        //- Layer thickness
-        scalar thickness_;
-
-        //- First cell thickness
-        scalar firstCellThickness_;
-
-        //- Layer cell distibution
-        scalarList layerPoints_;
+    if (nLayers_ != 1)
+    {
+        IOWarningIn("plane::plane(const dictionary& dict)", dict)
+            << "Expected nLayers (if specified) to be 1"
+            << endl;
+        nLayers_ = 1;
+    }
+}
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-public:
-
-    //- Runtime type information
-    TypeName("linearNormal");
-
-    // Constructors
-
-        //- Construct from dictionary
-        linearNormal(const dictionary& dict);
-
-
-    //- Destructor
-    virtual ~linearNormal();
-
-
-    // Member Operators
-
-        point operator()
-        (
-            const point& surfacePoint,
-            const vector& surfaceNormal,
-            const label layer
-        ) const;
-};
+plane::~plane()
+{}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace extrudeModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

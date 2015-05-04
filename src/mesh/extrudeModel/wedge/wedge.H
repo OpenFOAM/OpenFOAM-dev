@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,22 +25,17 @@ Class
     Foam::extrudeModels::wedge
 
 Description
-    Extrudes by rotating a surface around an axis
-    - extrusion is opposite the surface/patch normal so inwards the source
-      mesh
-    - axis direction has to be consistent with this.
-    - use -mergeFaces option if doing full 360 and want to merge front and back
-    - note direction of axis. This should be consistent with rotating against
-      the patch normal direction. If you get it wrong you'll see all cells
-      with extreme aspect ratio and internal faces wrong way around in
-      checkMesh
+    Extrudes by rotating a surface symmetrically around axis by 1 layer.
+
+SeeAlso
+    Foam::extrudeModels::sector
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef wedge_H
 #define wedge_H
 
-#include "extrudeModel.H"
+#include "sector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,19 +50,8 @@ namespace extrudeModels
 
 class wedge
 :
-    public extrudeModel
+    public sector
 {
-    // Private data
-
-        //- Point on axis
-        const point axisPt_;
-
-        //- Normalized direction of axis
-        const vector axis_;
-
-        //- Overall angle (radians)
-        const scalar angle_;
-
 
 public:
 
@@ -82,16 +66,6 @@ public:
 
     //- Destructor
     virtual ~wedge();
-
-
-    // Member Operators
-
-        point operator()
-        (
-            const point& surfacePoint,
-            const vector& surfaceNormal,
-            const label layer
-        ) const;
 };
 
 

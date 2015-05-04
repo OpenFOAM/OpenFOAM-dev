@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::extrudeModels::linearNormal
+    Foam::extrudeModels::cyclicSector
 
 Description
-    Extrudes by transforming points normal to the surface by a given distance.
+    Extrudes a sector.
+
+SeeAlso
+    Foam::extrudeModels::sector
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef linearNormal_H
-#define linearNormal_H
+#ifndef cyclicSector_H
+#define cyclicSector_H
 
-#include "point.H"
-#include "extrudeModel.H"
-#include "scalarList.H"
+#include "sector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,49 +45,27 @@ namespace extrudeModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class linearNormal Declaration
+                         Class cyclicSector Declaration
 \*---------------------------------------------------------------------------*/
 
-class linearNormal
+class cyclicSector
 :
-    public extrudeModel
+    public sector
 {
-    // Private data
-
-        //- Layer thickness
-        scalar thickness_;
-
-        //- First cell thickness
-        scalar firstCellThickness_;
-
-        //- Layer cell distibution
-        scalarList layerPoints_;
-
-
 
 public:
 
     //- Runtime type information
-    TypeName("linearNormal");
+    TypeName("cyclicSector");
 
     // Constructors
 
         //- Construct from dictionary
-        linearNormal(const dictionary& dict);
+        cyclicSector(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~linearNormal();
-
-
-    // Member Operators
-
-        point operator()
-        (
-            const point& surfacePoint,
-            const vector& surfaceNormal,
-            const label layer
-        ) const;
+    virtual ~cyclicSector();
 };
 
 

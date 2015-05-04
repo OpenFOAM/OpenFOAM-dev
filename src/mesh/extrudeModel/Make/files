@@ -1,10 +1,13 @@
 extrudeModel/extrudeModel.C
 extrudeModel/extrudeModelNew.C
 linearNormal/linearNormal.C
+plane/plane.C
 linearDirection/linearDirection.C
 linearRadial/linearRadial.C
 radial/radial.C
 sigmaRadial/sigmaRadial.C
+sector/sector.C
+cyclicSector/cyclicSector.C
 wedge/wedge.C
 
 LIB = $(FOAM_LIBBIN)/libextrudeModel

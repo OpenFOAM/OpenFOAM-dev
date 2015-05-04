@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "wedge.H"
 #include "addToRunTimeSelectionTable.H"
-#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,76 +44,22 @@ addToRunTimeSelectionTable(extrudeModel, wedge, dictionary);
 
 wedge::wedge(const dictionary& dict)
 :
-    extrudeModel(typeName, dict),
-    axisPt_(coeffDict_.lookup("axisPt")),
-    axis_(coeffDict_.lookup("axis")),
-    angle_
-    (
-        degToRad(readScalar(coeffDict_.lookup("angle")))
-    )
-{}
+    sector(dict)
+{
+    if (nLayers_ != 1)
+    {
+        IOWarningIn("wedge::wedge(const dictionary& dict)", dict)
+            << "Expected nLayers (if specified) to be 1"
+            << endl;
+        nLayers_ = 1;
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 wedge::~wedge()
 {}
-
-
-// * * * * * * * * * * * * * * * * Operators * * * * * * * * * * * * * * * * //
-
-point wedge::operator()
-(
-    const point& surfacePoint,
-    const vector& surfaceNormal,
-    const label layer
-) const
-{
-    scalar sliceAngle;
-    // For the case of a single layer extrusion assume a
-    // symmetric wedge about the reference plane is required
-    if (nLayers_ == 1)
-    {
-        if (layer == 0)
-        {
-            sliceAngle = -angle_/2.0;
-        }
-        else
-        {
-            sliceAngle = angle_/2.0;
-        }
-    }
-    else
-    {
-        //sliceAngle = angle_*layer/nLayers_;
-        sliceAngle = angle_*sumThickness(layer);
-    }
-
-    // Find projection onto axis (or rather decompose surfacePoint
-    // into vector along edge (proj), vector normal to edge in plane
-    // of surface point and surface normal.
-    point d = surfacePoint - axisPt_;
-
-    d -= (axis_ & d)*axis_;
-
-    scalar dMag = mag(d);
-
-    point edgePt = surfacePoint - d;
-
-    // Rotate point around sliceAngle.
-    point rotatedPoint = edgePt;
-
-    if (dMag > VSMALL)
-    {
-        vector n = (d/dMag) ^ axis_;
-
-        rotatedPoint +=
-          + cos(sliceAngle)*d
-          - sin(sliceAngle)*mag(d)*n; // Use either n or surfaceNormal
-    }
-
-    return rotatedPoint;
-}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

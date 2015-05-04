@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,12 +36,9 @@ Description
 
 #include "argList.H"
 #include "Time.H"
-#include "dimensionedTypes.H"
-#include "IFstream.H"
 #include "polyTopoChange.H"
 #include "polyTopoChanger.H"
 #include "edgeCollapser.H"
-#include "globalMeshData.H"
 #include "perfectInterface.H"
 #include "addPatchCellLayer.H"
 #include "fvMesh.H"
@@ -51,6 +48,11 @@ Description
 
 #include "extrudedMesh.H"
 #include "extrudeModel.H"
+
+#include "wedge.H"
+#include "wedgePolyPatch.H"
+#include "plane.H"
+#include "emptyPolyPatch.H"
 
 using namespace Foam;
 
@@ -209,6 +211,52 @@ void updateCellSet(const mapPolyMesh& map, labelHashSet& cellLabels)
         }
     }
     cellLabels.transfer(newCellLabels);
+}
+
+
+template<class PatchType>
+void changeFrontBackPatches
+(
+    polyMesh& mesh,
+    const word& frontPatchName,
+    const word& backPatchName
+)
+{
+    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+
+    label frontPatchI = findPatchID(patches, frontPatchName);
+    label backPatchI = findPatchID(patches, backPatchName);
+
+    DynamicList<polyPatch*> newPatches(patches.size());
+
+    forAll(patches, patchI)
+    {
+        const polyPatch& pp(patches[patchI]);
+
+        if (patchI == frontPatchI || patchI == backPatchI)
+        {
+            newPatches.append
+            (
+                new PatchType
+                (
+                    pp.name(),
+                    pp.size(),
+                    pp.start(),
+                    pp.index(),
+                    mesh.boundaryMesh(),
+                    PatchType::typeName
+                )
+            );
+        }
+        else
+        {
+            newPatches.append(pp.clone(mesh.boundaryMesh()).ptr());
+        }
+    }
+
+    // Edit patches
+    mesh.removeBoundary();
+    mesh.addPatches(newPatches, true);
 }
 
 
@@ -583,8 +631,10 @@ int main(int argc, char *argv[])
 
         // Layers per face
         labelList nFaceLayers(extrudePatch.size(), model().nLayers());
+
         // Layers per point
         labelList nPointLayers(extrudePatch.nPoints(), model().nLayers());
+
         // Displacement for first layer
         vectorField firstLayerDisp(displacement*model().sumThickness(1));
 
@@ -789,6 +839,31 @@ int main(int argc, char *argv[])
         << "        with span : " << span << nl
         << "Merge distance    : " << mergeDim << nl
         << endl;
+
+
+    // Change the front and back patch types as required
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    word frontBackType(word::null);
+
+    if (isType<extrudeModels::wedge>(model()))
+    {
+        changeFrontBackPatches<wedgePolyPatch>
+        (
+            mesh,
+            frontPatchName,
+            backPatchName
+        );
+    }
+    else if (isType<extrudeModels::plane>(model()))
+    {
+        changeFrontBackPatches<emptyPolyPatch>
+        (
+            mesh,
+            frontPatchName,
+            backPatchName
+        );
+    }
 
 
     // Collapse edges

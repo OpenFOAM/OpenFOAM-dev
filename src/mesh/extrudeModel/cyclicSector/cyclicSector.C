@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,66 +23,40 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "extrudeModel.H"
+#include "cyclicSector.H"
+#include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(extrudeModel, 0);
-    defineRunTimeSelectionTable(extrudeModel, dictionary);
-}
+namespace extrudeModels
+{
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+defineTypeNameAndDebug(cyclicSector, 0);
+
+addToRunTimeSelectionTable(extrudeModel, cyclicSector, dictionary);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::extrudeModel::extrudeModel
-(
-    const word& modelType,
-    const dictionary& dict
-)
+cyclicSector::cyclicSector(const dictionary& dict)
 :
-    nLayers_(dict.lookupOrDefault<label>("nLayers", 1)),
-    expansionRatio_(readScalar(dict.lookup("expansionRatio"))),
-    dict_(dict),
-    coeffDict_(dict.subDict(modelType + "Coeffs"))
+    sector(dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::extrudeModel::~extrudeModel()
+cyclicSector::~cyclicSector()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::label Foam::extrudeModel::nLayers() const
-{
-    return nLayers_;
-}
-
-
-Foam::scalar Foam::extrudeModel::expansionRatio() const
-{
-    return expansionRatio_;
-}
-
-
-Foam::scalar Foam::extrudeModel::sumThickness(const label layer) const
-{
-    // 1+r+r^2+ .. +r^(n-1) = (1-r^n)/(1-r)
-
-    if (mag(1.0-expansionRatio_) < SMALL)
-    {
-        return scalar(layer)/nLayers_;
-    }
-    else
-    {
-        return
-            (1.0-pow(expansionRatio_, layer))
-          / (1.0-pow(expansionRatio_, nLayers_));
-    }
-}
-
+} // End namespace extrudeModels
+} // End namespace Foam
 
 // ************************************************************************* //
