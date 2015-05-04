@@ -1,7 +1,7 @@
 extrudeModel/extrudeModel.C
 extrudeModel/extrudeModelNew.C
 linearNormal/linearNormal.C
-plane/plane.C
+planeExtrusion/planeExtrusion.C
 linearDirection/linearDirection.C
 linearRadial/linearRadial.C
 radial/radial.C

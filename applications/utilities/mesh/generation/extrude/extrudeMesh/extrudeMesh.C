@@ -51,7 +51,7 @@ Description
 
 #include "wedge.H"
 #include "wedgePolyPatch.H"
-#include "plane.H"
+#include "planeExtrusion.H"
 #include "emptyPolyPatch.H"
 
 using namespace Foam;
