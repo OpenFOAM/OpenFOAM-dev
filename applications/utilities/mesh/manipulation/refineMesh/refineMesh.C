@@ -27,10 +27,13 @@ Application
 Description
     Utility to refine cells in multiple directions.
 
-    Either supply -all option to refine all cells (3D refinement for 3D
-    cases; 2D for 2D cases) or reads a refineMeshDict with
-    - cellSet to refine
-    - directions to refine
+    Command-line option handling:
+    + If -all specified or no refineMeshDict exists or, refine all cells
+    + If -dict <file> specified refine according to <file>
+    + If refineMeshDict exists refine according to refineMeshDict
+
+    When the refinement or all cells is selected apply 3D refinement for 3D
+    cases and 2D refinement for 2D cases.
 
 \*---------------------------------------------------------------------------*/
 
@@ -139,6 +142,13 @@ int main(int argc, char *argv[])
     #include "addOverwriteOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
+
+    Foam::argList::addBoolOption
+    (
+        "all",
+        "Refine all cells"
+    );
+
     #include "setRootCase.H"
     #include "createTime.H"
     runTime.functionObjects().off();
@@ -152,6 +162,7 @@ int main(int argc, char *argv[])
     //
 
     const bool readDict = args.optionFound("dict");
+    const bool refineAllCells = args.optionFound("all");
     const bool overwrite = args.optionFound("overwrite");
 
     // List of cells to refine
@@ -159,16 +170,59 @@ int main(int argc, char *argv[])
 
     // Dictionary to control refinement
     dictionary refineDict;
+    const word dictName("refineMeshDict");
 
     if (readDict)
     {
-        const word dictName("refineMeshDict");
-        #include "setSystemMeshDictionaryIO.H"
+        fileName dictPath = args["dict"];
+        if (isDir(dictPath))
+        {
+            dictPath = dictPath/dictName;
+        }
 
-        Info<< "Refining according to " << dictName << nl << endl;
+        IOobject dictIO
+        (
+            dictPath,
+            mesh,
+            IOobject::MUST_READ
+        );
+
+        if (!dictIO.headerOk())
+        {
+            FatalErrorIn(args.executable())
+                << "Cannot open specified refinement dictionary "
+                << dictPath
+                << exit(FatalError);
+        }
+
+        Info<< "Refining according to " << dictPath << nl << endl;
 
         refineDict = IOdictionary(dictIO);
+    }
+    else if (!refineAllCells)
+    {
+        IOobject dictIO
+        (
+            dictName,
+            runTime.system(),
+            mesh,
+            IOobject::MUST_READ
+        );
 
+        if (dictIO.headerOk())
+        {
+            Info<< "Refining according to " << dictName << nl << endl;
+
+            refineDict = IOdictionary(dictIO);
+        }
+        else
+        {
+            Info<< "Refinement dictionary " << dictName << " not found" << endl;
+        }
+    }
+
+    if (refineDict.size())
+    {
         const word setName(refineDict.lookup("set"));
 
         cellSet cells(mesh, setName);
