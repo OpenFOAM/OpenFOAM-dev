@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(probes, 0);
+    defineTypeNameAndDebug(probes, 0);
 }
 
 
@@ -228,30 +228,35 @@ Foam::label Foam::probes::prepare()
             // Create directory if does not exist.
             mkDir(probeDir);
 
-            OFstream* sPtr = new OFstream(probeDir/fieldName);
+            OFstream* fPtr = new OFstream(probeDir/fieldName);
+
+            OFstream& fout = *fPtr;
 
             if (debug)
             {
-                Info<< "open probe stream: " << sPtr->name() << endl;
+                Info<< "open probe stream: " << fout.name() << endl;
             }
 
-            probeFilePtrs_.insert(fieldName, sPtr);
+            probeFilePtrs_.insert(fieldName, fPtr);
 
             unsigned int w = IOstream::defaultPrecision() + 7;
 
-            for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
+            forAll(*this, probeI)
             {
-                *sPtr<< '#' << setw(IOstream::defaultPrecision() + 6)
-                    << vector::componentNames[cmpt];
-
-                forAll(*this, probeI)
-                {
-                    *sPtr<< ' ' << setw(w) << operator[](probeI)[cmpt];
-                }
-                *sPtr << endl;
+                fout<< "# Probe " << probeI << ' ' << operator[](probeI)
+                    << endl;
             }
 
-            *sPtr<< '#' << setw(IOstream::defaultPrecision() + 6)
+            fout<< '#' << setw(IOstream::defaultPrecision() + 6)
+                << "Probe";
+
+            forAll(*this, probeI)
+            {
+                fout<< ' ' << setw(w) << probeI;
+            }
+            fout<< endl;
+
+            fout<< '#' << setw(IOstream::defaultPrecision() + 6)
                 << "Time" << endl;
         }
     }
