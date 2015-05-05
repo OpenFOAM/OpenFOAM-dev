@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fieldMinMax.H"
-#include "volFields.H"
-#include "dictionary.H"
-#include "Time.H"
+#include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -66,6 +64,7 @@ Foam::fieldMinMax::fieldMinMax
     obr_(obr),
     active_(true),
     log_(true),
+    location_(true),
     mode_(mdMag),
     fieldSet_()
 {
@@ -103,6 +102,7 @@ void Foam::fieldMinMax::read(const dictionary& dict)
     if (active_)
     {
         log_ = dict.lookupOrDefault<Switch>("log", true);
+        location_ = dict.lookupOrDefault<Switch>("location", true);
 
         mode_ = modeTypeNames_[dict.lookupOrDefault<word>("mode", "magnitude")];
         dict.lookup("fields") >> fieldSet_;
@@ -112,26 +112,41 @@ void Foam::fieldMinMax::read(const dictionary& dict)
 
 void Foam::fieldMinMax::writeFileHeader(const label i)
 {
-    writeHeader(file(), "Field minima and maxima");
-    writeCommented(file(), "Time");
-    writeTabbed(file(), "field");
-    writeTabbed(file(), "min");
-    writeTabbed(file(), "position(min)");
+    OFstream& file = this->file();
 
-    if (Pstream::parRun())
+    writeHeader(file, "Field minima and maxima");
+    writeCommented(file, "Time");
+
+    if (location_)
     {
-        writeTabbed(file(), "processor");
+        writeTabbed(file, "field");
+
+        writeTabbed(file, "min");
+        writeTabbed(file, "location(min)");
+
+        if (Pstream::parRun())
+        {
+            writeTabbed(file, "processor");
+        }
+
+        writeTabbed(file, "max");
+        writeTabbed(file, "location(max)");
+
+        if (Pstream::parRun())
+        {
+            writeTabbed(file, "processor");
+        }
+    }
+    else
+    {
+        forAll(fieldSet_, fieldI)
+        {
+            writeTabbed(file, "min(" + fieldSet_[fieldI] + ')');
+            writeTabbed(file, "max(" + fieldSet_[fieldI] + ')');
+        }
     }
 
-    writeTabbed(file(), "max");
-    writeTabbed(file(), "position(max)");
-
-    if (Pstream::parRun())
-    {
-        writeTabbed(file(), "processor");
-    }
-
-    file() << endl;
+    file<< endl;
 }
 
 
@@ -159,6 +174,11 @@ void Foam::fieldMinMax::write()
     {
         functionObjectFile::write();
 
+        if (!location_)
+        {
+            file()<< obr_.time().value();
+        }
+
         Info(log_)<< type() << " " << name_ <<  " output:" << nl;
 
         forAll(fieldSet_, fieldI)
@@ -168,6 +188,11 @@ void Foam::fieldMinMax::write()
             calcMinMaxFields<sphericalTensor>(fieldSet_[fieldI], mode_);
             calcMinMaxFields<symmTensor>(fieldSet_[fieldI], mode_);
             calcMinMaxFields<tensor>(fieldSet_[fieldI], mode_);
+        }
+
+        if (!location_)
+        {
+            file()<< endl;
         }
 
         Info(log_)<< endl;

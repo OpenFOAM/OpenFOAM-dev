@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object calculates the value and position of scalar minimim
+    This function object calculates the value and location of scalar minimim
     and maximum for a list of user-specified fields.  For variables with a rank
     greater than zero, either the min/max of a component value or the magnitude
     is reported.  When operating in parallel, the processor owning the value
@@ -43,6 +43,7 @@ Description
         ...
         write       yes;
         log         yes;
+        location    yes;
         mode        magnitude;
         fields
         (
@@ -58,6 +59,7 @@ Description
         type         | type name: fieldMinMax  | yes         |
         write        | write min/max data to file |  no      | yes
         log          | write min/max data to standard output | no | no
+        location     | write location of the min/max value | no | yes
         mode         | calculation mode: magnitude or component | no | magnitude
     \endtable
 
@@ -77,12 +79,8 @@ SourceFiles
 #define fieldMinMax_H
 
 #include "functionObjectFile.H"
-#include "primitiveFieldsFwd.H"
-#include "volFieldsFwd.H"
-#include "HashSet.H"
-#include "OFstream.H"
 #include "Switch.H"
-#include "NamedEnum.H"
+#include "vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -129,6 +127,9 @@ protected:
 
         //- Switch to send output to Info as well
         Switch log_;
+
+        //- Switch to write location of min/max values
+        Switch location_;
 
         //- Mode for min/max - only applicable for ranks > 0
         modeType mode_;
