@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,8 +58,6 @@ class injectionModel
 :
     public filmSubModelBase
 {
-private:
-
     // Private data
 
         //- Injected mass
@@ -106,6 +104,7 @@ public:
              (owner, dict)
          );
 
+
     // Constructors
 
         //- Construct null
@@ -137,18 +136,21 @@ public:
 
     // Member Functions
 
-        // Evolution
+        //- Correct
+        virtual void correct
+        (
+            scalarField& availableMass,
+            scalarField& massToInject,
+            scalarField& diameterToInject
+        ) = 0;
 
-            //- Correct
-            virtual void correct
-            (
-                scalarField& availableMass,
-                scalarField& massToInject,
-                scalarField& diameterToInject
-            ) = 0;
+        //- Return the total mass injected
+        virtual scalar injectedMassTotal() const;
 
-            //- Return the total mass injected
-            scalar injectedMassTotal() const;
+        //- Accumulate the total mass injected for the patches into the
+        //  scalarField provided
+        virtual void patchInjectedMassTotals(scalarField& patchMasses) const
+        {}
 };
 
 

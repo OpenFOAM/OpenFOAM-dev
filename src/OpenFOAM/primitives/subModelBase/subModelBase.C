@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,9 +158,7 @@ bool Foam::subModelBase::active() const
 
 
 void Foam::subModelBase::cacheFields(const bool)
-{
-    // do nothing
-}
+{}
 
 
 bool Foam::subModelBase::outputTime() const
@@ -171,8 +169,6 @@ bool Foam::subModelBase::outputTime() const
 
 void Foam::subModelBase::write(Ostream& os) const
 {
-    // not writing complete cloud dictionary, only coeffs
-//    os  << dict_;
     os  << coeffDict_;
 }
 

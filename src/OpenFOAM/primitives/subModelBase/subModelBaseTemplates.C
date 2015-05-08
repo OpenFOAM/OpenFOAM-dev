@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,33 +80,6 @@ void Foam::subModelBase::setBaseProperty
 
 
 template<class Type>
-Type Foam::subModelBase::getModelProperty
-(
-    const word& entryName,
-    const Type& defaultValue
-) const
-{
-    Type result = defaultValue;
-
-    if (properties_.found(baseName_))
-    {
-        const dictionary& baseDict = properties_.subDict(baseName_);
-
-        if (inLine() && baseDict.found(modelName_))
-        {
-            baseDict.subDict(modelName_).readIfPresent(entryName, result);
-        }
-        else if (baseDict.found(modelType_))
-        {
-            baseDict.subDict(modelType_).readIfPresent(entryName, result);
-        }
-    }
-
-    return result;
-}
-
-
-template<class Type>
 void Foam::subModelBase::getModelProperty
 (
     const word& entryName,
@@ -126,6 +99,19 @@ void Foam::subModelBase::getModelProperty
             baseDict.subDict(modelType_).readIfPresent(entryName, value);
         }
     }
+}
+
+
+template<class Type>
+Type Foam::subModelBase::getModelProperty
+(
+    const word& entryName,
+    const Type& defaultValue
+) const
+{
+    Type result = defaultValue;
+    getModelProperty(entryName, result);
+    return result;
 }
 
 

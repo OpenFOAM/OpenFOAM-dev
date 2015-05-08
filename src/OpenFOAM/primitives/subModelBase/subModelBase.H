@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,6 @@ namespace Foam
 
 class subModelBase
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise assignment
@@ -183,15 +181,15 @@ public:
 
                 //- Retrieve generic property from the sub-model
                 template<class Type>
+                void getModelProperty(const word& entryName, Type& value) const;
+
+                //- Retrieve generic property from the sub-model
+                template<class Type>
                 Type getModelProperty
                 (
                     const word& entryName,
                     const Type& defaultValue = pTraits<Type>::zero
                 ) const;
-
-                //- Retrieve generic property from the sub-model
-                template<class Type>
-                void getModelProperty(const word& entryName, Type& value) const;
 
                 //- Add generic property to the sub-model
                 template<class Type>

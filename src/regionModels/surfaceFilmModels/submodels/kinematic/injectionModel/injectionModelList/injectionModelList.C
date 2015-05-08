@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,44 +118,57 @@ void injectionModelList::correct
 
     forAll(patchIDs, i)
     {
-        label patchI = patchIDs[i];
+        label patchi = patchIDs[i];
         massInjected_[i] =
-            massInjected_[i] + sum(massToInject.boundaryField()[patchI]);
+            massInjected_[i] + sum(massToInject.boundaryField()[patchi]);
     }
 }
 
 
 void injectionModelList::info(Ostream& os)
 {
-    scalar injectedMass = 0.0;
+    const polyBoundaryMesh& pbm = owner().regionMesh().boundaryMesh();
+
+    scalar injectedMass = 0;
+    scalarField patchInjectedMasses(pbm.size(), 0);
+
     forAll(*this, i)
     {
         const injectionModel& im = operator[](i);
         injectedMass += im.injectedMassTotal();
+        im.patchInjectedMassTotals(patchInjectedMasses);
     }
 
     os  << indent << "injected mass      = " << injectedMass << nl;
 
-    scalarList mass0(massInjected_.size(), 0.0);
-    this->getModelProperty("massInjected", mass0);
+    forAll(pbm, patchi)
+    {
+        if (mag(patchInjectedMasses[patchi]) > VSMALL)
+        {
+            os  << indent << indent << "from patch " << pbm[patchi].name()
+                << " = " << patchInjectedMasses[patchi] << nl;
+        }
+    }
 
-    scalarList mass(massInjected_);
+    scalarField mass0(massInjected_.size(), 0.0);
+    this->getBaseProperty("massInjected", mass0);
+
+    scalarField mass(massInjected_);
     Pstream::listCombineGather(mass, plusEqOp<scalar>());
-    mass = mass + mass0;
+    mass += mass0;
 
-    const polyBoundaryMesh& pbm = owner().regionMesh().boundaryMesh();
     const labelList& patchIDs = owner().intCoupledPatchIDs();
 
     forAll(patchIDs, i)
     {
-        label patchI = patchIDs[i];
-        Info<< indent << "  - patch: " << pbm[patchI].name() << ": "
+        label patchi = patchIDs[i];
+        Info<< indent << "  - patch: " << pbm[patchi].name() << ": "
             << mass[i] << endl;
     }
 
     if (owner().time().outputTime())
     {
-        setModelProperty("massInjected", mass);
+        setBaseProperty("massInjected", mass);
         massInjected_ = 0.0;
     }
 }
