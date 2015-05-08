@@ -98,11 +98,27 @@ while (pimple.correct())
     surfaceScalarField rhof1(fvc::interpolate(rho1));
     surfaceScalarField rhof2(fvc::interpolate(rho2));
 
-    // Correct flux BCs to be consistent with the velocity BCs
-    phi1.boundaryField() ==
-        mrfZones.relative(mesh.Sf().boundaryField() & U1.boundaryField());
-    phi2.boundaryField() ==
-        mrfZones.relative(mesh.Sf().boundaryField() & U2.boundaryField());
+    // Correct fixed-flux BCs to be consistent with the velocity BCs
+    forAll(mesh.boundary(), patchi)
+    {
+        if (isA<fixedValueFvsPatchScalarField>(phi1.boundaryField()[patchi]))
+        {
+            phi1.boundaryField()[patchi] ==
+                mrfZones.relative
+                (
+                    mesh.Sf().boundaryField() & U1.boundaryField()
+                )()[patchi];
+        }
+
+        if (isA<fixedValueFvsPatchScalarField>(phi2.boundaryField()[patchi]))
+        {
+            phi2.boundaryField()[patchi] ==
+                mrfZones.relative
+                (
+                    mesh.Sf().boundaryField() & U2.boundaryField()
+                )()[patchi];
+        }
+    }
 
     surfaceScalarField alpharAUf1
     (

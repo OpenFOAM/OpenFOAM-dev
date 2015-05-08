@@ -22,8 +22,6 @@ volScalarField rAU2
     )
 );
 
-//surfaceScalarField alpharAUf1(fvc::interpolate(alpha1*rAU1));
-//surfaceScalarField alpharAUf2(fvc::interpolate(alpha2*rAU2));
 surfaceScalarField alpharAUf1
 (
     fvc::interpolate(max(alpha1, fluid.residualAlpha(phase1))*rAU1)
@@ -94,10 +92,26 @@ while (pimple.correct())
     #include "correctContErrs.H"
 
     // Correct flux BCs to be consistent with the velocity BCs
-    phi1.boundaryField() ==
-        mrfZones.relative(mesh.Sf().boundaryField() & U1.boundaryField());
-    phi2.boundaryField() ==
-        mrfZones.relative(mesh.Sf().boundaryField() & U2.boundaryField());
+    forAll(mesh.boundary(), patchi)
+    {
+        if (isA<fixedValueFvsPatchScalarField>(phi1.boundaryField()[patchi]))
+        {
+            phi1.boundaryField()[patchi] ==
+                mrfZones.relative
+                (
+                    mesh.Sf().boundaryField() & U1.boundaryField()
+                )()[patchi];
+        }
+
+        if (isA<fixedValueFvsPatchScalarField>(phi2.boundaryField()[patchi]))
+        {
+            phi2.boundaryField()[patchi] ==
+                mrfZones.relative
+                (
+                    mesh.Sf().boundaryField() & U2.boundaryField()
+                )()[patchi];
+        }
+    }
 
     volVectorField HbyA1
     (
@@ -227,12 +241,9 @@ while (pimple.correct())
         p_rgh.boundaryField(),
         (
             phiHbyA.boundaryField()
-          - mrfZones.relative
-            (
-                alphaf1.boundaryField()
-               *(mesh.Sf().boundaryField() & U1.boundaryField())
-              + alphaf2.boundaryField()
-               *(mesh.Sf().boundaryField() & U2.boundaryField())
+          - (
+                alphaf1.boundaryField()*phi1.boundaryField()
+              + alphaf2.boundaryField()*phi2.boundaryField()
             )
         )/(mesh.magSf().boundaryField()*rAUf.boundaryField())
     );

@@ -30,6 +30,7 @@ License
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "dragModel.H"
 #include "heatTransferModel.H"
+#include "fixedValueFvsPatchFields.H"
 #include "fixedValueFvPatchFields.H"
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
@@ -151,7 +152,7 @@ Foam::phaseModel::phaseModel
              || isA<partialSlipFvPatchVectorField>(U_.boundaryField()[i])
             )
             {
-                phiTypes[i] = fixedValueFvPatchScalarField::typeName;
+                phiTypes[i] = fixedValueFvsPatchScalarField::typeName;
             }
         }
 
