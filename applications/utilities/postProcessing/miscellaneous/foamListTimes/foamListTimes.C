@@ -31,6 +31,8 @@ Usage
 
     - foamListTimes [OPTION]
 
+    \param -rm \n
+    Remove selected time directories
     \param -processor \n
     List times from processor0/ directory
 
@@ -55,6 +57,11 @@ int main(int argc, char *argv[])
     (
         "processor",
         "list times from processor0/ directory"
+    );
+    argList::addBoolOption
+    (
+        "rm",
+        "remove selected time directories"
     );
     #include "setRootCase.H"
 
@@ -117,9 +124,37 @@ int main(int argc, char *argv[])
         args
     );
 
-    forAll(timeDirs, timeI)
+    if (args.optionFound("rm"))
     {
-        Info<< timeDirs[timeI].name() << endl;
+        if (args.optionFound("processor"))
+        {
+            for (label procI=0; procI<nProcs; procI++)
+            {
+                fileName procPath
+                (
+                    args.path()/(word("processor") + name(procI))
+                );
+
+                forAll(timeDirs, timeI)
+                {
+                    rmDir(procPath/timeDirs[timeI].name());
+                }
+            }
+        }
+        else
+        {
+            forAll(timeDirs, timeI)
+            {
+                rmDir(args.path()/timeDirs[timeI].name());
+            }
+        }
+    }
+    else
+    {
+        forAll(timeDirs, timeI)
+        {
+            Info<< timeDirs[timeI].name() << endl;
+        }
     }
 
     return 0;
