@@ -83,7 +83,7 @@ heatTransfer
     (particles in air)
     {
         type            RanzMarshall;
-        residualAlpha   1e-4;
+        residualAlpha   1e-3;
     }
 );
 
