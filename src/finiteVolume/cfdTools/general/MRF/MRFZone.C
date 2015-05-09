@@ -526,7 +526,6 @@ void Foam::MRFZone::correctBoundaryVelocity(volVectorField& U) const
 {
     const vector Omega = this->Omega();
 
-
     // Included patches
     forAll(includedFaces_, patchi)
     {

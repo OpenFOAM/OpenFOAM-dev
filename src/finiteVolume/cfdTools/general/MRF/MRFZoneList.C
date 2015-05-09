@@ -25,6 +25,7 @@ License
 
 #include "MRFZoneList.H"
 #include "volFields.H"
+#include "fixedValueFvsPatchFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -306,6 +307,30 @@ void Foam::MRFZoneList::correctBoundaryVelocity(volVectorField& U) const
     forAll(*this, i)
     {
         operator[](i).correctBoundaryVelocity(U);
+    }
+}
+
+
+void Foam::MRFZoneList::correctBoundaryFlux
+(
+    const volVectorField& U,
+    surfaceScalarField& phi
+) const
+{
+    FieldField<fvsPatchField, scalar> phibf
+    (
+        relative(mesh_.Sf().boundaryField() & U.boundaryField())
+    );
+
+    forAll(mesh_.boundary(), patchi)
+    {
+        if
+        (
+            isA<fixedValueFvsPatchScalarField>(phi.boundaryField()[patchi])
+        )
+        {
+            phi.boundaryField()[patchi] == phibf[patchi];
+        }
     }
 }
 

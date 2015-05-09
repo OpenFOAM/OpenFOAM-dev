@@ -246,7 +246,7 @@ public:
                 surfaceScalarField& phi
             ) const;
 
-            //- Correct the boundary velocity for the roation of the MRF region
+            //- Correct the boundary velocity for the rotation of the MRF region
             void correctBoundaryVelocity(volVectorField& U) const;
 
 
