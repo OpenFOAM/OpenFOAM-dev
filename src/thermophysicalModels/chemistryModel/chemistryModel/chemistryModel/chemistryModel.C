@@ -51,7 +51,7 @@ Foam::chemistryModel<CompType, ThermoType>::chemistryModel
 
     nSpecie_(Y_.size()),
     nReaction_(reactions_.size()),
-
+    Treact_(CompType::template lookupOrDefault<scalar>("Treact", 0.0)),
     RR_(nSpecie_)
 {
     // create the fields for the chemistry sources
@@ -796,32 +796,44 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::solve
 
     forAll(rho, celli)
     {
-        const scalar rhoi = rho[celli];
-        scalar pi = p[celli];
         scalar Ti = T[celli];
 
-        for (label i=0; i<nSpecie_; i++)
+        if (Ti > Treact_)
         {
-            c[i] = rhoi*Y_[i][celli]/specieThermo_[i].W();
-            c0[i] = c[i];
+            const scalar rhoi = rho[celli];
+            scalar pi = p[celli];
+
+            for (label i=0; i<nSpecie_; i++)
+            {
+                c[i] = rhoi*Y_[i][celli]/specieThermo_[i].W();
+                c0[i] = c[i];
+            }
+
+            // Initialise time progress
+            scalar timeLeft = deltaT[celli];
+
+            // Calculate the chemical source terms
+            while (timeLeft > SMALL)
+            {
+                scalar dt = timeLeft;
+                this->solve(c, Ti, pi, dt, this->deltaTChem_[celli]);
+                timeLeft -= dt;
+            }
+
+            deltaTMin = min(this->deltaTChem_[celli], deltaTMin);
+
+            for (label i=0; i<nSpecie_; i++)
+            {
+                RR_[i][celli] =
+                    (c[i] - c0[i])*specieThermo_[i].W()/deltaT[celli];
+            }
         }
-
-        // Initialise time progress
-        scalar timeLeft = deltaT[celli];
-
-        // Calculate the chemical source terms
-        while (timeLeft > SMALL)
+        else
         {
-            scalar dt = timeLeft;
-            this->solve(c, Ti, pi, dt, this->deltaTChem_[celli]);
-            timeLeft -= dt;
-        }
-
-        deltaTMin = min(this->deltaTChem_[celli], deltaTMin);
-
-        for (label i=0; i<nSpecie_; i++)
-        {
-            RR_[i][celli] = (c[i] - c0[i])*specieThermo_[i].W()/deltaT[celli];
+            for (label i=0; i<nSpecie_; i++)
+            {
+                RR_[i][celli] = 0;
+            }
         }
     }
 

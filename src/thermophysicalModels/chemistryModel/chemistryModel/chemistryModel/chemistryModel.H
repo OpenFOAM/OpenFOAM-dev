@@ -97,6 +97,9 @@ protected:
         //- Number of reactions
         label nReaction_;
 
+        //- Temperature below which the reaction rates are assumed 0
+        scalar Treact_;
+
         //- List of reaction rate per specie [kg/m3/s]
         PtrList<DimensionedField<scalar, volMesh> > RR_;
 
@@ -137,6 +140,12 @@ public:
 
         //- The number of reactions
         inline label nReaction() const;
+
+        //- Temperature below which the reaction rates are assumed 0
+        inline scalar Treact() const;
+
+        //- Temperature below which the reaction rates are assumed 0
+        inline scalar& Treact();
 
         //- dc/dt = omega, rate of change in concentration, for each species
         virtual tmp<scalarField> omega

@@ -69,6 +69,22 @@ Foam::chemistryModel<CompType, ThermoType>::nReaction() const
 
 
 template<class CompType, class ThermoType>
+inline Foam::scalar
+Foam::chemistryModel<CompType, ThermoType>::Treact() const
+{
+    return Treact_;
+}
+
+
+template<class CompType, class ThermoType>
+inline Foam::scalar&
+Foam::chemistryModel<CompType, ThermoType>::Treact()
+{
+    return Treact_;
+}
+
+
+template<class CompType, class ThermoType>
 inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
 Foam::chemistryModel<CompType, ThermoType>::RR
 (
