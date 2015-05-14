@@ -104,17 +104,6 @@ Linux)
         export WM_COMPILER=I64
         ;;
 
-    mips64)
-        WM_ARCH=SiCortex64
-        WM_MPLIB=MPI
-        export WM_COMPILER_LIB_ARCH=64
-        export WM_CC='gcc'
-        export WM_CXX='g++'
-        export WM_CFLAGS='-mabi=64 -fPIC'
-        export WM_CXXFLAGS='-mabi=64 -fPIC'
-        export WM_LDFLAGS='-mabi=64 -G0'
-        ;;
-
     armv7l)
         WM_ARCH=linuxARM7
         export WM_COMPILER_LIB_ARCH=32

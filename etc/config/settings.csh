@@ -85,17 +85,6 @@ case Linux:
         setenv WM_COMPILER I64
         breaksw
 
-    case mips64:
-        setenv WM_ARCH SiCortex64
-        setenv WM_MPLIB MPI
-        setenv WM_COMPILER_LIB_ARCH 64
-        setenv WM_CC 'gcc'
-        setenv WM_CXX 'g++'
-        setenv WM_CFLAGS '-mabi=64 -fPIC'
-        setenv WM_CXXFLAGS '-mabi=64 -fPIC'
-        setenv WM_LDFLAGS '-mabi=64 -G0'
-        breaksw
-
     case ppc64:
         setenv WM_ARCH linuxPPC64
         setenv WM_COMPILER_LIB_ARCH 64
