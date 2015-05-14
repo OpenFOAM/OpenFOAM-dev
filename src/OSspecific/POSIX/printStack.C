@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,17 +91,17 @@ void printSourceFileAndLine
         // Convert offset into .so into offset into executable.
 
         void *addr;
-        sscanf(myAddress.c_str(), "%p",&addr);
+        sscanf(myAddress.c_str(), "%p", &addr);
 
         Dl_info info;
 
         dladdr(addr, &info);
 
-        unsigned long offset = ulong(info.dli_fbase);
+        uintptr_t offset = uintptr_t(info.dli_fbase);
 
         IStringStream addressStr(address.substr(2));
-        long addressValue = ReadHex<long>(addressStr);
-        long relativeAddress = addressValue-offset;
+        uintptr_t addressValue = ReadHex<uintptr_t>(addressStr);
+        intptr_t relativeAddress = addressValue - offset;
 
         // Reconstruct hex word from address
         OStringStream nStream;

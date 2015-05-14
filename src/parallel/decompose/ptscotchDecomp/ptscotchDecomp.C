@@ -566,10 +566,10 @@ Foam::label Foam::ptscotchDecomp::decompose
     {
         Pout<< "SCOTCH_dgraphBuild with:" << nl
             << "xadjSize-1      : " << xadjSize-1 << nl
-            << "xadj            : " << long(xadj) << nl
-            << "velotab         : " << long(velotab.begin()) << nl
+            << "xadj            : " << uintptr_t(xadj) << nl
+            << "velotab         : " << uintptr_t(velotab.begin()) << nl
             << "adjncySize      : " << adjncySize << nl
-            << "adjncy          : " << long(adjncy) << nl
+            << "adjncy          : " << uintptr_t(adjncy) << nl
             << endl;
     }
 
