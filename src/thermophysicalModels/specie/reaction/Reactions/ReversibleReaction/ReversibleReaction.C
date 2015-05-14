@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,16 @@ Foam::scalar Foam::ReversibleReaction
     const scalarField& c
 ) const
 {
-    return kfwd/this->Kc(p, T);
+    scalar Kc = this->Kc(p, T);
+
+    if (mag(Kc > VSMALL))
+    {
+        return kfwd/Kc;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
