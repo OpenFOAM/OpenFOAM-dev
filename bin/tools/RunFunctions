@@ -30,12 +30,12 @@
 
 getNumberOfProcessors()
 {
-    sed -ne 's/^numberOfSubdomains *\(.*\);/\1/p' system/decomposeParDict
+    sed -ne 's/^numberOfSubdomains\s*\(.*\);/\1/p' system/decomposeParDict
 }
 
 getApplication()
 {
-    sed -ne 's/^ *application *\([a-zA-Z]*\) *;.*$/\1/p' system/controlDict
+    sed -ne 's/^ *application\s*\([a-zA-Z]*\)\s*;.*$/\1/p' system/controlDict
 }
 
 runApplication()
