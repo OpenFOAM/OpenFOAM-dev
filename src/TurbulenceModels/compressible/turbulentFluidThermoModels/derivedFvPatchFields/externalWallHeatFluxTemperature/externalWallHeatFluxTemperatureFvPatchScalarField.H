@@ -73,7 +73,7 @@ Description
         Ta              uniform 300.0;
         h               uniform 10.0;
         thicknessLayers (0.1 0.2 0.3 0.4);
-        kappaLayers     (1 2 3 4)
+        kappaLayers     (1 2 3 4);
         value           uniform 300.0;
         kappaName       none;
         QrName          none;
