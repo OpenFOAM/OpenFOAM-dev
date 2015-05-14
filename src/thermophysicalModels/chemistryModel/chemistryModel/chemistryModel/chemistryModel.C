@@ -344,7 +344,7 @@ void Foam::chemistryModel<CompType, ThermoType>::jacobian
         }
     }
 
-    // length of the first argument must be nSpecie()
+    // Length of the first argument must be nSpecie()
     dcdt = omega(c2, T, p);
 
     forAll(reactions_, ri)
@@ -352,7 +352,7 @@ void Foam::chemistryModel<CompType, ThermoType>::jacobian
         const Reaction<ThermoType>& R = reactions_[ri];
 
         const scalar kf0 = R.kf(p, T, c2);
-        const scalar kr0 = R.kr(p, T, c2);
+        const scalar kr0 = R.kr(kf0, p, T, c2);
 
         forAll(R.lhs(), j)
         {
