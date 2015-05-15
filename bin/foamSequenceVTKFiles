@@ -1,0 +1,126 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamSequenceVTKFiles
+#
+# Description
+#     Creates symbolic links to all VTK files in a post-processing directory
+#     Links form a sequence like name.0000.vtk, name.0001.vtk, etc.
+#     Paraview recognises link names as a sequence which can be animated.
+#     The sequence of links can be used to create a video from the images.
+#     - Default directory name for VTK files is postProcessing
+#
+#------------------------------------------------------------------------------
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS] ...
+options:
+  -c | -case <dir>    specify case directory (default = local dir)
+  -d | -dir <dir>     post-processing directory <dir> (default = postProcessing)
+  -h | -help          help
+  -o | -out <dir>     output links directory <dir> (default = sequencedVTK)
+
+Creates symbolic links to all VTK files in a post-processing directory
+Links form a sequence like name.0000.vtk, name.0001.vtk, etc.
+Paraview recognises the link names as a sequence which can be opened and played.
+The sequence of links to images can be used to create a video from the images.
+- Default directory name for VTK files is postProcessing
+
+USAGE
+    exit 1
+}
+
+DIR=postProcessing
+OUT=sequencedVTK
+
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -c | -case)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      cd "$2" 2>/dev/null || usage "directory does not exist:  '$2'"
+      shift 2
+      ;;
+   -d | -dir)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      DIR=$2
+      shift 2
+      ;;
+   -h | -help)
+      printUsage
+      ;;
+   -o | -out)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      OUT=$2
+      shift 2
+      ;;
+   -*)
+      usage "invalid option '$1'"
+      ;;
+   *)
+      break
+      ;;
+    esac
+done
+
+if [ ! -d $DIR ]; then
+    echo "Cannot find postProcessing directory, exiting."
+    exit 0
+fi
+
+FILES=$(find $DIR -type f -name *vtk)
+NAMES=$(basename -s .vtk -a $FILES | sort -u)
+
+if [ -d $OUT ]; then
+    echo "$OUT directory already exists.  Deleting links within it..."
+    rm -rf $OUT/*
+else
+    echo "Creating $OUT directory..."
+    mkdir $OUT
+fi
+
+for N in $NAMES
+do
+    echo "Sequencing all VTK files named $N.vtk"
+
+    # Create list of VTK files, ordered by time step
+    FILE_LIST=$(echo $FILES | \
+        tr " " "\n" | \
+        grep $N.vtk | \
+        awk -F'/' '{print($(NF-1)" "$0)}' | \
+        sort -k 1 -g | \
+        cut -d' ' -f2)
+
+    i=0
+    for F in $FILE_LIST
+    do
+        i=$(expr $i + 1) # Relies on ordered list of $sourceFiles
+        LINK=$(printf "${N}.%04d.vtk" $i)
+        ln -s ../$F $OUT/$LINK
+    done
+done
