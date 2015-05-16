@@ -69,6 +69,15 @@ bool read(const char*, int32_t&);
 Istream& operator>>(Istream&, int32_t&);
 Ostream& operator<<(Ostream&, const int32_t);
 
+// On 32bit OSs long is not unambiguously int32_t (or int64_t) causing problems
+// for IO operator resolution.
+// This problem is avoided by explicitly defining the following operators:
+#if WM_ARCH_OPTION == 32
+    Istream& operator>>(Istream&, long&);
+    Ostream& operator<<(Ostream&, const long);
+#endif
+
+
 //- Template specialization for pTraits<int32_t>
 template<>
 class pTraits<int32_t>
