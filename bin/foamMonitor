@@ -1,0 +1,176 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamMonitor
+#
+# Description
+#     Monitor data with Gnuplot from time-value(s) graphs written by OpenFOAM
+#     e.g. by functionObjects
+#     - requires gnuplot, gnuplot_x11
+#
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTION] <file>
+options:
+  -h | -help            print the usage
+  -i | -idle <time>     stops if <file> unchanging for <time> sec (default = 60)
+  -l | -logscale        plots data (y-axis) on log scale, e.g. for residuals
+  -r | -refresh <time>  refreshes display every <time> sec (default = 10)
+  -y | -yrange <range>  sets data (y-axis) <range>, format "[0:1]"
+
+Monitor data with Gnuplot from time-value(s) graphs written by OpenFOAM
+e.g. by functionObjects
+- requires gnuplot, gnuplot_x11
+
+Example:
+  foamMonitor -l postProcessing/residuals/0/residuals.dat
+
+USAGE
+    exit 1
+}
+
+plotFileHeader() {
+    cat<<EOF
+set term x11 1 font "helvetica,17" linewidth 1.5 persist noraise
+$LOGSCALE
+$YRANGE
+set title "Data Monitoring"
+set xlabel "$XLABEL"
+plot \\
+EOF
+}
+
+plotFileFooter() {
+    cat<<EOF
+
+pause $REFRESH
+reread
+EOF
+}
+
+howMany() ( set -f; set -- $1; echo $# )
+
+IDLE=60
+REFRESH=10
+LOGSCALE=""
+YRANGE=""
+GNUPLOT=$(which gnuplot)
+! [ "x$GNUPLOT" = "x" ] || usage "Gnuplot not installed"
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -i | -idle)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ ! -z "${2##*[!0-9]*}" ] && IDLE=$2 || usage "Argument of '$1' is not an integer: '$2'"
+        shift 2
+        ;;
+    -l | -logscale)
+        LOGSCALE="set logscale y"
+        shift 1
+        ;;
+    -r | -refresh)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ ! -z "${2##*[!0-9]*}" ] && REFRESH=$2 || usage "Argument of '$1' is not an integer: '$2'"
+        shift 2
+        ;;
+    -y | -yrange)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        YRANGE="set yrange $2"
+        shift 2
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+[ $# -eq 1 ] || usage "Incorrect arguments specified"
+[ -f $1 ]    || usage "File $1 does not exit"
+FILE=$1
+
+# Get KEYS from header
+KEYS=$(grep -E '^#' $FILE | tail -1)
+
+[ "x$KEYS" = "x" ] && KEYS="# Step"
+NKEYS=$(howMany "$KEYS")
+NCOLS=$(tail -1 $FILE | awk '{ print NF}')
+
+# With full column labels, NKEYS = NCOLS + 1, since it includes "#"
+
+# If NKEYS > NCOLS + 1, REMOVE EXCESS KEYS
+NCOLSPONE=$(expr $NCOLS + 1)
+[ "$NKEYS" -gt "$NCOLSPONE" ] && KEYS=$(echo $KEYS | cut -d" " -f1-$NCOLSPONE)
+NKEYS=$(howMany "$KEYS")
+
+i=0
+while [ "$NKEYS" -le "$NCOLS" ]
+do
+    i=$(expr $i + 1)
+    KEYS="$KEYS data$i"
+    NKEYS=$(howMany "$KEYS")
+done
+
+# Remove # and Time keys
+XLABEL=$(echo $KEYS | cut -d " " -f2)
+KEYS=$(echo $KEYS | cut -d " " -f3-)
+
+GPFILE=$(mktemp)
+plotFileHeader > $GPFILE
+i=1
+for field in $KEYS
+do
+    i=$(expr $i + 1)
+    echo "\"$FILE\" using 1:${i} with lines title \"$field\", \\" >> $GPFILE
+done
+plotFileFooter >> $GPFILE
+
+touch $FILE
+$GNUPLOT $GPFILE &
+PID=$!
+
+while true
+do
+    MODTIME=$(stat --format=%Y $FILE)
+    IDLEAGO=$(expr $(date +%s) - $IDLE)
+    test "$MODTIME" -gt "$IDLEAGO" || break
+    sleep $REFRESH
+done
+
+kill -9 $PID
+rm $GPFILE
+
+#------------------------------------------------------------------------------

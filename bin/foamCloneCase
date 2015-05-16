@@ -1,0 +1,90 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamCloneCase
+#
+# Description
+#     Create a new case directory that includes time, system and constant
+#     directories from a source case.
+#     The time directory is the first time directory by default
+#     - requires foamListTimes v2.3.x and newer
+#
+#------------------------------------------------------------------------------
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTION] <sourceCase> <targetCase>
+options:
+  -l | -latestTime    clone the latest time directory
+  -h | -help          print the usage
+
+Create a new <targetCase> case directory that includes time, system and constant
+directories of <sourceCase> directory.
+The time directory is the first time directory by default.
+
+USAGE
+    exit 1
+}
+
+TIME_OPTION="head -1"
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -l | -latestTime)
+        TIME_OPTION="tail -1"
+        shift 1
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+[ $# -eq 2 ] || usage "Incorrect arguments specified"
+if [ "$(foamListTimes -case $1 2>&1 >/dev/null | grep 'FOAM FATAL ERROR')" ]
+then
+    usage "$1 is not does not a valid case directory"
+fi
+! [ -e $2 ] || usage "$2 file/directory already exists, delete and re-run"
+
+echo "Making $2 case directory"
+mkdir $2
+
+TIME_DIR="$(foamListTimes -withZero -case $1 | $TIME_OPTION)"
+
+echo "Copying case directories from $1 to $2"
+cp -r $1/system $1/constant $1/${TIME_DIR} $2
+
+#------------------------------------------------------------------------------

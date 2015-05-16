@@ -1,0 +1,117 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamCreateVideo
+#
+# Description
+#     Creates an MPEG-4 compressed (.mp4) video file from PNG images
+#     - requires mencoder
+#
+#------------------------------------------------------------------------------
+
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS] ...
+options:
+  -d | -dir <dir>     directory containing png images (default local dir)
+  -f | -fps <fps>     frames per second (default = 10)
+  -h | -help          help
+  -i | -image <name>  name of image sequence (default = image)
+  -o | -out <name>    name of output video file (default = video)
+
+Creates an MPEG-4 compressed (.mp4) video file from a sequence of PNG images
+- A sequence named "image" will expect files image.0000.png, image.0001.png, etc
+- An output video named "video" will produce a file video.mp4
+- By default the video codec is high resolution (x264) but there is an option to
+  select a medium resolution codec (lavc)
+
+Requires mencoder
+
+USAGE
+    exit 1
+}
+
+
+# Default settings
+DIR='.'
+IMAGE='image'
+VIDEO='video'
+FPS=10
+VCODEC=x264
+
+
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -h | -help)
+      usage
+      ;;
+   -d | -directory)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      DIR=$2
+      shift 2
+      ;;
+   -f | -fps)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      FPS=$2
+      shift 2
+      ;;
+   -i | -image)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      IMAGE=$2
+      shift 2
+      ;;
+   -o | -out)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      VIDEO=$2
+      shift 2
+      ;;
+   -*)
+      usage "invalid option '$1'"
+      ;;
+   *)
+      break
+      ;;
+    esac
+done
+
+#
+# MAIN
+#
+
+[ -f "$(ls -1 $DIR/$IMAGE.*.png | head -1)" ] || usage "Cannot find first file in image sequence"
+
+if command -v mencoder >/dev/null 2>&1; then
+    mencoder \
+        "mf://$DIR/$IMAGE.*.png" \
+        -mf fps=$FPS \
+        -o $VIDEO.mp4 \
+        -ovc $VCODEC
+else
+    usage "Please install mencoder"
+fi
