@@ -50,6 +50,7 @@ case Linux:
 
     switch (`uname -m`)
     case i686:
+        setenv WM_ARCH_OPTION 32
         breaksw
 
     case x86_64:

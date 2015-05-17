@@ -70,7 +70,8 @@ Linux)
 
     # compiler specifics
     case `uname -m` in
-    i686)
+        i686)
+            export WM_ARCH_OPTION=32
         ;;
 
     x86_64)

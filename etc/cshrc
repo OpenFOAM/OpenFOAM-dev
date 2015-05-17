@@ -68,7 +68,7 @@ unsetenv WM_COMPILER_LIB_ARCH
 
 #- Memory addressing:
 #    On a 64bit OS this can be 32bit or 64bit
-#    On a 32bit OS addressing is 32bin and this option is not used
+#    On a 32bit OS addressing is 32bit and this option is not used
 #    WM_ARCH_OPTION = 32 | 64
 setenv WM_ARCH_OPTION 64
 
