@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,22 +21,29 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Typedef
+    Foam::IOyPlus
+
+Description
+    Instance of the generic IOOutputFilter for yPlus.
+
 \*---------------------------------------------------------------------------*/
 
-#include "DESModelRegionsFunctionObject.H"
+#ifndef IOyPlus_H
+#define IOyPlus_H
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+#include "yPlus.H"
+#include "IOOutputFilter.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineNamedTemplateTypeNameAndDebug(DESModelRegionsFunctionObject, 0);
-
-    addToRunTimeSelectionTable
-    (
-        functionObject,
-        DESModelRegionsFunctionObject,
-        dictionary
-    );
+    typedef IOOutputFilter<yPlus> IOyPlus;
 }
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

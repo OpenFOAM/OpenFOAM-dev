@@ -52,7 +52,6 @@ void calcYPlus
 (
     const TurbulenceModel& turbulenceModel,
     const fvMesh& mesh,
-    const Time& runTime,
     const volVectorField& U,
     volScalarField& yPlus
 )
@@ -128,7 +127,7 @@ void calcIncompressibleYPlus
         incompressible::turbulenceModel::New(U, phi, laminarTransport)
     );
 
-    calcYPlus(turbulenceModel, mesh, runTime, U, yPlus);
+    calcYPlus(turbulenceModel, mesh, U, yPlus);
 }
 
 
@@ -174,7 +173,7 @@ void calcCompressibleYPlus
         )
     );
 
-    calcYPlus(turbulenceModel, mesh, runTime, U, yPlus);
+    calcYPlus(turbulenceModel, mesh, U, yPlus);
 }
 
 

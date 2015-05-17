@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,28 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Typedef
-    Foam::yPlusLESFunctionObject
+    Foam::yPlusFunctionObject
 
 Description
-    FunctionObject wrapper around yPlusLES to allow it to be created
+    FunctionObject wrapper around yPlus to allow it to be created
     via the functions entry within controlDict.
 
 SourceFiles
-    yPlusLESFunctionObject.C
+    yPlusFunctionObject.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef yPlusLESFunctionObject_H
-#define yPlusLESFunctionObject_H
+#ifndef yPlusFunctionObject_H
+#define yPlusFunctionObject_H
 
-#include "yPlusLES.H"
+#include "yPlus.H"
 #include "OutputFilterFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef OutputFilterFunctionObject<yPlusLES> yPlusLESFunctionObject;
+    typedef OutputFilterFunctionObject<yPlus> yPlusFunctionObject;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

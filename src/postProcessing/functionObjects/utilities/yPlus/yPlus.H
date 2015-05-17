@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,23 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::yPlusLES
+    Foam::yPlus
 
 Group
     grpUtilitiesFunctionObjects
 
 Description
-    Evaluates and outputs turbulence y+ for LES models.  Values written to
-    time directories as field 'yPlusLES'
+    Evaluates and outputs turbulence y+ for  models.  Values written to
+    time directories as field 'yPlus'
 
 SourceFiles
-    yPlusLES.C
-    IOyPlusLES.H
+    yPlus.C
+    IOyPlus.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef yPlusLES_H
-#define yPlusLES_H
+#ifndef yPlus_H
+#define yPlus_H
 
 #include "functionObjectFile.H"
 #include "volFieldsFwd.H"
@@ -58,16 +58,16 @@ class mapPolyMesh;
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                          Class yPlusLES Declaration
+                          Class yPlus Declaration
 \*---------------------------------------------------------------------------*/
 
-class yPlusLES
+class yPlus
 :
     public functionObjectFile
 {
     // Private data
 
-        //- Name of this set of yPlusLES objects
+        //- Name of this set of yPlus objects
         word name_;
 
         const objectRegistry& obr_;
@@ -81,49 +81,39 @@ class yPlusLES
         //- Name of mass/volume flux field (optional, default = phi)
         word phiName_;
 
-        //- Name of velocity field
-        word UName_;
-
 
     // Private Member Functions
 
         //- File header information
         virtual void writeFileHeader(const label i);
 
-        //- Calculate incompressible form of y+
-        void calcIncompressibleYPlus
+        //- Calculate y+
+        template<class TurbulenceModel>
+        void calcYPlus
         (
+            const TurbulenceModel& turbulenceModel,
             const fvMesh& mesh,
-            const volVectorField& U,
-            volScalarField& yPlus
-        );
-
-        //- Calculate compressible form of y+
-        void calcCompressibleYPlus
-        (
-            const fvMesh& mesh,
-            const volVectorField& U,
             volScalarField& yPlus
         );
 
         //- Disallow default bitwise copy construct
-        yPlusLES(const yPlusLES&);
+        yPlus(const yPlus&);
 
         //- Disallow default bitwise assignment
-        void operator=(const yPlusLES&);
+        void operator=(const yPlus&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("yPlusLES");
+    TypeName("yPlus");
 
 
     // Constructors
 
         //- Construct for given objectRegistry and dictionary.
         //  Allow the possibility to load fields from files
-        yPlusLES
+        yPlus
         (
             const word& name,
             const objectRegistry&,
@@ -133,18 +123,18 @@ public:
 
 
     //- Destructor
-    virtual ~yPlusLES();
+    virtual ~yPlus();
 
 
     // Member Functions
 
-        //- Return name of the set of yPlusLES
+        //- Return name of the set of yPlus
         virtual const word& name() const
         {
             return name_;
         }
 
-        //- Read the yPlusLES data
+        //- Read the yPlus data
         virtual void read(const dictionary&);
 
         //- Execute, currently does nothing
@@ -156,7 +146,7 @@ public:
         //- Called when time was set at the end of the Time::operator++
         virtual void timeSet();
 
-        //- Calculate the yPlusLES and write
+        //- Calculate the yPlus and write
         virtual void write();
 
         //- Update for changes of mesh
@@ -172,6 +162,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "yPlusTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

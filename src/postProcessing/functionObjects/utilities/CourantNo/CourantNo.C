@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,51 +24,32 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "CourantNo.H"
-#include "volFields.H"
 #include "surfaceFields.H"
-#include "dictionary.H"
-#include "zeroGradientFvPatchFields.H"
 #include "fvcSurfaceIntegrate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(CourantNo, 0);
+    defineTypeNameAndDebug(CourantNo, 0);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::CourantNo::rho
+Foam::tmp<Foam::volScalarField::DimensionedInternalField>
+Foam::CourantNo::byRho
 (
-    const surfaceScalarField& phi
+    const tmp<volScalarField::DimensionedInternalField>& Co
 ) const
 {
-    if (phi.dimensions() == dimMass/dimTime)
+    if (Co().dimensions() == dimDensity)
     {
-        return (obr_.lookupObject<volScalarField>(rhoName_));
+        return Co/obr_.lookupObject<volScalarField>(rhoName_);
     }
     else
     {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-        return tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "rho",
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                mesh,
-                dimensionedScalar("rho", dimless, 1.0)
-            )
-        );
+        return Co;
     }
 }
 
@@ -162,23 +143,19 @@ void Foam::CourantNo::execute()
         const surfaceScalarField& phi =
             mesh.lookupObject<surfaceScalarField>(phiName_);
 
-        volScalarField& CourantNo =
+        volScalarField& Co =
             const_cast<volScalarField&>
             (
                 mesh.lookupObject<volScalarField>(type())
             );
 
-        scalarField& iField = CourantNo.internalField();
-
-        const scalarField sumPhi
+        Co.dimensionedInternalField() = byRho
         (
-            fvc::surfaceSum(mag(phi))().internalField()
-           /rho(phi)().internalField()
+            (0.5*mesh.time().deltaT())
+           *fvc::surfaceSum(mag(phi))().dimensionedInternalField()
+           /mesh.V()
         );
-
-        iField = 0.5*sumPhi/mesh.V().field()*mesh.time().deltaTValue();
-
-        CourantNo.correctBoundaryConditions();
+        Co.correctBoundaryConditions();
     }
 }
 
@@ -193,9 +170,7 @@ void Foam::CourantNo::end()
 
 
 void Foam::CourantNo::timeSet()
-{
-    // Do nothing
-}
+{}
 
 
 void Foam::CourantNo::write()

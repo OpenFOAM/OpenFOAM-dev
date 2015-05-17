@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,10 +41,7 @@ SourceFiles
 #ifndef CourantNo_H
 #define CourantNo_H
 
-#include "volFieldsFwd.H"
-#include "surfaceFieldsFwd.H"
-#include "OFstream.H"
-#include "Switch.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -83,9 +80,11 @@ class CourantNo
 
     // Private Member Functions
 
-        //- Return 1 if the flux field is volumetric, otherwise return rho
-        //  from the database
-        tmp<volScalarField> rho(const surfaceScalarField& p) const;
+        //- Divide Co by rho if required
+        tmp<volScalarField::DimensionedInternalField> byRho
+        (
+            const tmp<volScalarField::DimensionedInternalField>& Co
+        ) const;
 
         //- Disallow default bitwise copy construct
         CourantNo(const CourantNo&);

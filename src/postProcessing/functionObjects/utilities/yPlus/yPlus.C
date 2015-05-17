@@ -23,24 +23,24 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "yPlusRAS.H"
+#include "yPlus.H"
 #include "volFields.H"
-#include "turbulenceModel.H"
-#include "nutWallFunctionFvPatchScalarField.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(yPlusRAS, 0);
+    defineTypeNameAndDebug(yPlus, 0);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::yPlusRAS::writeFileHeader(const label i)
+void Foam::yPlus::writeFileHeader(const label i)
 {
-    writeHeader(file(), "y+ (RAS)");
+    writeHeader(file(), "y+ ()");
 
     writeCommented(file(), "Time");
     writeTabbed(file(), "patch");
@@ -51,68 +51,9 @@ void Foam::yPlusRAS::writeFileHeader(const label i)
 }
 
 
-void Foam::yPlusRAS::calcYPlus
-(
-    const fvMesh& mesh,
-    volScalarField& yPlus
-)
-{
-    const turbulenceModel& model = mesh.lookupObject<turbulenceModel>
-    (
-        turbulenceModel::propertiesName
-    );
-
-    const volScalarField nut(model.nut());
-    const volScalarField::GeometricBoundaryField& nutPatches =
-        nut.boundaryField();
-
-    bool foundPatch = false;
-    forAll(nutPatches, patchi)
-    {
-        if (isA<nutWallFunctionFvPatchScalarField>(nutPatches[patchi]))
-        {
-            foundPatch = true;
-
-            const nutWallFunctionFvPatchScalarField& nutPw =
-                dynamic_cast
-                <
-                    const nutWallFunctionFvPatchScalarField&
-                >(nutPatches[patchi]);
-
-            yPlus.boundaryField()[patchi] = nutPw.yPlus();
-            const scalarField& Yp = yPlus.boundaryField()[patchi];
-
-            scalar minYp = gMin(Yp);
-            scalar maxYp = gMax(Yp);
-            scalar avgYp = gAverage(Yp);
-
-            if (Pstream::master())
-            {
-                Info(log_)<< "    patch " << nutPw.patch().name()
-                    << " y+ : min = " << minYp << ", max = " << maxYp
-                    << ", average = " << avgYp << nl;
-
-                file() << obr_.time().value()
-                    << token::TAB << nutPw.patch().name()
-                    << token::TAB << minYp
-                    << token::TAB << maxYp
-                    << token::TAB << avgYp
-                    << endl;
-            }
-        }
-    }
-
-    if (log_ && !foundPatch)
-    {
-        Info<< "    no " << nutWallFunctionFvPatchScalarField::typeName
-            << " patches" << endl;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::yPlusRAS::yPlusRAS
+Foam::yPlus::yPlus
 (
     const word& name,
     const objectRegistry& obr,
@@ -133,7 +74,7 @@ Foam::yPlusRAS::yPlusRAS
         active_ = false;
         WarningIn
         (
-            "yPlusRAS::yPlusRAS"
+            "yPlus::yPlus"
             "("
                 "const word&, "
                 "const objectRegistry&, "
@@ -148,7 +89,7 @@ Foam::yPlusRAS::yPlusRAS
     {
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        volScalarField* yPlusRASPtr
+        volScalarField* yPlusPtr
         (
             new volScalarField
             (
@@ -165,20 +106,20 @@ Foam::yPlusRAS::yPlusRAS
             )
         );
 
-        mesh.objectRegistry::store(yPlusRASPtr);
+        mesh.objectRegistry::store(yPlusPtr);
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::yPlusRAS::~yPlusRAS()
+Foam::yPlus::~yPlus()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::yPlusRAS::read(const dictionary& dict)
+void Foam::yPlus::read(const dictionary& dict)
 {
     if (active_)
     {
@@ -188,15 +129,18 @@ void Foam::yPlusRAS::read(const dictionary& dict)
 }
 
 
-void Foam::yPlusRAS::execute()
+void Foam::yPlus::execute()
 {
+    typedef compressible::turbulenceModel cmpModel;
+    typedef incompressible::turbulenceModel icoModel;
+
     if (active_)
     {
         functionObjectFile::write();
 
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        volScalarField& yPlusRAS =
+        volScalarField& yPlus =
             const_cast<volScalarField&>
             (
                 mesh.lookupObject<volScalarField>(type())
@@ -204,12 +148,32 @@ void Foam::yPlusRAS::execute()
 
         Info(log_)<< type() << " " << name_ << " output:" << nl;
 
-        calcYPlus(mesh, yPlusRAS);
+        tmp<volSymmTensorField> Reff;
+        if (mesh.foundObject<cmpModel>(turbulenceModel::propertiesName))
+        {
+            const cmpModel& model =
+                mesh.lookupObject<cmpModel>(turbulenceModel::propertiesName);
+
+            calcYPlus(model, mesh, yPlus);
+        }
+        else if (mesh.foundObject<icoModel>(turbulenceModel::propertiesName))
+        {
+            const icoModel& model =
+                mesh.lookupObject<icoModel>(turbulenceModel::propertiesName);
+
+            calcYPlus(model, mesh, yPlus);
+        }
+        else
+        {
+            FatalErrorIn("void Foam::yPlus::write()")
+                << "Unable to find turbulence model in the "
+                << "database" << exit(FatalError);
+        }
     }
 }
 
 
-void Foam::yPlusRAS::end()
+void Foam::yPlus::end()
 {
     if (active_)
     {
@@ -218,24 +182,24 @@ void Foam::yPlusRAS::end()
 }
 
 
-void Foam::yPlusRAS::timeSet()
+void Foam::yPlus::timeSet()
 {
     // Do nothing
 }
 
 
-void Foam::yPlusRAS::write()
+void Foam::yPlus::write()
 {
     if (active_)
     {
         functionObjectFile::write();
 
-        const volScalarField& yPlusRAS =
+        const volScalarField& yPlus =
             obr_.lookupObject<volScalarField>(type());
 
-        Info(log_)<< "    writing field " << yPlusRAS.name() << nl << endl;
+        Info(log_)<< "    writing field " << yPlus.name() << nl << endl;
 
-        yPlusRAS.write();
+        yPlus.write();
     }
 }
 

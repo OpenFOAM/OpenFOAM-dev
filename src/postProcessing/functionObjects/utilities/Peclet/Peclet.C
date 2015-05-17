@@ -27,8 +27,8 @@ License
 #include "volFields.H"
 #include "dictionary.H"
 #include "surfaceFields.H"
-#include "incompressible/turbulenceModel/turbulenceModel.H"
-#include "compressible/turbulenceModel/turbulenceModel.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 #include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

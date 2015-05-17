@@ -34,14 +34,14 @@ License
 #include "fvcDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
-#include "incompressible/turbulenceModel/turbulenceModel.H"
-#include "compressible/turbulenceModel/turbulenceModel.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(scalarTransport, 0);
+    defineTypeNameAndDebug(scalarTransport, 0);
 }
 
 

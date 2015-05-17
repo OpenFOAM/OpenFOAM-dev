@@ -25,8 +25,8 @@ License
 
 #include "turbulenceFields.H"
 #include "dictionary.H"
-#include "compressible/turbulenceModel/turbulenceModel.H"
-#include "incompressible/turbulenceModel/turbulenceModel.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
