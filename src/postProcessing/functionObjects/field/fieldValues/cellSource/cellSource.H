@@ -192,6 +192,9 @@ protected:
         //- Weight field name - only used for opWeightedAverage mode
         word weightFieldName_;
 
+        //- Volume of the cellSource
+        scalar volume_;
+
         //- Optionally write the volume of the cellSource
         bool writeVolume_;
 

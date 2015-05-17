@@ -447,10 +447,12 @@ void Foam::fieldValues::faceSource::initialise(const dictionary& dict)
         surfacePtr_().update();
     }
 
+    totalArea_ = totalArea();
+
     Info<< type() << " " << name_ << ":" << nl
         << "    total faces  = " << nFaces_
         << nl
-        << "    total area   = " << totalArea()
+        << "    total area   = " << totalArea_
         << nl;
 
     if (dict.readIfPresent("weightField", weightFieldName_))
@@ -534,7 +536,7 @@ void Foam::fieldValues::faceSource::writeFileHeader(const label i)
     writeCommented(file(), "Faces  : ");
     file() << nFaces_ << endl;
     writeCommented(file(), "Area   : ");
-    file() << totalArea() << endl;
+    file() << totalArea_ << endl;
 
     writeCommented(file(), "Time");
     if (writeArea_)
@@ -694,10 +696,12 @@ void Foam::fieldValues::faceSource::write()
 
         if (writeArea_)
         {
+            totalArea_ = totalArea();
             if (Pstream::master())
             {
-                file() << tab << totalArea();
+                file() << tab << totalArea_;
             }
+            Info(log_)<< "    total area = " << totalArea_ << endl;
         }
 
         // construct weight field. Note: zero size means weight = 1

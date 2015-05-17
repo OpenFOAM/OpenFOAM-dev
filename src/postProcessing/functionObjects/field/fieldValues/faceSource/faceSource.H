@@ -258,6 +258,9 @@ protected:
         //- Scale factor - optional
         scalar scaleFactor_;
 
+        //- Total area of the faceSource
+        scalar totalArea_;
+
         //- Optionally write the area of the faceSource
         bool writeArea_;
 

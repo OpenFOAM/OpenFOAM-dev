@@ -142,10 +142,12 @@ void Foam::fieldValues::cellSource::initialise(const dictionary& dict)
         return;
     }
 
+    volume_ = volume();
+
     Info<< type() << " " << name_ << ":"
         << sourceTypeNames_[source_] << "(" << sourceName_ << "):" << nl
         << "    total cells  = " << nCells_ << nl
-        << "    total volume = " << gSum(filterField(mesh().V()))
+        << "    total volume = " << volume_
         << nl << endl;
 
     if (dict.readIfPresent("weightField", weightFieldName_))
@@ -164,7 +166,7 @@ void Foam::fieldValues::cellSource::writeFileHeader(const label i)
     writeCommented(file(), "Cells  : ");
     file() << nCells_ << endl;
     writeCommented(file(), "Volume : ");
-    file() << volume() << endl;
+    file() << volume_ << endl;
 
     writeCommented(file(), "Time");
     if (writeVolume_)
@@ -238,10 +240,12 @@ void Foam::fieldValues::cellSource::write()
 
         if (writeVolume_)
         {
+            volume_ = volume();
             if (Pstream::master())
             {
-                file() << tab << volume();
+                file() << tab << volume_;
             }
+            Info(log_)<< "    total volume = " << volume_ << endl;
         }
 
         forAll(fields_, i)
