@@ -39,8 +39,17 @@ Description
 #include "thermoPhysicsTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// hConstSolidThermoPhysics
 
 makeSolidChemistryModel
+(
+    solidChemistryModel,
+    pyrolysisChemistryModel,
+    basicSolidChemistryModel,
+    hConstSolidThermoPhysics
+);
+
+makeSolidGasChemistryModel
 (
     solidChemistryModel,
     pyrolysisChemistryModel,
@@ -49,7 +58,19 @@ makeSolidChemistryModel
     gasHThermoPhysics
 );
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// hPowerSolidThermoPhysics
+
 makeSolidChemistryModel
+(
+    solidChemistryModel,
+    pyrolysisChemistryModel,
+    basicSolidChemistryModel,
+    hPowerSolidThermoPhysics
+);
+
+makeSolidGasChemistryModel
 (
     solidChemistryModel,
     pyrolysisChemistryModel,
@@ -58,7 +79,19 @@ makeSolidChemistryModel
     gasHThermoPhysics
 );
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// hExpKappaConstSolidThermoPhysics
+
 makeSolidChemistryModel
+(
+    solidChemistryModel,
+    pyrolysisChemistryModel,
+    basicSolidChemistryModel,
+    hExpKappaConstSolidThermoPhysics
+);
+
+makeSolidGasChemistryModel
 (
     solidChemistryModel,
     pyrolysisChemistryModel,

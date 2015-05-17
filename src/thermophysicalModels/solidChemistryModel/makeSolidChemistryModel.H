@@ -34,21 +34,24 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeSolidChemistryModel(sChemistry, SS, Comp, SThermo, GThermo)       \
-                                                                              \
-    typedef Foam::SS<Foam::Comp, Foam::SThermo, Foam::GThermo>                \
-        SS##Comp##SThermo##GThermo;                                           \
+#define makeSolidChemistryModel(sChemistry, SS, Comp, SThermo)                \
                                                                               \
     typedef Foam::sChemistry<Foam::Comp, Foam::SThermo>                       \
-        sChemistryl##Comp##SThermo;                                           \
+        sChemistry##Comp##SThermo;                                            \
                                                                               \
     defineTemplateTypeNameAndDebugWithName                                    \
     (                                                                         \
-        sChemistryl##Comp##SThermo,                                           \
-        (Foam::word(sChemistryl##Comp##SThermo::typeName_()) + "<"#Comp","    \
+        sChemistry##Comp##SThermo,                                            \
+        (Foam::word(sChemistry##Comp##SThermo::typeName_()) + "<"#Comp","     \
         + SThermo::typeName() + ">").c_str(),                                 \
         0                                                                     \
-    );                                                                        \
+    );
+
+
+#define makeSolidGasChemistryModel(sChemistry, SS, Comp, SThermo, GThermo)    \
+                                                                              \
+    typedef Foam::SS<Foam::Comp, Foam::SThermo, Foam::GThermo>                \
+        SS##Comp##SThermo##GThermo;                                           \
                                                                               \
     defineTemplateTypeNameAndDebugWithName                                    \
     (                                                                         \
