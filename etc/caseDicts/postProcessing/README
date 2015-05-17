@@ -1,0 +1,52 @@
+Overview
+========
+- This directory contains files to help post-processing of OpenFOAM cases
+- It primariy "packages" functionObject functionality in a convenient form for
+  users to plug into their OpenFOAM cases
+- While some tools are quite generic, e.g. minMax, others are more application-
+  oriented, e.g. flowRate.
+
+How the tools work
+==================
+- The configuration of functionObjects includes both required input data and
+  control parameters for the functionObject
+- This creates a lot of input that can be confusing to users
+- The tools here are packaged so that the user input is separated from control
+  parameters
+- Control parameters are pre-configured in .cfg files - users can ignore these
+  files
+- For each tool, required user input is all in one file, for the users to copy
+  into their case and set accordingly
+
+Example of how to use the tools
+===============================
+Task: monitor flow rate at an outlet patch named "outlet" for a case
+Solution:
+- locate the flowRatePatch tool in the flowRate directory
+- copy the flowRatePatch file into the case system directory (not
+  flowRatePatch.cfg)
+- edit system/flowRatePatch to set the patch name
+  replace "patch <patchName>;"
+  with    "patch outlet;"
+- activate the function object by including the flowRatePatch file in functions
+  sub-dictionary in the case controlDict file, e.g.
+  functions
+  {
+      #include "flowRatePatch"
+      ... other function objects here ...
+  }
+
+Current tools
+=============
+- fields          calculate specific fields, e.g. Q
+- flowRate        tools to calculate flow rate
+- forces          forces and forceCoeffs for incompressible/compressible flows
+- graphs          simple sampling for graph plotting, e.g. singleGraph
+- minMax          range of minimum and maximum field monitoring, e.g. cellMax
+- numerical       outputs information relating to numerics, e.g. residuals
+- pressure        calculates different forms of pressure, pressure drop, etc
+- probes          options for probing data
+- scalarTransport for plugin scalar transport calculations
+- visualization   post-processing VTK files for cutting planes, streamlines,...
+
+- faceSource      configuration for some of the tools above
