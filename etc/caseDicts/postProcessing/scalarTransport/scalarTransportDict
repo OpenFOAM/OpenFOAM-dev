@@ -1,0 +1,33 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |  
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      scalarTransportDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// controlDict settings
+startTime       0;
+
+stopAt          endTime;
+endTime         1;
+
+deltaT          1e-4;
+
+writeControl    runTime;
+writeInterval   1e-2;
+
+// transportProperties settings
+DT      DT [ 0 2 -1 0 0 0 0 ] 1e-9;
+
+#includeEtc "caseDicts/postProcessing/scalarTransport/scalarTransportDict.cfg"
+
+// ************************************************************************* //

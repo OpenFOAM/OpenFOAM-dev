@@ -1,0 +1,64 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |  
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      surfaces.cfg;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaces
+{
+    #includeEtc "caseDicts/postProcessing/visualization/surfaces.cfg"
+
+    fields       ( p U );
+
+    surfaces
+    (
+        xNormal
+        {
+            $cuttingPlane;
+        }
+
+        yNormal
+        {
+            $cuttingPlane;
+            pointAndNormalDict
+            {
+                normalVector $y;      // Overrides default normalVector (1 0 0)
+            }                         // $y: macro for (0 1 0)
+        }
+
+        zNormal
+        {
+            $cuttingPlane;
+            pointAndNormalDict
+            {
+                basePoint    (0 0 2); // Overrides default basePoint (0 0 0)
+                normalVector $z;      // $y: macro for (0 0 1)
+            }
+        }
+
+        p100
+        {
+            $isosurface;
+            isoField    p;
+            isoValue    100;
+        }
+
+        CAD
+        {
+            $patchSurface;
+            patches     ( CAD );
+        }
+    );
+}
+
+// ************************************************************************* //
