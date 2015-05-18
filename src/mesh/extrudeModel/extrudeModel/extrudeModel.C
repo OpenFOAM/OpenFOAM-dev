@@ -42,7 +42,7 @@ Foam::extrudeModel::extrudeModel
 )
 :
     nLayers_(dict.lookupOrDefault<label>("nLayers", 1)),
-    expansionRatio_(readScalar(dict.lookup("expansionRatio"))),
+    expansionRatio_(dict.lookupOrDefault<scalar>("expansionRatio", 1)),
     dict_(dict),
     coeffDict_(dict.subDict(modelType + "Coeffs"))
 {}
