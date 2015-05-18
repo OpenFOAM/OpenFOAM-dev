@@ -841,31 +841,6 @@ int main(int argc, char *argv[])
         << endl;
 
 
-    // Change the front and back patch types as required
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    word frontBackType(word::null);
-
-    if (isType<extrudeModels::wedge>(model()))
-    {
-        changeFrontBackPatches<wedgePolyPatch>
-        (
-            mesh,
-            frontPatchName,
-            backPatchName
-        );
-    }
-    else if (isType<extrudeModels::plane>(model()))
-    {
-        changeFrontBackPatches<emptyPolyPatch>
-        (
-            mesh,
-            frontPatchName,
-            backPatchName
-        );
-    }
-
-
     // Collapse edges
     // ~~~~~~~~~~~~~~
 
@@ -936,6 +911,31 @@ int main(int argc, char *argv[])
                 mesh.movePoints(map().preMotionPoints());
             }
         }
+    }
+
+
+    // Change the front and back patch types as required
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    word frontBackType(word::null);
+
+    if (isType<extrudeModels::wedge>(model()))
+    {
+        changeFrontBackPatches<wedgePolyPatch>
+        (
+            mesh,
+            frontPatchName,
+            backPatchName
+        );
+    }
+    else if (isType<extrudeModels::plane>(model()))
+    {
+        changeFrontBackPatches<emptyPolyPatch>
+        (
+            mesh,
+            frontPatchName,
+            backPatchName
+        );
     }
 
 
