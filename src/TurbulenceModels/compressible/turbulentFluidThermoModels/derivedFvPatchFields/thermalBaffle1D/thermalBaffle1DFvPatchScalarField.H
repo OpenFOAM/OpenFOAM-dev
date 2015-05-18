@@ -50,7 +50,7 @@ Description
         Qs              uniform 100;    // heat flux [W/m2]
 
         Qr              none;
-        relaxation      0;
+        relaxation      1;
 
         // Solid thermo
         specie
@@ -81,7 +81,7 @@ Description
         samplePatch     myPatch_master_master;
 
         Qr              none;
-        relaxation      0;
+        relaxation      1;
     }
     \endverbatim
 
@@ -136,7 +136,7 @@ class thermalBaffle1DFvPatchScalarField
         //- Solid thermo
         mutable autoPtr<solidType> solidPtr_;
 
-        //- Chache Qr for relaxation
+        //- Cache Qr for relaxation
         scalarField QrPrevious_;
 
         //- Relaxation for Qr

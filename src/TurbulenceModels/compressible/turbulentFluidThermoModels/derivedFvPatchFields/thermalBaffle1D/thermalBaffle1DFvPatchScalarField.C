@@ -55,7 +55,7 @@ thermalBaffle1DFvPatchScalarField
     solidDict_(),
     solidPtr_(NULL),
     QrPrevious_(p.size()),
-    QrRelaxation_(0),
+    QrRelaxation_(1),
     QrName_("undefined-Qr")
 {}
 
@@ -102,7 +102,7 @@ thermalBaffle1DFvPatchScalarField
     solidDict_(dict),
     solidPtr_(),
     QrPrevious_(p.size(), 0.0),
-    QrRelaxation_(dict.lookupOrDefault<scalar>("relaxation", 0)),
+    QrRelaxation_(dict.lookupOrDefault<scalar>("relaxation", 1)),
     QrName_(dict.lookupOrDefault<word>("Qr", "none"))
 {
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
@@ -439,7 +439,7 @@ void thermalBaffle1DFvPatchScalarField<solidType>::write(Ostream& os) const
 
     QrPrevious_.writeEntry("QrPrevious", os);
     os.writeKeyword("Qr")<< QrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("QrRelaxation")<< QrRelaxation_
+    os.writeKeyword("relaxation")<< QrRelaxation_
         << token::END_STATEMENT << nl;
 }
 
