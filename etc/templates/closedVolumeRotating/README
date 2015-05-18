@@ -1,0 +1,7 @@
+Overview
+========
++ Template case for rotating geometry flow for a closed geometry
++ Can be used for MRF or AMI simulations
++ Setup to run the simpleFoam solver
++ Set up is like inflowOutflowRotating but without inlet and outlet
++ See $FOAM_ETC/templates/closedVolumeRotating/README for details of use

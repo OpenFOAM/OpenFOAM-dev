@@ -1,0 +1,147 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+snap            on;
+addLayers       off;
+
+geometry
+{
+    fixed.obj
+    {
+        type triSurfaceMesh;
+        name fixed;
+        regions
+        {
+            <inletPatch>  { name inlet; }
+            <outletPatch> { name outlet; }
+        }
+    }
+    rotating.obj
+    {
+        type triSurfaceMesh;
+        name rotating;
+    }
+    rotatingZone.obj
+    {
+        type triSurfaceMesh;
+        name rotatingZone;
+    }
+};
+
+castellatedMeshControls
+{
+    features
+    (
+        { file "fixed.eMesh";        level 1; }
+        { file "rotating.eMesh";     level 1; }
+        { file "rotatingZone.eMesh"; level 1; }
+    );
+
+    refinementSurfaces
+    {
+        fixed
+        {
+            level       (2 2);
+            patchInfo   { type wall; }
+            inGroups    (fixed);
+
+            regions
+            {
+                <inletPatch>
+                {
+                    level (2 2);
+                    patchInfo { type patch; }
+                }
+
+                <outletPatch>
+                {
+                    level (2 2);
+                    patchInfo { type patch; }
+                }
+            }
+        }
+        rotating
+        {
+            level       (2 2);
+            patchInfo   { type wall; }
+        }
+        rotatingZone
+        {
+            level       (2 2);
+            faceZone    rotatingZone;
+            cellZone    rotatingZone;
+            cellZoneInside  inside;
+        }
+
+    }
+
+    refinementRegions
+    {
+        /*
+        rotatingZone
+        {
+            mode inside;
+            levels ((1E15 2));
+        }
+        */
+    }
+
+    locationInMesh (1e-5 1e-5 1e-5); // Offset from (0 0 0) to avoid
+                                     // coinciding with face or edge
+}
+
+snapControls
+{
+    explicitFeatureSnap    true;
+}
+
+addLayersControls
+{
+    layers
+    {
+        "(rotating|fixed)"
+        {
+            nSurfaceLayers 2;
+        }
+    }
+
+    relativeSizes       true; // false, usually with firstLayerThickness
+    expansionRatio      1.2;
+    finalLayerThickness 0.5;
+    minThickness        1e-3;
+//  firstLayerThickness 0.01;
+
+//  maxThicknessToMedialRatio 0.6;
+}
+
+meshQualityControls
+{
+//    minTetQuality -1e+30;
+}
+
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields
+);
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //
