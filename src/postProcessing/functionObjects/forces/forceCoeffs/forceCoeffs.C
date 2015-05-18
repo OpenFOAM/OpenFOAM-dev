@@ -227,7 +227,7 @@ void Foam::forceCoeffs::write()
             << obr_.time().value() << tab << Cm << tab  << Cd
             << tab << Cl << tab << Clf << tab << Clr << endl;
 
-        Info(log_)<< type() << " " << name_ << " output:" << nl
+        if (log_) Info<< type() << " " << name_ << " output:" << nl
             << "    Cm    = " << Cm << nl
             << "    Cd    = " << Cd << nl
             << "    Cl    = " << Cl << nl
@@ -259,7 +259,7 @@ void Foam::forceCoeffs::write()
             file(1) << endl;
         }
 
-        Info(log_)<< endl;
+        if (log_) Info<< endl;
     }
 }
 

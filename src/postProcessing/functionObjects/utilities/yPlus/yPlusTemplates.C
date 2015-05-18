@@ -72,7 +72,7 @@ void Foam::yPlus::calcYPlus
 
             if (Pstream::master())
             {
-                Info(log_)
+                if (log_) Info
                     << "    patch " << patch.name()
                     << " y+ : min = " << minYplus << ", max = " << maxYplus
                     << ", average = " << avgYplus << nl;
@@ -102,7 +102,7 @@ void Foam::yPlus::calcYPlus
 
             if (Pstream::master())
             {
-                Info(log_)
+                if (log_) Info
                     << "    patch " << patch.name()
                     << " y+ : min = " << minYplus << ", max = " << maxYplus
                     << ", average = " << avgYplus << nl;

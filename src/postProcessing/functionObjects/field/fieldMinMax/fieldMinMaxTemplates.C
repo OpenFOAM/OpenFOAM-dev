@@ -67,34 +67,34 @@ void Foam::fieldMinMax::output
 
         file<< endl;
 
-        Info(log_)
+        if (log_) Info
             << "    min(" << outputName << ") = " << minValue
             << " at location " << minC;
 
         if (Pstream::parRun())
         {
-            Info(log_)<< " on processor " << minProcI;
+            if (log_) Info<< " on processor " << minProcI;
         }
 
-        Info(log_)
+        if (log_) Info
             << nl << "    max(" << outputName << ") = " << maxValue
             << " at location " << maxC;
 
         if (Pstream::parRun())
         {
-            Info(log_)<< " on processor " << maxProcI;
+            if (log_) Info<< " on processor " << maxProcI;
         }
     }
     else
     {
         file<< token::TAB << minValue << token::TAB << maxValue;
 
-        Info(log_)
+        if (log_) Info
             << "    min/max(" << outputName << ") = "
             << minValue << ' ' << maxValue;
     }
 
-    Info(log_)<< endl;
+    if (log_) Info<< endl;
 }
 
 

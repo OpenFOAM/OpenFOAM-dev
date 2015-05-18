@@ -58,7 +58,7 @@ void Foam::fieldValue::write()
     {
         functionObjectFile::write();
 
-        Info(log_)<< type() << " " << name_ << " output:" << nl;
+        if (log_) Info<< type() << " " << name_ << " output:" << nl;
     }
 }
 

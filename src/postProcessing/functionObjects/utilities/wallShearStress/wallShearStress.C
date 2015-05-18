@@ -83,7 +83,7 @@ void Foam::wallShearStress::calcShearStress
                 << endl;
         }
 
-        Info(log_)<< "    min/max(" << pp.name() << ") = "
+        if (log_) Info<< "    min/max(" << pp.name() << ") = "
             << minSsp << ", " << maxSsp << endl;
     }
 }
@@ -238,7 +238,7 @@ void Foam::wallShearStress::execute()
                 mesh.lookupObject<volVectorField>(type())
             );
 
-        Info(log_)<< type() << " " << name_ << " output:" << nl;
+        if (log_) Info<< type() << " " << name_ << " output:" << nl;
 
 
         tmp<volSymmTensorField> Reff;
@@ -258,7 +258,7 @@ void Foam::wallShearStress::execute()
         }
         else
         {
-            FatalErrorIn("void Foam::wallShearStress::write()")
+            FatalErrorIn("void Foam::wallShearStress::execute()")
                 << "Unable to find turbulence model in the "
                 << "database" << exit(FatalError);
         }
@@ -292,7 +292,7 @@ void Foam::wallShearStress::write()
         const volVectorField& wallShearStress =
             obr_.lookupObject<volVectorField>(type());
 
-        Info(log_)<< type() << " " << name_ << " output:" << nl
+        if (log_) Info<< type() << " " << name_ << " output:" << nl
             << "    writing field " << wallShearStress.name() << nl
             << endl;
 

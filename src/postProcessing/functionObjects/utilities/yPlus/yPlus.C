@@ -146,7 +146,7 @@ void Foam::yPlus::execute()
                 mesh.lookupObject<volScalarField>(type())
             );
 
-        Info(log_)<< type() << " " << name_ << " output:" << nl;
+        if (log_) Info<< type() << " " << name_ << " output:" << nl;
 
         tmp<volSymmTensorField> Reff;
         if (mesh.foundObject<cmpModel>(turbulenceModel::propertiesName))
@@ -197,7 +197,7 @@ void Foam::yPlus::write()
         const volScalarField& yPlus =
             obr_.lookupObject<volScalarField>(type());
 
-        Info(log_)<< "    writing field " << yPlus.name() << nl << endl;
+        if (log_) Info<< "    writing field " << yPlus.name() << nl << endl;
 
         yPlus.write();
     }

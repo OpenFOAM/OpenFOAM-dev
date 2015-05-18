@@ -114,7 +114,7 @@ void Foam::fieldValues::fieldValueDelta::processFields(bool& found)
 
             Type result = applyOperation(r1, r2);
 
-            Info(log_)<< "    " << operationTypeNames_[operation_]
+            if (log_) Info<< "    " << operationTypeNames_[operation_]
                 << "(" << fieldName << ") = " << result
                 << endl;
 

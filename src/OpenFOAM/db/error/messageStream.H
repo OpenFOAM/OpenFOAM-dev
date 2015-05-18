@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,10 +188,6 @@ public:
             const int sourceFileLineNumber,
             const dictionary&
         );
-
-        //- Convert to OSstream
-        //  Use Info for default communicator, control output using bool flag
-        OSstream& operator()(const bool output);
 
         //- Convert to OSstream for << operations
         operator OSstream&();

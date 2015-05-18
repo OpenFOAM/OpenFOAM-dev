@@ -174,12 +174,8 @@ void Foam::fieldMinMax::write()
     {
         functionObjectFile::write();
 
-        if (!location_)
-        {
-            file()<< obr_.time().value();
-        }
-
-        Info(log_)<< type() << " " << name_ <<  " output:" << nl;
+        if (!location_) file()<< obr_.time().value();
+        if (log_) Info<< type() << " " << name_ <<  " output:" << nl;
 
         forAll(fieldSet_, fieldI)
         {
@@ -190,12 +186,8 @@ void Foam::fieldMinMax::write()
             calcMinMaxFields<tensor>(fieldSet_[fieldI], mode_);
         }
 
-        if (!location_)
-        {
-            file()<< endl;
-        }
-
-        Info(log_)<< endl;
+        if (!location_) file()<< endl;
+        if (log_) Info<< endl;
     }
 }
 

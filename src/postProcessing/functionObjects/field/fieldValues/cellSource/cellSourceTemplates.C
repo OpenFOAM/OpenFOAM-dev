@@ -205,7 +205,7 @@ bool Foam::fieldValues::cellSource::writeValues(const word& fieldName)
 
             file()<< tab << result;
 
-            Info(log_)<< "    " << operationTypeNames_[operation_]
+            if (log_) Info<< "    " << operationTypeNames_[operation_]
                 << "(" << sourceName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }

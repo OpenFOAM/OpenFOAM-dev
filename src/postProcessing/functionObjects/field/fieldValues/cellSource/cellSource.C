@@ -245,7 +245,7 @@ void Foam::fieldValues::cellSource::write()
             {
                 file() << tab << volume_;
             }
-            Info(log_)<< "    total volume = " << volume_ << endl;
+            if (log_) Info<< "    total volume = " << volume_ << endl;
         }
 
         forAll(fields_, i)
@@ -273,7 +273,7 @@ void Foam::fieldValues::cellSource::write()
             file()<< endl;
         }
 
-        Info(log_)<< endl;
+        if (log_) Info<< endl;
     }
 }
 

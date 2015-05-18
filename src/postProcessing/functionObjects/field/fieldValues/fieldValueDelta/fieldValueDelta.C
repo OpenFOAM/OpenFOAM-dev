@@ -158,7 +158,7 @@ void Foam::fieldValues::fieldValueDelta::write()
         file()<< obr_.time().value();
     }
 
-    Info(log_)<< type() << " " << name_ << " output:" << endl;
+    if (log_) Info<< type() << " " << name_ << " output:" << endl;
 
     bool found = false;
     processFields<scalar>(found);
