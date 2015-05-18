@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -30,7 +30,7 @@
 ##------------------------------------------------------------------------------
 
 set boost_version=boost-system
-set cgal_version=CGAL-4.5.1
+set cgal_version=CGAL-4.6
 
 setenv BOOST_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$boost_version
 setenv CGAL_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cgal_version
