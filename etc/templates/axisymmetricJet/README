@@ -1,0 +1,25 @@
+Overview
+========
++ Template case for axisymmetric jet flow
++ The main purpose of this template is to demonstrate a simple, reliable meshing
+  strategy for axisymmetric flow
+
+Meshing
+=======
++ The blockMeshDict file contains a backgroundMesh subditionary
++ In backgroundMesh set the geometry radius and length and jet radius
++ Set the number of cells in the length and radial directions
++ Run blockMesh to generate a 2D "slab" mesh
++ Run extrudeMesh to convert the mesh into a 2D axisymmetric mesh with wedge
+  front and back patches
+
+Initialisation
+==============
++ In the field files in the 0 directory, set inlet values
++ For example, in 0/U, set the inlet velocity Uinlet
++ Set the viscosity in constant/transportProperties
+
+Output
+======
++ Graph data of field values along the centreline are written to files in
+  postProcessing/graph

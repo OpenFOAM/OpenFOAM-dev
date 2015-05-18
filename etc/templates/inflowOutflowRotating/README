@@ -1,0 +1,32 @@
+Overview
+========
++ Template case for rotating geometry flow with single inlet and outlet
++ Can be used for MRF or AMI simulations
++ Setup to run the simpleFoam solver for MRF, pimpleDyMFoam for AMI
++ The case is designed to be meshed with snappyHexMesh
++ snappyHexMesh is setup to use 3 trisurface files
+  + fixed.obj: CAD of the stationary geometry
+  + rotating.obj: CAD of the rotating geometry
+  + rotatingZone.obj: CAD of surface bounding the rotating region
++ Copy the *.obj files to the constant/triSurface directory
++ The fixed.obj should contain an inlet and outlet region to create the relevant
+  patches in the mesh
+
+Meshing
+=======
++ Meshing is setup as in the inflowOutflow template
++ See $FOAM_ETC/templates/inflowOutflow/README for details
++ For AMI, the AMI interface can be set up by running createBaffles which uses
+  the createBafflesDict file
+
+Initialisation
+==============
++ In the field files in the 0 directory, set inlet values
++ For example, in 0/U, set the inlet velocity Uinlet
++ Set the viscosity in constant/transportProperties
++ Rotating properties are set in constant/rotatingZoneProperties
+  + For MRF, this file is included from system/fvOptions
+  + For AMI, this file is included from constant/dynamicMeshDict
++ Ensure settings are appropriate in controlDict, fvSchemes, fvSolution, for
+  relevant simulation; for AMI, in particular, ensure that deltaT, ddtSchemes
+  and relaxationFactors are set for transient simulation
