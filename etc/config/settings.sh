@@ -263,8 +263,8 @@ OpenFOAM | ThirdParty)
         mpfr_version=mpfr-3.1.2
         mpc_version=mpc-1.0.1
         ;;
-    Gcc50)
-        gcc_version=gcc-5.0.0
+    Gcc51)
+        gcc_version=gcc-5.1.0
         gmp_version=gmp-5.1.2
         mpfr_version=mpfr-3.1.2
         mpc_version=mpc-1.0.1
