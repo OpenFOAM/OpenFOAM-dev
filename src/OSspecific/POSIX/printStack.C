@@ -24,12 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "error.H"
-#include "IStringStream.H"
 #include "OStringStream.H"
 #include "OSspecific.H"
 #include "IFstream.H"
-#include "ReadHex.H"
 
+#include <inttypes.h>
 #include <cxxabi.h>
 #include <execinfo.h>
 #include <dlfcn.h>
@@ -43,70 +42,70 @@ namespace Foam
 
 string pOpen(const string &cmd, label line=0)
 {
-    const int MAX = 1000;
+    string res = "\n";
 
     FILE *cmdPipe = popen(cmd.c_str(), "r");
 
     if (cmdPipe)
     {
+        char *buf = NULL;
+
         // Read line number of lines
         for (label cnt = 0; cnt <= line; cnt++)
         {
-            char buffer[MAX];
-            char* s = fgets(buffer, MAX-1, cmdPipe);
+            size_t linecap = 0;
+            ssize_t linelen;
+            linelen = getline(&buf, &linecap, cmdPipe);
 
-            if (s == NULL)
+            if (linelen < 0)
             {
-                return "";
+                break;
             }
 
             if (cnt == line)
             {
-                string str(buffer);
-                return str.substr(0, str.size()-1);
+                res = string(buf);
+                break;
             }
         }
+
+        if (buf != NULL)
+        {
+            free(buf);
+        }
+
         pclose(cmdPipe);
     }
 
-    return "";
+    return res.substr(0, res.size() - 1);
 }
 
 
-// use popen to call addr2line (using bfd.h directly would have
-// meant relinking everything)
+inline word addressToWord(const uintptr_t addr)
+{
+    OStringStream nStream;
+    nStream << "0x" << hex << addr;
+    return nStream.str();
+}
+
 
 void printSourceFileAndLine
 (
     Ostream& os,
-    const HashTable<label, fileName>& addressMap,
     const fileName& filename,
-    const word& address
+    Dl_info *info,
+    void *addr
 )
 {
-    word myAddress = address;
+    uintptr_t address = uintptr_t(addr);
+    word myAddress = addressToWord(address);
 
     if (filename.ext() == "so")
     {
-        // Convert offset into .so into offset into executable.
-
-        void *addr;
-        sscanf(myAddress.c_str(), "%p", &addr);
-
-        Dl_info info;
-
-        dladdr(addr, &info);
-
-        uintptr_t offset = uintptr_t(info.dli_fbase);
-
-        IStringStream addressStr(address.substr(2));
-        uintptr_t addressValue = ReadHex<uintptr_t>(addressStr);
-        intptr_t relativeAddress = addressValue - offset;
-
-        // Reconstruct hex word from address
-        OStringStream nStream;
-        nStream << "0x" << hex << relativeAddress;
-        myAddress = nStream.str();
+        // Convert address into offset into dynamic library
+        uintptr_t offset = uintptr_t(info->dli_fbase);
+        intptr_t relativeAddress = address - offset;
+        myAddress = addressToWord(relativeAddress);
     }
 
     if (filename[0] == '/')
@@ -139,35 +138,58 @@ void printSourceFileAndLine
 }
 
 
-void getSymbolForRaw
-(
-    Ostream& os,
-    const string& raw,
-    const fileName& filename,
-    const word& address
-)
+fileName absolutePath(const char* fn)
 {
-    if (filename.size() && filename[0] == '/')
-    {
-        string fcnt = pOpen
-        (
-            "addr2line -f --demangle=auto --exe "
-          + filename
-          + " "
-          + address
-        );
+    fileName fname(fn);
 
-        if (fcnt != "")
+    if (fname[0] != '/' && fname[0] != '~')
+    {
+        string tmp = pOpen("which " + fname);
+
+        if (tmp[0] == '/' || tmp[0] == '~')
         {
-            os  << fcnt.c_str();
-            return;
+            fname = tmp;
         }
     }
-    os  << "Uninterpreted: " << raw.c_str();
+
+    return fname;
 }
 
 
-void error::safePrintStack(std::ostream& os)
+word demangleSymbol(const char* sn)
+{
+    word res;
+    int st;
+    char* cxx_sname = abi::__cxa_demangle
+    (
+        sn,
+        NULL,
+        0,
+        &st
+    );
+
+    if (st == 0 && cxx_sname)
+    {
+        res = word(cxx_sname);
+        free(cxx_sname);
+    }
+    else
+    {
+        res = word(sn);
+    }
+
+    return res;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+void Foam::error::safePrintStack(std::ostream& os)
 {
     // Get raw stack symbols
     void *array[100];
@@ -187,143 +209,46 @@ void error::safePrintStack(std::ostream& os)
 }
 
 
-void error::printStack(Ostream& os)
+void Foam::error::printStack(Ostream& os)
 {
-    // Reads the starting addresses for the dynamically linked libraries
-    // from the /proc/pid/maps-file
-    // I'm afraid this works only for Linux 2.6-Kernels (may work on 2.4)
-    // Note2: the filenames in here will have softlinks resolved so will
-    // go wrong when having e.g. OpenFOAM installed under a softlink.
-
-    HashTable<label, fileName> addressMap;
-    {
-        IFstream is("/proc/" + name(pid()) + "/maps");
-
-        while (is.good())
-        {
-            string line;
-            is.getLine(line);
-
-            string::size_type space = line.rfind(' ') + 1;
-            fileName libPath = line.substr(space, line.size()-space);
-
-            if (libPath.size() && libPath[0] == '/')
-            {
-                string offsetString(line.substr(0, line.find('-')));
-                IStringStream offsetStr(offsetString);
-                addressMap.insert(libPath, ReadHex<label>(offsetStr));
-            }
-        }
-    }
-
     // Get raw stack symbols
-    void *array[100];
-    size_t size = backtrace(array, 100);
-    char **strings = backtrace_symbols(array, size);
+    const size_t CALLSTACK_SIZE = 128;
 
-    // See if they contain function between () e.g. "(__libc_start_main+0xd0)"
-    // and see if cplus_demangle can make sense of part before +
-    for (size_t i = 0; i < size; i++)
+    void *callstack[CALLSTACK_SIZE];
+    size_t size = backtrace(callstack, CALLSTACK_SIZE);
+
+    Dl_info *info = new Dl_info;
+
+    fileName fname = "???";
+    word address;
+
+    for(size_t i=0; i<size; i++)
     {
-        string msg(strings[i]);
-        fileName programFile;
-        word address;
+        int st = dladdr(callstack[i], info);
 
-        os  << '#' << label(i) << "  ";
-        //os  << "Raw   : " << msg << "\n\t";
+        os << '#' << label(i) << "  ";
+        if (st != 0 && info->dli_fname != NULL && info->dli_fname[0] != '\0')
         {
-            string::size_type lPos = msg.find('[');
-            string::size_type rPos = msg.find(']');
+            fname = absolutePath(info->dli_fname);
 
-            if (lPos != string::npos && rPos != string::npos && lPos < rPos)
-            {
-                address = msg.substr(lPos+1, rPos-lPos-1);
-                msg = msg.substr(0, lPos);
-            }
-
-            string::size_type bracketPos = msg.find('(');
-            string::size_type spacePos = msg.find(' ');
-            if (bracketPos != string::npos || spacePos != string::npos)
-            {
-                programFile = msg.substr(0, min(spacePos, bracketPos));
-
-                // not an absolute path
-                if (programFile[0] != '/')
-                {
-                    string tmp = pOpen("which " + programFile);
-                    if (tmp[0] == '/' || tmp[0] == '~')
-                    {
-                        programFile = tmp;
-                    }
-                }
-            }
-        }
-
-        string::size_type bracketPos = msg.find('(');
-
-        if (bracketPos != string::npos)
-        {
-            string::size_type start = bracketPos+1;
-
-            string::size_type plusPos = msg.find('+', start);
-
-            if (plusPos != string::npos)
-            {
-                string cName(msg.substr(start, plusPos-start));
-
-                int status;
-                char* cplusNamePtr = abi::__cxa_demangle
-                (
-                    cName.c_str(),
-                    NULL,                   // have it malloc itself
-                    0,
-                    &status
-                );
-
-                if (status == 0 && cplusNamePtr)
-                {
-                    os  << cplusNamePtr;
-                    free(cplusNamePtr);
-                }
-                else
-                {
-                    os  << cName.c_str();
-                }
-            }
-            else
-            {
-                string::size_type endBracketPos = msg.find(')', start);
-
-                if (endBracketPos != string::npos)
-                {
-                    string fullName(msg.substr(start, endBracketPos-start));
-
-                    os  << fullName.c_str() << nl;
-                }
-                else
-                {
-                    // Print raw message
-                    getSymbolForRaw(os, msg, programFile, address);
-                }
-            }
+            os <<
+            (
+                (info->dli_sname != NULL)
+              ? demangleSymbol(info->dli_sname)
+              : "?"
+            );
         }
         else
         {
-            // Print raw message
-            getSymbolForRaw(os, msg, programFile, address);
+            os << "?";
         }
 
-        printSourceFileAndLine(os, addressMap, programFile, address);
-
-        os  << nl;
+        printSourceFileAndLine(os, fname, info, callstack[i]);
+        os << nl;
     }
 
-    free(strings);
+    delete info;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //
