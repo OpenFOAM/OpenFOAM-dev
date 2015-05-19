@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,9 @@ void Foam::ODESolver::solve
     stepState& step
 ) const
 {
+    scalar x0 = x;
     solve(x, y, step.dxTry);
+    step.dxDid = x - x0;
 }
 
 
@@ -149,6 +151,8 @@ void Foam::ODESolver::solve
         "(const scalar xStart, const scalar xEnd,"
         "scalarField& y, scalar& dxTry) const"
     )   << "Integration steps greater than maximum " << maxSteps_
+        << "xStart = " << xStart << ", xEnd = " << xEnd
+        << ", x = " << x << ", dxDid = " << step.dxDid
         << exit(FatalError);
 }
 
