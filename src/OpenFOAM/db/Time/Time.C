@@ -1086,7 +1086,7 @@ Foam::Time& Foam::Time::operator++()
     deltaTSave_ = deltaT_;
 
     // Save old time value and name
-    const scalar oldTimeValue = value();
+    const scalar oldTimeValue = timeToUserTime(value());
     const word oldTimeName = dimensionedScalar::name();
 
     // Increment time
@@ -1276,19 +1276,22 @@ Foam::Time& Foam::Time::operator++()
         // Adjust the precision of the time directory name if necessary
         if (outputTime_)
         {
+            // Tolerance used when testing time equivalence
+            const scalar timeTol =
+                max(min(pow(10.0, -precision_), 0.1*deltaT_), SMALL);
+
+            // User-time equivalent of deltaT
+            const scalar userDeltaT = timeToUserTime(deltaT_);
+
             // Time value obtained by reading timeName
             scalar timeNameValue = -VGREAT;
-
-            // Tolerance used when testing time equivalence
-            scalar timeTol =
-                max(min(pow(10.0, -precision_), 0.1*deltaT_), SMALL);
 
             // Check that new time representation differs from old one
             // reinterpretation of the word
             if
             (
                 readScalar(dimensionedScalar::name().c_str(), timeNameValue)
-             && (mag(timeNameValue - oldTimeValue - deltaT_) > timeTol)
+             && (mag(timeNameValue - oldTimeValue - userDeltaT) > timeTol)
             )
             {
                 int oldPrecision = precision_;
@@ -1296,7 +1299,7 @@ Foam::Time& Foam::Time::operator++()
                 (
                     precision_ < maxPrecision_
                  && readScalar(dimensionedScalar::name().c_str(), timeNameValue)
-                 && (mag(timeNameValue - oldTimeValue - deltaT_) > timeTol)
+                 && (mag(timeNameValue - oldTimeValue - userDeltaT) > timeTol)
                 )
                 {
                     precision_++;
