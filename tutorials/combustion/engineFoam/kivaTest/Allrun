@@ -9,12 +9,6 @@ application=`getApplication`
 
 runApplication kivaToFoam -file otape17
 
-cp system/controlDict.1st system/controlDict
 runApplication $application
-mv log.$application log.$application.1
-
-cp system/controlDict.2nd system/controlDict
-runApplication $application
-mv log.$application log.$application.2
 
 # ----------------------------------------------------------------- end-of-file

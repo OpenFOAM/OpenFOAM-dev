@@ -51,8 +51,8 @@ divSchemes
         eau limitedLinear 1;
     };
     div(U)          Gauss linear;
-    div((Su*grad(b))) Gauss linear;
-    div((U+((Su*Xi)*grad(b)))) Gauss linear;
+    div((Su*n)) Gauss linear;
+    div((U+((Su*Xi)*n))) Gauss linear;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 

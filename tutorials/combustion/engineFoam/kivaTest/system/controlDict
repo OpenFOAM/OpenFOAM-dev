@@ -23,7 +23,7 @@ startTime       -180;
 
 stopAt          endTime;
 
-endTime         -15;
+endTime         60;
 
 deltaT          0.25;
 
@@ -51,5 +51,26 @@ maxCo           0.2;
 
 maxDeltaT       1;
 
+functions
+{
+    timeStep
+    {
+        type coded;
+        functionObjectLibs ("libutilityFunctionObjects.so");
+        redirectType setDeltaT;
+
+        code
+        #{
+            const Time& runTime = mesh().time();
+            if (runTime.timeToUserTime(runTime.value()) >= -15.0)
+            {
+                const_cast<Time&>(runTime).setDeltaT
+                (
+                    runTime.userTimeToTime(0.025)
+                );
+            }
+        #};
+    }
+}
 
 // ************************************************************************* //
