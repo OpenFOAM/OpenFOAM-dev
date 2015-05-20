@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1051,10 +1051,10 @@ void Foam::particle::hitCyclicAMIPatch
 {
     const cyclicAMIPolyPatch& receiveCpp = cpp.neighbPatch();
 
-    // patch face index on sending side
+    // Patch face index on sending side
     label patchFaceI = faceI_ - cpp.start();
 
-    // patch face index on receiving side - also updates position
+    // Patch face index on receiving side - also updates position
     patchFaceI = cpp.pointFace(patchFaceI, direction, position_);
 
     if (patchFaceI < 0)
@@ -1074,7 +1074,7 @@ void Foam::particle::hitCyclicAMIPatch
             << " at position " << position_ << abort(FatalError);
     }
 
-    // convert face index into global numbering
+    // Convert face index into global numbering
     faceI_ = patchFaceI + receiveCpp.start();
 
     cellI_ = mesh_.faceOwner()[faceI_];
@@ -1085,9 +1085,6 @@ void Foam::particle::hitCyclicAMIPatch
     tetPtI_ = mesh_.faces()[tetFaceI_].size() - 1 - tetPtI_;
 
     // Now the particle is on the receiving side
-
-    // Have patch transform the position
-    receiveCpp.transformPosition(position_, patchFaceI);
 
     // Transform the properties
     if (!receiveCpp.parallel())
