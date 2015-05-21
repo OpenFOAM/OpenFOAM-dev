@@ -50,15 +50,6 @@ then
 
     if [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
     then
-        #- Bit of a hack: ptscotch 6 requires scotch linked as well as. Can be
-        #  removed once ptscotch declares dependency on scotch itself.
-        case "$SCOTCH_VERSION" in
-        scotch_6.*)
-            export LINK_FLAGS="-lscotch"
-            ;;
-        esac
-
-
         wmakeMpiLib ptscotchDecomp
     fi
 else
