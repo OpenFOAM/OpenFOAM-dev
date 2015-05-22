@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,8 +61,14 @@ int main(int argc, char *argv[])
             << exit(FatalError);
     }
 
-    const vector slabDir((Vector<label>::one - mesh.geometricD())/2);
-    scalar thickness = slabDir & mesh.bounds().span();
+    Vector<label> slabNormal((Vector<label>::one - mesh.geometricD())/2);
+    const direction slabDir
+    (
+        slabNormal
+      & Vector<label>(Vector<label>::X, Vector<label>::Y, Vector<label>::Z)
+    );
+
+    scalar thickness = vector(slabNormal) & mesh.bounds().span();
 
     const pointMesh& pMesh = pointMesh::New(mesh);
 
@@ -302,7 +308,7 @@ int main(int argc, char *argv[])
                                          vector edgeHat =
                                              points[curBPoints[pointI]]
                                              - currentBStreamPoint;
-                                         edgeHat.replace(vector::Z, 0);
+                                         edgeHat.replace(slabDir, 0);
                                          edgeHat /= mag(edgeHat);
 
                                          vector nHat = unitAreas[faceI];
@@ -410,7 +416,7 @@ int main(int argc, char *argv[])
                                          points[curPoints[pointI]]
                                        - currentStreamPoint;
 
-                                     edgeHat.replace(vector::Z, 0);
+                                     edgeHat.replace(slabDir, 0);
                                      edgeHat /= mag(edgeHat);
 
                                      vector nHat = unitAreas[faceI];
