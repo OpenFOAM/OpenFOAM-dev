@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::radiationCoupledBase
+    radiationCoupledBase
 
 Description
     Common functions to emissivity. It gets supplied from lookup into a
     dictionary or calculated by the solidThermo:
 
-    - 'lookup' : lookup volScalarField with name
-    - 'solidThermo' : use solidThermo emissivity()
+    - 'lookup' : Read the patch emissivity field from the dictionary
+    - 'solidRadiation' : Use the emissivity field mapped from the adjacent solid
 
 SourceFiles
     radiationCoupledBase.C
@@ -83,8 +83,8 @@ protected:
         //- How to get emissivity
         const emissivityMethodType method_;
 
-         //- Emissivity
-         // Cached locally when is read from dictionary (lookup mode)
+        //- Emissivity
+        // Cached locally when is read from dictionary (lookup mode)
         scalarField emissivity_;
 
 
@@ -123,6 +123,7 @@ public:
 
     //- Destructor
         virtual ~radiationCoupledBase();
+
 
     // Member functions
 

@@ -32,7 +32,6 @@ License
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
-
 namespace Foam
 {
     defineTypeNameAndDebug(radiationCoupledBase, 0);

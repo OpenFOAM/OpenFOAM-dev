@@ -36,7 +36,7 @@ Description
     \table
         Property     | Description             | Required    | Default value
         Qro          | external radiative heat flux | yes    |
-        emissivityMode | emissivity mode: solidThermo or lookup | yes |
+        emissivityMode | emissivity mode: solidRadiation or lookup | yes |
     \endtable
 
     Example of the boundary condition specification:
@@ -45,15 +45,15 @@ Description
     {
         type            greyDiffusiveRadiationViewFactor;
         Qro             uniform 0;
-        emissivityMode  solidThermo;
+        emissivityMode  solidRadiation;
         value           uniform 0;
     }
     \endverbatim
 
 SeeAlso
+    Foam::radiationCoupledBase
     Foam::radiation::radiationModel
     Foam::radiation::viewFactor
-    Foam::radiationCoupledBase
     Foam::fixedValueFvPatchField
 
 SourceFiles
@@ -73,6 +73,7 @@ namespace Foam
 {
 namespace radiation
 {
+
 /*---------------------------------------------------------------------------*\
       Class greyDiffusiveViewFactorFixedValueFvPatchScalarField declaration
 \*---------------------------------------------------------------------------*/
@@ -186,8 +187,8 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace radiation
 } // End namespace Foam
-}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
