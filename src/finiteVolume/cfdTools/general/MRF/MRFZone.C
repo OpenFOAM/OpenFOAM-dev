@@ -30,6 +30,7 @@ License
 #include "fvMatrices.H"
 #include "faceSet.H"
 #include "geometricOneField.H"
+#include "syncTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -116,6 +117,9 @@ void Foam::MRFZone::setMRFFaces()
             }
         }
     }
+
+    // Synchronize the faceType across processor patches
+    syncTools::syncFaceList(mesh_, faceType, maxEqOp<label>());
 
     // Now we have for faceType:
     //  0   : face not in cellZone
