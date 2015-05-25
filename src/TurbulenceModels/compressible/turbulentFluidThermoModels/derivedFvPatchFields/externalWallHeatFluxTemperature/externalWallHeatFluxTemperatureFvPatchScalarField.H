@@ -61,6 +61,7 @@ Description
         kappaLayers  | list of thermal conductivites per layer [W/m/K] | yes |
         kappaName    | name of thermal conductivity field | yes  |
         QrName       | name of the radiative field | no | no
+        relaxation   | relaxation factor for radiative field | no | 1
     \endtable
 
     Example of the boundary condition specification:
@@ -77,6 +78,7 @@ Description
         value           uniform 300.0;
         kappaName       none;
         QrName          none;
+        relaxation      1;
     }
     \endverbatim
 
@@ -139,6 +141,12 @@ private:
 
         //- Ambient temperature / [K]
         scalarField Ta_;
+
+        //- Chache Qr for relaxation
+        scalarField QrPrevious_;
+
+        //- Relaxation for Qr
+        scalar QrRelaxation_;
 
         //- Name of the radiative heat flux
         const word QrName_;
