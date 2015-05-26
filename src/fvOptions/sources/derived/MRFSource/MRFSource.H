@@ -73,7 +73,7 @@ protected:
 
     // Protected data
 
-        //- Run-time selectable porosity model
+        //- Run-time selectable MRF model
         autoPtr<MRFZone> mrfPtr_;
 
         //- Velocity field name, default = U
