@@ -35,7 +35,7 @@ SourceFiles
 #ifndef mapLagrangian_H
 #define mapLagrangian_H
 
-#include "meshToMesh0.H"
+#include "meshToMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,7 +43,7 @@ namespace Foam
 {
 
 //- Maps lagrangian positions and fields
-void mapLagrangian(const meshToMesh0& meshToMesh0Interp);
+void mapLagrangian(const meshToMesh& interp);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

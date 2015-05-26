@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mapNearestMethod
+    Foam::directMethod
 
 Description
-    Map nearest mesh-to-mesh interpolation class
+    Direct (one-to-one cell correspondence) mesh-to-mesh interpolation class
 
-    Not volume conservative.
-    - cells outside other meshes bounding box do not get mapped
-      (initial filtering)
-    - all remaining cells will be mapped (with weight 1!)
-    - so take care when mapping meshes with different bounding boxes!
+    Volume conservative.
 
 SourceFiles
-    mapNearestMethod.C
+    directMethod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mapNearestMethod_H
-#define mapNearestMethod_H
+#ifndef directMethod_H
+#define directMethod_H
 
 #include "meshToMeshMethod.H"
 
@@ -49,16 +45,23 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class mapNearestMethod Declaration
+                        Class directMethod Declaration
 \*---------------------------------------------------------------------------*/
 
-class mapNearestMethod
+class directMethod
 :
     public meshToMeshMethod
 {
 protected:
 
     // Protected Member Functions
+
+        //- Return the true if cells intersect
+        virtual bool intersect
+        (
+            const label srcCellI,
+            const label tgtCellI
+        ) const;
 
         //- Find indices of overlapping cells in src and tgt meshes - returns
         //  true if found a matching pair
@@ -85,49 +88,33 @@ protected:
             label& startSeedI
         );
 
-        //- Find the nearest cell on mesh2 for cell1 on mesh1
-        virtual void findNearestCell
+        //- Append to list of src mesh seed indices
+        virtual void appendToDirectSeeds
         (
-            const polyMesh& mesh1,
-            const polyMesh& mesh2,
-            const label cell1,
-            label& cell2
-        ) const;
-
-        //- Set the next cells for the marching front algorithm
-        virtual void setNextNearestCells
-        (
-            label& startSeedI,
-            label& srcCellI,
-            label& tgtCellI,
             boolList& mapFlag,
-            const labelList& srcCellIDs
-        ) const;
-
-        //- Find a source cell mapped to target cell tgtCellI
-        virtual label findMappedSrcCell
-        (
-            const label tgtCellI,
-            const List<DynamicList<label> >& tgtToSrc
+            labelList& srcTgtSeed,
+            DynamicList<label>& srcSeeds,
+            label& srcSeedI,
+            label& tgtSeedI
         ) const;
 
         //- Disallow default bitwise copy construct
-        mapNearestMethod(const mapNearestMethod&);
+        directMethod(const directMethod&);
 
         //- Disallow default bitwise assignment
-        void operator=(const mapNearestMethod&);
+        void operator=(const directMethod&);
 
 
 public:
 
     //- Run-time type information
-    TypeName("mapNearest");
+    TypeName("direct");
 
     //- Construct from source and target meshes
-    mapNearestMethod(const polyMesh& src, const polyMesh& tgt);
+    directMethod(const polyMesh& src, const polyMesh& tgt);
 
     //- Destructor
-    virtual ~mapNearestMethod();
+    virtual ~directMethod();
 
 
     // Member Functions

@@ -55,15 +55,18 @@ graphField/writePatchGraph.C
 graphField/writeCellGraph.C
 graphField/makeGraph.C
 
-meshToMesh = meshToMeshInterpolation/meshToMesh
-$(meshToMesh)/meshToMesh.C
-$(meshToMesh)/meshToMeshParallelOps.C
-meshToMeshMethods = meshToMeshInterpolation/meshToMesh/calcMethod
+meshToMesh/meshToMesh.C
+meshToMesh/meshToMeshParallelOps.C
+meshToMeshMethods = meshToMesh/calcMethod
 $(meshToMeshMethods)/meshToMeshMethod/meshToMeshMethod.C
 $(meshToMeshMethods)/meshToMeshMethod/meshToMeshMethodNew.C
 $(meshToMeshMethods)/cellVolumeWeight/cellVolumeWeightMethod.C
 $(meshToMeshMethods)/direct/directMethod.C
 $(meshToMeshMethods)/mapNearest/mapNearestMethod.C
+
+meshToMesh0/meshToMesh0.C
+meshToMesh0/calculateMeshToMesh0Addressing.C
+meshToMesh0/calculateMeshToMesh0Weights.C
 
 
 LIB = $(FOAM_LIBBIN)/libsampling

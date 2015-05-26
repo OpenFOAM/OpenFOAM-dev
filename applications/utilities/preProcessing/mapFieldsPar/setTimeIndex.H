@@ -1,3 +1,4 @@
+{
     instantList sourceTimes = runTimeSource.times();
     label sourceTimeIndex = runTimeSource.timeIndex();
     if (args.optionFound("sourceTime"))
@@ -29,3 +30,4 @@
     Info<< "\nSource time: " << runTimeSource.value()
         << "\nTarget time: " << runTimeTarget.value()
         << endl;
+}

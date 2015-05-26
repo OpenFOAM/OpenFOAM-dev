@@ -80,26 +80,16 @@ static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
 }
 
 
-void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
+void mapLagrangian(const meshToMesh& interp)
 {
     // Determine which particles are in meshTarget
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // target to source cell map
-    const labelList& cellAddressing = meshToMesh0Interp.cellAddressing();
+    const polyMesh& meshSource = interp.srcRegion();
+    const polyMesh& meshTarget = interp.tgtRegion();
+    const labelListList& sourceToTarget = interp.srcToTgtCellAddr();
 
-    // Invert celladdressing to get source to target(s).
-    // Note: could use sparse addressing but that is too storage inefficient
-    // (Map<labelList>)
-    labelListList sourceToTargets
-    (
-        invertOneToMany(meshToMesh0Interp.fromMesh().nCells(), cellAddressing)
-    );
-
-    const fvMesh& meshSource = meshToMesh0Interp.fromMesh();
-    const fvMesh& meshTarget = meshToMesh0Interp.toMesh();
     const pointField& targetCc = meshTarget.cellCentres();
-
 
     fileNameList cloudDirs
     (
@@ -120,7 +110,7 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
             cloud::prefix/cloudDirs[cloudI]
         );
 
-        IOobject* positionsPtr = objects.lookup("positions");
+        IOobject* positionsPtr = objects.lookup(word("positions"));
 
         if (positionsPtr)
         {
@@ -168,7 +158,7 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                 if (iter().cell() >= 0)
                 {
                     const labelList& targetCells =
-                        sourceToTargets[iter().cell()];
+                        sourceToTarget[iter().cell()];
 
                     // Particle probably in one of the targetcells. Try
                     // all by tracking from their cell centre to the parcel
@@ -210,7 +200,7 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                 sourceParticleI++;
             }
 
-            Info<< "    after meshToMesh0 addressing found "
+            Info<< "    after meshToMesh addressing found "
                 << targetParcels.size()
                 << " parcels in target mesh." << endl;
 
@@ -259,17 +249,47 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                 // ~~~~~~~~~~~~~~~~~~~~~
 
                 MapLagrangianFields<label>
-                (cloudDirs[cloudI], objects, meshToMesh0Interp, addParticles);
+                (
+                    cloudDirs[cloudI],
+                    objects,
+                    meshTarget,
+                    addParticles
+                );
                 MapLagrangianFields<scalar>
-                (cloudDirs[cloudI], objects, meshToMesh0Interp, addParticles);
+                (
+                    cloudDirs[cloudI],
+                    objects,
+                    meshTarget,
+                    addParticles
+                );
                 MapLagrangianFields<vector>
-                (cloudDirs[cloudI], objects, meshToMesh0Interp, addParticles);
+                (
+                    cloudDirs[cloudI],
+                    objects,
+                    meshTarget,
+                    addParticles
+                );
                 MapLagrangianFields<sphericalTensor>
-                (cloudDirs[cloudI], objects, meshToMesh0Interp, addParticles);
+                (
+                    cloudDirs[cloudI],
+                    objects,
+                    meshTarget,
+                    addParticles
+                );
                 MapLagrangianFields<symmTensor>
-                (cloudDirs[cloudI], objects, meshToMesh0Interp, addParticles);
+                (
+                    cloudDirs[cloudI],
+                    objects,
+                    meshTarget,
+                    addParticles
+                );
                 MapLagrangianFields<tensor>
-                (cloudDirs[cloudI], objects, meshToMesh0Interp, addParticles);
+                (
+                    cloudDirs[cloudI],
+                    objects,
+                    meshTarget,
+                    addParticles
+                );
             }
         }
     }

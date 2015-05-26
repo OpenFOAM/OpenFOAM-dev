@@ -23,11 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MapVolFields_H
-#define MapVolFields_H
+#ifndef MapConsistentVolFields_H
+#define MapConsistentVolFields_H
 
 #include "GeometricField.H"
-#include "meshToMesh0.H"
+#include "meshToMesh.H"
 #include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -39,62 +39,55 @@ template<class Type, class CombineOp>
 void MapVolFields
 (
     const IOobjectList& objects,
-    const meshToMesh0& meshToMesh0Interp,
-    const meshToMesh0::order& mapOrder,
+    const HashSet<word>& selectedFields,
+    const meshToMesh& interp,
     const CombineOp& cop
 )
 {
-    const fvMesh& meshSource = meshToMesh0Interp.fromMesh();
-    const fvMesh& meshTarget = meshToMesh0Interp.toMesh();
+    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
-    word fieldClassName
-    (
-        GeometricField<Type, fvPatchField, volMesh>::typeName
-    );
+    const fvMesh& meshSource = static_cast<const fvMesh&>(interp.srcRegion());
+    const fvMesh& meshTarget = static_cast<const fvMesh&>(interp.tgtRegion());
 
-    IOobjectList fields = objects.lookupClass(fieldClassName);
+    IOobjectList fields = objects.lookupClass(fieldType::typeName);
 
     forAllIter(IOobjectList, fields, fieldIter)
     {
-        IOobject fieldTargetIOobject
-        (
-            fieldIter()->name(),
-            meshTarget.time().timeName(),
-            meshTarget,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        );
+        const word& fieldName = fieldIter()->name();
 
-        if (fieldTargetIOobject.headerOk())
+        if (selectedFields.empty() || selectedFields.found(fieldName))
         {
-            Info<< "    interpolating " << fieldIter()->name()
-                << endl;
+            Info<< "    interpolating " << fieldName << endl;
 
-            // Read field fieldSource
-            GeometricField<Type, fvPatchField, volMesh> fieldSource
+            const fieldType fieldSource(*fieldIter(), meshSource);
+
+            IOobject targetIO
             (
-                *fieldIter(),
-                meshSource
+                fieldName,
+                meshTarget.time().timeName(),
+                meshTarget,
+                IOobject::MUST_READ
             );
 
-            // Read fieldTarget
-            GeometricField<Type, fvPatchField, volMesh> fieldTarget
-            (
-                fieldTargetIOobject,
-                meshTarget
-            );
+            if (targetIO.headerOk())
+            {
+                fieldType fieldTarget(targetIO, meshTarget);
 
-            // Interpolate field
-            meshToMesh0Interp.interpolate
-            (
-                fieldTarget,
-                fieldSource,
-                mapOrder,
-                cop
-            );
+                interp.mapSrcToTgt(fieldSource, cop, fieldTarget);
 
-            // Write field
-            fieldTarget.write();
+                fieldTarget.write();
+            }
+            else
+            {
+                targetIO.readOpt() = IOobject::NO_READ;
+
+                tmp<fieldType>
+                    tfieldTarget(interp.mapSrcToTgt(fieldSource, cop));
+
+                fieldType fieldTarget(targetIO, tfieldTarget);
+
+                fieldTarget.write();
+            }
         }
     }
 }

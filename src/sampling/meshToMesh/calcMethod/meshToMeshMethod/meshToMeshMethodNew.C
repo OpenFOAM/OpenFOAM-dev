@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,21 +23,42 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-const Foam::polyMesh& Foam::meshToMeshMethod::src() const
+#include "meshToMeshMethod.H"
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::meshToMeshMethod> Foam::meshToMeshMethod::New
+(
+    const word& methodName,
+    const polyMesh& src,
+    const polyMesh& tgt
+)
 {
-    return src_;
-}
+    if (debug)
+    {
+        Info<< "Selecting AMIMethod " << methodName << endl;
+    }
 
+    componentsConstructorTable::iterator cstrIter =
+        componentsConstructorTablePtr_->find(methodName);
 
-const Foam::polyMesh& Foam::meshToMeshMethod::tgt() const
-{
-    return tgt_;
-}
+    if (cstrIter == componentsConstructorTablePtr_->end())
+    {
+        FatalErrorIn
+        (
+            "Foam::autoPtr<Foam::meshToMeshMethod> Foam::meshToMeshMethod::New"
+            "("
+                "const word&, "
+                "const polyMesh&, "
+                "const polyMesh&"
+            ")"
+        )   << "Unknown meshToMesh type "
+            << methodName << nl << nl
+            << "Valid meshToMesh types are:" << nl
+            << componentsConstructorTablePtr_->sortedToc() << exit(FatalError);
+    }
 
-
-Foam::scalar Foam::meshToMeshMethod::V() const
-{
-    return V_;
+    return autoPtr<meshToMeshMethod>(cstrIter()(src, tgt));
 }
 
 

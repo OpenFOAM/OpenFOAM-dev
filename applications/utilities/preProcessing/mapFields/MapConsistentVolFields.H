@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MapVolFields_H
-#define MapVolFields_H
+#ifndef MapConsistentVolFields_H
+#define MapConsistentVolFields_H
 
 #include "GeometricField.H"
 #include "meshToMesh0.H"
@@ -36,7 +36,7 @@ namespace Foam
 {
 
 template<class Type, class CombineOp>
-void MapVolFields
+void MapConsistentVolFields
 (
     const IOobjectList& objects,
     const meshToMesh0& meshToMesh0Interp,
@@ -56,6 +56,16 @@ void MapVolFields
 
     forAllIter(IOobjectList, fields, fieldIter)
     {
+        Info<< "    interpolating " << fieldIter()->name()
+            << endl;
+
+        // Read field
+        GeometricField<Type, fvPatchField, volMesh> fieldSource
+        (
+            *fieldIter(),
+            meshSource
+        );
+
         IOobject fieldTargetIOobject
         (
             fieldIter()->name(),
@@ -67,16 +77,6 @@ void MapVolFields
 
         if (fieldTargetIOobject.headerOk())
         {
-            Info<< "    interpolating " << fieldIter()->name()
-                << endl;
-
-            // Read field fieldSource
-            GeometricField<Type, fvPatchField, volMesh> fieldSource
-            (
-                *fieldIter(),
-                meshSource
-            );
-
             // Read fieldTarget
             GeometricField<Type, fvPatchField, volMesh> fieldTarget
             (
@@ -91,6 +91,25 @@ void MapVolFields
                 fieldSource,
                 mapOrder,
                 cop
+            );
+
+            // Write field
+            fieldTarget.write();
+        }
+        else
+        {
+            fieldTargetIOobject.readOpt() = IOobject::NO_READ;
+
+            // Interpolate field
+            GeometricField<Type, fvPatchField, volMesh> fieldTarget
+            (
+                fieldTargetIOobject,
+                meshToMesh0Interp.interpolate
+                (
+                    fieldSource,
+                    mapOrder,
+                    cop
+                )
             );
 
             // Write field

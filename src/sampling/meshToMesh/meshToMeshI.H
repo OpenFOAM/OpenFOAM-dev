@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,42 +23,60 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "meshToMeshMethod.H"
+#include "meshToMesh.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::meshToMeshMethod> Foam::meshToMeshMethod::New
-(
-    const word& methodName,
-    const polyMesh& src,
-    const polyMesh& tgt
-)
+inline const Foam::polyMesh& Foam::meshToMesh::srcRegion() const
 {
-    if (debug)
-    {
-        Info<< "Selecting AMIMethod " << methodName << endl;
-    }
+    return srcRegion_;
+}
 
-    componentsConstructorTable::iterator cstrIter =
-        componentsConstructorTablePtr_->find(methodName);
 
-    if (cstrIter == componentsConstructorTablePtr_->end())
-    {
-        FatalErrorIn
-        (
-            "Foam::autoPtr<Foam::meshToMeshMethod> Foam::meshToMeshMethod::New"
-            "("
-                "const word&, "
-                "const polyMesh&, "
-                "const polyMesh&"
-            ")"
-        )   << "Unknown meshToMesh type "
-            << methodName << nl << nl
-            << "Valid meshToMesh types are:" << nl
-            << componentsConstructorTablePtr_->sortedToc() << exit(FatalError);
-    }
+inline const Foam::polyMesh& Foam::meshToMesh::tgtRegion() const
+{
+    return tgtRegion_;
+}
 
-    return autoPtr<meshToMeshMethod>(cstrIter()(src, tgt));
+
+inline const Foam::labelListList&
+Foam::meshToMesh::srcToTgtCellAddr() const
+{
+    return srcToTgtCellAddr_;
+}
+
+
+inline const Foam::labelListList&
+Foam::meshToMesh::tgtToSrcCellAddr() const
+{
+    return tgtToSrcCellAddr_;
+}
+
+
+inline const Foam::scalarListList&
+Foam::meshToMesh::srcToTgtCellWght() const
+{
+    return srcToTgtCellWght_;
+}
+
+
+inline const Foam::scalarListList&
+Foam::meshToMesh::tgtToSrcCellWght() const
+{
+    return tgtToSrcCellWght_;
+}
+
+
+inline Foam::scalar Foam::meshToMesh::V() const
+{
+    return V_;
+}
+
+
+inline const Foam::PtrList<Foam::AMIPatchToPatchInterpolation>&
+Foam::meshToMesh::patchAMIs() const
+{
+    return patchAMIs_;
 }
 
 
