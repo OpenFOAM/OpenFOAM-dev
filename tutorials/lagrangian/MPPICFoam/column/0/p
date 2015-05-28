@@ -28,14 +28,12 @@ boundaryField
     top
     {
         type            fixedFluxPressure;
-        phi             phi.air;
         value           $internalField;
     }
 
     bottom
     {
         type            fixedFluxPressure;
-        phi             phi.air;
         value           $internalField;
     }
 }

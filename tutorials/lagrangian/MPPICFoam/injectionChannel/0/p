@@ -23,32 +23,28 @@ boundaryField
     walls
     {
         type            fixedFluxPressure;
-        phi             phi.air;
         value           $internalField;
     }
 
     lowerInlet
     {
         type            fixedFluxPressure;
-        phi             phi.air;
         value           $internalField;
     }
 
     upperInlet
     {
         type            fixedFluxPressure;
-        phi             phi.air;
         value           $internalField;
     }
 
     outlet
     {
         type            fixedValue;
-        phi             phi.air;
         value           uniform 0;
     }
 
-    frontAndBack        
+    frontAndBack
     {
         type            symmetry;
     }

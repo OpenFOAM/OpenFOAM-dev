@@ -23,21 +23,18 @@ boundaryField
     inlet
     {
         type fixedFluxPressure;
-        phi phi.air;
         value $internalField;
     }
 
     outlet
     {
         type fixedValue;
-        phi phi.air;
         value uniform 0;
     }
 
     walls
     {
         type fixedFluxPressure;
-        phi phi.air;
         value $internalField;
     }
 }

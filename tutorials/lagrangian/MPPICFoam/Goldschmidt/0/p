@@ -23,21 +23,18 @@ boundaryField
     walls
     {
         type            fixedFluxPressure;
-        phi             phi.air;
         value           $internalField;
     }
 
     bottom
     {
         type            fixedFluxPressure;
-        phi             phi.air;
         value           $internalField;
     }
 
     top
     {
         type            fixedValue;
-        phi             phi.air;
         value           $internalField;
     }
 
