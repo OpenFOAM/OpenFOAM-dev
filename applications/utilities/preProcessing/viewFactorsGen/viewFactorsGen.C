@@ -37,35 +37,21 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-
 #include "argList.H"
-#include "fvMesh.H"
 #include "Time.H"
+#include "fvMesh.H"
+#include "singleCellFvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "fixedValueFvPatchFields.H"
 #include "distributedTriSurfaceMesh.H"
 #include "cyclicAMIPolyPatch.H"
-#include "triSurfaceTools.H"
 #include "mapDistribute.H"
-
-#include "OFstream.H"
 #include "meshTools.H"
-#include "plane.H"
 #include "uindirectPrimitivePatch.H"
 #include "DynamicField.H"
-#include "IFstream.H"
-#include "unitConversion.H"
-
-#include "mathematicalConstants.H"
 #include "scalarMatrices.H"
-#include "CompactListList.H"
-#include "labelIOList.H"
-#include "labelListIOList.H"
 #include "scalarListIOList.H"
-
-#include "singleCellFvMesh.H"
-#include "IOdictionary.H"
-#include "fixedValueFvPatchFields.H"
 
 using namespace Foam;
 
@@ -130,7 +116,7 @@ triSurface triangulate
         newPatchI++;
     }
 
-    triSurfaceToAgglom.resize(localTriFaceI-1);
+    triSurfaceToAgglom.resize(localTriFaceI);
 
     triangles.shrink();
 
@@ -369,7 +355,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    viewFactorsPatches.resize(count--);
+    viewFactorsPatches.resize(count);
 
     // total number of coarse faces
     label totalNCoarseFaces = nCoarseFaces;
