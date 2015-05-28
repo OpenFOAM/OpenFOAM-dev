@@ -1,4 +1,4 @@
-    word contiuousPhaseName
+    word continuousPhaseName
     (
         IOdictionary
         (
@@ -9,7 +9,7 @@
                 mesh,
                 IOobject::MUST_READ
             )
-        ).lookup("contiuousPhaseName")
+        ).lookup("continuousPhaseName")
     );
 
     Info<< "Reading field U\n" << endl;
@@ -17,7 +17,7 @@
     (
         IOobject
         (
-            IOobject::groupName("U", contiuousPhaseName),
+            IOobject::groupName("U", continuousPhaseName),
             runTime.timeName(),
             mesh,
             IOobject::MUST_READ,
@@ -48,7 +48,7 @@
     (
         IOobject
         (
-            IOobject::groupName("phi", contiuousPhaseName),
+            IOobject::groupName("phi", continuousPhaseName),
             runTime.timeName(),
             mesh,
             IOobject::READ_IF_PRESENT,
@@ -67,11 +67,11 @@
 
     dimensionedScalar rhocValue
     (
-        IOobject::groupName("rho", contiuousPhaseName),
+        IOobject::groupName("rho", continuousPhaseName),
         dimDensity,
         continuousPhaseTransport.lookup
         (
-            IOobject::groupName("rho", contiuousPhaseName)
+            IOobject::groupName("rho", continuousPhaseName)
         )
     );
 
@@ -93,7 +93,7 @@
     (
         IOobject
         (
-            IOobject::groupName("mu", contiuousPhaseName),
+            IOobject::groupName("mu", continuousPhaseName),
             runTime.timeName(),
             mesh,
             IOobject::NO_READ,
@@ -109,7 +109,7 @@
     (
         IOobject
         (
-            IOobject::groupName("alpha", contiuousPhaseName),
+            IOobject::groupName("alpha", continuousPhaseName),
             runTime.timeName(),
             mesh,
             IOobject::READ_IF_PRESENT,
