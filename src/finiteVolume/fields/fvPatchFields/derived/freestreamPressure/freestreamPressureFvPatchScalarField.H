@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,13 @@ Description
     based on the free-stream velocity.
 
     \heading Patch usage
+
+    \table
+        Property     | Description             | Required    | Default value
+        U            | velocity field name     | no          | U
+        phi          | flux field name         | no          | phi
+        rho          | density field name      | no          | none
+    \endtable
 
     Example of the boundary condition specification:
     \verbatim
@@ -73,6 +80,18 @@ class freestreamPressureFvPatchScalarField
 :
     public zeroGradientFvPatchScalarField
 {
+    // Private data
+
+        //- Name of the velocity field
+        word UName_;
+
+        //- Name of the flux transporting the field
+        word phiName_;
+
+        //- Name of the density field used to normalise the mass flux
+        //  if neccessary
+        word rhoName_;
+
 
 public:
 

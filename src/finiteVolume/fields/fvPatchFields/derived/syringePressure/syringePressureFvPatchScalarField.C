@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,30 +38,7 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    curTimeIndex_(-1)
-{}
-
-
-Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
-(
-    const syringePressureFvPatchScalarField& sppsf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchScalarField(sppsf, p, iF, mapper),
-    Ap_(sppsf.Ap_),
-    Sp_(sppsf.Sp_),
-    VsI_(sppsf.VsI_),
-    tas_(sppsf.tas_),
-    tae_(sppsf.tae_),
-    tds_(sppsf.tds_),
-    tde_(sppsf.tde_),
-    psI_(sppsf.psI_),
-    psi_(sppsf.psi_),
-    ams_(sppsf.ams_),
-    ams0_(sppsf.ams0_),
+    phiName_("phi"),
     curTimeIndex_(-1)
 {}
 
@@ -85,11 +62,37 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
     psi_(readScalar(dict.lookup("psi"))),
     ams_(readScalar(dict.lookup("ams"))),
     ams0_(ams_),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     curTimeIndex_(-1)
 {
     scalar ps = (psI_*VsI_ + ams_/psi_)/Vs(db().time().value());
     fvPatchField<scalar>::operator=(ps);
 }
+
+
+Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
+(
+    const syringePressureFvPatchScalarField& sppsf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchScalarField(sppsf, p, iF, mapper),
+    Ap_(sppsf.Ap_),
+    Sp_(sppsf.Sp_),
+    VsI_(sppsf.VsI_),
+    tas_(sppsf.tas_),
+    tae_(sppsf.tae_),
+    tds_(sppsf.tds_),
+    tde_(sppsf.tde_),
+    psI_(sppsf.psI_),
+    psi_(sppsf.psi_),
+    ams_(sppsf.ams_),
+    ams0_(sppsf.ams0_),
+    phiName_(sppsf.phiName_),
+    curTimeIndex_(-1)
+{}
 
 
 Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
@@ -110,6 +113,7 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
     psi_(sppsf.psi_),
     ams_(sppsf.ams_),
     ams0_(sppsf.ams0_),
+    phiName_(sppsf.phiName_),
     curTimeIndex_(-1)
 {}
 
@@ -131,6 +135,7 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
     psi_(sppsf.psi_),
     ams_(sppsf.ams_),
     ams0_(sppsf.ams0_),
+    phiName_(sppsf.phiName_),
     curTimeIndex_(-1)
 {}
 
@@ -193,7 +198,7 @@ void Foam::syringePressureFvPatchScalarField::updateCoeffs()
     scalar deltaT = db().time().deltaTValue();
 
     const surfaceScalarField& phi =
-        db().lookupObject<surfaceScalarField>("phi");
+        db().lookupObject<surfaceScalarField>(phiName_);
 
     const fvsPatchField<scalar>& phip =
         patch().patchField<surfaceScalarField, scalar>(phi);

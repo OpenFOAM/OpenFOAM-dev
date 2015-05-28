@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,8 @@ Description
         Property     | Description             | Required    | Default value
         patchType    | underlying patch type should be \c cyclic| yes |
         jumpTable    | jump data, e.g. \c csvFile | yes      |
+        phi          | flux field name         | no          | phi
+        rho          | density field name      | no          | none
     \endtable
 
     Example of the boundary condition specification:
@@ -98,6 +100,15 @@ class fanFvPatchField
 :
     public uniformJumpFvPatchField<Type>
 {
+    // Private data
+
+        //- Name of the flux transporting the field
+        word phiName_;
+
+        //- Name of the density field used to normalise the mass flux
+        //  if neccessary
+        word rhoName_;
+
 
     // Private Member Functions
 

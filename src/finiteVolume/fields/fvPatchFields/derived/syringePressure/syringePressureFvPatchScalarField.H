@@ -133,6 +133,9 @@ class syringePressureFvPatchScalarField
         //- Added gas mass at previous time step
         scalar ams0_;
 
+        //- Name of the flux transporting the field
+        word phiName_;
+
         //- Current time index used to store ms0_
         label curTimeIndex_;
 

@@ -49,7 +49,7 @@ void Foam::fanFvPatchField<Foam::scalar>::calcFanJump()
     if (this->cyclicPatch().owner())
     {
         const surfaceScalarField& phi =
-            db().lookupObject<surfaceScalarField>("phi");
+            db().lookupObject<surfaceScalarField>(phiName_);
 
         const fvsPatchField<scalar>& phip =
             patch().patchField<surfaceScalarField, scalar>(phi);
@@ -58,7 +58,7 @@ void Foam::fanFvPatchField<Foam::scalar>::calcFanJump()
 
         if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
         {
-            Un /= patch().lookupPatchField<volScalarField, scalar>("rho");
+            Un /= patch().lookupPatchField<volScalarField, scalar>(rhoName_);
         }
 
         this->jump_ = max(this->jumpTable_->value(Un), scalar(0));
@@ -76,7 +76,9 @@ Foam::fanFvPatchField<Foam::scalar>::fanFvPatchField
     const dictionary& dict
 )
 :
-    uniformJumpFvPatchField<scalar>(p, iF)
+    uniformJumpFvPatchField<scalar>(p, iF),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "none"))
 {
     if (this->cyclicPatch().owner())
     {
