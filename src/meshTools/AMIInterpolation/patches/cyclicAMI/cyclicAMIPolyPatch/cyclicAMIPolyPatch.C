@@ -261,7 +261,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
 
                 if (debug)
                 {
-                    scalar theta = radToDeg(acos(n0 & n1));
+                    scalar theta = radToDeg(acos(-(n0 & n1)));
 
                     Pout<< "cyclicAMIPolyPatch::calcTransforms: patch:"
                         << name()
