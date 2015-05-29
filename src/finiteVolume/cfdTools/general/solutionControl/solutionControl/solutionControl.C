@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,16 +37,21 @@ namespace Foam
 
 void Foam::solutionControl::read(const bool absTolOnly)
 {
-    const dictionary& solnDict = this->dict();
+    const dictionary& solutionDict = this->dict();
 
     // Read solution controls
     nNonOrthCorr_ =
-        solnDict.lookupOrDefault<label>("nNonOrthogonalCorrectors", 0);
-    momentumPredictor_ = solnDict.lookupOrDefault("momentumPredictor", true);
-    transonic_ = solnDict.lookupOrDefault("transonic", false);
+        solutionDict.lookupOrDefault<label>("nNonOrthogonalCorrectors", 0);
+    momentumPredictor_ =
+        solutionDict.lookupOrDefault("momentumPredictor", true);
+    transonic_ = solutionDict.lookupOrDefault("transonic", false);
+    consistent_ = solutionDict.lookupOrDefault("consistent", false);
 
     // Read residual information
-    const dictionary residualDict(solnDict.subOrEmptyDict("residualControl"));
+    const dictionary residualDict
+    (
+        solutionDict.subOrEmptyDict("residualControl")
+    );
 
     DynamicList<fieldData> data(residualControl_);
 
@@ -177,6 +182,7 @@ Foam::solutionControl::solutionControl(fvMesh& mesh, const word& algorithmName)
     nNonOrthCorr_(0),
     momentumPredictor_(true),
     transonic_(false),
+    consistent_(false),
     corr_(0),
     corrNonOrtho_(0)
 {}

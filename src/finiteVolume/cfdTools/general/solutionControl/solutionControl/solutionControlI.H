@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,12 @@ inline bool Foam::solutionControl::momentumPredictor() const
 inline bool Foam::solutionControl::transonic() const
 {
     return transonic_;
+}
+
+
+inline bool Foam::solutionControl::consistent() const
+{
+    return consistent_;
 }
 
 

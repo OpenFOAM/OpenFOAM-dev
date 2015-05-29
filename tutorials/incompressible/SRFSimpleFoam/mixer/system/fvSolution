@@ -37,22 +37,14 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
+    consistent          yes;
 }
 
 relaxationFactors
 {
-    fields
-    {
-        p               0.3;
-    }
     equations
     {
-        Urel            0.7;
-        k               0.7;
-        epsilon         0.7;
-        omega           0.7;
-        R               0.7;
-        nuTilda         0.7;
+        ".*"            0.9;
     }
 }
 
