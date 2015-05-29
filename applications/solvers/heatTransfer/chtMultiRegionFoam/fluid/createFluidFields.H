@@ -15,6 +15,7 @@
     List<scalar> initialMassFluid(fluidRegions.size());
     List<bool> frozenFlowFluid(fluidRegions.size(), false);
 
+    PtrList<IOMRFZoneList> MRFfluid(fluidRegions.size());
     PtrList<fv::IOoptionList> fluidFvOptions(fluidRegions.size());
 
     // Populate fluid field pointer lists
@@ -194,6 +195,13 @@
         const dictionary& pimpleDict =
             fluidRegions[i].solutionDict().subDict("PIMPLE");
         pimpleDict.readIfPresent("frozenFlow", frozenFlowFluid[i]);
+
+        Info<< "    Adding MRF\n" << endl;
+        MRFfluid.set
+        (
+            i,
+            new IOMRFZoneList(fluidRegions[i])
+        );
 
         Info<< "    Adding fvOptions\n" << endl;
         fluidFvOptions.set

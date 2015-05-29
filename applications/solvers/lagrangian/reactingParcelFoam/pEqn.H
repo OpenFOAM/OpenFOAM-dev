@@ -20,7 +20,7 @@
         )
     );
 
-    fvOptions.makeRelative(fvc::interpolate(rho), phiHbyA);
+    MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
     fvScalarMatrix pDDtEqn
     (

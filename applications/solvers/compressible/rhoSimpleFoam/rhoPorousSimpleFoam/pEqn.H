@@ -22,7 +22,7 @@
         fvc::interpolate(rho*HbyA) & mesh.Sf()
     );
 
-    fvOptions.makeRelative(fvc::interpolate(rho), phiHbyA);
+    MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
     closedVolume = adjustPhi(phiHbyA, U, p);
 

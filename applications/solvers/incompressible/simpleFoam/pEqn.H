@@ -4,7 +4,7 @@
     HbyA = rAU*UEqn().H();
 
     surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(HbyA) & mesh.Sf());
-    fvOptions.makeRelative(phiHbyA);
+    MRF.makeRelative(phiHbyA);
     adjustPhi(phiHbyA, U, p);
 
     tmp<volScalarField> rAtU(rAU);

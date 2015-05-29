@@ -14,7 +14,6 @@ derivedSources=sources/derived
 $(derivedSources)/actuationDiskSource/actuationDiskSource.C
 $(derivedSources)/effectivenessHeatExchangerSource/effectivenessHeatExchangerSource.C
 $(derivedSources)/explicitPorositySource/explicitPorositySource.C
-$(derivedSources)/MRFSource/MRFSource.C
 $(derivedSources)/pressureGradientExplicitSource/pressureGradientExplicitSource.C
 $(derivedSources)/pressureGradientExplicitSource/pressureGradientExplicitSourceIO.C
 $(derivedSources)/radialActuationDiskSource/radialActuationDiskSource.C

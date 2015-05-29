@@ -15,6 +15,8 @@ surfaceScalarField phiHbyA
   + rAUf*fvc::ddtCorr(U, Uf)
 );
 
+MRF.makeRelative(phiHbyA);
+
 if (p.needReference())
 {
     fvc::makeRelative(phiHbyA, U);
@@ -22,6 +24,17 @@ if (p.needReference())
     fvc::makeAbsolute(phiHbyA, U);
 }
 
+// Update the fixedFluxPressure BCs to ensure flux consistency
+setSnGrad<fixedFluxPressureFvPatchScalarField>
+(
+    p.boundaryField(),
+    (
+        phiHbyA.boundaryField()
+      - MRF.relative(mesh.Sf().boundaryField() & U.boundaryField())
+    )/(mesh.magSf().boundaryField()*rAUf.boundaryField())
+);
+
+// Non-orthogonal pressure corrector loop
 while (pimple.correctNonOrthogonal())
 {
     fvScalarMatrix pEqn

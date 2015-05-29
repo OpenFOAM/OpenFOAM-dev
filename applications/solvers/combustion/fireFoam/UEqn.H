@@ -1,7 +1,9 @@
+    MRF.correctBoundaryVelocity(U);
+
     fvVectorMatrix UEqn
     (
-        fvm::ddt(rho, U)
-      + fvm::div(phi, U)
+        fvm::ddt(rho, U) + fvm::div(phi, U)
+      + MRF.DDt(rho, U)
       + turbulence->divDevRhoReff(U)
      ==
         parcels.SU(U)

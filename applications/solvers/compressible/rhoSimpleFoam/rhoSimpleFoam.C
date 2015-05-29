@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
     simpleControl simple(mesh);
 
     #include "createFields.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 

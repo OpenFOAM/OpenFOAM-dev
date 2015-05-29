@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -605,47 +605,6 @@ void Foam::fv::option::setValue
 
 
 void Foam::fv::option::setValue(fvMatrix<tensor>& eqn, const label fieldI)
-{
-    // do nothing
-}
-
-
-void Foam::fv::option::makeRelative(surfaceScalarField& phi) const
-{
-    // do nothing
-}
-
-
-void Foam::fv::option::makeRelative
-(
-    FieldField<fvsPatchField, scalar>& phi
-) const
-{
-    // do nothing
-}
-
-
-void Foam::fv::option::makeRelative
-(
-    const surfaceScalarField& rho,
-    surfaceScalarField& phi
-) const
-{
-    // do nothing
-}
-
-
-void Foam::fv::option::makeAbsolute(surfaceScalarField& phi) const
-{
-    // do nothing
-}
-
-
-void Foam::fv::option::makeAbsolute
-(
-    const surfaceScalarField& rho,
-    surfaceScalarField& phi
-) const
 {
     // do nothing
 }

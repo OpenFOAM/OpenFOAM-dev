@@ -10,26 +10,26 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
+    location    "constant";
     object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF1
+porousToair
 {
-    type            MRFSource;
-    active          true;
-    selectionMode   cellZone;
-    cellZone        rotor;
+    type            constantHeatTransfer;
+    active          on;
+    selectionMode   mapRegion;
+    interpolationMethod cellVolumeWeight;
+    nbrRegionName   air;
+    master          true;
 
-    MRFSourceCoeffs
+    constantHeatTransferCoeffs
     {
-        active      true;
-        origin      (0 0 0);
-        axis        (0 0 1);
-        omega       104.72;
+        nbrModelName    airToporous;
+        fieldNames      (h);
+        semiImplicit    no;
     }
 }
-
 
 // ************************************************************************* //

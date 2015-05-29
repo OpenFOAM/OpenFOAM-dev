@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
     #include "readGravitationalAcceleration.H"
     #include "createFields.H"
     #include "createRhoUf.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "createClouds.H"
     #include "createRadiationModel.H"

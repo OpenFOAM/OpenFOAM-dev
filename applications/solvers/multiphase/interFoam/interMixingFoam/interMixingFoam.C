@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
 
     #include "initContinuityErrs.H"
     #include "createFields.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "readTimeControls.H"
     #include "CourantNo.H"

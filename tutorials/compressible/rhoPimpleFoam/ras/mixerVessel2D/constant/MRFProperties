@@ -10,40 +10,22 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      fvOptions;
+    location    "constant";
+    object      MRFProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-porosity1
+MRF1
 {
-    type            explicitPorositySource;
-    active          true;
-    selectionMode   cellZone;
-    cellZone        porosity;
+    cellZone    rotor;
+    active      yes;
 
-    explicitPorositySourceCoeffs
-    {
-        type            DarcyForchheimer;
+    // Fixed patches (by default they 'move' with the MRF zone)
+    nonRotatingPatches ();
 
-        DarcyForchheimerCoeffs
-        {
-            d   d [0 -2 0 0 0 0 0] (5e7 -1000 -1000);
-            f   f [0 -1 0 0 0 0 0] (0 0 0);
-
-            coordinateSystem
-            {
-                type    cartesian;
-                origin  (0 0 0);
-                coordinateRotation
-                {
-                    type    axesRotation;
-                    e1  (0.70710678 0.70710678 0);
-                    e2  (0 0 1);
-                }
-            }
-        }
-    }
+    origin    (0 0 0);
+    axis      (0 0 1);
+    omega     constant 1047.2;
 }
 
 

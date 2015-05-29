@@ -11,6 +11,7 @@
         (fvc::interpolate(HbyA) & mesh.Sf())
       + fvc::interpolate(rho*rAU)*fvc::ddtCorr(U, Uf)
     );
+    MRF.makeRelative(phiHbyA);
 
     if (p_rgh.needReference())
     {

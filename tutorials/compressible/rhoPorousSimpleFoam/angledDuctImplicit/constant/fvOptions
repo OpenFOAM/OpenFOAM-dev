@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
+    location    "constant";
     object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -19,15 +19,13 @@ source1
 {
     type            fixedTemperatureConstraint;
     active          true;
-    timeStart       0.1;
-    duration        0.4;
-    selectionMode   cellSet;
-    cellSet         ignitionCells;
+    selectionMode   cellZone;
+    cellZone        porosity;
 
     fixedTemperatureConstraintCoeffs
     {
         mode            uniform;
-        temperature     2000;
+        temperature     350;
     }
 }
 

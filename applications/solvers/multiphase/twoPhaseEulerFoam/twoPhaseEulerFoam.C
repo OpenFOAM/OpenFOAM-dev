@@ -34,7 +34,6 @@ Description
 #include "twoPhaseSystem.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "pimpleControl.H"
-#include "IOMRFZoneList.H"
 #include "fvIOoptionList.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "fixedValueFvsPatchFields.H"
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
     pimpleControl pimple(mesh);
 
     #include "createFields.H"
-    #include "createMRFZones.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
     #include "readTimeControls.H"

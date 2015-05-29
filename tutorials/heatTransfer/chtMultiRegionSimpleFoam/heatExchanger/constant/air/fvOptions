@@ -10,26 +10,59 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
+    location    "constant";
     object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-porousToair
+airToporous
 {
     type            constantHeatTransfer;
     active          on;
     selectionMode   mapRegion;
     interpolationMethod cellVolumeWeight;
-    nbrRegionName   air;
-    master          true;
+    nbrRegionName   porous;
+    master          false;
 
     constantHeatTransferCoeffs
     {
-        nbrModelName    airToporous;
+        nbrModelName    porousToair;
         fieldNames      (h);
         semiImplicit    no;
     }
 }
+
+porosityBlockage
+{
+    type            interRegionExplicitPorositySource;
+    active          on;
+    selectionMode   mapRegion;
+    interpolationMethod cellVolumeWeight;
+    nbrRegionName   porous;
+
+    interRegionExplicitPorositySourceCoeffs
+    {
+        type            DarcyForchheimer;
+
+        DarcyForchheimerCoeffs
+        {
+            d   d [0 -2 0 0 0] (-1000 -1000 1e4);
+            f   f [0 -1 0 0 0] (0 0 0);
+
+            coordinateSystem
+            {
+                type    cartesian;
+                origin  (0 0 0);
+                coordinateRotation
+                {
+                    type    axesRotation;
+                    e1      (0 1 0);
+                    e2      (0 0 1);
+                }
+            }
+        }
+    }
+}
+
 
 // ************************************************************************* //

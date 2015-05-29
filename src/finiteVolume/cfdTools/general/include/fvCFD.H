@@ -14,6 +14,7 @@
 #include "fixedValueFvPatchFields.H"
 #include "adjustPhi.H"
 #include "findRefCell.H"
+#include "IOMRFZoneList.H"
 #include "constants.H"
 
 #include "OSspecific.H"

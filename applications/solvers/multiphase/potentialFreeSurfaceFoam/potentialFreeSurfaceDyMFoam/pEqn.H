@@ -17,6 +17,8 @@
       + rAUf*fvc::ddtCorr(U, Uf)
     );
 
+    MRF.makeRelative(phiHbyA);
+
     if (p_gh.needReference())
     {
         fvc::makeRelative(phiHbyA, U);

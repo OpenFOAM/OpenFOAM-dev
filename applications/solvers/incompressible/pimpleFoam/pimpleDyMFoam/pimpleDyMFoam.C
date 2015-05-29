@@ -39,6 +39,7 @@ Description
 #include "pimpleControl.H"
 #include "CorrectPhi.H"
 #include "fvIOoptionList.H"
+#include "fixedFluxPressureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,6 +54,7 @@ int main(int argc, char *argv[])
 
     #include "createFields.H"
     #include "createUf.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "readTimeControls.H"
     #include "CourantNo.H"

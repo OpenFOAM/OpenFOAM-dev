@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -511,35 +511,6 @@ public:
                     fvMatrix<tensor>& eqn,
                     const label fieldI
                 );
-
-
-            // Flux manipulations
-
-                //- Make the given absolute flux relative
-                virtual void makeRelative(surfaceScalarField& phi) const;
-
-                //- Make the given absolute boundary flux relative
-                virtual void makeRelative
-                (
-                    FieldField<fvsPatchField, scalar>& phi
-                ) const;
-
-                //- Make the given absolute mass-flux relative
-                virtual void makeRelative
-                (
-                    const surfaceScalarField& rho,
-                    surfaceScalarField& phi
-                ) const;
-
-                //- Make the given relative flux absolute
-                virtual void makeAbsolute(surfaceScalarField& phi) const;
-
-                //- Make the given relative mass-flux absolute
-                virtual void makeAbsolute
-                (
-                    const surfaceScalarField& rho,
-                    surfaceScalarField& phi
-                ) const;
 
 
         // I-O

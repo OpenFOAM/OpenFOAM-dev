@@ -14,7 +14,7 @@
         (fvc::interpolate(HbyA) & mesh.Sf())
     );
 
-    fvOptions.makeRelative(phiHbyA);
+    MRF.makeRelative(phiHbyA);
 
     adjustPhi(phiHbyA, U, p_rgh);
 
@@ -26,7 +26,7 @@
         p_rgh.boundaryField(),
         (
             phiHbyA.boundaryField()
-          - fvOptions.relative(mesh.Sf().boundaryField() & U.boundaryField())
+          - MRF.relative(mesh.Sf().boundaryField() & U.boundaryField())
         )/(mesh.magSf().boundaryField()*rAUf.boundaryField())
     );
 

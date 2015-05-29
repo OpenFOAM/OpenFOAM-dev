@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     pimpleControl pimple(mesh);
 
     #include "createFields.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "createClouds.H"
     #include "createSurfaceFilmModel.H"

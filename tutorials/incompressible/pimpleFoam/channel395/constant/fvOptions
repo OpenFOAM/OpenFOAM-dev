@@ -10,45 +10,23 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
+    location    "constant";
     object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-disk1
+momentumSource
 {
-    type            actuationDiskSource;
+    type            pressureGradientExplicitSource;
     active          on;            //on/off switch
-    selectionMode   cellSet;       //cellSet // points //cellZone
-    cellSet         actuationDisk1;//cellSet name when selectionMode = cellSet
+    selectionMode   all;       //cellSet // points //cellZone
 
-    actuationDiskSourceCoeffs
+    pressureGradientExplicitSourceCoeffs
     {
         fieldNames  (U);
-        diskDir     (1 0 0);   // orientation of the disk
-        Cp          0.386;      // Cp
-        Ct          0.58;       // Ct
-        diskArea    40;         // disk area
-        upstreamPoint (581849 4785810 1065);
+        Ubar        ( 0.1335 0 0 );
     }
 }
 
-disk2
-{
-    type            actuationDiskSource;
-    active          on;
-    selectionMode   cellSet;
-    cellSet         actuationDisk2;
-
-    actuationDiskSourceCoeffs
-    {
-        fieldNames  (U);
-        diskDir     (1 0 0);
-        Cp          0.53;
-        Ct          0.58;
-        diskArea    40;
-        upstreamPoint (581753 4785663 1070);
-    }
-}
 
 // ************************************************************************* //

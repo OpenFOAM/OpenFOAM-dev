@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
 
     #include "readCombustionProperties.H"
     #include "createFields.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "createRhoUf.H"
     #include "initContinuityErrs.H"

@@ -35,7 +35,6 @@ Description
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
 #include "simpleControl.H"
-#include "IOMRFZoneList.H"
 #include "IOporosityModelList.H"
 #include "fvIOoptionList.H"
 
@@ -50,8 +49,9 @@ int main(int argc, char *argv[])
     simpleControl simple(mesh);
 
     #include "createFields.H"
+    #include "createMRF.H"
+    #include "createPorousZones.H"
     #include "createFvOptions.H"
-    #include "createZones.H"
     #include "initContinuityErrs.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

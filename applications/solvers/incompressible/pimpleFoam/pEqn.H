@@ -15,7 +15,7 @@ surfaceScalarField phiHbyA
   + rAUf*fvc::ddtCorr(U, phi)
 );
 
-fvOptions.makeRelative(phiHbyA);
+MRF.makeRelative(phiHbyA);
 
 adjustPhi(phiHbyA, U, p);
 
@@ -25,7 +25,7 @@ setSnGrad<fixedFluxPressureFvPatchScalarField>
     p.boundaryField(),
     (
         phiHbyA.boundaryField()
-      - fvOptions.relative(mesh.Sf().boundaryField() & U.boundaryField())
+      - MRF.relative(mesh.Sf().boundaryField() & U.boundaryField())
     )/(mesh.magSf().boundaryField()*rAUf.boundaryField())
 );
 

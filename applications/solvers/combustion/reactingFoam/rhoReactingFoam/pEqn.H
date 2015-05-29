@@ -22,7 +22,7 @@
             )
         );
 
-        fvOptions.makeRelative(phiHbyA);
+        MRF.makeRelative(phiHbyA);
 
         surfaceScalarField phid("phid", fvc::interpolate(thermo.psi())*phiHbyA);
 
@@ -63,7 +63,7 @@
             )
         );
 
-        fvOptions.makeRelative(fvc::interpolate(rho), phiHbyA);
+        MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
         fvScalarMatrix pDDtEqn
         (

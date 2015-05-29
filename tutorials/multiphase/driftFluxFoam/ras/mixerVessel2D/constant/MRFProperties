@@ -10,24 +10,22 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      fvOptions;
+    location    "constant";
+    object      MRFProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-source1
+MRF1
 {
-    type            fixedTemperatureConstraint;
-    active          true;
-    selectionMode   cellZone;
-    cellZone        porosity;
+    cellZone    rotor;
+    active      yes;
 
-    fixedTemperatureConstraintCoeffs
-    {
-        mode            uniform;
-        temperature     350;
-    }
+    // Fixed patches (by default they 'move' with the MRF zone)
+    nonRotatingPatches ();
+
+    origin    (0 0 0);
+    axis      (0 0 1);
+    omega     constant 6.2831853;
 }
-
 
 // ************************************************************************* //

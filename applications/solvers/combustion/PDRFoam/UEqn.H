@@ -1,7 +1,9 @@
+    MRF.correctBoundaryVelocity(U);
+
     fvVectorMatrix UEqn
     (
-        betav*fvm::ddt(rho, U)
-      + fvm::div(phi, U)
+        betav*fvm::ddt(rho, U) + fvm::div(phi, U)
+      + MRF.DDt(rho, U)
       + turbulence->divDevRhoReff(U)
      ==
         betav*rho*g

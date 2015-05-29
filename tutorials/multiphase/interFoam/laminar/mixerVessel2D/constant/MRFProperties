@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-zone1
+MRF1
 {
     cellZone    rotor;
     active      yes;

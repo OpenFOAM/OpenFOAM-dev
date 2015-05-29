@@ -19,7 +19,7 @@
         (fvc::interpolate(rho*HbyA) & mesh.Sf())
     );
 
-    fvOptions.makeRelative(fvc::interpolate(rho), phiHbyA);
+    MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
     bool closedVolume = adjustPhi(phiHbyA, U, p_rgh);
 
@@ -31,7 +31,7 @@
         p_rgh.boundaryField(),
         (
             phiHbyA.boundaryField()
-          - fvOptions.relative(mesh.Sf().boundaryField() & U.boundaryField())
+          - MRF.relative(mesh.Sf().boundaryField() & U.boundaryField())
            *rho.boundaryField()
         )/(mesh.magSf().boundaryField()*rhorAUf.boundaryField())
     );

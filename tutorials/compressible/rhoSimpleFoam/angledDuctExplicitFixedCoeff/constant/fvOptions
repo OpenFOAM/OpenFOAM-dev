@@ -10,44 +10,44 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
+    location    "constant";
     object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-airToporous
+fixedTemperaure1
 {
-    type            constantHeatTransfer;
-    active          on;
-    selectionMode   mapRegion;
-    interpolationMethod cellVolumeWeight;
-    nbrRegionName   porous;
-    master          false;
+    type            fixedTemperatureConstraint;
+    active          true;
+    selectionMode   cellZone;
+    cellZone        porosity;
 
-    constantHeatTransferCoeffs
+    fixedTemperatureConstraintCoeffs
     {
-        nbrModelName    porousToair;
-        fieldNames      (h);
-        semiImplicit    no;
+        mode            uniform;
+        temperature     350;
     }
 }
 
-porosityBlockage
+
+porosity1
 {
-    type            interRegionExplicitPorositySource;
-    active          on;
-    selectionMode   mapRegion;
-    interpolationMethod cellVolumeWeight;
-    nbrRegionName   porous;
+    type            explicitPorositySource;
+    active          true;
+    selectionMode   cellZone;
+    cellZone        porosity;
 
-    interRegionExplicitPorositySourceCoeffs
+    explicitPorositySourceCoeffs
     {
-        type            DarcyForchheimer;
+        type            fixedCoeff;
+        active          yes;
+        cellZone        porosity;
 
-        DarcyForchheimerCoeffs
+        fixedCoeffCoeffs
         {
-            d   d [0 -2 0 0 0] (-1000 -1000 1e4);
-            f   f [0 -1 0 0 0] (0 0 0);
+            alpha       alpha [0 0 -1 0 0 0 0] (500 -1000 -1000);
+            beta        beta  [0 -1 0 0 0 0 0] (0 0 0);
+            rhoRef      1;
 
             coordinateSystem
             {
@@ -56,27 +56,13 @@ porosityBlockage
                 coordinateRotation
                 {
                     type    axesRotation;
-                    e1      (0 1 0);
-                    e2      (0 0 1);
+                    e1  (0.70710678 0.70710678 0);
+                    e2  (0 0 1);
                 }
             }
         }
     }
 }
 
-MRF1
-{
-    type            MRFSource;
-    active          true;
-    selectionMode   cellZone;
-    cellZone        rotor;
-
-    MRFSourceCoeffs
-    {
-        origin    (0.25 0.25 0.25);
-        axis      (0 0 1);
-        omega     47.7; // 50 rpm
-    }
-}
 
 // ************************************************************************* //

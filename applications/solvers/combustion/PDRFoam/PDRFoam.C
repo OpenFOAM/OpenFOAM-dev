@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
     #include "readCombustionProperties.H"
     #include "readGravitationalAcceleration.H"
     #include "createFields.H"
+    #include "createMRF.H"
     #include "initContinuityErrs.H"
     #include "readTimeControls.H"
     #include "compressibleCourantNo.H"

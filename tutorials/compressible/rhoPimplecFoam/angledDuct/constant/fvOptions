@@ -10,25 +10,10 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
+    location    "constant";
     object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-fixedTemperaure1
-{
-    type            fixedTemperatureConstraint;
-    active          true;
-    selectionMode   cellZone;
-    cellZone        porosity;
-
-    fixedTemperatureConstraintCoeffs
-    {
-        mode            uniform;
-        temperature     350;
-    }
-}
-
 
 porosity1
 {
@@ -39,15 +24,12 @@ porosity1
 
     explicitPorositySourceCoeffs
     {
-        type            fixedCoeff;
-        active          yes;
-        cellZone        porosity;
+        type            DarcyForchheimer;
 
-        fixedCoeffCoeffs
+        DarcyForchheimerCoeffs
         {
-            alpha       alpha [0 0 -1 0 0 0 0] (500 -1000 -1000);
-            beta        beta  [0 -1 0 0 0 0 0] (0 0 0);
-            rhoRef      1;
+            d   d [0 -2 0 0 0 0 0] (7e5 -1000 -1000);
+            f   f [0 -1 0 0 0 0 0] (0 0 0);
 
             coordinateSystem
             {
@@ -57,7 +39,7 @@ porosity1
                 {
                     type    axesRotation;
                     e1  (0.70710678 0.70710678 0);
-                    e2  (0 0 1);
+                    e3  (0 0 1);
                 }
             }
         }
@@ -65,4 +47,4 @@ porosity1
 }
 
 
-// ************************************************************************* //
+//************************************************************************ //

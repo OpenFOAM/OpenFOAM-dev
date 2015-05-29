@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
     pisoControl potentialFlow(mesh, "potentialFlow");
 
     #include "createFields.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -90,8 +91,7 @@ int main(int argc, char *argv[])
     // function objects so do it ourselves
     runTime.functionObjects().start();
 
-    fvOptions.makeRelative(phi);
-
+    MRF.makeRelative(phi);
     adjustPhi(phi, U, p);
 
     // Non-orthogonal velocity potential corrector loop
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    fvOptions.makeAbsolute(phi);
+    MRF.makeAbsolute(phi);
 
     Info<< "Continuity error = "
         << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()

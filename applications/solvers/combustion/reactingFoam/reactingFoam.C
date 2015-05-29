@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
 
     #include "readGravitationalAcceleration.H"
     #include "createFields.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
     #include "readTimeControls.H"

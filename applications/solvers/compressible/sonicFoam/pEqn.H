@@ -16,7 +16,7 @@ surfaceScalarField phid
     )
 );
 
-fvOptions.makeRelative(fvc::interpolate(psi), phid);
+MRF.makeRelative(fvc::interpolate(psi), phid);
 
 // Non-orthogonal pressure corrector loop
 while (pimple.correctNonOrthogonal())

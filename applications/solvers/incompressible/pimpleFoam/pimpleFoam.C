@@ -39,8 +39,6 @@ Description
 #include "turbulentTransportModel.H"
 #include "pimpleControl.H"
 #include "fvIOoptionList.H"
-#include "IOporosityModelList.H"
-#include "IOMRFZoneList.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,6 +52,7 @@ int main(int argc, char *argv[])
     pimpleControl pimple(mesh);
 
     #include "createFields.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 

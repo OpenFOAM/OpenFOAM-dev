@@ -18,6 +18,7 @@
     PtrList<dimensionedScalar> rhoMax(fluidRegions.size());
     PtrList<dimensionedScalar> rhoMin(fluidRegions.size());
 
+    PtrList<IOMRFZoneList> MRFfluid(fluidRegions.size());
     PtrList<fv::IOoptionList> fluidFvOptions(fluidRegions.size());
 
     // Populate fluid field pointer lists
@@ -203,6 +204,13 @@
                     dimDensity
                 )
             )
+        );
+
+        Info<< "    Adding MRF\n" << endl;
+        MRFfluid.set
+        (
+            i,
+            new IOMRFZoneList(fluidRegions[i])
         );
 
         Info<< "    Adding fvOptions\n" << endl;

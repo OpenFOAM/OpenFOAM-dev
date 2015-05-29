@@ -57,6 +57,7 @@ int main(int argc, char *argv[])
 
     #include "readTimeControls.H"
     #include "createFields.H"
+    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "createRDeltaT.H"
     #include "createRadiationModel.H"

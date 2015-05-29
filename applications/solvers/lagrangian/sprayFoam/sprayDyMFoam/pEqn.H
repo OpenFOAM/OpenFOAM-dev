@@ -27,7 +27,7 @@ if (pimple.transonic())
     );
 
     fvc::makeRelative(phid, psi, U);
-    fvOptions.makeRelative(fvc::interpolate(psi), phid);
+    MRF.makeRelative(fvc::interpolate(psi), phid);
 
     while (pimple.correctNonOrthogonal())
     {
@@ -59,7 +59,7 @@ else
     );
 
     fvc::makeRelative(phiHbyA, rho, U);
-    fvOptions.makeRelative(fvc::interpolate(rho), phiHbyA);
+    MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
     while (pimple.correctNonOrthogonal())
     {

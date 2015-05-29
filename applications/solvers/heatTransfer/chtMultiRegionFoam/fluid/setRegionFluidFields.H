@@ -20,6 +20,7 @@
 
     radiation::radiationModel& rad = radiation[i];
 
+    IOMRFZoneList& MRF = MRFfluid[i];
     fv::IOoptionList& fvOptions = fluidFvOptions[i];
 
     const dimensionedScalar initialMass
