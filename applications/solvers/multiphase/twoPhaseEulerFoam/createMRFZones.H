@@ -1,4 +1,4 @@
-    IOMRFZoneList mrfZones(mesh);
-    mrfZones.correctBoundaryVelocity(U1);
-    mrfZones.correctBoundaryVelocity(U2);
-    mrfZones.correctBoundaryVelocity(U);
+    IOMRFZoneList MRF(mesh);
+    MRF.correctBoundaryVelocity(U1);
+    MRF.correctBoundaryVelocity(U2);
+    MRF.correctBoundaryVelocity(U);

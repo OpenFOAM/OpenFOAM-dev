@@ -11,7 +11,7 @@ else
 UEqn.clear();
 surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(HbyA) & mesh.Sf());
 
-mrfZones.makeRelative(phiHbyA);
+MRF.makeRelative(phiHbyA);
 
 adjustPhi(phiHbyA, U, p);
 

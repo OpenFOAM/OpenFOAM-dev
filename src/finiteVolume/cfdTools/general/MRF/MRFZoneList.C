@@ -126,20 +126,20 @@ bool Foam::MRFZoneList::writeData(Ostream& os) const
 }
 
 
-void Foam::MRFZoneList::addCoriolis
+void Foam::MRFZoneList::addAcceleration
 (
     const volVectorField& U,
     volVectorField& ddtU
 ) const
 {
     forAll(*this, i)
-    {
+     {
         operator[](i).addCoriolis(U, ddtU);
     }
 }
 
 
-void Foam::MRFZoneList::addCoriolis(fvVectorMatrix& UEqn) const
+void Foam::MRFZoneList::addAcceleration(fvVectorMatrix& UEqn) const
 {
     forAll(*this, i)
     {
@@ -148,7 +148,7 @@ void Foam::MRFZoneList::addCoriolis(fvVectorMatrix& UEqn) const
 }
 
 
-void Foam::MRFZoneList::addCoriolis
+void Foam::MRFZoneList::addAcceleration
 (
     const volScalarField& rho,
     fvVectorMatrix& UEqn
@@ -161,7 +161,7 @@ void Foam::MRFZoneList::addCoriolis
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::operator()
+Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
 (
     const volVectorField& U
 )
@@ -191,13 +191,13 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::operator()
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::operator()
+Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
 (
     const volScalarField& rho,
     const volVectorField& U
 )
 {
-    return rho*operator()(U);
+    return rho*DDt(U);
 }
 
 

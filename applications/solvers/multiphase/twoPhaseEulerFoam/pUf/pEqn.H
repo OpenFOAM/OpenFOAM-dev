@@ -99,8 +99,8 @@ while (pimple.correct())
     surfaceScalarField rhof2(fvc::interpolate(rho2));
 
     // Correct fixed-flux BCs to be consistent with the velocity BCs
-    mrfZones.correctBoundaryFlux(U1, phi1);
-    mrfZones.correctBoundaryFlux(U2, phi2);
+    MRF.correctBoundaryFlux(U1, phi1);
+    MRF.correctBoundaryFlux(U2, phi2);
 
     surfaceScalarField alpharAUf1
     (
@@ -155,10 +155,10 @@ while (pimple.correct())
         rAUf1
        *(
             (alphaRhof10 + Vmf)
-           *mrfZones.absolute(phi1.oldTime())/runTime.deltaT()
+           *MRF.absolute(phi1.oldTime())/runTime.deltaT()
           + (fvc::interpolate(U1Eqn.H()) & mesh.Sf())
           + Vmf*ddtPhi2
-          + Kdf*mrfZones.absolute(phi2)
+          + Kdf*MRF.absolute(phi2)
           - Ff1()
         );
 
@@ -173,10 +173,10 @@ while (pimple.correct())
         rAUf2
        *(
             (alphaRhof20 + Vmf)
-           *mrfZones.absolute(phi2.oldTime())/runTime.deltaT()
+           *MRF.absolute(phi2.oldTime())/runTime.deltaT()
           + (fvc::interpolate(U2Eqn.H()) & mesh.Sf())
           + Vmf*ddtPhi1
-          + Kdf*mrfZones.absolute(phi1)
+          + Kdf*MRF.absolute(phi1)
           - Ff2()
        );
 
@@ -186,7 +186,7 @@ while (pimple.correct())
         "phiHbyA",
         alphaf1*(phiHbyA1 - phig1) + alphaf2*(phiHbyA2 - phig2)
     );
-    mrfZones.makeRelative(phiHbyA);
+    MRF.makeRelative(phiHbyA);
 
     phiHbyA1 -= phig1;
     phiHbyA2 -= phig2;
@@ -296,14 +296,14 @@ while (pimple.correct())
             (
                 phiHbyA1
               + alpharAUf1*mSfGradp
-              - rAUf1*Kdf*mrfZones.absolute(phi2)
+              - rAUf1*Kdf*MRF.absolute(phi2)
             );
 
             surfaceScalarField phi2s
             (
                 phiHbyA2
               + alpharAUf2*mSfGradp
-              - rAUf2*Kdf*mrfZones.absolute(phi1)
+              - rAUf2*Kdf*MRF.absolute(phi1)
             );
 
             surfaceScalarField phir
@@ -315,11 +315,11 @@ while (pimple.correct())
             phi1 = phi - alphaf2*phir;
             phi2 = phi + alphaf1*phir;
 
-            U1 = fvc::reconstruct(mrfZones.absolute(phi1));
+            U1 = fvc::reconstruct(MRF.absolute(phi1));
             U1.correctBoundaryConditions();
             fvOptions.correct(U1);
 
-            U2 = fvc::reconstruct(mrfZones.absolute(phi2));
+            U2 = fvc::reconstruct(MRF.absolute(phi2));
             U2.correctBoundaryConditions();
             fvOptions.correct(U2);
 

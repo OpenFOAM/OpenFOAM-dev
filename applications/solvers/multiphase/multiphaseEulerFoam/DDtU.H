@@ -7,5 +7,5 @@ forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
       + fvc::div(phase.phi(), phase.U())
       - fvc::div(phase.phi())*phase.U();
 
-    mrfZones.addCoriolis(phase.U(), phase.DDtU());
+    MRF.addAcceleration(phase.U(), phase.DDtU());
 }

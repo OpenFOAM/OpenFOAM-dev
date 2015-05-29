@@ -1,4 +1,4 @@
-#include "mrfZonesCorrectBCs.H"
+#include "MRFCorrectBCs.H"
 
 PtrList<fvVectorMatrix> UEqns(fluid.phases().size());
 autoPtr<multiphaseSystem::dragCoeffFields> dragCoeffs(fluid.dragCoeffs());
@@ -51,7 +51,7 @@ forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
             )
         )
     );
-    mrfZones.addCoriolis
+    MRF.addAcceleration
     (
         alpha*(1 + (1/phase.rho())*fluid.Cvm(phase)),
         UEqns[phasei]

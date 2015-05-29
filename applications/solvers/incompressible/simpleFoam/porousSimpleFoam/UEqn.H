@@ -3,12 +3,11 @@
     tmp<fvVectorMatrix> UEqn
     (
         fvm::div(phi, U)
+      + MRF.DDt(U)
       + turbulence->divDevReff(U)
       ==
         fvOptions(U)
     );
-
-    mrfZones.addCoriolis(UEqn());
 
     UEqn().relax();
 

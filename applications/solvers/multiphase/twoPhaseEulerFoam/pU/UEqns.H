@@ -1,6 +1,6 @@
-mrfZones.correctBoundaryVelocity(U1);
-mrfZones.correctBoundaryVelocity(U2);
-mrfZones.correctBoundaryVelocity(U);
+MRF.correctBoundaryVelocity(U1);
+MRF.correctBoundaryVelocity(U2);
+MRF.correctBoundaryVelocity(U);
 
 fvVectorMatrix U1Eqn(U1, rho1.dimensions()*U1.dimensions()*dimVol/dimTime);
 fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVol/dimTime);
@@ -15,7 +15,7 @@ volScalarField Kd(fluid.Kd());
         (
             fvm::ddt(alpha1, rho1, U1) + fvm::div(alphaRhoPhi1, U1)
           - fvm::Sp(contErr1, U1)
-          + mrfZones(alpha1*rho1 + Vm, U1)
+          + MRF.DDt(alpha1*rho1 + Vm, U1)
           + phase1.turbulence().divDevRhoReff(U1)
          ==
           - Vm
@@ -39,7 +39,7 @@ volScalarField Kd(fluid.Kd());
         (
             fvm::ddt(alpha2, rho2, U2) + fvm::div(alphaRhoPhi2, U2)
           - fvm::Sp(contErr2, U2)
-          + mrfZones(alpha2*rho2 + Vm, U2)
+          + MRF.DDt(alpha2*rho2 + Vm, U2)
           + phase2.turbulence().divDevRhoReff(U2)
          ==
           - Vm

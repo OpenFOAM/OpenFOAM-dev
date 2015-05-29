@@ -93,23 +93,31 @@ public:
         //- Reset the source list
         void reset(const dictionary& dict);
 
-        //- Add the Coriolis force contribution to the acceleration field
-        void addCoriolis(const volVectorField& U, volVectorField& ddtU) const;
+        //- Add the frame acceleration
+        void addAcceleration
+        (
+            const volVectorField& U,
+            volVectorField& ddtU
+        ) const;
 
-        //- Add the Coriolis force contribution to the momentum equation
-        void addCoriolis(fvVectorMatrix& UEqn) const;
+        //- Add the frame acceleration contribution to the momentum equation
+        void addAcceleration(fvVectorMatrix& UEqn) const;
 
-        //- Add the Coriolis force contribution to the momentum equation
-        void addCoriolis(const volScalarField& rho, fvVectorMatrix& UEqn) const;
+        //- Add the frame acceleration contribution to the momentum equation
+        void addAcceleration
+        (
+            const volScalarField& rho,
+            fvVectorMatrix& UEqn
+        ) const;
 
         //- Return the frame acceleration
-        tmp<volVectorField> operator()
+        tmp<volVectorField> DDt
         (
             const volVectorField& U
         );
 
-        //- Return the frame acceleration force
-        tmp<volVectorField> operator()
+        //- Return the frame acceleration
+        tmp<volVectorField> DDt
         (
             const volScalarField& rho,
             const volVectorField& U

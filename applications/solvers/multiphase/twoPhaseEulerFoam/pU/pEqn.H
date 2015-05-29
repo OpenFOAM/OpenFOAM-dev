@@ -92,8 +92,8 @@ while (pimple.correct())
     #include "correctContErrs.H"
 
     // Correct fixed-flux BCs to be consistent with the velocity BCs
-    mrfZones.correctBoundaryFlux(U1, phi1);
-    mrfZones.correctBoundaryFlux(U2, phi2);
+    MRF.correctBoundaryFlux(U1, phi1);
+    MRF.correctBoundaryFlux(U2, phi2);
 
     volVectorField HbyA1
     (
@@ -175,7 +175,7 @@ while (pimple.correct())
         (fvc::interpolate(HbyA1) & mesh.Sf())
       + phiCorrCoeff1*fvc::interpolate(alpha1.oldTime()*rho1.oldTime()*rAU1)
        *(
-            mrfZones.absolute(phi1.oldTime())
+            MRF.absolute(phi1.oldTime())
           - (fvc::interpolate(U1.oldTime()) & mesh.Sf())
         )/runTime.deltaT()
       - phiF1()
@@ -189,7 +189,7 @@ while (pimple.correct())
         (fvc::interpolate(HbyA2) & mesh.Sf())
       + phiCorrCoeff2*fvc::interpolate(alpha2.oldTime()*rho2.oldTime()*rAU2)
        *(
-            mrfZones.absolute(phi2.oldTime())
+            MRF.absolute(phi2.oldTime())
           - (fvc::interpolate(U2.oldTime()) & mesh.Sf())
         )/runTime.deltaT()
       - phiF2()
@@ -205,10 +205,10 @@ while (pimple.correct())
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
-        alphaf1*(phiHbyA1 + rAUKd1*mrfZones.absolute(phi2))
-      + alphaf2*(phiHbyA2 + rAUKd2*mrfZones.absolute(phi1))
+        alphaf1*(phiHbyA1 + rAUKd1*MRF.absolute(phi2))
+      + alphaf2*(phiHbyA2 + rAUKd2*MRF.absolute(phi1))
     );
-    mrfZones.makeRelative(phiHbyA);
+    MRF.makeRelative(phiHbyA);
 
     // Construct pressure "diffusivity"
     surfaceScalarField rAUf
