@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ void Foam::fv::interRegionHeatTransferModel::setNbrModel()
 
     firstIter_ = false;
 
-    // set nbr model's nbr model to avoid construction order problems
+    // Set nbr model's nbr model to avoid construction order problems
     nbrModel_->setNbrModel();
 }
 
@@ -112,9 +112,15 @@ Foam::fv::interRegionHeatTransferModel::interRegionHeatTransferModel
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh, readBool(dict.lookup("master"))),
+    interRegionOption
+    (
+        name,
+        modelType,
+        dict,
+        mesh
+    ),
+    nbrModelName_(coeffs_.lookup("nbrModelName")),
     nbrModel_(NULL),
-    nbrModelName_(word::null),
     firstIter_(true),
     timeIndex_(-1),
     htc_
@@ -142,8 +148,6 @@ Foam::fv::interRegionHeatTransferModel::interRegionHeatTransferModel
 {
     if (active())
     {
-        coeffs_.lookup("nbrModelName") >> nbrModelName_;
-
         coeffs_.lookup("fieldNames") >> fieldNames_;
         applied_.setSize(fieldNames_.size(), false);
 
@@ -271,38 +275,6 @@ void Foam::fv::interRegionHeatTransferModel::addSup
 )
 {
     addSup(eqn, fieldI);
-}
-
-
-void Foam::fv::interRegionHeatTransferModel::writeData(Ostream& os) const
-{
-    os.writeKeyword("name") << this->name() << token::END_STATEMENT << nl;
-    os.writeKeyword("nbrRegionName") << nbrRegionName_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("nbrModelName") << nbrModelName_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("master") << master_ << token::END_STATEMENT << nl;
-    os.writeKeyword("semiImplicit") << semiImplicit_ << token::END_STATEMENT
-        << nl;
-
-    if (dict_.found("note"))
-    {
-        os.writeKeyword("note") << string(dict_.lookup("note"))
-            << token::END_STATEMENT << nl;
-    }
-}
-
-
-bool Foam::fv::interRegionHeatTransferModel::read(const dictionary& dict)
-{
-    if (option::read(dict))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 

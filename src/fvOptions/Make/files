@@ -1,10 +1,16 @@
-fvOptions/fvOption.C
-fvOptions/fvOptionIO.C
-fvOptions/fvOptionList.C
-fvOptions/fvIOoptionList.C
+fvOption/fvOption.C
+fvOption/fvOptionIO.C
+fvOption/fvOptionList.C
+fvOption/fvIOoptionList.C
+
+cellSetOption/cellSetOption.C
+cellSetOption/cellSetOptionIO.C
+
+interRegionOption/interRegionOption.C
+interRegionOption/interRegionOptionIO.C
 
 
-/* sources */
+/* Sources */
 
 generalSources=sources/general
 $(generalSources)/codedSource/codedSource.C
@@ -32,16 +38,17 @@ $(derivedSources)/solidificationMeltingSource/solidificationMeltingSourceIO.C
 $(derivedSources)/tabulatedAccelerationSource/tabulatedAccelerationSource.C
 $(derivedSources)/tabulatedAccelerationSource/tabulated6DoFAcceleration/tabulated6DoFAcceleration.C
 
+
 interRegion = sources/interRegion
-$(interRegion)/interRegionHeatTransferModel/constantHeatTransfer/constantHeatTransfer.C
-$(interRegion)/interRegionHeatTransferModel/interRegionHeatTransferModel/interRegionHeatTransferModel.C
-$(interRegion)/interRegionHeatTransferModel/tabulatedHeatTransfer/tabulatedHeatTransfer.C
-$(interRegion)/interRegionHeatTransferModel/variableHeatTransfer/variableHeatTransfer.C
+$(interRegion)/interRegionHeatTransfer/interRegionHeatTransferModel/interRegionHeatTransferModel.C
+$(interRegion)/interRegionHeatTransfer/interRegionHeatTransferModel/interRegionHeatTransferModelIO.C
+$(interRegion)/interRegionHeatTransfer/constantHeatTransfer/constantHeatTransfer.C
+$(interRegion)/interRegionHeatTransfer/tabulatedHeatTransfer/tabulatedHeatTransfer.C
+$(interRegion)/interRegionHeatTransfer/variableHeatTransfer/variableHeatTransfer.C
 $(interRegion)/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
 
 
-
-/* constraints */
+/* Constraints */
 
 generalConstraints=constraints/general
 $(generalConstraints)/explicitSetValue/explicitSetValue.C

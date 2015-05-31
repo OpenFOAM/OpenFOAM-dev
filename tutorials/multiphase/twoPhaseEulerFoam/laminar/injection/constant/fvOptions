@@ -17,8 +17,7 @@ FoamFile
 
 injector1
 {
-    active          true;
-    timeStart       0;
+    timeStart       0.1;
     duration        5;
     selectionMode   points;
     points
@@ -32,10 +31,11 @@ options
     massSource1
     {
         type            scalarSemiImplicitSource;
-        $injector1;
 
         scalarSemiImplicitSourceCoeffs
         {
+            $injector1;
+
             volumeMode      absolute;
             injectionRateSuSp
             {
@@ -47,10 +47,11 @@ options
     momentumSource1
     {
         type            vectorSemiImplicitSource;
-        $injector1;
 
         vectorSemiImplicitSourceCoeffs
         {
+            $injector1;
+
             volumeMode      absolute;
             injectionRateSuSp
             {
@@ -62,10 +63,11 @@ options
     energySource1
     {
         type            scalarSemiImplicitSource;
-        $injector1;
 
         scalarSemiImplicitSourceCoeffs
         {
+            $injector1;
+
             volumeMode      absolute;
             injectionRateSuSp
             {

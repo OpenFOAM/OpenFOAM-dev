@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,41 +23,41 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-inline const Foam::volScalarField&
-Foam::fv::interRegionHeatTransferModel::htc() const
+inline const Foam::word& Foam::fv::option::name() const
 {
-    return  htc_;
+    return name_;
 }
 
 
-inline const Foam::fv::interRegionHeatTransferModel&
-Foam::fv::interRegionHeatTransferModel::nbrModel() const
+inline const Foam::fvMesh& Foam::fv::option::mesh() const
 {
-    if (nbrModel_ == NULL)
-    {
-        FatalErrorIn("const interRegionHeatTransferModel& nbrModel() const")
-            << "Neighbour model not set"
-            << abort(FatalError);
-    }
-
-    return *nbrModel_;
+    return mesh_;
 }
 
 
-inline Foam::fv::interRegionHeatTransferModel&
-Foam::fv::interRegionHeatTransferModel::nbrModel()
+inline const Foam::dictionary& Foam::fv::option::coeffs() const
 {
-    if (nbrModel_ == NULL)
-    {
-        FatalErrorIn("interRegionHeatTransferModel& nbrModel()")
-            << "Neighbour model not set"
-            << abort(FatalError);
-    }
+    return coeffs_;
+}
 
-    return *nbrModel_;
+
+inline bool Foam::fv::option::active() const
+{
+    return active_;
+}
+
+
+inline void Foam::fv::option::setApplied(const label fieldI)
+{
+    applied_[fieldI] = true;
+}
+
+
+inline bool& Foam::fv::option::active()
+{
+    return active_;
 }
 
 

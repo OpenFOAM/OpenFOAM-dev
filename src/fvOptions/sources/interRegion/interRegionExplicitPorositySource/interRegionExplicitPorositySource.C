@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh, true),
+    interRegionOption(name, modelType, dict, mesh),
     porosityPtr_(NULL),
     firstIter_(-1),
     UName_(coeffs_.lookupOrDefault<word>("UName", "U")),

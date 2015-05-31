@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,12 +51,13 @@ Description
     solidificationMeltingSource1
     {
         type            solidificationMeltingSource;
-        active          on;
-        selectionMode   cellZone;
-        cellZone        iceZone;
+        active          yes;
 
         solidificationMeltingSourceCoeffs
         {
+            selectionMode   cellZone;
+            cellZone        iceZone;
+
             Tmelt           273;
             L               334000;
             thermoMode      thermo;
@@ -96,7 +97,7 @@ SourceFiles
 
 #include "fvMesh.H"
 #include "volFields.H"
-#include "fvOption.H"
+#include "cellSetOption.H"
 #include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -112,7 +113,7 @@ namespace fv
 
 class solidificationMeltingSource
 :
-    public option
+    public cellSetOption
 {
 public:
 

@@ -18,12 +18,13 @@ FoamFile
 filter1
 {
     type            explicitPorositySource;
-    selectionMode   cellZone;
-    cellZone        filter;
-    active          true;
+    active          yes;
 
     explicitPorositySourceCoeffs
     {
+        selectionMode   cellZone;
+        cellZone        filter;
+
         type            DarcyForchheimer;
 
         DarcyForchheimerCoeffs
@@ -50,17 +51,18 @@ filter1
 massSource1
 {
     type            scalarSemiImplicitSource;
-    active          true;
-    timeStart       0.2;
-    duration        2.0;
-    selectionMode   points;
-    points
-    (
-        (2.75 0.5 0)
-    );
+    active          yes;
 
     scalarSemiImplicitSourceCoeffs
     {
+        timeStart       0.2;
+        duration        2.0;
+        selectionMode   points;
+        points
+        (
+            (2.75 0.5 0)
+        );
+
         volumeMode      absolute;
         injectionRateSuSp
         {
@@ -74,17 +76,18 @@ massSource1
 momentumSource1
 {
     type            vectorSemiImplicitSource;
-    active          true;
-    timeStart       0.2;
-    duration        2.0;
-    selectionMode   points;
-    points
-    (
-        (2.75 0.5 0)
-    );
+    active          yes;
 
     vectorSemiImplicitSourceCoeffs
     {
+        timeStart       0.2;
+        duration        2.0;
+        selectionMode   points;
+        points
+        (
+            (2.75 0.5 0)
+        );
+
         volumeMode      absolute;
         injectionRateSuSp
         {
@@ -97,17 +100,18 @@ momentumSource1
 energySource1
 {
     type            scalarSemiImplicitSource;
-    active          true;
-    timeStart       0.2;
-    duration        2.0;
-    selectionMode   points;
-    points
-    (
-        (2.75 0.5 0)
-    );
+    active          yes;
 
     scalarSemiImplicitSourceCoeffs
     {
+        timeStart       0.2;
+        duration        2.0;
+        selectionMode   points;
+        points
+        (
+            (2.75 0.5 0)
+        );
+
         volumeMode      absolute;
         injectionRateSuSp
         {

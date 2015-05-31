@@ -23,67 +23,63 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ExplicitSetValue.H"
-#include "fvMesh.H"
-#include "fvMatrices.H"
-#include "DimensionedField.H"
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
 template<class Type>
-void Foam::fv::ExplicitSetValue<Type>::setFieldData(const dictionary& dict)
+Foam::tmp<Foam::Field<Type> >
+Foam::fv::interRegionHeatTransferModel::interpolate
+(
+    const interRegionHeatTransferModel& nbrModel,
+    const Field<Type>& field
+) const
 {
-    fieldNames_.setSize(dict.toc().size());
-    injectionRate_.setSize(fieldNames_.size());
-
-    applied_.setSize(fieldNames_.size(), false);
-
-    label i = 0;
-    forAllConstIter(dictionary, dict, iter)
+    if (master_)
     {
-        fieldNames_[i] = iter().keyword();
-        dict.lookup(iter().keyword()) >> injectionRate_[i];
-        i++;
+        return meshInterp().mapTgtToSrc(field);
+    }
+    else
+    {
+        return (nbrModel.meshInterp().mapSrcToTgt(field));
     }
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
 template<class Type>
-Foam::fv::ExplicitSetValue<Type>::ExplicitSetValue
+Foam::tmp<Foam::Field<Type> >
+Foam::fv::interRegionHeatTransferModel::interpolate
 (
-    const word& name,
-    const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
-)
-:
-    cellSetOption(name, modelType, dict, mesh),
-    injectionRate_()
+    const Field<Type>& field
+) const
 {
-    read(dict);
+    return interpolate(nbrModel(), field);
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+template<class Type>
+void Foam::fv::interRegionHeatTransferModel::interpolate
+(
+    const interRegionHeatTransferModel& nbrModel,
+    const Field<Type>& field,
+    Field<Type>& result
+) const
+{
+    if (master_)
+    {
+        meshInterp().mapTgtToSrc(field, plusEqOp<scalar>(), result);
+    }
+    else
+    {
+        nbrModel.meshInterp().mapSrcToTgt(field, plusEqOp<scalar>(), result);
+    }
+}
+
 
 template<class Type>
-void Foam::fv::ExplicitSetValue<Type>::setValue
+void Foam::fv::interRegionHeatTransferModel::interpolate
 (
-    fvMatrix<Type>& eqn,
-    const label fieldI
-)
+    const Field<Type>& field,
+    Field<Type>& result
+) const
 {
-    if (debug)
-    {
-        Info<< "ExplicitSetValue<"<< pTraits<Type>::typeName
-            << ">::setValue for source " << name_ << endl;
-    }
-
-    List<Type> values(cells_.size(), injectionRate_[fieldI]);
-
-    eqn.setValues(cells_, values);
+    return interpolate(nbrModel(), field, result);
 }
 
 

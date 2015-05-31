@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ SourceFiles
 #define SemiImplicitSource_H
 
 #include "Tuple2.H"
-#include "fvOption.H"
+#include "cellSetOption.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -101,7 +101,7 @@ Ostream& operator<<
 template<class Type>
 class SemiImplicitSource
 :
-    public option
+    public cellSetOption
 {
 public:
 

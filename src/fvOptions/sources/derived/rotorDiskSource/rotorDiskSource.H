@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ SourceFiles
 #ifndef rotorDiskSource_H
 #define rotorDiskSource_H
 
-#include "fvOption.H"
+#include "cellSetOption.H"
 #include "cylindricalCS.H"
 #include "localAxesRotation.H"
 #include "NamedEnum.H"
@@ -113,7 +113,7 @@ namespace fv
 
 class rotorDiskSource
 :
-    public option
+    public cellSetOption
 {
 public:
 

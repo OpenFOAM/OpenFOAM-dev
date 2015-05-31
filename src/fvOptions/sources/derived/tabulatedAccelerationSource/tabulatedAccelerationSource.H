@@ -34,8 +34,7 @@ Description
     SBM
     {
         type            tabulatedAccelerationSource;
-        active          true;
-        selectionMode   all;
+        active          yes;
 
         tabulatedAccelerationSourceCoeffs
         {
@@ -55,6 +54,7 @@ SourceFiles
 
 #include "fvOption.H"
 #include "tabulated6DoFAcceleration.H"
+#include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

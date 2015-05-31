@@ -18,14 +18,14 @@ FoamFile
 airToporous
 {
     type            constantHeatTransfer;
-    active          on;
-    selectionMode   mapRegion;
-    interpolationMethod cellVolumeWeight;
-    nbrRegionName   porous;
-    master          false;
+    active          yes;
 
     constantHeatTransferCoeffs
     {
+        interpolationMethod cellVolumeWeight;
+        nbrRegionName   porous;
+        master          false;
+
         nbrModelName    porousToair;
         fieldNames      (h);
         semiImplicit    no;
@@ -35,13 +35,13 @@ airToporous
 porosityBlockage
 {
     type            interRegionExplicitPorositySource;
-    active          on;
-    selectionMode   mapRegion;
-    interpolationMethod cellVolumeWeight;
-    nbrRegionName   porous;
+    active          yes;
 
     interRegionExplicitPorositySourceCoeffs
     {
+        interpolationMethod cellVolumeWeight;
+        nbrRegionName   porous;
+
         type            DarcyForchheimer;
 
         DarcyForchheimerCoeffs

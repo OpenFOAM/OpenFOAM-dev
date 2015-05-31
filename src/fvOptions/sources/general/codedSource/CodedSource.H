@@ -58,11 +58,12 @@ Description
     {
         type            scalarCodedSource;
 
-        active          true;
-        selectionMode   all;
+        active          yes;
 
         scalarCodedSourceCoeffs
         {
+            selectionMode   all;
+
             fieldNames      (h);
             redirectType    sourceTime;
 
@@ -115,7 +116,7 @@ SourceFiles
 #ifndef CodedSource_H
 #define CodedSource_H
 
-#include "fvOption.H"
+#include "cellSetOption.H"
 #include "codedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -132,7 +133,7 @@ namespace fv
 template<class Type>
 class CodedSource
 :
-    public option,
+    public cellSetOption,
     public codedBase
 {
 

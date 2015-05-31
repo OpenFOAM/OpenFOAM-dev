@@ -18,12 +18,13 @@ FoamFile
 porosity1
 {
     type            explicitPorositySource;
-    active          true;
-    selectionMode   cellZone;
-    cellZone        porosity;
+    active          yes;
 
     explicitPorositySourceCoeffs
     {
+        selectionMode   cellZone;
+        cellZone        porosity;
+
         type            DarcyForchheimer;
 
         DarcyForchheimerCoeffs

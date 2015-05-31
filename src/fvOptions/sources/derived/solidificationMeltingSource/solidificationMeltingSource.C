@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -235,7 +235,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
     const fvMesh& mesh
 )
 :
-    option(sourceName, modelType, dict, mesh),
+    cellSetOption(sourceName, modelType, dict, mesh),
     Tmelt_(readScalar(coeffs_.lookup("Tmelt"))),
     L_(readScalar(coeffs_.lookup("L"))),
     relax_(coeffs_.lookupOrDefault("relax", 0.9)),

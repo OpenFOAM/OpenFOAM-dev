@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ SourceFiles
 #ifndef temperatureLimitsConstraint_H
 #define temperatureLimitsConstraint_H
 
-#include "fvOption.H"
+#include "cellSetOption.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,7 +60,7 @@ namespace fv
 
 class temperatureLimitsConstraint
 :
-    public option
+    public cellSetOption
 {
 
 protected:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,47 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMesh.H"
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::word& Foam::fv::option::name() const
-{
-    return name_;
-}
-
-
-inline const Foam::fvMesh& Foam::fv::option::mesh() const
-{
-    return mesh_;
-}
-
-
-inline const Foam::dictionary& Foam::fv::option::coeffs() const
-{
-    return coeffs_;
-}
-
-
-inline bool Foam::fv::option::active() const
-{
-    return active_;
-}
-
-
-inline Foam::scalar Foam::fv::option::timeStart() const
+inline Foam::scalar Foam::fv::cellSetOption::timeStart() const
 {
     return timeStart_;
 }
 
 
-inline Foam::scalar Foam::fv::option::duration() const
+inline Foam::scalar Foam::fv::cellSetOption::duration() const
 {
     return duration_;
 }
 
 
-inline bool Foam::fv::option::inTimeLimits(const scalar time) const
+inline bool Foam::fv::cellSetOption::inTimeLimits(const scalar time) const
 {
     return
     (
@@ -77,71 +51,40 @@ inline bool Foam::fv::option::inTimeLimits(const scalar time) const
 }
 
 
-inline const Foam::fv::option::selectionModeType&
-Foam::fv::option::selectionMode() const
+inline const Foam::fv::cellSetOption::selectionModeType&
+Foam::fv::cellSetOption::selectionMode() const
 {
     return selectionMode_;
 }
 
 
-inline const Foam::word& Foam::fv::option::cellSetName() const
+inline const Foam::word& Foam::fv::cellSetOption::cellSetName() const
 {
     return cellSetName_;
 }
 
 
-inline Foam::scalar Foam::fv::option::V() const
+inline Foam::scalar Foam::fv::cellSetOption::V() const
 {
     return V_;
 }
 
 
-inline const Foam::labelList& Foam::fv::option::cells() const
+inline const Foam::labelList& Foam::fv::cellSetOption::cells() const
 {
     return cells_;
 }
 
 
-inline void Foam::fv::option::setApplied(const label fieldI)
-{
-    applied_[fieldI] = true;
-}
-
-
-inline bool& Foam::fv::option::active()
-{
-    return active_;
-}
-
-
-inline Foam::scalar& Foam::fv::option::timeStart()
+inline Foam::scalar& Foam::fv::cellSetOption::timeStart()
 {
     return timeStart_;
 }
 
 
-inline Foam::scalar& Foam::fv::option::duration()
+inline Foam::scalar& Foam::fv::cellSetOption::duration()
 {
     return duration_;
-}
-
-
-inline const Foam::word& Foam::fv::option::nbrRegionName() const
-{
-    return nbrRegionName_;
-}
-
-
-inline const Foam::meshToMesh& Foam::fv::option::meshInterp() const
-{
-    if (!meshInterpPtr_.valid())
-    {
-        FatalErrorIn("const meshToMesh& meshInterp() const")
-            << "Interpolation object not set"
-            << abort(FatalError);
-    }
-
-    return meshInterpPtr_();
 }
 
 

@@ -30,12 +30,9 @@ Description
 
         type            scalarExplicitSource    // source type
         active          on;                     // on/off switch
-        timeStart       0.0;                    // start time
-        duration        1000.0;                 // duration
-        selectionMode   cellSet;                // cellSet // points //cellZone
-                                                // mapRegion
+
 Note:
-    On evaluation, source/sink options are to be added to the equation rhs
+    On evaluation, source/sink options are to be added to the equation R.H.S.
 
 SourceFiles
     fvOption.C
@@ -48,10 +45,7 @@ SourceFiles
 
 #include "fvMatricesFwd.H"
 #include "volFieldsFwd.H"
-#include "cellSet.H"
-#include "autoPtr.H"
-#include "meshToMesh.H"
-
+#include "dictionary.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -70,25 +64,6 @@ namespace fv
 
 class option
 {
-public:
-
-    // Public data
-
-        //- Enumeration for selection mode types
-        enum selectionModeType
-        {
-            smPoints,
-            smCellSet,
-            smCellZone,
-            smMapRegion,
-            smAll
-        };
-
-        //- Word list of selection mode type names
-        static const NamedEnum<selectionModeType, 5>
-            selectionModeTypeNames_;
-
-
 protected:
 
     // Protected data
@@ -111,39 +86,6 @@ protected:
         //- Source active flag
         bool active_;
 
-        //- Time start
-        scalar timeStart_;
-
-        //- Duration
-        scalar duration_;
-
-        //- Cell selection mode
-        selectionModeType selectionMode_;
-
-        //- Name of cell set for "cellSet" and "cellZone" selectionMode
-        word cellSetName_;
-
-        //- List of points for "points" selectionMode
-        List<point> points_;
-
-        //- Set of cells to apply source to
-        labelList cells_;
-
-        //- Sum of cell volumes
-        scalar V_;
-
-        // Data for smMapRegion only
-
-            //- Mesh to mesh interpolation object
-            autoPtr<meshToMesh> meshInterpPtr_;
-
-            //- Name of the neighbour region to map
-            word nbrRegionName_;
-
-            //- Master or slave region
-            bool master_;
-
-
         //- Field names to apply source to - populated by derived models
         wordList fieldNames_;
 
@@ -155,12 +97,6 @@ protected:
 
         //- Flag to bypass the apply flag list checking
         virtual bool alwaysApply() const;
-
-        //- Set the cellSet or points selection
-        void setSelection(const dictionary& dict);
-
-        //- Set the cell set based on the user input selection mode
-        void setCellSet();
 
 
 public:
@@ -194,8 +130,7 @@ public:
             const word& name,
             const word& modelType,
             const dictionary& dict,
-            const fvMesh& mesh,
-            const bool master = false
+            const fvMesh& mesh
         );
 
         //- Return clone
@@ -209,8 +144,9 @@ public:
         //  on the freestore from an Istream
         class iNew
         {
-            //- Reference to the mesh database
+            //- Reference to the mesh
             const fvMesh& mesh_;
+
             const word& name_;
 
         public:
@@ -253,7 +189,6 @@ public:
     virtual ~option();
 
 
-
     // Member Functions
 
         // Access
@@ -270,34 +205,6 @@ public:
             //- Return const access to the source active flag
             inline bool active() const;
 
-            //- Return const access to the time start
-            inline scalar timeStart() const;
-
-            //- Return const access to the duration
-            inline scalar duration() const;
-
-            //- Return true if within time limits
-            inline bool inTimeLimits(const scalar time) const;
-
-            //- Return const access to the cell selection mode
-            inline const selectionModeType& selectionMode() const;
-
-            //- Return const access to the name of cell set for "cellSet"
-            //  selectionMode
-            inline const word& cellSetName() const;
-
-            //- Return const access to the total cell volume
-            inline scalar V() const;
-
-            //- Return const access to the neighbour region name
-            inline const word& nbrRegionName() const;
-
-            //- Return const access to the mapToMap pointer
-            inline const meshToMesh& meshInterp() const;
-
-            //- Return const access to the cell set
-            inline const labelList& cells() const;
-
             //- Set the applied flag to true for field index fieldI
             inline void setApplied(const label fieldI);
 
@@ -306,12 +213,6 @@ public:
 
             //- Return access to the source active flag
             inline bool& active();
-
-            //- Return access to the time start
-            inline scalar& timeStart();
-
-            //- Return access to the duration
-            inline scalar& duration();
 
 
         // Checks

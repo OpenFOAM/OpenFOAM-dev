@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,28 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::variableHeatTransfer
+    Foam::fv::IOoptionList
 
 Description
-    Variable heat transfer model depending on local values. The area of contact
-    between regions (area) must be provided. The Nu number is calculated as:
+    IOoptionList
 
-        Nu = a*pow(Re, b)*pow(Pr, c)
-
-    and the heat transfer coefficient as:
-
-        htc = Nu*K/ds
-
-    where:
-        K is the heat conduction
-        ds is the strut diameter
+SourceFiles
+    IOoptionList.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef variableHeatTransfer_H
-#define variableHeatTransfer_H
+#ifndef IOoptionList_H
+#define IOoptionList_H
 
-#include "interRegionHeatTransferModel.H"
+#include "fvOptionList.H"
+#include "IOdictionary.H"
 #include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,70 +47,45 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class variableHeatTransfer Declaration
+                        Class IOoptionList Declaration
 \*---------------------------------------------------------------------------*/
 
-class variableHeatTransfer
+class IOoptionList
 :
-    public interRegionHeatTransferModel
+    public IOdictionary,
+    public optionList
 {
 private:
 
-    // Private data
+    // Private Member Functions
 
-        //- Name of neighbour velocity field; default = U
-        word UNbrName_;
+        //- Create IO object if dictionary is present
+        IOobject createIOobject(const fvMesh& mesh) const;
 
-        //- Model constants
-        scalar a_;
-        scalar b_;
-        scalar c_;
+        //- Disallow default bitwise copy construct
+        IOoptionList(const IOoptionList&);
 
-        //- Strut diameter
-        scalar ds_;
-
-        //- Fluid Prandt number
-        scalar Pr_;
-
-        //- Area per unit volume of heat exchanger
-        autoPtr<volScalarField> AoV_;
+        //- Disallow default bitwise assignment
+        void operator=(const IOoptionList&);
 
 
 public:
 
-    //- Runtime type information
-    TypeName("variableHeatTransfer");
-
-
     // Constructors
 
-        //- Construct from dictionary
-        variableHeatTransfer
-        (
-            const word& name,
-            const word& modelType,
-            const dictionary& dict,
-            const fvMesh& mesh
-        );
+        //- Construct from components with list of field names
+        IOoptionList(const fvMesh& mesh);
 
 
-    //- Destructor
-    virtual ~variableHeatTransfer();
+        //- Destructor
+        virtual ~IOoptionList()
+        {}
 
 
-    // Public Functions
+    // Member Functions
 
-        //- Calculate the heat transfer coefficient
-        virtual void calculateHtc();
-
-
-        // I-O
-
-            //- Write data
-            virtual void writeData(Ostream&) const;
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict) ;
+        //- Read dictionary
+        virtual bool read();
 };
 
 

@@ -22,13 +22,8 @@ boundaryField
 {
     outlet
     {
-        type            totalPressure;
-        p0              $internalField;
-        U               U.air;
-        phi             phi.air;
-        rho             thermo:rho.air;
-        psi             none;
-        gamma           1;
+        type            prghPressure;
+        p               $internalField;
         value           $internalField;
     }
 

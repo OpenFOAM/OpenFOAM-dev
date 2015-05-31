@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,9 +38,8 @@ Description
 #ifndef interRegionHeatTransferModel_H
 #define interRegionHeatTransferModel_H
 
-#include "fvOption.H"
+#include "interRegionOption.H"
 #include "volFields.H"
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,29 +54,23 @@ namespace fv
 
 class interRegionHeatTransferModel
 :
-    public option
+    public interRegionOption
 {
+protected:
 
-private:
-
-    // Private data
-
-        //- Pointer to neighbour interRegionHeatTransferModel
-        interRegionHeatTransferModel* nbrModel_;
+    // Protected data
 
         //- Name of the model in the neighbour mesh
         word nbrModelName_;
+
+        //- Pointer to neighbour interRegionHeatTransferModel
+        interRegionHeatTransferModel* nbrModel_;
 
         //- First iteration
         bool firstIter_;
 
         //- Time index - used for updating htc
         label timeIndex_;
-
-
-protected:
-
-    // Protected data
 
         //- Heat transfer coefficient [W/m2/k] times area/volume [1/m]
         volScalarField htc_;
@@ -158,6 +151,12 @@ public:
     // Member Functions
 
         // Access
+
+            //- Return const access to the neighbour region name
+            inline const word& nbrRegionName() const;
+
+            //- Return const access to the mapToMap pointer
+            inline const meshToMesh& meshInterp() const;
 
             //- Return the heat transfer coefficient
             inline const volScalarField& htc() const;

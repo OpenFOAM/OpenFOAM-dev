@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,59 +43,12 @@ void Foam::fv::option::writeFooter(Ostream& os) const
 void Foam::fv::option::writeData(Ostream& os) const
 {
     os.writeKeyword("active") << active_ << token::END_STATEMENT << nl;
-    os.writeKeyword("timeStart") << timeStart_ << token::END_STATEMENT << nl;
-    os.writeKeyword("duration") << duration_ << token::END_STATEMENT << nl;
-    os.writeKeyword("selectionMode")
-        << selectionModeTypeNames_[selectionMode_] << nl;
-
-    switch (selectionMode_)
-    {
-        case smPoints:
-        {
-            os.writeKeyword("points") << points_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smCellSet:
-        {
-            os.writeKeyword("cellSet") << cellSetName_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smCellZone:
-        {
-            os.writeKeyword("cellZone") << cellSetName_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smAll:
-        {
-            break;
-        }
-        case smMapRegion:
-        {
-            break;
-        }
-        default:
-        {
-            FatalErrorIn("option::writeData(Ostream&) const")
-                << "Unknown selectionMode "
-                << selectionMode_
-                << abort(FatalError);
-        }
-    }
 }
 
 
 bool Foam::fv::option::read(const dictionary& dict)
 {
-    active_ = readBool(dict.lookup("active"));
-
-    if (dict.readIfPresent("timeStart", timeStart_))
-    {
-        dict.lookup("duration") >> duration_;
-    }
-
+    dict.readIfPresent("active", active_);
     coeffs_ = dict.subDict(modelType_ + "Coeffs");
 
     return true;

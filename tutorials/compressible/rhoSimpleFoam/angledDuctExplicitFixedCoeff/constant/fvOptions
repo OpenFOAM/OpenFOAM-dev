@@ -18,12 +18,12 @@ FoamFile
 fixedTemperaure1
 {
     type            fixedTemperatureConstraint;
-    active          true;
-    selectionMode   cellZone;
-    cellZone        porosity;
+    active          yes;
 
     fixedTemperatureConstraintCoeffs
     {
+        selectionMode   cellZone;
+        cellZone        porosity;
         mode            uniform;
         temperature     350;
     }
@@ -33,12 +33,12 @@ fixedTemperaure1
 porosity1
 {
     type            explicitPorositySource;
-    active          true;
-    selectionMode   cellZone;
-    cellZone        porosity;
+    active          yes;
 
     explicitPorositySourceCoeffs
     {
+        selectionMode   cellZone;
+        cellZone        porosity;
         type            fixedCoeff;
         active          yes;
         cellZone        porosity;

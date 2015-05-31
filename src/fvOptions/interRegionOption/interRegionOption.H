@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,39 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::fixedTemperatureConstraint
+    Foam::fv::interRegionOption
 
 Description
-    Fixed temperature equation constraint
-
-    Sources described by:
-
-        fixedTemperatureConstraintCoeffs
-        {
-            mode            uniform;    // uniform or lookup
-
-            // uniform option
-            temperature     constant 500; // fixed temperature with time [K]
-
-            // lookup option
-            // TName        T;          // optional temperature field name
-        }
-
-Note:
-    The 'uniform' option allows the use of a time-varying uniform temperature
-    by means of the DataEntry type.
-
-SourceFiles
-    fvOption.C
+    Base class for inter region exchange.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedTemperatureConstraint_H
-#define fixedTemperatureConstraint_H
+#ifndef interRegionOption_H
+#define interRegionOption_H
 
-#include "cellSetOption.H"
-#include "NamedEnum.H"
-#include "DataEntry.H"
+#include "fvOption.H"
+#include "volFields.H"
+#include "autoPtr.H"
+#include "meshToMesh.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,63 +46,43 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class fixedTemperatureConstraint Declaration
+                Class interRegionOption Declaration
 \*---------------------------------------------------------------------------*/
 
-class fixedTemperatureConstraint
+class interRegionOption
 :
-    public cellSetOption
+    public option
 {
-
-public:
-
-    //- Temperature mode
-    enum temperatureMode
-    {
-        tmUniform,
-        tmLookup
-    };
-
-
-    //- String representation of temperatureMode enums
-    static const NamedEnum<temperatureMode, 2> temperatureModeNames_;
-
-
 protected:
 
     // Protected data
 
-        //- Operation mode
-        temperatureMode mode_;
+        //- Master or slave region
+        bool master_;
 
-        //- Uniform temperature [K]
-        autoPtr<DataEntry<scalar> > Tuniform_;
+        //- Name of the neighbour region to map
+        word nbrRegionName_;
 
-        //- Temperature field name
-        word TName_;
+        //- Mesh to mesh interpolation object
+        autoPtr<meshToMesh> meshInterpPtr_;
 
 
-private:
+    // Protected member functions
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fixedTemperatureConstraint(const fixedTemperatureConstraint&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fixedTemperatureConstraint&);
+        //- Set the mesh to mesh interpolation object
+        void setMapper();
 
 
 public:
 
     //- Runtime type information
-    TypeName("fixedTemperatureConstraint");
+    TypeName("interRegionOption");
 
 
     // Constructors
 
-        //- Construct from components
-        fixedTemperatureConstraint
+        //- Construct from dictionary
+        interRegionOption
         (
             const word& name,
             const word& modelType,
@@ -130,19 +92,18 @@ public:
 
 
     //- Destructor
-    virtual ~fixedTemperatureConstraint()
-    {}
+    virtual ~interRegionOption();
 
 
     // Member Functions
 
-        virtual bool alwaysApply() const;
+        // Access
 
+            //- Return const access to the neighbour region name
+            inline const word& nbrRegionName() const;
 
-        // Set values directly
-
-            //- Scalar
-            virtual void setValue(fvMatrix<scalar>& eqn, const label fieldI);
+            //- Return const access to the mapToMap pointer
+            inline const meshToMesh& meshInterp() const;
 
 
         // I-O
@@ -159,6 +120,10 @@ public:
 
 } // End namespace fv
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "interRegionOptionI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

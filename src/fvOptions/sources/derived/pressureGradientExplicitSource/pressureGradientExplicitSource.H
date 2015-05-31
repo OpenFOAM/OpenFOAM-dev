@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ SourceFiles
 #include "cellSet.H"
 #include "fvMesh.H"
 #include "volFields.H"
-#include "fvOption.H"
+#include "cellSetOption.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,7 +70,7 @@ namespace fv
 
 class pressureGradientExplicitSource
 :
-    public option
+    public cellSetOption
 {
     // Private data
 

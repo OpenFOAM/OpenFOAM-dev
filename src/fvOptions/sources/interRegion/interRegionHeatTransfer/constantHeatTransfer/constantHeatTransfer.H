@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::IOoptionList
+    Foam::fv::constantHeatTransfer
 
 Description
-    IOoptionList
-
-SourceFiles
-    IOoptionList.C
+    Constant heat transfer model. htcConst [W/m2/K] and area/volume [1/m]
+    must be provided.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IOoptionList_H
-#define IOoptionList_H
+#ifndef constantHeatTransfer_H
+#define constantHeatTransfer_H
 
-#include "fvOptionList.H"
-#include "IOdictionary.H"
+#include "interRegionHeatTransferModel.H"
 #include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,45 +44,59 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class IOoptionList Declaration
+                    Class constantHeatTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
-class IOoptionList
+class constantHeatTransfer
 :
-    public IOdictionary,
-    public optionList
+    public interRegionHeatTransferModel
 {
 private:
 
-    // Private Member Functions
+    // Private data
 
-        //- Create IO object if dictionary is present
-        IOobject createIOobject(const fvMesh& mesh) const;
+        //- Constant heat transfer coefficient [W/m2/K]
+        autoPtr<volScalarField> htcConst_;
 
-        //- Disallow default bitwise copy construct
-        IOoptionList(const IOoptionList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const IOoptionList&);
+        //- Area per unit volume of heat exchanger [1/m]
+        autoPtr<volScalarField> AoV_;
 
 
 public:
 
+    //- Runtime type information
+      TypeName("constantHeatTransfer");
+
+
     // Constructors
 
-        //- Construct from components with list of field names
-        IOoptionList(const fvMesh& mesh);
+        //- Construct from dictionary
+        constantHeatTransfer
+        (
+            const word& name,
+            const word& modelType,
+            const dictionary& dict,
+            const fvMesh& mesh
+        );
 
 
-        //- Destructor
-        virtual ~IOoptionList()
-        {}
+    //- Destructor
+    virtual ~constantHeatTransfer();
 
 
-    // Member Functions
+    // Public Functions
 
-        //- Read dictionary
-        virtual bool read();
+        //- Calculate the heat transfer coefficient
+        virtual void calculateHtc();
+
+
+        // I-O
+
+            //- Write data
+            virtual void writeData(Ostream&) const;
+
+            //- Read dictionary
+            virtual bool read(const dictionary& dict);
 };
 
 

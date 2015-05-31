@@ -66,7 +66,7 @@ SourceFiles
 #ifndef explicitPorositySource_H
 #define explicitPorositySource_H
 
-#include "fvOption.H"
+#include "cellSetOption.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -85,7 +85,7 @@ namespace fv
 
 class explicitPorositySource
 :
-    public option
+    public cellSetOption
 {
 
 protected:

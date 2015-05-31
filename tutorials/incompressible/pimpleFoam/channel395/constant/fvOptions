@@ -18,13 +18,14 @@ FoamFile
 momentumSource
 {
     type            pressureGradientExplicitSource;
-    active          on;            //on/off switch
-    selectionMode   all;       //cellSet // points //cellZone
+    active          yes;
 
     pressureGradientExplicitSourceCoeffs
     {
-        fieldNames  (U);
-        Ubar        ( 0.1335 0 0 );
+        selectionMode   all;
+
+        fieldNames      (U);
+        Ubar            (0.1335 0 0);
     }
 }
 

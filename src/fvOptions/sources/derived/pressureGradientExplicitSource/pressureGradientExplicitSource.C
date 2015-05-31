@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::fv::pressureGradientExplicitSource::pressureGradientExplicitSource
     const fvMesh& mesh
 )
 :
-    option(sourceName, modelType, dict, mesh),
+    cellSetOption(sourceName, modelType, dict, mesh),
     Ubar_(coeffs_.lookup("Ubar")),
     gradP0_(0.0),
     dGradP_(0.0),

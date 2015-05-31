@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,64 +23,30 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-Foam::tmp<Foam::Field<Type> >
-Foam::fv::interRegionHeatTransferModel::interpolate
-(
-    const interRegionHeatTransferModel& nbrModel,
-    const Field<Type>& field
-) const
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+inline const Foam::word&
+Foam::fv::interRegionOption::nbrRegionName() const
 {
-    if (master_)
-    {
-        return meshInterp().mapTgtToSrc(field);
-    }
-    else
-    {
-        return (nbrModel.meshInterp().mapSrcToTgt(field));
-    }
+    return nbrRegionName_;
 }
 
 
-template<class Type>
-Foam::tmp<Foam::Field<Type> >
-Foam::fv::interRegionHeatTransferModel::interpolate
-(
-    const Field<Type>& field
-) const
+inline const Foam::meshToMesh&
+Foam::fv::interRegionOption::meshInterp() const
 {
-    return interpolate(nbrModel(), field);
-}
-
-
-template<class Type>
-void Foam::fv::interRegionHeatTransferModel::interpolate
-(
-    const interRegionHeatTransferModel& nbrModel,
-    const Field<Type>& field,
-    Field<Type>& result
-) const
-{
-    if (master_)
+    if (!meshInterpPtr_.valid())
     {
-        meshInterp().mapTgtToSrc(field, plusEqOp<scalar>(), result);
+        FatalErrorIn
+        (
+            "const meshToMesh& interRegionOption::meshInterp() const"
+        )   << "Interpolation object not set"
+            << abort(FatalError);
     }
-    else
-    {
-        nbrModel.meshInterp().mapSrcToTgt(field, plusEqOp<scalar>(), result);
-    }
+
+    return meshInterpPtr_();
 }
 
-
-template<class Type>
-void Foam::fv::interRegionHeatTransferModel::interpolate
-(
-    const Field<Type>& field,
-    Field<Type>& result
-) const
-{
-    return interpolate(nbrModel(), field, result);
-}
 
 
 // ************************************************************************* //
