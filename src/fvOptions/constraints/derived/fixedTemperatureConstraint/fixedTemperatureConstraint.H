@@ -145,7 +145,7 @@ public:
             virtual void setValue(fvMatrix<scalar>& eqn, const label fieldI);
 
 
-        // I-O
+        // IO
 
             //- Write data
             virtual void writeData(Ostream&) const;

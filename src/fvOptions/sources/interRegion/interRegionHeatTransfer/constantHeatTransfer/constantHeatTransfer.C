@@ -105,27 +105,20 @@ Foam::fv::constantHeatTransfer::~constantHeatTransfer()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::fv::constantHeatTransfer::calculateHtc()
-{
-    // do nothing
-}
+{}
 
 
 void Foam::fv::constantHeatTransfer::writeData(Ostream& os) const
 {
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
     interRegionHeatTransferModel::writeData(os);
-
     os << indent << type() + "Coeffs" << nl;
-
     coeffs_.write(os);
-
-    os << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 
 bool Foam::fv::constantHeatTransfer::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (interRegionHeatTransferModel::read(dict))
     {
         return true;
     }

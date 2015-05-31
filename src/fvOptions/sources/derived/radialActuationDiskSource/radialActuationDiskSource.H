@@ -161,7 +161,7 @@ public:
         );
 
 
-    // I-O
+    // IO
 
         //- Write data
         virtual void writeData(Ostream&) const;

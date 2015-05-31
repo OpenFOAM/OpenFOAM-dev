@@ -30,7 +30,7 @@ License
 template<class Type>
 void Foam::fv::ExplicitSetValue<Type>::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    cellSetOption::writeData(os);
     dict_.write(os);
 }
 
@@ -38,7 +38,7 @@ void Foam::fv::ExplicitSetValue<Type>::writeData(Ostream& os) const
 template<class Type>
 bool Foam::fv::ExplicitSetValue<Type>::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         setFieldData(coeffs_.subDict("injectionRate"));
         return true;

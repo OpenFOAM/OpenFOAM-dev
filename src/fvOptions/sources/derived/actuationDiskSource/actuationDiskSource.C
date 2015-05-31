@@ -160,14 +160,14 @@ void Foam::fv::actuationDiskSource::addSup
 
 void Foam::fv::actuationDiskSource::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    cellSetOption::writeData(os);
     dict_.write(os);
 }
 
 
 bool Foam::fv::actuationDiskSource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         coeffs_.readIfPresent("diskDir", diskDir_);
         coeffs_.readIfPresent("Cp", Cp_);

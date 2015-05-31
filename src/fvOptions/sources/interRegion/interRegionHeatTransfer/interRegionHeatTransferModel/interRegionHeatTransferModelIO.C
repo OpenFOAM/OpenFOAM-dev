@@ -40,7 +40,7 @@ void Foam::fv::interRegionHeatTransferModel::writeData(Ostream& os) const
 
 bool Foam::fv::interRegionHeatTransferModel::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (interRegionOption::read(dict))
     {
         return true;
     }

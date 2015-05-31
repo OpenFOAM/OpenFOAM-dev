@@ -175,7 +175,7 @@ public:
             void constrain(fvMatrix<Type>& eqn);
 
 
-        // I-O
+        // IO
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);

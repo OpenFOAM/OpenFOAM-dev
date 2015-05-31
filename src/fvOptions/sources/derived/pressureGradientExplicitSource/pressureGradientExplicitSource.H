@@ -153,7 +153,7 @@ public:
             );
 
 
-        // I-O
+        // IO
 
             //- Write the source properties
             virtual void writeData(Ostream&) const;

@@ -150,14 +150,14 @@ void Foam::fv::fixedTemperatureConstraint::setValue
 
 void Foam::fv::fixedTemperatureConstraint::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    cellSetOption::writeData(os);
     dict_.write(os);
 }
 
 
 bool Foam::fv::fixedTemperatureConstraint::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         if (coeffs_.found(Tuniform_->name()))
         {

@@ -111,7 +111,7 @@ public:
             virtual void setValue(fvMatrix<Type>& eqn, const label fieldI);
 
 
-        // I-O
+        // IO
 
             //- Write the source properties
             virtual void writeData(Ostream&) const;

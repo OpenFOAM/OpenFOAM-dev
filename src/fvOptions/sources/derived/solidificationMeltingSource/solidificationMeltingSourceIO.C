@@ -29,14 +29,14 @@ License
 
 void Foam::fv::solidificationMeltingSource::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    cellSetOption::writeData(os);
     dict_.write(os);
 }
 
 
 bool Foam::fv::solidificationMeltingSource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         coeffs_.lookup("Tmelt") >> Tmelt_;
         coeffs_.lookup("L") >> L_;

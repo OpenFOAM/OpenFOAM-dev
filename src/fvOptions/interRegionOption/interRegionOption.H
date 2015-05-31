@@ -25,7 +25,7 @@ Class
     Foam::fv::interRegionOption
 
 Description
-    Base class for inter region exchange.
+    Base class for inter-region exchange.
 
 \*---------------------------------------------------------------------------*/
 
@@ -106,7 +106,7 @@ public:
             inline const meshToMesh& meshInterp() const;
 
 
-        // I-O
+        // IO
 
             //- Write data
             virtual void writeData(Ostream&) const;

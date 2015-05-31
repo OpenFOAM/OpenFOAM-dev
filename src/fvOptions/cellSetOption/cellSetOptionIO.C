@@ -27,19 +27,6 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::cellSetOption::writeHeader(Ostream& os) const
-{
-    os  << indent << name_ << nl
-        << indent << token::BEGIN_BLOCK << incrIndent << nl;
-}
-
-
-void Foam::fv::cellSetOption::writeFooter(Ostream& os) const
-{
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
-
-
 void Foam::fv::cellSetOption::writeData(Ostream& os) const
 {
     option::writeData(os);

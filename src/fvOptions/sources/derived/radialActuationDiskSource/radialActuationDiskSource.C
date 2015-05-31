@@ -119,12 +119,8 @@ void Foam::fv::radialActuationDiskSource::writeData(Ostream& os) const
 
 bool Foam::fv::radialActuationDiskSource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (actuationDiskSource::read(dict))
     {
-        coeffs_.readIfPresent("diskDir", diskDir_);
-        coeffs_.readIfPresent("Cp", Cp_);
-        coeffs_.readIfPresent("Ct", Ct_);
-        coeffs_.readIfPresent("diskArea", diskArea_);
         coeffs_.lookup("coeffs") >> radialCoeffs_;
         return true;
     }

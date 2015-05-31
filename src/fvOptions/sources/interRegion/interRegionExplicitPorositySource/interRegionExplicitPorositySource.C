@@ -290,14 +290,14 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 
 void Foam::fv::interRegionExplicitPorositySource::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    interRegionOption::writeData(os);
     dict_.write(os);
 }
 
 
 bool Foam::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (interRegionOption::read(dict))
     {
         coeffs_.readIfPresent("UName", UName_);
         coeffs_.readIfPresent("muName", muName_);

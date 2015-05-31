@@ -31,7 +31,7 @@ License
 template<class Type>
 void Foam::fv::CodedSource<Type>::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    cellSetOption::writeData(os);
     dict_.write(os);
 }
 
@@ -39,7 +39,7 @@ void Foam::fv::CodedSource<Type>::writeData(Ostream& os) const
 template<class Type>
 bool Foam::fv::CodedSource<Type>::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         coeffs_.lookup("fieldNames") >> fieldNames_;
         applied_.setSize(fieldNames_.size(), false);

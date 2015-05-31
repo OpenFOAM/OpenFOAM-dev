@@ -190,13 +190,7 @@ public:
             virtual bool isActive();
 
 
-        // I-O
-
-            //- Write the source header information
-            virtual void writeHeader(Ostream&) const;
-
-            //- Write the source footer information
-            virtual void writeFooter(Ostream&) const;
+        // IO
 
             //- Write the source properties
             virtual void writeData(Ostream&) const;

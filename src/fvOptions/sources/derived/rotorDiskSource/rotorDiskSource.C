@@ -589,14 +589,14 @@ void Foam::fv::rotorDiskSource::addSup
 
 void Foam::fv::rotorDiskSource::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    cellSetOption::writeData(os);
     dict_.write(os);
 }
 
 
 bool Foam::fv::rotorDiskSource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         coeffs_.lookup("fieldNames") >> fieldNames_;
         applied_.setSize(fieldNames_.size(), false);

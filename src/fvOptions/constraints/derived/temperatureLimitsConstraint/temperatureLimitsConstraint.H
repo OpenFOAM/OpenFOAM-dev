@@ -36,9 +36,8 @@ Description
             maximum     500;
         }
 
-
 SourceFiles
-    fvOption.C
+    temperatureLimitsConstraint.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -119,7 +118,7 @@ public:
             virtual void correct(volScalarField& he);
 
 
-        // I-O
+        // IO
 
             //- Write data
             virtual void writeData(Ostream&) const;

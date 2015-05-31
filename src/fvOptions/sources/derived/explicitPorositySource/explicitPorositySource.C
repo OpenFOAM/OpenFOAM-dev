@@ -125,14 +125,14 @@ void Foam::fv::explicitPorositySource::addSup
 
 void Foam::fv::explicitPorositySource::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    cellSetOption::writeData(os);
     dict_.write(os);
 }
 
 
 bool Foam::fv::explicitPorositySource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         if (coeffs_.found("UNames"))
         {

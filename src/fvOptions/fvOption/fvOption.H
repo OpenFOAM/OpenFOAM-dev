@@ -414,7 +414,7 @@ public:
                 );
 
 
-        // I-O
+        // IO
 
             //- Write the source header information
             virtual void writeHeader(Ostream&) const;

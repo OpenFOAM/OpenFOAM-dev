@@ -310,14 +310,14 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
 
 void Foam::fv::effectivenessHeatExchangerSource::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    cellSetOption::writeData(os);
     dict_.write(os);
 }
 
 
 bool Foam::fv::effectivenessHeatExchangerSource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         coeffs_.lookup("secondaryMassFlowRate") >> secondaryMassFlowRate_;
         coeffs_.lookup("secondaryInletT") >> secondaryInletT_;

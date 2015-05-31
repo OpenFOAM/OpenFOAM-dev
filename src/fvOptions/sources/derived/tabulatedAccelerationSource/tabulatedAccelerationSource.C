@@ -96,7 +96,7 @@ void Foam::fv::tabulatedAccelerationSource::addSup
 
 void Foam::fv::tabulatedAccelerationSource::writeData(Ostream& os) const
 {
-    os  << indent << name_ << endl;
+    option::writeData(os);
     dict_.write(os);
 }
 

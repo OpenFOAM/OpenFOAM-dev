@@ -186,7 +186,7 @@ public:
             virtual void calculateHtc() = 0;
 
 
-        // I-O
+        // IO
 
             //- Write data
             virtual void writeData(Ostream&) const;
