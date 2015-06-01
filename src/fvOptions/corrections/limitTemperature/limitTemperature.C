@@ -44,6 +44,7 @@ namespace fv
 }
 }
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::limitTemperature::limitTemperature
@@ -58,66 +59,62 @@ Foam::fv::limitTemperature::limitTemperature
     Tmin_(readScalar(coeffs_.lookup("Tmin"))),
     Tmax_(readScalar(coeffs_.lookup("Tmax")))
 {
-    fieldNames_.setSize(1, "energy");
+    // Set the field name to that of the energy field from which the temperature
+    // is obtained
+
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+
+    fieldNames_.setSize(1, thermo.he().name());
+
     applied_.setSize(1, false);
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::limitTemperature::alwaysApply() const
-{
-    return true;
-}
-
-
 void Foam::fv::limitTemperature::correct(volScalarField& he)
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>("thermophysicalProperties");
 
-    if (he.name() == thermo.he().name())
+    scalarField Tmin(cells_.size(), Tmin_);
+    scalarField Tmax(cells_.size(), Tmax_);
+
+    scalarField heMin(thermo.he(thermo.p(), Tmin, cells_));
+    scalarField heMax(thermo.he(thermo.p(), Tmax, cells_));
+
+    scalarField& hec = he.internalField();
+
+    forAll(cells_, i)
     {
-        scalarField Tmin(cells_.size(), Tmin_);
-        scalarField Tmax(cells_.size(), Tmax_);
+        label cellI = cells_[i];
+        hec[cellI]= max(min(hec[cellI], heMax[i]), heMin[i]);
+    }
 
-        scalarField heMin(thermo.he(thermo.p(), Tmin, cells_));
-        scalarField heMax(thermo.he(thermo.p(), Tmax, cells_));
+    // handle boundaries in the case of 'all'
+    if (selectionMode_ == smAll)
+    {
+        volScalarField::GeometricBoundaryField& bf = he.boundaryField();
 
-        scalarField& hec = he.internalField();
-
-        forAll(cells_, i)
+        forAll(bf, patchi)
         {
-            label cellI = cells_[i];
-            hec[cellI]= max(min(hec[cellI], heMax[i]), heMin[i]);
-        }
+            fvPatchScalarField& hep = bf[patchi];
 
-        // handle boundaries in the case of 'all'
-        if (selectionMode_ == smAll)
-        {
-            volScalarField::GeometricBoundaryField& bf = he.boundaryField();
-
-            forAll(bf, patchI)
+            if (!hep.fixesValue())
             {
-                fvPatchScalarField& hep = bf[patchI];
-                if (hep.fixesValue())
-                {
-                    // not over-riding fixed conditions
-                    continue;
-                }
-
-                const scalarField& pp = thermo.p().boundaryField()[patchI];
+                const scalarField& pp = thermo.p().boundaryField()[patchi];
 
                 scalarField Tminp(pp.size(), Tmin_);
                 scalarField Tmaxp(pp.size(), Tmax_);
 
-                scalarField heMinp(thermo.he(pp, Tminp, patchI));
-                scalarField heMaxp(thermo.he(pp, Tmaxp, patchI));
+                scalarField heMinp(thermo.he(pp, Tminp, patchi));
+                scalarField heMaxp(thermo.he(pp, Tmaxp, patchi));
 
-                forAll(hep, faceI)
+                forAll(hep, facei)
                 {
-                    hep[faceI] =
-                        max(min(hep[faceI], heMaxp[faceI]), heMinp[faceI]);
+                    hep[facei] =
+                        max(min(hep[facei], heMaxp[facei]), heMinp[facei]);
                 }
             }
         }

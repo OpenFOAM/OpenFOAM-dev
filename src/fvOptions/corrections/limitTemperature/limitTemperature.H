@@ -109,9 +109,6 @@ public:
 
     // Member Functions
 
-        virtual bool alwaysApply() const;
-
-
         // Evaluate
 
             //- Correct the energy field
