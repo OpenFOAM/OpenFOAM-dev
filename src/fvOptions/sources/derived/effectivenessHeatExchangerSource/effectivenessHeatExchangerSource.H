@@ -245,10 +245,7 @@ public:
 
     // Member Functions
 
-        virtual bool alwaysApply() const;
-
-
-        // Add explicit and implicit contributions
+        // Explicit and implicit source
 
             //- Scalar
             virtual void addSup
@@ -265,7 +262,7 @@ public:
             }
 
 
-        // Add explicit and implicit contributions to compressible equation
+        // Explicit and implicit source for compressible equation
 
             //- Scalar
             virtual void addSup

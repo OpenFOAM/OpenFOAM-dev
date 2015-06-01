@@ -166,7 +166,6 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
     faceSign_(),
     faceZoneArea_(0)
 {
-
     if (zoneID_ < 0)
     {
         FatalErrorIn
@@ -185,7 +184,14 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
             << nl << exit(FatalError);
     }
 
-    fieldNames_.setSize(1, "energy");
+    // Set the field name to that of the energy field from which the temperature
+    // is obtained
+
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+
+    fieldNames_.setSize(1, thermo.he().name());
+
     applied_.setSize(1, false);
 
     eTable_.reset(new interpolation2DTable<scalar>(coeffs_));
@@ -196,12 +202,6 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::effectivenessHeatExchangerSource::alwaysApply() const
-{
-    return true;
-}
-
-
 void Foam::fv::effectivenessHeatExchangerSource::addSup
 (
     const volScalarField& rho,
@@ -211,11 +211,6 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>("thermophysicalProperties");
-
-    if (eqn.psi().name() != thermo.he().name())
-    {
-        return;
-    }
 
     const surfaceScalarField Cpf(fvc::interpolate(thermo.Cp()));
 

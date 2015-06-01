@@ -136,13 +136,8 @@ public:
 
     // Member Functions
 
-        virtual bool alwaysApply() const;
-
-
-        // Set values directly
-
-            //- Scalar
-            virtual void constrain(fvMatrix<scalar>& eqn, const label fieldI);
+        //- Constrain energy equation to fix the temperature
+        virtual void constrain(fvMatrix<scalar>& eqn, const label fieldI);
 
 
         // IO
