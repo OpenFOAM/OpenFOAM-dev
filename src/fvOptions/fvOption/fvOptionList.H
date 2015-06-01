@@ -44,6 +44,16 @@ SourceFile
 
 namespace Foam
 {
+
+// Forward declaration of friend functions and operators
+
+namespace fv
+{
+    class optionList;
+}
+
+Ostream& operator<<(Ostream& os, const fv::optionList& options);
+
 namespace fv
 {
 
@@ -190,6 +200,7 @@ public:
                 const optionList& options
             );
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

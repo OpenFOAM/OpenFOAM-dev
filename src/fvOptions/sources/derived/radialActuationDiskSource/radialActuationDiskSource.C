@@ -111,12 +111,6 @@ void Foam::fv::radialActuationDiskSource::addSup
 }
 
 
-void Foam::fv::radialActuationDiskSource::writeData(Ostream& os) const
-{
-    actuationDiskSource::writeData(os);
-}
-
-
 bool Foam::fv::radialActuationDiskSource::read(const dictionary& dict)
 {
     if (actuationDiskSource::read(dict))

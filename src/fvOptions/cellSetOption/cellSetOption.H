@@ -192,9 +192,6 @@ public:
 
         // IO
 
-            //- Write the source properties
-            virtual void writeData(Ostream&) const;
-
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
 };

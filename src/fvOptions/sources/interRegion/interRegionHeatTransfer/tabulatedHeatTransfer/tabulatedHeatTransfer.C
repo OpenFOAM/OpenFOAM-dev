@@ -133,13 +133,6 @@ void Foam::fv::tabulatedHeatTransfer::calculateHtc()
 }
 
 
-void Foam::fv::tabulatedHeatTransfer::writeData(Ostream& os) const
-{
-    interRegionHeatTransferModel::writeData(os);
-    coeffs_.write(os);
-}
-
-
 bool Foam::fv::tabulatedHeatTransfer::read(const dictionary& dict)
 {
     if (interRegionHeatTransferModel::read(dict))

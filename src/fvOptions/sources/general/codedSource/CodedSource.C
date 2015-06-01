@@ -201,7 +201,7 @@ void Foam::fv::CodedSource<Type>::addSup
 
 
 template<class Type>
-void Foam::fv::CodedSource<Type>::setValue
+void Foam::fv::CodedSource<Type>::constrain
 (
     fvMatrix<Type>& eqn,
     const label fieldI
@@ -210,11 +210,11 @@ void Foam::fv::CodedSource<Type>::setValue
     if (debug)
     {
         Info<< "CodedSource<"<< pTraits<Type>::typeName
-            << ">::setValue for source " << name_ << endl;
+            << ">::constrain for source " << name_ << endl;
     }
 
     updateLibrary(redirectType_);
-    redirectFvOption().setValue(eqn, fieldI);
+    redirectFvOption().constrain(eqn, fieldI);
 }
 
 

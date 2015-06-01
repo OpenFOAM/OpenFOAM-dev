@@ -28,14 +28,6 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fv::SemiImplicitSource<Type>::writeData(Ostream& os) const
-{
-    cellSetOption::writeData(os);
-    dict_.write(os);
-}
-
-
-template<class Type>
 bool Foam::fv::SemiImplicitSource<Type>::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))

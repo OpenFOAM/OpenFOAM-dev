@@ -148,7 +148,9 @@ bool Foam::fv::optionList::writeData(Ostream& os) const
     forAll(*this, i)
     {
         os  << nl;
+        this->operator[](i).writeHeader(os);
         this->operator[](i).writeData(os);
+        this->operator[](i).writeFooter(os);
     }
 
     // Check state of IOstream
@@ -158,17 +160,10 @@ bool Foam::fv::optionList::writeData(Ostream& os) const
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-namespace Foam
+Foam::Ostream& Foam::operator<<(Ostream& os, const fv::optionList& options)
 {
-    Ostream& operator<<
-    (
-        Ostream& os,
-        const fv::optionList& options
-    )
-    {
-        options.writeData(os);
-        return os;
-    }
+    options.writeData(os);
+    return os;
 }
 
 

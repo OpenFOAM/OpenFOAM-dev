@@ -27,13 +27,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::solidificationMeltingSource::writeData(Ostream& os) const
-{
-    cellSetOption::writeData(os);
-    dict_.write(os);
-}
-
-
 bool Foam::fv::solidificationMeltingSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))

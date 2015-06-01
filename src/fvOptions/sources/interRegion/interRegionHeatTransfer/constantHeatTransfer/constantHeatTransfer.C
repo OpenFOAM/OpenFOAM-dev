@@ -108,14 +108,6 @@ void Foam::fv::constantHeatTransfer::calculateHtc()
 {}
 
 
-void Foam::fv::constantHeatTransfer::writeData(Ostream& os) const
-{
-    interRegionHeatTransferModel::writeData(os);
-    os << indent << type() + "Coeffs" << nl;
-    coeffs_.write(os);
-}
-
-
 bool Foam::fv::constantHeatTransfer::read(const dictionary& dict)
 {
     if (interRegionHeatTransferModel::read(dict))

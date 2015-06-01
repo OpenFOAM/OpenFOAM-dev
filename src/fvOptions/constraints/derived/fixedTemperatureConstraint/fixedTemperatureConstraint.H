@@ -142,13 +142,10 @@ public:
         // Set values directly
 
             //- Scalar
-            virtual void setValue(fvMatrix<scalar>& eqn, const label fieldI);
+            virtual void constrain(fvMatrix<scalar>& eqn, const label fieldI);
 
 
         // IO
-
-            //- Write data
-            virtual void writeData(Ostream&) const;
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);

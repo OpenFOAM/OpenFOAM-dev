@@ -94,13 +94,6 @@ void Foam::fv::tabulatedAccelerationSource::addSup
 }
 
 
-void Foam::fv::tabulatedAccelerationSource::writeData(Ostream& os) const
-{
-    option::writeData(os);
-    dict_.write(os);
-}
-
-
 bool Foam::fv::tabulatedAccelerationSource::read(const dictionary& dict)
 {
     if (option::read(dict))

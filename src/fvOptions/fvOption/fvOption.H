@@ -46,6 +46,7 @@ SourceFiles
 #include "fvMatricesFwd.H"
 #include "volFieldsFwd.H"
 #include "dictionary.H"
+#include "Switch.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -84,7 +85,7 @@ protected:
         dictionary coeffs_;
 
         //- Source active flag
-        bool active_;
+        Switch active_;
 
         //- Field names to apply source to - populated by derived models
         wordList fieldNames_;
@@ -212,7 +213,7 @@ public:
         // Edit
 
             //- Return access to the source active flag
-            inline bool& active();
+            inline Switch& active();
 
 
         // Checks
@@ -376,38 +377,38 @@ public:
                 );
 
 
-            // Set values directly
+            // Constraints
 
                 //- Scalar
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<scalar>& eqn,
                     const label fieldI
                 );
 
                 //- Vector
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<vector>& eqn,
                     const label fieldI
                 );
 
                 //- Spherical tensor
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<sphericalTensor>& eqn,
                     const label fieldI
                 );
 
                 //- Symmetric tensor
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<symmTensor>& eqn,
                     const label fieldI
                 );
 
                 //- Tensor
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<tensor>& eqn,
                     const label fieldI

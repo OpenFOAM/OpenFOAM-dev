@@ -587,13 +587,6 @@ void Foam::fv::rotorDiskSource::addSup
 }
 
 
-void Foam::fv::rotorDiskSource::writeData(Ostream& os) const
-{
-    cellSetOption::writeData(os);
-    dict_.write(os);
-}
-
-
 bool Foam::fv::rotorDiskSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))

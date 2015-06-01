@@ -27,50 +27,6 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::cellSetOption::writeData(Ostream& os) const
-{
-    option::writeData(os);
-
-    os.writeKeyword("timeStart") << timeStart_ << token::END_STATEMENT << nl;
-    os.writeKeyword("duration") << duration_ << token::END_STATEMENT << nl;
-    os.writeKeyword("selectionMode")
-        << selectionModeTypeNames_[selectionMode_] << nl;
-
-    switch (selectionMode_)
-    {
-        case smPoints:
-        {
-            os.writeKeyword("points") << points_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smCellSet:
-        {
-            os.writeKeyword("cellSet") << cellSetName_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smCellZone:
-        {
-            os.writeKeyword("cellZone") << cellSetName_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smAll:
-        {
-            break;
-        }
-        default:
-        {
-            FatalErrorIn("option::writeData(Ostream&) const")
-                << "Unknown selectionMode "
-                << selectionMode_
-                << abort(FatalError);
-        }
-    }
-}
-
-
 bool Foam::fv::cellSetOption::read(const dictionary& dict)
 {
     if (option::read(dict))

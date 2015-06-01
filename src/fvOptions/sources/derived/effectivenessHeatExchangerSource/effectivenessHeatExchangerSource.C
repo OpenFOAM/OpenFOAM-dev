@@ -308,13 +308,6 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
 }
 
 
-void Foam::fv::effectivenessHeatExchangerSource::writeData(Ostream& os) const
-{
-    cellSetOption::writeData(os);
-    dict_.write(os);
-}
-
-
 bool Foam::fv::effectivenessHeatExchangerSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))

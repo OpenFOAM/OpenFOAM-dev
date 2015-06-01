@@ -40,7 +40,7 @@ Description
         const label fieldI
     )
 
-    setValue
+    constrain
     (
         fvMatrix<Type}>& eqn,
         const label fieldI
@@ -217,7 +217,7 @@ public:
             );
 
             //- Set value
-            virtual void setValue
+            virtual void constrain
             (
                 fvMatrix<Type>& eqn,
                 const label fieldI
@@ -225,9 +225,6 @@ public:
 
 
         // IO
-
-            //- Write the source properties
-            virtual void writeData(Ostream&) const;
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);

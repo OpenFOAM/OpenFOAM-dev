@@ -241,7 +241,7 @@ void Foam::fv::optionList::constrain(fvMatrix<Type>& eqn)
                         << " to field " << eqn.psi().name() << endl;
                 }
 
-                source.setValue(eqn, fieldI);
+                source.constrain(eqn, fieldI);
             }
         }
     }

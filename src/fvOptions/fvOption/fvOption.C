@@ -61,7 +61,7 @@ Foam::fv::option::option
     mesh_(mesh),
     dict_(dict),
     coeffs_(dict.subDict(modelType + "Coeffs")),
-    active_(dict_.lookupOrDefault<bool>("active", true)),
+    active_(dict_.lookupOrDefault<Switch>("active", true)),
     fieldNames_(),
     applied_()
 {
@@ -304,15 +304,15 @@ void Foam::fv::option::addSup
 }
 
 
-void Foam::fv::option::setValue(fvMatrix<scalar>& eqn, const label fieldI)
+void Foam::fv::option::constrain(fvMatrix<scalar>& eqn, const label fieldI)
 {}
 
 
-void Foam::fv::option::setValue(fvMatrix<vector>& eqn, const label fieldI)
+void Foam::fv::option::constrain(fvMatrix<vector>& eqn, const label fieldI)
 {}
 
 
-void Foam::fv::option::setValue
+void Foam::fv::option::constrain
 (
     fvMatrix<sphericalTensor>& eqn,
     const label fieldI
@@ -320,7 +320,7 @@ void Foam::fv::option::setValue
 {}
 
 
-void Foam::fv::option::setValue
+void Foam::fv::option::constrain
 (
     fvMatrix<symmTensor>& eqn,
     const label fieldI
@@ -328,7 +328,7 @@ void Foam::fv::option::setValue
 {}
 
 
-void Foam::fv::option::setValue(fvMatrix<tensor>& eqn, const label fieldI)
+void Foam::fv::option::constrain(fvMatrix<tensor>& eqn, const label fieldI)
 {}
 
 

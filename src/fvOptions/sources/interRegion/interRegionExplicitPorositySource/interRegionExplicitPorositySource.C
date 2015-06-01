@@ -288,13 +288,6 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 }
 
 
-void Foam::fv::interRegionExplicitPorositySource::writeData(Ostream& os) const
-{
-    interRegionOption::writeData(os);
-    dict_.write(os);
-}
-
-
 bool Foam::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
 {
     if (interRegionOption::read(dict))

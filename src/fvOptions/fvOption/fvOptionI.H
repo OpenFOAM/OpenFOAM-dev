@@ -55,7 +55,7 @@ inline void Foam::fv::option::setApplied(const label fieldI)
 }
 
 
-inline bool& Foam::fv::option::active()
+inline Foam::Switch& Foam::fv::option::active()
 {
     return active_;
 }

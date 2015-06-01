@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,18 +26,6 @@ License
 #include "pressureGradientExplicitSource.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::fv::pressureGradientExplicitSource::writeData(Ostream& os) const
-{
-    notImplemented
-    (
-        "void Foam::fv::pressureGradientExplicitSource::writeData"
-        "("
-            "Ostream&"
-        ") const"
-    );
-}
-
 
 bool Foam::fv::pressureGradientExplicitSource::read(const dictionary& dict)
 {

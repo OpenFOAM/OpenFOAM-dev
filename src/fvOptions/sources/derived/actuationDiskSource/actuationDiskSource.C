@@ -158,13 +158,6 @@ void Foam::fv::actuationDiskSource::addSup
 }
 
 
-void Foam::fv::actuationDiskSource::writeData(Ostream& os) const
-{
-    cellSetOption::writeData(os);
-    dict_.write(os);
-}
-
-
 bool Foam::fv::actuationDiskSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))

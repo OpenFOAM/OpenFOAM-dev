@@ -27,15 +27,6 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::interRegionOption::writeData(Ostream& os) const
-{
-    option::writeData(os);
-    os.writeKeyword("master") << master_ << token::END_STATEMENT << nl;
-    os.writeKeyword("nbrRegionName") << nbrRegionName_
-        << token::END_STATEMENT << nl;
-}
-
-
 bool Foam::fv::interRegionOption::read(const dictionary& dict)
 {
     if (option::read(dict))

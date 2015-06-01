@@ -108,13 +108,10 @@ public:
         // Evaluation
 
             //- Set value on field
-            virtual void setValue(fvMatrix<Type>& eqn, const label fieldI);
+            virtual void constrain(fvMatrix<Type>& eqn, const label fieldI);
 
 
         // IO
-
-            //- Write the source properties
-            virtual void writeData(Ostream&) const;
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);

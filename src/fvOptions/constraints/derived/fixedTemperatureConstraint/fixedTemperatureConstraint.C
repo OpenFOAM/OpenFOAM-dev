@@ -107,7 +107,7 @@ bool Foam::fv::fixedTemperatureConstraint::alwaysApply() const
 }
 
 
-void Foam::fv::fixedTemperatureConstraint::setValue
+void Foam::fv::fixedTemperatureConstraint::constrain
 (
     fvMatrix<scalar>& eqn,
     const label
@@ -145,13 +145,6 @@ void Foam::fv::fixedTemperatureConstraint::setValue
         }
 
     }
-}
-
-
-void Foam::fv::fixedTemperatureConstraint::writeData(Ostream& os) const
-{
-    cellSetOption::writeData(os);
-    dict_.write(os);
 }
 
 

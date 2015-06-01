@@ -214,7 +214,7 @@ void Foam::fv::pressureGradientExplicitSource::addSup
 }
 
 
-void Foam::fv::pressureGradientExplicitSource::setValue
+void Foam::fv::pressureGradientExplicitSource::constrain
 (
     fvMatrix<vector>& eqn,
     const label

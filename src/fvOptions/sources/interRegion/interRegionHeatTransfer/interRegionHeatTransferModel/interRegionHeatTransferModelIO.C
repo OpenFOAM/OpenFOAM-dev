@@ -27,17 +27,6 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::interRegionHeatTransferModel::writeData(Ostream& os) const
-{
-    interRegionOption::writeData(os);
-
-    os.writeKeyword("nbrModelName") << nbrModelName_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("semiImplicit") << semiImplicit_ << token::END_STATEMENT
-        << nl;
-}
-
-
 bool Foam::fv::interRegionHeatTransferModel::read(const dictionary& dict)
 {
     if (interRegionOption::read(dict))

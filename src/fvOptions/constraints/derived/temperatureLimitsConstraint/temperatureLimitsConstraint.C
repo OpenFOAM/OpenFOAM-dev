@@ -125,13 +125,6 @@ void Foam::fv::temperatureLimitsConstraint::correct(volScalarField& he)
 }
 
 
-void Foam::fv::temperatureLimitsConstraint::writeData(Ostream& os) const
-{
-    cellSetOption::writeData(os);
-    dict_.write(os);
-}
-
-
 bool Foam::fv::temperatureLimitsConstraint::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
