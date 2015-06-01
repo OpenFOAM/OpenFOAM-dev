@@ -230,55 +230,32 @@ public:
 
         // Evaluation
 
-            // Correct
+            // Explicit and implicit sources
 
-                //- Scalar
-                virtual void correct(volScalarField& fld);
-
-                //- Vector
-                virtual void correct(volVectorField& fld);
-
-                //- Spherical tensor
-                virtual void correct(volSphericalTensorField& fld);
-
-                //- Symmetric tensor
-                virtual void correct(volSymmTensorField& fld);
-
-                //- Tensor
-                virtual void correct(volTensorField& fld);
-
-
-            // Add explicit and implicit contributions
-
-                //- Scalar
                 virtual void addSup
                 (
                     fvMatrix<scalar>& eqn,
                     const label fieldI
                 );
 
-                //- Vector
                 virtual void addSup
                 (
                     fvMatrix<vector>& eqn,
                     const label fieldI
                 );
 
-                //- Spherical tensor
                 virtual void addSup
                 (
                     fvMatrix<symmTensor>& eqn,
                     const label fieldI
                 );
 
-                //- Symmetric tensor
                 virtual void addSup
                 (
                     fvMatrix<sphericalTensor>& eqn,
                     const label fieldI
                 );
 
-                //- Tensor
                 virtual void addSup
                 (
                     fvMatrix<tensor>& eqn,
@@ -286,9 +263,8 @@ public:
                 );
 
 
-            // Add explicit and implicit contributions to compressible equations
+            // Explicit and implicit sources for compressible equations
 
-                //- Scalar
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -296,7 +272,6 @@ public:
                     const label fieldI
                 );
 
-                //- Vector
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -304,7 +279,6 @@ public:
                     const label fieldI
                 );
 
-                //- Spherical tensor
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -312,7 +286,6 @@ public:
                     const label fieldI
                 );
 
-                //- Symmetric tensor
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -320,7 +293,6 @@ public:
                     const label fieldI
                 );
 
-                //- Tensor
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -329,9 +301,8 @@ public:
                 );
 
 
-            // Add explicit and implicit contributions to phase equations
+            // Explicit and implicit sources for phase equations
 
-                //- Scalar
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -340,7 +311,6 @@ public:
                     const label fieldI
                 );
 
-                //- Vector
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -349,7 +319,6 @@ public:
                     const label fieldI
                 );
 
-                //- Spherical tensor
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -358,7 +327,6 @@ public:
                     const label fieldI
                 );
 
-                //- Symmetric tensor
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -367,7 +335,6 @@ public:
                     const label fieldI
                 );
 
-                //- Tensor
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -379,40 +346,44 @@ public:
 
             // Constraints
 
-                //- Scalar
                 virtual void constrain
                 (
                     fvMatrix<scalar>& eqn,
                     const label fieldI
                 );
 
-                //- Vector
                 virtual void constrain
                 (
                     fvMatrix<vector>& eqn,
                     const label fieldI
                 );
 
-                //- Spherical tensor
                 virtual void constrain
                 (
                     fvMatrix<sphericalTensor>& eqn,
                     const label fieldI
                 );
 
-                //- Symmetric tensor
                 virtual void constrain
                 (
                     fvMatrix<symmTensor>& eqn,
                     const label fieldI
                 );
 
-                //- Tensor
                 virtual void constrain
                 (
                     fvMatrix<tensor>& eqn,
                     const label fieldI
                 );
+
+
+            // Correction
+
+                virtual void correct(volScalarField& field);
+                virtual void correct(volVectorField& field);
+                virtual void correct(volSphericalTensorField& field);
+                virtual void correct(volSymmTensorField& field);
+                virtual void correct(volTensorField& field);
 
 
         // IO

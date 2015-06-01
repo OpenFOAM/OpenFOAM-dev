@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvOption.H"
-#include "fvMatrices.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -65,8 +65,7 @@ Foam::fv::option::option
     fieldNames_(),
     applied_()
 {
-    Info<< incrIndent << indent << "Source: " << name_ << endl;
-    Info<< decrIndent;
+    Info<< incrIndent << indent << "Source: " << name_ << endl << decrIndent;
 }
 
 
@@ -137,26 +136,6 @@ void Foam::fv::option::checkApplied() const
         }
     }
 }
-
-
-void Foam::fv::option::correct(volScalarField& fld)
-{}
-
-
-void Foam::fv::option::correct(volVectorField& fld)
-{}
-
-
-void Foam::fv::option::correct(volSphericalTensorField& fld)
-{}
-
-
-void Foam::fv::option::correct(volSymmTensorField& fld)
-{}
-
-
-void Foam::fv::option::correct(volTensorField& fld)
-{}
 
 
 void Foam::fv::option::addSup
@@ -329,6 +308,26 @@ void Foam::fv::option::constrain
 
 
 void Foam::fv::option::constrain(fvMatrix<tensor>& eqn, const label fieldI)
+{}
+
+
+void Foam::fv::option::correct(volScalarField& field)
+{}
+
+
+void Foam::fv::option::correct(volVectorField& field)
+{}
+
+
+void Foam::fv::option::correct(volSphericalTensorField& field)
+{}
+
+
+void Foam::fv::option::correct(volSymmTensorField& field)
+{}
+
+
+void Foam::fv::option::correct(volTensorField& field)
 {}
 
 

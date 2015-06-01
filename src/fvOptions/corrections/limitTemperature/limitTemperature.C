@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "temperatureLimitsConstraint.H"
+#include "limitTemperature.H"
 #include "fvMesh.H"
 #include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,11 +34,11 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(temperatureLimitsConstraint, 0);
+    defineTypeNameAndDebug(limitTemperature, 0);
     addToRunTimeSelectionTable
     (
         option,
-        temperatureLimitsConstraint,
+        limitTemperature,
         dictionary
     );
 }
@@ -46,7 +46,7 @@ namespace fv
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::temperatureLimitsConstraint::temperatureLimitsConstraint
+Foam::fv::limitTemperature::limitTemperature
 (
     const word& name,
     const word& modelType,
@@ -65,13 +65,13 @@ Foam::fv::temperatureLimitsConstraint::temperatureLimitsConstraint
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::temperatureLimitsConstraint::alwaysApply() const
+bool Foam::fv::limitTemperature::alwaysApply() const
 {
     return true;
 }
 
 
-void Foam::fv::temperatureLimitsConstraint::correct(volScalarField& he)
+void Foam::fv::limitTemperature::correct(volScalarField& he)
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>("thermophysicalProperties");
@@ -125,7 +125,7 @@ void Foam::fv::temperatureLimitsConstraint::correct(volScalarField& he)
 }
 
 
-bool Foam::fv::temperatureLimitsConstraint::read(const dictionary& dict)
+bool Foam::fv::limitTemperature::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {

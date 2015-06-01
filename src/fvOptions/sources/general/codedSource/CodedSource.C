@@ -149,7 +149,7 @@ Foam::fv::option& Foam::fv::CodedSource<Type>::redirectFvOption() const
 template<class Type>
 void Foam::fv::CodedSource<Type>::correct
 (
-    GeometricField<Type, fvPatchField, volMesh>& fld
+    GeometricField<Type, fvPatchField, volMesh>& field
 )
 {
     if (debug)
@@ -159,7 +159,7 @@ void Foam::fv::CodedSource<Type>::correct
     }
 
     updateLibrary(redirectType_);
-    redirectFvOption().correct(fld);
+    redirectFvOption().correct(field);
 }
 
 

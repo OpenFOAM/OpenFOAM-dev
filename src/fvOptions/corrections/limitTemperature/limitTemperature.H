@@ -22,27 +22,27 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::temperatureLimitsConstraint
+    Foam::fv::limitTemperature
 
 Description
-    Constraint for temperature to apply limits between minimum and maximum
+    Correction for temperature to apply limits between minimum and maximum
     values
 
     Constraint described by:
 
-        temperatureLimitsConstraintCoeffs
+        limitTemperatureCoeffs
         {
             minimum     200;
             maximum     500;
         }
 
 SourceFiles
-    temperatureLimitsConstraint.C
+    limitTemperature.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef temperatureLimitsConstraint_H
-#define temperatureLimitsConstraint_H
+#ifndef limitTemperature_H
+#define limitTemperature_H
 
 #include "cellSetOption.H"
 
@@ -54,10 +54,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class temperatureLimitsConstraint Declaration
+                 Class limitTemperature Declaration
 \*---------------------------------------------------------------------------*/
 
-class temperatureLimitsConstraint
+class limitTemperature
 :
     public cellSetOption
 {
@@ -78,22 +78,22 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        temperatureLimitsConstraint(const temperatureLimitsConstraint&);
+        limitTemperature(const limitTemperature&);
 
         //- Disallow default bitwise assignment
-        void operator=(const temperatureLimitsConstraint&);
+        void operator=(const limitTemperature&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("temperatureLimitsConstraint");
+    TypeName("limitTemperature");
 
 
     // Constructors
 
         //- Construct from components
-        temperatureLimitsConstraint
+        limitTemperature
         (
             const word& name,
             const word& modelType,
@@ -103,7 +103,7 @@ public:
 
 
     //- Destructor
-    virtual ~temperatureLimitsConstraint()
+    virtual ~limitTemperature()
     {}
 
 

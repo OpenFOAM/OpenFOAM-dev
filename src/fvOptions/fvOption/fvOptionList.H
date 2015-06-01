@@ -32,13 +32,13 @@ SourceFile
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef optionList_H
-#define optionList_H
+#ifndef fvOptionList_H
+#define fvOptionList_H
 
+#include "fvOption.H"
 #include "PtrList.H"
 #include "GeometricField.H"
 #include "fvPatchField.H"
-#include "fvOption.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -119,10 +119,6 @@ public:
         //- Reset the source list
         void reset(const dictionary& dict);
 
-        //- Correct
-        template<class Type>
-        void correct(GeometricField<Type, fvPatchField, volMesh>& fld);
-
 
         // Sources
 
@@ -130,14 +126,14 @@ public:
             template<class Type>
             tmp<fvMatrix<Type> > operator()
             (
-                GeometricField<Type, fvPatchField, volMesh>& fld
+                GeometricField<Type, fvPatchField, volMesh>& field
             );
 
             //- Return source for equation with specified name
             template<class Type>
             tmp<fvMatrix<Type> > operator()
             (
-                GeometricField<Type, fvPatchField, volMesh>& fld,
+                GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             );
 
@@ -146,7 +142,7 @@ public:
             tmp<fvMatrix<Type> > operator()
             (
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& fld
+                GeometricField<Type, fvPatchField, volMesh>& field
             );
 
             //- Return source for equation with specified name
@@ -154,7 +150,7 @@ public:
             tmp<fvMatrix<Type> > operator()
             (
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& fld,
+                GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             );
 
@@ -164,7 +160,7 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& fld
+                GeometricField<Type, fvPatchField, volMesh>& field
             );
 
             //- Return source for equation with specified name
@@ -173,7 +169,7 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& fld,
+                GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             );
 
@@ -183,6 +179,13 @@ public:
             //- Apply constraints to equation
             template<class Type>
             void constrain(fvMatrix<Type>& eqn);
+
+
+        // Correction
+
+            //- Apply correction to field
+            template<class Type>
+            void correct(GeometricField<Type, fvPatchField, volMesh>& field);
 
 
         // IO

@@ -31,7 +31,7 @@ Description
 
     codeCorrect
     (
-        GeometricField<Type, fvPatchField, volMesh>& fld
+        GeometricField<Type, fvPatchField, volMesh>& field
     )
 
     codeAddSup
@@ -47,7 +47,7 @@ Description
     )
 
     where :
-        fld is the field in fieldNames
+        field is the field in fieldNames
         eqn is the fvMatrix
 
     \heading Source usage

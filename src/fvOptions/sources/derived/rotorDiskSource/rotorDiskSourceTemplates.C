@@ -169,7 +169,7 @@ void Foam::fv::rotorDiskSource::writeField
 
     if (mesh_.time().outputTime() || writeNow)
     {
-        tmp<fieldType> tfld
+        tmp<fieldType> tfield
         (
             new fieldType
             (
@@ -186,7 +186,7 @@ void Foam::fv::rotorDiskSource::writeField
             )
         );
 
-        Field<Type>& fld = tfld().internalField();
+        Field<Type>& field = tfield().internalField();
 
         if (cells_.size() != values.size())
         {
@@ -197,10 +197,10 @@ void Foam::fv::rotorDiskSource::writeField
         forAll(cells_, i)
         {
             const label cellI = cells_[i];
-            fld[cellI] = values[i];
+            field[cellI] = values[i];
         }
 
-        tfld().write();
+        tfield().write();
     }
 }
 

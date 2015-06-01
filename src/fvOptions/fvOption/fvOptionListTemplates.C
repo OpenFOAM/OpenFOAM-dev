@@ -26,60 +26,27 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fv::optionList::correct
+Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
 (
-    GeometricField<Type, fvPatchField, volMesh>& fld
+    GeometricField<Type, fvPatchField, volMesh>& field
 )
 {
-    const word& fieldName = fld.name();
-
-    forAll(*this, i)
-    {
-        option& source = this->operator[](i);
-
-        label fieldI = source.applyToField(fieldName);
-
-        if (fieldI != -1)
-        {
-            source.setApplied(fieldI);
-
-            if (source.isActive())
-            {
-                if (debug)
-                {
-                    Info<< "Correcting source " << source.name()
-                        << " for field " << fieldName << endl;
-                }
-
-                source.correct(fld);
-            }
-        }
-    }
+    return this->operator()(field, field.name());
 }
 
 
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
 (
-    GeometricField<Type, fvPatchField, volMesh>& fld
-)
-{
-    return this->operator()(fld, fld.name());
-}
-
-
-template<class Type>
-Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
-(
-    GeometricField<Type, fvPatchField, volMesh>& fld,
+    GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 )
 {
     checkApplied();
 
-    const dimensionSet ds = fld.dimensions()/dimTime*dimVolume;
+    const dimensionSet ds = field.dimensions()/dimTime*dimVolume;
 
-    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(field, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)
@@ -113,10 +80,10 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& fld
+    GeometricField<Type, fvPatchField, volMesh>& field
 )
 {
-    return this->operator()(rho, fld, fld.name());
+    return this->operator()(rho, field, field.name());
 }
 
 
@@ -124,15 +91,18 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& fld,
+    GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 )
 {
     checkApplied();
 
-    const dimensionSet ds = rho.dimensions()*fld.dimensions()/dimTime*dimVolume;
+    const dimensionSet ds
+    (
+        rho.dimensions()*field.dimensions()/dimTime*dimVolume
+    );
 
-    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(field, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)
@@ -167,10 +137,10 @@ Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& fld
+    GeometricField<Type, fvPatchField, volMesh>& field
 )
 {
-    return this->operator()(alpha, rho, fld, fld.name());
+    return this->operator()(alpha, rho, field, field.name());
 }
 
 
@@ -179,16 +149,19 @@ Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& fld,
+    GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 )
 {
     checkApplied();
 
-    const dimensionSet ds =
-        alpha.dimensions()*rho.dimensions()*fld.dimensions()/dimTime*dimVolume;
+    const dimensionSet ds
+    (
+        alpha.dimensions()*rho.dimensions()*field.dimensions()
+       /dimTime*dimVolume
+    );
 
-    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(field, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)
@@ -242,6 +215,39 @@ void Foam::fv::optionList::constrain(fvMatrix<Type>& eqn)
                 }
 
                 source.constrain(eqn, fieldI);
+            }
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::fv::optionList::correct
+(
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    const word& fieldName = field.name();
+
+    forAll(*this, i)
+    {
+        option& source = this->operator[](i);
+
+        label fieldI = source.applyToField(fieldName);
+
+        if (fieldI != -1)
+        {
+            source.setApplied(fieldI);
+
+            if (source.isActive())
+            {
+                if (debug)
+                {
+                    Info<< "Correcting source " << source.name()
+                        << " for field " << fieldName << endl;
+                }
+
+                source.correct(field);
             }
         }
     }
