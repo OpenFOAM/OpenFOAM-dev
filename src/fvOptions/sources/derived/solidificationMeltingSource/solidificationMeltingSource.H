@@ -178,9 +178,6 @@ private:
 
     // Private Member Functions
 
-        //- Flag to indicate whether to solve for given field
-        bool solveField(const word& fieldName) const;
-
         //- Return the specific heat capacity field
         tmp<volScalarField> Cp() const;
 
@@ -220,10 +217,6 @@ public:
 
 
     // Member Functions
-
-        //- Flag to bypass the apply flag list checking
-        virtual bool alwaysApply() const;
-
 
         // Add explicit and implicit contributions
 

@@ -94,12 +94,6 @@ protected:
         List<bool> applied_;
 
 
-    // Protected functions
-
-        //- Flag to bypass the apply flag list checking
-        virtual bool alwaysApply() const;
-
-
 public:
 
     //- Runtime type information

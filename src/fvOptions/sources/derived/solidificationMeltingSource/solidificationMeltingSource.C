@@ -65,51 +65,6 @@ const Foam::NamedEnum<Foam::fv::solidificationMeltingSource::thermoMode, 2>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::fv::solidificationMeltingSource::solveField
-(
-    const word& fieldName
-) const
-{
-    bool result = true;
-
-    switch (mode_)
-    {
-        case mdThermo:
-        {
-            const basicThermo& thermo =
-                mesh_.lookupObject<basicThermo>("thermophysicalProperties");
-
-            if (fieldName != thermo.he().name())
-            {
-                result = false;
-            }
-            break;
-        }
-        case mdLookup:
-        {
-            if (fieldName != TName_)
-            {
-                result = false;
-            }
-            break;
-        }
-        default:
-        {
-            FatalErrorIn
-            (
-                "bool Foam::fv::solidificationMeltingSource::solveField"
-                "("
-                    "const word&"
-                ") const"
-            )
-                << "Unhandled thermo mode: " << thermoModeTypeNames_[mode_]
-                << abort(FatalError);
-        }
-    }
-    return result;
-}
-
-
 Foam::tmp<Foam::volScalarField>
 Foam::fv::solidificationMeltingSource::Cp() const
 {
@@ -265,18 +220,39 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
     curTimeIndex_(-1),
     deltaT_(cells_.size(), 0)
 {
-    fieldNames_.setSize(1, "source");
-    applied_.setSize(1, false);
+    fieldNames_.setSize(2);
+    fieldNames_[0] = UName_;
+
+    switch (mode_)
+    {
+        case mdThermo:
+        {
+            const basicThermo& thermo =
+                mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+
+            fieldNames_[1] = thermo.he().name();
+            break;
+        }
+        case mdLookup:
+        {
+            fieldNames_[1] = TName_;
+            break;
+        }
+        default:
+        {
+            FatalErrorIn
+            (
+                "fv::solidificationMeltingSource::solidificationMeltingSource"
+            )   << "Unhandled thermo mode: " << thermoModeTypeNames_[mode_]
+                << abort(FatalError);
+        }
+    }
+
+    applied_.setSize(2, false);
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::fv::solidificationMeltingSource::alwaysApply() const
-{
-    return true;
-}
-
 
 void Foam::fv::solidificationMeltingSource::addSup
 (
@@ -305,16 +281,9 @@ void Foam::fv::solidificationMeltingSource::addSup
     const label fieldI
 )
 {
-    const volVectorField& U = eqn.psi();
-
-    if (U.name() != UName_)
-    {
-        return;
-    }
-
     if (debug)
     {
-        Info<< type() << ": applying source to " << UName_ << endl;
+        Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
     const volScalarField Cp(this->Cp());
@@ -350,7 +319,7 @@ void Foam::fv::solidificationMeltingSource::addSup
     const label fieldI
 )
 {
-    // momentum source uses a Boussinesq approximation - redirect
+    // Momentum source uses a Boussinesq approximation - redirect
     addSup(eqn, fieldI);
 }
 

@@ -38,14 +38,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-bool Foam::fv::option::alwaysApply() const
-{
-    return false;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::option::option
@@ -115,11 +107,6 @@ bool Foam::fv::option::isActive()
 
 Foam::label Foam::fv::option::applyToField(const word& fieldName) const
 {
-    if (alwaysApply())
-    {
-        return 0;
-    }
-
     return findIndex(fieldNames_, fieldName);
 }
 

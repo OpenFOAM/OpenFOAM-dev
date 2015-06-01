@@ -35,11 +35,6 @@ void Foam::fv::solidificationMeltingSource::apply
     fvMatrix<scalar>& eqn
 )
 {
-    if (!solveField(eqn.psi().name()))
-    {
-        return;
-    }
-
     if (debug)
     {
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
