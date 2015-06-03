@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,24 +59,23 @@ void thixotropicViscosity::updateMu()
 {
     const kinematicSingleLayer& film = filmType<kinematicSingleLayer>();
 
-    // blend based on mass fraction of added- to existing film mass
+    // Blend based on mass fraction of added- to existing film mass
     const dimensionedScalar m0("zero", dimMass, 0.0);
     const dimensionedScalar mSMALL("SMALL", dimMass, ROOTVSMALL);
     const volScalarField deltaMass("deltaMass", max(m0, film.deltaMass()));
     const volScalarField filmMass("filmMass", film.netMass() + mSMALL);
-    const volScalarField mask(pos(film.delta() - film.deltaSmall()));
 
-    // weighting field to blend new and existing mass contributions
+    // Weighting field to blend new and existing mass contributions
     const volScalarField w
     (
         "w",
         max(scalar(0.0), min(scalar(1.0), deltaMass/(deltaMass + filmMass)))
     );
 
-    // set new viscosity
     mu_ =
-        mask*muInf_/(sqr(1.0 - K_*(1.0 - w)*lambda_) + ROOTVSMALL)
-      + (1 - mask)*muInf_;
+        w*muInf_
+      + (1 - w)*muInf_/(sqr(1.0 - K_*lambda_) + ROOTVSMALL);
+
     mu_.correctBoundaryConditions();
 }
 
@@ -105,7 +104,7 @@ thixotropicViscosity::thixotropicViscosity
             typeName + ":lambda",
             owner.regionMesh().time().timeName(),
             owner.regionMesh(),
-            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
         owner.regionMesh()
@@ -114,7 +113,7 @@ thixotropicViscosity::thixotropicViscosity
     lambda_.min(1.0);
     lambda_.max(0.0);
 
-    // initialise viscosity to inf value
+    // Initialise viscosity to inf value
     // - cannot call updateMu() since this calls film.netMass() which
     //   cannot be evaluated yet (still in construction)
     mu_ = muInf_;
@@ -146,7 +145,7 @@ void thixotropicViscosity::correct
     const surfaceScalarField& phi = film.phi();
     const volScalarField& alpha = film.alpha();
 
-    // gamma-dot (shear rate)
+    // Shear rate
     volScalarField gDot("gDot", alpha*mag(U - Uw)/(delta + film.deltaSmall()));
 
     if (debug && this->owner().regionMesh().time().outputTime())
