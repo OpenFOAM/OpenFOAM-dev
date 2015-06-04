@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,23 +31,12 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(IOobject, 0);
+    defineTypeNameAndDebug(IOobject, 0);
 }
 
 
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
 
-// Return components following the IOobject requirements
-//
-// behaviour
-//    input               IOobject(instance, local, name)
-//    -----               ------
-//    "foo"               ("", "", "foo")
-//    "foo/bar"           ("foo", "", "bar")
-//    "/XXX/bar"          ("/XXX", "", "bar")
-//    "foo/bar/"          ERROR - no name
-//    "foo/xxx/bar"       ("foo", "xxx", "bar")
-//    "foo/xxx/yyy/bar"   ("foo", "xxx/yyy", "bar")
 bool Foam::IOobject::fileNameComponents
 (
     const fileName& path,
@@ -72,8 +61,7 @@ bool Foam::IOobject::fileNameComponents
                 "fileName&, "
                 "word&"
             ")"
-        )
-            << " called with directory: " << path << endl;
+        )   << " called with directory: " << path << endl;
 
         return false;
     }
@@ -83,7 +71,7 @@ bool Foam::IOobject::fileNameComponents
         string::size_type last = path.rfind('/');
         instance = path.substr(0, last);
 
-        // check afterwards
+        // Check afterwards
         name.string::operator=(path.substr(last+1));
     }
     else
@@ -114,7 +102,7 @@ bool Foam::IOobject::fileNameComponents
     }
 
 
-    // check for valid (and stripped) name, regardless of the debug level
+    // Check for valid (and stripped) name, regardless of the debug level
     if (name.empty() || string::stripInvalid<word>(name))
     {
         WarningIn
@@ -287,6 +275,21 @@ Foam::word Foam::IOobject::group() const
 }
 
 
+Foam::word Foam::IOobject::member() const
+{
+    word::size_type i = name_.find_last_of('.');
+
+    if (i == word::npos || i == 0)
+    {
+        return name_;
+    }
+    else
+    {
+        return name_.substr(0, i);
+    }
+}
+
+
 const Foam::fileName& Foam::IOobject::rootPath() const
 {
     return time().rootPath();
@@ -312,7 +315,7 @@ Foam::fileName Foam::IOobject::path
     const fileName& local
 ) const
 {
-    //Note: can only be called with relative instance since is word type
+    // Note: can only be called with relative instance since is word type
     return rootPath()/caseName()/instance/db_.dbDir()/local;
 }
 

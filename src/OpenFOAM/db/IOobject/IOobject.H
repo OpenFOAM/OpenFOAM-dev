@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,6 +180,14 @@ public:
     // Static Member Functions
 
         //- Split path into instance, local, name components
+        //  input               IOobject(instance, local, name)
+        //  -----               ------
+        //  "foo"               ("", "", "foo")
+        //  "foo/bar"           ("foo", "", "bar")
+        //  "/XXX/bar"          ("/XXX", "", "bar")
+        //  "foo/bar/"          ERROR - no name
+        //  "foo/xxx/bar"       ("foo", "xxx", "bar")
+        //  "foo/xxx/yyy/bar"   ("foo", "xxx/yyy", "bar")
         static bool fileNameComponents
         (
             const fileName& path,
@@ -320,6 +328,9 @@ public:
             //- Return group (extension part of name)
             word group() const;
 
+            //- Return member (name without the extension)
+            word member() const;
+
             const fileName& rootPath() const;
 
             const fileName& caseName() const;
@@ -432,7 +443,7 @@ Ostream& operator<<(Ostream& os, const InfoProxy<IOobject>& ip);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "IOobjectI.H"
+#include "IOobjectI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
