@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,53 +22,27 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thixotropicViscosity
+    Foam::ArrheniusViscosity
 
 Description
-    Thixotropic viscosity model based on the evolution of the structural
-    parameter \f$ \lambda \f$:
+    The Arrhenius temperature-dependent viscosity model multiplies the viscosity
+    of a base model by an Arrhenius-type temperature function:
 
-        \f[
-            \lambda = a(1 - \lambda)^b - c \lambda \dot{\gamma}^d
-        \f]
+        mu = mu0*exp(k1*(1/(T + k2) - 1/(Tref + k2)))
 
-    The viscosity is then calculated using the expression
-
-        \f[
-            \mu = \frac{\mu_{\infty}}{{1 - K \lambda}^2}
-        \f]
-
-    Where the parameter K is given by:
-
-        \f[
-            K = 1 - \sqrt{\frac{\mu_{\infty}}{\mu_{0}}}
-        \f]
-
-    Here:
-    \vartable
-        \lambda         | structural parameter
-        a               | model coefficient
-        b               | model coefficient
-        c               | model coefficient
-        d               | model coefficient
-        \dot{\gamma}    | stress rate [1/s]
-        \mu_{0}         | limiting viscosity when \f$ \lambda = 1 \f$
-        \mu_{\infty}    | limiting viscosity when \f$ \lambda = 0 \f$
-    \endvartable
-
-    Reference:
-    \verbatim
-        Barnes H A, 1997.  Thixotropy - a review.  J. Non-Newtonian Fluid
-        Mech 70, pp 1-33
-    \endverbatim
+    Where:
+        mu0 is the base-model viscosity
+        k1 and k2 are Arrhenius coefficients
+        T is the local temperature
+        Tref is the reference temperature
 
 SourceFiles
-    thixotropicViscosity.C
+    ArrheniusViscosity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef thixotropicViscosity_H
-#define thixotropicViscosity_H
+#ifndef ArrheniusViscosity_H
+#define ArrheniusViscosity_H
 
 #include "filmViscosityModel.H"
 
@@ -82,63 +56,49 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class thixotropicViscosity Declaration
+                    Class ArrheniusViscosity Declaration
 \*---------------------------------------------------------------------------*/
 
-class thixotropicViscosity
+class ArrheniusViscosity
 :
     public filmViscosityModel
 {
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        thixotropicViscosity(const thixotropicViscosity&);
+        ArrheniusViscosity(const ArrheniusViscosity&);
 
         //- Disallow default bitwise assignment
-        void operator=(const thixotropicViscosity&);
+        void operator=(const ArrheniusViscosity&);
 
 
 protected:
 
     // Protected data
 
-        //- Model `a' coefficient
-        dimensionedScalar a_;
+        //- Base viscosity model
+        autoPtr<filmViscosityModel> viscosity_;
 
-        //- Model `b' coefficient
-        dimensionedScalar b_;
+        //- Coefficient k1
+        dimensionedScalar k1_;
 
-        //- Model `d' coefficient
-        dimensionedScalar d_;
+        //- Coefficient k2
+        dimensionedScalar k2_;
 
-        //- Model `c' coefficient (read after d since dims depend on d value)
-        dimensionedScalar c_;
-
-        //- Limiting viscosity when lambda = 1
-        dimensionedScalar mu0_;
-
-        //- Limiting viscosity when lambda = 0
-        dimensionedScalar muInf_;
-
-        //- Model coeffiicient
-        dimensionedScalar K_;
-
-        //- Structural parameter
-        //  0 = freestream value (most liquid)
-        //  1 = fully built (most solid)
-        volScalarField lambda_;
+        //- Reference temperature
+        dimensionedScalar Tref_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("thixotropic");
+    TypeName("Arrhenius");
 
 
     // Constructors
 
         //- Construct from surface film model
-        thixotropicViscosity
+        ArrheniusViscosity
         (
             surfaceFilmModel& owner,
             const dictionary& dict,
@@ -147,7 +107,7 @@ public:
 
 
     //- Destructor
-    virtual ~thixotropicViscosity();
+    virtual ~ArrheniusViscosity();
 
 
     // Member Functions

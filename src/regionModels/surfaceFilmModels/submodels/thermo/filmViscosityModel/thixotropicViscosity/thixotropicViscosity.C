@@ -53,33 +53,6 @@ addToRunTimeSelectionTable
 );
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void thixotropicViscosity::updateMu()
-{
-    const kinematicSingleLayer& film = filmType<kinematicSingleLayer>();
-
-    // Blend based on mass fraction of added- to existing film mass
-    const dimensionedScalar m0("zero", dimMass, 0.0);
-    const dimensionedScalar mSMALL("SMALL", dimMass, ROOTVSMALL);
-    const volScalarField deltaMass("deltaMass", max(m0, film.deltaMass()));
-    const volScalarField filmMass("filmMass", film.netMass() + mSMALL);
-
-    // Weighting field to blend new and existing mass contributions
-    const volScalarField w
-    (
-        "w",
-        max(scalar(0.0), min(scalar(1.0), deltaMass/(deltaMass + filmMass)))
-    );
-
-    mu_ =
-        w*muInf_
-      + (1 - w)*muInf_/(sqr(1.0 - K_*lambda_) + ROOTVSMALL);
-
-    mu_.correctBoundaryConditions();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 thixotropicViscosity::thixotropicViscosity
@@ -113,9 +86,7 @@ thixotropicViscosity::thixotropicViscosity
     lambda_.min(1.0);
     lambda_.max(0.0);
 
-    // Initialise viscosity to inf value
-    // - cannot call updateMu() since this calls film.netMass() which
-    //   cannot be evaluated yet (still in construction)
+    // Initialise viscosity to inf value because it cannot be evaluated yet
     mu_ = muInf_;
     mu_.correctBoundaryConditions();
 }
@@ -177,7 +148,30 @@ void thixotropicViscosity::correct
     lambda_.min(1.0);
     lambda_.max(0.0);
 
-    updateMu();
+
+    // Blend based on mass fraction of added- to existing film mass
+    const dimensionedScalar m0("zero", dimMass, 0.0);
+    const dimensionedScalar mSMALL("SMALL", dimMass, ROOTVSMALL);
+    const volScalarField deltaMass
+    (
+        "thixotropicViscosity:deltaMass",
+        max(m0, film.deltaMass())
+    );
+    const volScalarField filmMass
+    (
+        "thixotropicViscosity:filmMass",
+        film.netMass() + mSMALL
+    );
+
+    // Weighting field to blend new and existing mass contributions
+    const volScalarField w
+    (
+        "thixotropicViscosity:w",
+        max(scalar(0.0), min(scalar(1.0), deltaMass/(deltaMass + filmMass)))
+    );
+
+    mu_ = w*muInf_ + (1 - w)*muInf_/(sqr(1.0 - K_*lambda_) + ROOTVSMALL);
+    mu_.correctBoundaryConditions();
 }
 
 

@@ -56,6 +56,7 @@ $(THERMOMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModelNew.C
 $(THERMOMODELS)/filmViscosityModel/constantViscosity/constantViscosity.C
 $(THERMOMODELS)/filmViscosityModel/liquidViscosity/liquidViscosity.C
 $(THERMOMODELS)/filmViscosityModel/thixotropicViscosity/thixotropicViscosity.C
+$(THERMOMODELS)/filmViscosityModel/ArrheniusViscosity/ArrheniusViscosity.C
 
 
 /* Boundary conditions */
