@@ -32,17 +32,18 @@ template<class Type>
 Foam::combustionModels::PaSR<Type>::PaSR
 (
     const word& modelType,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    laminar<Type>(modelType, mesh),
+    laminar<Type>(modelType, mesh, phaseName),
     Cmix_(readScalar(this->coeffs().lookup("Cmix"))),
     turbulentReaction_(this->coeffs().lookup("turbulentReaction")),
     kappa_
     (
         IOobject
         (
-            "PaSR:kappa",
+            IOobject::groupName("PaSR:kappa", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -116,11 +117,14 @@ template<class Type>
 Foam::tmp<Foam::volScalarField>
 Foam::combustionModels::PaSR<Type>::dQ() const
 {
-    return
-        tmp<volScalarField>
+    return tmp<volScalarField>
+    (
+        new volScalarField
         (
-            new volScalarField("PaSR:dQ", kappa_*laminar<Type>::dQ())
-        );
+            IOobject::groupName("PaSR:dQ", this->phaseName_),
+            kappa_*laminar<Type>::dQ()
+        )
+    );
 }
 
 
@@ -128,11 +132,14 @@ template<class Type>
 Foam::tmp<Foam::volScalarField>
 Foam::combustionModels::PaSR<Type>::Sh() const
 {
-    return
-        tmp<volScalarField>
+    return tmp<volScalarField>
+    (
+        new volScalarField
         (
-            new volScalarField("PaSR:Sh", kappa_*laminar<Type>::Sh())
-        );
+            IOobject::groupName("PaSR:Sh", this->phaseName_),
+            kappa_*laminar<Type>::Sh()
+        )
+    );
 }
 
 

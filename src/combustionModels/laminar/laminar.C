@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,10 +33,11 @@ template<class Type>
 Foam::combustionModels::laminar<Type>::laminar
 (
     const word& modelType,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    Type(modelType, mesh),
+    Type(modelType, mesh, phaseName),
     integrateReactionRate_
     (
         this->coeffs().lookupOrDefault("integrateReactionRate", true)
@@ -128,7 +129,8 @@ Foam::combustionModels::laminar<Type>::R(volScalarField& Y) const
 
     if (this->active())
     {
-        const label specieI = this->thermo().composition().species()[Y.name()];
+        const label specieI =
+            this->thermo().composition().species()[Y.member()];
 
         Su += this->chemistryPtr_->RR(specieI);
     }
@@ -147,7 +149,7 @@ Foam::combustionModels::laminar<Type>::dQ() const
         (
             IOobject
             (
-                typeName + ":dQ",
+                IOobject::groupName(typeName + ":dQ", this->phaseName_),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,
@@ -179,7 +181,7 @@ Foam::combustionModels::laminar<Type>::Sh() const
         (
             IOobject
             (
-                typeName + ":Sh",
+                IOobject::groupName(typeName + ":Sh", this->phaseName_),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,

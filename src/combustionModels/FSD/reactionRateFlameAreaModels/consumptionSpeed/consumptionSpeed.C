@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,17 +60,18 @@ Foam::scalar Foam::consumptionSpeed::omega0Sigma
     scalar a
 ) const
 {
-        scalar omega0 = 0.0;
-        if (sigma < sigmaExt_)
-        {
-            omega0 =
-            max
-            (
-                a*omega0_*(1.0 - exp(eta_*max(sigma, 0.0))),
-                omegaMin_
-            ) ;
-        }
-        return omega0;
+    scalar omega0 = 0.0;
+
+    if (sigma < sigmaExt_)
+    {
+        omega0 = max
+        (
+            a*omega0_*(1.0 - exp(eta_*max(sigma, 0.0))),
+            omegaMin_
+        ) ;
+    }
+
+    return omega0;
 }
 
 
@@ -136,5 +137,6 @@ void  Foam::consumptionSpeed::read(const dictionary& dict)
     dict.lookup("sigmaExt") >> sigmaExt_;
     dict.lookup("omegaMin") >> omegaMin_;
 }
+
 
 // ************************************************************************* //

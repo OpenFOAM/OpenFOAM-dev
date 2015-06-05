@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,7 @@ Foam::reactionRateFlameArea::reactionRateFlameArea
         ),
         mesh_
     )
-{
-}
+{}
 
 
 Foam::reactionRateFlameArea::reactionRateFlameArea
@@ -87,8 +86,8 @@ Foam::reactionRateFlameArea::reactionRateFlameArea
         ),
         mesh_
     )
-{
-}
+{}
+
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
@@ -101,8 +100,9 @@ Foam::reactionRateFlameArea::~reactionRateFlameArea()
 bool Foam::reactionRateFlameArea::read(const dictionary& dict)
 {
     dict.lookup("fuel") >> fuel_;
-    return true;
 
+    return true;
 }
+
 
 // ************************************************************************* //

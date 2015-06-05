@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,22 +81,32 @@ public:
         dictionary,
         (
             const word& modelType,
-            const fvMesh& mesh
+            const fvMesh& mesh,
+            const word& phaseName
         ),
-        (modelType, mesh)
+        (modelType, mesh, phaseName)
     );
 
 
     // Constructors
 
 
-        //- Construct from components and thermo
-        rhoCombustionModel(const word& modelType, const fvMesh& mesh);
+        //- Construct from components
+        rhoCombustionModel
+        (
+            const word& modelType,
+            const fvMesh& mesh,
+            const word& phaseName
+        );
 
 
 
     //- Selector
-    static autoPtr<rhoCombustionModel> New(const fvMesh& mesh);
+    static autoPtr<rhoCombustionModel> New
+    (
+        const fvMesh& mesh,
+        const word& phaseName=word::null
+    );
 
 
     //- Destructor
@@ -121,7 +131,7 @@ public:
         virtual tmp<volScalarField> rho() const = 0;
 
 
-     // I-O
+     // IO
 
         //- Update properties from given dictionary
         virtual bool read();

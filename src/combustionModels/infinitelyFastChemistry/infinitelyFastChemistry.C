@@ -35,10 +35,17 @@ namespace combustionModels
 template<class CombThermoType, class ThermoType>
 infinitelyFastChemistry<CombThermoType, ThermoType>::infinitelyFastChemistry
 (
-    const word& modelType, const fvMesh& mesh
+    const word& modelType,
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    singleStepCombustion<CombThermoType, ThermoType>(modelType, mesh),
+    singleStepCombustion<CombThermoType, ThermoType>
+    (
+        modelType,
+        mesh,
+        phaseName
+    ),
     C_(readScalar(this->coeffs().lookup("C")))
 {}
 

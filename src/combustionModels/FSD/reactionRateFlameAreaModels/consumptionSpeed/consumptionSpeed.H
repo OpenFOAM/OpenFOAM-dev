@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,6 @@ namespace Foam
 class consumptionSpeed
 {
     // Private Data
-
 
         //- Maximum consumption speed
         scalar omega0_;
@@ -122,7 +121,7 @@ public:
             }
 
 
-    // I-O
+    // IO
 
         //- Update properties
         void read(const dictionary& dict);

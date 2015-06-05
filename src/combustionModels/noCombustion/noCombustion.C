@@ -32,10 +32,11 @@ template<class CombThermoType>
 Foam::combustionModels::noCombustion<CombThermoType>::noCombustion
 (
     const word& modelType,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    CombThermoType(modelType, mesh)
+    CombThermoType(modelType, mesh, phaseName)
 {}
 
 
@@ -81,7 +82,7 @@ Foam::combustionModels::noCombustion<CombThermoType>::dQ() const
         (
             IOobject
             (
-                "dQ",
+                IOobject::groupName("dQ", this->phaseName_),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,
@@ -108,7 +109,7 @@ Foam::combustionModels::noCombustion<CombThermoType>::Sh() const
         (
             IOobject
             (
-                "Sh",
+                IOobject::groupName("Sh", this->phaseName_),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,

@@ -37,16 +37,17 @@ template<class CombThermoType, class ThermoType>
 singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
 (
     const word& modelType,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    CombThermoType(modelType, mesh),
+    CombThermoType(modelType, mesh, phaseName),
     singleMixturePtr_(NULL),
     wFuel_
     (
         IOobject
         (
-            "wFuel",
+            IOobject::groupName("wFuel", phaseName),
             this->mesh().time().timeName(),
             this->mesh(),
             IOobject::NO_READ,
@@ -73,7 +74,8 @@ singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
             "singleStepCombustion"
             "("
                 "const word&, "
-                "const fvMesh&"
+                "const fvMesh& "
+                "const word&"
             ")"
         )
             << "Inconsistent thermo package for " << this->type() << " model:\n"
@@ -108,7 +110,8 @@ tmp<fvScalarMatrix> singleStepCombustion<CombThermoType, ThermoType>::R
     volScalarField& Y
 ) const
 {
-    const label specieI = this->thermoPtr_->composition().species()[Y.name()];
+    const label specieI =
+        this->thermoPtr_->composition().species()[Y.member()];
 
     volScalarField wSpecie
     (
@@ -152,7 +155,7 @@ singleStepCombustion<CombThermoType, ThermoType>::dQ() const
         (
             IOobject
             (
-                "dQ",
+                IOobject::groupName("dQ", this->phaseName_),
                 this->mesh_.time().timeName(),
                 this->mesh_,
                 IOobject::NO_READ,

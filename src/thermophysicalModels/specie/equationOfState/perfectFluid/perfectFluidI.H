@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "perfectFluid.H"
+#include "specie.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

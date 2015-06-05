@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,12 @@ public:
     // Constructors
 
         //- Construct from components
-        singleStepCombustion(const word& modelType, const fvMesh& mesh);
+        singleStepCombustion
+        (
+            const word& modelType,
+            const fvMesh& mesh,
+            const word& phaseName
+        );
 
 
     //- Destructor
@@ -102,7 +107,7 @@ public:
             virtual tmp<volScalarField> Sh() const;
 
 
-        // I-O
+        // IO
 
             //- Update properties from given dictionary
             virtual bool read();

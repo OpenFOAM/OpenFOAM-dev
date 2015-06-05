@@ -86,7 +86,7 @@ public:
     // Constructors
 
         //- Construct from components
-        PaSR(const word& modelType, const fvMesh& mesh);
+        PaSR(const word& modelType, const fvMesh& mesh, const word& phaseName);
 
 
     //- Destructor
@@ -110,7 +110,7 @@ public:
             virtual tmp<volScalarField> Sh() const;
 
 
-    // I-O
+    // IO
 
             //- Update properties from given dictionary
             virtual bool read();

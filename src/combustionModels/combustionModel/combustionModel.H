@@ -51,6 +51,14 @@ class combustionModel
 :
     public IOdictionary
 {
+    // Private Member Functions
+
+        //- Disallow copy construct
+        combustionModel(const combustionModel&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const combustionModel&);
+
 
 protected:
 
@@ -68,19 +76,11 @@ protected:
         //- Dictionary of the model
         dictionary coeffs_;
 
-        //- Model name
+        //- Model type
         const word modelType_;
 
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        combustionModel(const combustionModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const combustionModel&);
+        //- Phase name
+        const word phaseName_;
 
 
 public:
@@ -91,9 +91,13 @@ public:
 
     // Constructors
 
-
         //- Construct from components
-        combustionModel(const word& modelType, const fvMesh& mesh);
+        combustionModel
+        (
+            const word& modelType,
+            const fvMesh& mesh,
+            const word& phaseName=word::null
+        );
 
 
     //- Destructor
@@ -103,7 +107,6 @@ public:
     // Member Functions
 
         // Access
-
 
             //- Return const access to the mesh database
             inline const fvMesh& mesh() const;
@@ -145,7 +148,7 @@ public:
         virtual tmp<volScalarField> Sh() const;
 
 
-    // I-O
+    // IO
 
         //- Update properties from given dictionary
         virtual bool read();

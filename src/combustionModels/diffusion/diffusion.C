@@ -36,10 +36,17 @@ namespace combustionModels
 template<class CombThermoType, class ThermoType>
 diffusion<CombThermoType, ThermoType>::diffusion
 (
-    const word& modelType, const fvMesh& mesh
+    const word& modelType,
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    singleStepCombustion<CombThermoType, ThermoType>(modelType, mesh),
+    singleStepCombustion<CombThermoType, ThermoType>
+    (
+        modelType,
+        mesh,
+        phaseName
+    ),
     C_(readScalar(this->coeffs().lookup("C"))),
     oxidantName_(this->coeffs().template lookupOrDefault<word>("oxidant", "O2"))
 {}
