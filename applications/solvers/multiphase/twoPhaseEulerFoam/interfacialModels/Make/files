@@ -29,6 +29,7 @@ liftModels/TomiyamaLift/TomiyamaLift.C
 heatTransferModels/heatTransferModel/heatTransferModel.C
 heatTransferModels/heatTransferModel/newHeatTransferModel.C
 heatTransferModels/RanzMarshall/RanzMarshall.C
+heatTransferModels/sphericalHeatTransfer/sphericalHeatTransfer.C
 
 virtualMassModels/virtualMassModel/virtualMassModel.C
 virtualMassModels/virtualMassModel/newVirtualMassModel.C
