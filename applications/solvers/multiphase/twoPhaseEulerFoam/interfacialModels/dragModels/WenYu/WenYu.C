@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ namespace Foam
 namespace dragModels
 {
     defineTypeNameAndDebug(WenYu, 0);
-    addToRunTimeSelectionTable(dragModel, WenYu, dictionary); 
+    addToRunTimeSelectionTable(dragModel, WenYu, dictionary);
 }
 }
 
@@ -63,7 +63,11 @@ Foam::dragModels::WenYu::~WenYu()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::WenYu::CdRe() const
 {
-    volScalarField alpha2(max(scalar(1) - pair_.dispersed(), residualAlpha_));
+    volScalarField alpha2
+    (
+        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+    );
+
     volScalarField Re(pair_.Re());
     volScalarField CdsRe
     (
@@ -74,7 +78,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::WenYu::CdRe() const
     return
         CdsRe
        *pow(alpha2, -2.65)
-       *max(pair_.continuous(), residualAlpha_);
+       *max(pair_.continuous(), pair_.continuous().residualAlpha());
 }
 
 

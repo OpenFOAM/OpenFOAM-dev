@@ -6,7 +6,7 @@ surfaceScalarField alphaRhof10
     "alphaRhof10",
     fvc::interpolate
     (
-        max(alpha1.oldTime(), fluid.residualAlpha(phase1))
+        max(alpha1.oldTime(), phase1.residualAlpha())
        *rho1.oldTime()
     )
 );
@@ -16,7 +16,7 @@ surfaceScalarField alphaRhof20
     "alphaRhof20",
     fvc::interpolate
     (
-        max(alpha2.oldTime(), fluid.residualAlpha(phase2))
+        max(alpha2.oldTime(), phase2.residualAlpha())
        *rho2.oldTime()
     )
 );
@@ -105,13 +105,13 @@ while (pimple.correct())
     surfaceScalarField alpharAUf1
     (
         IOobject::groupName("alpharAUf", phase1.name()),
-        max(alphaf1, fluid.residualAlpha(phase1))*rAUf1
+        max(alphaf1, phase1.residualAlpha())*rAUf1
     );
 
     surfaceScalarField alpharAUf2
     (
         IOobject::groupName("alpharAUf", phase2.name()),
-        max(alphaf2, fluid.residualAlpha(phase2))*rAUf2
+        max(alphaf2, phase2.residualAlpha())*rAUf2
     );
 
     volScalarField rho("rho", fluid.rho());

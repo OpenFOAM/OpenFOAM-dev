@@ -48,14 +48,6 @@ License
 #include "HashPtrTable.H"
 
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-Foam::dimensionedScalar Foam::twoPhaseSystem::zeroResidualAlpha_
-(
-    "zeroResidualAlpha", dimless, 0
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::twoPhaseSystem::twoPhaseSystem
@@ -584,20 +576,6 @@ bool Foam::twoPhaseSystem::read()
     else
     {
         return false;
-    }
-}
-
-
-const Foam::dimensionedScalar&
-Foam::twoPhaseSystem::residualAlpha(const phaseModel& phase) const
-{
-    if (drag_->hasModel(phase))
-    {
-        return drag_->phaseModel(phase).residualAlpha();
-    }
-    else
-    {
-        return zeroResidualAlpha_;
     }
 }
 

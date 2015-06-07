@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ namespace Foam
 namespace dragModels
 {
     defineTypeNameAndDebug(Gibilaro, 0);
-    addToRunTimeSelectionTable(dragModel, Gibilaro, dictionary); 
+    addToRunTimeSelectionTable(dragModel, Gibilaro, dictionary);
 }
 }
 
@@ -62,12 +62,15 @@ Foam::dragModels::Gibilaro::~Gibilaro()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::Gibilaro::CdRe() const
 {
-    volScalarField alpha2(max(scalar(1) - pair_.dispersed(), residualAlpha_));
+    volScalarField alpha2
+    (
+        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+    );
 
     return
         (4/3)
        *(17.3/alpha2 + 0.336*pair_.Re())
-       *max(pair_.continuous(), residualAlpha_)
+       *max(pair_.continuous(), pair_.continuous().residualAlpha())
        *pow(alpha2, -2.8);
 }
 

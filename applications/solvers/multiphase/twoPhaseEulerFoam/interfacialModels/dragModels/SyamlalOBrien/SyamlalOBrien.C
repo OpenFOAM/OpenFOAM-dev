@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ namespace Foam
 namespace dragModels
 {
     defineTypeNameAndDebug(SyamlalOBrien, 0);
-    addToRunTimeSelectionTable(dragModel, SyamlalOBrien, dictionary); 
+    addToRunTimeSelectionTable(dragModel, SyamlalOBrien, dictionary);
 }
 }
 
@@ -62,7 +62,11 @@ Foam::dragModels::SyamlalOBrien::~SyamlalOBrien()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::SyamlalOBrien::CdRe() const
 {
-    volScalarField alpha2(max(scalar(1) - pair_.dispersed(), residualAlpha_));
+    volScalarField alpha2
+    (
+        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+    );
+
     volScalarField A(pow(alpha2, 4.14));
     volScalarField B
     (
@@ -81,7 +85,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::SyamlalOBrien::CdRe() const
 
     return
         CdsRe
-       *max(pair_.continuous(), residualAlpha_)
+       *max(pair_.continuous(), pair_.continuous().residualAlpha())
        /sqr(Vr);
 }
 

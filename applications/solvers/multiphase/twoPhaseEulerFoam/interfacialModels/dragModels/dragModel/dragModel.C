@@ -90,8 +90,7 @@ Foam::dragModel::dragModel
             dict.subDict("swarmCorrection"),
             pair
         )
-    ),
-    residualAlpha_("residualAlpha", dimless, dict.lookup("residualAlpha"))
+    )
 {}
 
 
@@ -117,15 +116,18 @@ Foam::tmp<Foam::volScalarField> Foam::dragModel::Ki() const
 
 Foam::tmp<Foam::volScalarField> Foam::dragModel::K() const
 {
-    return max(pair_.dispersed(), residualAlpha_)*Ki();
+    return max(pair_.dispersed(), pair_.dispersed().residualAlpha())*Ki();
 }
 
 
 Foam::tmp<Foam::surfaceScalarField> Foam::dragModel::Kf() const
 {
     return
-        max(fvc::interpolate(pair_.dispersed()), residualAlpha_)
-       *fvc::interpolate(Ki());
+        max
+        (
+            fvc::interpolate(pair_.dispersed()),
+            pair_.dispersed().residualAlpha()
+        )*fvc::interpolate(Ki());
 }
 
 

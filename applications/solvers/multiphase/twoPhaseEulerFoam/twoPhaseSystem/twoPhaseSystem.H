@@ -116,9 +116,6 @@ class twoPhaseSystem
         autoPtr<BlendedInterfacialModel<turbulentDispersionModel> >
             turbulentDispersion_;
 
-        //- Default residual alpha (0)
-        static dimensionedScalar zeroResidualAlpha_;
-
 
     // Private member functions
 
@@ -184,13 +181,6 @@ public:
         bool read();
 
         // Access
-
-            //- Return the residual phase-fraction for given phase
-            //  Used to stabilize the phase momentum as the phase-fraction -> 0
-            const dimensionedScalar& residualAlpha
-            (
-                const phaseModel& phase
-            ) const;
 
             //- Return the drag model for the given phase
             const dragModel& drag(const phaseModel& phase) const;

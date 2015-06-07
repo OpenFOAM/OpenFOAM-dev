@@ -7,7 +7,7 @@ volScalarField rAU1
     1.0
    /(
         U1Eqn.A()
-      + max(fluid.residualAlpha(phase1) - alpha1, scalar(0))
+      + max(phase1.residualAlpha() - alpha1, scalar(0))
        *rho1/runTime.deltaT()
     )
 );
@@ -17,18 +17,18 @@ volScalarField rAU2
     1.0
    /(
         U2Eqn.A()
-      + max(fluid.residualAlpha(phase2) - alpha2, scalar(0))
+      + max(phase2.residualAlpha() - alpha2, scalar(0))
        *rho2/runTime.deltaT()
     )
 );
 
 surfaceScalarField alpharAUf1
 (
-    fvc::interpolate(max(alpha1, fluid.residualAlpha(phase1))*rAU1)
+    fvc::interpolate(max(alpha1, phase1.residualAlpha())*rAU1)
 );
 surfaceScalarField alpharAUf2
 (
-    fvc::interpolate(max(alpha2, fluid.residualAlpha(phase2))*rAU2)
+    fvc::interpolate(max(alpha2, phase2.residualAlpha())*rAU2)
 );
 
 // Turbulent diffusion, particle-pressure, lift and wall-lubrication fluxes
@@ -104,7 +104,7 @@ while (pimple.correct())
         rAU1
        *(
             U1Eqn.H()
-          + max(fluid.residualAlpha(phase1) - alpha1, scalar(0))
+          + max(phase1.residualAlpha() - alpha1, scalar(0))
            *rho1*U1.oldTime()/runTime.deltaT()
         );
 
@@ -117,7 +117,7 @@ while (pimple.correct())
         rAU2
        *(
             U2Eqn.H()
-         +  max(fluid.residualAlpha(phase2) - alpha2, scalar(0))
+         +  max(phase2.residualAlpha() - alpha2, scalar(0))
            *rho2*U2.oldTime()/runTime.deltaT()
         );
 
@@ -145,7 +145,7 @@ while (pimple.correct())
        *(
            ghSnGradRho
          - alphaf1*fvc::interpolate(rho2 - rho1)*(g & mesh.Sf())
-       )
+        )
     );
 
 

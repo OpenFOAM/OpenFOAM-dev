@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ SourceFiles
 namespace Foam
 {
 
-class orderedPhasePair;
+class phasePair;
 
 /*---------------------------------------------------------------------------*\
                            Class aspectRatioModel Declaration
@@ -57,7 +57,7 @@ protected:
     // Protected data
 
         //- Phase pair
-        const orderedPhasePair& pair_;
+        const phasePair& pair_;
 
 
 public:
@@ -74,7 +74,7 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const orderedPhasePair& pair
+            const phasePair& pair
         ),
         (dict, pair)
     );
@@ -86,7 +86,7 @@ public:
         aspectRatioModel
         (
             const dictionary& dict,
-            const orderedPhasePair& pair
+            const phasePair& pair
         );
 
 
@@ -99,7 +99,7 @@ public:
         static autoPtr<aspectRatioModel> New
         (
             const dictionary& dict,
-            const orderedPhasePair& pair
+            const phasePair& pair
         );
 
 

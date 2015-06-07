@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ namespace Foam
 {
 namespace swarmCorrections
 {
-    defineTypeNameAndDebug(TomiyamaSwarm, 0); 
+    defineTypeNameAndDebug(TomiyamaSwarm, 0);
     addToRunTimeSelectionTable
     (
         swarmCorrection,
@@ -53,7 +53,16 @@ Foam::swarmCorrections::TomiyamaSwarm::TomiyamaSwarm
 )
 :
     swarmCorrection(dict, pair),
-    residualAlpha_("residualAlpha", dimless, dict.lookup("residualAlpha")),
+    residualAlpha_
+    (
+        "residualAlpha",
+        dimless,
+        dict.lookupOrDefault<scalar>
+        (
+            "residualAlpha",
+            pair_.dispersed().residualAlpha().value()
+        )
+    ),
     l_("l", dimless, dict.lookup("l"))
 {}
 
@@ -69,7 +78,7 @@ Foam::swarmCorrections::TomiyamaSwarm::~TomiyamaSwarm()
 Foam::tmp<Foam::volScalarField>
 Foam::swarmCorrections::TomiyamaSwarm::Cs() const
 {
-    return 
+    return
         pow(max(this->pair_.continuous(), residualAlpha_), scalar(3) - 2*l_);
 }
 

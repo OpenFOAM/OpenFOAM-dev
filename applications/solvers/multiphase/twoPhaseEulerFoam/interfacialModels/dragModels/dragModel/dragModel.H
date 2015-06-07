@@ -65,9 +65,6 @@ protected:
         //- Swarm correction
         autoPtr<swarmCorrection> swarmCorrection_;
 
-        //- Residual phase fraction
-        const dimensionedScalar residualAlpha_;
-
 
 public:
 
@@ -129,13 +126,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the residual phase-fraction
-        //  used to stabilize the phase momentum as the phase-fraction -> 0
-        const dimensionedScalar& residualAlpha() const
-        {
-            return residualAlpha_;
-        }
 
         //- Drag coefficient
         virtual tmp<volScalarField> CdRe() const = 0;

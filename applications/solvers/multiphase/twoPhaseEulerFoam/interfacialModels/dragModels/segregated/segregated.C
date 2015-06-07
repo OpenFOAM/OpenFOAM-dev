@@ -112,7 +112,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
        /max
         (
             alpha1 + alpha2,
-            residualAlpha_
+            pair_.phase1().residualAlpha() + pair_.phase2().residualAlpha()
         )
     );
     volScalarField magGradI
@@ -120,7 +120,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
         max
         (
             mag(fvc::grad(I)),
-            residualAlpha_/L
+            (pair_.phase1().residualAlpha() + pair_.phase2().residualAlpha())/L
         )
     );
 

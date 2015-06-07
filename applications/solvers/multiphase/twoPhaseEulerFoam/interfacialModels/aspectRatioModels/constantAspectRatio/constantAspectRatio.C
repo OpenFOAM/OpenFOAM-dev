@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantAspectRatio.H"
-#include "orderedPhasePair.H"
+#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -33,7 +33,7 @@ namespace Foam
 {
 namespace aspectRatioModels
 {
-    defineTypeNameAndDebug(constantAspectRatio, 0); 
+    defineTypeNameAndDebug(constantAspectRatio, 0);
     addToRunTimeSelectionTable
     (
         aspectRatioModel,
@@ -49,7 +49,7 @@ namespace aspectRatioModels
 Foam::aspectRatioModels::constantAspectRatio::constantAspectRatio
 (
     const dictionary& dict,
-    const orderedPhasePair& pair
+    const phasePair& pair
 )
 :
     aspectRatioModel(dict, pair),

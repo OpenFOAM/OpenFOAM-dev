@@ -25,6 +25,8 @@ air
         d0              3e-3;
         p0              1e5;
     }
+
+    residualAlpha   1e-4;
 }
 
 water
@@ -34,6 +36,8 @@ water
     {
         d               1e-4;
     }
+
+    residualAlpha   1e-4;
 }
 
 blending
@@ -73,7 +77,6 @@ drag
     (air in water)
     {
         type            SchillerNaumann;
-        residualAlpha   1e-4;
         residualRe      1e-3;
         swarmCorrection
         {
@@ -84,7 +87,6 @@ drag
     (water in air)
     {
         type            SchillerNaumann;
-        residualAlpha   1e-4;
         residualRe      1e-3;
         swarmCorrection
         {
@@ -95,7 +97,6 @@ drag
     (air and water)
     {
         type            segregated;
-        residualAlpha   1e-4;
         m               0.5;
         n               8;
         swarmCorrection

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Wellek.H"
-#include "orderedPhasePair.H"
+#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,7 +49,7 @@ namespace aspectRatioModels
 Foam::aspectRatioModels::Wellek::Wellek
 (
     const dictionary& dict,
-    const orderedPhasePair& pair
+    const phasePair& pair
 )
 :
     aspectRatioModel(dict, pair)

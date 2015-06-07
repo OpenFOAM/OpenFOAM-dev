@@ -19,22 +19,29 @@ phases (particles air);
 
 particles
 {
+    residualAlpha   1e-6;
+
     diameterModel constant;
     constantCoeffs
     {
         d               3e-4;
     }
 
-    alphaMax 0.62;
+    alphaMax        0.62;
+    residualAlpha   1e-6;
 }
 
 air
 {
+    residualAlpha   0;
+
     diameterModel constant;
     constantCoeffs
     {
         d               1;
     }
+
+    residualAlpha   0;
 }
 
 blending
@@ -60,7 +67,6 @@ drag
     (particles in air)
     {
         type            GidaspowErgunWenYu;
-        residualAlpha   1e-6;
         residualRe      1e-3;
         swarmCorrection
         {

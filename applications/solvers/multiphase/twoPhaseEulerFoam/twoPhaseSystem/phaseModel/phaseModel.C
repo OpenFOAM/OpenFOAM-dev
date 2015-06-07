@@ -36,6 +36,7 @@ License
 #include "partialSlipFvPatchFields.H"
 #include "surfaceInterpolate.H"
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::phaseModel::phaseModel
@@ -63,6 +64,12 @@ Foam::phaseModel::phaseModel
     phaseDict_
     (
         phaseProperties.subDict(name_)
+    ),
+    residualAlpha_
+    (
+        "residualAlpha",
+        dimless,
+        fluid.subDict(phaseName).lookup("residualAlpha")
     ),
     alphaMax_(phaseDict_.lookupOrDefault("alphaMax", 1.0)),
     thermo_(rhoThermo::New(fluid.mesh(), name_)),
@@ -212,11 +219,13 @@ Foam::tmp<Foam::volScalarField> Foam::phaseModel::d() const
     return dPtr_().d();
 }
 
+
 Foam::PhaseCompressibleTurbulenceModel<Foam::phaseModel>&
 Foam::phaseModel::turbulence()
 {
     return turbulence_();
 }
+
 
 const Foam::PhaseCompressibleTurbulenceModel<Foam::phaseModel>&
 Foam::phaseModel::turbulence() const
@@ -224,10 +233,12 @@ Foam::phaseModel::turbulence() const
     return turbulence_();
 }
 
+
 void Foam::phaseModel::correct()
 {
     return dPtr_->correct();
 }
+
 
 bool Foam::phaseModel::read(const dictionary& phaseProperties)
 {

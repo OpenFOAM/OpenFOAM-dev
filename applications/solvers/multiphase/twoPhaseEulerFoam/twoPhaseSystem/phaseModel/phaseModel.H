@@ -71,6 +71,10 @@ class phaseModel
 
         dictionary phaseDict_;
 
+        //- Return the residual phase-fraction for given phase
+        //  Used to stabilize the phase momentum as the phase-fraction -> 0
+        dimensionedScalar residualAlpha_;
+
         //- Optional maximum phase-fraction (e.g. packing limit)
         scalar alphaMax_;
 
@@ -128,6 +132,13 @@ public:
 
         //- Return the other phase in this two-phase system
         const phaseModel& otherPhase() const;
+
+        //- Return the residual phase-fraction for given phase
+        //  Used to stabilize the phase momentum as the phase-fraction -> 0
+        const dimensionedScalar& residualAlpha() const
+        {
+            return residualAlpha_;
+        }
 
         //- Optional maximum phase-fraction (e.g. packing limit)
         //  Defaults to 1
