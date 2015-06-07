@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,11 +41,11 @@ inline const Foam::surfaceScalarField& Foam::combustionModel::phi() const
     {
         FatalErrorIn
         (
-            "const Foam::compressible::turbulenceModel& "
+            "const Foam::compressibleTurbulenceModel& "
             "Foam::combustionModel::turbulence() const "
         )   << "turbulencePtr_ is empty. Please use "
             << "combustionModel::setTurbulence "
-            << "(compressible::turbulenceModel& )"
+            << "(compressibleTurbulenceModel& )"
             << abort(FatalError);
 
         return turbulencePtr_->phi();
@@ -53,7 +53,7 @@ inline const Foam::surfaceScalarField& Foam::combustionModel::phi() const
 }
 
 
-inline const Foam::compressible::turbulenceModel&
+inline const Foam::compressibleTurbulenceModel&
 Foam::combustionModel::turbulence() const
 {
     if (turbulencePtr_)
@@ -64,11 +64,11 @@ Foam::combustionModel::turbulence() const
     {
         FatalErrorIn
         (
-            "const Foam::compressible::turbulenceModel& "
+            "const Foam::compressibleTurbulenceModel& "
             "Foam::combustionModel::turbulence() const "
         )   << "turbulencePtr_ is empty. Please use "
             << "combustionModel::setTurbulence "
-            << "(compressible::turbulenceModel& )"
+            << "(compressibleTurbulenceModel& )"
             << abort(FatalError);
 
         return *turbulencePtr_;
@@ -84,7 +84,7 @@ inline const Foam::Switch& Foam::combustionModel::active() const
 
 inline void Foam::combustionModel::setTurbulence
 (
-    compressible::turbulenceModel& turbModel
+    compressibleTurbulenceModel& turbModel
 )
 {
     turbulencePtr_ = &turbModel;

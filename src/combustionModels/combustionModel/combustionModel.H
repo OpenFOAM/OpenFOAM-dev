@@ -65,7 +65,7 @@ protected:
     // Protected data
 
         //- Reference to the turbulence model
-        compressible::turbulenceModel* turbulencePtr_;
+        compressibleTurbulenceModel* turbulencePtr_;
 
         //- Reference to the mesh database
         const fvMesh& mesh_;
@@ -118,12 +118,12 @@ public:
             virtual tmp<volScalarField> rho() const = 0;
 
             //- Return access to turbulence
-            inline const compressible::turbulenceModel& turbulence() const;
+            inline const compressibleTurbulenceModel& turbulence() const;
 
             //- Set turbulence
             inline void setTurbulence
             (
-                compressible::turbulenceModel& turbModel
+                compressibleTurbulenceModel& turbModel
             );
 
             //- Is combustion active?
