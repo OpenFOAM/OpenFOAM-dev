@@ -120,7 +120,7 @@ void continuousGasKEpsilon<BasicTurbulenceModel>::correctNut()
 
     const turbulenceModel& liquidTurbulence = this->liquidTurbulence();
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = gas.fluid();
+    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
     const transportModel& liquid = fluid.otherPhase(gas);
 
     volScalarField thetal(liquidTurbulence.k()/liquidTurbulence.epsilon());
@@ -149,7 +149,8 @@ continuousGasKEpsilon<BasicTurbulenceModel>::liquidTurbulence() const
         const volVectorField& U = this->U_;
 
         const transportModel& gas = this->transport();
-        const twoPhaseSystem& fluid = gas.fluid();
+        const twoPhaseSystem& fluid =
+            refCast<const twoPhaseSystem>(gas.fluid());
         const transportModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =
@@ -202,7 +203,7 @@ tmp<Foam::volScalarField>
 continuousGasKEpsilon<BasicTurbulenceModel>::rhoEff() const
 {
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = gas.fluid();
+    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
     const transportModel& liquid = fluid.otherPhase(gas);
 
     return tmp<volScalarField>

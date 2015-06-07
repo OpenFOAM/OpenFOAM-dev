@@ -347,7 +347,8 @@ mixtureKEpsilon<BasicTurbulenceModel>::liquidTurbulence() const
         const volVectorField& U = this->U_;
 
         const transportModel& gas = this->transport();
-        const twoPhaseSystem& fluid = gas.fluid();
+        const twoPhaseSystem& fluid =
+            refCast<const twoPhaseSystem>(gas.fluid());
         const transportModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =
@@ -375,7 +376,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::Ct2() const
         this->liquidTurbulence();
 
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = gas.fluid();
+    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
     const transportModel& liquid = fluid.otherPhase(gas);
 
     const volScalarField& alphag = this->alpha_;
@@ -399,7 +400,7 @@ template<class BasicTurbulenceModel>
 tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::rholEff() const
 {
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = gas.fluid();
+    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
     return fluid.otherPhase(gas).rho();
 }
 
@@ -408,7 +409,7 @@ template<class BasicTurbulenceModel>
 tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::rhogEff() const
 {
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = gas.fluid();
+    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
     return
         gas.rho()
       + fluid.virtualMass(gas).Cvm()*fluid.otherPhase(gas).rho();
@@ -484,7 +485,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::bubbleG() const
         this->liquidTurbulence();
 
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = gas.fluid();
+    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
     const transportModel& liquid = fluid.otherPhase(gas);
 
     volScalarField magUr(mag(liquidTurbulence.U() - this->U()));
@@ -531,7 +532,7 @@ template<class BasicTurbulenceModel>
 void mixtureKEpsilon<BasicTurbulenceModel>::correct()
 {
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = gas.fluid();
+    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
 
     // Only solve the mixture turbulence for the gas-phase
     if (&gas != &fluid.phase1())

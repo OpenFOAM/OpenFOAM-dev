@@ -145,7 +145,8 @@ LaheyKEpsilon<BasicTurbulenceModel>::gasTurbulence() const
         const volVectorField& U = this->U_;
 
         const transportModel& liquid = this->transport();
-        const twoPhaseSystem& fluid = liquid.fluid();
+        const twoPhaseSystem& fluid =
+            refCast<const twoPhaseSystem>(liquid.fluid());
         const transportModel& gas = fluid.otherPhase(liquid);
 
         gasTurbulencePtr_ =
@@ -186,7 +187,7 @@ tmp<volScalarField> LaheyKEpsilon<BasicTurbulenceModel>::bubbleG() const
         this->gasTurbulence();
 
     const transportModel& liquid = this->transport();
-    const twoPhaseSystem& fluid = liquid.fluid();
+    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(liquid.fluid());
     const transportModel& gas = fluid.otherPhase(liquid);
 
     volScalarField magUr(mag(this->U_ - gasTurbulence.U()));
