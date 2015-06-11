@@ -202,7 +202,7 @@ void Foam::tetDecomposer::setRefinement
 
 
     // Add face centre points
-    if (decomposeType == FACECENTRETETS)
+    if (decomposeType == FACE_CENTRE_TRIS)
     {
         faceToPoint_.setSize(mesh_.nFaces());
         forAll(mesh_.faceCentres(), faceI)
@@ -225,7 +225,7 @@ void Foam::tetDecomposer::setRefinement
     faceOwnerCells_.setSize(mesh_.nFaces());
     faceNeighbourCells_.setSize(mesh_.nFaces());
 
-    if (decomposeType == FACECENTRETETS)
+    if (decomposeType == FACE_CENTRE_TRIS)
     {
         forAll(faceOwnerCells_, faceI)
         {
@@ -267,7 +267,7 @@ void Foam::tetDecomposer::setRefinement
               : faceNeighbourCells_[faceI]
             );
 
-            if (decomposeType == FACECENTRETETS)
+            if (decomposeType == FACE_CENTRE_TRIS)
             {
                 forAll(f, fp)
                 {
@@ -341,7 +341,7 @@ void Foam::tetDecomposer::setRefinement
         }
 
 
-        if (decomposeType == FACECENTRETETS)
+        if (decomposeType == FACE_CENTRE_TRIS)
         {
             forAll(f, fp)
             {
@@ -628,7 +628,7 @@ void Foam::tetDecomposer::setRefinement
                     // Determine tets on either side
                     label thisTet, otherTet;
 
-                    if (decomposeType == FACECENTRETETS)
+                    if (decomposeType == FACE_CENTRE_TRIS)
                     {
                         if (mesh_.faceOwner()[faceI] == cellI)
                         {
