@@ -1483,6 +1483,21 @@ Foam::label Foam::polyMesh::findCell
         return -1;
     }
 
+    if
+    (
+        Pstream::parRun()
+     && (decompMode == FACE_DIAG_TRIS || decompMode == CELL_TETS)
+    )
+    {
+        // Force construction of face-diagonal decomposition before testing
+        // for zero cells.
+        //
+        // If parallel running a local domain might have zero cells so never
+        // construct the face-diagonal decomposition which uses parallel
+        // transfers.
+        (void)tetBasePtIs();
+    }
+
     if (decompMode == CELL_TETS)
     {
         // Advanced search method utilizing an octree
@@ -1500,15 +1515,6 @@ Foam::label Foam::polyMesh::findCell
     {
         // Approximate search avoiding the construction of an octree
         // and cell decomposition
-
-        if (Pstream::parRun() && decompMode == FACE_DIAG_TRIS)
-        {
-            // Force construction of face-diagonal decomposition before testing
-            // for zero cells. If parallel running a local domain might have
-            // zero cells so never construct the face-diagonal decomposition
-            // (which uses parallel transfers)
-            (void)tetBasePtIs();
-        }
 
         // Find the nearest cell centre to this location
         label celli = findNearestCell(p);
