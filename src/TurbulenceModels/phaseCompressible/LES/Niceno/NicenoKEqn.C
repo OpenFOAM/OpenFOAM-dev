@@ -96,7 +96,9 @@ NicenoKEqn<BasicTurbulenceModel>::NicenoKEqn
 {
     if (type == typeName)
     {
-        correctNut();
+        // Cannot correct nut yet: construction of the phases is not complete
+        // correctNut();
+
         this->printCoeffs(type);
     }
 }
