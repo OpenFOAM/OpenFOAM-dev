@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,6 +210,9 @@ void Foam::ThermoParcel<ParcelType>::calc
     // Sum Ni*Cpi*Wi of emission species
     scalar NCpW = 0.0;
 
+    // Store T for consistent radiation source
+    const scalar T0 = this->T_;
+
     // Calculate new particle temperature
     this->T_ =
         this->calcHeatTransfer
@@ -255,7 +258,7 @@ void Foam::ThermoParcel<ParcelType>::calc
         if (td.cloud().radiation())
         {
             const scalar ap = this->areaP();
-            const scalar T4 = pow4(this->T_);
+            const scalar T4 = pow4(T0);
             td.cloud().radAreaP()[cellI] += dt*np0*ap;
             td.cloud().radT4()[cellI] += dt*np0*T4;
             td.cloud().radAreaPT4()[cellI] += dt*np0*ap*T4;
@@ -304,7 +307,7 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
     htc = max(htc, ROOTVSMALL);
     const scalar As = this->areaS(d);
 
-    scalar ap = Tc_ + Sh/As/htc;
+    scalar ap = Tc_ + Sh/(As*htc);
     scalar bp = 6.0*(Sh/As + htc*(Tc_ - T_));
     if (td.cloud().radiation())
     {
@@ -313,8 +316,11 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
         const scalar sigma = physicoChemical::sigma.value();
         const scalar epsilon = td.cloud().constProps().epsilon0();
 
-        ap = (ap + epsilon*Gc/(4.0*htc))/(1.0 + epsilon*sigma*pow3(T_)/htc);
-        bp += 6.0*(epsilon*(Gc/4.0 - sigma*pow4(T_)));
+        // Assume constant source
+        scalar s = epsilon*(Gc/4.0 - sigma*pow4(T_));
+
+        ap += s/htc;
+        bp += 6.0*s;
     }
     bp /= rho*d*Cp_*(ap - T_) + ROOTVSMALL;
 

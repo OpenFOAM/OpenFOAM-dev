@@ -482,7 +482,8 @@ Foam::tmp<Foam::volScalarField> Foam::radiation::fvDOM::Rp() const
                 IOobject::NO_WRITE,
                 false
             ),
-            4.0*a_*physicoChemical::sigma //absorptionEmission_->a()
+            // Only include continuous phase emission
+            4*absorptionEmission_->aCont()*physicoChemical::sigma
         )
     );
 }
@@ -494,12 +495,15 @@ Foam::radiation::fvDOM::Ru() const
 
     const DimensionedField<scalar, volMesh>& G =
         G_.dimensionedInternalField();
+
     const DimensionedField<scalar, volMesh> E =
         absorptionEmission_->ECont()().dimensionedInternalField();
-    const DimensionedField<scalar, volMesh> a =
-        a_.dimensionedInternalField();
 
-    return  a*G - E;
+    // Only include continuous phase absorption
+    const DimensionedField<scalar, volMesh> a =
+        absorptionEmission_->aCont()().dimensionedInternalField();
+
+    return a*G - E;
 }
 
 

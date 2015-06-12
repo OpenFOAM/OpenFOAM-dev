@@ -30,7 +30,6 @@ License
 
 using namespace Foam::constant;
 
-
 const Foam::word
 Foam::radiation::radiativeIntensityRay::intensityPrefix("ILambda");
 
@@ -225,9 +224,15 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
               + fvm::Sp(k*omega_, ILambda_[lambdaI])
             ==
                 1.0/constant::mathematical::pi*omega_
-              * (
-                    k*blackBody_.bLambda(lambdaI)
-                  + absorptionEmission_.ECont(lambdaI)/4
+               *(
+                    // Remove aDisp from k
+                    (k - absorptionEmission_.aDisp(lambdaI))
+                   *blackBody_.bLambda(lambdaI)
+
+                  + absorptionEmission_.ECont(lambdaI)
+
+                    // Add EDisp term from parcels
+                  + absorptionEmission_.EDisp(lambdaI)
                 )
             );
         }
@@ -240,8 +245,14 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
            ==
                1.0/constant::mathematical::pi*omega_
              * (
-                   k*blackBody_.bLambda(lambdaI)
-                 + absorptionEmission_.ECont(lambdaI)/4
+                   // Remove aDisp from k
+                   (k - absorptionEmission_.aDisp(lambdaI))
+                  *blackBody_.bLambda(lambdaI)
+
+                 + absorptionEmission_.ECont(lambdaI)
+
+                   // Add EDisp term from parcels
+                 + absorptionEmission_.EDisp(lambdaI)
                )
             );
         }
