@@ -93,18 +93,18 @@ int main(int argc, char *argv[])
             fluid.correct();
 
             #include "contErrs.H"
-            #include "EEqns.H"
 
             if (faceMomentum)
             {
-                Info<< "Constructing face momentum equations" << endl;
                 #include "pUf/UEqns.H"
+                #include "EEqns.H"
                 #include "pUf/pEqn.H"
+                #include "pUf/DDtU.H"
             }
             else
             {
-                Info<< "Constructing momentum equations" << endl;
                 #include "pU/UEqns.H"
+                #include "EEqns.H"
                 #include "pU/pEqn.H"
                 #include "pU/DDtU.H"
             }

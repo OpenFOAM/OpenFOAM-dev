@@ -358,5 +358,3 @@ if (thermo1.dpdt() || thermo2.dpdt())
 {
     dpdt = fvc::ddt(p);
 }
-
-#include "pUf/DDtU.H"
