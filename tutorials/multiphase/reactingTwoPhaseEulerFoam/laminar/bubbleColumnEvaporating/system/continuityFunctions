@@ -1,0 +1,89 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+inletMassFlowRate
+{
+    type            faceSource;
+    functionObjectLibs ("libfieldFunctionObjects.so");
+
+    fields
+    (
+        alphaRhoPhi.gas
+        alphaRhoPhi.liquid
+    );
+
+    valueOutput     false;
+    log             true;
+    surfaceFormat   null;
+
+    source          patch;
+    sourceName      inlet;
+
+    operation       sum;
+
+    outputControl   timeStep;
+}
+
+outletMassFlowRate
+{
+    type            faceSource;
+    functionObjectLibs ("libfieldFunctionObjects.so");
+
+    fields
+    (
+        alphaRhoPhi.gas
+        alphaRhoPhi.liquid
+    );
+
+    valueOutput     false;
+    log             true;
+    surfaceFormat   null;
+
+    source          patch;
+    sourceName      outlet;
+
+    operation       sum;
+
+    outputControl   timeStep;
+}
+
+totalMass
+{
+    type            coded;
+    functionObjectLibs ("libutilityFunctionObjects.so");
+    redirectType    error;
+
+    code
+    #{
+        const volScalarField& alphaGas =
+            mesh().lookupObject<volScalarField>("alpha.gas");
+        const volScalarField& alphaLiquid =
+            mesh().lookupObject<volScalarField>("alpha.liquid");
+
+        const volScalarField& rhoGas =
+            mesh().lookupObject<volScalarField>("thermo:rho.gas");
+        const volScalarField& rhoLiquid =
+            mesh().lookupObject<volScalarField>("thermo:rho.liquid");
+
+        const volScalarField& dmdt =
+            mesh().lookupObject<volScalarField>("dmdt.gasAndLiquid");
+
+        const scalarField& v = mesh().V();
+
+        Info<< "coded totalMass output:" << endl
+            << "    volIntegrate(all) for alpha.gas*rho.gas = "
+            << gSum(alphaGas*rhoGas*v) << endl
+            << "    volIntegrate(all) for alpha.liquid*rho.liquid = "
+            << gSum(alphaLiquid*rhoLiquid*v) << endl
+            << "    volIntegrate(all) for dmdt = "
+            << gSum(dmdt*v) << endl
+            << endl;
+    #};
+}
+
+// ************************************************************************* //

@@ -1,0 +1,137 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "phaseModel.H"
+#include "phaseSystem.H"
+#include "diameterModel.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(phaseModel, 0);
+    defineRunTimeSelectionTable(phaseModel, phaseSystem);
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::phaseModel::phaseModel
+(
+    const phaseSystem& fluid,
+    const word& phaseName
+)
+:
+    volScalarField
+    (
+        IOobject
+        (
+            IOobject::groupName("alpha", phaseName),
+            fluid.mesh().time().timeName(),
+            fluid.mesh(),
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        fluid.mesh(),
+        dimensionedScalar("alpha", dimless, 0)
+    ),
+
+    fluid_(fluid),
+    name_(phaseName),
+    residualAlpha_
+    (
+        "residualAlpha",
+        dimless,
+        fluid.subDict(phaseName).lookup("residualAlpha")
+    ),
+    alphaMax_(fluid.subDict(phaseName).lookupOrDefault("alphaMax", 1.0))
+{
+    diameterModel_ = diameterModel::New(fluid.subDict(phaseName), *this);
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::phaseModel::~phaseModel()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::word& Foam::phaseModel::name() const
+{
+    return name_;
+}
+
+
+const Foam::phaseSystem& Foam::phaseModel::fluid() const
+{
+    return fluid_;
+}
+
+
+const Foam::dimensionedScalar& Foam::phaseModel::residualAlpha() const
+{
+    return residualAlpha_;
+}
+
+
+Foam::scalar Foam::phaseModel::alphaMax() const
+{
+    return alphaMax_;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::phaseModel::d() const
+{
+    return diameterModel_().d();
+}
+
+
+void Foam::phaseModel::correct()
+{
+    diameterModel_->correct();
+}
+
+
+void Foam::phaseModel::correctKinematics()
+{}
+
+
+void Foam::phaseModel::correctThermo()
+{}
+
+
+void Foam::phaseModel::correctTurbulence()
+{}
+
+
+bool Foam::phaseModel::read()
+{
+    return diameterModel_->read(fluid_.subDict(name_));
+}
+
+
+// ************************************************************************* //

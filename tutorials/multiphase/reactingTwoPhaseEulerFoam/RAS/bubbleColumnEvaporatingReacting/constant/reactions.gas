@@ -1,0 +1,22 @@
+species
+(
+    CO
+    CO2
+    H2
+    H2O
+    AIR
+);
+
+reactions
+{
+    waterGasShift
+    {
+        type        reversibleArrheniusReaction;
+
+        reaction    "CO^0.93 + H2O^0.24 = CO2^0.69 + H2^1";
+
+        A           1e8;
+        beta        0.86;
+        Ta          1e4;
+    }
+}
