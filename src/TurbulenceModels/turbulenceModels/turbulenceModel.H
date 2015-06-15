@@ -133,7 +133,7 @@ public:
         //- Const access to the coefficients dictionary
         virtual const dictionary& coeffDict() const = 0;
 
-        //- Helper function to return the nam eof the turbulence G field
+        //- Helper function to return the name of the turbulence G field
         inline word GName() const
         {
             return word(type() + ":G");
