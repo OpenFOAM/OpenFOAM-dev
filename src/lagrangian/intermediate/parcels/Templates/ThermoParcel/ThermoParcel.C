@@ -172,6 +172,9 @@ void Foam::ThermoParcel<ParcelType>::calc
     const scalar np0 = this->nParticle_;
     const scalar mass0 = this->mass();
 
+    // Store T for consistent radiation source
+    const scalar T0 = this->T_;
+
 
     // Calc surface values
     // ~~~~~~~~~~~~~~~~~~~
@@ -209,9 +212,6 @@ void Foam::ThermoParcel<ParcelType>::calc
 
     // Sum Ni*Cpi*Wi of emission species
     scalar NCpW = 0.0;
-
-    // Store T for consistent radiation source
-    const scalar T0 = this->T_;
 
     // Calculate new particle temperature
     this->T_ =

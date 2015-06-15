@@ -304,9 +304,6 @@ void Foam::ReactingParcel<ParcelType>::cellValueSourceCorrection
 
         this->Tc_ = td.cloud().constProps().TMin();
     }
-
-//  constant pressure
-//  this->pc_ = this->pc_;
 }
 
 
@@ -433,7 +430,7 @@ void Foam::ReactingParcel<ParcelType>::calc
 
 
     // Sources
-    //~~~~~~~~
+    // ~~~~~~~
 
     // Explicit momentum source for particle
     vector Su = vector::zero;
@@ -608,7 +605,7 @@ void Foam::ReactingParcel<ParcelType>::calc
         if (td.cloud().radiation())
         {
             const scalar ap = this->areaP();
-            const scalar T4 = pow4(this->T_);
+            const scalar T4 = pow4(T0);
             td.cloud().radAreaP()[cellI] += dt*np0*ap;
             td.cloud().radT4()[cellI] += dt*np0*T4;
             td.cloud().radAreaPT4()[cellI] += dt*np0*ap*T4;

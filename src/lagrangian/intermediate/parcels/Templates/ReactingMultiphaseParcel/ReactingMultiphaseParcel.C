@@ -360,14 +360,16 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
                 label gid = composition.localToCarrierId(LIQ, i);
                 td.cloud().rhoTrans(gid)[cellI] += dm*YMix[LIQ]*YLiquid_[i];
             }
-/*
+
             // No mapping between solid components and carrier phase
+            /*
             forAll(YSolid_, i)
             {
                 label gid = composition.localToCarrierId(SLD, i);
                 td.cloud().rhoTrans(gid)[cellI] += dm*YMix[SLD]*YSolid_[i];
             }
-*/
+            */
+
             td.cloud().UTrans()[cellI] += dm*U0;
 
             td.cloud().hsTrans()[cellI] += dm*HsEff(td, pc, T0, idG, idL, idS);
@@ -441,8 +443,9 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
             td.cloud().UTrans()[cellI] += dm*U0;
             td.cloud().hsTrans()[cellI] += dm*hs;
         }
-/*
+
         // No mapping between solid components and carrier phase
+        /*
         forAll(YSolid_, i)
         {
             scalar dm = np0*dMassSolid[i];
@@ -452,7 +455,8 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
             td.cloud().UTrans()[cellI] += dm*U0;
             td.cloud().hsTrans()[cellI] += dm*hs;
         }
-*/
+        */
+
         forAll(dMassSRCarrier, i)
         {
             scalar dm = np0*dMassSRCarrier[i];
@@ -474,7 +478,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         if (td.cloud().radiation())
         {
             const scalar ap = this->areaP();
-            const scalar T4 = pow4(this->T_);
+            const scalar T4 = pow4(T0);
             td.cloud().radAreaP()[cellI] += dt*np0*ap;
             td.cloud().radT4()[cellI] += dt*np0*T4;
             td.cloud().radAreaPT4()[cellI] += dt*np0*ap*T4;
