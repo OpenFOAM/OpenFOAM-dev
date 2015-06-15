@@ -365,7 +365,7 @@ bool Foam::pairPatchAgglomeration::agglomeratePatch
 }
 
 
-void Foam::pairPatchAgglomeration:: agglomerate()
+void Foam::pairPatchAgglomeration::agglomerate()
 {
     label nPairLevels = 0;
     label nCreatedLevels = 1; // 0 level is the base patch
@@ -380,13 +380,15 @@ void Foam::pairPatchAgglomeration:: agglomerate()
 
         do
         {
+            label nCoarseFacesPrev = nCoarseFaces;
+
             finalAgglomPtr = agglomerateOneLevel
             (
                 nCoarseFaces,
                 patch
             );
 
-            if (nCoarseFaces > 0)
+            if (nCoarseFaces > 0 && nCoarseFaces != nCoarseFacesPrev)
             {
                 if
                 (
@@ -524,7 +526,7 @@ Foam::tmp<Foam::labelField> Foam::pairPatchAgglomeration::agglomerateOneLevel
                 {
                     // if not create single-cell "clusters" for each
                     coarseCellMap[facei] = nCoarseFaces;
-                    nCoarseFaces ++;
+                    nCoarseFaces++;
                 }
             }
         }
