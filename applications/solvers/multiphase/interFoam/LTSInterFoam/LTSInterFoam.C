@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     #include "createFvOptions.H"
     #include "correctPhi.H"
     #include "CourantNo.H"
-    #include "setInitialrDeltaT.H"
+    #include "createRDeltaT.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

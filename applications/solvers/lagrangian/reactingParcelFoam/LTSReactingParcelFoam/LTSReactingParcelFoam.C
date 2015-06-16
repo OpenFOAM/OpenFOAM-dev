@@ -48,21 +48,19 @@ Description
 int main(int argc, char *argv[])
 {
     #include "setRootCase.H"
-
     #include "createTime.H"
     #include "createMesh.H"
-    #include "readGravitationalAcceleration.H"
 
     pimpleControl pimple(mesh);
 
-    #include "readTimeControls.H"
+    #include "readGravitationalAcceleration.H"
     #include "createFields.H"
     #include "createMRF.H"
     #include "createFvOptions.H"
-    #include "createRDeltaT.H"
     #include "createRadiationModel.H"
     #include "createClouds.H"
     #include "initContinuityErrs.H"
+    #include "createRDeltaT.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,22 +68,23 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
-
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         parcels.evolve();
 
-        #include "timeScales.H"
+        #include "setrDeltaT.H"
 
         #include "rhoEqn.H"
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            turbulence->correct();
+            if (pimple.turbCorr())
+            {
+                turbulence->correct();
+            }
 
             #include "UEqn.H"
             #include "YEqn.H"

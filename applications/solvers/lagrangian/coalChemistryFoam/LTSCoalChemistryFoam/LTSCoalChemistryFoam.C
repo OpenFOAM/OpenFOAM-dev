@@ -51,7 +51,6 @@ Description
 int main(int argc, char *argv[])
 {
     #include "setRootCase.H"
-
     #include "createTime.H"
     #include "createMesh.H"
 
@@ -59,13 +58,12 @@ int main(int argc, char *argv[])
 
     #include "readGravitationalAcceleration.H"
     #include "createFields.H"
-    #include "readTimeControls.H"
-    #include "createRDeltaT.H"
     #include "createMRF.H"
     #include "createFvOptions.H"
     #include "createClouds.H"
     #include "createRadiationModel.H"
     #include "initContinuityErrs.H"
+    #include "createRDeltaT.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,8 +71,6 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
-
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
@@ -83,10 +79,9 @@ int main(int argc, char *argv[])
         pDyn = 0.5*rho*magSqr(U);
 
         coalParcels.evolve();
-
         limestoneParcels.evolve();
 
-        #include "timeScales.H"
+        #include "setrDeltaT.H"
 
         #include "rhoEqn.H"
 

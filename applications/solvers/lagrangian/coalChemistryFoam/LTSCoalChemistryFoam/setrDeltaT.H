@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ License
     // Damping coefficient (1-0)
     scalar rDeltaTDampingCoeff
     (
-        pimpleDict.lookupOrDefault<scalar>("rDeltaTDampingCoeff", 1)
+        pimpleDict.lookupOrDefault<scalar>("rDeltaTDampingCoeff", 0.2)
     );
 
     // Maximum change in cell temperature per iteration
@@ -75,7 +75,18 @@ License
     {
         volScalarField::DimensionedInternalField rDeltaTT
         (
-            mag(reaction->Sh())/(alphaTemp*rho*thermo.Cp()*T)
+            mag
+            (
+               (coalParcels.hsTrans() + limestoneParcels.hsTrans())
+              /(mesh.V()*runTime.deltaT())
+             + combustion->Sh()()
+            )
+           /(
+               alphaTemp
+              *rho.dimensionedInternalField()
+              *thermo.Cp()().dimensionedInternalField()
+              *T.dimensionedInternalField()
+           )
         );
 
         Info<< "    Temperature = "

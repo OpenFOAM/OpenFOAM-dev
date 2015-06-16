@@ -17,7 +17,7 @@ FoamFile
 
 application     reactingParcelFoam;
 
-startFoam       latestTime;
+startFrom       latestTime;
 
 startTime       0;
 
