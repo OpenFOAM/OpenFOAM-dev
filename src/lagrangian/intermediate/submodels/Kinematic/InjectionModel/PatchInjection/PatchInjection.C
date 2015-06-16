@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ Foam::label Foam::PatchInjection<CloudType>::parcelsToInject
             nParcelsToInject > 0
          && (
                nParcels - scalar(nParcelsToInject)
-             > rnd.position(scalar(0), scalar(1))
+             > rnd.globalPosition(scalar(0), scalar(1))
             )
         )
         {
