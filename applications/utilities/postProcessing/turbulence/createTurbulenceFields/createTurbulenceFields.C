@@ -50,7 +50,6 @@ int main(int argc, char *argv[])
     instantList timeDirs = timeSelector::select0(runTime, args);
 
     #include "createMesh.H"
-    #include "createFields.H"
 
     forAll(timeDirs, timeI)
     {
@@ -58,7 +57,7 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << endl;
 
-        // Cache the turbulence fields
+        #include "createFields.H"
 
         Info<< "\nRetrieving field k from turbulence model" << endl;
         const volScalarField k(RASModel->k());
