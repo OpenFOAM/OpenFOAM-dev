@@ -115,11 +115,12 @@ void thixotropicViscosity::correct
     const volScalarField& deltaRho = film.deltaRho();
     const surfaceScalarField& phi = film.phi();
     const volScalarField& alpha = film.alpha();
+    const Time& runTime = this->owner().regionMesh().time();
 
     // Shear rate
     volScalarField gDot("gDot", alpha*mag(U - Uw)/(delta + film.deltaSmall()));
 
-    if (debug && this->owner().regionMesh().time().outputTime())
+    if (debug && runTime.outputTime())
     {
         gDot.write();
     }
@@ -130,6 +131,19 @@ void thixotropicViscosity::correct
     dimensionedScalar c0("c0", dimless/dimTime, ROOTVSMALL);
     volScalarField coeff("coeff", -c_*pow(gDot, d_) + c0);
 
+    // Limit the filmMass and deltaMass to calculate the effect of the added
+    // droplets with lambda = 0 to the film
+    const volScalarField filmMass
+    (
+        "thixotropicViscosity:filmMass",
+        film.netMass() + dimensionedScalar("SMALL", dimMass, ROOTVSMALL)
+    );
+    const volScalarField deltaMass
+    (
+        "thixotropicViscosity:deltaMass",
+        max(dimensionedScalar("zero", dimMass, 0), film.deltaMass())
+    );
+
     fvScalarMatrix lambdaEqn
     (
         fvm::ddt(lambda_)
@@ -138,39 +152,16 @@ void thixotropicViscosity::correct
       ==
         a_*pow((1.0 - lambda_), b_)
       + fvm::SuSp(coeff, lambda_)
+      - fvm::Sp(deltaMass/(runTime.deltaT()*filmMass), lambda_)
     );
 
-
     lambdaEqn.relax();
-
     lambdaEqn.solve();
 
     lambda_.min(1.0);
     lambda_.max(0.0);
 
-
-    // Blend based on mass fraction of added- to existing film mass
-    const dimensionedScalar m0("zero", dimMass, 0.0);
-    const dimensionedScalar mSMALL("SMALL", dimMass, ROOTVSMALL);
-    const volScalarField deltaMass
-    (
-        "thixotropicViscosity:deltaMass",
-        max(m0, film.deltaMass())
-    );
-    const volScalarField filmMass
-    (
-        "thixotropicViscosity:filmMass",
-        film.netMass() + mSMALL
-    );
-
-    // Weighting field to blend new and existing mass contributions
-    const volScalarField w
-    (
-        "thixotropicViscosity:w",
-        max(scalar(0.0), min(scalar(1.0), deltaMass/(deltaMass + filmMass)))
-    );
-
-    mu_ = w*muInf_ + (1 - w)*muInf_/(sqr(1.0 - K_*lambda_) + ROOTVSMALL);
+    mu_ = muInf_/(sqr(1.0 - K_*lambda_) + ROOTVSMALL);
     mu_.correctBoundaryConditions();
 }
 
