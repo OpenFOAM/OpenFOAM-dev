@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
             rhoU.dimensionedInternalField()
            /rho.dimensionedInternalField();
         U.correctBoundaryConditions();
-        rhoU.boundaryField() = rho.boundaryField()*U.boundaryField();
+        rhoU.boundaryField() == rho.boundaryField()*U.boundaryField();
 
         if (!inviscid)
         {
@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
         e = rhoE/rho - 0.5*magSqr(U);
         e.correctBoundaryConditions();
         thermo.correct();
-        rhoE.boundaryField() =
+        rhoE.boundaryField() ==
             rho.boundaryField()*
             (
                 e.boundaryField() + 0.5*magSqr(U.boundaryField())
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
             rho.dimensionedInternalField()
            /psi.dimensionedInternalField();
         p.correctBoundaryConditions();
-        rho.boundaryField() = psi.boundaryField()*p.boundaryField();
+        rho.boundaryField() == psi.boundaryField()*p.boundaryField();
 
         turbulence->correct();
 

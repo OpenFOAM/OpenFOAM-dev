@@ -31,8 +31,9 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > interpolate
     {
         if
         (
-           !sf.boundaryField()[patchi].coupled()
+            !sf.boundaryField()[patchi].coupled()
          && sf.boundaryField()[patchi].size()
+         && !vf.boundaryField()[patchi].fixesValue()
          && dir.boundaryField()[patchi][0] > 0
         )
         {
@@ -42,6 +43,30 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > interpolate
     }
 
     return tsf;
+}
+
+
+template<class Type>
+wordList derivedPatchFieldTypes
+(
+    const GeometricField<Type, fvPatchField, volMesh>& vf
+)
+{
+    wordList phiTypes
+    (
+        vf.boundaryField().size(),
+        calculatedFvPatchField<Type>::typeName
+    );
+
+    forAll(vf.boundaryField(), patchi)
+    {
+        if (vf.boundaryField()[patchi].fixesValue())
+        {
+            phiTypes[patchi] = fixedValueFvPatchField<Type>::typeName;
+        }
+    }
+
+    return phiTypes;
 }
 
 }

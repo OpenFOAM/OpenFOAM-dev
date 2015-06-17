@@ -32,7 +32,6 @@ volVectorField U
     mesh
 );
 
-#include "rhoBoundaryTypes.H"
 volScalarField rho
 (
     IOobject
@@ -44,7 +43,7 @@ volScalarField rho
         IOobject::AUTO_WRITE
     ),
     thermo.rho(),
-    rhoBoundaryTypes
+    derivedPatchFieldTypes(p)
 );
 
 volVectorField rhoU
@@ -57,7 +56,8 @@ volVectorField rhoU
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    rho*U
+    rho*U,
+    derivedPatchFieldTypes(U)
 );
 
 volScalarField rhoE
@@ -70,7 +70,8 @@ volScalarField rhoE
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    rho*(e + 0.5*magSqr(U))
+    rho*(e + 0.5*magSqr(U)),
+    derivedPatchFieldTypes(T)
 );
 
 surfaceScalarField pos
@@ -98,7 +99,18 @@ surfaceScalarField neg
 );
 
 
-surfaceScalarField phi("phi", mesh.Sf() & fvc::interpolate(rhoU));
+surfaceScalarField phi
+(
+    IOobject
+    (
+        "phi",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh.Sf() & fvc::interpolate(rhoU)
+);
 
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::turbulenceModel> turbulence
