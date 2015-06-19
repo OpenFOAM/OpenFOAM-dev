@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,20 +28,15 @@ License
 #include "triSurfaceSearch.H"
 #include "triSurface.H"
 #include "cpuTime.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(surfaceToPoint, 0);
-
-addToRunTimeSelectionTable(topoSetSource, surfaceToPoint, word);
-
-addToRunTimeSelectionTable(topoSetSource, surfaceToPoint, istream);
-
+    defineTypeNameAndDebug(surfaceToPoint, 0);
+    addToRunTimeSelectionTable(topoSetSource, surfaceToPoint, word);
+    addToRunTimeSelectionTable(topoSetSource, surfaceToPoint, istream);
 }
 
 
@@ -125,7 +120,6 @@ void Foam::surfaceToPoint::checkSettings() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::surfaceToPoint::surfaceToPoint
 (
     const polyMesh& mesh,
@@ -145,7 +139,6 @@ Foam::surfaceToPoint::surfaceToPoint
 }
 
 
-// Construct from dictionary
 Foam::surfaceToPoint::surfaceToPoint
 (
     const polyMesh& mesh,
@@ -153,7 +146,7 @@ Foam::surfaceToPoint::surfaceToPoint
 )
 :
     topoSetSource(mesh),
-    surfName_(dict.lookup("file")),
+    surfName_(fileName(dict.lookup("file")).expand()),
     nearDist_(readScalar(dict.lookup("nearDistance"))),
     includeInside_(readBool(dict.lookup("includeInside"))),
     includeOutside_(readBool(dict.lookup("includeOutside")))
@@ -162,7 +155,6 @@ Foam::surfaceToPoint::surfaceToPoint
 }
 
 
-// Construct from Istream
 Foam::surfaceToPoint::surfaceToPoint
 (
     const polyMesh& mesh,
