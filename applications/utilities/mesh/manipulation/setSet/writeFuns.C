@@ -25,7 +25,7 @@ License
 
 #include "writeFuns.H"
 
-#if defined(__mips) && !defined(__SICORTEX__)
+#if defined(__mips)
 #include <standards.h>
 #include <sys/endian.h>
 #endif
