@@ -571,7 +571,8 @@ void Foam::meshToMesh::mapTgtToSrc
         (
             tgtField,
             multiplyWeightedOp<Type, CombineOp>(cop),
-            srcField
+            srcField,
+            UList<Type>::null()
         );
     }
 
