@@ -125,6 +125,16 @@ Linux)
         export WM_LDFLAGS='-m64'
         ;;
 
+    ppc64le)
+        WM_ARCH=linuxPPC64le
+        export WM_COMPILER_LIB_ARCH=64
+        export WM_CC='gcc'
+        export WM_CXX='g++'
+        export WM_CFLAGS='-m64 -fPIC'
+        export WM_CXXFLAGS='-m64 -fPIC'
+        export WM_LDFLAGS='-m64'
+        ;;
+
     *)
         echo Unknown processor type `uname -m` for Linux 1>&2
         ;;
