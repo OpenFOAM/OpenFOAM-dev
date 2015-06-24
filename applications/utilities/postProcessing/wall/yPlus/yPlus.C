@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
     #include "createTime.H"
-    instantList timeDirs = timeSelector::select0(runTime, args);
+    instantList timeDirs = timeSelector::select(runTime, args, "yPlus");
     #include "createNamedMesh.H"
 
     const bool compressible = args.optionFound("compressible");

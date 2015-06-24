@@ -97,7 +97,7 @@ Foam::List<bool> Foam::timeSelector::selected(const instantList& Times) const
 }
 
 
-Foam::List<Foam::instant> Foam::timeSelector::select(const instantList& Times)
+Foam::instantList Foam::timeSelector::select(const instantList& Times)
 const
 {
     return subset(selected(Times), Times);
@@ -143,6 +143,11 @@ void Foam::timeSelector::addOptions
         "latestTime",
         "select the latest time"
     );
+    argList::addBoolOption
+    (
+        "newTimes",
+        "select the new times"
+    );
     argList::addOption
     (
         "time",
@@ -152,7 +157,7 @@ void Foam::timeSelector::addOptions
 }
 
 
-Foam::List<Foam::instant> Foam::timeSelector::select
+Foam::instantList Foam::timeSelector::select
 (
     const instantList& timeDirs,
     const argList& args,
@@ -244,17 +249,20 @@ Foam::List<Foam::instant> Foam::timeSelector::select
 }
 
 
-Foam::List<Foam::instant> Foam::timeSelector::select0
+Foam::instantList Foam::timeSelector::select0
 (
     Time& runTime,
     const argList& args
 )
 {
-    instantList timeDirs = timeSelector::select
+    instantList timeDirs
     (
-        runTime.times(),
-        args,
-        runTime.constant()
+        timeSelector::select
+        (
+            runTime.times(),
+            args,
+            runTime.constant()
+        )
     );
 
     if (timeDirs.empty())
@@ -272,7 +280,7 @@ Foam::List<Foam::instant> Foam::timeSelector::select0
 }
 
 
-Foam::List<Foam::instant> Foam::timeSelector::selectIfPresent
+Foam::instantList Foam::timeSelector::selectIfPresent
 (
     Time& runTime,
     const argList& args
@@ -293,6 +301,34 @@ Foam::List<Foam::instant> Foam::timeSelector::selectIfPresent
     {
         // No timeSelector option specified. Do not change runTime.
         return instantList(1, instant(runTime.value(), runTime.timeName()));
+    }
+}
+
+
+Foam::instantList Foam::timeSelector::select
+(
+    Time& runTime,
+    const argList& args,
+    const word& fName
+)
+{
+    instantList timeDirs(timeSelector::select0(runTime, args));
+
+    if (timeDirs.size() && args.optionFound("newTimes"))
+    {
+        List<bool> selectTimes(timeDirs.size(), true);
+
+        forAll(timeDirs, timeI)
+        {
+            selectTimes[timeI] =
+                !exists(runTime.path()/timeDirs[timeI].name()/fName);
+        }
+
+        return subset(selectTimes, timeDirs);
+    }
+    else
+    {
+        return timeDirs;
     }
 }
 
