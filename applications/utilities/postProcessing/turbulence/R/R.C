@@ -27,6 +27,10 @@ Application
 Description
     Calculates and writes the Reynolds stress R for the current time step.
 
+    Compressible modes is automatically selected based on the existence of the
+    "thermophysicalProperties" dictionary required to construct the
+    thermodynamics package.
+
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
@@ -108,21 +112,11 @@ void calcCompressibleR
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
-
     #include "addRegionOption.H"
-
-    argList::addBoolOption
-    (
-        "compressible",
-        "calculate compressible R"
-    );
-
     #include "setRootCase.H"
     #include "createTime.H"
     instantList timeDirs = timeSelector::select0(runTime, args);
     #include "createNamedMesh.H"
-
-    const bool compressible = args.optionFound("compressible");
 
     forAll(timeDirs, timeI)
     {
@@ -143,7 +137,15 @@ int main(int argc, char *argv[])
             Info<< "Reading field " << UHeader.name() << nl << endl;
             volVectorField U(UHeader, mesh);
 
-            if (compressible)
+            if
+            (
+                IOobject
+                (
+                    basicThermo::dictName,
+                    runTime.constant(),
+                    mesh
+                ).headerOk()
+            )
             {
                 calcCompressibleR(mesh, runTime, U);
             }

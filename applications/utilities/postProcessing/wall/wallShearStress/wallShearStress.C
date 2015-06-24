@@ -28,8 +28,9 @@ Description
     Calculates and reports wall shear stress for all patches, for the
     specified times when using RAS turbulence models.
 
-    Default behaviour assumes operating in incompressible mode.
-    Use the -compressible option for compressible RAS cases.
+    Compressible modes is automatically selected based on the existence of the
+    "thermophysicalProperties" dictionary required to construct the
+    thermodynamics package.
 
 \*---------------------------------------------------------------------------*/
 
@@ -128,21 +129,11 @@ void calcCompressible
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
-
     #include "addRegionOption.H"
-
-    argList::addBoolOption
-    (
-        "compressible",
-        "calculate compressible wall shear stress"
-    );
-
     #include "setRootCase.H"
     #include "createTime.H"
     instantList timeDirs = timeSelector::select0(runTime, args);
     #include "createNamedMesh.H"
-
-    const bool compressible = args.optionFound("compressible");
 
     forAll(timeDirs, timeI)
     {
@@ -183,7 +174,15 @@ int main(int argc, char *argv[])
             Info<< "Reading field U\n" << endl;
             volVectorField U(UHeader, mesh);
 
-            if (compressible)
+            if
+            (
+                IOobject
+                (
+                    basicThermo::dictName,
+                    runTime.constant(),
+                    mesh
+                ).headerOk()
+            )
             {
                 calcCompressible(mesh, runTime, U, wallShearStress);
             }

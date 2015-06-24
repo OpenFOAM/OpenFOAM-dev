@@ -32,8 +32,9 @@ Description
     the y+ values otherwise they are obtained directly from the near-wall
     velocity gradient and effective and laminar viscosities.
 
-    Default behaviour assumes operating in incompressible mode.
-    Use the -compressible option for compressible cases.
+    Compressible modes is automatically selected based on the existence of the
+    "thermophysicalProperties" dictionary required to construct the
+    thermodynamics package.
 
 \*---------------------------------------------------------------------------*/
 
@@ -180,21 +181,11 @@ void calcCompressibleYPlus
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
-
     #include "addRegionOption.H"
-
-    argList::addBoolOption
-    (
-        "compressible",
-        "calculate compressible y+"
-    );
-
     #include "setRootCase.H"
     #include "createTime.H"
     instantList timeDirs = timeSelector::select(runTime, args, "yPlus");
     #include "createNamedMesh.H"
-
-    const bool compressible = args.optionFound("compressible");
 
     forAll(timeDirs, timeI)
     {
@@ -230,7 +221,15 @@ int main(int argc, char *argv[])
             Info<< "Reading field U\n" << endl;
             volVectorField U(UHeader, mesh);
 
-            if (compressible)
+            if
+            (
+                IOobject
+                (
+                    basicThermo::dictName,
+                    runTime.constant(),
+                    mesh
+                ).headerOk()
+            )
             {
                 calcCompressibleYPlus(mesh, runTime, U, yPlus);
             }
