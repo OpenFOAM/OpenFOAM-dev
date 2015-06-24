@@ -109,7 +109,7 @@ void Foam::fv::variableHeatTransfer::calculateHtc()
         );
 
     const fluidThermo& nbrThermo =
-        nbrMesh.lookupObject<fluidThermo>("thermophysicalProperties");
+        nbrMesh.lookupObject<fluidThermo>(basicThermo::dictName);
 
     const volVectorField& UNbr =
         nbrMesh.lookupObject<volVectorField>(UNbrName_);

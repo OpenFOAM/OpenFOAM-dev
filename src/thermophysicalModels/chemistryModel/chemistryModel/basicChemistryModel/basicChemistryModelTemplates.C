@@ -75,7 +75,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
         (
             IOobject
             (
-                IOobject::groupName("thermophysicalProperties", phaseName),
+                IOobject::groupName(basicThermo::dictName, phaseName),
                 mesh.time().constant(),
                 mesh,
                 IOobject::MUST_READ_IF_MODIFIED,

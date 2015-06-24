@@ -91,7 +91,7 @@ greyMeanSolidAbsorptionEmission
 :
     absorptionEmissionModel(dict, mesh),
     coeffsDict_((dict.subDict(typeName + "Coeffs"))),
-    thermo_(mesh.lookupObject<solidThermo>("thermophysicalProperties")),
+    thermo_(mesh.lookupObject<solidThermo>(basicThermo::dictName)),
     speciesNames_(0),
     mixture_(dynamic_cast<const basicSpecieMixture&>(thermo_)),
     solidData_(mixture_.Y().size())

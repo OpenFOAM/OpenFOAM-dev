@@ -188,7 +188,7 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
     // is obtained
 
     const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
 
     fieldNames_.setSize(1, thermo.he().name());
 
@@ -210,7 +210,7 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
 )
 {
     const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
 
     const surfaceScalarField Cpf(fvc::interpolate(thermo.Cp()));
 

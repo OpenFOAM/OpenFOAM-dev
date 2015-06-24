@@ -62,7 +62,7 @@ Foam::radiation::wideBandAbsorptionEmission::wideBandAbsorptionEmission
         mesh.time().constant(),
         mesh
     ),
-    thermo_(mesh.lookupObject<fluidThermo>("thermophysicalProperties")),
+    thermo_(mesh.lookupObject<fluidThermo>(basicThermo::dictName)),
     Yj_(nSpecies_),
     totalWaveLength_(0)
 {

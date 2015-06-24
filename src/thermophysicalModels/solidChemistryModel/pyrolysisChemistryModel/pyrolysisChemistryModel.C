@@ -25,6 +25,7 @@ License
 
 #include "pyrolysisChemistryModel.H"
 #include "solidReaction.H"
+#include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -141,7 +142,7 @@ pyrolysisChemistryModel
         dictionary thermoDict =
             mesh.lookupObject<dictionary>
             (
-                "thermophysicalProperties"
+                basicThermo::dictName
             ).subDict(pyrolisisGases_[gasI]);
 
         gasThermo_.set

@@ -68,7 +68,7 @@ void Foam::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
         (
             IOobject
             (
-                "thermophysicalProperties",
+                basicThermo::dictName,
                 runTime.constant(),
                 mesh
             ).headerOk()

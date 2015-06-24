@@ -181,7 +181,7 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::updateCoeffs()
 
     // Prandtl number reading consistent with rhoCentralFoam
     const dictionary& thermophysicalProperties =
-        db().lookupObject<IOdictionary>("thermophysicalProperties");
+        db().lookupObject<IOdictionary>(basicThermo::dictName);
 
     dimensionedScalar Pr
     (

@@ -63,7 +63,7 @@ Foam::fv::limitTemperature::limitTemperature
     // is obtained
 
     const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
 
     fieldNames_.setSize(1, thermo.he().name());
 
@@ -76,7 +76,7 @@ Foam::fv::limitTemperature::limitTemperature
 void Foam::fv::limitTemperature::correct(volScalarField& he)
 {
     const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
 
     scalarField Tmin(cells_.size(), Tmin_);
     scalarField Tmax(cells_.size(), Tmax_);

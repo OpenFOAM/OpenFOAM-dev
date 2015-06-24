@@ -220,10 +220,10 @@ void Foam::fv::interRegionHeatTransferModel::addSup
     {
         if (he.dimensions() == dimEnergy/dimMass)
         {
-            if (mesh_.foundObject<basicThermo>("thermophysicalProperties"))
+            if (mesh_.foundObject<basicThermo>(basicThermo::dictName))
             {
                 const basicThermo& thermo =
-                   mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+                   mesh_.lookupObject<basicThermo>(basicThermo::dictName);
 
                 volScalarField htcByCpv(htc_/thermo.Cpv());
 

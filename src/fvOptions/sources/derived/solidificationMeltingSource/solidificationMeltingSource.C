@@ -73,7 +73,7 @@ Foam::fv::solidificationMeltingSource::Cp() const
         case mdThermo:
         {
             const basicThermo& thermo =
-                mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+                mesh_.lookupObject<basicThermo>(basicThermo::dictName);
 
             return thermo.Cp();
             break;
@@ -228,7 +228,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
         case mdThermo:
         {
             const basicThermo& thermo =
-                mesh_.lookupObject<basicThermo>("thermophysicalProperties");
+                mesh_.lookupObject<basicThermo>(basicThermo::dictName);
 
             fieldNames_[1] = thermo.he().name();
             break;

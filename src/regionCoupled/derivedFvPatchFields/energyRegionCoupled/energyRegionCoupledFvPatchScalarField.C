@@ -81,7 +81,7 @@ void Foam::energyRegionCoupledFvPatchScalarField::setMethod() const
         (
             &regionCoupledPatch_.nbrMesh().lookupObject<basicThermo>
             (
-                "thermophysicalProperties"
+                basicThermo::dictName
             )
         );
     }
@@ -92,7 +92,7 @@ void Foam::energyRegionCoupledFvPatchScalarField::setMethod() const
         (
             &this->db().lookupObject<basicThermo>
             (
-                "thermophysicalProperties"
+                basicThermo::dictName
             )
         );
     }
@@ -121,7 +121,7 @@ kappa() const
             const basicThermo& thermo =
                 this->db().lookupObject<basicThermo>
                 (
-                    "thermophysicalProperties"
+                    basicThermo::dictName
                 );
 
             return thermo.kappa(patch().index());

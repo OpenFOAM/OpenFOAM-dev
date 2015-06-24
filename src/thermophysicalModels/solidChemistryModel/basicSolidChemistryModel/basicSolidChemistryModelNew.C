@@ -76,7 +76,7 @@ New
     (
         IOobject
         (
-            "thermophysicalProperties",
+            basicThermo::dictName,
             mesh.time().constant(),
             mesh,
             IOobject::MUST_READ_IF_MODIFIED,

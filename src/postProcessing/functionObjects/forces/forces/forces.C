@@ -266,10 +266,10 @@ Foam::tmp<Foam::volSymmTensorField> Foam::forces::devRhoReff() const
 
 Foam::tmp<Foam::volScalarField> Foam::forces::mu() const
 {
-    if (obr_.foundObject<fluidThermo>("thermophysicalProperties"))
+    if (obr_.foundObject<fluidThermo>(basicThermo::dictName))
     {
         const fluidThermo& thermo =
-             obr_.lookupObject<fluidThermo>("thermophysicalProperties");
+             obr_.lookupObject<fluidThermo>(basicThermo::dictName);
 
         return thermo.mu();
     }

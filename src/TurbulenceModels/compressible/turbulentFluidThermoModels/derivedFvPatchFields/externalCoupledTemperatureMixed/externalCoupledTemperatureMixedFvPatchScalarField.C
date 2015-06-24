@@ -137,7 +137,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
         )
     );
 
-    static word thermoName("thermophysicalProperties");
+    static word thermoName(basicThermo::dictName);
 
     if (db().foundObject<cmpTurbModelType>(turbName))
     {

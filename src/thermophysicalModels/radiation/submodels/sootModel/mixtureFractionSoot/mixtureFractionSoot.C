@@ -99,7 +99,7 @@ Foam::radiation::mixtureFractionSoot<ThermoType>::mixtureFractionSoot
         coeffsDict_.lookupOrDefault<word>("mappingFieldName", "none")
     ),
     mapFieldMax_(1),
-    thermo_(mesh.lookupObject<fluidThermo>("thermophysicalProperties")),
+    thermo_(mesh.lookupObject<fluidThermo>(basicThermo::dictName)),
     mixture_(checkThermo(thermo_))
 {
     const Reaction<ThermoType>& reaction = mixture_.operator[](0);
