@@ -71,3 +71,6 @@
         pRefCell,
         pRefValue
     );
+
+    const IOMRFZoneList& MRF = fluid.MRF();
+    fv::IOoptionList& fvOptions = fluid.fvOptions();

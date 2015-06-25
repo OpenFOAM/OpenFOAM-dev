@@ -41,6 +41,8 @@ SourceFiles
 #include "phaseModel.H"
 #include "phasePair.H"
 #include "orderedPhasePair.H"
+#include "HashPtrTable.H"
+
 #include "IOMRFZoneList.H"
 #include "fvIOoptionList.H"
 

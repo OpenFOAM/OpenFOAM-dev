@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    twoPhaseEulerFoam
+    reactingTwoPhaseEulerFoam
 
 Description
     Solver for a system of 2 compressible fluid phases with a common pressure,
@@ -36,9 +36,8 @@ Description
 #include "fvCFD.H"
 #include "twoPhaseSystem.H"
 #include "PhaseCompressibleTurbulenceModel.H"
-#include "pimpleControl.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
-#include "HashPtrTable.H"
+#include "pimpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,9 +70,6 @@ int main(int argc, char *argv[])
     );
 
     #include "pUf/createDDtU.H"
-
-    const IOMRFZoneList& MRF = fluid.MRF();
-    fv::IOoptionList& fvOptions = fluid.fvOptions();
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
