@@ -175,10 +175,20 @@ surfaces
     interpolatedPlane
     {
         type            plane;    // always triangulated
-        // make plane relative to the coordinateSystem (Cartesian)
+
+        // Make plane relative to the coordinateSystem (Cartesian)
         coordinateSystem
         {
             origin      (0.0501 0.0501 0.005);
+
+            // Add a coordinate rotation
+            // (required, so here one that doesn't change anything)
+            coordinateRotation
+            {
+                type    axesRotation;
+                e1      (1 0 0);
+                e2      (0 1 0);
+            }
         }
         basePoint       (0 0 0);
         normalVector    (0.1 0.1 1);
