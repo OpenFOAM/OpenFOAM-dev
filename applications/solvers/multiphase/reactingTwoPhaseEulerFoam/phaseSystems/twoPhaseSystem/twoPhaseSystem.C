@@ -189,26 +189,26 @@ void Foam::twoPhaseSystem::solve()
     {
         tdgdt =
         (
-            alpha1.dimensionedInternalField()
-           *phase2_.D()().dimensionedInternalField()
-          - alpha2.dimensionedInternalField()
-           *phase1_.D()().dimensionedInternalField()
+            alpha2.dimensionedInternalField()
+           *phase1_.divU()().dimensionedInternalField()
+          - alpha1.dimensionedInternalField()
+           *phase2_.divU()().dimensionedInternalField()
         );
     }
     else if (phase1_.compressible())
     {
         tdgdt =
         (
-          - alpha2.dimensionedInternalField()
-           *phase1_.D()().dimensionedInternalField()
+            alpha2.dimensionedInternalField()
+           *phase1_.divU()().dimensionedInternalField()
         );
     }
     else if (phase2_.compressible())
     {
         tdgdt =
         (
-            alpha1.dimensionedInternalField()
-           *phase2_.D()().dimensionedInternalField()
+          - alpha1.dimensionedInternalField()
+           *phase2_.divU()().dimensionedInternalField()
         );
     }
 

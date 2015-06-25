@@ -338,14 +338,14 @@ while (pimple.correct())
                 phi2 = phi - alphaf1*phir;
             }
 
-            // Compressibility correction for phase-fraction equations
+            // Set the phase dilatation rates
             if (phase1.compressible())
             {
-                phase1.D(pEqnComp1 & p_rgh);
+                phase1.divU(-pEqnComp1 & p_rgh);
             }
             if (phase2.compressible())
             {
-                phase2.D(pEqnComp2 & p_rgh);
+                phase2.divU(-pEqnComp2 & p_rgh);
             }
 
             // Optionally relax pressure for velocity correction

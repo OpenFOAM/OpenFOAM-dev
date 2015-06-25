@@ -140,15 +140,15 @@ bool Foam::phaseModel::compressible() const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::phaseModel::D() const
+Foam::tmp<Foam::volScalarField> Foam::phaseModel::divU() const
 {
     return tmp<volScalarField>();
 }
 
 
-void Foam::phaseModel::D(const volScalarField& D)
+void Foam::phaseModel::divU(const volScalarField& divU)
 {
-    WarningIn("phaseModel::D(const volScalarField& D)")
+    WarningIn("phaseModel::divU(const volScalarField& divU)")
         << "Attempt to set the dilatation rate of an incompressible phase"
         << endl;
 }
