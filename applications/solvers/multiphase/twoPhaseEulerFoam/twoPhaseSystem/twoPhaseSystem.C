@@ -374,16 +374,19 @@ void Foam::twoPhaseSystem::solve()
     surfaceScalarField phic("phic", phi_);
     surfaceScalarField phir("phir", phi1 - phi2);
 
-    surfaceScalarField alpha1f(fvc::interpolate(max(alpha1, scalar(0))));
+    tmp<surfaceScalarField> alpha1alpha2f;
 
     if (pPrimeByA_.valid())
     {
+        alpha1alpha2f =
+            fvc::interpolate(max(alpha1, scalar(0)))
+           *fvc::interpolate(max(alpha2, scalar(0)));
+
         surfaceScalarField phiP
         (
             pPrimeByA_()*fvc::snGrad(alpha1, "bounded")*mesh_.magSf()
         );
 
-        phic += alpha1f*phiP;
         phir += phiP;
     }
 
@@ -520,7 +523,7 @@ void Foam::twoPhaseSystem::solve()
             fvScalarMatrix alpha1Eqn
             (
                 fvm::ddt(alpha1) - fvc::ddt(alpha1)
-              - fvm::laplacian(alpha1f*pPrimeByA_(), alpha1, "bounded")
+              - fvm::laplacian(alpha1alpha2f*pPrimeByA_(), alpha1, "bounded")
             );
 
             alpha1Eqn.relax();
