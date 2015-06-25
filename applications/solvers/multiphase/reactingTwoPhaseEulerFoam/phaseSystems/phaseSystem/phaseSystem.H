@@ -174,9 +174,6 @@ protected:
         //- Rate of change of pressure
         volScalarField dpdt_;
 
-        //- Dilatation
-        volScalarField dgdt_;
-
         //- Blending methods
         blendingMethodTable blendingMethods_;
 
@@ -365,12 +362,6 @@ public:
 
             //- Access the rate of change of the pressure
             inline volScalarField& dpdt();
-
-            //- Constant access the dilatation parameter
-            inline const volScalarField& dgdt() const;
-
-            //- Access the dilatation parameter
-            inline volScalarField& dgdt();
 
             //- Access a sub model between a phase pair
             template <class modelType>

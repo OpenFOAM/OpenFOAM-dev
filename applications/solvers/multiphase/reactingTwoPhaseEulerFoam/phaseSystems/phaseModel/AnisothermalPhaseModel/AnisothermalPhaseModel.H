@@ -54,6 +54,9 @@ class AnisothermalPhaseModel
 {
     // Private data
 
+        //- Dilatation
+        volScalarField D_;
+
         //- Kinetic energy
         volScalarField K_;
 
@@ -79,6 +82,18 @@ public:
 
         //- Return the enthalpy equation
         virtual tmp<fvScalarMatrix> heEqn();
+
+
+        // Compressibility (variable density)
+
+            //- Return true if the phase is compressible otherwise false
+            virtual bool compressible() const;
+
+            //- Phase dilatation rate ((alpha/rho)*Drho/Dt)
+            virtual tmp<volScalarField> D() const;
+
+            //- Set phase dilatation rate ((alpha/rho)*Drho/Dt)
+            virtual void D(const volScalarField& D);
 };
 
 

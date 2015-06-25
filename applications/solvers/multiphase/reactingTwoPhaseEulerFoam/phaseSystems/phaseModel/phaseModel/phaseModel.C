@@ -134,4 +134,24 @@ bool Foam::phaseModel::read()
 }
 
 
+bool Foam::phaseModel::compressible() const
+{
+    return false;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::phaseModel::D() const
+{
+    return tmp<volScalarField>();
+}
+
+
+void Foam::phaseModel::D(const volScalarField& D)
+{
+    WarningIn("phaseModel::D(const volScalarField& D)")
+        << "Attempt to set the dilatation rate of an incompressible phase"
+        << endl;
+}
+
+
 // ************************************************************************* //

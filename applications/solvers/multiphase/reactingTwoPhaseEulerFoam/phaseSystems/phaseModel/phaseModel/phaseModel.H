@@ -83,6 +83,7 @@ public:
     //- Runtime type information
     ClassName("phaseModel");
 
+
     // Declare runtime construction
 
         declareRunTimeSelectionTable
@@ -161,6 +162,18 @@ public:
 
         //- Read phase properties dictionary
         virtual bool read();
+
+
+        // Compressibility (variable density)
+
+            //- Return true if the phase is compressible otherwise false
+            virtual bool compressible() const;
+
+            //- Phase dilatation rate ((alpha/rho)*Drho/Dt)
+            virtual tmp<volScalarField> D() const;
+
+            //- Set phase dilatation rate ((alpha/rho)*Drho/Dt)
+            virtual void D(const volScalarField& D);
 
 
         // Thermo

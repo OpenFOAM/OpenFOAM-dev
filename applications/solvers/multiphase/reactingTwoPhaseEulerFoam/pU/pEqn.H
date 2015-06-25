@@ -76,7 +76,7 @@ tmp<surfaceScalarField> phiF2;
       + (fvc::interpolate(rAU1*F) & mesh.Sf())
     );
 
-    // Phase-1 dispersion, lift and wall-lubrication flux
+    // Phase-2 dispersion, lift and wall-lubrication flux
     phiF2 =
     (
       - Df2*snGradAlpha1
@@ -339,11 +339,14 @@ while (pimple.correct())
             }
 
             // Compressibility correction for phase-fraction equations
-            fluid.dgdt() =
-            (
-                alpha1*(pEqnComp2 & p_rgh)
-              - alpha2*(pEqnComp1 & p_rgh)
-            );
+            if (phase1.compressible())
+            {
+                phase1.D(pEqnComp1 & p_rgh);
+            }
+            if (phase2.compressible())
+            {
+                phase2.D(pEqnComp2 & p_rgh);
+            }
 
             // Optionally relax pressure for velocity correction
             p_rgh.relax();

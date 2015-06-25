@@ -323,11 +323,15 @@ while (pimple.correct())
             U2.correctBoundaryConditions();
             fvOptions.correct(U2);
 
-            fluid.dgdt() =
-            (
-                alpha1*(pEqnComp2 & p_rgh)
-              - alpha2*(pEqnComp1 & p_rgh)
-            );
+            // Compressibility correction for phase-fraction equations
+            if (phase1.compressible())
+            {
+                phase1.D(pEqnComp1 & p_rgh);
+            }
+            if (phase2.compressible())
+            {
+                phase2.D(pEqnComp2 & p_rgh);
+            }
         }
     }
 
