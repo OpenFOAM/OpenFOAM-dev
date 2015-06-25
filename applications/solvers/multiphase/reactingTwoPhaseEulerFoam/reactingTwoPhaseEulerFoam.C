@@ -94,8 +94,6 @@ int main(int argc, char *argv[])
             fluid.solve();
             fluid.correct();
 
-            #include "correctContErrs.H"
-
             #include "YEqns.H"
 
             if (faceMomentum)

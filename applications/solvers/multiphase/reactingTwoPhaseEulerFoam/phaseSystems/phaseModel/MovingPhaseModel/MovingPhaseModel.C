@@ -217,8 +217,11 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correct()
 
     this->fluid().MRF().correctBoundaryVelocity(U_);
 
+    volScalarField& rho = this->thermo().rho();
+
     continuityError_ =
-        fvc::ddt(*this, this->thermo().rho()) + fvc::div(alphaRhoPhi_);
+        fvc::ddt(*this, rho) + fvc::div(alphaRhoPhi_)
+      - (this->fluid().fvOptions()(*this, rho)&rho);
 }
 
 

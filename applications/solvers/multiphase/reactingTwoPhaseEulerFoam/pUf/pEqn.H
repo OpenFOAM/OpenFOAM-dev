@@ -93,7 +93,7 @@ tmp<surfaceScalarField> Ff2;
 while (pimple.correct())
 {
     // Update continuity errors due to temperature changes
-    #include "correctContErrs.H"
+    fluid.correct();
 
     surfaceScalarField rhof1(fvc::interpolate(rho1));
     surfaceScalarField rhof2(fvc::interpolate(rho2));

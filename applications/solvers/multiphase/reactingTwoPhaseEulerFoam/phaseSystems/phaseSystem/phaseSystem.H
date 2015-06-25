@@ -179,7 +179,7 @@ protected:
         IOMRFZoneList MRF_;
 
         //- Optional FV-options
-        fv::IOoptionList fvOptions_;
+        mutable fv::IOoptionList fvOptions_;
 
         //- Blending methods
         blendingMethodTable blendingMethods_;
@@ -371,7 +371,7 @@ public:
             inline const IOMRFZoneList& MRF() const;
 
             //- Optional FV-options
-            inline fv::IOoptionList& fvOptions();
+            inline fv::IOoptionList& fvOptions() const;
 
             //- Access a sub model between a phase pair
             template <class modelType>

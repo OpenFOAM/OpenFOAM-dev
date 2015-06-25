@@ -89,7 +89,7 @@ tmp<surfaceScalarField> phiF2;
 while (pimple.correct())
 {
     // Update continuity errors due to temperature changes
-    #include "correctContErrs.H"
+    fluid.correct();
 
     // Correct fixed-flux BCs to be consistent with the velocity BCs
     MRF.correctBoundaryFlux(U1, phi1);
