@@ -41,6 +41,8 @@ SourceFiles
 #include "phaseModel.H"
 #include "phasePair.H"
 #include "orderedPhasePair.H"
+#include "IOMRFZoneList.H"
+#include "fvIOoptionList.H"
 
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -55,7 +57,6 @@ class blendingMethod;
 template <class modelType> class BlendedInterfacialModel;
 class surfaceTensionModel;
 class aspectRatioModel;
-class IOMRFZoneList;
 
 /*---------------------------------------------------------------------------*\
                          Class phaseSystem Declaration
@@ -173,6 +174,12 @@ protected:
 
         //- Rate of change of pressure
         volScalarField dpdt_;
+
+        //- Optional MRF zones
+        IOMRFZoneList MRF_;
+
+        //- Optional FV-options
+        fv::IOoptionList fvOptions_;
 
         //- Blending methods
         blendingMethodTable blendingMethods_;
@@ -316,10 +323,7 @@ public:
         virtual tmp<volScalarField> dmdt(const phasePairKey& key) const = 0;
 
         //- Return the momentum transfer matrices
-        virtual autoPtr<momentumTransferTable> momentumTransfer
-        (
-            IOMRFZoneList& MRF
-        ) const = 0;
+        virtual autoPtr<momentumTransferTable> momentumTransfer() const = 0;
 
         //- Return the heat transfer matrices
         virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
@@ -362,6 +366,12 @@ public:
 
             //- Access the rate of change of the pressure
             inline volScalarField& dpdt();
+
+            //- Return MRF zones
+            inline const IOMRFZoneList& MRF() const;
+
+            //- Optional FV-options
+            inline fv::IOoptionList& fvOptions();
 
             //- Access a sub model between a phase pair
             template <class modelType>

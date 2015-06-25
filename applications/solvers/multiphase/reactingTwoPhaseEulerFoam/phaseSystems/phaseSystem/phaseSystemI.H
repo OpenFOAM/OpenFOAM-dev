@@ -55,4 +55,16 @@ inline Foam::volScalarField& Foam::phaseSystem::dpdt()
 }
 
 
+inline const Foam::IOMRFZoneList& Foam::phaseSystem::MRF() const
+{
+    return MRF_;
+}
+
+
+inline Foam::fv::IOoptionList& Foam::phaseSystem::fvOptions()
+{
+    return fvOptions_;
+}
+
+
 // ************************************************************************* //

@@ -142,10 +142,8 @@ public:
         ) const;
 
         //- Return the momentum transfer matrices
-        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer
-        (
-            IOMRFZoneList& mrfZones
-        ) const;
+        virtual autoPtr<phaseSystem::momentumTransferTable>
+            momentumTransfer() const;
 
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable>

@@ -37,7 +37,6 @@ Description
 #include "twoPhaseSystem.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "pimpleControl.H"
-#include "fvIOoptionList.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "HashPtrTable.H"
 
@@ -53,8 +52,6 @@ int main(int argc, char *argv[])
     pimpleControl pimple(mesh);
 
     #include "createFields.H"
-    #include "createMRF.H"
-    #include "createFvOptions.H"
     #include "initContinuityErrs.H"
     #include "readTimeControls.H"
     #include "CourantNos.H"
@@ -74,6 +71,9 @@ int main(int argc, char *argv[])
     );
 
     #include "pUf/createDDtU.H"
+
+    const IOMRFZoneList& MRF = fluid.MRF();
+    fv::IOoptionList& fvOptions = fluid.fvOptions();
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

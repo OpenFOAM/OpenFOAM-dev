@@ -42,12 +42,10 @@ License
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::generatePhi
-(
-    const word& phiName,
-    const volVectorField& U
-) const
+Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
 {
+    word phiName(IOobject::groupName("phi", this->name()));
+
     IOobject phiHeader
     (
         phiName,
@@ -60,22 +58,21 @@ Foam::MovingPhaseModel<BasePhaseModel>::generatePhi
     {
         Info<< "Reading face flux field " << phiName << endl;
 
-        return
-            tmp<surfaceScalarField>
+        return tmp<surfaceScalarField>
+        (
+            new surfaceScalarField
             (
-                new surfaceScalarField
+                IOobject
                 (
-                    IOobject
-                    (
-                        phiName,
-                        U.mesh().time().timeName(),
-                        U.mesh(),
-                        IOobject::MUST_READ,
-                        IOobject::AUTO_WRITE
-                    ),
-                    U.mesh()
-                )
-            );
+                    phiName,
+                    U.mesh().time().timeName(),
+                    U.mesh(),
+                    IOobject::MUST_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                U.mesh()
+            )
+        );
     }
     else
     {
@@ -142,14 +139,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         ),
         fluid.mesh()
     ),
-    phi_
-    (
-        generatePhi
-        (
-            IOobject::groupName("phi", this->name()),
-            U_
-        )
-    ),
+    phi_(phi(U_)),
     alphaPhi_
     (
         IOobject
@@ -224,6 +214,8 @@ template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::correct()
 {
     BasePhaseModel::correct();
+
+    this->fluid().MRF().correctBoundaryVelocity(U_);
 
     continuityError_ =
         fvc::ddt(*this, this->thermo().rho()) + fvc::div(alphaRhoPhi_);

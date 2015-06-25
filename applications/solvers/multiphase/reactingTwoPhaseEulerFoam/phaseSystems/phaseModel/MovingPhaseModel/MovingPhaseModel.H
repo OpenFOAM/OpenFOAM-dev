@@ -91,12 +91,8 @@ class MovingPhaseModel
 
     // Private static member functions
 
-        //- Generate the flux field
-        tmp<surfaceScalarField> generatePhi
-        (
-            const word& phiName,
-            const volVectorField& U
-        ) const;
+        //- Calculate and return the flux field
+        tmp<surfaceScalarField> phi(const volVectorField& U) const;
 
 
 public:

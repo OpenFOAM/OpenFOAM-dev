@@ -32,7 +32,6 @@ License
 #include "wallLubricationModel.H"
 #include "turbulentDispersionModel.H"
 
-#include "IOMRFZoneList.H"
 #include "HashPtrTable.H"
 
 #include "fvmDdt.H"
@@ -348,10 +347,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::D
 
 template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
-Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer
-(
-    IOMRFZoneList& MRF
-) const
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
 {
     // Create a momentum transfer matrix for each phase
     autoPtr<phaseSystem::momentumTransferTable> eqnsPtr
@@ -452,7 +448,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer
                   - fvm::Sp(fvc::div(phi), U)
                   - otherPhase->DUDt()
                 )
-              - MRF.DDt(Vm, U - otherPhase->U());
+              - this->MRF_.DDt(Vm, U - otherPhase->U());
 
             Swap(phase, otherPhase);
         }

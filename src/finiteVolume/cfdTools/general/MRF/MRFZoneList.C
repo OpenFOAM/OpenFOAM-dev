@@ -164,7 +164,7 @@ void Foam::MRFZoneList::addAcceleration
 Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
 (
     const volVectorField& U
-)
+) const
 {
     tmp<volVectorField> tacceleration
     (
@@ -195,7 +195,7 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
 (
     const volScalarField& rho,
     const volVectorField& U
-)
+) const
 {
     return rho*DDt(U);
 }

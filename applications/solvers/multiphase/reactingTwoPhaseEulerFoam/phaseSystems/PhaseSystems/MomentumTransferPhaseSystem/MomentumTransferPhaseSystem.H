@@ -171,10 +171,8 @@ public:
         virtual tmp<volScalarField> D(const phasePairKey& key) const;
 
         //- Return the momentum transfer matrices
-        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer
-        (
-            IOMRFZoneList& mrfZones
-        ) const;
+        virtual autoPtr<phaseSystem::momentumTransferTable>
+            momentumTransfer() const;
 
         //- Read base phaseProperties dictionary
         virtual bool read();

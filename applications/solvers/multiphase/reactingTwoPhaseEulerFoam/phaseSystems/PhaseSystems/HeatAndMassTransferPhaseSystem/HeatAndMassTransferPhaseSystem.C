@@ -171,13 +171,10 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::dmdt
 
 template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
-Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransfer
-(
-    IOMRFZoneList& MRF
-) const
+Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
 {
     autoPtr<phaseSystem::momentumTransferTable>
-        eqnsPtr(BasePhaseSystem::momentumTransfer(MRF));
+        eqnsPtr(BasePhaseSystem::momentumTransfer());
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 

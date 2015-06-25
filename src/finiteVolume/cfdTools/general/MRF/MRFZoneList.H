@@ -114,14 +114,14 @@ public:
         tmp<volVectorField> DDt
         (
             const volVectorField& U
-        );
+        ) const;
 
         //- Return the frame acceleration
         tmp<volVectorField> DDt
         (
             const volScalarField& rho,
             const volVectorField& U
-        );
+        ) const;
 
         //- Make the given absolute velocity relative within the MRF region
         void makeRelative(volVectorField& U) const;

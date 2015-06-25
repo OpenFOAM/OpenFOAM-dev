@@ -183,7 +183,10 @@ Foam::phaseSystem::phaseSystem
         ),
         mesh,
         dimensionedScalar("dpdt", dimPressure/dimTime, 0)
-    )
+    ),
+
+    MRF_(mesh_),
+    fvOptions_(mesh_)
 {
     // Blending methods
     forAllConstIter(dictionary, subDict("blending"), iter)
