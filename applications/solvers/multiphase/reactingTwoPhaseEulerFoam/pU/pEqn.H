@@ -39,7 +39,7 @@ tmp<surfaceScalarField> phiF2;
     volScalarField D(fluid.D());
 
     // Phase-1 turbulent dispersion and particle-pressure flux
-    surfaceScalarField Df1
+    tmp<surfaceScalarField> DbyA1
     (
         fvc::interpolate
         (
@@ -48,20 +48,13 @@ tmp<surfaceScalarField> phiF2;
     );
 
     // Phase-2 turbulent dispersion and particle-pressure flux
-    surfaceScalarField Df2
+    tmp<surfaceScalarField> DbyA2
     (
         fvc::interpolate
         (
             rAU2*(D + phase2.turbulence().pPrime())
         )
     );
-
-    // Cache the net diffusivity for implicit diffusion treatment in the
-    // phase-fraction equation
-    if (implicitPhasePressure)
-    {
-        fluid.pPrimeByA() = Df1 + Df2;
-    }
 
     // Lift and wall-lubrication forces
     volVectorField F(fluid.F());
@@ -72,16 +65,24 @@ tmp<surfaceScalarField> phiF2;
     // Phase-1 dispersion, lift and wall-lubrication flux
     phiF1 =
     (
-        Df1*snGradAlpha1
+        DbyA1()*snGradAlpha1
       + (fvc::interpolate(rAU1*F) & mesh.Sf())
     );
 
     // Phase-2 dispersion, lift and wall-lubrication flux
     phiF2 =
     (
-      - Df2*snGradAlpha1
+      - DbyA2()*snGradAlpha1
       - (fvc::interpolate(rAU2*F) & mesh.Sf())
     );
+
+    // Cache the phase diffusivities for implicit treatment in the
+    // phase-fraction equation
+    if (implicitPhasePressure)
+    {
+        phase1.DbyA(DbyA1);
+        phase2.DbyA(DbyA2);
+    }
 }
 
 

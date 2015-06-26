@@ -88,6 +88,10 @@ class MovingPhaseModel
         //- Continuity error
         volScalarField continuityError_;
 
+        //- Phase diffusivity divided by the momentum coefficient.
+        //  Used for implicit treatment of the phase pressure and dispersion
+        tmp<surfaceScalarField> DbyA_;
+
 
     // Private static member functions
 
@@ -123,6 +127,16 @@ public:
 
         //- Return the momentum equation
         virtual tmp<fvVectorMatrix> UEqn();
+
+
+        // Implicit phase pressure and dispersion support
+
+            //- Return the phase diffusivity divided by the momentum coefficient
+            virtual const surfaceScalarField& DbyA() const;
+
+            //- Set the phase diffusivity divided by the momentum coefficient
+            virtual void DbyA(const tmp<surfaceScalarField>& DbyA);
+
 
         // Momentum
 

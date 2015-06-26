@@ -190,9 +190,9 @@ void Foam::twoPhaseSystem::solve()
         tdgdt =
         (
             alpha2.dimensionedInternalField()
-           *phase1_.divU()().dimensionedInternalField()
+           *phase1_.divU().dimensionedInternalField()
           - alpha1.dimensionedInternalField()
-           *phase2_.divU()().dimensionedInternalField()
+           *phase2_.divU().dimensionedInternalField()
         );
     }
     else if (phase1_.compressible())
@@ -200,7 +200,7 @@ void Foam::twoPhaseSystem::solve()
         tdgdt =
         (
             alpha2.dimensionedInternalField()
-           *phase1_.divU()().dimensionedInternalField()
+           *phase1_.divU().dimensionedInternalField()
         );
     }
     else if (phase2_.compressible())
@@ -208,7 +208,7 @@ void Foam::twoPhaseSystem::solve()
         tdgdt =
         (
           - alpha1.dimensionedInternalField()
-           *phase2_.divU()().dimensionedInternalField()
+           *phase2_.divU().dimensionedInternalField()
         );
     }
 
@@ -218,20 +218,18 @@ void Foam::twoPhaseSystem::solve()
     surfaceScalarField phic("phic", phi);
     surfaceScalarField phir("phir", phi1 - phi2);
 
-    tmp<surfaceScalarField> alpha1alpha2f;
+    tmp<surfaceScalarField> alphaDbyA;
 
-    if (pPrimeByA_.valid())
+    if (notNull(phase1_.DbyA()) && notNull(phase2_.DbyA()))
     {
-        alpha1alpha2f =
+        surfaceScalarField DbyA(phase1_.DbyA() + phase2_.DbyA());
+
+        alphaDbyA =
             fvc::interpolate(max(alpha1, scalar(0)))
-           *fvc::interpolate(max(alpha2, scalar(0)));
+           *fvc::interpolate(max(alpha2, scalar(0)))
+           *DbyA;
 
-        surfaceScalarField phiP
-        (
-            pPrimeByA_()*fvc::snGrad(alpha1, "bounded")*mesh_.magSf()
-        );
-
-        phir += phiP;
+        phir += DbyA*fvc::snGrad(alpha1, "bounded")*mesh_.magSf();
     }
 
     for (int acorr=0; acorr<nAlphaCorr; acorr++)
@@ -367,12 +365,12 @@ void Foam::twoPhaseSystem::solve()
             phase1_.alphaPhi() = alphaPhic1;
         }
 
-        if (pPrimeByA_.valid())
+        if (alphaDbyA.valid())
         {
             fvScalarMatrix alpha1Eqn
             (
                 fvm::ddt(alpha1) - fvc::ddt(alpha1)
-              - fvm::laplacian(alpha1alpha2f*pPrimeByA_(), alpha1, "bounded")
+              - fvm::laplacian(alphaDbyA, alpha1, "bounded")
             );
 
             alpha1Eqn.relax();

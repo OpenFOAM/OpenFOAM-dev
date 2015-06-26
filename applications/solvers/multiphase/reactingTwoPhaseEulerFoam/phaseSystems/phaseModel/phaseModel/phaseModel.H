@@ -169,11 +169,20 @@ public:
             //- Return true if the phase is compressible otherwise false
             virtual bool compressible() const;
 
-            //- Phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual tmp<volScalarField> divU() const;
+            //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
+            virtual const volScalarField& divU() const;
 
-            //- Set phase dilatation rate (d(alpha)/dt + div(alpha*phi))
+            //- Set the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
             virtual void divU(const volScalarField& divU);
+
+
+        // Implicit phase pressure and dispersion support
+
+            //- Return the phase diffusivity divided by the momentum coefficient
+            virtual const surfaceScalarField& DbyA() const;
+
+            //- Set the phase diffusivity divided by the momentum coefficient
+            virtual void DbyA(const tmp<surfaceScalarField>& DbyA);
 
 
         // Thermo

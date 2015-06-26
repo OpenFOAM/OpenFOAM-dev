@@ -65,10 +65,4 @@ inline const Foam::phaseModel& Foam::twoPhaseSystem::otherPhase
 }
 
 
-inline Foam::tmp<Foam::surfaceScalarField>& Foam::twoPhaseSystem::pPrimeByA()
-{
-    return pPrimeByA_;
-}
-
-
 // ************************************************************************* //

@@ -63,9 +63,6 @@ protected:
         //- Phase model 2
         phaseModel& phase2_;
 
-        //- Optional dispersion diffusivity
-        tmp<surfaceScalarField> pPrimeByA_;
-
 
 public:
 
@@ -173,9 +170,6 @@ public:
 
             //- Return the virtual mass model for the given phase
             const virtualMassModel& virtualMass(const phaseModel& phase) const;
-
-            //- Return non-const access to the dispersion diffusivity
-            inline tmp<surfaceScalarField>& pPrimeByA();
 };
 
 

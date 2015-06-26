@@ -139,7 +139,7 @@ bool Foam::AnisothermalPhaseModel<BasePhaseModel>::compressible() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
+const Foam::volScalarField&
 Foam::AnisothermalPhaseModel<BasePhaseModel>::divU() const
 {
     return divU_;

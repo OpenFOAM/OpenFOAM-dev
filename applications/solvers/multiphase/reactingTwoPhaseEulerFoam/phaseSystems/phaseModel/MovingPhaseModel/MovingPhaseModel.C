@@ -258,6 +258,31 @@ Foam::MovingPhaseModel<BasePhaseModel>::UEqn()
 
 
 template<class BasePhaseModel>
+const Foam::surfaceScalarField&
+Foam::MovingPhaseModel<BasePhaseModel>::DbyA() const
+{
+    if (DbyA_.valid())
+    {
+        return DbyA_;
+    }
+    else
+    {
+        return surfaceScalarField::null();
+    }
+}
+
+
+template<class BasePhaseModel>
+void Foam::MovingPhaseModel<BasePhaseModel>::DbyA
+(
+    const tmp<surfaceScalarField>& DbyA
+)
+{
+    DbyA_ = DbyA;
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::volVectorField>
 Foam::MovingPhaseModel<BasePhaseModel>::U() const
 {

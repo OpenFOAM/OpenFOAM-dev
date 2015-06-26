@@ -69,11 +69,12 @@ tmp<surfaceScalarField> Ff2;
         fvc::interpolate(D + phase2.turbulence().pPrime())
     );
 
-    // Cache the net diffusivity for implicit diffusion treatment in the
+    // Cache the phase diffusivities for implicit treatment in the
     // phase-fraction equation
     if (implicitPhasePressure)
     {
-        fluid.pPrimeByA() = rAUf1*Df1 + rAUf2*Df2;
+        phase1.DbyA(rAUf1*Df1);
+        phase2.DbyA(rAUf2*Df2);
     }
 
     // Lift and wall-lubrication forces

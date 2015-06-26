@@ -90,7 +90,7 @@ public:
             virtual bool compressible() const;
 
             //- Phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual tmp<volScalarField> divU() const;
+            virtual const volScalarField& divU() const;
 
             //- Set phase dilatation rate (d(alpha)/dt + div(alpha*phi))
             virtual void divU(const volScalarField& divU);
