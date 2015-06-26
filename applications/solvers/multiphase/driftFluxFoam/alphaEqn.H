@@ -6,11 +6,7 @@
     {
         fvScalarMatrix alpha1Eqn
         (
-            #ifdef LTSSOLVE
-            fv::localEulerDdtScheme<scalar>(mesh, rDeltaT.name()).fvmDdt(alpha1)
-            #else
             fv::EulerDdtScheme<scalar>(mesh).fvmDdt(alpha1)
-            #endif
           + fv::gaussConvectionScheme<scalar>
             (
                 mesh,
@@ -34,16 +30,6 @@
         {
             Info<< "Applying the previous iteration correction flux" << endl;
 
-            #ifdef LTSSOLVE
-            MULES::LTScorrect
-            (
-                alpha1,
-                phiAlpha,
-                tphiAlphaCorr0(),
-                mixture.alphaMax(),
-                0
-            );
-            #else
             MULES::correct
             (
                 alpha1,
@@ -52,7 +38,6 @@
                 mixture.alphaMax(),
                 0
             );
-            #endif
 
             phiAlpha += tphiAlphaCorr0();
         }
@@ -84,16 +69,6 @@
             tmp<surfaceScalarField> tphiAlphaCorr(tphiAlphaUn() - phiAlpha);
             volScalarField alpha10("alpha10", alpha1);
 
-            #ifdef LTSSOLVE
-            MULES::LTScorrect
-            (
-                alpha1,
-                tphiAlphaUn(),
-                tphiAlphaCorr(),
-                mixture.alphaMax(),
-                0
-            );
-            #else
             MULES::correct
             (
                 alpha1,
@@ -102,7 +77,6 @@
                 mixture.alphaMax(),
                 0
             );
-            #endif
 
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)
@@ -119,16 +93,6 @@
         {
             phiAlpha = tphiAlphaUn;
 
-            #ifdef LTSSOLVE
-            MULES::explicitLTSSolve
-            (
-                alpha1,
-                phi,
-                phiAlpha,
-                mixture.alphaMax(),
-                0
-            );
-            #else
             MULES::explicitSolve
             (
                 alpha1,
@@ -137,7 +101,6 @@
                 mixture.alphaMax(),
                 0
             );
-            #endif
         }
     }
 

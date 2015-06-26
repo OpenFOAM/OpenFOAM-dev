@@ -94,29 +94,6 @@ void correct
     const scalar psiMin
 );
 
-template<class RhoType, class SpType, class SuType>
-void LTScorrect
-(
-    const RhoType& rho,
-    volScalarField& psi,
-    const surfaceScalarField& phi,
-    surfaceScalarField& phiCorr,
-    const SpType& Sp,
-    const SuType& Su,
-    const scalar psiMax,
-    const scalar psiMin
-);
-
-void LTScorrect
-(
-    volScalarField& psi,
-    const surfaceScalarField& phi,
-    surfaceScalarField& phiCorr,
-    const scalar psiMax,
-    const scalar psiMin
-);
-
-
 template<class RdeltaTType, class RhoType, class SpType, class SuType>
 void limiterCorr
 (

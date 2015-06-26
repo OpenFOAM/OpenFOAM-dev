@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,27 +37,6 @@ void Foam::MULES::explicitSolve
 )
 {
     explicitSolve
-    (
-        geometricOneField(),
-        psi,
-        phi,
-        phiPsi,
-        zeroField(), zeroField(),
-        psiMax, psiMin
-    );
-}
-
-
-void Foam::MULES::explicitLTSSolve
-(
-    volScalarField& psi,
-    const surfaceScalarField& phi,
-    surfaceScalarField& phiPsi,
-    const scalar psiMax,
-    const scalar psiMin
-)
-{
-    explicitLTSSolve
     (
         geometricOneField(),
         psi,

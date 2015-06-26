@@ -72,19 +72,41 @@
         phiAlpha1 -= phiAlpha1BD;
 
         // Calculate the limiter for alpha1
-        MULES::limiter
-        (
-            allLambda,
-            1.0/runTime.deltaT().value(),
-            geometricOneField(),
-            alpha1,
-            phiAlpha1BD,
-            phiAlpha1,
-            zeroField(),
-            zeroField(),
-            1,
-            0
-        );
+        if (LTS)
+        {
+            const volScalarField& rDeltaT =
+                mesh.objectRegistry::lookupObject<volScalarField>("rSubDeltaT");
+
+            MULES::limiter
+            (
+                allLambda,
+                rDeltaT,
+                geometricOneField(),
+                alpha1,
+                phiAlpha1BD,
+                phiAlpha1,
+                zeroField(),
+                zeroField(),
+                1,
+                0
+            );
+        }
+        else
+        {
+            MULES::limiter
+            (
+                allLambda,
+                1.0/runTime.deltaT().value(),
+                geometricOneField(),
+                alpha1,
+                phiAlpha1BD,
+                phiAlpha1,
+                zeroField(),
+                zeroField(),
+                1,
+                0
+            );
+        }
 
         // Create the complete flux for alpha2
         surfaceScalarField phiAlpha2
@@ -113,19 +135,41 @@
         phiAlpha2 -= phiAlpha2BD;
 
         // Further limit the limiter for alpha2
-        MULES::limiter
-        (
-            allLambda,
-            1.0/runTime.deltaT().value(),
-            geometricOneField(),
-            alpha2,
-            phiAlpha2BD,
-            phiAlpha2,
-            zeroField(),
-            zeroField(),
-            1,
-            0
-        );
+        if (LTS)
+        {
+            const volScalarField& rDeltaT =
+                mesh.objectRegistry::lookupObject<volScalarField>("rSubDeltaT");
+
+            MULES::limiter
+            (
+                allLambda,
+                rDeltaT,
+                geometricOneField(),
+                alpha2,
+                phiAlpha2BD,
+                phiAlpha2,
+                zeroField(),
+                zeroField(),
+                1,
+                0
+            );
+        }
+        else
+        {
+            MULES::limiter
+            (
+                allLambda,
+                1.0/runTime.deltaT().value(),
+                geometricOneField(),
+                alpha2,
+                phiAlpha2BD,
+                phiAlpha2,
+                zeroField(),
+                zeroField(),
+                1,
+                0
+            );
+        }
 
         // Construct the limited fluxes
         phiAlpha1 = phiAlpha1BD + lambda*phiAlpha1;

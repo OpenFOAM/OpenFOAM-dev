@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     LTSInterFoam;
+application     interFoam;
 
 startFrom       startTime;
 

@@ -26,6 +26,7 @@ License
 #include "MULES.H"
 #include "upwind.H"
 #include "fvcSurfaceIntegrate.H"
+#include "localEulerDdtScheme.H"
 #include "slicedSurfaceFields.H"
 #include "wedgeFvPatch.H"
 #include "syncTools.H"
@@ -107,63 +108,54 @@ void Foam::MULES::explicitSolve
 )
 {
     const fvMesh& mesh = psi.mesh();
-    const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
 
     psi.correctBoundaryConditions();
 
-    limit
-    (
-        rDeltaT,
-        rho,
-        psi,
-        phi,
-        phiPsi,
-        Sp,
-        Su,
-        psiMax,
-        psiMin,
-        false
-    );
+    bool LTS =
+        word(mesh.ddtScheme("default"))
+     == fv::localEulerDdtScheme<scalar>::typeName;
 
-    explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
-}
+    if (LTS)
+    {
+        const volScalarField& rDeltaT =
+            mesh.objectRegistry::lookupObject<volScalarField>("rSubDeltaT");
 
+        limit
+        (
+            rDeltaT,
+            rho,
+            psi,
+            phi,
+            phiPsi,
+            Sp,
+            Su,
+            psiMax,
+            psiMin,
+            false
+        );
 
-template<class RhoType, class SpType, class SuType>
-void Foam::MULES::explicitLTSSolve
-(
-    const RhoType& rho,
-    volScalarField& psi,
-    const surfaceScalarField& phi,
-    surfaceScalarField& phiPsi,
-    const SpType& Sp,
-    const SuType& Su,
-    const scalar psiMax,
-    const scalar psiMin
-)
-{
-    const fvMesh& mesh = psi.mesh();
+        explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
+    }
+    else
+    {
+        const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
 
-    const volScalarField& rDeltaT =
-        mesh.objectRegistry::lookupObject<volScalarField>("rSubDeltaT");
+        limit
+        (
+            rDeltaT,
+            rho,
+            psi,
+            phi,
+            phiPsi,
+            Sp,
+            Su,
+            psiMax,
+            psiMin,
+            false
+        );
 
-    psi.correctBoundaryConditions();
-
-    limit
-    (
-        rDeltaT,
-        rho,
-        psi,
-        phi,
-        phiPsi,
-        Sp,
-        Su,
-        psiMax,
-        psiMin,
-        false
-    );
-
-    explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
+        explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
+    }
 }
 
 

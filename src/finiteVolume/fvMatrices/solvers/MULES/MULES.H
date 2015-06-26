@@ -103,29 +103,6 @@ void explicitSolve
     const scalar psiMin
 );
 
-template<class RhoType, class SpType, class SuType>
-void explicitLTSSolve
-(
-    const RhoType& rho,
-    volScalarField& psi,
-    const surfaceScalarField& phiBD,
-    surfaceScalarField& phiPsi,
-    const SpType& Sp,
-    const SuType& Su,
-    const scalar psiMax,
-    const scalar psiMin
-);
-
-void explicitLTSSolve
-(
-    volScalarField& psi,
-    const surfaceScalarField& phiBD,
-    surfaceScalarField& phiPsi,
-    const scalar psiMax,
-    const scalar psiMin
-);
-
-
 template<class RdeltaTType, class RhoType, class SpType, class SuType>
 void limiter
 (

@@ -15,7 +15,7 @@
     (
         1/dimensionedScalar("maxDeltaT", dimTime, maxDeltaT),
         fvc::surfaceSum(amaxSf)().dimensionedInternalField()
-       /(2*maxCo*mesh.V())
+       /((2*maxCo)*mesh.V())
     );
 
     // Update tho boundary values of the reciprocal time-step

@@ -1,4 +1,7 @@
 {
+    volScalarField& rDeltaT = trDeltaT();
+    volScalarField& rSubDeltaT = trSubDeltaT();
+
     const dictionary& pimpleDict = pimple.dict();
 
     scalar maxCo
@@ -132,7 +135,8 @@
             << ", " << gMax(1/rDeltaT.internalField()) << endl;
     }
 
-    #include "alphaControls.H"
+    const dictionary& alphaControls = mesh.solverDict(alpha1.name());
+    label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
 
     rSubDeltaT = rDeltaT*nAlphaSubCycles;
 }

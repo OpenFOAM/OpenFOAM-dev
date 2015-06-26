@@ -45,6 +45,8 @@ Description
 #include "fvIOoptionList.H"
 #include "CorrectPhi.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,7 +62,6 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createMRF.H"
     #include "createFvOptions.H"
-    #include "readTimeControls.H"
 
     volScalarField rAU
     (
@@ -78,8 +79,14 @@ int main(int argc, char *argv[])
 
     #include "correctPhi.H"
     #include "createUf.H"
-    #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
+    #include "createRDeltaT.H"
+
+    if (!LTS)
+    {
+        #include "readTimeControls.H"
+        #include "CourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     Info<< "\nStarting time loop\n" << endl;
@@ -87,10 +94,17 @@ int main(int argc, char *argv[])
     while (runTime.run())
     {
         #include "readControls.H"
-        #include "alphaCourantNo.H"
-        #include "CourantNo.H"
 
-        #include "setDeltaT.H"
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
+        else
+        {
+            #include "CourantNo.H"
+            #include "alphaCourantNo.H"
+            #include "setDeltaT.H"
+        }
 
         runTime++;
 

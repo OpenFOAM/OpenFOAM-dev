@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,27 +37,6 @@ void Foam::MULES::correct
 )
 {
     correct
-    (
-        geometricOneField(),
-        psi,
-        phi,
-        phiPsiCorr,
-        zeroField(), zeroField(),
-        psiMax, psiMin
-    );
-}
-
-
-void Foam::MULES::LTScorrect
-(
-    volScalarField& psi,
-    const surfaceScalarField& phi,
-    surfaceScalarField& phiPsiCorr,
-    const scalar psiMax,
-    const scalar psiMin
-)
-{
-    LTScorrect
     (
         geometricOneField(),
         psi,

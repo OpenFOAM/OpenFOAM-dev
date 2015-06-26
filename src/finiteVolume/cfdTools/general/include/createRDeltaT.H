@@ -1,5 +1,5 @@
 bool LTS =
-    word(mesh.ddtScheme("ddt(rho)"))
+    word(mesh.ddtScheme("default"))
  == fv::localEulerDdtScheme<scalar>::typeName;
 
 tmp<volScalarField> trDeltaT;
