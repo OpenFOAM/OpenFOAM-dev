@@ -1,6 +1,5 @@
 {
     volScalarField& rDeltaT = trDeltaT();
-    volScalarField& rSubDeltaT = trSubDeltaT();
 
     scalar rDeltaTSmoothingCoeff
     (
@@ -27,9 +26,4 @@
     Info<< "Flow time scale min/max = "
         << gMin(1/rDeltaT.internalField())
         << ", " << gMax(1/rDeltaT.internalField()) << endl;
-
-    const dictionary& alphaControls = mesh.solverDict(alpha1.name());
-    label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
-
-    rSubDeltaT = rDeltaT*nAlphaSubCycles;
 }
