@@ -1,0 +1,35 @@
+{
+    volScalarField& rDeltaT = trDeltaT();
+    volScalarField& rSubDeltaT = trSubDeltaT();
+
+    scalar rDeltaTSmoothingCoeff
+    (
+        runTime.controlDict().lookupOrDefault<scalar>
+        (
+            "rDeltaTSmoothingCoeff",
+            0.02
+        )
+    );
+
+    // Set the reciprocal time-step from the local Courant number
+    rDeltaT.dimensionedInternalField() = max
+    (
+        1/dimensionedScalar("maxDeltaT", dimTime, maxDeltaT),
+        fvc::surfaceSum(max(mag(phi1), mag(phi2)))().dimensionedInternalField()
+       /((2*maxCo)*mesh.V())
+    );
+
+    // Update tho boundary values of the reciprocal time-step
+    rDeltaT.correctBoundaryConditions();
+
+    fvc::smooth(rDeltaT, rDeltaTSmoothingCoeff);
+
+    Info<< "Flow time scale min/max = "
+        << gMin(1/rDeltaT.internalField())
+        << ", " << gMax(1/rDeltaT.internalField()) << endl;
+
+    const dictionary& alphaControls = mesh.solverDict(alpha1.name());
+    label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
+
+    rSubDeltaT = rDeltaT*nAlphaSubCycles;
+}

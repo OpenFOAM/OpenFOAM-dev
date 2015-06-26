@@ -38,6 +38,8 @@ Description
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "pimpleControl.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,11 +52,16 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
+    #include "createRDeltaT.H"
     #include "createFields.H"
     #include "initContinuityErrs.H"
-    #include "readTimeControls.H"
-    #include "CourantNos.H"
-    #include "setInitialDeltaT.H"
+
+    if (!LTS)
+    {
+        #include "readTimeControls.H"
+        #include "CourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
 
     Switch faceMomentum
     (
@@ -78,8 +85,16 @@ int main(int argc, char *argv[])
     while (runTime.run())
     {
         #include "readTimeControls.H"
-        #include "CourantNos.H"
-        #include "setDeltaT.H"
+
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
+        else
+        {
+            #include "CourantNos.H"
+            #include "setDeltaT.H"
+        }
 
         runTime++;
         Info<< "Time = " << runTime.timeName() << nl << endl;
