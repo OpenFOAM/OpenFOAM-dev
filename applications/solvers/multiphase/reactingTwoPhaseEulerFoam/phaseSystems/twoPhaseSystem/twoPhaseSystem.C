@@ -175,6 +175,10 @@ void Foam::twoPhaseSystem::solve()
     label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
     label nAlphaCorr(readLabel(alphaControls.lookup("nAlphaCorr")));
 
+    bool LTS =
+        word(mesh.ddtScheme("default"))
+     == fv::localEulerDdtScheme<scalar>::typeName;
+
     word alphaScheme("div(phi," + alpha1.name() + ')');
     word alpharScheme("div(phir," + alpha1.name() + ')');
 
@@ -316,6 +320,22 @@ void Foam::twoPhaseSystem::solve()
 
         if (nAlphaSubCycles > 1)
         {
+            tmp<volScalarField> trSubDeltaT;
+
+            if (LTS)
+            {
+                const volScalarField& rDeltaT =
+                    mesh.objectRegistry::lookupObject<volScalarField>
+                    (
+                        "rDeltaT"
+                    );
+
+                trSubDeltaT = tmp<volScalarField>
+                (
+                    new volScalarField("rSubDeltaT", rDeltaT*nAlphaSubCycles)
+                );
+            }
+
             for
             (
                 subCycle<volScalarField> alphaSubCycle(alpha1, nAlphaSubCycles);

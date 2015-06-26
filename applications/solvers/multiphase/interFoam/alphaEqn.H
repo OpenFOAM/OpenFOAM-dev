@@ -82,7 +82,7 @@
               ? fv::localEulerDdtScheme<scalar>
                 (
                     mesh,
-                    trSubDeltaT().name()
+                    nAlphaSubCycles > 1 ? "rSubDeltaT" : "rDeltaT"
                 ).fvmDdt(alpha1)
               : fv::EulerDdtScheme<scalar>(mesh).fvmDdt(alpha1)
             )

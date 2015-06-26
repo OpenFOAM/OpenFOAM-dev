@@ -118,7 +118,10 @@ void Foam::MULES::explicitSolve
     if (LTS)
     {
         const volScalarField& rDeltaT =
-            mesh.objectRegistry::lookupObject<volScalarField>("rSubDeltaT");
+            mesh.objectRegistry::lookupObject<volScalarField>
+            (
+                mesh.time().subCycling() ? "rSubDeltaT" : "rDeltaT"
+            );
 
         limit
         (

@@ -13,6 +13,16 @@ if (nAlphaSubCycles > 1)
         dimensionedScalar("0", rhoPhi.dimensions(), 0)
     );
 
+    tmp<volScalarField> trSubDeltaT;
+
+    if (LTS)
+    {
+        trSubDeltaT = tmp<volScalarField>
+        (
+            new volScalarField("rSubDeltaT", trDeltaT()*nAlphaSubCycles)
+        );
+    }
+
     for
     (
         subCycle<volScalarField> alphaSubCycle(alpha1, nAlphaSubCycles);
