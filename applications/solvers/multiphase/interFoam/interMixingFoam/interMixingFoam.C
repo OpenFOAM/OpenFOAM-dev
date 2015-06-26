@@ -52,12 +52,12 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
+    #include "createRDeltaT.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createMRF.H"
     #include "createFvOptions.H"
     #include "correctPhi.H"
-    #include "createRDeltaT.H"
 
     if (!LTS)
     {
