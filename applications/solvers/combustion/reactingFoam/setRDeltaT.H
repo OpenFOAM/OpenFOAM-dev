@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 {
+    volScalarField& rDeltaT = trDeltaT();
+
     const dictionary& pimpleDict = pimple.dict();
 
     // Maximum flow Courant number

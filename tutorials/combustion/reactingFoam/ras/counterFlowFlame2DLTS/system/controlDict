@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     LTSReactingFoam;
+application     reactingFoam;
 
 startFrom       startTime;
 
