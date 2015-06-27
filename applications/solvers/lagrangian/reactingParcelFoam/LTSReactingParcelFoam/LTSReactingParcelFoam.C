@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 
         parcels.evolve();
 
-        #include "setrDeltaT.H"
+        #include "setRDeltaT.H"
 
         #include "rhoEqn.H"
 

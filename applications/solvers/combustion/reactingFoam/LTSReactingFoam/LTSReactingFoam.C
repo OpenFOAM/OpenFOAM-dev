@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        #include "setrDeltaT.H"
+        #include "setRDeltaT.H"
 
         #include "rhoEqn.H"
 

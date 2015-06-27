@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
         coalParcels.evolve();
         limestoneParcels.evolve();
 
-        #include "setrDeltaT.H"
+        #include "setRDeltaT.H"
 
         #include "rhoEqn.H"
 
