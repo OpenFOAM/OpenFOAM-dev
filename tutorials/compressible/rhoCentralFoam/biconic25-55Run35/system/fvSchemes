@@ -19,7 +19,7 @@ fluxScheme      Kurganov;
 
 ddtSchemes
 {
-    default         Euler;
+    default         localEuler rDeltaT;
 }
 
 gradSchemes

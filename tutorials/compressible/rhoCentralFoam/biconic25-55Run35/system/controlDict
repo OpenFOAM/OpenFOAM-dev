@@ -19,21 +19,21 @@ application     rhoCentralFoam;
 
 startFrom       latestTime;
 
-startTime       0.005;
+startTime       0;
 
 stopAt          endTime;
 
-endTime         1e-07;
+endTime         1e-3;
 
-deltaT          1e-10;
+deltaT          1e-7;
 
 writeControl    adjustableRunTime;
 
-writeInterval   1e-07;
+writeInterval   5e-5;
 
 cycleWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
 writePrecision  15;
 
@@ -43,11 +43,13 @@ timeFormat      general;
 
 timePrecision   6;
 
+runTimeModifiable true;
+
 adjustTimeStep  yes;
 
-maxCo           0.3;
+maxCo           0.5;
 
-maxDeltaT       1;
+maxDeltaT       2e-8;
 
 
 // ************************************************************************* //
