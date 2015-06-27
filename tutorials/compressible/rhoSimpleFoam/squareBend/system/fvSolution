@@ -54,6 +54,7 @@ SIMPLE
     rhoMin          0.1;
     rhoMax          1.0;
     transonic       yes;
+    consistent      yes;
 
     residualControl
     {

@@ -60,9 +60,15 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Pressure-velocity SIMPLE corrector
+        #include "UEqn.H"
+        #include "EEqn.H"
+
+        if (simple.consistent())
         {
-            #include "UEqn.H"
-            #include "EEqn.H"
+            #include "pcEqn.H"
+        }
+        else
+        {
             #include "pEqn.H"
         }
 
