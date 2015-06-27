@@ -44,6 +44,8 @@ Description
 #include "pimpleControl.H"
 #include "CorrectPhi.H"
 #include "fvIOoptionList.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,17 +54,23 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "initContinuityErrs.H"
 
     pimpleControl pimple(mesh);
 
-    #include "readControls.H"
+    #include "createRDeltaT.H"
+    #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createMRF.H"
     #include "createFvOptions.H"
     #include "createRhoUf.H"
     #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
+
+    if (!LTS)
+    {
+        #include "readTimeControls.H"
+        #include "CourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,8 +90,15 @@ int main(int argc, char *argv[])
                 fvc::div(fvc::absolute(phi, rho, U))
             );
 
-            #include "compressibleCourantNo.H"
-            #include "setDeltaT.H"
+            if (LTS)
+            {
+                #include "setRDeltaT.H"
+            }
+            else
+            {
+                #include "compressibleCourantNo.H"
+                #include "setDeltaT.H"
+            }
 
             runTime++;
 

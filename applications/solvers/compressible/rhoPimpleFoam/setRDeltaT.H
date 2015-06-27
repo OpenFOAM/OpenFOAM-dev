@@ -1,4 +1,6 @@
 {
+    volScalarField& rDeltaT = trDeltaT();
+
     const dictionary& pimpleDict = pimple.dict();
 
     scalar maxCo

@@ -107,79 +107,55 @@ edges
 (
 );
 
-boundary
+patches
 (
     // is there no way of defining all my 'defaultFaces' to be 'wall'?
-    front
-    {
-        type wall;
-        faces
-        (
-            // inlet block
-            frontQuad(in1, join1, join2, in2)
-            // outlet block
-            frontQuad(poro1, out1, out2, poro2)
-        );
-    }
+    wall front
+    (
+    // inlet block
+    frontQuad(in1, join1, join2, in2)
+    // outlet block
+    frontQuad(poro1, out1, out2, poro2)
+    )
 
-    back
-    {
-        type wall;
-        faces
-        (
-            // inlet block
-            backQuad(in1, join1, join2, in2)
-            // outlet block
-            backQuad(poro1, out1, out2, poro2)
-        );
-    }
+    wall back
+    (
+    // inlet block
+    backQuad(in1, join1, join2, in2)
+    // outlet block
+    backQuad(poro1, out1, out2, poro2)
+    )
 
-    walls
-    {
-        type wall;
-        faces
-        (
-            // inlet block
-            quad2D(in1, join1)
-            quad2D(join2, in2)
-            // outlet block
-            quad2D(poro1, out1)
-            quad2D(out2, poro2)
-        );
-    }
+    wall walls
+    (
+    // inlet block
+    quad2D(in1, join1)
+    quad2D(join2, in2)
+    // outlet block
+    quad2D(poro1, out1)
+    quad2D(out2, poro2)
+    )
 
-    porosityWall
-    {
-        type wall;
-        faces
-        (
-            // porosity block
-            frontQuad(join1, poro1, poro2, join2)
-            // porosity block
-            backQuad(join1, poro1, poro2, join2)
-            // porosity block
-            quad2D(join1, poro1)
-            quad2D(poro2, join2)
-        );
-    }
+    wall porosityWall
+    (
+    // porosity block
+    frontQuad(join1, poro1, poro2, join2)
+    // porosity block
+    backQuad(join1, poro1, poro2, join2)
+    // porosity block
+    quad2D(join1, poro1)
+    quad2D(poro2, join2)
+    )
 
-    inlet
-    {
-        type patch;
-        faces
-        (
-            quad2D(in2, in1)
-        );
-    }
+    patch inlet
+    (
+    quad2D(in2, in1)
+    )
 
-    outlet
-    {
-        type patch;
-        faces
-        (
-            quad2D(out2, out1)
-        );
-    }
+    patch outlet
+    (
+    quad2D(out2, out1)
+    )
 );
 
 mergePatchPairs

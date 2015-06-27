@@ -17,39 +17,39 @@ FoamFile
 
 dimensions      [1 -1 -1 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 1e-3;
 
 boundaryField
 {
     front
     {
         type            compressible::alphatWallFunction;
-        value           uniform 0;
+        value           $internalField;
     }
     back
     {
         type            compressible::alphatWallFunction;
-        value           uniform 0;
+        value           $internalField;
     }
     walls
     {
         type            compressible::alphatWallFunction;
-        value           uniform 0;
+        value           $internalField;
     }
     porosityWall
     {
         type            compressible::alphatWallFunction;
-        value           uniform 0;
+        value           $internalField;
     }
     inlet
     {
         type            calculated;
-        value           uniform 0;
+        value           $internalField;
     }
     outlet
     {
         type            calculated;
-        value           uniform 0;
+        value           $internalField;
     }
 }
 

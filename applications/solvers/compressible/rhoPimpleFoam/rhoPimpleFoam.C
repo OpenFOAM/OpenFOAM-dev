@@ -39,6 +39,8 @@ Description
 #include "bound.H"
 #include "pimpleControl.H"
 #include "fvIOoptionList.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,10 +52,18 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
+    #include "createRDeltaT.H"
+    #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createMRF.H"
     #include "createFvOptions.H"
-    #include "initContinuityErrs.H"
+
+    if (!LTS)
+    {
+        #include "readTimeControls.H"
+        #include "CourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,8 +72,16 @@ int main(int argc, char *argv[])
     while (runTime.run())
     {
         #include "readTimeControls.H"
-        #include "compressibleCourantNo.H"
-        #include "setDeltaT.H"
+
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
+        else
+        {
+            #include "compressibleCourantNo.H"
+            #include "setDeltaT.H"
+        }
 
         runTime++;
 

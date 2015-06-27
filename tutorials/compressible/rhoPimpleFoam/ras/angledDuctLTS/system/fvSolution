@@ -21,70 +21,48 @@ solvers
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-07;
-        relTol          0.01;
+        tolerance       1e-06;
+        relTol          0.1;
     }
 
     pFinal
     {
         $p;
-        tolerance       1e-07;
-        relTol          0;
+        tolerance       1e-06;
+        relTol          0.1;
     }
 
     "(rho|U|h|k|epsilon|omega)"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-06;
+        tolerance       1e-05;
         relTol          0.1;
     }
 
     "(rho|U|h|k|epsilon|omega)Final"
     {
         $U;
-        tolerance       1e-06;
-        relTol          0;
+        tolerance       1e-05;
+        relTol          0.1;
     }
+
 }
 
 PIMPLE
 {
-    momentumPredictor   yes;
-    transonic           no;
-    nOuterCorrectors    50;
-    nCorrectors         1;
+    momentumPredictor yes;
+    nOuterCorrectors  1;
+    nCorrectors       1;
     nNonOrthogonalCorrectors 0;
-    consistent          yes;
 
-    rhoMin          0.5;
-    rhoMax          2.0;
+    rhoMin            0.5;
+    rhoMax            2.0;
 
-    residualControl
-    {
-        "(U|k|epsilon)"
-        {
-            relTol          0;
-            tolerance       0.0001;
-        }
-    }
-
-    turbOnFinalIterOnly off;
-}
-
-relaxationFactors
-{
-    fields
-    {
-        "p.*"           0.9;
-        "rho.*"         1;
-    }
-    equations
-    {
-        "U.*"           0.9;
-        "h.*"           0.7;
-        "(k|epsilon|omega).*" 0.8;
-    }
+    maxCo             0.2;
+    rDeltaTSmoothingCoeff 0.1;
+    rDeltaTDampingCoeff 1;
+    maxDeltaT         1;
 }
 
 
