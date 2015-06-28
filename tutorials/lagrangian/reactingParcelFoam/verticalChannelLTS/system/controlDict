@@ -15,27 +15,27 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     LTSReactingParcelFoam;
+application     reactingParcelFoam;
 
-startFrom       startTime;
+startFrom       latestTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         2000;
+endTime         300;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   10;
 
-purgeWrite      0;
+purgeWrite      20;
 
 writeFormat     ascii;
 
-writePrecision  6;
+writePrecision  10;
 
 writeCompression uncompressed;
 
@@ -45,6 +45,28 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-adjustTimeStep  yes;
+
+functions
+{
+    faceSource1
+    {
+        type            faceSource;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        enabled         yes;
+        outputControl   outputTime;
+        log             yes;
+        valueOutput     no;
+        source          patch;
+        sourceName      outlet;
+        operation       weightedAverage;
+        weightField     phi;
+        fields
+        (
+            H2O
+            T
+        );
+    }
+}
+
 
 // ************************************************************************* //

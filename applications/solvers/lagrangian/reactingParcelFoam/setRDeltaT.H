@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 {
+    volScalarField& rDeltaT = trDeltaT();
+
     const dictionary& pimpleDict = pimple.dict();
 
     // Maximum flow Courant number
@@ -71,14 +73,12 @@ License
     }
 
     // Reaction source time scale
-    if (alphaTemp < 1.0)
     {
         volScalarField::DimensionedInternalField rDeltaTT
         (
             mag
             (
-               (coalParcels.hsTrans() + limestoneParcels.hsTrans())
-              /(mesh.V()*runTime.deltaT())
+               parcels.hsTrans()/(mesh.V()*runTime.deltaT())
              + combustion->Sh()()
             )
            /(

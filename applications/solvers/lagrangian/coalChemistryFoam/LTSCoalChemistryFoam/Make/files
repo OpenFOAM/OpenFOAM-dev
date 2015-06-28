@@ -1,3 +1,0 @@
-LTSCoalChemistryFoam.C
-
-EXE = $(FOAM_APPBIN)/LTSCoalChemistryFoam
