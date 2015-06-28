@@ -117,11 +117,7 @@ void Foam::MULES::explicitSolve
 
     if (LTS)
     {
-        const volScalarField& rDeltaT =
-            mesh.objectRegistry::lookupObject<volScalarField>
-            (
-                mesh.time().subCycling() ? "rSubDeltaT" : "rDeltaT"
-            );
+        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
 
         limit
         (

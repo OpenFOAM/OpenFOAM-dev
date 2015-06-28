@@ -17,10 +17,8 @@ if (nAlphaSubCycles > 1)
 
     if (LTS)
     {
-        trSubDeltaT = tmp<volScalarField>
-        (
-            new volScalarField("rSubDeltaT", trDeltaT()*nAlphaSubCycles)
-        );
+        trSubDeltaT =
+            fv::localEulerDdt::localRSubDeltaT(mesh, nAlphaSubCycles);
     }
 
     for

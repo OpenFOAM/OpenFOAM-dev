@@ -77,11 +77,7 @@ int main(int argc, char *argv[])
     {
         #include "readTimeControls.H"
 
-        if (LTS)
-        {
-            #include "setRDeltaT.H"
-        }
-        else
+        if (!LTS)
         {
             #include "compressibleCourantNo.H"
             #include "setDeltaT.H"
@@ -92,6 +88,11 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         parcels.evolve();
+
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
 
         #include "rhoEqn.H"
 

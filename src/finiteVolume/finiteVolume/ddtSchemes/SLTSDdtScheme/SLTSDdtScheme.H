@@ -33,7 +33,8 @@ Description
     using transient codes where local time-stepping is preferably to
     under-relaxation for transport consistency reasons.
 
-    See also CoEulerDdtScheme.
+See Also
+    Foam::fv::CoEulerDdtScheme
 
 SourceFiles
     SLTSDdtScheme.C

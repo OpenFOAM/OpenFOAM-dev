@@ -17,7 +17,7 @@ FoamFile
 
 ddtSchemes
 {
-    default         localEuler rDeltaT;
+    default         localEuler;
 }
 
 gradSchemes

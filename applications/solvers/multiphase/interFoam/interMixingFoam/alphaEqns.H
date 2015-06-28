@@ -75,7 +75,7 @@
         if (LTS)
         {
             const volScalarField& rDeltaT =
-                mesh.objectRegistry::lookupObject<volScalarField>("rSubDeltaT");
+                fv::localEulerDdt::localRDeltaT(mesh);
 
             MULES::limiter
             (
@@ -138,7 +138,7 @@
         if (LTS)
         {
             const volScalarField& rDeltaT =
-                mesh.objectRegistry::lookupObject<volScalarField>("rSubDeltaT");
+                fv::localEulerDdt::localRDeltaT(mesh);
 
             MULES::limiter
             (

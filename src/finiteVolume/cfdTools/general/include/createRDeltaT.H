@@ -14,7 +14,7 @@ if (LTS)
         (
             IOobject
             (
-                "rDeltaT",
+                fv::localEulerDdt::rDeltaTName,
                 runTime.timeName(),
                 mesh,
                 IOobject::READ_IF_PRESENT,

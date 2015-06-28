@@ -95,11 +95,7 @@ void Foam::MULES::correct
 
     if (LTS)
     {
-        const volScalarField& rDeltaT =
-            mesh.objectRegistry::lookupObject<volScalarField>
-            (
-                mesh.time().subCycling() ? "rSubDeltaT" : "rDeltaT"
-            );
+        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
 
         limitCorr
         (

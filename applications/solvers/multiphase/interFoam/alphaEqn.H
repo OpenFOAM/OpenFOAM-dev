@@ -79,11 +79,7 @@
         (
             (
                 LTS
-              ? fv::localEulerDdtScheme<scalar>
-                (
-                    mesh,
-                    nAlphaSubCycles > 1 ? "rSubDeltaT" : "rDeltaT"
-                ).fvmDdt(alpha1)
+              ? fv::localEulerDdtScheme<scalar>(mesh).fvmDdt(alpha1)
               : fv::EulerDdtScheme<scalar>(mesh).fvmDdt(alpha1)
             )
           + fv::gaussConvectionScheme<scalar>

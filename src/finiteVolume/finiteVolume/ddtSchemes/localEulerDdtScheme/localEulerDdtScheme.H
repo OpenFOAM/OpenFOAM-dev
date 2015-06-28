@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,14 +26,15 @@ Class
 
 Description
     Local time-step first-order Euler implicit/explicit ddt.
-    The reciprocal of the local time-step field is looked-up from the
-    database with the name provided.
 
-    This scheme should only be used for steady-state computations
-    using transient codes where local time-stepping is preferably to
-    under-relaxation for transport consistency reasons.
+    The reciprocal of the local time-step field is looked-up from the database.
 
-    See also CoEulerDdtScheme.
+    This scheme should only be used for steady-state computations using
+    transient codes where local time-stepping is preferably to under-relaxation
+    for transport consistency reasons.
+
+See Also
+    Foam::fv::CoEulerDdtScheme
 
 SourceFiles
     localEulerDdtScheme.C
@@ -57,20 +58,50 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
+                       Class localEulerDdt Declaration
+\*---------------------------------------------------------------------------*/
+
+class localEulerDdt
+{
+public:
+
+    //- Name of the reciprocal local time-step field
+    static word rDeltaTName;
+
+    //- Name of the reciprocal local sub-cycling time-step field
+    static word rSubDeltaTName;
+
+    // Constructors
+
+        localEulerDdt()
+        {}
+
+    // Member Functions
+
+        //- Return the reciprocal of the local time-step
+        //  looked-up from the objectRegistry
+        static const volScalarField& localRDeltaT(const fvMesh& mesh);
+
+        //- Calculate and return the reciprocal of the local sub-cycling
+        //  time-step
+        static tmp<volScalarField> localRSubDeltaT
+        (
+            const fvMesh& mesh,
+            const label nAlphaSubCycles
+        );
+};
+
+
+/*---------------------------------------------------------------------------*\
                        Class localEulerDdtScheme Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 class localEulerDdtScheme
 :
+    public localEulerDdt,
     public fv::ddtScheme<Type>
 {
-    // Private Data
-
-        //- Name of the reciprocal local time-step field
-        word rDeltaTName_;
-
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -91,18 +122,16 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and name of the rDeltaT field
-        localEulerDdtScheme(const fvMesh& mesh, const word& rDeltaTName)
+        //- Construct from mesh
+        localEulerDdtScheme(const fvMesh& mesh)
         :
-            ddtScheme<Type>(mesh),
-            rDeltaTName_(rDeltaTName)
+            ddtScheme<Type>(mesh)
         {}
 
         //- Construct from mesh and Istream
         localEulerDdtScheme(const fvMesh& mesh, Istream& is)
         :
-            ddtScheme<Type>(mesh, is),
-            rDeltaTName_(is)
+            ddtScheme<Type>(mesh, is)
         {}
 
 

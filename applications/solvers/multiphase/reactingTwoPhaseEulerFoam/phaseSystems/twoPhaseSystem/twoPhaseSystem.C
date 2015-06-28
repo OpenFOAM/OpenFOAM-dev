@@ -324,16 +324,8 @@ void Foam::twoPhaseSystem::solve()
 
             if (LTS)
             {
-                const volScalarField& rDeltaT =
-                    mesh.objectRegistry::lookupObject<volScalarField>
-                    (
-                        "rDeltaT"
-                    );
-
-                trSubDeltaT = tmp<volScalarField>
-                (
-                    new volScalarField("rSubDeltaT", rDeltaT*nAlphaSubCycles)
-                );
+                trSubDeltaT =
+                    fv::localEulerDdt::localRSubDeltaT(mesh, nAlphaSubCycles);
             }
 
             for
