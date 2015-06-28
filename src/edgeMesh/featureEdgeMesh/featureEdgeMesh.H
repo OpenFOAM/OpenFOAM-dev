@@ -27,8 +27,8 @@ Class
 Description
     edgeMesh + IO.
 
-    See also extendedFeatureEdgeMesh type which stores additional classification
-    of features.
+See Also
+    Foam::extendedFeatureEdgeMesh
 
 SourceFiles
     featureEdgeMesh.C
