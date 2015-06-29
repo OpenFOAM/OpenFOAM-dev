@@ -22,25 +22,26 @@ boundaryField
 {
     inlet
     {
-        type               fixedFluxPressure;
-        value              $internalField;
+        type            fixedFluxPressure;
+        value           $internalField;
     }
 
     outlet
     {
-        type               fixedValue;
-        value              $internalField;
+        type            prghPressure;
+        p               $internalField;
+        value           $internalField;
     }
 
     walls
     {
-        type               fixedFluxPressure;
-        value              $internalField;
+        type            fixedFluxPressure;
+        value           $internalField;
     }
 
     frontAndBackPlanes
     {
-        type               empty;
+        type            empty;
     }
 }
 

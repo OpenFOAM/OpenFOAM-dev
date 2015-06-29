@@ -27,7 +27,8 @@ boundaryField
     }
     outlet
     {
-        type               fixedValue;
+        type               prghPressure;
+        p                  $internalField;
         value              $internalField;
     }
     walls

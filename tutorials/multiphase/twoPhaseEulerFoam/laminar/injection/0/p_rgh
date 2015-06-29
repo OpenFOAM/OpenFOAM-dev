@@ -29,8 +29,8 @@ boundaryField
 
     walls
     {
-        type               fixedFluxPressure;
-        value              $internalField;
+        type            fixedFluxPressure;
+        value           $internalField;
     }
 }
 
