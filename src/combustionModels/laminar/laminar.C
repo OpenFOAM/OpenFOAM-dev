@@ -78,9 +78,7 @@ void Foam::combustionModels::laminar<Type>::correct()
     {
         if (integrateReactionRate_)
         {
-            word ddtScheme(this->mesh().ddtScheme("Yi"));
-
-            if (ddtScheme == fv::localEulerDdtScheme<scalar>::typeName)
+            if (fv::localEulerDdt::enabled(this->mesh()))
             {
                 const scalarField& rDeltaT =
                     fv::localEulerDdt::localRDeltaT(this->mesh());

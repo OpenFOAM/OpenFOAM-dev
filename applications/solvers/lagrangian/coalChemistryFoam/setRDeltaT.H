@@ -73,7 +73,6 @@ License
     }
 
     // Reaction source time scale
-    if (alphaTemp < 1.0)
     {
         volScalarField::DimensionedInternalField rDeltaTT
         (

@@ -37,6 +37,7 @@ See Also
     Foam::fv::CoEulerDdtScheme
 
 SourceFiles
+    localEulerDdt.C
     localEulerDdtScheme.C
     localEulerDdtSchemes.C
 
@@ -71,12 +72,17 @@ public:
     //- Name of the reciprocal local sub-cycling time-step field
     static word rSubDeltaTName;
 
+
     // Constructors
 
         localEulerDdt()
         {}
 
+
     // Member Functions
+
+        //- Return true if LTS is enabled
+        static bool enabled(const fvMesh& mesh);
 
         //- Return the reciprocal of the local time-step
         //  looked-up from the objectRegistry

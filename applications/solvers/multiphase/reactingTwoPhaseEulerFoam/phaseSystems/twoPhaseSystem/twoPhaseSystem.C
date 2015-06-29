@@ -175,9 +175,7 @@ void Foam::twoPhaseSystem::solve()
     label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
     label nAlphaCorr(readLabel(alphaControls.lookup("nAlphaCorr")));
 
-    bool LTS =
-        word(mesh.ddtScheme("default"))
-     == fv::localEulerDdtScheme<scalar>::typeName;
+    bool LTS = fv::localEulerDdt::enabled(mesh);
 
     word alphaScheme("div(phi," + alpha1.name() + ')');
     word alpharScheme("div(phir," + alpha1.name() + ')');

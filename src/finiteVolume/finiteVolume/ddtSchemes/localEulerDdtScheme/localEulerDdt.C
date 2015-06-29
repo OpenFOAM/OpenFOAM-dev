@@ -33,6 +33,14 @@ Foam::word Foam::fv::localEulerDdt::rSubDeltaTName("rSubDeltaTName");
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+bool Foam::fv::localEulerDdt::enabled(const fvMesh& mesh)
+{
+    return
+        word(mesh.ddtScheme("default"))
+     == fv::localEulerDdtScheme<scalar>::typeName;
+}
+
+
 const Foam::volScalarField& Foam::fv::localEulerDdt::localRDeltaT
 (
     const fvMesh& mesh

@@ -89,11 +89,7 @@ void Foam::MULES::correct
 {
     const fvMesh& mesh = psi.mesh();
 
-    bool LTS =
-        word(mesh.ddtScheme("default"))
-     == fv::localEulerDdtScheme<scalar>::typeName;
-
-    if (LTS)
+    if (fv::localEulerDdt::enabled(mesh))
     {
         const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
 
