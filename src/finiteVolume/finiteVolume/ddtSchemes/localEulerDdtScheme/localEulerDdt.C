@@ -46,7 +46,7 @@ const Foam::volScalarField& Foam::fv::localEulerDdt::localRDeltaT
     const fvMesh& mesh
 )
 {
-    return mesh.objectRegistry::template lookupObject<volScalarField>
+    return mesh.objectRegistry::lookupObject<volScalarField>
     (
         mesh.time().subCycling() ? rSubDeltaTName : rDeltaTName
     );
@@ -65,7 +65,7 @@ Foam::tmp<Foam::volScalarField> Foam::fv::localEulerDdt::localRSubDeltaT
         (
             rSubDeltaTName,
             nAlphaSubCycles
-           *mesh.objectRegistry::template lookupObject<volScalarField>
+           *mesh.objectRegistry::lookupObject<volScalarField>
             (
                 rDeltaTName
             )
