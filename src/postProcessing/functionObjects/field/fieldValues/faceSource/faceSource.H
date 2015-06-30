@@ -97,6 +97,7 @@ Description
        average       | ensemble average
        weightedAverage | weighted average
        areaAverage   | area weighted average
+       weightedAreaAverage | weighted area average
        areaIntegrate | area integral
        min           | minimum
        max           | maximum
@@ -190,6 +191,7 @@ public:
             opAverage,
             opWeightedAverage,
             opAreaAverage,
+            opWeightedAreaAverage,
             opAreaIntegrate,
             opMin,
             opMax,
@@ -199,7 +201,7 @@ public:
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 14> operationTypeNames_;
+        static const NamedEnum<operationType, 15> operationTypeNames_;
 
 
 private:

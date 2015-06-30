@@ -85,6 +85,7 @@ Description
        average       | ensemble average
        weightedAverage | weighted average
        volAverage    | volume weighted average
+       weightedVolAverage | weighted volume average
        volIntegrate  | volume integral
        min           | minimum
        max           | maximum
@@ -149,6 +150,7 @@ public:
             opAverage,
             opWeightedAverage,
             opVolAverage,
+            opWeightedVolAverage,
             opVolIntegrate,
             opMin,
             opMax,
@@ -156,7 +158,7 @@ public:
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 10> operationTypeNames_;
+        static const NamedEnum<operationType, 11> operationTypeNames_;
 
 
 private:

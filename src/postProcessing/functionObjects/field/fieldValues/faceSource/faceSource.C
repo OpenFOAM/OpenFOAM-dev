@@ -48,7 +48,7 @@ namespace Foam
 
 
     template<>
-    const char* NamedEnum<fieldValues::faceSource::operationType, 14>::names[] =
+    const char* NamedEnum<fieldValues::faceSource::operationType, 15>::names[] =
     {
         "none",
         "sum",
@@ -58,6 +58,7 @@ namespace Foam
         "average",
         "weightedAverage",
         "areaAverage",
+        "weightedAreaAverage",
         "areaIntegrate",
         "min",
         "max",
@@ -77,7 +78,7 @@ namespace Foam
 const Foam::NamedEnum<Foam::fieldValues::faceSource::sourceType, 3>
     Foam::fieldValues::faceSource::sourceTypeNames_;
 
-const Foam::NamedEnum<Foam::fieldValues::faceSource::operationType, 14>
+const Foam::NamedEnum<Foam::fieldValues::faceSource::operationType, 15>
     Foam::fieldValues::faceSource::operationTypeNames_;
 
 
