@@ -23,15 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "pressureGradientExplicitSource.H"
+#include "meanVelocityForce.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::fv::pressureGradientExplicitSource::read(const dictionary& dict)
+bool Foam::fv::meanVelocityForce::read(const dictionary& dict)
 {
     notImplemented
     (
-        "bool Foam::fv::pressureGradientExplicitSource::read"
+        "bool Foam::fv::meanVelocityForce::read"
         "("
             "const dictionary&"
         ") const"

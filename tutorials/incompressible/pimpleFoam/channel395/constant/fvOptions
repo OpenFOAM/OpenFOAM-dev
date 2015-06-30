@@ -17,10 +17,10 @@ FoamFile
 
 momentumSource
 {
-    type            pressureGradientExplicitSource;
+    type            meanVelocityForce;
     active          yes;
 
-    pressureGradientExplicitSourceCoeffs
+    meanVelocityForceCoeffs
     {
         selectionMode   all;
 

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::pressureGradientExplicitSource
+    Foam::fv::meanVelocityForce
 
 Description
     Creates a pressure gradient source
@@ -32,23 +32,24 @@ Description
     \heading Source usage
     Example usage:
     \verbatim
-    pressureGradientExplicitSourceCoeffs
+    meanVelocityForceCoeffs
     {
         fieldNames  (U);                        // name of velocity field
         Ubar        (10.0 0 0);                 // desired average velocity
         gradPini    gradPini [0 2 -2 0 0] 0;    // initial pressure gradient
         flowDir     (1 0 0);                    // flow direction
+        relaxation  0.2;                        // Optional relaxation factor
     }
     \endverbatim
 
 
 SourceFiles
-    pressureGradientExplicitSource.C
+    meanVelocityForce.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef pressureGradientExplicitSource_H
-#define pressureGradientExplicitSource_H
+#ifndef meanVelocityForce_H
+#define meanVelocityForce_H
 
 #include "autoPtr.H"
 #include "topoSetSource.H"
@@ -65,10 +66,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-               Class pressureGradientExplicitSource Declaration
+               Class meanVelocityForce Declaration
 \*---------------------------------------------------------------------------*/
 
-class pressureGradientExplicitSource
+class meanVelocityForce
 :
     public cellSetOption
 {
@@ -86,6 +87,9 @@ class pressureGradientExplicitSource
         //- Flow direction
         vector flowDir_;
 
+        //- Relaxation factor
+        scalar relaxation_;
+
         //- Matrix 1/A coefficients field pointer
         autoPtr<volScalarField> invAPtr_;
 
@@ -99,22 +103,22 @@ class pressureGradientExplicitSource
         void update(fvMatrix<vector>& eqn);
 
         //- Disallow default bitwise copy construct
-        pressureGradientExplicitSource(const pressureGradientExplicitSource&);
+        meanVelocityForce(const meanVelocityForce&);
 
         //- Disallow default bitwise assignment
-        void operator=(const pressureGradientExplicitSource&);
+        void operator=(const meanVelocityForce&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("pressureGradientExplicitSource");
+    TypeName("meanVelocityForce");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        pressureGradientExplicitSource
+        meanVelocityForce
         (
             const word& sourceName,
             const word& modelType,

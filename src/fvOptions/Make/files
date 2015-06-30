@@ -20,8 +20,8 @@ derivedSources=sources/derived
 $(derivedSources)/actuationDiskSource/actuationDiskSource.C
 $(derivedSources)/effectivenessHeatExchangerSource/effectivenessHeatExchangerSource.C
 $(derivedSources)/explicitPorositySource/explicitPorositySource.C
-$(derivedSources)/pressureGradientExplicitSource/pressureGradientExplicitSource.C
-$(derivedSources)/pressureGradientExplicitSource/pressureGradientExplicitSourceIO.C
+$(derivedSources)/meanVelocityForce/meanVelocityForce.C
+$(derivedSources)/meanVelocityForce/meanVelocityForceIO.C
 $(derivedSources)/radialActuationDiskSource/radialActuationDiskSource.C
 $(derivedSources)/rotorDiskSource/rotorDiskSource.C
 $(derivedSources)/rotorDiskSource/bladeModel/bladeModel.C

@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "pressureGradientExplicitSource.H"
+#include "meanVelocityForce.H"
 #include "fvMatrices.H"
 #include "DimensionedField.H"
 #include "IFstream.H"
@@ -35,12 +35,12 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(pressureGradientExplicitSource, 0);
+    defineTypeNameAndDebug(meanVelocityForce, 0);
 
     addToRunTimeSelectionTable
     (
         option,
-        pressureGradientExplicitSource,
+        meanVelocityForce,
         dictionary
     );
 }
@@ -49,7 +49,7 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::pressureGradientExplicitSource::writeProps
+void Foam::fv::meanVelocityForce::writeProps
 (
     const scalar gradP
 ) const
@@ -77,7 +77,7 @@ void Foam::fv::pressureGradientExplicitSource::writeProps
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::pressureGradientExplicitSource::pressureGradientExplicitSource
+Foam::fv::meanVelocityForce::meanVelocityForce
 (
     const word& sourceName,
     const word& modelType,
@@ -90,6 +90,7 @@ Foam::fv::pressureGradientExplicitSource::pressureGradientExplicitSource
     gradP0_(0.0),
     dGradP_(0.0),
     flowDir_(Ubar_/mag(Ubar_)),
+    relaxation_(coeffs_.lookupOrDefault<scalar>("relaxation", 1.0)),
     invAPtr_(NULL)
 {
     coeffs_.lookup("fieldNames") >> fieldNames_;
@@ -98,8 +99,8 @@ Foam::fv::pressureGradientExplicitSource::pressureGradientExplicitSource
     {
         FatalErrorIn
         (
-            "Foam::fv::pressureGradientExplicitSource::"
-            "pressureGradientExplicitSource"
+            "Foam::fv::meanVelocityForce::"
+            "meanVelocityForce"
             "("
                 "const word&, "
                 "const word&, "
@@ -131,7 +132,7 @@ Foam::fv::pressureGradientExplicitSource::pressureGradientExplicitSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::pressureGradientExplicitSource::correct(volVectorField& U)
+void Foam::fv::meanVelocityForce::correct(volVectorField& U)
 {
     const scalarField& rAU = invAPtr_().internalField();
 
@@ -155,9 +156,13 @@ void Foam::fv::pressureGradientExplicitSource::correct(volVectorField& U)
     magUbarAve /= V_;
     rAUave /= V_;
 
+    // magUbarAve =
+    //     gSum((flowDir_ & U.boundaryField()[0])*mesh_.boundary()[0].magSf())
+    //    /gSum(mesh_.boundary()[0].magSf());
+
     // Calculate the pressure gradient increment needed to adjust the average
     // flow-rate to the desired value
-    dGradP_ = (mag(Ubar_) - magUbarAve)/rAUave;
+    dGradP_ = relaxation_*(mag(Ubar_) - magUbarAve)/rAUave;
 
     // Apply correction to velocity field
     forAll(cells_, i)
@@ -175,7 +180,7 @@ void Foam::fv::pressureGradientExplicitSource::correct(volVectorField& U)
 }
 
 
-void Foam::fv::pressureGradientExplicitSource::addSup
+void Foam::fv::meanVelocityForce::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldI
@@ -203,7 +208,7 @@ void Foam::fv::pressureGradientExplicitSource::addSup
 }
 
 
-void Foam::fv::pressureGradientExplicitSource::addSup
+void Foam::fv::meanVelocityForce::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
@@ -214,7 +219,7 @@ void Foam::fv::pressureGradientExplicitSource::addSup
 }
 
 
-void Foam::fv::pressureGradientExplicitSource::constrain
+void Foam::fv::meanVelocityForce::constrain
 (
     fvMatrix<vector>& eqn,
     const label
