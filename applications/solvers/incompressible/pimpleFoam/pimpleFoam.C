@@ -30,7 +30,7 @@ Description
 
     Sub-models include:
     - turbulence modelling, i.e. laminar, RAS or LES
-    - run-time selectable finite volume options, e.g. MRF, explicit porosity
+    - run-time selectable MRF and finite volume options, e.g. explicit porosity
 
 \*---------------------------------------------------------------------------*/
 

@@ -27,7 +27,9 @@ Application
 Description
     Transient solver for incompressible flow.
 
-    Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
+    Sub-models include:
+    - turbulence modelling, i.e. laminar, RAS or LES
+    - run-time selectable MRF and finite volume options, e.g. explicit porosity
 
 \*---------------------------------------------------------------------------*/
 
@@ -35,6 +37,7 @@ Description
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
 #include "pisoControl.H"
+#include "fvIOoptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,6 +50,8 @@ int main(int argc, char *argv[])
     pisoControl piso(mesh);
 
     #include "createFields.H"
+    #include "createMRF.H"
+    #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -61,61 +66,12 @@ int main(int argc, char *argv[])
 
         // Pressure-velocity PISO corrector
         {
-            // Momentum predictor
-            fvVectorMatrix UEqn
-            (
-                fvm::ddt(U)
-              + fvm::div(phi, U)
-              + turbulence->divDevReff(U)
-            );
-
-            UEqn.relax();
-
-            if (piso.momentumPredictor())
-            {
-                solve(UEqn == -fvc::grad(p));
-            }
+            #include "UEqn.H"
 
             // --- PISO loop
             while (piso.correct())
             {
-                volScalarField rAU(1.0/UEqn.A());
-
-                volVectorField HbyA("HbyA", U);
-                HbyA = rAU*UEqn.H();
-                surfaceScalarField phiHbyA
-                (
-                    "phiHbyA",
-                    (fvc::interpolate(HbyA) & mesh.Sf())
-                  + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
-                );
-
-                adjustPhi(phiHbyA, U, p);
-
-                // Non-orthogonal pressure corrector loop
-                while (piso.correctNonOrthogonal())
-                {
-                    // Pressure corrector
-
-                    fvScalarMatrix pEqn
-                    (
-                        fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
-                    );
-
-                    pEqn.setReference(pRefCell, pRefValue);
-
-                    pEqn.solve(mesh.solver(p.select(piso.finalInnerIter())));
-
-                    if (piso.finalNonOrthogonalIter())
-                    {
-                        phi = phiHbyA - pEqn.flux();
-                    }
-                }
-
-                #include "continuityErrs.H"
-
-                U = HbyA - rAU*fvc::grad(p);
-                U.correctBoundaryConditions();
+                #include "pEqn.H"
             }
         }
 
