@@ -132,33 +132,50 @@ Foam::fv::meanVelocityForce::meanVelocityForce
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::meanVelocityForce::correct(volVectorField& U)
+Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
+(
+    const volVectorField& U
+) const
 {
-    const scalarField& rAU = rAPtr_().internalField();
-
-    // Integrate flow variables over cell set
     scalar magUbarAve = 0.0;
-    scalar rAUave = 0.0;
+
     const scalarField& cv = mesh_.V();
     forAll(cells_, i)
     {
         label cellI = cells_[i];
         scalar volCell = cv[cellI];
         magUbarAve += (flowDir_ & U[cellI])*volCell;
+    }
+
+    reduce(magUbarAve, sumOp<scalar>());
+
+    magUbarAve /= V_;
+
+    return magUbarAve;
+}
+
+
+void Foam::fv::meanVelocityForce::correct(volVectorField& U)
+{
+    const scalarField& rAU = rAPtr_().internalField();
+
+    // Integrate flow variables over cell set
+    scalar rAUave = 0.0;
+    const scalarField& cv = mesh_.V();
+    forAll(cells_, i)
+    {
+        label cellI = cells_[i];
+        scalar volCell = cv[cellI];
         rAUave += rAU[cellI]*volCell;
     }
 
     // Collect across all processors
-    reduce(magUbarAve, sumOp<scalar>());
     reduce(rAUave, sumOp<scalar>());
 
     // Volume averages
-    magUbarAve /= V_;
     rAUave /= V_;
 
-    // magUbarAve =
-    //     gSum((flowDir_ & U.boundaryField()[0])*mesh_.boundary()[0].magSf())
-    //    /gSum(mesh_.boundary()[0].magSf());
+    scalar magUbarAve = this->magUbarAve(U);
 
     // Calculate the pressure gradient increment needed to adjust the average
     // flow-rate to the desired value
