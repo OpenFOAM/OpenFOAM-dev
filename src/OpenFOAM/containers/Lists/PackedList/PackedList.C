@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,14 +54,14 @@ License
 template<unsigned nBits>
 unsigned int Foam::PackedList<nBits>::count() const
 {
-    register unsigned int c = 0;
+    unsigned int c = 0;
 
     if (size_)
     {
         const label packLen = packedLength();
         for (label i = 0; i < packLen; ++i)
         {
-            register unsigned int bits = StorageList::operator[](i);
+            unsigned int bits = StorageList::operator[](i);
             COUNT_PACKEDBITS(c, bits);
         }
     }
@@ -282,7 +282,7 @@ Foam::Istream& Foam::PackedList<nBits>::read(Istream& is)
             {
                 if (delimiter == token::BEGIN_LIST)
                 {
-                    for (register label i=0; i<sz; ++i)
+                    for (label i=0; i<sz; ++i)
                     {
                         lst[i] = lst.readValue(is);
 

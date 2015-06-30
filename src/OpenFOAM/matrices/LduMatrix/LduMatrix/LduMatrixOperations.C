@@ -37,7 +37,7 @@ void Foam::LduMatrix<Type, DType, LUType>::sumDiag()
     const unallocLabelList& l = lduAddr().lowerAddr();
     const unallocLabelList& u = lduAddr().upperAddr();
 
-    for (register label face=0; face<l.size(); face++)
+    for (label face=0; face<l.size(); face++)
     {
         Diag[l[face]] += Lower[face];
         Diag[u[face]] += Upper[face];
@@ -55,7 +55,7 @@ void Foam::LduMatrix<Type, DType, LUType>::negSumDiag()
     const unallocLabelList& l = lduAddr().lowerAddr();
     const unallocLabelList& u = lduAddr().upperAddr();
 
-    for (register label face=0; face<l.size(); face++)
+    for (label face=0; face<l.size(); face++)
     {
         Diag[l[face]] -= Lower[face];
         Diag[u[face]] -= Upper[face];
@@ -75,7 +75,7 @@ void Foam::LduMatrix<Type, DType, LUType>::sumMagOffDiag
     const unallocLabelList& l = lduAddr().lowerAddr();
     const unallocLabelList& u = lduAddr().upperAddr();
 
-    for (register label face = 0; face < l.size(); face++)
+    for (label face = 0; face < l.size(); face++)
     {
         sumOff[u[face]] += cmptMag(Lower[face]);
         sumOff[l[face]] += cmptMag(Upper[face]);
@@ -106,9 +106,9 @@ Foam::LduMatrix<Type, DType, LUType>::H(const Field<Type>& psi) const
         const LUType* __restrict__ lowerPtr = lower().begin();
         const LUType* __restrict__ upperPtr = upper().begin();
 
-        register const label nFaces = upper().size();
+        const label nFaces = upper().size();
 
-        for (register label face=0; face<nFaces; face++)
+        for (label face=0; face<nFaces; face++)
         {
             HpsiPtr[uPtr[face]] -= lowerPtr[face]*psiPtr[lPtr[face]];
             HpsiPtr[lPtr[face]] -= upperPtr[face]*psiPtr[uPtr[face]];
@@ -142,7 +142,7 @@ Foam::LduMatrix<Type, DType, LUType>::faceH(const Field<Type>& psi) const
     tmp<Field<Type> > tfaceHpsi(new Field<Type> (Lower.size()));
     Field<Type> & faceHpsi = tfaceHpsi();
 
-    for (register label face=0; face<l.size(); face++)
+    for (label face=0; face<l.size(); face++)
     {
         faceHpsi[face] = Upper[face]*psi[u[face]] - Lower[face]*psi[l[face]];
     }
@@ -422,12 +422,12 @@ void Foam::LduMatrix<Type, DType, LUType>::operator*=
         const unallocLabelList& l = lduAddr().lowerAddr();
         const unallocLabelList& u = lduAddr().upperAddr();
 
-        for (register label face=0; face<upper.size(); face++)
+        for (label face=0; face<upper.size(); face++)
         {
             upper[face] *= sf[l[face]];
         }
 
-        for (register label face=0; face<lower.size(); face++)
+        for (label face=0; face<lower.size(); face++)
         {
             lower[face] *= sf[u[face]];
         }

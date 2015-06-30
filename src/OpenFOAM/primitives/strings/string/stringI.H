@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ inline bool Foam::string::stripInvalid(string& str)
 {
     if (!valid<String>(str))
     {
-        register size_type nValid = 0;
+        size_type nValid = 0;
         iterator iter2 = str.begin();
 
         for
@@ -89,7 +89,7 @@ inline bool Foam::string::stripInvalid(string& str)
             iter1++
         )
         {
-            register char c = *iter1;
+            char c = *iter1;
 
             if (String::valid(c))
             {

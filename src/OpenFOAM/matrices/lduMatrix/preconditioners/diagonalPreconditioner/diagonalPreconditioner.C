@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,10 @@ Foam::diagonalPreconditioner::diagonalPreconditioner
     scalar* __restrict__ rDPtr = rD.begin();
     const scalar* __restrict__ DPtr = solver_.matrix().diag().begin();
 
-    register label nCells = rD.size();
+    label nCells = rD.size();
 
     // Generate reciprocal diagonal
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = 1.0/DPtr[cell];
     }
@@ -78,9 +78,9 @@ void Foam::diagonalPreconditioner::precondition
     const scalar* __restrict__ rAPtr = rA.begin();
     const scalar* __restrict__ rDPtr = rD.begin();
 
-    register label nCells = wA.size();
+    label nCells = wA.size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wAPtr[cell] = rDPtr[cell]*rAPtr[cell];
     }

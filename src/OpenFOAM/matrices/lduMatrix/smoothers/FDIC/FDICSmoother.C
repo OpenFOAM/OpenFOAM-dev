@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,21 +71,21 @@ Foam::FDICSmoother::FDICSmoother
     const scalar* const __restrict__ upperPtr =
         matrix_.upper().begin();
 
-    register label nCells = rD_.size();
-    register label nFaces = matrix_.upper().size();
+    label nCells = rD_.size();
+    label nFaces = matrix_.upper().size();
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDPtr[uPtr[face]] -= sqr(upperPtr[face])/rDPtr[lPtr[face]];
     }
 
     // Generate reciprocal FDIC
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = 1.0/rDPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDuUpperPtr[face] = rDPtr[uPtr[face]]*upperPtr[face];
         rDlUpperPtr[face] = rDPtr[lPtr[face]]*upperPtr[face];
@@ -129,14 +129,14 @@ void Foam::FDICSmoother::smooth
 
         rA *= rD_;
 
-        register label nFaces = matrix_.upper().size();
-        for (register label face=0; face<nFaces; face++)
+        label nFaces = matrix_.upper().size();
+        for (label face=0; face<nFaces; face++)
         {
             rAPtr[uPtr[face]] -= rDuUpperPtr[face]*rAPtr[lPtr[face]];
         }
 
-        register label nFacesM1 = nFaces - 1;
-        for (register label face=nFacesM1; face>=0; face--)
+        label nFacesM1 = nFaces - 1;
+        for (label face=nFacesM1; face>=0; face--)
         {
             rAPtr[lPtr[face]] -= rDlUpperPtr[face]*rAPtr[uPtr[face]];
         }

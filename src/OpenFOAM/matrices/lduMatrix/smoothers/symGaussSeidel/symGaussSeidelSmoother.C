@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,23 +75,23 @@ void Foam::symGaussSeidelSmoother::smooth
     const label nSweeps
 )
 {
-    register scalar* __restrict__ psiPtr = psi.begin();
+    scalar* __restrict__ psiPtr = psi.begin();
 
-    register const label nCells = psi.size();
+    const label nCells = psi.size();
 
     scalarField bPrime(nCells);
-    register scalar* __restrict__ bPrimePtr = bPrime.begin();
+    scalar* __restrict__ bPrimePtr = bPrime.begin();
 
-    register const scalar* const __restrict__ diagPtr = matrix_.diag().begin();
-    register const scalar* const __restrict__ upperPtr =
+    const scalar* const __restrict__ diagPtr = matrix_.diag().begin();
+    const scalar* const __restrict__ upperPtr =
         matrix_.upper().begin();
-    register const scalar* const __restrict__ lowerPtr =
+    const scalar* const __restrict__ lowerPtr =
         matrix_.lower().begin();
 
-    register const label* const __restrict__ uPtr =
+    const label* const __restrict__ uPtr =
         matrix_.lduAddr().upperAddr().begin();
 
-    register const label* const __restrict__ ownStartPtr =
+    const label* const __restrict__ ownStartPtr =
         matrix_.lduAddr().ownerStartAddr().begin();
 
 
@@ -144,11 +144,11 @@ void Foam::symGaussSeidelSmoother::smooth
             cmpt
         );
 
-        register scalar psii;
-        register label fStart;
-        register label fEnd = ownStartPtr[0];
+        scalar psii;
+        label fStart;
+        label fEnd = ownStartPtr[0];
 
-        for (register label celli=0; celli<nCells; celli++)
+        for (label celli=0; celli<nCells; celli++)
         {
             // Start and end of this row
             fStart = fEnd;
@@ -158,7 +158,7 @@ void Foam::symGaussSeidelSmoother::smooth
             psii = bPrimePtr[celli];
 
             // Accumulate the owner product side
-            for (register label facei=fStart; facei<fEnd; facei++)
+            for (label facei=fStart; facei<fEnd; facei++)
             {
                 psii -= upperPtr[facei]*psiPtr[uPtr[facei]];
             }
@@ -167,7 +167,7 @@ void Foam::symGaussSeidelSmoother::smooth
             psii /= diagPtr[celli];
 
             // Distribute the neighbour side using current psi
-            for (register label facei=fStart; facei<fEnd; facei++)
+            for (label facei=fStart; facei<fEnd; facei++)
             {
                 bPrimePtr[uPtr[facei]] -= lowerPtr[facei]*psii;
             }
@@ -177,7 +177,7 @@ void Foam::symGaussSeidelSmoother::smooth
 
         fStart = ownStartPtr[nCells];
 
-        for (register label celli=nCells-1; celli>=0; celli--)
+        for (label celli=nCells-1; celli>=0; celli--)
         {
             // Start and end of this row
             fEnd = fStart;
@@ -187,7 +187,7 @@ void Foam::symGaussSeidelSmoother::smooth
             psii = bPrimePtr[celli];
 
             // Accumulate the owner product side
-            for (register label facei=fStart; facei<fEnd; facei++)
+            for (label facei=fStart; facei<fEnd; facei++)
             {
                 psii -= upperPtr[facei]*psiPtr[uPtr[facei]];
             }
@@ -196,7 +196,7 @@ void Foam::symGaussSeidelSmoother::smooth
             psii /= diagPtr[celli];
 
             // Distribute the neighbour side using psi for this cell
-            for (register label facei=fStart; facei<fEnd; facei++)
+            for (label facei=fStart; facei<fEnd; facei++)
             {
                 bPrimePtr[uPtr[facei]] -= lowerPtr[facei]*psii;
             }

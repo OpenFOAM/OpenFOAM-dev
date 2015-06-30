@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,17 +97,17 @@ void Foam::DICSmoother::smooth
 
         rA *= rD_;
 
-        register label nFaces = matrix_.upper().size();
-        for (register label facei=0; facei<nFaces; facei++)
+        label nFaces = matrix_.upper().size();
+        for (label facei=0; facei<nFaces; facei++)
         {
-            register label u = uPtr[facei];
+            label u = uPtr[facei];
             rAPtr[u] -= rDPtr[u]*upperPtr[facei]*rAPtr[lPtr[facei]];
         }
 
-        register label nFacesM1 = nFaces - 1;
-        for (register label facei=nFacesM1; facei>=0; facei--)
+        label nFacesM1 = nFaces - 1;
+        for (label facei=nFacesM1; facei>=0; facei--)
         {
-            register label l = lPtr[facei];
+            label l = lPtr[facei];
             rAPtr[l] -= rDPtr[l]*upperPtr[facei]*rAPtr[uPtr[facei]];
         }
 

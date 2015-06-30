@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::Istream& Foam::operator>>(Foam::Istream& is, FixedList<T, Size>& L)
 
         if (delimiter == token::BEGIN_LIST)
         {
-            for (register unsigned i=0; i<Size; i++)
+            for (unsigned i=0; i<Size; i++)
             {
                 is >> L[i];
 
@@ -107,7 +107,7 @@ Foam::Istream& Foam::operator>>(Foam::Istream& is, FixedList<T, Size>& L)
                 "reading the single entry"
             );
 
-            for (register unsigned i=0; i<Size; i++)
+            for (unsigned i=0; i<Size; i++)
             {
                 L[i] = element;
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,7 +157,7 @@ void Foam::PtrList<T>::setSize(const label newSize)
     }
     else if (newSize < oldSize)
     {
-        register label i;
+        label i;
         for (i=newSize; i<oldSize; i++)
         {
             if (ptrs_[i])
@@ -172,7 +172,7 @@ void Foam::PtrList<T>::setSize(const label newSize)
     {
         ptrs_.setSize(newSize);
 
-        register label i;
+        label i;
         for (i=oldSize; i<newSize; i++)
         {
             ptrs_[i] = NULL;

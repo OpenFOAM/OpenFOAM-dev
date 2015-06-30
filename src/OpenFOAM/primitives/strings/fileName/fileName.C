@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ Foam::fileName& Foam::fileName::toAbsolute()
 bool Foam::fileName::clean()
 {
     // the top slash - we are never allowed to go above it
-    register string::size_type top = this->find('/');
+    string::size_type top = this->find('/');
 
     // no slashes - nothing to do
     if (top == string::npos)
@@ -100,18 +100,18 @@ bool Foam::fileName::clean()
     }
 
     // start with the '/' found:
-    register char prev = '/';
-    register string::size_type nChar  = top+1;
-    register string::size_type maxLen = this->size();
+    char prev = '/';
+    string::size_type nChar  = top+1;
+    string::size_type maxLen = this->size();
 
     for
     (
-        register string::size_type src = nChar;
+        string::size_type src = nChar;
         src < maxLen;
         /*nil*/
     )
     {
-        register char c = operator[](src++);
+        char c = operator[](src++);
 
         if (prev == '/')
         {
@@ -132,7 +132,7 @@ bool Foam::fileName::clean()
 
 
                 // peek at the next character
-                register char c1 = operator[](src);
+                char c1 = operator[](src);
 
                 // found '/./' - skip it
                 if (c1 == '/')

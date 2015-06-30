@@ -64,7 +64,7 @@ void Foam::ode<ChemistryModel>::solve
     label nSpecie = this->nSpecie();
 
     // Copy the concentration, T and P to the total solve-vector
-    for (register int i=0; i<nSpecie; i++)
+    for (int i=0; i<nSpecie; i++)
     {
         cTp_[i] = c[i];
     }
@@ -73,7 +73,7 @@ void Foam::ode<ChemistryModel>::solve
 
     odeSolver_->solve(0, deltaT, cTp_, subDeltaT);
 
-    for (register int i=0; i<nSpecie; i++)
+    for (int i=0; i<nSpecie; i++)
     {
         c[i] = max(0.0, cTp_[i]);
     }

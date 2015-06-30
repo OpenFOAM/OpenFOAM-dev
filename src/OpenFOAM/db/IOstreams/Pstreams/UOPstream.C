@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,8 +76,8 @@ inline void Foam::UOPstream::writeToBuffer
     // Extend if necessary
     sendBuf_.setSize(alignedPos + count);
 
-    register const char* dataPtr = reinterpret_cast<const char*>(data);
-    register size_t i = count;
+    const char* dataPtr = reinterpret_cast<const char*>(data);
+    size_t i = count;
     while (i--) sendBuf_[alignedPos++] = *dataPtr++;
 }
 

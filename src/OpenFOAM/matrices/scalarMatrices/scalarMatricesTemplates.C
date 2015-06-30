@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,13 +39,13 @@ void Foam::solve
     label n = tmpMatrix.n();
 
     // Elimination
-    for (register label i=0; i<n; i++)
+    for (label i=0; i<n; i++)
     {
         label iMax = i;
         scalar largestCoeff = mag(tmpMatrix[iMax][i]);
 
         // Swap entries around to find a good pivot
-        for (register label j=i+1; j<n; j++)
+        for (label j=i+1; j<n; j++)
         {
             if (mag(tmpMatrix[j][i]) > largestCoeff)
             {
@@ -58,7 +58,7 @@ void Foam::solve
         {
             //Info<< "Pivoted on " << i << " " << iMax << endl;
 
-            for (register label k=i; k<n; k++)
+            for (label k=i; k<n; k++)
             {
                 Swap(tmpMatrix[i][k], tmpMatrix[iMax][k]);
             }
@@ -74,11 +74,11 @@ void Foam::solve
         }
 
         // Reduce to upper triangular form
-        for (register label j=i+1; j<n; j++)
+        for (label j=i+1; j<n; j++)
         {
             sourceSol[j] -= sourceSol[i]*(tmpMatrix[j][i]/tmpMatrix[i][i]);
 
-            for (register label k=n-1; k>=i; k--)
+            for (label k=n-1; k>=i; k--)
             {
                 tmpMatrix[j][k] -=
                     tmpMatrix[i][k]*tmpMatrix[j][i]/tmpMatrix[i][i];
@@ -87,11 +87,11 @@ void Foam::solve
     }
 
     // Back-substitution
-    for (register label j=n-1; j>=0; j--)
+    for (label j=n-1; j>=0; j--)
     {
         Type ntempvec = pTraits<Type>::zero;
 
-        for (register label k=j+1; k<n; k++)
+        for (label k=j+1; k<n; k++)
         {
             ntempvec += tmpMatrix[j][k]*sourceSol[k];
         }
@@ -127,7 +127,7 @@ void Foam::LUBacksubstitute
 
     label ii = 0;
 
-    for (register label i=0; i<n; i++)
+    for (label i=0; i<n; i++)
     {
         label ip = pivotIndices[i];
         Type sum = sourceSol[ip];
@@ -149,12 +149,12 @@ void Foam::LUBacksubstitute
         sourceSol[i] = sum;
     }
 
-    for (register label i=n-1; i>=0; i--)
+    for (label i=n-1; i>=0; i--)
     {
         Type sum = sourceSol[i];
         const scalar* __restrict__ luMatrixi = luMatrix[i];
 
-        for (register label j=i+1; j<n; j++)
+        for (label j=i+1; j<n; j++)
         {
             sum -= luMatrixi[j]*sourceSol[j];
         }
@@ -175,7 +175,7 @@ void Foam::LUBacksubstitute
 
     label ii = 0;
 
-    for (register label i=0; i<n; i++)
+    for (label i=0; i<n; i++)
     {
         Type sum = sourceSol[i];
         const scalar* __restrict__ luMatrixi = luMatrix[i];
@@ -195,12 +195,12 @@ void Foam::LUBacksubstitute
         sourceSol[i] = sum/luMatrixi[i];
     }
 
-    for (register label i=n-1; i>=0; i--)
+    for (label i=n-1; i>=0; i--)
     {
         Type sum = sourceSol[i];
         const scalar* __restrict__ luMatrixi = luMatrix[i];
 
-        for (register label j=i+1; j<n; j++)
+        for (label j=i+1; j<n; j++)
         {
             sum -= luMatrixi[j]*sourceSol[j];
         }
@@ -258,11 +258,11 @@ void Foam::multiply
 
     ans = Matrix<Form, Type>(A.n(), B.m(), scalar(0));
 
-    for (register label i = 0; i < A.n(); i++)
+    for (label i = 0; i < A.n(); i++)
     {
-        for (register label j = 0; j < B.m(); j++)
+        for (label j = 0; j < B.m(); j++)
         {
-            for (register label l = 0; l < B.n(); l++)
+            for (label l = 0; l < B.n(); l++)
             {
                 ans[i][j] += A[i][l]*B[l][j];
             }

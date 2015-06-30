@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,8 +41,8 @@ const char* const Foam::pTraits<int32_t>::typeName = "int32";
 
 Foam::label Foam::pow(label a, label b)
 {
-    register label ans = 1;
-    for (register label i=0; i<b; i++)
+    label ans = 1;
+    for (label i=0; i<b; i++)
     {
         ans *= a;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ meshEdges
     // create the storage
     labelList meshEdges(PatchEdges.size());
 
-    register bool found = false;
+    bool found = false;
 
     // get reference to the points on the patch
     const labelList& pp = meshPoints();

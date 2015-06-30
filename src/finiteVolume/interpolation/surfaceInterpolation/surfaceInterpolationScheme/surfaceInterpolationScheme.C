@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ surfaceInterpolationScheme<Type>::interpolate
 
     Field<Type>& sfi = sf.internalField();
 
-    for (register label fi=0; fi<P.size(); fi++)
+    for (label fi=0; fi<P.size(); fi++)
     {
         sfi[fi] = lambda[fi]*vfi[P[fi]] + y[fi]*vfi[N[fi]];
     }
@@ -290,7 +290,7 @@ surfaceInterpolationScheme<Type>::interpolate
 
     Field<Type>& sfi = sf.internalField();
 
-    for (register label fi=0; fi<P.size(); fi++)
+    for (label fi=0; fi<P.size(); fi++)
     {
         sfi[fi] = lambda[fi]*(vfi[P[fi]] - vfi[N[fi]]) + vfi[N[fi]];
     }

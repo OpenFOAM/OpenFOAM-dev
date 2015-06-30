@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ const Foam::string Foam::string::null;
 // Count and return the number of a given character in the string
 Foam::string::size_type Foam::string::count(const char c) const
 {
-    register size_type cCount = 0;
+    size_type cCount = 0;
 
     for (const_iterator iter = begin(); iter != end(); ++iter)
     {
@@ -109,10 +109,10 @@ bool Foam::string::removeRepeated(const char character)
 
     if (character && find(character) != npos)
     {
-        register string::size_type nChar=0;
+        string::size_type nChar=0;
         iterator iter2 = begin();
 
-        register char prev = 0;
+        char prev = 0;
 
         for
         (
@@ -121,7 +121,7 @@ bool Foam::string::removeRepeated(const char character)
             iter1++
         )
         {
-            register char c = *iter1;
+            char c = *iter1;
 
             if (prev == c && c == character)
             {

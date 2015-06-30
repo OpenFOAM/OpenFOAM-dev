@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,13 +50,13 @@ void Foam::LUDecompose
     scalar vv[n];
     sign = 1;
 
-    for (register label i=0; i<n; i++)
+    for (label i=0; i<n; i++)
     {
         scalar largestCoeff = 0.0;
         scalar temp;
         const scalar* __restrict__ matrixi = matrix[i];
 
-        for (register label j=0; j<n; j++)
+        for (label j=0; j<n; j++)
         {
             if ((temp = mag(matrixi[j])) > largestCoeff)
             {
@@ -76,16 +76,16 @@ void Foam::LUDecompose
         vv[i] = 1.0/largestCoeff;
     }
 
-    for (register label j=0; j<n; j++)
+    for (label j=0; j<n; j++)
     {
         scalar* __restrict__ matrixj = matrix[j];
 
-        for (register label i=0; i<j; i++)
+        for (label i=0; i<j; i++)
         {
             scalar* __restrict__ matrixi = matrix[i];
 
             scalar sum = matrixi[j];
-            for (register label k=0; k<i; k++)
+            for (label k=0; k<i; k++)
             {
                 sum -= matrixi[k]*matrix[k][j];
             }
@@ -95,12 +95,12 @@ void Foam::LUDecompose
         label iMax = 0;
 
         scalar largestCoeff = 0.0;
-        for (register label i=j; i<n; i++)
+        for (label i=j; i<n; i++)
         {
             scalar* __restrict__ matrixi = matrix[i];
             scalar sum = matrixi[j];
 
-            for (register label k=0; k<j; k++)
+            for (label k=0; k<j; k++)
             {
                 sum -= matrixi[k]*matrix[k][j];
             }
@@ -121,7 +121,7 @@ void Foam::LUDecompose
         {
             scalar* __restrict__ matrixiMax = matrix[iMax];
 
-            for (register label k=0; k<n; k++)
+            for (label k=0; k<n; k++)
             {
                 Swap(matrixj[k], matrixiMax[k]);
             }
@@ -139,7 +139,7 @@ void Foam::LUDecompose
         {
             scalar rDiag = 1.0/matrixj[j];
 
-            for (register label i=j+1; i<n; i++)
+            for (label i=j+1; i<n; i++)
             {
                 matrix[i][j] *= rDiag;
             }
@@ -238,14 +238,14 @@ void Foam::multiply
 
     ans = scalarRectangularMatrix(A.n(), C.m(), scalar(0));
 
-    for (register label i = 0; i < A.n(); i++)
+    for (label i = 0; i < A.n(); i++)
     {
-        for (register label g = 0; g < C.m(); g++)
+        for (label g = 0; g < C.m(); g++)
         {
-            for (register label l = 0; l < C.n(); l++)
+            for (label l = 0; l < C.n(); l++)
             {
                 scalar ab = 0;
-                for (register label j = 0; j < A.m(); j++)
+                for (label j = 0; j < A.m(); j++)
                 {
                     ab += A[i][j]*B[j][l];
                 }
@@ -294,11 +294,11 @@ void Foam::multiply
 
     ans = scalarRectangularMatrix(A.n(), C.m(), scalar(0));
 
-    for (register label i = 0; i < A.n(); i++)
+    for (label i = 0; i < A.n(); i++)
     {
-        for (register label g = 0; g < C.m(); g++)
+        for (label g = 0; g < C.m(); g++)
         {
-            for (register label l = 0; l < C.n(); l++)
+            for (label l = 0; l < C.n(); l++)
             {
                 ans[i][g] += C[l][g] * A[i][l]*B[l];
             }

@@ -25,7 +25,7 @@ int main()
 
         Info<< "vectorField algebra" << endl;
 
-        for (register int j=0; j<nIter; j++)
+        for (int j=0; j<nIter; j++)
         {
             vf4 = vf1 + vf2 - vf3;
         }

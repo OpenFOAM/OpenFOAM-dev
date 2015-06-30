@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,16 +63,16 @@ void Foam::lduMatrix::Amul
         cmpt
     );
 
-    register const label nCells = diag().size();
-    for (register label cell=0; cell<nCells; cell++)
+    const label nCells = diag().size();
+    for (label cell=0; cell<nCells; cell++)
     {
         ApsiPtr[cell] = diagPtr[cell]*psiPtr[cell];
     }
 
 
-    register const label nFaces = upper().size();
+    const label nFaces = upper().size();
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         ApsiPtr[uPtr[face]] += lowerPtr[face]*psiPtr[lPtr[face]];
         ApsiPtr[lPtr[face]] += upperPtr[face]*psiPtr[uPtr[face]];
@@ -124,14 +124,14 @@ void Foam::lduMatrix::Tmul
         cmpt
     );
 
-    register const label nCells = diag().size();
-    for (register label cell=0; cell<nCells; cell++)
+    const label nCells = diag().size();
+    for (label cell=0; cell<nCells; cell++)
     {
         TpsiPtr[cell] = diagPtr[cell]*psiPtr[cell];
     }
 
-    register const label nFaces = upper().size();
-    for (register label face=0; face<nFaces; face++)
+    const label nFaces = upper().size();
+    for (label face=0; face<nFaces; face++)
     {
         TpsiPtr[uPtr[face]] += upperPtr[face]*psiPtr[lPtr[face]];
         TpsiPtr[lPtr[face]] += lowerPtr[face]*psiPtr[uPtr[face]];
@@ -168,15 +168,15 @@ void Foam::lduMatrix::sumA
     const scalar* __restrict__ lowerPtr = lower().begin();
     const scalar* __restrict__ upperPtr = upper().begin();
 
-    register const label nCells = diag().size();
-    register const label nFaces = upper().size();
+    const label nCells = diag().size();
+    const label nFaces = upper().size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         sumAPtr[cell] = diagPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         sumAPtr[uPtr[face]] += lowerPtr[face];
         sumAPtr[lPtr[face]] += upperPtr[face];
@@ -253,16 +253,16 @@ void Foam::lduMatrix::residual
         cmpt
     );
 
-    register const label nCells = diag().size();
-    for (register label cell=0; cell<nCells; cell++)
+    const label nCells = diag().size();
+    for (label cell=0; cell<nCells; cell++)
     {
         rAPtr[cell] = sourcePtr[cell] - diagPtr[cell]*psiPtr[cell];
     }
 
 
-    register const label nFaces = upper().size();
+    const label nFaces = upper().size();
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rAPtr[uPtr[face]] -= lowerPtr[face]*psiPtr[lPtr[face]];
         rAPtr[lPtr[face]] -= upperPtr[face]*psiPtr[uPtr[face]];
@@ -314,9 +314,9 @@ Foam::tmp<Foam::scalarField > Foam::lduMatrix::H1() const
         const scalar* __restrict__ lowerPtr = lower().begin();
         const scalar* __restrict__ upperPtr = upper().begin();
 
-        register const label nFaces = upper().size();
+        const label nFaces = upper().size();
 
-        for (register label face=0; face<nFaces; face++)
+        for (label face=0; face<nFaces; face++)
         {
             H1Ptr[uPtr[face]] -= lowerPtr[face];
             H1Ptr[lPtr[face]] -= upperPtr[face];

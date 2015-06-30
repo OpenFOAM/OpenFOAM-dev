@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,10 +107,10 @@ Foam::Ostream& Foam::OBJstream::write(const string& str)
 {
     OFstream::write(token::BEGIN_STRING);
 
-    register int backslash = 0;
+    int backslash = 0;
     for (string::const_iterator iter = str.begin(); iter != str.end(); ++iter)
     {
-        register char c = *iter;
+        char c = *iter;
 
         if (c == '\\')
         {
@@ -156,7 +156,7 @@ Foam::Ostream& Foam::OBJstream::writeQuoted
     {
         OFstream::write(token::BEGIN_STRING);
 
-        register int backslash = 0;
+        int backslash = 0;
         for
         (
             string::const_iterator iter = str.begin();
@@ -164,7 +164,7 @@ Foam::Ostream& Foam::OBJstream::writeQuoted
             ++iter
         )
         {
-            register char c = *iter;
+            char c = *iter;
 
             if (c == '\\')
             {

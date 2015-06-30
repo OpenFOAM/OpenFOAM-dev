@@ -796,8 +796,8 @@ static uint32_t crc_table[256];
 #define CRC32POLYNOMIAL 0x04c11db7L
 
 static void GenerateCRC32Table (void) {
-register int i, j;
-register uint32_t crc_accum;
+int i, j;
+uint32_t crc_accum;
 
     for ( i = 0;  i < 256;  i++ ) {
         crc_accum = ( (unsigned long) i << 24 );
@@ -821,8 +821,8 @@ static uint32_t UpdateCRC32
     const char *data_blk_ptr,
     int data_blk_size
 ) {
-register int j;
-register uint8_t i;
+int j;
+uint8_t i;
 
         for (j = 0; j < data_blk_size; j++) {
                 i = (crc_accum >> 24) ^ *data_blk_ptr++;
@@ -1017,7 +1017,7 @@ int i;
 uint32_t stroustrup (const char * s, int len) {
     uint32_t h;
 
-    for (register int i=0; i < len; ++s, ++i)
+    for (int i=0; i < len; ++s, ++i)
     {
         h = (h << 1) ^ (unsigned char) s[i];
     }

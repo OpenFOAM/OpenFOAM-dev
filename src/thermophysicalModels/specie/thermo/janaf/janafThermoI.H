@@ -44,7 +44,7 @@ inline Foam::janafThermo<EquationOfState>::janafThermo
     Thigh_(Thigh),
     Tcommon_(Tcommon)
 {
-    for (register label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
+    for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
     {
         highCpCoeffs_[coefLabel] = highCpCoeffs[coefLabel];
         lowCpCoeffs_[coefLabel] = lowCpCoeffs[coefLabel];
@@ -84,7 +84,7 @@ inline Foam::janafThermo<EquationOfState>::janafThermo
     Thigh_(jt.Thigh_),
     Tcommon_(jt.Tcommon_)
 {
-    for (register label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
+    for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
     {
         highCpCoeffs_[coefLabel] = jt.highCpCoeffs_[coefLabel];
         lowCpCoeffs_[coefLabel] = jt.lowCpCoeffs_[coefLabel];
@@ -260,7 +260,7 @@ inline void Foam::janafThermo<EquationOfState>::operator+=
 
     for
     (
-        register label coefLabel=0;
+        label coefLabel=0;
         coefLabel<janafThermo<EquationOfState>::nCoeffs_;
         coefLabel++
     )
@@ -307,7 +307,7 @@ inline void Foam::janafThermo<EquationOfState>::operator-=
 
     for
     (
-        register label coefLabel=0;
+        label coefLabel=0;
         coefLabel<janafThermo<EquationOfState>::nCoeffs_;
         coefLabel++
     )
@@ -343,7 +343,7 @@ inline Foam::janafThermo<EquationOfState> Foam::operator+
 
     for
     (
-        register label coefLabel=0;
+        label coefLabel=0;
         coefLabel<janafThermo<EquationOfState>::nCoeffs_;
         coefLabel++
     )
@@ -405,7 +405,7 @@ inline Foam::janafThermo<EquationOfState> Foam::operator-
 
     for
     (
-        register label coefLabel=0;
+        label coefLabel=0;
         coefLabel<janafThermo<EquationOfState>::nCoeffs_;
         coefLabel++
     )

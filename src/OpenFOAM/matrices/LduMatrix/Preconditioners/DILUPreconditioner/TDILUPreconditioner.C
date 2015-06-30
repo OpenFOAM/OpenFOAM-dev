@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,8 +58,8 @@ void Foam::TDILUPreconditioner<Type, DType, LUType>::calcInvD
     const LUType* const __restrict__ upperPtr = matrix.upper().begin();
     const LUType* const __restrict__ lowerPtr = matrix.lower().begin();
 
-    register label nFaces = matrix.upper().size();
-    for (register label face=0; face<nFaces; face++)
+    label nFaces = matrix.upper().size();
+    for (label face=0; face<nFaces; face++)
     {
         rDPtr[uPtr[face]] -=
             dot(dot(upperPtr[face], lowerPtr[face]), inv(rDPtr[lPtr[face]]));
@@ -67,9 +67,9 @@ void Foam::TDILUPreconditioner<Type, DType, LUType>::calcInvD
 
 
     // Calculate the reciprocal of the preconditioned diagonal
-    register label nCells = rD.size();
+    label nCells = rD.size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = inv(rDPtr[cell]);
     }
@@ -99,26 +99,26 @@ void Foam::TDILUPreconditioner<Type, DType, LUType>::precondition
     const LUType* const __restrict__ lowerPtr =
         this->solver_.matrix().lower().begin();
 
-    register label nCells = wA.size();
-    register label nFaces = this->solver_.matrix().upper().size();
-    register label nFacesM1 = nFaces - 1;
+    label nCells = wA.size();
+    label nFaces = this->solver_.matrix().upper().size();
+    label nFacesM1 = nFaces - 1;
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wAPtr[cell] = dot(rDPtr[cell], rAPtr[cell]);
     }
 
 
-    register label sface;
+    label sface;
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         sface = losortPtr[face];
         wAPtr[uPtr[sface]] -=
             dot(rDPtr[uPtr[sface]], dot(lowerPtr[sface], wAPtr[lPtr[sface]]));
     }
 
-    for (register label face=nFacesM1; face>=0; face--)
+    for (label face=nFacesM1; face>=0; face--)
     {
         wAPtr[lPtr[face]] -=
             dot(rDPtr[lPtr[face]], dot(upperPtr[face], wAPtr[uPtr[face]]));
@@ -149,25 +149,25 @@ void Foam::TDILUPreconditioner<Type, DType, LUType>::preconditionT
     const LUType* const __restrict__ lowerPtr =
         this->solver_.matrix().lower().begin();
 
-    register label nCells = wT.size();
-    register label nFaces = this->solver_.matrix().upper().size();
-    register label nFacesM1 = nFaces - 1;
+    label nCells = wT.size();
+    label nFaces = this->solver_.matrix().upper().size();
+    label nFacesM1 = nFaces - 1;
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wTPtr[cell] = dot(rDPtr[cell], rTPtr[cell]);
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         wTPtr[uPtr[face]] -=
             dot(rDPtr[uPtr[face]], dot(upperPtr[face], wTPtr[lPtr[face]]));
     }
 
 
-    register label sface;
+    label sface;
 
-    for (register label face=nFacesM1; face>=0; face--)
+    for (label face=nFacesM1; face>=0; face--)
     {
         sface = losortPtr[face];
         wTPtr[lPtr[sface]] -=

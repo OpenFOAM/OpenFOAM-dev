@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::solverPerformance Foam::PBiCG::solve
         fieldName_
     );
 
-    register label nCells = psi.size();
+    label nCells = psi.size();
 
     scalar* __restrict__ psiPtr = psi.begin();
 
@@ -149,7 +149,7 @@ Foam::solverPerformance Foam::PBiCG::solve
 
             if (solverPerf.nIterations() == 0)
             {
-                for (register label cell=0; cell<nCells; cell++)
+                for (label cell=0; cell<nCells; cell++)
                 {
                     pAPtr[cell] = wAPtr[cell];
                     pTPtr[cell] = wTPtr[cell];
@@ -159,7 +159,7 @@ Foam::solverPerformance Foam::PBiCG::solve
             {
                 scalar beta = wArT/wArTold;
 
-                for (register label cell=0; cell<nCells; cell++)
+                for (label cell=0; cell<nCells; cell++)
                 {
                     pAPtr[cell] = wAPtr[cell] + beta*pAPtr[cell];
                     pTPtr[cell] = wTPtr[cell] + beta*pTPtr[cell];
@@ -184,7 +184,7 @@ Foam::solverPerformance Foam::PBiCG::solve
 
             scalar alpha = wArT/wApT;
 
-            for (register label cell=0; cell<nCells; cell++)
+            for (label cell=0; cell<nCells; cell++)
             {
                 psiPtr[cell] += alpha*pAPtr[cell];
                 rAPtr[cell] -= alpha*wAPtr[cell];

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,9 +67,9 @@ inline void Foam::UIPstream::readFromBuffer
           + ((externalBufPosition_ - 1) & ~(align - 1));
     }
 
-    register const char* bufPtr = &externalBuf_[externalBufPosition_];
-    register char* dataPtr = reinterpret_cast<char*>(data);
-    register size_t i = count;
+    const char* bufPtr = &externalBuf_[externalBufPosition_];
+    char* dataPtr = reinterpret_cast<char*>(data);
+    size_t i = count;
     while (i--) *dataPtr++ = *bufPtr++;
     externalBufPosition_ += count;
     checkEof();

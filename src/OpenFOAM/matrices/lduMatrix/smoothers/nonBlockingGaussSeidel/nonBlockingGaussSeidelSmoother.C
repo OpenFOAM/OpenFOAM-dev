@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Foam::nonBlockingGaussSeidelSmoother::nonBlockingGaussSeidelSmoother
     // Check that all interface addressing is sorted to be after the
     // non-interface addressing.
 
-    register const label nCells = matrix.diag().size();
+    const label nCells = matrix.diag().size();
 
     blockStart_ = nCells;
 
@@ -103,23 +103,23 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
     const label nSweeps
 )
 {
-    register scalar* __restrict__ psiPtr = psi.begin();
+    scalar* __restrict__ psiPtr = psi.begin();
 
-    register const label nCells = psi.size();
+    const label nCells = psi.size();
 
     scalarField bPrime(nCells);
-    register scalar* __restrict__ bPrimePtr = bPrime.begin();
+    scalar* __restrict__ bPrimePtr = bPrime.begin();
 
-    register const scalar* const __restrict__ diagPtr = matrix_.diag().begin();
-    register const scalar* const __restrict__ upperPtr =
+    const scalar* const __restrict__ diagPtr = matrix_.diag().begin();
+    const scalar* const __restrict__ upperPtr =
         matrix_.upper().begin();
-    register const scalar* const __restrict__ lowerPtr =
+    const scalar* const __restrict__ lowerPtr =
         matrix_.lower().begin();
 
-    register const label* const __restrict__ uPtr =
+    const label* const __restrict__ uPtr =
         matrix_.lduAddr().upperAddr().begin();
 
-    register const label* const __restrict__ ownStartPtr =
+    const label* const __restrict__ ownStartPtr =
         matrix_.lduAddr().ownerStartAddr().begin();
 
     // Parallel boundary initialisation.  The parallel boundary is treated
@@ -160,11 +160,11 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
             cmpt
         );
 
-        register scalar curPsi;
-        register label fStart;
-        register label fEnd = ownStartPtr[0];
+        scalar curPsi;
+        label fStart;
+        label fEnd = ownStartPtr[0];
 
-        for (register label cellI=0; cellI<blockStart; cellI++)
+        for (label cellI=0; cellI<blockStart; cellI++)
         {
             // Start and end of this row
             fStart = fEnd;
@@ -174,7 +174,7 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
             curPsi = bPrimePtr[cellI];
 
             // Accumulate the owner product side
-            for (register label curFace=fStart; curFace<fEnd; curFace++)
+            for (label curFace=fStart; curFace<fEnd; curFace++)
             {
                 curPsi -= upperPtr[curFace]*psiPtr[uPtr[curFace]];
             }
@@ -183,7 +183,7 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
             curPsi /= diagPtr[cellI];
 
             // Distribute the neighbour side using current psi
-            for (register label curFace=fStart; curFace<fEnd; curFace++)
+            for (label curFace=fStart; curFace<fEnd; curFace++)
             {
                 bPrimePtr[uPtr[curFace]] -= lowerPtr[curFace]*curPsi;
             }
@@ -211,7 +211,7 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
             curPsi = bPrimePtr[cellI];
 
             // Accumulate the owner product side
-            for (register label curFace=fStart; curFace<fEnd; curFace++)
+            for (label curFace=fStart; curFace<fEnd; curFace++)
             {
                 curPsi -= upperPtr[curFace]*psiPtr[uPtr[curFace]];
             }
@@ -220,7 +220,7 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
             curPsi /= diagPtr[cellI];
 
             // Distribute the neighbour side using current psi
-            for (register label curFace=fStart; curFace<fEnd; curFace++)
+            for (label curFace=fStart; curFace<fEnd; curFace++)
             {
                 bPrimePtr[uPtr[curFace]] -= lowerPtr[curFace]*curPsi;
             }

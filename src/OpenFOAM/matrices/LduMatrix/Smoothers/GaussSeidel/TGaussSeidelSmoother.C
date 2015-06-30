@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,11 +41,11 @@ Foam::TGaussSeidelSmoother<Type, DType, LUType>::TGaussSeidelSmoother
     ),
     rD_(matrix.diag().size())
 {
-    register const label nCells = matrix.diag().size();
-    register const DType* const __restrict__ diagPtr = matrix.diag().begin();
-    register DType* __restrict__ rDPtr = rD_.begin();
+    const label nCells = matrix.diag().size();
+    const DType* const __restrict__ diagPtr = matrix.diag().begin();
+    DType* __restrict__ rDPtr = rD_.begin();
 
-    for (register label cellI=0; cellI<nCells; cellI++)
+    for (label cellI=0; cellI<nCells; cellI++)
     {
         rDPtr[cellI] = inv(diagPtr[cellI]);
     }
@@ -64,25 +64,25 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
     const label nSweeps
 )
 {
-    register Type* __restrict__ psiPtr = psi.begin();
+    Type* __restrict__ psiPtr = psi.begin();
 
-    register const label nCells = psi.size();
+    const label nCells = psi.size();
 
     Field<Type> bPrime(nCells);
-    register Type* __restrict__ bPrimePtr = bPrime.begin();
+    Type* __restrict__ bPrimePtr = bPrime.begin();
 
-    register const DType* const __restrict__ rDPtr = rD_.begin();
+    const DType* const __restrict__ rDPtr = rD_.begin();
 
-    register const LUType* const __restrict__ upperPtr =
+    const LUType* const __restrict__ upperPtr =
         matrix_.upper().begin();
 
-    register const LUType* const __restrict__ lowerPtr =
+    const LUType* const __restrict__ lowerPtr =
         matrix_.lower().begin();
 
-    register const label* const __restrict__ uPtr =
+    const label* const __restrict__ uPtr =
         matrix_.lduAddr().upperAddr().begin();
 
-    register const label* const __restrict__ ownStartPtr =
+    const label* const __restrict__ ownStartPtr =
         matrix_.lduAddr().ownerStartAddr().begin();
 
 
@@ -120,10 +120,10 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
         );
 
         Type curPsi;
-        register label fStart;
-        register label fEnd = ownStartPtr[0];
+        label fStart;
+        label fEnd = ownStartPtr[0];
 
-        for (register label cellI=0; cellI<nCells; cellI++)
+        for (label cellI=0; cellI<nCells; cellI++)
         {
             // Start and end of this row
             fStart = fEnd;
@@ -133,7 +133,7 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
             curPsi = bPrimePtr[cellI];
 
             // Accumulate the owner product side
-            for (register label curFace=fStart; curFace<fEnd; curFace++)
+            for (label curFace=fStart; curFace<fEnd; curFace++)
             {
                 curPsi -= dot(upperPtr[curFace], psiPtr[uPtr[curFace]]);
             }
@@ -142,7 +142,7 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
             curPsi = dot(rDPtr[cellI], curPsi);
 
             // Distribute the neighbour side using current psi
-            for (register label curFace=fStart; curFace<fEnd; curFace++)
+            for (label curFace=fStart; curFace<fEnd; curFace++)
             {
                 bPrimePtr[uPtr[curFace]] -= dot(lowerPtr[curFace], curPsi);
             }

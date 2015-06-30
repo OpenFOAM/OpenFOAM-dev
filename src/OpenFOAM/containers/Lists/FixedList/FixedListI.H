@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ inline Foam::FixedList<T, Size>::FixedList()
 template<class T, unsigned Size>
 inline Foam::FixedList<T, Size>::FixedList(const T v[Size])
 {
-    for (register unsigned i=0; i<Size; i++)
+    for (unsigned i=0; i<Size; i++)
     {
         v_[i] = v[i];
     }
@@ -47,7 +47,7 @@ inline Foam::FixedList<T, Size>::FixedList(const T v[Size])
 template<class T, unsigned Size>
 inline Foam::FixedList<T, Size>::FixedList(const T& t)
 {
-    for (register unsigned i=0; i<Size; i++)
+    for (unsigned i=0; i<Size; i++)
     {
         v_[i] = t;
     }
@@ -59,7 +59,7 @@ inline Foam::FixedList<T, Size>::FixedList(const UList<T>& lst)
 {
     checkSize(lst.size());
 
-    for (register unsigned i=0; i<Size; i++)
+    for (unsigned i=0; i<Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -71,7 +71,7 @@ inline Foam::FixedList<T, Size>::FixedList(const SLList<T>& lst)
 {
     checkSize(lst.size());
 
-    register label i = 0;
+    label i = 0;
     for
     (
         typename SLList<T>::const_iterator iter = lst.begin();
@@ -87,7 +87,7 @@ inline Foam::FixedList<T, Size>::FixedList(const SLList<T>& lst)
 template<class T, unsigned Size>
 inline Foam::FixedList<T, Size>::FixedList(const FixedList<T, Size>& lst)
 {
-    for (register unsigned i=0; i<Size; i++)
+    for (unsigned i=0; i<Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -184,7 +184,7 @@ inline void Foam::FixedList<T, Size>::setSize(const label s)
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::transfer(const FixedList<T, Size>& lst)
 {
-    for (register unsigned i=0; i<Size; i++)
+    for (unsigned i=0; i<Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -262,7 +262,7 @@ inline const T& Foam::FixedList<T, Size>::operator[](const label i) const
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::operator=(const T lst[Size])
 {
-    for (register unsigned i=0; i<Size; i++)
+    for (unsigned i=0; i<Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -273,7 +273,7 @@ inline void Foam::FixedList<T, Size>::operator=(const UList<T>& lst)
 {
     checkSize(lst.size());
 
-    for (register unsigned i=0; i<Size; i++)
+    for (unsigned i=0; i<Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -284,7 +284,7 @@ inline void Foam::FixedList<T, Size>::operator=(const SLList<T>& lst)
 {
     checkSize(lst.size());
 
-    register label i = 0;
+    label i = 0;
     for
     (
         typename SLList<T>::const_iterator iter = lst.begin();
@@ -299,7 +299,7 @@ inline void Foam::FixedList<T, Size>::operator=(const SLList<T>& lst)
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::operator=(const T& t)
 {
-    for (register unsigned i=0; i<Size; i++)
+    for (unsigned i=0; i<Size; i++)
     {
         v_[i] = t;
     }
@@ -443,7 +443,7 @@ inline unsigned Foam::FixedList<T, Size>::Hash<HashT>::operator()
         // hash incrementally
         unsigned val = seed;
 
-        for (register unsigned i=0; i<Size; i++)
+        for (unsigned i=0; i<Size; i++)
         {
             val = HashT()(lst[i], val);
         }

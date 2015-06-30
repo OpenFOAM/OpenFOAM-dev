@@ -39,7 +39,7 @@ void Foam::lduMatrix::sumDiag()
     const labelUList& l = lduAddr().lowerAddr();
     const labelUList& u = lduAddr().upperAddr();
 
-    for (register label face=0; face<l.size(); face++)
+    for (label face=0; face<l.size(); face++)
     {
         Diag[l[face]] += Lower[face];
         Diag[u[face]] += Upper[face];
@@ -56,7 +56,7 @@ void Foam::lduMatrix::negSumDiag()
     const labelUList& l = lduAddr().lowerAddr();
     const labelUList& u = lduAddr().upperAddr();
 
-    for (register label face=0; face<l.size(); face++)
+    for (label face=0; face<l.size(); face++)
     {
         Diag[l[face]] -= Lower[face];
         Diag[u[face]] -= Upper[face];
@@ -75,7 +75,7 @@ void Foam::lduMatrix::sumMagOffDiag
     const labelUList& l = lduAddr().lowerAddr();
     const labelUList& u = lduAddr().upperAddr();
 
-    for (register label face = 0; face < l.size(); face++)
+    for (label face = 0; face < l.size(); face++)
     {
         sumOff[u[face]] += mag(Lower[face]);
         sumOff[l[face]] += mag(Upper[face]);
@@ -316,12 +316,12 @@ void Foam::lduMatrix::operator*=(const scalarField& sf)
         const labelUList& l = lduAddr().lowerAddr();
         const labelUList& u = lduAddr().upperAddr();
 
-        for (register label face=0; face<upper.size(); face++)
+        for (label face=0; face<upper.size(); face++)
         {
             upper[face] *= sf[l[face]];
         }
 
-        for (register label face=0; face<lower.size(); face++)
+        for (label face=0; face<lower.size(); face++)
         {
             lower[face] *= sf[u[face]];
         }

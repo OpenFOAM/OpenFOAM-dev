@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,8 +89,8 @@ Foam::fv::leastSquaresGrad<Type>::calcGrad
 
     forAll(own, facei)
     {
-        register label ownFaceI = own[facei];
-        register label neiFaceI = nei[facei];
+        label ownFaceI = own[facei];
+        label neiFaceI = nei[facei];
 
         Type deltaVsf = vsf[neiFaceI] - vsf[ownFaceI];
 

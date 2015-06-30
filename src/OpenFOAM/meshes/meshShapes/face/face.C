@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -468,7 +468,7 @@ Foam::point Foam::face::centre(const pointField& points) const
 
 
     point centrePoint = point::zero;
-    for (register label pI=0; pI<nPoints; ++pI)
+    for (label pI=0; pI<nPoints; ++pI)
     {
         centrePoint += points[operator[](pI)];
     }
@@ -477,7 +477,7 @@ Foam::point Foam::face::centre(const pointField& points) const
     scalar sumA = 0;
     vector sumAc = vector::zero;
 
-    for (register label pI=0; pI<nPoints; ++pI)
+    for (label pI=0; pI<nPoints; ++pI)
     {
         const point& nextPoint = points[operator[]((pI + 1) % nPoints)];
 
@@ -532,7 +532,7 @@ Foam::vector Foam::face::normal(const pointField& p) const
         ).normal();
     }
 
-    register label pI;
+    label pI;
 
     point centrePoint = vector::zero;
     for (pI = 0; pI < nPoints; ++pI)
@@ -646,7 +646,7 @@ Foam::scalar Foam::face::sweptVol
 
     label nPoints = size();
 
-    for (register label pi=0; pi<nPoints-1; ++pi)
+    for (label pi=0; pi<nPoints-1; ++pi)
     {
         // Note: for best accuracy, centre point always comes last
         sv += triPointRef

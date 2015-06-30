@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,21 +61,21 @@ Foam::FDICPreconditioner::FDICPreconditioner
     const scalar* const __restrict__ upperPtr =
         solver_.matrix().upper().begin();
 
-    register label nCells = rD_.size();
-    register label nFaces = solver_.matrix().upper().size();
+    label nCells = rD_.size();
+    label nFaces = solver_.matrix().upper().size();
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDPtr[uPtr[face]] -= sqr(upperPtr[face])/rDPtr[lPtr[face]];
     }
 
     // Generate reciprocal FDIC
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = 1.0/rDPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDuUpperPtr[face] = rDPtr[uPtr[face]]*upperPtr[face];
         rDlUpperPtr[face] = rDPtr[lPtr[face]]*upperPtr[face];
@@ -104,21 +104,21 @@ void Foam::FDICPreconditioner::precondition
     const scalar* const __restrict__ rDuUpperPtr = rDuUpper_.begin();
     const scalar* const __restrict__ rDlUpperPtr = rDlUpper_.begin();
 
-    register label nCells = wA.size();
-    register label nFaces = solver_.matrix().upper().size();
-    register label nFacesM1 = nFaces - 1;
+    label nCells = wA.size();
+    label nFaces = solver_.matrix().upper().size();
+    label nFacesM1 = nFaces - 1;
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wAPtr[cell] = rDPtr[cell]*rAPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         wAPtr[uPtr[face]] -= rDuUpperPtr[face]*wAPtr[lPtr[face]];
     }
 
-    for (register label face=nFacesM1; face>=0; face--)
+    for (label face=nFacesM1; face>=0; face--)
     {
         wAPtr[lPtr[face]] -= rDlUpperPtr[face]*wAPtr[uPtr[face]];
     }

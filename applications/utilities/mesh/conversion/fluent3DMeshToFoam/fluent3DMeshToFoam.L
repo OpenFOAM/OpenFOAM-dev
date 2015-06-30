@@ -604,7 +604,7 @@ endOfSection               {space}")"{space}
 
 <readCellData>{space}{lbrac} {
         // Quickly scan to the end of the cell data block and discard
-        register int c;
+        int c;
         while ((c = yyinput()) != 0 && c != ')')
         {}
     }

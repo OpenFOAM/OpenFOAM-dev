@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,9 @@ void Foam::SIBS::SIMPR
     scalar h = deltaX/nSteps;
 
     scalarSquareMatrix a(n_);
-    for (register label i=0; i<n_; i++)
+    for (label i=0; i<n_; i++)
     {
-        for (register label j=0; j<n_; j++)
+        for (label j=0; j<n_; j++)
         {
             a[i][j] = -h*dfdy[i][j];
         }
@@ -54,7 +54,7 @@ void Foam::SIBS::SIMPR
     labelList pivotIndices(n_);
     LUDecompose(a, pivotIndices);
 
-    for (register label i=0; i<n_; i++)
+    for (label i=0; i<n_; i++)
     {
         yEnd[i] = h*(dydx[i] + h*dfdx[i]);
     }
@@ -64,7 +64,7 @@ void Foam::SIBS::SIMPR
     scalarField del(yEnd);
     scalarField ytemp(n_);
 
-    for (register label i=0; i<n_; i++)
+    for (label i=0; i<n_; i++)
     {
         ytemp[i] = y[i] + del[i];
     }
@@ -73,16 +73,16 @@ void Foam::SIBS::SIMPR
 
     odes_.derivatives(x, ytemp, yEnd);
 
-    for (register label nn=2; nn<=nSteps; nn++)
+    for (label nn=2; nn<=nSteps; nn++)
     {
-        for (register label i=0; i<n_; i++)
+        for (label i=0; i<n_; i++)
         {
             yEnd[i] = h*yEnd[i] - del[i];
         }
 
         LUBacksubstitute(a, pivotIndices, yEnd);
 
-        for (register label i=0; i<n_; i++)
+        for (label i=0; i<n_; i++)
         {
             ytemp[i] += (del[i] += 2.0*yEnd[i]);
         }
@@ -91,14 +91,14 @@ void Foam::SIBS::SIMPR
 
         odes_.derivatives(x, ytemp, yEnd);
     }
-    for (register label i=0; i<n_; i++)
+    for (label i=0; i<n_; i++)
     {
         yEnd[i] = h*yEnd[i] - del[i];
     }
 
     LUBacksubstitute(a, pivotIndices, yEnd);
 
-    for (register label i=0; i<n_; i++)
+    for (label i=0; i<n_; i++)
     {
         yEnd[i] += ytemp[i];
     }

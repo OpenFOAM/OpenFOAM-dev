@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ T Foam::ReadHex(ISstream& is)
     while (is.get(c) && isspace(c))
     {}
 
-    register T result = 0;
+    T result = 0;
     do
     {
         if (isspace(c) || c == 0) break;

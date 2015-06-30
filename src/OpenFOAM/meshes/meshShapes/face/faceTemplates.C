@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ Type Foam::face::average
     point centrePoint = point::zero;
     Type cf = pTraits<Type>::zero;
 
-    for (register label pI=0; pI<nPoints; pI++)
+    for (label pI=0; pI<nPoints; pI++)
     {
         centrePoint += meshPoints[operator[](pI)];
         cf += fld[operator[](pI)];
@@ -85,7 +85,7 @@ Type Foam::face::average
     scalar sumA = 0;
     Type sumAf = pTraits<Type>::zero;
 
-    for (register label pI=0; pI<nPoints; pI++)
+    for (label pI=0; pI<nPoints; pI++)
     {
         // Calculate 3*triangle centre field value
         Type ttcf  =

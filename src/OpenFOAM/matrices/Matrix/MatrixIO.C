@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,11 +80,11 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
                     label k = 0;
 
                     // loop over rows
-                    for (register label i=0; i<M.n(); i++)
+                    for (label i=0; i<M.n(); i++)
                     {
                         listDelimiter = is.readBeginList("MatrixRow");
 
-                        for (register label j=0; j<M.m(); j++)
+                        for (label j=0; j<M.m(); j++)
                         {
                             is >> v[k++];
 
@@ -109,7 +109,7 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
                         "reading the single entry"
                     );
 
-                    for (register label i=0; i<nm; i++)
+                    for (label i=0; i<nm; i++)
                     {
                         v[i] = element;
                     }
@@ -168,7 +168,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
             {
                 uniform = true;
 
-                for (register label i=0; i< nm; i++)
+                for (label i=0; i< nm; i++)
                 {
                     if (v[i] != v[0])
                     {
@@ -197,12 +197,12 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
                 label k = 0;
 
                 // loop over rows
-                for (register label i=0; i< M.n(); i++)
+                for (label i=0; i< M.n(); i++)
                 {
                     os  << token::BEGIN_LIST;
 
                     // Write row
-                    for (register label j=0; j< M.m(); j++)
+                    for (label j=0; j< M.m(); j++)
                     {
                         if (j > 0) os << token::SPACE;
                         os << v[k++];
@@ -222,12 +222,12 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
                 label k = 0;
 
                 // loop over rows
-                for (register label i=0; i< M.n(); i++)
+                for (label i=0; i< M.n(); i++)
                 {
                     os  << nl << token::BEGIN_LIST;
 
                     // Write row
-                    for (register label j=0; j< M.m(); j++)
+                    for (label j=0; j< M.m(); j++)
                     {
                         os << nl << v[k++];
                     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ Foam::PBiCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
         this->fieldName_
     );
 
-    register label nCells = psi.size();
+    label nCells = psi.size();
 
     Type* __restrict__ psiPtr = psi.begin();
 
@@ -126,7 +126,7 @@ Foam::PBiCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
 
             if (solverPerf.nIterations() == 0)
             {
-                for (register label cell=0; cell<nCells; cell++)
+                for (label cell=0; cell<nCells; cell++)
                 {
                     pAPtr[cell] = wAPtr[cell];
                     pTPtr[cell] = wTPtr[cell];
@@ -140,7 +140,7 @@ Foam::PBiCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
                     stabilise(wArTold, solverPerf.vsmall_)
                 );
 
-                for (register label cell=0; cell<nCells; cell++)
+                for (label cell=0; cell<nCells; cell++)
                 {
                     pAPtr[cell] = wAPtr[cell] + cmptMultiply(beta, pAPtr[cell]);
                     pTPtr[cell] = wTPtr[cell] + cmptMultiply(beta, pTPtr[cell]);
@@ -175,7 +175,7 @@ Foam::PBiCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
                 stabilise(wApT, solverPerf.vsmall_)
             );
 
-            for (register label cell=0; cell<nCells; cell++)
+            for (label cell=0; cell<nCells; cell++)
             {
                 psiPtr[cell] += cmptMultiply(alpha, pAPtr[cell]);
                 rAPtr[cell] -= cmptMultiply(alpha, wAPtr[cell]);

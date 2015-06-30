@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
 
         sqrMergeTol /= 10.0;
 
-        register bool found = false;
+        bool found = false;
 
         // N-squared point search over all points of all faces of
         // master block over all point of all faces of slave block
@@ -354,7 +354,7 @@ int main(int argc, char *argv[])
     }
 
 
-    register bool changedPointMerge = false;
+    bool changedPointMerge = false;
     label nPasses = 0;
 
     do

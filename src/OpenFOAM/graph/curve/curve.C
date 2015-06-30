@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ curve::curve(const curve& Curve, const label nFacets)
 {
     // Calculate curve length
     scalar curveLength=0;
-    register label i;
+    label i;
     for (i=0; i<Curve.size()-1; i++)
     {
         curveLength += distance(Curve[i], Curve[i+1]);
@@ -128,7 +128,7 @@ curve grad(const curve& Curve)
 {
     curve gradCurve(Curve);
 
-    register label i;
+    label i;
     for (i=1; i<Curve.size()-1; i++)
     {
         scalar deltaIm1 = Curve[i].x() - Curve[i-1].x();

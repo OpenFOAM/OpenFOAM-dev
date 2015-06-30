@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,9 +90,9 @@ Foam::scalar Foam::Rosenbrock23::solve
 {
     odes_.jacobian(x0, y0, dfdx_, dfdy_);
 
-    for (register label i=0; i<n_; i++)
+    for (label i=0; i<n_; i++)
     {
-        for (register label j=0; j<n_; j++)
+        for (label j=0; j<n_; j++)
         {
             a_[i][j] = -dfdy_[i][j];
         }

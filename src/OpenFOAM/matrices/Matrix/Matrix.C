@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ void Foam::Matrix<Form, Type>::allocate()
         v_ = new Type*[n_];
         v_[0] = new Type[n_*m_];
 
-        for (register label i=1; i<n_; i++)
+        for (label i=1; i<n_; i++)
         {
             v_[i] = v_[i-1] + m_;
         }
@@ -100,7 +100,7 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m, const Type& a)
 
         label nm = n_*m_;
 
-        for (register label i=0; i<nm; i++)
+        for (label i=0; i<nm; i++)
         {
             v[i] = a;
         }
@@ -122,7 +122,7 @@ Foam::Matrix<Form, Type>::Matrix(const Matrix<Form, Type>& a)
         const Type* av = a.v_[0];
 
         label nm = n_*m_;
-        for (register label i=0; i<nm; i++)
+        for (label i=0; i<nm; i++)
         {
             v[i] = av[i];
         }
@@ -166,9 +166,9 @@ Form Foam::Matrix<Form, Type>::T() const
     const Matrix<Form, Type>& A = *this;
     Form At(m(), n());
 
-    for (register label i=0; i<n(); i++)
+    for (label i=0; i<n(); i++)
     {
-        for (register label j=0; j<m(); j++)
+        for (label j=0; j<m(); j++)
         {
             At[j][i] = A[i][j];
         }
@@ -188,7 +188,7 @@ void Foam::Matrix<Form, Type>::operator=(const Type& t)
         Type* v = v_[0];
 
         label nm = n_*m_;
-        for (register label i=0; i<nm; i++)
+        for (label i=0; i<nm; i++)
         {
             v[i] = t;
         }
@@ -221,7 +221,7 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
         const Type* av = a.v_[0];
 
         label nm = n_*m_;
-        for (register label i=0; i<nm; i++)
+        for (label i=0; i<nm; i++)
         {
             v[i] = av[i];
         }
@@ -241,7 +241,7 @@ const Type& Foam::max(const Matrix<Form, Type>& a)
         label curMaxI = 0;
         const Type* v = a[0];
 
-        for (register label i=1; i<nm; i++)
+        for (label i=1; i<nm; i++)
         {
             if (v[i] > v[curMaxI])
             {
@@ -273,7 +273,7 @@ const Type& Foam::min(const Matrix<Form, Type>& a)
         label curMinI = 0;
         const Type* v = a[0];
 
-        for (register label i=1; i<nm; i++)
+        for (label i=1; i<nm; i++)
         {
             if (v[i] < v[curMinI])
             {
@@ -308,7 +308,7 @@ Form Foam::operator-(const Matrix<Form, Type>& a)
         const Type* av = a[0];
 
         label nm = a.n()*a.m();
-        for (register label i=0; i<nm; i++)
+        for (label i=0; i<nm; i++)
         {
             nav[i] = -av[i];
         }
@@ -350,7 +350,7 @@ Form Foam::operator+(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
     const Type* bv = b[0];
 
     label nm = a.n()*a.m();
-    for (register label i=0; i<nm; i++)
+    for (label i=0; i<nm; i++)
     {
         abv[i] = av[i] + bv[i];
     }
@@ -391,7 +391,7 @@ Form Foam::operator-(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
     const Type* bv = b[0];
 
     label nm = a.n()*a.m();
-    for (register label i=0; i<nm; i++)
+    for (label i=0; i<nm; i++)
     {
         abv[i] = av[i] - bv[i];
     }
@@ -411,7 +411,7 @@ Form Foam::operator*(const scalar s, const Matrix<Form, Type>& a)
         const Type* av = a[0];
 
         label nm = a.n()*a.m();
-        for (register label i=0; i<nm; i++)
+        for (label i=0; i<nm; i++)
         {
             sav[i] = s*av[i];
         }
@@ -440,11 +440,11 @@ Form Foam::operator*(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 
     Form ab(a.n(), b.m(), scalar(0));
 
-    for (register label i = 0; i < ab.n(); i++)
+    for (label i = 0; i < ab.n(); i++)
     {
-        for (register label j = 0; j < ab.m(); j++)
+        for (label j = 0; j < ab.m(); j++)
         {
-            for (register label l = 0; l < b.n(); l++)
+            for (label l = 0; l < b.n(); l++)
             {
                 ab[i][j] += a[i][l]*b[l][j];
             }

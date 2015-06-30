@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,9 +65,9 @@ void Foam::noPreconditioner::precondition
     scalar* __restrict__ wAPtr = wA.begin();
     const scalar* __restrict__ rAPtr = rA.begin();
 
-    register label nCells = wA.size();
+    label nCells = wA.size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wAPtr[cell] = rAPtr[cell];
     }
