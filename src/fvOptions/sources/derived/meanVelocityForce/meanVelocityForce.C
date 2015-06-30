@@ -91,7 +91,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
     dGradP_(0.0),
     flowDir_(Ubar_/mag(Ubar_)),
     relaxation_(coeffs_.lookupOrDefault<scalar>("relaxation", 1.0)),
-    invAPtr_(NULL)
+    rAPtr_(NULL)
 {
     coeffs_.lookup("fieldNames") >> fieldNames_;
 
@@ -134,7 +134,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
 
 void Foam::fv::meanVelocityForce::correct(volVectorField& U)
 {
-    const scalarField& rAU = invAPtr_().internalField();
+    const scalarField& rAU = rAPtr_().internalField();
 
     // Integrate flow variables over cell set
     scalar magUbarAve = 0.0;
@@ -225,15 +225,15 @@ void Foam::fv::meanVelocityForce::constrain
     const label
 )
 {
-    if (invAPtr_.empty())
+    if (rAPtr_.empty())
     {
-        invAPtr_.reset
+        rAPtr_.reset
         (
             new volScalarField
             (
                 IOobject
                 (
-                    name_ + ":invA",
+                    name_ + ":rA",
                     mesh_.time().timeName(),
                     mesh_,
                     IOobject::NO_READ,
@@ -245,7 +245,7 @@ void Foam::fv::meanVelocityForce::constrain
     }
     else
     {
-        invAPtr_() = 1.0/eqn.A();
+        rAPtr_() = 1.0/eqn.A();
     }
 
     gradP0_ += dGradP_;

@@ -25,20 +25,19 @@ Class
     Foam::fv::meanVelocityForce
 
 Description
-    Creates a pressure gradient source
+    Calculates and applies the force necessary to maintain the specified mean
+    velocity.
 
-    Note: Currently only handles kinematic pressure
+    Note: Currently only handles kinematic pressure (incompressible solvers).
 
     \heading Source usage
     Example usage:
     \verbatim
     meanVelocityForceCoeffs
     {
-        fieldNames  (U);                        // name of velocity field
-        Ubar        (10.0 0 0);                 // desired average velocity
-        gradPini    gradPini [0 2 -2 0 0] 0;    // initial pressure gradient
-        flowDir     (1 0 0);                    // flow direction
-        relaxation  0.2;                        // Optional relaxation factor
+        fieldNames  (U);                       // Name of velocity field
+        Ubar        (10.0 0 0);                // Desired mean velocity
+        relaxation  0.2;                       // Optional relaxation factor
     }
     \endverbatim
 
@@ -91,7 +90,7 @@ class meanVelocityForce
         scalar relaxation_;
 
         //- Matrix 1/A coefficients field pointer
-        autoPtr<volScalarField> invAPtr_;
+        autoPtr<volScalarField> rAPtr_;
 
 
     // Private Member Functions
