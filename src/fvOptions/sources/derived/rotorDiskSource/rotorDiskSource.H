@@ -58,12 +58,21 @@ Description
 
         blade
         {
-            ...
+            // see bladeModel.H for documentation
         }
 
         profiles
         {
-            ...
+            profile1
+            {
+                type    lookup; // lookup || series
+                ...
+                // see lookupProfile.H or seriesProfile.H for documentation
+            }
+            profile2
+            {
+                ...
+            }
         }
     }
     \endverbatim
@@ -78,6 +87,10 @@ Description
     - local         : use local flow conditions
     - surfaceNormal : specified normal velocity (positive towards rotor)
 
+See Also
+    Foam::bladeModel
+    Foam::lookupProfile
+    Foam::seriesProfile
 
 SourceFiles
     rotorDiskSource.C
