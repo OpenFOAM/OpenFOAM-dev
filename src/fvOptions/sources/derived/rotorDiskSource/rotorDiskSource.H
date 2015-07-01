@@ -25,10 +25,10 @@ Class
     Foam::fv::rotorDiskSource
 
 Description
-    Cell based momemtum source
+    Rotor disk source
 
-    Source approximates the mean effects of rotor forces on a cylindrical
-    region within the domain
+    Cell based momemtum source which approximates the mean effects of
+    rotor forces on a cylindrical region within the domain.
 
     \heading Source usage
 
