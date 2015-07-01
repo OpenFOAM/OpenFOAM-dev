@@ -17,7 +17,8 @@
         )
       - fvm::laplacian(turbulence->alphaEff(), he)
      ==
-        parcels.Sh(he)
+        rho*(U&g)
+      + parcels.Sh(he)
       + radiation->Sh(thermo)
       + combustion->Sh()
       + fvOptions(rho, he)

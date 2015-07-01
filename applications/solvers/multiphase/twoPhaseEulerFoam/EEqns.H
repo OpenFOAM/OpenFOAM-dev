@@ -7,7 +7,7 @@
 
     volScalarField Kh(fluid.Kh());
 
-    fvScalarMatrix he1Eqn
+    fvScalarMatrix E1Eqn
     (
         fvm::ddt(alpha1, rho1, he1) + fvm::div(alphaRhoPhi1, he1)
       - fvm::Sp(contErr1, he1)
@@ -28,17 +28,18 @@
         )
     );
 
-    he1Eqn.relax();
+    E1Eqn.relax();
 
-    he1Eqn -=
+    E1Eqn -=
     (
         Kh*(thermo2.T() - thermo1.T())
       + Kh*he1/Cpv1
       - fvm::Sp(Kh/Cpv1, he1)
+      + alpha1*rho1*(U1&g)
       + fvOptions(alpha1, rho1, he1)
     );
 
-    fvScalarMatrix he2Eqn
+    fvScalarMatrix E2Eqn
     (
         fvm::ddt(alpha2, rho2, he2) + fvm::div(alphaRhoPhi2, he2)
       - fvm::Sp(contErr2, he2)
@@ -59,21 +60,22 @@
         )
     );
 
-    he2Eqn.relax();
+    E2Eqn.relax();
 
-    he2Eqn -=
+    E2Eqn -=
     (
         Kh*(thermo1.T() - thermo2.T())
       + Kh*he2/Cpv2
       - fvm::Sp(Kh/Cpv2, he2)
+      + alpha2*rho2*(U2&g)
       + fvOptions(alpha2, rho2, he2)
     );
 
-    fvOptions.constrain(he1Eqn);
-    he1Eqn.solve();
+    fvOptions.constrain(E1Eqn);
+    E1Eqn.solve();
 
-    fvOptions.constrain(he2Eqn);
-    he2Eqn.solve();
+    fvOptions.constrain(E2Eqn);
+    E2Eqn.solve();
 
     thermo1.correct();
     Info<< "min " << thermo1.T().name()
