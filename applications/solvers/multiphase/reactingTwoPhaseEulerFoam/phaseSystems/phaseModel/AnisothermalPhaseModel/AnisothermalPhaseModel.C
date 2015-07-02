@@ -154,4 +154,12 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::divU(const volScalarField& divU)
 }
 
 
+template<class BasePhaseModel>
+const Foam::volScalarField&
+Foam::AnisothermalPhaseModel<BasePhaseModel>::K() const
+{
+    return K_;
+}
+
+
 // ************************************************************************* //

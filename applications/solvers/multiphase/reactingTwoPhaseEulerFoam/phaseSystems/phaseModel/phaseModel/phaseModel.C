@@ -155,6 +155,13 @@ void Foam::phaseModel::divU(const volScalarField& divU)
 }
 
 
+const Foam::volScalarField& Foam::phaseModel::K() const
+{
+    notImplemented("Foam::phaseModel::K()");
+    return volScalarField::null();
+}
+
+
 const Foam::surfaceScalarField& Foam::phaseModel::DbyA() const
 {
     return surfaceScalarField::null();

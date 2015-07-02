@@ -175,6 +175,9 @@ public:
             //- Set the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
             virtual void divU(const volScalarField& divU);
 
+            //- Return the phase kinetic energy
+            virtual const volScalarField& K() const;
+
 
         // Implicit phase pressure and dispersion support
 
@@ -217,9 +220,6 @@ public:
 
             //- Constant access the continuity error
             virtual tmp<volScalarField> continuityError() const = 0;
-
-            //- Access the continuity error
-            virtual volScalarField& continuityError() = 0;
 
             //- Constant access the volumetric flux
             virtual tmp<surfaceScalarField> phi() const = 0;

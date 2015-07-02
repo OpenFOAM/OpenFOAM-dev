@@ -315,14 +315,6 @@ Foam::MovingPhaseModel<BasePhaseModel>::continuityError() const
 
 
 template<class BasePhaseModel>
-Foam::volScalarField&
-Foam::MovingPhaseModel<BasePhaseModel>::continuityError()
-{
-    return continuityError_;
-}
-
-
-template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::phi() const
 {

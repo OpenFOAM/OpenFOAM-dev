@@ -152,9 +152,6 @@ public:
             //- Constant access the continuity error
             virtual tmp<volScalarField> continuityError() const;
 
-            //- Access the continuity error
-            virtual volScalarField& continuityError();
-
             //- Constant access the volumetric flux
             virtual tmp<surfaceScalarField> phi() const;
 
