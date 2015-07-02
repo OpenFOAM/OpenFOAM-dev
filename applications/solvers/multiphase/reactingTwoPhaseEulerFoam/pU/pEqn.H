@@ -278,14 +278,14 @@ while (pimple.correct())
     {
         pEqnComp1 =
             (
-                phase1.continuityError()
+                phase1.continuityError() - fluid.dmdt()
               - fvc::Sp(fvc::ddt(alpha1) + fvc::div(alphaPhi1), rho1)
             )/rho1
           + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh));
 
         pEqnComp2 =
             (
-                phase2.continuityError()
+                phase2.continuityError() + fluid.dmdt()
               - fvc::Sp(fvc::ddt(alpha2) + fvc::div(alphaPhi2), rho2)
             )/rho2
           + (alpha2*psi2/rho2)*correction(fvm::ddt(p_rgh));
