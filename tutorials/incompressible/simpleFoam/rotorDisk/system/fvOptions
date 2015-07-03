@@ -64,8 +64,8 @@ disk
         {
             data
             (
-                (profile1 (0.1 -6 0.1))
-                (profile1 (0.25 -6 0.1))
+                (profile1 (0.1 -6 0.02))
+                (profile1 (0.25 -6 0.02))
             );
         }
 
