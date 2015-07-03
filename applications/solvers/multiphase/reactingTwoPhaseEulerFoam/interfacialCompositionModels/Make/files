@@ -12,7 +12,7 @@ interfaceCompositionModels/interfaceCompositionModel/newInterfaceCompositionMode
 interfaceCompositionModels/InterfaceCompositionModel/InterfaceCompositionModels.C
 
 saturationModels/saturationModel/saturationModel.C
-saturationModels/saturationModel/newSaturationPressureModel.C
+saturationModels/saturationModel/newSaturationModel.C
 saturationModels/Antoine/Antoine.C
 saturationModels/AntoineExtended/AntoineExtended.C
 saturationModels/ArdenBuck/ArdenBuck.C
