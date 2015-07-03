@@ -18,8 +18,7 @@ volScalarField Kd(fluid.Kd());
         U1Eqn =
         (
             fvm::ddt(alpha1, rho1, U1) + fvm::div(alphaRhoPhi1, U1)
-          - fvm::Sp(phase1.continuityError() - dmdt21, U1)
-          - dmdt21*U2
+          - fvm::Sp(phase1.continuityError() + dmdt21, U1) + dmdt21*U2
           + MRF.DDt(alpha1*rho1, U1)
           + phase1.turbulence().divDevRhoReff(U1)
          ==
@@ -44,8 +43,7 @@ volScalarField Kd(fluid.Kd());
         U2Eqn =
         (
             fvm::ddt(alpha2, rho2, U2) + fvm::div(alphaRhoPhi2, U2)
-          - fvm::Sp(phase2.continuityError() + dmdt12, U2)
-          + dmdt12*U1
+          - fvm::Sp(phase2.continuityError() - dmdt12, U2) - dmdt12*U1
           + MRF.DDt(alpha2*rho2, U2)
           + phase2.turbulence().divDevRhoReff(U2)
          ==
