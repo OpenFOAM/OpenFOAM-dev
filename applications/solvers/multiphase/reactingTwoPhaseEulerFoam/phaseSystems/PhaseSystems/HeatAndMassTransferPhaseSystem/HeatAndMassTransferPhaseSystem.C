@@ -139,9 +139,11 @@ HeatAndMassTransferPhaseSystem
                 (
                     H1 + H2,
                     dimensionedScalar("small", heatTransferModel::dimK, SMALL)
-                )
+                ),
+                zeroGradientFvPatchScalarField::typeName
             )
         );
+        Tf_[pair]->correctBoundaryConditions();
     }
 }
 
@@ -303,21 +305,27 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
             continue;
         }
 
-        const volScalarField& he1(pair.phase1().thermo().he());
-        const volScalarField& he2(pair.phase2().thermo().he());
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
 
-        const volScalarField& K1(pair.phase1().K());
-        const volScalarField& K2(pair.phase2().K());
+        const volScalarField& he1(phase1.thermo().he());
+        const volScalarField& he2(phase2.thermo().he());
+
+        const volScalarField& K1(phase1.K());
+        const volScalarField& K2(phase2.K());
 
         const volScalarField dmdt(this->dmdt(pair));
         const volScalarField dmdt12(dmdt*pos(dmdt));
         const volScalarField dmdt21(dmdt*neg(dmdt));
+        const volScalarField& Tf(*Tf_[pair]);
 
-        *eqns[pair.phase1().name()] +=
-            fvm::Sp(dmdt21, he1) + dmdt21*K1 - dmdt21*(he2 + K2);
+        *eqns[phase1.name()] +=
+            fvm::Sp(dmdt21, he1) + dmdt21*K1
+          - dmdt21*(phase2.thermo().he(phase2.thermo().p(), Tf) + K2);
 
-        *eqns[pair.phase2().name()] +=
-            dmdt12*(he1 + K1) - fvm::Sp(dmdt12, he2) - dmdt12*K2;
+        *eqns[phase2.name()] +=
+            dmdt12*(phase1.thermo().he(phase1.thermo().p(), Tf) + K1)
+          - fvm::Sp(dmdt12, he2) - dmdt12*K2;
     }
 
     return eqnsPtr;
@@ -569,6 +577,8 @@ void Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::correctThermo()
         {
             interfaceCompositionModels_[key21]->update(Tf);
         }
+
+        Tf.correctBoundaryConditions();
 
         Info<< "Tf." << pair.name()
             << ": min = " << min(Tf.internalField())
