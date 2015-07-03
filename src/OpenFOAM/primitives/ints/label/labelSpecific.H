@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,17 @@ inline label neg(const label s)
 {
     return (s < 0)? 1: 0;
 }
+
+inline label posPart(const label s)
+{
+    return (s > 0)? s: 0;
+}
+
+inline label negPart(const label s)
+{
+    return (s < 0)? s: 0;
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

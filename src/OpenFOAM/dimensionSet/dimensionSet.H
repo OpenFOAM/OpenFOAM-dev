@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,6 +82,8 @@ dimensionSet mag(const dimensionSet&);
 dimensionSet sign(const dimensionSet&);
 dimensionSet pos(const dimensionSet&);
 dimensionSet neg(const dimensionSet&);
+dimensionSet posPart(const dimensionSet&);
+dimensionSet negPart(const dimensionSet&);
 dimensionSet inv(const dimensionSet&);
 
 // Function to check the argument is dimensionless

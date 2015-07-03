@@ -131,6 +131,18 @@ inline Scalar neg(const Scalar s)
 }
 
 
+inline Scalar posPart(const Scalar s)
+{
+    return (s > 0)? s: 0;
+}
+
+
+inline Scalar negPart(const Scalar s)
+{
+    return (s < 0)? s: 0;
+}
+
+
 inline bool equal(const Scalar& s1, const Scalar& s2)
 {
     return mag(s1 - s2) <= ScalarVSMALL;
