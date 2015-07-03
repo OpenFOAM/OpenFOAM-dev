@@ -111,12 +111,9 @@ void Foam::phaseSystem::generatePairsAndSubModels
             continue;
         }
 
-        Info<< "iter.key() " << iter.key() << endl;
         const phasePairKey key(iter.key().first(), iter.key().second());
         const phasePairKey key1In2(key.first(), key.second(), true);
         const phasePairKey key2In1(key.second(), key.first(), true);
-
-        Info<< "key " << key << endl;
 
         models.insert
         (
