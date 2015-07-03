@@ -23,69 +23,89 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Antoine.H"
+#include "ArdenBuck.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationPressureModels
+namespace saturationModels
 {
-    defineTypeNameAndDebug(Antoine, 0);
-    addToRunTimeSelectionTable(saturationPressureModel, Antoine, dictionary);
+    defineTypeNameAndDebug(ArdenBuck, 0);
+    addToRunTimeSelectionTable(saturationModel, ArdenBuck, dictionary);
 }
+}
+
+static const Foam::dimensionedScalar zeroC("", Foam::dimTemperature, 273.15);
+static const Foam::dimensionedScalar A("", Foam::dimPressure, 611.21);
+static const Foam::dimensionedScalar B("", Foam::dimless, 18.678);
+static const Foam::dimensionedScalar C("", Foam::dimTemperature, 234.5);
+static const Foam::dimensionedScalar D("", Foam::dimTemperature, 257.14);
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::saturationModels::ArdenBuck::xByTC
+(
+    const volScalarField& TC
+) const
+{
+    return (B - TC/C)/(D + TC);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationPressureModels::Antoine::Antoine(const dictionary& dict)
+Foam::saturationModels::ArdenBuck::ArdenBuck(const dictionary& dict)
 :
-    saturationPressureModel(),
-    A_("A", dimless, dict.lookup("A")),
-    B_("B", dimTemperature, dict.lookup("B")),
-    C_("C", dimTemperature, dict.lookup("C"))
+    saturationModel()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::saturationPressureModels::Antoine::~Antoine()
+Foam::saturationModels::ArdenBuck::~ArdenBuck()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::saturationPressureModels::Antoine::pSat
+Foam::saturationModels::ArdenBuck::pSat
 (
     const volScalarField& T
 ) const
 {
-    return
-        dimensionedScalar("one", dimPressure, 1)
-       *exp(A_ + B_/(C_ + T));
+    volScalarField TC(T - zeroC);
+
+    return A*exp(TC*xByTC(TC));
 }
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::saturationPressureModels::Antoine::pSatPrime
+Foam::saturationModels::ArdenBuck::pSatPrime
 (
     const volScalarField& T
 ) const
 {
-    return - pSat(T)*B_/sqr(C_ + T);
+    volScalarField TC(T - zeroC);
+
+    volScalarField x(xByTC(TC));
+
+    return A*exp(TC*x)*(D*x - TC/C)/(D + TC);
 }
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::saturationPressureModels::Antoine::lnPSat
+Foam::saturationModels::ArdenBuck::lnPSat
 (
     const volScalarField& T
 ) const
 {
-    return A_ + B_/(C_ + T);
+    volScalarField TC(T - zeroC);
+
+    return log(A.value()) + TC*xByTC(TC);
 }
 
 

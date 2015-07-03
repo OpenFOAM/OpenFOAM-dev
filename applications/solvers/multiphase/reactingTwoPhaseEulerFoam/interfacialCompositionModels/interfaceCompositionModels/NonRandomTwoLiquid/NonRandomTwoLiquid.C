@@ -109,16 +109,16 @@ NonRandomTwoLiquid
         dict.subDict(species2Name_).lookup("beta")
     );
 
-    saturationPressureModel12_.reset
+    saturationModel12_.reset
     (
-        saturationPressureModel::New
+        saturationModel::New
         (
             dict.subDict(species1Name_).subDict("interaction")
         ).ptr()
     );
-    saturationPressureModel21_.reset
+    saturationModel21_.reset
     (
-        saturationPressureModel::New
+        saturationModel::New
         (
             dict.subDict(species2Name_).subDict("interaction")
         ).ptr()
@@ -181,8 +181,8 @@ update
     volScalarField alpha12(alpha12_ + Tf*beta12_);
     volScalarField alpha21(alpha21_ + Tf*beta21_);
 
-    volScalarField tau12(saturationPressureModel12_->lnPSat(Tf));
-    volScalarField tau21(saturationPressureModel21_->lnPSat(Tf));
+    volScalarField tau12(saturationModel12_->lnPSat(Tf));
+    volScalarField tau21(saturationModel21_->lnPSat(Tf));
 
     volScalarField G12(exp(- alpha12*tau12));
     volScalarField G21(exp(- alpha21*tau21));

@@ -22,57 +22,72 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::saturationPressureModels::ArdenBuck
+    Foam::saturationModels::AntoineExtended
 
 Description
-    ArdenBuck equation for the vapour pressure of steam.
+    Extended Antoine equation for the vapour pressure.
+
+    \f[
+        \log (p) = A + \frac{B}{C + T} + D \log (T) + E T^F
+    \f]
+
+    Coefficients \f$A\f$, \f$B\f$, \f$C\f$, \f$D\f$, \f$E\f$ and \f$F\f$ are
+    to be supplied and should be suitable for natural logarithms and
+    temperatures in Kelvin.
 
 SourceFiles
-    ArdenBuck.C
+    AntoineExtended.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ArdenBuck_H
-#define ArdenBuck_H
+#ifndef AntoineExtended_H
+#define AntoineExtended_H
 
-#include "saturationPressureModel.H"
+#include "Antoine.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationPressureModels
+namespace saturationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class ArdenBuck Declaration
+                         Class AntoineExtended Declaration
 \*---------------------------------------------------------------------------*/
 
-class ArdenBuck
+class AntoineExtended
 :
-    public saturationPressureModel
+    public Antoine
 {
 private:
 
-    // Private Member Functions
+    // Private data
 
-        //- Exponent divided by the temperature
-        tmp<volScalarField> xByTC(const volScalarField& TC) const;
+        //- Constant D
+        dimensionedScalar D_;
+
+        //- Constant F
+        dimensionedScalar F_;
+
+        //- Constant E
+        //  (after F so F's dimensions can be used in the construction)
+        dimensionedScalar E_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("ArdenBuck");
+    TypeName("AntoineExtended");
 
     // Constructors
 
         //- Construct from a dictionary
-        ArdenBuck(const dictionary& dict);
+        AntoineExtended(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~ArdenBuck();
+    virtual ~AntoineExtended();
 
 
     // Member Functions
@@ -90,7 +105,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace saturationPressureModels
+} // End namespace saturationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

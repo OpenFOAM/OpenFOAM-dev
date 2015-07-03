@@ -54,9 +54,9 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Saturated
     (
         this->thermo_.composition().species()[saturatedName_]
     ),
-    saturationPressureModel_
+    saturationModel_
     (
-        saturationPressureModel::New
+        saturationModel::New
         (
             dict.subDict("saturationPressure")
         )
@@ -109,7 +109,7 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Yf
 {
     if (saturatedName_ == speciesName)
     {
-        return wRatioByP()*saturationPressureModel_->pSat(Tf);
+        return wRatioByP()*saturationModel_->pSat(Tf);
     }
     else
     {
@@ -120,7 +120,7 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Yf
 
         return
             this->thermo_.Y()[speciesIndex]
-           *(scalar(1) - wRatioByP()*saturationPressureModel_->pSat(Tf))
+           *(scalar(1) - wRatioByP()*saturationModel_->pSat(Tf))
            /max(scalar(1) - this->thermo_.Y()[saturatedIndex_], SMALL);
     }
 }
@@ -136,7 +136,7 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::YfPrime
 {
     if (saturatedName_ == speciesName)
     {
-        return wRatioByP()*saturationPressureModel_->pSatPrime(Tf);
+        return wRatioByP()*saturationModel_->pSatPrime(Tf);
     }
     else
     {
@@ -147,7 +147,7 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::YfPrime
 
         return
           - this->thermo_.Y()[speciesIndex]
-           *wRatioByP()*saturationPressureModel_->pSatPrime(Tf)
+           *wRatioByP()*saturationModel_->pSatPrime(Tf)
            /max(scalar(1) - this->thermo_.Y()[saturatedIndex_], SMALL);
     }
 }

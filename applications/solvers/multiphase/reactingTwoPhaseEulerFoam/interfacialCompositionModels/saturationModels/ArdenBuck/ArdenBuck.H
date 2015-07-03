@@ -22,70 +22,57 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::saturationPressureModels::Antoine
+    Foam::saturationModels::ArdenBuck
 
 Description
-    Antoine equation for the vapour pressure.
-
-    \f[
-        \log p = A + \frac{B}{C + T}
-    \f]
-
-    Coefficients \f$A\f$, \f$B\f$ and \f$C\f$ are to be supplied and should be
-    suitable for natural logarithms and temperatures in Kelvin.
+    ArdenBuck equation for the vapour pressure of steam.
 
 SourceFiles
-    Antoine.C
+    ArdenBuck.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Antoine_H
-#define Antoine_H
+#ifndef ArdenBuck_H
+#define ArdenBuck_H
 
-#include "saturationPressureModel.H"
+#include "saturationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationPressureModels
+namespace saturationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Antoine Declaration
+                         Class ArdenBuck Declaration
 \*---------------------------------------------------------------------------*/
 
-class Antoine
+class ArdenBuck
 :
-    public saturationPressureModel
+    public saturationModel
 {
-protected:
+private:
 
-    // Private data
+    // Private Member Functions
 
-        //- Constant A
-        dimensionedScalar A_;
-
-        //- Constant B
-        dimensionedScalar B_;
-
-        //- Constant C
-        dimensionedScalar C_;
+        //- Exponent divided by the temperature
+        tmp<volScalarField> xByTC(const volScalarField& TC) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("Antoine");
+    TypeName("ArdenBuck");
 
     // Constructors
 
         //- Construct from a dictionary
-        Antoine(const dictionary& dict);
+        ArdenBuck(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~Antoine();
+    virtual ~ArdenBuck();
 
 
     // Member Functions
@@ -103,7 +90,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace saturationPressureModels
+} // End namespace saturationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -23,26 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "saturationPressureModel.H"
+#include "saturationModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(saturationPressureModel, 0);
-    defineRunTimeSelectionTable(saturationPressureModel, dictionary);
+    defineTypeNameAndDebug(saturationModel, 0);
+    defineRunTimeSelectionTable(saturationModel, dictionary);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationPressureModel::saturationPressureModel()
+Foam::saturationModel::saturationModel()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::saturationPressureModel::~saturationPressureModel()
+Foam::saturationModel::~saturationModel()
 {}
 
 

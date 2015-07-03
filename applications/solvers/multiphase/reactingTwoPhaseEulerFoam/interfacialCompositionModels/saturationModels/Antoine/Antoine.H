@@ -22,72 +22,70 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::saturationPressureModels::AntoineExtended
+    Foam::saturationModels::Antoine
 
 Description
-    Extended Antoine equation for the vapour pressure.
+    Antoine equation for the vapour pressure.
 
     \f[
-        \log (p) = A + \frac{B}{C + T} + D \log (T) + E T^F
+        \log p = A + \frac{B}{C + T}
     \f]
 
-    Coefficients \f$A\f$, \f$B\f$, \f$C\f$, \f$D\f$, \f$E\f$ and \f$F\f$ are
-    to be supplied and should be suitable for natural logarithms and
-    temperatures in Kelvin.
+    Coefficients \f$A\f$, \f$B\f$ and \f$C\f$ are to be supplied and should be
+    suitable for natural logarithms and temperatures in Kelvin.
 
 SourceFiles
-    AntoineExtended.C
+    Antoine.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef AntoineExtended_H
-#define AntoineExtended_H
+#ifndef Antoine_H
+#define Antoine_H
 
-#include "Antoine.H"
+#include "saturationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationPressureModels
+namespace saturationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class AntoineExtended Declaration
+                         Class Antoine Declaration
 \*---------------------------------------------------------------------------*/
 
-class AntoineExtended
+class Antoine
 :
-    public Antoine
+    public saturationModel
 {
-private:
+protected:
 
     // Private data
 
-        //- Constant D
-        dimensionedScalar D_;
+        //- Constant A
+        dimensionedScalar A_;
 
-        //- Constant F
-        dimensionedScalar F_;
+        //- Constant B
+        dimensionedScalar B_;
 
-        //- Constant E
-        //  (after F so F's dimensions can be used in the construction)
-        dimensionedScalar E_;
+        //- Constant C
+        dimensionedScalar C_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("AntoineExtended");
+    TypeName("Antoine");
 
     // Constructors
 
         //- Construct from a dictionary
-        AntoineExtended(const dictionary& dict);
+        Antoine(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~AntoineExtended();
+    virtual ~Antoine();
 
 
     // Member Functions
@@ -105,7 +103,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace saturationPressureModels
+} // End namespace saturationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

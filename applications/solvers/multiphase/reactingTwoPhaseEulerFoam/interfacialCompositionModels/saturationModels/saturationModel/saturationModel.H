@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::saturationPressureModel
+    Foam::saturationModel
 
 Description
 
 SourceFiles
-    saturationPressureModel.C
+    saturationModel.C
     newSaturationPressureModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef saturationPressureModel_H
-#define saturationPressureModel_H
+#ifndef saturationModel_H
+#define saturationModel_H
 
 #include "volFields.H"
 #include "dictionary.H"
@@ -45,31 +45,31 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class saturationPressureModel Declaration
+                         Class saturationModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class saturationPressureModel
+class saturationModel
 {
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        saturationPressureModel(const saturationPressureModel&);
+        saturationModel(const saturationModel&);
 
         //- Disallow default bitwise assignment
-        void operator=(const saturationPressureModel&);
+        void operator=(const saturationModel&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("saturationPressureModel");
+    TypeName("saturationModel");
 
 
     //- Declare runtime construction
     declareRunTimeSelectionTable
     (
         autoPtr,
-        saturationPressureModel,
+        saturationModel,
         dictionary,
         (
             const dictionary& dict
@@ -81,17 +81,17 @@ public:
     // Constructors
 
         //- Construct null
-        saturationPressureModel();
+        saturationModel();
 
 
     // Selectors
 
         //- Select null constructed
-        static autoPtr<saturationPressureModel> New(const dictionary& dict);
+        static autoPtr<saturationModel> New(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~saturationPressureModel();
+    virtual ~saturationModel();
 
 
     // Member Functions

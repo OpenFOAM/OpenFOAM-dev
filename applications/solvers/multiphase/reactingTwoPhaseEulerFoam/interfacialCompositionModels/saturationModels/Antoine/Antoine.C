@@ -23,82 +23,69 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "AntoineExtended.H"
+#include "Antoine.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationPressureModels
+namespace saturationModels
 {
-    defineTypeNameAndDebug(AntoineExtended, 0);
-    addToRunTimeSelectionTable
-    (
-        saturationPressureModel,
-        AntoineExtended,
-        dictionary
-    );
+    defineTypeNameAndDebug(Antoine, 0);
+    addToRunTimeSelectionTable(saturationModel, Antoine, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationPressureModels::AntoineExtended::AntoineExtended
-(
-    const dictionary& dict
-)
+Foam::saturationModels::Antoine::Antoine(const dictionary& dict)
 :
-    Antoine(dict),
-    D_("D", dimless, dict.lookup("D")),
-    F_("F", dimless, dict.lookup("F")),
-    E_("E", dimless/pow(dimTemperature, F_), dict.lookup("E"))
+    saturationModel(),
+    A_("A", dimless, dict.lookup("A")),
+    B_("B", dimTemperature, dict.lookup("B")),
+    C_("C", dimTemperature, dict.lookup("C"))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::saturationPressureModels::AntoineExtended::~AntoineExtended()
+Foam::saturationModels::Antoine::~Antoine()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::saturationPressureModels::AntoineExtended::pSat
+Foam::saturationModels::Antoine::pSat
 (
     const volScalarField& T
 ) const
 {
     return
-        dimensionedScalar("one", dimPressure/pow(dimTemperature, D_), 1)
-       *exp(A_ + B_/(C_ + T) + E_*pow(T, F_))
-       *pow(T, D_);
+        dimensionedScalar("one", dimPressure, 1)
+       *exp(A_ + B_/(C_ + T));
 }
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::saturationPressureModels::AntoineExtended::pSatPrime
+Foam::saturationModels::Antoine::pSatPrime
 (
     const volScalarField& T
 ) const
 {
-    return pSat(T)*((D_ + E_*F_*pow(T, F_))/T - B_/sqr(C_ + T));
+    return - pSat(T)*B_/sqr(C_ + T);
 }
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::saturationPressureModels::AntoineExtended::lnPSat
+Foam::saturationModels::Antoine::lnPSat
 (
     const volScalarField& T
 ) const
 {
-    return
-        A_
-      + B_/(C_ + T)
-      + D_*log(T*dimensionedScalar("one", dimless/dimTemperature, 1))
-      + E_*pow(T, F_);
+    return A_ + B_/(C_ + T);
 }
 
 

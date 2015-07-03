@@ -41,7 +41,7 @@ SourceFiles
 #define NonRandomTwoLiquid_H
 
 #include "InterfaceCompositionModel.H"
-#include "saturationPressureModel.H"
+#include "saturationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,10 +97,10 @@ private:
         dimensionedScalar beta21_;
 
         //- Interaction parameter model for species 1
-        autoPtr<saturationPressureModel> saturationPressureModel12_;
+        autoPtr<saturationModel> saturationModel12_;
 
         //- Interaction parameter model for species 2
-        autoPtr<saturationPressureModel> saturationPressureModel21_;
+        autoPtr<saturationModel> saturationModel21_;
 
         //- Composition model for species 1
         autoPtr<interfaceCompositionModel> speciesModel1_;

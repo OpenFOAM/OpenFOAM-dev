@@ -23,29 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "saturationPressureModel.H"
+#include "saturationModel.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::saturationPressureModel> Foam::saturationPressureModel::New
+Foam::autoPtr<Foam::saturationModel> Foam::saturationModel::New
 (
     const dictionary& dict
 )
 {
-    word saturationPressureModelType(dict.lookup("type"));
+    word saturationModelType(dict.lookup("type"));
 
-    Info<< "Selecting saturationPressureModel: "
-        << saturationPressureModelType << endl;
+    Info<< "Selecting saturationModel: "
+        << saturationModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(saturationPressureModelType);
+        dictionaryConstructorTablePtr_->find(saturationModelType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("saturationPressureModel::New")
-            << "Unknown saturationPressureModelType type "
-            << saturationPressureModelType << endl << endl
-            << "Valid saturationPressureModel types are : " << endl
+        FatalErrorIn("saturationModel::New")
+            << "Unknown saturationModelType type "
+            << saturationModelType << endl << endl
+            << "Valid saturationModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
