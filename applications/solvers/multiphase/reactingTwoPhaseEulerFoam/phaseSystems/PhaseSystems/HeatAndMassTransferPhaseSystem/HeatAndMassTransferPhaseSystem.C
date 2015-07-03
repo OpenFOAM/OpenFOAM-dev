@@ -199,8 +199,8 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
         const volVectorField& U2(pair.phase2().U());
 
         const volScalarField dmdt(this->dmdt(pair));
-        const volScalarField dmdt12(dmdt*pos(dmdt));
-        const volScalarField dmdt21(dmdt*neg(dmdt));
+        const volScalarField dmdt12(posPart(dmdt));
+        const volScalarField dmdt21(negPart(dmdt));
 
         *eqns[pair.phase1().name()] += fvm::Sp(dmdt21, U1) - dmdt21*U2;
         *eqns[pair.phase2().name()] += dmdt12*U1 - fvm::Sp(dmdt12, U2);
@@ -315,8 +315,8 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
         const volScalarField& K2(phase2.K());
 
         const volScalarField dmdt(this->dmdt(pair));
-        const volScalarField dmdt12(dmdt*pos(dmdt));
-        const volScalarField dmdt21(dmdt*neg(dmdt));
+        const volScalarField dmdt12(posPart(dmdt));
+        const volScalarField dmdt21(negPart(dmdt));
         const volScalarField& Tf(*Tf_[pair]);
 
         *eqns[phase1.name()] +=

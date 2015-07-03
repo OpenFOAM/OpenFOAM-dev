@@ -11,8 +11,8 @@ volScalarField Kd(fluid.Kd());
 {
     volScalarField Vm(fluid.Vm());
 
-    const volScalarField dmdt12(fluid.dmdt()*pos(fluid.dmdt()));
-    const volScalarField dmdt21(fluid.dmdt()*neg(fluid.dmdt()));
+    const volScalarField dmdt12(posPart(fluid.dmdt()));
+    const volScalarField dmdt21(negPart(fluid.dmdt()));
 
     {
         U1Eqn =
