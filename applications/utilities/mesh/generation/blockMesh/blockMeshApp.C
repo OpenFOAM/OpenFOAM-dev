@@ -126,13 +126,13 @@ int main(int argc, char *argv[])
     )
     {
         dictPath =
-            runTime.path()/runTime.constant()
+            runTime.constant()
            /regionPath/polyMesh::meshSubDir/dictName;
     }
     // Otherwise assume the dictionary is present in the system directory
     else
     {
-        dictPath = runTime.path()/runTime.system()/regionPath/dictName;
+        dictPath = runTime.system()/regionPath/dictName;
     }
 
     IOobject meshDictIO
