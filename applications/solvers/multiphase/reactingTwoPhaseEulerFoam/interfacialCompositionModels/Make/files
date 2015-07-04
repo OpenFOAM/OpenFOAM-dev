@@ -16,5 +16,6 @@ saturationModels/saturationModel/newSaturationModel.C
 saturationModels/Antoine/Antoine.C
 saturationModels/AntoineExtended/AntoineExtended.C
 saturationModels/ArdenBuck/ArdenBuck.C
+saturationModels/constantSaturationConditions/constantSaturationConditions.C
 
 LIB = $(FOAM_LIBBIN)/libreactingEulerianInterfacialCompositionModels
