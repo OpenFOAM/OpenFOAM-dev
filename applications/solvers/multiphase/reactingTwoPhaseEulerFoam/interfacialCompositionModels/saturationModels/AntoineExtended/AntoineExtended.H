@@ -100,6 +100,9 @@ public:
 
         //- Natural log of the saturation pressure
         virtual tmp<volScalarField> lnPSat(const volScalarField& T) const;
+
+        //- Saturation temperature
+        virtual tmp<volScalarField> Tsat(const volScalarField& p) const;
 };
 
 

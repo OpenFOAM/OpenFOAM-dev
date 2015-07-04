@@ -89,4 +89,14 @@ Foam::saturationModels::Antoine::lnPSat
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::saturationModels::Antoine::Tsat
+(
+    const volScalarField& p
+) const
+{
+    return B_/(A_ - log10(p)) - C_;
+}
+
+
 // ************************************************************************* //

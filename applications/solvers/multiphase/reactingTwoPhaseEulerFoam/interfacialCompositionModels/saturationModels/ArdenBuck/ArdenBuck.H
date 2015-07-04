@@ -25,7 +25,7 @@ Class
     Foam::saturationModels::ArdenBuck
 
 Description
-    ArdenBuck equation for the vapour pressure of steam.
+    ArdenBuck equation for the vapour pressure of moist air.
 
 SourceFiles
     ArdenBuck.C
@@ -85,6 +85,9 @@ public:
 
         //- Natural log of the saturation pressure
         virtual tmp<volScalarField> lnPSat(const volScalarField& T) const;
+
+        //- Saturation temperature
+        virtual tmp<volScalarField> Tsat(const volScalarField& p) const;
 };
 
 

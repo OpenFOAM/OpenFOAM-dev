@@ -113,6 +113,12 @@ public:
         (
             const volScalarField& T
         ) const = 0;
+
+        //- Saturation temperature
+        virtual tmp<volScalarField> Tsat
+        (
+            const volScalarField& p
+        ) const = 0;
 };
 
 

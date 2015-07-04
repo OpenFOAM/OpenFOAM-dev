@@ -102,4 +102,19 @@ Foam::saturationModels::AntoineExtended::lnPSat
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::saturationModels::AntoineExtended::Tsat
+(
+    const volScalarField& p
+) const
+{
+    notImplemented
+    (
+        "saturationModels::AntoineExtended::Tsat(const volScalarField& p)"
+    );
+
+    return volScalarField::null();
+}
+
+
 // ************************************************************************* //

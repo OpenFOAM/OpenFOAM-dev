@@ -109,4 +109,19 @@ Foam::saturationModels::ArdenBuck::lnPSat
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::saturationModels::ArdenBuck::Tsat
+(
+    const volScalarField& p
+) const
+{
+    notImplemented
+    (
+        "saturationModels::ArdenBuck::Tsat(const volScalarField& p)"
+    );
+
+    return volScalarField::null();
+}
+
+
 // ************************************************************************* //
