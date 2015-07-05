@@ -86,11 +86,7 @@ void Foam::blockMesh::calcMergeInfo()
             blockPfaceLabel++
         )
         {
-            if
-            (
-                blockFaces[blockPfaces[blockPfaceLabel]]
-             == blockFaces[blockFaceLabel]
-            )
+            if (blockPfaces[blockPfaceLabel] == blockFaceLabel)
             {
                 foundFace = true;
                 break;
@@ -345,7 +341,6 @@ void Foam::blockMesh::calcMergeInfo()
                 }
             }
 
-// FIXME? - there seems to be some logic missing here
 
             label blockNfaceLabel;
             for
@@ -364,8 +359,6 @@ void Foam::blockMesh::calcMergeInfo()
                     break;
                 }
             }
-
-// FIXME? - there seems to be some logic missing here
 
 
             const labelListList& blockPfaceFaces =
@@ -416,7 +409,7 @@ void Foam::blockMesh::calcMergeInfo()
         {
             FatalErrorIn("blockMesh::calcMergeInfo()")
                 << "Point merging failed after max number of passes."
-                << abort(FatalError);
+                << exit(FatalError);
         }
     }
     while (changedPointMerge);
@@ -560,7 +553,8 @@ void Foam::blockMesh::calcMergeInfo()
         if (mergeList_[pointLabel] > pointLabel)
         {
             FatalErrorIn("blockMesh::calcMergeInfo()")
-                << "ouch" << exit(FatalError);
+                << "Merge list contains point index out of range"
+                << exit(FatalError);
         }
 
         if
@@ -579,7 +573,6 @@ void Foam::blockMesh::calcMergeInfo()
     }
 
     nPoints_ = newPointLabel;
-
 }
 
 
