@@ -10,21 +10,17 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvOptions;
+    location    "constant";
+    object      MRFProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 MRF1
 {
-    type            MRFSource;
-    selectionMode   cellZone;
-    cellZone        rotatingZone;
-    active          yes;
+    cellZone    rotatingZone;
+    active      yes;
 
-    MRFSourceCoeffs
-    {
-        #include "${FOAM_CASE}/constant/rotatingZoneProperties"
-    }
+    #include "rotatingZoneProperties"
 }
 
 // ************************************************************************* //

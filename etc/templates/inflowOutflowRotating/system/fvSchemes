@@ -40,7 +40,7 @@ divSchemes
     div(phi,omega)  $turbulence;
     div(phi,epsilon) $turbulence;
 
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
@@ -62,6 +62,11 @@ fluxRequired
 {
     default         no;
     p               ;
+}
+
+wallDist
+{
+    method meshWave;
 }
 
 // ************************************************************************* //
