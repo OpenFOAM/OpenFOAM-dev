@@ -254,6 +254,14 @@ else
         ;;
     esac
 
+    [ -n "$warn" ] || {
+        echo "Cannot locate OpenFOAM-format case files"
+        echo -n "Would you like to open ParaView anyway <Y|n>:"
+        read open
+        [ "$open" = "" ] || echo $open | grep -iqE "^y" && paraview
+        exit
+    }
+
     # only create/remove caseFile if it didn't already exist
     [ -e $caseFile ] || {
         trap "rm -f $caseFile 2>/dev/null; exit 0" EXIT TERM INT
