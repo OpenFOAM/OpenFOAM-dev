@@ -544,7 +544,7 @@ void Foam::blockMesh::calcMergeInfo()
     }
 
 
-    // sort merge list to return new point label (in new shorter list)
+    // Sort merge list to return new point label (in new shorter list)
     // given old point label
     label newPointLabel = 0;
 

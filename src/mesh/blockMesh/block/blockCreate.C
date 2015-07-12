@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,17 +27,6 @@ License
 #include "block.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::label Foam::block::vtxLabel(label i, label j, label k) const
-{
-    return
-    (
-        i
-      + j * (meshDensity().x() + 1)
-      + k * (meshDensity().x() + 1) * (meshDensity().y() + 1)
-    );
-}
-
 
 void Foam::block::createPoints() const
 {

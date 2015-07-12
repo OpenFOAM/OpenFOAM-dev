@@ -142,6 +142,12 @@ public:
 
         // Access
 
+        //- Return the number of cells in the i,j,k directions
+        const Vector<label>& density() const
+        {
+            return meshDensity_;
+        }
+
         //- Reference to point field defining the block mesh
         const pointField& blockPointField() const;
 

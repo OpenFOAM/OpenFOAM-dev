@@ -61,6 +61,8 @@ class blockMesh
     public blockList
 {
     // Private data
+
+        //- Switch for verbose output
         static bool verboseOutput;
 
         //- Point field defining the block mesh (corners)
@@ -134,6 +136,9 @@ class blockMesh
         //- Determine the merge info and the final number of cells/points
         void calcMergeInfo();
 
+        //- Determine the merge info and the final number of cells/points
+        void calcMergeInfoFast();
+
         faceList createPatchFaces(const polyPatch& patchTopologyFaces) const;
 
         void createPoints() const;
@@ -145,6 +150,11 @@ class blockMesh
 
 
 public:
+
+    // Static data members
+
+        ClassName("blockMesh");
+
 
     // Constructors
 
@@ -164,8 +174,10 @@ public:
             //  these points have not been scaled by scaleFactor
             const pointField& blockPointField() const;
 
+            //- Return the blockMesh topology as a polyMesh
             const polyMesh& topology() const;
 
+            //- Return the curved edges
             const curvedEdgeList& edges() const
             {
                 return edges_;
@@ -178,19 +190,17 @@ public:
             //  these points have been scaled by scaleFactor
             const pointField& points() const;
 
+            //- Return cell shapes list
             const cellShapeList& cells() const;
 
+            //- Return the patch face lists
             const faceListList& patches() const;
-
 
             //- Get patch information from the topology mesh
             PtrList<dictionary> patchDicts() const;
 
+            //- Return patch names
             wordList patchNames() const;
-
-//            wordList patchTypes() const;
-//
-//            wordList patchPhysicalTypes() const;
 
             //- Number of blocks with specified zones
             label numZonedBlocks() const;
@@ -203,6 +213,7 @@ public:
 
             //- Enable/disable verbose information about the progress
             static void verbose(const bool on=true);
+
 
         // Write
 
@@ -220,4 +231,3 @@ public:
 #endif
 
 // ************************************************************************* //
-

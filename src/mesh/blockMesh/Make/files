@@ -24,5 +24,6 @@ blockMesh/blockMeshCreate.C
 blockMesh/blockMeshTopology.C
 blockMesh/blockMeshCheck.C
 blockMesh/blockMeshMerge.C
+blockMesh/blockMeshMergeFast.C
 
 LIB = $(FOAM_LIBBIN)/libblockMesh

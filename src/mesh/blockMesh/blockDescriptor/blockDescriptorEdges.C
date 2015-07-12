@@ -68,7 +68,7 @@ void Foam::blockDescriptor::setEdge
     // Set reference to the list of labels defining the block
     const labelList& blockLabels = blockShape_;
 
-    // Set reference to global list of points
+    // Get list of points for this block
     const pointField blockPoints = blockShape_.points(blockPointField_);
 
     // Set the edge points/weights

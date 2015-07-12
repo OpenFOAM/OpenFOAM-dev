@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blockMesh.H"
+#include "Switch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 bool Foam::blockMesh::blockMesh::verboseOutput(false);
+
+namespace Foam
+{
+    defineDebugSwitch(blockMesh, 0);
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -38,7 +44,16 @@ Foam::blockMesh::blockMesh(const IOdictionary& dict, const word& regionName)
     scaleFactor_(1.0),
     topologyPtr_(createTopology(dict, regionName))
 {
-    calcMergeInfo();
+    Switch fastMerge(dict.lookupOrDefault<Switch>("fastMerge", false));
+
+    if (fastMerge)
+    {
+         calcMergeInfoFast();
+    }
+    else
+    {
+        calcMergeInfo();
+    }
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,13 +126,10 @@ public:
         // Access
 
             //- Return the block definition
-            inline const blockDescriptor& blockDef() const
-            {
-                return *this;
-            }
+            inline const blockDescriptor& blockDef() const;
 
             //- Vertex label offset for a particular i,j,k position
-            label vtxLabel(label i, label j, label k) const;
+            inline label vtxLabel(label i, label j, label k) const;
 
             //- Return the points for filling the block
             const pointField& points() const;
@@ -158,6 +155,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "blockI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
