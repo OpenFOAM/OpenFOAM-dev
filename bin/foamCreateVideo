@@ -26,8 +26,8 @@
 #     foamCreateVideo
 #
 # Description
-#     Creates an MPEG-4 compressed (.mp4) video file from PNG images
-#     - requires mencoder
+#     Creates a video file from PNG images
+#     - requires avconv or mencoder
 #
 #------------------------------------------------------------------------------
 
@@ -43,14 +43,15 @@ options:
   -h | -help          help
   -i | -image <name>  name of image sequence (default = image)
   -o | -out <name>    name of output video file (default = video)
+  -w | -webm          WebM output video file format
 
-Creates an MPEG-4 compressed (.mp4) video file from a sequence of PNG images
+Creates a video file from a sequence of PNG images
 - A sequence named "image" will expect files image.0000.png, image.0001.png, etc
-- An output video named "video" will produce a file video.mp4
-- By default the video codec is high resolution (x264) but there is an option to
-  select a medium resolution codec (lavc)
+- The default output video compression format is MPEG-4, with WebM as an option
+- The default file name, using MPEG-4 compression, is video.mp4
+- By default the video codec is high resolution
 
-Requires mencoder
+Requires avconv or mencoder for MPEG-4 output, avconv for WebM output
 
 USAGE
     exit 1
@@ -62,8 +63,7 @@ DIR='.'
 IMAGE='image'
 VIDEO='video'
 FPS=10
-VCODEC=x264
-
+FMT='mp4'
 
 while [ "$#" -gt 0 ]
 do
@@ -91,6 +91,11 @@ do
       VIDEO=$2
       shift 2
       ;;
+   -w | -webm)
+      FMT=webm
+      echo "Selected $FMT format, requires avconv..."
+      shift
+      ;;
    -*)
       usage "invalid option '$1'"
       ;;
@@ -106,12 +111,35 @@ done
 
 [ -f "$(ls -1 $DIR/$IMAGE.*.png | head -1)" ] || usage "Cannot find first file in image sequence"
 
-if command -v mencoder >/dev/null 2>&1; then
-    mencoder \
-        "mf://$DIR/$IMAGE.*.png" \
-        -mf fps=$FPS \
-        -o $VIDEO.mp4 \
-        -ovc $VCODEC
+if [ "$FMT" = "webm" ] ; then
+    if command -v avconv >/dev/null 2>&1 ; then
+        echo "Creating image with avconv..."
+        avconv \
+            -r 1 \
+            -i ${DIR}/${IMAGE}.%04d.png \
+            -r $FPS \
+            -c:v libvpx -crf 15 -b:v 1M \
+            $VIDEO.$FMT
+    else
+        usage "Please install avconv"
+    fi
 else
-    usage "Please install mencoder"
+    if command -v avconv >/dev/null 2>&1 ; then
+        echo "Creating image with avconv..."
+        avconv \
+            -r 1 \
+            -i ${DIR}/${IMAGE}.%04d.png \
+            -r $FPS \
+            -c:v libx264 -pix_fmt yuv420p \
+            $VIDEO.$FMT
+    elif command -v mencoder >/dev/null 2>&1 ; then
+        echo "Creating image with mencoder..."
+        mencoder \
+            "mf://$DIR/$IMAGE.*.png" \
+            -mf fps=$FPS \
+            -o $VIDEO.$FMT \
+            -ovc x264
+    else
+        usage "Please install avconv or mencoder"
+    fi
 fi
