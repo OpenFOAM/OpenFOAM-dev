@@ -115,9 +115,8 @@ if [ "$FMT" = "webm" ] ; then
     if command -v avconv >/dev/null 2>&1 ; then
         echo "Creating image with avconv..."
         avconv \
-            -r 1 \
-            -i ${DIR}/${IMAGE}.%04d.png \
             -r $FPS \
+            -i ${DIR}/${IMAGE}.%04d.png \
             -c:v libvpx -crf 15 -b:v 1M \
             $VIDEO.$FMT
     else
@@ -127,9 +126,8 @@ else
     if command -v avconv >/dev/null 2>&1 ; then
         echo "Creating image with avconv..."
         avconv \
-            -r 1 \
-            -i ${DIR}/${IMAGE}.%04d.png \
             -r $FPS \
+            -i ${DIR}/${IMAGE}.%04d.png \
             -c:v libx264 -pix_fmt yuv420p \
             $VIDEO.$FMT
     elif command -v mencoder >/dev/null 2>&1 ; then
