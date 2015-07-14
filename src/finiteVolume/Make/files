@@ -272,6 +272,7 @@ $(schemes)/fixedBlended/fixedBlended.C
 $(schemes)/localBlended/localBlended.C
 $(schemes)/limiterBlended/limiterBlended.C
 $(schemes)/CoBlended/CoBlended.C
+$(schemes)/cellCoBlended/cellCoBlended.C
 $(schemes)/localMax/localMax.C
 $(schemes)/localMin/localMin.C
 
