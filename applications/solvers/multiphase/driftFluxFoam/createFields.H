@@ -1,136 +1,138 @@
-    Info<< "Reading field p_rgh\n" << endl;
-    volScalarField p_rgh
+Info<< "Reading field p_rgh\n" << endl;
+volScalarField p_rgh
+(
+    IOobject
     (
-        IOobject
-        (
-            "p_rgh",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "p_rgh",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    Info<< "Reading field U\n" << endl;
-    volVectorField U
+Info<< "Reading field U\n" << endl;
+volVectorField U
+(
+    IOobject
     (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "U",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    #include "createPhi.H"
+#include "createPhi.H"
 
 
-    Info<< "Reading incompressibleTwoPhaseInteractingMixture\n" << endl;
-    incompressibleTwoPhaseInteractingMixture mixture(U, phi);
+Info<< "Reading incompressibleTwoPhaseInteractingMixture\n" << endl;
+incompressibleTwoPhaseInteractingMixture mixture(U, phi);
 
-    volScalarField& alpha1(mixture.alpha1());
-    volScalarField& alpha2(mixture.alpha2());
+volScalarField& alpha1(mixture.alpha1());
+volScalarField& alpha2(mixture.alpha2());
 
-    const dimensionedScalar& rho1 = mixture.rhod();
-    const dimensionedScalar& rho2 = mixture.rhoc();
+const dimensionedScalar& rho1 = mixture.rhod();
+const dimensionedScalar& rho2 = mixture.rhoc();
 
-    // Mixture density
-    volScalarField rho
+// Mixture density
+volScalarField rho
+(
+    IOobject
     (
-        IOobject
-        (
-            "rho",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mixture.rho()
-    );
+        "rho",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mixture.rho()
+);
 
-    // Mass flux
-    surfaceScalarField rhoPhi
+// Mass flux
+surfaceScalarField rhoPhi
+(
+    IOobject
     (
-        IOobject
-        (
-            "rhoPhi",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        fvc::interpolate(rho)*phi
-    );
+        "rhoPhi",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    fvc::interpolate(rho)*phi
+);
 
 
-    // Relative Velocity
-    autoPtr<relativeVelocityModel> UdmModelPtr
+// Relative Velocity
+autoPtr<relativeVelocityModel> UdmModelPtr
+(
+    relativeVelocityModel::New
     (
-        relativeVelocityModel::New
-        (
-            mixture,
-            mixture
-        )
-    );
+        mixture,
+        mixture
+    )
+);
 
-    relativeVelocityModel& UdmModel(UdmModelPtr());
+relativeVelocityModel& UdmModel(UdmModelPtr());
 
 
-    // Construct compressible turbulence model
-    autoPtr
-    <
-        CompressibleTurbulenceModel<incompressibleTwoPhaseInteractingMixture>
-    > turbulence
+// Construct compressible turbulence model
+autoPtr
+<
+    CompressibleTurbulenceModel<incompressibleTwoPhaseInteractingMixture>
+> turbulence
+(
+    CompressibleTurbulenceModel<incompressibleTwoPhaseInteractingMixture>
+    ::New(rho, U, rhoPhi, mixture)
+);
+
+
+#include "readGravitationalAcceleration.H"
+#include "readhRef.H"
+#include "gh.H"
+
+
+volScalarField p
+(
+    IOobject
     (
-        CompressibleTurbulenceModel<incompressibleTwoPhaseInteractingMixture>
-        ::New(rho, U, rhoPhi, mixture)
-    );
+        "p",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    p_rgh + rho*gh
+);
 
+label pRefCell = 0;
+scalar pRefValue = 0.0;
+setRefCell
+(
+    p,
+    p_rgh,
+    pimple.dict(),
+    pRefCell,
+    pRefValue
+);
 
-    #include "readGravitationalAcceleration.H"
-    #include "readhRef.H"
-    #include "gh.H"
-
-
-    volScalarField p
+if (p_rgh.needReference())
+{
+    p += dimensionedScalar
     (
-        IOobject
-        (
-            "p",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        p_rgh + rho*gh
+        "p",
+        p.dimensions(),
+        pRefValue - getRefCellValue(p, pRefCell)
     );
+    p_rgh = p - rho*gh;
+}
 
-    label pRefCell = 0;
-    scalar pRefValue = 0.0;
-    setRefCell
-    (
-        p,
-        p_rgh,
-        pimple.dict(),
-        pRefCell,
-        pRefValue
-    );
+mesh.setFluxRequired(p_rgh.name());
+mesh.setFluxRequired(alpha1.name());
 
-    if (p_rgh.needReference())
-    {
-        p += dimensionedScalar
-        (
-            "p",
-            p.dimensions(),
-            pRefValue - getRefCellValue(p, pRefCell)
-        );
-        p_rgh = p - rho*gh;
-    }
-
-
-    // MULES Correction
-    tmp<surfaceScalarField> tphiAlphaCorr0;
+// MULES Correction
+tmp<surfaceScalarField> tphiAlphaCorr0;

@@ -50,13 +50,5 @@ snGradSchemes
     default             limited corrected 0.5;
 }
 
-fluxRequired
-{
-    default             none;
-    Phi;
-    p_rgh;
-    pcorr;
-    alpha.water;
-}
 
 // ************************************************************************* //

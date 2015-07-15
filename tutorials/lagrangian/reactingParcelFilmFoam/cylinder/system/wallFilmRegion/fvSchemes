@@ -61,11 +61,5 @@ snGradSchemes
     snGrad(deltaf) uncorrected;
 }
 
-fluxRequired
-{
-    default no;
-    deltaf;
-}
-
 
 // ************************************************************************* //

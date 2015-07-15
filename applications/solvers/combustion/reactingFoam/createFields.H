@@ -45,6 +45,8 @@ const volScalarField& T = thermo.T();
 
 #include "compressibleCreatePhi.H"
 
+mesh.setFluxRequired(p.name());
+
 Info << "Creating turbulence model.\n" << nl;
 autoPtr<compressible::turbulenceModel> turbulence
 (

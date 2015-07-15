@@ -89,6 +89,8 @@ void Foam::CorrectPhi
         fvc::makeAbsolute(phi, U);
     }
 
+    mesh.setFluxRequired(pcorr.name());
+
     while (pimple.correctNonOrthogonal())
     {
         // Solve for pcorr such that the divergence of the corrected flux
@@ -155,6 +157,8 @@ void Foam::CorrectPhi
         dimensionedScalar("pcorr", p.dimensions(), 0.0),
         pcorrTypes
     );
+
+    mesh.setFluxRequired(pcorr.name());
 
     while (pimple.correctNonOrthogonal())
     {

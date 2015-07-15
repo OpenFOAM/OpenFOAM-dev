@@ -51,14 +51,6 @@ snGradSchemes
     default         corrected;
 }
 
-fluxRequired
-{
-    default         no;
-    p_rgh;
-    pcorr;
-    alpha.water;
-}
-
 wallDist
 {
     method meshWave;

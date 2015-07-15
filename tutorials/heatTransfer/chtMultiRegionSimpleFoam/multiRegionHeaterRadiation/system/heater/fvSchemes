@@ -45,9 +45,5 @@ snGradSchemes
     default         uncorrected;
 }
 
-fluxRequired
-{
-    default         no;
-}
 
 // ************************************************************************* //

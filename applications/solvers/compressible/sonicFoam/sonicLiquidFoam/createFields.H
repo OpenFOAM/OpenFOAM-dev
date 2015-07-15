@@ -1,44 +1,46 @@
-    Info<< "Reading field p\n" << endl;
-    volScalarField p
+Info<< "Reading field p\n" << endl;
+volScalarField p
+(
+    IOobject
     (
-        IOobject
-        (
-            "p",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "p",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
 
-    Info<< "Reading field U\n" << endl;
-    volVectorField U
+Info<< "Reading field U\n" << endl;
+volVectorField U
+(
+    IOobject
     (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "U",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    volScalarField rho
+volScalarField rho
+(
+    IOobject
     (
-        IOobject
-        (
-            "rho",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        rhoO + psi*p
-    );
+        "rho",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    rhoO + psi*p
+);
 
 
-    #include "compressibleCreatePhi.H"
+#include "compressibleCreatePhi.H"
+
+mesh.setFluxRequired(p.name());

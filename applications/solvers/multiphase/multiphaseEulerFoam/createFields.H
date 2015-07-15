@@ -1,115 +1,116 @@
-    Info<< "Reading field p_rgh\n" << endl;
-    volScalarField p_rgh
+Info<< "Reading field p_rgh\n" << endl;
+volScalarField p_rgh
+(
+    IOobject
     (
-        IOobject
-        (
-            "p_rgh",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-
-    volVectorField U
-    (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
+        "p_rgh",
+        runTime.timeName(),
         mesh,
-        dimensionedVector("U", dimVelocity, vector::zero)
-    );
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    surfaceScalarField phi
+volVectorField U
+(
+    IOobject
     (
-        IOobject
-        (
-            "phi",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
+        "U",
+        runTime.timeName(),
         mesh,
-        dimensionedScalar("phi", dimArea*dimVelocity, 0)
-    );
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedVector("U", dimVelocity, vector::zero)
+);
 
-    multiphaseSystem fluid(U, phi);
-
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
-    {
-        phaseModel& phase = iter();
-        const volScalarField& alpha = phase;
-
-        U += alpha*phase.U();
-        phi += fvc::interpolate(alpha)*phase.phi();
-    }
-
-    scalar slamDampCoeff
+surfaceScalarField phi
+(
+    IOobject
     (
-        fluid.lookupOrDefault<scalar>("slamDampCoeff", 1)
-    );
+        "phi",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("phi", dimArea*dimVelocity, 0)
+);
 
-    dimensionedScalar maxSlamVelocity
+multiphaseSystem fluid(U, phi);
+
+forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+{
+    phaseModel& phase = iter();
+    const volScalarField& alpha = phase;
+
+    U += alpha*phase.U();
+    phi += fvc::interpolate(alpha)*phase.phi();
+}
+
+scalar slamDampCoeff
+(
+    fluid.lookupOrDefault<scalar>("slamDampCoeff", 1)
+);
+
+dimensionedScalar maxSlamVelocity
+(
+    "maxSlamVelocity",
+    dimVelocity,
+    fluid.lookupOrDefault<scalar>("maxSlamVelocity", GREAT)
+);
+
+
+volScalarField rho
+(
+    IOobject
     (
-        "maxSlamVelocity",
-        dimVelocity,
-        fluid.lookupOrDefault<scalar>("maxSlamVelocity", GREAT)
-    );
+        "rho",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    fluid.rho()
+);
 
 
-    volScalarField rho
+// Construct incompressible turbulence model
+autoPtr<incompressible::turbulenceModel> turbulence
+(
+    incompressible::turbulenceModel::New(U, phi, fluid)
+);
+
+
+#include "readGravitationalAcceleration.H"
+#include "readhRef.H"
+#include "gh.H"
+
+
+volScalarField p
+(
+    IOobject
     (
-        IOobject
-        (
-            "rho",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        fluid.rho()
-    );
+        "p",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    p_rgh + rho*gh
+);
 
-
-    // Construct incompressible turbulence model
-    autoPtr<incompressible::turbulenceModel> turbulence
-    (
-        incompressible::turbulenceModel::New(U, phi, fluid)
-    );
-
-
-    #include "readGravitationalAcceleration.H"
-    #include "readhRef.H"
-    #include "gh.H"
-
-
-    volScalarField p
-    (
-        IOobject
-        (
-            "p",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        p_rgh + rho*gh
-    );
-
-    label pRefCell = 0;
-    scalar pRefValue = 0.0;
-    setRefCell
-    (
-        p,
-        p_rgh,
-        pimple.dict(),
-        pRefCell,
-        pRefValue
-    );
+label pRefCell = 0;
+scalar pRefValue = 0.0;
+setRefCell
+(
+    p,
+    p_rgh,
+    pimple.dict(),
+    pRefCell,
+    pRefValue
+);
+mesh.setFluxRequired(p_rgh.name());

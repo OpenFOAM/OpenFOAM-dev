@@ -65,12 +65,4 @@ snGradSchemes
     bounded     uncorrected;
 }
 
-fluxRequired
-{
-    default     no;
-    p_rgh;
-    alpha.particles;
-}
-
-
 // ************************************************************************* //

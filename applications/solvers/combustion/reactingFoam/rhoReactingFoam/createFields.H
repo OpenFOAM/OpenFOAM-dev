@@ -43,8 +43,9 @@ volScalarField& p = thermo.p();
 const volScalarField& psi = thermo.psi();
 const volScalarField& T = thermo.T();
 
-
 #include "compressibleCreatePhi.H"
+
+mesh.setFluxRequired(p.name());
 
 
 Info << "Creating turbulence model.\n" << nl;

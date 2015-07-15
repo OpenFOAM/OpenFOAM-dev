@@ -1,107 +1,110 @@
-    Info<< "Reading transportProperties\n" << endl;
+Info<< "Reading transportProperties\n" << endl;
 
-    IOdictionary transportProperties
+IOdictionary transportProperties
+(
+    IOobject
     (
-        IOobject
-        (
-            "transportProperties",
-            runTime.constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    );
+        "transportProperties",
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
 
-    dimensionedScalar rho
+dimensionedScalar rho
+(
+    transportProperties.lookup("rho")
+);
+
+dimensionedScalar nu
+(
+    transportProperties.lookup("nu")
+);
+
+dimensionedScalar mu
+(
+    transportProperties.lookup("mu")
+);
+
+dimensionedScalar sigma
+(
+    transportProperties.lookup("sigma")
+);
+
+Info<< "Reading field p\n" << endl;
+volScalarField p
+(
+    IOobject
     (
-        transportProperties.lookup("rho")
-    );
+        "p",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    dimensionedScalar nu
+
+Info<< "Reading field U\n" << endl;
+volVectorField U
+(
+    IOobject
     (
-        transportProperties.lookup("nu")
-    );
+        "U",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    dimensionedScalar mu
+#include "createPhi.H"
+
+Info<< "Reading field pB\n" << endl;
+volScalarField pB
+(
+    IOobject
     (
-        transportProperties.lookup("mu")
-    );
+        "pB",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    dimensionedScalar sigma
+
+Info<< "Reading field B\n" << endl;
+volVectorField B
+(
+    IOobject
     (
-        transportProperties.lookup("sigma")
-    );
-
-    Info<< "Reading field p\n" << endl;
-    volScalarField p
-    (
-        IOobject
-        (
-            "p",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "B",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
 
-    Info<< "Reading field U\n" << endl;
-    volVectorField U
-    (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+#include "createPhiB.H"
 
-    #include "createPhi.H"
+dimensionedScalar DB = 1.0/(mu*sigma);
+DB.name() = "DB";
 
-    Info<< "Reading field pB\n" << endl;
-    volScalarField pB
-    (
-        IOobject
-        (
-            "pB",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+dimensionedScalar DBU = 1.0/(2.0*mu*rho);
+DBU.name() = "DBU";
 
 
-    Info<< "Reading field B\n" << endl;
-    volVectorField B
-    (
-        IOobject
-        (
-            "B",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+label pRefCell = 0;
+scalar pRefValue = 0.0;
+setRefCell(p, piso.dict(), pRefCell, pRefValue);
 
-
-    #include "createPhiB.H"
-
-    dimensionedScalar DB = 1.0/(mu*sigma);
-    DB.name() = "DB";
-
-    dimensionedScalar DBU = 1.0/(2.0*mu*rho);
-    DBU.name() = "DBU";
-
-
-    label pRefCell = 0;
-    scalar pRefValue = 0.0;
-    setRefCell(p, piso.dict(), pRefCell, pRefValue);
+mesh.setFluxRequired(p.name());
+mesh.setFluxRequired(pB.name());

@@ -29,7 +29,7 @@ License
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvcReconstruct.H"
-#include "volPointInterpolation.H"                                              
+#include "volPointInterpolation.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -89,7 +89,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
     PackingModel<CloudType>::cacheFields(store);
 
     if (store)
-    { 
+    {
         const fvMesh& mesh = this->owner().mesh();
         const dimensionedScalar deltaT = this->owner().db().time().deltaT();
         const word& cloudName = this->owner().name();
@@ -108,6 +108,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                 cloudName + ":uSqrAverage"
             );
 
+        mesh.setFluxRequired(alpha_.name());
 
         // Property fields
         // ~~~~~~~~~~~~~~~
@@ -140,7 +141,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         //Info << "     rho: " << rho.internalField() << endl;
         //Info << endl;
 
-        
+
         // Stress field
         // ~~~~~~~~~~~~
 

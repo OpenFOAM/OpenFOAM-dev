@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    heatMassAndMomentumTransferTwoPhaseSystem;
+type    interfaceCompositionPhaseChangeTwoPhaseSystem;
 
 phases (gas liquid);
 

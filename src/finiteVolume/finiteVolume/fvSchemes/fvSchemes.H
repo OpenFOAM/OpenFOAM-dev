@@ -75,7 +75,7 @@ class fvSchemes
         dictionary laplacianSchemes_;
         ITstream defaultLaplacianScheme_;
 
-        dictionary fluxRequired_;
+        mutable dictionary fluxRequired_;
         bool defaultFluxRequired_;
 
         //- Steady-state run indicator
@@ -130,7 +130,7 @@ public:
 
             ITstream& laplacianScheme(const word& name) const;
 
-            void setFluxRequired(const word& name);
+            void setFluxRequired(const word& name) const;
 
             bool fluxRequired(const word& name) const;
 

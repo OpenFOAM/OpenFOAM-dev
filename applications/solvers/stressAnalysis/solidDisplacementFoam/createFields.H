@@ -72,3 +72,5 @@ else
 {
     divSigmaExp -= fvc::div((2*mu + lambda)*fvc::grad(D), "div(sigmaD)");
 }
+
+mesh.setFluxRequired(D.name());

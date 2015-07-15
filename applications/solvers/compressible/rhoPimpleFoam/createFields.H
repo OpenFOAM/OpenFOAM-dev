@@ -1,90 +1,92 @@
-    Info<< "Reading thermophysical properties\n" << endl;
+Info<< "Reading thermophysical properties\n" << endl;
 
-    autoPtr<psiThermo> pThermo
+autoPtr<psiThermo> pThermo
+(
+    psiThermo::New(mesh)
+);
+psiThermo& thermo = pThermo();
+thermo.validate(args.executable(), "h", "e");
+
+volScalarField& p = thermo.p();
+const volScalarField& psi = thermo.psi();
+
+volScalarField rho
+(
+    IOobject
     (
-        psiThermo::New(mesh)
-    );
-    psiThermo& thermo = pThermo();
-    thermo.validate(args.executable(), "h", "e");
-
-    volScalarField& p = thermo.p();
-    const volScalarField& psi = thermo.psi();
-
-    volScalarField rho
-    (
-        IOobject
-        (
-            "rho",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        thermo.rho()
-    );
-
-    Info<< "Reading field U\n" << endl;
-    volVectorField U
-    (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-
-    #include "compressibleCreatePhi.H"
-
-    dimensionedScalar rhoMax
-    (
-        dimensionedScalar::lookupOrDefault
-        (
-            "rhoMax",
-            pimple.dict(),
-            GREAT,
-            dimDensity
-        )
-    );
-
-    dimensionedScalar rhoMin
-    (
-        dimensionedScalar::lookupOrDefault
-        (
-            "rhoMin",
-            pimple.dict(),
-            0,
-            dimDensity
-        )
-    );
-
-    Info<< "Creating turbulence model\n" << endl;
-    autoPtr<compressible::turbulenceModel> turbulence
-    (
-        compressible::turbulenceModel::New
-        (
-            rho,
-            U,
-            phi,
-            thermo
-        )
-    );
-
-    Info<< "Creating field dpdt\n" << endl;
-    volScalarField dpdt
-    (
-        IOobject
-        (
-            "dpdt",
-            runTime.timeName(),
-            mesh
-        ),
+        "rho",
+        runTime.timeName(),
         mesh,
-        dimensionedScalar("dpdt", p.dimensions()/dimTime, 0)
-    );
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    thermo.rho()
+);
 
-    Info<< "Creating field kinetic energy K\n" << endl;
-    volScalarField K("K", 0.5*magSqr(U));
+Info<< "Reading field U\n" << endl;
+volVectorField U
+(
+    IOobject
+    (
+        "U",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+#include "compressibleCreatePhi.H"
+
+dimensionedScalar rhoMax
+(
+    dimensionedScalar::lookupOrDefault
+    (
+        "rhoMax",
+        pimple.dict(),
+        GREAT,
+        dimDensity
+    )
+);
+
+dimensionedScalar rhoMin
+(
+    dimensionedScalar::lookupOrDefault
+    (
+        "rhoMin",
+        pimple.dict(),
+        0,
+        dimDensity
+    )
+);
+
+Info<< "Creating turbulence model\n" << endl;
+autoPtr<compressible::turbulenceModel> turbulence
+(
+    compressible::turbulenceModel::New
+    (
+        rho,
+        U,
+        phi,
+        thermo
+    )
+);
+
+mesh.setFluxRequired(p.name());
+
+Info<< "Creating field dpdt\n" << endl;
+volScalarField dpdt
+(
+    IOobject
+    (
+        "dpdt",
+        runTime.timeName(),
+        mesh
+    ),
+    mesh,
+    dimensionedScalar("dpdt", p.dimensions()/dimTime, 0)
+);
+
+Info<< "Creating field kinetic energy K\n" << endl;
+volScalarField K("K", 0.5*magSqr(U));

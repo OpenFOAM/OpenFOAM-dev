@@ -558,7 +558,7 @@ Foam::ITstream& Foam::fvSchemes::laplacianScheme(const word& name) const
 }
 
 
-void Foam::fvSchemes::setFluxRequired(const word& name)
+void Foam::fvSchemes::setFluxRequired(const word& name) const
 {
     if (debug)
     {

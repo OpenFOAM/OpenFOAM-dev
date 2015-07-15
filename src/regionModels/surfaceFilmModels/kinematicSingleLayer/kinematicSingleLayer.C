@@ -383,7 +383,8 @@ void kinematicSingleLayer::solveThickness
         "deltaCoeff",
         fvc::interpolate(delta_)*deltarUAf*rhof*fvc::interpolate(pp)
     );
-//    constrainFilmField(ddrhorUAppf, 0.0);
+
+    regionMesh().setFluxRequired(delta_.name());
 
     for (int nonOrth=0; nonOrth<=nNonOrthCorr_; nonOrth++)
     {

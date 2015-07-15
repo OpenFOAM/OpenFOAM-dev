@@ -50,12 +50,4 @@ snGradSchemes
     default         corrected;
 }
 
-fluxRequired
-{
-    default         none;
-    p               ;
-    rho             ;
-}
-
-
 // ************************************************************************* //

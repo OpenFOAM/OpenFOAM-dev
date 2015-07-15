@@ -58,11 +58,5 @@ snGradSchemes
     snGrad(deltaf) orthogonal;
 }
 
-fluxRequired
-{
-    default no;
-    deltaf;
-}
-
 
 // ************************************************************************* //

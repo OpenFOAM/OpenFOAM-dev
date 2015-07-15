@@ -1,70 +1,72 @@
-    Info<< "Reading field p_rgh\n" << endl;
-    volScalarField p_rgh
+Info<< "Reading field p_rgh\n" << endl;
+volScalarField p_rgh
+(
+    IOobject
     (
-        IOobject
-        (
-            "p_rgh",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "p_rgh",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    Info<< "Reading field U\n" << endl;
-    volVectorField U
+Info<< "Reading field U\n" << endl;
+volVectorField U
+(
+    IOobject
     (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "U",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    #include "createPhi.H"
+#include "createPhi.H"
 
-    Info<< "Constructing multiphaseMixtureThermo\n" << endl;
-    multiphaseMixtureThermo mixture(U, phi);
+Info<< "Constructing multiphaseMixtureThermo\n" << endl;
+multiphaseMixtureThermo mixture(U, phi);
 
-    volScalarField& p = mixture.p();
-    volScalarField& T = mixture.T();
+volScalarField& p = mixture.p();
+volScalarField& T = mixture.T();
 
-    volScalarField rho
+volScalarField rho
+(
+    IOobject
     (
-        IOobject
-        (
-            "rho",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT
-        ),
-        mixture.rho()
-    );
+        "rho",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT
+    ),
+    mixture.rho()
+);
 
-    dimensionedScalar pMin(mixture.lookup("pMin"));
+dimensionedScalar pMin(mixture.lookup("pMin"));
 
-
-    #include "readGravitationalAcceleration.H"
-    #include "readhRef.H"
-    #include "gh.H"
+mesh.setFluxRequired(p_rgh.name());
 
 
-    // Construct compressible turbulence model
-    autoPtr<compressible::turbulenceModel> turbulence
+#include "readGravitationalAcceleration.H"
+#include "readhRef.H"
+#include "gh.H"
+
+
+// Construct compressible turbulence model
+autoPtr<compressible::turbulenceModel> turbulence
+(
+    compressible::turbulenceModel::New
     (
-        compressible::turbulenceModel::New
-        (
-            rho,
-            U,
-            mixture.rhoPhi(),
-            mixture
-        )
-    );
+        rho,
+        U,
+        mixture.rhoPhi(),
+        mixture
+    )
+);
 
-    Info<< "Creating field kinetic energy K\n" << endl;
-    volScalarField K("K", 0.5*magSqr(U));
+Info<< "Creating field kinetic energy K\n" << endl;
+volScalarField K("K", 0.5*magSqr(U));

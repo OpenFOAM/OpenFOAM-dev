@@ -69,10 +69,4 @@ snGradSchemes
     default         limited corrected 0.333;
 }
 
-fluxRequired
-{
-    default         no;
-    p;
-}
-
 // ************************************************************************* //
