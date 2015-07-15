@@ -43,6 +43,10 @@ Description
 
 #define List_END_FOR_ALL  }
 
+// Provide current element
+#define List_CELEM(f, fp, i)  (fp[i])
+
+// Provide current element
 #define List_ELEM(f, fp, i)  (fp[i])
 
 #define List_ACCESS(type, f, fp) \
@@ -62,6 +66,10 @@ Description
 
 #define List_END_FOR_ALL  }
 
+// Provide current element without incrementing pointer
+#define List_CELEM(f, fp, i)  (*fp)
+
+// Provide current element and increment pointer
 #define List_ELEM(f, fp, i)  (*fp++)
 
 #define List_ACCESS(type, f, fp) \

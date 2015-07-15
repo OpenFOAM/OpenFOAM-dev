@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,9 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    FixedListTest
+    Test-FixedList
 
 Description
+    Simple tests and examples of use of FixedList
+
+See Also
+    Foam::FixedList
 
 \*---------------------------------------------------------------------------*/
 
@@ -54,20 +58,18 @@ int main(int argc, char *argv[])
     Info<< "list:" << list
         << " hash:" << FixedList<label, 4>::Hash<>()(list) << endl;
 
-    Info<< "FixedList<label, ..> is contiguous, "
-        "thus hashing function is irrelevant: with string::hash" << endl;
-
-    Info<< "list:" << list
-        << " hash:" << FixedList<label, 4>::Hash<string::hash>()(list) << endl;
-
     label a[4] = {0, 1, 2, 3};
     FixedList<label, 4> list2(a);
 
-    Info<< "list:" << list2
+    Info<< "list2:" << list2
         << " hash:" << FixedList<label, 4>::Hash<>()(list2) << endl;
 
-    // FixedList<label, 3> hmm(Sin);
-    // Info<< hmm << endl;
+    Info<< "list: " << list << nl
+        << "list2: " << list2 << endl;
+    list.swap(list2);
+    Info<< "Swapped via the swap() method" << endl;
+    Info<< "list: " << list << nl
+        << "list2: " << list2 << endl;
 
     if (Pstream::parRun())
     {

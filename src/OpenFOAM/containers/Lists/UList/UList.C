@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,13 +46,13 @@ void Foam::UList<T>::assign(const UList<T>& a)
 
     if (this->size_)
     {
-#       ifdef USEMEMCPY
+        #ifdef USEMEMCPY
         if (contiguous<T>())
         {
             memcpy(this->v_, a.v_, this->byteSize());
         }
         else
-#       endif
+        #endif
         {
             List_ACCESS(T, (*this), vp);
             List_CONST_ACCESS(T, a, ap);
@@ -93,8 +93,8 @@ void Foam::UList<T>::swap(UList<T>& a)
     List_ACCESS(T, a, ap);
     T tmp;
     List_FOR_ALL((*this), i)
-        tmp = List_ELEM((*this), vp, i);
-        List_ELEM((*this), vp, i) = List_ELEM(a, ap, i);
+        tmp = List_CELEM((*this), vp, i);
+        List_ELEM((*this), vp, i) = List_CELEM(a, ap, i);
         List_ELEM(a, ap, i) = tmp;
     List_END_FOR_ALL
 }
