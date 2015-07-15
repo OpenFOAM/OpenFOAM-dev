@@ -52,12 +52,5 @@ snGradSchemes
     default         limited corrected 0.33;
 }
 
-fluxRequired
-{
-    default         no;
-    pcorr           ;
-    p               ;
-}
-
 
 // ************************************************************************* //

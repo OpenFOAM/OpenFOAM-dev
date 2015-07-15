@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,6 +129,8 @@ public:
             ITstream& snGradScheme(const word& name) const;
 
             ITstream& laplacianScheme(const word& name) const;
+
+            void setFluxRequired(const word& name);
 
             bool fluxRequired(const word& name) const;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,13 +42,13 @@ void Foam::fvSchemes::clear()
     defaultD2dt2Scheme_.clear();
     interpolationSchemes_.clear();
     defaultInterpolationScheme_.clear();
-    divSchemes_.clear(); // optional
+    divSchemes_.clear();
     defaultDivScheme_.clear();
-    gradSchemes_.clear(); // optional
+    gradSchemes_.clear();
     defaultGradScheme_.clear();
     snGradSchemes_.clear();
     defaultSnGradScheme_.clear();
-    laplacianSchemes_.clear(); // optional
+    laplacianSchemes_.clear();
     defaultLaplacianScheme_.clear();
     fluxRequired_.clear();
     defaultFluxRequired_ = false;
@@ -555,6 +555,17 @@ Foam::ITstream& Foam::fvSchemes::laplacianScheme(const word& name) const
         const_cast<ITstream&>(defaultLaplacianScheme_).rewind();
         return const_cast<ITstream&>(defaultLaplacianScheme_);
     }
+}
+
+
+void Foam::fvSchemes::setFluxRequired(const word& name)
+{
+    if (debug)
+    {
+        Info<< "Setting fluxRequired for " << name << endl;
+    }
+
+    fluxRequired_.add(name, true);
 }
 
 
