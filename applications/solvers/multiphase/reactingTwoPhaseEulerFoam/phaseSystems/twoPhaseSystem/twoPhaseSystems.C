@@ -29,7 +29,8 @@ License
 #include "twoPhaseSystem.H"
 #include "MomentumTransferPhaseSystem.H"
 #include "HeatTransferPhaseSystem.H"
-#include "HeatAndMassTransferPhaseSystem.H"
+#include "InterfaceCompositionPhaseChangePhaseSystem.H"
+#include "ThermalPhaseChangePhaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,19 +52,35 @@ namespace Foam
     );
 
     typedef
-        HeatAndMassTransferPhaseSystem
+        InterfaceCompositionPhaseChangePhaseSystem
         <
             MomentumTransferPhaseSystem<twoPhaseSystem>
         >
-        heatMassAndMomentumTransferTwoPhaseSystem;
+        interfaceCompositionPhaseChangeTwoPhaseSystem;
 
     addNamedToRunTimeSelectionTable
     (
         twoPhaseSystem,
-        heatMassAndMomentumTransferTwoPhaseSystem,
+        interfaceCompositionPhaseChangeTwoPhaseSystem,
         dictionary,
-        heatMassAndMomentumTransferTwoPhaseSystem
+        interfaceCompositionPhaseChangeTwoPhaseSystem
+    );
+
+    typedef
+        ThermalPhaseChangePhaseSystem
+        <
+            MomentumTransferPhaseSystem<twoPhaseSystem>
+        >
+        thermalPhaseChangeTwoPhaseSystem;
+
+    addNamedToRunTimeSelectionTable
+    (
+        twoPhaseSystem,
+        thermalPhaseChangeTwoPhaseSystem,
+        dictionary,
+        thermalPhaseChangeTwoPhaseSystem
     );
 }
+
 
 // ************************************************************************* //

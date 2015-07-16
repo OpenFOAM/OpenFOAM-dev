@@ -22,42 +22,41 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::HeatAndMassTransferPhaseSystem
+    Foam::InterfaceCompositionPhaseChangePhaseSystem
 
 Description
-    Base class to support interfacial heat and mass transfer between a number
-    of phases.
+    Class to provide interfacial heat and mass transfer between a number of
+    phases according to a interface composition model.
+
+    The interface temperature is calculated such that the net rate at which the
+    heat is transferred to the interface is equal to the latent heat consumed by
+    the mass transfer.
 
 SourceFiles
-    HeatAndMassTransferPhaseSystem.C
+    InterfaceCompositionPhaseChangePhaseSystem.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef HeatAndMassTransferPhaseSystem_H
-#define HeatAndMassTransferPhaseSystem_H
+#ifndef InterfaceCompositionPhaseChangePhaseSystem_H
+#define InterfaceCompositionPhaseChangePhaseSystem_H
 
-#include "phaseSystem.H"
+#include "HeatAndMassTransferPhaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template <class modelType>
-class BlendedInterfacialModel;
-
-class blendingMethod;
-class heatTransferModel;
-class massTransferModel;
+class interfaceCompositionModel;
 
 /*---------------------------------------------------------------------------*\
-                 Class HeatAndMassTransferPhaseSystem Declaration
+                 Class InterfaceCompositionPhaseChangePhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>
-class HeatAndMassTransferPhaseSystem
+class InterfaceCompositionPhaseChangePhaseSystem
 :
-    public BasePhaseSystem
+    public HeatAndMassTransferPhaseSystem<BasePhaseSystem>
 {
 protected:
 
@@ -65,45 +64,18 @@ protected:
 
         typedef HashTable
         <
-            HashTable
-            <
-                autoPtr<BlendedInterfacialModel<heatTransferModel> >
-            >,
+            autoPtr<interfaceCompositionModel>,
             phasePairKey,
             phasePairKey::hash
-        > heatTransferModelTable;
-
-        typedef HashTable
-        <
-            HashTable
-            <
-                autoPtr<BlendedInterfacialModel<massTransferModel> >
-            >,
-            phasePairKey,
-            phasePairKey::hash
-        > massTransferModelTable;
+        > interfaceCompositionModelTable;
 
 
     // Protected data
 
-        //- Mass transfer rate
-        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            dmdt_;
-
-        //- Explicit part of the mass transfer rate
-        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            dmdtExplicit_;
-
-        //- Interface temperatures
-        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash> Tf_;
-
         // Sub Models
 
-            //- Heat transfer models
-            heatTransferModelTable heatTransferModels_;
-
-            //- Mass transfer models
-            massTransferModelTable massTransferModels_;
+            //- Interface composition models
+            interfaceCompositionModelTable interfaceCompositionModels_;
 
 
 public:
@@ -111,35 +83,20 @@ public:
     // Constructors
 
         //- Construct from fvMesh
-        HeatAndMassTransferPhaseSystem(const fvMesh&);
+        InterfaceCompositionPhaseChangePhaseSystem(const fvMesh&);
 
 
     //- Destructor
-    virtual ~HeatAndMassTransferPhaseSystem();
+    virtual ~InterfaceCompositionPhaseChangePhaseSystem();
 
 
     // Member Functions
 
-        //- Return the interfacial mass flow rate
-        virtual tmp<volScalarField> dmdt
-        (
-            const phasePairKey& key
-        ) const;
-
-        //- Return the momentum transfer matrices
-        virtual autoPtr<phaseSystem::momentumTransferTable>
-            momentumTransfer() const;
-
-        //- Return the heat transfer matrices
-        virtual autoPtr<phaseSystem::heatTransferTable>
-            heatTransfer() const;
-
         //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable>
-            massTransfer() const = 0;
+        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
 
         //- Correct the thermodynamics
-        virtual void correctThermo() = 0;
+        virtual void correctThermo();
 
         //- Read base phaseProperties dictionary
         virtual bool read();
@@ -153,7 +110,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "HeatAndMassTransferPhaseSystem.C"
+#   include "InterfaceCompositionPhaseChangePhaseSystem.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
