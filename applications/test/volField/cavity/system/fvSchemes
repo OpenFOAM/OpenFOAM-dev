@@ -46,11 +46,4 @@ snGradSchemes
     default         orthogonal;
 }
 
-fluxRequired
-{
-    default         no;
-    p               ;
-}
-
-
 // ************************************************************************* //
