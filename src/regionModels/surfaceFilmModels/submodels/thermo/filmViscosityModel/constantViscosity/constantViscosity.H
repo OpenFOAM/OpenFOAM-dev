@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,6 @@ class constantViscosity
 :
     public filmViscosityModel
 {
-private:
-
     // Private member functions
 
         //- Disallow default bitwise copy construct
@@ -70,7 +68,7 @@ protected:
     // Protected data
 
         //- Constant viscosity [Pa.s]
-        scalar mu0_;
+        dimensionedScalar mu0_;
 
 
 

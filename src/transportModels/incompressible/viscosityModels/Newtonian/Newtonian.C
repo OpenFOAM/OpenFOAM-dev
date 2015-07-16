@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::viscosityModels::Newtonian::Newtonian
 )
 :
     viscosityModel(name, viscosityProperties, U, phi),
-    nu0_("nu", dimensionSet(0, 2, -1, 0, 0), viscosityProperties_.lookup("nu")),
+    nu0_("nu", dimViscosity, viscosityProperties_.lookup("nu")),
     nu_
     (
         IOobject
