@@ -1,2 +1,2 @@
 cDBUG       =
-cOPT        = -O3 -no-prec-div
+cOPT        = -xHost -O2
