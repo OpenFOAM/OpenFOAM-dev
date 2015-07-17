@@ -431,9 +431,7 @@ public:
 };
 
 
-#if defined (__GNUC__)
 template<>
-#endif
 Ostream& operator<<(Ostream& os, const InfoProxy<IOobject>& ip);
 
 

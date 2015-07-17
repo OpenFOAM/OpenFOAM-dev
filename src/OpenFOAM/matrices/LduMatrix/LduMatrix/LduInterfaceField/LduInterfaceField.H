@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,9 @@ public:
 
         // Coupled interface functionality
 
+            //- Inherit initInterfaceMatrixUpdate from lduInterfaceField
+            using lduInterfaceField::initInterfaceMatrixUpdate;
+
             //- Initialise neighbour matrix update
             virtual void initInterfaceMatrixUpdate
             (
@@ -99,6 +102,9 @@ public:
                 const Pstream::commsTypes commsType
             ) const
             {}
+
+            //- Inherit updateInterfaceMatrix from lduInterfaceField
+            using lduInterfaceField::updateInterfaceMatrix;
 
             //- Update result field based on interface functionality
             virtual void updateInterfaceMatrix

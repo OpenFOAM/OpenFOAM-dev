@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,11 +21,6 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Print a summary of the data described by the IOobject (for
-    use in erroring, etc.) via the global 'Info' error
-    mechanism.
-
 \*---------------------------------------------------------------------------*/
 
 #include "IOobject.H"
@@ -33,9 +28,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#if defined (__GNUC__)
 template<>
-#endif
 Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<IOobject>& ip)
 {
     const IOobject& io = ip.t_;

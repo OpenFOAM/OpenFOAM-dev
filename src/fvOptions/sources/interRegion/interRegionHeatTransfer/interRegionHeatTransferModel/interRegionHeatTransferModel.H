@@ -90,6 +90,9 @@ protected:
         //- Set the neighbour interRegionHeatTransferModel
         void setNbrModel();
 
+        //- Inherit correct from interRegionOption
+        using interRegionOption::correct;
+
         //- Correct to calculate the inter-region heat transfer coefficient
         void correct();
 

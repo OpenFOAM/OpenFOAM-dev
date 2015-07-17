@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,6 +143,12 @@ Foam::Ostream& Foam::ensightFile::write
 }
 
 
+Foam::Ostream& Foam::ensightFile::write(const char* value)
+{
+    return write(string(value));
+}
+
+
 Foam::Ostream& Foam::ensightFile::write(const string& value)
 {
     char buf[80];
@@ -270,7 +276,7 @@ Foam::Ostream& Foam::ensightFile::writeKeyword(const string& key)
 {
     if (allowUndef_)
     {
-        write(key + " undef");
+        write(string(key + " undef"));
         newline();
         write(undefValue_);
         newline();

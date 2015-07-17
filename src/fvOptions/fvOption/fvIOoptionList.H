@@ -77,12 +77,15 @@ public:
         IOoptionList(const fvMesh& mesh);
 
 
-        //- Destructor
-        virtual ~IOoptionList()
-        {}
+    //- Destructor
+    virtual ~IOoptionList()
+    {}
 
 
     // Member Functions
+
+        //- Inherit read from optionList
+        using optionList::read;
 
         //- Read dictionary
         virtual bool read();

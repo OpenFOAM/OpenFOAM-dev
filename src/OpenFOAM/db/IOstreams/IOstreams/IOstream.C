@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -227,20 +227,12 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const IOstream::versionNumber& vn)
 }
 
 
-
-namespace Foam
+template<>
+Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<IOstream>& ip)
 {
-
-#  if defined (__GNUC__)
-   template<>
-#  endif
-   Ostream& operator<<(Ostream& os, const InfoProxy<IOstream>& ip)
-   {
-       ip.t_.print(os);
-       return os;
-   }
-
-}  // end namespace
+    ip.t_.print(os);
+    return os;
+}
 
 
 // ************************************************************************* //

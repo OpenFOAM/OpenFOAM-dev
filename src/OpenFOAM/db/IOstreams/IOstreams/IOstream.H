@@ -52,10 +52,6 @@ SourceFiles
 
 #include <iostream>
 
-#if __GNUC__ < 3
-#   define ios_base ios
-#endif
-
 using std::ios_base;
 using std::istream;
 using std::ostream;
@@ -542,6 +538,9 @@ public:
 
 Ostream& operator<<(Ostream& os, const IOstream::streamFormat& sf);
 Ostream& operator<<(Ostream& os, const IOstream::versionNumber& vn);
+
+template<>
+Ostream& operator<<(Ostream& os, const InfoProxy<IOstream>& ip);
 
 
 // --------------------------------------------------------------------

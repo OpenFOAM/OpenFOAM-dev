@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,6 @@ public:
         virtual const word& type() const
         {
             return Cloud<typename CloudType::particleType>::typeName;
-            //cloud_.type();
         }
 
 
@@ -77,6 +76,9 @@ public:
 
 
     // Member functions
+
+        //- Inherit readData from regIOobject
+        using regIOobject::readData;
 
         virtual void readData(CloudType& c, bool checkClass);
 

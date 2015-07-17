@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,10 +56,10 @@ static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */ };
 
 inline uint32_t Foam::SHA1::swapBytes(uint32_t n)
 {
-#ifdef __BYTE_ORDER
-# if (__BYTE_ORDER == __BIG_ENDIAN)
+    #ifdef __BYTE_ORDER
+    # if (__BYTE_ORDER == __BIG_ENDIAN)
     return n;
-# else
+    # else
     return
     (
         ((n) << 24)
@@ -67,9 +67,9 @@ inline uint32_t Foam::SHA1::swapBytes(uint32_t n)
       | (((n) >> 8) & 0xff00)
       | ((n) >> 24)
     );
-# endif
+    # endif
 
-#else
+    #else
 
     const short x = 0x0100;
 
@@ -88,19 +88,17 @@ inline uint32_t Foam::SHA1::swapBytes(uint32_t n)
           | ((n) >> 24)
         );
     }
-#endif
+    #endif
 }
 
 
-inline void
-Foam::SHA1::set_uint32(unsigned char *cp, uint32_t v)
+inline void Foam::SHA1::set_uint32(unsigned char *cp, uint32_t v)
 {
     memcpy(cp, &v, sizeof(uint32_t));
 }
 
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
 
 void Foam::SHA1::processBytes(const void *data, size_t len)
 {
@@ -141,29 +139,12 @@ void Foam::SHA1::processBytes(const void *data, size_t len)
     }
 
     // Process available complete blocks
-//    if (len >= 64)
-//    {
-//#if !_STRING_ARCH_unaligned
-//# define alignof(type) offsetof (struct { char c; type x; }, x)
-//# define UNALIGNED_P(p) (((size_t) p) % alignof (uint32_t) != 0)
-//        if (UNALIGNED_P (data))
-//        {
-//            while (len > 64)
-            while (len >= 64)
-            {
-                processBlock(memcpy(buffer_, data, 64), 64);
-                data = reinterpret_cast<const unsigned char*>(data) + 64;
-                len -= 64;
-            }
-//        }
-//        else
-//#endif
-//        {
-//            processBlock(data, len & ~63);
-//            data = reinterpret_cast<const unsigned char*>(data) + (len & ~63);
-//            len &= 63;
-//        }
-//    }
+    while (len >= 64)
+    {
+        processBlock(memcpy(buffer_, data, 64), 64);
+        data = reinterpret_cast<const unsigned char*>(data) + 64;
+        len -= 64;
+    }
 
     // Move remaining bytes in internal buffer.
     if (len > 0)
@@ -199,8 +180,7 @@ void Foam::SHA1::processBytes(const void *data, size_t len)
 // Process LEN bytes of BUFFER, it is assumed that LEN % 64 == 0.
 // Most of this code comes from GnuPG's cipher/sha1.c
 
-void
-Foam::SHA1::processBlock(const void *data, size_t len)
+void Foam::SHA1::processBlock(const void *data, size_t len)
 {
     const uint32_t *words = reinterpret_cast<const uint32_t*>(data);
     size_t nwords = len / sizeof(uint32_t);
@@ -224,19 +204,18 @@ Foam::SHA1::processBlock(const void *data, size_t len)
     }
 
     // rotate left uint32_t by n bits
-#define rol_uint32(x, nbits)  (((x) << (nbits)) | ((x) >> (32 - (nbits))))
+    #define rol_uint32(x, nbits)  (((x) << (nbits)) | ((x) >> (32 - (nbits))))
 
-#define M(I) ( tm = x[I & 0x0F] ^ x[(I-14) & 0x0F]                            \
+    #define M(I) ( tm = x[I & 0x0F] ^ x[(I-14) & 0x0F]                        \
                ^ x[(I-8) & 0x0F] ^ x[(I-3) & 0x0F]                            \
                , (x[I & 0x0F] = rol_uint32(tm, 1)) )
 
-
-#define R(A,B,C,D,E,F,K,M)                                                    \
-    do                                                                        \
-    {                                                                         \
-        E += rol_uint32(A, 5) + F(B, C, D) + K + M;                           \
-        B = rol_uint32(B, 30);                                                \
-    } while (0)
+    #define R(A,B,C,D,E,F,K,M)                                                \
+        do                                                                    \
+        {                                                                     \
+            E += rol_uint32(A, 5) + F(B, C, D) + K + M;                       \
+            B = rol_uint32(B, 30);                                            \
+        } while (0)
 
     while (words < endp)
     {
@@ -357,18 +336,7 @@ void Foam::SHA1::calcDigest(SHA1Digest& dig) const
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
 
 void Foam::SHA1::clear()
 {
@@ -444,20 +412,6 @@ Foam::SHA1Digest Foam::SHA1::digest() const
 
     return dig;
 }
-
-
-// * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
-
-// void Foam::SHA1::operator=(const SHA1& rhs)
-// {
-//     // Check for assignment to self
-//     if (this == &rhs)
-//     {
-//         FatalErrorIn("Foam::SHA1::operator=(const Foam::SHA1&)")
-//             << "Attempted assignment to self"
-//             << abort(FatalError);
-//     }
-// }
 
 
 // ************************************************************************* //

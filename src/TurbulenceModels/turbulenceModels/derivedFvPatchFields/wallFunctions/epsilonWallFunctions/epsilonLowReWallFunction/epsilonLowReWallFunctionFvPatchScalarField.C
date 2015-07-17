@@ -77,8 +77,6 @@ void Foam::epsilonLowReWallFunctionFvPatchScalarField::calculate
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
-    typedef DimensionedField<scalar, volMesh> FieldType;
-
     const DimensionedField<scalar, volMesh>& G =
         db().lookupObject<DimensionedField<scalar, volMesh> >
         (

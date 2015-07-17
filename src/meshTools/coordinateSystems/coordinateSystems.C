@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,14 +174,14 @@ Foam::wordList Foam::coordinateSystems::toc() const
 }
 
 
-bool Foam::coordinateSystems::writeData(Ostream& os, bool subDict) const
+bool Foam::coordinateSystems::writeData(Ostream& os) const
 {
     os << nl << size() << nl << token::BEGIN_LIST;
 
     forAll(*this, i)
     {
         os << nl;
-        operator[](i).writeDict(os, subDict);
+        operator[](i).writeDict(os, true);
     }
 
     os << token::END_LIST << nl;

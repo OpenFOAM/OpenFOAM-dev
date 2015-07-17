@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,6 +88,9 @@ public:
             // Metis does not know about proc boundaries
             return false;
         }
+
+        //- Inherit decompose from decompositionMethod
+        using decompositionMethod::decompose;
 
         //- Return for every coordinate the wanted processor number. Use the
         //  mesh connectivity (if needed)

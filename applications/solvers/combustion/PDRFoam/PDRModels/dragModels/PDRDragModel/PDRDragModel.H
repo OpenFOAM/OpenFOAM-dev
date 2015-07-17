@@ -155,6 +155,9 @@ public:
         //- Return the momentum drag turbulence generation rate
         virtual tmp<volScalarField> Gk() const = 0;
 
+        //- Inherit read from regIOobject
+        using regIOobject::read;
+
         //- Update properties from given dictionary
         virtual bool read(const dictionary& PDRProperties) = 0;
 

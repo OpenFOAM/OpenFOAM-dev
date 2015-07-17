@@ -800,6 +800,60 @@ Foam::heThermo<BasicThermo, MixtureType>::alphaEff
 
 
 template<class BasicThermo, class MixtureType>
+Foam::scalar
+Foam::heThermo<BasicThermo, MixtureType>::Cp
+(
+    const label speciei,
+    const scalar p,
+    const scalar T
+) const
+{
+    notImplemented
+    (
+        "heThermo<BasicThermo, MixtureType>::"
+        "Cp(const label speciei, const scalar p, const scalar T)"
+    );
+    return 0;
+}
+
+
+template<class BasicThermo, class MixtureType>
+Foam::scalar
+Foam::heThermo<BasicThermo, MixtureType>::Cv
+(
+    const label speciei,
+    const scalar p,
+    const scalar T
+) const
+{
+    notImplemented
+    (
+        "heThermo<BasicThermo, MixtureType>::"
+        "Cv(const label speciei, const scalar p, const scalar T)"
+    );
+    return 0;
+}
+
+
+template<class BasicThermo, class MixtureType>
+Foam::scalar
+Foam::heThermo<BasicThermo, MixtureType>::kappa
+(
+    const label speciei,
+    const scalar p,
+    const scalar T
+) const
+{
+    notImplemented
+    (
+        "heThermo<BasicThermo, MixtureType>::"
+        "kappa(const label speciei, const scalar p, const scalar T)"
+    );
+    return 0;
+}
+
+
+template<class BasicThermo, class MixtureType>
 bool Foam::heThermo<BasicThermo, MixtureType>::read()
 {
     if (BasicThermo::read())

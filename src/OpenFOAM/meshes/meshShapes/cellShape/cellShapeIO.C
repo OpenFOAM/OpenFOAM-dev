@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,9 +21,6 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Reads a cellShape
-
 \*---------------------------------------------------------------------------*/
 
 #include "cellShape.H"
@@ -32,12 +29,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Istream& operator>>(Istream& is, cellShape& s)
+Foam::Istream& Foam::operator>>(Istream& is, cellShape& s)
 {
     bool readEndBracket = false;
 
@@ -100,7 +92,7 @@ Istream& operator>>(Istream& is, cellShape& s)
 }
 
 
-Ostream& operator<<(Ostream& os, const cellShape & s)
+Foam::Ostream& Foam::operator<<(Ostream& os, const cellShape & s)
 {
     // Write beginning of record
     os << token::BEGIN_LIST;
@@ -121,10 +113,8 @@ Ostream& operator<<(Ostream& os, const cellShape & s)
 }
 
 
-#if defined (__GNUC__)
 template<>
-#endif
-Ostream& operator<<(Ostream& os, const InfoProxy<cellShape>& ip)
+Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<cellShape>& ip)
 {
     const cellShape& cs = ip.t_;
 
@@ -147,9 +137,5 @@ Ostream& operator<<(Ostream& os, const InfoProxy<cellShape>& ip)
     return os;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

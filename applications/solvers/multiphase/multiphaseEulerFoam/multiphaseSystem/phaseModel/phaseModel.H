@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,6 +210,9 @@ public:
 
         //- Correct the phase properties
         void correct();
+
+        //-Inherit read from volScalarField
+        using volScalarField::read;
 
         //- Read base transportProperties dictionary
         bool read(const dictionary& phaseDict);

@@ -1,7 +1,6 @@
 SUFFIXES += .C
 
-# -Woverloaded-virtual may produce spurious warnings, disable for now
-c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast -Wnon-virtual-dtor -Wno-overloaded-virtual -Wno-unused-comparison -Wno-invalid-offsetof -Wno-c++11-extensions
+c++WARN     = -Wall -Wextra -Wold-style-cast -Wnon-virtual-dtor -Wno-unused-parameter -Wno-invalid-offsetof -Wno-c++11-extensions
 
 # Suppress CGAL warnings
 c++CGALWARN = -Wno-sometimes-uninitialized -Wno-mismatched-tags

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,10 +21,6 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Read construct cellPrimitiveModel from Istream.
-    Write cellPrimitiveModel to Ostream
-
 \*---------------------------------------------------------------------------*/
 
 #include "cellModel.H"
@@ -32,12 +28,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-cellModel::cellModel(Istream& is)
+Foam::cellModel::cellModel(Istream& is)
 {
     dictionaryEntry entry(dictionary::null, is);
     name_ = entry.keyword();
@@ -48,7 +39,7 @@ cellModel::cellModel(Istream& is)
 }
 
 
-Ostream& operator<<(Ostream& os, const cellModel& c)
+Foam::Ostream& Foam::operator<<(Ostream& os, const cellModel& c)
 {
     os  << "name" << tab << c.name_ << tab
         << "index" << tab << c.index_ << tab
@@ -60,10 +51,8 @@ Ostream& operator<<(Ostream& os, const cellModel& c)
 }
 
 
-#if defined (__GNUC__)
 template<>
-#endif
-Ostream& operator<<(Ostream& os, const InfoProxy<cellModel>& ip)
+Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<cellModel>& ip)
 {
     const cellModel& cm = ip.t_;
 
@@ -77,9 +66,5 @@ Ostream& operator<<(Ostream& os, const InfoProxy<cellModel>& ip)
     return os;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

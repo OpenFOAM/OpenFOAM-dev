@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,17 +82,13 @@ void Foam::NoSurfaceFilm<CloudType>::setParcelProperties
 (
     parcelType&,
     const label
-)
-{
-    // do nothing
-}
+) const
+{}
 
 
 template<class CloudType>
-void Foam::NoSurfaceFilm<CloudType>::info(Ostream&) const
-{
-    // do nothing
-}
+void Foam::NoSurfaceFilm<CloudType>::info(Ostream&)
+{}
 
 
 // ************************************************************************* //

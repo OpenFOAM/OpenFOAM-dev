@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,6 +111,9 @@ public:
             // ptscotch does not know about proc boundaries
             return true;
         }
+
+        //- Inherit decompose from decompositionMethod
+        using decompositionMethod::decompose;
 
         //- Return for every coordinate the wanted processor number. Use the
         //  mesh connectivity (if needed). See note on weights in scotchDecomp.H

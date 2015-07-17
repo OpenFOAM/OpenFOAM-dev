@@ -133,6 +133,12 @@ void Foam::solutionControl::read(const bool absTolOnly)
 }
 
 
+void Foam::solutionControl::read()
+{
+    read(false);
+}
+
+
 Foam::label Foam::solutionControl::applyToField
 (
     const word& fieldName,

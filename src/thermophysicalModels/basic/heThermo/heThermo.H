@@ -292,6 +292,34 @@ public:
             ) const;
 
 
+        // Dummy per-specie thermo properties to avoid problems
+        // with virtual function inheritance
+
+            //- Heat capacity at constant pressure [J/(kg K)]
+            virtual scalar Cp
+            (
+                const label speciei,
+                const scalar p,
+                const scalar T
+            ) const;
+
+            //- Heat capacity at constant volume [J/(kg K)]
+            virtual scalar Cv
+            (
+                const label speciei,
+                const scalar p,
+                const scalar T
+            ) const;
+
+            //- Thermal conductivity [W/m/K]
+            virtual scalar kappa
+            (
+                const label speciei,
+                const scalar p,
+                const scalar T
+            ) const;
+
+
         //- Read thermophysical properties dictionary
         virtual bool read();
 };

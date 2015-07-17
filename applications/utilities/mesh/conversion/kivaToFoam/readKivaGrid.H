@@ -426,7 +426,7 @@ if (pFaces[WEDGE].size() && pFaces[WEDGE][0].size())
         for
         (
             ;
-            iterf != pFaces[WEDGE][0].end(), iterb != pFaces[WEDGE][1].end();
+            iterf != pFaces[WEDGE][0].end() && iterb != pFaces[WEDGE][1].end();
             ++iterf, ++iterb
         )
         {
@@ -585,4 +585,3 @@ Info << "Writing cell zoning info to file: " << czPath << endl;
 OFstream cz(czPath);
 
 cz << cellZoning << endl;
-

@@ -133,7 +133,7 @@ public:
         wordList toc() const;
 
         //- Write data
-        bool writeData(Ostream&, bool subDict=true) const;
+        bool writeData(Ostream&) const;
 };
 
 

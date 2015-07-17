@@ -88,6 +88,9 @@ private:
 
     // Private Member Functions
 
+        //- Inherit findNearest from searchableSurface
+        using searchableSurface::findNearest;
+
         //- Find point nearest to sample. Updates minDistSqr. Sets nearestInfo
         //  and surface index
         void findNearest

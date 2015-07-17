@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,6 +100,9 @@ public:
 
 
         // Ostream implementation
+
+            //- Inherit write from Ostream
+            using Ostream::write;
 
             //- Write character
             virtual Ostream& write(const char);

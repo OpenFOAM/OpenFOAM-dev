@@ -66,6 +66,9 @@ class CloudFunctionObject
 
     // Private Member Functions
 
+        //- Inherite write from CloudSubModelBase
+        using CloudSubModelBase<CloudType>::write;
+
         //- Write post-processing info
         virtual void write();
 

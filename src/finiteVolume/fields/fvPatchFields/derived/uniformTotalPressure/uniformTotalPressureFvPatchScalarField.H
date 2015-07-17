@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,6 +213,9 @@ public:
 
 
         // Evaluation functions
+
+            //- Inherit updateCoeffs from fixedValueFvPatchScalarField
+            using fixedValueFvPatchScalarField::updateCoeffs;
 
             //- Update the coefficients associated with the patch field
             //  using the given patch velocity field

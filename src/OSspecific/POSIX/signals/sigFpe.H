@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,25 +71,21 @@ class sigFpe
         //- Saved old signal trapping setting
         static struct sigaction oldAction_;
 
-#       ifdef LINUX
-
+        #ifdef LINUX
             //- Saved old malloc
             static void *(*oldMallocHook_)(size_t, const void *);
 
             //- NaN malloc function. From malloc_hook manpage.
             static void* nanMallocHook_(size_t size, const void *caller);
-
-#       endif
+        #endif
 
 
     // Static data members
 
-#   ifdef LINUX_GNUC
-
+        #ifdef LINUX_GNUC
         //- Handler for caught signals
         static void sigHandler(int);
-
-#   endif
+        #endif
 
 
 public:
@@ -113,7 +109,6 @@ public:
 
         //- Helper: fill block of data with NaN
         static void fillSignallingNan(UList<scalar>&);
-
 };
 
 

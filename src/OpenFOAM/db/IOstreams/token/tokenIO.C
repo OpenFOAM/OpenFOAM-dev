@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -20,9 +20,6 @@ License
 
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
-
-Description
-    Stream operators for token
 
 \*---------------------------------------------------------------------------*/
 
@@ -209,14 +206,8 @@ ostream& Foam::operator<<(ostream& os, const InfoProxy<token>& ip)
 }
 
 
-// template specialization
-namespace Foam
-{
-
-#if defined (__GNUC__)
 template<>
-#endif
-Ostream& operator<<(Ostream& os, const InfoProxy<token>& ip)
+Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<token>& ip)
 {
     const token& t = ip.t_;
 
@@ -286,9 +277,5 @@ Ostream& operator<<(Ostream& os, const InfoProxy<token>& ip)
     return os;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,6 +162,10 @@ public:
         friend Istream& operator>>(Istream&, cellShape&);
         friend Ostream& operator<<(Ostream&, const cellShape&);
 };
+
+
+template<>
+Ostream& operator<<(Ostream& os, const InfoProxy<cellShape>& ip);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,42 +108,23 @@ public:
 
         // Manipulation
 
-            //- Convert time
-            virtual void convertTimeBase(const Time& t)
-            {
-                TableBase<Type>::convertTimeBase(t);
-            }
+            //- Inherit convertTimeBase from TableBase
+            using TableBase<Type>::convertTimeBase;
 
 
         // Evaluation
 
-            //- Return Table value
-            virtual Type value(const scalar x) const
-            {
-                return TableBase<Type>::value(x);
-            }
+            //- Inherit value from TableBase
+            using TableBase<Type>::value;
 
-            //- Integrate between two (scalar) values
-            virtual Type integrate(const scalar x1, const scalar x2) const
-            {
-                return TableBase<Type>::integrate(x1, x2);
-            }
+            //- Inherit integrate from TableBase
+            using TableBase<Type>::integrate;
 
-             //- Return dimensioned constant value
-            virtual dimensioned<Type> dimValue(const scalar x) const
-            {
-                return TableBase<Type>::dimValue(x);
-            }
+            //- Inherit dimValue from TableBase
+            using TableBase<Type>::dimValue;
 
-            //- Integrate between two values and return dimensioned type
-            virtual dimensioned<Type> dimIntegrate
-            (
-                const scalar x1,
-                const scalar x2
-            )
-            {
-                return TableBase<Type>::dimIntegrate(x1, x2);
-            }
+            //- Inherit dimIntegrate from TableBase
+            using TableBase<Type>::dimIntegrate;
 
 
     // I/O

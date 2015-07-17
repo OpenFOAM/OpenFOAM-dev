@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,6 +135,9 @@ public:
             (
                 const labelUList& internalData
             ) const;
+
+            //- Inherit initInternalFieldTransfer from lduInterface
+            using lduInterface::initInternalFieldTransfer;
 
             //- Initialise neighbour field transfer
             virtual void initInternalFieldTransfer

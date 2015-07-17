@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,9 @@ private:
             const point& planePt,
             pointIndexHit& info
         ) const;
+
+        //- Inherit findNearest from searchableSurface
+        using searchableSurface::findNearest;
 
         //- Returns miss or hit with face (0..5)
         pointIndexHit findNearest

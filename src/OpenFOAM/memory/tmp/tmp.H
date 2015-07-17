@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 #include "refCount.H"
 #include <cstddef>
 
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
+#ifndef __INTEL_COMPILER
 #   define ConstructFromTmp
 #endif
 

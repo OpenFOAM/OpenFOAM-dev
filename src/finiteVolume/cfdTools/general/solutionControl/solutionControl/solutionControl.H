@@ -102,6 +102,9 @@ protected:
         //- Read controls from fvSolution dictionary
         virtual void read(const bool absTolOnly);
 
+        //- Read controls from fvSolution dictionary
+        virtual void read();
+
         //- Return index of field in residualControl_ if present
         virtual label applyToField
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -433,9 +433,12 @@ public:
 
 Ostream& operator<<(Ostream&, const token::punctuationToken&);
 ostream& operator<<(ostream&, const token::punctuationToken&);
-ostream& operator<<(ostream&, const InfoProxy<token>&);
 Ostream& operator<<(Ostream&, const token::compound&);
 
+ostream& operator<<(ostream&, const InfoProxy<token>&);
+
+template<>
+Ostream& operator<<(Ostream& os, const InfoProxy<token>& ip);
 
 #define defineCompoundTypeName(Type, Name)                                    \
     defineTemplateTypeNameAndDebugWithName(token::Compound<Type>, #Type, 0);

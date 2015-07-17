@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,8 +119,14 @@ public:
             return IOdictionary::name();
         }
 
+        //- Inherit read from OutputFilter
+        using OutputFilter::read;
+
         //- Read output filter properties
         virtual bool read();
+
+        //- Inherit write from regIOobject
+        using regIOobject::write;
 
         //- Sample and write
         virtual void write();

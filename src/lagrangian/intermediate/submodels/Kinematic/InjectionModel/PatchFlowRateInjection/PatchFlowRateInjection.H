@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,6 +122,9 @@ public:
 
     // Member Functions
 
+        //- Inherit updateMesh from patchInjectionBase
+        using patchInjectionBase::updateMesh;
+
         //- Set injector locations when mesh is updated
         virtual void updateMesh();
 
@@ -139,6 +142,9 @@ public:
 
 
         // Injection geometry
+
+            //- Inherit setPositionAndCell from patchInjectionBase
+            using patchInjectionBase::setPositionAndCell;
 
             //- Set the injection position and owner cell, tetFace and tetPt
             virtual void setPositionAndCell

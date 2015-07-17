@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,11 +119,7 @@ public:
             //- Rewind the OStringStream
             void rewind()
             {
-                #if __GNUC__ < 4 && __GNUC_MINOR__ < 4
-                stdStream().rdbuf()->pubsetbuf(" ", 1);
-                #else
                 stdStream().rdbuf()->pubseekpos(0);
-                #endif
             }
 
 
