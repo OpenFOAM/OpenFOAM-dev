@@ -3,7 +3,7 @@ SUFFIXES += .C
 c++WARN     = -Wall -Wextra -Wold-style-cast -Wnon-virtual-dtor -Wno-unused-parameter -Wno-invalid-offsetof
 
 # Suppress CGAL warnings
-c++CGALWARN =
+c++CGALWARN = -Wno-old-style-cast -Wno-unused-local-typedef
 
 CC          = g++ -m64
 
