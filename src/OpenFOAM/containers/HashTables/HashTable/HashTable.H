@@ -370,7 +370,7 @@ public:
                 );
 
                 //- Construct from hash table, element and hash index
-                inline explicit iteratorBase
+                inline iteratorBase
                 (
                     const HashTable<T, Key, Hash>* curHashTable,
                     const hashedEntry* elmt,
@@ -428,7 +428,7 @@ public:
                 );
 
                 //- Construct from hash table, element and hash index
-                inline explicit iterator
+                inline iterator
                 (
                     HashTable<T, Key, Hash>* curHashTable,
                     hashedEntry* elmt,
@@ -483,7 +483,7 @@ public:
                 );
 
                 //- Construct from hash table, element and hash index
-                inline explicit const_iterator
+                inline const_iterator
                 (
                     const HashTable<T, Key, Hash>* curHashTable,
                     const hashedEntry* elmt,

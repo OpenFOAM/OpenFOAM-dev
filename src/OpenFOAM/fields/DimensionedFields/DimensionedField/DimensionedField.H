@@ -169,7 +169,7 @@ public:
         );
 
         //- Construct as copy of tmp<DimensionedField> deleting argument
-        #ifdef ConstructFromTmp
+        #ifndef NoConstructFromTmp
         DimensionedField
         (
             const tmp<DimensionedField<Type, GeoMesh> >&
@@ -214,7 +214,7 @@ public:
         );
 
         //- Construct as copy resetting name
-        #ifdef ConstructFromTmp
+        #ifndef NoConstructFromTmp
         DimensionedField
         (
             const word& newName,

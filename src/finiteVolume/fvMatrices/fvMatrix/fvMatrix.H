@@ -263,7 +263,7 @@ public:
         fvMatrix(const fvMatrix<Type>&);
 
         //- Construct as copy of tmp<fvMatrix<Type> > deleting argument
-        #ifdef ConstructFromTmp
+        #ifndef NoConstructFromTmp
         fvMatrix(const tmp<fvMatrix<Type> >&);
         #endif
 

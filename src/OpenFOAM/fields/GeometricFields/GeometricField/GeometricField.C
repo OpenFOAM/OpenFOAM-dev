@@ -426,7 +426,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 }
 
 
-#ifdef ConstructFromTmp
+#ifndef NoConstructFromTmp
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
@@ -488,7 +488,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 }
 
 
-#ifdef ConstructFromTmp
+#ifndef NoConstructFromTmp
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
@@ -552,7 +552,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 }
 
 
-#ifdef ConstructFromTmp
+#ifndef NoConstructFromTmp
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (

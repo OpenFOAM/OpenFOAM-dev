@@ -297,10 +297,8 @@ public:
         {
             friend class StaticHashTable;
 
-#           ifndef __INTEL_COMPILER
             template<class TRef2, class TableRef2>
             friend class Iterator;
-#           endif
 
             // Private data
 

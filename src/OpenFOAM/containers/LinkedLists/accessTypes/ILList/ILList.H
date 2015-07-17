@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,25 +95,7 @@ public:
 
         //- Copy constructor with additional argument for clone
         template<class CloneArg>
-        ILList(const ILList<LListBase, T>& lst, const CloneArg& cloneArg)
-        #ifdef __INTEL_COMPILER
-        :
-            UILList<LListBase, T>()
-        {
-            for
-            (
-                typename UILList<LListBase, T>::const_iterator iter =
-                    lst.begin();
-                iter != lst.end();
-                ++iter
-            )
-            {
-                append(iter().clone(cloneArg).ptr());
-            }
-        }
-        #else
-        ;
-        #endif
+        ILList(const ILList<LListBase, T>& lst, const CloneArg& cloneArg);
 
         //- Construct from Istream using given Istream constructor class
         template<class INew>

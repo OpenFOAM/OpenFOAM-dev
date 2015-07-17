@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,15 +210,10 @@ public:
         //- Construct by transferring the Field contents
         Field(const Xfer<Field<Type> >&);
 
-#ifdef __INTEL_COMPILER
-        //- Construct as copy of subField
-        Field(const typename Field<Type>::subField&);
-#endif
-
         //- Construct as copy of tmp<Field>
-#       ifdef ConstructFromTmp
+        #ifndef NoConstructFromTmp
         Field(const tmp<Field<Type> >&);
-#       endif
+        #endif
 
         //- Construct from Istream
         Field(Istream&);

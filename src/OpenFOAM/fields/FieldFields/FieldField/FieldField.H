@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,9 +108,9 @@ public:
         FieldField(const PtrList<Field<Type> >&);
 
         //- Construct as copy of tmp<FieldField>
-#       ifdef ConstructFromTmp
+        #ifndef NoConstructFromTmp
         FieldField(const tmp<FieldField<Field, Type> >&);
-#       endif
+        #endif
 
         //- Construct from Istream
         FieldField(Istream&);
@@ -124,24 +124,8 @@ public:
         static tmp<FieldField<Field, Type> > NewCalculatedType
         (
             const FieldField<Field, Type2>& ff
-        )
-#       ifdef __INTEL_COMPILER
-        {
-            FieldField<Field, Type>* nffPtr
-            (
-                new FieldField<Field, Type>(ff.size())
-            );
+        );
 
-            forAll(*nffPtr, i)
-            {
-                nffPtr->set(i, Field<Type>::NewCalculatedType(ff[i]).ptr());
-            }
-
-            return tmp<FieldField<Field, Type> >(nffPtr);
-        }
-#       else
-        ;
-#       endif
 
     // Member functions
 

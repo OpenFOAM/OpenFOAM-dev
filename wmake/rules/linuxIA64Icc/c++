@@ -1,6 +1,7 @@
 SUFFIXES += .C
 
-c++WARN     = -wd327,525,654,819,1125,1476,1505,1572
+c++WARN     = -Wall -Wextra -Wnon-virtual-dtor -Wno-unused-parameter -Wno-invalid-offsetof \
+              -diag-disable 2304
 
 CC          = icpc
 

@@ -158,7 +158,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {}
 
 
-#ifdef ConstructFromTmp
+#ifndef NoConstructFromTmp
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
@@ -251,7 +251,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {}
 
 
-#ifdef ConstructFromTmp
+#ifndef NoConstructFromTmp
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (

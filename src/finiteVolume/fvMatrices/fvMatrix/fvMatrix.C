@@ -356,7 +356,7 @@ Foam::fvMatrix<Type>::fvMatrix(const fvMatrix<Type>& fvm)
 }
 
 
-#ifdef ConstructFromTmp
+#ifndef NoConstructFromTmp
 template<class Type>
 Foam::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type> >& tfvm)
 :

@@ -38,10 +38,6 @@ SourceFiles
 #include "refCount.H"
 #include <cstddef>
 
-#ifndef __INTEL_COMPILER
-#   define ConstructFromTmp
-#endif
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

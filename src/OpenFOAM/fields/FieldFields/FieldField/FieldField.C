@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,7 +168,7 @@ FieldField<Field, Type>::FieldField(const PtrList<Field<Type> >& tl)
 
 
 // Construct as copy of tmp<FieldField>
-#ifdef ConstructFromTmp
+#ifndef NoConstructFromTmp
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type> >& tf)
 :
@@ -197,7 +197,6 @@ tmp<FieldField<Field, Type> > FieldField<Field, Type>::clone() const
 }
 
 
-#ifndef __INTEL_COMPILER
 template<template<class> class Field, class Type>
 template<class Type2>
 tmp<FieldField<Field, Type> > FieldField<Field, Type>::NewCalculatedType
@@ -217,7 +216,6 @@ tmp<FieldField<Field, Type> > FieldField<Field, Type>::NewCalculatedType
 
     return tmp<FieldField<Field, Type> >(nffPtr);
 }
-#endif
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

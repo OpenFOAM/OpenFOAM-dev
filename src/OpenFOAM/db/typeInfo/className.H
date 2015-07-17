@@ -99,14 +99,6 @@ public:                                                                       \
 #define defineTypeName(Type)                                                  \
     defineTypeNameWithName(Type, Type::typeName_())
 
-#ifdef __INTEL_COMPILER
-//- Define the typeName as \a Name for template classes
-# define defineTemplateTypeNameWithName(Type, Name)                           \
-    defineTypeNameWithName(Type, Name)
-//- Define the typeName as \a Name for template sub-classes
-# define defineTemplate2TypeNameWithName(Type, Name)                          \
-    defineTypeNameWithName(Type, Name)
-#else
 //- Define the typeName as \a Name for template classes
 # define defineTemplateTypeNameWithName(Type, Name)                           \
     template<>                                                                \
@@ -115,7 +107,6 @@ public:                                                                       \
 # define defineTemplate2TypeNameWithName(Type, Name)                          \
     template<>                                                                \
     defineTypeNameWithName(Type, Name)
-#endif
 
 //- Define the typeName for template classes, useful with typedefs
 #define defineTemplateTypeName(Type)                                          \

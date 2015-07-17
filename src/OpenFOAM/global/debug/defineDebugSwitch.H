@@ -114,14 +114,6 @@ public:
     defineDebugSwitchWithName(Type, Type::typeName_(), DebugSwitch);          \
     registerDebugSwitchWithName(Type, Type, Type::typeName_())
 
-#ifdef __INTEL_COMPILER
-//- Define the debug information for templates, lookup as \a Name
-# define defineTemplateDebugSwitchWithName(Type, Name, DebugSwitch)           \
-    defineDebugSwitchWithName(Type, Name, DebugSwitch)
-//- Define the debug information for templates sub-classes, lookup as \a Name
-# define defineTemplate2DebugSwitchWithName(Type, Name, DebugSwitch)          \
-    defineDebugSwitchWithName(Type, Name, DebugSwitch)
-#else
 //- Define the debug information for templates, lookup as \a Name
 # define defineTemplateDebugSwitchWithName(Type, Name, DebugSwitch)           \
     template<>                                                                \
@@ -132,7 +124,6 @@ public:
     template<>                                                                \
     defineDebugSwitchWithName(Type, Name, DebugSwitch);                       \
     registerTemplateDebugSwitchWithName(Type, Name)
-#endif
 
 //- Define the debug information for templates
 //  Useful with typedefs

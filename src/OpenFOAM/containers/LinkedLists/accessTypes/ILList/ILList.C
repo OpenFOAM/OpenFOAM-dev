@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,6 @@ Foam::ILList<LListBase, T>::ILList(const ILList<LListBase, T>& lst)
 }
 
 
-#ifndef __INTEL_COMPILER
 template<class LListBase, class T>
 template<class CloneArg>
 Foam::ILList<LListBase, T>::ILList
@@ -65,7 +64,6 @@ Foam::ILList<LListBase, T>::ILList
         this->append(iter().clone(cloneArg).ptr());
     }
 }
-#endif
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
