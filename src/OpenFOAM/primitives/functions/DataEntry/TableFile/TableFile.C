@@ -30,7 +30,6 @@ License
 template<class Type>
 Foam::TableFile<Type>::TableFile(const word& entryName, const dictionary& dict)
 :
-    DataEntry<Type>(entryName),
     TableBase<Type>(entryName, dict.subDict(entryName + "Coeffs")),
     fName_("none")
 {
@@ -63,7 +62,6 @@ Foam::TableFile<Type>::TableFile(const word& entryName, const dictionary& dict)
 template<class Type>
 Foam::TableFile<Type>::TableFile(const TableFile<Type>& tbl)
 :
-    DataEntry<Type>(tbl),
     TableBase<Type>(tbl),
     fName_(tbl.fName_)
 {}

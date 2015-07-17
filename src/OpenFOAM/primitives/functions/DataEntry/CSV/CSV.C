@@ -203,7 +203,6 @@ Foam::CSV<Type>::CSV
     const word& ext
 )
 :
-    DataEntry<Type>(entryName),
     TableBase<Type>(entryName, dict.subDict(entryName + ext)),
     coeffs_(dict.subDict(entryName + ext)),
     nHeaderLine_(readLabel(coeffs_.lookup("nHeaderLine"))),
@@ -230,7 +229,6 @@ Foam::CSV<Type>::CSV
 template<class Type>
 Foam::CSV<Type>::CSV(const CSV<Type>& tbl)
 :
-    DataEntry<Type>(tbl),
     TableBase<Type>(tbl),
     nHeaderLine_(tbl.nHeaderLine_),
     refColumn_(tbl.refColumn_),

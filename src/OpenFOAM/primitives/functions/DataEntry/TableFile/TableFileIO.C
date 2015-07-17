@@ -28,26 +28,6 @@ License
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const TableFile<Type>& tbl
-)
-{
-    os  << static_cast<const DataEntry<Type>&>(tbl)
-        << static_cast<const TableBase<Type>&>(tbl);
-
-    // Check state of Ostream
-    os.check
-    (
-        "Ostream& operator<<(Ostream&, const TableFile<Type>&)"
-    );
-
-    return os;
-}
-
-
-template<class Type>
 void Foam::TableFile<Type>::writeData(Ostream& os) const
 {
     DataEntry<Type>::writeData(os);

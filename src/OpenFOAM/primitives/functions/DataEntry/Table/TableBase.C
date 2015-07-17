@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,7 @@ const Foam::interpolationWeights& Foam::TableBase<Type>::interpolator() const
 template<class Type>
 Foam::TableBase<Type>::TableBase(const word& name, const dictionary& dict)
 :
+    DataEntry<Type>(name),
     name_(name),
     boundsHandling_
     (
@@ -77,6 +78,7 @@ Foam::TableBase<Type>::TableBase(const word& name, const dictionary& dict)
 template<class Type>
 Foam::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
 :
+    DataEntry<Type>(tbl),
     name_(tbl.name_),
     boundsHandling_(tbl.boundsHandling_),
     interpolationScheme_(tbl.interpolationScheme_),

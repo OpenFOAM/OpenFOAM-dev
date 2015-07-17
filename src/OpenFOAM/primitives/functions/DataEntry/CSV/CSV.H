@@ -79,7 +79,6 @@ Ostream& operator<<
 template<class Type>
 class CSV
 :
-    public DataEntry<Type>,
     public TableBase<Type>
 {
     // Private data
@@ -150,50 +149,10 @@ public:
 
     // Member Functions
 
-        // Manipulation
-
-            //- Convert time
-            virtual void convertTimeBase(const Time& t)
-            {
-                TableBase<Type>::convertTimeBase(t);
-            }
-
-
         // Access
 
             //- Return const access to the file name
             virtual const fileName& fName() const;
-
-
-        // Evaluation
-
-            //- Return Table value
-            virtual Type value(const scalar x) const
-            {
-                return TableBase<Type>::value(x);
-            }
-
-            //- Integrate between two (scalar) values
-            virtual Type integrate(const scalar x1, const scalar x2) const
-            {
-                return TableBase<Type>::integrate(x1, x2);
-            }
-
-            //- Return dimensioned constant value
-            virtual dimensioned<Type> dimValue(const scalar x) const
-            {
-                return TableBase<Type>::dimValue(x);
-            }
-
-            //- Integrate between two values and return dimensioned type
-            virtual dimensioned<Type> dimIntegrate
-            (
-                const scalar x1,
-                const scalar x2
-            ) const
-            {
-                return TableBase<Type>::dimIntegrate(x1, x2);
-            }
 
 
     // I/O

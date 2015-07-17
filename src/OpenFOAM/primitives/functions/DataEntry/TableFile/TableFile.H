@@ -82,7 +82,6 @@ Ostream& operator<<
 template<class Type>
 class TableFile
 :
-    public DataEntry<Type>,
     public TableBase<Type>
 {
     // Private data
@@ -122,37 +121,7 @@ public:
     virtual ~TableFile();
 
 
-    // Member Functions
-
-        // Manipulation
-
-            //- Inherit convertTimeBase from TableBase
-            using TableBase<Type>::convertTimeBase;
-
-
-        // Evaluation
-
-            //- Inherit value from TableBase
-            using TableBase<Type>::value;
-
-            //- Inherit integrate from TableBase
-            using TableBase<Type>::integrate;
-
-            //- Inherit dimValue from TableBase
-            using TableBase<Type>::dimValue;
-
-            //- Inherit dimIntegrate from TableBase
-            using TableBase<Type>::dimIntegrate;
-
-
     // I/O
-
-        //- Ostream Operator
-        friend Ostream& operator<< <Type>
-        (
-            Ostream& os,
-            const TableFile<Type>& tbl
-        );
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
