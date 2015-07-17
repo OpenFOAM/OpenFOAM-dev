@@ -3,6 +3,9 @@ SUFFIXES += .C
 c++WARN     = -Wall -Wextra -Wnon-virtual-dtor -Wno-unused-parameter -Wno-invalid-offsetof \
               -diag-disable 2304
 
+# Suppress CGAL warnings
+c++CGALWARN = -diag-disable 1224,2026,2305
+
 CC          = icpc -std=c++0x -fp-trap=common -fp-model precise
 
 include $(RULES)/c++$(WM_COMPILE_OPTION)
