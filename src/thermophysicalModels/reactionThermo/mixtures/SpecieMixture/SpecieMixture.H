@@ -36,6 +36,7 @@ SourceFiles
 #define SpecieMixture_H
 
 #include "scalar.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -184,6 +185,43 @@ public:
                 const scalar p,
                 const scalar T
             ) const;
+
+
+        // Field properties abstract functions
+        // provided here to avoid issues with inheritance of virtual functions
+        // in heThermo
+
+            //- Heat capacity at constant pressure for patch [J/kg/K]
+            virtual tmp<scalarField> Cp
+            (
+                const scalarField& p,
+                const scalarField& T,
+                const label patchi
+            ) const = 0;
+
+            //- Heat capacity at constant pressure for patch [J/kg/K]
+            virtual tmp<volScalarField> Cp() const = 0;
+
+            //- Heat capacity at constant volume for patch [J/kg/K]
+            virtual tmp<scalarField> Cv
+            (
+                const scalarField& p,
+                const scalarField& T,
+                const label patchi
+            ) const = 0;
+
+            //- Heat capacity at constant volume [J/kg/K]
+            virtual tmp<volScalarField> Cv() const = 0;
+
+            //- Thermal diffusivity for temperature
+            //  of mixture for patch [J/m/s/K]
+            virtual tmp<scalarField> kappa
+            (
+                const label patchi
+            ) const = 0;
+
+            //- Thermal diffusivity for temperature of mixture [J/m/s/K]
+            virtual tmp<volScalarField> kappa() const = 0;
 };
 
 
