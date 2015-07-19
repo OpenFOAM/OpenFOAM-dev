@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     #include "createRadiationModel.H"
     #include "createSurfaceFilmModel.H"
     #include "initContinuityErrs.H"
-    #include "readTimeControls.H"
+    #include "createTimeControls.H"
     #include "compressibleCourantNo.H"
     #include "setInitialDeltaT.H"
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "createTimeControls.H"
         #include "compressibleCourantNo.H"
         #include "setMultiRegionDeltaT.H"
         #include "setDeltaT.H"

@@ -28,7 +28,7 @@ int USERD_set_filenames
         // remove the last '/' from rootDir
         if (the_path[lRoot-1] == '/')
         {
-            the_path[lRoot-1] = (char)NULL;
+            the_path[lRoot-1] = char(NULL);
         }
         else
         {
@@ -182,9 +182,9 @@ int USERD_set_filenames
         IOobjectList objects(*meshPtr, runTime.timeName(), cloud::prefix);
 
         lagrangianScalarNames =
-            (const wordList&)objects.names(sprayScalarFieldName);
+            objects.names(sprayScalarFieldName);
         lagrangianVectorNames =
-            (const wordList&)objects.names(sprayVectorFieldName);
+            objects.names(sprayVectorFieldName);
 
         isSpray[fieldNames.size()] = true;
 

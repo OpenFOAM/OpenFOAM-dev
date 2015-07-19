@@ -12,7 +12,7 @@ EXE_INC = \
     ${CGAL_EXACT} \
     ${CGAL_INEXACT} \
     ${CGAL_INC} \
-    ${c++CGALWARN} \
+    ${c++LESSWARN} \
     -I../conformalVoronoiMesh/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \

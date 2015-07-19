@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
+    #include "createTimeControls.H"
     #include "createRDeltaT.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"

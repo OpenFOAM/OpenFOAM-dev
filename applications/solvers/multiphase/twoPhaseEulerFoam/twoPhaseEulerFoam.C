@@ -52,8 +52,7 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createMRF.H"
     #include "createFvOptions.H"
-    #include "initContinuityErrs.H"
-    #include "readTimeControls.H"
+    #include "createTimeControls.H"
     #include "CourantNos.H"
     #include "setInitialDeltaT.H"
 
@@ -79,7 +78,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "createTimeControls.H"
         #include "CourantNos.H"
         #include "setDeltaT.H"
 

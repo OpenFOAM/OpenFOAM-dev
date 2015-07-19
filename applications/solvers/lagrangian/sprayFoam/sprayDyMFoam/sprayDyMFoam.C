@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
-    #include "readTimeControls.H"
+    #include "createControls.H"
     #include "readGravitationalAcceleration.H"
     #include "createFields.H"
     #include "createRhoUf.H"
@@ -102,6 +102,11 @@ int main(int argc, char *argv[])
                 // Make the fluxes relative to the mesh-motion
                 fvc::makeRelative(phi, rho, U);
             }
+        }
+
+        if (mesh.changing() && checkMeshCourantNo)
+        {
+            #include "meshCourantNo.H"
         }
 
         parcels.evolve();

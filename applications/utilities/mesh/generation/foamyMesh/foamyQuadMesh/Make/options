@@ -7,7 +7,7 @@ EXE_INC = \
     ${ROUNDING_MATH} \
     ${EXE_NDEBUG} \
     ${CGAL_INC} \
-    ${c++CGALWARN} \
+    ${c++LESSWARN} \
     -I$(FOAM_APP)/utilities/mesh/generation/extrude2DMesh/extrude2DMesh/lnInclude \
     -I../conformalVoronoi2DMesh/lnInclude \
     -I../conformalVoronoiMesh/lnInclude \

@@ -2,8 +2,7 @@
 // checkTimeOptionsNoConstant.H
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Foam::label startTime = 0;
-    Foam::label endTime = Times.size();
+Foam::label startTime = 0;
 
-// check -time and -latestTime options
-#   include "checkTimeOption.H"
+// Check -time and -latestTime options
+#include "checkTimeOption.H"

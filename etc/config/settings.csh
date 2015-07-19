@@ -426,7 +426,7 @@ case SYSTEMMPI:
             echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
             echo "    MPI_ARCH_INC is not set. Example:"
             echo
-            echo '        setenv MPI_ARCH_INC "-I$MPI_ROOT/include"'
+            echo '        setenv MPI_ARCH_INC "-isystem $MPI_ROOT/include"'
             echo
         endif
 

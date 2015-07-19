@@ -1,7 +1,5 @@
-    #include "readTimeControls.H"
+#include "readTimeControls.H"
 
-    const bool correctPhi =
-        pimple.dict().lookupOrDefault("correctPhi", false);
+correctPhi = pimple.dict().lookupOrDefault("correctPhi", false);
 
-    const bool checkMeshCourantNo =
-        pimple.dict().lookupOrDefault("checkMeshCourantNo", false);
+checkMeshCourantNo = pimple.dict().lookupOrDefault("checkMeshCourantNo", false);

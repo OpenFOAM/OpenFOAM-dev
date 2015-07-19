@@ -2,8 +2,8 @@ SUFFIXES += .C
 
 c++WARN     = -Wall -Wextra -Wold-style-cast -Wnon-virtual-dtor -Wno-unused-parameter -Wno-invalid-offsetof
 
-# Suppress CGAL warnings
-c++CGALWARN = -Wno-old-style-cast -Wno-unused-local-typedefs -Wno-array-bounds
+# Suppress some warnings for flex++ and CGAL
+c++LESSWARN = -Wno-old-style-cast -Wno-unused-local-typedefs -Wno-array-bounds
 
 CC          = g++
 

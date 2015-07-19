@@ -64,10 +64,10 @@ int main(int argc, char *argv[])
     #include "createFvOptions.H"
     #include "createRhoUf.H"
     #include "CourantNo.H"
+    #include "createControls.H"
 
     if (!LTS)
     {
-        #include "readTimeControls.H"
         #include "CourantNo.H"
         #include "setInitialDeltaT.H"
     }

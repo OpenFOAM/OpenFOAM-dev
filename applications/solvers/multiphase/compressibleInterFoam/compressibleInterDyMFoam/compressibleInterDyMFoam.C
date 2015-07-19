@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
     #include "createFields.H"
     #include "createUf.H"
-    #include "readControls.H"
+    #include "createControls.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
 

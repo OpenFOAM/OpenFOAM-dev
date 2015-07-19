@@ -18,9 +18,9 @@ int USERD_get_part_coords
 
         for (label indx=0; indx<nPoints; indx++)
         {
-            coord_array[0][indx+1] = (float)points[indx].x();
-            coord_array[1][indx+1] = (float)points[indx].y();
-            coord_array[2][indx+1] = (float)points[indx].z();
+            coord_array[0][indx+1] = float(points[indx].x());
+            coord_array[1][indx+1] = float(points[indx].y());
+            coord_array[2][indx+1] = float(points[indx].z());
         }
     }
     else if (part_number < nPatches+2)
@@ -32,9 +32,9 @@ int USERD_get_part_coords
 
         for (label indx=0; indx<nPoints; indx++)
         {
-            coord_array[0][indx+1] = (float)points[indx].x();
-            coord_array[1][indx+1] = (float)points[indx].y();
-            coord_array[2][indx+1] = (float)points[indx].z();
+            coord_array[0][indx+1] = float(points[indx].x());
+            coord_array[1][indx+1] = float(points[indx].y());
+            coord_array[2][indx+1] = float(points[indx].z());
         }
 
     }
@@ -44,9 +44,9 @@ int USERD_get_part_coords
 
         forAllConstIter(Cloud<passiveParticle>, *sprayPtr, iter)
         {
-            coord_array[0][indx] = (float)iter().position().x();
-            coord_array[1][indx] = (float)iter().position().y();
-            coord_array[2][indx] = (float)iter().position().z();
+            coord_array[0][indx] = float(iter().position().x());
+            coord_array[1][indx] = float(iter().position().y());
+            coord_array[2][indx] = float(iter().position().z());
             indx++;
         }
 

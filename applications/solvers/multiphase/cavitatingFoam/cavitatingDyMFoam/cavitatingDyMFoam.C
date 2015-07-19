@@ -48,12 +48,11 @@ int main(int argc, char *argv[])
 
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "initContinuityErrs.H"
 
     pimpleControl pimple(mesh);
 
     #include "readThermodynamicProperties.H"
-    #include "readControls.H"
+    #include "createControls.H"
     #include "createFields.H"
     #include "createUf.H"
     #include "createPcorrTypes.H"

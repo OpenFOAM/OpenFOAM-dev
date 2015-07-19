@@ -1,8 +1,3 @@
-    if (runTime.controlDict().lookupOrDefault("suppressSolverInfo", false))
-    {
-        lduMatrix::debug = 0;
-    }
+runTime.controlDict().lookup("adjustTimeStep") >> adjustTimeStep;
 
-    Switch adjustTimeStep(runTime.controlDict().lookup("adjustTimeStep"));
-
-    scalar maxDeltaT(readScalar(runTime.controlDict().lookup("maxDeltaT")));
+maxDeltaT = readScalar(runTime.controlDict().lookup("maxDeltaT"));

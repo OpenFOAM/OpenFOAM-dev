@@ -1,2 +1,2 @@
-    p_rgh.storePrevIter();
-    rho.storePrevIter();
+p_rghFluid[i].storePrevIter();
+rhoFluid[i].storePrevIter();

@@ -51,7 +51,6 @@ Description
     #include "zoltanRenumber.H"
 #endif
 
-
 using namespace Foam;
 
 
@@ -635,14 +634,12 @@ int main(int argc, char *argv[])
         "calculate the rms of the frontwidth"
     );
 
-
-// Force linker to include zoltan symbols. This section is only needed since
-// Zoltan is a static library
-#ifdef FOAM_USE_ZOLTAN
+    // Force linker to include zoltan symbols. This section is only needed since
+    // Zoltan is a static library
+    #ifdef FOAM_USE_ZOLTAN
     Info<< "renumberMesh built with zoltan support." << nl << endl;
     (void)zoltanRenumber::typeName;
-#endif
-
+    #endif
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -651,7 +648,7 @@ int main(int argc, char *argv[])
     // Get times list
     instantList Times = runTime.times();
 
-    // set startTime and endTime depending on -time and -latestTime options
+    // Set startTime and endTime depending on -time and -latestTime options
     #include "checkTimeOptions.H"
 
     runTime.setTime(Times[startTime], startTime);
@@ -686,7 +683,7 @@ int main(int argc, char *argv[])
             sumSqrIntersect,
             sumOp<scalar>()
         )
-      / mesh.globalData().nTotalCells()
+       /mesh.globalData().nTotalCells()
     );
 
     Info<< "Mesh size: " << mesh.globalData().nTotalCells() << nl

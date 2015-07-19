@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     #include "createSolidFields.H"
 
     #include "initContinuityErrs.H"
-    #include "readTimeControls.H"
+    #include "createTimeControls.H"
     #include "readSolidTimeControls.H"
 
 
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "createTimeControls.H"
         #include "readSolidTimeControls.H"
         #include "readPIMPLEControls.H"
 
@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
         {
             forAll(fluidRegions, i)
             {
-                #include "setRegionFluidFields.H"
                 #include "storeOldFluidFields.H"
             }
         }

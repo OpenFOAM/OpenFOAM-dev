@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
+    #include "createControls.H"
     #include "createRDeltaT.H"
     #include "createFields.H"
     #include "createMRF.H"
@@ -83,7 +84,6 @@ int main(int argc, char *argv[])
 
     if (!LTS)
     {
-        #include "readTimeControls.H"
         #include "CourantNo.H"
         #include "setInitialDeltaT.H"
     }

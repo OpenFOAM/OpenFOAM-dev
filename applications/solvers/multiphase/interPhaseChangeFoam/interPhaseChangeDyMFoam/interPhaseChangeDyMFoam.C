@@ -63,10 +63,10 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
+    #include "../interFoam/interDyMFoam/createControls.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createFvOptions.H"
-    #include "readTimeControls.H"
 
     volScalarField rAU
     (

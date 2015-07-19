@@ -50,9 +50,8 @@ int main(int argc, char *argv[])
     pimpleControl pimple(mesh);
 
     #include "readThermodynamicProperties.H"
-    #include "readControls.H"
+    #include "createControls.H"
     #include "createFields.H"
-    #include "initContinuityErrs.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
 

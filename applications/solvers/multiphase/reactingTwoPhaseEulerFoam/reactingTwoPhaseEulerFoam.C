@@ -52,13 +52,12 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
+    #include "createTimeControls.H"
     #include "createRDeltaT.H"
     #include "createFields.H"
-    #include "initContinuityErrs.H"
 
     if (!LTS)
     {
-        #include "readTimeControls.H"
         #include "CourantNo.H"
         #include "setInitialDeltaT.H"
     }

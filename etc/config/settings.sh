@@ -453,7 +453,7 @@ SYSTEMMPI)
             echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
             echo "    MPI_ARCH_INC is not set. Example:" 1>&2
             echo 1>&2
-            echo "        export MPI_ARCH_INC=\"-I\$MPI_ROOT/include\"" 1>&2
+            echo "        export MPI_ARCH_INC=\"-isystem \$MPI_ROOT/include\"" 1>&2
             echo 1>&2
         fi
 

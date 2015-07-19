@@ -34,9 +34,6 @@ wmake $targetType dummy
 case "$WM_MPLIB" in
 *MPI*)
     set +x
-    echo
-    echo "Note: ignore spurious warnings about missing mpicxx.h headers"
-    echo
     wmakeMpiLib mpi
     ;;
 esac

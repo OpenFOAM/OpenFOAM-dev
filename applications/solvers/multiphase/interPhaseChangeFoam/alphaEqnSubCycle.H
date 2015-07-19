@@ -1,6 +1,13 @@
 {
-    surfaceScalarField phic(mag(phi/mesh.magSf()));
-    phic = min(interface.cAlpha()*phic, max(phic));
+    // Standard face-flux compression coefficient
+    surfaceScalarField phic(interface.cAlpha()*mag(phi/mesh.magSf()));
+
+    // Add the optional isotropic compression contribution
+    if (icAlpha > 0)
+    {
+        phic *= (1.0 - icAlpha);
+        phic += (interface.cAlpha()*icAlpha)*fvc::interpolate(mag(U));
+    }
 
     volScalarField divU(fvc::div(phi));
 
