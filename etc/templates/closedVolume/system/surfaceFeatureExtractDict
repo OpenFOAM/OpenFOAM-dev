@@ -29,6 +29,12 @@ CAD.obj
         openEdges        yes;
     }
 
+    trimFeatures
+    {
+        minElem          0;
+        minLen           0;
+    }
+
     writeObj             yes;
 }
 
