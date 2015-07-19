@@ -121,9 +121,9 @@ License
 
 extern "C"
 {
-#include <stdio.h>
-#include "mpi.h"
-#include "ptscotch.h"
+    #include <stdio.h>
+    #include <mpi.h>
+    #include "ptscotch.h"
 }
 
 
