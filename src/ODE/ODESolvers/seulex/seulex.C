@@ -256,7 +256,7 @@ void Foam::seulex::solve
                     << "step size underflow :"  << dx << endl;
         }
 
-        scalar errOld;
+        scalar errOld = 0;
 
         for (k=0; k<=kTarg_+1; k++)
         {
