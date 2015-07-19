@@ -45,12 +45,26 @@ scalar pRefValue = 0.0;
 setRefCell(p, simple.dict(), pRefCell, pRefValue);
 mesh.setFluxRequired(p.name());
 
-singlePhaseTransportModel laminarTransport(Urel, phi);
+Info<< "Creating SRF model\n" << endl;
+autoPtr<SRF::SRFModel> SRF(SRF::SRFModel::New(Urel));
+
+// Construct the absolute velocity
+volVectorField U
+(
+    IOobject
+    (
+        "U",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    Urel + SRF->U()
+);
+
+singlePhaseTransportModel laminarTransport(U, phi);
 
 autoPtr<incompressible::RASModel> turbulence
 (
-    incompressible::RASModel::New(Urel, phi, laminarTransport)
+    incompressible::RASModel::New(U, phi, laminarTransport)
 );
-
-Info<< "Creating SRF model\n" << endl;
-autoPtr<SRF::SRFModel> SRF(SRF::SRFModel::New(Urel));

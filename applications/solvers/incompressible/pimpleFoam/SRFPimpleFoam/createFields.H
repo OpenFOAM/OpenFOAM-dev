@@ -45,13 +45,6 @@ scalar pRefValue = 0.0;
 setRefCell(p, pimple.dict(), pRefCell, pRefValue);
 mesh.setFluxRequired(p.name());
 
-singlePhaseTransportModel laminarTransport(Urel, phi);
-
-autoPtr<incompressible::turbulenceModel> turbulence
-(
-    incompressible::turbulenceModel::New(Urel, phi, laminarTransport)
-);
-
 Info<< "Creating SRF model\n" << endl;
 autoPtr<SRF::SRFModel> SRF
 (
@@ -70,4 +63,11 @@ volVectorField U
         IOobject::AUTO_WRITE
     ),
     Urel + SRF->U()
+);
+
+singlePhaseTransportModel laminarTransport(U, phi);
+
+autoPtr<incompressible::turbulenceModel> turbulence
+(
+    incompressible::turbulenceModel::New(U, phi, laminarTransport)
 );
