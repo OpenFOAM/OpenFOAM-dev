@@ -27,7 +27,7 @@ thermoType
     //energy          absoluteInternalEnergy;
 }
 
-stoichiometricAirFuelMassRatio stoichiometricAirFuelMassRatio [ 0 0 0 0 0 0 0 ] 15.0336;
+stoichiometricAirFuelMassRatio stoichiometricAirFuelMassRatio [0 0 0 0 0 0 0] 15.0336;
 
 fuel
 {

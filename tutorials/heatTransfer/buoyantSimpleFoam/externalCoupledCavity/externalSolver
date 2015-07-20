@@ -51,7 +51,7 @@ init
 
 totalWait=0
 step=0
-while [ 1 ]; do
+while [1 ]; do
     if [ -f $lockFile ]; then
         log "found lock file ${lockFile} - waiting"
         totalWait=$(expr $totalWait + $waitSec)

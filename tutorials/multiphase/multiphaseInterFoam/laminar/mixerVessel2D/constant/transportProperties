@@ -20,29 +20,29 @@ phases
      water
      {
          transportModel Newtonian;
-         nu nu [ 0 2 -1 0 0 0 0 ] 1e-06;
-         rho rho [ 1 -3 0 0 0 0 0 ] 1000;
+         nu [0 2 -1 0 0 0 0] 1e-06;
+         rho [1 -3 0 0 0 0 0] 1000;
      }
 
      oil
      {
          transportModel Newtonian;
-         nu nu [ 0 2 -1 0 0 0 0 ] 1e-06;
-         rho rho [ 1 -3 0 0 0 0 0 ] 500;
+         nu [0 2 -1 0 0 0 0] 1e-06;
+         rho [1 -3 0 0 0 0 0] 500;
      }
 
      mercury
      {
          transportModel Newtonian;
-         nu nu [ 0 2 -1 0 0 0 0 ] 1.125e-07;
-         rho rho [ 1 -3 0 0 0 0 0 ] 13529;
+         nu [0 2 -1 0 0 0 0] 1.125e-07;
+         rho [1 -3 0 0 0 0 0] 13529;
      }
 
      air
      {
          transportModel Newtonian;
-         nu nu [ 0 2 -1 0 0 0 0 ] 1.48e-05;
-         rho rho [ 1 -3 0 0 0 0 0 ] 1;
+         nu [0 2 -1 0 0 0 0] 1.48e-05;
+         rho [1 -3 0 0 0 0 0] 1;
      }
 );
 

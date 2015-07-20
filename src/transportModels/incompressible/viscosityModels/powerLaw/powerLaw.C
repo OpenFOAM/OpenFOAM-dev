@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,10 +82,10 @@ Foam::viscosityModels::powerLaw::powerLaw
 :
     viscosityModel(name, viscosityProperties, U, phi),
     powerLawCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
-    k_(powerLawCoeffs_.lookup("k")),
-    n_(powerLawCoeffs_.lookup("n")),
-    nuMin_(powerLawCoeffs_.lookup("nuMin")),
-    nuMax_(powerLawCoeffs_.lookup("nuMax")),
+    k_("k", dimViscosity, powerLawCoeffs_.lookup("k")),
+    n_("n", dimless, powerLawCoeffs_.lookup("n")),
+    nuMin_("nuMin", dimViscosity, powerLawCoeffs_.lookup("nuMin")),
+    nuMax_("nuMax", dimViscosity, powerLawCoeffs_.lookup("nuMax")),
     nu_
     (
         IOobject

@@ -15,54 +15,24 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-mul             mul [ 1 -1 -1 0 0 ] 0.0065;
+mul             [1 -1 -1 0 0] 0.0065;
 
-muv             muv [ 1 -1 -1 0 0 ] 5.953e-06;
+muv             [1 -1 -1 0 0] 5.953e-06;
 
 phases (vapour water);
 
 water
 {
     transportModel  Newtonian;
-    nu              nu [ 0 2 -1 0 0 0 0 ] 7.831e-06;
-    rho             rho [ 1 -3 0 0 0 0 0 ] 830;
-    CrossPowerLawCoeffs
-    {
-        nu0             nu0 [ 0 2 -1 0 0 0 0 ] -999;
-        nuInf           nuInf [ 0 2 -1 0 0 0 0 ] -999;
-        m               m [ 0 0 1 0 0 0 0 ] -999;
-        n               n [ 0 0 0 0 0 0 0 ] -999;
-    }
-
-    BirdCarreauCoeffs
-    {
-        nu0             nu0 [ 0 2 -1 0 0 0 0 ] -999;
-        nuInf           nuInf [ 0 2 -1 0 0 0 0 ] -999;
-        k               k [ 0 0 1 0 0 0 0 ] -999;
-        n               n [ 0 0 0 0 0 0 0 ] -999;
-    }
+    nu              [0 2 -1 0 0 0 0] 7.831e-06;
+    rho             [1 -3 0 0 0 0 0] 830;
 }
 
 vapour
 {
     transportModel  Newtonian;
-    nu              nu [ 0 2 -1 0 0 0 0 ] 4.252e-05;
-    rho             rho [ 1 -3 0 0 0 0 0 ] 0.14;
-    CrossPowerLawCoeffs
-    {
-        nu0             nu0 [ 0 2 -1 0 0 0 0 ] -999;
-        nuInf           nuInf [ 0 2 -1 0 0 0 0 ] -999;
-        m               m [ 0 0 1 0 0 0 0 ] -999;
-        n               n [ 0 0 0 0 0 0 0 ] -999;
-    }
-
-    BirdCarreauCoeffs
-    {
-        nu0             nu0 [ 0 2 -1 0 0 0 0 ] -999;
-        nuInf           nuInf [ 0 2 -1 0 0 0 0 ] -999;
-        k               k [ 0 0 1 0 0 0 0 ] -999;
-        n               n [ 0 0 0 0 0 0 0 ] -999;
-    }
+    nu              [0 2 -1 0 0 0 0] 4.252e-05;
+    rho             [1 -3 0 0 0 0 0] 0.14;
 }
 
 

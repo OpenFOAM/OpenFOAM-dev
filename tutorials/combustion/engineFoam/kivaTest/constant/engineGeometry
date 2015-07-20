@@ -17,15 +17,15 @@ FoamFile
 
 engineMesh      layered;
 
-conRodLength    conRodLength [ 0 1 0 0 0 0 0 ] 0.147;
+conRodLength    conRodLength [0 1 0 0 0 0 0] 0.147;
 
-bore            bore [ 0 1 0 0 0 0 0 ] 0.092;
+bore            bore [0 1 0 0 0 0 0] 0.092;
 
-stroke          stroke [ 0 1 0 0 0 0 0 ] 0.08423;
+stroke          stroke [0 1 0 0 0 0 0] 0.08423;
 
-clearance       clearance [ 0 1 0 0 0 0 0 ] 0.00115;
+clearance       clearance [0 1 0 0 0 0 0] 0.00115;
 
-rpm             rpm [ 0 0 -1 0 0 0 0 ] 1500;
+rpm             rpm [0 0 -1 0 0 0 0] 1500;
 
 
 // ************************************************************************* //

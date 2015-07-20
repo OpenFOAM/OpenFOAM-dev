@@ -17,15 +17,15 @@ FoamFile
 
 barotropicCompressibilityModel linear;
 
-psiv            psiv [ 0 -2 2 0 0 ] 2.5e-06;
+psiv            [0 -2 2 0 0] 2.5e-06;
 
-rholSat         rholSat [ 1 -3 0 0 0 ] 830;
+rholSat         [1 -3 0 0 0] 830;
 
-psil            psil [ 0 -2 2 0 0 ] 5e-07;
+psil            [0 -2 2 0 0] 5e-07;
 
-pSat            pSat [ 1 -1 -2 0 0 ] 4500;
+pSat            [1 -1 -2 0 0] 4500;
 
-rhoMin          rhoMin [ 1 -3 0 0 0 ] 0.001;
+rhoMin          [1 -3 0 0 0] 0.001;
 
 
 // ************************************************************************* //

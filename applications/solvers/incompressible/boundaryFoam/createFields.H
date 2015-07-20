@@ -1,49 +1,49 @@
-    Info<< "Reading field U\n" << endl;
-    volVectorField U
+Info<< "Reading field U\n" << endl;
+volVectorField U
+(
+    IOobject
     (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-
-
-    Info<< "Creating face flux\n" << endl;
-    surfaceScalarField phi
-    (
-        IOobject
-        (
-            "phi",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
+        "U",
+        runTime.timeName(),
         mesh,
-        dimensionedScalar("zero", mesh.Sf().dimensions()*U.dimensions(), 0.0)
-    );
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
 
-    singlePhaseTransportModel laminarTransport(U, phi);
-
-    autoPtr<incompressible::RASModel> turbulence
+Info<< "Creating face flux\n" << endl;
+surfaceScalarField phi
+(
+    IOobject
     (
-        incompressible::RASModel::New(U, phi, laminarTransport)
-    );
+        "phi",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("zero", mesh.Sf().dimensions()*U.dimensions(), 0.0)
+);
 
-    dimensionedVector Ubar(laminarTransport.lookup("Ubar"));
 
-    vector flowDirection = (Ubar/mag(Ubar)).value();
-    tensor flowMask = sqr(flowDirection);
+singlePhaseTransportModel laminarTransport(U, phi);
 
-    dimensionedVector gradP
-    (
-        "gradP",
-        dimensionSet(0, 1, -2, 0, 0),
-        vector::zero
-    );
+autoPtr<incompressible::RASModel> turbulence
+(
+    incompressible::RASModel::New(U, phi, laminarTransport)
+);
+
+dimensionedVector Ubar("Ubar", dimVelocity, laminarTransport.lookup("Ubar"));
+
+vector flowDirection = (Ubar/mag(Ubar)).value();
+tensor flowMask = sqr(flowDirection);
+
+dimensionedVector gradP
+(
+    "gradP",
+    dimensionSet(0, 1, -2, 0, 0),
+    vector::zero
+);

@@ -193,6 +193,7 @@ const dimensionSet dimEnergy(dimForce*dimLength);
 const dimensionSet dimPower(dimEnergy/dimTime);
 
 const dimensionSet dimPressure(dimForce/dimArea);
+const dimensionSet dimCompressibility(dimDensity/dimPressure);
 const dimensionSet dimGasConstant(dimEnergy/dimMass/dimTemperature);
 const dimensionSet dimSpecificHeatCapacity(dimGasConstant);
 const dimensionSet dimViscosity(dimArea/dimTime);

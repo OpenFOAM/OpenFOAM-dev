@@ -19,21 +19,21 @@ laminarFlameSpeedCorrelation Gulders;
 
 fuel            IsoOctane;
 
-Su              Su [ 0 1 -1 0 0 0 0 ] 0;
+Su              Su [0 1 -1 0 0 0 0] 0;
 
 SuModel         unstrained;
 
-equivalenceRatio equivalenceRatio [ 0 0 0 0 0 0 0 ] 1;
+equivalenceRatio equivalenceRatio [0 0 0 0 0 0 0] 1;
 
-sigmaExt        sigmaExt [ 0 0 -1 0 0 0 0 ] 100000;
+sigmaExt        sigmaExt [0 0 -1 0 0 0 0] 100000;
 
 XiModel         transport;
 
-XiCoef          XiCoef [ 0 0 0 0 0 0 0 ] 0.62;
+XiCoef          XiCoef [0 0 0 0 0 0 0] 0.62;
 
-XiShapeCoef     XiShapeCoef [ 0 0 0 0 0 0 0 ] 1;
+XiShapeCoef     XiShapeCoef [0 0 0 0 0 0 0] 1;
 
-uPrimeCoef      uPrimeCoef [ 0 0 0 0 0 0 0 ] 1;
+uPrimeCoef      uPrimeCoef [0 0 0 0 0 0 0] 1;
 
 GuldersCoeffs
 {
@@ -83,11 +83,11 @@ ignitionSites
 
 ignitionSphereFraction 1;
 
-ignitionThickness ignitionThickness [ 0 1 0 0 0 0 0 ] 0;
+ignitionThickness ignitionThickness [0 1 0 0 0 0 0] 0;
 
 ignitionCircleFraction 1;
 
-ignitionKernelArea ignitionKernelArea [ 0 2 0 0 0 0 0 ] 0;
+ignitionKernelArea ignitionKernelArea [0 2 0 0 0 0 0] 0;
 
 
 // ************************************************************************* //

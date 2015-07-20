@@ -242,7 +242,7 @@ drag
 
 // This is a dummy to support the Smagorinsky model
 transportModel  Newtonian;
-nu              nu [ 0 2 -1 0 0 0 0 ] 0;
+nu              [0 2 -1 0 0 0 0] 0;
 
 
 // ************************************************************************* //

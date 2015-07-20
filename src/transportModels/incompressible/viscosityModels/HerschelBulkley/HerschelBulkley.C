@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,16 +55,6 @@ Foam::viscosityModels::HerschelBulkley::calcNu() const
 
     tmp<volScalarField> sr(strainRate());
 
- // return
- // (
- //     min
- //     (
- //         nu0_,
- //         (tau0_ + k_*rtone*(pow(tone*sr(), n_) - pow(tone*tau0_/nu0_, n_)))
- //        /max(sr(), dimensionedScalar("VSMALL", dimless/dimTime, VSMALL))
- //     )
- // );
-
     return
     (
         min
@@ -89,10 +79,10 @@ Foam::viscosityModels::HerschelBulkley::HerschelBulkley
 :
     viscosityModel(name, viscosityProperties, U, phi),
     HerschelBulkleyCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
-    k_(HerschelBulkleyCoeffs_.lookup("k")),
-    n_(HerschelBulkleyCoeffs_.lookup("n")),
-    tau0_(HerschelBulkleyCoeffs_.lookup("tau0")),
-    nu0_(HerschelBulkleyCoeffs_.lookup("nu0")),
+    k_("k", dimViscosity, HerschelBulkleyCoeffs_.lookup("k")),
+    n_("n", dimless, HerschelBulkleyCoeffs_.lookup("n")),
+    tau0_("tau0", dimViscosity/dimTime, HerschelBulkleyCoeffs_.lookup("tau0")),
+    nu0_("nu0", dimViscosity, HerschelBulkleyCoeffs_.lookup("nu0")),
     nu_
     (
         IOobject

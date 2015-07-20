@@ -20,17 +20,17 @@ phases (phase1 phase2);
 phase1
 {
     transportModel  Newtonian;
-    nu              nu [ 0 2 -1 0 0 0 0 ] 1e-06;
-    rho             rho [ 1 -3 0 0 0 0 0 ] 300;
+    nu              [0 2 -1 0 0 0 0] 1e-06;
+    rho             [1 -3 0 0 0 0 0] 300;
 }
 
 phase2
 {
     transportModel  Newtonian;
-    nu              nu [ 0 2 -1 0 0 0 0 ] 1e-6;
-    rho             rho [ 1 -3 0 0 0 0 0 ] 1027;
+    nu              [0 2 -1 0 0 0 0] 1e-6;
+    rho             [1 -3 0 0 0 0 0] 1027;
 }
 
-sigma           sigma [ 1 0 -2 0 0 0 0 ] 0.07;
+sigma           [1 0 -2 0 0 0 0] 0.07;
 
 // ************************************************************************* //

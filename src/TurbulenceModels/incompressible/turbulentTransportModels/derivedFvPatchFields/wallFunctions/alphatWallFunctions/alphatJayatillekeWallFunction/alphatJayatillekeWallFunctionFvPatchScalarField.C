@@ -226,7 +226,12 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     // Molecular Prandtl number
     const scalar Pr
     (
-        dimensionedScalar(transportProperties.lookup("Pr")).value()
+        dimensionedScalar
+        (
+            "Pr",
+            dimless,
+            transportProperties.lookup("Pr")
+        ).value()
     );
 
     // Populate boundary values

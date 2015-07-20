@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,18 @@ Foam::compressibilityModels::linear::linear
 )
 :
     barotropicCompressibilityModel(compressibilityProperties, gamma, psiName),
-    psiv_(compressibilityProperties_.lookup("psiv")),
-    psil_(compressibilityProperties_.lookup("psil"))
+    psiv_
+    (
+        "psiv",
+        dimCompressibility,
+        compressibilityProperties_.lookup("psiv")
+    ),
+    psil_
+    (
+        "psil",
+        dimCompressibility,
+        compressibilityProperties_.lookup("psil")
+    )
 {
     correct();
     psi_.oldTime();

@@ -71,7 +71,7 @@ for xi in $(seq 1 1 $nx); do
            echo "processing cube $n"
 
            pad=""
-           if [ $n -lt 10 ]; then
+           if [ $n -lt 10]; then
                pad="0"
            fi
 

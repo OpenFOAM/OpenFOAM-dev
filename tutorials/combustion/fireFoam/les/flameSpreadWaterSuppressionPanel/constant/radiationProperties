@@ -36,9 +36,9 @@ absorptionEmissionModel constantAbsorptionEmission;
 
 constantAbsorptionEmissionCoeffs
 {
-    absorptivity    absorptivity [ 0 -1 0 0 0 0 0 ] 0.1;
-    emissivity      emissivity [ 0 -1 0 0 0 0 0 ] 0.1;
-    E               E [ 1 -1 -3 0 0 0 0 ] 0;
+    absorptivity    absorptivity [0 -1 0 0 0 0 0] 0.1;
+    emissivity      emissivity [0 -1 0 0 0 0 0] 0.1;
+    E               E [1 -1 -3 0 0 0 0] 0;
 }
 
 greyMeanAbsorptionEmissionSootCoeffs

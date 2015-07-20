@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,9 +152,9 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         )
     ),
 
-    rho1_(nuModel1_->viscosityProperties().lookup("rho")),
-    rho2_(nuModel2_->viscosityProperties().lookup("rho")),
-    rho3_(nuModel3_->viscosityProperties().lookup("rho"))
+    rho1_("rho", dimDensity, nuModel1_->viscosityProperties().lookup("rho")),
+    rho2_("rho", dimDensity, nuModel2_->viscosityProperties().lookup("rho")),
+    rho3_("rho", dimDensity, nuModel3_->viscosityProperties().lookup("rho"))
 {
     alpha3_ == 1.0 - alpha1_ - alpha2_;
     calcNu();

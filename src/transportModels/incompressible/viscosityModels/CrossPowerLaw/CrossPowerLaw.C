@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,10 +66,10 @@ Foam::viscosityModels::CrossPowerLaw::CrossPowerLaw
 :
     viscosityModel(name, viscosityProperties, U, phi),
     CrossPowerLawCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
-    nu0_(CrossPowerLawCoeffs_.lookup("nu0")),
-    nuInf_(CrossPowerLawCoeffs_.lookup("nuInf")),
-    m_(CrossPowerLawCoeffs_.lookup("m")),
-    n_(CrossPowerLawCoeffs_.lookup("n")),
+    nu0_("nu0", dimViscosity, CrossPowerLawCoeffs_.lookup("nu0")),
+    nuInf_("nuInf", dimViscosity, CrossPowerLawCoeffs_.lookup("nuInf")),
+    m_("m", dimTime, CrossPowerLawCoeffs_.lookup("m")),
+    n_("n", dimless, CrossPowerLawCoeffs_.lookup("n")),
     nu_
     (
         IOobject

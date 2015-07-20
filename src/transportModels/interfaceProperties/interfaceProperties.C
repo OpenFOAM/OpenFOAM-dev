@@ -167,7 +167,7 @@ Foam::interfaceProperties::interfaceProperties
             alpha1.mesh().solverDict(alpha1.name()).lookup("cAlpha")
         )
     ),
-    sigma_(dict.lookup("sigma")),
+    sigma_("sigma", dimensionSet(1, 0, -2, 0, 0), dict.lookup("sigma")),
 
     deltaN_
     (
