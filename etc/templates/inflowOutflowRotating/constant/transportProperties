@@ -18,4 +18,36 @@ transportModel  Newtonian;
 
 nu              nu [ 0 2 -1 0 0 0 0 ] 1.5e-05;
 
+BirdCarreauCoeffs
+{
+    nu0             nu0   [ 0 2 -1 0 0 0 0 ] 1e-03;
+    nuInf           nuInf [ 0 2 -1 0 0 0 0 ] 1e-05;
+    m               m     [ 0 0  1 0 0 0 0 ] 1;
+    n               n     [ 0 0  0 0 0 0 0 ] 0.5;
+}
+
+CrossPowerLawCoeffs
+{
+    nu0             nu0   [ 0 2 -1 0 0 0 0 ] 1e-03;
+    nuInf           nuInf [ 0 2 -1 0 0 0 0 ] 1e-05;
+    m               m     [ 0 0  1 0 0 0 0 ] 1;
+    n               n     [ 0 0  0 0 0 0 0 ] 0.5;
+}
+
+powerLawCoeffs
+{
+    nuMax           nuMax [ 0 2 -1 0 0 0 0 ] 1e-03;
+    nuMin           nuMin [ 0 2 -1 0 0 0 0 ] 1e-05;
+    k               k     [ 0 2 -1 0 0 0 0 ] 1e-05;
+    n               n     [ 0 0  0 0 0 0 0 ] 1;
+}
+
+HerschelBulkleyCoeffs
+{
+    nu0             nu0   [ 0 2 -1 0 0 0 0 ] 1e-03;
+    tau0            tau0  [ 0 2 -2 0 0 0 0 ] 1;
+    k               k     [ 0 2 -1 0 0 0 0 ] 1e-05;
+    n               n     [ 0 0  0 0 0 0 0 ] 1;
+}
+
 // ************************************************************************* //
