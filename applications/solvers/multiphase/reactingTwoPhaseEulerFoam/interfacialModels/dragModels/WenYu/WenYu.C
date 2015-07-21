@@ -49,7 +49,7 @@ Foam::dragModels::WenYu::WenYu
 )
 :
     dragModel(dict, pair, registerObject),
-    residualRe_("residualRe", dimless, dict.lookup("residualRe"))
+    residualRe_("residualRe", dimless, dict)
 {}
 
 

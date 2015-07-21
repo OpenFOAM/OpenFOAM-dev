@@ -49,8 +49,8 @@ Foam::saturationModels::constantSaturationConditions::
 constantSaturationConditions(const dictionary& dict)
 :
     saturationModel(),
-    pSat_("pSat", dimPressure, dict.lookup("pSat")),
-    Tsat_("Tsat", dimTemperature, dict.lookup("Tsat"))
+    pSat_("pSat", dimPressure, dict),
+    Tsat_("Tsat", dimTemperature, dict)
 {}
 
 

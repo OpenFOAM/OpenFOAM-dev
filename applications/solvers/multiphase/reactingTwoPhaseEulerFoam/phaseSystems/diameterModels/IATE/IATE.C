@@ -75,13 +75,13 @@ Foam::diameterModels::IATE::IATE
         ),
         phase_.mesh()
     ),
-    dMax_("dMax", dimLength, diameterProperties_.lookup("dMax")),
-    dMin_("dMin", dimLength, diameterProperties_.lookup("dMin")),
+    dMax_("dMax", dimLength, diameterProperties_),
+    dMin_("dMin", dimLength, diameterProperties_),
     residualAlpha_
     (
         "residualAlpha",
         dimless,
-        diameterProperties_.lookup("residualAlpha")
+        diameterProperties_
     ),
     d_
     (

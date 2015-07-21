@@ -152,9 +152,9 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         )
     ),
 
-    rho1_("rho", dimDensity, nuModel1_->viscosityProperties().lookup("rho")),
-    rho2_("rho", dimDensity, nuModel2_->viscosityProperties().lookup("rho")),
-    rho3_("rho", dimDensity, nuModel3_->viscosityProperties().lookup("rho"))
+    rho1_("rho", dimDensity, nuModel1_->viscosityProperties()),
+    rho2_("rho", dimDensity, nuModel2_->viscosityProperties()),
+    rho3_("rho", dimDensity, nuModel3_->viscosityProperties())
 {
     alpha3_ == 1.0 - alpha1_ - alpha2_;
     calcNu();

@@ -53,8 +53,8 @@ Foam::wallLubricationModels::Antal::Antal
 )
 :
     wallLubricationModel(dict, pair),
-    Cw1_("Cw1", dimless, dict.lookup("Cw1")),
-    Cw2_("Cw2", dimless, dict.lookup("Cw2"))
+    Cw1_("Cw1", dimless, dict),
+    Cw2_("Cw2", dimless, dict)
 {}
 
 

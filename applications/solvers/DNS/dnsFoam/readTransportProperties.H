@@ -14,5 +14,7 @@
 
     dimensionedScalar nu
     (
-        transportProperties.lookup("nu")
+        "nu",
+        dimViscosity,
+        transportProperties
     );

@@ -51,9 +51,9 @@ randomCoalescence
 )
 :
     IATEsource(iate),
-    Crc_("Crc", dimless, dict.lookup("Crc")),
-    C_("C", dimless, dict.lookup("C")),
-    alphaMax_("alphaMax", dimless, dict.lookup("alphaMax"))
+    Crc_("Crc", dimless, dict),
+    C_("C", dimless, dict),
+    alphaMax_("alphaMax", dimless, dict)
 {}
 
 

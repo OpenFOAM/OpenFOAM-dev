@@ -6,7 +6,7 @@
 # Functionality is hard-coded for this particular test case
 # - patch temperatures increased by 1K on each step
 #
-cd ${0%/*} || exit 1    # Run from this directory
+cd ${0%/*} || exit 1    # run from this directory
 
 echo "Executing dummy external solver"
 
@@ -51,7 +51,7 @@ init
 
 totalWait=0
 step=0
-while [1 ]; do
+while [ 1 ]; do
     if [ -f $lockFile ]; then
         log "found lock file ${lockFile} - waiting"
         totalWait=$(expr $totalWait + $waitSec)

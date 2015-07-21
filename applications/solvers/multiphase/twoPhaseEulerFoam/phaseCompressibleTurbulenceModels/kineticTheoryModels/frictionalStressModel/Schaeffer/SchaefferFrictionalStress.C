@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::Schaeffer
 :
     frictionalStressModel(dict),
     coeffDict_(dict.subDict(typeName + "Coeffs")),
-    phi_("phi", dimless, coeffDict_.lookup("phi"))
+    phi_("phi", dimless, coeffDict_)
 {
     phi_ *= constant::mathematical::pi/180.0;
 }

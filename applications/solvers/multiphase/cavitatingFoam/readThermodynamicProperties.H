@@ -16,28 +16,28 @@ dimensionedScalar psil
 (
     "psil",
     dimCompressibility,
-    thermodynamicProperties.lookup("psil")
+    thermodynamicProperties
 );
 
 dimensionedScalar rholSat
 (
     "rholSat",
     dimDensity,
-    thermodynamicProperties.lookup("rholSat")
+    thermodynamicProperties
 );
 
 dimensionedScalar psiv
 (
     "psiv",
     dimCompressibility,
-    thermodynamicProperties.lookup("psiv")
+    thermodynamicProperties
 );
 
 dimensionedScalar pSat
 (
     "pSat",
     dimPressure,
-    thermodynamicProperties.lookup("pSat")
+    thermodynamicProperties
 );
 
 dimensionedScalar rhovSat("rhovSat", psiv*pSat);
@@ -48,5 +48,5 @@ dimensionedScalar rhoMin
 (
     "rhoMin",
     dimDensity,
-    thermodynamicProperties.lookup("rhoMin")
+    thermodynamicProperties
 );

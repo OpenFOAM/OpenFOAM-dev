@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,9 +47,9 @@ Foam::relativeVelocityModels::simple::simple
 )
 :
     relativeVelocityModel(dict, mixture),
-    a_("a", dimless, dict.lookup("a")),
-    V0_("V0", dimVelocity, dict.lookup("V0")),
-    residualAlpha_("residualAlpha", dimless, dict.lookup("residualAlpha"))
+    a_("a", dimless, dict),
+    V0_("V0", dimVelocity, dict),
+    residualAlpha_("residualAlpha", dimless, dict)
 {}
 
 

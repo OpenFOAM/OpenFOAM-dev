@@ -55,7 +55,7 @@ constantSurfaceTensionCoefficient
 )
 :
     surfaceTensionModel(dict, pair, registerObject),
-    sigma_("sigma", dimSigma, dict.lookup("sigma"))
+    sigma_("sigma", dimSigma, dict)
 {}
 
 

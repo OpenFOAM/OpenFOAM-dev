@@ -14,22 +14,30 @@ IOdictionary transportProperties
 
 dimensionedScalar rho
 (
-    transportProperties.lookup("rho")
+    "rho",
+    dimDensity,
+    transportProperties
 );
 
 dimensionedScalar nu
 (
-    transportProperties.lookup("nu")
+    "nu",
+    dimViscosity,
+    transportProperties
 );
 
 dimensionedScalar mu
 (
-    transportProperties.lookup("mu")
+    "mu",
+    dimensionSet(1, 1, -2, 0, 0, -2, 0),
+    transportProperties
 );
 
 dimensionedScalar sigma
 (
-    transportProperties.lookup("sigma")
+    "sigma",
+    dimensionSet(-1, -3, 3, 0, 0, 2, 0),
+    transportProperties
 );
 
 Info<< "Reading field p\n" << endl;

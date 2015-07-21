@@ -14,6 +14,8 @@ IOdictionary transportProperties
 
 dimensionedScalar nu
 (
+    "nu",
+    dimViscosity,
     transportProperties.lookup("nu")
 );
 

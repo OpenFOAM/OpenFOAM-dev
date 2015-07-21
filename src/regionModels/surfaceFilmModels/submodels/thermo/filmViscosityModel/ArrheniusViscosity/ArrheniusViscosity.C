@@ -58,9 +58,9 @@ ArrheniusViscosity::ArrheniusViscosity
 :
     filmViscosityModel(typeName, owner, dict, mu),
     viscosity_(filmViscosityModel::New(owner, coeffDict_, mu)),
-    k1_("k1", dimTemperature, coeffDict_.lookup("k1")),
-    k2_("k2", dimTemperature, coeffDict_.lookup("k2")),
-    Tref_("Tref", dimTemperature, coeffDict_.lookup("Tref"))
+    k1_("k1", dimTemperature, coeffDict_),
+    k2_("k2", dimTemperature, coeffDict_),
+    Tref_("Tref", dimTemperature, coeffDict_)
 {}
 
 

@@ -66,10 +66,10 @@ Foam::viscosityModels::CrossPowerLaw::CrossPowerLaw
 :
     viscosityModel(name, viscosityProperties, U, phi),
     CrossPowerLawCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
-    nu0_("nu0", dimViscosity, CrossPowerLawCoeffs_.lookup("nu0")),
-    nuInf_("nuInf", dimViscosity, CrossPowerLawCoeffs_.lookup("nuInf")),
-    m_("m", dimTime, CrossPowerLawCoeffs_.lookup("m")),
-    n_("n", dimless, CrossPowerLawCoeffs_.lookup("n")),
+    nu0_("nu0", dimViscosity, CrossPowerLawCoeffs_),
+    nuInf_("nuInf", dimViscosity, CrossPowerLawCoeffs_),
+    m_("m", dimTime, CrossPowerLawCoeffs_),
+    n_("n", dimless, CrossPowerLawCoeffs_),
     nu_
     (
         IOobject

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::dragModels::TomiyamaCorrelated::TomiyamaCorrelated
 )
 :
     dragModel(dict, pair, registerObject),
-    A_("A", dimless, dict.lookup("A"))
+    A_("A", dimless, dict)
 {}
 
 

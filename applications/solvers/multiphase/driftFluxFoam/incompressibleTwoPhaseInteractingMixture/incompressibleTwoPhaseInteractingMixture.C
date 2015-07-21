@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,8 @@ incompressibleTwoPhaseInteractingMixture
         )
     ),
 
-    rhod_("rho", dimDensity, muModel_->viscosityProperties().lookup("rho")),
-    rhoc_("rho", dimDensity, nucModel_->viscosityProperties().lookup("rho")),
+    rhod_("rho", dimDensity, muModel_->viscosityProperties()),
+    rhoc_("rho", dimDensity, nucModel_->viscosityProperties()),
     dd_
     (
         "d",

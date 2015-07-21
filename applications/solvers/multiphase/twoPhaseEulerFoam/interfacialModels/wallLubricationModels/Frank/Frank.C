@@ -53,8 +53,8 @@ Foam::wallLubricationModels::Frank::Frank
 )
 :
     wallLubricationModel(dict, pair),
-    Cwd_("Cwd", dimless, dict.lookup("Cwd")),
-    Cwc_("Cwc", dimless, dict.lookup("Cwc")),
+    Cwd_("Cwd", dimless, dict),
+    Cwc_("Cwc", dimless, dict),
     p_(readScalar(dict.lookup("p")))
 {}
 

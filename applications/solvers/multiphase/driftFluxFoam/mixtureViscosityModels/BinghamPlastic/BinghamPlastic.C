@@ -60,19 +60,19 @@ Foam::mixtureViscosityModels::BinghamPlastic::BinghamPlastic
     (
         "BinghamCoeff",
         dimensionSet(1, -1, -2, 0, 0),
-        plasticCoeffs_.lookup("BinghamCoeff")
+        plasticCoeffs_
     ),
     yieldStressExponent_
     (
         "BinghamExponent",
         dimless,
-        plasticCoeffs_.lookup("BinghamExponent")
+        plasticCoeffs_
     ),
     yieldStressOffset_
     (
         "BinghamOffset",
         dimless,
-        plasticCoeffs_.lookup("BinghamOffset")
+        plasticCoeffs_
     ),
     U_(U)
 {}

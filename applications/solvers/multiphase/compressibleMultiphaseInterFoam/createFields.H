@@ -46,7 +46,7 @@ volScalarField rho
     mixture.rho()
 );
 
-dimensionedScalar pMin("pMin", dimPressure, mixture.lookup("pMin"));
+dimensionedScalar pMin("pMin", dimPressure, mixture);
 
 mesh.setFluxRequired(p_rgh.name());
 

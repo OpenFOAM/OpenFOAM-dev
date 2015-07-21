@@ -53,7 +53,7 @@ Foam::diameterModels::constant::constant
 )
 :
     diameterModel(diameterProperties, phase),
-    d_("d", dimLength, diameterProperties_.lookup("d"))
+    d_("d", dimLength, diameterProperties_)
 {}
 
 

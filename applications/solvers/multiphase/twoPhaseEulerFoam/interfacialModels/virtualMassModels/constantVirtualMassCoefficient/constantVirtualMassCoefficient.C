@@ -55,7 +55,7 @@ constantVirtualMassCoefficient
 )
 :
     virtualMassModel(dict, pair, registerObject),
-    Cvm_("Cvm", dimless, dict.lookup("Cvm"))
+    Cvm_("Cvm", dimless, dict)
 {}
 
 

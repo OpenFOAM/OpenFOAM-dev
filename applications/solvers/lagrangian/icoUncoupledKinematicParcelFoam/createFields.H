@@ -20,7 +20,7 @@
     (
         "rhoInf",
         dimDensity,
-        laminarTransport.lookup("rhoInf")
+        laminarTransport
     );
 
     volScalarField rhoInf

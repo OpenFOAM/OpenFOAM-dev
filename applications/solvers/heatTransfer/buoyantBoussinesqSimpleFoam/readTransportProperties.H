@@ -5,14 +5,14 @@ dimensionedScalar beta
 (
     "beta",
     dimless/dimTemperature,
-    laminarTransport.lookup("beta")
+    laminarTransport
 );
 
 // Reference temperature [K]
-dimensionedScalar TRef("TRef", dimTemperature, laminarTransport.lookup("TRef"));
+dimensionedScalar TRef("TRef", dimTemperature, laminarTransport);
 
 // Laminar Prandtl number
-dimensionedScalar Pr("Pr", dimless, laminarTransport.lookup("Pr"));
+dimensionedScalar Pr("Pr", dimless, laminarTransport);
 
 // Turbulent Prandtl number
-dimensionedScalar Prt("Prt", dimless, laminarTransport.lookup("Prt"));
+dimensionedScalar Prt("Prt", dimless, laminarTransport);

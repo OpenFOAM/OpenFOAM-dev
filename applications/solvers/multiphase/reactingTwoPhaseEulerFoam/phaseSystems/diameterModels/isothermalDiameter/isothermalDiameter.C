@@ -53,8 +53,8 @@ Foam::diameterModels::isothermal::isothermal
 )
 :
     diameterModel(diameterProperties, phase),
-    d0_("d0", dimLength, diameterProperties_.lookup("d0")),
-    p0_("p0", dimPressure, diameterProperties_.lookup("p0"))
+    d0_("d0", dimLength, diameterProperties_),
+    p0_("p0", dimPressure, diameterProperties_)
 {}
 
 

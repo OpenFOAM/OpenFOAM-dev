@@ -48,7 +48,7 @@ Foam::liftModels::constantLiftCoefficient::constantLiftCoefficient
 )
 :
     liftModel(dict, pair),
-    Cl_("Cl", dimless, dict.lookup("Cl"))
+    Cl_("Cl", dimless, dict)
 {}
 
 

@@ -63,7 +63,7 @@ Foam::swarmCorrections::TomiyamaSwarm::TomiyamaSwarm
             pair_.dispersed().residualAlpha().value()
         )
     ),
-    l_("l", dimless, dict.lookup("l"))
+    l_("l", dimless, dict)
 {}
 
 

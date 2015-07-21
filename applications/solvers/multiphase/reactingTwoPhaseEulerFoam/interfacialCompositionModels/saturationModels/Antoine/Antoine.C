@@ -43,9 +43,9 @@ namespace saturationModels
 Foam::saturationModels::Antoine::Antoine(const dictionary& dict)
 :
     saturationModel(),
-    A_("A", dimless, dict.lookup("A")),
-    B_("B", dimTemperature, dict.lookup("B")),
-    C_("C", dimTemperature, dict.lookup("C"))
+    A_("A", dimless, dict),
+    B_("B", dimTemperature, dict),
+    C_("C", dimTemperature, dict)
 {}
 
 

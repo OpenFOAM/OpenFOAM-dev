@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,25 +57,25 @@ Foam::phaseModel::phaseModel
     (
         "nu",
         dimensionSet(0, 2, -1, 0, 0),
-        phaseDict_.lookup("nu")
+        phaseDict_
     ),
     kappa_
     (
         "kappa",
         dimensionSet(1, 1, -3, -1, 0),
-        phaseDict_.lookup("kappa")
+        phaseDict_
     ),
     Cp_
     (
         "Cp",
         dimensionSet(0, 2, -2, -1, 0),
-        phaseDict_.lookup("Cp")
+        phaseDict_
     ),
     rho_
     (
         "rho",
         dimDensity,
-        phaseDict_.lookup("rho")
+        phaseDict_
     ),
     U_
     (

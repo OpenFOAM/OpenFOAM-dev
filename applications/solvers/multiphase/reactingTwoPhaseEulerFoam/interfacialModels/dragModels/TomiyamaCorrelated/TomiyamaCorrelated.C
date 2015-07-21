@@ -49,7 +49,7 @@ Foam::dragModels::TomiyamaCorrelated::TomiyamaCorrelated
 )
 :
     dragModel(dict, pair, registerObject),
-    A_("A", dimless, dict.lookup("A"))
+    A_("A", dimless, dict)
 {}
 
 

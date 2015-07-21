@@ -51,9 +51,9 @@ Foam::saturationModels::AntoineExtended::AntoineExtended
 )
 :
     Antoine(dict),
-    D_("D", dimless, dict.lookup("D")),
-    F_("F", dimless, dict.lookup("F")),
-    E_("E", dimless/pow(dimTemperature, F_), dict.lookup("E"))
+    D_("D", dimless, dict),
+    F_("F", dimless, dict),
+    E_("E", dimless/pow(dimTemperature, F_), dict)
 {}
 
 

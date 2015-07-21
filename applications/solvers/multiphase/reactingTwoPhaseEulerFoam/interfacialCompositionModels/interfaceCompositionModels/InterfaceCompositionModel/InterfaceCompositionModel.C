@@ -89,7 +89,7 @@ Foam::InterfaceCompositionModel<Thermo, OtherThermo>::InterfaceCompositionModel
             IOobject::groupName(basicThermo::dictName, pair.phase2().name())
         )
     ),
-    Le_("Le", dimless, dict.lookup("Le"))
+    Le_("Le", dimless, dict)
 {}
 
 

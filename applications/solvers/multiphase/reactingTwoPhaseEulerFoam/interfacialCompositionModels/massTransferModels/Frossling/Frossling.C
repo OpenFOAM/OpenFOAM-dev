@@ -48,7 +48,7 @@ Foam::massTransferModels::Frossling::Frossling
 )
 :
     massTransferModel(dict, pair),
-    Le_("Le", dimless, dict.lookup("Le"))
+    Le_("Le", dimless, dict)
 {}
 
 

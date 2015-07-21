@@ -53,7 +53,7 @@ Foam::wallLubricationModels::TomiyamaWallLubrication::TomiyamaWallLubrication
 )
 :
     wallLubricationModel(dict, pair),
-    D_("Cwd", dimLength, dict.lookup("D"))
+    D_("Cwd", dimLength, dict)
 {}
 
 

@@ -63,12 +63,12 @@ thixotropicViscosity::thixotropicViscosity
 )
 :
     filmViscosityModel(typeName, owner, dict, mu),
-    a_("a", dimless/dimTime, coeffDict_.lookup("a")),
-    b_("b", dimless, coeffDict_.lookup("b")),
-    d_("d", dimless, coeffDict_.lookup("d")),
-    c_("c", pow(dimTime, d_.value() - scalar(1)), coeffDict_.lookup("c")),
-    mu0_("mu0", dimPressure*dimTime, coeffDict_.lookup("mu0")),
-    muInf_("muInf", mu0_.dimensions(), coeffDict_.lookup("muInf")),
+    a_("a", dimless/dimTime, coeffDict_),
+    b_("b", dimless, coeffDict_),
+    d_("d", dimless, coeffDict_),
+    c_("c", pow(dimTime, d_.value() - scalar(1)), coeffDict_),
+    mu0_("mu0", dimPressure*dimTime, coeffDict_),
+    muInf_("muInf", mu0_.dimensions(), coeffDict_),
     K_(1.0 - Foam::sqrt(muInf_/mu0_)),
     lambda_
     (

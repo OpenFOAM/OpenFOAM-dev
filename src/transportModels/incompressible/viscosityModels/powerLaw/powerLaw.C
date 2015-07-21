@@ -82,10 +82,10 @@ Foam::viscosityModels::powerLaw::powerLaw
 :
     viscosityModel(name, viscosityProperties, U, phi),
     powerLawCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
-    k_("k", dimViscosity, powerLawCoeffs_.lookup("k")),
-    n_("n", dimless, powerLawCoeffs_.lookup("n")),
-    nuMin_("nuMin", dimViscosity, powerLawCoeffs_.lookup("nuMin")),
-    nuMax_("nuMax", dimViscosity, powerLawCoeffs_.lookup("nuMax")),
+    k_("k", dimViscosity, powerLawCoeffs_),
+    n_("n", dimless, powerLawCoeffs_),
+    nuMin_("nuMin", dimViscosity, powerLawCoeffs_),
+    nuMax_("nuMax", dimViscosity, powerLawCoeffs_),
     nu_
     (
         IOobject

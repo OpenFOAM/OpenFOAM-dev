@@ -53,7 +53,7 @@ Foam::aspectRatioModels::constantAspectRatio::constantAspectRatio
 )
 :
     aspectRatioModel(dict, pair),
-    E0_("E0", dimless, dict.lookup("E0"))
+    E0_("E0", dimless, dict)
 {}
 
 

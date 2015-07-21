@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,9 +49,9 @@ Foam::dragModels::TomiyamaAnalytic::TomiyamaAnalytic
 )
 :
     dragModel(dict, pair, registerObject),
-    residualRe_("residualRe", dimless, dict.lookup("residualRe")),
-    residualEo_("residualEo", dimless, dict.lookup("residualEo")),
-    residualE_("residualE", dimless, dict.lookup("residualE"))
+    residualRe_("residualRe", dimless, dict),
+    residualEo_("residualEo", dimless, dict),
+    residualE_("residualE", dimless, dict)
 {}
 
 

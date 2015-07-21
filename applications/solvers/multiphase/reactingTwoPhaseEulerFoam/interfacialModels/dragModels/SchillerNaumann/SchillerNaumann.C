@@ -49,7 +49,7 @@ Foam::dragModels::SchillerNaumann::SchillerNaumann
 )
 :
     dragModel(dict, pair, registerObject),
-    residualRe_("residualRe", dimless, dict.lookup("residualRe"))
+    residualRe_("residualRe", dimless, dict)
 {}
 
 

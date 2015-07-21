@@ -27,7 +27,7 @@ dimensionedScalar pMin
 (
     "pMin",
     dimPressure,
-    fluid.lookup("pMin")
+    fluid
 );
 
 #include "gh.H"

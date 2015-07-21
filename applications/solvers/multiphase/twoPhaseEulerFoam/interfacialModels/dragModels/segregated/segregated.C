@@ -51,8 +51,8 @@ Foam::dragModels::segregated::segregated
 )
 :
     dragModel(dict, pair, registerObject),
-    m_("m", dimless, dict.lookup("m")),
-    n_("n", dimless, dict.lookup("n"))
+    m_("m", dimless, dict),
+    n_("n", dimless, dict)
 {}
 
 

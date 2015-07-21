@@ -61,7 +61,7 @@ dimensionedScalar pMin
 (
     "pMin",
     dimPressure,
-    mixture.lookup("pMin")
+    mixture
 );
 
 mesh.setFluxRequired(p_rgh.name());

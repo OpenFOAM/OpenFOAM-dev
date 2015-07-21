@@ -50,7 +50,7 @@ Foam::viscosityModels::Newtonian::Newtonian
 )
 :
     viscosityModel(name, viscosityProperties, U, phi),
-    nu0_("nu", dimViscosity, viscosityProperties_.lookup("nu")),
+    nu0_("nu", dimViscosity, viscosityProperties_),
     nu_
     (
         IOobject

@@ -79,10 +79,10 @@ Foam::viscosityModels::HerschelBulkley::HerschelBulkley
 :
     viscosityModel(name, viscosityProperties, U, phi),
     HerschelBulkleyCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
-    k_("k", dimViscosity, HerschelBulkleyCoeffs_.lookup("k")),
-    n_("n", dimless, HerschelBulkleyCoeffs_.lookup("n")),
-    tau0_("tau0", dimViscosity/dimTime, HerschelBulkleyCoeffs_.lookup("tau0")),
-    nu0_("nu0", dimViscosity, HerschelBulkleyCoeffs_.lookup("nu0")),
+    k_("k", dimViscosity, HerschelBulkleyCoeffs_),
+    n_("n", dimless, HerschelBulkleyCoeffs_),
+    tau0_("tau0", dimViscosity/dimTime, HerschelBulkleyCoeffs_),
+    nu0_("nu0", dimViscosity, HerschelBulkleyCoeffs_),
     nu_
     (
         IOobject

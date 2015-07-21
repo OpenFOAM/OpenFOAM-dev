@@ -56,7 +56,7 @@ Foam::turbulentDispersionModels::Burns::Burns
 )
 :
     turbulentDispersionModel(dict, pair),
-    sigma_("sigma", dimless, dict.lookup("sigma")),
+    sigma_("sigma", dimless, dict),
     residualAlpha_
     (
         "residualAlpha",

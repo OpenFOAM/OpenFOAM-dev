@@ -56,7 +56,7 @@ Foam::turbulentDispersionModels::Gosman::Gosman
 )
 :
     turbulentDispersionModel(dict, pair),
-    sigma_("sigma", dimless, dict.lookup("sigma"))
+    sigma_("sigma", dimless, dict)
 {}
 
 

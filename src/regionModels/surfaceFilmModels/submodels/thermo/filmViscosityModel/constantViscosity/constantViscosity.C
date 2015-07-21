@@ -56,7 +56,7 @@ constantViscosity::constantViscosity
 )
 :
     filmViscosityModel(typeName, owner, dict, mu),
-    mu0_("mu0", dimDynamicViscosity, coeffDict_.lookup("mu0"))
+    mu0_("mu0", dimDynamicViscosity, coeffDict_)
 {
     mu_ == mu0_;
 }

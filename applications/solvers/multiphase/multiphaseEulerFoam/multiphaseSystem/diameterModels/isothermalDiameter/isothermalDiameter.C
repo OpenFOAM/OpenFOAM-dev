@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ Foam::diameterModels::isothermal::isothermal
 )
 :
     diameterModel(dict, phase),
-    d0_("d0", dimLength, dict.lookup("d0")),
-    p0_("p0", dimPressure, dict.lookup("p0"))
+    d0_("d0", dimLength, dict),
+    p0_("p0", dimPressure, dict)
 {}
 
 

@@ -14,17 +14,23 @@
 
     dimensionedScalar rho0
     (
-        thermodynamicProperties.lookup("rho0")
+        "rho0",
+        dimDensity,
+        thermodynamicProperties
     );
 
     dimensionedScalar p0
     (
-        thermodynamicProperties.lookup("p0")
+        "p0",
+        dimPressure,
+        thermodynamicProperties
     );
 
     dimensionedScalar psi
     (
-        thermodynamicProperties.lookup("psi")
+        "psi",
+        dimCompressibility,
+        thermodynamicProperties
     );
 
     // Density offset, i.e. the constant part of the density

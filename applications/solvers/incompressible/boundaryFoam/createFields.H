@@ -36,7 +36,7 @@ autoPtr<incompressible::RASModel> turbulence
     incompressible::RASModel::New(U, phi, laminarTransport)
 );
 
-dimensionedVector Ubar("Ubar", dimVelocity, laminarTransport.lookup("Ubar"));
+dimensionedVector Ubar("Ubar", dimVelocity, laminarTransport);
 
 vector flowDirection = (Ubar/mag(Ubar)).value();
 tensor flowMask = sqr(flowDirection);

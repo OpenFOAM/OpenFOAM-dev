@@ -51,8 +51,8 @@ Foam::PDRDragModels::basic::basic
 )
 :
     PDRDragModel(PDRProperties, turbulence, rho, U, phi),
-    Csu("Csu", dimless, PDRDragModelCoeffs_.lookup("Csu")),
-    Csk("Csk", dimless, PDRDragModelCoeffs_.lookup("Csk")),
+    Csu("Csu", dimless, PDRDragModelCoeffs_),
+    Csk("Csk", dimless, PDRDragModelCoeffs_),
 
     Aw_
     (

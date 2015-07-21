@@ -55,7 +55,7 @@ constantTurbulentDispersionCoefficient
 )
 :
     turbulentDispersionModel(dict, pair),
-    Ctd_("Ctd", dimless, dict.lookup("Ctd"))
+    Ctd_("Ctd", dimless, dict)
 {}
 
 

@@ -59,7 +59,7 @@ Foam::phase::phase
             phi
         )
     ),
-    rho_("rho", dimDensity, phaseDict_.lookup("rho"))
+    rho_("rho", dimDensity, phaseDict_)
 {}
 
 

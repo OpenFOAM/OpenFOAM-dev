@@ -56,7 +56,7 @@ wakeEntrainmentCoalescence
 )
 :
     IATEsource(iate),
-    Cwe_("Cwe", dimless, dict.lookup("Cwe"))
+    Cwe_("Cwe", dimless, dict)
 {}
 
 

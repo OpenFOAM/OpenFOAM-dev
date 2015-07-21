@@ -68,10 +68,10 @@ Foam::viscosityModels::BirdCarreau::BirdCarreau
 :
     viscosityModel(name, viscosityProperties, U, phi),
     BirdCarreauCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
-    nu0_("nu0", dimViscosity, BirdCarreauCoeffs_.lookup("nu0")),
-    nuInf_("nuInf", dimViscosity, BirdCarreauCoeffs_.lookup("nuInf")),
-    k_("k", dimTime, BirdCarreauCoeffs_.lookup("k")),
-    n_("n", dimless, BirdCarreauCoeffs_.lookup("n")),
+    nu0_("nu0", dimViscosity, BirdCarreauCoeffs_),
+    nuInf_("nuInf", dimViscosity, BirdCarreauCoeffs_),
+    k_("k", dimTime, BirdCarreauCoeffs_),
+    n_("n", dimless, BirdCarreauCoeffs_),
     a_
     (
         BirdCarreauCoeffs_.lookupOrDefault

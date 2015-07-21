@@ -37,10 +37,10 @@ volScalarField& alpha2(mixture.alpha2());
 const dimensionedScalar& rho1 = mixture.rho1();
 const dimensionedScalar& rho2 = mixture.rho2();
 
-dimensionedScalar Dab("Dab", dimViscosity, mixture.lookup("Dab"));
+dimensionedScalar Dab("Dab", dimViscosity, mixture);
 
 // Read the reciprocal of the turbulent Schmidt number
-dimensionedScalar alphatab("alphatab", dimless, mixture.lookup("alphatab"));
+dimensionedScalar alphatab("alphatab", dimless, mixture);
 
 // Need to store rho for ddt(rho, U)
 volScalarField rho("rho", alpha1*rho1 + alpha2*rho2);

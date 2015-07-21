@@ -49,7 +49,7 @@ Foam::liftModels::LegendreMagnaudet::LegendreMagnaudet
 )
 :
     liftModel(dict, pair),
-    residualRe_("residualRe", dimless, dict.lookup("residualRe"))
+    residualRe_("residualRe", dimless, dict)
 {}
 
 

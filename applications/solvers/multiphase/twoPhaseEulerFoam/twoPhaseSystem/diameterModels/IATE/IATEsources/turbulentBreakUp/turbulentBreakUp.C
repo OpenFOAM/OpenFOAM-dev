@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,8 @@ turbulentBreakUp
 )
 :
     IATEsource(iate),
-    Cti_("Cti", dimless, dict.lookup("Cti")),
-    WeCr_("WeCr", dimless, dict.lookup("WeCr"))
+    Cti_("Cti", dimless, dict),
+    WeCr_("WeCr", dimless, dict)
 {}
 
 

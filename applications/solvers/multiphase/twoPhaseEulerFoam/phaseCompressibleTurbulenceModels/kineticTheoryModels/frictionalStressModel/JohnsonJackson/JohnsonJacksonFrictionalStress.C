@@ -58,11 +58,11 @@ JohnsonJackson
 :
     frictionalStressModel(dict),
     coeffDict_(dict.subDict(typeName + "Coeffs")),
-    Fr_("Fr", dimensionSet(1, -1, -2, 0, 0), coeffDict_.lookup("Fr")),
-    eta_("eta", dimless, coeffDict_.lookup("eta")),
-    p_("p", dimless, coeffDict_.lookup("p")),
-    phi_("phi", dimless, coeffDict_.lookup("phi")),
-    alphaDeltaMin_("alphaDeltaMin", dimless, coeffDict_.lookup("alphaDeltaMin"))
+    Fr_("Fr", dimensionSet(1, -1, -2, 0, 0), coeffDict_),
+    eta_("eta", dimless, coeffDict_),
+    p_("p", dimless, coeffDict_),
+    phi_("phi", dimless, coeffDict_),
+    alphaDeltaMin_("alphaDeltaMin", dimless, coeffDict_)
 {
     phi_ *= constant::mathematical::pi/180.0;
 }
