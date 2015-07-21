@@ -18,14 +18,14 @@ FoamFile
 defaultFieldValues
 (
     volScalarFieldValue alpha.water 0
-    volVectorFieldValue U ( 0 0 0 )
+    volVectorFieldValue U (0 0 0)
 );
 
 regions
 (
     boxToCell
     {
-        box ( 0 0 0 ) ( 0.6 0.1875 0.75 );
+        box (0 0 0) (0.6 0.1875 0.75);
         fieldValues
         (
             volScalarFieldValue alpha.water 1

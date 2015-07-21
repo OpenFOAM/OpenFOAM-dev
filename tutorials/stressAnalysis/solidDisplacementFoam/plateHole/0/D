@@ -27,7 +27,7 @@ boundaryField
     right
     {
         type            tractionDisplacement;
-        traction        uniform ( 10000 0 0 );
+        traction        uniform (10000 0 0);
         pressure        uniform 0;
         value           uniform (0 0 0);
     }
@@ -38,14 +38,14 @@ boundaryField
     up
     {
         type            tractionDisplacement;
-        traction        uniform ( 0 0 0 );
+        traction        uniform (0 0 0);
         pressure        uniform 0;
         value           uniform (0 0 0);
     }
     hole
     {
         type            tractionDisplacement;
-        traction        uniform ( 0 0 0 );
+        traction        uniform (0 0 0);
         pressure        uniform 0;
         value           uniform (0 0 0);
     }

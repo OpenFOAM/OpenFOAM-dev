@@ -132,7 +132,7 @@ functions
         patches         ( obstacle );
         directForceDensity true;
         fDName          fDMean;
-        CofR            ( 0 0 0 );
+        CofR            (0 0 0);
         log             on;
     }
 }

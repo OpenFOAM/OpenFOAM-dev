@@ -25,8 +25,8 @@ sets
     {
         type    face;
         axis    x;
-        start   ( -5 0 0 );
-        end     ( 5 0 0 );
+        start   (-5 0 0);
+        end     (5 0 0);
         nPoints 100;
     }
 );

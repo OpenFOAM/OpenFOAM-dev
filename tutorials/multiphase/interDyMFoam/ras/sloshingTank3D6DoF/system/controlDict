@@ -61,8 +61,8 @@ functions
         outputInterval  1;
         probeLocations
         (
-            ( 0 9.95 19.77 )
-            ( 0 -9.95 19.77 )
+            (0 9.95 19.77)
+            (0 -9.95 19.77)
         );
         fixedLocations  false;
         fields

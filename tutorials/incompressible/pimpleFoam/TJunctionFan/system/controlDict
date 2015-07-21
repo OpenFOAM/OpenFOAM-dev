@@ -74,9 +74,9 @@ functions
         probeLocations
         (
             ( 1e-06 0 0.01 )        // at inlet
-            ( 0.21 -0.20999 0.01 )  // at outlet1
-            ( 0.21 0.20999 0.01 )   // at outlet2
-            ( 0.21 0 0.01 )         // at central block
+            (0.21 -0.20999 0.01)  // at outlet1
+            (0.21 0.20999 0.01)   // at outlet2
+            (0.21 0 0.01)         // at central block
         );
     }
 }

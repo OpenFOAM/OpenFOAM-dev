@@ -22,7 +22,7 @@ solidBodyMotionFvMeshCoeffs
     solidBodyMotionFunction SDA;
     SDACoeffs
     {
-        CofG            ( 0 0 0 );
+        CofG            (0 0 0);
         lamda           50;
         rollAmax        0.22654;
         rollAmin        0.10472;

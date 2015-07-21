@@ -8053,8 +8053,8 @@ boundaryField
     outer
     {
         type                uniformInletOutlet;
-        uniformInletValue   ( 0 0 0 0 0 0 );
-        value               uniform ( 0 0 0 0 0 0 );
+        uniformInletValue   (0 0 0 0 0 0);
+        value               uniform (0 0 0 0 0 0);
     }
     ground
     {
@@ -8063,12 +8063,12 @@ boundaryField
     blockedFaces
     {
         type            zeroGradient;
-        value           uniform ( 0 0 0 0 0 0 );
+        value           uniform (0 0 0 0 0 0);
     }
     baffleWall
     {
         type            zeroGradient;
-        value           uniform ( 0 0 0 0 0 0 );
+        value           uniform (0 0 0 0 0 0);
     }
     baffleCyclic_half0
     {

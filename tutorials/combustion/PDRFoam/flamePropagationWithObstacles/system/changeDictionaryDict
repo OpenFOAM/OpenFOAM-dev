@@ -59,7 +59,7 @@ dictionaryReplacement
                 p                   p;
                 minThresholdValue   8000;
                 forceBased          0;
-                value               uniform ( 0 0 0 );
+                value               uniform (0 0 0);
             }
             baffleCyclic_half0
             {

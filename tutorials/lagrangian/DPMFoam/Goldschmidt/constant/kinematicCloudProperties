@@ -80,7 +80,7 @@ subModels
             nParticle       1;
             SOI             0;
             positionsFile   "kinematicCloudPositions";
-            U0              ( 0 0 0 );
+            U0              (0 0 0);
             sizeDistribution
             {
                 type        fixedValue;

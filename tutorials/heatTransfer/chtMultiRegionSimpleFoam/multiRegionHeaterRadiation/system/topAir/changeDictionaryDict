@@ -29,13 +29,13 @@ dictionaryReplacement
             minX
             {
                 type            fixedValue;
-                value           uniform ( 0.1 0 0 );
+                value           uniform (0.1 0 0);
             }
             maxX
             {
                 type            inletOutlet;
-                inletValue      uniform ( 0 0 0 );
-                value           uniform ( 0.1 0 0 );
+                inletValue      uniform (0 0 0);
+                value           uniform (0.1 0 0);
             }
         }
     }

@@ -40,25 +40,25 @@ vertices
     ( 35.35533906 106.06601718  25 )  // pt 11 (poro2f)
 
     // outlet
-    ( 141.42135624 141.42135624 -25 ) // pt 12 (out1b)
-    ( 106.06601718 176.7766953 -25 ) // pt 13 (out2b)
-    ( 141.42135624 141.42135624 25 ) // pt 14 (out1f)
-    ( 106.06601718 176.7766953 25 ) // pt 15 (out2f)
+    (141.42135624 141.42135624 -25) // pt 12 (out1b)
+    (106.06601718 176.7766953 -25) // pt 13 (out2b)
+    (141.42135624 141.42135624 25) // pt 14 (out1f)
+    (106.06601718 176.7766953 25) // pt 15 (out2f)
 );
 
 blocks
 (
     // inlet block
     hex (0 4 5 1 2 6 7 3)
-    inlet ( 15 20 20 ) simpleGrading (1 1 1)
+    inlet (15 20 20) simpleGrading (1 1 1)
 
     // porosity block
     hex (4 8 9 5 6 10 11 7)
-    porosity ( 20 20 20 ) simpleGrading (1 1 1)
+    porosity (20 20 20) simpleGrading (1 1 1)
 
     // outlet block
     hex (8 12 13 9 10 14 15 11)
-    outlet ( 20 20 20 )  simpleGrading (1 1 1)
+    outlet (20 20 20)  simpleGrading (1 1 1)
 );
 
 edges

@@ -25,24 +25,24 @@ sampleSets
     {
         name    cone25;
         axis    x;
-        start   ( 0 0 0 );
-        end     ( 0.09208087 0.042939 0 );
+        start   (0 0 0);
+        end     (0.09208087 0.042939 0);
         nPoints 92;
     }
     face
     {
         name    cone55;
         axis    x;
-        start   ( 0.09208087 0.042939 0 );
-        end     ( 0.153683 0.13092 0 );
+        start   (0.09208087 0.042939 0);
+        end     (0.153683 0.13092 0);
         nPoints 61;
     }
     face
     {
         name    base;
         axis    x;
-        start   ( 0.153683 0.13092 0 );
-        end     ( 0.193675 0.13092 0 );
+        start   (0.153683 0.13092 0);
+        end     (0.193675 0.13092 0);
         nPoints 40;
     }
 );

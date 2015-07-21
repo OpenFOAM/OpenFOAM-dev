@@ -80,7 +80,7 @@ subModels
             parcelBasisType mass;
             SOI             0;
             positionsFile   "limestonePositions";
-            U0              ( 0 0 0 );
+            U0              (0 0 0);
             sizeDistribution
             {
                 type        RosinRammler;

@@ -21,13 +21,13 @@ method          simple;
 
 simpleCoeffs
 {
-    n               ( 8 1 1 );
+    n               (8 1 1);
     delta           0.001;
 }
 
 hierarchicalCoeffs
 {
-    n               ( 1 1 1 );
+    n               (1 1 1);
     delta           0.001;
     order           xyz;
 }

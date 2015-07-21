@@ -17,50 +17,50 @@ FoamFile
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform ( 0.001 0 0 );
+internalField   uniform (0.001 0 0);
 
 boundaryField
 {
     minX
     {
         type            fixedValue;
-        value           uniform ( 0.001 0 0 );
+        value           uniform (0.001 0 0);
     }
     maxX
     {
         type            inletOutlet;
-        value           uniform ( 0.01 0 0 );
-        inletValue      uniform ( 0 0 0 );
+        value           uniform (0.01 0 0);
+        inletValue      uniform (0 0 0);
     }
     minY
     {
         type            fixedValue;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
     }
     minZ
     {
         type            fixedValue;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
     }
     maxZ
     {
         type            fixedValue;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
     }
     bottomWater_to_rightSolid
     {
         type            fixedValue;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
     }
     bottomWater_to_leftSolid
     {
         type            fixedValue;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
     }
     bottomWater_to_heater
     {
         type            fixedValue;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
     }
 }
 

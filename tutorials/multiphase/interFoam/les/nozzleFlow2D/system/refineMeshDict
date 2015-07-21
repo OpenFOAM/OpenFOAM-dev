@@ -21,14 +21,14 @@ coordinateSystem global;
 
 globalCoeffs
 {
-    tan1            ( 1 0 0 );
-    tan2            ( 0 1 0 );
+    tan1            (1 0 0);
+    tan2            (0 1 0);
 }
 
 patchLocalCoeffs
 {
     patch           outside;
-    tan1            ( 1 0 0 );
+    tan1            (1 0 0);
 }
 
 directions      ( tan1 );

@@ -22,7 +22,7 @@ solidBodyMotionFvMeshCoeffs
     solidBodyMotionFunction tabulated6DoFMotion;
     tabulated6DoFMotionCoeffs
     {
-        CofG            ( 0 0 0 );
+        CofG            (0 0 0);
         timeDataFileName "$FOAM_CASE/constant/6DoF.dat";
     }
 }

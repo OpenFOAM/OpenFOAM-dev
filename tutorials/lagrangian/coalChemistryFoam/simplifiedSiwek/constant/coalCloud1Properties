@@ -86,7 +86,7 @@ subModels
             parcelBasisType mass;
             SOI             0;
             positionsFile   "coalCloud1Positions";
-            U0              ( 0 -10 0 );
+            U0              (0 -10 0);
             sizeDistribution
             {
                 type        RosinRammler;

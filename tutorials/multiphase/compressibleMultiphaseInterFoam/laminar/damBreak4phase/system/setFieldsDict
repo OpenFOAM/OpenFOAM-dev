@@ -21,14 +21,14 @@ defaultFieldValues
     volScalarFieldValue alpha.water 0
     volScalarFieldValue alpha.oil 0
     volScalarFieldValue alpha.mercury 0
-    volVectorFieldValue U ( 0 0 0 )
+    volVectorFieldValue U (0 0 0)
 );
 
 regions
 (
     boxToCell
     {
-        box ( 0 0 -1 ) ( 0.1461 0.292 1 );
+        box (0 0 -1) (0.1461 0.292 1);
         fieldValues
         (
             volScalarFieldValue alpha.water 1
@@ -39,7 +39,7 @@ regions
     }
     boxToCell
     {
-        box ( 0.1461 0 -1 ) ( 0.2922 0.292 1 );
+        box (0.1461 0 -1) (0.2922 0.292 1);
         fieldValues
         (
             volScalarFieldValue alpha.water 0
@@ -50,7 +50,7 @@ regions
     }
     boxToCell
     {
-        box ( 0 0 -1 ) ( 0.1461 0.1 1 );
+        box (0 0 -1) (0.1461 0.1 1);
         fieldValues
         (
             volScalarFieldValue alpha.water 0

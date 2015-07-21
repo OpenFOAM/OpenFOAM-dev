@@ -63,10 +63,10 @@ functions
         UName       U;
         log         true;
         rhoInf      1;
-        CofR        ( 0 0 0 );
-        liftDir     ( -0.239733 0.970839 0 );
-        dragDir     ( 0.970839 0.239733 0 );
-        pitchAxis   ( 0 0 1 );
+        CofR        (0 0 0);
+        liftDir     (-0.239733 0.970839 0);
+        dragDir     (0.970839 0.239733 0);
+        pitchAxis   (0 0 1);
         magUInf     618.022;
         lRef        1;
         Aref        1;

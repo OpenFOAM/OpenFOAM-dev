@@ -17,30 +17,30 @@ FoamFile
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform ( 0 0 0 );
+internalField   uniform (0 0 0);
 
 boundaryField
 {
     outer
     {
         type                uniformInletOutlet;
-        uniformInletValue   ( 0 0 0 );
-        value               uniform ( 0 0 0 );
+        uniformInletValue   (0 0 0);
+        value               uniform (0 0 0);
     }
     ground
     {
         type            fixedValue;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
     }
     blockedFaces
     {
         type            fixedValue;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
     }
     baffleWall
     {
         type            activePressureForceBaffleVelocity;
-        value           uniform ( 0 0 0 );
+        value           uniform (0 0 0);
         cyclicPatch     baffleCyclic_half0;
         orientation     1;
         openingTime     0.01;
