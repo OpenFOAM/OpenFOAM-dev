@@ -23,12 +23,13 @@ ddtSchemes
 gradSchemes
 {
     default         Gauss linear;
+    limited         cellLimited Gauss linear 1;
 }
 
 divSchemes
 {
     default         none;
-    div(phi,Urel)   bounded Gauss upwind;
+    div(phi,Urel)   bounded Gauss linearUpwind limited;
     div(phi,k)      bounded Gauss upwind;
     div(phi,epsilon) bounded Gauss upwind;
     div(phi,omega)  bounded Gauss upwind;
@@ -40,13 +41,12 @@ divSchemes
 
 laplacianSchemes
 {
-    default        Gauss linear corrected;
+    default         Gauss linear corrected;
 }
 
 interpolationSchemes
 {
     default         linear;
-    interpolate(Urel) linear;
 }
 
 snGradSchemes

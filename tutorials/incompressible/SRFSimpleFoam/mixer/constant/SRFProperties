@@ -22,7 +22,7 @@ axis            (0 0 1);
 
 rpmCoeffs
 {
-    rpm             5000;
+    rpm         1000;
 }
 
 

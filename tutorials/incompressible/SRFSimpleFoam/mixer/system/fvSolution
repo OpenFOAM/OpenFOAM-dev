@@ -29,7 +29,7 @@ solvers
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-05;
+        tolerance       1e-6;
         relTol          0.1;
     }
 }

@@ -28,18 +28,17 @@ boundaryField
     }
     outlet
     {
-        type            zeroGradient;
+        type            inletOutlet;
+        inletValue      uniform 3.5;
     }
     innerWall
     {
         type            omegaWallFunction;
-        U               Urel;
         value           uniform 3.5;
     }
     outerWall
     {
         type            omegaWallFunction;
-        U               Urel;
         value           uniform 3.5;
     }
     cyclic_half0
