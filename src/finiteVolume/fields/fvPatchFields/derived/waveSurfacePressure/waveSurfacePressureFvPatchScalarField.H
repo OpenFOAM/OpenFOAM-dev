@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,8 +99,8 @@ public:
 
     // Public data
 
-        //- Enumeration defining the available time schemes
-        enum timeSchemeType
+        //- Enumeration defining the available ddt schemes
+        enum ddtSchemeType
         {
             tsEuler,
             tsCrankNicolson,
@@ -122,7 +122,7 @@ private:
         word rhoName_;
 
         //- Time scheme type names
-        static const NamedEnum<timeSchemeType, 3> timeSchemeTypeNames_;
+        static const NamedEnum<ddtSchemeType, 3> ddtSchemeTypeNames_;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ namespace Foam
     template<>
     const char* NamedEnum
     <
-        waveSurfacePressureFvPatchScalarField::timeSchemeType,
+        waveSurfacePressureFvPatchScalarField::ddtSchemeType,
         3
     >::names[] =
     {
@@ -53,9 +53,9 @@ namespace Foam
 
 const Foam::NamedEnum
 <
-    Foam::waveSurfacePressureFvPatchScalarField::timeSchemeType,
+    Foam::waveSurfacePressureFvPatchScalarField::ddtSchemeType,
     3
->   Foam::waveSurfacePressureFvPatchScalarField::timeSchemeTypeNames_;
+>   Foam::waveSurfacePressureFvPatchScalarField::ddtSchemeTypeNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -160,7 +160,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
 
     // lookup d/dt scheme from database for zeta
     const word ddtSchemeName(zeta.mesh().ddtScheme(zeta.name()));
-    timeSchemeType timeScheme(timeSchemeTypeNames_[ddtSchemeName]);
+    ddtSchemeType ddtScheme(ddtSchemeTypeNames_[ddtSchemeName]);
 
     // retrieve the flux field from the database
     const surfaceScalarField& phi =
@@ -180,7 +180,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
         dZetap /= rhop;
     }
 
-    switch (timeScheme)
+    switch (ddtScheme)
     {
         case tsEuler:
         case tsCrankNicolson:
