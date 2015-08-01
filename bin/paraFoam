@@ -67,12 +67,12 @@ unset regionName optTouch
 # already 2010-07)
 export LC_ALL=C
 
-# reader extension
+# Reader extension
 extension=OpenFOAM
 
 requirePV=1
 
-# parse options
+# Parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -110,10 +110,10 @@ do
         ;;
     --)
         shift
-        break    # stop here, treat balance as paraview options
+        break    # Stop here, treat balance as paraview options
         ;;
     --*)
-        break    # stop here, treat this and balance as paraview options
+        break    # Stop here, treat this and balance as paraview options
         ;;
     *)
         usage "unknown option/argument: '$*'"
@@ -124,7 +124,7 @@ done
 # Get the ParaView major version to select the appropriate readers
 version=`echo $ParaView_VERSION | sed -e 's/^\([0-9][0-9]*\).*$/\1/'`
 
-# check that reader module has been built
+# Check that reader module has been built
 if [ $requirePV -eq 1 -a ! -f $PV_PLUGIN_PATH/libPV${version}FoamReader_SM.so ]
 then
     cat<< BUILDREADER
@@ -140,7 +140,7 @@ BUILDREADER
     exit 1
 fi
 
-# check for --data=... argument
+# Check for --data=... argument
 hasDataArg()
 {
     hasData=false
@@ -159,7 +159,7 @@ hasDataArg()
 hasDataArg $@
 
 
-# get a sensible caseName from the directory name
+# Get a sensible caseName from the directory name
 caseName=${PWD##*/}
 caseFile="$caseName.$extension"
 fvControls="system"
@@ -179,14 +179,14 @@ fi
 case "${optTouch:-false}" in
 all)
     extension=OpenFOAM
-    if [ -f constant/polyMesh/blockMeshDict ]
+    if [ -f system/blockMeshDict -o -f constant/polyMesh/blockMeshDict ]
     then
         touch "$caseName.blockMesh"
         echo "Created '$caseName.blockMesh'"
     fi
     touch "$caseName.$extension"
     echo "Created '$caseName.$extension'"
-    # discover probable regions
+    # Discover probable regions
     for region in constant/*
     do
         if [ -d $region -a -d $region/polyMesh ]
@@ -206,7 +206,7 @@ true)
 esac
 
 
-# parent directory for normal or parallel results
+# Parent directory for normal or parallel results
 case "$caseName" in
     processor*) parentDir=".." ;;
     *)          parentDir="."  ;;
@@ -216,42 +216,47 @@ esac
 if [ "${hasData:-false}" = true ]
 then
 
-    # has --data=.., send directly to paraview
+    # Has --data=.., send directly to paraview
     exec paraview "$@"
 
 else
 
-    # check existence of essential files
+    # Check existence of essential files
     warn="WARN file does not exist:"
     case $extension in
-    blockMesh)
-        for check in \
-            system/controlDict \
-            constant/polyMesh/blockMeshDict \
-            ;
-        do
-            [ -s "$parentDir/$check" ] || {
-                [ -n "$warn" ] && echo "$warn" 1>&2
-                echo "    $parentDir/$check" 1>&2
-                unset warn
-            }
-        done
-        ;;
+        blockMesh)
+            blockMeshDictDir=system/blockMeshDict
+            if [ -f constant/polyMesh/blockMeshDict ]
+            then
+                blockMeshDictDir=constant/polyMesh/blockMeshDict
+            fi
+            for check in \
+                system/controlDict \
+                    $blockMeshDictDir \
+                ;
+            do
+                [ -s "$parentDir/$check" ] || {
+                    [ -n "$warn" ] && echo "$warn" 1>&2
+                    echo "    $parentDir/$check" 1>&2
+                    unset warn
+                }
+            done
+            ;;
 
-    builtin | OpenFOAM)
-        for check in \
-            system/controlDict \
-            $fvControls/fvSchemes \
-            $fvControls/fvSolution \
-            ;
-        do
-            [ -s "$parentDir/$check" ] || {
-                [ -n "$warn" ] && echo "$warn" 1>&2
-                echo "    $parentDir/$check" 1>&2
-                unset warn
-            }
-        done
-        ;;
+        builtin | OpenFOAM)
+            for check in \
+                system/controlDict \
+                    $fvControls/fvSchemes \
+                    $fvControls/fvSolution \
+                ;
+            do
+                [ -s "$parentDir/$check" ] || {
+                    [ -n "$warn" ] && echo "$warn" 1>&2
+                    echo "    $parentDir/$check" 1>&2
+                    unset warn
+                }
+            done
+            ;;
     esac
 
     [ -n "$warn" ] || {
@@ -262,7 +267,7 @@ else
         exit
     }
 
-    # only create/remove caseFile if it didn't already exist
+    # Only create/remove caseFile if it didn't already exist
     [ -e $caseFile ] || {
         trap "rm -f $caseFile 2>/dev/null; exit 0" EXIT TERM INT
         touch "$caseFile"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(vtkPV3blockMesh, 0);
+    defineTypeNameAndDebug(vtkPV3blockMesh, 0);
 }
 
 
@@ -335,13 +335,28 @@ void Foam::vtkPV3blockMesh::updateFoamMesh()
                 << endl;
         }
 
+        // Set path for the blockMeshDict
+        const word dictName("blockMeshDict");
+        fileName dictPath(dbPtr_().system()/dictName);
+
+        // Check if dictionary is present in the constant directory
+        if
+        (
+            exists
+            (
+                dbPtr_().path()/dbPtr_().constant()
+               /polyMesh::meshSubDir/dictName
+            )
+        )
+        {
+            dictPath = dbPtr_().constant()/polyMesh::meshSubDir/dictName;
+        }
+
         IOdictionary meshDict
         (
             IOobject
             (
-                "blockMeshDict",
-                dbPtr_().constant(),
-                meshDir_,
+                dictPath,
                 dbPtr_(),
                 IOobject::MUST_READ_IF_MODIFIED,
                 IOobject::NO_WRITE,
