@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ License
     - applications:
         collections of library functionality wrapped up into applications,
         such as solvers and utilities
-        
+
     - tutorials:
         a suite of test cases that highlight a broad cross-section of
         OpenFOAM's capabilities

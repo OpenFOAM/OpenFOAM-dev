@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
     This is a cell-volume based average. Point values are summed over the
     computational cells and the result is divided by the cell volume.
-    
+
     Interpolation is done assuming a constant value over each cells. Cell
     gradients are calculated by the default fvc::grad scheme, and are also
     assumed constant when interpolated.

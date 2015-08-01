@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Description
         psi          | compressibility field name | no       | none
         gamma        | ratio of specific heats (Cp/Cv) | yes |
         p0           | static pressure reference | yes       |
-        omega        | angular velocty of the frame [rad/s] | yes    | 
+        omega        | angular velocty of the frame [rad/s] | yes    |
     \endtable
 
     Example of the boundary condition specification:
@@ -55,7 +55,7 @@ Description
         psi             psi;
         gamma           1.4;
         p0              uniform 1e5;
-        omega           100;        
+        omega           100;
     }
     \endverbatim
 

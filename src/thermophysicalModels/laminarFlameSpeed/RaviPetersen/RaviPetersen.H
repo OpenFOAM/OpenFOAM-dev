@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,8 @@ Description
     The correlation for the laminar flame speed \f$Su\f$ is of the following
     form:
     \f[
-        Su = \left( \sum \alpha_i \phi^i \right) 
-        \left( \frac{T}{T_{ref}} \right)^{\left( \sum \beta_j \phi^j \right)} 
+        Su = \left( \sum \alpha_i \phi^i \right)
+        \left( \frac{T}{T_{ref}} \right)^{\left( \sum \beta_j \phi^j \right)}
     \f]
 
     Where \f$\phi\f$ is the equivalence ratio, and \f$\alpha\f$ and \f$\beta\f$

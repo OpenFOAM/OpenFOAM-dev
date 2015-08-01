@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
         Property     | Description             | Required    | Default value
         origin       | origin of rotation in Cartesian co-ordinates | yes|
         axis         | axis of rotation        | yes         |
-        omega        | angular velocty of the frame [rad/s] | yes    | 
+        omega        | angular velocty of the frame [rad/s] | yes    |
     \endtable
 
     Example of the boundary condition specification:
@@ -52,7 +52,7 @@ Description
 
     The \c omega entry is a DataEntry type, able to describe time varying
     functions.
-    
+
 SeeAlso
     Foam::DataEntry
     Foam::fixedValueFvPatchField

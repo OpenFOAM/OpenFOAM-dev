@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,11 +29,11 @@ Group
 
 Description
     This boundary condition maps the value at a set of cells or patch faces
-    back to *this.  
+    back to *this.
 
     The sample mode is set by the underlying mapping engine, provided by the
     mappedPatchBase class.
-    
+
     \heading Patch usage
 
     \table
