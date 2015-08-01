@@ -146,7 +146,7 @@ Foam::scalar Foam::ReversibleReaction
 {
     scalar Kc = this->Kc(p, T);
 
-    if (mag(Kc > VSMALL))
+    if (mag(Kc) > VSMALL)
     {
         return kfwd/Kc;
     }
