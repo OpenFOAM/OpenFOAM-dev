@@ -59,17 +59,38 @@ Foam::lineDivide::lineDivide
     // Check that there are more divisions than sections
     if (nDiv >= gd.size())
     {
+        // Calculate distribution of divisions to be independent
+        // of the order of the sections
+        labelList secnDivs(gd.size());
+        label sumSecnDivs = 0;
+        label secnMaxDivs = 0;
+
+        forAll(gd, sectioni)
+        {
+            scalar nDivFrac = gd[sectioni].nDivFraction();
+            secnDivs[sectioni] = label(nDivFrac*nDiv + 0.5);
+            sumSecnDivs += secnDivs[sectioni];
+
+            // Find the section with the largest number of divisions
+            if (nDivFrac > gd[secnMaxDivs].nDivFraction())
+            {
+                secnMaxDivs = sectioni;
+            }
+        }
+
+        // Adjust the number of divisions on the section with the largest
+        // number so that the total is nDiv
+        if (sumSecnDivs != nDiv)
+        {
+            secnDivs[secnMaxDivs] += (nDiv - sumSecnDivs);
+        }
+
         forAll(gd, sectioni)
         {
             scalar blockFrac = gd[sectioni].blockFraction();
-            scalar nDivFrac = gd[sectioni].nDivFraction();
             scalar expRatio = gd[sectioni].expansionRatio();
 
-            label secnDiv = label(nDivFrac*nDiv + 0.5);
-            if (sectioni == gd.size() - 1)
-            {
-                secnDiv = nDiv - secnStart + 1;
-            }
+            label secnDiv = secnDivs[sectioni];
             label secnEnd = secnStart + secnDiv;
 
             // Calculate the spacing
