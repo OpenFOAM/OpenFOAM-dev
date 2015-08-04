@@ -68,7 +68,7 @@ private:
         const word prefix_;
 
         //- File names
-        wordHashSet names_;
+        wordList names_;
 
         //- File pointer
         PtrList<OFstream> filePtrs_;
@@ -149,7 +149,7 @@ public:
     // Member Functions
 
         //- Return const access to the names
-        const wordHashSet& names() const;
+        const wordList& names() const;
 
         //- Return access to the file (if only 1)
         OFstream& file();
