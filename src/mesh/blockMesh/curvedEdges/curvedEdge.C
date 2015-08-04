@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,11 +117,11 @@ Foam::pointField Foam::curvedEdge::appendEndPoints
 {
     pointField allKnots(otherKnots.size() + 2);
 
-    // start/end knots
+    // Start/end knots
     allKnots[0] = points[start];
     allKnots[otherKnots.size() + 1] = points[end];
 
-    // intermediate knots
+    // Intermediate knots
     forAll(otherKnots, knotI)
     {
         allKnots[knotI+1] = otherKnots[knotI];

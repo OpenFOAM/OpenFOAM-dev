@@ -59,7 +59,7 @@ Foam::blockDescriptor::blockDescriptor
             << exit(FatalError);
     }
 
-    // create a list of edges
+    // Create a list of edges
     makeBlockEdges();
 }
 
@@ -99,7 +99,7 @@ Foam::blockDescriptor::blockDescriptor
 
     if (t.isPunctuation())
     {
-        // new-style: read a list of 3 values
+        // New-style: read a list of 3 values
         if (t.pToken() == token::BEGIN_LIST)
         {
             is >> meshDensity_;
@@ -118,7 +118,7 @@ Foam::blockDescriptor::blockDescriptor
     }
     else
     {
-        // old-style: read three labels
+        // Old-style: read three labels
         is  >> meshDensity_.x()
             >> meshDensity_.y()
             >> meshDensity_.z();
@@ -134,7 +134,7 @@ Foam::blockDescriptor::blockDescriptor
 
     if (expRatios.size() == 1)
     {
-        // identical in x/y/z-directions
+        // Identical in x/y/z-directions
         expand_ = expRatios[0];
     }
     else if (expRatios.size() == 3)
@@ -171,7 +171,7 @@ Foam::blockDescriptor::blockDescriptor
             << exit(FatalError);
     }
 
-    // create a list of edges
+    // Create a list of edges
     makeBlockEdges();
 }
 
@@ -279,7 +279,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const blockDescriptor& bd)
 
     const List<gradingDescriptors>& expand = bd.expand_;
 
-    // can we use a compact notation?
+    // Can we use a compact notation?
     if
     (
         // x-direction

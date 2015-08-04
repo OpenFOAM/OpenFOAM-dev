@@ -130,7 +130,6 @@ Foam::lineDivide::lineDivide
         }
     }
 
-
     // Calculate the points
     for (label i = 0; i <= nDiv; i++)
     {

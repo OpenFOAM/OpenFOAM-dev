@@ -47,7 +47,7 @@ Foam::gradingDescriptors Foam::gradingDescriptors::inv() const
 
     forAll(ret, i)
     {
-        ret[i] = operator[](i).inv();
+        ret[i] = operator[](ret.size() - i - 1).inv();
     }
 
     return ret;

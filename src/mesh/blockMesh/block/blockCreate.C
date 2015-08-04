@@ -30,7 +30,7 @@ License
 
 void Foam::block::createPoints() const
 {
-    // set local variables for mesh specification
+    // Set local variables for mesh specification
     const label ni = meshDensity().x();
     const label nj = meshDensity().y();
     const label nk = meshDensity().z();
@@ -46,12 +46,12 @@ void Foam::block::createPoints() const
     const point& p011 = blockPoint(7);
 
 
-    // list of edge point and weighting factors
+    // List of edge point and weighting factors
     const List< List<point> >& p = blockEdgePoints();
     const scalarListList& w = blockEdgeWeights();
 
     //
-    // generate vertices
+    // Generate vertices
     //
     vertices_.clear();
     vertices_.setSize(nPoints());
@@ -64,7 +64,7 @@ void Foam::block::createPoints() const
             {
                 const label vertexNo = vtxLabel(i, j, k);
 
-                // points on edges
+                // Points on edges
                 vector edgex1 = p000 + (p100 - p000)*w[0][i];
                 vector edgex2 = p010 + (p110 - p010)*w[1][i];
                 vector edgex3 = p011 + (p111 - p011)*w[2][i];
@@ -81,7 +81,7 @@ void Foam::block::createPoints() const
                 vector edgez4 = p010 + (p011 - p010)*w[11][k];
 
 
-                // calculate the importance factors for all edges
+                // Calculate the importance factors for all edges
 
                 // x-direction
                 scalar impx1 =
@@ -179,7 +179,7 @@ void Foam::block::createPoints() const
                 impz4 /= magImpz;
 
 
-                // calculate the correction vectors
+                // Calculate the correction vectors
                 vector corx1 = impx1*(p[0][i] - edgex1);
                 vector corx2 = impx2*(p[1][i] - edgex2);
                 vector corx3 = impx3*(p[2][i] - edgex3);
@@ -196,7 +196,7 @@ void Foam::block::createPoints() const
                 vector corz4 = impz4*(p[11][k] - edgez4);
 
 
-                // multiply by the importance factor
+                // Multiply by the importance factor
 
                 // x-direction
                 edgex1 *= impx1;
@@ -217,7 +217,7 @@ void Foam::block::createPoints() const
                 edgez4 *= impz4;
 
 
-                // add the contributions
+                // Add the contributions
                 vertices_[vertexNo] =
                 (
                     edgex1 + edgex2 + edgex3 + edgex4
@@ -244,7 +244,7 @@ void Foam::block::createCells() const
     const label nk = meshDensity().z();
 
     //
-    // generate cells
+    // Generate cells
     //
     cells_.clear();
     cells_.setSize(nCells());
@@ -281,7 +281,7 @@ void Foam::block::createBoundary() const
     const label nk = meshDensity().z();
 
     //
-    // generate boundaries on each side of the hex
+    // Generate boundaries on each side of the hex
     //
     boundaryPatches_.clear();
     boundaryPatches_.setSize(6);
@@ -300,7 +300,7 @@ void Foam::block::createBoundary() const
         {
             boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
 
-            // set the points
+            // Set the points
             boundaryPatches_[wallLabel][wallCellLabel][0] =
                 vtxLabel(0, j, k);
             boundaryPatches_[wallLabel][wallCellLabel][1] =
@@ -310,7 +310,7 @@ void Foam::block::createBoundary() const
             boundaryPatches_[wallLabel][wallCellLabel][3] =
                 vtxLabel(0, j + 1, k);
 
-            // update the counter
+            // Update the counter
             wallCellLabel++;
         }
     }
@@ -327,7 +327,7 @@ void Foam::block::createBoundary() const
         {
             boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
 
-            // set the points
+            // Set the points
             boundaryPatches_[wallLabel][wallCellLabel][0] =
                 vtxLabel(ni, j, k);
             boundaryPatches_[wallLabel][wallCellLabel][1] =
@@ -337,7 +337,7 @@ void Foam::block::createBoundary() const
             boundaryPatches_[wallLabel][wallCellLabel][3] =
                 vtxLabel(ni, j, k+1);
 
-            // update the counter
+            // Update the counter
             wallCellLabel++;
         }
     }
@@ -355,7 +355,7 @@ void Foam::block::createBoundary() const
         {
             boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
 
-            // set the points
+            // Set the points
             boundaryPatches_[wallLabel][wallCellLabel][0] =
                 vtxLabel(i, 0, k);
             boundaryPatches_[wallLabel][wallCellLabel][1] =
@@ -365,7 +365,7 @@ void Foam::block::createBoundary() const
             boundaryPatches_[wallLabel][wallCellLabel][3] =
                 vtxLabel(i, 0, k + 1);
 
-            // update the counter
+            // Update the counter
             wallCellLabel++;
         }
     }
@@ -382,7 +382,7 @@ void Foam::block::createBoundary() const
         {
             boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
 
-            // set the points
+            // Set the points
             boundaryPatches_[wallLabel][wallCellLabel][0] =
                 vtxLabel(i, nj, k);
             boundaryPatches_[wallLabel][wallCellLabel][1] =
@@ -392,7 +392,7 @@ void Foam::block::createBoundary() const
             boundaryPatches_[wallLabel][wallCellLabel][3] =
                 vtxLabel(i + 1, nj, k);
 
-            // update the counter
+            // Update the counter
             wallCellLabel++;
         }
     }
@@ -411,7 +411,7 @@ void Foam::block::createBoundary() const
         {
             boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
 
-            // set the points
+            // Set the points
             boundaryPatches_[wallLabel][wallCellLabel][0] =
                 vtxLabel(i, j, 0);
             boundaryPatches_[wallLabel][wallCellLabel][1] =
@@ -421,7 +421,7 @@ void Foam::block::createBoundary() const
             boundaryPatches_[wallLabel][wallCellLabel][3] =
                 vtxLabel(i + 1, j, 0);
 
-            // update the counter
+            // Update the counter
             wallCellLabel++;
         }
     }
@@ -438,7 +438,7 @@ void Foam::block::createBoundary() const
         {
             boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
 
-            // set the points
+            // Set the points
             boundaryPatches_[wallLabel][wallCellLabel][0] =
                 vtxLabel(i, j, nk);
             boundaryPatches_[wallLabel][wallCellLabel][1] =
@@ -448,7 +448,7 @@ void Foam::block::createBoundary() const
             boundaryPatches_[wallLabel][wallCellLabel][3] =
                 vtxLabel(i, j + 1, nk);
 
-            // update the counter
+            // Update the counter
             wallCellLabel++;
         }
     }

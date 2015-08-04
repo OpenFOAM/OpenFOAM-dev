@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
 #include "polyLine.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -41,7 +40,7 @@ void Foam::polyLine::calcParam()
             param_[i] = param_[i-1] + mag(points_[i] - points_[i-1]);
         }
 
-        // normalize on the interval 0-1
+        // Normalize on the interval 0-1
         lineLength_ = param_.last();
         for (label i=1; i < param_.size() - 1; i++)
         {
@@ -85,7 +84,7 @@ Foam::label Foam::polyLine::nSegments() const
 
 Foam::label Foam::polyLine::localParameter(scalar& lambda) const
 {
-    // check endpoints
+    // Check endpoints
     if (lambda < SMALL)
     {
         lambda = 0;
@@ -97,22 +96,20 @@ Foam::label Foam::polyLine::localParameter(scalar& lambda) const
         return nSegments();
     }
 
-    // search table of cumulative distances to find which line-segment
-    // we are on. Check the upper bound.
+    // Search table of cumulative distances to find which line-segment
+    // we are on.
+    // Check the upper bound.
 
     label segmentI = 1;
     while (param_[segmentI] < lambda)
     {
         segmentI++;
     }
-    segmentI--;   // we want the corresponding lower bound
+    segmentI--;   // We want the corresponding lower bound
 
-    // the local parameter [0-1] on this line segment
+    // The local parameter [0-1] on this line segment
     lambda =
-    (
-        ( lambda - param_[segmentI] )
-      / ( param_[segmentI+1] - param_[segmentI] )
-    );
+        (lambda - param_[segmentI])/(param_[segmentI+1] - param_[segmentI]);
 
     return segmentI;
 }
@@ -120,7 +117,7 @@ Foam::label Foam::polyLine::localParameter(scalar& lambda) const
 
 Foam::point Foam::polyLine::position(const scalar mu) const
 {
-    // check endpoints
+    // Check end-points
     if (mu < SMALL)
     {
         return points_.first();
@@ -129,7 +126,6 @@ Foam::point Foam::polyLine::position(const scalar mu) const
     {
         return points_.last();
     }
-
 
     scalar lambda = mu;
     label segment = localParameter(lambda);
@@ -143,7 +139,7 @@ Foam::point Foam::polyLine::position
     const scalar mu
 ) const
 {
-    // out-of-bounds
+    // Out-of-bounds
     if (segment < 0)
     {
         return points_.first();
@@ -156,7 +152,7 @@ Foam::point Foam::polyLine::position
     const point& p0 = points()[segment];
     const point& p1 = points()[segment+1];
 
-    // special cases - no calculation needed
+    // Special cases - no calculation needed
     if (mu <= 0.0)
     {
         return p0;
@@ -167,8 +163,8 @@ Foam::point Foam::polyLine::position
     }
     else
     {
-        // linear interpolation
-        return points_[segment] + mu * (p1 - p0);
+        // Linear interpolation
+        return points_[segment] + mu*(p1 - p0);
     }
 }
 
