@@ -66,13 +66,21 @@ castellatedMeshControls
                 <inletPatch>
                 {
                     level (2 2);
-                    patchInfo { type patch; }
+                    patchInfo
+                    {
+                        type patch;
+                        inGroups (inlet);
+                    }
                 }
 
                 <outletPatch>
                 {
                     level (2 2);
-                    patchInfo { type patch; }
+                    patchInfo
+                    {
+                        type patch;
+                        inGroups (outlet);
+                    }
                 }
             }
         }
