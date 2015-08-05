@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(cloudInfo, 0);
+    defineTypeNameAndDebug(cloudInfo, 0);
 }
 
 
@@ -84,9 +84,9 @@ void Foam::cloudInfo::read(const dictionary& dict)
         if (names().size())
         {
             Info<< "applying to clouds:" << nl;
-            forAllConstIter(wordHashSet, names(), iter)
+            forAll(names(), i)
             {
-                Info<< "    " << iter.key() << nl;
+                Info<< "    " << names()[i] << nl;
             }
             Info<< endl;
         }
@@ -99,21 +99,15 @@ void Foam::cloudInfo::read(const dictionary& dict)
 
 
 void Foam::cloudInfo::execute()
-{
-    // Do nothing
-}
+{}
 
 
 void Foam::cloudInfo::end()
-{
-    // Do nothing
-}
+{}
 
 
 void Foam::cloudInfo::timeSet()
-{
-    // Do nothing
-}
+{}
 
 
 void Foam::cloudInfo::write()
@@ -122,10 +116,9 @@ void Foam::cloudInfo::write()
     {
         functionObjectFile::write();
 
-        label i = 0;
-        forAllConstIter(wordHashSet, names(), iter)
+        forAll(names(), i)
         {
-            const word& cloudName = iter.key();
+            const word& cloudName = names()[i];
 
             const kinematicCloud& cloud =
                 obr_.lookupObject<kinematicCloud>(cloudName);
@@ -141,8 +134,6 @@ void Foam::cloudInfo::write()
                     << nParcels << token::TAB
                     << massInSystem << endl;
             }
-
-            i++;
         }
     }
 }
