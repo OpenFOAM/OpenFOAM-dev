@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,6 @@ namespace Foam
 
 class functionObjectFile
 {
-private:
-
     // Private data
 
         //- Reference to the database
@@ -68,7 +66,7 @@ private:
         const word prefix_;
 
         //- File names
-        wordHashSet names_;
+        wordList names_;
 
         //- File pointer
         PtrList<OFstream> filePtrs_;
@@ -120,6 +118,7 @@ public:
     //- Additional characters for writing
     static label addChars;
 
+
     // Constructors
 
         //- Construct null
@@ -149,7 +148,7 @@ public:
     // Member Functions
 
         //- Return const access to the names
-        const wordHashSet& names() const;
+        const wordList& names() const;
 
         //- Return access to the file (if only 1)
         OFstream& file();

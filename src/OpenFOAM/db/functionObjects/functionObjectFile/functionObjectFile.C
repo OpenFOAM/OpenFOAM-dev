@@ -33,12 +33,12 @@ License
 const Foam::word Foam::functionObjectFile::outputPrefix = "postProcessing";
 Foam::label Foam::functionObjectFile::addChars = 7;
 
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::functionObjectFile::initStream(Ostream& os) const
 {
     os.setf(ios_base::scientific, ios_base::floatfield);
-    // os.precision(IOstream::defaultPrecision());
     os.width(charWidth());
 }
 
@@ -58,7 +58,7 @@ Foam::fileName Foam::functionObjectFile::baseFileDir() const
         baseDir = baseDir/outputPrefix;
     }
 
-    // append mesh name if not default region
+    // Append mesh name if not default region
     if (isA<polyMesh>(obr_))
     {
         const polyMesh& mesh = refCast<const polyMesh>(obr_);
@@ -85,18 +85,16 @@ void Foam::functionObjectFile::createFiles()
         const word startTimeName =
             obr_.time().timeName(obr_.time().startTime().value());
 
-        label i = 0;
-        forAllConstIter(wordHashSet, names_, iter)
+        forAll(names_, i)
         {
             if (!filePtrs_.set(i))
             {
                 fileName outputDir(baseFileDir()/prefix_/startTimeName);
-
                 mkDir(outputDir);
 
-                word fName(iter.key());
+                word fName(names_[i]);
 
-                // check if file already exists
+                // Check if file already exists
                 IFstream is(outputDir/(fName + ".dat"));
                 if (is.good())
                 {
@@ -109,7 +107,6 @@ void Foam::functionObjectFile::createFiles()
 
                 writeFileHeader(i);
 
-                i++;
             }
         }
     }
@@ -117,9 +114,7 @@ void Foam::functionObjectFile::createFiles()
 
 
 void Foam::functionObjectFile::writeFileHeader(const label i)
-{
-    // do nothing
-}
+{}
 
 
 void Foam::functionObjectFile::write()
@@ -131,12 +126,12 @@ void Foam::functionObjectFile::write()
 void Foam::functionObjectFile::resetNames(const wordList& names)
 {
     names_.clear();
-    names_.insert(names);
+    names_.append(names);
 
     if (Pstream::master())
     {
         filePtrs_.clear();
-        filePtrs_.setSize(names_.toc().size());
+        filePtrs_.setSize(names_.size());
 
         createFiles();
     }
@@ -146,7 +141,7 @@ void Foam::functionObjectFile::resetNames(const wordList& names)
 void Foam::functionObjectFile::resetName(const word& name)
 {
     names_.clear();
-    names_.insert(name);
+    names_.append(name);
 
     if (Pstream::master())
     {
@@ -192,14 +187,13 @@ Foam::functionObjectFile::functionObjectFile
     filePtrs_()
 {
     names_.clear();
-    names_.insert(name);
-
+    names_.append(name);
     if (Pstream::master())
     {
         filePtrs_.clear();
         filePtrs_.setSize(1);
 
-        // cannot create files - need to access virtual function
+        // Cannot create files - need to access virtual function
     }
 }
 
@@ -217,14 +211,13 @@ Foam::functionObjectFile::functionObjectFile
     filePtrs_()
 {
     names_.clear();
-    names_.insert(names);
-
+    names_.append(names);
     if (Pstream::master())
     {
         filePtrs_.clear();
         filePtrs_.setSize(names_.size());
 
-        // cannot create files - need to access virtual function
+        // Cannot create files - need to access virtual function
     }
 }
 
@@ -237,7 +230,7 @@ Foam::functionObjectFile::~functionObjectFile()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordHashSet& Foam::functionObjectFile::names() const
+const Foam::wordList& Foam::functionObjectFile::names() const
 {
     return names_;
 }
