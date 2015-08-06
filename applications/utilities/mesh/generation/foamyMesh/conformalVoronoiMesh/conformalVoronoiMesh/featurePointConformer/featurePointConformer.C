@@ -29,7 +29,7 @@ License
 #include "conformalVoronoiMesh.H"
 #include "cellShapeControl.H"
 #include "DelaunayMeshTools.H"
-#include "const_circulator.H"
+#include "ConstCirculator.H"
 #include "backgroundMeshDecomposition.H"
 #include "autoPtr.H"
 #include "mapDistribute.H"
@@ -233,7 +233,7 @@ void Foam::featurePointConformer::createMasterAndSlavePoints
 
 //    Info<< nl << featPt << "  " << pointEdgeTypes;
 
-    const_circulator<labelList> circ(featPtEdges);
+    ConstCirculator<labelList> circ(featPtEdges);
 
     // Loop around the edges of the feature point
     if (circ.size()) do

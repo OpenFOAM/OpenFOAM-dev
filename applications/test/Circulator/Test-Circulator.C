@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,8 @@ Description
 #include "List.H"
 #include "ListOps.H"
 #include "face.H"
-#include "circulator.H"
-#include "const_circulator.H"
+#include "Circulator.H"
+#include "ConstCirculator.H"
 
 
 using namespace Foam;
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
     face f(identity(4));
 
-    const_circulator<face> cStart(f);
+    ConstCirculator<face> cStart(f);
 
     if (cStart.size()) do
     {
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
     Info<< nl << nl << "Test non-const circulator" << nl << endl;
 
-    circulator<face> cStart2(f);
+    Circulator<face> cStart2(f);
 
     Info<< "Face before : " << f << endl;
 
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     Info<< nl << nl << "Zero face" << nl << endl;
 
     face fZero;
-    circulator<face> cZero(fZero);
+    Circulator<face> cZero(fZero);
 
     if (cZero.size()) do
     {
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
     fZero = face(identity(5));
 
     // circulator was invalidated so reset
-    cZero = circulator<face>(fZero);
+    cZero = Circulator<face>(fZero);
 
     do
     {
@@ -161,8 +161,8 @@ int main(int argc, char *argv[])
     Info<< nl << nl << "Simultaneously go forwards/backwards over face " << f
         << nl << endl;
 
-    const_circulator<face> circForward(f);
-    const_circulator<face> circBackward(f);
+    ConstCirculator<face> circForward(f);
+    ConstCirculator<face> circBackward(f);
 
     if (circForward.size() && circBackward.size()) do
     {

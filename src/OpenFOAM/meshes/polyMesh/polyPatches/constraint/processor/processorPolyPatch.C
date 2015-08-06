@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ License
 #include "Time.H"
 #include "transformList.H"
 #include "PstreamBuffers.H"
-#include "const_circulator.H"
+#include "ConstCirculator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -601,8 +601,8 @@ Foam::label Foam::processorPolyPatch::matchFace
 
     scalar closestMatchDistSqr = sqr(GREAT);
 
-    const_circulator<face> aCirc(a);
-    const_circulator<face> bCirc(b);
+    ConstCirculator<face> aCirc(a);
+    ConstCirculator<face> bCirc(b);
 
     do
     {
@@ -611,7 +611,7 @@ Foam::label Foam::processorPolyPatch::matchFace
         if (diffSqr < absTolSqr)
         {
             // Found a matching point. Set the fulcrum of b to the iterator
-            const_circulator<face> bCirc2 = bCirc;
+            ConstCirculator<face> bCirc2 = bCirc;
             ++aCirc;
 
             bCirc2.setFulcrumToIterator();

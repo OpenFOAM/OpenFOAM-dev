@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::circulator
+    Foam::ConstCirculator
 
 Description
     Walks over a container as if it were circular. The container must have the
@@ -30,35 +30,51 @@ Description
         - value_type
         - size_type
         - difference_type
-        - iterator
-        - reference
+        - const_iterator
+        - const_reference
 
-    Examples
+    Examples:
 
     \code
         face f(identity(5));
 
         // Construct circulator from the face
-        circulator<face> circ(f);
+        ConstCirculator<face> circ(f);
 
         // First check that the circulator has a size to iterate over.
         // Then circulate around the list starting and finishing at the fulcrum.
         if (circ.size()) do
         {
-            circ() += 1;
-
             Info<< "Iterate forwards over face : " << circ() << endl;
 
         } while (circ.circulate(CirculatorBase::CLOCKWISE));
     \endcode
 
+    \code
+        face f(identity(5));
+
+        ConstCirculator<face> circClockwise(f);
+        ConstCirculator<face> circAnticlockwise(f);
+
+        if (circClockwise.size() && circAnticlockwise.size()) do
+        {
+            Info<< "Iterate forward over face :" << circClockwise() << endl;
+            Info<< "Iterate backward over face:" << circAnticlockwise() << endl;
+        }
+        while
+        (
+            circClockwise.circulate(CirculatorBase::CLOCKWISE),
+            circAnticlockwise.circulate(CirculatorBase::ANTICLOCKWISE)
+        );
+    \endcode
+
 SourceFiles
-    circulatorI.H
+    ConstCirculatorI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef circulator_H
-#define circulator_H
+#ifndef ConstCirculator_H
+#define ConstCirculator_H
 
 #include "CirculatorBase.H"
 
@@ -69,11 +85,11 @@ namespace Foam
 
 
 /*---------------------------------------------------------------------------*\
-                         Class circulator Declaration
+                      Class ConstCirculator Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ContainerType>
-class circulator
+class ConstCirculator
 :
     public CirculatorBase
 {
@@ -83,18 +99,18 @@ protected:
     // Protected data
 
         //- Iterator pointing to the beginning of the container
-        typename ContainerType::iterator begin_;
+        typename ContainerType::const_iterator begin_;
 
         //- Iterator pointing to the end of the container
-        typename ContainerType::iterator end_;
+        typename ContainerType::const_iterator end_;
 
-        //- Random access iterator for traversing ContainerType.
-        typename ContainerType::iterator iter_;
+        //- Iterator
+        typename ContainerType::const_iterator iter_;
 
         //- Iterator holding the location of the fulcrum (start and end) of
         //  the container. Used to decide when the iterator should stop
         //  circulating over the container
-        typename ContainerType::iterator fulcrum_;
+        typename ContainerType::const_iterator fulcrum_;
 
 
 public:
@@ -112,30 +128,34 @@ public:
         typedef typename ContainerType::difference_type difference_type;
 
         //- Random access iterator for traversing ContainerType.
-        typedef typename ContainerType::iterator        iterator;
+        typedef typename ContainerType::const_iterator  const_iterator;
 
         //- Type that can be used for storing into
-        //  ContainerType::value_type objects.
-        typedef typename ContainerType::reference       reference;
+        //  const ContainerType::value_type objects.
+        typedef typename ContainerType::const_reference const_reference;
 
 
     // Constructors
 
         //- Construct null
-        inline circulator();
+        inline ConstCirculator();
 
         //- Construct from a container.
-        inline explicit circulator(ContainerType& container);
+        inline explicit ConstCirculator(const ContainerType& container);
 
         //- Construct from two iterators
-        inline circulator(const iterator& begin, const iterator& end);
+        inline ConstCirculator
+        (
+            const const_iterator& begin,
+            const const_iterator& end
+        );
 
         //- Construct as copy
-        inline circulator(const circulator<ContainerType>&);
+        inline ConstCirculator(const ConstCirculator<ContainerType>&);
 
 
     //- Destructor
-    ~circulator();
+    ~ConstCirculator();
 
 
     // Member Functions
@@ -157,57 +177,57 @@ public:
         inline difference_type nRotations() const;
 
         //- Dereference the next iterator and return
-        inline reference next() const;
+        inline const_reference next() const;
 
         //- Dereference the previous iterator and return
-        inline reference prev() const;
+        inline const_reference prev() const;
 
 
     // Member Operators
 
         //- Assignment operator for circulators that operate on the same
         //  container type
-        inline void operator=(const circulator<ContainerType>&);
+        inline void operator=(const ConstCirculator<ContainerType>&);
 
         //- Prefix increment. Increments the iterator.
         //  Sets the iterator to the beginning of the container if it reaches
         //  the end
-        inline circulator<ContainerType>& operator++();
+        inline ConstCirculator<ContainerType>& operator++();
 
         //- Postfix increment. Increments the iterator.
         //  Sets the iterator to the beginning of the container if it reaches
         //  the end
-        inline circulator<ContainerType> operator++(int);
+        inline ConstCirculator<ContainerType> operator++(int);
 
         //- Prefix decrement. Decrements the iterator.
         //  Sets the iterator to the end of the container if it reaches
         //  the beginning
-        inline circulator<ContainerType>& operator--();
+        inline ConstCirculator<ContainerType>& operator--();
 
         //- Postfix decrement. Decrements the iterator.
         //  Sets the iterator to the end of the container if it reaches
         //  the beginning
-        inline circulator<ContainerType> operator--(int);
+        inline ConstCirculator<ContainerType> operator--(int);
 
         //- Check for equality of this iterator with another iterator that
         //  operate on the same container type
-        inline bool operator==(const circulator<ContainerType>& c) const;
+        inline bool operator==(const ConstCirculator<ContainerType>& c) const;
 
         //- Check for inequality of this iterator with another iterator that
         //  operate on the same container type
-        inline bool operator!=(const circulator<ContainerType>& c) const;
+        inline bool operator!=(const ConstCirculator<ContainerType>& c) const;
 
         //- Dereference the iterator and return
-        inline reference operator*() const;
+        inline const_reference operator*() const;
 
         //- Dereference the iterator and return
-        inline reference operator()() const;
+        inline const_reference operator()() const;
 
         //- Return the difference between this iterator and another iterator
         //  that operate on the same container type
         inline difference_type operator-
         (
-            const circulator<ContainerType>& c
+            const ConstCirculator<ContainerType>& c
         ) const;
 };
 
@@ -218,7 +238,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "circulatorI.H"
+#include "ConstCirculatorI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

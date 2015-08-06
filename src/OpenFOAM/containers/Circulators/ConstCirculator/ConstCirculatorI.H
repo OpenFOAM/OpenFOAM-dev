@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>::const_circulator()
+Foam::ConstCirculator<ContainerType>::ConstCirculator()
 :
     CirculatorBase(),
     begin_(0),
@@ -37,7 +37,7 @@ Foam::const_circulator<ContainerType>::const_circulator()
 
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>::const_circulator
+Foam::ConstCirculator<ContainerType>::ConstCirculator
 (
     const ContainerType& container
 )
@@ -51,7 +51,7 @@ Foam::const_circulator<ContainerType>::const_circulator
 
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>::const_circulator
+Foam::ConstCirculator<ContainerType>::ConstCirculator
 (
     const const_iterator& begin,
     const const_iterator& end
@@ -66,9 +66,9 @@ Foam::const_circulator<ContainerType>::const_circulator
 
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>::const_circulator
+Foam::ConstCirculator<ContainerType>::ConstCirculator
 (
-    const const_circulator<ContainerType>& rhs
+    const ConstCirculator<ContainerType>& rhs
 )
 :
     CirculatorBase(),
@@ -82,22 +82,22 @@ Foam::const_circulator<ContainerType>::const_circulator
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>::~const_circulator()
+Foam::ConstCirculator<ContainerType>::~ConstCirculator()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ContainerType>
-typename Foam::const_circulator<ContainerType>::size_type
-Foam::const_circulator<ContainerType>::size() const
+typename Foam::ConstCirculator<ContainerType>::size_type
+Foam::ConstCirculator<ContainerType>::size() const
 {
     return end_ - begin_;
 }
 
 
 template<class ContainerType>
-bool Foam::const_circulator<ContainerType>::circulate
+bool Foam::ConstCirculator<ContainerType>::circulate
 (
     const CirculatorBase::direction dir
 )
@@ -116,30 +116,30 @@ bool Foam::const_circulator<ContainerType>::circulate
 
 
 template<class ContainerType>
-void Foam::const_circulator<ContainerType>::setFulcrumToIterator()
+void Foam::ConstCirculator<ContainerType>::setFulcrumToIterator()
 {
     fulcrum_ = iter_;
 }
 
 
 template<class ContainerType>
-void Foam::const_circulator<ContainerType>::setIteratorToFulcrum()
+void Foam::ConstCirculator<ContainerType>::setIteratorToFulcrum()
 {
     iter_ = fulcrum_;
 }
 
 
 template<class ContainerType>
-typename Foam::const_circulator<ContainerType>::difference_type
-Foam::const_circulator<ContainerType>::nRotations() const
+typename Foam::ConstCirculator<ContainerType>::difference_type
+Foam::ConstCirculator<ContainerType>::nRotations() const
 {
     return (iter_ - fulcrum_);
 }
 
 
 template<class ContainerType>
-typename Foam::const_circulator<ContainerType>::const_reference
-Foam::const_circulator<ContainerType>::next() const
+typename Foam::ConstCirculator<ContainerType>::const_reference
+Foam::ConstCirculator<ContainerType>::next() const
 {
     if (iter_ == end_ - 1)
     {
@@ -151,8 +151,8 @@ Foam::const_circulator<ContainerType>::next() const
 
 
 template<class ContainerType>
-typename Foam::const_circulator<ContainerType>::const_reference
-Foam::const_circulator<ContainerType>::prev() const
+typename Foam::ConstCirculator<ContainerType>::const_reference
+Foam::ConstCirculator<ContainerType>::prev() const
 {
     if (iter_ == begin_)
     {
@@ -166,9 +166,9 @@ Foam::const_circulator<ContainerType>::prev() const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class ContainerType>
-void Foam::const_circulator<ContainerType>::operator=
+void Foam::ConstCirculator<ContainerType>::operator=
 (
-    const const_circulator<ContainerType>& rhs
+    const ConstCirculator<ContainerType>& rhs
 )
 {
     // Check for assignment to self
@@ -176,8 +176,8 @@ void Foam::const_circulator<ContainerType>::operator=
     {
         FatalErrorIn
         (
-            "Foam::const_circulator<ContainerType>::operator="
-            "(const Foam::const_circulator<ContainerType>&)"
+            "Foam::ConstCirculator<ContainerType>::operator="
+            "(const Foam::ConstCirculator<ContainerType>&)"
         )   << "Attempted assignment to self"
             << abort(FatalError);
     }
@@ -190,8 +190,8 @@ void Foam::const_circulator<ContainerType>::operator=
 
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>&
-Foam::const_circulator<ContainerType>::operator++()
+Foam::ConstCirculator<ContainerType>&
+Foam::ConstCirculator<ContainerType>::operator++()
 {
     ++iter_;
     if (iter_ == end_)
@@ -204,18 +204,18 @@ Foam::const_circulator<ContainerType>::operator++()
 
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>
-Foam::const_circulator<ContainerType>::operator++(int)
+Foam::ConstCirculator<ContainerType>
+Foam::ConstCirculator<ContainerType>::operator++(int)
 {
-    const_circulator<ContainerType> tmp = *this;
+    ConstCirculator<ContainerType> tmp = *this;
     ++(*this);
     return tmp;
 }
 
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>&
-Foam::const_circulator<ContainerType>::operator--()
+Foam::ConstCirculator<ContainerType>&
+Foam::ConstCirculator<ContainerType>::operator--()
 {
     if (iter_ == begin_)
     {
@@ -228,19 +228,19 @@ Foam::const_circulator<ContainerType>::operator--()
 
 
 template<class ContainerType>
-Foam::const_circulator<ContainerType>
-Foam::const_circulator<ContainerType>::operator--(int)
+Foam::ConstCirculator<ContainerType>
+Foam::ConstCirculator<ContainerType>::operator--(int)
 {
-    const_circulator<ContainerType> tmp = *this;
+    ConstCirculator<ContainerType> tmp = *this;
     --(*this);
     return tmp;
 }
 
 
 template<class ContainerType>
-bool Foam::const_circulator<ContainerType>::operator==
+bool Foam::ConstCirculator<ContainerType>::operator==
 (
-    const const_circulator<ContainerType>& c
+    const ConstCirculator<ContainerType>& c
 ) const
 {
     return
@@ -254,9 +254,9 @@ bool Foam::const_circulator<ContainerType>::operator==
 
 
 template<class ContainerType>
-bool Foam::const_circulator<ContainerType>::operator!=
+bool Foam::ConstCirculator<ContainerType>::operator!=
 (
-    const const_circulator<ContainerType>& c
+    const ConstCirculator<ContainerType>& c
 ) const
 {
     return !(*this == c);
@@ -264,26 +264,26 @@ bool Foam::const_circulator<ContainerType>::operator!=
 
 
 template<class ContainerType>
-typename Foam::const_circulator<ContainerType>::const_reference
-Foam::const_circulator<ContainerType>::operator*() const
+typename Foam::ConstCirculator<ContainerType>::const_reference
+Foam::ConstCirculator<ContainerType>::operator*() const
 {
     return *iter_;
 }
 
 
 template<class ContainerType>
-typename Foam::const_circulator<ContainerType>::const_reference
-Foam::const_circulator<ContainerType>::operator()() const
+typename Foam::ConstCirculator<ContainerType>::const_reference
+Foam::ConstCirculator<ContainerType>::operator()() const
 {
     return operator*();
 }
 
 
 template<class ContainerType>
-typename Foam::const_circulator<ContainerType>::difference_type
-Foam::const_circulator<ContainerType>::operator-
+typename Foam::ConstCirculator<ContainerType>::difference_type
+Foam::ConstCirculator<ContainerType>::operator-
 (
-    const const_circulator<ContainerType>& c
+    const ConstCirculator<ContainerType>& c
 ) const
 {
     return iter_ - c.iter_;

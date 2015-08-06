@@ -27,7 +27,7 @@ License
 #include "vectorTools.H"
 #include "triangle.H"
 #include "tetrahedron.H"
-#include "const_circulator.H"
+#include "ConstCirculator.H"
 #include "DelaunayMeshTools.H"
 #include "OBJstream.H"
 
@@ -183,8 +183,8 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
 
     const List<sideVolumeType>& normalVolumeTypes = feMesh.normalVolumeTypes();
 
-    const_circulator<labelList> circ(edNormalIs);
-    const_circulator<labelList> circNormalDirs(feNormalDirections);
+    ConstCirculator<labelList> circ(edNormalIs);
+    ConstCirculator<labelList> circNormalDirs(feNormalDirections);
 
     Map<Foam::point> masterPoints;
     Map<vertexType> masterPointsTypes;

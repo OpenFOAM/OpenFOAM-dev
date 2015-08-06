@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::const_circulator
+    Foam::Circulator
 
 Description
     Walks over a container as if it were circular. The container must have the
@@ -30,51 +30,35 @@ Description
         - value_type
         - size_type
         - difference_type
-        - const_iterator
-        - const_reference
+        - iterator
+        - reference
 
-    Examples:
+    Examples
 
     \code
         face f(identity(5));
 
-        // Construct circulator from the face
-        const_circulator<face> circ(f);
+        // Construct Circulator from the face
+        Circulator<face> circ(f);
 
-        // First check that the circulator has a size to iterate over.
+        // First check that the Circulator has a size to iterate over.
         // Then circulate around the list starting and finishing at the fulcrum.
         if (circ.size()) do
         {
+            circ() += 1;
+
             Info<< "Iterate forwards over face : " << circ() << endl;
 
         } while (circ.circulate(CirculatorBase::CLOCKWISE));
     \endcode
 
-    \code
-        face f(identity(5));
-
-        const_circulator<face> circClockwise(f);
-        const_circulator<face> circAnticlockwise(f);
-
-        if (circClockwise.size() && circAnticlockwise.size()) do
-        {
-            Info<< "Iterate forward over face :" << circClockwise() << endl;
-            Info<< "Iterate backward over face:" << circAnticlockwise() << endl;
-        }
-        while
-        (
-            circClockwise.circulate(CirculatorBase::CLOCKWISE),
-            circAnticlockwise.circulate(CirculatorBase::ANTICLOCKWISE)
-        );
-    \endcode
-
 SourceFiles
-    const_circulatorI.H
+    CirculatorI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef const_circulator_H
-#define const_circulator_H
+#ifndef Circulator_H
+#define Circulator_H
 
 #include "CirculatorBase.H"
 
@@ -85,11 +69,11 @@ namespace Foam
 
 
 /*---------------------------------------------------------------------------*\
-                      Class const_circulator Declaration
+                         Class Circulator Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ContainerType>
-class const_circulator
+class Circulator
 :
     public CirculatorBase
 {
@@ -99,18 +83,18 @@ protected:
     // Protected data
 
         //- Iterator pointing to the beginning of the container
-        typename ContainerType::const_iterator begin_;
+        typename ContainerType::iterator begin_;
 
         //- Iterator pointing to the end of the container
-        typename ContainerType::const_iterator end_;
+        typename ContainerType::iterator end_;
 
-        //- Iterator
-        typename ContainerType::const_iterator iter_;
+        //- Random access iterator for traversing ContainerType.
+        typename ContainerType::iterator iter_;
 
         //- Iterator holding the location of the fulcrum (start and end) of
         //  the container. Used to decide when the iterator should stop
         //  circulating over the container
-        typename ContainerType::const_iterator fulcrum_;
+        typename ContainerType::iterator fulcrum_;
 
 
 public:
@@ -128,34 +112,30 @@ public:
         typedef typename ContainerType::difference_type difference_type;
 
         //- Random access iterator for traversing ContainerType.
-        typedef typename ContainerType::const_iterator  const_iterator;
+        typedef typename ContainerType::iterator        iterator;
 
         //- Type that can be used for storing into
-        //  const ContainerType::value_type objects.
-        typedef typename ContainerType::const_reference const_reference;
+        //  ContainerType::value_type objects.
+        typedef typename ContainerType::reference       reference;
 
 
     // Constructors
 
         //- Construct null
-        inline const_circulator();
+        inline Circulator();
 
         //- Construct from a container.
-        inline explicit const_circulator(const ContainerType& container);
+        inline explicit Circulator(ContainerType& container);
 
         //- Construct from two iterators
-        inline const_circulator
-        (
-            const const_iterator& begin,
-            const const_iterator& end
-        );
+        inline Circulator(const iterator& begin, const iterator& end);
 
         //- Construct as copy
-        inline const_circulator(const const_circulator<ContainerType>&);
+        inline Circulator(const Circulator<ContainerType>&);
 
 
     //- Destructor
-    ~const_circulator();
+    ~Circulator();
 
 
     // Member Functions
@@ -173,61 +153,61 @@ public:
         inline void setIteratorToFulcrum();
 
         //- Return the distance between the iterator and the fulcrum. This is
-        //  equivalent to the number of rotations of the circulator.
+        //  equivalent to the number of rotations of the Circulator.
         inline difference_type nRotations() const;
 
         //- Dereference the next iterator and return
-        inline const_reference next() const;
+        inline reference next() const;
 
         //- Dereference the previous iterator and return
-        inline const_reference prev() const;
+        inline reference prev() const;
 
 
     // Member Operators
 
-        //- Assignment operator for circulators that operate on the same
+        //- Assignment operator for Circulators that operate on the same
         //  container type
-        inline void operator=(const const_circulator<ContainerType>&);
+        inline void operator=(const Circulator<ContainerType>&);
 
         //- Prefix increment. Increments the iterator.
         //  Sets the iterator to the beginning of the container if it reaches
         //  the end
-        inline const_circulator<ContainerType>& operator++();
+        inline Circulator<ContainerType>& operator++();
 
         //- Postfix increment. Increments the iterator.
         //  Sets the iterator to the beginning of the container if it reaches
         //  the end
-        inline const_circulator<ContainerType> operator++(int);
+        inline Circulator<ContainerType> operator++(int);
 
         //- Prefix decrement. Decrements the iterator.
         //  Sets the iterator to the end of the container if it reaches
         //  the beginning
-        inline const_circulator<ContainerType>& operator--();
+        inline Circulator<ContainerType>& operator--();
 
         //- Postfix decrement. Decrements the iterator.
         //  Sets the iterator to the end of the container if it reaches
         //  the beginning
-        inline const_circulator<ContainerType> operator--(int);
+        inline Circulator<ContainerType> operator--(int);
 
         //- Check for equality of this iterator with another iterator that
         //  operate on the same container type
-        inline bool operator==(const const_circulator<ContainerType>& c) const;
+        inline bool operator==(const Circulator<ContainerType>& c) const;
 
         //- Check for inequality of this iterator with another iterator that
         //  operate on the same container type
-        inline bool operator!=(const const_circulator<ContainerType>& c) const;
+        inline bool operator!=(const Circulator<ContainerType>& c) const;
 
         //- Dereference the iterator and return
-        inline const_reference operator*() const;
+        inline reference operator*() const;
 
         //- Dereference the iterator and return
-        inline const_reference operator()() const;
+        inline reference operator()() const;
 
         //- Return the difference between this iterator and another iterator
         //  that operate on the same container type
         inline difference_type operator-
         (
-            const const_circulator<ContainerType>& c
+            const Circulator<ContainerType>& c
         ) const;
 };
 
@@ -238,7 +218,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "const_circulatorI.H"
+#include "CirculatorI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
