@@ -371,6 +371,9 @@ public:
         //  -1: same face, but different orientation
         static int compare(const face&, const face&);
 
+        //- Return true if the faces have the same vertices
+        static bool sameVertices(const face&, const face&);
+
 
     // Friend Operators
 

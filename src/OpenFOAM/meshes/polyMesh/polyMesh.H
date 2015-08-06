@@ -233,6 +233,7 @@ private:
                 cellList& cells
             );
 
+
         // Geometry checks
 
             //- Check non-orthogonality

@@ -21,9 +21,6 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Create polyMesh from cell and patch shapes
-
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
@@ -102,7 +99,7 @@ Foam::labelList Foam::polyMesh::facePatchFaceCells
 
                 forAll(cellFaces, cellFace)
                 {
-                    if (cellFaces[cellFace] == curFace)
+                    if (face::sameVertices(cellFaces[cellFace], curFace))
                     {
                         // Found the cell corresponding to this face
                         FaceCells[fI] = facePointCells[cellI];
@@ -175,7 +172,7 @@ void Foam::polyMesh::setTopology
     // Initialise number of faces to 0
     nFaces = 0;
 
-    // set reference to point-cell addressing
+    // Set reference to point-cell addressing
     labelListList PointCells = cellShapePointCells(cellsAsShapes);
 
     bool found = false;
@@ -340,7 +337,7 @@ void Foam::polyMesh::setTopology
 
             forAll(facesOfCellInside, cellFaceI)
             {
-                if (facesOfCellInside[cellFaceI] == curFace)
+                if (face::sameVertices(facesOfCellInside[cellFaceI], curFace))
                 {
                     if (cells[cellInside][cellFaceI] >= 0)
                     {
@@ -385,7 +382,7 @@ void Foam::polyMesh::setTopology
                     << abort(FatalError);
             }
 
-            // increment the counter of faces
+            // Increment the counter of faces
             nFaces++;
         }
 
@@ -501,7 +498,7 @@ Foam::polyMesh::polyMesh
             IOobject::AUTO_WRITE
         ),
         *this,
-        boundaryFaces.size() + 1    // add room for a default patch
+        boundaryFaces.size() + 1    // Add room for a default patch
     ),
     bounds_(points_, syncPar),
     comm_(UPstream::worldComm),
@@ -587,7 +584,7 @@ Foam::polyMesh::polyMesh
     // completed, as they hold a subList of the face list
     forAll(boundaryFaces, patchI)
     {
-        // add the patch to the list
+        // Add the patch to the list
         boundary_.set
         (
             patchI,
@@ -785,7 +782,7 @@ Foam::polyMesh::polyMesh
             IOobject::AUTO_WRITE
         ),
         *this,
-        boundaryFaces.size() + 1    // add room for a default patch
+        boundaryFaces.size() + 1    // Add room for a default patch
     ),
     bounds_(points_, syncPar),
     comm_(UPstream::worldComm),
@@ -876,7 +873,7 @@ Foam::polyMesh::polyMesh
         patchDict.set("nFaces", patchSizes[patchI]);
         patchDict.set("startFace", patchStarts[patchI]);
 
-        // add the patch to the list
+        // Add the patch to the list
         boundary_.set
         (
             patchI,
