@@ -136,6 +136,12 @@ public:
 };
 
 
+inline int32_t mag(const int32_t l)
+{
+    return ::abs(l);
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

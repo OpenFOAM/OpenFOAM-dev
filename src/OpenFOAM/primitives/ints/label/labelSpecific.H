@@ -36,15 +36,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline label mag(const label l)
-{
-    #if WM_LABEL_SIZE == 32
-        return ::abs(l);
-    #elif WM_LABEL_SIZE == 64
-        return ::labs(l);
-    #endif
-}
-
 inline label sign(const label s)
 {
     return (s >= 0)? 1: -1;
