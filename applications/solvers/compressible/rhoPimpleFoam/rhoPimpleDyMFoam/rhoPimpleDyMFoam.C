@@ -63,12 +63,11 @@ int main(int argc, char *argv[])
     #include "createMRF.H"
     #include "createFvOptions.H"
     #include "createRhoUf.H"
-    #include "CourantNo.H"
     #include "createControls.H"
 
     if (!LTS)
     {
-        #include "CourantNo.H"
+        #include "compressibleCourantNo.H"
         #include "setInitialDeltaT.H"
     }
 

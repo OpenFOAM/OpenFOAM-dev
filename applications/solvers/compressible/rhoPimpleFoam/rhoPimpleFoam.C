@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
     if (!LTS)
     {
-        #include "CourantNo.H"
+        #include "compressibleCourantNo.H"
         #include "setInitialDeltaT.H"
     }
 

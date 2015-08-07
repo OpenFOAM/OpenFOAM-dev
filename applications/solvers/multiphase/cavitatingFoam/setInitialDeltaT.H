@@ -32,8 +32,6 @@ Description
 
 if (adjustTimeStep)
 {
-    #include "CourantNo.H"
-
     if (CoNum > SMALL)
     {
         scalar maxDeltaTFact =
