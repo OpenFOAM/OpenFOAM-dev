@@ -328,9 +328,7 @@ void Foam::polyMesh::setTopology
 
             const label cellInside = curPatchFaceCells[faceI];
 
-            faces_[nFaces] = curFace;
-
-            // get faces of the cell inside
+            // Get faces of the cell inside
             const faceList& facesOfCellInside = cellsFaceShapes[cellInside];
 
             bool found = false;
@@ -365,6 +363,9 @@ void Foam::polyMesh::setTopology
                     }
 
                     found = true;
+
+                    // Set the patch face to corresponding cell-face
+                    faces_[nFaces] = facesOfCellInside[cellFaceI];
 
                     cells[cellInside][cellFaceI] = nFaces;
 
