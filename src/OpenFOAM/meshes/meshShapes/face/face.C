@@ -427,18 +427,22 @@ bool Foam::face::sameVertices(const face& a, const face& b)
 
     forAll(a, i)
     {
-        bool found = false;
-
-        forAll(b, j)
+        // Count occurrences of a[i] in a
+        label aOcc = 0;
+        forAll(a, j)
         {
-            if (a[i] == b[j])
-            {
-                found = true;
-                break;
-            }
+            if (a[i] == a[j]) aOcc++;
         }
 
-        if (!found) return false;
+        // Count occurrences of a[i] in b
+        label bOcc = 0;
+        forAll(b, j)
+        {
+            if (a[i] == b[j]) bOcc++;
+        }
+
+        // Check if occurrences of a[i] in a and b are the same
+        if (aOcc != bOcc) return false;
     }
 
     return true;
