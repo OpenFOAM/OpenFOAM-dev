@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,15 +27,10 @@ License
 #include "IOstreams.H"
 #include "transformField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+Foam::transformFvPatchField<Type>::transformFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -46,7 +41,7 @@ transformFvPatchField<Type>::transformFvPatchField
 
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+Foam::transformFvPatchField<Type>::transformFvPatchField
 (
     const transformFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -59,7 +54,7 @@ transformFvPatchField<Type>::transformFvPatchField
 
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+Foam::transformFvPatchField<Type>::transformFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -71,7 +66,7 @@ transformFvPatchField<Type>::transformFvPatchField
 
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+Foam::transformFvPatchField<Type>::transformFvPatchField
 (
     const transformFvPatchField<Type>& ptf
 )
@@ -81,7 +76,7 @@ transformFvPatchField<Type>::transformFvPatchField
 
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+Foam::transformFvPatchField<Type>::transformFvPatchField
 (
     const transformFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -94,7 +89,8 @@ transformFvPatchField<Type>::transformFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > transformFvPatchField<Type>::valueInternalCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::transformFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -104,7 +100,8 @@ tmp<Field<Type> > transformFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > transformFvPatchField<Type>::valueBoundaryCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::transformFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -120,14 +117,16 @@ tmp<Field<Type> > transformFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > transformFvPatchField<Type>::gradientInternalCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::transformFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -this->patch().deltaCoeffs()*snGradTransformDiag();
 }
 
 
 template<class Type>
-tmp<Field<Type> > transformFvPatchField<Type>::gradientBoundaryCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::transformFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return
         snGrad()
@@ -138,7 +137,7 @@ tmp<Field<Type> > transformFvPatchField<Type>::gradientBoundaryCoeffs() const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
-void transformFvPatchField<Type>::operator=
+void Foam::transformFvPatchField<Type>::operator=
 (
     const fvPatchField<Type>& ptf
 )
@@ -146,9 +145,5 @@ void transformFvPatchField<Type>::operator=
     this->evaluate();
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

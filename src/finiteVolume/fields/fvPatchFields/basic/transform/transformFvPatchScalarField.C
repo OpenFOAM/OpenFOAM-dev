@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,21 +25,25 @@ License
 
 #include "transformFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<>
-tmp<scalarField > transformFvPatchField<scalar>::gradientInternalCoeffs() const
+Foam::tmp<Foam::scalarField>
+Foam::transformFvPatchField<Foam::scalar>::valueInternalCoeffs
+(
+    const tmp<scalarField>&
+) const
 {
-    return tmp<scalarField >(new scalarField(size(), 0.0));
+     return tmp<scalarField>(new scalarField(size(), 1.0));
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Foam
+template<>
+Foam::tmp<Foam::scalarField>
+Foam::transformFvPatchField<Foam::scalar>::gradientInternalCoeffs() const
+{
+    return tmp<scalarField>(new scalarField(size(), 0.0));
+}
+
 
 // ************************************************************************* //
