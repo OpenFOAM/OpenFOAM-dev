@@ -90,6 +90,8 @@ Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
         const scalar t = this->db().time().timeOutputValue();
         this->gradient() = uniformGradient_->value(t);
     }
+
+    fixedGradientFvPatchField<Type>::evaluate();
 }
 
 
