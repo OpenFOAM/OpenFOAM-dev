@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::localAxesRotation
+    Foam::cylindrical
 
 Description
     A local coordinate rotation.
@@ -34,7 +34,7 @@ Description
         (cylindrical coordinates)
 
         \verbatim
-            localAxesRotation
+            cylindrical
             {
                 type        localAxes;
                 e3          (0 0 1);
@@ -45,8 +45,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef localAxesRotation_H
-#define localAxesRotation_H
+#ifndef cylindrical_H
+#define cylindrical_H
 
 #include "point.H"
 #include "vector.H"
@@ -58,10 +58,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class localAxesRotation Declaration
+                    Class cylindrical Declaration
 \*---------------------------------------------------------------------------*/
 
-class localAxesRotation
+class cylindrical
 :
     public coordinateRotation
 {
@@ -90,15 +90,15 @@ class localAxesRotation
 public:
 
     //- Runtime type information
-    TypeName("localAxesRotation");
+    TypeName("cylindrical");
 
     // Constructors
 
         //- Construct from dictionary and objectRegistry
-        localAxesRotation(const dictionary&, const objectRegistry&);
+        cylindrical(const dictionary&, const objectRegistry&);
 
         //- Construct from components for all cells
-        localAxesRotation
+        cylindrical
         (
             const objectRegistry&,
             const vector& axis,
@@ -106,7 +106,7 @@ public:
         );
 
         //- Construct from components for list of cells
-        localAxesRotation
+        cylindrical
         (
             const objectRegistry&,
             const vector& axis,
@@ -115,20 +115,20 @@ public:
         );
 
         //- Construct from dictionary
-        localAxesRotation(const dictionary&);
+        cylindrical(const dictionary&);
 
         //- Construct from tensor Field
-        localAxesRotation(const tensorField&);
+        cylindrical(const tensorField&);
 
         //- Return clone
-        autoPtr<localAxesRotation> clone() const
+        autoPtr<cylindrical> clone() const
         {
-            return autoPtr<localAxesRotation>(new localAxesRotation(*this));
+            return autoPtr<cylindrical>(new cylindrical(*this));
         }
 
 
     //- Destructor
-    virtual ~localAxesRotation()
+    virtual ~cylindrical()
     {}
 
 
@@ -143,28 +143,28 @@ public:
         //- Return local-to-global transformation tensor
         virtual const tensor& R() const
         {
-            notImplemented("const tensor& localAxesRotation::R() const");
+            notImplemented("const tensor& cylindrical::R() const");
             return tensor::zero;
         }
 
         //- Return global-to-local transformation tensor
         virtual const tensor& Rtr() const
         {
-             notImplemented("const tensor& localAxesRotation::Rtr() const");
+             notImplemented("const tensor& cylindrical::Rtr() const");
              return tensor::zero;
         }
 
         //- Return local Cartesian x-axis
         virtual const vector e1() const
         {
-            notImplemented("const tensor& localAxesRotation::e1() const");
+            notImplemented("const tensor& cylindrical::e1() const");
             return vector::zero;
         }
 
         //- Return local Cartesian y-axis
         virtual const vector e2() const
         {
-            notImplemented("const tensor& localAxesRotation::e2() const");
+            notImplemented("const tensor& cylindrical::e2() const");
             return vector::zero;
         }
 

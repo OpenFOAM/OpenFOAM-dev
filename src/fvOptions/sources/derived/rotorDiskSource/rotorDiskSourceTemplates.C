@@ -59,7 +59,7 @@ void Foam::fv::rotorDiskSource::calculate
             const scalar radius = x_[i].x();
 
             // Transform velocity into local cylindrical reference frame
-            vector Uc = localAxesRotation_->invTransform(U[cellI], i);
+            vector Uc = cylindrical_->invTransform(U[cellI], i);
 
             // Transform velocity into local coning system
             Uc = R_[i] & Uc;
@@ -132,7 +132,7 @@ void Foam::fv::rotorDiskSource::calculate
             localForce = invR_[i] & localForce;
 
             // Transform force into global Cartesian co-ordinate system
-            force[cellI] = localAxesRotation_->transform(localForce, i);
+            force[cellI] = cylindrical_->transform(localForce, i);
 
             if (divideVolume)
             {

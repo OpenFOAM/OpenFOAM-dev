@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "localAxesRotation.H"
+#include "cylindrical.H"
 #include "axesRotation.H"
 #include "addToRunTimeSelectionTable.H"
 #include "polyMesh.H"
@@ -33,17 +33,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(localAxesRotation, 0);
+    defineTypeNameAndDebug(cylindrical, 0);
     addToRunTimeSelectionTable
     (
         coordinateRotation,
-        localAxesRotation,
+        cylindrical,
         dictionary
     );
     addToRunTimeSelectionTable
     (
         coordinateRotation,
-        localAxesRotation,
+        cylindrical,
         objectRegistry
     );
 }
@@ -51,7 +51,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-void Foam::localAxesRotation::init
+void Foam::cylindrical::init
 (
     const objectRegistry& obr,
     const List<label>& cells
@@ -92,7 +92,7 @@ void Foam::localAxesRotation::init
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::localAxesRotation::localAxesRotation
+Foam::cylindrical::cylindrical
 (
     const dictionary& dict,
     const objectRegistry& obr
@@ -115,7 +115,7 @@ Foam::localAxesRotation::localAxesRotation
 }
 
 
-Foam::localAxesRotation::localAxesRotation
+Foam::cylindrical::cylindrical
 (
     const objectRegistry& obr,
     const vector& axis,
@@ -130,7 +130,7 @@ Foam::localAxesRotation::localAxesRotation
 }
 
 
-Foam::localAxesRotation::localAxesRotation
+Foam::cylindrical::cylindrical
 (
     const objectRegistry& obr,
     const vector& axis,
@@ -146,14 +146,14 @@ Foam::localAxesRotation::localAxesRotation
 }
 
 
-Foam::localAxesRotation::localAxesRotation(const dictionary& dict)
+Foam::cylindrical::cylindrical(const dictionary& dict)
 :
     Rptr_(),
     origin_(),
     e3_()
 {
-    FatalErrorIn("localAxesRotation(const dictionary&)")
-        << " localAxesRotation can not be constructed from dictionary "
+    FatalErrorIn("cylindrical(const dictionary&)")
+        << " cylindrical can not be constructed from dictionary "
         << " use the construtctor : "
            "("
            "    const dictionary&, const objectRegistry&"
@@ -162,7 +162,7 @@ Foam::localAxesRotation::localAxesRotation(const dictionary& dict)
 }
 
 
-Foam::localAxesRotation::localAxesRotation(const tensorField& R)
+Foam::cylindrical::cylindrical(const tensorField& R)
 :
     Rptr_(),
     origin_(vector::zero),
@@ -174,7 +174,7 @@ Foam::localAxesRotation::localAxesRotation(const tensorField& R)
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::localAxesRotation::clear()
+void Foam::cylindrical::clear()
 {
     if (!Rptr_.empty())
     {
@@ -183,7 +183,7 @@ void Foam::localAxesRotation::clear()
 }
 
 
-void Foam::localAxesRotation::updateCells
+void Foam::cylindrical::updateCells
 (
     const polyMesh& mesh,
     const labelList& cells
@@ -203,7 +203,7 @@ void Foam::localAxesRotation::updateCells
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::localAxesRotation::transform
+Foam::tmp<Foam::vectorField> Foam::cylindrical::transform
 (
     const vectorField& vf
 ) const
@@ -212,7 +212,7 @@ Foam::tmp<Foam::vectorField> Foam::localAxesRotation::transform
     {
         FatalErrorIn
         (
-            "tmp<vectorField> localAxesRotation::transform(const vectorField&)"
+            "tmp<vectorField> cylindrical::transform(const vectorField&)"
         )
             << "vectorField st has different size to tensorField "
             << abort(FatalError);
@@ -222,17 +222,17 @@ Foam::tmp<Foam::vectorField> Foam::localAxesRotation::transform
 }
 
 
-Foam::vector Foam::localAxesRotation::transform(const vector& v) const
+Foam::vector Foam::cylindrical::transform(const vector& v) const
 {
     notImplemented
     (
-        "vector localAxesRotation::transform(const vector&) const"
+        "vector cylindrical::transform(const vector&) const"
     );
     return vector::zero;
 }
 
 
-Foam::vector Foam::localAxesRotation::transform
+Foam::vector Foam::cylindrical::transform
 (
     const vector& v,
     const label cmptI
@@ -242,7 +242,7 @@ Foam::vector Foam::localAxesRotation::transform
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::localAxesRotation::invTransform
+Foam::tmp<Foam::vectorField> Foam::cylindrical::invTransform
 (
     const vectorField& vf
 ) const
@@ -251,17 +251,17 @@ Foam::tmp<Foam::vectorField> Foam::localAxesRotation::invTransform
 }
 
 
-Foam::vector Foam::localAxesRotation::invTransform(const vector& v) const
+Foam::vector Foam::cylindrical::invTransform(const vector& v) const
 {
     notImplemented
     (
-        "vector localAxesRotation::invTransform(const vector&) const"
+        "vector cylindrical::invTransform(const vector&) const"
     );
     return vector::zero;
 }
 
 
-Foam::vector Foam::localAxesRotation::invTransform
+Foam::vector Foam::cylindrical::invTransform
 (
     const vector& v,
     const label cmptI
@@ -271,7 +271,7 @@ Foam::vector Foam::localAxesRotation::invTransform
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::localAxesRotation::transformTensor
+Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
 (
     const tensorField& tf
 ) const
@@ -280,7 +280,7 @@ Foam::tmp<Foam::tensorField> Foam::localAxesRotation::transformTensor
     {
         FatalErrorIn
         (
-            "tmp<tensorField> localAxesRotation::transformTensor"
+            "tmp<tensorField> cylindrical::transformTensor"
             "("
                 "const tensorField&"
             ")"
@@ -292,21 +292,21 @@ Foam::tmp<Foam::tensorField> Foam::localAxesRotation::transformTensor
 }
 
 
-Foam::tensor Foam::localAxesRotation::transformTensor
+Foam::tensor Foam::cylindrical::transformTensor
 (
     const tensor& t
 ) const
 {
     notImplemented
     (
-        "tensor localAxesRotation::transformTensor(const tensor&) const"
+        "tensor cylindrical::transformTensor(const tensor&) const"
     );
 
     return tensor::zero;
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::localAxesRotation::transformTensor
+Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
 (
     const tensorField& tf,
     const labelList& cellMap
@@ -316,7 +316,7 @@ Foam::tmp<Foam::tensorField> Foam::localAxesRotation::transformTensor
     {
         FatalErrorIn
         (
-            "tmp<tensorField> localAxesRotation::transformTensor"
+            "tmp<tensorField> cylindrical::transformTensor"
             "("
                 "const tensorField&, "
                 "const labelList&"
@@ -340,14 +340,14 @@ Foam::tmp<Foam::tensorField> Foam::localAxesRotation::transformTensor
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::localAxesRotation::transformVector
+Foam::tmp<Foam::symmTensorField> Foam::cylindrical::transformVector
 (
     const vectorField& vf
 ) const
 {
     if (Rptr_->size() != vf.size())
     {
-        FatalErrorIn("localAxesRotation::transformVector(const vectorField&)")
+        FatalErrorIn("cylindrical::transformVector(const vectorField&)")
             << "tensorField vf has different size to tensorField Tr"
             << abort(FatalError);
     }
@@ -364,20 +364,20 @@ Foam::tmp<Foam::symmTensorField> Foam::localAxesRotation::transformVector
 }
 
 
-Foam::symmTensor Foam::localAxesRotation::transformVector
+Foam::symmTensor Foam::cylindrical::transformVector
 (
     const vector& v
 ) const
 {
     notImplemented
     (
-        "tensor localAxesRotation::transformVector(const vector&) const"
+        "tensor cylindrical::transformVector(const vector&) const"
     );
     return symmTensor::zero;
 }
 
 
-void Foam::localAxesRotation::write(Ostream& os) const
+void Foam::cylindrical::write(Ostream& os) const
 {
      os.writeKeyword("e3") << e3() << token::END_STATEMENT << nl;
 }

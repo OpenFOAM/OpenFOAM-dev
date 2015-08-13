@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
             origin  (0 0 0);
             coordinateRotation
             {
-                type        localAxesRotation;
+                type        cylindrical;
                 e3          (0 0 1);
             }
         }
@@ -45,7 +45,7 @@ Description
     Types of coordinateRotation:
     1) axesRotation
     2) STARCDRotation
-    3) localAxesRotation
+    3) cylindrical
     4) EulerCoordinateRotation
 
     Type of co-ordinates:

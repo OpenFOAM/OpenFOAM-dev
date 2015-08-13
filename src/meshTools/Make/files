@@ -20,7 +20,7 @@ $(csys)/coordinateRotation/coordinateRotation.C
 $(csys)/coordinateRotation/coordinateRotationNew.C
 $(csys)/coordinateRotation/EulerCoordinateRotation.C
 $(csys)/coordinateRotation/STARCDCoordinateRotation.C
-$(csys)/coordinateRotation/localAxesRotation.C
+$(csys)/coordinateRotation/cylindrical.C
 
 edgeFaceCirculator/edgeFaceCirculator.C
 

@@ -334,9 +334,9 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
 
             coeffs_.lookup("refDirection") >> refDir;
 
-            localAxesRotation_.reset
+            cylindrical_.reset
             (
-                new localAxesRotation
+                new cylindrical
                 (
                     mesh_,
                     axis,
@@ -357,9 +357,9 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             coeffs_.lookup("axis") >> axis;
             coeffs_.lookup("refDirection") >> refDir;
 
-            localAxesRotation_.reset
+            cylindrical_.reset
             (
-                new localAxesRotation
+                new cylindrical
                 (
                     mesh_,
                     axis,
@@ -491,7 +491,7 @@ Foam::fv::rotorDiskSource::rotorDiskSource
     invR_(cells_.size(), I),
     area_(cells_.size(), 0.0),
     coordSys_(false),
-    localAxesRotation_(),
+    cylindrical_(),
     rMax_(0.0),
     trim_(trimModel::New(*this, coeffs_)),
     blade_(coeffs_.subDict("blade")),

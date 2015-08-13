@@ -103,7 +103,7 @@ SourceFiles
 
 #include "cellSetOption.H"
 #include "cylindricalCS.H"
-#include "localAxesRotation.H"
+#include "cylindrical.H"
 #include "NamedEnum.H"
 #include "bladeModel.H"
 #include "profileModelList.H"
@@ -201,7 +201,7 @@ protected:
         cylindricalCS coordSys_;
 
          //- Rotor transformation co-ordinate system
-        autoPtr<localAxesRotation> localAxesRotation_;
+        autoPtr<cylindrical> cylindrical_;
 
         //- Maximum radius
         scalar rMax_;
