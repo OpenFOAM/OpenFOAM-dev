@@ -47,3 +47,9 @@
 }
 
 fluid.correctThermo();
+
+Info<< "  phase1.thermo().T(): " << min(phase1.thermo().T()).value()
+    << " - " << max(phase1.thermo().T()).value() << endl;
+
+Info<< "  phase2.thermo().T(): " << min(phase2.thermo().T()).value()
+    << " - " << max(phase2.thermo().T()).value() << endl;

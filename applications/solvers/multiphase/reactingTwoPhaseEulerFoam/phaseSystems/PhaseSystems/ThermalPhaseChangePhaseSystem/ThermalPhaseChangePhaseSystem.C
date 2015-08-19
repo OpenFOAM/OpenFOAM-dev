@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ThermalPhaseChangePhaseSystem.H"
+#include "fvCFD.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -36,7 +37,8 @@ ThermalPhaseChangePhaseSystem
 :
     HeatAndMassTransferPhaseSystem<BasePhaseSystem>(mesh),
     volatile_(this->lookup("volatile")),
-    saturationModel_(saturationModel::New(this->subDict("saturationModel")))
+    saturationModel_(saturationModel::New(this->subDict("saturationModel"))),
+    massTransfer_(this->lookup("massTransfer"))
 {}
 
 
@@ -143,37 +145,79 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
         const phaseModel& phase1 = pair.phase1();
         const phaseModel& phase2 = pair.phase2();
 
-        volScalarField& Tf = *this->Tf_[pair];
-        Tf = saturationModel_->Tsat(phase1.thermo().p());
-
-        Info<< "Tf." << pair.name()
-            << ": min = " << min(Tf.internalField())
-            << ", mean = " << average(Tf.internalField())
-            << ", max = " << max(Tf.internalField())
-            << endl;
-
-        volScalarField& dmdt(*this->dmdt_[pair]);
-
-        volScalarField H1(this->heatTransferModels_[pair][pair.first()]->K());
-        volScalarField H2(this->heatTransferModels_[pair][pair.second()]->K());
-
         const volScalarField& T1(phase1.thermo().T());
         const volScalarField& T2(phase2.thermo().T());
 
         const volScalarField& he1(phase1.thermo().he());
         const volScalarField& he2(phase2.thermo().he());
 
-        volScalarField hef2(phase2.thermo().he(phase2.thermo().p(), Tf));
-        volScalarField hef1(phase1.thermo().he(phase1.thermo().p(), Tf));
+        volScalarField& dmdt(*this->dmdt_[pair]);
 
-        dmdt =
-            (H2*(Tf - T1) + H1*(Tf - T2))
-           /min
+        volScalarField& Tf = *this->Tf_[pair];
+
+        volScalarField hef1(phase1.thermo().he(phase1.thermo().p(), Tf));
+        volScalarField hef2(phase2.thermo().he(phase2.thermo().p(), Tf));
+
+        if (massTransfer_ )
+        {
+            volScalarField H1
+            (
+                this->heatTransferModels_[pair][pair.first()]->K(0)
+            );
+
+            volScalarField H2
+            (
+                this->heatTransferModels_[pair][pair.second()]->K(0)
+            );
+
+            Tf = saturationModel_->Tsat(phase1.thermo().p());
+
+            dmdt =
+                (H1*(Tf - T1) + H2*(Tf - T2))
+               /min
+                (
+                    (pos(dmdt)*he2 + neg(dmdt)*hef2)
+                  - (neg(dmdt)*he1 + pos(dmdt)*hef1),
+                    0.3*mag(hef2 - hef1)
+                );
+
+            Info<< "dmdt." << pair.name()
+                << ": min = " << min(dmdt.internalField())
+                << ", mean = " << average(dmdt.internalField())
+                << ", max = " << max(dmdt.internalField())
+                << ", integral = " << fvc::domainIntegrate(dmdt).value()
+                << endl;
+        }
+        else
+        {
+            dmdt == dimensionedScalar("0", dmdt.dimensions(), 0);
+        }
+
+        volScalarField H1(this->heatTransferModels_[pair][pair.first()]->K());
+        volScalarField H2(this->heatTransferModels_[pair][pair.second()]->K());
+
+        // Limit the H[12] boundary field to avoid /0
+        const scalar HLimit = 1e-4;
+        H1.boundaryField() =
+            max(H1.boundaryField(), phase1.boundaryField()*HLimit);
+        H2.boundaryField() =
+            max(H2.boundaryField(), phase2.boundaryField()*HLimit);
+
+        volScalarField mDotL
+        (
+            dmdt*
             (
                 (pos(dmdt)*he2 + neg(dmdt)*hef2)
-              - (neg(dmdt)*he1 + pos(dmdt)*hef1),
-                0.3*(hef1 - hef2)
-            );
+              - (neg(dmdt)*he1 + pos(dmdt)*hef1)
+            )
+        );
+        Tf = (H1*T1 + H2*T2 + mDotL)/(H1 + H2);
+
+        Info<< "Tf." << pair.name()
+            << ": min = " << min(Tf.internalField())
+            << ", mean = " << average(Tf.internalField())
+            << ", max = " << max(Tf.internalField())
+            << endl;
     }
 }
 

@@ -43,6 +43,7 @@ SourceFiles
 
 #include "HeatAndMassTransferPhaseSystem.H"
 #include "saturationModel.H"
+#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,6 +69,9 @@ protected:
 
         //- The saturation model used to evaluate Tsat = Tf
         autoPtr<saturationModel> saturationModel_;
+
+        // Mass transfer enabled
+        Switch massTransfer_;
 
 
 public:

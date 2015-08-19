@@ -65,4 +65,13 @@ Foam::heatTransferModel::~heatTransferModel()
 {}
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::heatTransferModel::K() const
+{
+    return K(residualAlpha_.value());
+}
+
+
 // ************************************************************************* //

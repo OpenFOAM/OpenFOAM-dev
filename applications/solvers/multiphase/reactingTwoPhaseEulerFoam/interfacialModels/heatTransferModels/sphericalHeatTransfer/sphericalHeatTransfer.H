@@ -79,7 +79,7 @@ public:
     // Member Functions
 
         //- The heat transfer function K used in the enthalpy equation
-        tmp<volScalarField> K() const;
+        tmp<volScalarField> K(const scalar residualAlpha) const;
 };
 
 

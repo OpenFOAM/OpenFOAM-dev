@@ -117,7 +117,13 @@ public:
         //- The heat transfer function K used in the enthalpy equation
         //    ddt(alpha1*rho1*ha) + ... = ... K*(Ta - Tb)
         //    ddt(alpha2*rho2*hb) + ... = ... K*(Tb - Ta)
-        virtual tmp<volScalarField> K() const = 0;
+        tmp<volScalarField> K() const;
+
+        //- The heat transfer function K used in the enthalpy equation
+        //    ddt(alpha1*rho1*ha) + ... = ... K*(Ta - Tb)
+        //    ddt(alpha2*rho2*hb) + ... = ... K*(Tb - Ta)
+        //  with a specified residual volume fraction
+        virtual tmp<volScalarField> K(const scalar residualAlpha) const = 0;
 };
 
 

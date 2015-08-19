@@ -29,4 +29,6 @@ twoPhaseSystem/twoPhaseSystem.C
 twoPhaseSystem/newTwoPhaseSystem.C
 twoPhaseSystem/twoPhaseSystems.C
 
+reactionThermo/hRefConstThermos.C
+
 LIB = $(FOAM_LIBBIN)/libreactingTwoPhaseSystem

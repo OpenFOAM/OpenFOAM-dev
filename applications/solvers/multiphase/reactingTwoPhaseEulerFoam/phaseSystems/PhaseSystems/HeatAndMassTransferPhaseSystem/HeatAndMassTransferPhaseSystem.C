@@ -192,11 +192,11 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
         const volVectorField& U2(pair.phase2().U());
 
         const volScalarField dmdt(this->dmdt(pair));
-        const volScalarField dmdt12(posPart(dmdt));
-        const volScalarField dmdt21(negPart(dmdt));
+        const volScalarField dmdt21(posPart(dmdt));
+        const volScalarField dmdt12(negPart(dmdt));
 
-        *eqns[pair.phase1().name()] += fvm::Sp(dmdt21, U1) - dmdt21*U2;
-        *eqns[pair.phase2().name()] += dmdt12*U1 - fvm::Sp(dmdt12, U2);
+        *eqns[pair.phase1().name()] += dmdt21*U2 - fvm::Sp(dmdt21, U1);
+        *eqns[pair.phase2().name()] -= dmdt12*U1 - fvm::Sp(dmdt12, U2);
     }
 
     return eqnsPtr;
@@ -283,7 +283,7 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
         }
     }
 
-    // Source term due to mass trasfer
+    // Source term due to mass transfer
     forAllConstIter
     (
         phaseSystem::phasePairTable,
@@ -308,17 +308,19 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
         const volScalarField& K2(phase2.K());
 
         const volScalarField dmdt(this->dmdt(pair));
-        const volScalarField dmdt12(posPart(dmdt));
-        const volScalarField dmdt21(negPart(dmdt));
+        const volScalarField dmdt21(posPart(dmdt));
+        const volScalarField dmdt12(negPart(dmdt));
         const volScalarField& Tf(*Tf_[pair]);
 
         *eqns[phase1.name()] +=
-            fvm::Sp(dmdt21, he1) + dmdt21*K1
-          - dmdt21*(phase2.thermo().he(phase2.thermo().p(), Tf) + K2);
+            dmdt21*(phase1.thermo().he(phase1.thermo().p(), Tf))
+          - fvm::Sp(dmdt21, he1)
+          + dmdt21*(K2 - K1);
 
-        *eqns[phase2.name()] +=
-            dmdt12*(phase1.thermo().he(phase1.thermo().p(), Tf) + K1)
-          - fvm::Sp(dmdt12, he2) - dmdt12*K2;
+        *eqns[phase2.name()] -=
+            dmdt12*(phase2.thermo().he(phase2.thermo().p(), Tf))
+          - fvm::Sp(dmdt12, he2)
+          + dmdt12*(K1 - K2);
     }
 
     return eqnsPtr;

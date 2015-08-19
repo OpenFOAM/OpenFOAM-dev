@@ -65,11 +65,14 @@ Foam::heatTransferModels::sphericalHeatTransfer::~sphericalHeatTransfer()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::heatTransferModels::sphericalHeatTransfer::K() const
+Foam::heatTransferModels::sphericalHeatTransfer::K
+(
+    const scalar residualAlpha
+) const
 {
     return
         60.0
-       *max(pair_.dispersed(), residualAlpha_)
+       *max(pair_.dispersed(), residualAlpha)
        *pair_.continuous().kappa()
        /sqr(pair_.dispersed().d());
 }

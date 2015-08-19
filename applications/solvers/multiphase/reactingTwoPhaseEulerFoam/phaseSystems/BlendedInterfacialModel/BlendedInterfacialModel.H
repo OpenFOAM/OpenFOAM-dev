@@ -136,6 +136,9 @@ public:
         //- Return the blended force coefficient
         tmp<volScalarField> K() const;
 
+        //- Return the blended force coefficient with a specified residual alpha
+        tmp<volScalarField> K(const scalar residualAlpha) const;
+
         //- Return the face blended force coefficient
         tmp<surfaceScalarField> Kf() const;
 

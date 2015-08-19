@@ -224,6 +224,66 @@ Foam::BlendedInterfacialModel<ModelType>::K() const
 
 
 template<class ModelType>
+Foam::tmp<Foam::volScalarField>
+Foam::BlendedInterfacialModel<ModelType>::K(const scalar residualAlpha) const
+{
+    tmp<volScalarField> f1, f2;
+
+    if (model_.valid() || model1In2_.valid())
+    {
+        f1 = blending_.f1(phase1_, phase2_);
+    }
+
+    if (model_.valid() || model2In1_.valid())
+    {
+        f2 = blending_.f2(phase1_, phase2_);
+    }
+
+    tmp<volScalarField> x
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                ModelType::typeName + ":K",
+                phase1_.mesh().time().timeName(),
+                phase1_.mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            phase1_.mesh(),
+            dimensionedScalar("zero", ModelType::dimK, 0)
+        )
+    );
+
+    if (model_.valid())
+    {
+        x() += model_->K(residualAlpha)*(scalar(1) - f1() - f2());
+    }
+    if (model1In2_.valid())
+    {
+        x() += model1In2_->K(residualAlpha)*f1;
+    }
+    if (model2In1_.valid())
+    {
+        x() += model2In1_->K(residualAlpha)*f2;
+    }
+
+    if
+    (
+        correctFixedFluxBCs_
+     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    )
+    {
+        correctFixedFluxBCs(x());
+    }
+
+    return x;
+}
+
+
+template<class ModelType>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::BlendedInterfacialModel<ModelType>::Kf() const
 {
