@@ -96,6 +96,7 @@ public:
         virtual tmp<volScalarField> nu
         (
             const volScalarField& alpha1,
+            const dimensionedScalar& alphaMinFriction,
             const dimensionedScalar& alphaMax,
             const volScalarField& pf,
             const volSymmTensorField& D

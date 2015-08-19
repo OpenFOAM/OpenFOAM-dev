@@ -519,6 +519,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         nut_ += frictionalStressModel_->nu
         (
             alpha,
+            alphaMinFriction_,
             alphaMax_,
             pf/rho,
             D

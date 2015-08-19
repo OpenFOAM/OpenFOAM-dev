@@ -104,6 +104,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
 (
     const volScalarField& alpha1,
+    const dimensionedScalar& alphaMinFriction,
     const dimensionedScalar& alphaMax,
     const volScalarField& pf,
     const volSymmTensorField& D
@@ -133,9 +134,9 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
 
     volScalarField& nuf = tnu();
 
-    forAll (D, celli)
+    forAll(D, celli)
     {
-        if (alpha1[celli] > alphaMax.value() - 5e-2)
+        if (alpha1[celli] > alphaMinFriction.value())
         {
             nuf[celli] =
                 0.5*pf[celli]*sin(phi_.value())

@@ -115,6 +115,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::nu
 (
     const volScalarField& alpha1,
+    const dimensionedScalar& alphaMinFriction,
     const dimensionedScalar& alphaMax,
     const volScalarField& pf,
     const volSymmTensorField& D
