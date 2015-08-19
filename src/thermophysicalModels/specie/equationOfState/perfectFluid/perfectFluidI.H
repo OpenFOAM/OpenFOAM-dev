@@ -186,7 +186,7 @@ inline Foam::perfectFluid<Specie> Foam::operator+
     scalar molr1 = pf1.nMoles()/nMoles;
     scalar molr2 = pf2.nMoles()/nMoles;
 
-    return rhoConst<Specie>
+    return perfectFluid<Specie>
     (
         static_cast<const Specie&>(pf1)
       + static_cast<const Specie&>(pf2),
@@ -207,7 +207,7 @@ inline Foam::perfectFluid<Specie> Foam::operator-
     scalar molr1 = pf1.nMoles()/nMoles;
     scalar molr2 = pf2.nMoles()/nMoles;
 
-    return rhoConst<Specie>
+    return perfectFluid<Specie>
     (
         static_cast<const Specie&>(pf1)
       - static_cast<const Specie&>(pf2),
