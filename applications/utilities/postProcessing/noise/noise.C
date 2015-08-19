@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,13 +42,16 @@ Description
     fU          10000;
     graphFormat raw;
 
-    csvFileData
+    pressureData
     {
         fileName        "pressureData"
-        nHeaderLine     1;
-        refColumn       0;
-        componentColumns (1);
-        separator       " ";
+        nHeaderLine         1;          // number of header lines
+        refColumn           0;          // reference column index
+        componentColumns    (1);        // component column indices
+        separator           " ";        // optional (defaults to ",")
+        mergeSeparators     no;         // merge multiple separators
+        outOfBounds         clamp;      // optional out-of-bounds handling
+        interpolationScheme linear;     // optional interpolation scheme
     }
     \endverbatim
 
