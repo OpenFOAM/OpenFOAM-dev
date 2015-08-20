@@ -28,6 +28,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
 
+#include "CompressibleTurbulenceModel.H"
 #include "ThermalDiffusivity.H"
 #include "EddyDiffusivity.H"
 

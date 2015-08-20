@@ -55,7 +55,7 @@ PDRkEpsilon::PDRkEpsilon
     const word& modelName
 )
 :
-    Foam::RASModels::kEpsilon<eddyDiffusivity<compressible::turbulenceModel> >
+    Foam::RASModels::kEpsilon<EddyDiffusivity<compressible::turbulenceModel> >
     (
         geometricOneField(),
         rho,

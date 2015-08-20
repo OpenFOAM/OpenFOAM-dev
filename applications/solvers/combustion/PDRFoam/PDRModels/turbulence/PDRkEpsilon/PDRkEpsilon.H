@@ -80,7 +80,7 @@ class PDRkEpsilon
 :
     public Foam::RASModels::kEpsilon
     <
-        eddyDiffusivity
+        EddyDiffusivity
         <
             compressible::turbulenceModel
         >

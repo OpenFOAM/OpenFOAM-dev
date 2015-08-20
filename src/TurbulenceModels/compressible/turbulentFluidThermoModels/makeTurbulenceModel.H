@@ -41,7 +41,8 @@ License
             dictionary                                                         \
         );                                                                     \
                                                                                \
-        typedef BaseModel<Transport> Transport##BaseModel;                     \
+        typedef BaseModel<CompressibleTurbulenceModel<Transport> >             \
+            Transport##BaseModel;                                              \
                                                                                \
                                                                                \
         typedef laminar<Transport##BaseModel> Laminar##Transport##BaseModel;   \

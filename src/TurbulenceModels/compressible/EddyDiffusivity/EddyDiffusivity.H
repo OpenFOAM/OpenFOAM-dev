@@ -36,8 +36,6 @@ SourceFiles
 #ifndef EddyDiffusivity_H
 #define EddyDiffusivity_H
 
-#include "CompressibleTurbulenceModel.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

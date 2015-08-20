@@ -25,8 +25,8 @@ Class
     Foam::ThermalDiffusivity
 
 Description
-    Templated abstract base class for single-phase compressible
-    turbulence models.
+    Templated wrapper class to provide compressible turbulence models
+    thermal diffusivity based thermal transport.
 
 SourceFiles
     ThermalDiffusivity.C
@@ -35,8 +35,6 @@ SourceFiles
 
 #ifndef ThermalDiffusivity_H
 #define ThermalDiffusivity_H
-
-#include "CompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,17 +45,17 @@ namespace Foam
                Class ThermalDiffusivity Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class TransportModel>
+template<class BasicTurbulenceModel>
 class ThermalDiffusivity
 :
-    public CompressibleTurbulenceModel<TransportModel>
+    public BasicTurbulenceModel
 {
 
 public:
 
     typedef geometricOneField alphaField;
     typedef volScalarField rhoField;
-    typedef TransportModel transportModel;
+    typedef typename BasicTurbulenceModel::transportModel transportModel;
 
 
     // Constructors
