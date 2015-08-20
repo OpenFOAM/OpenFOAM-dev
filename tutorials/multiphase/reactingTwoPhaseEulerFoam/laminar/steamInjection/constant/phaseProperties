@@ -1,0 +1,222 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    thermalPhaseChangeTwoPhaseSystem;
+
+phases (steam water);
+
+volatile    "water";
+
+massTransfer on;
+
+steam
+{
+    type            multiComponentPhaseModel;
+    diameterModel   isothermal;
+    isothermalCoeffs
+    {
+        d0              3e-3;
+        p0              1e5;
+    }
+    Sc              0.7;
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            multiComponentPhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+    Sc              0.7;
+
+    residualAlpha   1e-6;
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase water;
+        minFullyContinuousAlpha.steam 0.7;
+        minPartlyContinuousAlpha.steam 0.5;
+        minFullyContinuousAlpha.water 0.7;
+        minPartlyContinuousAlpha.water 0.5;
+    }
+
+    heatTransfer
+    {
+        type            none;
+        continuousPhase water;
+        minFullyContinuousAlpha.steam 1;
+        minPartlyContinuousAlpha.steam 0;
+        minFullyContinuousAlpha.water 1;
+        minPartlyContinuousAlpha.water 0;
+    }
+
+    massTransfer
+    {
+        type            none;
+        continuousPhase water;
+        minFullyContinuousAlpha.steam 1;
+        minPartlyContinuousAlpha.steam 0;
+        minFullyContinuousAlpha.water 1;
+        minPartlyContinuousAlpha.water 0;
+    }
+}
+
+surfaceTension
+(
+    (steam and water)
+    {
+        type            constant;
+        sigma           0.07;
+    }
+);
+
+saturationModel
+{
+    type constant;
+    pSat 1e5;
+    Tsat 372.76;
+};
+
+
+aspectRatio
+(
+    (steam in water)
+    {
+        type            constant;
+        E0              1.0;
+    }
+
+    (water in steam)
+    {
+        type            constant;
+        E0              1.0;
+    }
+);
+
+drag
+(
+    (steam in water)
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+
+    (water in steam)
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+    (steam in water)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+
+    (water in steam)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+);
+
+interfaceComposition
+(
+    (steam in water)
+    {
+        type Saturated;
+        species ( H2O );
+        Le 1.0;
+        saturationPressure
+        {
+            type ArdenBuck;
+        }
+    }
+
+);
+
+heatTransfer.steam
+(
+    (steam in water)
+    {
+        type spherical;
+        residualAlpha 1e-4;
+    }
+);
+
+heatTransfer.water
+(
+    (steam in water)
+    {
+        type RanzMarshall;
+        residualAlpha 1e-4;
+    }
+);
+
+massTransfer.steam
+(
+
+);
+
+massTransfer.water
+(
+
+);
+
+lift
+(
+);
+
+wallLubrication
+(
+);
+
+turbulentDispersion
+(
+    (steam in water)
+    {
+        type                Burns;//
+        sigma               0.7;
+        Ctd                 1.0;
+        residualAlpha       1e-3;
+    }
+);
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //
