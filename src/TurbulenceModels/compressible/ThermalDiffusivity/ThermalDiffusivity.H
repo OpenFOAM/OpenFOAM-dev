@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermalDiffusivity
+    Foam::ThermalDiffusivity
 
 Description
     Templated abstract base class for single-phase compressible
     turbulence models.
 
 SourceFiles
-    thermalDiffusivity.C
+    ThermalDiffusivity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef thermalDiffusivity_H
-#define thermalDiffusivity_H
+#ifndef ThermalDiffusivity_H
+#define ThermalDiffusivity_H
 
 #include "CompressibleTurbulenceModel.H"
 
@@ -44,11 +44,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class thermalDiffusivity Declaration
+               Class ThermalDiffusivity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class TransportModel>
-class thermalDiffusivity
+class ThermalDiffusivity
 :
     public CompressibleTurbulenceModel<TransportModel>
 {
@@ -63,7 +63,7 @@ public:
     // Constructors
 
         //- Construct
-        thermalDiffusivity
+        ThermalDiffusivity
         (
             const word& type,
             const geometricOneField& alpha,
@@ -79,7 +79,7 @@ public:
     // Selectors
 
         //- Return a reference to the selected turbulence model
-        static autoPtr<thermalDiffusivity> New
+        static autoPtr<ThermalDiffusivity> New
         (
             const volScalarField& rho,
             const volVectorField& U,
@@ -90,7 +90,7 @@ public:
 
 
     //- Destructor
-    virtual ~thermalDiffusivity()
+    virtual ~ThermalDiffusivity()
     {}
 
 
@@ -166,7 +166,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "thermalDiffusivity.C"
+#   include "ThermalDiffusivity.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

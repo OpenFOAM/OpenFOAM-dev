@@ -28,8 +28,8 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
 
-#include "thermalDiffusivity.H"
-#include "eddyDiffusivity.H"
+#include "ThermalDiffusivity.H"
+#include "EddyDiffusivity.H"
 
 #include "laminar.H"
 #include "RASModel.H"
@@ -42,17 +42,17 @@ makeBaseTurbulenceModel
     geometricOneField,
     volScalarField,
     compressibleTurbulenceModel,
-    thermalDiffusivity,
+    ThermalDiffusivity,
     fluidThermo
 );
 
 #define makeRASModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
-    (fluidThermothermalDiffusivity, RAS, Type)
+    (fluidThermoThermalDiffusivity, RAS, Type)
 
 #define makeLESModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
-    (fluidThermothermalDiffusivity, LES, Type)
+    (fluidThermoThermalDiffusivity, LES, Type)
 
 
 // -------------------------------------------------------------------------- //

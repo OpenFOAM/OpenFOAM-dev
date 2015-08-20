@@ -56,7 +56,7 @@ License
         );                                                                     \
                                                                                \
                                                                                \
-        typedef RASModel<eddyDiffusivity<Transport##BaseModel> >               \
+        typedef RASModel<EddyDiffusivity<Transport##BaseModel> >               \
             RAS##Transport##BaseModel;                                         \
                                                                                \
         defineNamedTemplateTypeNameAndDebug(RAS##Transport##BaseModel, 0);     \
@@ -72,7 +72,7 @@ License
         );                                                                     \
                                                                                \
                                                                                \
-        typedef LESModel<eddyDiffusivity<Transport##BaseModel> >               \
+        typedef LESModel<EddyDiffusivity<Transport##BaseModel> >               \
             LES##Transport##BaseModel;                                         \
                                                                                \
         defineNamedTemplateTypeNameAndDebug(LES##Transport##BaseModel, 0);     \
@@ -90,7 +90,7 @@ License
 
 
 #define makeTemplatedTurbulenceModel(BaseModel, SType, Type)                   \
-    typedef Foam::SType##Models::Type<Foam::eddyDiffusivity<Foam::BaseModel> > \
+    typedef Foam::SType##Models::Type<Foam::EddyDiffusivity<Foam::BaseModel> > \
         Type##SType##BaseModel;                                                \
     defineNamedTemplateTypeNameAndDebug(Type##SType##BaseModel, 0);            \
                                                                                \
@@ -98,7 +98,7 @@ License
     {                                                                          \
         namespace SType##Models                                                \
         {                                                                      \
-            typedef Type<eddyDiffusivity<BaseModel> > Type##SType##BaseModel;  \
+            typedef Type<EddyDiffusivity<BaseModel> > Type##SType##BaseModel;  \
                                                                                \
             addToRunTimeSelectionTable                                         \
             (                                                                  \

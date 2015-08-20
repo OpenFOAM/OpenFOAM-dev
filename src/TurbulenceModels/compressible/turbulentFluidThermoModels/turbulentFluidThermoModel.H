@@ -43,8 +43,8 @@ SourceFiles
 #define turbulentFluidThermoModel_H
 
 #include "SpecificCompressibleTurbulenceModel.H"
-#include "thermalDiffusivity.H"
-#include "eddyDiffusivity.H"
+#include "ThermalDiffusivity.H"
+#include "EddyDiffusivity.H"
 #include "RASModel.H"
 #include "LESModel.H"
 #include "fluidThermo.H"
@@ -55,16 +55,16 @@ namespace Foam
 {
     namespace compressible
     {
-        typedef thermalDiffusivity<fluidThermo> turbulenceModel;
+        typedef ThermalDiffusivity<fluidThermo> turbulenceModel;
 
         typedef SpecificCompressibleTurbulenceModel
         <
-            RASModel<eddyDiffusivity<turbulenceModel> >
+            RASModel<EddyDiffusivity<turbulenceModel> >
         > RASModel;
 
         typedef SpecificCompressibleTurbulenceModel
         <
-            LESModel<eddyDiffusivity<turbulenceModel> >
+            LESModel<EddyDiffusivity<turbulenceModel> >
         > LESModel;
     }
 }

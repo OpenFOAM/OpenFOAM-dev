@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "thermalDiffusivity.H"
+#include "ThermalDiffusivity.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class TransportModel>
-Foam::thermalDiffusivity<TransportModel>::thermalDiffusivity
+Foam::ThermalDiffusivity<TransportModel>::ThermalDiffusivity
 (
     const word& type,
     const geometricOneField& alpha,
@@ -57,8 +57,8 @@ Foam::thermalDiffusivity<TransportModel>::thermalDiffusivity
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class TransportModel>
-Foam::autoPtr<Foam::thermalDiffusivity<TransportModel> >
-Foam::thermalDiffusivity<TransportModel>::New
+Foam::autoPtr<Foam::ThermalDiffusivity<TransportModel> >
+Foam::ThermalDiffusivity<TransportModel>::New
 (
     const volScalarField& rho,
     const volVectorField& U,
@@ -67,9 +67,9 @@ Foam::thermalDiffusivity<TransportModel>::New
     const word& propertiesName
 )
 {
-    return autoPtr<thermalDiffusivity>
+    return autoPtr<ThermalDiffusivity>
     (
-        static_cast<thermalDiffusivity*>(
+        static_cast<ThermalDiffusivity*>(
         CompressibleTurbulenceModel<transportModel>::New
         (
             rho,
@@ -86,7 +86,7 @@ Foam::thermalDiffusivity<TransportModel>::New
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
-Foam::thermalDiffusivity<BasicTurbulenceModel>::alphat() const
+Foam::ThermalDiffusivity<BasicTurbulenceModel>::alphat() const
 {
     return tmp<volScalarField>
     (
@@ -109,7 +109,7 @@ Foam::thermalDiffusivity<BasicTurbulenceModel>::alphat() const
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::scalarField>
-Foam::thermalDiffusivity<BasicTurbulenceModel>::alphat
+Foam::ThermalDiffusivity<BasicTurbulenceModel>::alphat
 (
     const label patchi
 ) const

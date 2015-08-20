@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::eddyDiffusivity
+    Foam::EddyDiffusivity
 
 Description
     Templated abstract base class for single-phase compressible
     turbulence models.
 
 SourceFiles
-    eddyDiffusivity.C
+    EddyDiffusivity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef eddyDiffusivity_H
-#define eddyDiffusivity_H
+#ifndef EddyDiffusivity_H
+#define EddyDiffusivity_H
 
 #include "CompressibleTurbulenceModel.H"
 
@@ -44,11 +44,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class eddyDiffusivity Declaration
+               Class EddyDiffusivity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicTurbulenceModel>
-class eddyDiffusivity
+class EddyDiffusivity
 :
     public BasicTurbulenceModel
 {
@@ -81,7 +81,7 @@ public:
     // Constructors
 
         //- Construct
-        eddyDiffusivity
+        EddyDiffusivity
         (
             const word& type,
             const geometricOneField& alpha,
@@ -97,7 +97,7 @@ public:
     // Selectors
 
         //- Return a reference to the selected turbulence model
-        static autoPtr<eddyDiffusivity> New
+        static autoPtr<EddyDiffusivity> New
         (
             const volScalarField& rho,
             const volVectorField& U,
@@ -108,7 +108,7 @@ public:
 
 
     //- Destructor
-    virtual ~eddyDiffusivity()
+    virtual ~EddyDiffusivity()
     {}
 
 
@@ -167,7 +167,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "eddyDiffusivity.C"
+#   include "EddyDiffusivity.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

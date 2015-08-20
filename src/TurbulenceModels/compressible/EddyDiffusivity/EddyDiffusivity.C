@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "eddyDiffusivity.H"
+#include "EddyDiffusivity.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-void Foam::eddyDiffusivity<BasicTurbulenceModel>::correctNut()
+void Foam::EddyDiffusivity<BasicTurbulenceModel>::correctNut()
 {
     alphat_ = this->rho_*this->nut()/Prt_;
     alphat_.correctBoundaryConditions();
@@ -38,7 +38,7 @@ void Foam::eddyDiffusivity<BasicTurbulenceModel>::correctNut()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-Foam::eddyDiffusivity<BasicTurbulenceModel>::eddyDiffusivity
+Foam::EddyDiffusivity<BasicTurbulenceModel>::EddyDiffusivity
 (
     const word& type,
     const geometricOneField& alpha,
@@ -92,8 +92,8 @@ Foam::eddyDiffusivity<BasicTurbulenceModel>::eddyDiffusivity
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-Foam::autoPtr<Foam::eddyDiffusivity<BasicTurbulenceModel> >
-Foam::eddyDiffusivity<BasicTurbulenceModel>::New
+Foam::autoPtr<Foam::EddyDiffusivity<BasicTurbulenceModel> >
+Foam::EddyDiffusivity<BasicTurbulenceModel>::New
 (
     const volScalarField& rho,
     const volVectorField& U,
@@ -102,9 +102,9 @@ Foam::eddyDiffusivity<BasicTurbulenceModel>::New
     const word& propertiesName
 )
 {
-    return autoPtr<eddyDiffusivity>
+    return autoPtr<EddyDiffusivity>
     (
-        static_cast<eddyDiffusivity*>(
+        static_cast<EddyDiffusivity*>(
         BasicTurbulenceModel::New
         (
             rho,
@@ -120,7 +120,7 @@ Foam::eddyDiffusivity<BasicTurbulenceModel>::New
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-bool Foam::eddyDiffusivity<BasicTurbulenceModel>::read()
+bool Foam::EddyDiffusivity<BasicTurbulenceModel>::read()
 {
     if (BasicTurbulenceModel::read())
     {
