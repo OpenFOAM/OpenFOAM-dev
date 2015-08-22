@@ -41,7 +41,13 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     const word& type
 )
 :
-    eddyViscosity<RASModel<PhaseCompressibleTurbulenceModel<phaseModel> > >
+    eddyViscosity
+    <
+        RASModel<EddyDiffusivity<ThermalDiffusivity
+        <
+            PhaseCompressibleTurbulenceModel<phaseModel>
+        > > >
+    >
     (
         type,
         alpha,
@@ -183,7 +189,10 @@ bool Foam::RASModels::kineticTheoryModel::read()
     (
         eddyViscosity
         <
-            RASModel<PhaseCompressibleTurbulenceModel<phaseModel> >
+            RASModel<EddyDiffusivity<ThermalDiffusivity
+            <
+                PhaseCompressibleTurbulenceModel<phaseModel>
+            > > >
         >::read()
     )
     {

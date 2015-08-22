@@ -105,19 +105,51 @@ public:
             virtual tmp<volScalarField> mu() const;
 
             //- Access the laminar dynamic viscosity
-            virtual tmp<scalarField> mu(const label patchI) const;
+            virtual tmp<scalarField> mu(const label patchi) const;
 
             //- Return the laminar kinematic viscosity
             virtual tmp<volScalarField> nu() const;
 
             //- Access the laminar kinematic viscosity
-            virtual tmp<scalarField> nu(const label patchI) const;
+            virtual tmp<scalarField> nu(const label patchi) const;
 
             //- Return the laminar thermal conductivity
             virtual tmp<volScalarField> kappa() const;
 
             //- Access the laminar thermal conductivity
-            virtual tmp<scalarField> kappa(const label patchI) const;
+            virtual tmp<scalarField> kappa(const label patchi) const;
+
+            //- Return the laminar thermal conductivity
+            virtual tmp<volScalarField> kappaEff
+            (
+                const volScalarField& alphat
+            ) const;
+
+            //- Access the laminar thermal conductivity
+            virtual tmp<scalarField> kappaEff
+            (
+                const scalarField& alphat,
+                const label patchi
+            ) const;
+
+            //- Return the thermal diffusivity for enthalpy
+            virtual tmp<volScalarField> alpha() const;
+
+            //- Return the thermal diffusivity for enthalpy on a patch
+            virtual tmp<scalarField> alpha(const label patchi) const;
+
+            //- Return the thermal diffusivity for enthalpy
+            virtual tmp<volScalarField> alphaEff
+            (
+                const volScalarField& alphat
+            ) const;
+
+            //- Return the thermal diffusivity for enthalpy on a patch
+            virtual tmp<scalarField> alphaEff
+            (
+                const scalarField& alphat,
+                const label patchi
+            ) const;
 };
 
 

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphatWallFunctionFvPatchScalarField.H"
+#include "compressibleTurbulenceModel.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -44,8 +45,6 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    rhoName_("rho"),
-    nutName_("nut"),
     Prt_(0.85)
 {}
 
@@ -59,8 +58,6 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    rhoName_(ptf.rhoName_),
-    nutName_(ptf.nutName_),
     Prt_(ptf.Prt_)
 {}
 
@@ -73,8 +70,6 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    nutName_(dict.lookupOrDefault<word>("nut", "nut")),
     Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85))
 {}
 
@@ -85,8 +80,6 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(awfpsf),
-    rhoName_(awfpsf.rhoName_),
-    nutName_(awfpsf.nutName_),
     Prt_(awfpsf.Prt_)
 {}
 
@@ -98,8 +91,6 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(awfpsf, iF),
-    rhoName_(awfpsf.rhoName_),
-    nutName_(awfpsf.nutName_),
     Prt_(awfpsf.Prt_)
 {}
 
@@ -113,13 +104,23 @@ void alphatWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const scalarField& rhow =
-        patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+    const label patchi = patch().index();
 
-    const scalarField& nutw =
-        patch().lookupPatchField<volScalarField, scalar>(nutName_);
+    // Retrieve turbulence properties from model
+    const compressibleTurbulenceModel& turbModel =
+        db().lookupObject<compressibleTurbulenceModel>
+        (
+            IOobject::groupName
+            (
+                compressibleTurbulenceModel::propertiesName,
+                dimensionedInternalField().group()
+            )
+        );
 
-    operator==(rhow*nutw/Prt_);
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
+    const tmp<scalarField> tnutw = turbModel.nut(patchi);
+
+    operator==(rhow*tnutw/Prt_);
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }
@@ -128,8 +129,6 @@ void alphatWallFunctionFvPatchScalarField::updateCoeffs()
 void alphatWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntryIfDifferent<word>(os, "nut", "nut", nutName_);
     os.writeKeyword("Prt") << Prt_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
 }

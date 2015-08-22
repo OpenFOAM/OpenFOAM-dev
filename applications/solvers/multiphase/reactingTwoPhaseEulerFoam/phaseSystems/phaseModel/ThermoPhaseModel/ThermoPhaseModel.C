@@ -110,10 +110,10 @@ template<class BasePhaseModel, class ThermoType>
 Foam::tmp<Foam::scalarField>
 Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::mu
 (
-    const label patchI
+    const label patchi
 ) const
 {
-    return thermo_->mu(patchI);
+    return thermo_->mu(patchi);
 }
 
 
@@ -129,10 +129,10 @@ template<class BasePhaseModel, class ThermoType>
 Foam::tmp<Foam::scalarField>
 Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::nu
 (
-    const label patchI
+    const label patchi
 ) const
 {
-    return thermo_->nu(patchI);
+    return thermo_->nu(patchi);
 }
 
 
@@ -148,10 +148,75 @@ template<class BasePhaseModel, class ThermoType>
 Foam::tmp<Foam::scalarField>
 Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappa
 (
-    const label patchI
+    const label patchi
 ) const
 {
-    return thermo_->kappa(patchI);
+    return thermo_->kappa(patchi);
+}
+
+
+template<class BasePhaseModel, class ThermoType>
+Foam::tmp<Foam::volScalarField>
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappaEff
+(
+    const volScalarField& alphat
+) const
+{
+    return thermo_->kappaEff(alphat);
+}
+
+
+template<class BasePhaseModel, class ThermoType>
+Foam::tmp<Foam::scalarField>
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappaEff
+(
+    const scalarField& alphat,
+    const label patchi
+) const
+{
+    return thermo_->kappaEff(alphat, patchi);
+}
+
+
+template<class BasePhaseModel, class ThermoType>
+Foam::tmp<Foam::volScalarField>
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alpha() const
+{
+    return thermo_->alpha();
+}
+
+
+template<class BasePhaseModel, class ThermoType>
+Foam::tmp<Foam::scalarField>
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alpha
+(
+    const label patchi
+) const
+{
+    return thermo_->alpha(patchi);
+}
+
+
+template<class BasePhaseModel, class ThermoType>
+Foam::tmp<Foam::volScalarField>
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alphaEff
+(
+    const volScalarField& alphat
+) const
+{
+    return thermo_->alphaEff(alphat);
+}
+
+
+template<class BasePhaseModel, class ThermoType>
+Foam::tmp<Foam::scalarField>
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alphaEff
+(
+    const scalarField& alphat,
+    const label patchi
+) const
+{
+    return thermo_->alphaEff(alphat, patchi);
 }
 
 

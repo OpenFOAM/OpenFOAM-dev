@@ -30,6 +30,14 @@ License
 template<class BasicTurbulenceModel>
 void Foam::EddyDiffusivity<BasicTurbulenceModel>::correctNut()
 {
+    // Read Prt if provided
+    Prt_ = dimensioned<scalar>::lookupOrDefault
+    (
+        "Prt",
+        this->coeffDict(),
+        1.0
+    );
+
     alphat_ = this->rho_*this->nut()/Prt_;
     alphat_.correctBoundaryConditions();
 }
@@ -41,7 +49,7 @@ template<class BasicTurbulenceModel>
 Foam::EddyDiffusivity<BasicTurbulenceModel>::EddyDiffusivity
 (
     const word& type,
-    const geometricOneField& alpha,
+    const alphaField& alpha,
     const volScalarField& rho,
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
@@ -62,23 +70,14 @@ Foam::EddyDiffusivity<BasicTurbulenceModel>::EddyDiffusivity
         propertiesName
     ),
 
-    // Prt_
-    // (
-    //     dimensioned<scalar>::lookupOrAddToDict
-    //     (
-    //         "Prt",
-    //         this->coeffDict_,
-    //         1.0
-    //     )
-    // ),
-
+    // Cannot read Prt yet
     Prt_("Prt", dimless, 1.0),
 
     alphat_
     (
         IOobject
         (
-            "alphat",
+            IOobject::groupName("alphat", U.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -87,34 +86,6 @@ Foam::EddyDiffusivity<BasicTurbulenceModel>::EddyDiffusivity
         this->mesh_
     )
 {}
-
-
-// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
-
-template<class BasicTurbulenceModel>
-Foam::autoPtr<Foam::EddyDiffusivity<BasicTurbulenceModel> >
-Foam::EddyDiffusivity<BasicTurbulenceModel>::New
-(
-    const volScalarField& rho,
-    const volVectorField& U,
-    const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
-)
-{
-    return autoPtr<EddyDiffusivity>
-    (
-        static_cast<EddyDiffusivity*>(
-        BasicTurbulenceModel::New
-        (
-            rho,
-            U,
-            phi,
-            transport,
-            propertiesName
-        ).ptr())
-    );
-}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

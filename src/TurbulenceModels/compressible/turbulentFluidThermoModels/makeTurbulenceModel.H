@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#define makeBaseTurbulenceModel(Alpha, Rho, baseModel, BaseModel, Transport)   \
+#define makeBaseTurbulenceModel(                                               \
+    Alpha, Rho, baseModel, BaseModel, TDModel, Transport)                      \
                                                                                \
     namespace Foam                                                             \
     {                                                                          \
@@ -41,7 +42,7 @@ License
             dictionary                                                         \
         );                                                                     \
                                                                                \
-        typedef BaseModel<CompressibleTurbulenceModel<Transport> >             \
+        typedef TDModel<BaseModel<Transport> >                                 \
             Transport##BaseModel;                                              \
                                                                                \
                                                                                \

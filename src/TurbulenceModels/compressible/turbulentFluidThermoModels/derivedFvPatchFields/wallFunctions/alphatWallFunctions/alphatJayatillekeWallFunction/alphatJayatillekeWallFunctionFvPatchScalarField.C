@@ -200,15 +200,15 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     const label patchi = patch().index();
 
     // Retrieve turbulence properties from model
-
-    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
-    (
-        IOobject::groupName
+    const compressible::turbulenceModel& turbModel =
+        db().lookupObject<compressible::turbulenceModel>
         (
-            turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
-        )
-    );
+            IOobject::groupName
+            (
+                compressible::turbulenceModel::propertiesName,
+                dimensionedInternalField().group()
+            )
+        );
 
     const scalar Cmu25 = pow025(Cmu_);
 

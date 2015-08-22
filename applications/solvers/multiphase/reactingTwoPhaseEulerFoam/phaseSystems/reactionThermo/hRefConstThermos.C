@@ -33,29 +33,17 @@ License
 #include "perfectGas.H"
 #include "perfectFluid.H"
 #include "rhoConst.H"
-#include "incompressiblePerfectGas.H"
-#include "hConstThermo.H"
-#include "janafThermo.H"
+
 #include "sensibleEnthalpy.H"
-#include "absoluteEnthalpy.H"
-#include "absoluteInternalEnergy.H"
-#include "thermo.H"
-
-#include "constTransport.H"
-#include "sutherlandTransport.H"
-
-#include "pureMixture.H"
-#include "homogeneousMixture.H"
-#include "inhomogeneousMixture.H"
-#include "veryInhomogeneousMixture.H"
-#include "multiComponentMixture.H"
-#include "reactingMixture.H"
-#include "singleStepReactingMixture.H"
-
-#include "thermoPhysicsTypes.H"
 
 #include "hRefConstThermo.H"
 
+#include "constTransport.H"
+
+#include "pureMixture.H"
+#include "multiComponentMixture.H"
+
+#include "thermoPhysicsTypes.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -118,6 +106,19 @@ constTransport
         sensibleInternalEnergy
     >
 > constRefFluidEThermoPhysics;
+
+typedef
+constTransport
+<
+    species::thermo
+    <
+        hRefConstThermo
+        <
+            rhoConst<specie>
+        >,
+        sensibleInternalEnergy
+    >
+> constRefRhoConstEThermoPhysics;
 
 
 // pureMixture, sensibleEnthalpy:
@@ -216,6 +217,15 @@ makeReactionMixtureThermo
     heRhoThermo,
     multiComponentMixture,
     constRefFluidEThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    multiComponentMixture,
+    constRefRhoConstEThermoPhysics
 );
 
 

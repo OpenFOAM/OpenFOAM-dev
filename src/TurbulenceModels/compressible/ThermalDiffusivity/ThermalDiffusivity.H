@@ -53,7 +53,7 @@ class ThermalDiffusivity
 
 public:
 
-    typedef geometricOneField alphaField;
+    typedef typename BasicTurbulenceModel::alphaField alphaField;
     typedef volScalarField rhoField;
     typedef typename BasicTurbulenceModel::transportModel transportModel;
 
@@ -64,7 +64,7 @@ public:
         ThermalDiffusivity
         (
             const word& type,
-            const geometricOneField& alpha,
+            const alphaField& alpha,
             const volScalarField& rho,
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
@@ -75,6 +75,18 @@ public:
 
 
     // Selectors
+
+        //- Return a reference to the selected turbulence model
+        static autoPtr<ThermalDiffusivity> New
+        (
+            const alphaField& alpha,
+            const volScalarField& rho,
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            const transportModel& trasportModel,
+            const word& propertiesName = turbulenceModel::propertiesName
+        );
+
 
         //- Return a reference to the selected turbulence model
         static autoPtr<ThermalDiffusivity> New

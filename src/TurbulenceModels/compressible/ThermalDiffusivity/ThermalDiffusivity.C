@@ -31,7 +31,7 @@ template<class BasicTurbulenceModel>
 Foam::ThermalDiffusivity<BasicTurbulenceModel>::ThermalDiffusivity
 (
     const word& type,
-    const geometricOneField& alpha,
+    const alphaField& alpha,
     const volScalarField& rho,
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
@@ -55,6 +55,34 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::ThermalDiffusivity
 
 
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+Foam::autoPtr<Foam::ThermalDiffusivity<BasicTurbulenceModel> >
+Foam::ThermalDiffusivity<BasicTurbulenceModel>::New
+(
+    const alphaField& alpha,
+    const volScalarField& rho,
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    const transportModel& transport,
+    const word& propertiesName
+)
+{
+    return autoPtr<ThermalDiffusivity>
+    (
+        static_cast<ThermalDiffusivity*>(
+        BasicTurbulenceModel::New
+        (
+            alpha,
+            rho,
+            U,
+            phi,
+            transport,
+            propertiesName
+        ).ptr())
+    );
+}
+
 
 template<class BasicTurbulenceModel>
 Foam::autoPtr<Foam::ThermalDiffusivity<BasicTurbulenceModel> >

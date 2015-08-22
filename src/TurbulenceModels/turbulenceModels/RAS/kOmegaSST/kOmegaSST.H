@@ -141,8 +141,6 @@ protected:
             dimensionedScalar alphaOmega1_;
             dimensionedScalar alphaOmega2_;
 
-            dimensionedScalar Prt_;
-
             dimensionedScalar gamma1_;
             dimensionedScalar gamma2_;
 

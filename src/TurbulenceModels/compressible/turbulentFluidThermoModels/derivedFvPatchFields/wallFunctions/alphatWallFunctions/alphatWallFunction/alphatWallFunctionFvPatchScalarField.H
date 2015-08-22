@@ -95,12 +95,6 @@ class alphatWallFunctionFvPatchScalarField
 {
     // Private data
 
-        //- Name of density field (default = rho)
-        word rhoName_;
-
-        //- Name of turbulent viscosity field (default = nut)
-        word nutName_;
-
         //- Turbulent Prandtl number (default = 0.85)
         scalar Prt_;
 
