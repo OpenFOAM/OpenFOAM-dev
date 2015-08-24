@@ -137,7 +137,6 @@ int yyFlexLexer::yywrap()
 one_space                  [ \t\f]
 space                      {one_space}*
 some_space                 {one_space}+
-cspace                     ","{space}
 
 alpha                      [_[:alpha:]]
 digit                      [[:digit:]]
@@ -150,6 +149,7 @@ rbrac                      ")"
 quote                      \"
 dash                       "-"
 dotColonDash               [.:-]
+commaPipe                  [,\|]
 
 schemeSpecialInitial       [!$%&*/\\:<=>?~_^#.@']
 schemeSpecialSubsequent    [.+-]
@@ -164,6 +164,7 @@ zeroLabel                  {digit}*
 signedInteger              [-+]?{integer}
 word                       ({alpha}|{digit}|{dotColonDash})*
 wordBraces                 ({word}|{lbrac}|{rbrac})*
+wordBracesExtras           ({word}|{lbrac}|{rbrac}|{commaPipe})*
 
 exponent_part              [eE][-+]?{digit}+
 fractional_constant        [-+]?(({digit}*"."{digit}+)|({digit}+".")|({digit}))
@@ -186,6 +187,8 @@ schemeSymbolList           ({schemeSymbolListElement}+{space})
 starStar                   ("**")
 text                       ({space}({word}*{space})*)
 textBraces                 ({space}({wordBraces}*{space})*)
+textExtras                 ({space}({word}*{commaPipe}{space})*)
+textBracesExtras           ({space}({wordBracesExtras}*{space})*)
 anythingInBlock            ([^)]*)
 
 dateDDMMYYYY               ({digit}{digit}"/"{digit}{digit}"/"{digit}{digit}{digit}{digit})
@@ -278,7 +281,7 @@ endOfSection               {space}")"{space}
         BEGIN(readHeader);
     }
 
-<readHeader>{quote}{textBraces}{quote} {
+<readHeader>{quote}{textBracesExtras}{quote} {
         Info<< "Reading header: " << YYText() << endl;
     }
 
@@ -727,6 +730,8 @@ endOfSection               {space}")"{space}
 <ignoreBlock,ignoreEmbeddedBlock>{space}{text} {
     }
 
+<ignoreBlock,ignoreEmbeddedBlock>{space}{textExtras} {
+    }
 
  /* ------              Count newlines.                              ------  */
 
