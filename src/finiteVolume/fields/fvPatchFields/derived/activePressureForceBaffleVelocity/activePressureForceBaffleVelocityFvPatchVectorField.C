@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -296,13 +296,13 @@ void Foam::activePressureForceBaffleVelocityFvPatchVectorField::updateCoeffs()
             Info<< "Pressure difference = " << valueDiff << endl;
         }
 
-        if ((mag(valueDiff) > mag(minThresholdValue_) || baffleActivated_))
+        if ((mag(valueDiff) > mag(minThresholdValue_)) || baffleActivated_)
         {
             openFraction_ =
                 max(
                     min(
                         openFraction_
-                      + max
+                      + min
                         (
                           this->db().time().deltaT().value()/openingTime_,
                           maxOpenFractionDelta_

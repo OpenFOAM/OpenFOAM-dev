@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,17 +29,20 @@ Group
 
 Description
     This boundary condition is applied to the flow velocity, to simulate the
-    opening of a baffle due to local flow conditions, by merging the behaviours
-    of wall and cyclic conditions.
+    opening or closure of a baffle due to local pressure or force changes,
+    by merging the behaviours of wall and cyclic conditions.
 
     The baffle joins two mesh regions, where the open fraction determines
     the interpolation weights applied to each cyclic- and neighbour-patch
-    contribution.
+    contribution. This means that this is boundary condition is meant to be
+    used in an extra wall beyond an existing cyclic patch pair. See PDRMesh
+    for more details.
 
-    Once opened the baffle continues to open at a fixed rate using
+    Once the threshold is crossed, this condition activated and continues to
+    open or close at a fixed rate using
 
         \f[
-            x = x_{old} + \frac{dt}{DT}
+            x = x_{old} + s \times \frac{dt}{DT}
         \f]
 
     where
@@ -47,6 +50,7 @@ Description
     \vartable
         x       | baffle open fraction [0-1]
         x_{old} | baffle open fraction on previous evaluation
+        s       | sign for orientation: 1 to open or -1 to close
         dt      | simulation time step
         DT      | time taken to open the baffle
     \endvartable
@@ -58,12 +62,13 @@ Description
     \table
         Property     | Description             | Required    | Default value
         p            | pressure field name     | no          | p
-        cyclicPatch  | cylclic patch name      | yes         |
-        orientation  | 1 or -1 used to switch flow direction | yes|
-        openFraction | current opatch open fraction [0-1]| yes |
-        openingTime  | time taken to open the baffle | yes |
-        maxOpenFractionDelta | max open fraction change per timestep | yes |
-        minThresholdValue | minimum open fraction for activation | yes |
+        cyclicPatch  | cyclic patch name       | yes         |
+        orientation  | 1 to open or -1 to close | yes|
+        openFraction | current open fraction [0-1] | yes |
+        openingTime  | time taken to open or close the baffle | yes |
+        maxOpenFractionDelta | max fraction change per timestep | yes |
+        minThresholdValue | minimum absolute pressure or
+                            force difference for activation | yes |
         forceBased   | force (true) or pressure-based (false) activation | yes |
     \endtable
 
@@ -119,9 +124,8 @@ class activePressureForceBaffleVelocityFvPatchVectorField
         //- Index of the cyclic patch used when the active baffle is open
         label cyclicPatchLabel_;
 
-        //- Orientation (1 or -1) of the active baffle patch.
-        //  Used to change the direction of opening without the need for
-        //  reordering the patch faces
+        //- Orientation (1 or -1) of the active baffle mode
+        //  Used to change the direction of opening or closing the baffle
         label orientation_;
 
         //- Initial wall patch areas
