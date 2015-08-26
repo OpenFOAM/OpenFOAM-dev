@@ -122,7 +122,7 @@ public:
         virtual tmp<fvVectorMatrix> divDevRhoReff(volVectorField& U) const = 0;
 
         //- Correct the turbulence thermal diffusivity for energy transport
-        virtual void correctEnergyTransport() = 0;
+        virtual void correctEnergyTransport();
 };
 
 

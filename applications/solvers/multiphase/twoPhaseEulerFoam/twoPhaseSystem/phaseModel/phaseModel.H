@@ -196,10 +196,66 @@ public:
             return thermo_->mu(patchi);
         }
 
+        //- Return the thermal conductivity on a patch
+        tmp<scalarField> kappa(const label patchi) const
+        {
+            return thermo_->kappa(patchi);
+        }
+
         //- Return the thermal conductivity
         tmp<volScalarField> kappa() const
         {
             return thermo_->kappa();
+        }
+
+        //- Return the laminar thermal conductivity
+        tmp<volScalarField> kappaEff
+        (
+            const volScalarField& alphat
+        ) const
+        {
+            return thermo_->kappaEff(alphat);
+        }
+
+        //- Return the laminar thermal conductivity on a patch
+        tmp<scalarField> kappaEff
+        (
+            const scalarField& alphat,
+            const label patchi
+        ) const
+        {
+            return thermo_->kappaEff(alphat, patchi);
+        }
+
+        //- Return the laminar thermal diffusivity for enthalpy
+        tmp<volScalarField> alpha() const
+        {
+            return thermo_->alpha();
+        }
+
+        //- Return the laminar thermal diffusivity for enthalpy on a patch
+        tmp<scalarField> alpha(const label patchi) const
+        {
+            return thermo_->alpha(patchi);
+        }
+
+        //- Return the effective thermal diffusivity for enthalpy
+        tmp<volScalarField> alphaEff
+        (
+            const volScalarField& alphat
+        ) const
+        {
+            return thermo_->alphaEff(alphat);
+        }
+
+        //- Return the effective thermal diffusivity for enthalpy on a patch
+        tmp<scalarField> alphaEff
+        (
+            const scalarField& alphat,
+            const label patchi
+        ) const
+        {
+            return thermo_->alphaEff(alphat, patchi);
         }
 
         //- Return the specific heat capacity

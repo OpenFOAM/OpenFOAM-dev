@@ -73,4 +73,8 @@ Foam::compressibleTurbulenceModel::phi() const
 }
 
 
+void Foam::compressibleTurbulenceModel::correctEnergyTransport()
+{}
+
+
 // ************************************************************************* //
