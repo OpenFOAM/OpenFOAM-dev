@@ -7,7 +7,6 @@ wmakeLnInclude interfacialCompositionModels
 wmake libso phaseSystems
 wmake libso interfacialModels
 wmake libso interfacialCompositionModels
-wmake libso phaseCompressibleTurbulenceModels
-wmake
+reactingTwoPhaseEulerFoam/Allwmake
 
 # ----------------------------------------------------------------- end-of-file
