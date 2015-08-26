@@ -142,6 +142,9 @@ public:
         {
             return this->transport_.alphaEff(alphat(patchi), patchi);
         }
+
+        //- Correct the turbulence thermal diffusivity for energy transport
+        virtual void correctEnergyTransport();
 };
 
 

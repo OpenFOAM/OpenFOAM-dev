@@ -348,6 +348,9 @@ public:
         //- Correct the turbulence
         virtual void correctTurbulence();
 
+        //- Correct the energy transport e.g. alphat
+        virtual void correctEnergyTransport();
+
         //- Read base phaseProperties dictionary
         virtual bool read();
 

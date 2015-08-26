@@ -106,4 +106,11 @@ bool Foam::EddyDiffusivity<BasicTurbulenceModel>::read()
 }
 
 
+template<class BasicTurbulenceModel>
+void Foam::EddyDiffusivity<BasicTurbulenceModel>::correctEnergyTransport()
+{
+    EddyDiffusivity<BasicTurbulenceModel>::correctNut();
+}
+
+
 // ************************************************************************* //

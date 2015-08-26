@@ -149,4 +149,9 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::alphat
 }
 
 
+template<class BasicTurbulenceModel>
+void Foam::ThermalDiffusivity<BasicTurbulenceModel>::correctEnergyTransport()
+{}
+
+
 // ************************************************************************* //

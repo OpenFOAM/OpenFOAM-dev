@@ -166,6 +166,9 @@ public:
         {
             return alpha(patchi);
         }
+
+        //- Correct the turbulence thermal diffusivity for energy transport
+        virtual void correctEnergyTransport();
 };
 
 

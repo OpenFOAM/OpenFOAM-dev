@@ -1,4 +1,6 @@
 {
+    fluid.correctEnergyTransport();
+
     autoPtr<phaseSystem::heatTransferTable>
         heatTransferPtr(fluid.heatTransfer());
 

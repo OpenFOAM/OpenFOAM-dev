@@ -125,6 +125,9 @@ public:
         //- Correct the turbulence
         virtual void correctTurbulence();
 
+        //- Correct the energy transport e.g. alphat
+        virtual void correctEnergyTransport();
+
         //- Return the momentum equation
         virtual tmp<fvVectorMatrix> UEqn();
 

@@ -244,6 +244,14 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctTurbulence()
 
 
 template<class BasePhaseModel>
+void Foam::MovingPhaseModel<BasePhaseModel>::correctEnergyTransport()
+{
+    BasePhaseModel::correctEnergyTransport();
+    turbulence_->correctEnergyTransport();
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::fvVectorMatrix>
 Foam::MovingPhaseModel<BasePhaseModel>::UEqn()
 {

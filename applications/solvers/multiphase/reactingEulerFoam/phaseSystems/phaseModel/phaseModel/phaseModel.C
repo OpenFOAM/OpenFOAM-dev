@@ -128,6 +128,10 @@ void Foam::phaseModel::correctTurbulence()
 {}
 
 
+void Foam::phaseModel::correctEnergyTransport()
+{}
+
+
 bool Foam::phaseModel::read()
 {
     return diameterModel_->read(fluid_.subDict(name_));
