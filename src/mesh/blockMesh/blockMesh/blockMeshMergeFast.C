@@ -455,6 +455,9 @@ void Foam::blockMesh::calcMergeInfoFast()
                         << " and face "
                         << blockNfacei << " of block " << blockNi
                         << endl
+                        << "    Points: " << blockPpoints[blockPpointi]
+                        << " " << blockNpoints[blockNpointi]
+                        << endl
                         << "    This may be due to inconsistent grading."
                         << exit(FatalError);
                 }
