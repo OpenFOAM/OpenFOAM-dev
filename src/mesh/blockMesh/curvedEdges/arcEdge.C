@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ Foam::arcEdge::arcEdge(const pointField& points, Istream& is)
 
 Foam::point Foam::arcEdge::position(const scalar lambda) const
 {
-    if (lambda < 0 || lambda > 1)
+    if (lambda < -SMALL || lambda > 1 + SMALL)
     {
         FatalErrorIn("arcEdge::position(const scalar lambda) const")
             << "Parameter out of range, lambda = " << lambda

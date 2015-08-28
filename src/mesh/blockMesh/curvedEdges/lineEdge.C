@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,16 +54,18 @@ Foam::lineEdge::lineEdge(const pointField& points, Istream& is)
     curvedEdge(points, is)
 {}
 
+
 // * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * //
 
 Foam::lineEdge::~lineEdge()
 {}
 
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::point Foam::lineEdge::position(const scalar lambda) const
 {
-    if (lambda < 0 || lambda > 1)
+    if (lambda < -SMALL || lambda > 1+SMALL)
     {
         FatalErrorIn("lineEdge::position(const scalar)")
             << "Parameter out of range, lambda = " << lambda
