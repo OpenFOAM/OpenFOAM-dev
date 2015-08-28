@@ -72,7 +72,6 @@ setRefCell
     pRefValue
 );
 mesh.setFluxRequired(p_rgh.name());
-mesh.setFluxRequired(alpha1.name());
 
 const IOMRFZoneList& MRF = fluid.MRF();
 fv::IOoptionList& fvOptions = fluid.fvOptions();

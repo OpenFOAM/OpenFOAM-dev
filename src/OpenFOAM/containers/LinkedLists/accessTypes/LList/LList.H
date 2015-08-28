@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,6 +203,7 @@ public:
             //  and annul the argument list.
             void transfer(LList<LListBase, T>&);
 
+
     // Member operators
 
         void operator=(const LList<LListBase, T>&);
@@ -265,6 +266,16 @@ public:
                 }
         };
 
+        inline iterator begin()
+        {
+            return LListBase::begin();
+        }
+
+        inline const iterator& end()
+        {
+            return static_cast<const iterator&>(LListBase::end());
+        }
+
 
     // STL const_iterator
 
@@ -312,6 +323,26 @@ public:
                     return *this;
                 }
         };
+
+        inline const_iterator cbegin() const
+        {
+            return LListBase::cbegin();
+        }
+
+        inline const const_iterator& cend() const
+        {
+            return static_cast<const const_iterator&>(LListBase::cend());
+        }
+
+        inline const_iterator begin() const
+        {
+            return LListBase::begin();
+        }
+
+        inline const const_iterator& end() const
+        {
+            return static_cast<const const_iterator&>(LListBase::end());
+        }
 
 
     // IOstream operators

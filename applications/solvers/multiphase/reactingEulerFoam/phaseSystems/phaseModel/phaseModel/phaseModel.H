@@ -107,9 +107,8 @@ public:
             const word& phaseName
         );
 
-
-    //- Destructor
-    virtual ~phaseModel();
+        //- Return clone
+        autoPtr<phaseModel> clone() const;
 
 
     // Selectors
@@ -120,11 +119,42 @@ public:
             const word& phaseName
         );
 
+        //- Return a pointer to a new phase created on freestore
+        //  from Istream
+        class iNew
+        {
+            const phaseSystem& fluid_;
+
+        public:
+
+            iNew
+            (
+                const phaseSystem& fluid
+            )
+            :
+                fluid_(fluid)
+            {}
+
+            autoPtr<phaseModel> operator()(Istream& is) const
+            {
+                return autoPtr<phaseModel>
+                (
+                    phaseModel::New(fluid_, word(is))
+                );
+            }
+        };
+
+
+    //- Destructor
+    virtual ~phaseModel();
+
 
     // Member Functions
 
         //- Return the name of this phase
         const word& name() const;
+
+        const word& keyword() const;
 
         //- Return the system to which this phase belongs
         const phaseSystem& fluid() const;

@@ -50,7 +50,7 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::ThermoPhaseModel
     {
         thermoPtr_.set
         (
-            ThermoType::New(fluid.mesh(), phaseName).ptr()
+            ThermoType::New(fluid.mesh(), this->name()).ptr()
         );
 
         thermo_ = thermoPtr_.ptr();

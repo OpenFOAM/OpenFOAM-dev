@@ -72,6 +72,13 @@ Foam::phaseModel::phaseModel
 }
 
 
+Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::clone() const
+{
+    notImplemented("phaseModel::clone() const");
+    return autoPtr<phaseModel>(NULL);
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::phaseModel::~phaseModel()
@@ -81,6 +88,12 @@ Foam::phaseModel::~phaseModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::word& Foam::phaseModel::name() const
+{
+    return name_;
+}
+
+
+const Foam::word& Foam::phaseModel::keyword() const
 {
     return name_;
 }

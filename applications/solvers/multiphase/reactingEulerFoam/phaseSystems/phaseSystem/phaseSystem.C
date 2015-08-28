@@ -41,31 +41,7 @@ const Foam::word Foam::phaseSystem::propertiesName("phaseProperties");
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::phaseSystem::phaseModelTable
-Foam::phaseSystem::generatePhaseModels(const wordList& phaseNames) const
-{
-    phaseModelTable phaseModels;
-
-    forAllConstIter(wordList, phaseNames, phaseNameIter)
-    {
-        phaseModels.insert
-        (
-            *phaseNameIter,
-            phaseModel::New
-            (
-                *this,
-                *phaseNameIter
-            )
-        );
-    }
-
-    // normalise ?
-
-    return phaseModels;
-}
-
-
-Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::generatePhi
+Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::calcPhi
 (
     const phaseModelTable& phaseModels
 ) const
@@ -77,7 +53,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::generatePhi
         new surfaceScalarField
         (
             "phi",
-            fvc::interpolate(phaseModelIter()())*phaseModelIter()->phi()
+            fvc::interpolate(phaseModelIter())*phaseModelIter().phi()
         )
     );
 
@@ -86,8 +62,8 @@ Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::generatePhi
     for (; phaseModelIter != phaseModels.end(); ++ phaseModelIter)
     {
         tmpPhi() +=
-            fvc::interpolate(phaseModelIter()())
-           *phaseModelIter()->phi();
+            fvc::interpolate(phaseModelIter())
+           *phaseModelIter().phi();
     }
 
     return tmpPhi;
@@ -167,11 +143,9 @@ Foam::phaseSystem::phaseSystem
 
     mesh_(mesh),
 
-    phaseNames_(lookup("phases")),
+    phaseModels_(lookup("phases"), phaseModel::iNew(*this)),
 
-    phaseModels_(generatePhaseModels(phaseNames_)),
-
-    phi_(generatePhi(phaseModels_)),
+    phi_(calcPhi(phaseModels_)),
 
     dpdt_
     (
@@ -197,7 +171,7 @@ Foam::phaseSystem::phaseSystem
             blendingMethod::New
             (
                 iter().dict(),
-                wordList(lookup("phases"))
+                phaseModels_.toc()
             )
         );
     }
@@ -224,12 +198,12 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 
     tmp<volScalarField> tmpRho
     (
-        phaseModelIter()()*phaseModelIter()->rho()
+        phaseModelIter()*phaseModelIter().rho()
     );
 
     for (; phaseModelIter != phaseModels_.end(); ++ phaseModelIter)
     {
-        tmpRho() += phaseModelIter()()*phaseModelIter()->rho();
+        tmpRho() += phaseModelIter()*phaseModelIter().rho();
     }
 
     return tmpRho;
@@ -242,12 +216,12 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 
     tmp<volVectorField> tmpU
     (
-        phaseModelIter()()*phaseModelIter()->U()
+        phaseModelIter()*phaseModelIter().U()
     );
 
     for (; phaseModelIter != phaseModels_.end(); ++ phaseModelIter)
     {
-        tmpU() += phaseModelIter()()*phaseModelIter()->U();
+        tmpU() += phaseModelIter()*phaseModelIter().U();
     }
 
     return tmpU;
@@ -292,7 +266,7 @@ void Foam::phaseSystem::correct()
 {
     forAllIter(phaseModelTable, phaseModels_, phaseModelIter)
     {
-        phaseModelIter()->correct();
+        phaseModelIter().correct();
     }
 }
 
@@ -303,15 +277,17 @@ void Foam::phaseSystem::correctKinematics()
 
     forAllIter(phaseModelTable, phaseModels_, phaseModelIter)
     {
-        phaseModelIter()->correctKinematics();
+        phaseModelIter().correctKinematics();
 
-        updateDpdt = updateDpdt || phaseModelIter()->thermo().dpdt();
+        updateDpdt = updateDpdt || phaseModelIter().thermo().dpdt();
     }
+
+    //phaseModelTable::iterator iter = phaseModels_.begin();
 
     // Update the pressure time-derivative if required
     if (updateDpdt)
     {
-        dpdt_ = fvc::ddt(phaseModels_.begin()()().thermo().p());
+        dpdt_ = fvc::ddt(phaseModels_.begin()()->thermo().p());
     }
 }
 
@@ -320,7 +296,7 @@ void Foam::phaseSystem::correctThermo()
 {
     forAllIter(phaseModelTable, phaseModels_, phaseModelIter)
     {
-        phaseModelIter()->correctThermo();
+        phaseModelIter().correctThermo();
     }
 }
 
@@ -329,7 +305,7 @@ void Foam::phaseSystem::correctTurbulence()
 {
     forAllIter(phaseModelTable, phaseModels_, phaseModelIter)
     {
-        phaseModelIter()->correctTurbulence();
+        phaseModelIter().correctTurbulence();
     }
 }
 
@@ -338,7 +314,7 @@ void Foam::phaseSystem::correctEnergyTransport()
 {
     forAllIter(phaseModelTable, phaseModels_, phaseModelIter)
     {
-        phaseModelIter()->correctEnergyTransport();
+        phaseModelIter().correctEnergyTransport();
     }
 }
 
@@ -351,7 +327,7 @@ bool Foam::phaseSystem::read()
 
         forAllIter(phaseModelTable, phaseModels_, phaseModelIter)
         {
-            readOK &= phaseModelIter()->read();
+            readOK &= phaseModelIter().read();
         }
 
         // models ...

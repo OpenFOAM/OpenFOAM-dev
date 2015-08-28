@@ -254,14 +254,14 @@ public:
             virtual volScalarField& he()
             {
                 notImplemented("multiphaseMixtureThermo::he()");
-                return phases_[0]->thermo().he();
+                return phases_[0].thermo().he();
             }
 
             //- Enthalpy/Internal energy [J/kg]
             virtual const volScalarField& he() const
             {
                 notImplemented("multiphaseMixtureThermo::he() const");
-                return phases_[0]->thermo().he();
+                return phases_[0].thermo().he();
             }
 
             //- Enthalpy/Internal energy

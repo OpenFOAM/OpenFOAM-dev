@@ -263,6 +263,7 @@ public:
         inline const_iterator begin() const;
         inline const const_iterator& end() const;
 
+
     // STL const_reverse_iterator
 
         //- An STL-conforming const_reverse_iterator
@@ -300,6 +301,7 @@ public:
         inline const_reverse_iterator rbegin() const;
         inline const const_reverse_iterator& rend() const;
 
+
 private:
 
         //- Iterator returned by end()
@@ -310,7 +312,6 @@ private:
 
         //- const_reverse_iterator returned by end()
         static const_reverse_iterator endConstRevIter_;
-
 };
 
 

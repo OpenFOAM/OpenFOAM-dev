@@ -31,6 +31,20 @@ inline const Foam::fvMesh& Foam::phaseSystem::mesh() const
 }
 
 
+inline const Foam::phaseSystem::phaseModelTable&
+Foam::phaseSystem::phases() const
+{
+    return phaseModels_;
+}
+
+
+inline Foam::phaseSystem::phaseModelTable&
+Foam::phaseSystem::phases()
+{
+    return phaseModels_;
+}
+
+
 inline const Foam::surfaceScalarField& Foam::phaseSystem::phi() const
 {
     return phi_;

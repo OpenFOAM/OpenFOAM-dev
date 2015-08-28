@@ -42,6 +42,7 @@ SourceFiles
 #include "phasePair.H"
 #include "orderedPhasePair.H"
 #include "HashPtrTable.H"
+#include "PtrDictionary.H"
 
 #include "IOMRFZoneList.H"
 #include "fvIOoptionList.H"
@@ -117,14 +118,16 @@ public:
             >
             massTransferTable;
 
+        // typedef
+        //     HashTable<autoPtr<phaseModel>, word, word::hash>
+        //     phaseModelTable;
+
+        typedef PtrDictionary<phaseModel> phaseModelTable;
+
 
 protected:
 
     // Protected typedefs
-
-        typedef
-            HashTable<autoPtr<phaseModel>, word, word::hash>
-            phaseModelTable;
 
         typedef
             HashTable<dictionary, phasePairKey, phasePairKey::hash>
@@ -162,9 +165,6 @@ protected:
         //- Reference to the mesh
         const fvMesh& mesh_;
 
-        //- Phase names
-        wordList phaseNames_;
-
         //- Phase models
         phaseModelTable phaseModels_;
 
@@ -198,16 +198,10 @@ protected:
 
     // Protected member functions
 
-        //- Generate the phases
-        HashTable<autoPtr<phaseModel> > generatePhaseModels
+        //- Calculate and return the mixture flux
+        tmp<surfaceScalarField> calcPhi
         (
-            const wordList& names
-        ) const;
-
-        //- Generate the mixture flux
-        tmp<surfaceScalarField> generatePhi
-        (
-            const HashTable<autoPtr<phaseModel> >& phaseModels
+            const phaseModelTable& phaseModels
         ) const;
 
         //- Generate pairs
@@ -359,6 +353,12 @@ public:
 
             //- Constant access the mesh
             inline const fvMesh& mesh() const;
+
+            //- Constant access the phase models
+            inline const phaseModelTable& phases() const;
+
+            //- Access the phase models
+            inline phaseModelTable& phases();
 
             //- Constant access the mixture flux
             inline const surfaceScalarField& phi() const;
