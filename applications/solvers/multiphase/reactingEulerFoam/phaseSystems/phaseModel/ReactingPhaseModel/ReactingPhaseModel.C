@@ -39,7 +39,7 @@ Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::ReactingPhaseModel
     BasePhaseModel(fluid, phaseName, false),
     reaction_
     (
-        ReactionType::New(fluid.mesh(), phaseName)
+        ReactionType::New(fluid.mesh(), this->name())
     )
 {
     this->thermo_ = &reaction_->thermo();
