@@ -30,7 +30,8 @@ if (finalIter)
 
 thermo.correct();
 
-Info<< "Min/max T:" << min(thermo.T()) << ' ' << max(thermo.T()) << endl;
+Info<< "Min/max T:" << min(thermo.T()).value() << ' '
+    << max(thermo.T()).value() << endl;
 
 if (finalIter)
 {
