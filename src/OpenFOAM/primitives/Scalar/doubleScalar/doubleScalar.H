@@ -55,6 +55,7 @@ static const doubleScalar doubleScalarGREAT = 1.0e+15;
 static const doubleScalar doubleScalarVGREAT = 1.0e+300;
 static const doubleScalar doubleScalarROOTVGREAT = 1.0e+150;
 static const doubleScalar doubleScalarSMALL = 1.0e-15;
+static const doubleScalar doubleScalarROOTSMALL = 3.0e-8;
 static const doubleScalar doubleScalarVSMALL = 1.0e-300;
 static const doubleScalar doubleScalarROOTVSMALL = 1.0e-150;
 

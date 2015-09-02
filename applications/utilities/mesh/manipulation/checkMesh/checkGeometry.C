@@ -136,7 +136,7 @@ bool Foam::checkWedges
                 const point& pt = p[pp.meshPoints()[i]];
                 scalar d = mag((pt - p0) & pp.n());
 
-                if (d > sqrt(SMALL))
+                if (d > ROOTSMALL)
                 {
                     if (report)
                     {

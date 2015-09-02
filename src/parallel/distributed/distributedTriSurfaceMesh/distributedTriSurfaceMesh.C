@@ -1752,7 +1752,7 @@ void Foam::distributedTriSurfaceMesh::findLineAll
     const scalarField magSqrDirVec(magSqr(dirVec));
     const vectorField smallVec
     (
-        Foam::sqrt(SMALL)*dirVec
+        ROOTSMALL*dirVec
       + vector(ROOTVSMALL,ROOTVSMALL,ROOTVSMALL)
     );
 
