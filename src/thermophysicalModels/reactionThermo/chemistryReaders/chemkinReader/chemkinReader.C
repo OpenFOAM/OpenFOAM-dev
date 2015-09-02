@@ -753,10 +753,11 @@ void Foam::chemkinReader::addReaction
 
     forAll(nAtoms, i)
     {
-        if (mag(nAtoms[i]) > SMALL)
+        if (mag(nAtoms[i]) > imbalanceTol_)
         {
             FatalErrorIn("chemkinReader::addReaction")
-                << "Elemental imbalance in " << elementNames_[i]
+                << "Elemental imbalance of " << mag(nAtoms[i])
+                << " in " << elementNames_[i]
                 << " in reaction" << nl
                 << reactions_.last() << nl
                 << " on line " << lineNo_-1
@@ -839,7 +840,8 @@ Foam::chemkinReader::chemkinReader
     specieNames_(10),
     speciesTable_(species),
     reactions_(speciesTable_, speciesThermo_),
-    newFormat_(newFormat)
+    newFormat_(newFormat),
+    imbalanceTol_(ROOTSMALL)
 {
     read(CHEMKINFileName, thermoFileName);
 }
@@ -855,7 +857,8 @@ Foam::chemkinReader::chemkinReader
     specieNames_(10),
     speciesTable_(species),
     reactions_(speciesTable_, speciesThermo_),
-    newFormat_(thermoDict.lookupOrDefault("newFormat", false))
+    newFormat_(thermoDict.lookupOrDefault("newFormat", false)),
+    imbalanceTol_(thermoDict.lookupOrDefault("imbalanceTolerance", ROOTSMALL))
 {
     if (newFormat_)
     {
