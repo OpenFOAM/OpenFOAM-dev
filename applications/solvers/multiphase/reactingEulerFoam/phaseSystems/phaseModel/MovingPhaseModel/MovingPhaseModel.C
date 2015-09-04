@@ -260,6 +260,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::UEqn()
         fvm::ddt(*this, this->thermo().rho(), U_)
       + fvm::div(alphaRhoPhi_, U_)
       - fvm::Sp(continuityError_, U_)
+      + this->fluid().MRF().DDt(*this*this->thermo().rho(), U_)
       + turbulence_->divDevRhoReff(U_)
     );
 }

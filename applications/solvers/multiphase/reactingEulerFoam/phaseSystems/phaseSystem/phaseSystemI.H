@@ -45,6 +45,13 @@ Foam::phaseSystem::phases()
 }
 
 
+inline const Foam::phaseSystem::phasePairTable&
+Foam::phaseSystem::phasePairs() const
+{
+    return phasePairs_;
+}
+
+
 inline const Foam::surfaceScalarField& Foam::phaseSystem::phi() const
 {
     return phi_;

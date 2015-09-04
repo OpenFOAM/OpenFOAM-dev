@@ -85,6 +85,12 @@ Foam::twoPhaseSystem::sigma() const
 }
 
 
+const Foam::dragModel& Foam::twoPhaseSystem::drag(const phaseModel& phase) const
+{
+    return lookupSubModel<dragModel>(phase, otherPhase(phase));
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::twoPhaseSystem::Kd() const
 {
@@ -102,6 +108,13 @@ Foam::twoPhaseSystem::Kdf() const
     (
         phasePairKey(phase1().name(), phase2().name())
     );
+}
+
+
+const Foam::virtualMassModel&
+Foam::twoPhaseSystem::virtualMass(const phaseModel& phase) const
+{
+    return lookupSubModel<virtualMassModel>(phase, otherPhase(phase));
 }
 
 
@@ -406,19 +419,6 @@ void Foam::twoPhaseSystem::solve()
             << "  Max(alpha1) = " << max(alpha1).value()
             << endl;
     }
-}
-
-
-const Foam::dragModel& Foam::twoPhaseSystem::drag(const phaseModel& phase) const
-{
-    return lookupSubModel<dragModel>(phase, otherPhase(phase));
-}
-
-
-const Foam::virtualMassModel&
-Foam::twoPhaseSystem::virtualMass(const phaseModel& phase) const
-{
-    return lookupSubModel<virtualMassModel>(phase, otherPhase(phase));
 }
 
 

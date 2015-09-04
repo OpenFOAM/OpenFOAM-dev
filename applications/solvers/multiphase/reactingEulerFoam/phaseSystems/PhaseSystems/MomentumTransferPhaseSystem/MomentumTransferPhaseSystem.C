@@ -157,6 +157,63 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kdf
 
 template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kd
+(
+    const Foam::phaseModel& phase
+) const
+{
+    tmp<volScalarField> tKd
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("Kd", phase.name()),
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar
+            (
+                IOobject::groupName("Kd", phase.name()),
+                dimensionSet(1, -3, -1, 0, 0),
+                0
+            )
+        )
+    );
+
+    // Add the implicit part of the drag force
+    forAllConstIter
+    (
+        phaseSystem::KdTable,
+        Kds_,
+        KdIter
+    )
+    {
+        const volScalarField& K(*KdIter());
+
+        const phasePair& pair(this->phasePairs_[KdIter.key()]);
+
+        const phaseModel* phase1 = &pair.phase1();
+        const phaseModel* phase2 = &pair.phase2();
+
+        forAllConstIter(phasePair, pair, iter)
+        {
+            if (phase1 == &phase)
+            {
+                tKd() += K;
+            }
+
+            Swap(phase1, phase2);
+        }
+    }
+
+    return tKd;
+}
+
+
+template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Vm
 (
     const phasePairKey& key
@@ -385,6 +442,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
     }
 
     // Add the implicit part of the drag force
+    /* ***HGW Currently this is handled in the pEqn
     forAllConstIter
     (
         phaseSystem::KdTable,
@@ -401,13 +459,14 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
 
         forAllConstIter(phasePair, pair, iter)
         {
-            const volVectorField& U(phase->U());
+            const volVectorField& U = phase->U();
 
             *eqns[phase->name()] -= fvm::Sp(K, U);
 
             Swap(phase, otherPhase);
         }
     }
+    */
 
     // Update the virtual mass coefficients
     forAllConstIter
@@ -437,8 +496,8 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
 
         forAllConstIter(phasePair, pair, iter)
         {
-            const volVectorField& U(phase->U());
-            const surfaceScalarField& phi(phase->phi());
+            const volVectorField& U = phase->U();
+            const surfaceScalarField& phi = phase->phi();
 
             *eqns[phase->name()] +=
               - Vm

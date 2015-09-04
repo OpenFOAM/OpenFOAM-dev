@@ -148,11 +148,20 @@ public:
 
     // Member Functions
 
+        //- Constant access to drag coefficients
+        virtual const phaseSystem::KdTable& Kds() const
+        {
+            return Kds_;
+        }
+
         //- Return the drag coefficient
         virtual tmp<volScalarField> Kd(const phasePairKey& key) const;
 
         //- Return the face drag coefficient
         virtual tmp<surfaceScalarField> Kdf(const phasePairKey& key) const;
+
+        //- Return the drag coefficient for phase
+        virtual tmp<volScalarField> Kd(const phaseModel& phase) const;
 
         //- Return the virtual mass coefficient
         virtual tmp<volScalarField> Vm(const phasePairKey& key) const;

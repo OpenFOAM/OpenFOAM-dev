@@ -282,8 +282,6 @@ void Foam::phaseSystem::correctKinematics()
         updateDpdt = updateDpdt || phaseModelIter().thermo().dpdt();
     }
 
-    //phaseModelTable::iterator iter = phaseModels_.begin();
-
     // Update the pressure time-derivative if required
     if (updateDpdt)
     {

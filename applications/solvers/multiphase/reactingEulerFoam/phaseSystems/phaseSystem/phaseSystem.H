@@ -118,10 +118,6 @@ public:
             >
             massTransferTable;
 
-        // typedef
-        //     HashTable<autoPtr<phaseModel>, word, word::hash>
-        //     phaseModelTable;
-
         typedef PtrDictionary<phaseModel> phaseModelTable;
 
 
@@ -284,48 +280,56 @@ public:
 
     // Member Functions
 
+        //- Constant access the mesh
+        inline const fvMesh& mesh() const;
+
+        //- Constant access the phase models
+        inline const phaseModelTable& phases() const;
+
+        //- Access the phase models
+        inline phaseModelTable& phases();
+
+        //- Constant access the phase pairs
+        inline const phasePairTable& phasePairs() const;
+
         //- Return the mixture density
         tmp<volScalarField> rho() const;
 
         //- Return the mixture velocity
         tmp<volVectorField> U() const;
 
+        //- Constant access the mixture flux
+        inline const surfaceScalarField& phi() const;
+
+        //- Access the mixture flux
+        inline surfaceScalarField& phi();
+
+        //- Constant access the rate of change of the pressure
+        inline const volScalarField& dpdt() const;
+
+        //- Access the rate of change of the pressure
+        inline volScalarField& dpdt();
+
         //- Return the surface tension coefficient
         tmp<volScalarField> sigma(const phasePairKey& key) const;
 
-        //- Return the drag coefficient
-        virtual tmp<volScalarField> Kd(const phasePairKey& key) const = 0;
+        //- Return MRF zones
+        inline const IOMRFZoneList& MRF() const;
 
-        //- Return the face drag coefficient
-        virtual tmp<surfaceScalarField> Kdf(const phasePairKey& key) const = 0;
+        //- Optional FV-options
+        inline fv::IOoptionList& fvOptions() const;
 
-        //- Return the virtual mass coefficient
-        virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
+        //- Access a sub model between a phase pair
+        template <class modelType>
+        const modelType& lookupSubModel(const phasePair& key) const;
 
-        //- Return the face virtual mass coefficient
-        virtual tmp<surfaceScalarField> Vmf(const phasePairKey& key) const = 0;
-
-        //- Return the combined force (lift + wall-lubrication)
-        virtual tmp<volVectorField> F(const phasePairKey& key) const = 0;
-
-        //- Return the combined face-force (lift + wall-lubrication)
-        virtual tmp<surfaceScalarField> Ff(const phasePairKey& key) const = 0;
-
-        //- Return the turbulent diffusivity
-        //  Multiplies the phase-fraction gradient
-        virtual tmp<volScalarField> D(const phasePairKey& key) const = 0;
-
-        //- Return the interfacial mass flow rate
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const = 0;
-
-        //- Return the momentum transfer matrices
-        virtual autoPtr<momentumTransferTable> momentumTransfer() const = 0;
-
-        //- Return the heat transfer matrices
-        virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
-
-        //- Return the mass transfer matrices
-        virtual autoPtr<massTransferTable> massTransfer() const = 0;
+        //- Access a sub model between two phases
+        template <class modelType>
+        const modelType& lookupSubModel
+        (
+            const phaseModel& dispersed,
+            const phaseModel& continuous
+        ) const;
 
         //- Solve for the phase fractions
         virtual void solve();
@@ -347,48 +351,6 @@ public:
 
         //- Read base phaseProperties dictionary
         virtual bool read();
-
-
-        // Access
-
-            //- Constant access the mesh
-            inline const fvMesh& mesh() const;
-
-            //- Constant access the phase models
-            inline const phaseModelTable& phases() const;
-
-            //- Access the phase models
-            inline phaseModelTable& phases();
-
-            //- Constant access the mixture flux
-            inline const surfaceScalarField& phi() const;
-
-            //- Access the mixture flux
-            inline surfaceScalarField& phi();
-
-            //- Constant access the rate of change of the pressure
-            inline const volScalarField& dpdt() const;
-
-            //- Access the rate of change of the pressure
-            inline volScalarField& dpdt();
-
-            //- Return MRF zones
-            inline const IOMRFZoneList& MRF() const;
-
-            //- Optional FV-options
-            inline fv::IOoptionList& fvOptions() const;
-
-            //- Access a sub model between a phase pair
-            template <class modelType>
-            const modelType& lookupSubModel(const phasePair& key) const;
-
-            //- Access a sub model between two phases
-            template <class modelType>
-            const modelType& lookupSubModel
-            (
-                const phaseModel& dispersed,
-                const phaseModel& continuous
-            ) const;
 };
 
 
