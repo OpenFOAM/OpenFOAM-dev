@@ -198,8 +198,10 @@ int main(int argc, char *argv[])
 {
     argList::addNote
     (
-        "merge the faces on the specified patches (if geometrically possible)\n"
-        "so the faces become internal"
+        "Merge the faces on the specified patches (if geometrically possible)\n"
+        "so the faces become internal.\n"
+        "Integral matching is used when the options -partial and -perfect are "
+        "omitted.\n"
     );
 
     argList::noParallel();
@@ -212,12 +214,12 @@ int main(int argc, char *argv[])
     argList::addBoolOption
     (
         "partial",
-        "couple partially overlapping patches"
+        "couple partially overlapping patches (optional)"
     );
     argList::addBoolOption
     (
         "perfect",
-        "couple perfectly aligned patches"
+        "couple perfectly aligned patches (optional)"
     );
     argList::addOption
     (
