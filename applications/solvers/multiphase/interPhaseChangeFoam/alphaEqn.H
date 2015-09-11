@@ -10,7 +10,7 @@
     const volScalarField& vDotvAlphal = vDotAlphal[1]();
     const volScalarField vDotvmcAlphal(vDotvAlphal - vDotcAlphal);
 
-    tmp<surfaceScalarField> tphiAlpha;
+    tmp<surfaceScalarField> talphaPhi;
 
     if (MULESCorr)
     {
@@ -37,14 +37,14 @@
             << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
             << endl;
 
-        tphiAlpha = alpha1Eqn.flux();
+        talphaPhi = alpha1Eqn.flux();
     }
 
     volScalarField alpha10("alpha10", alpha1);
 
     for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
     {
-        tmp<surfaceScalarField> tphiAlphaCorr
+        tmp<surfaceScalarField> talphaPhiCorr
         (
             fvc::flux
             (
@@ -62,7 +62,7 @@
 
         if (MULESCorr)
         {
-            tphiAlphaCorr() -= tphiAlpha();
+            talphaPhiCorr() -= talphaPhi();
 
             volScalarField alpha100("alpha100", alpha10);
             alpha10 = alpha1;
@@ -71,8 +71,8 @@
             (
                 geometricOneField(),
                 alpha1,
-                tphiAlpha(),
-                tphiAlphaCorr(),
+                talphaPhi(),
+                talphaPhiCorr(),
                 vDotvmcAlphal,
                 (
                     divU*(alpha10 - alpha100)
@@ -85,12 +85,12 @@
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)
             {
-                tphiAlpha() += tphiAlphaCorr();
+                talphaPhi() += talphaPhiCorr();
             }
             else
             {
                 alpha1 = 0.5*alpha1 + 0.5*alpha10;
-                tphiAlpha() += 0.5*tphiAlphaCorr();
+                talphaPhi() += 0.5*talphaPhiCorr();
             }
         }
         else
@@ -100,20 +100,20 @@
                 geometricOneField(),
                 alpha1,
                 phi,
-                tphiAlphaCorr(),
+                talphaPhiCorr(),
                 vDotvmcAlphal,
                 (divU*alpha1 + vDotcAlphal)(),
                 1,
                 0
             );
 
-            tphiAlpha = tphiAlphaCorr;
+            talphaPhi = talphaPhiCorr;
         }
 
         alpha2 = 1.0 - alpha1;
     }
 
-    rhoPhi = tphiAlpha()*(rho1 - rho2) + phi*rho2;
+    rhoPhi = talphaPhi()*(rho1 - rho2) + phi*rho2;
 
     Info<< "Liquid phase volume fraction = "
         << alpha1.weightedAverage(mesh.V()).value()

@@ -23,32 +23,32 @@
             << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
             << endl;
 
-        tmp<surfaceScalarField> tphiAlphaUD(alpha1Eqn.flux());
-        phiAlpha = tphiAlphaUD();
+        tmp<surfaceScalarField> talphaPhiUD(alpha1Eqn.flux());
+        alphaPhi = talphaPhiUD();
 
-        if (alphaApplyPrevCorr && tphiAlphaCorr0.valid())
+        if (alphaApplyPrevCorr && talphaPhiCorr0.valid())
         {
             Info<< "Applying the previous iteration correction flux" << endl;
 
             MULES::correct
             (
                 alpha1,
-                phiAlpha,
-                tphiAlphaCorr0(),
+                alphaPhi,
+                talphaPhiCorr0(),
                 mixture.alphaMax(),
                 0
             );
 
-            phiAlpha += tphiAlphaCorr0();
+            alphaPhi += talphaPhiCorr0();
         }
 
         // Cache the upwind-flux
-        tphiAlphaCorr0 = tphiAlphaUD;
+        talphaPhiCorr0 = talphaPhiUD;
     }
 
     for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
     {
-        tmp<surfaceScalarField> tphiAlphaUn
+        tmp<surfaceScalarField> talphaPhiUn
         (
             fvc::flux
             (
@@ -66,14 +66,14 @@
 
         if (MULESCorr)
         {
-            tmp<surfaceScalarField> tphiAlphaCorr(tphiAlphaUn() - phiAlpha);
+            tmp<surfaceScalarField> talphaPhiCorr(talphaPhiUn() - alphaPhi);
             volScalarField alpha10("alpha10", alpha1);
 
             MULES::correct
             (
                 alpha1,
-                tphiAlphaUn(),
-                tphiAlphaCorr(),
+                talphaPhiUn(),
+                talphaPhiCorr(),
                 mixture.alphaMax(),
                 0
             );
@@ -81,23 +81,23 @@
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)
             {
-                phiAlpha += tphiAlphaCorr();
+                alphaPhi += talphaPhiCorr();
             }
             else
             {
                 alpha1 = 0.5*alpha1 + 0.5*alpha10;
-                phiAlpha += 0.5*tphiAlphaCorr();
+                alphaPhi += 0.5*talphaPhiCorr();
             }
         }
         else
         {
-            phiAlpha = tphiAlphaUn;
+            alphaPhi = talphaPhiUn;
 
             MULES::explicitSolve
             (
                 alpha1,
                 phi,
-                phiAlpha,
+                alphaPhi,
                 mixture.alphaMax(),
                 0
             );
@@ -106,7 +106,7 @@
 
     if (alphaApplyPrevCorr && MULESCorr)
     {
-        tphiAlphaCorr0 = phiAlpha - tphiAlphaCorr0;
+        talphaPhiCorr0 = alphaPhi - talphaPhiCorr0;
     }
 
     alpha2 = 1.0 - alpha1;

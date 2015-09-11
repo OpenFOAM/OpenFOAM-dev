@@ -942,14 +942,14 @@ void Foam::multiphaseMixtureThermo::solveAlphas
     surfaceScalarField phic(mag(phi_/mesh_.magSf()));
     phic = min(cAlpha*phic, max(phic));
 
-    PtrList<surfaceScalarField> phiAlphaCorrs(phases_.size());
+    PtrList<surfaceScalarField> alphaPhiCorrs(phases_.size());
     int phasei = 0;
 
     forAllIter(PtrDictionary<phaseModel>, phases_, phase)
     {
         phaseModel& alpha = phase();
 
-        phiAlphaCorrs.set
+        alphaPhiCorrs.set
         (
             phasei,
             new surfaceScalarField
@@ -964,7 +964,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             )
         );
 
-        surfaceScalarField& phiAlphaCorr = phiAlphaCorrs[phasei];
+        surfaceScalarField& alphaPhiCorr = alphaPhiCorrs[phasei];
 
         forAllIter(PtrDictionary<phaseModel>, phases_, phase2)
         {
@@ -974,7 +974,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
 
             surfaceScalarField phir(phic*nHatf(alpha, alpha2));
 
-            phiAlphaCorr += fvc::flux
+            alphaPhiCorr += fvc::flux
             (
                 -fvc::flux(-phir, alpha2, alpharScheme),
                 alpha,
@@ -988,7 +988,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             geometricOneField(),
             alpha,
             phi_,
-            phiAlphaCorr,
+            alphaPhiCorr,
             zeroField(),
             zeroField(),
             1,
@@ -999,7 +999,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
         phasei++;
     }
 
-    MULES::limitSum(phiAlphaCorrs);
+    MULES::limitSum(alphaPhiCorrs);
 
     rhoPhi_ = dimensionedScalar("0", dimensionSet(1, 0, -1, 0, 0), 0);
 
@@ -1025,8 +1025,8 @@ void Foam::multiphaseMixtureThermo::solveAlphas
     {
         phaseModel& alpha = phase();
 
-        surfaceScalarField& phiAlpha = phiAlphaCorrs[phasei];
-        phiAlpha += upwind<scalar>(mesh_, phi_).flux(alpha);
+        surfaceScalarField& alphaPhi = alphaPhiCorrs[phasei];
+        alphaPhi += upwind<scalar>(mesh_, phi_).flux(alpha);
 
         volScalarField::DimensionedInternalField Sp
         (
@@ -1096,12 +1096,12 @@ void Foam::multiphaseMixtureThermo::solveAlphas
         (
             geometricOneField(),
             alpha,
-            phiAlpha,
+            alphaPhi,
             Sp,
             Su
         );
 
-        rhoPhi_ += fvc::interpolate(alpha.thermo().rho())*phiAlpha;
+        rhoPhi_ += fvc::interpolate(alpha.thermo().rho())*alphaPhi;
 
         Info<< alpha.name() << " volume fraction, min, max = "
             << alpha.weightedAverage(mesh_.V()).value()

@@ -121,11 +121,11 @@ mesh.setFluxRequired(p_rgh.name());
 mesh.setFluxRequired(alpha1.name());
 
 // MULES flux from previous time-step
-surfaceScalarField phiAlpha
+surfaceScalarField alphaPhi
 (
     IOobject
     (
-        "phiAlpha",
+        "alphaPhi",
         runTime.timeName(),
         mesh,
         IOobject::READ_IF_PRESENT,
@@ -135,4 +135,4 @@ surfaceScalarField phiAlpha
 );
 
 // MULES Correction
-tmp<surfaceScalarField> tphiAlphaCorr0;
+tmp<surfaceScalarField> talphaPhiCorr0;

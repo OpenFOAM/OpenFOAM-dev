@@ -45,7 +45,7 @@
         }
 
 
-        surfaceScalarField phiAlpha1
+        surfaceScalarField alphaPhi1
         (
             fvc::flux
             (
@@ -66,7 +66,7 @@
             geometricOneField(),
             alpha1,
             phi,
-            phiAlpha1,
+            alphaPhi1,
             Sp,
             Su,
             1,
@@ -75,7 +75,7 @@
 
         surfaceScalarField rho1f(fvc::interpolate(rho1));
         surfaceScalarField rho2f(fvc::interpolate(rho2));
-        rhoPhi = phiAlpha1*(rho1f - rho2f) + phi*rho2f;
+        rhoPhi = alphaPhi1*(rho1f - rho2f) + phi*rho2f;
 
         alpha2 = scalar(1) - alpha1;
     }
