@@ -8,5 +8,6 @@ wmake libso phaseSystems
 wmake libso interfacialModels
 wmake libso interfacialCompositionModels
 reactingTwoPhaseEulerFoam/Allwmake
+reactingMultiphaseEulerFoam/Allwmake
 
 # ----------------------------------------------------------------- end-of-file

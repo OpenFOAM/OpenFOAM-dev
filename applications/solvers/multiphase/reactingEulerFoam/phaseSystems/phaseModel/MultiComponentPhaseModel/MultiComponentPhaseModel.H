@@ -73,7 +73,8 @@ public:
         MultiComponentPhaseModel
         (
             const phaseSystem& fluid,
-            const word& phaseName
+            const word& phaseName,
+            const label index
         );
 
 

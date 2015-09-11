@@ -41,10 +41,11 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::ThermoPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
+    const label index,
     const bool createThermo
 )
 :
-    BasePhaseModel(fluid, phaseName)
+    BasePhaseModel(fluid, phaseName, index)
 {
     if (createThermo)
     {

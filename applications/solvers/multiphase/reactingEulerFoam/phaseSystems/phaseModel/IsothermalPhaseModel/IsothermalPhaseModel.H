@@ -57,7 +57,12 @@ public:
 
     // Constructors
 
-        IsothermalPhaseModel(const phaseSystem& fluid, const word& phaseName);
+        IsothermalPhaseModel
+        (
+            const phaseSystem& fluid,
+            const word& phaseName,
+            const label index
+        );
 
 
     //- Destructor

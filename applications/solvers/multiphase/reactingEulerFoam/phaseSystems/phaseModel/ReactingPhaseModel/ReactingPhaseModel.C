@@ -33,10 +33,11 @@ template<class BasePhaseModel, class ReactionType>
 Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::ReactingPhaseModel
 (
     const phaseSystem& fluid,
-    const word& phaseName
+    const word& phaseName,
+    const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, false),
+    BasePhaseModel(fluid, phaseName, index, false),
     reaction_
     (
         ReactionType::New(fluid.mesh(), this->name())

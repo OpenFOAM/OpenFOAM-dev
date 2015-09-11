@@ -41,10 +41,11 @@ template<class BasePhaseModel>
 Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
 (
     const phaseSystem& fluid,
-    const word& phaseName
+    const word& phaseName,
+    const label index
 )
 :
-    BasePhaseModel(fluid, phaseName),
+    BasePhaseModel(fluid, phaseName, index),
     Sc_
     (
         "Sc",

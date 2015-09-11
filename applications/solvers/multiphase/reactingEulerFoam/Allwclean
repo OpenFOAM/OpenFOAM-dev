@@ -6,5 +6,6 @@ wclean libso phaseSystems
 wclean libso interfacialModels
 wclean libso interfacialCompositionModels
 reactingTwoPhaseEulerFoam/Allwclean
+reactingMultiphaseEulerFoam/Allwclean
 
 # ----------------------------------------------------------------- end-of-file

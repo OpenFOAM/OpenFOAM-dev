@@ -121,10 +121,10 @@ public:
     // Member Functions
 
         //- Return the interfacial mass flow rate
-        virtual tmp<volScalarField> dmdt
-        (
-            const phasePairKey& key
-        ) const;
+        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
+
+        //- Return the total interfacial mass transfer rate for phase
+        virtual tmp<volScalarField> dmdt(const phaseModel& phase) const;
 
         //- Return the momentum transfer matrices
         virtual autoPtr<phaseSystem::momentumTransferTable>

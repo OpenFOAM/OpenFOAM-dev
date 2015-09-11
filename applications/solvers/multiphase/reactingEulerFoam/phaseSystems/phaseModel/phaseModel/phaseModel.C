@@ -41,7 +41,8 @@ namespace Foam
 Foam::phaseModel::phaseModel
 (
     const phaseSystem& fluid,
-    const word& phaseName
+    const word& phaseName,
+    const label index
 )
 :
     volScalarField
@@ -60,6 +61,7 @@ Foam::phaseModel::phaseModel
 
     fluid_(fluid),
     name_(phaseName),
+    index_(index),
     residualAlpha_
     (
         "residualAlpha",
@@ -96,6 +98,12 @@ const Foam::word& Foam::phaseModel::name() const
 const Foam::word& Foam::phaseModel::keyword() const
 {
     return name_;
+}
+
+
+Foam::label Foam::phaseModel::index() const
+{
+    return index_;
 }
 
 

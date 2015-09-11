@@ -123,10 +123,11 @@ template<class BasePhaseModel>
 Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
 (
     const phaseSystem& fluid,
-    const word& phaseName
+    const word& phaseName,
+    const label index
 )
 :
-    BasePhaseModel(fluid, phaseName),
+    BasePhaseModel(fluid, phaseName, index),
     U_
     (
         IOobject
@@ -197,6 +198,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         dimensionedScalar("0", dimDensity/dimTime, 0)
     )
 {
+    phi_.writeOpt() = IOobject::AUTO_WRITE;
     correctKinematics();
 }
 

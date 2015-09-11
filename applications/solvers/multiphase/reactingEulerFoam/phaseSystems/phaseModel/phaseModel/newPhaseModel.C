@@ -31,7 +31,8 @@ License
 Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::New
 (
     const phaseSystem& fluid,
-    const word& phaseName
+    const word& phaseName,
+    const label index
 )
 {
     word phaseModelType(fluid.subDict(phaseName).lookup("type"));
@@ -52,7 +53,7 @@ Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(fluid, phaseName);
+    return cstrIter()(fluid, phaseName, index);
 }
 
 // ************************************************************************* //

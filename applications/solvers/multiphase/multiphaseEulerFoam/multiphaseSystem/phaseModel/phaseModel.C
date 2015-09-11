@@ -100,11 +100,11 @@ Foam::phaseModel::phaseModel
         mesh,
         dimensionedVector("0", dimVelocity/dimTime, vector::zero)
     ),
-    phiAlpha_
+    alphaPhi_
     (
         IOobject
         (
-            IOobject::groupName("phiAlpha", phaseName),
+            IOobject::groupName("alphaPhi", phaseName),
             mesh.time().timeName(),
             mesh
         ),

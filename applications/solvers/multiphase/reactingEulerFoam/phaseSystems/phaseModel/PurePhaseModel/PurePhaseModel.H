@@ -64,7 +64,12 @@ public:
 
     // Constructors
 
-        PurePhaseModel(const phaseSystem& fluid, const word& phaseName);
+        PurePhaseModel
+        (
+            const phaseSystem& fluid,
+            const word& phaseName,
+            const label index
+        );
 
 
     //- Destructor

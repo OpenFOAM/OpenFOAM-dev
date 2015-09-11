@@ -80,7 +80,7 @@ class phaseModel
         volVectorField DDtU_;
 
         //- Volumetric flux of the phase
-        surfaceScalarField phiAlpha_;
+        surfaceScalarField alphaPhi_;
 
         //- Volumetric flux for the phase
         autoPtr<surfaceScalarField> phiPtr_;
@@ -198,14 +198,14 @@ public:
             return phiPtr_();
         }
 
-        const surfaceScalarField& phiAlpha() const
+        const surfaceScalarField& alphaPhi() const
         {
-            return phiAlpha_;
+            return alphaPhi_;
         }
 
-        surfaceScalarField& phiAlpha()
+        surfaceScalarField& alphaPhi()
         {
-            return phiAlpha_;
+            return alphaPhi_;
         }
 
         //- Correct the phase properties

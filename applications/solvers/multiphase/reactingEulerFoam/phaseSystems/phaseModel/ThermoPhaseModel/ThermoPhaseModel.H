@@ -76,6 +76,7 @@ public:
         (
             const phaseSystem& fluid,
             const word& phaseName,
+            const label index,
             const bool createThermo = true
         );
 

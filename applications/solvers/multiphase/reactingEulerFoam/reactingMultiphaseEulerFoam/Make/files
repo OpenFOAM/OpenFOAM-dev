@@ -1,0 +1,3 @@
+reactingMultiphaseEulerFoam.C
+
+EXE = $(FOAM_APPBIN)/reactingMultiphaseEulerFoam

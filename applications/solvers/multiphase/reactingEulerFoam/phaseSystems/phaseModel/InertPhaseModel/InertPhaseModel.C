@@ -32,10 +32,11 @@ template<class BasePhaseModel>
 Foam::InertPhaseModel<BasePhaseModel>::InertPhaseModel
 (
     const phaseSystem& fluid,
-    const word& phaseName
+    const word& phaseName,
+    const label index
 )
 :
-    BasePhaseModel(fluid, phaseName)
+    BasePhaseModel(fluid, phaseName, index)
 {}
 
 

@@ -56,7 +56,12 @@ public:
 
     // Constructors
 
-        InertPhaseModel(const phaseSystem& fluid, const word& phaseName);
+        InertPhaseModel
+        (
+            const phaseSystem& fluid,
+            const word& phaseName,
+            const label index
+        );
 
 
     //- Destructor

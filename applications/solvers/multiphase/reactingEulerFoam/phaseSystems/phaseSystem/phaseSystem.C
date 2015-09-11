@@ -162,6 +162,8 @@ Foam::phaseSystem::phaseSystem
     MRF_(mesh_),
     fvOptions_(mesh_)
 {
+    phi_.writeOpt() = IOobject::AUTO_WRITE;
+
     // Blending methods
     forAllConstIter(dictionary, subDict("blending"), iter)
     {

@@ -32,10 +32,11 @@ template<class BasePhaseModel>
 Foam::AnisothermalPhaseModel<BasePhaseModel>::AnisothermalPhaseModel
 (
     const phaseSystem& fluid,
-    const word& phaseName
+    const word& phaseName,
+    const label index
 )
 :
-    BasePhaseModel(fluid, phaseName),
+    BasePhaseModel(fluid, phaseName, index),
     divU_
     (
         IOobject
@@ -134,7 +135,7 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 template<class BasePhaseModel>
 bool Foam::AnisothermalPhaseModel<BasePhaseModel>::compressible() const
 {
-    return true;
+    return !this->thermo().incompressible();
 }
 
 

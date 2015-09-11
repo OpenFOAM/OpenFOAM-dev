@@ -65,7 +65,12 @@ public:
 
     // Constructors
 
-        AnisothermalPhaseModel(const phaseSystem& fluid, const word& phaseName);
+        AnisothermalPhaseModel
+        (
+            const phaseSystem& fluid,
+            const word& phaseName,
+            const label index
+        );
 
 
     //- Destructor

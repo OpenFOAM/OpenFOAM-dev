@@ -86,6 +86,30 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::dmdt
 
 
 template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::HeatTransferPhaseSystem<BasePhaseSystem>::dmdt
+(
+    const Foam::phaseModel& phase
+) const
+{
+    return tmp<volScalarField>
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("dmdt", phase.name()),
+                this->mesh().time().timeName(),
+                this->mesh().time()
+            ),
+            this->mesh(),
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
+        )
+    );
+}
+
+
+template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
 Foam::HeatTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
 {

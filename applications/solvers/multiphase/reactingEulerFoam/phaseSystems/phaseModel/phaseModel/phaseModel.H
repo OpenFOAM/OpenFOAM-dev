@@ -67,6 +67,9 @@ class phaseModel
         //- Name of phase
         word name_;
 
+        //- Index of phase
+        label index_;
+
         //- Return the residual phase-fraction for given phase
         //  Used to stabilize the phase momentum as the phase-fraction -> 0
         dimensionedScalar residualAlpha_;
@@ -93,9 +96,10 @@ public:
             phaseSystem,
             (
                 const phaseSystem& fluid,
-                const word& phaseName
+                const word& phaseName,
+                const label index
             ),
-            (fluid, phaseName)
+            (fluid, phaseName, index)
         );
 
 
@@ -104,7 +108,8 @@ public:
         phaseModel
         (
             const phaseSystem& fluid,
-            const word& phaseName
+            const word& phaseName,
+            const label index
         );
 
         //- Return clone
@@ -116,7 +121,8 @@ public:
         static autoPtr<phaseModel> New
         (
             const phaseSystem& fluid,
-            const word& phaseName
+            const word& phaseName,
+            const label index
         );
 
         //- Return a pointer to a new phase created on freestore
@@ -124,6 +130,7 @@ public:
         class iNew
         {
             const phaseSystem& fluid_;
+            mutable label indexCounter_;
 
         public:
 
@@ -132,14 +139,16 @@ public:
                 const phaseSystem& fluid
             )
             :
-                fluid_(fluid)
+                fluid_(fluid),
+                indexCounter_(-1)
             {}
 
             autoPtr<phaseModel> operator()(Istream& is) const
             {
+                indexCounter_++;
                 return autoPtr<phaseModel>
                 (
-                    phaseModel::New(fluid_, word(is))
+                    phaseModel::New(fluid_, word(is), indexCounter_)
                 );
             }
         };
@@ -154,7 +163,11 @@ public:
         //- Return the name of this phase
         const word& name() const;
 
+        //- Return the name of the phase for use as the keyword in PtrDictionary
         const word& keyword() const;
+
+        //- Return the index of the phase
+        label index() const;
 
         //- Return the system to which this phase belongs
         const phaseSystem& fluid() const;

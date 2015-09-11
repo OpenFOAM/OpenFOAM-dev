@@ -172,6 +172,9 @@ public:
         //- Return the combined force (lift + wall-lubrication)
         virtual tmp<volVectorField> F(const phasePairKey& key) const;
 
+        //- Return the combined force (lift + wall-lubrication)
+        virtual autoPtr<PtrList<volVectorField> > Fs() const;
+
         //- Return the combined face-force (lift + wall-lubrication)
         virtual tmp<surfaceScalarField> Ff(const phasePairKey& key) const;
 
