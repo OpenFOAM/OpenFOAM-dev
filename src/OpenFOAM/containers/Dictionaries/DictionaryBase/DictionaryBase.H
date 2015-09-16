@@ -74,13 +74,15 @@ class DictionaryBase
 :
     public IDLListType
 {
-    // Private data
+protected:
+
+    // Protected data
 
         //- HashTable of the entries held on the IDLListType for quick lookup
         HashTable<T*> hashedTs_;
 
 
-    // Private Member functions
+    // Protected Member functions
 
         // Add the IDLListType entries into the HashTable
         void addEntries();
