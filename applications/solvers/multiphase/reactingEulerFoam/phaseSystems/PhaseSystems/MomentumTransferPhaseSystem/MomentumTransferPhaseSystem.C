@@ -415,7 +415,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
 
     forAllConstIter
     (
-        phaseSystem::phaseModelTable,
+        phaseSystem::phaseModelList,
         this->phaseModels_,
         phaseModelIter
     )

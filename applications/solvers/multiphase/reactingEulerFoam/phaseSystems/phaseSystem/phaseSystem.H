@@ -42,7 +42,7 @@ SourceFiles
 #include "phasePair.H"
 #include "orderedPhasePair.H"
 #include "HashPtrTable.H"
-#include "PtrDictionary.H"
+#include "PtrListDictionary.H"
 
 #include "IOMRFZoneList.H"
 #include "fvIOoptionList.H"
@@ -118,7 +118,7 @@ public:
             >
             massTransferTable;
 
-        typedef PtrDictionary<phaseModel> phaseModelTable;
+        typedef PtrListDictionary<phaseModel> phaseModelList;
 
 
 protected:
@@ -162,7 +162,7 @@ protected:
         const fvMesh& mesh_;
 
         //- Phase models
-        phaseModelTable phaseModels_;
+        phaseModelList phaseModels_;
 
         //- Phase pairs
         phasePairTable phasePairs_;
@@ -197,7 +197,7 @@ protected:
         //- Calculate and return the mixture flux
         tmp<surfaceScalarField> calcPhi
         (
-            const phaseModelTable& phaseModels
+            const phaseModelList& phaseModels
         ) const;
 
         //- Generate pairs
@@ -284,10 +284,10 @@ public:
         inline const fvMesh& mesh() const;
 
         //- Constant access the phase models
-        inline const phaseModelTable& phases() const;
+        inline const phaseModelList& phases() const;
 
         //- Access the phase models
-        inline phaseModelTable& phases();
+        inline phaseModelList& phases();
 
         //- Constant access the phase pairs
         inline const phasePairTable& phasePairs() const;

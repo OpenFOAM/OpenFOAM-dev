@@ -151,7 +151,7 @@ void Foam::phaseSystem::generatePairsAndSubModels
         HashTable<autoPtr<modelType>, phasePairKey, phasePairKey::hash>
         modelTypeTable;
 
-    forAllConstIter(phaseModelTable, phaseModels_, phaseModelIter)
+    forAllConstIter(phaseModelList, phaseModels_, phaseModelIter)
     {
         modelTypeTable tempModels;
         generatePairsAndSubModels

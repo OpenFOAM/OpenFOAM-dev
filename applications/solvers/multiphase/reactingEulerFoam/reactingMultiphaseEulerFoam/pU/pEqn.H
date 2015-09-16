@@ -2,10 +2,9 @@ PtrList<surfaceScalarField> alphafs(fluid.phases().size());
 PtrList<volScalarField> rAUs(fluid.phases().size());
 PtrList<surfaceScalarField> alpharAUfs(fluid.phases().size());
 
-int phasei = 0;
-forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+forAll(fluid.phases(), phasei)
 {
-    phaseModel& phase = iter();
+    phaseModel& phase = fluid.phases()[phasei];
     const volScalarField& alpha = phase;
 
     alphafs.set(phasei, fvc::interpolate(alpha).ptr());
@@ -33,8 +32,6 @@ forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
             fvc::interpolate(max(alpha, phase.residualAlpha())*rAUs[phasei])
         ).ptr()
     );
-
-    phasei++;
 }
 
 // Turbulent diffusion, particle-pressure, lift and wall-lubrication fluxes
@@ -42,10 +39,9 @@ PtrList<surfaceScalarField> phiFs(fluid.phases().size());
 {
     autoPtr<PtrList<volVectorField> > Fs = fluid.Fs();
 
-    phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = fluid.phases()[phasei];
 
         phiFs.set
         (
@@ -56,8 +52,6 @@ PtrList<surfaceScalarField> phiFs(fluid.phases().size());
                 (fvc::interpolate(rAUs[phasei]*Fs()[phasei]) & mesh.Sf())
             )
         );
-
-        phasei++;
     }
 }
 
@@ -69,10 +63,9 @@ while (pimple.correct())
 
     PtrList<volVectorField> HbyAs(fluid.phases().size());
 
-    phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = fluid.phases()[phasei];
         const volScalarField& alpha = phase;
 
         // Correct fixed-flux BCs to be consistent with the velocity BCs
@@ -95,8 +88,6 @@ while (pimple.correct())
               + max(phase.residualAlpha() - alpha, scalar(0))
                *phase.rho()*phase.U().oldTime()/runTime.deltaT()
             );
-
-        phasei++;
     }
 
     // Mean density for buoyancy force and p_rgh -> p
@@ -109,10 +100,9 @@ while (pimple.correct())
     );
 
     PtrList<surfaceScalarField> phigs(fluid.phases().size());
-    phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = fluid.phases()[phasei];
 
         phigs.set
         (
@@ -126,8 +116,6 @@ while (pimple.correct())
                 )
             ).ptr()
         );
-
-        phasei++;
     }
 
     PtrList<surfaceScalarField> phiHbyAs(fluid.phases().size());
@@ -146,10 +134,9 @@ while (pimple.correct())
         dimensionedScalar("phiHbyA", dimArea*dimVelocity, 0)
     );
 
-    phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = fluid.phases()[phasei];
         const volScalarField& alpha = phase;
 
         // ddtPhiCorr filter -- only apply in pure(ish) phases
@@ -223,8 +210,6 @@ while (pimple.correct())
         }
 
         phiHbyA += alphafs[phasei]*phiHbyAs[phasei];
-
-        phasei++;
     }
 
     MRF.makeRelative(phiHbyA);
@@ -242,11 +227,9 @@ while (pimple.correct())
         dimensionedScalar("rAUf", dimensionSet(-1, 3, 1, 0, 0), 0)
     );
 
-    phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
         rAUf += alphafs[phasei]*alpharAUfs[phasei];
-        phasei++;
     }
     rAUf = mag(rAUf);
 
@@ -255,12 +238,10 @@ while (pimple.correct())
     {
         surfaceScalarField::GeometricBoundaryField phib(phi.boundaryField());
         phib = 0;
-        phasei = 0;
-        forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+        forAll(fluid.phases(), phasei)
         {
-            phaseModel& phase = iter();
+            phaseModel& phase = fluid.phases()[phasei];
             phib += alphafs[phasei].boundaryField()*phase.phi().boundaryField();
-            phasei++;
         }
 
         setSnGrad<fixedFluxPressureFvPatchScalarField>
@@ -273,10 +254,9 @@ while (pimple.correct())
     }
 
     PtrList<fvScalarMatrix> pEqnComps(fluid.phases().size());
-    phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = fluid.phases()[phasei];
 
         if (phase.compressible())
         {
@@ -338,8 +318,6 @@ while (pimple.correct())
                 );
             }
         }
-
-        phasei++;
     }
 
     // Cache p prior to solve for density update
@@ -358,17 +336,14 @@ while (pimple.correct())
         {
             fvScalarMatrix pEqn(pEqnIncomp);
 
-            phasei = 0;
-            forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+            forAll(fluid.phases(), phasei)
             {
-                phaseModel& phase = iter();
+                phaseModel& phase = fluid.phases()[phasei];
 
                 if (phase.compressible())
                 {
                     pEqn += pEqnComps[phasei];
                 }
-
-                phasei++;
             }
 
             solve
@@ -385,10 +360,9 @@ while (pimple.correct())
 
             surfaceScalarField mSfGradp("mSfGradp", pEqnIncomp.flux()/rAUf);
 
-            phasei = 0;
-            forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+            forAll(fluid.phases(), phasei)
             {
-                phaseModel& phase = iter();
+                phaseModel& phase = fluid.phases()[phasei];
 
                 phase.phi() = phiHbyAs[phasei] + alpharAUfs[phasei]*mSfGradp;
 
@@ -397,8 +371,6 @@ while (pimple.correct())
                 {
                     phase.divU(-pEqnComps[phasei] & p_rgh);
                 }
-
-                phasei++;
             }
 
             // Optionally relax pressure for velocity correction
@@ -406,10 +378,9 @@ while (pimple.correct())
 
             mSfGradp = pEqnIncomp.flux()/rAUf;
 
-            phasei = 0;
-            forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+            forAll(fluid.phases(), phasei)
             {
-                phaseModel& phase = iter();
+                phaseModel& phase = fluid.phases()[phasei];
 
                 phase.U() =
                     HbyAs[phasei]
@@ -421,8 +392,6 @@ while (pimple.correct())
                     );
                 phase.U().correctBoundaryConditions();
                 fvOptions.correct(phase.U());
-
-                phasei++;
             }
         }
     }
@@ -434,9 +403,9 @@ while (pimple.correct())
     p_rgh = p - rho*gh;
 
     // Update densities from change in p_rgh
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = fluid.phases()[phasei];
         phase.rho()() += phase.thermo().psi()*(p_rgh - p_rgh_0);
     }
 

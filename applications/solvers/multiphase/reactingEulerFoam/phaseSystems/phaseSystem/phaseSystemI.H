@@ -31,14 +31,14 @@ inline const Foam::fvMesh& Foam::phaseSystem::mesh() const
 }
 
 
-inline const Foam::phaseSystem::phaseModelTable&
+inline const Foam::phaseSystem::phaseModelList&
 Foam::phaseSystem::phases() const
 {
     return phaseModels_;
 }
 
 
-inline Foam::phaseSystem::phaseModelTable&
+inline Foam::phaseSystem::phaseModelList&
 Foam::phaseSystem::phases()
 {
     return phaseModels_;

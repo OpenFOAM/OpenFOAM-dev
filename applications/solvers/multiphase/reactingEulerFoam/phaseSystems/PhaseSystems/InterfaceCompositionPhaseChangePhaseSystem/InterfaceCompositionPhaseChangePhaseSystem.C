@@ -71,7 +71,7 @@ massTransfer() const
 
     forAllConstIter
     (
-        phaseSystem::phaseModelTable,
+        phaseSystem::phaseModelList,
         this->phaseModels_,
         phaseModelIter
     )

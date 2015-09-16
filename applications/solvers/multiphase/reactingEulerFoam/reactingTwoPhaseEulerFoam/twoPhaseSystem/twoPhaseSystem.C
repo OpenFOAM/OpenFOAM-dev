@@ -57,8 +57,8 @@ Foam::twoPhaseSystem::twoPhaseSystem
 )
 :
     phaseSystem(mesh),
-    phase1_(phaseModels_.first()),
-    phase2_(phaseModels_.last())
+    phase1_(phaseModels_[0]),
+    phase2_(phaseModels_[1])
 {
     phase2_.volScalarField::operator=(scalar(1) - phase1_);
 

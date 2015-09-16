@@ -59,9 +59,9 @@ void Foam::multiphaseSystem::calcAlphas()
     scalar level = 0.0;
     alphas_ == 0.0;
 
-    forAllIter(PtrDictionary<phaseModel>, phases(), iter)
+    forAll(phases(), i)
     {
-        alphas_ += level*iter();
+        alphas_ += level*phases()[i];
         level += 1.0;
     }
 
@@ -72,11 +72,9 @@ void Foam::multiphaseSystem::calcAlphas()
 void Foam::multiphaseSystem::solveAlphas()
 {
     PtrList<surfaceScalarField> alphaPhiCorrs(phases().size());
-    int phasei = 0;
-
-    forAllIter(PtrDictionary<phaseModel>, phases(), iter)
+    forAll(phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = phases()[phasei];
         volScalarField& alpha1 = phase;
 
         phase.alphaPhi() =
@@ -99,9 +97,9 @@ void Foam::multiphaseSystem::solveAlphas()
 
         surfaceScalarField& alphaPhiCorr = alphaPhiCorrs[phasei];
 
-        forAllIter(PtrDictionary<phaseModel>, phases(), iter2)
+        forAll(phases(), phasej)
         {
-            phaseModel& phase2 = iter2();
+            phaseModel& phase2 = phases()[phasej];
             volScalarField& alpha2 = phase2;
 
             if (&phase2 == &phase) continue;
@@ -170,8 +168,6 @@ void Foam::multiphaseSystem::solveAlphas()
             0,
             true
         );
-
-        phasei++;
     }
 
     MULES::limitSum(alphaPhiCorrs);
@@ -191,10 +187,9 @@ void Foam::multiphaseSystem::solveAlphas()
 
     volScalarField divU(fvc::div(fvc::absolute(phi_, phases().first().U())));
 
-    phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, phases(), iter)
+    forAll(phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = phases()[phasei];
         volScalarField& alpha = phase;
 
         surfaceScalarField& alphaPhic = alphaPhiCorrs[phasei];
@@ -245,9 +240,9 @@ void Foam::multiphaseSystem::solveAlphas()
             }
         }
 
-        forAllConstIter(PtrDictionary<phaseModel>, phases(), iter2)
+        forAll(phases(), phasej)
         {
-            const phaseModel& phase2 = iter2();
+            const phaseModel& phase2 = phases()[phasej];
             const volScalarField& alpha2 = phase2;
 
             if (&phase2 == &phase) continue;
@@ -294,8 +289,6 @@ void Foam::multiphaseSystem::solveAlphas()
             << endl;
 
         sumAlpha += phase;
-
-        phasei++;
     }
 
     Info<< "Phase-sum volume fraction, min, max = "
@@ -506,9 +499,9 @@ Foam::multiphaseSystem::multiphaseSystem
         1e-8/pow(average(mesh.V()), 1.0/3.0)
     )
 {
-    forAllIter(phaseSystem::phaseModelTable, phases(), iter)
+    forAll(phases(), phasei)
     {
-        volScalarField& alphai = iter();
+        volScalarField& alphai = phases()[phasei];
         mesh.setFluxRequired(alphai.name());
     }
 }
@@ -547,9 +540,9 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
         )
     );
 
-    forAllConstIter(PtrDictionary<phaseModel>, phases(), iter)
+    forAll(phases(), phasej)
     {
-        const phaseModel& phase2 = iter();
+        const phaseModel& phase2 = phases()[phasej];
 
         if (&phase2 != &phase1)
         {
@@ -591,9 +584,13 @@ Foam::multiphaseSystem::nearInterface() const
         )
     );
 
-    forAllConstIter(PtrDictionary<phaseModel>, phases(), iter)
+    forAll(phases(), phasei)
     {
-        tnearInt() = max(tnearInt(), pos(iter() - 0.01)*pos(0.99 - iter()));
+        tnearInt() = max
+        (
+            tnearInt(),
+            pos(phases()[phasei] - 0.01)*pos(0.99 - phases()[phasei])
+        );
     }
 
     return tnearInt;
@@ -625,10 +622,9 @@ void Foam::multiphaseSystem::solve()
         PtrList<volScalarField> alpha0s(phases().size());
         PtrList<surfaceScalarField> phiSums(phases().size());
 
-        int phasei = 0;
-        forAllIter(PtrDictionary<phaseModel>, phases(), iter)
+        forAll(phases(), phasei)
         {
-            phaseModel& phase = iter();
+            phaseModel& phase = phases()[phasei];
             volScalarField& alpha = phase;
 
             alpha0s.set
@@ -652,8 +648,6 @@ void Foam::multiphaseSystem::solve()
                     dimensionedScalar("0", dimensionSet(0, 3, -1, 0, 0), 0)
                 )
             );
-
-            phasei++;
         }
 
         for
@@ -668,18 +662,15 @@ void Foam::multiphaseSystem::solve()
         {
             solveAlphas();
 
-            int phasei = 0;
-            forAllIter(PtrDictionary<phaseModel>, phases(), iter)
+            forAll(phases(), phasei)
             {
-                phiSums[phasei] += iter().phi();
-                phasei++;
+                phiSums[phasei] += phases()[phasei].phi();
             }
         }
 
-        phasei = 0;
-        forAllIter(PtrDictionary<phaseModel>, phases(), iter)
+        forAll(phases(), phasei)
         {
-            phaseModel& phase = iter();
+            phaseModel& phase = phases()[phasei];
             volScalarField& alpha = phase;
 
             phase.phi() = phiSums[phasei]/nAlphaSubCycles;
@@ -691,8 +682,6 @@ void Foam::multiphaseSystem::solve()
             // Reset the old-time field value
             alpha.oldTime() = alpha0s[phasei];
             alpha.oldTime().timeIndex() = runTime.timeIndex();
-
-            phasei++;
         }
     }
     else
@@ -700,9 +689,9 @@ void Foam::multiphaseSystem::solve()
         solveAlphas();
     }
 
-    forAllIter(PtrDictionary<phaseModel>, phases(), iter)
+    forAll(phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = phases()[phasei];
         phase.alphaRhoPhi() = fvc::interpolate(phase.rho())*phase.alphaPhi();
     }
 

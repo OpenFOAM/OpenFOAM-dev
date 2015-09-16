@@ -9,10 +9,10 @@ PtrList<fvVectorMatrix> UEqns(fluid.phases().size());
     phaseSystem::momentumTransferTable&
         momentumTransfer(momentumTransferPtr());
 
-    int phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = fluid.phases()[phasei];
+
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
         volVectorField& U = phase.U();
@@ -31,7 +31,5 @@ PtrList<fvVectorMatrix> UEqns(fluid.phases().size());
 
         UEqns[phasei].relax();
         fvOptions.constrain(UEqns[phasei]);
-
-        phasei++;
     }
 }

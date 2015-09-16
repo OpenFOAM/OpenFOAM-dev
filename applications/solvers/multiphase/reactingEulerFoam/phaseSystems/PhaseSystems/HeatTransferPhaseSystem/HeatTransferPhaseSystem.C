@@ -122,7 +122,7 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
 
     forAllConstIter
     (
-        phaseSystem::phaseModelTable,
+        phaseSystem::phaseModelList,
         this->phaseModels_,
         phaseModelIter
     )

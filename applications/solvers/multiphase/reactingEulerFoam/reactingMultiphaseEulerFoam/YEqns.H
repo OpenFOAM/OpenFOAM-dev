@@ -5,9 +5,10 @@
     phaseSystem::massTransferTable&
         massTransfer(massTransferPtr());
 
-    forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
+    forAll(fluid.phases(), phasei)
     {
-        phaseModel& phase = iter();
+        phaseModel& phase = fluid.phases()[phasei];
+
         PtrList<volScalarField>& Y = phase.Y();
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
