@@ -1,4 +1,4 @@
-EXE_INC = -ggdb3 \
+EXE_INC = \
     -ImultiphaseSystem/lnInclude \
     -I../phaseSystems/lnInclude \
     -I../interfacialModels/lnInclude \
