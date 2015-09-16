@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,8 +22,6 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-
-#include "error.H"
 
 #include "autoPtr.H"
 #include "tmp.H"
@@ -368,6 +366,229 @@ inline typename Foam::PtrList<T>::iterator Foam::PtrList<T>::begin()
 
 template<class T>
 inline typename Foam::PtrList<T>::iterator Foam::PtrList<T>::end()
+{
+    return ptrs_.end();
+}
+
+
+// * * * * * * * * * * * * * * * STL const_iterator  * * * * * * * * * * * * //
+
+template<class T>
+inline Foam::PtrList<T>::const_iterator::const_iterator(const T* const* ptr)
+:
+    ptr_(ptr)
+{}
+
+
+template<class T>
+inline Foam::PtrList<T>::const_iterator::const_iterator(const iterator& iter)
+:
+    ptr_(iter.ptr_)
+{}
+
+
+template<class T>
+inline bool Foam::PtrList<T>::const_iterator::operator==
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ == iter.ptr_;
+}
+
+
+template<class T>
+inline bool Foam::PtrList<T>::const_iterator::operator!=
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ != iter.ptr_;
+}
+
+
+template<class T>
+inline const T& Foam::PtrList<T>::const_iterator::operator*()
+{
+    return **ptr_;
+}
+
+
+template<class T>
+inline const T& Foam::PtrList<T>::const_iterator::operator()()
+{
+    return operator*();
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::const_iterator::operator++()
+{
+    ++ptr_;
+    return *this;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::const_iterator::operator++(int)
+{
+    const_iterator tmp = *this;
+    ++ptr_;
+    return tmp;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::const_iterator::operator--()
+{
+    --ptr_;
+    return *this;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::const_iterator::operator--(int)
+{
+    const_iterator tmp = *this;
+    --ptr_;
+    return tmp;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::const_iterator::operator+=(label n)
+{
+    ptr_ += n;
+    return *this;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::operator+(const typename PtrList<T>::const_iterator& iter, label n)
+{
+    typename PtrList<T>::const_iterator tmp = iter;
+    return tmp += n;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::operator+(label n, const typename PtrList<T>::const_iterator& iter)
+{
+    typename PtrList<T>::const_iterator tmp = iter;
+    return tmp += n;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::const_iterator::operator-=(label n)
+{
+    ptr_ -= n;
+    return *this;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::operator-(const typename PtrList<T>::const_iterator& iter, label n)
+{
+    typename PtrList<T>::const_iterator tmp = iter;
+    return tmp -= n;
+}
+
+
+template<class T>
+inline Foam::label Foam::operator-
+(
+    const typename PtrList<T>::const_iterator& iter1,
+    const typename PtrList<T>::const_iterator& iter2
+)
+{
+    return (iter1.ptr_ - iter2.ptr_)/sizeof(T*);
+}
+
+
+template<class T>
+inline const T& Foam::PtrList<T>::const_iterator::operator[](label n)
+{
+    return *(*this + n);
+}
+
+
+template<class T>
+inline bool Foam::PtrList<T>::const_iterator::operator<
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ < iter.ptr_;
+}
+
+
+template<class T>
+inline bool Foam::PtrList<T>::const_iterator::operator>
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ > iter.ptr_;
+}
+
+
+template<class T>
+inline bool Foam::PtrList<T>::const_iterator::operator<=
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ <= iter.ptr_;
+}
+
+
+template<class T>
+inline bool Foam::PtrList<T>::const_iterator::operator>=
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ >= iter.ptr_;
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::begin() const
+{
+    return ptrs_.begin();
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::end() const
+{
+    return ptrs_.end();
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::cbegin() const
+{
+    return ptrs_.begin();
+}
+
+
+template<class T>
+inline typename Foam::PtrList<T>::const_iterator
+Foam::PtrList<T>::cend() const
 {
     return ptrs_.end();
 }

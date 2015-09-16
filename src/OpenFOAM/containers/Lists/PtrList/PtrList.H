@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,7 @@ Description
     pointer.
 
 SourceFiles
+    PtrListI.H
     PtrList.C
     PtrListIO.C
 
@@ -78,6 +79,34 @@ inline label operator-
 (
     const typename PtrList<T>::iterator&,
     const typename PtrList<T>::iterator&
+);
+
+template<class T>
+inline typename PtrList<T>::const_iterator operator+
+(
+    const typename PtrList<T>::const_iterator&,
+    label
+);
+
+template<class T>
+inline typename PtrList<T>::const_iterator operator+
+(
+    label,
+    const typename PtrList<T>::const_iterator&
+);
+
+template<class T>
+inline typename PtrList<T>::const_iterator operator-
+(
+    const typename PtrList<T>::const_iterator&,
+    label
+);
+
+template<class T>
+inline label operator-
+(
+    const typename PtrList<T>::const_iterator&,
+    const typename PtrList<T>::const_iterator&
 );
 
 template<class T>
@@ -245,7 +274,9 @@ public:
     // Random access iterator for traversing PtrList.
 
         class iterator;
+        class const_iterator;
         friend class iterator;
+        friend class const_iterator;
 
         //- An STL-conforming iterator
         class iterator
@@ -253,6 +284,8 @@ public:
             T** ptr_;
 
         public:
+
+            friend class const_iterator;
 
             //- Construct for a given PtrList entry
             inline iterator(T**);
@@ -301,6 +334,87 @@ public:
 
         //- Return an iterator to end traversing the PtrList.
         inline iterator end();
+
+
+    // STL const_iterator
+    // Random access iterator for traversing PtrList.
+
+        //- An STL-conforming const_iterator
+        class const_iterator
+        {
+            const T* const* ptr_;
+
+        public:
+
+            //- Construct for a given PtrList entry
+            inline const_iterator(const T* const*);
+
+            //- Construct from an iterator
+            inline const_iterator(const iterator&);
+
+
+            // Member operators
+
+                inline bool operator==(const const_iterator&) const;
+                inline bool operator!=(const const_iterator&) const;
+
+                typedef const T& Tref;
+                inline Tref operator*();
+                inline Tref operator()();
+
+                inline const_iterator operator++();
+                inline const_iterator operator++(int);
+
+                inline const_iterator operator--();
+                inline const_iterator operator--(int);
+
+                inline const_iterator operator+=(label);
+
+                friend const_iterator operator+ <T>
+                (
+                    const const_iterator&,
+                    label
+                );
+                friend const_iterator operator+ <T>
+                (
+                    label,
+                    const const_iterator&
+                );
+
+                inline const_iterator operator-=(label);
+
+                friend const_iterator operator- <T>
+                (
+                    const const_iterator&,
+                    label
+                );
+
+                friend label operator- <T>
+                (
+                    const const_iterator&,
+                    const const_iterator&
+                );
+
+                inline const T& operator[](label);
+
+                inline bool operator<(const const_iterator&) const;
+                inline bool operator>(const const_iterator&) const;
+
+                inline bool operator<=(const const_iterator&) const;
+                inline bool operator>=(const const_iterator&) const;
+        };
+
+        //- Return an const_iterator to begin traversing the PtrList.
+        inline const_iterator cbegin() const;
+
+        //- Return an const_iterator to end traversing the PtrList.
+        inline const_iterator cend() const;
+
+        //- Return an const_iterator to begin traversing the PtrList.
+        inline const_iterator begin() const;
+
+        //- Return an const_iterator to end traversing the PtrList.
+        inline const_iterator end() const;
 
 
     // IOstream operator
