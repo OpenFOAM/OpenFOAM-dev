@@ -8,6 +8,7 @@ autoPtr<multiphaseSystem> fluidPtr
     multiphaseSystem::New(mesh)
 );
 multiphaseSystem& fluid = fluidPtr();
+multiphaseSystem::phaseModelList& phases = fluid.phases();
 
 surfaceScalarField& phi = fluid.phi();
 
@@ -20,7 +21,7 @@ dimensionedScalar pMin
 
 #include "gh.H"
 
-volScalarField& p = fluid.phases().first().thermo().p();
+volScalarField& p = phases[0].thermo().p();
 
 Info<< "Reading field p_rgh\n" << endl;
 volScalarField p_rgh

@@ -6,9 +6,9 @@
 
     phaseSystem::heatTransferTable& heatTransfer = heatTransferPtr();
 
-    forAll(fluid.phases(), phasei)
+    forAll(phases, phasei)
     {
-        phaseModel& phase = fluid.phases()[phasei];
+        phaseModel& phase = phases[phasei];
 
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
@@ -36,9 +36,9 @@
 
 fluid.correctThermo();
 
-forAll(fluid.phases(), phasei)
+forAll(phases, phasei)
 {
-    phaseModel& phase = fluid.phases()[phasei];
+    phaseModel& phase = phases[phasei];
 
     Info<< phase.name() << " min/max T "
         << min(phase.thermo().T()).value()

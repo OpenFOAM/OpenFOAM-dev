@@ -39,12 +39,12 @@ if (mesh.nInternalFaces())
         fvc::surfaceSum(mag(phi))().internalField()
     );
 
-    forAll(fluid.phases(), phasei)
+    forAll(phases, phasei)
     {
         sumPhi = max
         (
             sumPhi,
-            fvc::surfaceSum(mag(fluid.phases()[phasei].phi()))().internalField()
+            fvc::surfaceSum(mag(phases[phasei].phi()))().internalField()
         );
     }
 
