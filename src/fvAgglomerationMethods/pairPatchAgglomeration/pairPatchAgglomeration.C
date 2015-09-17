@@ -440,6 +440,8 @@ void Foam::pairPatchAgglomeration::agglomerate()
 
         nCoarseFacesOld = nCoarseFaces;
     }
+
+    compactLevels(nCreatedLevels);
 }
 
 
