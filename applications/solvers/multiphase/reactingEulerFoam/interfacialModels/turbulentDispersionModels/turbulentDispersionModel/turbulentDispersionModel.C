@@ -26,6 +26,8 @@ License
 #include "turbulentDispersionModel.H"
 #include "phasePair.H"
 #include "fvcGrad.H"
+#include "surfaceInterpolate.H"
+#include "fvcSnGrad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -63,6 +65,13 @@ Foam::tmp<Foam::volVectorField>
 Foam::turbulentDispersionModel::F() const
 {
     return D()*fvc::grad(pair_.dispersed());
+}
+
+
+Foam::tmp<Foam::surfaceScalarField>
+Foam::turbulentDispersionModel::Ff() const
+{
+    return fvc::interpolate(D())*fvc::snGrad(pair_.dispersed());
 }
 
 

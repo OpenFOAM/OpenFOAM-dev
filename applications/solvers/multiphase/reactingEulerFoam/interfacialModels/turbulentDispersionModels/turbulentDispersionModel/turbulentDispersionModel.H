@@ -120,6 +120,9 @@ public:
 
         //- Turbulent dispersion force
         virtual tmp<volVectorField> F() const;
+
+        //- Turbulent dispersion force on faces
+        virtual tmp<surfaceScalarField> Ff() const;
 };
 
 

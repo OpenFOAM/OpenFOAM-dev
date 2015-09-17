@@ -34,10 +34,11 @@ forAll(phases, phasei)
     );
 }
 
-// Turbulent diffusion, particle-pressure, lift and wall-lubrication fluxes
+// Lift, wall-lubrication and turbulent diffusion fluxes
 PtrList<surfaceScalarField> phiFs(phases.size());
 {
     autoPtr<PtrList<volVectorField> > Fs = fluid.Fs();
+    autoPtr<PtrList<surfaceScalarField> > phiDs = fluid.phiDs(rAUs);
 
     forAll(phases, phasei)
     {
@@ -50,6 +51,7 @@ PtrList<surfaceScalarField> phiFs(phases.size());
             (
                 IOobject::groupName("phiF", phase.name()),
                 (fvc::interpolate(rAUs[phasei]*Fs()[phasei]) & mesh.Sf())
+              + phiDs()[phasei]
             )
         );
     }
