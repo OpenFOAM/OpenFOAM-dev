@@ -133,6 +133,20 @@ private:
             //- Turbulent dispersion models
             turbulentDispersionModelTable turbulentDispersionModels_;
 
+            //- Construct element phasei of Fs if not set and return
+            //  Used by Fs()
+            volVectorField& setF
+            (
+                PtrList<volVectorField>& Fs, const label phasei
+            ) const;
+
+            //- Construct element phasei of phiDs if not set and return
+            //  Used by phiDs()
+            surfaceScalarField& setPhiD
+            (
+                PtrList<surfaceScalarField>& phiDs, const label phasei
+            ) const;
+
 
 public:
 

@@ -38,22 +38,51 @@ forAll(phases, phasei)
 PtrList<surfaceScalarField> phiFs(phases.size());
 {
     autoPtr<PtrList<volVectorField> > Fs = fluid.Fs();
+
+    forAll(phases, phasei)
+    {
+        phaseModel& phase = phases[phasei];
+
+        if (Fs().set(phasei))
+        {
+            phiFs.set
+            (
+                phasei,
+                new surfaceScalarField
+                (
+                    IOobject::groupName("phiF", phase.name()),
+                    (fvc::interpolate(rAUs[phasei]*Fs()[phasei]) & mesh.Sf())
+                )
+            );
+        }
+    }
+}
+{
     autoPtr<PtrList<surfaceScalarField> > phiDs = fluid.phiDs(rAUs);
 
     forAll(phases, phasei)
     {
         phaseModel& phase = phases[phasei];
 
-        phiFs.set
-        (
-            phasei,
-            new surfaceScalarField
-            (
-                IOobject::groupName("phiF", phase.name()),
-                (fvc::interpolate(rAUs[phasei]*Fs()[phasei]) & mesh.Sf())
-              + phiDs()[phasei]
-            )
-        );
+        if (phiDs().set(phasei))
+        {
+            if (phiFs.set(phasei))
+            {
+                phiFs[phasei] += phiDs()[phasei];
+            }
+            else
+            {
+                phiFs.set
+                (
+                    phasei,
+                    new surfaceScalarField
+                    (
+                        IOobject::groupName("phiF", phase.name()),
+                        phiDs()[phasei]
+                    )
+                );
+            }
+        }
     }
 }
 
@@ -101,12 +130,12 @@ while (pimple.correct())
         ghf*fvc::snGrad(rho)*mesh.magSf()
     );
 
-    PtrList<surfaceScalarField> phigs(phases.size());
+    PtrList<surfaceScalarField> phigFs(phases.size());
     forAll(phases, phasei)
     {
         phaseModel& phase = phases[phasei];
 
-        phigs.set
+        phigFs.set
         (
             phasei,
             (
@@ -118,6 +147,11 @@ while (pimple.correct())
                 )
             ).ptr()
         );
+
+        if (phiFs.set(phasei))
+        {
+            phigFs[phasei] += phiFs[phasei];
+        }
     }
 
     PtrList<surfaceScalarField> phiHbyAs(phases.size());
@@ -177,8 +211,7 @@ while (pimple.correct())
                    MRF.absolute(phase.phi().oldTime())
                  - (fvc::interpolate(phase.U().oldTime()) & mesh.Sf())
                 )/runTime.deltaT()
-              - phiFs[phasei]
-              - phigs[phasei]
+              - phigFs[phasei]
             )
         );
 
@@ -389,8 +422,7 @@ while (pimple.correct())
                   + fvc::reconstruct
                     (
                         alpharAUfs[phasei]*mSfGradp
-                      - phiFs[phasei]
-                      - phigs[phasei]
+                      - phigFs[phasei]
                     );
                 phase.U().correctBoundaryConditions();
                 fvOptions.correct(phase.U());

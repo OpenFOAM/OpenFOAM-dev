@@ -511,17 +511,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::PtrList<Foam::volVectorField> >
-Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
+Foam::volVectorField& Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::setF
+(
+    PtrList<volVectorField>& Fs, const label phasei
+) const
 {
-    autoPtr<PtrList<volVectorField> > tFs
-    (
-        new PtrList<volVectorField>(this->phases().size())
-    );
-
-    PtrList<volVectorField>& Fs = tFs();
-
-    forAll(Fs, phasei)
+    if (!Fs.set(phasei))
     {
         Fs.set
         (
@@ -543,6 +538,20 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
         );
     }
 
+    return Fs[phasei];
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::PtrList<Foam::volVectorField> >
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
+{
+    autoPtr<PtrList<volVectorField> > tFs
+    (
+        new PtrList<volVectorField>(this->phases().size())
+    );
+    PtrList<volVectorField>& Fs = tFs();
+
     // Add the lift force
     forAllConstIter
     (
@@ -555,8 +564,8 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
 
         const phasePair& pair(this->phasePairs_[liftModelIter.key()]);
 
-        Fs[pair.phase1().index()] += F;
-        Fs[pair.phase2().index()] -= F;
+        setF(Fs, pair.phase1().index()) += F;
+        setF(Fs, pair.phase2().index()) -= F;
     }
 
     // Add the wall lubrication force
@@ -572,8 +581,8 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
         const phasePair&
             pair(this->phasePairs_[wallLubricationModelIter.key()]);
 
-        Fs[pair.phase1().index()] += F;
-        Fs[pair.phase2().index()] -= F;
+        setF(Fs, pair.phase1().index()) += F;
+        setF(Fs, pair.phase2().index()) -= F;
     }
 
     return tFs;
@@ -581,20 +590,13 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::PtrList<Foam::surfaceScalarField> >
-Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiDs
+Foam::surfaceScalarField&
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::setPhiD
 (
-    const PtrList<volScalarField>& rAUs
+    PtrList<surfaceScalarField>& phiDs, const label phasei
 ) const
 {
-    autoPtr<PtrList<surfaceScalarField> > tphiDs
-    (
-        new PtrList<surfaceScalarField>(this->phases().size())
-    );
-
-    PtrList<surfaceScalarField>& phiDs = tphiDs();
-
-    forAll(phiDs, phasei)
+    if (!phiDs.set(phasei))
     {
         phiDs.set
         (
@@ -603,7 +605,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiDs
             (
                 IOobject
                 (
-                    liftModel::typeName + ":F",
+                    turbulentDispersionModel::typeName + ":phiD",
                     this->mesh_.time().timeName(),
                     this->mesh_,
                     IOobject::NO_READ,
@@ -620,6 +622,23 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiDs
             )
         );
     }
+
+    return phiDs[phasei];
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::PtrList<Foam::surfaceScalarField> >
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiDs
+(
+    const PtrList<volScalarField>& rAUs
+) const
+{
+    autoPtr<PtrList<surfaceScalarField> > tphiDs
+    (
+        new PtrList<surfaceScalarField>(this->phases().size())
+    );
+    PtrList<surfaceScalarField>& phiDs = tphiDs();
 
     // Add the turbulent dispersion force
     forAllConstIter
@@ -638,9 +657,9 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiDs
             fvc::snGrad(pair.phase1())*this->mesh_.magSf()
         );
 
-        phiDs[pair.phase1().index()] +=
+        setPhiD(phiDs, pair.phase1().index()) +=
             fvc::interpolate(rAUs[pair.phase1().index()]*D)*snGradAlpha1;
-        phiDs[pair.phase2().index()] -=
+        setPhiD(phiDs, pair.phase2().index()) -=
             fvc::interpolate(rAUs[pair.phase2().index()]*D)*snGradAlpha1;
     }
 
