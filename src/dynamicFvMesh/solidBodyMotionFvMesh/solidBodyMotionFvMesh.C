@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,9 +123,8 @@ Foam::solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject& io)
             FatalErrorIn
             (
                 "solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject&)"
-            )
-                << "Unable to find cellZone " << cellZoneName
-                << ".  Valid celLZones are:"
+            )   << "Unable to find cellZone " << cellZoneName
+                << ".  Valid cellZones are:"
                 << cellZones().names()
                 << exit(FatalError);
         }
