@@ -35,6 +35,11 @@ namespace Foam
 namespace compressible
 {
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+defineTypeNameAndDebug(alphatPhaseChangeWallFunctionFvPatchScalarField,0);
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 alphatPhaseChangeWallFunctionFvPatchScalarField::
