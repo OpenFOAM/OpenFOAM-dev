@@ -227,7 +227,9 @@ while (pimple.correct())
             fvc::interpolate(psi2)*phi2
         );
 
-        pEqnComp1 =
+        if (phase1.compressible())
+        {
+            pEqnComp1 =
             (
                 phase1.continuityError() - fluid.dmdt()
               - fvc::Sp(fvc::ddt(alpha1) + fvc::div(alphaPhi1), rho1)
@@ -237,10 +239,13 @@ while (pimple.correct())
                 psi1*fvm::ddt(p_rgh)
               + fvm::div(phid1, p_rgh) - fvm::Sp(fvc::div(phid1), p_rgh)
             );
-        deleteDemandDrivenData(pEqnComp1().faceFluxCorrectionPtr());
-        pEqnComp1().relax();
+            deleteDemandDrivenData(pEqnComp1().faceFluxCorrectionPtr());
+            pEqnComp1().relax();
+        }
 
-        pEqnComp2 =
+        if (phase2.compressible())
+        {
+            pEqnComp2 =
             (
                 phase2.continuityError() + fluid.dmdt()
               - fvc::Sp(fvc::ddt(alpha2) + fvc::div(alphaPhi2), rho2)
@@ -250,24 +255,31 @@ while (pimple.correct())
                 psi2*fvm::ddt(p_rgh)
               + fvm::div(phid2, p_rgh) - fvm::Sp(fvc::div(phid2), p_rgh)
             );
-        deleteDemandDrivenData(pEqnComp2().faceFluxCorrectionPtr());
-        pEqnComp2().relax();
+            deleteDemandDrivenData(pEqnComp2().faceFluxCorrectionPtr());
+            pEqnComp2().relax();
+        }
     }
     else
     {
-        pEqnComp1 =
+        if (phase1.compressible())
+        {
+            pEqnComp1 =
             (
                 phase1.continuityError() - fluid.dmdt()
               - fvc::Sp(fvc::ddt(alpha1) + fvc::div(alphaPhi1), rho1)
             )/rho1
           + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh));
+        }
 
-        pEqnComp2 =
+        if (phase2.compressible())
+        {
+            pEqnComp2 =
             (
                 phase2.continuityError() + fluid.dmdt()
               - fvc::Sp(fvc::ddt(alpha2) + fvc::div(alphaPhi2), rho2)
             )/rho2
           + (alpha2*psi2/rho2)*correction(fvm::ddt(p_rgh));
+        }
     }
 
     // Cache p prior to solve for density update
@@ -281,11 +293,25 @@ while (pimple.correct())
           - fvm::laplacian(rAUf, p_rgh)
         );
 
-        solve
-        (
-            pEqnComp1() + pEqnComp2() + pEqnIncomp,
-            mesh.solver(p_rgh.select(pimple.finalInnerIter()))
-        );
+        {
+            fvScalarMatrix pEqn(pEqnIncomp);
+
+            if (pEqnComp1.valid())
+            {
+                pEqn += pEqnComp1();
+            }
+
+            if (pEqnComp2.valid())
+            {
+                pEqn += pEqnComp2();
+            }
+
+            solve
+            (
+                pEqn,
+                mesh.solver(p_rgh.select(pimple.finalInnerIter()))
+            );
+        }
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -325,15 +351,21 @@ while (pimple.correct())
             fvOptions.correct(U2);
 
             // Set the phase dilatation rates
-            if (phase1.compressible())
+            if (pEqnComp1.valid())
             {
                 phase1.divU(-pEqnComp1 & p_rgh);
             }
-            if (phase2.compressible())
+            if (pEqnComp2.valid())
             {
                 phase2.divU(-pEqnComp2 & p_rgh);
             }
         }
+    }
+
+    Info<< "min(p) = " << min(p_rgh + rho*gh).value() << endl;
+    if (min(p_rgh + rho*gh) < pMin)
+    {
+        Info<< "Clipping p" << endl;
     }
 
     // Update and limit the static pressure

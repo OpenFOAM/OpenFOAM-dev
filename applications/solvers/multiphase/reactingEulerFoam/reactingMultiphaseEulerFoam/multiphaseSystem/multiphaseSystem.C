@@ -204,7 +204,7 @@ void Foam::multiphaseSystem::solveAlphas()
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("Sp", phase.divU().dimensions(), 0.0)
+            dimensionedScalar("Sp", divU.dimensions(), 0.0)
         );
 
         volScalarField::DimensionedInternalField Su
@@ -220,9 +220,9 @@ void Foam::multiphaseSystem::solveAlphas()
             divU*min(alpha, scalar(1))
         );
 
-        if (phase.compressible())
+        if (phase.divU().valid())
         {
-            const scalarField& dgdt = phase.divU();
+            const scalarField& dgdt = phase.divU()();
 
             forAll(dgdt, celli)
             {
@@ -247,9 +247,9 @@ void Foam::multiphaseSystem::solveAlphas()
 
             if (&phase2 == &phase) continue;
 
-            if (phase2.compressible())
+            if (phase2.divU().valid())
             {
-                const scalarField& dgdt2 = phase2.divU();
+                const scalarField& dgdt2 = phase2.divU()();
 
                 forAll(dgdt2, celli)
                 {
@@ -514,6 +514,12 @@ Foam::multiphaseSystem::~multiphaseSystem()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+bool Foam::multiphaseSystem::transfersMass(const phaseModel& phase) const
+{
+    return false;
+}
+
 
 Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
 (

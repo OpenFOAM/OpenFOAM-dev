@@ -2,6 +2,7 @@ EXE_INC = \
     -I../twoPhaseSystem/lnInclude \
     -I../../phaseSystems/lnInclude \
     -I../../interfacialModels/lnInclude\
+    -I../../interfacialCompositionModels/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/transportModels/incompressible/transportModel \

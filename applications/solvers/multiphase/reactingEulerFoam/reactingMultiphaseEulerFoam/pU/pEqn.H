@@ -311,7 +311,7 @@ while (pimple.correct())
                     phasei,
                     (
                         (
-                            phase.continuityError() - fluid.dmdt(phase)
+                            phase.continuityError()
                           - fvc::Sp
                             (
                                 fvc::ddt(alpha) + fvc::div(phase.alphaPhi()),
@@ -340,7 +340,7 @@ while (pimple.correct())
                     phasei,
                     (
                         (
-                            phase.continuityError() - fluid.dmdt(phase)
+                            phase.continuityError()
                           - fvc::Sp
                             (
                                 (fvc::ddt(alpha) + fvc::div(phase.alphaPhi())),
@@ -351,6 +351,18 @@ while (pimple.correct())
                        *correction(fvm::ddt(p_rgh))
                     ).ptr()
                 );
+            }
+
+            if (fluid.transfersMass(phase))
+            {
+                if (pEqnComps.set(phasei))
+                {
+                    pEqnComps[phasei] -= fluid.dmdt(phase);
+                }
+                else
+                {
+                    pEqnComps.set(phasei, fvm::Su(-fluid.dmdt(phase), rho));
+                }
             }
         }
     }
@@ -373,9 +385,7 @@ while (pimple.correct())
 
             forAll(phases, phasei)
             {
-                phaseModel& phase = phases[phasei];
-
-                if (phase.compressible())
+                if (pEqnComps.set(phasei))
                 {
                     pEqn += pEqnComps[phasei];
                 }

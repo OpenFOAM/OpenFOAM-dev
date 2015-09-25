@@ -175,6 +175,9 @@ public:
             const PtrList<volScalarField>& rAUs
         ) const = 0;
 
+        //- Return true if there is mass transfer for phase
+        virtual bool transfersMass(const phaseModel& phase) const;
+
         //- Return the total interfacial mass transfer rate for phase
         virtual tmp<volScalarField> dmdt(const phaseModel& phase) const = 0;
 

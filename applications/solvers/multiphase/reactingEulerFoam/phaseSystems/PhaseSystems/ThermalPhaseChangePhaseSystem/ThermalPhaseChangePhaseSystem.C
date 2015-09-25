@@ -25,6 +25,7 @@ License
 
 #include "ThermalPhaseChangePhaseSystem.H"
 #include "fvCFD.H"
+#include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,7 +40,61 @@ ThermalPhaseChangePhaseSystem
     volatile_(this->lookup("volatile")),
     saturationModel_(saturationModel::New(this->subDict("saturationModel"))),
     massTransfer_(this->lookup("massTransfer"))
-{}
+{
+
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        const phasePair& pair(phasePairIter());
+
+        if (pair.ordered())
+        {
+            continue;
+        }
+
+        // Initially assume no mass transfer
+        iDmdt_.insert
+        (
+            pair,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("iDmdt", pair.name()),
+                    this->mesh().time().timeName(),
+                    this->mesh(),
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh(),
+                dimensionedScalar("zero", dimDensity/dimTime, 0)
+            )
+        );
+
+        // Initially assume no mass transfer
+        wDmdt_.insert
+        (
+            pair,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("wDmdt", pair.name()),
+                    this->mesh().time().timeName(),
+                    this->mesh(),
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh(),
+                dimensionedScalar("zero", dimDensity/dimTime, 0)
+            )
+        );
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -51,6 +106,14 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class BasePhaseSystem>
+const Foam::saturationModel&
+Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::saturation() const
+{
+    return saturationModel_();
+}
+
 
 template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::massTransferTable>
@@ -121,6 +184,9 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::massTransfer() const
 template<class BasePhaseSystem>
 void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
 {
+    typedef compressible::alphatPhaseChangeWallFunctionFvPatchScalarField
+        alphatPhaseChangeWallFunction;
+
     BasePhaseSystem::correctThermo();
 
     forAllConstIter
@@ -147,6 +213,8 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
         const volScalarField& he2(phase2.thermo().he());
 
         volScalarField& dmdt(*this->dmdt_[pair]);
+        volScalarField& iDmdt(*this->iDmdt_[pair]);
+        volScalarField& wDmdt(*this->wDmdt_[pair]);
 
         volScalarField& Tf = *this->Tf_[pair];
 
@@ -167,25 +235,28 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
 
             Tf = saturationModel_->Tsat(phase1.thermo().p());
 
-            dmdt =
-                (H1*(Tf - T1) + H2*(Tf - T2))
+            scalar iDmdtRelax(this->mesh().fieldRelaxationFactor("iDmdt"));
+
+            iDmdt =
+                (1 - iDmdtRelax)*iDmdt
+              + iDmdtRelax*(H1*(Tf - T1) + H2*(Tf - T2))
                /min
                 (
-                    (pos(dmdt)*he2 + neg(dmdt)*hef2)
-                  - (neg(dmdt)*he1 + pos(dmdt)*hef1),
+                    (pos(iDmdt)*he2 + neg(iDmdt)*hef2)
+                  - (neg(iDmdt)*he1 + pos(iDmdt)*hef1),
                     0.3*mag(hef2 - hef1)
                 );
 
-            Info<< "dmdt." << pair.name()
-                << ": min = " << min(dmdt.internalField())
-                << ", mean = " << average(dmdt.internalField())
-                << ", max = " << max(dmdt.internalField())
-                << ", integral = " << fvc::domainIntegrate(dmdt).value()
+            Info<< "iDmdt." << pair.name()
+                << ": min = " << min(iDmdt.internalField())
+                << ", mean = " << average(iDmdt.internalField())
+                << ", max = " << max(iDmdt.internalField())
+                << ", integral = " << fvc::domainIntegrate(iDmdt).value()
                 << endl;
         }
         else
         {
-            dmdt == dimensionedScalar("0", dmdt.dimensions(), 0);
+            iDmdt == dimensionedScalar("0", dmdt.dimensions(), 0);
         }
 
         volScalarField H1(this->heatTransferModels_[pair][pair.first()]->K());
@@ -200,18 +271,81 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
 
         volScalarField mDotL
         (
-            dmdt*
+            iDmdt*
             (
-                (pos(dmdt)*he2 + neg(dmdt)*hef2)
-              - (neg(dmdt)*he1 + pos(dmdt)*hef1)
+                (pos(iDmdt)*he2 + neg(iDmdt)*hef2)
+              - (neg(iDmdt)*he1 + pos(iDmdt)*hef1)
             )
         );
+
         Tf = (H1*T1 + H2*T2 + mDotL)/(H1 + H2);
 
         Info<< "Tf." << pair.name()
             << ": min = " << min(Tf.internalField())
             << ", mean = " << average(Tf.internalField())
             << ", max = " << max(Tf.internalField())
+            << endl;
+
+        // Accumulate dmdt contributions from boundaries
+        if
+        (
+            phase2.mesh().foundObject<volScalarField>
+            (
+                "alphat." +  phase2.name()
+            )
+        )
+        {
+            scalar wDmdtRelax(this->mesh().fieldRelaxationFactor("wDmdt"));
+            wDmdt *= (1 - wDmdtRelax);
+
+            const volScalarField& alphat =
+                phase2.mesh().lookupObject<volScalarField>
+                (
+                    "alphat." +  phase2.name()
+                );
+
+            const fvPatchList& patches = this->mesh().boundary();
+            forAll(patches, patchi)
+            {
+                const fvPatch& currPatch = patches[patchi];
+
+                if
+                (
+                    isA<alphatPhaseChangeWallFunction>
+                    (
+                        alphat.boundaryField()[patchi]
+                    )
+                )
+                {
+                    const scalarField& patchDmdt =
+                        refCast<const alphatPhaseChangeWallFunction>
+                        (
+                            alphat.boundaryField()[patchi]
+                        ).dmdt();
+
+                    forAll(patchDmdt,facei)
+                    {
+                        label faceCelli = currPatch.faceCells()[facei];
+                        wDmdt[faceCelli] += wDmdtRelax*patchDmdt[facei];
+                    }
+                }
+            }
+
+            Info<< "wDmdt." << pair.name()
+                << ": min = " << min(wDmdt.internalField())
+                << ", mean = " << average(wDmdt.internalField())
+                << ", max = " << max(wDmdt.internalField())
+                << ", integral = " << fvc::domainIntegrate(wDmdt).value()
+                << endl;
+        }
+
+        dmdt = wDmdt + iDmdt;
+
+        Info<< "dmdt." << pair.name()
+            << ": min = " << min(dmdt.internalField())
+            << ", mean = " << average(dmdt.internalField())
+            << ", max = " << max(dmdt.internalField())
+            << ", integral = " << fvc::domainIntegrate(dmdt).value()
             << endl;
     }
 }

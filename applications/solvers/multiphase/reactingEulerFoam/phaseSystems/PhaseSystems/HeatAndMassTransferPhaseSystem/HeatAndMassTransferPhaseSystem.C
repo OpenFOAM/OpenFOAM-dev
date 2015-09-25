@@ -152,6 +152,16 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
+bool Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::transfersMass
+(
+    const phaseModel& phase
+) const
+{
+    return true;
+}
+
+
+template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
 Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::dmdt
 (

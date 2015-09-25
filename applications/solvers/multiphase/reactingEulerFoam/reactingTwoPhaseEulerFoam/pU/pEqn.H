@@ -321,12 +321,12 @@ while (pimple.correct())
         {
             fvScalarMatrix pEqn(pEqnIncomp);
 
-            if (phase1.compressible())
+            if (pEqnComp1.valid())
             {
                 pEqn += pEqnComp1();
             }
 
-            if (phase2.compressible())
+            if (pEqnComp2.valid())
             {
                 pEqn += pEqnComp2();
             }

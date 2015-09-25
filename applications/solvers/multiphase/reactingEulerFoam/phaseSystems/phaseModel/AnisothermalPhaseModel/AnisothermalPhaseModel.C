@@ -37,17 +37,7 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::AnisothermalPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, index),
-    divU_
-    (
-        IOobject
-        (
-            IOobject::groupName("divU", this->name()),
-            fluid.mesh().time().timeName(),
-            fluid.mesh()
-        ),
-        fluid.mesh(),
-        dimensionedScalar("divU", dimless/dimTime, 0)
-    ),
+    divU_(NULL),
     K_
     (
         IOobject
@@ -105,7 +95,7 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 
     volScalarField& he = this->thermo_->he();
 
-    return
+    tmp<fvScalarMatrix> tEEqn
     (
         fvm::ddt(alpha, this->rho(), he) + fvm::div(alphaRhoPhi, he)
       - fvm::Sp(contErr, he)
@@ -119,16 +109,23 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
            *fvc::interpolate(alphaEff),
             he
         )
-
-      + (
-            he.name() == this->thermo_->phasePropertyName("e")
-          ? fvc::ddt(alpha)*this->thermo().p()
-          + fvc::div(alphaPhi, this->thermo().p())
-          : -alpha*this->fluid().dpdt()
-        )
      ==
         this->Sh()
     );
+
+    // Add the appropriate pressure-work term
+    if (he.name() == this->thermo_->phasePropertyName("e"))
+    {
+        tEEqn() +=
+            fvc::ddt(alpha)*this->thermo().p()
+          + fvc::div(alphaPhi, this->thermo().p());
+    }
+    else if (this->thermo_->dpdt())
+    {
+        tEEqn() -= alpha*this->fluid().dpdt();
+    }
+
+    return tEEqn;
 }
 
 
@@ -140,7 +137,7 @@ bool Foam::AnisothermalPhaseModel<BasePhaseModel>::compressible() const
 
 
 template<class BasePhaseModel>
-const Foam::volScalarField&
+const Foam::tmp<Foam::volScalarField>&
 Foam::AnisothermalPhaseModel<BasePhaseModel>::divU() const
 {
     return divU_;
@@ -149,7 +146,10 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::divU() const
 
 template<class BasePhaseModel>
 void
-Foam::AnisothermalPhaseModel<BasePhaseModel>::divU(const volScalarField& divU)
+Foam::AnisothermalPhaseModel<BasePhaseModel>::divU
+(
+    const tmp<volScalarField>& divU
+)
 {
     divU_ = divU;
 }

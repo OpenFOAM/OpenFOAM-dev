@@ -216,10 +216,10 @@ public:
             virtual bool compressible() const;
 
             //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual const volScalarField& divU() const;
+            virtual const tmp<volScalarField>& divU() const;
 
             //- Set the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual void divU(const volScalarField& divU);
+            virtual void divU(const tmp<volScalarField>& divU);
 
             //- Return the phase kinetic energy
             virtual const volScalarField& K() const;

@@ -73,6 +73,14 @@ protected:
         // Mass transfer enabled
         Switch massTransfer_;
 
+        //- Interfacial Mass transfer rate
+        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
+            iDmdt_;
+
+        //- Wall Mass transfer rate
+        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
+            wDmdt_;
+
 
 public:
 
@@ -87,6 +95,9 @@ public:
 
 
     // Member Functions
+
+        //- Return the saturationModel
+        const saturationModel& saturation() const;
 
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;

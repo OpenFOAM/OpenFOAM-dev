@@ -203,30 +203,30 @@ void Foam::twoPhaseSystem::solve()
     // Construct the dilatation rate source term
     tmp<volScalarField::DimensionedInternalField> tdgdt;
 
-    if (phase1_.compressible() && phase2_.compressible())
+    if (phase1_.divU().valid() && phase2_.divU().valid())
     {
         tdgdt =
         (
             alpha2.dimensionedInternalField()
-           *phase1_.divU().dimensionedInternalField()
+           *phase1_.divU()().dimensionedInternalField()
           - alpha1.dimensionedInternalField()
-           *phase2_.divU().dimensionedInternalField()
+           *phase2_.divU()().dimensionedInternalField()
         );
     }
-    else if (phase1_.compressible())
+    else if (phase1_.divU().valid())
     {
         tdgdt =
         (
             alpha2.dimensionedInternalField()
-           *phase1_.divU().dimensionedInternalField()
+           *phase1_.divU()().dimensionedInternalField()
         );
     }
-    else if (phase2_.compressible())
+    else if (phase2_.divU().valid())
     {
         tdgdt =
         (
           - alpha1.dimensionedInternalField()
-           *phase2_.divU().dimensionedInternalField()
+           *phase2_.divU()().dimensionedInternalField()
         );
     }
 
