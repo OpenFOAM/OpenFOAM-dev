@@ -78,6 +78,9 @@ class twoPhaseSystem
         //  Multiplies the phase-fraction gradient
         virtual tmp<volScalarField> D(const phasePairKey& key) const = 0;
 
+        //- Return true if there is mass transfer for phase
+        virtual bool transfersMass(const phaseModel& phase) const = 0;
+
         //- Return the interfacial mass flow rate for phase pair
         virtual tmp<volScalarField> dmdt(const phasePairKey& key) const = 0;
 
@@ -191,6 +194,9 @@ public:
         //- Return the turbulent diffusivity
         //  Multiplies the phase-fraction gradient
         tmp<volScalarField> D() const;
+
+        //- Return true if there is mass transfer
+        bool transfersMass() const;
 
         //- Return the interfacial mass flow rate
         tmp<volScalarField> dmdt() const;

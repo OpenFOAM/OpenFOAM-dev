@@ -357,11 +357,15 @@ while (pimple.correct())
             {
                 if (pEqnComps.set(phasei))
                 {
-                    pEqnComps[phasei] -= fluid.dmdt(phase);
+                    pEqnComps[phasei] -= fluid.dmdt(phase)/rho;
                 }
                 else
                 {
-                    pEqnComps.set(phasei, fvm::Su(-fluid.dmdt(phase), rho));
+                    pEqnComps.set
+                    (
+                        phasei,
+                        fvm::Su(-fluid.dmdt(phase)/rho, p_rgh)
+                    );
                 }
             }
         }

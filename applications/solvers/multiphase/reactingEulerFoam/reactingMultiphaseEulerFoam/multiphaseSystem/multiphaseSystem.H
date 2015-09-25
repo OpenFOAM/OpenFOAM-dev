@@ -176,7 +176,7 @@ public:
         ) const = 0;
 
         //- Return true if there is mass transfer for phase
-        virtual bool transfersMass(const phaseModel& phase) const;
+        virtual bool transfersMass(const phaseModel& phase) const = 0;
 
         //- Return the total interfacial mass transfer rate for phase
         virtual tmp<volScalarField> dmdt(const phaseModel& phase) const = 0;

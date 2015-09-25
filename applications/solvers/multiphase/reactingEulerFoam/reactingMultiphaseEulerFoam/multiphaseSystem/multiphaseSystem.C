@@ -515,12 +515,6 @@ Foam::multiphaseSystem::~multiphaseSystem()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::multiphaseSystem::transfersMass(const phaseModel& phase) const
-{
-    return false;
-}
-
-
 Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
 (
     const phaseModel& phase1

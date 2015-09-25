@@ -89,6 +89,9 @@ public:
 
     // Member Functions
 
+        //- Return true if there is mass transfer for phase
+        virtual bool transfersMass(const phaseModel& phase) const;
+
         //- Return the interfacial mass flow rate
         virtual tmp<volScalarField> dmdt
         (

@@ -168,6 +168,12 @@ Foam::twoPhaseSystem::D() const
 }
 
 
+bool Foam::twoPhaseSystem::transfersMass() const
+{
+    return transfersMass(phase1());
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::twoPhaseSystem::dmdt() const
 {
