@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,17 +125,6 @@ Foam::linearUpwindV<Type>::correction
                 sfCorr[facei] *= maxCorrs/(sfCorrs + VSMALL);
             }
         }
-        else if (sfCorrs < 0)
-        {
-            if (maxCorrs > 0)
-            {
-                sfCorr[facei] = vector::zero;
-            }
-            else if (sfCorrs < maxCorrs)
-            {
-                sfCorr[facei] *= maxCorrs/(sfCorrs - VSMALL);
-            }
-        }
     }
 
 
@@ -203,17 +192,6 @@ Foam::linearUpwindV<Type>::correction
                         pSfCorr[facei] *= maxCorrs/(pSfCorrs + VSMALL);
                     }
                 }
-                else if (pSfCorrs < 0)
-                {
-                    if (maxCorrs > 0)
-                    {
-                        pSfCorr[facei] = vector::zero;
-                    }
-                    else if (pSfCorrs < maxCorrs)
-                    {
-                        pSfCorr[facei] *= maxCorrs/(pSfCorrs - VSMALL);
-                    }
-                }
             }
         }
     }
@@ -226,5 +204,6 @@ namespace Foam
 {
     makelimitedSurfaceInterpolationTypeScheme(linearUpwindV, vector)
 }
+
 
 // ************************************************************************* //
