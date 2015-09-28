@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,7 +187,7 @@ void Foam::KinematicLookupTableInjection<CloudType>::setPositionAndCell
     }
     else
     {
-        injectorI = parcelI*injectorCells_.size()/nParcels;
+        injectorI = int64_t(parcelI)*int64_t(injectors_.size())/nParcels;
     }
 
     position = injectors_[injectorI].x();
@@ -206,7 +206,7 @@ void Foam::KinematicLookupTableInjection<CloudType>::setProperties
     typename CloudType::parcelType& parcel
 )
 {
-    label injectorI = parcelI*injectorCells_.size()/nParcels;
+    label injectorI = int64_t(parcelI)*int64_t(injectors_.size())/nParcels;
 
     // set particle velocity
     parcel.U() = injectors_[injectorI].U();
