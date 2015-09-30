@@ -82,6 +82,13 @@ patchInjection::patchInjection
 
         patchInjectedMasses_.setSize(pbm.size(), 0);
     }
+
+    if (!patchIDs_.size())
+    {
+        FatalErrorIn("patchInjection::patchInjection")
+            << "No patches selected"
+            << exit(FatalError);
+    }
 }
 
 
@@ -100,6 +107,9 @@ void patchInjection::correct
     scalarField& diameterToInject
 )
 {
+    // Do not correct if no patches selected
+    if (!patchIDs_.size()) return;
+
     const scalarField& delta = owner().delta();
     const scalarField& rho = owner().rho();
     const scalarField& magSf = owner().magSf();
@@ -160,6 +170,9 @@ void patchInjection::correct
 
 void patchInjection::patchInjectedMassTotals(scalarField& patchMasses) const
 {
+    // Do not correct if no patches selected
+    if (!patchIDs_.size()) return;
+
     scalarField patchInjectedMasses
     (
         getModelProperty<scalarField>
@@ -170,7 +183,6 @@ void patchInjection::patchInjectedMassTotals(scalarField& patchMasses) const
     );
 
     scalarField patchInjectedMassTotals(patchInjectedMasses_);
-    //combineReduce(patchInjectedMassTotals, plusEqOp<scalarField>());
     Pstream::listCombineGather(patchInjectedMassTotals, plusEqOp<scalar>());
 
     forAll(patchIDs_, pidi)
