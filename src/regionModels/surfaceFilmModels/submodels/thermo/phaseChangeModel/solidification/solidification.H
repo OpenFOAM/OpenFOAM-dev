@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,9 @@ Class
     Foam::solidification
 
 Description
-    Solidification phase change model where all film mass is converted when
-    the local temperature > activation temperature.
+    Solidification phase change model where all film mass is converted when the
+    local temperature > activation temperature.  The latent heat is
+    assumed to be removed by heat-transfer to the wall.
 
 SourceFiles
     solidification.C
@@ -55,8 +56,6 @@ class solidification
 :
     public phaseChangeModel
 {
-private:
-
     // Private member functions
 
         //- Disallow default bitwise copy construct
@@ -73,11 +72,13 @@ protected:
         //- Temperature at which solidification starts
         scalar T0_;
 
-        //- Latent heat of solidification [J/kg]
-        scalar L_;
+        //- Solidification limiter
+        //  Maximum fraction of film which can solidify in a time-step
+        scalar maxSolidificationFrac_;
 
-        //- Under-relaxation parameter for solidification process (0-1)
-        scalar alpha_;
+        //- Solidification limiter
+        //  Maximum rate at which the film can solidify
+        dimensionedScalar maxSolidificationRate_;
 
         //- Accumulated solid mass [kg]
         volScalarField mass_;

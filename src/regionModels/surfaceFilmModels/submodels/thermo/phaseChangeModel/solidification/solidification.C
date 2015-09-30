@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,20 @@ solidification::solidification
 :
     phaseChangeModel(typeName, owner, dict),
     T0_(readScalar(coeffDict_.lookup("T0"))),
-    L_(readScalar(coeffDict_.lookup("L"))),
-    alpha_(readScalar(coeffDict_.lookup("alpha"))),
+    maxSolidificationFrac_
+    (
+        coeffDict_.lookupOrDefault("maxSolidificationFrac", 0.2)
+    ),
+    maxSolidificationRate_
+    (
+        dimensioned<scalar>::lookupOrDefault
+        (
+            "maxSolidificationRate",
+            coeffDict_,
+            dimless/dimTime,
+            GREAT
+        )
+    ),
     mass_
     (
         IOobject
@@ -111,15 +123,28 @@ void solidification::correctModel
     const scalarField& T = film.T();
     const scalarField& alpha = film.alpha();
 
-    forAll(alpha, cellI)
+    const scalar rateLimiter = min
+    (
+        maxSolidificationFrac_,
+        (
+            maxSolidificationRate_
+           *owner_.regionMesh().time().deltaTValue()
+        ).value()
+    );
+
+    forAll(alpha, celli)
     {
-        if (alpha[cellI] > 0.5)
+        if (alpha[celli] > 0.5)
         {
-            if (T[cellI] > T0_)
+            if (T[celli] < T0_)
             {
-                mass_[cellI] += alpha_*availableMass[cellI];
-                dMass[cellI] += alpha_*availableMass[cellI];
-                dEnergy[cellI] += alpha_*availableMass[cellI]*L_;
+                const scalar dm = rateLimiter*availableMass[celli];
+
+                mass_[celli] += dm;
+                dMass[celli] += dm;
+
+                // Heat is assumed to be removed by heat-transfer to the wall
+                // so the energy remains unchanged by the phase-change.
             }
         }
     }
