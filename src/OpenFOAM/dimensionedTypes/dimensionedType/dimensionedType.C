@@ -198,18 +198,10 @@ Foam::dimensioned<Type> Foam::dimensioned<Type>::lookupOrDefault
 (
     const word& name,
     const dictionary& dict,
-    const Type& defaultValue,
-    const dimensionSet& dims
+    const Type& defaultValue
 )
 {
-    if (dict.found(name))
-    {
-        return dimensioned<Type>(name, dims, dict.lookup(name));
-    }
-    else
-    {
-        return dimensioned<Type>(name, dims, defaultValue);
-    }
+    return lookupOrDefault(name, dict, dimless, defaultValue);
 }
 
 
@@ -232,12 +224,10 @@ Foam::dimensioned<Type> Foam::dimensioned<Type>::lookupOrAddToDict
 (
     const word& name,
     dictionary& dict,
-    const Type& defaultValue,
-    const dimensionSet& dims
+    const Type& defaultValue
 )
 {
-    Type value = dict.lookupOrAddDefault<Type>(name, defaultValue);
-    return dimensioned<Type>(name, dims, value);
+    return lookupOrAddToDict(name, dict, dimless, defaultValue);
 }
 
 

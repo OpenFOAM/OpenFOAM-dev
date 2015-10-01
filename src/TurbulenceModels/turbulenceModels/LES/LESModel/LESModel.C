@@ -75,8 +75,8 @@ Foam::LESModel<BasicTurbulenceModel>::LESModel
         (
             "kMin",
             LESDict_,
-            SMALL,
-            sqr(dimVelocity)
+            sqr(dimVelocity),
+            SMALL
         )
     ),
 

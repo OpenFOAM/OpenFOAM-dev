@@ -187,8 +187,8 @@ forAll(fluidRegions, i)
             (
                 "rhoMax",
                 simpleDict,
-                GREAT,
-                dimDensity
+                dimDensity,
+                GREAT
             )
         )
     );
@@ -202,8 +202,8 @@ forAll(fluidRegions, i)
             (
                 "rhoMin",
                 simpleDict,
-                0,
-                dimDensity
+                dimDensity,
+                0
             )
         )
     );

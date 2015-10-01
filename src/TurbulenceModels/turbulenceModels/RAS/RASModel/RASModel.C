@@ -75,8 +75,8 @@ Foam::RASModel<BasicTurbulenceModel>::RASModel
         (
             "kMin",
             RASDict_,
-            SMALL,
-            sqr(dimVelocity)
+            sqr(dimVelocity),
+            SMALL
         )
     ),
 
@@ -86,8 +86,8 @@ Foam::RASModel<BasicTurbulenceModel>::RASModel
         (
             "epsilonMin",
             RASDict_,
-            SMALL,
-            kMin_.dimensions()/dimTime
+            kMin_.dimensions()/dimTime,
+            SMALL
         )
     ),
 
@@ -97,8 +97,8 @@ Foam::RASModel<BasicTurbulenceModel>::RASModel
         (
             "omegaMin",
             RASDict_,
-            SMALL,
-            dimless/dimTime
+            dimless/dimTime,
+            SMALL
         )
     )
 {
