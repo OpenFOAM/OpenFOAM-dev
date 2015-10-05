@@ -157,7 +157,7 @@ void Foam::multiphaseSystem::solveAlphas()
 
         MULES::limit
         (
-            1.0/mesh_.time().deltaT().value(),
+            1.0/mesh_.time().deltaT().value(), // ***HGW add support for LTS
             geometricOneField(),
             phase,
             phi_,
@@ -620,7 +620,7 @@ void Foam::multiphaseSystem::solve()
         dimensionedScalar totalDeltaT = runTime.deltaT();
 
         PtrList<volScalarField> alpha0s(phases().size());
-        PtrList<surfaceScalarField> phiSums(phases().size());
+        PtrList<surfaceScalarField> alphaPhiSums(phases().size());
 
         forAll(phases(), phasei)
         {
@@ -633,7 +633,7 @@ void Foam::multiphaseSystem::solve()
                 new volScalarField(alpha.oldTime())
             );
 
-            phiSums.set
+            alphaPhiSums.set
             (
                 phasei,
                 new surfaceScalarField
@@ -664,7 +664,7 @@ void Foam::multiphaseSystem::solve()
 
             forAll(phases(), phasei)
             {
-                phiSums[phasei] += phases()[phasei].phi();
+                alphaPhiSums[phasei] += phases()[phasei].alphaPhi();
             }
         }
 
@@ -673,7 +673,7 @@ void Foam::multiphaseSystem::solve()
             phaseModel& phase = phases()[phasei];
             volScalarField& alpha = phase;
 
-            phase.phi() = phiSums[phasei]/nAlphaSubCycles;
+            phase.alphaPhi() = alphaPhiSums[phasei]/nAlphaSubCycles;
 
             // Correct the time index of the field
             // to correspond to the global time

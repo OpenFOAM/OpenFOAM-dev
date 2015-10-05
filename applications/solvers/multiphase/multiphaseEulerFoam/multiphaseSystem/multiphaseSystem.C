@@ -888,7 +888,7 @@ void Foam::multiphaseSystem::solve()
         dimensionedScalar totalDeltaT = runTime.deltaT();
 
         PtrList<volScalarField> alpha0s(phases_.size());
-        PtrList<surfaceScalarField> phiSums(phases_.size());
+        PtrList<surfaceScalarField> alphaPhiSums(phases_.size());
 
         int phasei = 0;
         forAllIter(PtrDictionary<phaseModel>, phases_, iter)
@@ -902,7 +902,7 @@ void Foam::multiphaseSystem::solve()
                 new volScalarField(alpha.oldTime())
             );
 
-            phiSums.set
+            alphaPhiSums.set
             (
                 phasei,
                 new surfaceScalarField
@@ -936,7 +936,7 @@ void Foam::multiphaseSystem::solve()
             int phasei = 0;
             forAllIter(PtrDictionary<phaseModel>, phases_, iter)
             {
-                phiSums[phasei] += (runTime.deltaT()/totalDeltaT)*iter().phi();
+                alphaPhiSums[phasei] += iter().alphaPhi()/nAlphaSubCycles;
                 phasei++;
             }
         }
@@ -947,7 +947,7 @@ void Foam::multiphaseSystem::solve()
             phaseModel& phase = iter();
             volScalarField& alpha = phase;
 
-            phase.phi() = phiSums[phasei];
+            phase.alphaPhi() = alphaPhiSums[phasei];
 
             // Correct the time index of the field
             // to correspond to the global time
