@@ -38,13 +38,14 @@ Description
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
+    #include "addRegionOption.H"
 
     #include "setRootCase.H"
     #include "createTime.H"
 
     instantList timeDirs = timeSelector::select0(runTime, args);
 
-    #include "createMesh.H"
+    #include "createNamedMesh.H"
 
     runTime.setTime(timeDirs.last(), timeDirs.size()-1);
 

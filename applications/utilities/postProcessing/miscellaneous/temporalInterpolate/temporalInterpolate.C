@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,6 +185,7 @@ void fieldInterpolator::interpolate()
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
+    #include "addRegionOption.H"
     argList::addOption
     (
         "fields",
@@ -259,7 +260,7 @@ int main(int argc, char *argv[])
     );
 
 
-    #include "createMesh.H"
+    #include "createNamedMesh.H"
 
     Info<< "Interpolating fields for times:" << endl;
 
