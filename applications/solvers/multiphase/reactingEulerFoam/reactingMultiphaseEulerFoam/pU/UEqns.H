@@ -31,5 +31,6 @@ PtrList<fvVectorMatrix> UEqns(phases.size());
 
         UEqns[phasei].relax();
         fvOptions.constrain(UEqns[phasei]);
+        fvOptions.correct(U);
     }
 }

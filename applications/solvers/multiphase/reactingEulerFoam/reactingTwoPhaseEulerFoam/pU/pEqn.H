@@ -31,6 +31,8 @@ surfaceScalarField alpharAUf2
     fvc::interpolate(max(alpha2, phase2.residualAlpha())*rAU2)
 );
 
+volScalarField Kd(fluid.Kd());
+
 // Turbulent diffusion, particle-pressure, lift and wall-lubrication fluxes
 tmp<surfaceScalarField> phiF1;
 tmp<surfaceScalarField> phiF2;
