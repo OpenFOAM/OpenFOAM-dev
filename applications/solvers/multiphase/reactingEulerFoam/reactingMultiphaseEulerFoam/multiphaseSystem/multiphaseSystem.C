@@ -155,19 +155,43 @@ void Foam::multiphaseSystem::solveAlphas()
             }
         }
 
-        MULES::limit
-        (
-            1.0/mesh_.time().deltaT().value(), // ***HGW add support for LTS
-            geometricOneField(),
-            phase,
-            phi_,
-            alphaPhiCorr,
-            zeroField(),
-            zeroField(),
-            phase.alphaMax(),
-            0,
-            true
-        );
+        if (fv::localEulerDdt::enabled(mesh_))
+        {
+            const volScalarField& rDeltaT =
+                fv::localEulerDdt::localRDeltaT(mesh_);
+
+            MULES::limit
+            (
+                rDeltaT,
+                geometricOneField(),
+                phase,
+                phi_,
+                alphaPhiCorr,
+                zeroField(),
+                zeroField(),
+                phase.alphaMax(),
+                0,
+                true
+            );
+        }
+        else
+        {
+            const scalar rDeltaT = 1.0/mesh_.time().deltaTValue();
+
+            MULES::limit
+            (
+                rDeltaT,
+                geometricOneField(),
+                phase,
+                phi_,
+                alphaPhiCorr,
+                zeroField(),
+                zeroField(),
+                phase.alphaMax(),
+                0,
+                true
+            );
+        }
     }
 
     MULES::limitSum(alphaPhiCorrs);
@@ -481,7 +505,7 @@ Foam::multiphaseSystem::multiphaseSystem
         IOobject
         (
             "alphas",
-            mesh.time().timeName(),
+            mesh_.time().timeName(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -496,13 +520,13 @@ Foam::multiphaseSystem::multiphaseSystem
     deltaN_
     (
         "deltaN",
-        1e-8/pow(average(mesh.V()), 1.0/3.0)
+        1e-8/pow(average(mesh_.V()), 1.0/3.0)
     )
 {
     forAll(phases(), phasei)
     {
         volScalarField& alphai = phases()[phasei];
-        mesh.setFluxRequired(alphai.name());
+        mesh_.setFluxRequired(alphai.name());
     }
 }
 
@@ -599,13 +623,12 @@ Foam::multiphaseSystem::nearInterface() const
 
 void Foam::multiphaseSystem::solve()
 {
-    const fvMesh& mesh = this->mesh();
-    const Time& runTime = mesh.time();
+    const Time& runTime = mesh_.time();
 
     const dictionary& alphaControls = mesh_.solverDict("alpha");
     label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
 
-    bool LTS = fv::localEulerDdt::enabled(mesh);
+    bool LTS = fv::localEulerDdt::enabled(mesh_);
 
     if (nAlphaSubCycles > 1)
     {
@@ -614,7 +637,7 @@ void Foam::multiphaseSystem::solve()
         if (LTS)
         {
             trSubDeltaT =
-                fv::localEulerDdt::localRSubDeltaT(mesh, nAlphaSubCycles);
+                fv::localEulerDdt::localRSubDeltaT(mesh_, nAlphaSubCycles);
         }
 
         dimensionedScalar totalDeltaT = runTime.deltaT();
