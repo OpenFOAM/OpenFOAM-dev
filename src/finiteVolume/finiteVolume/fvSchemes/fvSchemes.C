@@ -501,7 +501,7 @@ void Foam::fvSchemes::setFluxRequired(const word& name) const
         Info<< "Setting fluxRequired for " << name << endl;
     }
 
-    fluxRequired_.add(name, true);
+    fluxRequired_.add(name, true, true);
 }
 
 
