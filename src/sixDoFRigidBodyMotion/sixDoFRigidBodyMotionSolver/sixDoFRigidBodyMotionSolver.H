@@ -70,6 +70,10 @@ class sixDoFRigidBodyMotionSolver
         //- Outer morphing distance (limit of linear interpolation region)
         const scalar do_;
 
+        //- Switch for test-mode in which only the
+        //  gravitational body-force is applied
+        Switch test_;
+
         //- Reference density required by the forces object for
         //  incompressible calculations, required if rhoName == rhoInf
         scalar rhoInf_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,9 @@ Description
     pages = {5840-5851},
     url = {http://link.aip.org/link/?JCP/107/5840/1},
     doi = {10.1063/1.474310}
+
+    Changes to Crank-Nicolson integration if subsequent iterations to handle
+    implicit coupling between pressure and motion.
 
     Can add restraints (e.g. a spring)
     and constraints (e.g. motion may only be on a plane).
@@ -298,18 +301,22 @@ public:
 
         // Update state
 
-            //- First leapfrog velocity adjust and motion part, required
+            //- First symplectic velocity adjust and motion part, required
             //  before force calculation.  Takes old timestep for variable
             //  timestep cases.
-            void updatePosition(scalar deltaT, scalar deltaT0);
+            //  Changes to Crank-Nicolson integration for subsequent iterations.
+            void updatePosition(bool firstIter, scalar deltaT, scalar deltaT0);
 
-            //- Second leapfrog velocity adjust part
-            //  required after motion and force calculation
+            //- Second symplectic velocity adjust part
+            //  required after motion and force calculation.
+            //  Changes to Crank-Nicolson integration for subsequent iterations.
             void updateAcceleration
             (
+                bool firstIter,
                 const vector& fGlobal,
                 const vector& tauGlobal,
-                scalar deltaT
+                scalar deltaT,
+                scalar deltaT0
             );
 
             //- Report the status of the motion

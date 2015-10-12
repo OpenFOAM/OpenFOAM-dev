@@ -259,22 +259,38 @@ void Foam::sixDoFRigidBodyMotion::addConstraints
 
 void Foam::sixDoFRigidBodyMotion::updatePosition
 (
+    bool firstIter,
     scalar deltaT,
     scalar deltaT0
 )
 {
-    // First leapfrog velocity adjust and motion part, required before
-    // force calculation
-
     if (Pstream::master())
     {
-        v() = tConstraints_ & (v0() + aDamp_*0.5*deltaT0*a());
-        pi() = rConstraints_ & (pi0() + aDamp_*0.5*deltaT0*tau());
+        if (firstIter)
+        {
+            // First simplectic step:
+            //     Half-step for linear and angular velocities
+            //     Update position and orientation
 
-        // Leapfrog move part
-        centreOfRotation() = centreOfRotation0() + deltaT*v();
+            v() = tConstraints_ & (v0() + aDamp_*0.5*deltaT0*a());
+            pi() = rConstraints_ & (pi0() + aDamp_*0.5*deltaT0*tau());
 
-        // Leapfrog orientation adjustment
+            centreOfRotation() = centreOfRotation0() + deltaT*v();
+        }
+        else
+        {
+            // For subsequent iterations use Crank-Nicolson
+
+            v() = tConstraints_
+              & (v0() + aDamp_*0.5*deltaT*(a() + motionState0_.a()));
+            pi() = rConstraints_
+              & (pi0() + aDamp_*0.5*deltaT*(tau() + motionState0_.tau()));
+
+            centreOfRotation() =
+                centreOfRotation0() + 0.5*deltaT*(v() + motionState0_.v());
+        }
+
+        // Correct orientation
         Tuple2<tensor, vector> Qpi = rotate(Q0(), pi(), deltaT);
         Q() = Qpi.first();
         pi() = rConstraints_ & Qpi.second();
@@ -286,15 +302,14 @@ void Foam::sixDoFRigidBodyMotion::updatePosition
 
 void Foam::sixDoFRigidBodyMotion::updateAcceleration
 (
+    bool firstIter,
     const vector& fGlobal,
     const vector& tauGlobal,
-    scalar deltaT
+    scalar deltaT,
+    scalar deltaT0
 )
 {
     static bool first = false;
-
-    // Second leapfrog velocity adjust part, required after motion and
-    // acceleration calculation
 
     if (Pstream::master())
     {
@@ -315,9 +330,23 @@ void Foam::sixDoFRigidBodyMotion::updateAcceleration
         }
         first = false;
 
-        // Correct velocities
-        v() += tConstraints_ & aDamp_*0.5*deltaT*a();
-        pi() += rConstraints_ & aDamp_*0.5*deltaT*tau();
+        if (firstIter)
+        {
+            // Second simplectic step:
+            //     Complete update of linear and angular velocities
+
+            v() += tConstraints_ & aDamp_*0.5*deltaT*a();
+            pi() += rConstraints_ & aDamp_*0.5*deltaT*tau();
+        }
+        else
+        {
+            // For subsequent iterations use Crank-Nicolson
+
+            v() = tConstraints_
+              & (v0() + aDamp_*0.5*deltaT*(a() + motionState0_.a()));
+            pi() = rConstraints_
+              & (pi0() + aDamp_*0.5*deltaT*(tau() + motionState0_.tau()));
+        }
 
         if (report_)
         {
@@ -327,6 +356,7 @@ void Foam::sixDoFRigidBodyMotion::updateAcceleration
 
     Pstream::scatter(motionState_);
 }
+
 
 
 void Foam::sixDoFRigidBodyMotion::status() const

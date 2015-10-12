@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,13 +152,15 @@ void uncoupledSixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
     const Time& t = mesh.time();
 
     // Store the motion state at the beginning of the time-step
+    bool firstIter = false;
     if (curTimeIndex_ != t.timeIndex())
     {
         motion_.newTime();
         curTimeIndex_ = t.timeIndex();
+        firstIter = true;
     }
 
-    motion_.updatePosition(t.deltaTValue(), t.deltaT0Value());
+    motion_.updatePosition(firstIter, t.deltaTValue(), t.deltaT0Value());
 
     vector gravity = vector::zero;
 
@@ -173,9 +175,11 @@ void uncoupledSixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
     // Do not modify the accelerations, except with gravity, where available
     motion_.updateAcceleration
     (
+        firstIter,
         gravity*motion_.mass(),
         vector::zero,
-        t.deltaTValue()
+        t.deltaTValue(),
+        t.deltaT0Value()
     );
 
     Field<vector>::operator=

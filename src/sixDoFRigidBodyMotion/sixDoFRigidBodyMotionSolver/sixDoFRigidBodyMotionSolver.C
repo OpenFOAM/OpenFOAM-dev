@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,6 +85,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
     di_(readScalar(coeffDict().lookup("innerDistance"))),
     do_(readScalar(coeffDict().lookup("outerDistance"))),
+    test_(coeffDict().lookupOrDefault<Switch>("test", false)),
     rhoInf_(1.0),
     rhoName_(coeffDict().lookupOrDefault<word>("rhoName", "rho")),
     scale_
@@ -179,30 +180,14 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
             << " points." << exit(FatalError);
     }
 
-    // Store the motion state at the beginning of the time-step
+    // Store the motion state at the beginning of the time-stepbool
+    bool firstIter = false;
     if (curTimeIndex_ != this->db().time().timeIndex())
     {
         motion_.newTime();
         curTimeIndex_ = this->db().time().timeIndex();
+        firstIter = true;
     }
-
-    // Patch force data is valid for the current positions, so
-    // calculate the forces on the motion object from this data, then
-    // update the positions
-
-    motion_.updatePosition(t.deltaTValue(), t.deltaT0Value());
-
-    dictionary forcesDict;
-
-    forcesDict.add("type", forces::typeName);
-    forcesDict.add("patches", patches_);
-    forcesDict.add("rhoInf", rhoInf_);
-    forcesDict.add("rhoName", rhoName_);
-    forcesDict.add("CofR", motion_.centreOfRotation());
-
-    forces f("forces", db(), forcesDict);
-
-    f.calcForcesMoment();
 
     dimensionedVector g("g", dimAcceleration, vector::zero);
 
@@ -218,12 +203,51 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
     // scalar ramp = min(max((this->db().time().value() - 5)/10, 0), 1);
     scalar ramp = 1.0;
 
-    motion_.updateAcceleration
-    (
-        ramp*(f.forceEff() + motion_.mass()*g.value()),
-        ramp*(f.momentEff() + motion_.mass()*(motion_.momentArm() ^ g.value())),
-        t.deltaTValue()
-    );
+    if (test_)
+    {
+        motion_.updatePosition(firstIter, t.deltaTValue(), t.deltaT0Value());
+
+        motion_.updateAcceleration
+        (
+            firstIter,
+            ramp*(motion_.mass()*g.value()),
+            ramp*(motion_.mass()*(motion_.momentArm() ^ g.value())),
+            t.deltaTValue(),
+            t.deltaT0Value()
+        );
+    }
+    else
+    {
+        dictionary forcesDict;
+
+        forcesDict.add("type", forces::typeName);
+        forcesDict.add("patches", patches_);
+        forcesDict.add("rhoInf", rhoInf_);
+        forcesDict.add("rhoName", rhoName_);
+        forcesDict.add("CofR", motion_.centreOfRotation());
+
+        forces f("forces", db(), forcesDict);
+
+        f.calcForcesMoment();
+
+        // Patch force data is valid for the current positions, so
+        // calculate the forces on the motion object from this data, then
+        // update the positions
+        motion_.updatePosition(firstIter, t.deltaTValue(), t.deltaT0Value());
+
+        motion_.updateAcceleration
+        (
+            firstIter,
+            ramp*(f.forceEff() + motion_.mass()*g.value()),
+            ramp
+           *(
+               f.momentEff()
+             + motion_.mass()*(motion_.momentArm() ^ g.value())
+            ),
+            t.deltaTValue(),
+            t.deltaT0Value()
+        );
+    }
 
     // Update the displacements
     pointDisplacement_.internalField() =

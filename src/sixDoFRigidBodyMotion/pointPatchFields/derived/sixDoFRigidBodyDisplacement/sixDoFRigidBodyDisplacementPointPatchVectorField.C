@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,17 +204,13 @@ void sixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
     const pointPatch& ptPatch = this->patch();
 
     // Store the motion state at the beginning of the time-step
+    bool firstIter = false;
     if (curTimeIndex_ != t.timeIndex())
     {
         motion_.newTime();
         curTimeIndex_ = t.timeIndex();
+        firstIter = true;
     }
-
-    // Patch force data is valid for the current positions, so
-    // calculate the forces on the motion object from this data, then
-    // update the positions
-
-    motion_.updatePosition(t.deltaTValue(), t.deltaT0Value());
 
     dictionary forcesDict;
 
@@ -227,6 +223,11 @@ void sixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
     forces f("forces", db(), forcesDict);
 
     f.calcForcesMoment();
+
+    // Patch force data is valid for the current positions, so
+    // calculate the forces on the motion object from this data, then
+    // update the positions
+    motion_.updatePosition(firstIter, t.deltaTValue(), t.deltaT0Value());
 
     // Get the forces on the patch faces at the current positions
 
@@ -243,9 +244,11 @@ void sixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
 
     motion_.updateAcceleration
     (
+        firstIter,
         ramp*(f.forceEff() + motion_.mass()*g_),
         ramp*(f.momentEff() + motion_.mass()*(motion_.momentArm() ^ g_)),
-        t.deltaTValue()
+        t.deltaTValue(),
+        t.deltaT0Value()
     );
 
     Field<vector>::operator=
