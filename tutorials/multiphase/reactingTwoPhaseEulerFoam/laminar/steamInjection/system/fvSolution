@@ -87,6 +87,11 @@ PIMPLE
 
 relaxationFactors
 {
+    fields
+    {
+        iDmdt 1;
+    }
+
     equations
     {
         ".*"            1;
