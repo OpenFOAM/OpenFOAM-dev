@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,22 +53,24 @@ Description
 
     \heading Function object usage
     \table
-        Property     | Description             | Required    | Default value
-        type         | type name: processorField | yes       |
-        fields       | fields to store (see below) | yes     |
+        Property     | Description                 | Required | Default value
+        type         | type name: processorField   | yes      |
+        fields       | fields to store (see below) | yes      |
     \endtable
 
     Where \c fields can include:
     \plaintable
-        R           | Stress tensor
-        devRhoReff  |
+        k           | turbulence kinetic energy
+        epsilon     | turbulence kinetic energy dissipation rate
+        nut         | turbulence viscosity (incompressible)
+        nuEff       | effective turbulence viscosity (incompressible)
         mut         | turbulence viscosity (compressible)
         muEff       | effective turbulence viscosity (compressible)
         alphat      | turbulence thermal diffusivity (compressible)
         alphaEff    | effective turbulence thermal diffusivity (compressible)
-        devReff     |
-        nut         | turbulence viscosity (incompressible)
-        nuEff       | effective turbulence viscosity (incompressible)
+        R           | Reynolds stress tensor
+        devReff     | Deviatoric part of the effective Reynolds stress
+        devRhoReff  | Divergence of the Reynolds stress
     \endplaintable
 
 SeeAlso
@@ -109,23 +111,27 @@ public:
 
     enum compressibleField
     {
-        cfR,
-        cfDevRhoReff,
+        cfK,
+        cfEpsilon,
         cfMut,
         cfMuEff,
         cfAlphat,
-        cfAlphaEff
+        cfAlphaEff,
+        cfR,
+        cfDevRhoReff
     };
-    static const NamedEnum<compressibleField, 6> compressibleFieldNames_;
+    static const NamedEnum<compressibleField, 8> compressibleFieldNames_;
 
     enum incompressibleField
     {
-        ifR,
-        ifDevReff,
+        ifK,
+        ifEpsilon,
         ifNut,
-        ifNuEff
+        ifNuEff,
+        ifR,
+        ifDevReff
     };
-    static const NamedEnum<incompressibleField, 4> incompressibleFieldNames_;
+    static const NamedEnum<incompressibleField, 6> incompressibleFieldNames_;
 
     static const word modelName;
 
