@@ -45,6 +45,8 @@ Description
 
 int main(int argc, char *argv[])
 {
+    argList::noParallel();
+
     #include "setRootCase.H"
 
     #include "createTime.H"
