@@ -493,12 +493,15 @@ Foam::label Foam::checkGeometry(const polyMesh& mesh, const bool allGeometry)
     // Min length
     scalar minDistSqr = magSqr(1e-6 * globalBb.span());
 
-    // Non-empty directions
+    // Geometric directions
     const Vector<label> validDirs = (mesh.geometricD() + Vector<label>::one)/2;
-    Info<< "    Mesh (non-empty, non-wedge) directions " << validDirs << endl;
+    Info<< "    Mesh has " << mesh.nGeometricD()
+        << " geometric (non-empty/wedge) directions " << validDirs << endl;
 
+    // Solution directions
     const Vector<label> solDirs = (mesh.solutionD() + Vector<label>::one)/2;
-    Info<< "    Mesh (non-empty) directions " << solDirs << endl;
+    Info<< "    Mesh has " << mesh.nSolutionD()
+        << " solution (non-empty) directions " << solDirs << endl;
 
     if (mesh.nGeometricD() < 3)
     {
