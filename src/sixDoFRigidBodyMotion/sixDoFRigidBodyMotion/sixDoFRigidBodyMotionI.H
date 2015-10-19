@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,36 +161,6 @@ inline const Foam::vector& Foam::sixDoFRigidBodyMotion::tau() const
 }
 
 
-inline const Foam::tensor& Foam::sixDoFRigidBodyMotion::Q0() const
-{
-    return motionState0_.Q();
-}
-
-
-inline const Foam::vector& Foam::sixDoFRigidBodyMotion::v0() const
-{
-    return motionState0_.v();
-}
-
-
-inline const Foam::vector& Foam::sixDoFRigidBodyMotion::a0() const
-{
-    return motionState0_.a();
-}
-
-
-inline const Foam::vector& Foam::sixDoFRigidBodyMotion::pi0() const
-{
-    return motionState0_.pi();
-}
-
-
-inline const Foam::vector& Foam::sixDoFRigidBodyMotion::tau0() const
-{
-    return motionState0_.tau();
-}
-
-
 inline Foam::point& Foam::sixDoFRigidBodyMotion::initialCentreOfRotation()
 {
     return initialCentreOfRotation_;
@@ -258,12 +228,6 @@ Foam::sixDoFRigidBodyMotion::state() const
 inline const Foam::point& Foam::sixDoFRigidBodyMotion::centreOfRotation() const
 {
     return motionState_.centreOfRotation();
-}
-
-
-inline const Foam::point& Foam::sixDoFRigidBodyMotion::centreOfRotation0() const
-{
-    return motionState0_.centreOfRotation();
 }
 
 

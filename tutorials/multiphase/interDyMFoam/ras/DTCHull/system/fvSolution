@@ -60,7 +60,7 @@ solvers
         cacheAgglomeration true;
 
         tolerance       5e-8;
-        relTol          0.001;
+        relTol          0;
     };
 
     p_rghFinal
@@ -86,8 +86,8 @@ PIMPLE
 {
     momentumPredictor no;
 
-    nOuterCorrectors 1;
-    nCorrectors      3;
+    nOuterCorrectors 3;
+    nCorrectors      1;
     nNonOrthogonalCorrectors 0;
 
     correctPhi      yes;

@@ -31,8 +31,15 @@ sixDoFRigidBodyMotionCoeffs
     momentOfInertia (40 921 921);
     rhoInf          1;
     report          on;
-    accelerationRelaxation 0.3;
+
     value           uniform (0 0 0);
+
+    accelerationRelaxation 0.4;
+
+    solver
+    {
+        type Newmark;
+    }
 
     constraints
     {

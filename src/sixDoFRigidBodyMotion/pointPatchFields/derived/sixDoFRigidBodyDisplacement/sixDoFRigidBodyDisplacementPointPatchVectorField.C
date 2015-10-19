@@ -224,11 +224,6 @@ void sixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
 
     f.calcForcesMoment();
 
-    // Patch force data is valid for the current positions, so
-    // calculate the forces on the motion object from this data, then
-    // update the positions
-    motion_.updatePosition(firstIter, t.deltaTValue(), t.deltaT0Value());
-
     // Get the forces on the patch faces at the current positions
 
     if (lookupGravity_ == 1)
@@ -242,7 +237,7 @@ void sixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
     // scalar ramp = min(max((t.value() - 5)/10, 0), 1);
     scalar ramp = 1.0;
 
-    motion_.updateAcceleration
+    motion_.update
     (
         firstIter,
         ramp*(f.forceEff() + motion_.mass()*g_),

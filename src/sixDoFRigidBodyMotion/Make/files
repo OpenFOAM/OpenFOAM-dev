@@ -31,4 +31,10 @@ sixDoFRigidBodyMotionSolver/sixDoFRigidBodyMotionSolver.C
 sixDoFRigidBodyMotionSolver/externalPointEdgePoint.C
 sixDoFRigidBodyMotionSolver/pointPatchDist.C
 
+sixDoFSolvers/sixDoFSolver/sixDoFSolver.C
+sixDoFSolvers/sixDoFSolver/newSixDoFSolver.C
+sixDoFSolvers/symplectic/symplectic.C
+sixDoFSolvers/CrankNicolson/CrankNicolson.C
+sixDoFSolvers/Newmark/Newmark.C
+
 LIB = $(FOAM_LIBBIN)/libsixDoFRigidBodyMotion

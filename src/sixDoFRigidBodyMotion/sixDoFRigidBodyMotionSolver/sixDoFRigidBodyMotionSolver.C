@@ -205,9 +205,7 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 
     if (test_)
     {
-        motion_.updatePosition(firstIter, t.deltaTValue(), t.deltaT0Value());
-
-        motion_.updateAcceleration
+        motion_.update
         (
             firstIter,
             ramp*(motion_.mass()*g.value()),
@@ -230,12 +228,7 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 
         f.calcForcesMoment();
 
-        // Patch force data is valid for the current positions, so
-        // calculate the forces on the motion object from this data, then
-        // update the positions
-        motion_.updatePosition(firstIter, t.deltaTValue(), t.deltaT0Value());
-
-        motion_.updateAcceleration
+        motion_.update
         (
             firstIter,
             ramp*(f.forceEff() + motion_.mass()*g.value()),

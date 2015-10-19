@@ -133,7 +133,11 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << endl;
 
-        mesh.update();
+        for (int i = 0; i<2; i++)
+        {
+            mesh.update();
+        }
+
         mesh.checkMesh(true);
 
         if (checkAMI)

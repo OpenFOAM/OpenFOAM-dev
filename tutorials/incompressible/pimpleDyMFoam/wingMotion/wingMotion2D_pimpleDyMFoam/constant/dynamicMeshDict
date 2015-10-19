@@ -41,6 +41,11 @@ sixDoFRigidBodyMotionCoeffs
     rhoInf          1;
     report          on;
 
+    solver
+    {
+        type symplectic;
+    }
+
     constraints
     {
         yLine
