@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        #include "write.H"
+        runTime.write();
 
         Info<< "ExecutionTime = "
             << runTime.elapsedCpuTime()
