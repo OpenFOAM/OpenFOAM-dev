@@ -1483,11 +1483,7 @@ Foam::label Foam::polyMesh::findCell
         return -1;
     }
 
-    if
-    (
-        Pstream::parRun()
-     && (decompMode == FACE_DIAG_TRIS || decompMode == CELL_TETS)
-    )
+    if (Pstream::parRun() && decompMode == FACE_DIAG_TRIS)
     {
         // Force construction of face-diagonal decomposition before testing
         // for zero cells.
