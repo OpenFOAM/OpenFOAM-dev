@@ -71,7 +71,6 @@ Foam::vector Foam::cyclicAMIPolyPatch::findFaceNormalMaxRadius
 
 void Foam::cyclicAMIPolyPatch::calcTransforms()
 {
-    // Half0
     const cyclicAMIPolyPatch& half0 = *this;
     vectorField half0Areas(half0.size());
     forAll(half0, facei)
@@ -79,7 +78,6 @@ void Foam::cyclicAMIPolyPatch::calcTransforms()
         half0Areas[facei] = half0[facei].normal(half0.points());
     }
 
-    // Half1
     const cyclicAMIPolyPatch& half1 = neighbPatch();
     vectorField half1Areas(half1.size());
     forAll(half1, facei)
@@ -406,6 +404,9 @@ void Foam::cyclicAMIPolyPatch::resetAMI
 
 void Foam::cyclicAMIPolyPatch::initGeometry(PstreamBuffers& pBufs)
 {
+    // Clear the invalid AMI
+    AMIPtr_.clear();
+
     polyPatch::initGeometry(pBufs);
 }
 
@@ -431,6 +432,9 @@ void Foam::cyclicAMIPolyPatch::initMovePoints
     const pointField& p
 )
 {
+    // Clear the invalid AMI
+    AMIPtr_.clear();
+
     polyPatch::initMovePoints(pBufs, p);
 
     // See below. Clear out any local geometry
@@ -447,19 +451,15 @@ void Foam::cyclicAMIPolyPatch::movePoints
     polyPatch::movePoints(pBufs, p);
 
     calcTransforms();
-
-    // Note: resetAMI is called whilst in geometry update. So the slave
-    // side might not have reached 'movePoints'. Is explicitly handled by
-    // - clearing geometry of neighbour inside initMovePoints
-    // - not using localPoints() inside resetAMI
-    resetAMI();
 }
 
 
 void Foam::cyclicAMIPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
 {
-    polyPatch::initUpdateMesh(pBufs);
+    // Clear the invalid AMI
     AMIPtr_.clear();
+
+    polyPatch::initUpdateMesh(pBufs);
 }
 
 
