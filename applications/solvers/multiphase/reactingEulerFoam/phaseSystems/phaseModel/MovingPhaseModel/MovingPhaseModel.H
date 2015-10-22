@@ -47,14 +47,12 @@ SourceFiles
 #define MovingPhaseModel_H
 
 #include "phaseModel.H"
+#include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-template<class TransportModel>
-class PhaseCompressibleTurbulenceModel;
 
 /*---------------------------------------------------------------------------*\
                            Class phaseModel Declaration
@@ -83,7 +81,7 @@ class MovingPhaseModel
         volVectorField DUDt_;
 
         //- Turbulence model
-        autoPtr<PhaseCompressibleTurbulenceModel<phaseModel> > turbulence_;
+        autoPtr<phaseCompressibleTurbulenceModel> turbulence_;
 
         //- Continuity error
         volScalarField continuityError_;
@@ -178,8 +176,7 @@ public:
         // Turbulence
 
             //- Return the turbulence model
-            virtual const PhaseCompressibleTurbulenceModel<phaseModel>&
-                turbulence() const;
+            virtual const phaseCompressibleTurbulenceModel& turbulence() const;
 };
 
 

@@ -25,7 +25,7 @@ License
 
 #include "MovingPhaseModel.H"
 #include "phaseSystem.H"
-#include "PhaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleTurbulenceModel.H"
 #include "fixedValueFvPatchFields.H"
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
@@ -176,7 +176,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
     ),
     turbulence_
     (
-        PhaseCompressibleTurbulenceModel<phaseModel>::New
+        phaseCompressibleTurbulenceModel::New
         (
             *this,
             this->thermo().rho(),
@@ -374,7 +374,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::alphaRhoPhi()
 
 
 template<class BasePhaseModel>
-const Foam::PhaseCompressibleTurbulenceModel<Foam::phaseModel>&
+const Foam::phaseCompressibleTurbulenceModel&
 Foam::MovingPhaseModel<BasePhaseModel>::turbulence() const
 {
     return turbulence_;

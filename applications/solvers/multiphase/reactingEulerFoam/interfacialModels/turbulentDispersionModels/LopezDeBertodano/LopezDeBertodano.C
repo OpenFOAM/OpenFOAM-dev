@@ -25,7 +25,7 @@ License
 
 #include "LopezDeBertodano.H"
 #include "phasePair.H"
-#include "PhaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleTurbulenceModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

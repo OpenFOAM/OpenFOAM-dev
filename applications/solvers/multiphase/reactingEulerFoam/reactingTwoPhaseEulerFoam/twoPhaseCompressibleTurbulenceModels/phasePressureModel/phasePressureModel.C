@@ -42,10 +42,7 @@ Foam::RASModels::phasePressureModel::phasePressureModel
 :
     eddyViscosity
     <
-        RASModel<EddyDiffusivity<ThermalDiffusivity
-        <
-            PhaseCompressibleTurbulenceModel<phaseModel>
-        > > >
+        RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel> >
     >
     (
         type,
@@ -93,10 +90,7 @@ bool Foam::RASModels::phasePressureModel::read()
     (
         eddyViscosity
         <
-            RASModel<EddyDiffusivity<ThermalDiffusivity
-            <
-                PhaseCompressibleTurbulenceModel<phaseModel>
-            > > >
+            RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel> >
         >::read()
     )
     {

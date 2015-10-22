@@ -35,7 +35,7 @@ Description
 
 #include "fvCFD.H"
 #include "twoPhaseSystem.H"
-#include "PhaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleTurbulenceModel.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "pimpleControl.H"
 #include "localEulerDdtScheme.H"

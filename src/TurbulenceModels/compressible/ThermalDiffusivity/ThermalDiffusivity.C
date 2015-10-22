@@ -63,6 +63,7 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::New
     const alphaField& alpha,
     const volScalarField& rho,
     const volVectorField& U,
+    const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& transport,
     const word& propertiesName
@@ -76,6 +77,7 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::New
             alpha,
             rho,
             U,
+            alphaRhoPhi,
             phi,
             transport,
             propertiesName

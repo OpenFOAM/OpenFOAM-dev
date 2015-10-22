@@ -23,14 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "PhaseCompressibleTurbulenceModel.H"
-#include "phaseModel.H"
-#include "multiphaseSystem.H"
+#include "phaseCompressibleTurbulenceModel.H"
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
-
-#include "ThermalDiffusivity.H"
-#include "EddyDiffusivity.H"
 
 #include "laminar.H"
 #include "RASModel.H"

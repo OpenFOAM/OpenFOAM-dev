@@ -38,6 +38,7 @@ SourceFiles
 #include "surfaceFields.H"
 #include "fvMatricesFwd.H"
 #include "rhoThermo.H"
+#include "phaseCompressibleTurbulenceModelFwd.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,9 +48,6 @@ namespace Foam
 
 class phaseSystem;
 class diameterModel;
-
-template<class TransportModel>
-class PhaseCompressibleTurbulenceModel;
 
 /*---------------------------------------------------------------------------*\
                            Class phaseModel Declaration
@@ -342,7 +340,7 @@ public:
         // Turbulence
 
             //- Return the turbulence model
-            virtual const PhaseCompressibleTurbulenceModel<phaseModel>&
+            virtual const phaseCompressibleTurbulenceModel&
                 turbulence() const = 0;
 };
 
