@@ -136,23 +136,23 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
 
             if (rotationAngleDefined_)
             {
-                tensor T(rotationAxis_*rotationAxis_);
+                const tensor T(rotationAxis_*rotationAxis_);
 
-                tensor S
+                const tensor S
                 (
                     0, -rotationAxis_.z(), rotationAxis_.y(),
                     rotationAxis_.z(), 0, -rotationAxis_.x(),
                     -rotationAxis_.y(), rotationAxis_.x(), 0
                 );
 
-                tensor revTPos
+                const tensor revTPos
                 (
                     T
                   + cos(rotationAngle_)*(tensor::I - T)
                   + sin(rotationAngle_)*S
                 );
 
-                tensor revTNeg
+                const tensor revTNeg
                 (
                     T
                   + cos(-rotationAngle_)*(tensor::I - T)
@@ -161,27 +161,30 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
 
                 // Check - assume correct angle when difference in face areas
                 // is the smallest
-                vector transformedAreaPos = gSum(half1Areas & revTPos);
-                vector transformedAreaNeg = gSum(half1Areas & revTNeg);
-                vector area0 = gSum(half0Areas);
+                const vector transformedAreaPos = gSum(half1Areas & revTPos);
+                const vector transformedAreaNeg = gSum(half1Areas & revTNeg);
+                const vector area0 = gSum(half0Areas);
+                const scalar magArea0 = mag(area0) + ROOTVSMALL;
 
-                // Areas have opposite sign, so sum should be zero when
-                // correct rotation applied
-                scalar errorPos = mag(transformedAreaPos + area0);
-                scalar errorNeg = mag(transformedAreaNeg + area0);
+                // Areas have opposite sign, so sum should be zero when correct
+                // rotation applied
+                const scalar errorPos = mag(transformedAreaPos + area0);
+                const scalar errorNeg = mag(transformedAreaNeg + area0);
 
-                if (errorPos < errorNeg)
-                {
-                    revT = revTPos;
-                }
-                else
+                const scalar normErrorPos = errorPos/magArea0;
+                const scalar normErrorNeg = errorNeg/magArea0;
+
+                if (errorPos > errorNeg && normErrorNeg < matchTolerance())
                 {
                     revT = revTNeg;
                     rotationAngle_ *= -1;
                 }
+                else
+                {
+                    revT = revTPos;
+                }
 
-                scalar areaError =
-                    min(errorPos, errorNeg)/(mag(area0) + ROOTVSMALL);
+                const scalar areaError = min(normErrorPos, normErrorNeg);
 
                 if (areaError > matchTolerance())
                 {
@@ -195,8 +198,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                             "const pointField&, "
                             "const vectorField&"
                         ")"
-                    )
-                        << "Patch areas are not consistent within "
+                    )   << "Patch areas are not consistent within "
                         << 100*matchTolerance()
                         << " % indicating a possible error in the specified "
                         << "angle of rotation" << nl
