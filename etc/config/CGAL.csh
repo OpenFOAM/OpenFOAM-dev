@@ -30,7 +30,7 @@
 ##------------------------------------------------------------------------------
 
 set boost_version=boost-system
-set cgal_version=CGAL-4.6
+set cgal_version=CGAL-4.7
 
 setenv BOOST_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$boost_version
 setenv CGAL_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cgal_version
