@@ -9,6 +9,7 @@
         masterCasePath,
         masterCaseName
     );
+    runTimeMaster.functionObjects().off();
 
     const fileName addCasePath = addCase.path();
     const fileName addCaseName = addCase.name();
@@ -19,4 +20,4 @@
         addCasePath,
         addCaseName
     );
-
+    runTimeToAdd.functionObjects().off();
