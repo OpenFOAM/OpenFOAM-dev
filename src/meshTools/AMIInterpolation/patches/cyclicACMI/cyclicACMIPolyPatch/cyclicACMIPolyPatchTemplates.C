@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type>
 Foam::tmp<Foam::Field<Type> > Foam::cyclicACMIPolyPatch::interpolate
 (
@@ -32,27 +30,20 @@ Foam::tmp<Foam::Field<Type> > Foam::cyclicACMIPolyPatch::interpolate
     const Field<Type>& fldNonOverlap
 ) const
 {
-    // note: do not scale AMI field as face areas have already been taken
-    // into account
+    // Note: do not scale AMI field as face areas have already been taken into
+    // account
 
     if (owner())
     {
-        const scalarField& w = srcMask_;
-
-        tmp<Field<Type> > interpField(AMI().interpolateToSource(fldCouple));
-
-        return interpField + (1.0 - w)*fldNonOverlap;
+        return
+            AMI().interpolateToSource(fldCouple)
+          + (1.0 - AMI().srcWeightsSum())*fldNonOverlap;
     }
     else
     {
-        const scalarField& w = neighbPatch().tgtMask();
-
-        tmp<Field<Type> > interpField
-        (
+        return
             neighbPatch().AMI().interpolateToTarget(fldCouple)
-        );
-
-        return interpField + (1.0 - w)*fldNonOverlap;
+          + (1.0 - neighbPatch().AMI().tgtWeightsSum())*fldNonOverlap;
     }
 }
 
@@ -77,22 +68,18 @@ void Foam::cyclicACMIPolyPatch::interpolate
     List<Type>& result
 ) const
 {
-    // note: do not scale AMI field as face areas have already been taken
-    // into account
+    // Note: do not scale AMI field as face areas have already been taken into
+    // account
 
     if (owner())
     {
-        const scalarField& w = srcMask_;
-
         AMI().interpolateToSource(fldCouple, cop, result);
-        result = result + (1.0 - w)*fldNonOverlap;
+        result += (1.0 - AMI().srcWeightsSum())*fldNonOverlap;
     }
     else
     {
-        const scalarField& w = neighbPatch().tgtMask();
-
         neighbPatch().AMI().interpolateToTarget(fldCouple, cop, result);
-        result = result + (1.0 - w)*fldNonOverlap;
+        result += (1.0 - neighbPatch().AMI().tgtWeightsSum())*fldNonOverlap;
     }
 }
 
