@@ -25,17 +25,41 @@ Class
     Foam::temperatureCoupledBase
 
 Description
-    Common functions for use in temperature coupled boundaries. For now only
+    Common functions for use in temperature coupled boundaries.
 
-    kappa() : heat conduction at patch. Gets supplied how to lookup/calculate
-        kappa:
+    For now only provides the following methods:
 
-    - 'lookup' : lookup volScalarField (or volSymmTensorField) with name
-    - 'fluidThermo' : use fluidThermo and default compressible::turbulenceModel
-       to calculate kappa
-    - 'solidThermo' : use solidThermo kappa()
-    - 'directionalSolidThermo': uses look up for volSymmTensorField for
-       transformed kappa vector. Named 'Anialpha' in solid solver
+    - kappa() : heat conduction at patch. Gets supplied how to lookup/calculate
+      'kappa':
+        - 'lookup' : lookup volScalarField (or volSymmTensorField) with name
+           defined in 'kappaName'
+        - 'fluidThermo' : use fluidThermo and default
+          compressible::turbulenceModel to calculate kappa
+        - 'solidThermo' : use solidThermo kappa()
+        - 'directionalSolidThermo': uses look up for volSymmTensorField for
+          transformed kappa vector. Field name definable in 'alphaAniName',
+          named 'Anialpha' in solid solver by default
+
+    \heading Keywords provided by this class
+
+    \table
+        Property     | Description             | Required    | Default value
+        kappa        | heat conduction type at patch, as listed above | yes |
+        kappaName    | Name of thermal conductivity field | yes |
+        alphaAniName | name of the non-isotropic alpha | no | 'Anialpha'
+    \endtable
+
+    Usage examples:
+    \verbatim
+    nonIsotropicWall
+    {
+        ...
+        kappa           directionalSolidThermo;
+        kappaName       none;
+        alphaAniName    Anialpha;
+        ...
+    }
+    \endverbatim
 
 SourceFiles
     temperatureCoupledBase.C

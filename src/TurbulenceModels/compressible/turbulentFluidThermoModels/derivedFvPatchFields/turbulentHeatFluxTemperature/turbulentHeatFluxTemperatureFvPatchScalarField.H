@@ -35,11 +35,14 @@ Description
         Property     | Description             | Required    | Default value
         heatSource   | 'power' [W] or 'flux' [W/m^2] | yes |
         q            | heat power or flux field      | yes |
-        kappa        | inherited from Foam::temperatureCoupledBase | yes |
+        kappa        | inherited from temperatureCoupledBase | yes |
+        kappaName    | inherited from temperatureCoupledBase | yes |
         Qr           | name of the radiative flux field | yes |
-        value        | initial temperature value     | no | calculated
-        gradient     | initial gradient value        | no | 0.0
+        value        | initial temperature value | no | calculated
+        gradient     | initial gradient value | no | 0.0
     \endtable
+
+    Note: If needed, both 'value' and 'gradient' must be defined to be used.
 
     Example usage:
     \verbatim
@@ -49,9 +52,8 @@ Description
         heatSource      flux;
         q               uniform 10;
         kappa           fluidThermo;
+        kappaName       none;
         Qr              none;
-        gradient        uniform 0;
-        value           uniform 300;
     }
     \endverbatim
 
