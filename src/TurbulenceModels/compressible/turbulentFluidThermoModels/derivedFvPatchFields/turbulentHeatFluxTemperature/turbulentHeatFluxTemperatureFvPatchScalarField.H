@@ -29,18 +29,35 @@ Description
     heat source either specified in terms of an absolute power [W], or as a
     flux [W/m^2].
 
+    \heading Patch usage
+
+    \table
+        Property     | Description             | Required    | Default value
+        heatSource   | 'power' [W] or 'flux' [W/m^2] | yes |
+        q            | heat power or flux field      | yes |
+        kappa        | inherited from Foam::temperatureCoupledBase | yes |
+        Qr           | name of the radiative flux field | yes |
+        value        | initial temperature value     | no | calculated
+        gradient     | initial gradient value        | no | 0.0
+    \endtable
+
     Example usage:
+    \verbatim
+    hotWall
+    {
+        type            compressible::turbulentHeatFluxTemperature;
+        heatSource      flux;
+        q               uniform 10;
+        kappa           fluidThermo;
+        Qr              none;
+        gradient        uniform 0;
+        value           uniform 300;
+    }
+    \endverbatim
 
-        hotWall
-        {
-            type            compressible::turbulentHeatFluxTemperature;
-            heatSource      flux;        // power [W]; flux [W/m^2]
-            q               uniform 10;  // heat power or flux
-            kappa           fluidThermo; // calculate kappa=alphaEff*thermo.Cp
-            Qr              none;        // name of the radiative flux
-            value           uniform 300; // initial temperature value
-        }
 
+SeeAlso
+    Foam::temperatureCoupledBase
 
 SourceFiles
     turbulentHeatFluxTemperatureFvPatchScalarField.C
