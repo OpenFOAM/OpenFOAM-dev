@@ -37,7 +37,10 @@ src/Allwmake $targetType $*
 applications/Allwmake $targetType $*
 
 # Optionally build OpenFOAM Doxygen documentation
-[ $genDoc -eq 1 ] && doc/Allwmake
+if [ $genDoc -eq 1 ]
+then
+    doc/Allwmake
+fi
 
 
 # ----------------------------------------------------------------- end-of-file
