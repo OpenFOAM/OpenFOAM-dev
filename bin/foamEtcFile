@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -103,7 +103,7 @@ OpenFOAM-*)         # standard naming convention OpenFOAM-<VERSION>
     version="${projectDirName##OpenFOAM-}"
     ;;
 
-openfoam[0-9]*)     # debian naming convention 'openfoam<VERSION>'
+openfoam[0-9]* | openfoamdev)     # debian naming convention 'openfoam<VERSION>'
     versionNum="${projectDirName##openfoam}"
     case "$versionNum" in
     ??)         # convert 2 digit version number to decimal delineated
