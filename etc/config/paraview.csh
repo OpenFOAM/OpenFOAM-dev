@@ -52,7 +52,8 @@ end
 #setenv ParaView_VERSION 3.12.0
 #setenv ParaView_VERSION 4.0.1
 #setenv ParaView_VERSION 4.1.0
-setenv ParaView_VERSION 4.3.1
+#setenv ParaView_VERSION 4.3.1
+setenv ParaView_VERSION 4.4.0
 setenv ParaView_MAJOR detect
 
 
