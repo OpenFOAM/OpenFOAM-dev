@@ -22,27 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::saturationModels::Antoine
+    Foam::saturationModels::polynomial
 
 Description
-    Antoine equation for the vapour pressure.
+    Polynomial equation for the saturation vapour temperature in terms of
+    the vapour pressure (in Pa).
 
     \f[
-        \log p = A + \frac{B}{C + T}
+        T_sat = \sum_i C_i p^i
     \f]
 
-    Coefficients \f$A\f$, \f$B\f$ and \f$C\f$ are to be supplied and should be
-    suitable for natural logarithms and temperatures in Kelvin.
+    where \f$p\f$ is the pressure in Pa and \f$C\f$ are the coefficients.
+
+    Currently this class only provides \f$T_sat\f$, the inverse function to
+    return the vapour pressure for a given temperature are not implemented.
 
 SourceFiles
-    Antoine.C
+    polynomial.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Antoine_H
-#define Antoine_H
+#ifndef polynomial_H
+#define polynomial_H
 
 #include "saturationModel.H"
+#include "Polynomial.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,40 +56,32 @@ namespace saturationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Antoine Declaration
+                         Class polynomial Declaration
 \*---------------------------------------------------------------------------*/
 
-class Antoine
+class polynomial
 :
     public saturationModel
 {
-protected:
+    // Private data
 
-    // Protected data
-
-        //- Constant A
-        dimensionedScalar A_;
-
-        //- Constant B
-        dimensionedScalar B_;
-
-        //- Constant C
-        dimensionedScalar C_;
+        //- Polynomial coefficients
+        Polynomial<8> C_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("Antoine");
+    TypeName("polynomial");
 
     // Constructors
 
         //- Construct from a dictionary
-        Antoine(const dictionary& dict);
+        polynomial(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~Antoine();
+    virtual ~polynomial();
 
 
     // Member Functions
