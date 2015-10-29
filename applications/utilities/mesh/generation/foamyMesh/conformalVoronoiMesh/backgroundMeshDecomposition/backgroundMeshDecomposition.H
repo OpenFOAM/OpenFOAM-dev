@@ -30,16 +30,16 @@ Description
 
     The requirements are:
 
-    + To have a decomposition of space which can quickly interrogate an
+    - To have a decomposition of space which can quickly interrogate an
       arbitrary location from any processor to reliably and unambiguously
       determine which processor owns the space that the point is in, i.e. as
       the vertices move, or need inserted as part of the surface conformation,
       send them to the correct proc.
 
-    + To be able to be dynamically built, refined and redistributed to other
+    - To be able to be dynamically built, refined and redistributed to other
       procs the partitioning as the meshing progresses to balance the load.
 
-    + To be able to query whether a sphere (the circumsphere of a Delaunay tet)
+    - To be able to query whether a sphere (the circumsphere of a Delaunay tet)
       overlaps any part of the space defined by the structure, and whether a
       ray (Voronoi edge) penetrates any part of the space defined by the
       structure, this is what determines if points get referred to a processor.

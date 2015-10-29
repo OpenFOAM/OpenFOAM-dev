@@ -30,7 +30,7 @@ Description
     operation on two surfaces.  Assumes that the orientation of the surfaces is
     correct:
 
-    + if the operation is union or intersection, that both surface's normals
+    - if the operation is union or intersection, that both surface's normals
       (n) have the same orientation with respect to a point, i.e. surfaces and b
       are orientated the same with respect to point x:
 
@@ -45,7 +45,7 @@ Description
 
     @endverbatim
 
-    + if the operation is a subtraction, the surfaces should be oppositely
+    - if the operation is a subtraction, the surfaces should be oppositely
     oriented with respect to a point, i.e. for (a - b), then b's orientation
     should be such that x is "inside", and a's orientation such that x is
     "outside"
