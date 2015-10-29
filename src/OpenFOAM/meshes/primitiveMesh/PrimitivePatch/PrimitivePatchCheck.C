@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ Description
 #include "PrimitivePatch.H"
 #include "Map.H"
 #include "ListOps.H"
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -192,7 +191,7 @@ checkTopology
 
     const labelListList& edgeFcs = edgeFaces();
 
-    surfaceTopo surfaceType = MANIFOLD;
+    bool illegalTopo = false;
 
     forAll(edgeFcs, edgeI)
     {
@@ -200,7 +199,7 @@ checkTopology
 
         if (nNbrs < 1 || nNbrs > 2)
         {
-            surfaceType = ILLEGAL;
+            illegalTopo = true;
 
             if (report)
             {
@@ -217,10 +216,6 @@ checkTopology
                 setPtr->insert(meshPoints()[e.end()]);
             }
         }
-        else if (nNbrs == 1)
-        {
-            surfaceType = OPEN;
-        }
     }
 
     if (debug)
@@ -231,7 +226,7 @@ checkTopology
             << endl;
     }
 
-    return surfaceType == ILLEGAL;
+    return illegalTopo;
 }
 
 
