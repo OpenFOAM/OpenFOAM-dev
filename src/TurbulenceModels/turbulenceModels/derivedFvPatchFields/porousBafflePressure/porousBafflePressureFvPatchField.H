@@ -43,8 +43,8 @@ Description
         p      | pressure [Pa]
         \rho   | density [kg/m3]
         \mu    | laminar viscosity [Pa s]
-        I      | inertial coefficient
         D      | Darcy coefficient
+        I      | inertial coefficient
         L      | porous media length in the flow direction
     \endvartable
 
@@ -58,7 +58,7 @@ Description
         rho          | density field name      | no          | rho
         D            | Darcy coefficient       | yes         |
         I            | inertial coefficient    | yes         |
-        L            | porous media length in the flow direction | yes |
+        length       | porous media length in the flow direction | yes |
     \endtable
 
     Example of the boundary condition specification:
@@ -70,7 +70,7 @@ Description
         jump            uniform 0;
         D               0.001;
         I               1000000;
-        L               0.1;
+        length          0.1;
         value           uniform 0;
     }
     \endverbatim
