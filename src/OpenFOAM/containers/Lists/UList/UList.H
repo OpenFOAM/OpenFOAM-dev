@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -395,49 +395,40 @@ inline void reverse(UList<T>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-/**
- * \def forAll(list, i)
- * Loop across all elements in \a list
- * \par Usage
- * \code
- * forAll(anyList, i)
- * {
- *      statements;
- * }
- * \endcode
- * \sa forAllReverse
-*/
-/**
- * \def forAllReverse(list, i)
- * Reverse loop across all elements in \a list
- * \par Usage
- * \code
- * forAllReverse(anyList, i)
- * {
- *      statements;
- * }
- * \endcode
- * \sa forAll
-*/
+//- Loop across all elements in \a list
+// \par Usage
+// \code
+// forAll(anyList, i)
+// {
+//      statements;
+// }
+// \endcode
+// \sa forAllReverse
 #define forAll(list, i) \
     for (Foam::label i=0; i<(list).size(); i++)
 
+//- Reverse loop across all elements in \a list
+//  \par Usage
+//  \code
+//  forAllReverse(anyList, i)
+//  {
+//       statements;
+//  }
+//  \endcode
+//  \sa forAll
 #define forAllReverse(list, i) \
     for (Foam::label i=(list).size()-1; i>=0; i--)
 
-/**
- * \def forAllIter(Container, container, iter)
- * Iterate across all elements in the \a container object of type
- * \a Container.
- * \par Usage
- * \code
- * forAll(ContainerType, container, iter)
- * {
- *     statements;
- * }
- * \endcode
- * \sa forAllConstIter
-*/
+//- Iterate across all elements in the \a container object of type
+//  \a Container.
+//  \par Usage
+//  \code
+//  forAll(ContainerType, container, iter)
+//  {
+//      statements;
+//  }
+//  \endcode
+//  \sa forAllConstIter
 #define forAllIter(Container,container,iter)                                   \
     for                                                                        \
     (                                                                          \
@@ -446,19 +437,16 @@ inline void reverse(UList<T>&);
         ++iter                                                                 \
     )
 
-/**
- * \def forAllConstIter(Container, container, iter)
- * Iterate across all elements in the \a container object of type
- * \a Container with const access.
- * \par Usage
- * \code
- * forAllConstIter(ContainerType, container, iter)
- * {
- *     statements;
- * }
- * \endcode
- * \sa forAllIter
-*/
+//- Iterate across all elements in the \a container object of type
+//  \a Container with const access.
+//  \par Usage
+//  \code
+//  forAllConstIter(ContainerType, container, iter)
+//  {
+//      statements;
+//  }
+//  \endcode
+//  \sa forAllIter
 #define forAllConstIter(Container,container,iter)                              \
     for                                                                        \
     (                                                                          \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,7 @@ class Xfer
         //- Pointer to underlying datatype
         mutable T* ptr_;
 
+
 public:
 
     // Constructors
@@ -107,13 +108,16 @@ public:
         //- Construct by transferring the contents
         inline Xfer(const Xfer<T>&);
 
+
     //- Destructor
     inline ~Xfer();
+
 
     // Member Functions
 
         //- Return a null object reference
         inline static const Xfer<T>& null();
+
 
     // Member Operators
 
@@ -128,67 +132,57 @@ public:
 
         //- Pointer to the underlying datatype
         inline T* operator->() const;
-
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-/**
- * Construct by copying the contents of the \a arg
- *
- * \sa xferCopyTo, xferMove, xferMoveTo, xferTmp and Foam::Xfer
-*/
+//- Construct by copying the contents of the \a arg
+//
+//  \sa xferCopyTo, xferMove, xferMoveTo, xferTmp and Foam::Xfer
 template<class T>
 inline Xfer<T> xferCopy(const T&);
 
-/**
- * Construct by transferring the contents of the \a arg
- *
- * \sa xferCopy, xferCopyTo, xferMoveTo, xferTmp and Foam::Xfer
-*/
+//- Construct by transferring the contents of the \a arg
+//
+//  \sa xferCopy, xferCopyTo, xferMoveTo, xferTmp and Foam::Xfer
 template<class T>
 inline Xfer<T> xferMove(T&);
 
 
-/**
- * Construct by transferring the contents of the \a arg
- *
- * \sa xferCopy, xferCopyTo, xferMove, xferMoveTo and Foam::Xfer
-*/
+//- Construct by transferring the contents of the \a arg
+//
+//  \sa xferCopy, xferCopyTo, xferMove, xferMoveTo and Foam::Xfer
 template<class T>
 inline Xfer<T> xferTmp(Foam::tmp<T>&);
 
 
-/**
- * Construct by copying the contents of the \a arg
- * between dissimilar types
- *
- * \sa xferCopy, xferMove, xferMoveTo, xferTmp and Foam::Xfer
-*/
+//- Construct by copying the contents of the \a arg
+//  between dissimilar types
+//
+//  \sa xferCopy, xferMove, xferMoveTo, xferTmp and Foam::Xfer
 template<class To, class From>
 inline Xfer<To> xferCopyTo(const From&);
 
 
-/**
- * Construct by transferring the contents of the \a arg
- * between dissimilar types
- *
- * \par Example Use
- * \code
- *     DynamicList<label> dynLst;
- *     ...
- *     labelList plainLst( xferMoveTo<labelList>(dynLst) );
- * \endcode
- *
- * \sa xferCopy, xferCopyTo, xferMove, xferTmp and Foam::Xfer
-*/
+//- Construct by transferring the contents of the \a arg
+//  between dissimilar types
+//
+//  \par Example Use
+//  \code
+//      DynamicList<label> dynLst;
+//      ...
+//      labelList plainLst( xferMoveTo<labelList>(dynLst) );
+//  \endcode
+//
+//  \sa xferCopy, xferCopyTo, xferMove, xferTmp and Foam::Xfer
 template<class To, class From>
 inline Xfer<To> xferMoveTo(From&);
 
 
-} // End namespace Foam
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

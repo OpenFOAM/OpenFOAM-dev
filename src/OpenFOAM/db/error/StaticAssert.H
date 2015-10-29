@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,19 +62,18 @@ class StaticAssertionTest {};
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// internal use:
+// Internal use:
 // ~~~~~~~~~~~~~
-// paste together strings, even if an argument is itself a macro
+
+// Paste together strings, even if an argument is itself a macro
 #define StaticAssertMacro(X,Y)  StaticAssertMacro1(X,Y)
 #define StaticAssertMacro1(X,Y) StaticAssertMacro2(X,Y)
 #define StaticAssertMacro2(X,Y) X##Y
 
-// external use:
+// External use:
 // ~~~~~~~~~~~~~
-/**
- * \def StaticAssert(Test)
- * Assert that some test is true at compile-time
-*/
+
+//- Assert that some test is true at compile-time
 #define StaticAssert(Test)                                                   \
     typedef ::Foam::StaticAssertionTest                                      \
     <                                                                        \
