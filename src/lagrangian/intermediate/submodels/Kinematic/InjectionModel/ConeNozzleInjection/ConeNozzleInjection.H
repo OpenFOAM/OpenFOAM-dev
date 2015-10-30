@@ -39,7 +39,7 @@ Description
     - Parcel velocity is calculated as:
 
         - Constant velocity
-            U = <specified by user>
+            U = \<specified by user\>
         - Pressure driven velocity
             U = sqrt(2*(Pinj - Pamb)/rho)
         - Flow rate and discharge

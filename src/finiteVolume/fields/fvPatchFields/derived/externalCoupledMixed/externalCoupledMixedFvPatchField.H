@@ -32,25 +32,25 @@ Description
     Values are transferred as plain text files, where OpenFOAM data is written
     as:
 
-        # Patch: <patch name>
-        <magSf1> <value1> <surfaceNormalGradient1>
-        <magSf2> <value2> <surfaceNormalGradient2>
-        <magSf3> <value3> <surfaceNormalGradient3>
+        # Patch: \<patch name\>
+        \<magSf1\> \<value1\> \<surfaceNormalGradient1\>
+        \<magSf2\> \<value2\> \<surfaceNormalGradient2\>
+        \<magSf3\> \<value3\> \<surfaceNormalGradient3\>
         ...
-        <magSfN> <valueN> <surfaceNormalGradientN>
+        \<magSfN\> \<valueN\> \<surfaceNormalGradientN\>
 
     and received as the constituent pieces of the `mixed' condition, i.e.
 
-        # Patch: <patch name>
-        <value1> <gradient1> <valueFracion1>
-        <value2> <gradient2> <valueFracion2>
-        <value3> <gradient3> <valueFracion3>
+        # Patch: \<patch name\>
+        \<value1\> \<gradient1\> \<valueFracion1\>
+        \<value2\> \<gradient2\> \<valueFracion2\>
+        \<value3\> \<gradient3\> \<valueFracion3\>
         ...
-        <valueN> <gradientN> <valueFracionN>
+        \<valueN\> \<gradientN\> \<valueFracionN\>
 
     Data is sent/received as a single file for all patches from the directory
 
-        $FOAM_CASE/<commsDir>
+        $FOAM_CASE/\<commsDir\>
 
     At start-up, the boundary creates a lock file, i.e..
 
@@ -59,13 +59,13 @@ Description
     ... to signal the external source to wait.  During the boundary condition
     update, boundary values are written to file, e.g.
 
-        <fileName>.out
+        \<fileName\>.out
 
     The lock file is then removed, instructing the external source to take
     control of the program execution.  When ready, the external program
     should create the return values, e.g. to file
 
-        <fileName>.in
+        \<fileName\>.in
 
     ... and then re-instate the lock file.  The boundary condition will then
     read the return values, and pass program execution back to OpenFOAM.

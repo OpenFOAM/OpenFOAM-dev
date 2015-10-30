@@ -29,7 +29,7 @@ Description
 
     Command-line option handling:
     - If -all specified or no refineMeshDict exists or, refine all cells
-    - If -dict {file} specified refine according to {file}
+    - If -dict \<file\> specified refine according to \<file\>
     - If refineMeshDict exists refine according to refineMeshDict
 
     When the refinement or all cells is selected apply 3D refinement for 3D

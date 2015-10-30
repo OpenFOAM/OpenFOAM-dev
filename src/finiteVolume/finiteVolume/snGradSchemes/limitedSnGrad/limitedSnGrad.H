@@ -34,11 +34,11 @@ Description
     non-orthogonal contribution does not exceed the orthogonal part.
 
     Format:
-        limited <corrected scheme> <coefficient>;
+        limited \<corrected scheme\> \<coefficient\>;
 
         or
 
-        limited <coefficient>;  // Backward compatibility
+        limited \<coefficient\>;  // Backward compatibility
 
 SourceFiles
     limitedSnGrad.C

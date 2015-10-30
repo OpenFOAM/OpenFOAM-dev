@@ -114,8 +114,8 @@ License
     }
 
 
-    Note: instead of gmap run gpart <nProcs> -vs <grfFile>
-    where <grfFile> can be obtained by running with 'writeGraph=true'
+    Note: instead of gmap run gpart \<nProcs\> -vs \<grfFile\>
+    where \<grfFile\> can be obtained by running with 'writeGraph=true'
 
 \*---------------------------------------------------------------------------*/
 
