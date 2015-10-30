@@ -70,19 +70,24 @@ int main(int argc, char *argv[])
         const surfaceScalarField::GeometricBoundaryField& patchHeatFlux =
             heatFlux.boundaryField();
 
+        const volScalarField::GeometricBoundaryField& patchRadHeatFlux =
+            Qr.boundaryField();
+
+        const surfaceScalarField::GeometricBoundaryField& magSf =
+            mesh.magSf().boundaryField();
+
         Info<< "\nWall heat fluxes [W]" << endl;
         forAll(patchHeatFlux, patchi)
         {
             if (isA<wallFvPatch>(mesh.boundary()[patchi]))
             {
-                Info<< mesh.boundary()[patchi].name()
-                    << " "
-                    << gSum
-                       (
-                           mesh.magSf().boundaryField()[patchi]
-                          *patchHeatFlux[patchi]
-                       )
-                    << endl;
+                scalar convFlux = gSum(magSf[patchi]*patchHeatFlux[patchi]);
+                scalar radFlux = gSum(magSf[patchi]*patchRadHeatFlux[patchi]);
+
+                Info<< mesh.boundary()[patchi].name() << endl
+                    << "    convective: " << convFlux << endl
+                    << "    radiative:  " << radFlux << endl
+                    << "    total:      " << convFlux + radFlux << endl;
             }
         }
         Info<< endl;
@@ -105,11 +110,42 @@ int main(int argc, char *argv[])
         }
 
         wallHeatFlux.write();
+
+        // Write the total heat-flux including the radiative contribution
+        // if available
+        if (Qr.headerOk())
+        {
+            volScalarField totalWallHeatFlux
+            (
+                IOobject
+                (
+                    "totalWallHeatFlux",
+                    runTime.timeName(),
+                    mesh
+                ),
+                mesh,
+                dimensionedScalar
+                (
+                    "totalWallHeatFlux",
+                    heatFlux.dimensions(),
+                    0.0
+                )
+            );
+
+            forAll(totalWallHeatFlux.boundaryField(), patchi)
+            {
+                totalWallHeatFlux.boundaryField()[patchi] =
+                    patchHeatFlux[patchi] + patchRadHeatFlux[patchi];
+            }
+
+            totalWallHeatFlux.write();
+        }
     }
 
     Info<< "End" << endl;
 
     return 0;
 }
+
 
 // ************************************************************************* //

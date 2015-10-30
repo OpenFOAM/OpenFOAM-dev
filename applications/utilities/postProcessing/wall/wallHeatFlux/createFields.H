@@ -42,6 +42,7 @@ if (isA<fluidThermo>(thermo()))
     const volVectorField& U = UPtr();
 
     #include "compressibleCreatePhi.H"
+
     // Copy phi to autoPtr. Rename to make sure copy is now registered as 'phi'.
     phi.rename("phiFluid");
     phiPtr.reset(new surfaceScalarField("phi", phi));
@@ -54,3 +55,18 @@ if (isA<fluidThermo>(thermo()))
         refCast<const fluidThermo>(thermo())
     );
 }
+
+// Read radiative heat-flux if available
+volScalarField Qr
+(
+    IOobject
+    (
+        "Qr",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("Qr", dimMass/pow3(dimTime), 0.0)
+);
