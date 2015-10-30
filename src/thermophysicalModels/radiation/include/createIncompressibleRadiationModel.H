@@ -21,12 +21,23 @@
                 runTime,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
-                false  // do not register!
+                false // Do not register
             )
         );
 
-        dimensionedScalar rhoRef(transportProperties.lookup("rhoRef"));
-        dimensionedScalar CpRef(transportProperties.lookup("CpRef"));
+        dimensionedScalar rhoRef
+        (
+            "rhoRef",
+            dimDensity,
+            transportProperties
+        );
+
+        dimensionedScalar CpRef
+        (
+            "CpRef",
+            dimSpecificHeatCapacity,
+            transportProperties
+        );
 
         rhoCpRef = rhoRef*CpRef;
     }
