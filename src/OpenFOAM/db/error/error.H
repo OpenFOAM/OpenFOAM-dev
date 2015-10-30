@@ -315,11 +315,22 @@ extern IOerror FatalIOError;
 #define FatalErrorIn(functionName)                                             \
     ::Foam::FatalError((functionName), __FILE__, __LINE__)
 
+//- Report an error message using Foam::FatalError
+//  for FUNCTION_NAME in file __FILE__ at line __LINE__
+#define FatalErrorInFunction FatalErrorIn(FUNCTION_NAME)
+
+
 //- Report an error message using Foam::FatalIOError
 //  for functionName in file __FILE__ at line __LINE__
 //  for a particular IOstream
 #define FatalIOErrorIn(functionName, ios)                                      \
     ::Foam::FatalIOError((functionName), __FILE__, __LINE__, (ios))
+
+//- Report an error message using Foam::FatalIOError
+//  for FUNCTION_NAME in file __FILE__ at line __LINE__
+//  for a particular IOstream
+#define FatalIOErrorInFunction(ios) FatalIOErrorIn(FUNCTION_NAME, ios)
+
 
 //- Report an error message using Foam::FatalIOError
 //  (or cerr if FatalIOError not yet constructed)
@@ -328,6 +339,14 @@ extern IOerror FatalIOError;
 #define SafeFatalIOErrorIn(functionName, ios, msg)                             \
     ::Foam::IOerror::SafeFatalIOError                                          \
     ((functionName), __FILE__, __LINE__, (ios), (msg))
+
+//- Report an error message using Foam::FatalIOError
+//  (or cerr if FatalIOError not yet constructed)
+//  for functionName in file __FILE__ at line __LINE__
+//  for a particular IOstream
+#define SafeFatalIOErrorInFunction(ios, msg)                                   \
+    SafeFatalIOErrorIn(FUNCTION_NAME, ios, msg)
+
 
 //- Issue a FatalErrorIn for a function not currently implemented.
 //  The functionName is printed and then abort is called.
@@ -340,10 +359,12 @@ extern IOerror FatalIOError;
         << "Not implemented" << ::Foam::abort(FatalError);
 
 //- Issue a FatalErrorIn for a function not currently implemented.
-//  The compiler generated function name string is printed and then
-//  abort is called.
-#define NotImplemented                                                         \
-    notImplemented(__PRETTY_FUNCTION__)
+//  The FUNCTION_NAME is printed and then abort is called.
+//
+//  This macro can be particularly useful when methods must be defined to
+//  complete the interface of a derived class even if they should never be
+//  called for this derived class.
+#define NotImplemented notImplemented(FUNCTION_NAME)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
