@@ -9,7 +9,8 @@
         fvm::div(phi, T)
       - fvm::laplacian(alphaEff, T)
      ==
-        fvOptions(T)
+        radiation->ST(rhoCpRef, T)
+      + fvOptions(T)
     );
 
     TEqn.relax();
@@ -17,6 +18,8 @@
     fvOptions.constrain(TEqn);
 
     TEqn.solve();
+
+    radiation->correct();
 
     fvOptions.correct(T);
 
