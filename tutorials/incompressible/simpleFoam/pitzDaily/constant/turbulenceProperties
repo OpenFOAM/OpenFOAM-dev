@@ -21,7 +21,7 @@ RAS
 {
     // Tested with kEpsilon, realizableKE, kOmega, kOmegaSST, v2f,
     // ShihQuadraticKE, LienCubicKE.
-    RASModel        v2f;
+    RASModel        kEpsilon;
 
     turbulence      on;
 
