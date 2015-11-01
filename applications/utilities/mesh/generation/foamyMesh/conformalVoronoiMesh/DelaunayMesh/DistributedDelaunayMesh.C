@@ -792,13 +792,7 @@ bool Foam::DistributedDelaunayMesh<Triangulation>::distribute
     const boundBox& bb
 )
 {
-    notImplemented
-    (
-        "Foam::DistributedDelaunayMesh<Triangulation>::distribute"
-        "("
-        "    const boundBox& bb"
-        ")"
-    );
+    NotImplemented;
 
     if (!Pstream::parRun())
     {

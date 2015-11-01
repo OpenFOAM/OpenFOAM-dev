@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,11 +108,7 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const
         {
-            notImplemented
-            (
-                "localMax::weights"
-                "(const GeometricField<Type, fvPatchField, volMesh>&)"
-            );
+            NotImplemented;
 
             return tmp<surfaceScalarField>(NULL);
         }

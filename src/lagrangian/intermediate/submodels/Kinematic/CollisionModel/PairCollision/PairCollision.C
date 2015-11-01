@@ -608,13 +608,7 @@ Foam::PairCollision<CloudType>::PairCollision
     il_(cm.owner().mesh())
 {
     // Need to clone to PairModel and WallModel
-    notImplemented
-    (
-        "Foam::PairCollision<CloudType>::PairCollision"
-        "("
-            "PairCollision<CloudType>& cm"
-        ")"
-    );
+    NotImplemented;
 }
 
 

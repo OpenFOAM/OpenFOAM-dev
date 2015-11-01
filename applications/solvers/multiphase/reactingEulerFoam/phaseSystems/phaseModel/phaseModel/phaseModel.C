@@ -76,7 +76,7 @@ Foam::phaseModel::phaseModel
 
 Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::clone() const
 {
-    notImplemented("phaseModel::clone() const");
+    NotImplemented;
     return autoPtr<phaseModel>(NULL);
 }
 
@@ -167,7 +167,7 @@ bool Foam::phaseModel::compressible() const
 
 const Foam::tmp<Foam::volScalarField>& Foam::phaseModel::divU() const
 {
-    notImplemented("Foam::phaseModel::divU()");
+    NotImplemented;
     static tmp<Foam::volScalarField> divU_(NULL);
     return divU_;
 }
@@ -183,7 +183,7 @@ void Foam::phaseModel::divU(const tmp<volScalarField>& divU)
 
 const Foam::volScalarField& Foam::phaseModel::K() const
 {
-    notImplemented("Foam::phaseModel::K()");
+    NotImplemented;
     return volScalarField::null();
 }
 

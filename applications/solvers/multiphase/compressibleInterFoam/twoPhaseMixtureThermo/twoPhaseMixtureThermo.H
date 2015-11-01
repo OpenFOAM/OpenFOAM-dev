@@ -122,14 +122,14 @@ public:
             //  Non-const access allowed for transport equations
             virtual volScalarField& he()
             {
-                notImplemented("twoPhaseMixtureThermo::he()");
+                NotImplemented;
                 return thermo1_->he();
             }
 
             //- Enthalpy/Internal energy [J/kg]
             virtual const volScalarField& he() const
             {
-                notImplemented("twoPhaseMixtureThermo::he() const");
+                NotImplemented;
                 return thermo1_->he();
             }
 

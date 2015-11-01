@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,13 +95,7 @@ template<class Thermo>
 inline Foam::scalar Foam::exponentialSolidTransport<Thermo>::
 mu(const scalar p, const scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::exponentialSolidTransport<Thermo>mu::"
-        "("
-        "    const scalar p, const scalar T"
-        ") const"
-    );
+    NotImplemented;
     return scalar(0);
 }
 

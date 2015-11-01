@@ -168,7 +168,7 @@ public:
 
         virtual void writeFields() const
         {
-            notImplemented("PDRDragModel::write()");
+            NotImplemented;
         }
 };
 

@@ -70,7 +70,7 @@ void Foam::DataEntry<Type>::convertTimeBase(const Time&)
 template<class Type>
 Type Foam::DataEntry<Type>::value(const scalar x) const
 {
-    notImplemented("Type Foam::DataEntry<Type>::value(const scalar) const");
+    NotImplemented;
 
     return pTraits<Type>::zero;
 }
@@ -79,14 +79,7 @@ Type Foam::DataEntry<Type>::value(const scalar x) const
 template<class Type>
 Type Foam::DataEntry<Type>::integrate(const scalar x1, const scalar x2) const
 {
-    notImplemented
-    (
-        "Type Foam::DataEntry<Type>::integrate"
-        "("
-            "const scalar, "
-            "const scalar"
-        ") const"
-    );
+    NotImplemented;
 
     return pTraits<Type>::zero;
 }
@@ -131,11 +124,7 @@ Foam::tmp<Foam::Field<Type> > Foam::DataEntry<Type>::integrate
 template<class Type>
 Foam::dimensioned<Type> Foam::DataEntry<Type>::dimValue(const scalar x) const
 {
-    notImplemented
-    (
-        "dimensioned<Type> Foam::DataEntry<dimensioned<Type> >::dimValue"
-        "(const scalar) const"
-    );
+    NotImplemented;
 
     return dimensioned<Type>("zero", dimless, pTraits<Type>::zero);
 }
@@ -148,14 +137,7 @@ Foam::dimensioned<Type> Foam::DataEntry<Type>::dimIntegrate
     const scalar x2
 ) const
 {
-    notImplemented
-    (
-        "dimensioned<Type> Foam::DataEntry<Type>::dimIntegrate"
-        "("
-            "const scalar, "
-            "const scalar"
-        ") const"
-    );
+    NotImplemented;
 
     return dimensioned<Type>("zero", dimless, pTraits<Type>::zero);
 }

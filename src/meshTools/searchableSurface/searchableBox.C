@@ -377,11 +377,7 @@ Foam::pointIndexHit Foam::searchableBox::findNearest
     point& linePoint
 ) const
 {
-    notImplemented
-    (
-        "searchableBox::findNearest"
-        "(const linePointRef&, treeBoundBox&, point&)"
-    );
+    NotImplemented;
     return pointIndexHit();
 }
 

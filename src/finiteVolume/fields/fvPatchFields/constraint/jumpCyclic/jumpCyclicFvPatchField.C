@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,17 +138,7 @@ void Foam::jumpCyclicFvPatchField<Type>::updateInterfaceMatrix
     const Pstream::commsTypes
 ) const
 {
-    notImplemented
-    (
-        "void Foam::jumpCyclicFvPatchField<Type>::updateInterfaceMatrix"
-        "("
-            "scalarField&, "
-            "const scalarField&, "
-            "const scalarField&, "
-            "const direction, "
-            "const Pstream::commsTypes"
-        ") const"
-    );
+    NotImplemented;
 }
 
 

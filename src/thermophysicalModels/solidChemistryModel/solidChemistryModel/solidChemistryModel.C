@@ -99,10 +99,7 @@ Foam::scalar Foam::solidChemistryModel<CompType, SolidThermo>::solve
     const scalarField& deltaT
 )
 {
-    notImplemented
-    (
-        "solidChemistryModel::solve(const scalarField& deltaT)"
-    );
+    NotImplemented;
     return 0;
 }
 
@@ -111,10 +108,7 @@ template<class CompType, class SolidThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::solidChemistryModel<CompType, SolidThermo>::tc() const
 {
-    notImplemented
-    (
-        "solidChemistryModel::tc()"
-    );
+    NotImplemented;
     return volScalarField::null();
 }
 

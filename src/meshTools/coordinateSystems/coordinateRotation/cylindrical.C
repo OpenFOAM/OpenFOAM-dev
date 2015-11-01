@@ -224,10 +224,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindrical::transform
 
 Foam::vector Foam::cylindrical::transform(const vector& v) const
 {
-    notImplemented
-    (
-        "vector cylindrical::transform(const vector&) const"
-    );
+    NotImplemented;
     return vector::zero;
 }
 
@@ -253,10 +250,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindrical::invTransform
 
 Foam::vector Foam::cylindrical::invTransform(const vector& v) const
 {
-    notImplemented
-    (
-        "vector cylindrical::invTransform(const vector&) const"
-    );
+    NotImplemented;
     return vector::zero;
 }
 
@@ -297,10 +291,7 @@ Foam::tensor Foam::cylindrical::transformTensor
     const tensor& t
 ) const
 {
-    notImplemented
-    (
-        "tensor cylindrical::transformTensor(const tensor&) const"
-    );
+    NotImplemented;
 
     return tensor::zero;
 }
@@ -369,10 +360,7 @@ Foam::symmTensor Foam::cylindrical::transformVector
     const vector& v
 ) const
 {
-    notImplemented
-    (
-        "tensor cylindrical::transformVector(const vector&) const"
-    );
+    NotImplemented;
     return symmTensor::zero;
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,11 +69,7 @@ Foam::tmp<Foam::vectorField> Foam::EulerCoordinateRotation::transform
     const vectorField& st
 ) const
 {
-    notImplemented
-    (
-        "tmp<vectorField> Foam::EulerCoordinateRotation:: "
-        "transform(const vectorField& st) const"
-    );
+    NotImplemented;
     return tmp<vectorField>(NULL);
 }
 
@@ -83,21 +79,14 @@ Foam::tmp<Foam::vectorField> Foam::EulerCoordinateRotation::invTransform
     const vectorField& st
 ) const
 {
-    notImplemented
-    (
-        "tmp<vectorField>  Foam::EulerCoordinateRotation::"
-        "invTransform(const vectorField& st) const"
-    );
+    NotImplemented;
     return tmp<vectorField>(NULL);
 }
 
 
 const Foam::tensorField& Foam::EulerCoordinateRotation::Tr() const
 {
-    notImplemented
-    (
-        "const tensorField& EulerCoordinateRotation::Tr() const"
-    );
+    NotImplemented;
     return NullObjectRef<tensorField>();
 }
 
@@ -107,10 +96,7 @@ Foam::tmp<Foam::tensorField> Foam::EulerCoordinateRotation::transformTensor
     const tensorField& st
 ) const
 {
-     notImplemented
-    (
-        "const tensorField& EulerCoordinateRotation::transformTensor() const"
-    );
+     NotImplemented;
     return tmp<tensorField>(NULL);
 }
 
@@ -130,13 +116,7 @@ Foam::tmp<Foam::tensorField> Foam::EulerCoordinateRotation::transformTensor
     const labelList& cellMap
 ) const
 {
-    notImplemented
-    (
-        "tmp<Foam::tensorField> EulerCoordinateRotation::transformTensor "
-        " const tensorField& st,"
-        " const labelList& cellMap "
-        ") const"
-    );
+    NotImplemented;
     return tmp<tensorField>(NULL);
 }
 

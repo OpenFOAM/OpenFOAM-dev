@@ -449,11 +449,7 @@ public:
                 const Field<Type>& rT
             ) const
             {
-                notImplemented
-                (
-                    type() +"::preconditionT"
-                    "(Field<Type>& wT, const Field<Type>& rT)"
-                );
+                NotImplemented;
             }
     };
 

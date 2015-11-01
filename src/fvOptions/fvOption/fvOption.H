@@ -131,7 +131,7 @@ public:
         //- Return clone
         autoPtr<option> clone() const
         {
-            notImplemented("autoPtr<option> clone() const");
+            NotImplemented;
             return autoPtr<option>(NULL);
         }
 

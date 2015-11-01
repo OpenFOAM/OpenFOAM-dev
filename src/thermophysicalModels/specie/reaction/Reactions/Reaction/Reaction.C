@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -498,11 +498,7 @@ const Foam::speciesTable& Foam::Reaction<ReactionThermo>::species() const
 template<class ReactionThermo>
 const Foam::speciesTable& Foam::Reaction<ReactionThermo>::gasSpecies() const
 {
-    notImplemented
-    (
-        "const speciesTable& gasSpecies() const"
-        " for this reaction"
-    );
+    NotImplemented;
     return NullObjectRef<speciesTable>();
 }
 
@@ -511,11 +507,7 @@ template<class ReactionThermo>
 const Foam::List<typename Foam::Reaction<ReactionThermo>::specieCoeffs>&
 Foam::Reaction<ReactionThermo>::glhs() const
 {
-    notImplemented
-    (
-        "inline const List<typename Reaction<ReactionThermo>::specieCoeffs>&"
-        "Reaction<ReactionThermo>::glhs()"
-    );
+    NotImplemented;
     return NullObjectRef<List<specieCoeffs> >();
 }
 
@@ -524,11 +516,7 @@ template<class ReactionThermo>
 const Foam::List<typename Foam::Reaction<ReactionThermo>::specieCoeffs>&
 Foam::Reaction<ReactionThermo>::grhs() const
 {
-    notImplemented
-    (
-        "inline const List<typename Reaction<ReactionThermo>::specieCoeffs>&"
-        "Reaction<ReactionThermo>::grhs()"
-    );
+    NotImplemented;
     return NullObjectRef<List<specieCoeffs> >();
 }
 

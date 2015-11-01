@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,130 +226,91 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 
 Foam::scalar Foam::liquidProperties::rho(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::rho(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::pv(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::pv(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::hl(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::hl(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::Cp(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::Cp(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::h(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::h(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::Cpg(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::Cpg(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::mu(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::mu(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::mug(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::mug(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::K(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::K(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::Kg(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::Kg(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::sigma(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::sigms(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::D(scalar p, scalar T) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::D(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 
 
 Foam::scalar Foam::liquidProperties::D(scalar p, scalar T, scalar Wb) const
 {
-    notImplemented
-    (
-        "Foam::scalar Foam::liquidProperties::D(scalar, scalar) const"
-    );
+    NotImplemented;
     return 0.0;
 }
 

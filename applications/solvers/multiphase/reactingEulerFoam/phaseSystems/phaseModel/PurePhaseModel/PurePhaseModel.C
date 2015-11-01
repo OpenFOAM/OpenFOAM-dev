@@ -56,13 +56,7 @@ Foam::PurePhaseModel<BasePhaseModel>::YiEqn
     volScalarField& Yi
 )
 {
-    notImplemented
-    (
-        "template<class BasePhaseModel> "
-        "Foam::tmp<Foam::fvScalarMatrix> "
-        "Foam::PurePhaseModel<BasePhaseModel>::YiEqn"
-        "(volScalarField& Yi) const"
-    );
+    NotImplemented;
 
     return tmp<fvScalarMatrix>();
 }

@@ -129,7 +129,7 @@ public:
         //- Clone
         autoPtr<blockDescriptor> clone() const
         {
-            notImplemented("blockDescriptor::clone()");
+            NotImplemented;
             return autoPtr<blockDescriptor>(NULL);
         }
 

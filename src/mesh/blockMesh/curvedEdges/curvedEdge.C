@@ -68,7 +68,7 @@ Foam::curvedEdge::curvedEdge(const curvedEdge& c)
 
 Foam::autoPtr<Foam::curvedEdge> Foam::curvedEdge::clone() const
 {
-    notImplemented("curvedEdge::clone() const");
+    NotImplemented;
     return autoPtr<curvedEdge>(NULL);
 }
 
@@ -135,7 +135,7 @@ Foam::pointField Foam::curvedEdge::appendEndPoints
 
 void Foam::curvedEdge::operator=(const curvedEdge&)
 {
-    notImplemented("void curvedEdge::operator=(const curvedEdge&)");
+    NotImplemented;
 }
 
 

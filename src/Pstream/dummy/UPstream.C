@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,13 +45,13 @@ bool Foam::UPstream::init(int& argc, char**& argv)
 
 void Foam::UPstream::exit(int errnum)
 {
-    notImplemented("UPstream::exit(int errnum)");
+    NotImplemented;
 }
 
 
 void Foam::UPstream::abort()
 {
-    notImplemented("UPstream::abort()");
+    NotImplemented;
 }
 
 
@@ -113,7 +113,7 @@ void Foam::UPstream::waitRequest(const label i)
 
 bool Foam::UPstream::finishedRequest(const label i)
 {
-    notImplemented("UPstream::finishedRequest()");
+    NotImplemented;
     return false;
 }
 

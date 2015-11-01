@@ -121,11 +121,7 @@ Foam::tmp<Foam::volSymmTensorField>
 Foam::IncompressibleTurbulenceModel<TransportModel>::
 devRhoReff() const
 {
-    notImplemented
-    (
-        "IncompressibleTurbulenceModel<TransportModel>::"
-        "devRhoReff()"
-    );
+    NotImplemented;
 
     return devReff();
 }
@@ -139,11 +135,7 @@ divDevRhoReff
     volVectorField& U
 ) const
 {
-    notImplemented
-    (
-        "IncompressibleTurbulenceModel<TransportModel>::"
-        "divDevRhoReff(volVectorField& U)"
-    );
+    NotImplemented;
 
     return divDevReff(U);
 }
@@ -158,11 +150,7 @@ divDevRhoReff
     volVectorField& U
 ) const
 {
-    notImplemented
-    (
-        "IncompressibleTurbulenceModel<TransportModel>::"
-        "divDevRhoReff(const volScalarField& rho, volVectorField& U)"
-    );
+    NotImplemented;
 
     return divDevReff(U);
 }

@@ -463,15 +463,7 @@ void Foam::energyRegionCoupledFvPatchScalarField::updateInterfaceMatrix
     const Pstream::commsTypes
 ) const
 {
-    notImplemented
-    (
-        "energyRegionCoupledFvPatchScalarField::updateInterfaceMatrix()"
-        "("
-        "Field<scalar>& "
-        "const Field<scalar>&"
-        "const scalarField& "
-        "const Pstream::commsTypes"
-    );
+    NotImplemented;
 }
 
 

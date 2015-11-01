@@ -340,7 +340,7 @@ public:
         //- Disallow default bitwise assignment
         void operator=(const ensightPart&)
         {
-            notImplemented("ensightPart::operator=(const ensightPart&)");
+            NotImplemented;
         }
 
 

@@ -223,7 +223,7 @@ public:
 
             bool writeData(Ostream&) const
             {
-                notImplemented("searchablePlate::writeData(Ostream&) const");
+                NotImplemented;
                 return false;
             }
 };

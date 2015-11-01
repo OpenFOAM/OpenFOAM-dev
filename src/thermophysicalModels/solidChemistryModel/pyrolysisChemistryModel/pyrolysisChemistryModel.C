@@ -662,16 +662,6 @@ void Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::solve
     scalar& subDeltaT
 ) const
 {
-    notImplemented
-    (
-        "pyrolysisChemistryModel::solve"
-        "("
-            "scalarField&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&  "
-        ") const"
-    );
+    NotImplemented;
 }
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,12 +69,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 :
     fvsPatchField<Type>(ptf, p, iF, mapper)
 {
-    notImplemented
-    (
-        "slicedFvsPatchField<Type>::"
-        "slicedFvsPatchField(const slicedFvsPatchField<Type>&, "
-        "const fvPatch&, const Field<Type>&, const fvPatchFieldMapper&)"
-    );
+    NotImplemented;
 }
 
 
@@ -88,11 +83,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 :
     fvsPatchField<Type>(p, iF, Field<Type>("value", dict, p.size()))
 {
-    notImplemented
-    (
-        "slicedFvsPatchField<Type>::"
-        "slicedFvsPatchField(const Field<Type>&, const dictionary&)"
-    );
+    NotImplemented;
 }
 
 

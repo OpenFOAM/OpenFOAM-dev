@@ -219,7 +219,7 @@ bool Foam::RASModels::kineticTheoryModel::read()
 Foam::tmp<Foam::volScalarField>
 Foam::RASModels::kineticTheoryModel::k() const
 {
-    notImplemented("kineticTheoryModel::k()");
+    NotImplemented;
     return nut_;
 }
 
@@ -227,7 +227,7 @@ Foam::RASModels::kineticTheoryModel::k() const
 Foam::tmp<Foam::volScalarField>
 Foam::RASModels::kineticTheoryModel::epsilon() const
 {
-    notImplemented("kineticTheoryModel::epsilon()");
+    NotImplemented;
     return nut_;
 }
 

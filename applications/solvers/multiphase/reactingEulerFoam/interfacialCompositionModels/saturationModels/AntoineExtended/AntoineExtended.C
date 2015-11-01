@@ -108,10 +108,7 @@ Foam::saturationModels::AntoineExtended::Tsat
     const volScalarField& p
 ) const
 {
-    notImplemented
-    (
-        "saturationModels::AntoineExtended::Tsat(const volScalarField& p)"
-    );
+    NotImplemented;
 
     return volScalarField::null();
 }

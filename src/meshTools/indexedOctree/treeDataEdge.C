@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -276,11 +276,7 @@ bool Foam::treeDataEdge::findIntersectOp::operator()
     point& result
 ) const
 {
-    notImplemented
-    (
-        "treeDataEdge::intersects(const label, const point&,"
-        "const point&, point&)"
-    );
+    NotImplemented;
     return false;
 }
 

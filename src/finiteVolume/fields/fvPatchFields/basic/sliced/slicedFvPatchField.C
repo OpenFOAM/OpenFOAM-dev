@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,12 +69,7 @@ slicedFvPatchField<Type>::slicedFvPatchField
 :
     fvPatchField<Type>(ptf, p, iF, mapper)
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "slicedFvPatchField(const slicedFvPatchField<Type>&, "
-        "const fvPatch&, const Field<Type>&, const fvPatchFieldMapper&)"
-    );
+    NotImplemented;
 }
 
 
@@ -88,11 +83,7 @@ slicedFvPatchField<Type>::slicedFvPatchField
 :
     fvPatchField<Type>(p, iF, dict)
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "slicedFvPatchField(const Field<Type>&, const dictionary&)"
-    );
+    NotImplemented;
 }
 
 
@@ -164,11 +155,7 @@ slicedFvPatchField<Type>::~slicedFvPatchField<Type>()
 template<class Type>
 tmp<Field<Type> > slicedFvPatchField<Type>::snGrad() const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "snGrad()"
-    );
+    NotImplemented;
 
     return Field<Type>::null();
 }
@@ -177,22 +164,14 @@ tmp<Field<Type> > slicedFvPatchField<Type>::snGrad() const
 template<class Type>
 void slicedFvPatchField<Type>::updateCoeffs()
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "updateCoeffs()"
-    );
+    NotImplemented;
 }
 
 
 template<class Type>
 tmp<Field<Type> > slicedFvPatchField<Type>::patchInternalField() const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "patchInternalField()"
-    );
+    NotImplemented;
 
     return Field<Type>::null();
 }
@@ -201,11 +180,7 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchInternalField() const
 template<class Type>
 void slicedFvPatchField<Type>::patchInternalField(Field<Type>&) const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "patchInternalField(Field<Type>&)"
-    );
+    NotImplemented;
 }
 
 
@@ -215,11 +190,7 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField
     const Field<Type>& iField
 ) const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "patchNeighbourField(const DimensionedField<Type, volMesh>& iField)"
-    );
+    NotImplemented;
 
     return Field<Type>::null();
 }
@@ -228,11 +199,7 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField
 template<class Type>
 tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField() const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "patchNeighbourField()"
-    );
+    NotImplemented;
 
     return Field<Type>::null();
 }
@@ -244,11 +211,7 @@ tmp<Field<Type> > slicedFvPatchField<Type>::valueInternalCoeffs
     const tmp<scalarField>&
 ) const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "valueInternalCoeffs(const tmp<scalarField>&)"
-    );
+    NotImplemented;
 
     return Field<Type>::null();
 }
@@ -260,11 +223,7 @@ tmp<Field<Type> > slicedFvPatchField<Type>::valueBoundaryCoeffs
     const tmp<scalarField>&
 ) const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "valueBoundaryCoeffs(const tmp<scalarField>&)"
-    );
+    NotImplemented;
 
     return Field<Type>::null();
 }
@@ -273,11 +232,7 @@ tmp<Field<Type> > slicedFvPatchField<Type>::valueBoundaryCoeffs
 template<class Type>
 tmp<Field<Type> > slicedFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "gradientInternalCoeffs()"
-    );
+    NotImplemented;
 
     return Field<Type>::null();
 }
@@ -286,11 +241,7 @@ tmp<Field<Type> > slicedFvPatchField<Type>::gradientInternalCoeffs() const
 template<class Type>
 tmp<Field<Type> > slicedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
-    notImplemented
-    (
-        "slicedFvPatchField<Type>::"
-        "gradientBoundaryCoeffs()"
-    );
+    NotImplemented;
 
     return Field<Type>::null();
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,7 +132,7 @@ Foam::point Foam::CatmullRomSpline::position
 
 Foam::scalar Foam::CatmullRomSpline::length() const
 {
-    notImplemented("CatmullRomSpline::length() const");
+    NotImplemented;
     return 1.0;
 }
 

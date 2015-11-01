@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,10 +169,7 @@ Foam::axesRotation::axesRotation(const tensor& R)
 
 const Foam::tensorField& Foam::axesRotation::Tr() const
 {
-    notImplemented
-    (
-        "const Foam::tensorField& axesRotation::Tr() const"
-    );
+    NotImplemented;
     return NullObjectRef<tensorField>();
 }
 
@@ -212,10 +209,7 @@ Foam::tmp<Foam::tensorField> Foam::axesRotation::transformTensor
     const tensorField& st
 ) const
 {
-    notImplemented
-    (
-        "const tensorField& axesRotation::transformTensor() const"
-    );
+    NotImplemented;
     return tmp<tensorField>(NULL);
 }
 
@@ -235,14 +229,7 @@ Foam::tmp<Foam::tensorField> Foam::axesRotation::transformTensor
     const labelList& cellMap
 ) const
 {
-    notImplemented
-    (
-        "tmp<Foam::tensorField> axesRotation::transformTensor "
-        "("
-            "const tensorField&,"
-            "const labelList&"
-        ") const"
-    );
+    NotImplemented;
     return tmp<tensorField>(NULL);
 }
 

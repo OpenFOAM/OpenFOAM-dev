@@ -152,14 +152,7 @@ public:
             const kinematicParcelInjectionData& b
         )
         {
-            notImplemented
-            (
-                "operator=="
-                "("
-                    "const kinematicParcelInjectionData&, "
-                    "const kinematicParcelInjectionData&"
-                ")"
-            );
+            NotImplemented;
 
             return false;
         }
@@ -170,14 +163,7 @@ public:
             const kinematicParcelInjectionData& b
         )
         {
-            notImplemented
-            (
-                "operator=="
-                "("
-                    "const kinematicParcelInjectionData&, "
-                    "const kinematicParcelInjectionData&"
-                ")"
-            );
+            NotImplemented;
 
             return false;
         }

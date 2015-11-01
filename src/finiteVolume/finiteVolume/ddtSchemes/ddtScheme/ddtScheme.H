@@ -288,7 +288,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtUfCorr                               \
     const surfaceScalarField& Uf                                               \
 )                                                                              \
 {                                                                              \
-    notImplemented(#SS"<scalar>::fvcDdtUfCorr");                               \
+    NotImplemented;                               \
     return surfaceScalarField::null();                                         \
 }                                                                              \
                                                                                \
@@ -299,7 +299,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
     const surfaceScalarField& phi                                              \
 )                                                                              \
 {                                                                              \
-    notImplemented(#SS"<scalar>::fvcDdtPhiCorr");                              \
+    NotImplemented;                              \
     return surfaceScalarField::null();                                         \
 }                                                                              \
                                                                                \
@@ -311,7 +311,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtUfCorr                               \
     const surfaceScalarField& Uf                                               \
 )                                                                              \
 {                                                                              \
-    notImplemented(#SS"<scalar>::fvcDdtUfCorr");                               \
+    NotImplemented;                               \
     return surfaceScalarField::null();                                         \
 }                                                                              \
                                                                                \
@@ -323,7 +323,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
     const surfaceScalarField& phi                                              \
 )                                                                              \
 {                                                                              \
-    notImplemented(#SS"<scalar>::fvcDdtPhiCorr");                              \
+    NotImplemented;                              \
     return surfaceScalarField::null();                                         \
 }                                                                              \
                                                                                \

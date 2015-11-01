@@ -254,11 +254,7 @@ public:
                 const label fieldI
             )
             {
-                notImplemented
-                (
-                    "effectivenessHeatExchangerSource::addSup(eqn, fieldI): "
-                    "only compressible solvers supported."
-                );
+                NotImplemented;
             }
 
 

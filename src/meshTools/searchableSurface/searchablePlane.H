@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,10 +148,7 @@ public:
         //- Does any part of the surface overlap the supplied bound box?
         virtual bool overlaps(const boundBox& bb) const
         {
-            notImplemented
-            (
-                "searchablePlane::overlaps(const boundBox&) const"
-            );
+            NotImplemented;
 
             return false;
         }
@@ -215,7 +212,7 @@ public:
 
             bool writeData(Ostream&) const
             {
-                notImplemented("searchablePlane::writeData(Ostream&) const");
+                NotImplemented;
                 return false;
             }
 

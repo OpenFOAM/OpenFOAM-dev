@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,49 +108,49 @@ Foam::Istream& Foam::ITstream::read(token& t)
 
 Foam::Istream& Foam::ITstream::read(char&)
 {
-    notImplemented("Istream& ITstream::read(char&)");
+    NotImplemented;
     return *this;
 }
 
 
 Foam::Istream& Foam::ITstream::read(word&)
 {
-    notImplemented("Istream& ITstream::read(word&)");
+    NotImplemented;
     return *this;
 }
 
 
 Foam::Istream& Foam::ITstream::read(string&)
 {
-    notImplemented("Istream& ITstream::read(string&)");
+    NotImplemented;
     return *this;
 }
 
 
 Foam::Istream& Foam::ITstream::read(label&)
 {
-    notImplemented("Istream& ITstream::read(label&)");
+    NotImplemented;
     return *this;
 }
 
 
 Foam::Istream& Foam::ITstream::read(floatScalar&)
 {
-    notImplemented("Istream& ITstream::read(floatScalar&)");
+    NotImplemented;
     return *this;
 }
 
 
 Foam::Istream& Foam::ITstream::read(doubleScalar&)
 {
-    notImplemented("Istream& ITstream::read(doubleScalar&)");
+    NotImplemented;
     return *this;
 }
 
 
 Foam::Istream& Foam::ITstream::read(char*, std::streamsize)
 {
-    notImplemented("Istream& ITstream::read(char*, std::streamsize)");
+    NotImplemented;
     return *this;
 }
 

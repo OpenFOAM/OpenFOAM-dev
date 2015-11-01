@@ -270,7 +270,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::THE
     const labelList& cells
 ) const
 {
-    notImplemented("multiphaseMixtureThermo::THE(...)");
+    NotImplemented;
     return T0;
 }
 
@@ -283,7 +283,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::THE
     const label patchi
 ) const
 {
-    notImplemented("multiphaseMixtureThermo::THE(...)");
+    NotImplemented;
     return T0;
 }
 

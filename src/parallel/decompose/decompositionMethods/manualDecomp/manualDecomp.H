@@ -108,11 +108,7 @@ public:
             const scalarField& cWeights
         )
         {
-            notImplemented
-            (
-                "decompose(const labelListList&, const pointField&"
-                ", const scalarField&)"
-            );
+            NotImplemented;
             return labelList(0);
         }
 

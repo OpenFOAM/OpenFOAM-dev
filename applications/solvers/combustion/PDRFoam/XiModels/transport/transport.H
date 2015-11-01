@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,7 @@ public:
         //- Correct the flame-wrinking Xi
         virtual void correct()
         {
-            notImplemented("transport::correct()");
+            NotImplemented;
         }
 
         //- Correct the flame-wrinking Xi using the given convection scheme

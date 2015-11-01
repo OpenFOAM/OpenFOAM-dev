@@ -100,7 +100,7 @@ public:
         //- Clone
         virtual autoPtr<searchableSurfaceFeatures> clone() const
         {
-            notImplemented("autoPtr<searchableSurfaceFeatures> clone() const");
+            NotImplemented;
             return autoPtr<searchableSurfaceFeatures>(NULL);
         }
 

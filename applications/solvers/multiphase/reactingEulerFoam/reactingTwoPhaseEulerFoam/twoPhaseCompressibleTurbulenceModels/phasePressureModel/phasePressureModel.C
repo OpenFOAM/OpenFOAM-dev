@@ -111,7 +111,7 @@ bool Foam::RASModels::phasePressureModel::read()
 Foam::tmp<Foam::volScalarField>
 Foam::RASModels::phasePressureModel::k() const
 {
-    notImplemented("phasePressureModel::k()");
+    NotImplemented;
     return nut_;
 }
 
@@ -119,7 +119,7 @@ Foam::RASModels::phasePressureModel::k() const
 Foam::tmp<Foam::volScalarField>
 Foam::RASModels::phasePressureModel::epsilon() const
 {
-    notImplemented("phasePressureModel::epsilon()");
+    NotImplemented;
     return nut_;
 }
 

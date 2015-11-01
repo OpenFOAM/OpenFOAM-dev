@@ -29,13 +29,7 @@ License
 
 bool Foam::fv::meanVelocityForce::read(const dictionary& dict)
 {
-    notImplemented
-    (
-        "bool Foam::fv::meanVelocityForce::read"
-        "("
-            "const dictionary&"
-        ") const"
-    );
+    NotImplemented;
 
     return false;
 }

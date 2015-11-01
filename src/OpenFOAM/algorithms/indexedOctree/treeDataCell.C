@@ -232,18 +232,7 @@ void Foam::treeDataCell::findNearestOp::operator()
     point& nearestPoint
 ) const
 {
-    notImplemented
-    (
-        "treeDataCell::findNearestOp::operator()"
-        "("
-        "    const labelUList&,"
-        "    const linePointRef&,"
-        "    treeBoundBox&,"
-        "    label&,"
-        "    point&,"
-        "    point&"
-        ") const"
-    );
+    NotImplemented;
 }
 
 

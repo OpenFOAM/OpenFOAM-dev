@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,10 +91,7 @@ Foam::scalar surfaceFilmModel::CourantNumber() const
 
 tmp<DimensionedField<scalar, volMesh> > surfaceFilmModel::Srho() const
 {
-    notImplemented
-    (
-        "tmp<DimensionedField<scalar, volMesh> > surfaceFilmModel::Srho() const"
-    )
+    NotImplemented;
 
     return tmp<DimensionedField<scalar, volMesh> >(NULL);
 }
@@ -103,11 +100,7 @@ tmp<DimensionedField<scalar, volMesh> > surfaceFilmModel::Srho() const
 tmp<DimensionedField<scalar, volMesh> >
 surfaceFilmModel::Srho(const label) const
 {
-    notImplemented
-    (
-        "tmp<DimensionedField<scalar, volMesh> > surfaceFilmModel::Srho"
-        "(const label) const"
-    )
+    NotImplemented;
 
     return tmp<DimensionedField<scalar, volMesh> >(NULL);
 }
@@ -115,10 +108,7 @@ surfaceFilmModel::Srho(const label) const
 
 tmp<DimensionedField<scalar, volMesh> > surfaceFilmModel::Sh() const
 {
-    notImplemented
-    (
-        "tmp<DimensionedField<scalar, volMesh> > surfaceFilmModel::Sh() const"
-    )
+    NotImplemented;
 
     return tmp<DimensionedField<scalar, volMesh> >(NULL);
 }

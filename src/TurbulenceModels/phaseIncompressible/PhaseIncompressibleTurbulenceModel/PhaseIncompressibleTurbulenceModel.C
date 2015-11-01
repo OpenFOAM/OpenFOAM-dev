@@ -169,11 +169,7 @@ Foam::tmp<Foam::volSymmTensorField>
 Foam::PhaseIncompressibleTurbulenceModel<TransportModel>::
 devRhoReff() const
 {
-    notImplemented
-    (
-        "PhaseIncompressibleTurbulenceModel<TransportModel>::"
-        "devRhoReff()"
-    );
+    NotImplemented;
 
     return devReff();
 }
@@ -187,11 +183,7 @@ divDevRhoReff
     volVectorField& U
 ) const
 {
-    notImplemented
-    (
-        "PhaseIncompressibleTurbulenceModel<TransportModel>::"
-        "divDevRhoReff(volVectorField& U)"
-    );
+    NotImplemented;
 
     return divDevReff(U);
 }

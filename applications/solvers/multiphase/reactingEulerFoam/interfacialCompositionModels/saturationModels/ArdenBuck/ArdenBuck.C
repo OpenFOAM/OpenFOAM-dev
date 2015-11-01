@@ -115,10 +115,7 @@ Foam::saturationModels::ArdenBuck::Tsat
     const volScalarField& p
 ) const
 {
-    notImplemented
-    (
-        "saturationModels::ArdenBuck::Tsat(const volScalarField& p)"
-    );
+    NotImplemented;
 
     return volScalarField::null();
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type> >
 Foam::coupledFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    notImplemented("coupledFvPatchField<Type>::gradientInternalCoeffs()");
+    NotImplemented;
     return -Type(pTraits<Type>::one)*this->patch().deltaCoeffs();
 }
 
@@ -201,7 +201,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type> >
 Foam::coupledFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
-    notImplemented("coupledFvPatchField<Type>::gradientBoundaryCoeffs()");
+    NotImplemented;
     return -this->gradientInternalCoeffs();
 }
 

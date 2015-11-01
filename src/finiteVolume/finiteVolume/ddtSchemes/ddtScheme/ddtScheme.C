@@ -105,7 +105,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > ddtScheme<Type>::fvcDdt
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    notImplemented("fvmDdt(alpha, rho, psi");
+    NotImplemented;
 
     return tmp<GeometricField<Type, fvPatchField, volMesh> >
     (
@@ -122,7 +122,7 @@ tmp<fvMatrix<Type> > ddtScheme<Type>::fvmDdt
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    notImplemented("fvmDdt(alpha, rho, psi");
+    NotImplemented;
 
     return tmp<fvMatrix<Type> >
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,7 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::THE
     const labelList& cells
 ) const
 {
-    notImplemented("twoPhaseMixtureThermo::THE(...)");
+    NotImplemented;
     return T0;
 }
 
@@ -165,7 +165,7 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::THE
     const label patchi
 ) const
 {
-    notImplemented("twoPhaseMixtureThermo::THE(...)");
+    NotImplemented;
     return T0;
 }
 

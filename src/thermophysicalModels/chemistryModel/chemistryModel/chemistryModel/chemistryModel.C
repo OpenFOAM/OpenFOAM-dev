@@ -876,17 +876,7 @@ void Foam::chemistryModel<CompType, ThermoType>::solve
     scalar& subDeltaT
 ) const
 {
-    notImplemented
-    (
-        "chemistryModel::solve"
-        "("
-            "scalarField&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&, "
-            "scalar&"
-        ") const"
-    );
+    NotImplemented;
 }
 
 

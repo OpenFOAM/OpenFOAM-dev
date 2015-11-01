@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,11 +56,7 @@ uncorrectedSnGrad<Type>::correction
     const GeometricField<Type, fvPatchField, volMesh>&
 ) const
 {
-    notImplemented
-    (
-        "uncorrectedSnGrad<Type>::correction"
-        "(const GeometricField<Type, fvPatchField, volMesh>&)"
-    );
+    NotImplemented;
     return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >(NULL);
 }
 

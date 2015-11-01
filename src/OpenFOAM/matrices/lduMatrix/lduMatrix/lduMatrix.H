@@ -500,12 +500,7 @@ public:
                 const direction cmpt=0
             ) const
             {
-                notImplemented
-                (
-                    type() +"::preconditionT"
-                    "(scalarField& wT, const scalarField& rT, "
-                    "const direction cmpt)"
-                );
+                NotImplemented;
             }
     };
 

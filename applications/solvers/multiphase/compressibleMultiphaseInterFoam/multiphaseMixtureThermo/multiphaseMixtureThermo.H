@@ -253,14 +253,14 @@ public:
             //  Non-const access allowed for transport equations
             virtual volScalarField& he()
             {
-                notImplemented("multiphaseMixtureThermo::he()");
+                NotImplemented;
                 return phases_[0].thermo().he();
             }
 
             //- Enthalpy/Internal energy [J/kg]
             virtual const volScalarField& he() const
             {
-                notImplemented("multiphaseMixtureThermo::he() const");
+                NotImplemented;
                 return phases_[0].thermo().he();
             }
 

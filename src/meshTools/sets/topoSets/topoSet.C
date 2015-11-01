@@ -514,7 +514,7 @@ void Foam::topoSet::deleteSet(const topoSet& set)
 
 void Foam::topoSet::sync(const polyMesh&)
 {
-    notImplemented("topoSet::sync(const polyMesh&)");
+    NotImplemented;
 }
 
 
@@ -557,7 +557,7 @@ bool Foam::topoSet::writeData(Ostream& os) const
 
 void Foam::topoSet::updateMesh(const mapPolyMesh&)
 {
-    notImplemented("topoSet::updateMesh(const mapPolyMesh&)");
+    NotImplemented;
 }
 
 

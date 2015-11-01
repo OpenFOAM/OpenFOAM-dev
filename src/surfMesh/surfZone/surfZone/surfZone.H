@@ -114,7 +114,7 @@ public:
         //- Return clone
         autoPtr<surfZone> clone() const
         {
-            notImplemented("autoPtr<surfZone> clone() const");
+            NotImplemented;
             return autoPtr<surfZone>(NULL);
         }
 

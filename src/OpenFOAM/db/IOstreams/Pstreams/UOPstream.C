@@ -170,7 +170,7 @@ Foam::Ostream& Foam::UOPstream::write(const token& t)
     }
     else
     {
-        notImplemented("Ostream& UOPstream::write(const token&)");
+        NotImplemented;
         setBad();
     }
     return *this;

@@ -271,11 +271,7 @@ public:
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&)
         {
-            notImplemented
-            (
-                "medialAxisMeshMover::updateMesh"
-                "(const mapPolyMesh&)"
-            );
+            NotImplemented;
         }
 
 };

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -242,7 +242,7 @@ public:
         //- Clone
         autoPtr<topoSetSource> clone() const
         {
-            notImplemented("autoPtr<topoSetSource> clone() const");
+            NotImplemented;
             return autoPtr<topoSetSource>(NULL);
         }
 

@@ -164,7 +164,7 @@ public:
         //- Return clone
         autoPtr<MRFZone> clone() const
         {
-            notImplemented("autoPtr<MRFZone> clone() const");
+            NotImplemented;
             return autoPtr<MRFZone>(NULL);
         }
 

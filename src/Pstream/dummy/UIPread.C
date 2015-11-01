@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,21 +53,7 @@ Foam::UIPstream::UIPstream
     clearAtEnd_(clearAtEnd),
     messageSize_(0)
 {
-    notImplemented
-    (
-        "UIPstream::UIPstream\n"
-        "(\n"
-            "const commsTypes,\n"
-            "const int,\n"
-            "DynamicList<char>&,\n"
-            "label&,\n"
-            "const int,\n"
-            "const label,\n"
-            "const bool,\n"
-            "streamFormat,\n"
-            "versionNumber\n"
-        ")"
-    );
+    NotImplemented;
 }
 
 
@@ -83,14 +69,7 @@ Foam::UIPstream::UIPstream(const int fromProcNo, PstreamBuffers& buffers)
     clearAtEnd_(true),
     messageSize_(0)
 {
-    notImplemented
-    (
-        "UIPstream::UIPstream\n"
-        "(\n"
-            "const int,\n"
-            "PstreamBuffers&\n"
-        ")"
-    );
+    NotImplemented;
 }
 
 
@@ -106,18 +85,7 @@ Foam::label Foam::UIPstream::read
     const label communicator
 )
 {
-    notImplemented
-    (
-        "UIPstream::read"
-        "("
-            "const commsTypes,"
-            "const int fromProcNo,"
-            "char* buf,"
-            "const label bufSize,"
-            "const int tag,"
-            "const label communicator"
-        ")"
-     );
+    NotImplemented;
 
      return 0;
 }

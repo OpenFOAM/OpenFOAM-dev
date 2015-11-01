@@ -213,7 +213,7 @@ void kkLOmega::correctNut()
 {
     // Currently this function is not implemented due to the complexity of
     // evaluating nut.  Better calculate nut at the end of correct()
-    notImplemented("kkLOmega::correctNut()");
+    NotImplemented;
 }
 
 
