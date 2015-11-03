@@ -14,6 +14,38 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-simulationType RASModel;
+simulationType RAS;
+
+RAS
+{
+    RASModel            kEpsilon;
+
+    turbulence          on;
+    printCoeffs         on;
+}
+
+LES
+{
+    LESModel            SpalartAllmarasDDES;
+    delta               cubeRootVol;
+
+    turbulence          on;
+    printCoeffs         on;
+
+    cubeRootVolCoeffs
+    {
+        deltaCoeff      1;
+    }
+
+    smoothCoeffs
+    {
+        delta           cubeRootVol;
+        cubeRootVolCoeffs
+        {
+            deltaCoeff      1;
+        }
+        maxDeltaRatio   1.1;
+    }
+}
 
 // ************************************************************************* //
