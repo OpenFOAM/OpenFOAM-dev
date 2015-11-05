@@ -222,6 +222,36 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 
 
 Foam::tmp<Foam::volScalarField>
+Foam::phaseSystem::E(const phasePairKey& key) const
+{
+    if (aspectRatioModels_.found(key))
+    {
+        return aspectRatioModels_[key]->E();
+    }
+    else
+    {
+        return tmp<volScalarField>
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    aspectRatioModel::typeName + ":E",
+                    this->mesh_.time().timeName(),
+                    this->mesh_,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                this->mesh_,
+                dimensionedScalar("zero", dimless, 1)
+            )
+        );
+    }
+}
+
+
+Foam::tmp<Foam::volScalarField>
 Foam::phaseSystem::sigma(const phasePairKey& key) const
 {
     if (surfaceTensionModels_.found(key))

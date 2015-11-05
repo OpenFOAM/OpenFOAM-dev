@@ -77,7 +77,7 @@ Foam::aspectRatioModels::constantAspectRatio::E() const
             (
                 IOobject
                 (
-                    "zero",
+                    aspectRatioModel::typeName + ":E",
                     mesh.time().timeName(),
                     mesh
                 ),

@@ -41,8 +41,6 @@ SourceFiles
 namespace Foam
 {
 
-class aspectRatioModel;
-
 /*---------------------------------------------------------------------------*\
                          Class orderedPhasePair Declaration
 \*---------------------------------------------------------------------------*/
@@ -51,17 +49,6 @@ class orderedPhasePair
 :
     public phasePair
 {
-    // Private data
-
-        //- Aspect ratio model
-        autoPtr<aspectRatioModel> aspectRatio_;
-
-
-    // Private member functions
-
-        //- Set the aspect ratio model, if there is one
-        void setAspectRatioModel(const dictTable aspectRatioTable);
-
 
 public:
 

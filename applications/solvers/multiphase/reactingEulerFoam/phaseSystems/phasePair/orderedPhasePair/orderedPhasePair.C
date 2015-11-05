@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "orderedPhasePair.H"
-#include "aspectRatioModel.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -73,15 +73,7 @@ Foam::word Foam::orderedPhasePair::name() const
 
 Foam::tmp<Foam::volScalarField> Foam::orderedPhasePair::E() const
 {
-    return
-        phase1().mesh().lookupObject<aspectRatioModel>
-        (
-            IOobject::groupName
-            (
-                aspectRatioModel::typeName,
-                orderedPhasePair::name()
-            )
-        ).E();
+    return phase1().fluid().E(*this);
 }
 
 

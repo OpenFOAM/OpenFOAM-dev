@@ -310,6 +310,9 @@ public:
         //- Access the rate of change of the pressure
         inline volScalarField& dpdt();
 
+        //- Return the aspect-ratio
+        tmp<volScalarField> E(const phasePairKey& key) const;
+
         //- Return the surface tension coefficient
         tmp<volScalarField> sigma(const phasePairKey& key) const;
 
