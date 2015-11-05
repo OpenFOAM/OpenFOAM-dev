@@ -267,6 +267,26 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::CpByCpv
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::nu() const
+{
+    return mu()/(alpha1()*thermo1_->rho() + alpha2()*thermo2_->rho());
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::nu
+(
+    const label patchi
+) const
+{
+    return
+        mu(patchi)
+       /(
+            alpha1().boundaryField()[patchi]*thermo1_->rho(patchi)
+          + alpha2().boundaryField()[patchi]*thermo2_->rho(patchi)
+        );
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::kappa() const
 {
     return alpha1()*thermo1_->kappa() + alpha2()*thermo2_->kappa();
