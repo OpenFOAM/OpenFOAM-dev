@@ -37,7 +37,6 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::AnisothermalPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, index),
-    divU_(NULL),
     K_
     (
         IOobject
@@ -130,25 +129,6 @@ template<class BasePhaseModel>
 bool Foam::AnisothermalPhaseModel<BasePhaseModel>::compressible() const
 {
     return !this->thermo().incompressible();
-}
-
-
-template<class BasePhaseModel>
-const Foam::tmp<Foam::volScalarField>&
-Foam::AnisothermalPhaseModel<BasePhaseModel>::divU() const
-{
-    return divU_;
-}
-
-
-template<class BasePhaseModel>
-void
-Foam::AnisothermalPhaseModel<BasePhaseModel>::divU
-(
-    const tmp<volScalarField>& divU
-)
-{
-    divU_ = divU;
 }
 
 

@@ -80,6 +80,9 @@ class MovingPhaseModel
         //- Lagrangian acceleration field (needed for virtual-mass)
         volVectorField DUDt_;
 
+        //- Dilatation rate
+        tmp<volScalarField> divU_;
+
         //- Turbulence model
         autoPtr<phaseCompressibleTurbulenceModel> turbulence_;
 
@@ -150,6 +153,12 @@ public:
 
             //- Return the substantive acceleration
             virtual tmp<volVectorField> DUDt() const;
+
+            //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
+            virtual const tmp<volScalarField>& divU() const;
+
+            //- Set the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
+            virtual void divU(const tmp<volScalarField>& divU);
 
             //- Constant access the continuity error
             virtual tmp<volScalarField> continuityError() const;

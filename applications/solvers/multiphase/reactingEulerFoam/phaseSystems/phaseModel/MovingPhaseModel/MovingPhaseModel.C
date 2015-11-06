@@ -174,6 +174,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         fluid.mesh(),
         dimensionedVector("0", dimAcceleration, vector::zero)
     ),
+    divU_(NULL),
     turbulence_
     (
         phaseCompressibleTurbulenceModel::New
@@ -314,6 +315,25 @@ Foam::tmp<Foam::volVectorField>
 Foam::MovingPhaseModel<BasePhaseModel>::DUDt() const
 {
     return DUDt_;
+}
+
+
+template<class BasePhaseModel>
+const Foam::tmp<Foam::volScalarField>&
+Foam::MovingPhaseModel<BasePhaseModel>::divU() const
+{
+    return divU_;
+}
+
+
+template<class BasePhaseModel>
+void
+Foam::MovingPhaseModel<BasePhaseModel>::divU
+(
+    const tmp<volScalarField>& divU
+)
+{
+    divU_ = divU;
 }
 
 
