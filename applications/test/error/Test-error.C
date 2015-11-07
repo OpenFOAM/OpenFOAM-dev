@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,15 +40,15 @@ int main(int argc, char *argv[])
 
     try
     {
-        WarningIn("main") << "warning 1" << endl;
-        IOWarningIn("main", Serr) << "warning 2" << endl;
+        WarningInFunction << "warning 1" << endl;
+        IOWarningInFunction(Serr) << "warning 2" << endl;
 
         dictionary dict;
 
         IOWarningIn("main", dict) << "warning 3" << endl;
 
-        FatalErrorIn("main") << "error 1" << endl;
-        FatalErrorIn("main") << "error 2" << exit(FatalError);
+        FatalErrorInFunction << "error 1" << endl;
+        FatalErrorInFunction << "error 2" << exit(FatalError);
     }
     catch (Foam::error& fErr)
     {
