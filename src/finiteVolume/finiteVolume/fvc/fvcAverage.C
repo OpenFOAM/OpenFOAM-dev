@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,8 @@ average
     const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf
 )
 {
+    Info<< "average" << endl;
+
     const fvMesh& mesh = ssf.mesh();
 
     tmp<GeometricField<Type, fvPatchField, volMesh> > taverage
@@ -70,8 +72,9 @@ average
 
     av.internalField() =
     (
-        surfaceSum(mesh.magSf()*ssf)/surfaceSum(mesh.magSf())
-    )().internalField();
+        surfaceSum(mesh.magSf()*ssf)().internalField()
+       /surfaceSum(mesh.magSf())().internalField()
+    );
 
     typename GeometricField<Type, fvPatchField, volMesh>::
     GeometricBoundaryField& bav = av.boundaryField();
