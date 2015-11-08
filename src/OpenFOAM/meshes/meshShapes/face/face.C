@@ -135,12 +135,7 @@ Foam::label Foam::face::split
 
     if (size() <= 2)
     {
-        FatalErrorIn
-        (
-            "face::split"
-            "(const face::splitMode, const pointField&, label&, label&"
-            ", faceList&, faceList&)"
-        )
+        FatalErrorInFunction
             << "Serious problem: asked to split a face with < 3 vertices"
             << abort(FatalError);
     }

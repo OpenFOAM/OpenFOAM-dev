@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,10 +130,8 @@ Foam::treeBoundBox::treeBoundBox(const UList<point>& points)
 {
     if (points.empty())
     {
-        WarningIn
-        (
-            "treeBoundBox::treeBoundBox(const UList<point>&)"
-        )   << "cannot find bounding box for zero-sized pointField, "
+        WarningInFunction
+            << "cannot find bounding box for zero-sized pointField, "
             << "returning zero" << endl;
 
         return;
@@ -151,11 +149,8 @@ Foam::treeBoundBox::treeBoundBox
 {
     if (points.empty() || indices.empty())
     {
-        WarningIn
-        (
-            "treeBoundBox::treeBoundBox"
-            "(const UList<point>&, const labelUList&)"
-        )   << "cannot find bounding box for zero-sized pointField, "
+        WarningInFunction
+            << "cannot find bounding box for zero-sized pointField, "
             << "returning zero" << endl;
 
         return;
@@ -195,10 +190,8 @@ Foam::treeBoundBox Foam::treeBoundBox::subBbox
 {
     if (octant > 7)
     {
-        FatalErrorIn
-        (
-            "treeBoundBox::subBbox(const point&, const direction)"
-        )   << "octant should be [0..7]"
+        FatalErrorInFunction
+            << "octant should be [0..7]"
             << abort(FatalError);
     }
 

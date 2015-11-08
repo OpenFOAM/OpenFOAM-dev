@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,12 +146,8 @@ tmp<Field<Type1> > pointPatchField<Type>::patchInternalField
     // Check size
     if (iF.size() != internalField().size())
     {
-        FatalErrorIn
-        (
-            "tmp<Field<Type1> > pointPatchField<"
-            "Type>::"
-            "patchInternalField(const Field<Type1>& iF) const"
-        )   << "given internal field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
             << " mesh size: " << internalField().size()
             << abort(FatalError);
@@ -183,12 +179,8 @@ void pointPatchField<Type>::addToInternalField
     // Check size
     if (iF.size() != internalField().size())
     {
-        FatalErrorIn
-        (
-            "void pointPatchField<Type>::"
-            "addToInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF) const"
-        )   << "given internal field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
             << " mesh size: " << internalField().size()
             << abort(FatalError);
@@ -196,12 +188,8 @@ void pointPatchField<Type>::addToInternalField
 
     if (pF.size() != size())
     {
-        FatalErrorIn
-        (
-            "void pointPatchField<Type>::"
-            "addToInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF) const"
-        )   << "given patch field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given patch field does not correspond to the mesh. "
             << "Field size: " << pF.size()
             << " mesh size: " << size()
             << abort(FatalError);
@@ -229,12 +217,8 @@ void pointPatchField<Type>::addToInternalField
     // Check size
     if (iF.size() != internalField().size())
     {
-        FatalErrorIn
-        (
-            "void pointPatchField<Type>::"
-            "addToInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF, const labelList&) const"
-        )   << "given internal field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
             << " mesh size: " << internalField().size()
             << abort(FatalError);
@@ -242,12 +226,8 @@ void pointPatchField<Type>::addToInternalField
 
     if (pF.size() != size())
     {
-        FatalErrorIn
-        (
-            "void pointPatchField<Type>::"
-            "addToInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF, const labelList&) const"
-        )   << "given patch field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given patch field does not correspond to the mesh. "
             << "Field size: " << pF.size()
             << " mesh size: " << size()
             << abort(FatalError);
@@ -276,12 +256,8 @@ void pointPatchField<Type>::setInInternalField
     // Check size
     if (iF.size() != internalField().size())
     {
-        FatalErrorIn
-        (
-            "void pointPatchField<Type>::"
-            "setInInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF) const"
-        )   << "given internal field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
             << " mesh size: " << internalField().size()
             << abort(FatalError);
@@ -289,12 +265,8 @@ void pointPatchField<Type>::setInInternalField
 
     if (pF.size() != meshPoints.size())
     {
-        FatalErrorIn
-        (
-            "void pointPatchField<Type>::"
-            "setInInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF) const"
-        )   << "given patch field does not correspond to the meshPoints. "
+        FatalErrorInFunction
+            << "given patch field does not correspond to the meshPoints. "
             << "Field size: " << pF.size()
             << " meshPoints size: " << size()
             << abort(FatalError);

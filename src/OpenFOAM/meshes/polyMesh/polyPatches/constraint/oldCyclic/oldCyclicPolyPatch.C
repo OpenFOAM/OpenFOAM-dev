@@ -263,11 +263,8 @@ bool Foam::oldCyclicPolyPatch::getGeometricHalves
             }
         }
 
-        SeriousErrorIn
-        (
-            "oldCyclicPolyPatch::getGeometricHalves"
-            "(const primitivePatch&, labelList&, labelList&) const"
-        )   << "Patch " << name() << " gets decomposed in two zones of"
+        SeriousErrorInFunction
+            << "Patch " << name() << " gets decomposed in two zones of"
             << "inequal size: " << half0ToPatch.size()
             << " and " << half1ToPatch.size() << endl
             << "This means that the patch is either not two separate regions"
@@ -499,10 +496,8 @@ bool Foam::oldCyclicPolyPatch::matchAnchors
             if (report)
             {
                 const face& f = half1Faces[half1FaceI];
-                SeriousErrorIn
-                (
-                    "oldCyclicPolyPatch::matchAnchors(..)"
-                )   << "Patch:" << name() << " : "
+                SeriousErrorInFunction
+                    << "Patch:" << name() << " : "
                     << "Cannot find point on face " << f
                     << " with vertices:"
                     << UIndirectList<point>(pp.points(), f)()
@@ -602,15 +597,8 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
 {
     if (dict.found("neighbourPatch"))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "oldCyclicPolyPatch::oldCyclicPolyPatch\n"
-            "(\n"
-            "    const word& name,\n"
-            "    const dictionary& dict,\n"
-            "    const label index,\n"
-            "    const polyBoundaryMesh& bm\n"
-            ")",
             dict
         )   << "Found \"neighbourPatch\" entry when reading cyclic patch "
             << name << endl
@@ -771,7 +759,7 @@ bool Foam::oldCyclicPolyPatch::order
 
     if (pp.size()&1)
     {
-        FatalErrorIn("oldCyclicPolyPatch::order(..)")
+        FatalErrorInFunction
             << "Size of cyclic " << name() << " should be a multiple of 2"
             << ". It is " << pp.size() << abort(FatalError);
     }
@@ -1191,11 +1179,8 @@ bool Foam::oldCyclicPolyPatch::order
 
     if (!matchedAll)
     {
-        SeriousErrorIn
-        (
-            "oldCyclicPolyPatch::order"
-            "(const primitivePatch&, labelList&, labelList&) const"
-        )   << "Patch:" << name() << " : "
+        SeriousErrorInFunction
+            << "Patch:" << name() << " : "
             << "Cannot match vectors to faces on both sides of patch" << endl
             << "    Perhaps your faces do not match?"
             << " The obj files written contain the current match." << endl
@@ -1269,7 +1254,7 @@ void Foam::oldCyclicPolyPatch::write(Ostream& os) const
         }
     }
 
-    WarningIn("oldCyclicPolyPatch::write(Ostream& os) const")
+    WarningInFunction
         << "Please run foamUpgradeCyclics to convert these old-style"
         << " cyclics into two separate cyclics patches."
         << endl;

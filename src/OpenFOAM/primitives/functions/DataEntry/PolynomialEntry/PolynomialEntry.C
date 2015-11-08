@@ -53,11 +53,8 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
 
     if (!coeffs_.size())
     {
-        FatalErrorIn
-        (
-            "PolynomialEntry<Type>::"
-            "PolynomialEntry(const word&, const dictionary&)"
-        )   << "PolynomialEntry coefficients for entry " << this->name_
+        FatalErrorInFunction
+            << "PolynomialEntry coefficients for entry " << this->name_
             << " are invalid (empty)" << nl << exit(FatalError);
     }
 
@@ -74,11 +71,8 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
     {
         if (!canIntegrate_)
         {
-            WarningIn
-            (
-                "PolynomialEntry<Type>::PolynomialEntry"
-                "(const word&, const dictionary&)"
-            )   << "PolynomialEntry " << this->name_ << " cannot be integrated"
+            WarningInFunction
+                << "PolynomialEntry " << this->name_ << " cannot be integrated"
                 << endl;
         }
     }
@@ -99,11 +93,8 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
 {
     if (!coeffs_.size())
     {
-        FatalErrorIn
-        (
-            "Foam::PolynomialEntry<Type>::PolynomialEntry"
-            "(const word&, const List<Tuple2<Type, Type> >&)"
-        )   << "PolynomialEntry coefficients for entry " << this->name_
+        FatalErrorInFunction
+            << "PolynomialEntry coefficients for entry " << this->name_
             << " are invalid (empty)" << nl << exit(FatalError);
     }
 
@@ -120,11 +111,8 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
     {
         if (!canIntegrate_)
         {
-            WarningIn
-            (
-                "Foam::PolynomialEntry<Type>::PolynomialEntry"
-                "(const word&, const List<Tuple2<Type, Type> >&)"
-            )   << "PolynomialEntry " << this->name_ << " cannot be integrated"
+            WarningInFunction
+                << "PolynomialEntry " << this->name_ << " cannot be integrated"
                 << endl;
         }
     }

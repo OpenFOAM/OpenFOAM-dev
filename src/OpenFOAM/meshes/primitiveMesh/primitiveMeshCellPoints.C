@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ const Foam::labelListList& Foam::primitiveMesh::cellPoints() const
             {
                 // For checking calls:abort so we can quickly hunt down
                 // origin of call
-                FatalErrorIn("primitiveMesh::cellPoints()")
+                FatalErrorInFunction
                     << abort(FatalError);
             }
         }

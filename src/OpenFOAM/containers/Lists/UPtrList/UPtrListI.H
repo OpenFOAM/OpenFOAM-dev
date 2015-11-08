@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ inline const T& Foam::UPtrList<T>::operator[](const label i) const
 {
     if (!ptrs_[i])
     {
-        FatalErrorIn("UPtrList::operator[] const")
+        FatalErrorInFunction
             << "hanging pointer at index " << i
             << " (size " << size()
             << "), cannot dereference"
@@ -122,7 +122,7 @@ inline T& Foam::UPtrList<T>::operator[](const label i)
 {
     if (!ptrs_[i])
     {
-        FatalErrorIn("UPtrList::operator[]")
+        FatalErrorInFunction
             << "hanging pointer at index " << i
             << " (size " << size()
             << "), cannot dereference"

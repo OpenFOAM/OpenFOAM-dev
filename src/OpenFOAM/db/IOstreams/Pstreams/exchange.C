@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,18 +46,14 @@ void Foam::Pstream::exchange
 {
     if (!contiguous<T>())
     {
-        FatalErrorIn
-        (
-            "Pstream::exchange(..)"
-        )   << "Continuous data only." << sizeof(T) << Foam::abort(FatalError);
+        FatalErrorInFunction
+            << "Continuous data only." << sizeof(T) << Foam::abort(FatalError);
     }
 
     if (sendBufs.size() != UPstream::nProcs(comm))
     {
-        FatalErrorIn
-        (
-            "Pstream::exchange(..)"
-        )   << "Size of list:" << sendBufs.size()
+        FatalErrorInFunction
+            << "Size of list:" << sendBufs.size()
             << " does not equal the number of processors:"
             << UPstream::nProcs(comm)
             << Foam::abort(FatalError);
@@ -123,7 +119,7 @@ void Foam::Pstream::exchange
                     )
                 )
                 {
-                    FatalErrorIn("Pstream::exchange(..)")
+                    FatalErrorInFunction
                         << "Cannot send outgoing message. "
                         << "to:" << procI << " nBytes:"
                         << label(sendBufs[procI].size()*sizeof(T))

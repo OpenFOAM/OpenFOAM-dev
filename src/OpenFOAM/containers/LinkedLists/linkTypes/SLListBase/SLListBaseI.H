@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ Foam::SLListBase::first()
 {
     if (!nElmts_)
     {
-        FatalErrorIn("SLListBase::first()")
+        FatalErrorInFunction
             << "list is empty"
             << abort(FatalError);
     }
@@ -94,7 +94,7 @@ Foam::SLListBase::first() const
 {
     if (!nElmts_)
     {
-        FatalErrorIn("SLListBase::first() const")
+        FatalErrorInFunction
             << "list is empty"
             << abort(FatalError);
     }
@@ -107,7 +107,7 @@ Foam::SLListBase::last()
 {
     if (!nElmts_)
     {
-        FatalErrorIn("SLListBase::last()")
+        FatalErrorInFunction
             << "list is empty"
             << abort(FatalError);
     }
@@ -120,7 +120,7 @@ Foam::SLListBase::last() const
 {
     if (!nElmts_)
     {
-        FatalErrorIn("SLListBase::last() const")
+        FatalErrorInFunction
             << "list is empty"
             << abort(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ inline Foam::triPointRef Foam::tetrahedron<Point, PointRef>::tri
     }
     else
     {
-        FatalErrorIn("tetrahedron::tri(const label faceI) const")
+        FatalErrorInFunction
             << "index out of range 0 -> 3. faceI = " << faceI
             << abort(FatalError);
         return triPointRef(b_, c_, d_);
@@ -907,7 +907,7 @@ tetSliceWithPlane
         }
         else
         {
-            FatalErrorIn("tetSliceWithPlane(..)")
+            FatalErrorInFunction
                 << "Missed edge:" << posEdge
                 << abort(FatalError);
         }

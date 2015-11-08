@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,11 +54,8 @@ Foam::globalIndex::globalIndex
 
         if (offset < oldOffset)
         {
-            FatalErrorIn
-            (
-                "globalIndex::globalIndex"
-                "(const label, const int, const label, const bool)"
-            )   << "Overflow : sum of sizes " << localSizes
+            FatalErrorInFunction
+                << "Overflow : sum of sizes " << localSizes
                 << " exceeds capability of label (" << labelMax
                 << "). Please recompile with larger datatype for label."
                 << exit(FatalError);
@@ -86,7 +83,7 @@ Foam::globalIndex::globalIndex(const label localSize)
 
         if (offset < oldOffset)
         {
-            FatalErrorIn("globalIndex::globalIndex(const label)")
+            FatalErrorInFunction
                 << "Overflow : sum of sizes " << localSizes
                 << " exceeds capability of label (" << labelMax
                 << "). Please recompile with larger datatype for label."

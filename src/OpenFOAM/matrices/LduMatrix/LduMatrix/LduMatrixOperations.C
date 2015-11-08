@@ -168,10 +168,8 @@ void Foam::LduMatrix<Type, DType, LUType>::operator=(const LduMatrix& A)
 {
     if (this == &A)
     {
-        FatalErrorIn
-        (
-            "LduMatrix<Type, DType, LUType>::operator=(const LduMatrix&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 
@@ -305,10 +303,8 @@ void Foam::LduMatrix<Type, DType, LUType>::operator+=(const LduMatrix& A)
     }
     else
     {
-        FatalErrorIn
-        (
-            "LduMatrix<Type, DType, LUType>::operator+=(const LduMatrix& A)"
-        )   << "Unknown matrix type combination"
+        FatalErrorInFunction
+            << "Unknown matrix type combination"
             << abort(FatalError);
     }
 
@@ -384,10 +380,8 @@ void Foam::LduMatrix<Type, DType, LUType>::operator-=(const LduMatrix& A)
     }
     else
     {
-        FatalErrorIn
-        (
-            "LduMatrix<Type, DType, LUType>::operator-=(const LduMatrix& A)"
-        )   << "Unknown matrix type combination"
+        FatalErrorInFunction
+            << "Unknown matrix type combination"
             << abort(FatalError);
     }
 
@@ -433,10 +427,8 @@ void Foam::LduMatrix<Type, DType, LUType>::operator*=
         }
     }
 
-    FatalErrorIn
-    (
-        "LduMatrix<Type, DType, LUType>::operator*=(const scalarField& sf)"
-    )   << "Scaling a matrix by scalarField is not currently supported\n"
+    FatalErrorInFunction
+        << "Scaling a matrix by scalarField is not currently supported\n"
            "because scaling interfacesUpper_ and interfacesLower_ "
            "require special transfers"
         << abort(FatalError);

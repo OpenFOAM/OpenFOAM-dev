@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,12 +56,8 @@ projectPoints
 
     if (projectionDirection.size() != nPoints())
     {
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "projectPoints(const PrimitivePatch& "
-            ", const Field<PointType>&) const"
-        )   << "Projection direction field does not correspond to "
+        FatalErrorInFunction
+            << "Projection direction field does not correspond to "
             << "patch points." << endl
             << "Size: " << projectionDirection.size()
             << " Number of points: " << nPoints()
@@ -303,12 +299,8 @@ projectFaceCentres
 
     if (projectionDirection.size() != this->size())
     {
-        FatalErrorIn
-        (
-            "labelList PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "projectFaceCentres(const PrimitivePatch& "
-            ", const Field<PointType>&) const"
-        )   << "Projection direction field does not correspond to patch faces."
+        FatalErrorInFunction
+            << "Projection direction field does not correspond to patch faces."
             << endl << "Size: " << projectionDirection.size()
             << " Number of points: " << this->size()
             << abort(FatalError);

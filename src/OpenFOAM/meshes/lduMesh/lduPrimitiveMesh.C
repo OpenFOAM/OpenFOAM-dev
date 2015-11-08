@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,21 +68,15 @@ void Foam::lduPrimitiveMesh::checkUpperTriangular
     {
         if (u[faceI] < l[faceI])
         {
-            FatalErrorIn
-            (
-                "checkUpperTriangular"
-                "(const label, const labelUList&, const labelUList&)"
-            )   << "Reversed face. Problem at face " << faceI
+            FatalErrorInFunction
+                << "Reversed face. Problem at face " << faceI
                 << " l:" << l[faceI] << " u:" << u[faceI]
                 << abort(FatalError);
         }
         if (l[faceI] < 0 || u[faceI] < 0 || u[faceI] >= size)
         {
-            FatalErrorIn
-            (
-                "checkUpperTriangular"
-                "(const label, const labelUList&, const labelUList&)"
-            )   << "Illegal cell label. Problem at face " << faceI
+            FatalErrorInFunction
+                << "Illegal cell label. Problem at face " << faceI
                 << " l:" << l[faceI] << " u:" << u[faceI]
                 << abort(FatalError);
         }
@@ -92,11 +86,8 @@ void Foam::lduPrimitiveMesh::checkUpperTriangular
     {
         if (l[faceI-1] > l[faceI])
         {
-            FatalErrorIn
-            (
-                "checkUpperTriangular"
-                "(const label, const labelUList&, const labelUList&)"
-            )   << "Lower not in incremental cell order."
+            FatalErrorInFunction
+                << "Lower not in incremental cell order."
                 << " Problem at face " << faceI
                 << " l:" << l[faceI] << " u:" << u[faceI]
                 << " previous l:" << l[faceI-1]
@@ -107,11 +98,8 @@ void Foam::lduPrimitiveMesh::checkUpperTriangular
             // Same cell.
             if (u[faceI-1] > u[faceI])
             {
-                FatalErrorIn
-                (
-                    "checkUpperTriangular"
-                    "(const label, const labelUList&, const labelUList&)"
-                )   << "Upper not in incremental cell order."
+                FatalErrorInFunction
+                    << "Upper not in incremental cell order."
                     << " Problem at face " << faceI
                     << " l:" << l[faceI] << " u:" << u[faceI]
                     << " previous u:" << u[faceI-1]
@@ -151,7 +139,7 @@ Foam::labelList Foam::lduPrimitiveMesh::upperTriOrder
     {
         if (upper[faceI] < lower[faceI])
         {
-            FatalErrorIn("lduPrimitiveMesh::upperTriOrder(..)")
+            FatalErrorInFunction
                 << "Problem at face:" << faceI
                 << " lower:" << lower[faceI]
                 << " upper:" << upper[faceI]
@@ -309,10 +297,8 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
     {
         if (otherMeshes[i].comm() != currentComm)
         {
-            WarningIn
-            (
-                "lduPrimitiveMesh::lduPrimitiveMesh(..)"
-            )   << "Communicator " << otherMeshes[i].comm()
+            WarningInFunction
+                << "Communicator " << otherMeshes[i].comm()
                 << " at index " << i
                 << " differs from that of predecessor "
                 << currentComm
@@ -337,10 +323,8 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
     {
         if (procAgglomMap[procIDs[i]] != procAgglomMap[procIDs[0]])
         {
-            FatalErrorIn
-            (
-                "lduPrimitiveMesh::lduPrimitiveMesh(..)"
-            )   << "Processor " << procIDs[i]
+            FatalErrorInFunction
+                << "Processor " << procIDs[i]
                 << " agglomerates to " << procAgglomMap[procIDs[i]]
                 << " whereas other processors " << procIDs
                 << " agglomerate to "
@@ -423,7 +407,7 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
 
                     if (agglom0 != myAgglom && agglom1 != myAgglom)
                     {
-                        FatalErrorIn("lduPrimitiveMesh::lduPrimitiveMesh(..)")
+                        FatalErrorInFunction
                             << "At mesh from processor " << procIDs[procMeshI]
                             << " have interface " << intI
                             << " with myProcNo:" << pldui.myProcNo()
@@ -501,7 +485,7 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
                 else
                 {
                     // Still external (non proc) interface
-                    FatalErrorIn("lduPrimitiveMesh::lduPrimitiveMesh(..)")
+                    FatalErrorInFunction
                         << "At mesh from processor " << procIDs[procMeshI]
                         << " have interface " << intI
                         << " of unhandled type " << interfaces[intI].type()
@@ -691,10 +675,8 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
 
                             if (nbrIntI == -1)
                             {
-                                FatalErrorIn
-                                (
-                                    "lduPrimitiveMesh::lduPrimitiveMesh(..)"
-                                )   << "elems:" << elems << abort(FatalError);
+                                FatalErrorInFunction
+                                    << "elems:" << elems << abort(FatalError);
                             }
 
 
@@ -713,10 +695,8 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
 
                             if (faceCells.size() != nbrFaceCells.size())
                             {
-                                FatalErrorIn
-                                (
-                                    "lduPrimitiveMesh::lduPrimitiveMesh(..)"
-                                )   << "faceCells:" << faceCells
+                                FatalErrorInFunction
+                                    << "faceCells:" << faceCells
                                     << " nbrFaceCells:" << nbrFaceCells
                                     << abort(FatalError);
                             }
@@ -915,10 +895,8 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
         {
             if (iter.key()[1] == myAgglom)
             {
-                FatalErrorIn
-                (
-                    "lduPrimitiveMesh::lduPrimitiveMesh(..)"
-                )   << "problem procEdge:" << iter.key()
+                FatalErrorInFunction
+                    << "problem procEdge:" << iter.key()
                     << exit(FatalError);
             }
 
@@ -928,10 +906,8 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
         {
             if (iter.key()[1] != myAgglom)
             {
-                FatalErrorIn
-                (
-                    "lduPrimitiveMesh::lduPrimitiveMesh(..)"
-                )   << "problem procEdge:" << iter.key()
+                FatalErrorInFunction
+                    << "problem procEdge:" << iter.key()
                     << exit(FatalError);
             }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,20 +85,16 @@ Foam::tmp<Foam::scalarField> Foam::GAMGInterface::agglomerateCoeffs
 
     if (fineCoeffs.size() != faceRestrictAddressing_.size())
     {
-        FatalErrorIn
-        (
-            "GAMGInterface::agglomerateCoeffs(const scalarField&) const"
-        )   << "Size of coefficients " << fineCoeffs.size()
+        FatalErrorInFunction
+            << "Size of coefficients " << fineCoeffs.size()
             << " does not correspond to the size of the restriction "
             << faceRestrictAddressing_.size()
             << abort(FatalError);
     }
     if (debug && max(faceRestrictAddressing_) > size())
     {
-        FatalErrorIn
-        (
-            "GAMGInterface::agglomerateCoeffs(const scalarField&) const"
-        )   << "Face restrict addressing addresses outside of coarse interface"
+        FatalErrorInFunction
+            << "Face restrict addressing addresses outside of coarse interface"
             << " size. Max addressing:" << max(faceRestrictAddressing_)
             << " coarse size:" << size()
             << abort(FatalError);

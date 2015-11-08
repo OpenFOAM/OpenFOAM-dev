@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,8 @@ Foam::StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)
 {
     if (size < 1)
     {
-        FatalErrorIn
-        (
-            "StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)"
-        )   << "Illegal size " << size << " for StaticHashTable."
+        FatalErrorInFunction
+            << "Illegal size " << size << " for StaticHashTable."
             << " Minimum size is 1" << abort(FatalError);
     }
 }
@@ -406,10 +404,8 @@ void Foam::StaticHashTable<T, Key, Hash>::resize(const label sz)
 
     if (newSize < 1)
     {
-        FatalErrorIn
-        (
-            "StaticHashTable<T, Key, Hash>::resize(const label)"
-        )   << "Illegal size " << newSize << " for StaticHashTable."
+        FatalErrorInFunction
+            << "Illegal size " << newSize << " for StaticHashTable."
             << " Minimum size is 1" << abort(FatalError);
     }
 
@@ -486,11 +482,8 @@ void Foam::StaticHashTable<T, Key, Hash>::operator=
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn
-        (
-            "StaticHashTable<T, Key, Hash>::operator="
-            "(const StaticHashTable<T, Key, Hash>&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 

@@ -70,10 +70,8 @@ inline Foam::autoPtr<T> Foam::PtrListDictionary<T>::set
 {
     if (!DictionaryBase<PtrList<T>, T>::hashedTs_.insert(key, ptr))
     {
-        FatalErrorIn
-        (
-            "PtrListDictionary<T>::set(const label i, const word& key, T* ptr)"
-        )   << "Cannot insert with key '" << key << "' into hash-table"
+        FatalErrorInFunction
+            << "Cannot insert with key '" << key << "' into hash-table"
             << abort(FatalError);
     }
     return PtrList<T>::set(i, ptr);
@@ -91,11 +89,8 @@ inline Foam::autoPtr<T> Foam::PtrListDictionary<T>::set
     T* ptr = aptr.ptr();
     if (!DictionaryBase<PtrList<T>, T>::hashedTs_.insert(key, ptr))
     {
-        FatalErrorIn
-        (
-            "PtrListDictionary<T>::"
-            "set(const label i, const word& key, autoPtr<T>& aptr)"
-        )   << "Cannot insert with key '" << key << "' into hash-table"
+        FatalErrorInFunction
+            << "Cannot insert with key '" << key << "' into hash-table"
             << abort(FatalError);
     }
     return PtrList<T>::set(i, ptr);
@@ -113,11 +108,8 @@ inline Foam::autoPtr<T> Foam::PtrListDictionary<T>::set
     T* ptr = t.ptr();
     if (!DictionaryBase<PtrList<T>, T>::hashedTs_.insert(key, ptr))
     {
-        FatalErrorIn
-        (
-            "PtrListDictionary<T>::"
-            "set(const label i, const word& key, tmp<T>& t)"
-        )   << "Cannot insert with key '" << key << "' into hash-table"
+        FatalErrorInFunction
+            << "Cannot insert with key '" << key << "' into hash-table"
             << abort(FatalError);
     }
     return PtrList<T>::set(i, ptr);

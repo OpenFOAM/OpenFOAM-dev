@@ -171,11 +171,8 @@ void Foam::Circulator<ContainerType>::operator=
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn
-        (
-            "Foam::Circulator<ContainerType>::operator="
-            "(const Foam::Circulator<ContainerType>&)"
-        )   << "Attempted assignment to self"
+        FatalErrorInFunction
+            << "Attempted assignment to self"
             << abort(FatalError);
     }
 

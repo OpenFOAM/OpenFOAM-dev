@@ -352,7 +352,7 @@ void Foam::LUscalarMatrix::convert
 
                 if (neiInterfacei == -1)
                 {
-                    FatalErrorIn("LUscalarMatrix::convert") << exit(FatalError);
+                    FatalErrorInFunction << exit(FatalError);
                 }
 
                 const procLduInterface& neiInterface =

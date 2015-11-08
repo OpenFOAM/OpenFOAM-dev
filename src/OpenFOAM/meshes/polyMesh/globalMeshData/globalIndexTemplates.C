@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ void Foam::globalIndex::gather
 
             if (!contiguous<Type>())
             {
-                FatalErrorIn("globalIndex::gather(..)")
+                FatalErrorInFunction
                     << "nonBlocking not supported for non-contiguous data"
                     << exit(FatalError);
             }
@@ -146,7 +146,7 @@ void Foam::globalIndex::gather
 
             if (!contiguous<Type>())
             {
-                FatalErrorIn("globalIndex::gather(..)")
+                FatalErrorInFunction
                     << "nonBlocking not supported for non-contiguous data"
                     << exit(FatalError);
             }
@@ -252,7 +252,7 @@ void Foam::globalIndex::scatter
 
             if (!contiguous<Type>())
             {
-                FatalErrorIn("globalIndex::scatter(..)")
+                FatalErrorInFunction
                     << "nonBlocking not supported for non-contiguous data"
                     << exit(FatalError);
             }
@@ -319,7 +319,7 @@ void Foam::globalIndex::scatter
 
             if (!contiguous<Type>())
             {
-                FatalErrorIn("globalIndex::scatter(..)")
+                FatalErrorInFunction
                     << "nonBlocking not supported for non-contiguous data"
                     << exit(FatalError);
             }

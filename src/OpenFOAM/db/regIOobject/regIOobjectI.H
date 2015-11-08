@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ inline Type& Foam::regIOobject::store(Type* tPtr)
 {
     if (!tPtr)
     {
-        FatalErrorIn("Type& regIOobject::store(Type*)")
+        FatalErrorInFunction
             << "object deallocated"
             << abort(FatalError);
     }
@@ -60,10 +60,8 @@ inline Type& Foam::regIOobject::store(autoPtr<Type>& atPtr)
 
     if (!tPtr)
     {
-        FatalErrorIn
-            (
-                "Type& regIOobject::store(autoPtr<Type>&)"
-            )   << "object deallocated"
+        FatalErrorInFunction
+                << "object deallocated"
                 << abort(FatalError);
     }
 

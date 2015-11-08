@@ -50,7 +50,7 @@ Foam::label Foam::pow(label a, label b)
     #ifdef FULLDEBUG
     if (b < 0)
     {
-        FatalErrorIn("pow(label a, label b)")
+        FatalErrorInFunction
             << "negative value for b is not supported"
             << abort(FatalError);
     }
@@ -71,7 +71,7 @@ Foam::label Foam::factorial(label n)
     #ifdef FULLDEBUG
     if (n > 12 && n < 0)
     {
-        FatalErrorIn("factorial(label n)")
+        FatalErrorInFunction
             << "n value out of range"
             << abort(FatalError);
     }

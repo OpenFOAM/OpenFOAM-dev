@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,11 +57,8 @@ void Pstream::gatherList
     {
         if (Values.size() != UPstream::nProcs(comm))
         {
-            FatalErrorIn
-            (
-                "UPstream::gatherList(const List<UPstream::commsStruct>&"
-                ", List<T>)"
-            )   << "Size of list:" << Values.size()
+            FatalErrorInFunction
+                << "Size of list:" << Values.size()
                 << " does not equal the number of processors:"
                 << UPstream::nProcs(comm)
                 << Foam::abort(FatalError);
@@ -216,11 +213,8 @@ void Pstream::scatterList
     {
         if (Values.size() != UPstream::nProcs(comm))
         {
-            FatalErrorIn
-            (
-                "UPstream::scatterList(const List<UPstream::commsStruct>&"
-                ", List<T>)"
-            )   << "Size of list:" << Values.size()
+            FatalErrorInFunction
+                << "Size of list:" << Values.size()
                 << " does not equal the number of processors:"
                 << UPstream::nProcs(comm)
                 << Foam::abort(FatalError);

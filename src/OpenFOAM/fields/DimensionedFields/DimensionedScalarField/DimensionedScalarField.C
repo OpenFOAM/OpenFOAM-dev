@@ -678,11 +678,8 @@ tmp<DimensionedField<scalar, GeoMesh> > func                                \
 {                                                                           \
     if (!dsf.dimensions().dimensionless())                                  \
     {                                                                       \
-        FatalErrorIn                                                        \
-        (                                                                   \
-            #func"(const int n, "                                           \
-            "const DimensionedField<scalar, GeoMesh>& dsf)"                 \
-        )   << "dsf not dimensionless"                                      \
+        FatalErrorInFunction                                                \
+            << "dsf not dimensionless"                                      \
             << abort(FatalError);                                           \
     }                                                                       \
                                                                             \
@@ -717,11 +714,8 @@ tmp<DimensionedField<scalar, GeoMesh> > func                                \
                                                                             \
     if (!dsf.dimensions().dimensionless())                                  \
     {                                                                       \
-        FatalErrorIn                                                        \
-        (                                                                   \
-            #func"(const int n, "                                           \
-            "const tmp<DimensionedField<scalar, GeoMesh> >& dsf)"           \
-        )   << " : dsf not dimensionless"                                   \
+        FatalErrorInFunction                                                \
+            << " : dsf not dimensionless"                                   \
             << abort(FatalError);                                           \
     }                                                                       \
                                                                             \

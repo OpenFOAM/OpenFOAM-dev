@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,10 +139,8 @@ void Foam::CompactListList<T, Container>::setSize(const label nRows)
     }
     else if (nRows > size())
     {
-        FatalErrorIn
-        (
-            "CompactListList<T, Container>::setSize(const label nRows)"
-        )   << "Cannot be used to extend the list from " << offsets_.size()
+        FatalErrorInFunction
+            << "Cannot be used to extend the list from " << offsets_.size()
             << " to " << nRows << nl
             << "    Please use one of the other setSize member functions"
             << abort(FatalError);

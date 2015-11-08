@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ public:
         {
             if (!hit_)
             {
-                FatalErrorIn("const Point& PointHit::hitPoint() const")
+                FatalErrorInFunction
                     << "requested a hit point for a miss"
                     << abort(FatalError);
             }
@@ -147,7 +147,7 @@ public:
         {
             if (hit_)
             {
-                FatalErrorIn("const Point& PointHit::missPoint() const")
+                FatalErrorInFunction
                     << "requested a miss point for a hit"
                     << abort(FatalError);
             }

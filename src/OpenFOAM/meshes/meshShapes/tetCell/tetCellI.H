@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ inline Foam::triFace Foam::tetCell::face(const label faceI) const
 #   ifdef FULLDEBUG
     if (faceI >= 4)
     {
-        FatalErrorIn("tetCell::face(const label faceI) const")
+        FatalErrorInFunction
             << "index out of range 0 -> 3. faceI = " << faceI
             << abort(FatalError);
     }
@@ -98,11 +98,8 @@ inline Foam::label Foam::tetCell::edgeFace(const label edgeI) const
 #   ifdef FULLDEBUG
     if (edgeI >= 6)
     {
-        FatalErrorIn
-        (
-            "tetCell::edgeFace(const label edgeI)"
-            "const"
-        )   << "edge index out of range 0 -> 5. edgeI = " << edgeI
+        FatalErrorInFunction
+            << "edge index out of range 0 -> 5. edgeI = " << edgeI
             << abort(FatalError);
     }
 #   endif
@@ -132,21 +129,15 @@ inline Foam::label Foam::tetCell::edgeAdjacentFace
 #   ifdef FULLDEBUG
     if (faceI >= 4)
     {
-        FatalErrorIn
-        (
-            "tetCell::edgeAdjacentFace(const label edgeI, const label faceI)"
-            "const"
-        )   << "face index out of range 0 -> 3. faceI = " << faceI
+        FatalErrorInFunction
+            << "face index out of range 0 -> 3. faceI = " << faceI
             << abort(FatalError);
     }
 
     if (edgeI >= 6)
     {
-        FatalErrorIn
-        (
-            "tetCell::edgeAdjacentFace(const label edgeI, const label faceI)"
-            "const"
-        )   << "edge index out of range 0 -> 5. edgeI = " << edgeI
+        FatalErrorInFunction
+            << "edge index out of range 0 -> 5. edgeI = " << edgeI
             << abort(FatalError);
     }
 #   endif
@@ -166,7 +157,7 @@ inline Foam::edge Foam::tetCell::tetEdge(const label edgeI) const
 #   ifdef FULLDEBUG
     if (edgeI >= 6)
     {
-        FatalErrorIn("tetCell::tetEdge(const label edgeI) const")
+        FatalErrorInFunction
             << "index out of range 0 -> 5. edgeI = " << edgeI
             << abort(FatalError);
     }

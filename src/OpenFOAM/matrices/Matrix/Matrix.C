@@ -67,7 +67,7 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m)
 {
     if (n_ < 0 || m_ < 0)
     {
-        FatalErrorIn("Matrix<Form, Type>::Matrix(const label n, const label m)")
+        FatalErrorInFunction
             << "bad n, m " << n_ << ", " << m_
             << abort(FatalError);
     }
@@ -85,10 +85,8 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m, const Type& a)
 {
     if (n_ < 0 || m_ < 0)
     {
-        FatalErrorIn
-        (
-            "Matrix<Form, Type>::Matrix(const label n, const label m, const T&)"
-        )   << "bad n, m " << n_ << ", " << m_
+        FatalErrorInFunction
+            << "bad n, m " << n_ << ", " << m_
             << abort(FatalError);
     }
 
@@ -202,7 +200,7 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
 {
     if (this == &a)
     {
-        FatalErrorIn("Matrix<Form, Type>::operator=(const Matrix<Form, Type>&)")
+        FatalErrorInFunction
             << "attempted assignment to self"
             << abort(FatalError);
     }
@@ -253,7 +251,7 @@ const Type& Foam::max(const Matrix<Form, Type>& a)
     }
     else
     {
-        FatalErrorIn("max(const Matrix<Form, Type>&)")
+        FatalErrorInFunction
             << "matrix is empty"
             << abort(FatalError);
 
@@ -285,7 +283,7 @@ const Type& Foam::min(const Matrix<Form, Type>& a)
     }
     else
     {
-        FatalErrorIn("min(const Matrix<Form, Type>&)")
+        FatalErrorInFunction
             << "matrix is empty"
             << abort(FatalError);
 
@@ -323,22 +321,16 @@ Form Foam::operator+(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 {
     if (a.n() != b.n())
     {
-        FatalErrorIn
-        (
-            "Matrix<Form, Type>::operator+"
-            "(const Matrix<Form, Type>&, const Matrix<Form, Type>&)"
-        )   << "attempted add matrices with different number of rows: "
+        FatalErrorInFunction
+            << "attempted add matrices with different number of rows: "
             << a.n() << ", " << b.n()
             << abort(FatalError);
     }
 
     if (a.m() != b.m())
     {
-        FatalErrorIn
-        (
-            "Matrix<Form, Type>::operator+"
-            "(const Matrix<Form, Type>&, const Matrix<Form, Type>&)"
-        )   << "attempted add matrices with different number of columns: "
+        FatalErrorInFunction
+            << "attempted add matrices with different number of columns: "
             << a.m() << ", " << b.m()
             << abort(FatalError);
     }
@@ -364,22 +356,16 @@ Form Foam::operator-(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 {
     if (a.n() != b.n())
     {
-        FatalErrorIn
-        (
-            "Matrix<Form, Type>::operator-"
-            "(const Matrix<Form, Type>&, const Matrix<Form, Type>&)"
-        )   << "attempted add matrices with different number of rows: "
+        FatalErrorInFunction
+            << "attempted add matrices with different number of rows: "
             << a.n() << ", " << b.n()
             << abort(FatalError);
     }
 
     if (a.m() != b.m())
     {
-        FatalErrorIn
-        (
-            "Matrix<Form, Type>::operator-"
-            "(const Matrix<Form, Type>&, const Matrix<Form, Type>&)"
-        )   << "attempted add matrices with different number of columns: "
+        FatalErrorInFunction
+            << "attempted add matrices with different number of columns: "
             << a.m() << ", " << b.m()
             << abort(FatalError);
     }
@@ -426,11 +412,8 @@ Form Foam::operator*(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 {
     if (a.m() != b.n())
     {
-        FatalErrorIn
-        (
-            "Matrix<Form, Type>::operator*"
-            "(const Matrix<Form, Type>&, const Matrix<Form, Type>&)"
-        )   << "attempted to multiply incompatible matrices:" << nl
+        FatalErrorInFunction
+            << "attempted to multiply incompatible matrices:" << nl
             << "Matrix A : " << a.n() << " rows, " << a.m() << " columns" << nl
             << "Matrix B : " << b.n() << " rows, " << b.m() << " columns" << nl
             << "In order to multiply matrices, columns of A must equal "

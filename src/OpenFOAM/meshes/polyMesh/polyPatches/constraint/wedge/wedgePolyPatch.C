@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,10 +66,7 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
             {
                 // only issue warning instead of error so that the case can
                 // still be read for post-processing
-                WarningIn
-                (
-                    "wedgePolyPatch::calcGeometry(PstreamBuffers&)"
-                )
+                WarningInFunction
                     << "Wedge patch '" << name() << "' is not planar." << nl
                     << "At local face at "
                     << primitivePatch::faceCentres()[faceI]
@@ -97,7 +94,7 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
 
         if (mag(cnCmptSum) < (1 - SMALL))
         {
-            FatalErrorIn("wedgePolyPatch::calcGeometry(PstreamBuffers&)")
+            FatalErrorInFunction
                 << "wedge " << name()
                 << " centre plane does not align with a coordinate plane by "
                 << 1 - mag(cnCmptSum)
@@ -109,7 +106,7 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
 
         if (magAxis < SMALL)
         {
-            FatalErrorIn("wedgePolyPatch::calcGeometry(PstreamBuffers&)")
+            FatalErrorInFunction
                 << "wedge " << name()
                 << " plane aligns with a coordinate plane." << nl
                 << "    The wedge plane should make a small angle (~2.5deg)"

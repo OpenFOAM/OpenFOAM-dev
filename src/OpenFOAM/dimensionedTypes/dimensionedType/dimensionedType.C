@@ -54,10 +54,8 @@ void Foam::dimensioned<Type>::initialize(Istream& is)
 
         if (dims != dimensions_)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "dimensioned<Type>::dimensioned"
-                "(const word&, const dimensionSet&, Istream&)",
                 is
             ) << "The dimensions " << dims
               << " provided do not match the required dimensions "
@@ -537,7 +535,7 @@ Foam::dimensioned<Type> Foam::max
 {
     if (dt1.dimensions() != dt2.dimensions())
     {
-        FatalErrorIn("max(const dimensioned<Type>&, const dimensioned<Type>&)")
+        FatalErrorInFunction
             << "dimensions of arguments are not equal"
             << abort(FatalError);
     }
@@ -560,7 +558,7 @@ Foam::dimensioned<Type> Foam::min
 {
     if (dt1.dimensions() != dt2.dimensions())
     {
-        FatalErrorIn("min(const dimensioned<Type>&, const dimensioned<Type>&)")
+        FatalErrorInFunction
             << "dimensions of arguments are not equal"
             << abort(FatalError);
     }

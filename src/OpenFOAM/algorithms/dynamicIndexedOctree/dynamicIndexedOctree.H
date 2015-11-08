@@ -472,7 +472,7 @@ public:
             {
                 if (nodes_.empty())
                 {
-                    FatalErrorIn("dynamicIndexedOctree<Type>::bb() const")
+                    FatalErrorInFunction
                         << "Tree is empty" << abort(FatalError);
                 }
                 return nodes_[0].bb_;
@@ -500,7 +500,7 @@ public:
             {
                 if (!isContent(i))
                 {
-                    FatalErrorIn("getContent(const label)")
+                    FatalErrorInFunction
                         << abort(FatalError);
                 }
                 return -i.val()-1;
@@ -510,7 +510,7 @@ public:
             {
                 if (!isNode(i))
                 {
-                    FatalErrorIn("getNode(const label)")
+                    FatalErrorInFunction
                         << abort(FatalError);
                 }
                 return i.val() - 1;

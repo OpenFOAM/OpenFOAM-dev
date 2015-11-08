@@ -46,7 +46,7 @@ Foam::List<T>::List(const label s)
 {
     if (this->size_ < 0)
     {
-        FatalErrorIn("List<T>::List(const label size)")
+        FatalErrorInFunction
             << "bad size " << this->size_
             << abort(FatalError);
     }
@@ -66,7 +66,7 @@ Foam::List<T>::List(const label s, const T& a)
 {
     if (this->size_ < 0)
     {
-        FatalErrorIn("List<T>::List(const label size, const T&)")
+        FatalErrorInFunction
             << "bad size " << this->size_
             << abort(FatalError);
     }
@@ -319,7 +319,7 @@ void Foam::List<T>::setSize(const label newSize)
 {
     if (newSize < 0)
     {
-        FatalErrorIn("List<T>::setSize(const label)")
+        FatalErrorInFunction
             << "bad set size " << newSize
             << abort(FatalError);
     }
@@ -462,7 +462,7 @@ void Foam::List<T>::operator=(const List<T>& a)
 {
     if (this == &a)
     {
-        FatalErrorIn("List<T>::operator=(const List<T>&)")
+        FatalErrorInFunction
             << "attempted assignment to self"
             << abort(FatalError);
     }

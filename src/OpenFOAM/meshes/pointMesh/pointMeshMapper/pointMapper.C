@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ void Foam::pointMapper::calcAddressing() const
      || insertedPointLabelsPtr_
     )
     {
-        FatalErrorIn("void pointMapper::calcAddressing() const")
+        FatalErrorInFunction
             << "Addressing already calculated."
             << abort(FatalError);
     }
@@ -98,7 +98,7 @@ void Foam::pointMapper::calcAddressing() const
 
             if (addr[pointI].size())
             {
-                FatalErrorIn("void pointMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "Master point " << pointI
                     << " mapped from points " << mo
                     << " already destination of mapping." << abort(FatalError);
@@ -237,10 +237,8 @@ const Foam::labelUList& Foam::pointMapper::directAddressing() const
 {
     if (!direct())
     {
-        FatalErrorIn
-        (
-            "const labelUList& pointMapper::directAddressing() const"
-        )   << "Requested direct addressing for an interpolative mapper."
+        FatalErrorInFunction
+            << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);
     }
 
@@ -265,10 +263,8 @@ const Foam::labelListList& Foam::pointMapper::addressing() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const labelListList& pointMapper::addressing() const"
-        )   << "Requested interpolative addressing for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative addressing for a direct mapper."
             << abort(FatalError);
     }
 
@@ -285,10 +281,8 @@ const Foam::scalarListList& Foam::pointMapper::weights() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const scalarListList& pointMapper::weights() const"
-        )   << "Requested interpolative weights for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative weights for a direct mapper."
             << abort(FatalError);
     }
 

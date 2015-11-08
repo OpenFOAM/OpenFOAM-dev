@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,10 +33,8 @@ void Foam::valuePointPatchField<Type>::checkFieldSize() const
 {
     if (this->size() != this->patch().size())
     {
-        FatalErrorIn
-        (
-            "void valuePointPatchField<Type>::checkField() const"
-        )   << "field does not correspond to patch. " << endl
+        FatalErrorInFunction
+            << "field does not correspond to patch. " << endl
             << "Field size: " << size() << " patch size: "
             << this->patch().size()
             << abort(FatalError);
@@ -83,15 +81,8 @@ Foam::valuePointPatchField<Type>::valuePointPatchField
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "pointPatchField<Type>::pointPatchField"
-            "("
-            "const fvPatch& p,"
-            "const DimensionedField<Type, pointMesh>& iF,"
-            "const dictionary& dict,"
-            "const bool valueRequired"
-            ")",
             dict
         )   << "Essential entry 'value' missing"
             << exit(FatalIOError);

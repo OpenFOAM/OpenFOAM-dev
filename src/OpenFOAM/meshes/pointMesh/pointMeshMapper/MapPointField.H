@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,14 +69,8 @@ void MapInternalField<Type, MeshMapper, pointMesh>::operator()
 {
     if (field.size() != mapper.pointMap().sizeBeforeMapping())
     {
-        FatalErrorIn
-        (
-            "void MapInternalField<Type, MeshMapper, pointMesh>::operator()\n"
-            "(\n"
-            "    Field<Type>& field,\n"
-            "    const MeshMapper& mapper\n"
-            ") const"
-        )  << "Incompatible size before mapping.  Field size: " << field.size()
+        FatalErrorInFunction
+           << "Incompatible size before mapping.  Field size: " << field.size()
            << " map size: " << mapper.pointMap().sizeBeforeMapping()
            << abort(FatalError);
     }

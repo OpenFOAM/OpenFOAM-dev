@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,8 @@ void Foam::transformList(const tensorField& rotTensor, UList<T>& field)
     }
     else
     {
-        FatalErrorIn
-        (
-            "transformList(const tensorField&, UList<T>&)"
-        )   << "Sizes of field and transformation not equal. field:"
+        FatalErrorInFunction
+            << "Sizes of field and transformation not equal. field:"
             << field.size() << " transformation:" << rotTensor.size()
             << abort(FatalError);
     }
@@ -106,10 +104,8 @@ void Foam::transformList(const tensorField& rotTensor, Map<T>& field)
     }
     else
     {
-        FatalErrorIn
-        (
-            "transformList(const tensorField&, Map<T>&)"
-        )   << "Multiple transformation tensors not supported. field:"
+        FatalErrorInFunction
+            << "Multiple transformation tensors not supported. field:"
             << field.size() << " transformation:" << rotTensor.size()
             << abort(FatalError);
     }
@@ -138,10 +134,8 @@ void Foam::transformList(const tensorField& rotTensor, EdgeMap<T>& field)
     }
     else
     {
-        FatalErrorIn
-        (
-            "transformList(const tensorField&, EdgeMap<T>&)"
-        )   << "Multiple transformation tensors not supported. field:"
+        FatalErrorInFunction
+            << "Multiple transformation tensors not supported. field:"
             << field.size() << " transformation:" << rotTensor.size()
             << abort(FatalError);
     }

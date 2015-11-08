@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ Foam::dynamicIndexedOctree<Type>::divide
      || bb.min()[2] >= bb.max()[2]
     )
     {
-        FatalErrorIn("dynamicIndexedOctree<Type>::divide(..)")
+        FatalErrorInFunction
             << "Badly formed bounding box:" << bb
             << abort(FatalError);
     }
@@ -436,11 +436,8 @@ Foam::volumeType Foam::dynamicIndexedOctree<Type>::getVolumeType
         {
             // Empty node. Cannot have 'mixed' as its type since not divided
             // up and has no items inside it.
-            FatalErrorIn
-            (
-                "dynamicIndexedOctree<Type>::getVolumeType"
-                "(const label, const point&)"
-            )   << "Sample:" << sample << " node:" << nodeI
+            FatalErrorInFunction
+                << "Sample:" << sample << " node:" << nodeI
                 << " with bb:" << nodes_[nodeI].bb_ << nl
                 << "Empty subnode has invalid volume type MIXED."
                 << abort(FatalError);
@@ -450,11 +447,8 @@ Foam::volumeType Foam::dynamicIndexedOctree<Type>::getVolumeType
     }
     else
     {
-        FatalErrorIn
-        (
-            "dynamicIndexedOctree<Type>::getVolumeType"
-            "(const label, const point&)"
-        )   << "Sample:" << sample << " at node:" << nodeI
+        FatalErrorInFunction
+            << "Sample:" << sample << " at node:" << nodeI
             << " octant:" << octant
             << " with bb:" << nod.bb_.subBbox(octant) << nl
             << "Node has invalid volume type " << octantType
@@ -708,7 +702,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPoint
     {
         if (pushInside != bb.contains(perturbedPt))
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::pushPoint(..)")
+            FatalErrorInFunction
                 << "pushed point:" << pt
                 << " to:" << perturbedPt
                 << " wanted side:" << pushInside
@@ -743,7 +737,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPoint
 
     if (faceID == 0)
     {
-        FatalErrorIn("dynamicIndexedOctree<Type>::pushPoint(..)")
+        FatalErrorInFunction
             << abort(FatalError);
     }
 
@@ -820,7 +814,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPoint
     {
         if (pushInside != bb.contains(perturbedPt))
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::pushPoint(..)")
+            FatalErrorInFunction
                 << "pushed point:" << pt << " on face:" << faceString(faceID)
                 << " to:" << perturbedPt
                 << " wanted side:" << pushInside
@@ -849,7 +843,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPointIntoFace
     {
         if (bb.posBits(pt) != 0)
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::pushPointIntoFace(..)")
+            FatalErrorInFunction
                 << " bb:" << bb << endl
                 << "does not contain point " << pt << abort(FatalError);
         }
@@ -971,7 +965,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPointIntoFace
     {
         if (faceID != bb.faceBits(facePoint))
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::pushPointIntoFace(..)")
+            FatalErrorInFunction
                 << "Pushed point from " << pt
                 << " on face:" << ptFaceID << " of bb:" << bb << endl
                 << "onto " << facePoint
@@ -982,7 +976,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPointIntoFace
         }
         if (bb.posBits(facePoint) != 0)
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::pushPointIntoFace(..)")
+            FatalErrorInFunction
                 << " bb:" << bb << endl
                 << "does not contain perturbed point "
                 << facePoint << abort(FatalError);
@@ -1086,7 +1080,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPointIntoFace
 //
 //    if (nFaces == 0 || nFaces == 1 || nFaces > 3)
 //    {
-//        FatalErrorIn("dynamicIndexedOctree<Type>::checkMultipleFaces(..)")
+//        FatalErrorInFunction
 //            << "Problem : nFaces:" << nFaces << abort(FatalError);
 //    }
 //
@@ -1119,7 +1113,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPointIntoFace
 //
 //    if (maxIndex == -1)
 //    {
-//        FatalErrorIn("dynamicIndexedOctree<Type>::checkMultipleFaces(..)")
+//        FatalErrorInFunction
 //            << "Problem maxIndex:" << maxIndex << " inproducts:" << inproducts
 //            << abort(FatalError);
 //    }
@@ -1179,7 +1173,7 @@ Foam::point Foam::dynamicIndexedOctree<Type>::pushPointIntoFace
 //    {
 //        if (faceID != bb.faceBits(faceHitInfo.rawPoint()))
 //        {
-//            FatalErrorIn("dynamicIndexedOctree<Type>::checkMultipleFaces(..)")
+//            FatalErrorInFunction
 //                << "Pushed point from " << oldPoint
 //                << " on face:" << oldFaceID << " of bb:" << bb << endl
 //                << "onto " << faceHitInfo.rawPoint()
@@ -1229,7 +1223,7 @@ bool Foam::dynamicIndexedOctree<Type>::walkToParent
 
     if (parentOctant == 255)
     {
-        FatalErrorIn("walkToParent(..)")
+        FatalErrorInFunction
             << "Problem: no parent found for octant:" << octant
             << " node:" << nodeI
             << abort(FatalError);
@@ -1426,7 +1420,7 @@ bool Foam::dynamicIndexedOctree<Type>::walkToNeighbour
 
         if (!subBb.contains(facePoint))
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::walkToNeighbour(..)")
+            FatalErrorInFunction
                 << "When searching for " << facePoint
                 << " ended up in node:" << nodeI
                 << " octant:" << octant
@@ -1455,7 +1449,7 @@ bool Foam::dynamicIndexedOctree<Type>::walkToNeighbour
 
         if (nodeI == oldNodeI && octant == oldOctant)
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::walkToNeighbour(..)")
+            FatalErrorInFunction
                 << "Did not go to neighbour when searching for " << facePoint
                 << endl
                 << "    starting from face:" << faceString(faceID)
@@ -1467,7 +1461,7 @@ bool Foam::dynamicIndexedOctree<Type>::walkToNeighbour
 
         if (!subBb.contains(facePoint))
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::walkToNeighbour(..)")
+            FatalErrorInFunction
                 << "When searching for " << facePoint
                 << " ended up in node:" << nodeI
                 << " octant:" << octant
@@ -1555,7 +1549,7 @@ void Foam::dynamicIndexedOctree<Type>::traverseNode
 
         if (octantBb.posBits(start) != 0)
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::traverseNode(..)")
+            FatalErrorInFunction
                 << "Node:" << nodeI << " octant:" << octant
                 << " bb:" << octantBb << endl
                 << "does not contain point " << start << abort(FatalError);
@@ -1863,7 +1857,7 @@ Foam::pointIndexHit Foam::dynamicIndexedOctree<Type>::findLine
         }
         if (debug)
         {
-            FatalErrorIn("dynamicIndexedOctree<Type>::findLine(..)")
+            FatalErrorInFunction
                 << "Got stuck in loop raytracing from:" << treeStart
                 << " to:" << treeEnd << endl
                 << "inside top box:" << subBbox(startNodeI, startOctant)
@@ -1871,7 +1865,7 @@ Foam::pointIndexHit Foam::dynamicIndexedOctree<Type>::findLine
         }
         else
         {
-            WarningIn("dynamicIndexedOctree<Type>::findLine(..)")
+            WarningInFunction
                 << "Got stuck in loop raytracing from:" << treeStart
                 << " to:" << treeEnd << endl
                 << "inside top box:" << subBbox(startNodeI, startOctant)
@@ -2493,7 +2487,7 @@ Foam::labelBits Foam::dynamicIndexedOctree<Type>::findNode
     {
         if (!nod.bb_.contains(sample))
         {
-            FatalErrorIn("findNode(..)")
+            FatalErrorInFunction
                 << "Cannot find " << sample << " in node " << nodeI
                 << abort(FatalError);
         }
@@ -2627,7 +2621,7 @@ Foam::volumeType Foam::dynamicIndexedOctree<Type>::getVolumeType
                 }
                 else
                 {
-                    FatalErrorIn("getVolumeType") << abort(FatalError);
+                    FatalErrorInFunction << abort(FatalError);
                 }
             }
 

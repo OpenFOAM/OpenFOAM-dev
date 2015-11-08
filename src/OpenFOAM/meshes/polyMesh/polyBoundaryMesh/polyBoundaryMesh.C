@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,14 +61,8 @@ Foam::polyBoundaryMesh::polyBoundaryMesh
     {
         if (readOpt() == IOobject::MUST_READ_IF_MODIFIED)
         {
-            WarningIn
-            (
-                "polyBoundaryMesh::polyBoundaryMesh\n"
-                "(\n"
-                "    const IOobject&,\n"
-                "    const polyMesh&\n"
-                ")"
-            )   << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
+            WarningInFunction
+                << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
                 << " does not support automatic rereading."
                 << endl;
         }
@@ -143,15 +137,8 @@ Foam::polyBoundaryMesh::polyBoundaryMesh
 
         if (readOpt() == IOobject::MUST_READ_IF_MODIFIED)
         {
-            WarningIn
-            (
-                "polyBoundaryMesh::polyBoundaryMesh\n"
-                "(\n"
-                "    const IOobject&,\n"
-                "    const polyMesh&\n"
-                "    const polyPatchList&\n"
-                ")"
-            )   << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
+            WarningInFunction
+                << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
                 << " does not support automatic rereading."
                 << endl;
         }
@@ -281,7 +268,7 @@ Foam::polyBoundaryMesh::neighbourEdges() const
 {
     if (Pstream::parRun())
     {
-        WarningIn("polyBoundaryMesh::neighbourEdges() const")
+        WarningInFunction
             << "Neighbour edge addressing not correct across parallel"
             << " boundaries." << endl;
     }
@@ -371,7 +358,7 @@ Foam::polyBoundaryMesh::neighbourEdges() const
 
         if (pointsToEdge.size())
         {
-            FatalErrorIn("polyBoundaryMesh::neighbourEdges() const")
+            FatalErrorInFunction
                 << "Not all boundary edges of patches match up." << nl
                 << "Is the outside of your mesh multiply connected?"
                 << abort(FatalError);
@@ -392,7 +379,7 @@ Foam::polyBoundaryMesh::neighbourEdges() const
                     label edgeI = pp.nInternalEdges() + i;
                     const edge& e = pp.edges()[edgeI];
 
-                    FatalErrorIn("polyBoundaryMesh::neighbourEdges() const")
+                    FatalErrorInFunction
                         << "Not all boundary edges of patches match up." << nl
                         << "Edge " << edgeI << " on patch " << pp.name()
                         << " end points " << pp.localPoints()[e[0]] << ' '
@@ -458,7 +445,7 @@ Foam::polyBoundaryMesh::groupPatchIDs() const
 
                 if (findPatchID(name) != -1)
                 {
-                    WarningIn("polyBoundaryMesh::groupPatchIDs() const")
+                    WarningInFunction
                         << "Patch " << bm[patchI].name()
                         << " specifies a group " << name
                         << " which is also a patch name."
@@ -725,10 +712,8 @@ Foam::label Foam::polyBoundaryMesh::whichPatch(const label faceIndex) const
     }
     else if (faceIndex >= mesh().nFaces())
     {
-        FatalErrorIn
-        (
-            "polyBoundaryMesh::whichPatch(const label faceIndex) const"
-        )   << "given label " << faceIndex
+        FatalErrorInFunction
+            << "given label " << faceIndex
             << " greater than the number of geometric faces " << mesh().nFaces()
             << abort(FatalError);
     }
@@ -749,10 +734,8 @@ Foam::label Foam::polyBoundaryMesh::whichPatch(const label faceIndex) const
     }
 
     // If not in any of above, it is trouble!
-    FatalErrorIn
-    (
-        "label polyBoundaryMesh::whichPatch(const label faceIndex) const"
-    )   << "Cannot find face " << faceIndex << " in any of the patches "
+    FatalErrorInFunction
+        << "Cannot find face " << faceIndex << " in any of the patches "
         << names() << nl
         << "It seems your patches are not consistent with the mesh :"
         << " internalFaces:" << mesh().nInternalFaces()
@@ -808,22 +791,16 @@ Foam::labelHashSet Foam::polyBoundaryMesh::patchSet
 
                 if (groupIDs.empty() && warnNotFound)
                 {
-                    WarningIn
-                    (
-                        "polyBoundaryMesh::patchSet"
-                        "(const wordReList&, const bool, const bool) const"
-                    )   << "Cannot find any patch or group names matching "
+                    WarningInFunction
+                        << "Cannot find any patch or group names matching "
                         << patchName
                         << endl;
                 }
             }
             else if (warnNotFound)
             {
-                WarningIn
-                (
-                    "polyBoundaryMesh::patchSet"
-                    "(const wordReList&, const bool, const bool) const"
-                )   << "Cannot find any patch names matching " << patchName
+                WarningInFunction
+                    << "Cannot find any patch names matching " << patchName
                     << endl;
             }
         }
@@ -1187,10 +1164,8 @@ const Foam::polyPatch& Foam::polyBoundaryMesh::operator[]
 
     if (patchI < 0)
     {
-        FatalErrorIn
-        (
-            "polyBoundaryMesh::operator[](const word&) const"
-        )   << "Patch named " << patchName << " not found." << nl
+        FatalErrorInFunction
+            << "Patch named " << patchName << " not found." << nl
             << "Available patch names: " << names() << endl
             << abort(FatalError);
     }
@@ -1208,10 +1183,8 @@ Foam::polyPatch& Foam::polyBoundaryMesh::operator[]
 
     if (patchI < 0)
     {
-        FatalErrorIn
-        (
-            "polyBoundaryMesh::operator[](const word&)"
-        )   << "Patch named " << patchName << " not found." << nl
+        FatalErrorInFunction
+            << "Patch named " << patchName << " not found." << nl
             << "Available patch names: " << names() << endl
             << abort(FatalError);
     }

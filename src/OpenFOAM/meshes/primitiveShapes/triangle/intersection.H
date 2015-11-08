@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,10 +93,7 @@ public:
         {
             if (t < -VSMALL)
             {
-                FatalErrorIn
-                (
-                    "scalar intersection::setPlanarTol(const scalar t)"
-                )   << "Negative planar tolerance.  This is not allowed."
+                FatalErrorInFunction
                     << abort(FatalError);
             }
 

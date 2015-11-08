@@ -144,7 +144,7 @@ Foam::UOPstream::~UOPstream()
             )
         )
         {
-            FatalErrorIn("UOPstream::~UOPstream()")
+            FatalErrorInFunction
                 << "Failed sending outgoing message of size " << sendBuf_.size()
                 << " to processor " << toProcNo_
                 << Foam::abort(FatalError);
@@ -290,7 +290,7 @@ Foam::Ostream& Foam::UOPstream::write(const char* data, std::streamsize count)
 {
     if (format() != BINARY)
     {
-        FatalErrorIn("Ostream::write(const char*, std::streamsize)")
+        FatalErrorInFunction
             << "stream format not binary"
             << Foam::abort(FatalError);
     }

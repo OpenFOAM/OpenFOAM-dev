@@ -302,11 +302,8 @@ const Foam::GAMGAgglomeration& Foam::GAMGAgglomeration::New
 
         if (cstrIter == lduMeshConstructorTablePtr_->end())
         {
-            FatalErrorIn
-            (
-                "GAMGAgglomeration::New"
-                "(const lduMesh& mesh, const dictionary& controlDict)"
-            )   << "Unknown GAMGAgglomeration type "
+            FatalErrorInFunction
+                << "Unknown GAMGAgglomeration type "
                 << agglomeratorType << ".\n"
                 << "Valid matrix GAMGAgglomeration types are :"
                 << lduMatrixConstructorTablePtr_->sortedToc() << endl
@@ -406,12 +403,8 @@ Foam::autoPtr<Foam::GAMGAgglomeration> Foam::GAMGAgglomeration::New
 
     if (cstrIter == geometryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "GAMGAgglomeration::New"
-            "(const lduMesh& mesh, const scalarField&"
-            ", const vectorField&, const dictionary& controlDict)"
-        )   << "Unknown GAMGAgglomeration type "
+        FatalErrorInFunction
+            << "Unknown GAMGAgglomeration type "
             << agglomeratorType << ".\n"
             << "Valid geometric GAMGAgglomeration types are :"
             << geometryConstructorTablePtr_->sortedToc()
@@ -581,10 +574,8 @@ bool Foam::GAMGAgglomeration::checkRestriction
 {
     if (fineAddressing.size() != restrict.size())
     {
-        FatalErrorIn
-        (
-            "checkRestriction(..)"
-        )   << "nCells:" << fineAddressing.size()
+        FatalErrorInFunction
+            << "nCells:" << fineAddressing.size()
             << " agglom:" << restrict.size()
             << abort(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ bool Foam::manualGAMGProcAgglomeration::agglomerate()
 
             if (fineLevelIndex >= agglom_.size())
             {
-                WarningIn("manualGAMGProcAgglomeration::agglomerate()")
+                WarningInFunction
                     << "Ignoring specification for level " << fineLevelIndex
                     << " since outside agglomeration." << endl;
 
@@ -141,10 +141,8 @@ bool Foam::manualGAMGProcAgglomeration::agglomerate()
 
                         if (masterIndex == -1)
                         {
-                            FatalErrorIn
-                            (
-                                "manualGAMGProcAgglomeration::agglomerate()"
-                            )   << "At level " << fineLevelIndex
+                            FatalErrorInFunction
+                                << "At level " << fineLevelIndex
                                 << " the master processor "
                                 << coarseToMaster[coarseI]
                                 << " is not in the cluster "
@@ -165,10 +163,8 @@ bool Foam::manualGAMGProcAgglomeration::agglomerate()
                     // Check that we've done all processors
                     if (findIndex(procAgglomMap, -1) != -1)
                     {
-                        FatalErrorIn
-                        (
-                            "manualGAMGProcAgglomeration::agglomerate()"
-                        )   << "At level " << fineLevelIndex
+                        FatalErrorInFunction
+                            << "At level " << fineLevelIndex
                             << " processor "
                             << findIndex(procAgglomMap, -1)
                             << " is not in any cluster"

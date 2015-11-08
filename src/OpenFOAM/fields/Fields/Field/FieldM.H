@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,11 +53,7 @@ void checkFields
 {
     if (f1.size() != f2.size())
     {
-        FatalErrorIn
-        (
-            "checkFields(const UList<Type1>&, "
-            "const UList<Type2>&, const char*)"
-        )   << "    incompatible fields"
+        FatalErrorInFunction
             << " Field<"<<pTraits<Type1>::typeName<<"> f1("<<f1.size()<<')'
             << " and Field<"<<pTraits<Type2>::typeName<<"> f2("<<f2.size()<<')'
             << endl << " for operation " << op
@@ -76,12 +72,7 @@ void checkFields
 {
     if (f1.size() != f2.size() || f1.size() != f3.size())
     {
-        FatalErrorIn
-        (
-            "checkFields(const UList<Type1>&, "
-            "const UList<Type2>&, const UList<Type3>&, "
-            "const char*)"
-        )   << "    incompatible fields"
+        FatalErrorInFunction
             << " Field<"<<pTraits<Type1>::typeName<<"> f1("<<f1.size()<<')'
             << ", Field<"<<pTraits<Type2>::typeName<<"> f2("<<f2.size()<<')'
             << " and Field<"<<pTraits<Type3>::typeName<<"> f3("<<f3.size()<<')'

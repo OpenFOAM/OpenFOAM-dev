@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ Foam::label Foam::walkPatch::getNeighbour
 
     if (nbrEdgeI == -1)
     {
-        FatalErrorIn("getNeighbour")
+        FatalErrorInFunction
             << "Did not find edge on face " << faceI << " that uses vertices"
             << v0 << " and " << v1 << abort(FatalError);
     }
@@ -114,7 +114,7 @@ Foam::label Foam::walkPatch::getNeighbour
     }
     else
     {
-        FatalErrorIn("getNeighbour")
+        FatalErrorInFunction
             << "Illegal surface on patch. Face " << faceI
             << " at vertices " << v0 << ',' << v1
             << " has fewer than 1 or more than 2 neighbours"

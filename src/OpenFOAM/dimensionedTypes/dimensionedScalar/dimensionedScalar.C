@@ -236,7 +236,7 @@ dimensionedScalar func(const dimensionedScalar& ds)                        \
 {                                                                          \
     if (!ds.dimensions().dimensionless())                                  \
     {                                                                      \
-        FatalErrorIn(#func "(const dimensionedScalar& ds)")                \
+        FatalErrorInFunction                                               \
             << "ds not dimensionless"                                      \
             << abort(FatalError);                                          \
     }                                                                      \
@@ -280,14 +280,14 @@ dimensionedScalar func(const int n, const dimensionedScalar& ds)           \
 {                                                                          \
     if (!ds.dimensions().dimensionless())                                  \
     {                                                                      \
-        FatalErrorIn(#func "(const int n, const dimensionedScalar& ds)")   \
+        FatalErrorInFunction                                               \
             << "ds not dimensionless"                                      \
             << abort(FatalError);                                          \
     }                                                                      \
                                                                            \
     return dimensionedScalar                                               \
     (                                                                      \
-        #func "(" + name(n) + ',' + ds.name() + ')',                      \
+        #func "(" + name(n) + ',' + ds.name() + ')',                       \
         dimless,                                                           \
         ::func(n, ds.value())                                              \
     );                                                                     \

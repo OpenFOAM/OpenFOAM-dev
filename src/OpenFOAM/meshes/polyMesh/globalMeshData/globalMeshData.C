@@ -140,7 +140,7 @@ void Foam::globalMeshData::calcSharedPoints() const
      || sharedPointAddrPtr_.valid()
     )
     {
-        FatalErrorIn("globalMeshData::calcSharedPoints()")
+        FatalErrorInFunction
             << "Shared point addressing already done" << abort(FatalError);
     }
 
@@ -307,7 +307,7 @@ void Foam::globalMeshData::calcSharedEdges() const
      || sharedEdgeAddrPtr_.valid()
     )
     {
-        FatalErrorIn("globalMeshData::calcSharedEdges()")
+        FatalErrorInFunction
             << "Shared edge addressing already done" << abort(FatalError);
     }
 
@@ -845,7 +845,7 @@ Foam::label Foam::globalMeshData::findTransform
 
     if (remoteTransformI == -1 || localTransformI == -1)
     {
-        FatalErrorIn("globalMeshData::findTransform(..)")
+        FatalErrorInFunction
             << "Problem. Cannot find " << remotePoint
             << " or " << localPoint  << " "
             << coupledPatch().localPoints()[localPoint]
@@ -1177,10 +1177,8 @@ void Foam::globalMeshData::calcGlobalEdgeOrientation() const
             );
             if (stat == 0)
             {
-                FatalErrorIn
-                (
-                    "globalMeshData::calcGlobalEdgeOrientation() const"
-                )   << "problem : my edge:" << e
+                FatalErrorInFunction
+                    << "problem : my edge:" << e
                     << " in master points:" << masterE
                     << " v.s. masterEdgeVerts:" << masterEdgeVerts[edgeI]
                     << exit(FatalError);

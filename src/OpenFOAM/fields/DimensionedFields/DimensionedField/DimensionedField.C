@@ -37,7 +37,7 @@ namespace Foam
 #define checkField(df1, df2, op)                                    \
 if (&(df1).mesh() != &(df2).mesh())                                 \
 {                                                                   \
-    FatalErrorIn("checkField(df1, df2, op)")                        \
+    FatalErrorInFunction                                            \
         << "different mesh for fields "                             \
         << (df1).name() << " and " << (df2).name()                  \
         << " during operatrion " <<  op                             \
@@ -63,12 +63,8 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {
     if (field.size() && field.size() != GeoMesh::size(mesh))
     {
-        FatalErrorIn
-        (
-            "DimensionedField<Type, GeoMesh>::DimensionedField"
-            "(const IOobject& io,const Mesh& mesh, "
-            "const dimensionSet& dims, const Field<Type>& field)"
-        )   << "size of field = " << field.size()
+        FatalErrorInFunction
+            << "size of field = " << field.size()
             << " is not the same as the size of mesh = "
             << GeoMesh::size(mesh)
             << abort(FatalError);
@@ -433,11 +429,8 @@ void DimensionedField<Type, GeoMesh>::operator=
     // Check for assignment to self
     if (this == &df)
     {
-        FatalErrorIn
-        (
-            "DimensionedField<Type, GeoMesh>::operator="
-            "(const DimensionedField<Type, GeoMesh>&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 
@@ -459,11 +452,8 @@ void DimensionedField<Type, GeoMesh>::operator=
     // Check for assignment to self
     if (this == &df)
     {
-        FatalErrorIn
-        (
-            "DimensionedField<Type, GeoMesh>::operator="
-            "(const tmp<DimensionedField<Type, GeoMesh> >&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 

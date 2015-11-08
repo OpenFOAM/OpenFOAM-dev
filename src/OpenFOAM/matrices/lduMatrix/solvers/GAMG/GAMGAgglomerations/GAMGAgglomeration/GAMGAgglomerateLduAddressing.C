@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,17 +47,14 @@ void Foam::GAMGAgglomeration::agglomerateLduAddressing
 
     if (min(restrictMap) == -1)
     {
-        FatalErrorIn("GAMGAgglomeration::agglomerateLduAddressing")
+        FatalErrorInFunction
             << "min(restrictMap) == -1" << exit(FatalError);
     }
 
     if (restrictMap.size() != fineMeshAddr.size())
     {
-        FatalErrorIn
-        (
-            "GAMGAgglomeration::agglomerateLduAddressing"
-            "(const label fineLevelIndex)"
-        )   << "restrict map does not correspond to fine level. " << endl
+        FatalErrorInFunction
+            << "restrict map does not correspond to fine level. " << endl
             << " Sizes: restrictMap: " << restrictMap.size()
             << " nEqns: " << fineMeshAddr.size()
             << abort(FatalError);
@@ -232,7 +229,7 @@ void Foam::GAMGAgglomeration::agglomerateLduAddressing
             }
             else
             {
-                FatalErrorIn("GAMGAgglomeration::agglomerateLduAddressing(..)")
+                FatalErrorInFunction
                     << "problem."
                     << " fineFacei:" << fineFacei
                     << " rmUpperAddr:" << rmUpperAddr

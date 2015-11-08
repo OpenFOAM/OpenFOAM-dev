@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,10 +39,8 @@ Foam::label Foam::coupleGroupIdentifier::findOtherPatchID
 
     if (!valid())
     {
-        FatalErrorIn
-        (
-            "coupleGroupIdentifier::findOtherPatchID(const polyPatch&) const"
-        )   << "Invalid coupleGroup patch group"
+        FatalErrorInFunction
+            << "Invalid coupleGroup patch group"
             << " on patch " << thisPatch.name()
             << " in region " << pbm.mesh().name()
             << exit(FatalError);
@@ -56,11 +54,8 @@ Foam::label Foam::coupleGroupIdentifier::findOtherPatchID
         if (&mesh == &thisPatch.boundaryMesh().mesh())
         {
             // thisPatch should be in patchGroup
-            FatalErrorIn
-            (
-                "coupleGroupIdentifier::findOtherPatchID"
-                "(const polyMesh&, const polyPatch&) const"
-            )   << "Patch " << thisPatch.name()
+            FatalErrorInFunction
+                << "Patch " << thisPatch.name()
                 << " should be in patchGroup " << name()
                 << " in region " << pbm.mesh().name()
                 << exit(FatalError);
@@ -76,11 +71,8 @@ Foam::label Foam::coupleGroupIdentifier::findOtherPatchID
     {
         if (patchIDs.size() > 2 || patchIDs.size() == 0)
         {
-            FatalErrorIn
-            (
-                "coupleGroupIdentifier::findOtherPatchID"
-                "(const polyMesh&, const polyPatch&) const"
-            )   << "Couple patchGroup " << name()
+            FatalErrorInFunction
+                << "Couple patchGroup " << name()
                 << " with contents " << patchIDs
                 << " not of size < 2"
                 << " on patch " << thisPatch.name()
@@ -94,11 +86,8 @@ Foam::label Foam::coupleGroupIdentifier::findOtherPatchID
 
         if (index == -1)
         {
-            FatalErrorIn
-            (
-                "coupleGroupIdentifier::findOtherPatchID"
-                "(const polyMesh&, const polyPatch&) const"
-            )   << "Couple patchGroup " << name()
+            FatalErrorInFunction
+                << "Couple patchGroup " << name()
                 << " with contents " << patchIDs
                 << " does not contain patch " << thisPatch.name()
                 << " in region " << pbm.mesh().name()
@@ -122,11 +111,8 @@ Foam::label Foam::coupleGroupIdentifier::findOtherPatchID
     {
         if (patchIDs.size() != 1)
         {
-            FatalErrorIn
-            (
-                "coupleGroupIdentifier::findOtherPatchID"
-                "(const polyMesh&, const polyPatch&) const"
-            )   << "Couple patchGroup " << name()
+            FatalErrorInFunction
+                << "Couple patchGroup " << name()
                 << " with contents " << patchIDs
                 << " in region " << mesh.name()
                 << " should only contain a single patch"
@@ -199,11 +185,8 @@ Foam::label Foam::coupleGroupIdentifier::findOtherPatchID
         {
             if (otherPatchID != -1)
             {
-                FatalErrorIn
-                (
-                    "coupleGroupIdentifier::findOtherPatchID"
-                    "(const polyPatch&, word&) const"
-                )   << "Couple patchGroup " << name()
+                FatalErrorInFunction
+                    << "Couple patchGroup " << name()
                     << " should be present on only two patches"
                     << " in any of the meshes in " << meshSet.sortedToc()
                     << endl
@@ -223,11 +206,8 @@ Foam::label Foam::coupleGroupIdentifier::findOtherPatchID
 
     if (otherPatchID == -1)
     {
-        FatalErrorIn
-        (
-            "coupleGroupIdentifier::findOtherPatchID"
-            "(const polyPatch&, word&) const"
-        )   << "Couple patchGroup " << name()
+        FatalErrorInFunction
+            << "Couple patchGroup " << name()
             << " not found in any of the other meshes " << meshSet.sortedToc()
             << " on patch " << thisPatch.name()
             << " region " << thisMesh.name()

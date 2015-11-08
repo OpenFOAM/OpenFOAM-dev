@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ public:
 
         virtual const labelUList& directAddressing() const
         {
-            FatalErrorIn("FieldMapper::directAddressing() const")
+            FatalErrorInFunction
                 << "attempt to access null direct addressing"
                 << abort(FatalError);
 
@@ -79,7 +79,7 @@ public:
 
         virtual const labelListList& addressing() const
         {
-            FatalErrorIn("FieldMapper::addressing() const")
+            FatalErrorInFunction
                 << "attempt to access null interpolation addressing"
                 << abort(FatalError);
 
@@ -88,7 +88,7 @@ public:
 
         virtual const scalarListList& weights() const
         {
-            FatalErrorIn("FieldMapper::weights() const")
+            FatalErrorInFunction
                 << "attempt to access null interpolation weights"
                 << abort(FatalError);
 

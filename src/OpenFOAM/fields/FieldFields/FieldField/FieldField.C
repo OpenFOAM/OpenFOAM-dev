@@ -45,11 +45,7 @@ void checkFields
 {
     if (f1.size() != f2.size())
     {
-        FatalErrorIn
-        (
-            "checkFields(const FieldField<Field, Type1>&, "
-            "const FieldField<Field, Type2>&, const char* op)"
-        )   << "    incompatible fields"
+        FatalErrorInFunction
             << " FieldField<" << pTraits<Type1>::typeName
             << "> f1(" << f1.size() << ')'
             << " and FieldField<" << pTraits<Type2>::typeName
@@ -70,13 +66,7 @@ void checkFields
 {
     if (f1.size() != f2.size() || f1.size() != f3.size())
     {
-        FatalErrorIn
-        (
-            "checkFields(const FieldField<Field, Type1>&, "
-            "const FieldField<Field, Type2>&, "
-            "const FieldField<Field, Type3>&, "
-            "const char* op)"
-        )   << "    incompatible fields"
+        FatalErrorInFunction
             << " FieldField<" << pTraits<Type1>::typeName
             << "> f1(" << f1.size() << ')'
             << ", FieldField<" <<pTraits<Type2>::typeName
@@ -297,11 +287,8 @@ void FieldField<Field, Type>::operator=(const FieldField<Field, Type>& f)
 {
     if (this == &f)
     {
-        FatalErrorIn
-        (
-            "FieldField<Field, Type>::"
-            "operator=(const FieldField<Field, Type>&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 
@@ -317,10 +304,8 @@ void FieldField<Field, Type>::operator=(const tmp<FieldField>& tf)
 {
     if (this == &(tf()))
     {
-        FatalErrorIn
-        (
-            "FieldField<Field, Type>::operator=(const tmp<FieldField>&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 

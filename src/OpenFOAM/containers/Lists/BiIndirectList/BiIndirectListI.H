@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ inline void Foam::BiIndirectList<T>::operator=(const UList<T>& ae)
 {
     if (addressing_.size() != ae.size())
     {
-        FatalErrorIn("BiIndirectList<T>::operator=(const UList<T>&)")
+        FatalErrorInFunction
             << "Addressing and list of addressed elements "
                "have different sizes: "
             << addressing_.size() << " " << ae.size()

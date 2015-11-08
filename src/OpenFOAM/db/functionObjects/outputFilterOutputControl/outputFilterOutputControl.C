@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,7 @@ bool Foam::outputFilterOutputControl::output()
         default:
         {
             // this error should not actually be possible
-            FatalErrorIn("bool Foam::outputFilterOutputControl::output()")
+            FatalErrorInFunction
                 << "Undefined output control: "
                 << outputControlNames_[outputControl_] << nl
                 << abort(FatalError);

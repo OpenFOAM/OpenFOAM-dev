@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,8 @@ Foam::autoPtr<Foam::polyPatch> Foam::polyPatch::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "polyPatch::New(const word&, const word&, const label, "
-            "const label, const label, const polyBoundaryMesh&) "
-        )   << "Unknown polyPatch type "
+        FatalErrorInFunction
+            << "Unknown polyPatch type "
             << patchType << " for patch " << name << nl << nl
             << "Valid polyPatch types are :" << endl
             << wordConstructorTablePtr_->sortedToc()
@@ -127,10 +124,8 @@ Foam::autoPtr<Foam::polyPatch> Foam::polyPatch::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "polyPatch::New(const word&, const dictionary&, "
-                "const label, const polyBoundaryMesh&)",
                 dict
             )   << "Unknown polyPatch type "
                 << patchType << " for patch " << name << nl << nl

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,8 @@ calcBdryPoints() const
     {
         // it is considered an error to attempt to recalculate
         // if already allocated
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "calcBdryPoints()"
-        )   << "edge types already calculated"
+        FatalErrorInFunction
+            << "edge types already calculated"
             << abort(FatalError);
     }
 

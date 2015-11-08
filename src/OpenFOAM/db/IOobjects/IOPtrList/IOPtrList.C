@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const label s)
 {
     if (io.readOpt() != IOobject::NO_READ)
     {
-        FatalErrorIn("IOPtrList<T>::IOPtrList(const IOobject&, const label)")
+        FatalErrorInFunction
             << "NO_READ must be set if specifying size" << nl
             << exit(FatalError);
     }

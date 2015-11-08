@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ autoPtr<interpolationWeights> interpolationWeights::New
 {
     if (debug)
     {
-        InfoIn("interpolationWeights::New")
+        InfoInFunction
             << "Selecting interpolationWeights "
             << type << endl;
     }
@@ -69,11 +69,8 @@ autoPtr<interpolationWeights> interpolationWeights::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "interpolationWeights::New(const word&, "
-            "const scalarField&)"
-        )   << "Unknown interpolationWeights type "
+        FatalErrorInFunction
+            << "Unknown interpolationWeights type "
             << type
             << endl << endl
             << "Valid interpolationWeights types are :" << endl

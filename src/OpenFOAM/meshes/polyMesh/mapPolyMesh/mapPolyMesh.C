@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,8 +106,7 @@ Foam::mapPolyMesh::mapPolyMesh
     {
         if (min(oldPatchSizes_) < 0)
         {
-            FatalErrorIn("mapPolyMesh::mapPolyMesh(...)")
-                << "Calculated negative old patch size.  Error in mapping data"
+            FatalErrorInFunction
                 << abort(FatalError);
         }
     }
@@ -195,7 +194,7 @@ Foam::mapPolyMesh::mapPolyMesh
         {
             if (min(oldPatchSizes_) < 0)
             {
-                FatalErrorIn("mapPolyMesh::mapPolyMesh(...)")
+                FatalErrorInFunction
                     << "Calculated negative old patch size."
                     << "  Error in mapping data"
                     << abort(FatalError);

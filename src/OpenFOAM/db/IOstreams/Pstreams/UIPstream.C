@@ -317,7 +317,7 @@ Foam::Istream& Foam::UIPstream::read(char* data, std::streamsize count)
 {
     if (format() != BINARY)
     {
-        FatalErrorIn("UIPstream::read(char*, std::streamsize)")
+        FatalErrorInFunction
             << "stream format not binary"
             << Foam::abort(FatalError);
     }

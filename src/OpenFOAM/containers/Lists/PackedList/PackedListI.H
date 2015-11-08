@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,11 +107,7 @@ inline unsigned int Foam::PackedList<nBits>::readValue(Istream& is)
 
     if (val > max_value())
     {
-        FatalIOErrorIn
-        (
-            "PackedList<nBits>::readValue(Istream&)",
-            is
-        )
+        FatalIOErrorInFunction(is)
             << "Out-of-range value " << val << " for PackedList<" << nBits
             << ">. Maximum permitted value is " << max_value() << "."
             << exit(FatalIOError);
@@ -133,11 +129,7 @@ inline void Foam::PackedList<nBits>::setPair(Istream& is)
 
     if (val > max_value())
     {
-        FatalIOErrorIn
-        (
-            "PackedList<nBits>::setPair(Istream&)",
-            is
-        )
+        FatalIOErrorInFunction(is)
             << "Out-of-range value " << val << " for PackedList<" << nBits
             << "> at index " << ind
             << ". Maximum permitted value is " << max_value() << "."
@@ -1053,10 +1045,8 @@ inline unsigned int Foam::PackedList<nBits>::remove()
 {
     if (!size_)
     {
-        FatalErrorIn
-        (
-            "Foam::PackedList<nBits>::remove()"
-        )   << "List is empty" << abort(FatalError);
+        FatalErrorInFunction
+            << "List is empty" << abort(FatalError);
     }
 
     label elemI = size_ - 1;

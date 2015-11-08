@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,10 +141,8 @@ const T* Foam::DictionaryBase<IDLListType, T>::lookup(const word& keyword) const
 
     if (iter == hashedTs_.end())
     {
-        FatalErrorIn
-        (
-            "DictionaryBase<IDLListType, T>::lookup(const word&) const"
-        )   << keyword << " is undefined"
+        FatalErrorInFunction
+            << keyword << " is undefined"
             << exit(FatalError);
     }
 
@@ -160,10 +158,8 @@ T* Foam::DictionaryBase<IDLListType, T>::lookup(const word& keyword)
 
     if (iter == hashedTs_.end())
     {
-        FatalErrorIn
-        (
-            "DictionaryBase<IDLListType, T>::lookup(const word&)"
-        )   << keyword << " is undefined"
+        FatalErrorInFunction
+            << keyword << " is undefined"
             << exit(FatalError);
     }
 
@@ -260,7 +256,7 @@ void Foam::DictionaryBase<IDLListType, T>::operator=
     // Check for assignment to self
     if (this == &dict)
     {
-        FatalErrorIn("DictionaryBase::operator=(const DictionaryBase&)")
+        FatalErrorInFunction
             << "attempted assignment to self"
             << abort(FatalError);
     }

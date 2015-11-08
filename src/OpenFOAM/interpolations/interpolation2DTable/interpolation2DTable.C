@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,10 +39,8 @@ void Foam::interpolation2DTable<Type>::readTable()
 
     if (this->empty())
     {
-        FatalErrorIn
-        (
-            "Foam::interpolation2DTable<Type>::readTable()"
-        )   << "table read from " << fName << " is empty" << nl
+        FatalErrorInFunction
+            << "table read from " << fName << " is empty" << nl
             << exit(FatalError);
     }
 
@@ -136,28 +134,16 @@ Type Foam::interpolation2DTable<Type>::interpolateValue
         {
             case interpolation2DTable::ERROR:
             {
-                FatalErrorIn
-                (
-                    "Foam::interpolation2DTable<Type>::interpolateValue"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                    ")"
-                )   << "value (" << lookupValue << ") less than lower "
+                FatalErrorInFunction
+                    << "value (" << lookupValue << ") less than lower "
                     << "bound (" << minLimit << ")" << nl
                     << exit(FatalError);
                 break;
             }
             case interpolation2DTable::WARN:
             {
-                WarningIn
-                (
-                    "Foam::interpolation2DTable<Type>::interpolateValue"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                    ")"
-                )   << "value (" << lookupValue << ") less than lower "
+                WarningInFunction
+                    << "value (" << lookupValue << ") less than lower "
                     << "bound (" << minLimit << ")" << nl
                     << "    Continuing with the first entry"
                     << endl;
@@ -176,28 +162,16 @@ Type Foam::interpolation2DTable<Type>::interpolateValue
         {
             case interpolation2DTable::ERROR:
             {
-                FatalErrorIn
-                (
-                    "Foam::interpolation2DTable<Type>::interpolateValue"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                    ")"
-                )   << "value (" << lookupValue << ") greater than upper "
+                FatalErrorInFunction
+                    << "value (" << lookupValue << ") greater than upper "
                     << "bound (" << maxLimit << ")" << nl
                     << exit(FatalError);
                 break;
             }
             case interpolation2DTable::WARN:
             {
-                WarningIn
-                (
-                    "Foam::interpolation2DTable<Type>::interpolateValue"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                    ")"
-                )   << "value (" << lookupValue << ") greater than upper "
+                WarningInFunction
+                    << "value (" << lookupValue << ") greater than upper "
                     << "bound (" << maxLimit << ")" << nl
                     << "    Continuing with the last entry"
                     << endl;
@@ -267,28 +241,15 @@ Foam::label Foam::interpolation2DTable<Type>::Xi
         {
             case interpolation2DTable::ERROR:
             {
-                FatalErrorIn
-                (
-                    "Foam::label Foam::interpolation2DTable<Type>::Xi"
-                    "("
-                        "const BinaryOp&, "
-                        "const scalar, "
-                        "const bool"
-                    ") const"
-                )   << "value (" << valueX << ") out of bounds"
+                FatalErrorInFunction
+                    << "value (" << valueX << ") out of bounds"
                     << exit(FatalError);
                 break;
             }
             case interpolation2DTable::WARN:
             {
-                WarningIn
-                (
-                    "Foam::label Foam::interpolation2DTable<Type>::Xi"
-                    "("
-                        "const BinaryOp&, "
-                        "const scalar, "
-                        "const bool"
-                )   << "value (" << valueX << ") out of bounds"
+                WarningInFunction
+                    << "value (" << valueX << ") out of bounds"
                     << endl;
                 // fall-through to 'CLAMP'
             }
@@ -298,15 +259,7 @@ Foam::label Foam::interpolation2DTable<Type>::Xi
             }
             default:
             {
-                FatalErrorIn
-                (
-                    "Foam::label Foam::interpolation2DTable<Type>::Xi"
-                    "("
-                        "const BinaryOp&, "
-                        "const scalar, "
-                        "const bool"
-                    ") const"
-                )
+                FatalErrorInFunction
                     << "Un-handled enumeration " << boundsHandling_
                     << abort(FatalError);
             }
@@ -352,14 +305,7 @@ Type Foam::interpolation2DTable<Type>::operator()
 
     if (nX == 0)
     {
-        WarningIn
-        (
-            "Type Foam::interpolation2DTable<Type>::operator()"
-            "("
-                "const scalar, "
-                "const scalar"
-            ") const"
-        )
+        WarningInFunction
             << "cannot interpolate a zero-sized table - returning zero" << endl;
 
         return pTraits<Type>::zero;
@@ -450,13 +396,8 @@ Foam::interpolation2DTable<Type>::wordToBoundsHandling
     }
     else
     {
-        WarningIn
-        (
-            "Foam::interpolation2DTable<Type>::wordToBoundsHandling"
-            "("
-            "    const word&"
-            ")"
-        )   << "bad outOfBounds specifier " << bound << " using 'warn'" << endl;
+        WarningInFunction
+            << "bad outOfBounds specifier " << bound << " using 'warn'" << endl;
 
         return interpolation2DTable::WARN;
     }
@@ -491,10 +432,8 @@ void Foam::interpolation2DTable<Type>::checkOrder() const
         // avoid duplicate values (divide-by-zero error)
         if (currValue <= prevValue)
         {
-            FatalErrorIn
-            (
-                "Foam::interpolation2DTable<Type>::checkOrder() const"
-            )   << "out-of-order value: "
+            FatalErrorInFunction
+                << "out-of-order value: "
                 << currValue << " at index " << i << nl
                 << exit(FatalError);
         }

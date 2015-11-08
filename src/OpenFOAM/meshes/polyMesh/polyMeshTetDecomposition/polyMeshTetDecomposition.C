@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -309,16 +309,8 @@ Foam::labelList Foam::polyMeshTetDecomposition::findFaceBasePts
 
         if (bFTetBasePtI == -2)
         {
-            FatalErrorIn
-            (
-                "labelList"
-                "polyMeshTetDecomposition::findFaceBasePts"
-                "("
-                    "const polyMesh& mesh, "
-                    "scalar tol, "
-                    "bool report"
-                ")"
-            )   << "Coupled face base point exchange failure for face "
+            FatalErrorInFunction
+                << "Coupled face base point exchange failure for face "
                 << fI
                 << abort(FatalError);
         }
@@ -558,16 +550,8 @@ Foam::List<Foam::tetIndices> Foam::polyMeshTetDecomposition::faceTetIndices
     {
         if (nWarnings < maxWarnings)
         {
-            WarningIn
-            (
-                "List<tetIndices> "
-                "polyMeshTetDecomposition::faceTetIndices"
-                "("
-                    "const polyMesh&, "
-                    "label, "
-                    "label"
-                ")"
-            )   << "No base point for face " << fI << ", " << f
+            WarningInFunction
+                << "No base point for face " << fI << ", " << f
                 << ", produces a valid tet decomposition."
                 << endl;
             nWarnings++;
@@ -630,17 +614,8 @@ Foam::tetIndices Foam::polyMeshTetDecomposition::triangleTetIndices
     {
         if (nWarnings < maxWarnings)
         {
-            WarningIn
-            (
-                "tetIndices "
-                "polyMeshTetDecomposition::triangleTetIndices"
-                "("
-                    "const polyMesh&, "
-                    "label, "
-                    "label, "
-                    "label"
-                ")"
-            )   << "No base point for face " << fI << ", " << f
+            WarningInFunction
+                << "No base point for face " << fI << ", " << f
                 << ", produces a valid tet decomposition."
                 << endl;
             nWarnings++;

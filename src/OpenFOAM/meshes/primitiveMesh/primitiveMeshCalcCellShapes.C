@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void Foam::primitiveMesh::calcCellShapes() const
     // if the pointer is already set
     if (cellShapesPtr_)
     {
-        FatalErrorIn("primitiveMesh::calcCellShapes() const")
+        FatalErrorInFunction
             << "cellShapes already calculated"
             << abort(FatalError);
     }

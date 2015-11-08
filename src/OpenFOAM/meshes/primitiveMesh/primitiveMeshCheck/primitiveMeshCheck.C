@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -699,11 +699,8 @@ bool Foam::primitiveMesh::checkFaceAngles
 
     if (maxDeg < -SMALL || maxDeg > 180+SMALL)
     {
-        FatalErrorIn
-        (
-            "primitiveMesh::checkFaceAngles"
-            "(const bool, const scalar, labelHashSet*)"
-        )   << "maxDeg should be [0..180] but is now " << maxDeg
+        FatalErrorInFunction
+            << "maxDeg should be [0..180] but is now " << maxDeg
             << exit(FatalError);
     }
 
@@ -785,11 +782,8 @@ bool Foam::primitiveMesh::checkFaceFlatness
 
     if (warnFlatness < 0 || warnFlatness > 1)
     {
-        FatalErrorIn
-        (
-            "primitiveMesh::checkFaceFlatness"
-            "(const bool, const scalar, labelHashSet*)"
-        )   << "warnFlatness should be [0..1] but is now " << warnFlatness
+        FatalErrorInFunction
+            << "warnFlatness should be [0..1] but is now " << warnFlatness
             << exit(FatalError);
     }
 

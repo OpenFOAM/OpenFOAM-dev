@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ const
 
     if (localI < 0 || i >= offsets_[procI+1])
     {
-        FatalErrorIn("globalIndex::toLocal(const label, const label)")
+        FatalErrorInFunction
             << "Global " << i << " does not belong on processor "
             << procI << endl << "Offsets:" << offsets_
             << abort(FatalError);
@@ -124,7 +124,7 @@ inline Foam::label Foam::globalIndex::whichProcID(const label i) const
 {
     if (i < 0 || i >= size())
     {
-        FatalErrorIn("globalIndex::whichProcID(const label)")
+        FatalErrorInFunction
             << "Global " << i << " does not belong on any processor."
             << " Offsets:" << offsets_
             << abort(FatalError);

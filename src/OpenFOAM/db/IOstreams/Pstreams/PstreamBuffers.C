@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Foam::PstreamBuffers::~PstreamBuffers()
     {
         if (recvBufPos_[procI] < recvBuf_[procI].size())
         {
-            FatalErrorIn("PstreamBuffers::~PstreamBuffers()")
+            FatalErrorInFunction
                 << "Message from processor " << procI
                 << " not fully consumed. messageSize:" << recvBuf_[procI].size()
                 << " bytes of which only " << recvBufPos_[procI]
@@ -117,10 +117,8 @@ void Foam::PstreamBuffers::finishedSends(labelListList& sizes, const bool block)
     }
     else
     {
-        FatalErrorIn
-        (
-            "PstreamBuffers::finishedSends(labelListList&, const bool)"
-        )   << "Obtaining sizes not supported in "
+        FatalErrorInFunction
+            << "Obtaining sizes not supported in "
             << UPstream::commsTypeNames[commsType_] << endl
             << " since transfers already in progress. Use non-blocking instead."
             << exit(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,11 +62,8 @@ calcAddressing() const
     {
         // it is considered an error to attempt to recalculate
         // if already allocated
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "calcAddressing()"
-        )   << "addressing already calculated"
+        FatalErrorInFunction
+            << "addressing already calculated"
             << abort(FatalError);
     }
 
@@ -245,11 +242,8 @@ calcAddressing() const
             }
             else
             {
-                FatalErrorIn
-                (
-                    "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-                    "calcAddressing()"
-                )   << "Error in internal edge insertion"
+                FatalErrorInFunction
+                    << "Error in internal edge insertion"
                     << abort(FatalError);
             }
         }

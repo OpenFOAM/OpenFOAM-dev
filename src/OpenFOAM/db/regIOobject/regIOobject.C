@@ -261,7 +261,7 @@ bool Foam::regIOobject::checkIn()
         {
             if (watchIndex_ != -1)
             {
-                FatalErrorIn("regIOobject::checkIn()")
+                FatalErrorInFunction
                     << "Object " << objectPath()
                     << " already watched with index " << watchIndex_
                     << abort(FatalError);
@@ -285,7 +285,7 @@ bool Foam::regIOobject::checkIn()
             {
                 // for ease of finding where attempted duplicate check-in
                 // originated
-                FatalErrorIn("regIOobject::checkIn()")
+                FatalErrorInFunction
                     << "failed to register object " << objectPath()
                     << " the name already exists in the objectRegistry" << endl
                     << "Contents:" << db().sortedToc()
@@ -293,7 +293,7 @@ bool Foam::regIOobject::checkIn()
             }
             else
             {
-                WarningIn("regIOobject::checkIn()")
+                WarningInFunction
                     << "failed to register object " << objectPath()
                     << " the name already exists in the objectRegistry"
                     << endl;

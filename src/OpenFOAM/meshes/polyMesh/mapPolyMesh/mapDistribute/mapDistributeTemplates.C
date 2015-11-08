@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -374,7 +374,7 @@ void Foam::mapDistribute::distribute
     }
     else
     {
-        FatalErrorIn("mapDistribute::distribute(..)")
+        FatalErrorInFunction
             << "Unknown communication schedule " << commsType
             << abort(FatalError);
     }
@@ -721,7 +721,7 @@ void Foam::mapDistribute::distribute
     }
     else
     {
-        FatalErrorIn("mapDistribute::distribute(..)")
+        FatalErrorInFunction
             << "Unknown communication schedule " << commsType
             << abort(FatalError);
     }
@@ -767,15 +767,8 @@ void Foam::mapDistribute::receive(PstreamBuffers& pBufs, List<T>& field) const
 
             if (recvField.size() != map.size())
             {
-                FatalErrorIn
-                (
-                    "template<class T>\n"
-                    "void mapDistribute::receive\n"
-                    "(\n"
-                    "    PstreamBuffers&,\n"
-                    "    List<T>&\n"
-                    ")\n"
-                )   << "Expected from processor " << domain
+                FatalErrorInFunction
+                    << "Expected from processor " << domain
                     << " " << map.size() << " but received "
                     << recvField.size() << " elements."
                     << abort(FatalError);

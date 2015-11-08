@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,11 +50,8 @@ inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix
 {
     if (m != n)
     {
-        FatalErrorIn
-        (
-            "SymmetricSquareMatrix<Type>::SymmetricSquareMatrix"
-            "(const label m, const label n)"
-        )   << "m != n for constructing a symmetric square matrix"
+        FatalErrorInFunction
+            << "m != n for constructing a symmetric square matrix"
             << exit(FatalError);
     }
 }
@@ -72,11 +69,8 @@ inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix
 {
     if (m != n)
     {
-        FatalErrorIn
-        (
-            "SymmetricSquareMatrix<Type>::SymmetricSquareMatrix"
-            "(const label m, const label n, const Type&)"
-        )   << "m != n for constructing a symmetric square matrix"
+        FatalErrorInFunction
+            << "m != n for constructing a symmetric square matrix"
             << exit(FatalError);
     }
 }

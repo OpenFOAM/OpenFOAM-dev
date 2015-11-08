@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,10 +60,8 @@ class labelBits
 #           ifdef FULLDEBUG
             if (bits > 7 || (((val<<3)>>3) != val))
             {
-                FatalErrorIn
-                (
-                    "labelBits::pack(const label, const direction)"
-                )   << "Direction " << bits << " outside range 0..7"
+                FatalErrorInFunction
+                    << "Direction " << bits << " outside range 0..7"
                     << " or value " << val << " negative or larger than "
                     << label(8*sizeof(label)-3) << " bit representation"
                     << abort(FatalError);

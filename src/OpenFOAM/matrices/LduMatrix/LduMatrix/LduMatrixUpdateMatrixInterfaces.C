@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
     }
     else
     {
-        FatalErrorIn("LduMatrix<Type, DType, LUType>::initMatrixInterfaces")
+        FatalErrorInFunction
             << "Unsuported communications type "
             << Pstream::commsTypeNames[Pstream::defaultCommsType]
             << exit(FatalError);
@@ -189,7 +189,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
     }
     else
     {
-        FatalErrorIn("LduMatrix<Type, DType, LUType>::updateMatrixInterfaces")
+        FatalErrorInFunction
             << "Unsuported communications type "
             << Pstream::commsTypeNames[Pstream::defaultCommsType]
             << exit(FatalError);

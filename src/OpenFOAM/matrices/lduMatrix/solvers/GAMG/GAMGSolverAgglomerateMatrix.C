@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -664,7 +664,7 @@ void Foam::GAMGSolver::procAgglomerateMatrix
                         label allFaceI = map[i];
                         if (allFaceI < 0)
                         {
-                            FatalErrorIn("GAMGSolver::GAMGSolver()")
+                            FatalErrorInFunction
                                 << "problem." << abort(FatalError);
                         }
                         allBou[allFaceI] = procBou[i];

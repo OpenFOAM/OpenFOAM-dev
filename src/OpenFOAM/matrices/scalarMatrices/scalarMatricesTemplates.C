@@ -68,7 +68,7 @@ void Foam::solve
         // Check that the system of equations isn't singular
         if (mag(tmpMatrix[i][i]) < 1e-20)
         {
-            FatalErrorIn("solve(scalarSquareMatrix&, Field<Type>& sourceSol)")
+            FatalErrorInFunction
                 << "Singular Matrix"
                 << exit(FatalError);
         }
@@ -245,13 +245,8 @@ void Foam::multiply
 {
     if (A.m() != B.n())
     {
-        FatalErrorIn
-        (
-            "multiply("
-            "Matrix<Form, Type>& answer "
-            "const Matrix<Form, Type>& A, "
-            "const Matrix<Form, Type>& B)"
-        )   << "A and B must have identical inner dimensions but A.m = "
+        FatalErrorInFunction
+            << "A and B must have identical inner dimensions but A.m = "
             << A.m() << " and B.n = " << B.n()
             << abort(FatalError);
     }

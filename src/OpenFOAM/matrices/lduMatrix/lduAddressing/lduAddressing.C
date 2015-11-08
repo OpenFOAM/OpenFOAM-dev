@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ void Foam::lduAddressing::calcLosort() const
 {
     if (losortPtr_)
     {
-        FatalErrorIn("lduAddressing::calcLosort() const")
+        FatalErrorInFunction
             << "losort already calculated"
             << abort(FatalError);
     }
@@ -94,7 +94,7 @@ void Foam::lduAddressing::calcOwnerStart() const
 {
     if (ownerStartPtr_)
     {
-        FatalErrorIn("lduAddressing::calcOwnerStart() const")
+        FatalErrorInFunction
             << "owner start already calculated"
             << abort(FatalError);
     }
@@ -131,7 +131,7 @@ void Foam::lduAddressing::calcLosortStart() const
 {
     if (losortStartPtr_)
     {
-        FatalErrorIn("lduAddressing::calcLosortStart() const")
+        FatalErrorInFunction
             << "losort start already calculated"
             << abort(FatalError);
     }
@@ -238,10 +238,8 @@ Foam::label Foam::lduAddressing::triIndex(const label a, const label b) const
 
     // If neighbour has not been found, something has gone seriously
     // wrong with the addressing mechanism
-    FatalErrorIn
-    (
-        "lduAddressing::triIndex(const label owner, const label nbr) const"
-    )   << "neighbour " << nbr << " not found for owner " << own << ". "
+    FatalErrorInFunction
+        << "neighbour " << nbr << " not found for owner " << own << ". "
         << "Problem with addressing"
         << abort(FatalError);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,13 +77,7 @@ Foam::label Foam::globalIndexAndTransform::encodeTransformIndex
 {
     if (permutationIndices.size() != transforms_.size())
     {
-        FatalErrorIn
-        (
-            "Foam::label encodeTransformIndex"
-            "("
-                "const List<label>& permutationIndices,"
-            ") const"
-        )
+        FatalErrorInFunction
             << "permutationIndices " << permutationIndices
             << "are of a different size to the number of independent transforms"
             << abort(FatalError);
@@ -97,13 +91,7 @@ Foam::label Foam::globalIndexAndTransform::encodeTransformIndex
     {
         if (mag(permutationIndices[b]) > 1)
         {
-            FatalErrorIn
-            (
-                "Foam::label encodeTransformIndex"
-                "("
-                "const List<label>& permutationIndices,"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "permutationIndices " << permutationIndices
                 << "are illegal, they must all be only -1, 0 or +1"
                 << abort(FatalError);
@@ -173,10 +161,8 @@ Foam::globalIndexAndTransform::decodeTransformIndex
     t /= 3;
     if (t != 0)
     {
-        FatalErrorIn
-        (
-            "globalIndexAndTransform::decodeTransformIndex(const label)"
-        )   << "transformIndex : " << transformIndex
+        FatalErrorInFunction
+            << "transformIndex : " << transformIndex
             << " has more than 3 fields."
             << abort(FatalError);
     }
@@ -221,7 +207,7 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
             if (sign == 0)
             {
                 // sent from patch without a transformation. Do nothing.
-                FatalErrorIn("globalIndexAndTransform::addToTransformIndex(..)")
+                FatalErrorInFunction
                     << "patch:" << mesh_.boundaryMesh()[patchI].name()
                     << " transform:" << matchTransI << " sign:" << sign
                     << "  current transforms:" << permutation
@@ -256,16 +242,8 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "Foam::label "
-                        "Foam::globalIndexAndTransform::addToTransformIndex\n"
-                        "(\n"
-                            "const label,\n"
-                            "const label,\n"
-                            "const bool\n"
-                        ") const\n"
-                    )   << "More than one patch accessing the same transform "
+                    FatalErrorInFunction
+                        << "More than one patch accessing the same transform "
                         << "but not of the same sign." << endl
                         << "patch:" << mesh_.boundaryMesh()[patchI].name()
                         << " transform:" << matchTransI << " sign:" << sign
@@ -377,15 +355,7 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
 {
     if (transformIndex < 0 || transformIndex >= base_)
     {
-        FatalErrorIn
-        (
-            "Foam::labelPair Foam::globalIndexAndTransform::encode"
-            "("
-                "const label procI, "
-                "const label index, "
-                "const label transformIndex"
-            ")"
-        )
+        FatalErrorInFunction
             << "TransformIndex " << transformIndex
             << " is outside allowed range of 0 to "
             << base_ - 1
@@ -394,15 +364,7 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
 
     if (procI > labelMax/base_)
     {
-        FatalErrorIn
-        (
-            "Foam::labelPair Foam::globalIndexAndTransform::encode"
-            "("
-                "const label procI, "
-                "const label index, "
-                "const label transformIndex"
-            ")"
-        )
+        FatalErrorInFunction
             << "Overflow : encoding processor " << procI << " in base " << base_
             << " exceeds capability of label (" << labelMax
             << "). Please recompile with larger datatype for label."
@@ -521,14 +483,7 @@ Foam::labelList Foam::globalIndexAndTransform::transformIndicesForPatches
                 // transform.
                 if (permutation[matchTransI] != sign)
                 {
-                    FatalErrorIn
-                    (
-                        "const Foam::List<Foam::vectorTensorTransform>& "
-                        "Foam::globalIndexAndTransform::transformsForPatches"
-                        "("
-                            "const labelList& patchIs"
-                        ") const"
-                    )
+                    FatalErrorInFunction
                         << "More than one patch accessing the same transform "
                         << "but not of the same sign."
                         << exit(FatalError);
@@ -658,14 +613,7 @@ Foam::labelList Foam::globalIndexAndTransform::transformIndicesForPatches
         }
         default:
         {
-            FatalErrorIn
-            (
-                "const Foam::List<Foam::vectorTensorTransform>& "
-                "Foam::globalIndexAndTransform::transformsForPatches"
-                "("
-                    "const labelList& patchIs"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "Only 1-3 transforms are possible."
                 << exit(FatalError);
         }

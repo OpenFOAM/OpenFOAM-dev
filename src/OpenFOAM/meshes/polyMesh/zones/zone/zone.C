@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ void Foam::zone::calcLookupMap() const
 
     if (lookupMapPtr_)
     {
-        FatalErrorIn("void zone::calcLookupMap() const")
+        FatalErrorInFunction
             << "Lookup map already calculated" << nl
             << abort(FatalError);
     }
@@ -207,11 +207,8 @@ bool Foam::zone::checkDefinition(const label maxSize, const bool report) const
 
             if (report)
             {
-                SeriousErrorIn
-                (
-                    "bool zone::checkDefinition("
-                    "const label maxSize, const bool report) const"
-                )   << "Zone " << name_
+                SeriousErrorInFunction
+                    << "Zone " << name_
                     << " contains invalid index label " << addr[i] << nl
                     << "Valid index labels are 0.."
                     << maxSize-1 << endl;
@@ -226,11 +223,8 @@ bool Foam::zone::checkDefinition(const label maxSize, const bool report) const
         {
             if (report)
             {
-                WarningIn
-                (
-                    "bool zone::checkDefinition("
-                    "const label maxSize, const bool report) const"
-                )   << "Zone " << name_
+                WarningInFunction
+                    << "Zone " << name_
                     << " contains duplicate index label " << addr[i] << endl;
             }
         }

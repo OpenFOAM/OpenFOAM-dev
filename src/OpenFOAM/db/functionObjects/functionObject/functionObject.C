@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,11 +70,8 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
 
     if (!dictionaryConstructorTablePtr_)
     {
-        FatalErrorIn
-        (
-            "functionObject::New"
-            "(const word& name, const Time&, const dictionary&)"
-        )   << "Unknown function type "
+        FatalErrorInFunction
+            << "Unknown function type "
             << functionType << nl << nl
             << "Table of functionObjects is empty" << endl
             << exit(FatalError);
@@ -85,11 +82,8 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "functionObject::New"
-            "(const word& name, const Time&, const dictionary&)"
-        )   << "Unknown function type "
+        FatalErrorInFunction
+            << "Unknown function type "
             << functionType << nl << nl
             << "Valid functions are : " << nl
             << dictionaryConstructorTablePtr_->sortedToc() << endl

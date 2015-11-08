@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ std::ostream& Foam::OFstream::stdStream()
 {
     if (!ofPtr_)
     {
-        FatalErrorIn("OFstream::stdStream()")
+        FatalErrorInFunction
             << "No stream allocated." << abort(FatalError);
     }
     return *ofPtr_;
@@ -145,7 +145,7 @@ const std::ostream& Foam::OFstream::stdStream() const
 {
     if (!ofPtr_)
     {
-        FatalErrorIn("OFstreamAllocator::stdStream() const")
+        FatalErrorInFunction
             << "No stream allocated." << abort(FatalError);
     }
     return *ofPtr_;

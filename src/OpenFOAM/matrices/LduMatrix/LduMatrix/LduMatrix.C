@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -261,10 +261,8 @@ const Foam::Field<DType>& Foam::LduMatrix<Type, DType, LUType>::diag() const
 {
     if (!diagPtr_)
     {
-        FatalErrorIn
-        (
-            "const Field<DType>& LduMatrix<Type, DType, LUType>::diag() const"
-        )   << "diagPtr_ unallocated"
+        FatalErrorInFunction
+            << "diagPtr_ unallocated"
             << abort(FatalError);
     }
 
@@ -277,10 +275,8 @@ const Foam::Field<LUType>& Foam::LduMatrix<Type, DType, LUType>::upper() const
 {
     if (!lowerPtr_ && !upperPtr_)
     {
-        FatalErrorIn
-        (
-            "const Field<LUType>& LduMatrix<Type, DType, LUType>::upper() const"
-        )   << "lowerPtr_ or upperPtr_ unallocated"
+        FatalErrorInFunction
+            << "lowerPtr_ or upperPtr_ unallocated"
             << abort(FatalError);
     }
 
@@ -300,10 +296,8 @@ const Foam::Field<LUType>& Foam::LduMatrix<Type, DType, LUType>::lower() const
 {
     if (!lowerPtr_ && !upperPtr_)
     {
-        FatalErrorIn
-        (
-            "const Field<LUType>& LduMatrix<Type, DType, LUType>::lower() const"
-        )   << "lowerPtr_ or upperPtr_ unallocated"
+        FatalErrorInFunction
+            << "lowerPtr_ or upperPtr_ unallocated"
             << abort(FatalError);
     }
 
@@ -323,10 +317,8 @@ const Foam::Field<Type>& Foam::LduMatrix<Type, DType, LUType>::source() const
 {
     if (!sourcePtr_)
     {
-        FatalErrorIn
-        (
-            "const Field<Type>& LduMatrix<Type, DType, LUType>::source() const"
-        )   << "sourcePtr_ unallocated"
+        FatalErrorInFunction
+            << "sourcePtr_ unallocated"
             << abort(FatalError);
     }
 

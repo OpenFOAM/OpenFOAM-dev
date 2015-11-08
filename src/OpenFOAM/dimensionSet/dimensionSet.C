@@ -168,7 +168,7 @@ bool Foam::dimensionSet::operator=(const dimensionSet& ds) const
 {
     if (dimensionSet::debug && *this != ds)
     {
-        FatalErrorIn("dimensionSet::operator=(const dimensionSet&) const")
+        FatalErrorInFunction
             << "Different dimensions for =" << endl
             << "     dimensions : " << *this << " = " << ds << endl
             << abort(FatalError);
@@ -182,7 +182,7 @@ bool Foam::dimensionSet::operator+=(const dimensionSet& ds) const
 {
     if (dimensionSet::debug && *this != ds)
     {
-        FatalErrorIn("dimensionSet::operator+=(const dimensionSet&) const")
+        FatalErrorInFunction
             << "Different dimensions for +=" << endl
             << "     dimensions : " << *this << " = " << ds << endl
             << abort(FatalError);
@@ -196,7 +196,7 @@ bool Foam::dimensionSet::operator-=(const dimensionSet& ds) const
 {
     if (dimensionSet::debug && *this != ds)
     {
-        FatalErrorIn("dimensionSet::operator-=(const dimensionSet&) const")
+        FatalErrorInFunction
             << "Different dimensions for -=" << endl
             << "     dimensions : " << *this << " = " << ds << endl
             << abort(FatalError);
@@ -228,7 +228,7 @@ Foam::dimensionSet Foam::max(const dimensionSet& ds1, const dimensionSet& ds2)
 {
     if (dimensionSet::debug && ds1 != ds2)
     {
-        FatalErrorIn("max(const dimensionSet&, const dimensionSet&)")
+        FatalErrorInFunction
             << "Arguments of max have different dimensions" << endl
             << "     dimensions : " << ds1 << " and " << ds2 << endl
             << abort(FatalError);
@@ -242,7 +242,7 @@ Foam::dimensionSet Foam::min(const dimensionSet& ds1, const dimensionSet& ds2)
 {
     if (dimensionSet::debug && ds1 != ds2)
     {
-        FatalErrorIn("min(const dimensionSet&, const dimensionSet&)")
+        FatalErrorInFunction
             << "Arguments of min have different dimensions" << endl
             << "     dimensions : " << ds1 << " and " << ds2 << endl
             << abort(FatalError);
@@ -297,7 +297,7 @@ Foam::dimensionSet Foam::pow
 {
     if (dimensionSet::debug && !dS.dimensions().dimensionless())
     {
-        FatalErrorIn("pow(const dimensionSet&, const dimensionedScalar&)")
+        FatalErrorInFunction
             << "Exponent of pow is not dimensionless"
             << abort(FatalError);
     }
@@ -330,7 +330,7 @@ Foam::dimensionSet Foam::pow
      && !ds.dimensionless()
     )
     {
-        FatalErrorIn("pow(const dimensionedScalar&, const dimensionSet&)")
+        FatalErrorInFunction
             << "Argument or exponent of pow not dimensionless" << endl
             << abort(FatalError);
     }
@@ -439,7 +439,7 @@ Foam::dimensionSet Foam::trans(const dimensionSet& ds)
 {
     if (dimensionSet::debug && !ds.dimensionless())
     {
-        FatalErrorIn("trans(const dimensionSet&)")
+        FatalErrorInFunction
             << "Argument of trancendental function not dimensionless"
             << abort(FatalError);
     }
@@ -452,7 +452,7 @@ Foam::dimensionSet Foam::atan2(const dimensionSet& ds1, const dimensionSet& ds2)
 {
     if (dimensionSet::debug && ds1 != ds2)
     {
-        FatalErrorIn("atan2(const dimensionSet&, const dimensionSet&)")
+        FatalErrorInFunction
             << "Arguments of atan2 have different dimensions" << endl
             << "     dimensions : " << ds1 << " and " << ds2 << endl
             << abort(FatalError);
@@ -486,8 +486,7 @@ Foam::dimensionSet Foam::operator+
 
     if (dimensionSet::debug && ds1 != ds2)
     {
-        FatalErrorIn
-            ("operator+(const dimensionSet&, const dimensionSet&)")
+        FatalErrorInFunction
             << "LHS and RHS of + have different dimensions" << endl
             << "     dimensions : " << ds1 << " + " << ds2 << endl
             << abort(FatalError);
@@ -507,8 +506,7 @@ Foam::dimensionSet Foam::operator-
 
     if (dimensionSet::debug && ds1 != ds2)
     {
-        FatalErrorIn
-            ("operator-(const dimensionSet&, const dimensionSet&)")
+        FatalErrorInFunction
             << "LHS and RHS of - have different dimensions" << endl
             << "     dimensions : " << ds1 << " - " << ds2 << endl
             << abort(FatalError);

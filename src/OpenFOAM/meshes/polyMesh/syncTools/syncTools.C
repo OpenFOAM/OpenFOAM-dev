@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,11 +36,8 @@ void Foam::syncTools::swapBoundaryCellPositions
 {
     if (cellData.size() != mesh.nCells())
     {
-        FatalErrorIn
-        (
-            "syncTools<class T>::swapBoundaryCellPositions"
-            "(const polyMesh&, const UList<T>&, List<T>&)"
-        )   << "Number of cell values " << cellData.size()
+        FatalErrorInFunction
+            << "Number of cell values " << cellData.size()
             << " is not equal to the number of cells in the mesh "
             << mesh.nCells() << abort(FatalError);
     }

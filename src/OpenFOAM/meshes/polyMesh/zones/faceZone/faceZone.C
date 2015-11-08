@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,10 +56,8 @@ void Foam::faceZone::calcFaceZonePatch() const
 
     if (patchPtr_)
     {
-        FatalErrorIn
-        (
-            "void faceZone::calcFaceZonePatch() const"
-        )   << "primitive face zone patch already calculated"
+        FatalErrorInFunction
+            << "primitive face zone patch already calculated"
             << abort(FatalError);
     }
 
@@ -111,7 +109,7 @@ void Foam::faceZone::calcCellLayers() const
     // if the pointer is already set
     if (masterCellsPtr_ || slaveCellsPtr_)
     {
-        FatalErrorIn("void faceZone::calcCellLayers() const")
+        FatalErrorInFunction
             << "cell layers already calculated"
             << abort(FatalError);
     }
@@ -165,8 +163,7 @@ void Foam::faceZone::checkAddressing() const
 {
     if (size() != flipMap_.size())
     {
-        FatalErrorIn("void Foam::faceZone::checkAddressing() const")
-            << "Different sizes of the addressing and flipMap arrays.  "
+        FatalErrorInFunction
             << "Size of addressing: " << size()
             << " size of flip map: " << flipMap_.size()
             << abort(FatalError);
@@ -182,7 +179,7 @@ void Foam::faceZone::checkAddressing() const
     {
         if (!hasWarned && (mf[i] < 0 || mf[i] >= nFaces))
         {
-            WarningIn("void Foam::faceZone::checkAddressing() const")
+            WarningInFunction
                 << "Illegal face index " << mf[i] << " outside range 0.."
                 << nFaces-1 << endl;
             hasWarned = true;

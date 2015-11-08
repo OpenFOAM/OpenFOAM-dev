@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ Foam::SLListBase::link* Foam::SLListBase::removeHead()
 
     if (last_ == 0)
     {
-        FatalErrorIn("SLListBase::remove()")
+        FatalErrorInFunction
             << "remove from empty list"
             << abort(FatalError);
     }

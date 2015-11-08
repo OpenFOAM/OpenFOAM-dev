@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,24 +134,16 @@ Foam::word Foam::Time::findInstance
             {
                 if (name.empty())
                 {
-                    FatalErrorIn
-                    (
-                        "Time::findInstance"
-                        "(const fileName&, const word&"
-                        ", const IOobject::readOption, const word&)"
-                    )   << "Cannot find directory "
+                    FatalErrorInFunction
+                        << "Cannot find directory "
                         << dir << " in times " << timeName()
                         << " down to " << stopInstance
                         << exit(FatalError);
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "Time::findInstance"
-                        "(const fileName&, const word&"
-                        ", const IOobject::readOption, const word&)"
-                    )   << "Cannot find file \"" << name << "\" in directory "
+                    FatalErrorInFunction
+                        << "Cannot find file \"" << name << "\" in directory "
                         << dir << " in times " << timeName()
                         << " down to " << stopInstance
                         << exit(FatalError);
@@ -195,12 +187,8 @@ Foam::word Foam::Time::findInstance
 
     if (rOpt == IOobject::MUST_READ || rOpt == IOobject::MUST_READ_IF_MODIFIED)
     {
-        FatalErrorIn
-        (
-            "Time::findInstance"
-            "(const fileName&, const word&"
-            ", const IOobject::readOption, const word&)"
-        )   << "Cannot find file \"" << name << "\" in directory "
+        FatalErrorInFunction
+            << "Cannot find file \"" << name << "\" in directory "
             << dir << " in times " << timeName()
             << " down to " << constant()
             << exit(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -484,7 +484,7 @@ public:
                     }
                     else
                     {
-                        FatalErrorIn("mergedPoint(const label) const")
+                        FatalErrorInFunction
                             << "old point label " << oldPointI
                             << " has reverseMap " << i << endl
                             << "Only call mergedPoint for removed points."
@@ -515,7 +515,7 @@ public:
                     }
                     else
                     {
-                        FatalErrorIn("mergedFace(const label) const")
+                        FatalErrorInFunction
                             << "old face label " << oldFaceI
                             << " has reverseMap " << i << endl
                             << "Only call mergedFace for removed faces."
@@ -546,7 +546,7 @@ public:
                     }
                     else
                     {
-                        FatalErrorIn("mergedCell(const label) const")
+                        FatalErrorInFunction
                             << "old cell label " << oldCellI
                             << " has reverseMap " << i << endl
                             << "Only call mergedCell for removed cells."

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -286,15 +286,8 @@ Foam::string Foam::stringOps::getVariable
 
         if (value.empty())
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "stringOps::getVariable\n"
-                "(\n"
-                "    const word&,\n"
-                "    const dictionary&,\n"
-                "    const bool,\n"
-                "    const bool\n"
-                ")\n",
                 dict
             )   << "Cannot find dictionary or environment variable "
                 << name << exit(FatalIOError);
@@ -302,15 +295,8 @@ Foam::string Foam::stringOps::getVariable
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "stringOps::getVariable\n"
-            "(\n"
-            "    const word&,\n"
-            "    const dictionary&,\n"
-            "    const bool,\n"
-            "    const bool\n"
-            ")\n",
             dict
         )   << "Cannot find dictionary variable "
             << name << exit(FatalIOError);
@@ -792,10 +778,8 @@ Foam::string& Foam::stringOps::inplaceExpand
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "stringOps::inplaceExpand(string&, const bool)"
-                    )   << "Unknown variable name '" << varName << "'"
+                    FatalErrorInFunction
+                        << "Unknown variable name '" << varName << "'"
                         << exit(FatalError);
                 }
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,8 @@ calcMeshData() const
     // if they have already been calculated.
     if (meshPointsPtr_ || localFacesPtr_)
     {
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "calcMeshData()"
-        )   << "meshPointsPtr_ or localFacesPtr_already allocated"
+        FatalErrorInFunction
+            << "meshPointsPtr_ or localFacesPtr_already allocated"
             << abort(FatalError);
     }
 
@@ -164,11 +161,8 @@ calcMeshPointMap() const
     // if they have already been calculated.
     if (meshPointMapPtr_)
     {
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "calcMeshPointMap()"
-        )   << "meshPointMapPtr_ already allocated"
+        FatalErrorInFunction
+            << "meshPointMapPtr_ already allocated"
             << abort(FatalError);
     }
 
@@ -215,11 +209,8 @@ calcLocalPoints() const
     // if they have already been calculated.
     if (localPointsPtr_)
     {
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "calcLocalPoints()"
-        )   << "localPointsPtr_already allocated"
+        FatalErrorInFunction
+            << "localPointsPtr_already allocated"
             << abort(FatalError);
     }
 
@@ -267,11 +258,8 @@ calcPointNormals() const
     // if they have already been calculated.
     if (pointNormalsPtr_)
     {
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "calcPointNormals()"
-        )   << "pointNormalsPtr_already allocated"
+        FatalErrorInFunction
+            << "pointNormalsPtr_already allocated"
             << abort(FatalError);
     }
 
@@ -334,11 +322,8 @@ calcFaceCentres() const
     // if they have already been calculated.
     if (faceCentresPtr_)
     {
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "calcFaceCentres()"
-        )   << "faceCentresPtr_already allocated"
+        FatalErrorInFunction
+            << "faceCentresPtr_already allocated"
             << abort(FatalError);
     }
 
@@ -384,11 +369,8 @@ calcFaceNormals() const
     // if they have already been calculated.
     if (faceNormalsPtr_)
     {
-        FatalErrorIn
-        (
-            "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            "calcFaceNormals()"
-        )   << "faceNormalsPtr_already allocated"
+        FatalErrorInFunction
+            << "faceNormalsPtr_already allocated"
             << abort(FatalError);
     }
 

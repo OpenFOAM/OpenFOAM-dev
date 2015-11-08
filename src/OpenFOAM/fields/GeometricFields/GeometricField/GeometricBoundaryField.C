@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,14 +180,8 @@ readField
         {
             if (bmesh_[patchi].type() == cyclicPolyPatch::typeName)
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "GeometricField<Type, PatchField, GeoMesh>::"
-                    "GeometricBoundaryField::readField"
-                    "("
-                        "const DimensionedField<Type, GeoMesh>&, "
-                        "const dictionary&"
-                    ")",
                     dict
                 )   << "Cannot find patchField entry for cyclic "
                     << bmesh_[patchi].name() << endl
@@ -197,14 +191,8 @@ readField
             }
             else
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "GeometricField<Type, PatchField, GeoMesh>::"
-                    "GeometricBoundaryField::readField"
-                    "("
-                        "const DimensionedField<Type, GeoMesh>&, "
-                        "const dictionary&"
-                    ")",
                     dict
                 )   << "Cannot find patchField entry for "
                     << bmesh_[patchi].name() << exit(FatalIOError);
@@ -298,18 +286,8 @@ GeometricBoundaryField
      || (constraintTypes.size() && (constraintTypes.size() != this->size()))
     )
     {
-        FatalErrorIn
-        (
-            "GeometricField<Type, PatchField, GeoMesh>::"
-            "GeometricBoundaryField::"
-            "GeometricBoundaryField"
-            "("
-                "const BoundaryMesh&, "
-                "const DimensionedField<Type>&, "
-                "const wordList&, "
-                "const wordList&"
-            ")"
-        )   << "Incorrect number of patch type specifications given" << nl
+        FatalErrorInFunction
+            << "Incorrect number of patch type specifications given" << nl
             << "    Number of patches in mesh = " << bmesh.size()
             << " number of patch type specifications = "
             << patchFieldTypes.size()
@@ -542,7 +520,7 @@ evaluate()
     }
     else
     {
-        FatalErrorIn("GeometricBoundaryField::evaluate()")
+        FatalErrorInFunction
             << "Unsuported communications type "
             << Pstream::commsTypeNames[Pstream::defaultCommsType]
             << exit(FatalError);

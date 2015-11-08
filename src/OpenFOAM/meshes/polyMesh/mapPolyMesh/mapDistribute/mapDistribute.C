@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -285,19 +285,8 @@ void Foam::mapDistribute::checkReceivedSize
 {
     if (receivedSize != expectedSize)
     {
-        FatalErrorIn
-        (
-            "template<class T>\n"
-            "void mapDistribute::distribute\n"
-            "(\n"
-            "    const Pstream::commsTypes commsType,\n"
-            "    const List<labelPair>& schedule,\n"
-            "    const label constructSize,\n"
-            "    const labelListList& subMap,\n"
-            "    const labelListList& constructMap,\n"
-            "    List<T>& field\n"
-            ")\n"
-        )   << "Expected from processor " << procI
+        FatalErrorInFunction
+            << "Expected from processor " << procI
             << " " << expectedSize << " but received "
             << receivedSize << " elements."
             << abort(FatalError);
@@ -341,7 +330,7 @@ void Foam::mapDistribute::printLayout(Ostream& os) const
             {
                 if (minIndex[procI] != offset)
                 {
-                    FatalErrorIn("mapDistribute::printLayout(..)")
+                    FatalErrorInFunction
                         << "offset:" << offset
                         << " procI:" << procI
                         << " minIndex:" << minIndex[procI]
@@ -700,10 +689,8 @@ Foam::mapDistribute::mapDistribute
 {
     if (sendProcs.size() != recvProcs.size())
     {
-        FatalErrorIn
-        (
-            "mapDistribute::mapDistribute(const labelList&, const labelList&)"
-        )   << "The send and receive data is not the same length. sendProcs:"
+        FatalErrorInFunction
+            << "The send and receive data is not the same length. sendProcs:"
             << sendProcs.size() << " recvProcs:" << recvProcs.size()
             << abort(FatalError);
     }
@@ -1326,10 +1313,8 @@ void Foam::mapDistribute::operator=(const mapDistribute& rhs)
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn
-        (
-            "Foam::mapDistribute::operator=(const Foam::mapDistribute&)"
-        )   << "Attempted assignment to self"
+        FatalErrorInFunction
+            << "Attempted assignment to self"
             << abort(FatalError);
     }
     constructSize_ = rhs.constructSize_;

@@ -155,7 +155,7 @@ inline const T& Foam::PtrList<T>::operator[](const label i) const
 {
     if (!ptrs_[i])
     {
-        FatalErrorIn("PtrList::operator[] const")
+        FatalErrorInFunction
             << "hanging pointer of type " << typeid(T).name()
             << " at index " << i
             << " (size " << size()
@@ -172,7 +172,7 @@ inline T& Foam::PtrList<T>::operator[](const label i)
 {
     if (!ptrs_[i])
     {
-        FatalErrorIn("PtrList::operator[]")
+        FatalErrorInFunction
             << "hanging pointer of type " << typeid(T).name()
             << " at index " << i
             << " (size " << size()

@@ -277,10 +277,8 @@ public:
                 );
                 if (referPatchID_ == -1)
                 {
-                    FatalErrorIn
-                    (
-                        "processorCyclicPolyPatch::referPatchID() const"
-                    )   << "Illegal referPatch name " << referPatchName_
+                    FatalErrorInFunction
+                        << "Illegal referPatch name " << referPatchName_
                         << endl << "Valid patch names are "
                         << this->boundaryMesh().names()
                         << exit(FatalError);

@@ -362,10 +362,8 @@ public:
             }
             else
             {
-                FatalErrorIn
-                (
-                    "cyclicPolyPatch::transformGlobalFace(const label) const"
-                )   << "Face " << facei << " not in patch " << name()
+                FatalErrorInFunction
+                    << "Face " << facei << " not in patch " << name()
                     << exit(FatalError);
                 return -1;
             }

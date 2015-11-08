@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::NamedEnum<Enum, nEnum>::NamedEnum()
                 goodNames[i] = names[i];
             }
 
-            FatalErrorIn("NamedEnum<Enum, nEnum>::NamedEnum()")
+            FatalErrorInFunction
                 << "Illegal enumeration name at position " << enumI << endl
                 << "after entries " << goodNames << ".\n"
                 << "Possibly your NamedEnum<Enum, nEnum>::names array"
@@ -66,10 +66,8 @@ Enum Foam::NamedEnum<Enum, nEnum>::read(Istream& is) const
 
     if (iter == HashTable<int>::end())
     {
-        FatalIOErrorIn
-        (
-            "NamedEnum<Enum, nEnum>::read(Istream&) const", is
-        )   << name << " is not in enumeration: "
+        FatalIOErrorInFunction(is)
+            << name << " is not in enumeration: "
             << sortedToc() << exit(FatalIOError);
     }
 

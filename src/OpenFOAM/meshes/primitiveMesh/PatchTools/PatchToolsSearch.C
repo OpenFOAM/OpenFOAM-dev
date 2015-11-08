@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,18 +89,7 @@ Foam::PatchTools::markZone
                         }
                         else if (faceZone[nbrFaceI] != currentZone)
                         {
-                            FatalErrorIn
-                            (
-                                "PatchTools::markZone"
-                                "("
-                                    "const PrimitivePatch<Face, FaceList, "
-                                        "PointField, PointType>& p,"
-                                    "const BoolListType& borderEdge,"
-                                    "const label faceI,"
-                                    "const label currentZone,"
-                                    "labelList&  faceZone"
-                                ")"
-                            )
+                            FatalErrorInFunction
                                 << "Zones " << faceZone[nbrFaceI]
                                 << " at face " << nbrFaceI
                                 << " connects to zone " << currentZone

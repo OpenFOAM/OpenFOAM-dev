@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,7 +179,7 @@ int Foam::processorCyclicPolyPatch::tag() const
 
         if (tag_ == Pstream::msgType() || tag_ == -1)
         {
-            FatalErrorIn("processorCyclicPolyPatch::tag() const")
+            FatalErrorInFunction
                 << "Tag calculated from cyclic patch name " << tag_
                 << " is the same as the current message type "
                 << Pstream::msgType() << " or -1" << nl

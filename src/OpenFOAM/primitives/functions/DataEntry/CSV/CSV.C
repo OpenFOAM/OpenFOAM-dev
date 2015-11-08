@@ -36,7 +36,7 @@ namespace Foam
     {
         if (componentColumns_[0] >= splitted.size())
         {
-            FatalErrorIn("CSV<label>::readValue(const List<string>&)")
+            FatalErrorInFunction
                 << "No column " << componentColumns_[0] << " in "
                 << splitted << endl
                 << exit(FatalError);
@@ -50,7 +50,7 @@ namespace Foam
     {
         if (componentColumns_[0] >= splitted.size())
         {
-            FatalErrorIn("CSV<scalar>::readValue(const List<string>&)")
+            FatalErrorInFunction
                 << "No column " << componentColumns_[0] << " in "
                 << splitted << endl
                 << exit(FatalError);
@@ -69,7 +69,7 @@ namespace Foam
         {
             if (componentColumns_[i] >= splitted.size())
             {
-                FatalErrorIn("CSV<Type>::readValue(const List<string>&)")
+                FatalErrorInFunction
                     << "No column " << componentColumns_[i] << " in "
                     << splitted << endl
                     << exit(FatalError);
@@ -92,7 +92,7 @@ void Foam::CSV<Type>::read()
 
     if (!is.good())
     {
-        FatalIOErrorIn("CSV<Type>::read()", is)
+        FatalIOErrorInFunction(is)
             << "Cannot open CSV file for reading."
             << exit(FatalIOError);
     }
@@ -214,7 +214,7 @@ Foam::CSV<Type>::CSV
 {
     if (componentColumns_.size() != pTraits<Type>::nComponents)
     {
-        FatalErrorIn("Foam::CSV<Type>::CSV(const word&, Istream&)")
+        FatalErrorInFunction
             << componentColumns_ << " does not have the expected length of "
             << pTraits<Type>::nComponents << endl
             << exit(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void Foam::faceMapper::calcAddressing() const
      || insertedFaceLabelsPtr_
     )
     {
-        FatalErrorIn("void faceMapper::calcAddressing() const")
+        FatalErrorInFunction
             << "Addressing already calculated."
             << abort(FatalError);
     }
@@ -94,7 +94,7 @@ void Foam::faceMapper::calcAddressing() const
 
             if (addr[faceI].size())
             {
-                FatalErrorIn("void faceMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "Master face " << faceI
                     << " mapped from point faces " << mo
                     << " already destination of mapping." << abort(FatalError);
@@ -116,7 +116,7 @@ void Foam::faceMapper::calcAddressing() const
 
             if (addr[faceI].size())
             {
-                FatalErrorIn("void faceMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "Master face " << faceI
                     << " mapped from edge faces " << mo
                     << " already destination of mapping." << abort(FatalError);
@@ -138,7 +138,7 @@ void Foam::faceMapper::calcAddressing() const
 
             if (addr[faceI].size())
             {
-                FatalErrorIn("void faceMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "Master face " << faceI
                     << " mapped from face faces " << mo
                     << " already destination of mapping." << abort(FatalError);
@@ -303,10 +303,8 @@ const Foam::labelUList& Foam::faceMapper::directAddressing() const
 {
     if (!direct())
     {
-        FatalErrorIn
-        (
-            "const labelUList& faceMapper::directAddressing() const"
-        )   << "Requested direct addressing for an interpolative mapper."
+        FatalErrorInFunction
+            << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);
     }
 
@@ -331,10 +329,8 @@ const Foam::labelListList& Foam::faceMapper::addressing() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const labelListList& faceMapper::addressing() const"
-        )   << "Requested interpolative addressing for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative addressing for a direct mapper."
             << abort(FatalError);
     }
 
@@ -351,10 +347,8 @@ const Foam::scalarListList& Foam::faceMapper::weights() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const scalarListList& faceMapper::weights() const"
-        )   << "Requested interpolative weights for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative weights for a direct mapper."
             << abort(FatalError);
     }
 

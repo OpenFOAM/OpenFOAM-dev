@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ void Foam::primitiveMesh::calcPointCells() const
         {
             // For checking calls:abort so we can quickly hunt down
             // origin of call
-            FatalErrorIn("primitiveMesh::calcPointCells()")
+            FatalErrorInFunction
                 << abort(FatalError);
         }
     }
@@ -51,7 +51,7 @@ void Foam::primitiveMesh::calcPointCells() const
     // if the pointer is already set
     if (pcPtr_)
     {
-        FatalErrorIn("primitiveMesh::calcPointCells() const")
+        FatalErrorInFunction
             << "pointCells already calculated"
             << abort(FatalError);
     }

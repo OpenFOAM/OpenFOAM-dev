@@ -78,11 +78,8 @@ visitPointRegion
 
         if (nextEdgeI == -1)
         {
-            FatalErrorIn
-            (
-                "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-                "visitPointRegion"
-            )   << "Problem: cannot find edge out of " << fEdges
+            FatalErrorInFunction
+                << "Problem: cannot find edge out of " << fEdges
                 << "on face " << startFaceI << " that uses point " << pointI
                 << " and is not edge " << startEdgeI << abort(FatalError);
         }

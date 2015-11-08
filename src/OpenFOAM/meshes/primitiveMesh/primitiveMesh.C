@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -310,11 +310,8 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMesh::movePoints
 {
     if (newPoints.size() <  nPoints() || oldPoints.size() < nPoints())
     {
-        FatalErrorIn
-        (
-            "primitiveMesh::movePoints(const pointField& newPoints, "
-            "const pointField& oldPoints)"
-        )   << "Cannot move points: size of given point list smaller "
+        FatalErrorInFunction
+            << "Cannot move points: size of given point list smaller "
             << "than the number of active points"
             << abort(FatalError);
     }

@@ -159,7 +159,7 @@ Foam::TableBase<Type>::wordToBoundsHandling
     }
     else
     {
-        WarningIn("Foam::TableBase<Type>::wordToBoundsHandling(const word&)")
+        WarningInFunction
             << "bad outOfBounds specifier " << bound << " using 'warn'"
             << endl;
 
@@ -187,7 +187,7 @@ void Foam::TableBase<Type>::check() const
 {
     if (!table_.size())
     {
-        FatalErrorIn("Foam::TableBase<Type>::check() const")
+        FatalErrorInFunction
             << "Table for entry " << this->name_ << " is invalid (empty)"
             << nl << exit(FatalError);
     }
@@ -202,7 +202,7 @@ void Foam::TableBase<Type>::check() const
         // avoid duplicate values (divide-by-zero error)
         if (currValue <= prevValue)
         {
-            FatalErrorIn("Foam::TableBase<Type>::check() const")
+            FatalErrorInFunction
                 << "out-of-order value: " << currValue << " at index " << i
                 << exit(FatalError);
         }
@@ -224,27 +224,15 @@ bool Foam::TableBase<Type>::checkMinBounds
         {
             case ERROR:
             {
-                FatalErrorIn
-                (
-                    "bool Foam::TableBase<Type>::checkMinBounds"
-                    "("
-                        "const scalar, "
-                        "scalar&"
-                    ") const"
-                )   << "value (" << x << ") underflow"
+                FatalErrorInFunction
+                    << "value (" << x << ") underflow"
                     << exit(FatalError);
                 break;
             }
             case WARN:
             {
-                WarningIn
-                (
-                    "bool Foam::TableBase<Type>::checkMinBounds"
-                    "("
-                        "const scalar, "
-                        "scalar&"
-                    ") const"
-                )   << "value (" << x << ") underflow" << nl
+                WarningInFunction
+                    << "value (" << x << ") underflow" << nl
                     << endl;
 
                 // fall-through to 'CLAMP'
@@ -286,27 +274,15 @@ bool Foam::TableBase<Type>::checkMaxBounds
         {
             case ERROR:
             {
-                FatalErrorIn
-                (
-                    "bool Foam::TableBase<Type>::checkMaxBounds"
-                    "("
-                        "const scalar, "
-                        "scalar&"
-                    ") const"
-                )   << "value (" << x << ") overflow"
+                FatalErrorInFunction
+                    << "value (" << x << ") overflow"
                     << exit(FatalError);
                 break;
             }
             case WARN:
             {
-                WarningIn
-                (
-                    "bool Foam::TableBase<Type>::checkMaxBounds"
-                    "("
-                        "const scalar, "
-                        "scalar&"
-                    ") const"
-                )   << "value (" << x << ") overflow" << nl
+                WarningInFunction
+                    << "value (" << x << ") overflow" << nl
                     << endl;
 
                 // fall-through to 'CLAMP'

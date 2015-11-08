@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,11 +82,8 @@ Foam::commSchedule::commSchedule
 
         if (proc0 < 0 || proc0 >= nProcs || proc1 < 0 || proc1 >= nProcs)
         {
-            FatalErrorIn
-            (
-                "commSchedule::commSchedule"
-                "(const label, const List<labelPair>&)"
-            )   << "Illegal processor " << comms[commI] << abort(FatalError);
+            FatalErrorInFunction
+                << "Illegal processor " << comms[commI] << abort(FatalError);
         }
 
         procToComms[proc0].append(commI);

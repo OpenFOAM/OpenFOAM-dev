@@ -217,7 +217,7 @@ Foam::messageStream::operator Foam::OSstream&()
 
                 if (errorCount_ >= maxErrors_)
                 {
-                    FatalErrorIn("messageStream::operator OSstream&()")
+                    FatalErrorInFunction
                         << "Too many errors"
                         << abort(FatalError);
                 }

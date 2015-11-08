@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,10 +165,8 @@ Foam::patchZones::patchZones
 
     if (borderEdge.size() != pp_.nEdges())
     {
-        FatalErrorIn
-        (
-            "patchZones::patchZones(const primitivePatch&, const boolList&)"
-        )   << "borderEdge boolList not same size as number of edges" << endl
+        FatalErrorInFunction
+            << "borderEdge boolList not same size as number of edges" << endl
             << "borderEdge:" << borderEdge.size() << endl
             << "nEdges    :" << pp_.nEdges()
             << abort(FatalError);

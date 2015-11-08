@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,14 +55,8 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 {
     if (!isType<symmetryPointPatch>(p))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "symmetryPointPatchField<Type>::symmetryPointPatchField\n"
-            "(\n"
-            "    const pointPatch& p,\n"
-            "    const Field<Type>& field,\n"
-            "    const dictionary& dict\n"
-            ")\n",
             dict
         )   << "patch " << this->patch().index() << " not symmetry type. "
             << "Patch type = " << p.type()
@@ -84,16 +78,8 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 {
     if (!isType<symmetryPointPatch>(this->patch()))
     {
-        FatalErrorIn
-        (
-            "symmetryPointPatchField<Type>::symmetryPointPatchField\n"
-            "(\n"
-            "    const symmetryPointPatchField<Type>& ptf,\n"
-            "    const pointPatch& p,\n"
-            "    const DimensionedField<Type, pointMesh>& iF,\n"
-            "    const pointPatchFieldMapper& mapper\n"
-            ")\n"
-        )   << "Field type does not correspond to patch type for patch "
+        FatalErrorInFunction
+            << "Field type does not correspond to patch type for patch "
             << this->patch().index() << "." << endl
             << "Field type: " << typeName << endl
             << "Patch type: " << this->patch().type()

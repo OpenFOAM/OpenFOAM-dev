@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ const Foam::scalarField& Foam::graph::y() const
 {
     if (size() != 1)
     {
-        FatalErrorIn("const scalarField& graph::y() const")
+        FatalErrorInFunction
             << "y field requested for graph containing " << size()
             << "ys" << exit(FatalError);
     }
@@ -151,7 +151,7 @@ Foam::scalarField& Foam::graph::y()
 {
     if (size() != 1)
     {
-        FatalErrorIn("scalarField& graph::y()")
+        FatalErrorInFunction
             << "y field requested for graph containing " << size()
             << "ys" << exit(FatalError);
     }
@@ -167,10 +167,8 @@ Foam::autoPtr<Foam::graph::writer> Foam::graph::writer::New
 {
     if (!wordConstructorTablePtr_)
     {
-        FatalErrorIn
-        (
-            "graph::writer::New(const word&)"
-        )   << "Graph writer table is empty"
+        FatalErrorInFunction
+            << "Graph writer table is empty"
             << exit(FatalError);
     }
 
@@ -179,10 +177,8 @@ Foam::autoPtr<Foam::graph::writer> Foam::graph::writer::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "graph::writer::New(const word&)"
-        )   << "Unknown graph format " << graphFormat
+        FatalErrorInFunction
+            << "Unknown graph format " << graphFormat
             << endl << endl
             << "Valid graph formats are : " << endl
             << wordConstructorTablePtr_->sortedToc()
@@ -240,7 +236,7 @@ void Foam::graph::write(const fileName& pName, const word& format) const
     }
     else
     {
-        WarningIn("graph::write(const word& format, const fileName& dir)")
+        WarningInFunction
             << "Could not open graph file " << graphFile.name()
             << endl;
     }

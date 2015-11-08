@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ void Foam::primitiveMesh::calcCellEdges() const
         {
             // For checking calls:abort so we can quickly hunt down
             // origin of call
-            FatalErrorIn("primitiveMesh::calcCellEdges()")
+            FatalErrorInFunction
                 << abort(FatalError);
         }
     }
@@ -53,7 +53,7 @@ void Foam::primitiveMesh::calcCellEdges() const
     // if the pointer is already set
     if (cePtr_)
     {
-        FatalErrorIn("primitiveMesh::calcCellEdges() const")
+        FatalErrorInFunction
             << "cellEdges already calculated"
             << abort(FatalError);
     }

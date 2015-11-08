@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,11 +97,8 @@ bool Foam::polyMesh::checkFaceOrthogonality
                 if (detailedReport && errorNonOrth == 0)
                 {
                     // Non-orthogonality greater than 90 deg
-                    WarningIn
-                    (
-                        "polyMesh::checkFaceOrthogonality"
-                        "(const pointField&, const bool) const"
-                    )   << "Severe non-orthogonality for face "
+                    WarningInFunction
+                        << "Severe non-orthogonality for face "
                         << faceI
                         << " between cells " << own[faceI]
                         << " and " << nei[faceI]
@@ -227,22 +224,16 @@ bool Foam::polyMesh::checkFaceSkewness
                 // Non-orthogonality greater than 90 deg
                 if (isInternalFace(faceI))
                 {
-                    WarningIn
-                    (
-                        "polyMesh::checkFaceSkewnesss"
-                        "(const pointField&, const bool) const"
-                    )   << "Severe skewness " << skew[faceI]
+                    WarningInFunction
+                        << "Severe skewness " << skew[faceI]
                         << " for face " << faceI
                         << " between cells " << own[faceI]
                         << " and " << nei[faceI];
                 }
                 else
                 {
-                    WarningIn
-                    (
-                        "polyMesh::checkFaceSkewnesss"
-                        "(const pointField&, const bool) const"
-                    )   << "Severe skewness " << skew[faceI]
+                    WarningInFunction
+                        << "Severe skewness " << skew[faceI]
                         << " for boundary face " << faceI
                         << " on cell " << own[faceI];
                 }
@@ -312,11 +303,8 @@ bool Foam::polyMesh::checkEdgeAlignment
         }
         else if (directions[cmpt] != 0)
         {
-            FatalErrorIn
-            (
-                "polyMesh::checkEdgeAlignment"
-                "(const bool, const Vector<label>&, labelHashSet*)"
-            )   << "directions should contain 0 or 1 but is now " << directions
+            FatalErrorInFunction
+                << "directions should contain 0 or 1 but is now " << directions
                 << exit(FatalError);
         }
     }

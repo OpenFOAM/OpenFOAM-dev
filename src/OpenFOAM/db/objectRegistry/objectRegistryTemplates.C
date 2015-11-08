@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,10 +175,8 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
             return *vpsiPtr_;
         }
 
-        FatalErrorIn
-        (
-            "objectRegistry::lookupObject<Type>(const word&) const"
-        )   << nl
+        FatalErrorInFunction
+            << nl
             << "    lookup of " << name << " from objectRegistry "
             << this->name()
             << " successful\n    but it is not a " << Type::typeName
@@ -192,10 +190,8 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
             return parent_.lookupObject<Type>(name);
         }
 
-        FatalErrorIn
-        (
-            "objectRegistry::lookupObject<Type>(const word&) const"
-        )   << nl
+        FatalErrorInFunction
+            << nl
             << "    request for " << Type::typeName
             << " " << name << " from objectRegistry " << this->name()
             << " failed\n    available objects of type " << Type::typeName

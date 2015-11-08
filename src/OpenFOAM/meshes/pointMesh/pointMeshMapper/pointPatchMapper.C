@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,10 +40,8 @@ void Foam::pointPatchMapper::calcAddressing() const
      || weightsPtr_
     )
     {
-        FatalErrorIn
-        (
-            "void pointPatchMapper::calcAddressing() const"
-        )   << "Addressing already calculated"
+        FatalErrorInFunction
+            << "Addressing already calculated"
             << abort(FatalError);
     }
 
@@ -150,10 +148,8 @@ const Foam::labelUList& Foam::pointPatchMapper::directAddressing() const
 {
     if (!direct())
     {
-        FatalErrorIn
-        (
-            "const labelUList& pointPatchMapper::directAddressing() const"
-        )   << "Requested direct addressing for an interpolative mapper."
+        FatalErrorInFunction
+            << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);
     }
 
@@ -170,10 +166,8 @@ const Foam::labelListList& Foam::pointPatchMapper::addressing() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const labelListList& pointPatchMapper::addressing() const"
-        )   << "Requested interpolative addressing for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative addressing for a direct mapper."
             << abort(FatalError);
     }
 
@@ -190,10 +184,8 @@ const Foam::scalarListList& Foam::pointPatchMapper::weights() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const scalarListList& pointPatchMapper::weights() const"
-        )   << "Requested interpolative weights for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative weights for a direct mapper."
             << abort(FatalError);
     }
 

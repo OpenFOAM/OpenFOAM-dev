@@ -143,7 +143,7 @@ void Foam::PtrList<T>::setSize(const label newSize)
 {
     if (newSize < 0)
     {
-        FatalErrorIn("PtrList<T>::setSize(const label)")
+        FatalErrorInFunction
             << "bad set size " << newSize
             << " for type " << typeid(T).name()
             << abort(FatalError);
@@ -209,7 +209,7 @@ void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
 {
     if (oldToNew.size() != size())
     {
-        FatalErrorIn("PtrList<T>::reorder(const labelUList&)")
+        FatalErrorInFunction
             << "Size of map (" << oldToNew.size()
             << ") not equal to list size (" << size()
             << ") for type " << typeid(T).name()
@@ -224,7 +224,7 @@ void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
 
         if (newI < 0 || newI >= size())
         {
-            FatalErrorIn("PtrList<T>::reorder(const labelUList&)")
+            FatalErrorInFunction
                 << "Illegal index " << newI << nl
                 << "Valid indices are 0.." << size()-1
                 << " for type " << typeid(T).name()
@@ -233,7 +233,7 @@ void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
 
         if (newPtrs_[newI])
         {
-            FatalErrorIn("PtrList<T>::reorder(const labelUList&)")
+            FatalErrorInFunction
                 << "reorder map is not unique; element " << newI
                 << " already set for type " << typeid(T).name()
                 << abort(FatalError);
@@ -245,7 +245,7 @@ void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
     {
         if (!newPtrs_[i])
         {
-            FatalErrorIn("PtrList<T>::reorder(const labelUList&)")
+            FatalErrorInFunction
                 << "Element " << i << " not set after reordering with type "
                 << typeid(T).name() << nl << abort(FatalError);
         }
@@ -262,7 +262,7 @@ Foam::PtrList<T>& Foam::PtrList<T>::operator=(const PtrList<T>& a)
 {
     if (this == &a)
     {
-        FatalErrorIn("PtrList<T>::operator=(const PtrList<T>&)")
+        FatalErrorInFunction
             << "attempted assignment to self for type " << typeid(T).name()
             << abort(FatalError);
     }
@@ -285,7 +285,7 @@ Foam::PtrList<T>& Foam::PtrList<T>::operator=(const PtrList<T>& a)
     }
     else
     {
-        FatalErrorIn("PtrList::operator=(const PtrList<T>&)")
+        FatalErrorInFunction
             << "bad size: " << a.size()
             << " for type " << typeid(T).name()
             << abort(FatalError);

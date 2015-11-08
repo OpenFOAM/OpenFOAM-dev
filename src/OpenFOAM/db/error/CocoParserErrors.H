@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,14 +91,14 @@ public:
         //- Handle a general warning 'msg'
         virtual void Warning(const StringClass& msg)
         {
-            WarningIn(name_)
+            WarningInFunction
                 << msg << endl;
         }
 
         //- Handle a general warning 'msg'
         virtual void Warning(int line, int col, const StringClass& msg)
         {
-            WarningIn(name_)
+            WarningInFunction
                 <<"line " << line << " col " << col << ": "
                 << msg << endl;
         }
@@ -106,7 +106,7 @@ public:
         //- Handle general error 'msg' (eg, a semantic error)
         virtual void Error(int line, int col, const StringClass& msg)
         {
-            FatalErrorIn(name_)
+            FatalErrorInFunction
                 << "line " << line << " col " << col <<": " << msg << endl
                 << exit(FatalError);
         }
@@ -114,7 +114,7 @@ public:
         //- Handle general error 'msg' (eg, a semantic error)
         virtual void Error(const StringClass& msg)
         {
-            FatalErrorIn(name_)
+            FatalErrorInFunction
                 << msg << endl
                 << exit(FatalError);
         }

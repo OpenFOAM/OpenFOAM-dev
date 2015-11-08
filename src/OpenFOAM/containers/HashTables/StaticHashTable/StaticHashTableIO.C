@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,10 +45,8 @@ Foam::StaticHashTable<T, Key, Hash>::StaticHashTable
 {
     if (size < 1)
     {
-        FatalErrorIn
-        (
-            "StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)"
-        )   << "Illegal size " << size << " for StaticHashTable."
+        FatalErrorInFunction
+            << "Illegal size " << size << " for StaticHashTable."
             << " Minimum size is 1" << abort(FatalError);
     }
 
@@ -142,9 +140,8 @@ Foam::Istream& Foam::operator>>(Istream& is, StaticHashTable<T, Key, Hash>& L)
             }
             else
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "operator>>(Istream&, StaticHashTable<T, Key, Hash>&)",
                     is
                 )   << "incorrect first token, '(', found " << firstToken.info()
                     << exit(FatalIOError);
@@ -158,9 +155,8 @@ Foam::Istream& Foam::operator>>(Istream& is, StaticHashTable<T, Key, Hash>& L)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "operator>>(Istream&, StaticHashTable<T, Key, Hash>&)",
                 is
             )   << "incorrect first token, '(', found " << firstToken.info()
                 << exit(FatalIOError);
@@ -196,9 +192,8 @@ Foam::Istream& Foam::operator>>(Istream& is, StaticHashTable<T, Key, Hash>& L)
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "operator>>(Istream&, StaticHashTable<T, Key, Hash>&)",
             is
         )   << "incorrect first token, expected <int> or '(', found "
             << firstToken.info()

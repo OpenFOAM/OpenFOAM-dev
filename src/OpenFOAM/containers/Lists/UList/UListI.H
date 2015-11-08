@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ inline void Foam::UList<T>::checkStart(const label start) const
 {
     if (start<0 || (start && start>=size_))
     {
-        FatalErrorIn("UList<T>::checkStart(const label)")
+        FatalErrorInFunction
             << "start " << start << " out of range 0 ... " << max(size_-1, 0)
             << abort(FatalError);
     }
@@ -87,7 +87,7 @@ inline void Foam::UList<T>::checkSize(const label size) const
 {
     if (size<0 || size>size_)
     {
-        FatalErrorIn("UList<T>::checkSize(const label)")
+        FatalErrorInFunction
             << "size " << size << " out of range 0 ... " << size_
             << abort(FatalError);
     }
@@ -100,13 +100,13 @@ inline void Foam::UList<T>::checkIndex(const label i) const
 {
     if (!size_)
     {
-        FatalErrorIn("UList<T>::checkIndex(const label)")
+        FatalErrorInFunction
             << "attempt to access element from zero sized list"
             << abort(FatalError);
     }
     else if (i<0 || i>=size_)
     {
-        FatalErrorIn("UList<T>::checkIndex(const label)")
+        FatalErrorInFunction
             << "index " << i << " out of range 0 ... " << size_-1
             << abort(FatalError);
     }

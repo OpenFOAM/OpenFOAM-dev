@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,10 +88,8 @@ bool Foam::primitiveEntry::expandVariable
 
             if (envStr.empty())
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "primitiveEntry::expandVariable"
-                    "(const string&, const dictionary&",
                     dict
                 )   << "Illegal dictionary entry or environment variable name "
                     << varName << endl << "Valid dictionary entries are "
@@ -188,7 +186,7 @@ Foam::ITstream& Foam::primitiveEntry::stream() const
 
 const Foam::dictionary& Foam::primitiveEntry::dict() const
 {
-    FatalErrorIn("const dictionary& primitiveEntry::dict() const")
+    FatalErrorInFunction
         << "Attempt to return primitive entry " << info()
         << " as a sub-dictionary"
         << abort(FatalError);
@@ -199,7 +197,7 @@ const Foam::dictionary& Foam::primitiveEntry::dict() const
 
 Foam::dictionary& Foam::primitiveEntry::dict()
 {
-    FatalErrorIn("const dictionary& primitiveEntry::dict()")
+    FatalErrorInFunction
         << "Attempt to return primitive entry " << info()
         << " as a sub-dictionary"
         << abort(FatalError);

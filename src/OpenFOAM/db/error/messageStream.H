@@ -230,19 +230,19 @@ extern messageStream Info;
 
 //- Report an error message using Foam::SeriousError
 //  for functionName in file __FILE__ at line __LINE__
-#define SeriousErrorIn(fn)                                                     \
-    ::Foam::SeriousError((fn), __FILE__, __LINE__)
+#define SeriousErrorIn(functionName)                                           \
+    ::Foam::SeriousError((functionName), __FILE__, __LINE__)
 
 //- Report an error message using Foam::SeriousError
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__
-#define SeriousErrorInFunction(fn) SeriousErrorIn(FUNCTION_NAME)
+#define SeriousErrorInFunction SeriousErrorIn(FUNCTION_NAME)
 
 
 //- Report an IO error message using Foam::SeriousError
 //  for functionName in file __FILE__ at line __LINE__
 //  for a particular IOstream
-#define SeriousIOErrorIn(fn, ios)                                              \
-    ::Foam::SeriousError((fn), __FILE__, __LINE__, ios)
+#define SeriousIOErrorIn(functionName, ios)                                    \
+    ::Foam::SeriousError((functionName), __FILE__, __LINE__, ios)
 
 //- Report an IO error message using Foam::SeriousError
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__
@@ -252,8 +252,8 @@ extern messageStream Info;
 
 //- Report a warning using Foam::Warning
 //  for functionName in file __FILE__ at line __LINE__
-#define WarningIn(fn)                                                          \
-    ::Foam::Warning((fn), __FILE__, __LINE__)
+#define WarningIn(functionName)                                                \
+    ::Foam::Warning((functionName), __FILE__, __LINE__)
 
 //- Report a warning using Foam::Warning
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__
@@ -263,8 +263,8 @@ extern messageStream Info;
 //- Report an IO warning using Foam::Warning
 //  for functionName in file __FILE__ at line __LINE__
 //  for a particular IOstream
-#define IOWarningIn(fn, ios)                                                   \
-    ::Foam::Warning((fn), __FILE__, __LINE__, (ios))
+#define IOWarningIn(functionName, ios)                                         \
+    ::Foam::Warning((functionName), __FILE__, __LINE__, (ios))
 
 //- Report an IO warning using Foam::Warning
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__
@@ -274,8 +274,8 @@ extern messageStream Info;
 
 //- Report a information message using Foam::Info
 //  for functionName in file __FILE__ at line __LINE__
-#define InfoIn(fn)                                                             \
-    ::Foam::Info((fn), __FILE__, __LINE__)
+#define InfoIn(functionName)                                                   \
+    ::Foam::Info((functionName), __FILE__, __LINE__)
 
 //- Report a information message using Foam::Info
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__
@@ -285,8 +285,8 @@ extern messageStream Info;
 //- Report an IO information message using Foam::Info
 //  for functionName in file __FILE__ at line __LINE__
 //  for a particular IOstream
-#define IOInfoIn(fn, ios)                                                      \
-    ::Foam::Info((fn), __FILE__, __LINE__, (ios))
+#define IOInfoIn(functionName, ios)                                            \
+    ::Foam::Info((functionName), __FILE__, __LINE__, (ios))
 
 //- Report an IO information message using Foam::Info
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ void Foam::Histogram<List>::count(const List& bins, const List& l)
 {
     if (bins.size() < 2)
     {
-        FatalErrorIn("Histogram<List>::count(const List&, const List&)")
+        FatalErrorInFunction
             << "Should have at least two values in bins. Now:" << bins
             << exit(FatalError);
     }

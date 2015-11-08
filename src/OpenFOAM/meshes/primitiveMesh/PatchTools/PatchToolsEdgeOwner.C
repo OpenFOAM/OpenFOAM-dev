@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,10 +73,7 @@ Foam::PatchTools::edgeOwner
 
             if (edgeOwner[edgeI] == -1)
             {
-                FatalErrorIn
-                (
-                    "PatchTools::edgeOwner()"
-                )
+                FatalErrorInFunction
                     << "Edge " << edgeI << " vertices:" << edges[edgeI]
                     << " is used by faces " << nbrFaces
                     << " vertices:"

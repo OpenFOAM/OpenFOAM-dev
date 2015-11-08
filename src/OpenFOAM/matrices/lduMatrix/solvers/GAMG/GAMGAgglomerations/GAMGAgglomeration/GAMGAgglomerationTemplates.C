@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,12 +103,8 @@ void Foam::GAMGAgglomeration::restrictField
 
     if (!procAgglom && ff.size() != fineToCoarse.size())
     {
-        FatalErrorIn
-        (
-            "void GAMGAgglomeration::restrictField"
-            "(Field<Type>& cf, const Field<Type>& ff, "
-            "const label fineLevelIndex) const"
-        )   << "field does not correspond to level " << fineLevelIndex
+        FatalErrorInFunction
+            << "field does not correspond to level " << fineLevelIndex
             << " sizes: field = " << ff.size()
             << " level = " << fineToCoarse.size()
             << abort(FatalError);
@@ -150,12 +146,8 @@ void Foam::GAMGAgglomeration::restrictFaceField
 
     if (ff.size() != fineToCoarse.size())
     {
-        FatalErrorIn
-        (
-            "void GAMGAgglomeration::restrictFaceField"
-            "(Field<Type>& cf, const Field<Type>& ff, "
-            "const label fineLevelIndex) const"
-        )   << "field does not correspond to level " << fineLevelIndex
+        FatalErrorInFunction
+            << "field does not correspond to level " << fineLevelIndex
             << " sizes: field = " << ff.size()
             << " level = " << fineToCoarse.size()
             << abort(FatalError);

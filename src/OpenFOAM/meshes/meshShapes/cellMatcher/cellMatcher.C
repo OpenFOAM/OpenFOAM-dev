@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,11 +174,8 @@ void Foam::cellMatcher::calcEdgeAddressing(const label numVert)
             }
             else
             {
-                FatalErrorIn
-                (
-                    "calcEdgeAddressing"
-                    "(const faceList&, const label)"
-                )   << "edgeFaces_ full at entry:" << key1
+                FatalErrorInFunction
+                    << "edgeFaces_ full at entry:" << key1
                     << " for edge " << start << " " << end
                     << abort(FatalError);
             }
@@ -239,12 +236,8 @@ Foam::label Foam::cellMatcher::otherFace
     }
     else
     {
-        FatalErrorIn
-        (
-            "otherFace"
-            "(const label, const labelList&, const label, const label, "
-            "const label)"
-        )   << "edgeFaces_ does not contain:" << localFaceI
+        FatalErrorInFunction
+            << "edgeFaces_ does not contain:" << localFaceI
             << " for edge " << v0 << " " << v1 << " at key " << key
             << " edgeFaces_[key, key+1]:" <<  edgeFaces_[key]
             << " , " << edgeFaces_[key+1]

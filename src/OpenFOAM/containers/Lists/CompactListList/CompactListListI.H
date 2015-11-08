@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,10 +144,8 @@ const
 {
     if (i < 0 || i >= m_.size())
     {
-        FatalErrorIn
-        (
-            "CompactListList<T, Container>::whichRow(const label) const"
-        )   << "Index " << i << " outside 0.." << m_.size()
+        FatalErrorInFunction
+            << "Index " << i << " outside 0.." << m_.size()
             << abort(FatalError);
     }
 

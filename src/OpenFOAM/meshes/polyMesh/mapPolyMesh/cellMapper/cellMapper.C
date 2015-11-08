@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void Foam::cellMapper::calcAddressing() const
      || insertedCellLabelsPtr_
     )
     {
-        FatalErrorIn("void cellMapper::calcAddressing() const")
+        FatalErrorInFunction
             << "Addressing already calculated."
             << abort(FatalError);
     }
@@ -94,7 +94,7 @@ void Foam::cellMapper::calcAddressing() const
 
             if (addr[cellI].size())
             {
-                FatalErrorIn("void cellMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "Master cell " << cellI
                     << " mapped from point cells " << mo
                     << " already destination of mapping." << abort(FatalError);
@@ -116,7 +116,7 @@ void Foam::cellMapper::calcAddressing() const
 
             if (addr[cellI].size())
             {
-                FatalErrorIn("void cellMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "Master cell " << cellI
                     << " mapped from edge cells " << mo
                     << " already destination of mapping." << abort(FatalError);
@@ -138,7 +138,7 @@ void Foam::cellMapper::calcAddressing() const
 
             if (addr[cellI].size())
             {
-                FatalErrorIn("void cellMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "Master cell " << cellI
                     << " mapped from face cells " << mo
                     << " already destination of mapping." << abort(FatalError);
@@ -162,7 +162,7 @@ void Foam::cellMapper::calcAddressing() const
 
             if (addr[cellI].size())
             {
-                FatalErrorIn("void cellMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "Master cell " << cellI
                     << " mapped from cell cells " << mo
                     << " already destination of mapping."
@@ -181,7 +181,7 @@ void Foam::cellMapper::calcAddressing() const
 
             if (V.size() != sizeBeforeMapping())
             {
-                FatalErrorIn("void cellMapper::calcAddressing() const")
+                FatalErrorInFunction
                     << "cellVolumes size " << V.size()
                     << " is not the old number of cells " << sizeBeforeMapping()
                     << ". Are your cellVolumes already mapped?"
@@ -390,10 +390,8 @@ const Foam::labelUList& Foam::cellMapper::directAddressing() const
 {
     if (!direct())
     {
-        FatalErrorIn
-        (
-            "const labelUList& cellMapper::directAddressing() const"
-        )   << "Requested direct addressing for an interpolative mapper."
+        FatalErrorInFunction
+            << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);
     }
 
@@ -418,10 +416,8 @@ const Foam::labelListList& Foam::cellMapper::addressing() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const labelListList& cellMapper::addressing() const"
-        )   << "Requested interpolative addressing for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative addressing for a direct mapper."
             << abort(FatalError);
     }
 
@@ -438,10 +434,8 @@ const Foam::scalarListList& Foam::cellMapper::weights() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const scalarListList& cellMapper::weights() const"
-        )   << "Requested interpolative weights for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative weights for a direct mapper."
             << abort(FatalError);
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -296,7 +296,7 @@ ListType Foam::subset
     // select must at least cover the list range
     if (select.size() < lst.size())
     {
-        FatalErrorIn("subset(const UList<T>&, const T&, const ListType&)")
+        FatalErrorInFunction
             << "select is of size " << select.size()
             << "; but it must index a list of size " << lst.size()
             << abort(FatalError);
@@ -332,7 +332,7 @@ void Foam::inplaceSubset
     // select must at least cover the list range
     if (select.size() < lst.size())
     {
-        FatalErrorIn("inplaceSubset(const UList<T>&, const T&, ListType&)")
+        FatalErrorInFunction
             << "select is of size " << select.size()
             << "; but it must index a list of size " << lst.size()
             << abort(FatalError);

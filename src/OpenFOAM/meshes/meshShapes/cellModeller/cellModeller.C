@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::cellModeller::cellModeller()
 {
     if (modelPtrs_.size())
     {
-        FatalErrorIn("cellModeller::cellModeller(const fileName&)")
+        FatalErrorInFunction
             << "attempt to re-construct cellModeller when it already exists"
             << exit(FatalError);
     }
@@ -56,7 +56,7 @@ Foam::cellModeller::cellModeller()
     {
         if (modelPtrs_[models_[i].index()])
         {
-            FatalErrorIn("cellModeller::cellModeller(const fileName&)")
+            FatalErrorInFunction
                 << "more than one model share the index "
                 << models_[i].index()
                 << exit(FatalError);
@@ -66,7 +66,7 @@ Foam::cellModeller::cellModeller()
 
         if (modelDictionary_.found(models_[i].name()))
         {
-            FatalErrorIn("cellModeller::cellModeller(const fileName&)")
+            FatalErrorInFunction
                 << "more than one model share the name "
                 << models_[i].name()
                 << exit(FatalError);

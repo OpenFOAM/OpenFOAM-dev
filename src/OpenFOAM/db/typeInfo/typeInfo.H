@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ inline To& dynamicCast(From& r)
     }
     catch (std::bad_cast)
     {
-        FatalErrorIn("dynamicCast<To>(From&)")
+        FatalErrorInFunction
             << "Attempt to cast type " << typeid(r).name()
             << " to type " << typeid(To).name()
             << abort(FatalError);
@@ -111,7 +111,7 @@ inline To& refCast(From& r)
     }
     catch (std::bad_cast)
     {
-        FatalErrorIn("refCast<To>(From&)")
+        FatalErrorInFunction
             << "Attempt to cast type " << r.type()
             << " to type " << To::typeName
             << abort(FatalError);

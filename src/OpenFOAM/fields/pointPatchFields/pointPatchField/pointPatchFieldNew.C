@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         |2011 OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,8 @@ Foam::autoPtr<Foam::pointPatchField<Type> > Foam::pointPatchField<Type>::New
 
     if (cstrIter == pointPatchConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "PointPatchField<Type>::New"
-            "(const word&, const word&, const pointPatch&, const Field<Type>&)"
-        )   << "Unknown patchFieldType type "
+        FatalErrorInFunction
+            << "Unknown patchFieldType type "
             << patchFieldType << nl << nl
             << "Valid patchField types are :" << endl
             << pointPatchConstructorTablePtr_->sortedToc()
@@ -75,12 +72,8 @@ Foam::autoPtr<Foam::pointPatchField<Type> > Foam::pointPatchField<Type>::New
 
             if (patchTypeCstrIter == pointPatchConstructorTablePtr_->end())
             {
-                FatalErrorIn
-                (
-                    "PointPatchField<Type>::New"
-                    "(const word&, const word&"
-                    ", const pointPatch&, const Field<Type>&)"
-                )   << "inconsistent patch and patchField types for \n"
+                FatalErrorInFunction
+                    << "inconsistent patch and patchField types for \n"
                     << "    patch type " << p.type()
                     << " and patchField type " << patchFieldType
                     << exit(FatalError);
@@ -143,10 +136,8 @@ Foam::autoPtr<Foam::pointPatchField<Type> > Foam::pointPatchField<Type>::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "PointPatchField<Type>::"
-                "New(const pointPatch&, const Field<Type>&, const dictionary&)",
                 dict
             )   << "Unknown patchField type " << patchFieldType
                 << " for patch type " << p.type() << nl << nl
@@ -178,10 +169,8 @@ Foam::autoPtr<Foam::pointPatchField<Type> > Foam::pointPatchField<Type>::New
 
             if (patchTypeCstrIter == dictionaryConstructorTablePtr_->end())
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "PointPatchField<Type>const pointPatch&, "
-                    "const Field<Type>&, const dictionary&)",
                     dict
                 )   << "inconsistent patch and patchField types for \n"
                     << "    patch type " << p.type()
@@ -223,16 +212,8 @@ Foam::autoPtr<Foam::pointPatchField<Type> > Foam::pointPatchField<Type>::New
 
     if (cstrIter == patchMapperConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "PointPatchField<Type>::New"
-            "("
-            "const pointPatchField<Type>&, "
-            "const pointPatch&, "
-            "const DimensionedField<Type, pointMesh>&, "
-            "const pointPatchFieldMapper&"
-            ")"
-        )   << "Unknown patchField type "
+        FatalErrorInFunction
+            << "Unknown patchField type "
             << ptf.type() << nl << nl
             << "Valid patchField types are :" << endl
             << patchMapperConstructorTablePtr_->sortedToc()

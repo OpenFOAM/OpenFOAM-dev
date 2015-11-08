@@ -66,11 +66,8 @@ void Foam::LUDecompose
 
         if (largestCoeff == 0.0)
         {
-            FatalErrorIn
-            (
-                "LUdecompose"
-                "(scalarSquareMatrix& matrix, labelList& rowIndices)"
-            )   << "Singular matrix" << exit(FatalError);
+            FatalErrorInFunction
+                << "Singular matrix" << exit(FatalError);
         }
 
         vv[i] = 1.0/largestCoeff;
@@ -187,7 +184,7 @@ void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
 
         if (d < 0.0)
         {
-            FatalErrorIn("Foam::LUDecompose(scalarSymmetricSquareMatrix&)")
+            FatalErrorInFunction
                 << "Matrix is not symmetric positive-definite. Unable to "
                 << "decompose."
                 << abort(FatalError);
@@ -210,28 +207,16 @@ void Foam::multiply
 {
     if (A.m() != B.n())
     {
-        FatalErrorIn
-        (
-            "multiply("
-            "const scalarRectangularMatrix& A, "
-            "const scalarRectangularMatrix& B, "
-            "const scalarRectangularMatrix& C, "
-            "scalarRectangularMatrix& answer)"
-        )   << "A and B must have identical inner dimensions but A.m = "
+        FatalErrorInFunction
+            << "A and B must have identical inner dimensions but A.m = "
             << A.m() << " and B.n = " << B.n()
             << abort(FatalError);
     }
 
     if (B.m() != C.n())
     {
-        FatalErrorIn
-        (
-            "multiply("
-            "const scalarRectangularMatrix& A, "
-            "const scalarRectangularMatrix& B, "
-            "const scalarRectangularMatrix& C, "
-            "scalarRectangularMatrix& answer)"
-        )   << "B and C must have identical inner dimensions but B.m = "
+        FatalErrorInFunction
+            << "B and C must have identical inner dimensions but B.m = "
             << B.m() << " and C.n = " << C.n()
             << abort(FatalError);
     }
@@ -266,28 +251,16 @@ void Foam::multiply
 {
     if (A.m() != B.size())
     {
-        FatalErrorIn
-        (
-            "multiply("
-            "const scalarRectangularMatrix& A, "
-            "const DiagonalMatrix<scalar>& B, "
-            "const scalarRectangularMatrix& C, "
-            "scalarRectangularMatrix& answer)"
-        )   << "A and B must have identical inner dimensions but A.m = "
+        FatalErrorInFunction
+            << "A and B must have identical inner dimensions but A.m = "
             << A.m() << " and B.n = " << B.size()
             << abort(FatalError);
     }
 
     if (B.size() != C.n())
     {
-        FatalErrorIn
-        (
-            "multiply("
-            "const scalarRectangularMatrix& A, "
-            "const DiagonalMatrix<scalar>& B, "
-            "const scalarRectangularMatrix& C, "
-            "scalarRectangularMatrix& answer)"
-        )   << "B and C must have identical inner dimensions but B.m = "
+        FatalErrorInFunction
+            << "B and C must have identical inner dimensions but B.m = "
             << B.size() << " and C.n = " << C.n()
             << abort(FatalError);
     }
