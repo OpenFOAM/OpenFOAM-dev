@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,10 +107,7 @@ const mappedPatchBase& mappedFixedValueFvPatchField<Type>::mapper
 {
     if (!isA<mappedPatchBase>(p.patch()))
     {
-        FatalErrorIn
-        (
-            "mappedFixedValueFvPatchField<Type>::mapper()"
-        )   << "\n    patch type '" << p.patch().type()
+        FatalErrorInFunction
             << "' not type '" << mappedPatchBase::typeName << "'"
             << "\n    for patch " << p.patch().name()
             << " of field " << iF.name()

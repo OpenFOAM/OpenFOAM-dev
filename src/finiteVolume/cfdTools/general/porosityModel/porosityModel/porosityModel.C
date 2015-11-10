@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,13 +43,8 @@ void Foam::porosityModel::adjustNegativeResistance(dimensionedVector& resist)
 
     if (maxCmpt < 0)
     {
-        FatalErrorIn
-        (
-            "void Foam::porosityModel::adjustNegativeResistance"
-            "("
-                "dimensionedVector&"
-            ")"
-        )   << "Negative resistances are invalid, resistance = " << resist
+        FatalErrorInFunction
+            << "Negative resistances are invalid, resistance = " << resist
             << exit(FatalError);
     }
     else
@@ -123,17 +118,8 @@ Foam::porosityModel::porosityModel
 
     if (!foundZone && Pstream::master())
     {
-        FatalErrorIn
-        (
-            "Foam::porosityModel::porosityModel"
-            "("
-                "const word&, "
-                "const word&, "
-                "const fvMesh&, "
-                "const dictionary&"
-                "const word&, "
-            ")"
-        )   << "cannot find porous cellZone " << zoneName_
+        FatalErrorInFunction
+            << "cannot find porous cellZone " << zoneName_
             << exit(FatalError);
     }
 }

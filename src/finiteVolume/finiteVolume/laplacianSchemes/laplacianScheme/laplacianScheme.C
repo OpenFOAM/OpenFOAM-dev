@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,9 +56,8 @@ tmp<laplacianScheme<Type, GType> > laplacianScheme<Type, GType>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "laplacianScheme<Type, GType>::New(const fvMesh&, Istream&)",
             schemeData
         )   << "Laplacian scheme not specified" << endl << endl
             << "Valid laplacian schemes are :" << endl
@@ -73,9 +72,8 @@ tmp<laplacianScheme<Type, GType> > laplacianScheme<Type, GType>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "laplacianScheme<Type, GType>::New(const fvMesh&, Istream&)",
             schemeData
         )   << "Unknown laplacian scheme " << schemeName << nl << nl
             << "Valid laplacian schemes are :" << endl

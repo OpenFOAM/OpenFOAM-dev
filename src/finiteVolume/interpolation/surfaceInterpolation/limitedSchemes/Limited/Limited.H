@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class LimitedLimiter
     {
         if (lowerBound_ > upperBound_)
         {
-            FatalIOErrorIn("checkParameters()", is)
+            FatalIOErrorInFunction(is)
                 << "Invalid bounds.  Lower = " << lowerBound_
                 << "  Upper = " << upperBound_
                 << ".  Lower bound is higher than the upper bound."

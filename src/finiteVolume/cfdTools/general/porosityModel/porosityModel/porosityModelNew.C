@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,16 +45,7 @@ Foam::autoPtr<Foam::porosityModel> Foam::porosityModel::New
 
     if (cstrIter == meshConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "porosityModel::New"
-            "("
-                "const word&, "
-                "const fvMesh&, "
-                "const dictionary&, "
-                "const word&"
-            ")"
-        )
+        FatalErrorInFunction
             << "Unknown " << typeName << " type " << modelType << nl << nl
             << "Valid " << typeName << " types are:" << nl
             << meshConstructorTablePtr_->sortedToc()

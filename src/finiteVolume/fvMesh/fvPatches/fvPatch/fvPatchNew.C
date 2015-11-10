@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::autoPtr<Foam::fvPatch> Foam::fvPatch::New
 
     if (cstrIter == polyPatchConstructorTablePtr_->end())
     {
-        FatalErrorIn("fvPatch::New(const polyPatch&, const fvBoundaryMesh&)")
+        FatalErrorInFunction
             << "Unknown fvPatch type " << patch.type() << nl
             << "Valid fvPatch types are :"
             << polyPatchConstructorTablePtr_->sortedToc()

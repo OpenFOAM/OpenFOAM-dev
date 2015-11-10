@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,8 @@ limitedSurfaceInterpolationScheme<Type>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "limitedSurfaceInterpolationScheme<Type>::"
-            "New(const fvMesh&, Istream&)",
             schemeData
         )   << "Discretisation scheme not specified"
             << endl << endl
@@ -72,10 +70,8 @@ limitedSurfaceInterpolationScheme<Type>::New
 
     if (constructorIter == MeshConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "limitedSurfaceInterpolationScheme<Type>::"
-            "New(const fvMesh&, Istream&)",
             schemeData
         )   << "Unknown discretisation scheme "
             << schemeName << nl << nl
@@ -108,10 +104,8 @@ limitedSurfaceInterpolationScheme<Type>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "limitedSurfaceInterpolationScheme<Type>::New"
-            "(const fvMesh&, const surfaceScalarField&, Istream&)",
             schemeData
         )   << "Discretisation scheme not specified"
             << endl << endl
@@ -127,10 +121,8 @@ limitedSurfaceInterpolationScheme<Type>::New
 
     if (constructorIter == MeshFluxConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "limitedSurfaceInterpolationScheme<Type>::New"
-            "(const fvMesh&, const surfaceScalarField&, Istream&)",
             schemeData
         )   << "Unknown discretisation scheme "
             << schemeName << nl << nl

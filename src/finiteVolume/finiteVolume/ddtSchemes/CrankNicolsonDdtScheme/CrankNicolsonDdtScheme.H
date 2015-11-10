@@ -208,9 +208,8 @@ public:
         {
             if (ocCoeff_ < 0 || ocCoeff_ > 1)
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "CrankNicolsonDdtScheme(const fvMesh& mesh, Istream& is)",
                     is
                 )   << "Off-centreing coefficient = " << ocCoeff_
                     << " should be >= 0 and <= 1"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -606,10 +606,8 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
     }
     else
     {
-        FatalErrorIn
-        (
-            "EulerDdtScheme<Type>::fvcDdtPhiCorr"
-        )   << "dimensions of Uf are not correct"
+        FatalErrorInFunction
+            << "dimensions of Uf are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();
@@ -670,10 +668,8 @@ EulerDdtScheme<Type>::fvcDdtPhiCorr
     }
     else
     {
-        FatalErrorIn
-        (
-            "EulerDdtScheme<Type>::fvcDdtPhiCorr"
-        )   << "dimensions of phi are not correct"
+        FatalErrorInFunction
+            << "dimensions of phi are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();

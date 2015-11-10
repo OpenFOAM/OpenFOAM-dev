@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,16 +54,7 @@ Foam::symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField
 {
     if (!isType<symmetryPlaneFvPatch>(this->patch()))
     {
-        FatalErrorIn
-        (
-            "symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField\n"
-            "(\n"
-            "    const symmetryPlaneFvPatchField<Type>& ptf,\n"
-            "    const fvPatch& p,\n"
-            "    const DimensionedField<Type, volMesh>& iF,\n"
-            "    const fvPatchFieldMapper& mapper\n"
-            ")\n"
-        )   << "\n    patch type '" << p.type()
+        FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << this->dimensionedInternalField().name()
@@ -86,14 +77,8 @@ Foam::symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField
 {
     if (!isType<symmetryPlaneFvPatch>(p))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField\n"
-            "(\n"
-            "    const fvPatch& p,\n"
-            "    const Field<Type>& field,\n"
-            "    const dictionary& dict\n"
-            ")\n",
             dict
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"

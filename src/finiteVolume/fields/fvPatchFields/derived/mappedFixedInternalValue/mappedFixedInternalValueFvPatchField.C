@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,10 +121,8 @@ void Foam::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
     {
         case mappedPatchBase::NEARESTCELL:
         {
-            FatalErrorIn
-            (
-                "void mappedFixedValueFvPatchField<Type>::updateCoeffs()"
-            )   << "Cannot apply "
+            FatalErrorInFunction
+                << "Cannot apply "
                 << mappedPatchBase::sampleModeNames_
                    [
                        mappedPatchBase::NEARESTCELL
@@ -171,7 +169,7 @@ void Foam::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
         }
         default:
         {
-            FatalErrorIn("mappedFixedValueFvPatchField<Type>::updateCoeffs()")
+            FatalErrorInFunction
                 << "Unknown sampling mode: " << mpp.mode()
                 << abort(FatalError);
         }

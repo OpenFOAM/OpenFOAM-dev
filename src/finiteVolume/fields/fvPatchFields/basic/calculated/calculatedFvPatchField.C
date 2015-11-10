@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,12 +147,8 @@ Foam::calculatedFvPatchField<Type>::valueInternalCoeffs
     const tmp<scalarField>&
 ) const
 {
-    FatalErrorIn
-    (
-        "calculatedFvPatchField<Type>::"
-        "valueInternalCoeffs(const tmp<scalarField>&) const"
-    )   << "\n    "
-           "valueInternalCoeffs cannot be called for a calculatedFvPatchField"
+    FatalErrorInFunction
+        << "cannot be called for a calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()
         << " in file " << this->dimensionedInternalField().objectPath()
@@ -171,12 +167,8 @@ Foam::calculatedFvPatchField<Type>::valueBoundaryCoeffs
     const tmp<scalarField>&
 ) const
 {
-    FatalErrorIn
-    (
-        "calculatedFvPatchField<Type>::"
-        "valueBoundaryCoeffs(const tmp<scalarField>&) const"
-    )   << "\n    "
-           "valueBoundaryCoeffs cannot be called for a calculatedFvPatchField"
+    FatalErrorInFunction
+        << "cannot be called for a calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()
         << " in file " << this->dimensionedInternalField().objectPath()
@@ -192,13 +184,8 @@ template<class Type>
 Foam::tmp<Foam::Field<Type> >
 Foam::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    FatalErrorIn
-    (
-        "calculatedFvPatchField<Type>::"
-        "gradientInternalCoeffs() const"
-    )   << "\n    "
-           "gradientInternalCoeffs cannot be called for a "
-           "calculatedFvPatchField"
+    FatalErrorInFunction
+        << "cannot be called for a calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()
         << " in file " << this->dimensionedInternalField().objectPath()
@@ -214,13 +201,8 @@ template<class Type>
 Foam::tmp<Foam::Field<Type> >
 Foam::calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
-    FatalErrorIn
-    (
-        "calculatedFvPatchField<Type>::"
-        "gradientBoundaryCoeffs() const"
-    )   << "\n    "
-           "gradientBoundaryCoeffs cannot be called for a "
-           "calculatedFvPatchField"
+    FatalErrorInFunction
+        << "cannot be called for a calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()
         << " in file " << this->dimensionedInternalField().objectPath()

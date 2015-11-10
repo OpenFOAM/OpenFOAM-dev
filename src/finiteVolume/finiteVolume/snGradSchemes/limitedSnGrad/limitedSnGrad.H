@@ -135,9 +135,8 @@ public:
         {
             if (limitCoeff_ < 0 || limitCoeff_ > 1)
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "limitedSnGrad(const fvMesh& mesh, Istream& schemeData) : ",
                     schemeData
                 )   << "limitCoeff is specified as " << limitCoeff_
                     << " but should be >= 0 && <= 1"

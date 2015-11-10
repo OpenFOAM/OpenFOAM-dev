@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,15 +26,10 @@ License
 #include "emptyFvPatchField.H"
 #include "fvPatchFieldMapper.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -45,7 +40,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>&,
     const fvPatch& p,
@@ -57,16 +52,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 {
     if (!isType<emptyFvPatch>(p))
     {
-        FatalErrorIn
-        (
-            "emptyFvPatchField<Type>::emptyFvPatchField\n"
-            "(\n"
-            "    const emptyFvPatchField<Type>&,\n"
-            "    const fvPatch& p,\n"
-            "    const DimensionedField<Type, volMesh>& iF,\n"
-            "    const fvPatchFieldMapper& mapper\n"
-            ")\n"
-        )   << "\n    patch type '" << p.type()
+        FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << this->dimensionedInternalField().name()
@@ -77,7 +63,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -88,14 +74,8 @@ emptyFvPatchField<Type>::emptyFvPatchField
 {
     if (!isType<emptyFvPatch>(p))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "emptyFvPatchField<Type>::emptyFvPatchField\n"
-            "(\n"
-            "    const fvPatch& p,\n"
-            "    const Field<Type>& field,\n"
-            "    const dictionary& dict\n"
-            ")\n",
             dict
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
@@ -108,7 +88,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>& ptf
 )
@@ -123,7 +103,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -136,28 +116,11 @@ emptyFvPatchField<Type>::emptyFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void emptyFvPatchField<Type>::updateCoeffs()
+void Foam::emptyFvPatchField<Type>::updateCoeffs()
 {
-    //- Check moved to checkMesh. Test here breaks down if multiple empty
-    //  patches.
-    //if
-    //(
-    //    this->patch().patch().size()
-    //  % this->dimensionedInternalField().mesh().nCells()
-    //)
-    //{
-    //    FatalErrorIn("emptyFvPatchField<Type>::updateCoeffs()")
-    //        << "This mesh contains patches of type empty but is not"
-    //        << "1D or 2D\n"
-    //           "    by virtue of the fact that the number of faces of this\n"
-    //           "    empty patch is not divisible by the number of cells."
-    //        << exit(FatalError);
-    //}
+    // Check moved to checkMesh.
+    // Test here fails if multiple empty patches.
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

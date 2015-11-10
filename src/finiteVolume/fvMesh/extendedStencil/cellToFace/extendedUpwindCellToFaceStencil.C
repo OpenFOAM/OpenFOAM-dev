@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,10 +168,8 @@ void Foam::extendedUpwindCellToFaceStencil::transportStencil
         }
         if (n != transportedStencil.size())
         {
-            FatalErrorIn
-            (
-                "extendedUpwindCellToFaceStencil::transportStencil(..)"
-            )   << "problem:" << faceStencilSet
+            FatalErrorInFunction
+                << "problem:" << faceStencilSet
                 << abort(FatalError);
         }
     }
@@ -190,10 +188,8 @@ void Foam::extendedUpwindCellToFaceStencil::transportStencil
         }
         if (n != transportedStencil.size())
         {
-            FatalErrorIn
-            (
-                "extendedUpwindCellToFaceStencil::transportStencil(..)"
-            )   << "problem:" << faceStencilSet
+            FatalErrorInFunction
+                << "problem:" << faceStencilSet
                 << abort(FatalError);
         }
     }

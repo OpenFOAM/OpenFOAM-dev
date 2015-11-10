@@ -213,7 +213,7 @@ void Foam::syringePressureFvPatchScalarField::updateCoeffs()
     }
     else
     {
-        FatalErrorIn("syringePressureFvPatchScalarField::updateCoeffs()")
+        FatalErrorInFunction
             << "dimensions of phi are not correct"
             << "\n    on patch " << this->patch().name()
             << " of field " << this->dimensionedInternalField().name()

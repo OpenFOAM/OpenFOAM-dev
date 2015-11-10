@@ -52,16 +52,8 @@ void Foam::setRefCell
 
                 if (refCelli < 0 || refCelli >= field.mesh().nCells())
                 {
-                    FatalIOErrorIn
+                    FatalIOErrorInFunction
                     (
-                        "void Foam::setRefCell\n"
-                        "    (\n"
-                        "        const volScalarField&,\n"
-                        "        const volScalarField&,\n"
-                        "        const dictionary&,\n"
-                        "        label& scalar&,\n"
-                        "        bool\n"
-                        ")",
                         dict
                     )   << "Illegal master cellID " << refCelli
                         << ". Should be 0.." << field.mesh().nCells()
@@ -95,16 +87,8 @@ void Foam::setRefCell
 
             if (sumHasRef != 1)
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "void Foam::setRefCell\n"
-                    "    (\n"
-                    "        const volScalarField&,\n"
-                    "        const volScalarField&,\n"
-                    "        const dictionary&,\n"
-                    "        label& scalar&,\n"
-                    "        bool\n"
-                    "    )",
                     dict
                 )   << "Unable to set reference cell for field " << field.name()
                     << nl << "    Reference point " << refPointName
@@ -115,16 +99,8 @@ void Foam::setRefCell
         }
         else
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "void Foam::setRefCell\n"
-                "    (\n"
-                "        const volScalarField&,\n"
-                "        const volScalarField&,\n"
-                "        const dictionary&,\n"
-                "        label& scalar&,\n"
-                "        bool\n"
-                "    )",
                 dict
             )   << "Unable to set reference cell for field " << field.name()
                 << nl

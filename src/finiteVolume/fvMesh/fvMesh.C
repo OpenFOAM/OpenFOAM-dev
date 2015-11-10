@@ -466,10 +466,8 @@ void Foam::fvMesh::addFvPatches
 {
     if (boundary().size())
     {
-        FatalErrorIn
-        (
-            "fvMesh::addFvPatches(const List<polyPatch*>&, const bool)"
-        )   << " boundary already exists"
+        FatalErrorInFunction
+            << " boundary already exists"
             << abort(FatalError);
     }
 
@@ -586,7 +584,7 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
      || meshMap.faceMap().size() != nFaces()
     )
     {
-        FatalErrorIn("fvMesh::mapFields(const mapPolyMesh&)")
+        FatalErrorInFunction
             << "mapPolyMesh does not correspond to the old mesh."
             << " nCells:" << nCells()
             << " cellMap:" << meshMap.cellMap().size()
@@ -815,7 +813,7 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
         // Few checks
         if (VPtr_ && (V().size() != mpm.nOldCells()))
         {
-            FatalErrorIn("fvMesh::updateMesh(const mapPolyMesh&)")
+            FatalErrorInFunction
                 << "V:" << V().size()
                 << " not equal to the number of old cells "
                 << mpm.nOldCells()
@@ -823,7 +821,7 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
         }
         if (V0Ptr_ && (V0Ptr_->size() != mpm.nOldCells()))
         {
-            FatalErrorIn("fvMesh::updateMesh(const mapPolyMesh&)")
+            FatalErrorInFunction
                 << "V0:" << V0Ptr_->size()
                 << " not equal to the number of old cells "
                 << mpm.nOldCells()
@@ -831,7 +829,7 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
         }
         if (V00Ptr_ && (V00Ptr_->size() != mpm.nOldCells()))
         {
-            FatalErrorIn("fvMesh::updateMesh(const mapPolyMesh&)")
+            FatalErrorInFunction
                 << "V0:" << V00Ptr_->size()
                 << " not equal to the number of old cells "
                 << mpm.nOldCells()

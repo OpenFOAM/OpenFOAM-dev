@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,10 +149,8 @@ const Foam::fvPatch& Foam::fvBoundaryMesh::operator[]
 
     if (patchI < 0)
     {
-        FatalErrorIn
-        (
-            "fvBoundaryMesh::operator[](const word&) const"
-        )   << "Patch named " << patchName << " not found." << nl
+        FatalErrorInFunction
+            << "Patch named " << patchName << " not found." << nl
             << abort(FatalError);
     }
 
@@ -169,10 +167,8 @@ Foam::fvPatch& Foam::fvBoundaryMesh::operator[]
 
     if (patchI < 0)
     {
-        FatalErrorIn
-        (
-            "fvBoundaryMesh::operator[](const word&)"
-        )   << "Patch named " << patchName << " not found." << nl
+        FatalErrorInFunction
+            << "Patch named " << patchName << " not found." << nl
             << abort(FatalError);
     }
 

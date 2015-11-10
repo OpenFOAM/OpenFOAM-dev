@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::FitData<Form, ExtendedStencil, Polynomial>::FitData
     // Check input
     if (linearLimitFactor <= SMALL || linearLimitFactor > 3)
     {
-        FatalErrorIn("FitData<Polynomial>::FitData(..)")
+        FatalErrorInFunction
             << "linearLimitFactor requested = " << linearLimitFactor
             << " should be between zero and 3"
             << exit(FatalError);
@@ -114,7 +114,7 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::findFaceDirs
 
         if (magk < SMALL)
         {
-            FatalErrorIn("findFaceDirs(..)") << " calculated kdir = zero"
+            FatalErrorInFunction
                 << exit(FatalError);
         }
         else
@@ -302,10 +302,8 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::calcFit
     {
         // if (debug)
         // {
-            WarningIn
-            (
-                "FitData<Polynomial>::calcFit(..)"
-            )   << "Could not fit face " << facei
+            WarningInFunction
+                << "Could not fit face " << facei
                 << "    Weights = " << coeffsi
                 << ", reverting to linear." << nl
                 << "    Linear weights " << wLin << " " << 1 - wLin << endl;

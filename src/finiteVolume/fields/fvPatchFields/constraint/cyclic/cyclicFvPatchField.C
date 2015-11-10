@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,16 +59,7 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 {
     if (!isA<cyclicFvPatch>(this->patch()))
     {
-        FatalErrorIn
-        (
-            "cyclicFvPatchField<Type>::cyclicFvPatchField"
-            "("
-                "const cyclicFvPatchField<Type>& ,"
-                "const fvPatch&, "
-                "const DimensionedField<Type, volMesh>&, "
-                "const fvPatchFieldMapper&"
-            ")"
-        )   << "    patch type '" << p.type()
+        FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << this->dimensionedInternalField().name()
@@ -91,14 +82,8 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 {
     if (!isA<cyclicFvPatch>(p))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "cyclicFvPatchField<Type>::cyclicFvPatchField"
-            "("
-                "const fvPatch&, "
-                "const Field<Type>&, "
-                "const dictionary&"
-            ")",
             dict
         )   << "    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"

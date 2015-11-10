@@ -65,7 +65,7 @@ Foam::autoPtr<Foam::patchDistMethod> Foam::patchDistMethod::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("patchDistMethod::New")
+        FatalErrorInFunction
             << "Unknown patchDistMethodType type "
             << patchDistMethodType << endl << endl
             << "Valid patchDistMethod types are : " << endl

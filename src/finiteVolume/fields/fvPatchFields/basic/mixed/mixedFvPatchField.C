@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,16 +62,8 @@ mixedFvPatchField<Type>::mixedFvPatchField
 {
     if (notNull(iF) && mapper.hasUnmapped())
     {
-        WarningIn
-        (
-            "mixedFvPatchField<Type>::mixedFvPatchField\n"
-            "(\n"
-            "    const mixedFvPatchField<Type>&,\n"
-            "    const fvPatch&,\n"
-            "    const DimensionedField<Type, volMesh>&,\n"
-            "    const fvPatchFieldMapper&\n"
-            ")\n"
-        )   << "On field " << iF.name() << " patch " << p.name()
+        WarningInFunction
+            << "On field " << iF.name() << " patch " << p.name()
             << " patchField " << this->type()
             << " : mapper does not map all values." << nl
             << "    To avoid this warning fully specify the mapping in derived"

@@ -613,10 +613,8 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
     }
     else
     {
-        FatalErrorIn
-        (
-            "localEulerDdtScheme<Type>::fvcDdtPhiCorr"
-        )   << "dimensions of Uf are not correct"
+        FatalErrorInFunction
+            << "dimensions of Uf are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();
@@ -677,10 +675,8 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
     }
     else
     {
-        FatalErrorIn
-        (
-            "localEulerDdtScheme<Type>::fvcDdtPhiCorr"
-        )   << "dimensions of phi are not correct"
+        FatalErrorInFunction
+            << "dimensions of phi are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();

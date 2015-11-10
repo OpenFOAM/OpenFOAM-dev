@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,14 +98,8 @@ fvsPatchField<Type>::fvsPatchField
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "fvsPatchField<Type>::fvsPatchField\n"
-            "(\n"
-            "    const fvPatch& p,\n"
-            "    const DimensionedField<Type, surfaceMesh>& iF,\n"
-            "    const dictionary& dict\n"
-            ")\n",
             dict
         )   << "essential value entry not provided"
             << exit(FatalIOError);
@@ -152,7 +146,7 @@ void fvsPatchField<Type>::check(const fvsPatchField<Type>& ptf) const
 {
     if (&patch_ != &(ptf.patch_))
     {
-        FatalErrorIn("PatchField<Type>::check(const fvsPatchField<Type>&)")
+        FatalErrorInFunction
             << "different patches for fvsPatchField<Type>s"
             << abort(FatalError);
     }
@@ -244,10 +238,8 @@ void fvsPatchField<Type>::operator*=
 {
     if (&patch_ != &ptf.patch())
     {
-        FatalErrorIn
-        (
-            "PatchField<Type>::operator*=(const fvsPatchField<scalar>& ptf)"
-        )   << "incompatible patches for patch fields"
+        FatalErrorInFunction
+            << "incompatible patches for patch fields"
             << abort(FatalError);
     }
 
@@ -263,10 +255,7 @@ void fvsPatchField<Type>::operator/=
 {
     if (&patch_ != &ptf.patch())
     {
-        FatalErrorIn
-        (
-            "PatchField<Type>::operator/=(const fvsPatchField<scalar>& ptf)"
-        )   << "    incompatible patches for patch fields"
+        FatalErrorInFunction
             << abort(FatalError);
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ public:
         {
             if (blendingFactor_ < 0 || blendingFactor_ > 1)
             {
-                FatalIOErrorIn("fixedBlended(const fvMesh&, Istream&)", is)
+                FatalIOErrorInFunction(is)
                     << "coefficient = " << blendingFactor_
                     << " should be >= 0 and <= 1"
                     << exit(FatalIOError);
@@ -146,7 +146,7 @@ public:
         {
             if (blendingFactor_ < 0 || blendingFactor_ > 1)
             {
-                FatalIOErrorIn("fixedBlended(const fvMesh&, Istream&)", is)
+                FatalIOErrorInFunction(is)
                     << "coefficient = " << blendingFactor_
                     << " should be >= 0 and <= 1"
                     << exit(FatalIOError);

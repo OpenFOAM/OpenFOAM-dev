@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,9 +58,8 @@ tmp<divScheme<Type> > divScheme<Type>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "divScheme<Type>::New(const fvMesh&, Istream&)",
             schemeData
         )   << "Div scheme not specified" << endl << endl
             << "Valid div schemes are :" << endl
@@ -75,9 +74,8 @@ tmp<divScheme<Type> > divScheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "divScheme<Type>::New(const fvMesh&, Istream&)",
             schemeData
         )   << "unknown div scheme "
             << schemeName << nl << nl

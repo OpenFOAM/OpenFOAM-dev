@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ void fvMesh::makeSf() const
     // if the pointer is already set
     if (SfPtr_)
     {
-        FatalErrorIn("fvMesh::makeSf()")
+        FatalErrorInFunction
             << "face areas already exist"
             << abort(FatalError);
     }
@@ -90,7 +90,7 @@ void fvMesh::makeMagSf() const
     // if the pointer is already set
     if (magSfPtr_)
     {
-        FatalErrorIn("void fvMesh::makeMagSf()")
+        FatalErrorInFunction
             << "mag face areas already exist"
             << abort(FatalError);
     }
@@ -128,7 +128,7 @@ void fvMesh::makeC() const
     // if the pointer is already set
     if (CPtr_)
     {
-        FatalErrorIn("fvMesh::makeC()")
+        FatalErrorInFunction
             << "cell centres already exist"
             << abort(FatalError);
     }
@@ -170,7 +170,7 @@ void fvMesh::makeCf() const
     // if the pointer is already set
     if (CfPtr_)
     {
-        FatalErrorIn("fvMesh::makeCf()")
+        FatalErrorInFunction
             << "face centres already exist"
             << abort(FatalError);
     }
@@ -232,7 +232,7 @@ const volScalarField::DimensionedInternalField& fvMesh::V0() const
 {
     if (!V0Ptr_)
     {
-        FatalErrorIn("fvMesh::V0() const")
+        FatalErrorInFunction
             << "V0 is not available"
             << abort(FatalError);
     }
@@ -245,7 +245,7 @@ volScalarField::DimensionedInternalField& fvMesh::setV0()
 {
     if (!V0Ptr_)
     {
-        FatalErrorIn("fvMesh::setV0()")
+        FatalErrorInFunction
             << "V0 is not available"
             << abort(FatalError);
     }
@@ -439,7 +439,7 @@ const surfaceScalarField& fvMesh::phi() const
 {
     if (!phiPtr_)
     {
-        FatalErrorIn("fvMesh::phi()")
+        FatalErrorInFunction
             << "mesh flux field does not exist, is the mesh actually moving?"
             << abort(FatalError);
     }
@@ -459,7 +459,7 @@ surfaceScalarField& fvMesh::setPhi()
 {
     if (!phiPtr_)
     {
-        FatalErrorIn("fvMesh::setPhi()")
+        FatalErrorInFunction
             << "mesh flux field does not exist, is the mesh actually moving?"
             << abort(FatalError);
     }

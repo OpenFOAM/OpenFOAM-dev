@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,7 +141,7 @@ tmp<surfaceScalarField> CoEulerDdtScheme<Type>::CofrDeltaT() const
     }
     else
     {
-        FatalErrorIn("CoEulerDdtScheme<Type>::CofrDeltaT() const")
+        FatalErrorInFunction
             << "Incorrect dimensions of phi: " << phi.dimensions()
             << abort(FatalError);
 
@@ -717,10 +717,8 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
     }
     else
     {
-        FatalErrorIn
-        (
-            "CoEulerDdtScheme<Type>::fvcDdtPhiCorr"
-        )   << "dimensions of Uf are not correct"
+        FatalErrorInFunction
+            << "dimensions of Uf are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();
@@ -781,10 +779,8 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
     }
     else
     {
-        FatalErrorIn
-        (
-            "CoEulerDdtScheme<Type>::fvcDdtPhiCorr"
-        )   << "dimensions of phi are not correct"
+        FatalErrorInFunction
+            << "dimensions of phi are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();

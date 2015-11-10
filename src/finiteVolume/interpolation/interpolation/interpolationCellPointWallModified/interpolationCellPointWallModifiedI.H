@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,16 +76,7 @@ inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
     {
         if (faceI != tetIs.face())
         {
-            FatalErrorIn
-            (
-                "inline Type "
-                "Foam::interpolationCellPointWallModifie<Type>::interpolate"
-                "("
-                    "const vector& position, "
-                    "const tetIndices& tetIs, "
-                    "const label faceI"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "specified face " << faceI << " inconsistent with the face "
                 << "stored by tetIndices: " << tetIs.face()
                 << exit(FatalError);

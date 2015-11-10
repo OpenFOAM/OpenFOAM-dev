@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,10 +243,8 @@ tmp<Field<Type> > mappedPatchFieldBase<Type>::mappedField() const
 
             if (nbrPatchID < 0)
             {
-                FatalErrorIn
-                (
-                    "void mappedPatchFieldBase<Type>::updateCoeffs()"
-                )<< "Unable to find sample patch " << mapper_.samplePatch()
+                FatalErrorInFunction
+                 << "Unable to find sample patch " << mapper_.samplePatch()
                  << " in region " << mapper_.sampleRegion()
                  << " for patch " << patchField_.patch().name() << nl
                  << abort(FatalError);
@@ -284,10 +282,8 @@ tmp<Field<Type> > mappedPatchFieldBase<Type>::mappedField() const
         }
         default:
         {
-            FatalErrorIn
-            (
-                "mappedPatchFieldBase<Type>::updateCoeffs()"
-            )<< "Unknown sampling mode: " << mapper_.mode()
+            FatalErrorInFunction
+             << "Unknown sampling mode: " << mapper_.mode()
              << nl << abort(FatalError);
         }
     }

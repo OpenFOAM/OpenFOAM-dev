@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,15 +106,8 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
 
         if (lInf_ < 0.0)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "advectiveFvPatchField<Type>::"
-                "advectiveFvPatchField"
-                "("
-                    "const fvPatch&, "
-                    "const DimensionedField<Type, volMesh>&, "
-                    "const dictionary&"
-                ")",
                 dict
             )   << "unphysical lInf specified (lInf < 0)" << nl
                 << "    on patch " << this->patch().name()
@@ -252,8 +245,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         }
         else
         {
-            FatalErrorIn("advectiveFvPatchField<Type>::updateCoeffs()")
-                << "    Unsupported temporal differencing scheme : "
+            FatalErrorInFunction
                 << ddtScheme << nl
                 << "    on patch " << this->patch().name()
                 << " of field " << this->dimensionedInternalField().name()
@@ -285,10 +277,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         }
         else
         {
-            FatalErrorIn
-            (
-                "advectiveFvPatchField<Type>::updateCoeffs()"
-            )   << "    Unsupported temporal differencing scheme : "
+            FatalErrorInFunction
                 << ddtScheme
                 << "\n    on patch " << this->patch().name()
                 << " of field " << this->dimensionedInternalField().name()

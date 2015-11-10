@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,12 +88,8 @@ flowRateInletVelocityFvPatchVectorField
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "flowRateInletVelocityFvPatchVectorField::"
-            "flowRateInletVelocityFvPatchVectorField"
-            "(const fvPatch&, const DimensionedField<vector, volMesh>&,"
-            " const dictionary&)",
             dict
         )   << "Please supply either 'volumetricFlowRate' or"
             << " 'massFlowRate' and 'rho'" << exit(FatalIOError);
@@ -179,10 +175,8 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
             // Use constant density
             if (rhoInlet_ < 0)
             {
-                FatalErrorIn
-                (
-                    "flowRateInletVelocityFvPatchVectorField::updateCoeffs()"
-                )   << "Did not find registered density field " << rhoName_
+                FatalErrorInFunction
+                    << "Did not find registered density field " << rhoName_
                     << " and no constant density 'rhoInlet' specified"
                     << exit(FatalError);
             }

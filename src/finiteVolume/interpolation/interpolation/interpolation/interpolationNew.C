@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,11 +40,8 @@ Foam::autoPtr<Foam::interpolation<Type> > Foam::interpolation<Type>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "interpolation::New(const word&, "
-            "const GeometricField<Type, fvPatchField, volMesh>&)"
-        )   << "Unknown interpolation type " << interpolationType
+        FatalErrorInFunction
+            << "Unknown interpolation type " << interpolationType
             << " for field " << psi.name() << nl << nl
             << "Valid interpolation types : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

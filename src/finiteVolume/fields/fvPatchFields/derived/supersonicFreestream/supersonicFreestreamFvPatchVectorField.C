@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,11 +107,8 @@ supersonicFreestreamFvPatchVectorField
 
     if (pInf_ < SMALL)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "supersonicFreestreamFvPatchVectorField::"
-            "supersonicFreestreamFvPatchVectorField"
-            "(const fvPatch&, const vectorField&, const dictionary&)",
             dict
         )   << "    unphysical pInf specified (pInf <= 0.0)"
             << "\n    on patch " << this->patch().name()
@@ -183,10 +180,7 @@ void Foam::supersonicFreestreamFvPatchVectorField::updateCoeffs()
 
     if (MachInf < 1.0)
     {
-        FatalErrorIn
-        (
-            "supersonicFreestreamFvPatchVectorField::updateCoeffs()"
-        )   << "    MachInf < 1.0, free stream must be supersonic"
+        FatalErrorInFunction
             << "\n    on patch " << this->patch().name()
             << " of field " << this->dimensionedInternalField().name()
             << " in file " << this->dimensionedInternalField().objectPath()
@@ -283,10 +277,8 @@ void Foam::supersonicFreestreamFvPatchVectorField::updateCoeffs()
             }
             else // If subsonic
             {
-                FatalErrorIn
-                (
-                    "supersonicFreestreamFvPatchVectorField::updateCoeffs()"
-                )   << "unphysical subsonic inflow has been generated"
+                FatalErrorInFunction
+                    << "unphysical subsonic inflow has been generated"
                     << "\n    on patch " << this->patch().name()
                     << " of field " << this->dimensionedInternalField().name()
                     << " in file "

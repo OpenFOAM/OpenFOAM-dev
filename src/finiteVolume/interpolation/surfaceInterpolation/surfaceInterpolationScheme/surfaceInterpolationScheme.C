@@ -48,9 +48,8 @@ tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
 {
     if (schemeData.eof())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "surfaceInterpolationScheme<Type>::New(const fvMesh&, Istream&)",
             schemeData
         )   << "Discretisation scheme not specified"
             << endl << endl
@@ -75,9 +74,8 @@ tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
 
     if (constructorIter == MeshConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "surfaceInterpolationScheme<Type>::New(const fvMesh&, Istream&)",
             schemeData
         )   << "Unknown discretisation scheme "
             << schemeName << nl << nl
@@ -101,10 +99,8 @@ tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
 {
     if (schemeData.eof())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "surfaceInterpolationScheme<Type>::New"
-            "(const fvMesh&, const surfaceScalarField&, Istream&)",
             schemeData
         )   << "Discretisation scheme not specified"
             << endl << endl
@@ -129,10 +125,8 @@ tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
 
     if (constructorIter == MeshFluxConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "surfaceInterpolationScheme<Type>::New"
-            "(const fvMesh&, const surfaceScalarField&, Istream&)",
             schemeData
         )   << "Unknown discretisation scheme "
             << schemeName << nl << nl

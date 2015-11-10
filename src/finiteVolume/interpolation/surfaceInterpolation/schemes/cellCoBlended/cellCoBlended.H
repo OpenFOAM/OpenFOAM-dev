@@ -153,7 +153,7 @@ public:
         {
             if (Co1_ < 0 || Co2_ < 0 || Co1_ >= Co2_)
             {
-                FatalIOErrorIn("cellCoBlended(const fvMesh&, Istream&)", is)
+                FatalIOErrorInFunction(is)
                     << "coefficients = " << Co1_ << " and " << Co2_
                     << " should be > 0 and Co2 > Co1"
                     << exit(FatalIOError);
@@ -184,7 +184,7 @@ public:
         {
             if (Co1_ < 0 || Co2_ < 0 || Co1_ >= Co2_)
             {
-                FatalIOErrorIn("cellCoBlended(const fvMesh&, Istream&)", is)
+                FatalIOErrorInFunction(is)
                     << "coefficients = " << Co1_ << " and " << Co2_
                     << " should be > 0 and Co2 > Co1"
                     << exit(FatalIOError);
@@ -215,10 +215,8 @@ public:
             }
             else if (faceFlux_.dimensions() != dimVelocity*dimArea)
             {
-                FatalErrorIn
-                (
-                    "cellCoBlended::blendingFactor()"
-                )   << "dimensions of faceFlux are not correct"
+                FatalErrorInFunction
+                    << "dimensions of faceFlux are not correct"
                     << exit(FatalError);
             }
 

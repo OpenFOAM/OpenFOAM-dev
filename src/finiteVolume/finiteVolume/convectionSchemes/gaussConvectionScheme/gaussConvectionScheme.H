@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ public:
             {
                 fileNameList controlDictFiles(findEtcFiles("controlDict"));
 
-                IOWarningIn("gaussConvectionScheme", is)
+                IOWarningInFunction(is)
                     << "Unbounded 'Gauss' div scheme used in "
                        "steady-state solver, use 'bounded Gauss' "
                        "to ensure boundedness.\n"

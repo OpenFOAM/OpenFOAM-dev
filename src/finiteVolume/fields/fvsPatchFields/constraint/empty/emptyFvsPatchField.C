@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,16 +58,8 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 {
     if (!isType<emptyFvPatch>(this->patch()))
     {
-        FatalErrorIn
-        (
-            "emptyFvsPatchField<Type>::emptyFvsPatchField\n"
-            "(\n"
-            "    const emptyFvsPatchField<Type>&,\n"
-            "    const fvPatch& p,\n"
-            "    const DimensionedField<Type, surfaceMesh>& iF,\n"
-            "    const fvPatchFieldMapper& mapper\n"
-            ")\n"
-        )   << "Field type does not correspond to patch type for patch "
+        FatalErrorInFunction
+            << "Field type does not correspond to patch type for patch "
             << this->patch().index() << "." << endl
             << "Field type: " << typeName << endl
             << "Patch type: " << this->patch().type()
@@ -88,14 +80,8 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 {
     if (!isType<emptyFvPatch>(p))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "emptyFvsPatchField<Type>::emptyFvsPatchField\n"
-            "(\n"
-            "    const fvPatch& p,\n"
-            "    const Field<Type>& field,\n"
-            "    const dictionary& dict\n"
-            ")\n",
             dict
         )   << "patch " << this->patch().index() << " not empty type. "
             << "Patch type = " << p.type()

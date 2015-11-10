@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,10 +41,8 @@ void Foam::fvPatchMapper::calcAddressing() const
      || weightsPtr_
     )
     {
-        FatalErrorIn
-        (
-            "void fvPatchMapper::calcAddressing() const)"
-        )   << "Addressing already calculated"
+        FatalErrorInFunction
+            << "Addressing already calculated"
             << abort(FatalError);
     }
 
@@ -95,10 +93,8 @@ void Foam::fvPatchMapper::calcAddressing() const
             if (min(addr) < 0)
             {
                 //FatalErrorIn
-                WarningIn
-                (
-                    "void fvPatchMapper::calcAddressing() const"
-                )   << "Unmapped entry in patch mapping for patch "
+                WarningInFunction
+                    << "Unmapped entry in patch mapping for patch "
                     << patch_.index() << " named " << patch_.name()
                     //<< abort(FatalError);
                     << endl;
@@ -195,10 +191,8 @@ void Foam::fvPatchMapper::calcAddressing() const
             {
                 if (min(addr[i]) < 0)
                 {
-                    FatalErrorIn
-                    (
-                        "void fvPatchMapper::calcAddressing() const"
-                    )   << "Error in patch mapping for patch "
+                    FatalErrorInFunction
+                        << "Error in patch mapping for patch "
                         << patch_.index() << " named " << patch_.name()
                         << abort(FatalError);
                 }
@@ -250,10 +244,8 @@ const Foam::labelUList& Foam::fvPatchMapper::directAddressing() const
 {
     if (!direct())
     {
-        FatalErrorIn
-        (
-            "const labelUList& fvPatchMapper::directAddressing() const"
-        )   << "Requested direct addressing for an interpolative mapper."
+        FatalErrorInFunction
+            << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);
     }
 
@@ -270,10 +262,8 @@ const Foam::labelListList& Foam::fvPatchMapper::addressing() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const labelListList& fvPatchMapper::addressing() const"
-        )   << "Requested interpolative addressing for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative addressing for a direct mapper."
             << abort(FatalError);
     }
 
@@ -290,10 +280,8 @@ const Foam::scalarListList& Foam::fvPatchMapper::weights() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const scalarListList& fvPatchMapper::weights() const"
-        )   << "Requested interpolative weights for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative weights for a direct mapper."
             << abort(FatalError);
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ public:
     {
         if (k_ < 0 || k_ > 1)
         {
-            FatalIOErrorIn("filteredLinear2VLimiter(Istream& is)", is)
+            FatalIOErrorInFunction(is)
                 << "coefficient = " << k_
                 << " should be >= 0 and <= 1"
                 << exit(FatalIOError);
@@ -92,7 +92,7 @@ public:
 
         if (l_ < 0 || l_ > 1)
         {
-            FatalIOErrorIn("filteredLinear2VLimiter(Istream& is)", is)
+            FatalIOErrorInFunction(is)
                 << "coefficient = " << l_
                 << " should be >= 0 and <= 1"
                 << exit(FatalIOError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,11 +76,8 @@ Foam::PhiScheme<Type, PhiLimiter>::limiter
     }
     else if (this->faceFlux_.dimensions() != dimVelocity*dimArea)
     {
-        FatalErrorIn
-        (
-            "PhiScheme<PhiLimiter>::limiter"
-            "(const GeometricField<Type, fvPatchField, volMesh>& phi)"
-        )   << "dimensions of faceFlux are not correct"
+        FatalErrorInFunction
+            << "dimensions of faceFlux are not correct"
             << exit(FatalError);
     }
 

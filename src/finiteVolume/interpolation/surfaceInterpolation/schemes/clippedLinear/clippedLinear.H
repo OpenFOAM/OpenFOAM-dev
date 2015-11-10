@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class clippedLinear
         {
             if (cellSizeRatio_ <= 0 || cellSizeRatio_ > 1)
             {
-                FatalErrorIn("clippedLinear::calcWfLimit()")
+                FatalErrorInFunction
                     << "Given cellSizeRatio of " << cellSizeRatio_
                     << " is not between 0 and 1"
                     << exit(FatalError);

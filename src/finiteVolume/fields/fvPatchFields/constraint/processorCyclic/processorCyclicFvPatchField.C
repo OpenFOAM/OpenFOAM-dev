@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,16 +72,7 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
 {
     if (!isType<processorCyclicFvPatch>(this->patch()))
     {
-        FatalErrorIn
-        (
-            "processorCyclicFvPatchField<Type>::processorCyclicFvPatchField\n"
-            "(\n"
-            "    const processorCyclicFvPatchField<Type>& ptf,\n"
-            "    const fvPatch& p,\n"
-            "    const DimensionedField<Type, volMesh>& iF,\n"
-            "    const fvPatchFieldMapper& mapper\n"
-            ")\n"
-        )   << "\n    patch type '" << p.type()
+        FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << this->dimensionedInternalField().name()
@@ -105,14 +96,8 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
 {
     if (!isType<processorCyclicFvPatch>(p))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "processorCyclicFvPatchField<Type>::processorCyclicFvPatchField\n"
-            "(\n"
-            "    const fvPatch& p,\n"
-            "    const Field<Type>& field,\n"
-            "    const dictionary& dict\n"
-            ")\n",
             dict
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
@@ -124,15 +109,8 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
 
     if (Pstream::defaultCommsType == Pstream::scheduled)
     {
-        WarningIn
-        (
-            "processorCyclicFvPatchField<Type>::processorCyclicFvPatchField\n"
-            "(\n"
-            "    const fvPatch& p,\n"
-            "    const DimensionedField<Type, volMesh>& iF,\n"
-            "    const dictionary& dict\n"
-            ")\n"
-        )   << "Scheduled communication with split cyclics not supported."
+        WarningInFunction
+            << "Scheduled communication with split cyclics not supported."
             << endl;
     }
 }

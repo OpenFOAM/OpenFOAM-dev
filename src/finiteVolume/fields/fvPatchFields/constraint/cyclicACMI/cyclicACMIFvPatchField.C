@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,16 +56,7 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
 {
     if (!isA<cyclicACMIFvPatch>(this->patch()))
     {
-        FatalErrorIn
-        (
-            "cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField"
-            "("
-                "const cyclicACMIFvPatchField<Type>& ,"
-                "const fvPatch&, "
-                "const DimensionedField<Type, volMesh>&, "
-                "const fvPatchFieldMapper&"
-            ")"
-        )   << "    patch type '" << p.type()
+        FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << this->dimensionedInternalField().name()
@@ -89,14 +80,8 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
 {
     if (!isA<cyclicACMIFvPatch>(p))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField"
-            "("
-                "const fvPatch&, "
-                "const DimensionedField<Type, volMesh>&, "
-                "const dictionary&"
-            ")",
             dict
         )   << "    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"

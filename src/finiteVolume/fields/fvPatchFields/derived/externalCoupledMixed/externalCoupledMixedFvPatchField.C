@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -280,12 +280,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::wait() const
         {
             if (totalTime > timeOut_)
             {
-                FatalErrorIn
-                (
-                    "void "
-                    "Foam::externalCoupledMixedFvPatchField<Type>::wait() "
-                    "const"
-                )
+                FatalErrorInFunction
                     << "Wait time exceeded time out time of " << timeOut_
                     << " s" << abort(FatalError);
             }
@@ -327,14 +322,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::initialiseRead
 {
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "void Foam::externalCoupledMixedFvPatchField<Type>::"
-            "initialiseRead"
-            "("
-                "IFstream&"
-            ") const"
-        )
+        FatalErrorInFunction
             << "Unable to open data transfer file " << is.name()
             << " for patch " << this->patch().name()
             << exit(FatalError);
@@ -352,14 +340,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::initialiseRead
         }
         else
         {
-            FatalErrorIn
-            (
-                "void Foam::externalCoupledMixedFvPatchField<Type>::"
-                "initialiseRead"
-                "("
-                    "IFstream&"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "Unable to scan forward to appropriate read position for "
                 << "data transfer file " << is.name()
                 << " for patch " << this->patch().name()
@@ -394,13 +375,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::readData
         }
         else
         {
-            FatalErrorIn
-            (
-                "void Foam::externalCoupledMixedFvPatchField<Type>::readData"
-                "("
-                    "const fileName&"
-                ")"
-            )
+            FatalErrorInFunction
                 << "Insufficient data for patch "
                 << this->patch().name()
                 << " in file " << is.name()

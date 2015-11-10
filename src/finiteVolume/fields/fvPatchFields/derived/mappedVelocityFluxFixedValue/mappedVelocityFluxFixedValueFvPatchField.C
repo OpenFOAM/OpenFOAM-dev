@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,17 +59,8 @@ mappedVelocityFluxFixedValueFvPatchField
 {
     if (!isA<mappedPatchBase>(this->patch().patch()))
     {
-        FatalErrorIn
-        (
-            "mappedVelocityFluxFixedValueFvPatchField::"
-            "mappedVelocityFluxFixedValueFvPatchField"
-            "("
-                "const mappedVelocityFluxFixedValueFvPatchField&, "
-                "const fvPatch&, "
-                "const DimensionedField<vector, volMesh>&, "
-                "const fvPatchFieldMapper&"
-            ")"
-        )   << "Patch type '" << p.type()
+        FatalErrorInFunction
+            << "Patch type '" << p.type()
             << "' not type '" << mappedPatchBase::typeName << "'"
             << " for patch " << p.name()
             << " of field " << dimensionedInternalField().name()
@@ -92,16 +83,8 @@ mappedVelocityFluxFixedValueFvPatchField
 {
     if (!isA<mappedPatchBase>(this->patch().patch()))
     {
-        FatalErrorIn
-        (
-            "mappedVelocityFluxFixedValueFvPatchField::"
-            "mappedVelocityFluxFixedValueFvPatchField"
-            "("
-                "const fvPatch&, "
-                "const DimensionedField<vector, volMesh>&, "
-                "const dictionary&"
-            ")"
-        )   << "Patch type '" << p.type()
+        FatalErrorInFunction
+            << "Patch type '" << p.type()
             << "' not type '" << mappedPatchBase::typeName << "'"
             << " for patch " << p.name()
             << " of field " << dimensionedInternalField().name()
@@ -115,16 +98,8 @@ mappedVelocityFluxFixedValueFvPatchField
     );
     if (mpp.mode() == mappedPolyPatch::NEARESTCELL)
     {
-        FatalErrorIn
-        (
-            "mappedVelocityFluxFixedValueFvPatchField::"
-            "mappedVelocityFluxFixedValueFvPatchField"
-            "("
-                "const fvPatch&, "
-                "const DimensionedField<vector, volMesh>&, "
-                "const dictionary&"
-            ")"
-        )   << "Patch " << p.name()
+        FatalErrorInFunction
+            << "Patch " << p.name()
             << " of type '" << p.type()
             << "' can not be used in 'nearestCell' mode"
             << " of field " << dimensionedInternalField().name()
@@ -234,11 +209,8 @@ void Foam::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
         }
         default:
         {
-            FatalErrorIn
-            (
-                "mappedVelocityFluxFixedValueFvPatchField::"
-                "updateCoeffs()"
-            )   << "patch can only be used in NEARESTPATCHFACE, "
+            FatalErrorInFunction
+                << "patch can only be used in NEARESTPATCHFACE, "
                 << "NEARESTPATCHFACEAMI or NEARESTFACE mode" << nl
                 << abort(FatalError);
         }

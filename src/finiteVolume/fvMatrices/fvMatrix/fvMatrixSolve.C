@@ -87,9 +87,8 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "fvMatrix<Type>::solve(const dictionary& solverControls)",
             solverControls
         )   << "Unknown type " << type
             << "; currently supported solver types are segregated and coupled"

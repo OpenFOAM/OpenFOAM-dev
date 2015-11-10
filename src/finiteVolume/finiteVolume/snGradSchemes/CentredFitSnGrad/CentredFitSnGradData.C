@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,11 +156,8 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit
             // (not good fit so increase weight in the centre and weight
             //  for constant and linear terms)
 
-            WarningIn
-            (
-                "CentredFitSnGradData<Polynomial>::calcFit"
-                "(const List<point>& C, const label facei"
-            )   << "Cannot fit face " << facei << " iteration " << iIt
+            WarningInFunction
+                << "Cannot fit face " << facei << " iteration " << iIt
                 << " with sum of weights " << sum(coeffsi) << nl
                 << "    Weights " << coeffsi << nl
                 << "    Linear weights " << wLin << " " << 1 - wLin << nl
@@ -198,10 +195,8 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit
     }
     else
     {
-        WarningIn
-        (
-            "CentredFitSnGradData<Polynomial>::calcFit(..)"
-        )   << "Could not fit face " << facei
+        WarningInFunction
+            << "Could not fit face " << facei
             << "    Coefficients = " << coeffsi
             << ", reverting to uncorrected." << endl;
 

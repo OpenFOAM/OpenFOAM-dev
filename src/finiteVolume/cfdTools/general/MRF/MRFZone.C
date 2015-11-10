@@ -289,16 +289,7 @@ Foam::MRFZone::MRFZone
 
         if (!cellZoneFound)
         {
-            FatalErrorIn
-            (
-                "MRFZone"
-                "("
-                    "const word&, "
-                    "const fvMesh&, "
-                    "const dictionary&, "
-                    "const word&"
-                ")"
-            )
+            FatalErrorInFunction
                 << "cannot find MRF cellZone " << cellZoneName_
                 << exit(FatalError);
         }

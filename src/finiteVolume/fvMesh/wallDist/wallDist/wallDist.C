@@ -169,7 +169,7 @@ const Foam::volVectorField& Foam::wallDist::n() const
 {
     if (isNull(n_()))
     {
-        WarningIn("Foam::wallDist::n()")
+        WarningInFunction
             << "n requested but 'nRequired' not specified in the "
             << (patchTypeName_ & "Dist") << " dictionary" << nl
             << "    Recalculating y and n fields." << endl;

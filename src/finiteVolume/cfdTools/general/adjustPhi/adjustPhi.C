@@ -103,15 +103,8 @@ bool Foam::adjustPhi
         }
         else if (mag(fixedMassOut - massIn)/totalFlux > 1e-8)
         {
-            FatalErrorIn
-            (
-                "adjustPhi"
-                "("
-                    "surfaceScalarField&, "
-                    "const volVectorField&,"
-                    "volScalarField&"
-                ")"
-            )   << "Continuity error cannot be removed by adjusting the"
+            FatalErrorInFunction
+                << "Continuity error cannot be removed by adjusting the"
                    " outflow.\nPlease check the velocity boundary conditions"
                    " and/or run potentialFoam to initialise the outflow." << nl
                 << "Total flux              : " << totalFlux << nl

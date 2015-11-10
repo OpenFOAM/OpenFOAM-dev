@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,8 @@ void Foam::singleCellFvMesh::agglomerateMesh
             {
                 if (agglom[patchI][i] < 0  || agglom[patchI][i] >= pp.size())
                 {
-                    FatalErrorIn
-                    (
-                        "singleCellFvMesh::agglomerateMesh(..)"
-                    )   << "agglomeration on patch " << patchI
+                    FatalErrorInFunction
+                        << "agglomeration on patch " << patchI
                         << " is out of range 0.." << pp.size()-1
                         << exit(FatalError);
                 }
@@ -116,10 +114,8 @@ void Foam::singleCellFvMesh::agglomerateMesh
                         // Check that zone numbers are still the same.
                         if (iter() != nbrZone)
                         {
-                            FatalErrorIn
-                            (
-                                "singleCellFvMesh::agglomerateMesh(..)"
-                            )   << "agglomeration is not synchronised across"
+                            FatalErrorInFunction
+                                << "agglomeration is not synchronised across"
                                 << " coupled patch " << pp.name()
                                 << endl
                                 << "Local agglomeration " << myZone
@@ -206,10 +202,8 @@ void Foam::singleCellFvMesh::agglomerateMesh
 
                     if (upp.edgeLoops().size() != 1)
                     {
-                        FatalErrorIn
-                        (
-                            "singleCellFvMesh::agglomerateMesh(..)"
-                        )   << "agglomeration does not create a"
+                        FatalErrorInFunction
+                            << "agglomeration does not create a"
                             << " single, non-manifold"
                             << " face for agglomeration " << myAgglom
                             << " on patch " <<  patchI

@@ -208,10 +208,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
         }
         default:
         {
-            FatalErrorIn
-            (
-                "waveSurfacePressureFvPatchScalarField<Type>::updateCoeffs()"
-            )   << "    Unsupported temporal differencing scheme : "
+            FatalErrorInFunction
                 << ddtSchemeName << nl
                 << "    on patch " << this->patch().name()
                 << " of field " << this->dimensionedInternalField().name()

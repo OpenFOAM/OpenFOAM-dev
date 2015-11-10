@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,7 +211,7 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
         {
             if (iter.key() == globalOwn || iter.key() == globalNei)
             {
-                FatalErrorIn("FECCellToFaceStencil::calcFaceStencil(..)")
+                FatalErrorInFunction
                     << "problem:" << faceStencilSet
                     << abort(FatalError);
             }
@@ -272,10 +272,8 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
                 {
                     if (iter.key() == globalOwn || iter.key() == globalNei)
                     {
-                        FatalErrorIn
-                        (
-                            "FECCellToFaceStencil::calcFaceStencil(..)"
-                        )   << "problem:" << faceStencilSet
+                        FatalErrorInFunction
+                            << "problem:" << faceStencilSet
                             << abort(FatalError);
                     }
                     faceStencil[faceI][n++] = iter.key();
@@ -283,7 +281,7 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
 
                 if (n != faceStencil[faceI].size())
                 {
-                    FatalErrorIn("problem") << "n:" << n
+                    FatalErrorInFunction
                         << " size:" << faceStencil[faceI].size()
                         << abort(FatalError);
                 }
@@ -338,10 +336,8 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
                 {
                     if (iter.key() == globalOwn)
                     {
-                        FatalErrorIn
-                        (
-                            "FECCellToFaceStencil::calcFaceStencil(..)"
-                        )   << "problem:" << faceStencilSet
+                        FatalErrorInFunction
+                            << "problem:" << faceStencilSet
                             << abort(FatalError);
                     }
                     faceStencil[faceI][n++] = iter.key();
@@ -358,7 +354,7 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
         label globalOwn = globalNumbering().toGlobal(own[faceI]);
         if (faceStencil[faceI][0] != globalOwn)
         {
-            FatalErrorIn("FECCellToFaceStencil::calcFaceStencil(..)")
+            FatalErrorInFunction
                 << "problem:" << faceStencil[faceI]
                 << " globalOwn:" << globalOwn
                 << abort(FatalError);
@@ -366,7 +362,7 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
         label globalNei = globalNumbering().toGlobal(nei[faceI]);
         if (faceStencil[faceI][1] != globalNei)
         {
-            FatalErrorIn("FECCellToFaceStencil::calcFaceStencil(..)")
+            FatalErrorInFunction
                 << "problem:" << faceStencil[faceI]
                 << " globalNei:" << globalNei
                 << abort(FatalError);
@@ -387,7 +383,7 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
                 label globalOwn = globalNumbering().toGlobal(own[faceI]);
                 if (faceStencil[faceI][0] != globalOwn)
                 {
-                    FatalErrorIn("FECCellToFaceStencil::calcFaceStencil(..)")
+                    FatalErrorInFunction
                         << "problem:" << faceStencil[faceI]
                         << " globalOwn:" << globalOwn
                         << abort(FatalError);
@@ -395,7 +391,7 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
                 label globalNei = neiGlobalCell[faceI-mesh().nInternalFaces()];
                 if (faceStencil[faceI][1] != globalNei)
                 {
-                    FatalErrorIn("FECCellToFaceStencil::calcFaceStencil(..)")
+                    FatalErrorInFunction
                         << "problem:" << faceStencil[faceI]
                         << " globalNei:" << globalNei
                         << abort(FatalError);
@@ -411,7 +407,7 @@ void Foam::FECCellToFaceStencil::calcFaceStencil
                 label globalOwn = globalNumbering().toGlobal(own[faceI]);
                 if (faceStencil[faceI][0] != globalOwn)
                 {
-                    FatalErrorIn("FECCellToFaceStencil::calcFaceStencil(..)")
+                    FatalErrorInFunction
                         << "problem:" << faceStencil[faceI]
                         << " globalOwn:" << globalOwn
                         << abort(FatalError);

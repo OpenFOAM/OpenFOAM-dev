@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,8 @@ void processorFvPatchField<scalar>::initInterfaceMatrixUpdate
         // Fast path.
         if (debug && !this->ready())
         {
-            FatalErrorIn
-            (
-                "processorFvPatchField<scalar>::initInterfaceMatrixUpdate(..)"
-            )   << "On patch " << procPatch_.name()
+            FatalErrorInFunction
+                << "On patch " << procPatch_.name()
                 << " outstanding request."
                 << abort(FatalError);
         }
