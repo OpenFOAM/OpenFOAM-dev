@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,9 +94,8 @@ void Foam::LPtrList<LListBase, T>::read(Istream& is, const INew& iNew)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "LPtrList<LListBase, T>::read(Istream&, const INew&)",
                 is
             )   << "incorrect first token, '(', found " << firstToken.info()
                 << exit(FatalIOError);
@@ -125,9 +124,8 @@ void Foam::LPtrList<LListBase, T>::read(Istream& is, const INew& iNew)
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "LPtrList<LListBase, T>::read(Istream&, const INew&)",
             is
         )   << "incorrect first token, expected <int> or '(', found "
             << firstToken.info()

@@ -99,9 +99,8 @@ Foam::dictionary& Foam::debug::controlDict()
 
             if (!ifs.good())
             {
-                SafeFatalIOErrorIn
+                SafeFatalIOErrorInFunction
                 (
-                    "debug::controlDict()",
                     ifs,
                     "Cannot open controlDict"
                 );

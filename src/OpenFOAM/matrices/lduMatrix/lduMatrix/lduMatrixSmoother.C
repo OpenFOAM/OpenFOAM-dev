@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,10 +91,8 @@ Foam::autoPtr<Foam::lduMatrix::smoother> Foam::lduMatrix::smoother::New
 
         if (constructorIter == symMatrixConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
-            (
-                "lduMatrix::smoother::New", solverControls
-            )   << "Unknown symmetric matrix smoother "
+            FatalIOErrorInFunction(solverControls)
+                << "Unknown symmetric matrix smoother "
                 << name << nl << nl
                 << "Valid symmetric matrix smoothers are :" << endl
                 << symMatrixConstructorTablePtr_->sortedToc()
@@ -120,10 +118,8 @@ Foam::autoPtr<Foam::lduMatrix::smoother> Foam::lduMatrix::smoother::New
 
         if (constructorIter == asymMatrixConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
-            (
-                "lduMatrix::smoother::New", solverControls
-            )   << "Unknown asymmetric matrix smoother "
+            FatalIOErrorInFunction(solverControls)
+                << "Unknown asymmetric matrix smoother "
                 << name << nl << nl
                 << "Valid asymmetric matrix smoothers are :" << endl
                 << asymMatrixConstructorTablePtr_->sortedToc()
@@ -144,10 +140,8 @@ Foam::autoPtr<Foam::lduMatrix::smoother> Foam::lduMatrix::smoother::New
     }
     else
     {
-        FatalIOErrorIn
-        (
-            "lduMatrix::smoother::New", solverControls
-        )   << "cannot solve incomplete matrix, "
+        FatalIOErrorInFunction(solverControls)
+            << "cannot solve incomplete matrix, "
                "no diagonal or off-diagonal coefficient"
             << exit(FatalIOError);
 

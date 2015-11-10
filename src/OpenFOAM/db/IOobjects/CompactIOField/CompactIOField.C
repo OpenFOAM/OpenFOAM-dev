@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,9 +45,8 @@ void Foam::CompactIOField<T, BaseType>::readFromStream()
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "CompactIOField<T, BaseType>::readFromStream()",
             is
         )   << "unexpected class name " << headerClassName()
             << " expected " << typeName << " or " << IOField<T>::typeName

@@ -46,9 +46,8 @@ Foam::TableFile<Type>::TableFile(const word& entryName, const dictionary& dict)
 
     if (!is.good())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "TableFile<Type>::TableFile(const word&, const dictionary&)",
             is
         )   << "Cannot open file." << exit(FatalIOError);
     }

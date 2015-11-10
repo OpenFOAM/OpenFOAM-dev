@@ -219,7 +219,7 @@ Foam::Ostream& Foam::OSstream::write(const char* buf, std::streamsize count)
 {
     if (format() != BINARY)
     {
-        FatalIOErrorIn("Ostream::write(const char*, std::streamsize)", *this)
+        FatalIOErrorInFunction(*this)
             << "stream format not binary"
             << abort(FatalIOError);
     }

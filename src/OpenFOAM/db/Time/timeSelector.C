@@ -267,7 +267,7 @@ Foam::instantList Foam::timeSelector::select0
 
     if (timeDirs.empty())
     {
-        WarningIn(args.executable())
+        WarningInFunction
             << "No time specified or available, selecting 'constant'"
             << endl;
 

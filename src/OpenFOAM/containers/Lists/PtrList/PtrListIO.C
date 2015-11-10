@@ -95,9 +95,8 @@ void Foam::PtrList<T>::read(Istream& is, const INew& inewt)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "PtrList<T>::read(Istream&, const INew&)",
                 is
             )   << "incorrect first token, '(', found " << firstToken.info()
                 << exit(FatalIOError);
@@ -118,9 +117,8 @@ void Foam::PtrList<T>::read(Istream& is, const INew& inewt)
 
             if (is.eof())
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "PtrList<T>::read(Istream&, const INew&)",
                     is
                 )   << "Premature EOF after reading " << lastToken.info()
                     << exit(FatalIOError);
@@ -145,9 +143,8 @@ void Foam::PtrList<T>::read(Istream& is, const INew& inewt)
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "PtrList<T>::read(Istream&, const INew&)",
             is
         )   << "incorrect first token, expected <int> or '(', found "
             << firstToken.info()

@@ -102,7 +102,7 @@ const HashTable<dimensionedScalar>& unitSet()
 
         if (!dict.found("unitSet"))
         {
-            FatalIOErrorIn("unitSet()", dict)
+            FatalIOErrorInFunction(dict)
                 << "Cannot find unitSet in dictionary " << dict.name()
                 << exit(FatalIOError);
         }
@@ -111,7 +111,7 @@ const HashTable<dimensionedScalar>& unitSet()
 
         if (!dict.found(unitSetCoeffs))
         {
-            FatalIOErrorIn("unitSet()", dict)
+            FatalIOErrorInFunction(dict)
                 << "Cannot find " << unitSetCoeffs << " in dictionary "
                 << dict.name() << exit(FatalIOError);
         }
@@ -129,7 +129,7 @@ const HashTable<dimensionedScalar>& unitSet()
                 bool ok = unitSetPtr_->insert(iter().keyword(), dt);
                 if (!ok)
                 {
-                    FatalIOErrorIn("unitSet()", dict)
+                    FatalIOErrorInFunction(dict)
                         << "Duplicate unit " << iter().keyword()
                         << " in DimensionSets dictionary"
                         << exit(FatalIOError);
@@ -150,7 +150,7 @@ const HashTable<dimensionedScalar>& unitSet()
 
         if (writeUnitNames.size() != 0 && writeUnitNames.size() != 7)
         {
-            FatalIOErrorIn("unitSet()", dict)
+            FatalIOErrorInFunction(dict)
                 << "Cannot find entry \"writeUnits\" in " << unitDict.name()
                 << " or it is not a wordList of size 7"
                 << exit(FatalIOError);

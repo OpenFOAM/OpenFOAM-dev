@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,11 +156,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                 }
                 else
                 {
-                    FatalIOErrorIn
-                    (
-                        "entry::New(const dictionary& parentDict, Istream&)",
-                        is
-                    )
+                    FatalIOErrorInFunction(is)
                         << "Attempt to use undefined variable " << varName
                         << " as keyword"
                         << exit(FatalIOError);
@@ -228,11 +224,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                 }
                 else if (functionEntries::inputModeEntry::error())
                 {
-                    FatalIOErrorIn
-                    (
-                        "entry::New(const dictionary& parentDict, Istream&)",
-                        is
-                    )
+                    FatalIOErrorInFunction(is)
                         << "ERROR! duplicate entry: " << keyword
                         << exit(FatalIOError);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -292,11 +292,8 @@ Foam::dimensionedScalar Foam::dimensionSet::parse
                 token t = tis.nextToken();
                 if (!t.isPunctuation()  || t.pToken() !=  token::END_LIST)
                 {
-                    FatalIOErrorIn
+                    FatalIOErrorInFunction
                     (
-                        "dimensionSet::parse"
-                        "(const label, tokeniser&"
-                        ", const HashTable<dimensionedScalar>&)",
                         tis.stream()
                     )   << "Illegal token " << t << exit(FatalIOError);
                 }
@@ -364,22 +361,16 @@ Foam::dimensionedScalar Foam::dimensionSet::parse
             }
             else
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "dimensionSet::parse"
-                    "(const label, tokeniser&"
-                    ", const HashTable<dimensionedScalar>&)",
                     tis.stream()
                 )   << "Illegal token " << nextToken << exit(FatalIOError);
             }
         }
         else
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "dimensionSet::parse"
-                "(const label, tokeniser&"
-                ", const HashTable<dimensionedScalar>&)",
                 tis.stream()
             )   << "Illegal token " << nextToken << exit(FatalIOError);
         }
@@ -422,10 +413,8 @@ Foam::Istream& Foam::dimensionSet::read
 
     if (startToken != token::BEGIN_SQR)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "dimensionSet::read"
-            "(Istream&, scalar&, const HashTable<dimensionedScalar>&)",
             is
         )   << "expected a " << token::BEGIN_SQR << " in dimensionSet"
             << endl << "in stream " << is.info()
@@ -480,10 +469,8 @@ Foam::Istream& Foam::dimensionSet::read
         // Check end of dimensionSet
         if (nextToken != token::END_SQR)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "dimensionSet::read"
-                "(Istream&, scalar&, const HashTable<dimensionedScalar>&)",
                 is
             )   << "expected a " << token::END_SQR << " in dimensionSet "
                 << endl << "in stream " << is.info()
@@ -521,10 +508,8 @@ Foam::Istream& Foam::dimensionSet::read
 
     if (startToken != token::BEGIN_SQR)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "dimensionSet::read"
-            "(Istream&, scalar&, const dictionary&)",
             is
         )   << "expected a " << token::BEGIN_SQR << " in dimensionSet"
             << endl << "in stream " << is.info()
@@ -623,10 +608,8 @@ Foam::Istream& Foam::dimensionSet::read
         // Check end of dimensionSet
         if (nextToken != token::END_SQR)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "dimensionSet::read"
-                "(Istream&, scalar&, const dictionary&)",
                 is
             )   << "expected a " << token::END_SQR << " in dimensionSet "
                 << endl << "in stream " << is.info()
@@ -734,7 +717,7 @@ Foam::Istream& Foam::operator>>(Istream& is, dimensionSet& dset)
 
     if (mag(multiplier-1.0) > dimensionSet::smallExponent)
     {
-        FatalIOErrorIn("Foam::operator>>(Istream&, dimensionSet&)", is)
+        FatalIOErrorInFunction(is)
             << "Cannot use scaled units in dimensionSet"
             << exit(FatalIOError);
     }

@@ -47,7 +47,7 @@ T Foam::dictionary::lookupOrDefault
     {
         if (writeOptionalEntries)
         {
-            IOInfoIn("dictionary::lookupOrDefault", *this)
+            IOInfoInFunction(*this)
                 << "Optional entry '" << keyword << "' is not present,"
                 << " returning the default value '" << deflt << "'"
                 << endl;
@@ -77,7 +77,7 @@ T Foam::dictionary::lookupOrAddDefault
     {
         if (writeOptionalEntries)
         {
-            IOInfoIn("dictionary::lookupOrAddDefault", *this)
+            IOInfoInFunction(*this)
                 << "Optional entry '" << keyword << "' is not present,"
                 << " adding and returning the default value '" << deflt << "'"
                 << endl;
@@ -109,7 +109,7 @@ bool Foam::dictionary::readIfPresent
     {
         if (writeOptionalEntries)
         {
-            IOInfoIn("dictionary::readIfPresent", *this)
+            IOInfoInFunction(*this)
                 << "Optional entry '" << keyword << "' is not present,"
                 << " the default value '" << val << "' will be used."
                 << endl;

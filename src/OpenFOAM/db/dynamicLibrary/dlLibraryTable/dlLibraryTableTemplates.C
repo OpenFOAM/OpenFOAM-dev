@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,22 +59,14 @@ bool Foam::dlLibraryTable::open
 
             if (!opened)
             {
-                WarningIn
-                (
-                    "dlLibraryTable::open"
-                    "(const dictionary&, const word&, "
-                    "const TablePtr&)"
-                )   << "Could not open library " << libName
+                WarningInFunction
+                    << "Could not open library " << libName
                     << endl << endl;
             }
             else if (debug && (!tablePtr || tablePtr->size() <= nEntries))
             {
-                WarningIn
-                (
-                    "dlLibraryTable::open"
-                    "(const dictionary&, const word&, "
-                    "const TablePtr&)"
-                )   << "library " << libName
+                WarningInFunction
+                    << "library " << libName
                     << " did not introduce any new entries"
                     << endl << endl;
             }

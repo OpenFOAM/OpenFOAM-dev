@@ -76,9 +76,8 @@ Foam::Istream& Foam::ITstream::read(token& t)
     {
         if (eof())
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "ITstream::read(token&)",
                 *this
             )   << "attempt to read beyond EOF"
                 << exit(FatalIOError);

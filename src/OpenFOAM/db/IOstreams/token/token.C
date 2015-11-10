@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::autoPtr<Foam::token::compound> Foam::token::compound::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn("token::compound::New(const word&, Istream&)", is)
+        FatalIOErrorInFunction(is)
             << "Unknown compound type " << compoundType << nl << nl
             << "Valid compound types:" << endl
             << IstreamConstructorTablePtr_->sortedToc()
@@ -96,11 +96,8 @@ Foam::token::compound& Foam::token::transferCompoundToken(const Istream& is)
     {
         if (compoundTokenPtr_->empty())
         {
-            FatalIOErrorIn
-            (
-                "token::transferCompoundToken(const Istream& is)",
-                is
-            )   << "compound has already been transfered from token\n    "
+            FatalIOErrorInFunction(is)
+                << "compound has already been transfered from token\n    "
                 << info() << abort(FatalIOError);
         }
         else

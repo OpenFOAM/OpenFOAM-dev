@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,16 +270,8 @@ Foam::label Foam::coupledPolyPatch::getRotation
 
             if (distSqr == minDistSqr && fp != anchorFp)
             {
-                WarningIn
-                (
-                    "label coupledPolyPatch::getRotation\n"
-                    "(\n"
-                    "    const pointField&,\n"
-                    "    const face&,\n"
-                    "    const point&,\n"
-                    "    const scalar\n"
-                    ")"
-                )   << "Cannot determine unique anchor point on face "
+                WarningInFunction
+                    << "Cannot determine unique anchor point on face "
                     << UIndirectList<point>(points, f)
                     << endl
                     << "Both at index " << anchorFp << " and " << fp

@@ -306,11 +306,7 @@ Foam::Istream& Foam::PackedList<nBits>::read(Istream& is)
                 }
                 else
                 {
-                    FatalIOErrorIn
-                    (
-                        "PackedList<nBits>::read(Istream&)",
-                        is
-                    )
+                    FatalIOErrorInFunction(is)
                         << "incorrect list token, expected '(' or '{', found "
                         << firstTok.info()
                         << exit(FatalIOError);
@@ -380,11 +376,7 @@ Foam::Istream& Foam::PackedList<nBits>::read(Istream& is)
         }
         else
         {
-            FatalIOErrorIn
-            (
-                "PackedList<nBits>::read(Istream&)",
-                is
-            )
+            FatalIOErrorInFunction(is)
                 << "incorrect first token, expected '(', found "
                 << firstTok.info()
                 << exit(FatalIOError);
@@ -392,11 +384,7 @@ Foam::Istream& Foam::PackedList<nBits>::read(Istream& is)
     }
     else
     {
-        FatalIOErrorIn
-        (
-            "PackedList<nBits>::read(Istream&)",
-            is
-        )
+        FatalIOErrorInFunction(is)
             << "incorrect first token, expected <int>, '(' or '{', found "
             << firstTok.info()
             << exit(FatalIOError);

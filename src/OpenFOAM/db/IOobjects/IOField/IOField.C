@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::IOField<Type>::IOField(const IOobject& io)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOField::IOField(const IOobject&)")
+        WarningInFunction
             << "IOField " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOField does not support automatic rereading."
@@ -65,7 +65,7 @@ Foam::IOField<Type>::IOField(const IOobject& io, const label size)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOField::IOField(const IOobject&, const label)")
+        WarningInFunction
             << "IOField " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOField does not support automatic rereading."
@@ -99,7 +99,7 @@ Foam::IOField<Type>::IOField(const IOobject& io, const Field<Type>& f)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOField::IOField(const IOobject&, const Field<Type>&)")
+        WarningInFunction
             << "IOField " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOField does not support automatic rereading."
@@ -133,10 +133,8 @@ Foam::IOField<Type>::IOField(const IOobject& io, const Xfer<Field<Type> >& f)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn
-        (
-            "IOField::IOField(const IOobject&, const Xfer<Field<Type> >&)"
-        )   << "IOField " << name()
+        WarningInFunction
+            << "IOField " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOField does not support automatic rereading."
             << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ Foam::label Foam::dictionaryEntry::endLineNumber() const
 
 Foam::ITstream& Foam::dictionaryEntry::stream() const
 {
-    FatalIOErrorIn("ITstream& primitiveEntry::stream() const", *this)
+    FatalIOErrorInFunction(*this)
         << "Attempt to return dictionary entry as a primitive"
         << abort(FatalIOError);
 

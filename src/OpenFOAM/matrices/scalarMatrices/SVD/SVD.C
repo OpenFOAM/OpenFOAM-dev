@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,11 +293,8 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
             }
             if (its == 34)
             {
-                WarningIn
-                (
-                    "SVD::SVD"
-                    "(scalarRectangularMatrix& A, const scalar minCondition)"
-                )   << "no convergence in 35 SVD iterations"
+                WarningInFunction
+                    << "no convergence in 35 SVD iterations"
                     << endl;
             }
 

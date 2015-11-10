@@ -213,7 +213,7 @@ void Foam::Time::readDict()
     {
         if (writeControl_ == wcTimeStep && label(writeInterval_) < 1)
         {
-            FatalIOErrorIn("Time::readDict()", controlDict_)
+            FatalIOErrorInFunction(controlDict_)
                 << "writeInterval < 1 for writeControl timeStep"
                 << exit(FatalIOError);
         }
@@ -247,7 +247,7 @@ void Foam::Time::readDict()
              && label(secondaryWriteInterval_) < 1
             )
             {
-                FatalIOErrorIn("Time::readDict()", controlDict_)
+                FatalIOErrorInFunction(controlDict_)
                     << "secondaryWriteInterval < 1"
                     << " for secondaryWriteControl timeStep"
                     << exit(FatalIOError);
@@ -307,7 +307,7 @@ void Foam::Time::readDict()
     {
         if (purgeWrite_ < 0)
         {
-            WarningIn("Time::readDict()")
+            WarningInFunction
                 << "invalid value for purgeWrite " << purgeWrite_
                 << ", should be >= 0, setting to 0"
                 << endl;
@@ -320,7 +320,7 @@ void Foam::Time::readDict()
     {
         if (secondaryPurgeWrite_ < 0)
         {
-            WarningIn("Time::readDict()")
+            WarningInFunction
                 << "invalid value for secondaryPurgeWrite "
                 << secondaryPurgeWrite_
                 << ", should be >= 0, setting to 0"
@@ -348,7 +348,7 @@ void Foam::Time::readDict()
         }
         else
         {
-            WarningIn("Time::readDict()")
+            WarningInFunction
                 << "unsupported time format " << formatName
                 << endl;
         }

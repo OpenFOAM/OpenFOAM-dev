@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::Istream& Foam::operator>>(Istream& is, word& w)
         if (w.empty() || w.size() != t.stringToken().size())
         {
             is.setBad();
-            FatalIOErrorIn("operator>>(Istream&, word&)", is)
+            FatalIOErrorInFunction(is)
                 << "wrong token type - expected word, found "
                 "non-word characters "
                 << t.info()
@@ -71,7 +71,7 @@ Foam::Istream& Foam::operator>>(Istream& is, word& w)
     else
     {
         is.setBad();
-        FatalIOErrorIn("operator>>(Istream&, word&)", is)
+        FatalIOErrorInFunction(is)
             << "wrong token type - expected word, found "
             << t.info()
             << exit(FatalIOError);

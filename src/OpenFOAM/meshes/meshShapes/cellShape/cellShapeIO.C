@@ -46,7 +46,7 @@ Foam::Istream& Foam::operator>>(Istream& is, cellShape& s)
         }
         else
         {
-            FatalIOErrorIn("operator>>(Istream&, cellShape& s)", is)
+            FatalIOErrorInFunction(is)
                 << "incorrect first token, expected '(', found "
                 << t.info()
                 << exit(FatalIOError);
@@ -64,7 +64,7 @@ Foam::Istream& Foam::operator>>(Istream& is, cellShape& s)
     }
     else
     {
-        FatalIOErrorIn("operator>>(Istream& is, cellShape& s)", is)
+        FatalIOErrorInFunction(is)
             << "Bad type of token for cellShape symbol " << t.info()
             << exit(FatalIOError);
         return is;
@@ -73,7 +73,7 @@ Foam::Istream& Foam::operator>>(Istream& is, cellShape& s)
     // Check that a model was found
     if (!s.m)
     {
-        FatalIOErrorIn("operator>>(Istream& is, cellShape& s)", is)
+        FatalIOErrorInFunction(is)
             << "CellShape has unknown model " << t.info()
             << exit(FatalIOError);
         return is;

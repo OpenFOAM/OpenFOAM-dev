@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,10 +140,8 @@ bool Foam::functionEntries::includeEntry::execute
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "functionEntries::includeEntry::includeEntry"
-            "(dictionary& parentDict, Istream&)",
             is
         )   << "Cannot open include file "
             << (ifs.name().size() ? ifs.name() : rawFName)
@@ -180,10 +178,8 @@ bool Foam::functionEntries::includeEntry::execute
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "functionEntries::includeEntry::includeEntry"
-            "(dictionary& parentDict, primitiveEntry&, Istream&)",
             is
         )   << "Cannot open include file "
             << (ifs.name().size() ? ifs.name() : rawFName)

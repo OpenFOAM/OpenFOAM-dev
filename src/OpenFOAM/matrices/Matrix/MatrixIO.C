@@ -138,7 +138,7 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
     }
     else
     {
-        FatalIOErrorIn("operator>>(Istream&, Matrix<Form, Type>&)", is)
+        FatalIOErrorInFunction(is)
             << "incorrect first token, expected <int>, found "
             << firstToken.info()
             << exit(FatalIOError);

@@ -100,10 +100,8 @@ bool Foam::GeometricField<Type, PatchField, GeoMesh>::readIfPresent()
      || this->readOpt() == IOobject::MUST_READ_IF_MODIFIED
     )
     {
-        WarningIn
-        (
-            "GeometricField<Type, PatchField, GeoMesh>::readIfPresent()"
-        )   << "read option IOobject::MUST_READ or MUST_READ_IF_MODIFIED"
+        WarningInFunction
+            << "read option IOobject::MUST_READ or MUST_READ_IF_MODIFIED"
             << " suggests that a read constructor for field " << this->name()
             << " would be more appropriate." << endl;
     }
@@ -871,11 +869,8 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::relax(const scalar alpha)
 {
     if (debug)
     {
-        InfoIn
-        (
-            "GeometricField<Type, PatchField, GeoMesh>::relax"
-            "(const scalar alpha)"
-        )  << "Relaxing" << endl << this->info() << " by " << alpha << endl;
+        InfoInFunction
+           << "Relaxing" << endl << this->info() << " by " << alpha << endl;
     }
 
     operator==(prevIter() + alpha*(*this - prevIter()));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,9 +76,8 @@ void* Foam::codedBase::loadLibrary
                     }
                     else
                     {
-                        FatalIOErrorIn
+                        FatalIOErrorInFunction
                         (
-                            "codedBase::updateLibrary()",
                             contextDict
                         )   << "Failed looking up symbol " << globalFuncName
                             << nl << "from " << libPath << exit(FatalIOError);
@@ -86,9 +85,8 @@ void* Foam::codedBase::loadLibrary
                 }
                 else
                 {
-                    FatalIOErrorIn
+                    FatalIOErrorInFunction
                     (
-                        "codedBase::loadLibrary()",
                         contextDict
                     )   << "Failed looking up symbol " << globalFuncName << nl
                         << "from " << libPath << exit(FatalIOError);
@@ -96,9 +94,8 @@ void* Foam::codedBase::loadLibrary
                     lib = 0;
                     if (!libs().close(libPath, false))
                     {
-                        FatalIOErrorIn
+                        FatalIOErrorInFunction
                         (
-                            "codedBase::loadLibrary()",
                             contextDict
                         )   << "Failed unloading library "
                             << libPath
@@ -149,9 +146,8 @@ void Foam::codedBase::unloadLibrary
         }
         else
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "codedBase::unloadLibrary()",
                 contextDict
             )   << "Failed looking up symbol " << globalFuncName << nl
                 << "from " << libPath << exit(FatalIOError);
@@ -160,9 +156,8 @@ void Foam::codedBase::unloadLibrary
 
     if (!libs().close(libPath, false))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "codedBase::updateLibrary()",
             contextDict
         )   << "Failed unloading library " << libPath
             << exit(FatalIOError);
@@ -194,9 +189,8 @@ void Foam::codedBase::createLibrary
 
             if (!dynCode.copyOrCreateFiles(true))
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "codedBase::createLibrary(..)",
                     context.dict()
                 )   << "Failed writing files for" << nl
                     << dynCode.libRelPath() << nl
@@ -206,9 +200,8 @@ void Foam::codedBase::createLibrary
 
         if (!dynCode.wmakeLibso())
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "codedBase::createLibrary(..)",
                 context.dict()
             )   << "Failed wmake " << dynCode.libRelPath() << nl
                 << exit(FatalIOError);
@@ -257,9 +250,8 @@ void Foam::codedBase::createLibrary
 
             if (mySize < masterSize)
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "functionEntries::codeStream::execute(..)",
                     context.dict()
                 )   << "Cannot read (NFS mounted) library " << nl
                     << libPath << nl

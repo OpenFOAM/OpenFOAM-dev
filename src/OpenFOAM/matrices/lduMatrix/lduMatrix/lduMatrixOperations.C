@@ -204,7 +204,7 @@ void Foam::lduMatrix::operator+=(const lduMatrix& A)
     {
         if (debug > 1)
         {
-            WarningIn("lduMatrix::operator+=(const lduMatrix& A)")
+            WarningInFunction
                 << "Unknown matrix type combination" << nl
                 << "    this :"
                 << " diagonal:" << diagonal()
@@ -283,7 +283,7 @@ void Foam::lduMatrix::operator-=(const lduMatrix& A)
     {
         if (debug > 1)
         {
-            WarningIn("lduMatrix::operator-=(const lduMatrix& A)")
+            WarningInFunction
                 << "Unknown matrix type combination" << nl
                 << "    this :"
                 << " diagonal:" << diagonal()

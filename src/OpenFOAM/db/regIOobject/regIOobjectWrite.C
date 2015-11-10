@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ bool Foam::regIOobject::writeObject
 {
     if (!good())
     {
-        SeriousErrorIn("regIOobject::write()")
+        SeriousErrorInFunction
             << "bad object " << name()
             << endl;
 
@@ -51,7 +51,7 @@ bool Foam::regIOobject::writeObject
 
     if (instance().empty())
     {
-        SeriousErrorIn("regIOobject::write()")
+        SeriousErrorInFunction
             << "instance undefined for object " << name()
             << endl;
 

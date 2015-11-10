@@ -129,7 +129,7 @@ Foam::Istream& Foam::operator>>(Istream& is, List<T>& L)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorIn("operator>>(Istream&, List<T>&)", is)
+            FatalIOErrorInFunction(is)
                 << "incorrect first token, expected '(', found "
                 << firstToken.info()
                 << exit(FatalIOError);
@@ -146,7 +146,7 @@ Foam::Istream& Foam::operator>>(Istream& is, List<T>& L)
     }
     else
     {
-        FatalIOErrorIn("operator>>(Istream&, List<T>&)", is)
+        FatalIOErrorInFunction(is)
             << "incorrect first token, expected <int> or '(', found "
             << firstToken.info()
             << exit(FatalIOError);
@@ -167,7 +167,7 @@ Foam::List<T> Foam::readList(Istream& is)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorIn("readList<T>(Istream&)", is)
+            FatalIOErrorInFunction(is)
                 << "incorrect first token, expected '(', found "
                 << firstToken.info()
                 << exit(FatalIOError);

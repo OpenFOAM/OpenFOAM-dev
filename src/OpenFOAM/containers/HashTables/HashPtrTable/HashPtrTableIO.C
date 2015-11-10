@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,9 +76,8 @@ void Foam::HashPtrTable<T, Key, Hash>::read(Istream& is, const INew& inewt)
             }
             else
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "HashPtrTable<T, Key, Hash>::read(Istream&, const INew&)",
                     is
                 )   << "incorrect first token, '(', found " << firstToken.info()
                     << exit(FatalIOError);
@@ -92,9 +91,8 @@ void Foam::HashPtrTable<T, Key, Hash>::read(Istream& is, const INew& inewt)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "HashPtrTable<T, Key, Hash>::read(Istream&, const INew&)",
                 is
             )   << "incorrect first token, '(', found " << firstToken.info()
                 << exit(FatalIOError);
@@ -125,9 +123,8 @@ void Foam::HashPtrTable<T, Key, Hash>::read(Istream& is, const INew& inewt)
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "HashPtrTable<T, Key, Hash>::read(Istream&, const INew&)",
             is
         )   << "incorrect first token, expected <int> or '(', found "
             << firstToken.info()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::IOList<T>::IOList(const IOobject& io)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOList::IOList(const IOobject&)")
+        WarningInFunction
             << "IOList " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOList does not support automatic rereading."
@@ -64,7 +64,7 @@ Foam::IOList<T>::IOList(const IOobject& io, const label size)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOList::IOList(const IOobject&, const label)")
+        WarningInFunction
             << "IOList " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOList does not support automatic rereading."
@@ -97,7 +97,7 @@ Foam::IOList<T>::IOList(const IOobject& io, const List<T>& list)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOList::IOList(const IOobject&, const List<T>&)")
+        WarningInFunction
             << "IOList " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOList does not support automatic rereading."
@@ -131,10 +131,8 @@ Foam::IOList<T>::IOList(const IOobject& io, const Xfer<List<T> >& list)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn
-        (
-            "IOList::IOList(const IOobject&, const Xfer<List<T> >&)"
-        )   << "IOList " << name()
+        WarningInFunction
+            << "IOList " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOList does not support automatic rereading."
             << endl;

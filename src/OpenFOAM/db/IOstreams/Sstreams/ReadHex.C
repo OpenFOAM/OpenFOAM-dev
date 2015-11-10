@@ -52,7 +52,7 @@ T Foam::ReadHex(ISstream& is)
 
         if (!isxdigit(c))
         {
-            FatalIOErrorIn("ReadHex(ISstream&)", is)
+            FatalIOErrorInFunction(is)
                 << "Illegal hex digit: '" << c << "'"
                 << exit(FatalIOError);
         }

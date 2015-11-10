@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,10 +44,8 @@ Foam::LduMatrix<Type, DType, LUType>::preconditioner::New
 
         if (constructorIter == symMatrixConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "LduMatrix<Type, DType, LUType>::preconditioner::New"
-                "(const solver&, Istream&)",
                 preconditionerDict
             )   << "Unknown symmetric matrix preconditioner "
                 << preconditionerName << endl << endl
@@ -72,10 +70,8 @@ Foam::LduMatrix<Type, DType, LUType>::preconditioner::New
 
         if (constructorIter == asymMatrixConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "LduMatrix<Type, DType, LUType>::preconditioner::New"
-                "(const solver&, Istream&)",
                 preconditionerDict
             )   << "Unknown asymmetric matrix preconditioner "
                 << preconditionerName << endl << endl
@@ -95,10 +91,8 @@ Foam::LduMatrix<Type, DType, LUType>::preconditioner::New
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "LduMatrix<Type, DType, LUType>::preconditioner::New"
-            "(const solver&, Istream&)",
             preconditionerDict
         )   << "cannot preconditione incomplete matrix, "
                "no diagonal or off-diagonal coefficient"

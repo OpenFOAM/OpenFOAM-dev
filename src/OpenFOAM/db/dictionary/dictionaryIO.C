@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ bool Foam::dictionary::read(Istream& is, const bool keepHeader)
 
     if (!is.good())
     {
-        FatalIOErrorIn("dictionary::read(Istream&, bool)", is)
+        FatalIOErrorInFunction(is)
             << "Istream not OK for reading dictionary "
             << exit(FatalIOError);
 
@@ -193,7 +193,7 @@ void Foam::dictionary::write(Ostream& os, bool subDict) const
         // Check stream before going to next entry.
         if (!os.good())
         {
-            WarningIn("dictionary::write(Ostream&, bool subDict)")
+            WarningInFunction
                 << "Can't write entry " << iter().keyword()
                 << " for dictionary " << name()
                 << endl;

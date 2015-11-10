@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ Foam::PatchTools::sortedPointEdges
             nVisitedEdges++;
             if (nVisitedEdges > nPointEdges)
             {
-                WarningIn("Foam::PatchTools::sortedPointEdges()")
+                WarningInFunction
                     << "Unable to order pointEdges as the face connections "
                     << "are not circular" << nl
                     << "    Original pointEdges = " << pEdges << nl
@@ -130,7 +130,7 @@ Foam::PatchTools::sortedPointEdges
             {
                 if (findIndex(newEdgeList, pEdges[eI]) == -1)
                 {
-                    WarningIn("Foam::PatchTools::sortedPointEdges()")
+                    WarningInFunction
                         << "Cannot find all original edges in the new list"
                         << nl
                         << "    Original pointEdges = " << pEdges << nl

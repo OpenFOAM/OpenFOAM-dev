@@ -118,10 +118,8 @@ bool Foam::functionEntries::includeEtcEntry::execute
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "functionEntries::includeEtcEntry::includeEtcEntry"
-            "(dictionary& parentDict, Istream&)",
             is
         )   << "Cannot open etc file "
             << (ifs.name().size() ? ifs.name() : rawFName)
@@ -158,10 +156,8 @@ bool Foam::functionEntries::includeEtcEntry::execute
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "functionEntries::includeEtcEntry::includeEtcEntry"
-            "(dictionary& parentDict, primitiveEntry&, Istream&)",
             is
         )   << "Cannot open etc file "
             << (ifs.name().size() ? ifs.name() : rawFName)

@@ -524,7 +524,7 @@ Type average(const FieldField<Field, Type>& f)
 
         if (n == 0)
         {
-            WarningIn("average(const FieldField<Field, Type>&) const")
+            WarningInFunction
                 << "empty fieldField, returning zero" << endl;
 
             return pTraits<Type>::zero;
@@ -536,7 +536,7 @@ Type average(const FieldField<Field, Type>& f)
     }
     else
     {
-        WarningIn("average(const FieldField<Field, Type>&) const")
+        WarningInFunction
             << "empty fieldField, returning zero" << endl;
 
         return pTraits<Type>::zero;
@@ -587,7 +587,7 @@ Type gAverage(const FieldField<Field, Type>& f)
     }
     else
     {
-        WarningIn("gAverage(const FieldField<Field, Type>&) const")
+        WarningInFunction
             << "empty fieldField, returning zero" << endl;
 
         return pTraits<Type>::zero;

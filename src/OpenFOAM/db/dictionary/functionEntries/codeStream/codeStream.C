@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,9 +158,8 @@ Foam::functionEntries::codeStream::getFunction
 
                 if (!dynCode.copyOrCreateFiles(true))
                 {
-                    FatalIOErrorIn
+                    FatalIOErrorInFunction
                     (
-                        "functionEntries::codeStream::execute(..)",
                         parentDict
                     )   << "Failed writing files for" << nl
                         << dynCode.libRelPath() << nl
@@ -170,9 +169,8 @@ Foam::functionEntries::codeStream::getFunction
 
             if (!dynCode.wmakeLibso())
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "functionEntries::codeStream::execute(..)",
                     parentDict
                 )   << "Failed wmake " << dynCode.libRelPath() << nl
                     << exit(FatalIOError);
@@ -223,9 +221,8 @@ Foam::functionEntries::codeStream::getFunction
 
                 if (mySize < masterSize)
                 {
-                    FatalIOErrorIn
+                    FatalIOErrorInFunction
                     (
-                        "functionEntries::codeStream::execute(..)",
                         parentDict
                     )   << "Cannot read (NFS mounted) library " << nl
                         << libPath << nl
@@ -262,9 +259,8 @@ Foam::functionEntries::codeStream::getFunction
 
             if (!dlLibs.open(libPath, false))
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "functionEntries::codeStream::execute(..)",
                     parentDict
                 )   << "Failed loading library " << libPath << nl
                     << "Did you add all libraries to the 'libs' entry"
@@ -293,9 +289,8 @@ Foam::functionEntries::codeStream::getFunction
 
     if (!haveLib)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "functionEntries::codeStream::execute(..)",
             parentDict
         )   << "Failed loading library " << libPath
             << " on some processors."
@@ -313,9 +308,8 @@ Foam::functionEntries::codeStream::getFunction
 
     if (!function)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "functionEntries::codeStream::execute(..)",
             parentDict
         )   << "Failed looking up symbol " << dynCode.codeName()
             << " in library " << lib << exit(FatalIOError);

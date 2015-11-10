@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -306,9 +306,8 @@ Foam::scalar Foam::solution::fieldRelaxationFactor(const word& name) const
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "Foam::solution::fieldRelaxationFactor(const word&)",
             fieldRelaxDict_
         )   << "Cannot find variable relaxation factor for '" << name
             << "' or a suitable default value."
@@ -336,9 +335,8 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "Foam::solution::eqnRelaxationFactor(const word&)",
             eqnRelaxDict_
         )   << "Cannot find equation relaxation factor for '" << name
             << "' or a suitable default value."
@@ -366,7 +364,7 @@ const Foam::dictionary& Foam::solution::solverDict(const word& name) const
 {
     if (debug)
     {
-        InfoIn("solution::solverDict(const word&)")
+        InfoInFunction
             << "Lookup solver for " << name << endl;
     }
 
@@ -378,7 +376,7 @@ const Foam::dictionary& Foam::solution::solver(const word& name) const
 {
     if (debug)
     {
-        InfoIn("solution::solver(const word&)")
+        InfoInFunction
             << "Lookup solver for " << name << endl;
     }
 

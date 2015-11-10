@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::IOmapDistribute::IOmapDistribute(const IOobject& io)
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOmapDistribute::IOmapDistribute(const IOobject&)")
+        WarningInFunction
             << "IOmapDistribute " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOmapDistribute does not support automatic rereading."
@@ -75,7 +75,7 @@ Foam::IOmapDistribute::IOmapDistribute
      // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOmapDistribute::IOmapDistribute(const IOobject&)")
+        WarningInFunction
             << "IOmapDistribute " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOmapDistribute does not support automatic rereading."
@@ -112,7 +112,7 @@ Foam::IOmapDistribute::IOmapDistribute
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        WarningIn("IOmapDistribute::IOmapDistribute(const IOobject&)")
+        WarningInFunction
             << "IOmapDistribute " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
             " but IOmapDistribute does not support automatic rereading."

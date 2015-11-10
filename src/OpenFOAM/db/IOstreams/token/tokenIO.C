@@ -54,7 +54,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const token& t)
     {
         case token::UNDEFINED:
             os << "UNDEFINED";
-            WarningIn("Ostream& operator<<(Ostream&, const token&)")
+            WarningInFunction
                 << "Undefined token" << endl;
         break;
 
@@ -94,13 +94,13 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const token& t)
 
         case token::ERROR:
             os << "ERROR";
-            WarningIn("Ostream& operator<<(Ostream&, const token&)")
+            WarningInFunction
                 << "Error token" << endl;
         break;
 
         default:
             os << "UNKNOWN";
-            SeriousErrorIn("Ostream& operator<<(Ostream&, const token&)")
+            SeriousErrorInFunction
                 << "Unknown token"
                 << endl;
     }

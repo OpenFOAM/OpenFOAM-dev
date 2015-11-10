@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,13 @@ void Foam::Istream::putBack(const token& t)
 {
     if (bad())
     {
-        FatalIOErrorIn("void Istream::putBack(const token&)", *this)
+        FatalIOErrorInFunction(*this)
             << "Attempt to put back onto bad stream"
             << exit(FatalIOError);
     }
     else if (putBack_)
     {
-        FatalIOErrorIn("void Istream::putBack(const token&)", *this)
+        FatalIOErrorInFunction(*this)
             << "Attempt to put back another token"
             << exit(FatalIOError);
     }
@@ -53,7 +53,7 @@ bool Foam::Istream::getBack(token& t)
 {
     if (bad())
     {
-        FatalIOErrorIn("void Istream::getBack(token&)", *this)
+        FatalIOErrorInFunction(*this)
             << "Attempt to get back from bad stream"
             << exit(FatalIOError);
     }
@@ -91,7 +91,7 @@ Foam::Istream& Foam::Istream::readBegin(const char* funcName)
     if (delimiter != token::BEGIN_LIST)
     {
         setBad();
-        FatalIOErrorIn("Istream::readBegin(const char*)", *this)
+        FatalIOErrorInFunction(*this)
             << "Expected a '" << token::BEGIN_LIST
             << "' while reading " << funcName
             << ", found " << delimiter.info()
@@ -108,7 +108,7 @@ Foam::Istream& Foam::Istream::readEnd(const char* funcName)
     if (delimiter != token::END_LIST)
     {
         setBad();
-        FatalIOErrorIn("Istream::readEnd(const char*)", *this)
+        FatalIOErrorInFunction(*this)
             << "Expected a '" << token::END_LIST
             << "' while reading " << funcName
             << ", found " << delimiter.info()
@@ -135,7 +135,7 @@ char Foam::Istream::readBeginList(const char* funcName)
     if (delimiter != token::BEGIN_LIST && delimiter != token::BEGIN_BLOCK)
     {
         setBad();
-        FatalIOErrorIn("Istream::readBeginList(const char*)", *this)
+        FatalIOErrorInFunction(*this)
             << "Expected a '" << token::BEGIN_LIST
             << "' or a '" << token::BEGIN_BLOCK
             << "' while reading " << funcName
@@ -156,7 +156,7 @@ char Foam::Istream::readEndList(const char* funcName)
     if (delimiter != token::END_LIST && delimiter != token::END_BLOCK)
     {
         setBad();
-        FatalIOErrorIn("Istream::readEndList(const char*)", *this)
+        FatalIOErrorInFunction(*this)
             << "Expected a '" << token::END_LIST
             << "' or a '" << token::END_BLOCK
             << "' while reading " << funcName

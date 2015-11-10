@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,10 +58,8 @@ Foam::LduMatrix<Type, DType, LUType>::solver::New
 
         if (constructorIter == symMatrixConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
-            (
-                "LduMatrix<Type, DType, LUType>::solver::New", solverDict
-            )   << "Unknown symmetric matrix solver " << solverName
+            FatalIOErrorInFunction(solverDict)
+                << "Unknown symmetric matrix solver " << solverName
                 << endl << endl
                 << "Valid symmetric matrix solvers are :" << endl
                 << symMatrixConstructorTablePtr_->toc()
@@ -85,10 +83,8 @@ Foam::LduMatrix<Type, DType, LUType>::solver::New
 
         if (constructorIter == asymMatrixConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
-            (
-                "LduMatrix<Type, DType, LUType>::solver::New", solverDict
-            )   << "Unknown asymmetric matrix solver " << solverName
+            FatalIOErrorInFunction(solverDict)
+                << "Unknown asymmetric matrix solver " << solverName
                 << endl << endl
                 << "Valid asymmetric matrix solvers are :" << endl
                 << asymMatrixConstructorTablePtr_->toc()
@@ -107,10 +103,8 @@ Foam::LduMatrix<Type, DType, LUType>::solver::New
     }
     else
     {
-        FatalIOErrorIn
-        (
-            "LduMatrix<Type, DType, LUType>::solver::New", solverDict
-        )   << "cannot solve incomplete matrix, "
+        FatalIOErrorInFunction(solverDict)
+            << "cannot solve incomplete matrix, "
                "no diagonal or off-diagonal coefficient"
             << exit(FatalIOError);
 

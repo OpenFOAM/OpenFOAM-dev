@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,7 +185,7 @@ Foam::label Foam::objectRegistry::getEvent() const
     {
         if (objectRegistry::debug)
         {
-            WarningIn("objectRegistry::getEvent() const")
+            WarningInFunction
                 << "Event counter has overflowed. "
                 << "Resetting counter on all dependent objects." << nl
                 << "This might cause extra evaluations." << endl;
@@ -246,7 +246,7 @@ bool Foam::objectRegistry::checkOut(regIOobject& io) const
         {
             if (objectRegistry::debug)
             {
-                WarningIn("objectRegistry::checkOut(regIOobject&)")
+                WarningInFunction
                     << name() << " : attempt to checkOut copy of "
                     << iter.key()
                     << endl;

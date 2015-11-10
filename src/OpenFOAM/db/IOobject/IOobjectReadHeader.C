@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ bool Foam::IOobject::readHeader(Istream& is)
     {
         if (rOpt_ == MUST_READ || rOpt_ == MUST_READ_IF_MODIFIED)
         {
-            FatalIOErrorIn("IOobject::readHeader(Istream&)", is)
+            FatalIOErrorInFunction(is)
                 << " stream not open for reading essential object from file "
                 << is.name()
                 << exit(FatalIOError);
@@ -49,7 +49,7 @@ bool Foam::IOobject::readHeader(Istream& is)
 
         if (IOobject::debug)
         {
-            SeriousIOErrorIn("IOobject::readHeader(Istream&)", is)
+            SeriousIOErrorInFunction(is)
                 << " stream not open for reading from file "
                 << is.name() << endl;
         }
@@ -75,7 +75,7 @@ bool Foam::IOobject::readHeader(Istream& is)
         const word headerObject(headerDict.lookup("object"));
         if (IOobject::debug && headerObject != name())
         {
-            IOWarningIn("IOobject::readHeader(Istream&)", is)
+            IOWarningInFunction(is)
                 << " object renamed from "
                 << name() << " to " << headerObject
                 << " for file " << is.name() << endl;
@@ -86,7 +86,7 @@ bool Foam::IOobject::readHeader(Istream& is)
     }
     else
     {
-        IOWarningIn("IOobject::readHeader(Istream&)", is)
+        IOWarningInFunction(is)
             << "First token could not be read or is not the keyword 'FoamFile'"
             << nl << nl << "Check header is of the form:" << nl << endl;
 
@@ -104,7 +104,7 @@ bool Foam::IOobject::readHeader(Istream& is)
     {
         if (rOpt_ == MUST_READ || rOpt_ == MUST_READ_IF_MODIFIED)
         {
-            FatalIOErrorIn("IOobject::readHeader(Istream&)", is)
+            FatalIOErrorInFunction(is)
                 << " stream failure while reading header"
                 << " on line " << is.lineNumber()
                 << " of file " << is.name()

@@ -61,7 +61,7 @@ Foam::Istream& Foam::operator>>(Istream& is, int64_t& i)
     else
     {
         is.setBad();
-        FatalIOErrorIn("operator>>(Istream&, int64_t&)", is)
+        FatalIOErrorInFunction(is)
             << "wrong token type - expected int64_t, found " << t.info()
             << exit(FatalIOError);
 

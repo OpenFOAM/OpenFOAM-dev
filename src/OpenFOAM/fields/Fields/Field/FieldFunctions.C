@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -517,7 +517,7 @@ Type average(const UList<Type>& f)
     }
     else
     {
-        WarningIn("average(const UList<Type>&)")
+        WarningInFunction
             << "empty field, returning zero" << endl;
 
         return pTraits<Type>::zero;
@@ -594,7 +594,7 @@ Type gAverage
     }
     else
     {
-        WarningIn("gAverage(const UList<Type>&)")
+        WarningInFunction
             << "empty field, returning zero." << endl;
 
         return pTraits<Type>::zero;
