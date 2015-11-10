@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ labelList findBaffles(const polyMesh& mesh, const labelList& boundaryFaces)
 
             if (isA<processorPolyPatch>(patches[patchI]))
             {
-                FatalErrorIn("findBaffles(const polyMesh&, const labelList&)")
+                FatalErrorInFunction
                     << "Duplicate face " << faceI
                     << " is on a processorPolyPatch."
                     << "This is not allowed." << nl

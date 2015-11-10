@@ -235,15 +235,8 @@ void Foam::fileControl::initialVertices
 
     if ((pts.size() != sizes.size()) || (pts.size() != alignments.size()))
     {
-        FatalErrorIn
-        (
-            "Foam::fileControl::initialVertices"
-            "("
-            "   pointField&,"
-            "   scalarField&,"
-            "   Field<triad>&"
-            ")"
-        )   << "Size of list of points, sizes and alignments do not match:"
+        FatalErrorInFunction
+            << "Size of list of points, sizes and alignments do not match:"
             << nl
             << "Points size     = " << pts.size() << nl
             << "Sizes size      = " << sizes.size() << nl

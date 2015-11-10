@@ -288,7 +288,7 @@ Foam::multiphaseMixture::surfaceTensionForce() const
 
             if (sigma == sigmas_.end())
             {
-                FatalErrorIn("multiphaseMixture::surfaceTensionForce() const")
+                FatalErrorInFunction
                     << "Cannot find interface " << interfacePair(alpha1, alpha2)
                     << " in list of sigma values"
                     << exit(FatalError);
@@ -442,12 +442,8 @@ void Foam::multiphaseMixture::correctContactAngle
 
             if (tp == acap.thetaProps().end())
             {
-                FatalErrorIn
-                (
-                    "multiphaseMixture::correctContactAngle"
-                    "(const phase& alpha1, const phase& alpha2, "
-                    "fvPatchVectorFieldField& nHatb) const"
-                )   << "Cannot find interface " << interfacePair(alpha1, alpha2)
+                FatalErrorInFunction
+                    << "Cannot find interface " << interfacePair(alpha1, alpha2)
                     << "\n    in table of theta properties for patch "
                     << acap.patch().name()
                     << exit(FatalError);

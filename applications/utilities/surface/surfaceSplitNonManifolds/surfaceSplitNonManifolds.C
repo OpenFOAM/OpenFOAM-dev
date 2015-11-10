@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,14 +152,14 @@ void testSortedEdgeFaces(const triSurface& surf)
         {
             if (findIndex(sortMyFaces, myFaces[i]) == -1)
             {
-                FatalErrorIn("testSortedEdgeFaces(..)") << abort(FatalError);
+                FatalErrorInFunction << abort(FatalError);
             }
         }
         forAll(sortMyFaces, i)
         {
             if (findIndex(myFaces, sortMyFaces[i]) == -1)
             {
-                FatalErrorIn("testSortedEdgeFaces(..)") << abort(FatalError);
+                FatalErrorInFunction << abort(FatalError);
             }
         }
     }
@@ -299,7 +299,7 @@ label findEdge
     }
 
 
-    FatalErrorIn("findEdge(..)") << "Cannot find edge with labels " << v0
+    FatalErrorInFunction
         << ' ' << v1 << " in candidates " << edgeLabels
         << " with vertices:" << UIndirectList<edge>(surf.edges(), edgeLabels)()
         << abort(FatalError);
@@ -338,7 +338,7 @@ label otherEdge
         }
     }
 
-    FatalErrorIn("otherEdge(..)") << "Cannot find other edge on face " << faceI
+    FatalErrorInFunction
         << " verts:" << surf.localPoints()[faceI]
         << " connected to point " << pointI
         << " faceEdges:" << UIndirectList<edge>(surf.edges(), fEdges)()
@@ -404,7 +404,7 @@ void walkSplitLine
 
             if (eFaces.size() != 2)
             {
-                FatalErrorIn("walkSplitPoint(..)")
+                FatalErrorInFunction
                     << "Can only handle edges with 2 or 4 edges for now."
                     << abort(FatalError);
             }
@@ -419,7 +419,7 @@ void walkSplitLine
             }
             else
             {
-                FatalErrorIn("walkSplitPoint(..)") << abort(FatalError);
+                FatalErrorInFunction << abort(FatalError);
             }
         }
         while (true);
@@ -539,7 +539,7 @@ void calcPointVecs
 
                 surf.write("errorSurf.obj");
 
-                FatalErrorIn("calcPointVecs(..)")
+                FatalErrorInFunction
                     << "Cannot find two faces using border edge " << edgeI
                     << " verts:" << edges[edgeI]
                     << " eFaces:" << eFaces << endl

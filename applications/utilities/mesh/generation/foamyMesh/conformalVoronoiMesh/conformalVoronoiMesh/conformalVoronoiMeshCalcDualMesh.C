@@ -234,8 +234,7 @@ void Foam::conformalVoronoiMesh::calcTetMesh
             {
                 patchIndex = patchNames.size() - 1;
 
-                WarningIn("Foam::conformalVoronoiMesh::calcTetMesh")
-                    << "Tet face centre at  " << nl
+                WarningInFunction
                     << newFace.centre(points) << nl
                     << "did not find a surface patch. Adding to "
                     << patchNames[patchIndex]
@@ -2479,15 +2478,7 @@ void Foam::conformalVoronoiMesh::sortProcPatches
              || slaves.size() != sortingIndices.size()
             )
             {
-                FatalErrorIn
-                (
-                    "void Foam::conformalVoronoiMesh::sortProcPatches"
-                    "("
-                        "List<DynamicList<face> >& patchFaces, "
-                        "List<DynamicList<label> >& patchOwners, "
-                        "const List<DynamicList<label> >& patchSortingIndices"
-                    ") const"
-                )
+                FatalErrorInFunction
                     << "patch size and size of sorting indices is inconsistent "
                     << " for patch " << patchI << nl
                     << " faces.size() " << faces.size() << nl

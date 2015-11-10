@@ -73,11 +73,8 @@ autoPtr<relaxationModel> relaxationModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "relaxationModel::New(const dictionary&, "
-            "const conformalVoronoiMesh&)"
-        )   << "Unknown relaxationModel type "
+        FatalErrorInFunction
+            << "Unknown relaxationModel type "
             << relaxationModelTypeName
             << endl << endl
             << "Valid relaxationModel types are :" << endl

@@ -92,11 +92,9 @@ void Foam::fvPatchMapper::calcAddressing() const
         {
             if (min(addr) < 0)
             {
-                //FatalErrorIn
                 WarningInFunction
                     << "Unmapped entry in patch mapping for patch "
                     << patch_.index() << " named " << patch_.name()
-                    //<< abort(FatalError);
                     << endl;
             }
         }
@@ -292,15 +290,6 @@ const Foam::scalarListList& Foam::fvPatchMapper::weights() const
 
     return *weightsPtr_;
 }
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

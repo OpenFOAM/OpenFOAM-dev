@@ -229,7 +229,7 @@ void Foam::CV2D::insertPoints(const fileName& pointFileName)
     }
     else
     {
-        FatalErrorIn("insertInitialPoints")
+        FatalErrorInFunction
             << "Could not open pointsFile " << pointFileName
             << exit(FatalError);
     }
@@ -913,7 +913,7 @@ void Foam::CV2D::newPoints()
 //             }
 //             else
 //             {
-//                 FatalErrorIn("CV2D::newPoints() const")
+//                 FatalErrorInFunction
 //                     << "Infinite triangle found in internal mesh"
 //                     << exit(FatalError);
 //             }

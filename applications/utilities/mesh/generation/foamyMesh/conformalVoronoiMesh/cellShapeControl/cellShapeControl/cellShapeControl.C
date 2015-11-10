@@ -350,10 +350,8 @@ void Foam::cellShapeControl::cellSizeAndAlignment
 
             alignment = v;
 
-//            FatalErrorIn
-//            (
-//                "Foam::conformalVoronoiMesh::setVertexSizeAndAlignment()"
-//            )   << "Point has bad alignment! "
+//            FatalErrorInFunction
+//                << "Point has bad alignment! "
 //                << pt << " " << size << " " << alignment << nl
 //                << "Bary Coords = " << bary <<  nl
 //                << ch->vertex(0)->info() << nl

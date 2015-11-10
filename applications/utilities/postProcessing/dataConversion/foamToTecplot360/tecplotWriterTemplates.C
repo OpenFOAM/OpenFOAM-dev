@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ void Foam::tecplotWriter::writeField(const Field<Type>& fld) const
 
         if (!TECDAT112(&size, floats.begin(), &IsDouble))
         {
-//            FatalErrorIn("tecplotWriter::writeField(..) const")
+//            FatalErrorInFunction
 //                << "Error in TECDAT112." << exit(FatalError);
         }
     }

@@ -179,11 +179,8 @@ void Foam::starMesh::addSAMMcell
 
         default:
         {
-            FatalErrorIn
-            (
-                "starMesh::addSAMMcell"
-                "(const labelList& labels, const label nCreatedCells)"
-            )   << "SAMM type " << sammTypeFlag << " is invalid"
+            FatalErrorInFunction
+                << "SAMM type " << sammTypeFlag << " is invalid"
                 << abort(FatalError);
         }
     }
@@ -245,7 +242,7 @@ void Foam::starMesh::readCells()
         }
         else
         {
-            FatalErrorIn("starMesh::readCells()")
+            FatalErrorInFunction
                 << "Cannot read file " << cellsFileName
                 << abort(FatalError);
         }
@@ -294,7 +291,7 @@ void Foam::starMesh::readCells()
             {
                 if ((cellsFile >> lineLabel).eof())
                 {
-                    FatalErrorIn("starMesh::readCells()")
+                    FatalErrorInFunction
                         << "Reached end of cells file before "
                         << "all cells are read in."
                         << abort(FatalError);
@@ -370,7 +367,7 @@ void Foam::starMesh::readCells()
             {
                 if (curShapeLabels[i] < 0)
                 {
-                    FatalErrorIn("starMesh::readCells()")
+                    FatalErrorInFunction
                         << "Invalid vertex found in cell " << cellI
                         << ". STAR cell no: " << lineLabel
                         << " labels: " << curShapeLabels
@@ -381,7 +378,7 @@ void Foam::starMesh::readCells()
     }
     else
     {
-        FatalErrorIn("starMesh::readCells()")
+        FatalErrorInFunction
             << "No cells in file " << cellsFileName
             << abort(FatalError);
     }

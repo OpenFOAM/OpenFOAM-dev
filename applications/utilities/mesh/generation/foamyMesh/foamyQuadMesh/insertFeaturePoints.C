@@ -61,7 +61,7 @@ void Foam::CV2D::insertFeaturePoints()
 
     if (feMeshes.empty())
     {
-        WarningIn("CV2D::insertFeaturePoints")
+        WarningInFunction
             << "Extended Feature Edge Mesh is empty so no feature points will "
             << "be found." << nl
             << "    Use: featureMethod extendedFeatureEdgeMesh;" << nl
@@ -341,7 +341,7 @@ void Foam::CV2D::insertFeaturePoints()
                 }
                 else
                 {
-                    WarningIn("void Foam::CV2D::insertFeaturePoints()")
+                    WarningInFunction
                         << "Feature Edge " << edges[edgeI] << nl
                         << "    points(" << points[edges[edgeI].start()]
                         << ", " << points[edges[edgeI].end()] << ")" << nl
@@ -352,7 +352,7 @@ void Foam::CV2D::insertFeaturePoints()
             }
             else
             {
-                WarningIn("void Foam::CV2D::insertFeaturePoints()")
+                WarningInFunction
                       << "Point " << featPoint << " is not on the line "
                       << line << endl;
             }

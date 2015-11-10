@@ -79,11 +79,8 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::Moraga::Cl() const
      || max(sqrSr).value() > 0.04
     )
     {
-        WarningIn
-        (
-            "Foam::tmp<Foam::volScalarField> "
-            "Foam::liftModels::Moraga::Cl() const"
-        )   << "Re and/or Sr are out of the range of applicability of the "
+        WarningInFunction
+            << "Re and/or Sr are out of the range of applicability of the "
             << "Moraga model. Clamping to range bounds"
             << endl;
     }

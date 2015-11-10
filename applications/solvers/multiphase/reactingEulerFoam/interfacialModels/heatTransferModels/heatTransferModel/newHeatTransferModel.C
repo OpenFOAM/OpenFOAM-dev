@@ -44,7 +44,7 @@ Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("heatTransferModel::New")
+        FatalErrorInFunction
             << "Unknown heatTransferModelType type "
             << heatTransferModelType << endl << endl
             << "Valid heatTransferModel types are : " << endl

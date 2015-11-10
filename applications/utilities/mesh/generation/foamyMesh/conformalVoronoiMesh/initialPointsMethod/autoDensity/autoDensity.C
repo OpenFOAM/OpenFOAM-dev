@@ -896,14 +896,8 @@ autoDensity::autoDensity
     {
         maxSizeRatio_ = 2.0;
 
-        WarningIn
-        (
-            "autoDensity::autoDensity"
-            "("
-                "const dictionary& initialPointsDict,"
-                "const conformalVoronoiMesh& foamyHexMesh"
-            ")"
-        )   << "The maxSizeRatio must be greater than one to be sensible, "
+        WarningInFunction
+            << "The maxSizeRatio must be greater than one to be sensible, "
             << "setting to " << maxSizeRatio_
             << endl;
     }

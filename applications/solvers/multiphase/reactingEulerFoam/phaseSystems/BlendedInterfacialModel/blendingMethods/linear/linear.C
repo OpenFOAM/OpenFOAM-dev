@@ -93,14 +93,8 @@ Foam::blendingMethods::linear::linear
           < minPartlyContinuousAlpha_[*iter]
         )
         {
-            FatalErrorIn
-            (
-                "Foam::blendingMethods::linear::linear"
-                "("
-                    "const dictionary& dict,"
-                    "const wordList& phaseNames"
-                ")"
-            )   << "The supplied fully continuous volume fraction for "
+            FatalErrorInFunction
+                << "The supplied fully continuous volume fraction for "
                 << *iter
                 << " is less than the partly continuous value."
                 << endl << exit(FatalError);

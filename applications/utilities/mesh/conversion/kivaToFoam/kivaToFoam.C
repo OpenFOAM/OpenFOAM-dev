@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            FatalErrorIn("main(int argc, char *argv[])")
+            FatalErrorInFunction
                 << "KIVA file version " << versionName << " not supported"
                 << exit(FatalError);
 

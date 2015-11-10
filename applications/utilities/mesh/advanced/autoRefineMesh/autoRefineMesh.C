@@ -365,7 +365,7 @@ bool limitRefinementLevel
                 {
                     if (refLevel[cellI] - refLevel[nbr] >= limitDiff)
                     {
-                        FatalErrorIn("limitRefinementLevel")
+                        FatalErrorInFunction
                             << "Level difference between neighbouring cells "
                             << cellI << " and " << nbr
                             << " greater than or equal to " << limitDiff << endl
@@ -705,7 +705,7 @@ int main(int argc, char *argv[])
 
     if (nCutLayers > 0 && selectInside)
     {
-        WarningIn(args.executable())
+        WarningInFunction
             << "Illogical settings : Both nCutLayers>0 and selectInside true."
             << endl
             << "This would mean that inside cells get removed but should be"
@@ -728,7 +728,7 @@ int main(int argc, char *argv[])
 
         if (queryMesh.findCell(outsidePoint, -1, false) == -1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "outsidePoint " << outsidePoint
                 << " is not inside any cell"
                 << exit(FatalError);

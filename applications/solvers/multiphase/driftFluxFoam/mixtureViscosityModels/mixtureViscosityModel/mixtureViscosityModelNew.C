@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,11 +46,8 @@ Foam::autoPtr<Foam::mixtureViscosityModel> Foam::mixtureViscosityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "mixtureViscosityModel::New(const volVectorField&, "
-            "const surfaceScalarField&)"
-        )   << "Unknown mixtureViscosityModel type "
+        FatalErrorInFunction
+            << "Unknown mixtureViscosityModel type "
             << modelType << nl << nl
             << "Valid mixtureViscosityModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

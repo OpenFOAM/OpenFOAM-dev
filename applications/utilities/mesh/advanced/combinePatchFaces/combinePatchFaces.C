@@ -177,7 +177,7 @@ label mergePatchFaces
 
                         if (newVertI < 0)
                         {
-                            FatalErrorIn("mergePatchFaces")
+                            FatalErrorInFunction
                                 << "In set:" << setI << " old face labels:"
                                 << allFaceSets[setI] << " new face vertices:"
                                 << setFaceVerts[i] << " are unmapped vertices!"

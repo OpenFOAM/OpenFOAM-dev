@@ -306,7 +306,7 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
 
     if (nTotalVertices != label(Triangulation::number_of_vertices()))
     {
-        WarningIn("Foam::conformalVoronoiMesh::printVertexInfo()")
+        WarningInFunction
             << nTotalVertices << " does not equal "
             << Triangulation::number_of_vertices()
             << endl;

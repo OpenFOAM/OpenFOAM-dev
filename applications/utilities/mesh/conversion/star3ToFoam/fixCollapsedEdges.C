@@ -127,7 +127,7 @@ void Foam::starMesh::fixCollapsedEdges()
 
                 if (nNewVertices < 3)
                 {
-                    FatalErrorIn("starMesh::fixCollapsedEdges()")
+                    FatalErrorInFunction
                         << "Face " << faceI << " of cell " << cellI
                         << " is colapsed down to a point or edge, which is "
                         << "not permitted" << endl

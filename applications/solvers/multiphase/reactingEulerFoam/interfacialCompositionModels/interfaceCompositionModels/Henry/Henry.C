@@ -50,16 +50,8 @@ Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::Henry
 {
     if (k_.size() != this->speciesNames_.size())
     {
-        FatalErrorIn
-        (
-            "template<class Thermo, class OtherThermo> "
-            "Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>:: "
-            "Henry "
-            "( "
-                "const dictionary& dict, "
-                "const phasePair& pair "
-            ")"
-        )   << "Differing number of species and solubilities"
+        FatalErrorInFunction
+            << "Differing number of species and solubilities"
             << exit(FatalError);
     }
 }

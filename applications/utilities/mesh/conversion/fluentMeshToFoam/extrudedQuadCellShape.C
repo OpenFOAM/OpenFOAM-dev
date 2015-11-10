@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,13 +59,8 @@ cellShape extrudedQuadCellShape
     // Checking
     if (faceLabels.size() != 4)
     {
-        FatalErrorIn
-        (
-            "extrudedQuadCellShape(const label cellIndex, "
-            "const labelList& faceLabels, const faceList& faces, "
-            "const labelList& owner, const labelList& neighbour, "
-            "const label pointOffset, faceList& frontAndBackFaces)"
-        )   << "Trying to create a quad with " << faceLabels.size() << " faces"
+        FatalErrorInFunction
+            << "Trying to create a quad with " << faceLabels.size() << " faces"
             << abort(FatalError);
     }
 
@@ -80,13 +75,8 @@ cellShape extrudedQuadCellShape
 
         if (curFace.size() != 2)
         {
-            FatalErrorIn
-            (
-                "extrudedQuadCellShape(const label cellIndex, "
-                "const labelList& faceLabels, const faceList& faces, "
-                "const labelList& owner, const labelList& neighbour, "
-                "const label pointOffset, faceList& frontAndBackFaces)"
-            )   << "face " << curFaceLabel
+            FatalErrorInFunction
+                << "face " << curFaceLabel
                 << "does not have 2 vertices. Number of vertices: " << curFace
                 << abort(FatalError);
         }
@@ -110,13 +100,8 @@ cellShape extrudedQuadCellShape
         }
         else
         {
-            FatalErrorIn
-            (
-                "extrudedQuadCellShape(const label cellIndex, "
-                "const labelList& faceLabels, const faceList& faces, "
-                "const labelList& owner, const labelList& neighbour, "
-                "const label pointOffset, faceList& frontAndBackFaces)"
-            )   << "face " << curFaceLabel
+            FatalErrorInFunction
+                << "face " << curFaceLabel
                 << " does not belong to cell " << cellIndex
                 << ". Face owner: " << owner[curFaceLabel] << " neighbour: "
                 << neighbour[curFaceLabel]
@@ -253,13 +238,8 @@ cellShape extrudedQuadCellShape
     }
     else
     {
-        FatalErrorIn
-        (
-            "extrudedQuadCellShape(const label cellIndex, "
-            "const labelList& faceLabels, const faceList& faces, "
-            "const labelList& owner, const labelList& neighbour, "
-            "const label pointOffset, faceList& frontAndBackFaces)"
-        )   << "Problem with edge matching. Edges: " << localFaces
+        FatalErrorInFunction
+            << "Problem with edge matching. Edges: " << localFaces
             << abort(FatalError);
     }
 

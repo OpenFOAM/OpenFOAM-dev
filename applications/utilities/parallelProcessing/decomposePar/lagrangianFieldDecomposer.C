@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,6 @@ Description
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::lagrangianFieldDecomposer::lagrangianFieldDecomposer
 (
     const polyMesh& mesh,
@@ -77,22 +76,8 @@ Foam::lagrangianFieldDecomposer::lagrangianFieldDecomposer
 
                 // if (mappedTetFace == -1)
                 // {
-                //     FatalErrorIn
-                //     (
-                //         "Foam::lagrangianFieldDecomposer"
-                //         "::lagrangianFieldDecomposer"
-                //         "("
-                //             "const polyMesh& mesh, "
-                //             "const polyMesh& procMesh, "
-                //             "const labelList& faceProcAddressing, "
-                //             "const labelList& cellProcAddressing, "
-                //             "const word& cloudName, "
-                //             "const Cloud<indexedParticle>& "
-                //             "lagrangianPositions, "
-                //             "const List<SLList<indexedParticle*>*>& "
-                //             "cellParticles"
-                //         ")"
-                //     )   << "Face lookup failure." << nl
+                //     FatalErrorInFunction
+                //         << "Face lookup failure." << nl
                 //         << abort(FatalError);
                 // }
 

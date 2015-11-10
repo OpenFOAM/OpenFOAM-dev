@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,8 @@ autoPtr<tabulatedWallFunction> tabulatedWallFunction::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "tabulatedWallFunction::New(const dictionary&, const polyMesh&)"
-        )   << "Unknown tabulatedWallFunction type " << twfTypeName
+        FatalErrorInFunction
+            << "Unknown tabulatedWallFunction type " << twfTypeName
             << nl << nl << "Valid tabulatedWallFunction types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);

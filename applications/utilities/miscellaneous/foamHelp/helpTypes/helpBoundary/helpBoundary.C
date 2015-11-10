@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,14 +92,7 @@ void Foam::helpTypes::helpBoundary::execute
     bool abortVar(env("FOAM_ABORT"));
     if (abortVar)
     {
-        FatalErrorIn
-        (
-            "void Foam::helpTypes::helpBoundary::execute"
-            "("
-                "const argList&, "
-                "const fvMesh&"
-            ")"
-        )
+        FatalErrorInFunction
             << "Please unset FOAM_ABORT to use this utlity"
             << exit(FatalError);
     }
@@ -155,27 +148,13 @@ void Foam::helpTypes::helpBoundary::execute
         }
         else
         {
-            FatalErrorIn
-            (
-                "void Foam::helpTypes::helpBoundary::execute"
-                "("
-                    "const argList&, "
-                    "const fvMesh&"
-                ")"
-            )
+            FatalErrorInFunction
                 << "Unable to read field " << fieldName << exit(FatalError);
         }
     }
     else if (args.optionReadIfPresent("fixedValue", fieldName))
     {
-        FatalErrorIn
-        (
-            "void Foam::helpTypes::helpBoundary::execute"
-            "("
-                "const argList&, "
-                "const fvMesh&"
-            ")"
-        )
+        FatalErrorInFunction
             << "-field option must be specified when using the -fixedValue "
             << "option" << exit(FatalError);
     }

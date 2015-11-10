@@ -109,7 +109,7 @@ void Foam::shortEdgeFilter2D::updateEdgeRegionMap
         {
             region = startPtRegions[0];
 
-            WarningIn("shortEdgeFilter2D()")
+            WarningInFunction
                 << "Both points in edge are in different regions."
                 << " Assigning edge to region " << region
                 << endl;
@@ -495,7 +495,7 @@ Foam::shortEdgeFilter2D::filter()
                         }
                         else
                         {
-                            WarningIn("shortEdgeFilter")
+                            WarningInFunction
                                 << "Point " << pChain
                                 << " marked for deletion as well as point "
                                 << pointI << nl
@@ -525,7 +525,7 @@ Foam::shortEdgeFilter2D::filter()
         }
         else
         {
-            FatalErrorIn("shortEdgeFilter")
+            FatalErrorInFunction
                 << "Only " << newFace.size() << " in face " << faceI
                 << exit(FatalError);
         }
@@ -553,7 +553,7 @@ Foam::shortEdgeFilter2D::filter()
     {
         if (newPointNumbers[pointI] == -1)
         {
-            WarningIn("shortEdgeFilter")
+            WarningInFunction
                 << pointI << " will be deleted and " << newPointNumbers[pointI]
                 << ", so it will not be replaced. "
                 << "This will cause edges to be deleted." << endl;

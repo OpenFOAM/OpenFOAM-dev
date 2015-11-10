@@ -104,15 +104,8 @@ void rayShooting::splitLine
             }
             else
             {
-                WarningIn
-                (
-                    "rayShooting::splitLine"
-                    "("
-                    "   const line<point,point>&,"
-                    "   const scalar&,"
-                    "   DynamicList<Vb::Point>&"
-                    ")"
-                )   << "Point perturbation crosses a surface. Not inserting."
+                WarningInFunction
+                    << "Point perturbation crosses a surface. Not inserting."
                     << endl;
             }
         }

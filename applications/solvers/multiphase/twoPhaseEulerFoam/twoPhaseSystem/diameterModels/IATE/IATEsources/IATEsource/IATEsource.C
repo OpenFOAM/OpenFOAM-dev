@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,11 +56,8 @@ Foam::diameterModels::IATEsource::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "IATEsource::New"
-            "(const word& type, const IATE&, const dictionary&)"
-        )   << "Unknown IATE source type "
+        FatalErrorInFunction
+            << "Unknown IATE source type "
             << type << nl << nl
             << "Valid IATE source types : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

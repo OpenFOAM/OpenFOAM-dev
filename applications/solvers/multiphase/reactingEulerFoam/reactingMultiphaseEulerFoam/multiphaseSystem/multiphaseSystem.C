@@ -400,12 +400,8 @@ void Foam::multiphaseSystem::correctContactAngle
 
             if (tp == acap.thetaProps().end())
             {
-                FatalErrorIn
-                (
-                    "multiphaseSystem::correctContactAngle"
-                    "(const phaseModel& phase1, const phaseModel& phase2, "
-                    "fvPatchVectorFieldField& nHatb) const"
-                )   << "Cannot find interface "
+                FatalErrorInFunction
+                    << "Cannot find interface "
                     << phasePairKey(phase1.name(), phase2.name())
                     << "\n    in table of theta properties for patch "
                     << acap.patch().name()

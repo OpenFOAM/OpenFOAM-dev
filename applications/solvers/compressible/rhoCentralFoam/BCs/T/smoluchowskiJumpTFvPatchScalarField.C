@@ -94,15 +94,8 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
      || mag(accommodationCoeff_) > 2.0
     )
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "smoluchowskiJumpTFvPatchScalarField::"
-            "smoluchowskiJumpTFvPatchScalarField"
-            "("
-            "    const fvPatch&,"
-            "    const DimensionedField<scalar, volMesh>&,"
-            "    const dictionary&"
-            ")",
             dict
         )   << "unphysical accommodationCoeff specified"
             << "(0 < accommodationCoeff <= 1)" << endl

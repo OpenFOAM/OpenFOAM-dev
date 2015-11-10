@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ public:
 
             if (volTot > 1.001 || volTot < 0.999)
             {
-                FatalErrorIn("mixture::mixture(istream& is)")
+                FatalErrorInFunction
                     << "Sum of volume fractions for Mixture " << name_
                     << " = " << volTot << endl
                     << "Should equal one."

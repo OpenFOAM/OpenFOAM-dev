@@ -69,10 +69,7 @@ addToRunTimeSelectionTable
 ////
 ////    if (!surfHit.hit())
 ////    {
-////        FatalErrorIn
-////        (
-////            "Foam::tensor Foam::conformalVoronoiMesh::requiredAlignment"
-////        )
+////        FatalErrorInFunction
 ////            << "findSurfaceNearest did not find a hit across the surfaces."
 ////            << exit(FatalError) << endl;
 ////    }
@@ -125,7 +122,7 @@ addToRunTimeSelectionTable
 //
 //    if (mag(ns) < SMALL)
 //    {
-//        WarningIn("conformalVoronoiMesh::requiredAlignment")
+//        WarningInFunction
 //            << "Parallel normals detected in spoke search." << nl
 //            << "point: " << pt << nl
 //            << "np   : " << np << nl
@@ -466,11 +463,8 @@ void Foam::searchableSurfaceControl::initialVertices
         if (!cellSize(pts[pI], sizes[pI], priority))
         {
             sizes[pI] = defaultCellSize_;
-//            FatalErrorIn
-//            (
-//                "Foam::searchableSurfaceControl::initialVertices"
-//                "(pointField&, scalarField&, tensorField&)"
-//            )   << "Could not calculate cell size"
+//            FatalErrorInFunction
+//                << "Could not calculate cell size"
 //                << abort(FatalError);
         }
 

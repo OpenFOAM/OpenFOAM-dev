@@ -55,11 +55,8 @@ Foam::diameterModels::IATEsource::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "IATEsource::New"
-            "(const word& type, const IATE&, const dictionary&)"
-        )   << "Unknown IATE source type "
+        FatalErrorInFunction
+            << "Unknown IATE source type "
             << type << nl << nl
             << "Valid IATE source types : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

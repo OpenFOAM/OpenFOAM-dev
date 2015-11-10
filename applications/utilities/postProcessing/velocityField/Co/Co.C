@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ void Foam::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
         }
         else
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Incorrect dimensions of phi: " << phi.dimensions()
                 << abort(FatalError);
         }

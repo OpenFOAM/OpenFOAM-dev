@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
     if (!smapFile.good())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Cannot open SMAP file " << smapFile.name()
             << exit(FatalError);
     }
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
          && fieldName.wordToken() != "CELL"
         )
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Expected first CELL, found "
                 << fieldName
                 << exit(FatalError);
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
 
         if (cell != 0)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Expected first SMAP dummy entry to be cell 0, found "
                 << cell
                 << exit(FatalError);

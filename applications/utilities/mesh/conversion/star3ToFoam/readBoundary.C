@@ -114,7 +114,7 @@ void Foam::starMesh::readBoundary()
         }
         else
         {
-            FatalErrorIn("starMesh::readBoundary()")
+            FatalErrorInFunction
                 << "Cannot read file "
                 << boundaryFileName
                 << abort(FatalError);
@@ -220,7 +220,7 @@ void Foam::starMesh::readBoundary()
     }
     else
     {
-        WarningIn("void starMesh::readBoundary()")
+        WarningInFunction
             << "no boundary faces in file "
             << boundaryFileName
             << endl;

@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     if (fZone.checkParallelSync())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Face zone " << fZone.name()
             << " is not parallel synchronised."
             << " Any coupled face also needs its coupled version to be included"
@@ -334,7 +334,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    FatalErrorIn(args.executable())
+                    FatalErrorInFunction
                         << "Incorrect status for face " << meshFaceI
                         << abort(FatalError);
                 }
@@ -359,7 +359,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem : unvisited face " << faceI
                 << " centre:" << mesh.faceCentres()[faceLabels[faceI]]
                 << abort(FatalError);
@@ -380,7 +380,7 @@ int main(int argc, char *argv[])
         mesh.faceZones()[zoneName].resetAddressing(faceLabels, newFlipMap);
         if (!mesh.faceZones().write())
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Failed writing faceZones" << exit(FatalError);
         }
     }

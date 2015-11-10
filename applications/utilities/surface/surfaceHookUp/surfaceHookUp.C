@@ -471,7 +471,7 @@ int main(int argc, char *argv[])
 
                     if (eFaces.size() != 1)
                     {
-                        WarningIn(args.executable())
+                        WarningInFunction
                             << "Edge is attached to " << eFaces.size()
                             << " faces." << endl;
 

@@ -82,7 +82,7 @@ scalar getMergeDistance
 
     if (runTime.writeFormat() == IOstream::ASCII && mergeTol < writeTol)
     {
-        FatalErrorIn("getMergeDistance")
+        FatalErrorInFunction
             << "Your current settings specify ASCII writing with "
             << IOstream::defaultPrecision() << " digits precision." << endl
             << "Your merging tolerance (" << mergeTol << ") is finer than this."
@@ -272,7 +272,7 @@ void readFields
 
     if (haveMesh[Pstream::myProcNo()] && objectNames != masterNames)
     {
-        FatalErrorIn("readFields()")
+        FatalErrorInFunction
             << "differing fields of type " << GeoField::typeName
             << " on processors." << endl
             << "Master has:" << masterNames << endl
@@ -373,11 +373,8 @@ void compareFields
     {
         if (mag(b[cellI] - a[cellI]) > tolDim)
         {
-            FatalErrorIn
-            (
-                "compareFields"
-                "(const scalar, const volVectorField&, const volVectorField&)"
-            )   << "Did not map volVectorField correctly:" << nl
+            FatalErrorInFunction
+                << "Did not map volVectorField correctly:" << nl
                 << "cell:" << cellI
                 << " transfer b:" << b[cellI]
                 << " real cc:" << a[cellI]
@@ -401,12 +398,8 @@ void compareFields
             {
                 if (mag(aBoundary[i] - bBoundary[i]) > tolDim)
                 {
-                    WarningIn
-                    (
-                        "compareFields"
-                        "(const scalar, const volVectorField&"
-                        ", const volVectorField&)"
-                    )   << "Did not map volVectorField correctly:"
+                    WarningInFunction
+                        << "Did not map volVectorField correctly:"
                         << endl
                         << "patch:" << patchI << " patchFace:" << i
                         << " cc:" << endl
@@ -441,7 +434,7 @@ int main(int argc, char *argv[])
 
     if (env("FOAM_SIGFPE"))
     {
-        WarningIn(args.executable())
+        WarningInFunction
             << "Detected floating point exception trapping (FOAM_SIGFPE)."
             << " This might give" << nl
             << "    problems when mapping fields. Switch it off in case"
@@ -550,7 +543,7 @@ int main(int argc, char *argv[])
 
         if (!decomposer().parallelAware())
         {
-            WarningIn(args.executable())
+            WarningInFunction
                 << "You have selected decomposition method "
                 << decomposer().typeName
                 << " which does" << endl
@@ -596,7 +589,7 @@ int main(int argc, char *argv[])
 
         if (nonProcI == -1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Cannot find non-processor patch on processor "
                 << Pstream::myProcNo() << endl
                 << " Current patches:" << patches.names() << abort(FatalError);

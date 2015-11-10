@@ -56,7 +56,7 @@ Foam::autoPtr<Foam::multiphaseSystem> Foam::multiphaseSystem::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("multiphaseSystem::New")
+        FatalErrorInFunction
             << "Unknown multiphaseSystemType type "
             << multiphaseSystemType << endl << endl
             << "Valid multiphaseSystem types are : " << endl

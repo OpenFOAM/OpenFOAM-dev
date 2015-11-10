@@ -268,7 +268,7 @@ autoPtr<mapPolyMesh> mergeSharedPoints
             }
             else
             {
-                FatalErrorIn("fvMeshDistribute::mergeSharedPoints()")
+                FatalErrorInFunction
                     << "Problem. oldPointI:" << oldPointI
                     << " newPointI:" << newPointI << abort(FatalError);
             }
@@ -301,7 +301,7 @@ boundBox procBounds
 
         if (pointsInstance != databases[procI].timeName())
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Your time was specified as " << databases[procI].timeName()
                 << " but there is no polyMesh/points in that time." << endl
                 << "(there is a points file in " << pointsInstance
@@ -497,7 +497,7 @@ int main(int argc, char *argv[])
 
     if (runTime.writeFormat() == IOstream::ASCII && mergeTol < writeTol)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Your current settings specify ASCII writing with "
             << IOstream::defaultPrecision() << " digits precision." << endl
             << "Your merging tolerance (" << mergeTol << ") is finer than this."
@@ -726,7 +726,7 @@ int main(int argc, char *argv[])
 
             if (!masterMesh.write())
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Failed writing polyMesh."
                     << exit(FatalError);
             }

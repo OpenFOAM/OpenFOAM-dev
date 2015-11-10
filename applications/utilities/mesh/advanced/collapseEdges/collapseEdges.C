@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 
     if (collapseFaces && collapseFaceSet)
     {
-        FatalErrorIn("main(int, char*[])")
+        FatalErrorInFunction
             << "Both face zone collapsing and face collapsing have been"
             << "selected. Choose only one of:" << nl
             << "    -collapseFaces" << nl

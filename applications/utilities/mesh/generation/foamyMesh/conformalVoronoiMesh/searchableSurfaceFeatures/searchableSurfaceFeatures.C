@@ -50,11 +50,8 @@ Foam::searchableSurfaceFeatures::New
 
     if (cstrIter == dictConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "searchableSurfaceFeatures::New(const word&,"
-            " const searchableSurface&, const dictionary&)"
-        )   << "Unknown searchableSurfaceFeatures type "
+        FatalErrorInFunction
+            << "Unknown searchableSurfaceFeatures type "
             << searchableSurfaceFeaturesType << endl << endl
             << "Valid searchableSurfaceFeatures types : " << endl
             << dictConstructorTablePtr_->sortedToc()

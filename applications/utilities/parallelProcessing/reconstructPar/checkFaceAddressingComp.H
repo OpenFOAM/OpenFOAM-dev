@@ -23,7 +23,7 @@
 
     if (minFaceIndex < 1)
     {
-        WarningIn(args.executable())
+        WarningInFunction
             << "parallel decomposition addressing." << endl
             << "It looks like you are trying to reconstruct the case "
             << "decomposed with an earlier version of FOAM, which could\n"

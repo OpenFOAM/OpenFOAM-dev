@@ -402,13 +402,8 @@ bool Foam::checkCoupledPoints
 
                     if (f.size() != nbrPoints[bFaceI].size())
                     {
-                        FatalErrorIn
-                        (
-                            "Foam::checkCoupledPoints\n"
-                            "(\n"
-                            "   const polyMesh&, const bool, labelHashSet*\n"
-                            ")\n"
-                        )   << "Local face size : " << f.size()
+                        FatalErrorInFunction
+                            << "Local face size : " << f.size()
                             << " does not equal neighbour face size : "
                             << nbrPoints[bFaceI].size()
                             << abort(FatalError);

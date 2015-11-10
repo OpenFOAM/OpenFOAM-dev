@@ -29,7 +29,7 @@ void Foam::printMeshStats(const polyMesh& mesh, const bool allTopology)
 
         if (returnReduce(mesh.nInternalPoints(), minOp<label>()) == -1)
         {
-            WarningIn("Foam::printMeshStats(const polyMesh&, const bool)")
+            WarningInFunction
                 << "Some processors have their points sorted into internal"
                 << " and external and some do not." << endl
                 << "This can cause problems later on." << endl;

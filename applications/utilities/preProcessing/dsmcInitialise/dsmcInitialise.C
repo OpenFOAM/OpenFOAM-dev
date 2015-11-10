@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 
     if (!mesh.write())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing dsmcCloud."
             << nl << exit(FatalError);
     }

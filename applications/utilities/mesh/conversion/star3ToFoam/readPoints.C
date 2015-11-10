@@ -107,7 +107,7 @@ void Foam::starMesh::readPoints(const scalar scaleFactor)
         }
         else
         {
-            FatalErrorIn("starMesh::readPoints()")
+            FatalErrorInFunction
                 << "Cannot read file " << pointsFileName
                 << abort(FatalError);
         }

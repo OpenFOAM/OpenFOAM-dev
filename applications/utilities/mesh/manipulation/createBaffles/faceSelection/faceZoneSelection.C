@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,8 @@ void Foam::faceSelections::faceZoneSelection::select
 
     if (readID == -1)
     {
-        FatalErrorIn
-        (
-            "faceSelections::faceZoneSelection::select(labelList&) const"
-        )   << "Cannot find faceZone " << zoneName_ << nl << "Valid zones are "
+        FatalErrorInFunction
+            << "Cannot find faceZone " << zoneName_ << nl << "Valid zones are "
             << mesh_.faceZones().names()
             << exit(FatalError);
     }
@@ -92,10 +90,8 @@ void Foam::faceSelections::faceZoneSelection::select
         }
         else if (faceToZoneID[faceI] != zoneID)
         {
-            FatalErrorIn
-            (
-                "faceSelections::faceZoneSelection::select(labelList&) const"
-            )   << "Face " << faceI << " already in faceZone "
+            FatalErrorInFunction
+                << "Face " << faceI << " already in faceZone "
                 << faceToZoneID[faceI]
                 << exit(FatalError);
         }

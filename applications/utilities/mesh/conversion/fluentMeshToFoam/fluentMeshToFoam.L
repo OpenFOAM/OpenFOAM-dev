@@ -853,7 +853,7 @@ label findFace(const primitiveMesh& mesh, const face& f)
     }
 
     // Didn't find face. Do what?
-    FatalErrorIn("findFace(const primitiveMesh&, const face&)")
+    FatalErrorInFunction
         << "Problem : cannot find a single face in the mesh which uses"
         << " vertices " << f << exit(FatalError);
 
@@ -901,7 +901,7 @@ int main(int argc, char *argv[])
 
     if (!fluentStream)
     {
-        FatalErrorIn("fluentToFoam::main(int argc, char *argv[])")
+        FatalErrorInFunction
             << args.executable()
             << ": file " << fluentFile << " not found"
             << exit(FatalError);
@@ -1054,8 +1054,7 @@ int main(int argc, char *argv[])
 
                 default:
                 {
-                    FatalErrorIn("fluentToFoam::main(int argc, char *argv[])")
-                        << "unrecognised  2-D cell shape: "
+                    FatalErrorInFunction
                         << fluentCellModelID[celli]
                         << abort(FatalError);
                 }
@@ -1068,7 +1067,7 @@ int main(int argc, char *argv[])
 
             if (faces[faceI].size() != 2)
             {
-                FatalErrorIn("fluentToFoam::main(int argc, char *argv[])")
+                FatalErrorInFunction
                     << "fluentMeshToFoam: a 2-D face defined with "
                     << faces[faceI].size() << " points." << endl;
             }
@@ -1114,7 +1113,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                FatalErrorIn("fluentToFoam::main(int argc, char *argv[])")
+                FatalErrorInFunction
                     << "unrecognised 3-D cell shape: "
                     << fluentCellModelID[celli]
                     << abort(FatalError);
@@ -1255,7 +1254,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                FatalErrorIn("fluentToFoam::main(int argc, char *argv[])")
+                FatalErrorInFunction
                     << "unrecognised face shape with "
                     << patchFaces[faceI].size() << " vertices"
                     << abort(FatalError);
@@ -1340,7 +1339,7 @@ int main(int argc, char *argv[])
         }
         else //unknown face regions are not handled
         {
-            FatalErrorIn("fluentToFoam::main(int argc, char *argv[])")
+            FatalErrorInFunction
                 << "fluent patch type " << curPatchType << " not recognised."
                 << abort(FatalError);
         }
@@ -1417,7 +1416,7 @@ int main(int argc, char *argv[])
 
                 if (pShapeMesh.isInternalFace(faceI))
                 {
-                    FatalErrorIn(args.executable())
+                    FatalErrorInFunction
                         << "Face " << faceI << " on new patch "
                         << patchNames[patchI]
                         << " is not an external face of the mesh." << endl
@@ -1426,7 +1425,7 @@ int main(int argc, char *argv[])
 
                 if (facePatchID[faceI - pShapeMesh.nInternalFaces()]!= -1)
                 {
-                    FatalErrorIn(args.executable())
+                    FatalErrorInFunction
                         << "Face " << faceI << " on new patch "
                         << patchNames[patchI]
                         << " has already been marked for repatching to"

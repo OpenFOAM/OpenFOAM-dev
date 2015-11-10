@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::tmp<Foam::volScalarField> Foam::orderedPhasePair::E() const
 {
     if (!aspectRatio_.valid())
     {
-        FatalErrorIn("Foam::orderedPhasePair::E() const")
+        FatalErrorInFunction
             << "Aspect ratio model not specified for " << *this << "."
             << exit(FatalError);
     }

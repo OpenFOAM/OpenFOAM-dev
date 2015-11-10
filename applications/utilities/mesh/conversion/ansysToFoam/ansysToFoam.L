@@ -285,7 +285,7 @@ label findFace(const polyMesh& mesh, const face& f)
         }
     }
 
-    FatalErrorIn("findFace(const polyMesh&, const face&)")
+    FatalErrorInFunction
         << "Cannot find a face matching " << f
         << exit(FatalError);
 
@@ -320,7 +320,7 @@ int main(int argc, char *argv[])
 
     if (!ansysStream)
     {
-        FatalErrorIn("ansysToFoam::main(int argc, char *argv[])")
+        FatalErrorInFunction
             << args.executable()
             << ": file " << ansysFile << " not found"
             << exit(FatalError);

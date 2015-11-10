@@ -1097,7 +1097,7 @@ void Foam::starMesh::createCoupleMatches()
 
                     if (edgesToConsider.empty())
                     {
-                        FatalErrorIn("void starMesh::createCoupleMatches()")
+                        FatalErrorInFunction
                             << setprecision(12)
                             << "void starMesh::createCoupleMatches() : "
                             << endl << "error in face intersection: "
@@ -1219,7 +1219,7 @@ void Foam::starMesh::createCoupleMatches()
                         // Check if there is room for more points
                         if (nIntFacePoints >= intersectedFace.size())
                         {
-                            FatalErrorIn("void starMesh::createCoupleMatches()")
+                            FatalErrorInFunction
                                 << setprecision(12)
                                 << "void starMesh::createCoupleMatches() : "
                                 << endl << "error in intersected face: "
@@ -1270,7 +1270,7 @@ void Foam::starMesh::createCoupleMatches()
                     {
                         if (intersectedFace[checkI] == intersectedFace[checkJ])
                         {
-                            FatalErrorIn("void starMesh::createCoupleMatches()")
+                            FatalErrorInFunction
                                 << setprecision(12)
                                 << "void starMesh::createCoupleMatches() : "
                                 << endl << "error in intersected face: "
@@ -1294,7 +1294,7 @@ void Foam::starMesh::createCoupleMatches()
             }
             else
             {
-                FatalErrorIn("void starMesh::createCoupleMatches()")
+                FatalErrorInFunction
                     << setprecision(12)
                     << "void starMesh::createCoupleMatches() : " << endl
                     << "could not find start edge for intersection of couple "

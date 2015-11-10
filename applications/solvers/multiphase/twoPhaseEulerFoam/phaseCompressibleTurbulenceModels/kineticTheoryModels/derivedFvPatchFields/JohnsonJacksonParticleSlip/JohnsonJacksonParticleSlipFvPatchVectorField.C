@@ -89,16 +89,8 @@ JohnsonJacksonParticleSlipFvPatchVectorField
      || (specularityCoefficient_.value() > 1)
     )
     {
-        FatalErrorIn
-        (
-            "("
-                "Foam::JohnsonJacksonParticleSlipFvPatchVectorField::"
-                "JohnsonJacksonParticleSlipFvPatchVectorField"
-                "const fvPatch& p,"
-                "const DimensionedField<scalar, volMesh>& iF,"
-                "const dictionary& dict"
-            ")"
-        )   << "The specularity coefficient has to be between 0 and 1"
+        FatalErrorInFunction
+            << "The specularity coefficient has to be between 0 and 1"
             << abort(FatalError);
     }
 

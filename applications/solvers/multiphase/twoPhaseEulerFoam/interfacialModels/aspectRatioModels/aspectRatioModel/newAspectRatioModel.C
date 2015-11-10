@@ -45,7 +45,7 @@ Foam::aspectRatioModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("aspectRatioModel::New")
+        FatalErrorInFunction
             << "Unknown aspectRatioModelType type "
             << aspectRatioModelType << endl << endl
             << "Valid aspectRatioModel types are : " << endl

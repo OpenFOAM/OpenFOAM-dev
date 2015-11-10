@@ -53,14 +53,14 @@ int main(int argc, char *argv[])
 
     if (globalNumbering.localSize() != mesh.nCells())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Problem." << abort(FatalError);
     }
 
 
     if (!Pstream::parRun())
     {
-        WarningIn(args.executable())
+        WarningInFunction
             << "globalIndex class is only useful in parallel code."
             << endl;
     }
@@ -77,14 +77,14 @@ int main(int argc, char *argv[])
 
         if (procI != Pstream::myProcNo() || localCellI != cellI)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem. cellI:" << cellI << " localCellI:" << localCellI
                 << " procI:" << procI << abort(FatalError);
         }
 
         if (!globalNumbering.isLocal(globalCellI))
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem. cellI:" << cellI << " globalCellI:" << globalCellI
                 << " not local" << abort(FatalError);
         }
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
     if (mesh.nCells() < 1)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Test needs to be run on a case with at least one"
             << " cell per processor." << abort(FatalError);
     }
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 
         if (procI != Pstream::myProcNo()-1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem. global:" << prevProcCellI
                 << " expected on processor:" << Pstream::myProcNo()-1
                 << " but is calculated to be on procI:" << procI
@@ -118,14 +118,14 @@ int main(int argc, char *argv[])
 
         if (globalNumbering.isLocal(prevProcCellI))
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem. globalCellI:" << prevProcCellI
                 << " calculated as local" << abort(FatalError);
         }
 
         if (!globalNumbering.isLocal(procI, prevProcCellI))
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem. globalCellI:" << prevProcCellI
                 << " not calculated as local on processor:" << procI
                 << abort(FatalError);
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
 
         if (procI != Pstream::myProcNo()+1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem. global:" << nextProcCellI
                 << " expected on processor:" << Pstream::myProcNo()+1
                 << " but is calculated to be on procI:" << procI
@@ -149,14 +149,14 @@ int main(int argc, char *argv[])
 
         if (globalNumbering.isLocal(nextProcCellI))
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem. globalCellI:" << nextProcCellI
                 << " calculated as local" << abort(FatalError);
         }
 
         if (!globalNumbering.isLocal(procI, nextProcCellI))
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Problem. globalCellI:" << nextProcCellI
                 << " not calculated as local on processor:" << procI
                 << abort(FatalError);

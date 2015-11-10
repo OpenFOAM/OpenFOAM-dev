@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,10 +45,8 @@ Foam::autoPtr<Foam::PDRDragModel> Foam::PDRDragModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "PDRDragModel::New"
-        )   << "Unknown PDRDragModel type "
+        FatalErrorInFunction
+            << "Unknown PDRDragModel type "
             << modelType << nl << nl
             << "Valid  PDRDragModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,11 +175,8 @@ label addPatch
         }
         else
         {
-            FatalErrorIn
-            (
-                "addPatch<PatchType>(const polyBoundaryMesh&,"
-                " const word&, DynamicList<polyPatch*>)"
-            )   << "Already have patch " << patchName
+            FatalErrorInFunction
+                << "Already have patch " << patchName
                 << " but of type " << newPatches[patchI]->type()
                 << exit(FatalError);
         }
@@ -233,11 +230,8 @@ label addPatch
         }
         else
         {
-            FatalErrorIn
-            (
-                "addPatch<PatchType>(const polyBoundaryMesh&,"
-                " const word&, DynamicList<polyPatch*>)"
-            )   << "Already have patch " << patchName
+            FatalErrorInFunction
+                << "Already have patch " << patchName
                 << " but of type " << newPatches[patchI]->type()
                 << exit(FatalError);
         }
@@ -436,7 +430,7 @@ void checkZoneInside
         label zoneI = zoneID[i];
         if (isInternal[zoneI] != mesh.isInternalFace(faceI))
         {
-            FatalErrorIn("checkZoneInside(..)")
+            FatalErrorInFunction
                 << "Zone " << zoneNames[zoneI]
                 << " is not consistently all internal or all boundary faces."
                 << " Face " << faceI << " at " << mesh.faceCentres()[faceI]
@@ -694,7 +688,7 @@ void countExtrudePatches
             {
                 const edge& e = extrudePatch.edges()[edgeI];
                 const pointField& pts = extrudePatch.localPoints();
-                WarningIn("countExtrudePatches(..)")
+                WarningInFunction
                     << "Edge " << edgeI
                     << "at " << pts[e[0]] << pts[e[1]]
                     << " is a coupled edge and inbetween two different zones "
@@ -954,20 +948,8 @@ void addCoupledPatches
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "void addCoupledPatches"
-                        "("
-                            "const fvMesh&, "
-                            "const primitiveFacePatch&, "
-                            "const labelList&, "
-                            "const labelList&, "
-                            "const mapDistribute&, "
-                            "const labelListList&, "
-                            "labelList&, "
-                            "DynamicList<polyPatch*>&"
-                        ")"
-                    )   << "Unable to determine coupled patch addressing"
+                    FatalErrorInFunction
+                        << "Unable to determine coupled patch addressing"
                         << abort(FatalError);
                 }
             }
@@ -1054,7 +1036,7 @@ void addZoneSidePatches
             }
             else
             {
-                FatalErrorIn("addZoneSidePatches()")
+                FatalErrorInFunction
                     << "Type " << oneDPolyPatchType << " does not exist "
                     << exit(FatalError);
             }
@@ -1475,7 +1457,7 @@ void extrudeGeometricProperties
 
     if (!ok)
     {
-        FatalErrorIn("extrudeGeometricProperties(..)")
+        FatalErrorInFunction
             << "Failed writing " << faceCentres.objectPath()
             << " and " << cellCentres.objectPath()
             << exit(FatalError);
@@ -1503,7 +1485,7 @@ int main(int argc, char *argv[])
         Pstream::gatherList(allNames);
         Pstream::scatterList(allNames);
 
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Patches are not synchronised on all processors."
             << " Per processor patches " << allNames
             << exit(FatalError);
@@ -2654,7 +2636,7 @@ int main(int argc, char *argv[])
 
     if (!ok)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing mesh " << regionMesh.name()
             << " at location " << regionMesh.facesInstance()
             << exit(FatalError);
@@ -2855,7 +2837,7 @@ int main(int argc, char *argv[])
 
         if (!mesh.write())
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Failed writing mesh " << mesh.name()
                 << " at location " << mesh.facesInstance()
                 << exit(FatalError);

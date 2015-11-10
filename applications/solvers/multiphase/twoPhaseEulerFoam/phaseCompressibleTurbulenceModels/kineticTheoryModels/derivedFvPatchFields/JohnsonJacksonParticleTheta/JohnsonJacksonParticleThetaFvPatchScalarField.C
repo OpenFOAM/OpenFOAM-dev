@@ -97,16 +97,8 @@ JohnsonJacksonParticleThetaFvPatchScalarField
      || (restitutionCoefficient_.value() > 1)
     )
     {
-        FatalErrorIn
-        (
-            "Foam::JohnsonJacksonParticleThetaFvPatchScalarField::"
-            "JohnsonJacksonParticleThetaFvPatchScalarField"
-            "("
-                "const fvPatch& p,"
-                "const DimensionedField<scalar, volMesh>& iF,"
-                "const dictionary& dict"
-            ")"
-        )   << "The restitution coefficient has to be between 0 and 1"
+        FatalErrorInFunction
+            << "The restitution coefficient has to be between 0 and 1"
             << abort(FatalError);
     }
 
@@ -116,16 +108,8 @@ JohnsonJacksonParticleThetaFvPatchScalarField
      || (specularityCoefficient_.value() > 1)
     )
     {
-        FatalErrorIn
-        (
-            "Foam::JohnsonJacksonParticleThetaFvPatchScalarField::"
-            "JohnsonJacksonParticleThetaFvPatchScalarField"
-            "("
-                "const fvPatch& p,"
-                "const DimensionedField<scalar, volMesh>& iF,"
-                "const dictionary& dict"
-            ")"
-        )   << "The specularity coefficient has to be between 0 and 1"
+        FatalErrorInFunction
+            << "The specularity coefficient has to be between 0 and 1"
             << abort(FatalError);
     }
 

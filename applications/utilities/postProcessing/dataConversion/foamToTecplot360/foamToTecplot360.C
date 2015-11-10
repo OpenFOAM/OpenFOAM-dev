@@ -224,14 +224,14 @@ int main(int argc, char *argv[])
 
     if (nearCellValue)
     {
-        WarningIn(args.executable())
+        WarningInFunction
             << "Using neighbouring cell value instead of patch value"
             << nl << endl;
     }
 
     if (noPointValues)
     {
-        WarningIn(args.executable())
+        WarningInFunction
             << "Outputting cell values only" << nl << endl;
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
                             }
                             else
                             {
-                                FatalErrorIn(args.executable())
+                                FatalErrorInFunction
                                     << "Cannot find sub-entry " << entryNames[i]
                                     << " in entry " << args["entry"]
                                     << " in dictionary " << dictFileName;
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
                         /*
                         if (ent[1] != token::BEGIN_BLOCK)
                         {
-                            FatalErrorIn(args.executable())
+                            FatalErrorInFunction
                                 << "Cannot find entry "
                                 << args["entry"]
                                 << " in dictionary " << dictFileName
@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    FatalErrorIn(args.executable())
+                    FatalErrorInFunction
                         << "Cannot find entry "
                         << entryName
                         << " in dictionary " << dictFileName;
@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Cannot open file " << dictFileName;
             FatalError.exit(1);
         }

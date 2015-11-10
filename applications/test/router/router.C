@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,12 +125,8 @@ void Foam::router::fixWeights
 
     if (minNodeI == -1)
     {
-        WarningIn
-        (
-            "Foam::router::fixWeights"
-            "(const label startNodeI, const label endNodeI,"
-            "const label nodeI, const label prevNodeI)"
-        )   << "Cannot route from node " << nodeI
+        WarningInFunction
+            << "Cannot route from node " << nodeI
             << " since all neigbours of node "
             << "already allocated:" << endl;
 
@@ -138,12 +134,7 @@ void Foam::router::fixWeights
         {
             label nbrNodeI = myNeighbours[neighbourI];
 
-            WarningIn
-            (
-                "Foam::router::fixWeights"
-                "(const label startNodeI, const label endNodeI,"
-                "const label nodeI, const label prevNodeI)"
-            )   << "  neighbour:" << nbrNodeI
+            WarningInFunction
                 << "  weight:" << weights_[nbrNodeI] << endl;
         }
         return;
@@ -292,7 +283,7 @@ bool Foam::router::route(const labelList& path, const label pathValue)
 {
     if (pathValue >= 0)
     {
-        FatalErrorIn("router::route(const labelList&, const label)")
+        FatalErrorInFunction
             << "Illegal pathValue " << pathValue << exit(FatalError);
     }
 
@@ -382,7 +373,7 @@ Foam::labelList Foam::router::getRoute(const label pathValue) const
 
     if (pathNodeI == -1)
     {
-        FatalErrorIn("router::getRoute(const label)")
+        FatalErrorInFunction
             << "No route with value " << pathValue << endl;
     }
 

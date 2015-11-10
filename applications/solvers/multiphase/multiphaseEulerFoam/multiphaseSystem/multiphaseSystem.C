@@ -295,12 +295,8 @@ void Foam::multiphaseSystem::correctContactAngle
 
             if (tp == acap.thetaProps().end())
             {
-                FatalErrorIn
-                (
-                    "multiphaseSystem::correctContactAngle"
-                    "(const phaseModel& phase1, const phaseModel& phase2, "
-                    "fvPatchVectorFieldField& nHatb) const"
-                )   << "Cannot find interface " << interfacePair(phase1, phase2)
+                FatalErrorInFunction
+                    << "Cannot find interface " << interfacePair(phase1, phase2)
                     << "\n    in table of theta properties for patch "
                     << acap.patch().name()
                     << exit(FatalError);
@@ -478,12 +474,8 @@ Foam::multiphaseSystem::multiphaseSystem
 
                     if (cAlpha == cAlphas_.end())
                     {
-                        WarningIn
-                        (
-                            "multiphaseSystem::multiphaseSystem"
-                            "(const volVectorField& U,"
-                            "const surfaceScalarField& phi)"
-                        ) << "Compression coefficient not specified for "
+                        WarningInFunction
+                          << "Compression coefficient not specified for "
                              "phase pair ("
                           << phase1.name() << ' ' << phase2.name()
                           << ") for which a surface tension "

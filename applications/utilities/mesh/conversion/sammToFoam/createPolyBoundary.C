@@ -83,10 +83,8 @@ void Foam::sammMesh::createPolyBoundary()
                              != -1
                             )
                             {
-                                FatalErrorIn
-                                (
-                                    "void sammMesh::createPolyBoundary()"
-                                )   << "This looks like an already detected "
+                                FatalErrorInFunction
+                                    << "This looks like an already detected "
                                     << "internal face"
                                     << abort(FatalError);
                             }

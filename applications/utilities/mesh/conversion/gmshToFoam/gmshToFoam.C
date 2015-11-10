@@ -257,7 +257,7 @@ scalar readMeshFormat(IFstream& inFile)
 
     if (asciiFlag != 0)
     {
-        FatalIOErrorIn("readMeshFormat(IFstream&)", inFile)
+        FatalIOErrorInFunction(inFile)
             << "Can only read ascii msh files."
             << exit(FatalIOError);
     }
@@ -268,7 +268,7 @@ scalar readMeshFormat(IFstream& inFile)
 
     if (tag != "$EndMeshFormat")
     {
-        FatalIOErrorIn("readMeshFormat(IFstream&)", inFile)
+        FatalIOErrorInFunction(inFile)
             << "Did not find $ENDNOD tag on line "
             << inFile.lineNumber() << exit(FatalIOError);
     }
@@ -323,7 +323,7 @@ void readPoints(IFstream& inFile, pointField& points, Map<label>& mshToFoam)
 
     if (tag != "$ENDNOD" && tag != "$EndNodes")
     {
-        FatalIOErrorIn("readPoints(..)", inFile)
+        FatalIOErrorInFunction(inFile)
             << "Did not find $ENDNOD tag on line "
             << inFile.lineNumber() << exit(FatalIOError);
     }
@@ -396,7 +396,7 @@ void readPhysNames(IFstream& inFile, Map<word>& physicalNames)
 
     if (tag != "$EndPhysicalNames")
     {
-        FatalIOErrorIn("readPhysicalNames(..)", inFile)
+        FatalIOErrorInFunction(inFile)
             << "Did not find $EndPhysicalNames tag on line "
             << inFile.lineNumber() << exit(FatalIOError);
     }
@@ -699,7 +699,7 @@ void readCells
 
     if (tag != "$ENDELM" && tag != "$EndElements")
     {
-        FatalIOErrorIn("readCells(..)", inFile)
+        FatalIOErrorInFunction(inFile)
             << "Did not find $ENDELM tag on line "
             << inFile.lineNumber() << exit(FatalIOError);
     }
@@ -723,7 +723,7 @@ void readCells
 
     if (cells.size() == 0)
     {
-        FatalIOErrorIn("readCells(..)", inFile)
+        FatalIOErrorInFunction(inFile)
             << "No cells read from file " << inFile.name() << nl
             << "Does your file specify any 3D elements (hex=" << MSHHEX
             << ", prism=" << MSHPRISM << ", pyramid=" << MSHPYR
@@ -969,7 +969,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    WarningIn(args.executable())
+                    WarningInFunction
                         << "Could not match gmsh face " << f
                         << " to any of the interior or exterior faces"
                         << " that share the same 0th point" << endl;

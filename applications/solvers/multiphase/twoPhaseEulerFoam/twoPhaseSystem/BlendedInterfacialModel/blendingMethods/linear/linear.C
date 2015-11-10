@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,14 +93,8 @@ Foam::blendingMethods::linear::linear
           > maxPartlyDispersedAlpha_[*iter]
         )
         {
-            FatalErrorIn
-            (
-                "Foam::blendingMethods::linear::linear"
-                "("
-                    "const dictionary& dict,"
-                    "const wordList& phaseNames"
-                ")"
-            )   << "The supplied fully dispersed volume fraction for "
+            FatalErrorInFunction
+                << "The supplied fully dispersed volume fraction for "
                 << *iter
                 << " is greater than the partly dispersed value."
                 << endl << exit(FatalError);

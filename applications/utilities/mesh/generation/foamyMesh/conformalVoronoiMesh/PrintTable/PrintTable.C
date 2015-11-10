@@ -222,11 +222,8 @@ void Foam::PrintTable<KeyType, DataType>::operator=
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn
-        (
-            "Foam::PrintTable<KeyType, DataType>::operator="
-            "(const Foam::PrintTable<KeyType, DataType>&)"
-        )   << "Attempted assignment to self"
+        FatalErrorInFunction
+            << "Attempted assignment to self"
             << abort(FatalError);
     }
 }

@@ -61,7 +61,7 @@ inline Foam::label Foam::CV2D::insertPoint
 
     if (nVert == number_of_vertices())
     {
-        WarningIn("Foam::CV2D::insertPoint")
+        WarningInFunction
             << "Failed to insert point " << toPoint2D(p) << endl;
     }
     else

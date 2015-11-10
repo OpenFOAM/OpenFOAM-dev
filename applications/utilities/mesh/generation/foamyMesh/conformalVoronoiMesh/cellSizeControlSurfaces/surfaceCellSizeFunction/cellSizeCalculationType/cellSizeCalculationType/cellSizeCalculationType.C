@@ -73,11 +73,8 @@ Foam::autoPtr<Foam::cellSizeCalculationType> Foam::cellSizeCalculationType::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "cellSizeCalculationType::New(dictionary&, "
-            "const conformalVoronoiMesh&, const searchableSurface&)"
-        )   << "Unknown cellSizeCalculationType type "
+        FatalErrorInFunction
+            << "Unknown cellSizeCalculationType type "
             << cellSizeCalculationTypeTypeName
             << endl << endl
             << "Valid cellSizeCalculationType types are :" << endl

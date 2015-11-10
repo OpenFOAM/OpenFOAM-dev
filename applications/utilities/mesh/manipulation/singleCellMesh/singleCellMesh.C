@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 
     if (regionName == singleCellName)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Cannot convert region " << singleCellName
             << " since result would overwrite it. Please rename your region."
             << exit(FatalError);

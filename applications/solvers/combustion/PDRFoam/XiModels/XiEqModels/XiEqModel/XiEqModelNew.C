@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,15 +44,8 @@ Foam::autoPtr<Foam::XiEqModel> Foam::XiEqModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "XiEqModel::New"
-            "("
-            "    const psiuReactionThermo& thermo,"
-            "    const compressible::RASModel& turbulence,"
-            "    const volScalarField& Su"
-            ")"
-        )   << "Unknown XiEqModel type "
+        FatalErrorInFunction
+            << "Unknown XiEqModel type "
             << modelType << nl << nl
             << "Valid XiEqModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

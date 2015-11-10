@@ -266,7 +266,7 @@ void Foam::starMesh::mergeCoupleFacePoints()
             {
                 if (renumberPoints[oldFacePoints[pointI]] < 0)
                 {
-                    FatalErrorIn("starMesh::mergeCoupleFacePoints()")
+                    FatalErrorInFunction
                         << "Error in point renumbering. Old face: "
                         << oldFacePoints << endl
                         << "prelim face: " << prelimFacePoints
@@ -306,7 +306,7 @@ void Foam::starMesh::mergeCoupleFacePoints()
         {
             if (renumberPoints[curLabels[pointI]] == 0)
             {
-                FatalErrorIn("starMesh::mergeCoupleFacePoints()")
+                FatalErrorInFunction
                     << "Error in point merging for cell "
                     << cellI << ". STAR index: " << starCellID_[cellI]
                     << ". " << endl
@@ -360,7 +360,7 @@ void Foam::starMesh::mergeCoupleFacePoints()
             {
                 if (renumberPoints[oldFacePoints[pointI]] < 0)
                 {
-                    FatalErrorIn("starMesh::mergeCoupleFacePoints()")
+                    FatalErrorInFunction
                         << "Error in point renumbering for point "
                         << oldFacePoints[pointI]
                         << ". Renumbering index is -1." << endl
@@ -385,7 +385,7 @@ void Foam::starMesh::mergeCoupleFacePoints()
         {
             if (renumberPoints[curLabels[pointI]] < 0)
             {
-                FatalErrorIn("starMesh::mergeCoupleFacePoints()")
+                FatalErrorInFunction
                     << "Error in point renumbering for cell "
                     << cellI << ". STAR index: " << starCellID_[cellI]
                     << ". " << endl

@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
         {
             if (mesh.V().size() != mesh.nCells())
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Volume not mapped. V:" << mesh.V().size()
                     << " nCells:" << mesh.nCells()
                     << exit(FatalError);
@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
 
             if (mag(newVol-totalVol)/totalVol > 1e-10)
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Volume loss: old volume:" << totalVol
                     << "  new volume:" << newVol
                     << exit(FatalError);
@@ -260,7 +260,7 @@ int main(int argc, char *argv[])
 
             if (notEqual(max, 1.0, 1e-10) || notEqual(min, 1.0, 1e-10))
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Uniform volVectorField not preserved."
                     << " Min and max should both be 1.0. min:" << min
                     << " max:" << max
@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
 
             if (notEqual(max, 0.0, 1e-10) || notEqual(min, 0.0, 1e-10))
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Linear profile not preserved."
                     << " Min and max should both be 0.0. min:" << min
                     << " max:" << max
@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
 
             if (notEqual(max, 1.0, 1e-10) || notEqual(min, 1.0, 1e-10))
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Uniform surfaceScalarField not preserved."
                     << " Min and max should both be 1.0. min:" << min
                     << " max:" << max

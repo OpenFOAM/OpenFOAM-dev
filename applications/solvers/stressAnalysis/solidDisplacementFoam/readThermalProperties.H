@@ -96,10 +96,8 @@ if (thermalStress)
     }
     else
     {
-        FatalErrorIn
-        (
-             "readThermalProperties.H"
-        )   << "Valid type entries are uniform or field for C"
+        FatalErrorInFunction
+            << "Valid type entries are uniform or field for C"
             << abort(FatalError);
     }
 
@@ -154,10 +152,8 @@ if (thermalStress)
     }
     else
     {
-        FatalErrorIn
-        (
-             "readThermalProperties.H"
-        )   << "Valid type entries are uniform or field for K"
+        FatalErrorInFunction
+            << "Valid type entries are uniform or field for K"
             << abort(FatalError);
     }
 
@@ -212,10 +208,8 @@ if (thermalStress)
     }
     else
     {
-        FatalErrorIn
-        (
-            "readThermalProperties.H"
-        )   << "Valid type entries are uniform or field for alpha"
+        FatalErrorInFunction
+            << "Valid type entries are uniform or field for alpha"
             << abort(FatalError);
     }
 

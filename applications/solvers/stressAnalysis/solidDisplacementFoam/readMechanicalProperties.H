@@ -61,10 +61,8 @@
     }
     else
     {
-        FatalErrorIn
-        (
-            "readMechanicalProperties.H"
-        )   << "Valid type entries are uniform or field for rho"
+        FatalErrorInFunction
+            << "Valid type entries are uniform or field for rho"
             << abort(FatalError);
     }
 
@@ -119,10 +117,8 @@
     }
     else
     {
-        FatalErrorIn
-        (
-            "readMechanicalProperties.H"
-        )   << "Valid type entries are uniform or field for E"
+        FatalErrorInFunction
+            << "Valid type entries are uniform or field for E"
             << abort(FatalError);
     }
 
@@ -175,10 +171,8 @@
     }
     else
     {
-        FatalErrorIn
-        (
-            "readMechanicalProperties.H"
-        )   << "Valid type entries are uniform or field for nu"
+        FatalErrorInFunction
+            << "Valid type entries are uniform or field for nu"
             << abort(FatalError);
     }
 

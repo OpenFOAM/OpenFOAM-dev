@@ -42,7 +42,7 @@ Foam::autoPtr<Foam::saturationModel> Foam::saturationModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("saturationModel::New")
+        FatalErrorInFunction
             << "Unknown saturationModelType type "
             << saturationModelType << endl << endl
             << "Valid saturationModel types are : " << endl

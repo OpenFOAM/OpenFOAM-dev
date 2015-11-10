@@ -128,7 +128,7 @@ void Foam::sammMesh::fixCollapsedEdges()
 
                 if (nNewVertices < 3)
                 {
-                    FatalErrorIn("void sammMesh::fixCollapsedEdges()")
+                    FatalErrorInFunction
                         << "face " << faceI << " of cell " << cellI
                         << " is colapsed down to a point or edge, which is "
                         << "not permitted" << endl

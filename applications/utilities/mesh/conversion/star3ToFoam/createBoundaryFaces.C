@@ -148,7 +148,7 @@ void Foam::starMesh::markBoundaryFaces()
             }
             if (!found)
             {
-                FatalErrorIn("starMesh::markBoundaryFaces()")
+                FatalErrorInFunction
                     << "Face " << faceI
                     << " does not have neighbour cell."
                     << " Face : " << endl << curFace << endl

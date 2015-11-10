@@ -149,11 +149,8 @@ bool Foam::conformalVoronoiMesh::regionIsInside
     }
     else
     {
-        WarningIn
-        (
-            "Foam::conformalVoronoiMesh::regionIsInside"
-            "(volTypeA, normalA, volTypeB, normalB, masterPtVec)"
-        )   << ""
+        WarningInFunction
+            << ""
             << endl;
 
         return false;
@@ -252,16 +249,8 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
                 }
                 else
                 {
-                    WarningIn
-                    (
-                        "Foam::conformalVoronoiMesh::"
-                        "createEdgePointGroupByCirculating"
-                        "("
-                        "    const extendedFeatureEdgeMesh&,"
-                        "    const pointIndexHit&,"
-                        "    DynamicList<Vb>&"
-                        ")"
-                    )   << "Failed to insert flat/open edge as volType is "
+                    WarningInFunction
+                        << "Failed to insert flat/open edge as volType is "
                         << extendedFeatureEdgeMesh::sideVolumeTypeNames_
                            [
                                volType
@@ -314,16 +303,8 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
             }
             else
             {
-                WarningIn
-                (
-                    "Foam::conformalVoronoiMesh::"
-                    "createEdgePointGroupByCirculating"
-                    "("
-                    "    const extendedFeatureEdgeMesh&,"
-                    "    const pointIndexHit&,"
-                    "    DynamicList<Vb>&"
-                    ")"
-                )   << "Faces are parallel but master point is not inside"
+                WarningInFunction
+                    << "Faces are parallel but master point is not inside"
                     << endl;
             }
         }

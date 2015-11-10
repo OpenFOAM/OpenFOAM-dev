@@ -425,7 +425,7 @@ mtype                 {space}"MTYPE:"{space}
 
         if (curGroupID > 0)
         {
-            FatalErrorIn("gambitToFoam::main")
+            FatalErrorInFunction
                 << "<readCellStreamGroupID>{space}{label} : "
                 << "trying to reset group ID while active"
                 << abort(FatalError);
@@ -582,7 +582,7 @@ mtype                 {space}"MTYPE:"{space}
 <boundaryPatchFaces>{spaceNl}{label}({scalarList}|\n) {
 
         // Vertex-based boundary condition
-        FatalErrorIn("gambitToFoam::main")
+        FatalErrorInFunction
             << "<boundaryPatchFaces>{spaceNl}{label}{scalarList} : "
             << "boundary condition specified on vertices not supported"
             << abort(FatalError);
@@ -648,7 +648,7 @@ int main(int argc, char *argv[])
 
     if (!gambitStream)
     {
-        FatalErrorIn("gambitToFoam::main")
+        FatalErrorInFunction
             << args.executable()
             << ": file " << gambitFile << " not found"
             << abort(FatalError);

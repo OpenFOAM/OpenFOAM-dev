@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ void Foam::tabulatedWallFunctions::SpaldingsLaw::invertFunction()
 
         if (iter == maxIters_)
         {
-            WarningIn("SpaldingsLaw::invertFunction()")
+            WarningInFunction
                 << "Newton iterations not converged:" << nl
                 << "    iters = " << iter << ", error = " << error << endl;
         }

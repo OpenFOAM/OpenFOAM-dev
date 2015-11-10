@@ -107,7 +107,7 @@ Foam::scalar checkUniformTimeStep(const scalarField& t)
 
             if (mag(deltaT - dT) > SMALL)
             {
-                FatalErrorIn("checkUniformTimeStep(const scalarField&)")
+                FatalErrorInFunction
                     << "Unable to process data with a variable time step"
                     << exit(FatalError);
             }
@@ -115,7 +115,7 @@ Foam::scalar checkUniformTimeStep(const scalarField& t)
     }
     else
     {
-        FatalErrorIn("checkUniformTimeStep(const scalarField&)")
+        FatalErrorInFunction
             << "Unable to create FFT with a single value"
             << exit(FatalError);
     }
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 
     if (t.size() < N)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Block size N = " << N
             << " is larger than number of data = " << t.size()
             << exit(FatalError);

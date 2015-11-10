@@ -1,6 +1,6 @@
     if (mesh.nCells() != 1)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Solver only applicable to single cell cases"
             << exit(FatalError);
     }

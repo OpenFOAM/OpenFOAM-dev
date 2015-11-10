@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ polyMesh::readUpdateState meshReadUpdate(polyMesh& mesh)
         }
         default:
         {
-            FatalErrorIn("meshReadUpdate(polyMesh&)")
+            FatalErrorInFunction
                 << "Illegal mesh update state "
                 << stat  << abort(FatalError);
             break;
@@ -354,7 +354,7 @@ int main(int argc, char *argv[])
 
 
                 default:
-                    WarningIn(args.executable())
+                    WarningInFunction
                         << "Unhandled action " << action << endl;
                 break;
             }

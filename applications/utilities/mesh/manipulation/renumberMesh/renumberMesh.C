@@ -244,11 +244,8 @@ labelList getFaceOrder
     {
         if (oldToNewFace[faceI] == -1)
         {
-            FatalErrorIn
-            (
-                "getFaceOrder"
-                "(const primitiveMesh&, const labelList&, const labelList&)"
-            )   << "Did not determine new position" << " for face " << faceI
+            FatalErrorInFunction
+                << "Did not determine new position" << " for face " << faceI
                 << abort(FatalError);
         }
     }
@@ -386,11 +383,8 @@ labelList getRegionFaceOrder
     {
         if (oldToNewFace[faceI] == -1)
         {
-            FatalErrorIn
-            (
-                "getRegionFaceOrder"
-                "(const primitveMesh&, const labelList&, const labelList&)"
-            )   << "Did not determine new position"
+            FatalErrorInFunction
+                << "Did not determine new position"
                 << " for face " << faceI
                 << abort(FatalError);
         }
@@ -738,7 +732,7 @@ int main(int argc, char *argv[])
 
             if (blockSize < 0 || blockSize >= mesh.nCells())
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Block size " << blockSize
                     << " should be positive integer"
                     << " and less than the number of cells in the mesh."
@@ -1118,7 +1112,7 @@ int main(int argc, char *argv[])
 
             if (masterFaceI == 0)
             {
-                FatalErrorIn(args.executable()) << "problem faceI:" << faceI
+                FatalErrorInFunction
                     << " masterFaceI:" << masterFaceI << exit(FatalError);
             }
         }

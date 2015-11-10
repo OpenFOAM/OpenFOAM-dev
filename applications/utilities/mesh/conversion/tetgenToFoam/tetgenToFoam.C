@@ -88,7 +88,7 @@ label findFace(const primitiveMesh& mesh, const face& f)
         }
     }
 
-    FatalErrorIn("findFace(const primitiveMesh&, const face&)")
+    FatalErrorInFunction
         << "Cannot find face " << f << " in mesh." << abort(FatalError);
 
     return -1;
@@ -135,14 +135,14 @@ int main(int argc, char *argv[])
 
     if (!isFile(nodeFile) || !isFile(eleFile))
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Cannot read " << nodeFile << " or " << eleFile
             << exit(FatalError);
     }
 
     if (readFaceFile && !isFile(faceFile))
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Cannot read " << faceFile << endl
             << "Did you run tetgen with -f option?" << endl
             << "If you don't want to read the .face file and thus not have"
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
 
     if (nElemAttr != 0)
     {
-        WarningIn(args.executable())
+        WarningInFunction
             << "Element attributes (third elemenent in .ele header)"
             << " not used" << endl;
     }

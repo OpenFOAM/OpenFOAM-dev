@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
 
         if (!dictIO.headerOk())
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Cannot open specified refinement dictionary "
                 << dictPath
                 << exit(FatalError);

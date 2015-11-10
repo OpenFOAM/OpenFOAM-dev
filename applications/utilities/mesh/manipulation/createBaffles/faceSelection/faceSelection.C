@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,11 +73,8 @@ Foam::autoPtr<Foam::faceSelection> Foam::faceSelection::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "faceSelection::New"
-            "(const word&, const fvMesh&, const dictionary&)"
-        )   << "Unknown faceSelection type "
+        FatalErrorInFunction
+            << "Unknown faceSelection type "
             << sampleType << nl << nl
             << "Valid faceSelection types : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

@@ -151,11 +151,8 @@ void Foam::CV2D::writeFaces(const fileName& fName, bool internalOnly) const
                 {
                     if (fc->faceIndex() < 0)
                     {
-                        FatalErrorIn
-                        (
-                            "Foam::CV2D::writeFaces"
-                            "(const fileName& fName, bool internalOnly)"
-                        )<< "Dual face uses vertex defined by a triangle"
+                        FatalErrorInFunction
+                         << "Dual face uses vertex defined by a triangle"
                             " defined by an external point"
                             << exit(FatalError);
                     }
@@ -222,7 +219,7 @@ void Foam::CV2D::extractPatches
             {
                 patchIndex = defaultPatchIndex;
 
-                WarningIn("Foam::CV2D::extractPatches")
+                WarningInFunction
                     << "Dual face found that is not on a surface "
                     << "patch. Adding to CV2D_default_patch."
                     << endl;
@@ -315,11 +312,8 @@ void Foam::CV2D::calcDual
                 {
                     if (fc->faceIndex() < 0)
                     {
-                        FatalErrorIn
-                        (
-                            "Foam::CV2D::calcDual"
-                            "(point2DField& dualPoints, faceList& dualFaces)"
-                        )<< "Dual face uses vertex defined by a triangle"
+                        FatalErrorInFunction
+                         << "Dual face uses vertex defined by a triangle"
                             " defined by an external point"
                             << exit(FatalError);
                     }

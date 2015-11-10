@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ void hexBlock::setHandedness()
 
     if (blockHandedness_ == noPoints)
     {
-        WarningIn("hexBlock::hexBlock::setHandedness()")
+        WarningInFunction
             << "Cannot determine orientation of block."
             << " Continuing as if right handed." << endl;
         blockHandedness_ = right;
@@ -233,7 +233,7 @@ labelListList hexBlock::blockCells() const
     }
     else
     {
-        FatalErrorIn("hexBlock::cellShapes()")
+        FatalErrorInFunction
             << "Unable to determine block handedness as points "
             << "have not been read in yet"
             << abort(FatalError);
@@ -252,10 +252,8 @@ faceList hexBlock::patchFaces(const label direc, const labelList& range) const
 {
     if (range.size() != 6)
     {
-        FatalErrorIn
-        (
-            "patchFaces(const label direc, const labelList& range) const"
-        )   << "Invalid size of the range array: " << range.size()
+        FatalErrorInFunction
+            << "Invalid size of the range array: " << range.size()
             << ". Should be 6 (xMin, xMax, yMin, yMax, zMin, zMax"
             << abort(FatalError);
     }
@@ -448,10 +446,8 @@ faceList hexBlock::patchFaces(const label direc, const labelList& range) const
 
         default:
         {
-            FatalErrorIn
-            (
-                "patchFaces(const label direc, const labelList& range) const"
-            )   << "direction out of range (1 to 6): " << direc
+            FatalErrorInFunction
+                << "direction out of range (1 to 6): " << direc
                 << abort(FatalError);
         }
     }
@@ -460,10 +456,8 @@ faceList hexBlock::patchFaces(const label direc, const labelList& range) const
     // Do nothing for the right-handed block
     if (blockHandedness_ == noPoints)
     {
-        FatalErrorIn
-        (
-            "patchFaces(const label direc, const labelList& range) const"
-        )   << "Unable to determine block handedness as points "
+        FatalErrorInFunction
+            << "Unable to determine block handedness as points "
             << "have not been read in yet"
             << abort(FatalError);
     }

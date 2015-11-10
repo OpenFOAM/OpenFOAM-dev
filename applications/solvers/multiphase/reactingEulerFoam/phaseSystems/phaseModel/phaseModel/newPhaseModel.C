@@ -45,7 +45,7 @@ Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::New
 
     if (cstrIter == phaseSystemConstructorTablePtr_->end())
     {
-        FatalErrorIn("phaseModel::New")
+        FatalErrorInFunction
             << "Unknown phaseModelType type "
             << phaseModelType << endl << endl
             << "Valid phaseModel types are : " << endl

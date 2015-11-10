@@ -66,10 +66,8 @@ inline Foam::label Foam::DelaunayMesh<Triangulation>::getNewCellIndex() const
 
     if (id == labelMax)
     {
-        WarningIn
-        (
-            "Foam::DelaunayMesh<Triangulation>::getNewCellIndex() const"
-        )   << "Cell counter has overflowed." << endl;
+        WarningInFunction
+            << "Cell counter has overflowed." << endl;
     }
 
     return id;
@@ -83,10 +81,8 @@ inline Foam::label Foam::DelaunayMesh<Triangulation>::getNewVertexIndex() const
 
     if (id == labelMax)
     {
-        WarningIn
-        (
-            "Foam::DelaunayMesh<Triangulation>::getNewVertexIndex() const"
-        )   << "Vertex counter has overflowed." << endl;
+        WarningInFunction
+            << "Vertex counter has overflowed." << endl;
     }
 
     return id;

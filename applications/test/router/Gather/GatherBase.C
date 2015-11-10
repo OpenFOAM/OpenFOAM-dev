@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,11 +70,8 @@ IndexType GatherBase::offset
 {
     if (values.size() != indices.size())
     {
-        FatalErrorIn
-        (
-            "GatherBase::offset(const List<DataType>&, "
-            "const List<IndexType>&, AddOp)"
-        )   << "Input data and indices lists not equal size." << endl
+        FatalErrorInFunction
+            << "Input data and indices lists not equal size." << endl
             << "data size:" << values.size()
             << "  indices:" << indices.size()
             << abort(FatalError);

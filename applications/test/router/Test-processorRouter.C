@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
     if (!Pstream::parRun())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Please run in parallel" << exit(FatalError);
     }
 

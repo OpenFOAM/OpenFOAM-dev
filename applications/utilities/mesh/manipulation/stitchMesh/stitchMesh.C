@@ -177,7 +177,7 @@ void checkPatch(const polyBoundaryMesh& bMesh, const word& name)
 
     if (patchI == -1)
     {
-        FatalErrorIn("checkPatch(const polyBoundaryMesh&, const word&)")
+        FatalErrorInFunction
             << "Cannot find patch " << name << endl
             << "It should be present and of non-zero size" << endl
             << "Valid patches are " << bMesh.names()
@@ -186,7 +186,7 @@ void checkPatch(const polyBoundaryMesh& bMesh, const word& name)
 
     if (bMesh[patchI].empty())
     {
-        FatalErrorIn("checkPatch(const polyBoundaryMesh&, const word&)")
+        FatalErrorInFunction
             << "Patch " << name << " is present but zero size"
             << exit(FatalError);
     }
@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 
     if (partialCover && perfectCover)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Cannot supply both partial and perfect." << endl
             << "Use perfect match option if the patches perfectly align"
             << " (both vertex positions and face centres)" << endl
@@ -487,7 +487,7 @@ int main(int argc, char *argv[])
         )
     )
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing polyMesh."
             << exit(FatalError);
     }

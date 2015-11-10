@@ -284,11 +284,8 @@ void Foam::conformalVoronoiMesh::insertSurfacePointPairs
         }
         else
         {
-            WarningIn
-            (
-                "Foam::conformalVoronoiMesh::insertSurfacePointPairs"
-                "(const pointIndexHitAndFeatureList&, const fileName)"
-            )   << meshableSide << ", bad"
+            WarningInFunction
+                << meshableSide << ", bad"
                 << endl;
         }
     }
@@ -652,7 +649,7 @@ Foam::face Foam::conformalVoronoiMesh::buildDualFace
 //            DelaunayMeshTools::drawDelaunayCell(Pout, cc1);
 //            DelaunayMeshTools::drawDelaunayCell(Pout, cc2);
 
-            WarningIn("Foam::conformalVoronoiMesh::buildDualFace")
+            WarningInFunction
                 << "Dual face uses circumcenter defined by a "
                 << "Delaunay tetrahedron with no internal "
                 << "or boundary points.  Defining Delaunay edge ends: "
@@ -723,7 +720,7 @@ Foam::label Foam::conformalVoronoiMesh::maxFilterCount
             Vertex_handle vA = c->vertex(eit->second);
             Vertex_handle vB = c->vertex(eit->third);
 
-            FatalErrorIn("Foam::conformalVoronoiMesh::buildDualFace")
+            FatalErrorInFunction
                 << "Dual face uses circumcenter defined by a "
                 << "Delaunay tetrahedron with no internal "
                 << "or boundary points.  Defining Delaunay edge ends: "
@@ -780,16 +777,7 @@ bool Foam::conformalVoronoiMesh::ownerAndNeighbour
 
     if (dualCellIndexA == -1 && dualCellIndexB == -1)
     {
-        FatalErrorIn
-        (
-            "bool Foam::conformalVoronoiMesh::ownerAndNeighbour"
-            "("
-                "Vertex_handle vA,"
-                "Vertex_handle vB,"
-                "label& owner,"
-                "label& neighbour"
-            ") const"
-        )
+        FatalErrorInFunction
             << "Attempting to create a face joining "
             << "two unindexed dual cells "
             << exit(FatalError);
@@ -1614,7 +1602,7 @@ void Foam::conformalVoronoiMesh::move()
         {
             if (!vit->referred() && !usedIndices.insert(vit->index()))
             {
-                FatalErrorIn("Foam::conformalVoronoiMesh::move()")
+                FatalErrorInFunction
                     << "Index already used! Could not insert: " << nl
                     << vit->info()
                     << abort(FatalError);

@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
         if (!nProcs)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "No processor* directories found"
                 << exit(FatalError);
         }

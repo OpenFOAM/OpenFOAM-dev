@@ -134,14 +134,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorPosition
 
             if (!globalBackgroundBounds_.contains(pt))
             {
-                FatalErrorIn
-                (
-                    "Foam::labelList"
-                    "Foam::backgroundMeshDecomposition::processorPosition"
-                    "("
-                        "const List<point>&"
-                    ") const"
-                )
+                FatalErrorInFunction
                     << "The position " << pt
                     << " is not in any part of the background mesh "
                     << globalBackgroundBounds_ << endl
@@ -152,14 +145,8 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorPosition
 
             if (debug)
             {
-                WarningIn
-                (
-                    "Foam::labelList"
-                    "Foam::backgroundMeshDecomposition::processorPosition"
-                    "("
-                        "const List<point>&"
-                    ") const"
-                )   << "The position " << pt
+                WarningInFunction
+                    << "The position " << pt
                     << " was not found in the background mesh "
                     << globalBackgroundBounds_ << ", finding nearest."
                     << endl;

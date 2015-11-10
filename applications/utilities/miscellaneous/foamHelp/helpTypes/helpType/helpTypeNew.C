@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,14 +43,14 @@ Foam::autoPtr<Foam::helpType> Foam::helpType::New
         // exit without stack trace
         if (helpTypeName == "-help")
         {
-            FatalErrorIn("helpType::New()")
+            FatalErrorInFunction
                 << "Valid helpType selections are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc() << nl
                 << exit(FatalError);
         }
         else
         {
-            FatalErrorIn("helpType::New()")
+            FatalErrorInFunction
                 << "Unknown helpType type " << helpTypeName << nl
                 << "Valid helpType selections are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc() << nl

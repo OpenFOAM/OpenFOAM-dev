@@ -71,7 +71,7 @@ void checkFaceEdges
 
             if (edges[myEdges[fp]] != edge(f[fp], f[fp1]))
             {
-                FatalErrorIn("checkFaceEdges")
+                FatalErrorInFunction
                     << "Edges of face not in face point order:"
                     << "face:" << faceI << " localF:" << f
                     << " faceEdges:" << myEdges

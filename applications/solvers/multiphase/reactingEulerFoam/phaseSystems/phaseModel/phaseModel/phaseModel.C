@@ -175,7 +175,7 @@ const Foam::tmp<Foam::volScalarField>& Foam::phaseModel::divU() const
 
 void Foam::phaseModel::divU(const tmp<volScalarField>& divU)
 {
-    WarningIn("phaseModel::divU(const tmp<volScalarField>& divU)")
+    WarningInFunction
         << "Attempt to set the dilatation rate of an incompressible phase"
         << endl;
 }
@@ -196,7 +196,7 @@ const Foam::surfaceScalarField& Foam::phaseModel::DbyA() const
 
 void Foam::phaseModel::DbyA(const tmp<surfaceScalarField>& DbyA)
 {
-    WarningIn("phaseModel::DbyA(const surfaceScalarField& DbyA)")
+    WarningInFunction
         << "Attempt to set the dilatation rate of an incompressible phase"
         << endl;
 }

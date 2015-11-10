@@ -82,7 +82,7 @@ Foam::phasePair::~phasePair()
 
 const Foam::phaseModel& Foam::phasePair::dispersed() const
 {
-    FatalErrorIn("Foam::phasePair::dispersed() const")
+    FatalErrorInFunction
         << "Requested dispersed phase from an unordered pair."
         << exit(FatalError);
 
@@ -92,7 +92,7 @@ const Foam::phaseModel& Foam::phasePair::dispersed() const
 
 const Foam::phaseModel& Foam::phasePair::continuous() const
 {
-    FatalErrorIn("Foam::phasePair::dispersed() const")
+    FatalErrorInFunction
         << "Requested continuous phase from an unordered pair."
         << exit(FatalError);
 
@@ -185,7 +185,7 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::Ta() const
 
 Foam::tmp<Foam::volScalarField> Foam::phasePair::E() const
 {
-    FatalErrorIn("Foam::phasePair::E() const")
+    FatalErrorInFunction
         << "Requested aspect ratio of the dispersed phase in an unordered pair"
         << exit(FatalError);
 

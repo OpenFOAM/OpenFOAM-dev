@@ -44,7 +44,7 @@ Foam::autoPtr<Foam::dragModel> Foam::dragModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("dragModel::New")
+        FatalErrorInFunction
             << "Unknown dragModelType type "
             << dragModelType << endl << endl
             << "Valid dragModel types are : " << endl

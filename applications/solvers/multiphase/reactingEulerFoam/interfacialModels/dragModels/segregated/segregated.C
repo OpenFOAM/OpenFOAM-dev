@@ -66,7 +66,7 @@ Foam::dragModels::segregated::~segregated()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::CdRe() const
 {
-    FatalErrorIn("Foam::dragModels::segregated::CdRe() const")
+    FatalErrorInFunction
         << "Not implemented."
         << "Drag coefficient not defined for the segregated model."
         << exit(FatalError);

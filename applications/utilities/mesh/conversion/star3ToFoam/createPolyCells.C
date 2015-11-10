@@ -173,7 +173,7 @@ void Foam::starMesh::createPolyCells()
             }
             else
             {
-              FatalErrorIn("void starMesh::createPolyCells()")
+              FatalErrorInFunction
                   << "Error in internal face insertion"
                   << abort(FatalError);
             }

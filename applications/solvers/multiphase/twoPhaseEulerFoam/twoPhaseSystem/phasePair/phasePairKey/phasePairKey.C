@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,14 +125,8 @@ Foam::Istream& Foam::operator>>(Istream& is, phasePairKey& key)
     }
     else
     {
-        FatalErrorIn
-        (
-            "friend Istream& operator>>"
-            "("
-                "Istream& is, "
-                "phasePairKey& key"
-            ")"
-        )   << "Phase pair type is not recognised. "
+        FatalErrorInFunction
+            << "Phase pair type is not recognised. "
             << temp
             << "Use (phaseDispersed in phaseContinuous) for an ordered"
             << "pair, or (phase1 and pase2) for an unordered pair."

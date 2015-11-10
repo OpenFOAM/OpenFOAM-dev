@@ -246,7 +246,7 @@ void simpleMarkFeatures
     {
         if (faceZones.size() > 0)
         {
-            WarningIn("simpleMarkFeatures(..)")
+            WarningInFunction
                 << "Detected " << faceZones.size()
                 << " faceZones. These will not be preserved."
                 << endl;

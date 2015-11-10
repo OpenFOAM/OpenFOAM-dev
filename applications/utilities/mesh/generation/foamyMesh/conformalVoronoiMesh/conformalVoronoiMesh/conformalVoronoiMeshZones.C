@@ -43,7 +43,7 @@ void Foam::conformalVoronoiMesh::calcNeighbourCellCentres
 
     if (neiCc.size() != nBoundaryFaces)
     {
-        FatalErrorIn("conformalVoronoiMesh::calcNeighbourCellCentres(..)")
+        FatalErrorInFunction
             << "nBoundaries:" << nBoundaryFaces
             << " neiCc:" << neiCc.size()
             << abort(FatalError);
@@ -171,12 +171,8 @@ void Foam::conformalVoronoiMesh::findCellZoneInsideWalk
 
         if (keepRegionI == -1)
         {
-            FatalErrorIn
-            (
-                "conformalVoronoiMesh::findCellZoneInsideWalk"
-                "(const polyMesh&, const labelList&"
-                ", const labelList&, labelList&)"
-            )   << "Point " << insidePoint
+            FatalErrorInFunction
+                << "Point " << insidePoint
                 << " is not inside the mesh." << nl
                 << "Bounding box of the mesh:" << mesh.bounds()
                 << exit(FatalError);
@@ -193,12 +189,8 @@ void Foam::conformalVoronoiMesh::findCellZoneInsideWalk
                 }
                 else if (cellToSurface[cellI] != surfI)
                 {
-                    WarningIn
-                    (
-                        "conformalVoronoiMesh::findCellZoneInsideWalk"
-                        "(const labelList&, const labelList&"
-                        ", const labelList&, const labelList&)"
-                    )   << "Cell " << cellI
+                    WarningInFunction
+                        << "Cell " << cellI
                         << " at " << mesh.cellCentres()[cellI]
                         << " is inside surface " << surfName
                         << " but already marked as being in zone "
@@ -251,7 +243,7 @@ Foam::labelList Foam::conformalVoronoiMesh::calcCellZones
          && selectionMethod != surfaceZonesInfo::INSIDEPOINT
         )
         {
-            FatalErrorIn("conformalVoronoiMesh::calcCellZones(..)")
+            FatalErrorInFunction
                 << "Trying to use surface "
                 << surface.name()
                 << " which has non-geometric inside selection method "

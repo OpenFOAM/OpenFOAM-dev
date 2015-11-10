@@ -48,7 +48,7 @@ Foam::autoPtr<Foam::diameterModel> Foam::diameterModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("diameterModel::New")
+        FatalErrorInFunction
            << "Unknown diameterModelType type "
            << diameterModelType << endl << endl
            << "Valid diameterModel types are : " << endl

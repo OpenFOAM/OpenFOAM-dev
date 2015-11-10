@@ -45,7 +45,7 @@ Foam::surfaceTensionModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("surfaceTensionModel::New")
+        FatalErrorInFunction
             << "Unknown surfaceTensionModelType type "
             << surfaceTensionModelType << endl << endl
             << "Valid surfaceTensionModel types are : " << endl

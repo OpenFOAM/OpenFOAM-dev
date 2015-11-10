@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,8 @@ Foam::pointFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
     {
         hasUnmapped_ = true;
 
-        FatalErrorIn
-        (
-            "pointFieldDecomposer::patchFieldDecomposer()"
-        )   << "Incomplete patch point addressing"
+        FatalErrorInFunction
+            << "Incomplete patch point addressing"
             << abort(FatalError);
     }
 }

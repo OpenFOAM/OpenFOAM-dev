@@ -63,17 +63,8 @@ NonRandomTwoLiquid
 {
     if (this->speciesNames_.size() != 2)
     {
-        FatalErrorIn
-        (
-            "template<class Thermo, class OtherThermo>"
-            "Foam::interfaceCompositionModels::"
-            "NonRandomTwoLiquid<Thermo, OtherThermo>::"
-            "NonRandomTwoLiquid"
-            "( "
-                "const dictionary& dict, "
-                "const phasePair& pair "
-            ")"
-        )   << "NonRandomTwoLiquid model is suitable for two species only."
+        FatalErrorInFunction
+            << "NonRandomTwoLiquid model is suitable for two species only."
             << exit(FatalError);
     }
 

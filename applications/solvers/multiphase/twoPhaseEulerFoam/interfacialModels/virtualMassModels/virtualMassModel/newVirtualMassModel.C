@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Foam::autoPtr<Foam::virtualMassModel> Foam::virtualMassModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("virtualMassModel::New")
+        FatalErrorInFunction
             << "Unknown virtualMassModelType type "
             << virtualMassModelType << endl << endl
             << "Valid virtualMassModel types are : " << endl

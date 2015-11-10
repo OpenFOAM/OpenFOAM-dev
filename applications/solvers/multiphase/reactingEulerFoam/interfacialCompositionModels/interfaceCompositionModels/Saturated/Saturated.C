@@ -64,16 +64,8 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Saturated
 {
     if (this->speciesNames_.size() != 1)
     {
-        FatalErrorIn
-        (
-            "template<class Thermo, class OtherThermo>"
-            "Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::"
-            "Saturated"
-            "( "
-                "const dictionary& dict, "
-                "const phasePair& pair "
-            ")"
-        )   << "Saturated model is suitable for one species only."
+        FatalErrorInFunction
+            << "Saturated model is suitable for one species only."
             << exit(FatalError);
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -319,7 +319,7 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             // Check that the face is valid
             if (min(newFace) < 0)
             {
-                FatalErrorIn("void mergePolyMesh::addMesh(const polyMesh&)")
+                FatalErrorInFunction
                     << "Error in point mapping for face " << faceI
                     << ".  Old face: " << curFace << " New face: " << newFace
                     << abort(FatalError);

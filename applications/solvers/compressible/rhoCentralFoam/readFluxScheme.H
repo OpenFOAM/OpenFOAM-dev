@@ -7,10 +7,8 @@ if (mesh.schemesDict().readIfPresent("fluxScheme", fluxScheme))
     }
     else
     {
-        FatalErrorIn
-        (
-            "rhoCentralFoam::readFluxScheme"
-        )   << "fluxScheme: " << fluxScheme
+        FatalErrorInFunction
+            << "fluxScheme: " << fluxScheme
             << " is not a valid choice. "
             << "Options are: Tadmor, Kurganov"
             << abort(FatalError);

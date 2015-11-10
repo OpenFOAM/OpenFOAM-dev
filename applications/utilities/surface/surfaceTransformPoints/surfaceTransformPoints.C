@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 
     if (args.options().empty())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "No options supplied, please use one or more of "
                "-translate, -rotate or -scale options."
             << exit(FatalError);

@@ -112,7 +112,7 @@ void Foam::sammMesh::createBoundaryFaces()
             }
             if (!found)
             {
-                FatalErrorIn("sammMesh::createBoundaryFaces()")
+                FatalErrorInFunction
                     << "Face " << faceI
                     << " does not have neighbour cell." << endl
                     << "    face : " << endl << curFace

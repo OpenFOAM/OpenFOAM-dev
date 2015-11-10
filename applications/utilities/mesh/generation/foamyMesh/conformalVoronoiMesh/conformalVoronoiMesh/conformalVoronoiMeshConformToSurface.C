@@ -649,7 +649,7 @@ void Foam::conformalVoronoiMesh::buildSurfaceConformation()
 
         if (iterationNo == maxIterations)
         {
-            WarningIn("conformalVoronoiMesh::conformToSurface()")
+            WarningInFunction
                 << "Maximum surface conformation iterations ("
                 << maxIterations <<  ") reached." << endl;
         }

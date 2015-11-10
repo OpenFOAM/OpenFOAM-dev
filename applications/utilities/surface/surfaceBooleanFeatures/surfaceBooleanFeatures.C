@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
 
     if (!validActions.found(action))
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Unsupported action " << action << endl
             << "Supported actions:" << validActions.toc() << abort(FatalError);
     }
@@ -468,7 +468,7 @@ int main(int argc, char *argv[])
 
     if (invertedSpace && validActions[action] == booleanSurface::DIFFERENCE)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Inverted space only makes sense for union or intersection."
             << exit(FatalError);
     }
@@ -708,7 +708,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Unsupported booleanSurface:booleanOpType and space "
             << action << " " << invertedSpace
             << abort(FatalError);

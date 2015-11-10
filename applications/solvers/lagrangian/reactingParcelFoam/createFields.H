@@ -17,7 +17,7 @@ const word inertSpecie(thermo.lookup("inertSpecie"));
 
 if (!composition.contains(inertSpecie))
 {
-    FatalErrorIn(args.executable())
+    FatalErrorInFunction
         << "Specified inert specie '" << inertSpecie << "' not found in "
         << "species list. Available species:" << composition.species()
         << exit(FatalError);

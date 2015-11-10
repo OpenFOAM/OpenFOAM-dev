@@ -36,7 +36,7 @@ void Foam::starMesh::calcPointCells() const
 
     if (pointCellsPtr_)
     {
-        FatalErrorIn("starMesh::calcPointCells() const")
+        FatalErrorInFunction
             << "pointCells already calculated"
             << abort(FatalError);
     }

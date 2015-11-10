@@ -84,15 +84,7 @@ surfaceOffsetLinearDistance::surfaceOffsetLinearDistance
          && coeffsDict().found("linearDistanceCoeff")
         )
         {
-            FatalErrorIn
-            (
-                "surfaceOffsetLinearDistance::surfaceOffsetLinearDistance"
-                "("
-                "    const dictionary& initialPointsDict,"
-                "    const searchableSurface& surface,"
-                "    const scalar& defaultCellSize"
-                ")"
-            )
+            FatalErrorInFunction
                 << "totalDistanceCoeff and linearDistanceCoeff found, "
                 << "specify one or other, not both."
                 << nl << exit(FatalError) << endl;
@@ -114,15 +106,7 @@ surfaceOffsetLinearDistance::surfaceOffsetLinearDistance
     }
     else
     {
-        FatalErrorIn
-        (
-            "surfaceOffsetLinearDistance::surfaceOffsetLinearDistance"
-            "("
-            "    const dictionary& initialPointsDict,"
-            "    const searchableSurface& surface,"
-            "    const scalar& defaultCellSize"
-            ")"
-        )
+        FatalErrorInFunction
             << "totalDistanceCoeff or linearDistanceCoeff not found."
             << nl << exit(FatalError) << endl;
     }

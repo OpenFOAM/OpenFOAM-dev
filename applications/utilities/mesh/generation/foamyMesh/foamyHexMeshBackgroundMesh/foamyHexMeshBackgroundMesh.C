@@ -72,7 +72,7 @@ scalar getMergeDistance
 
     if (runTime.writeFormat() == IOstream::ASCII && mergeTol < writeTol)
     {
-        FatalErrorIn("getMergeDistance")
+        FatalErrorInFunction
             << "Your current settings specify ASCII writing with "
             << IOstream::defaultPrecision() << " digits precision." << endl
             << "Your merging tolerance (" << mergeTol << ") is finer than this."
@@ -367,7 +367,7 @@ tmp<scalarField> signedDistance
             }
             else
             {
-                FatalErrorIn("signedDistance()")
+                FatalErrorInFunction
                     << "getVolumeType failure, neither INSIDE or OUTSIDE"
                     << exit(FatalError);
             }

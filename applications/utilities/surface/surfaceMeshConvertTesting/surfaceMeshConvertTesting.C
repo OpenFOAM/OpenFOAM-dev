@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
     if (importName == exportName)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Output file " << exportName << " would overwrite input file."
             << exit(FatalError);
     }

@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
     if (!args.optionFound("ybl") && !args.optionFound("Cbl"))
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Neither option 'ybl' or 'Cbl' have been provided to calculate "
             << "the boundary-layer thickness.\n"
             << "Please choose either 'ybl' OR 'Cbl'."
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     }
     else if (args.optionFound("ybl") && args.optionFound("Cbl"))
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Both 'ybl' and 'Cbl' have been provided to calculate "
             << "the boundary-layer thickness.\n"
             << "Please choose either 'ybl' OR 'Cbl'."

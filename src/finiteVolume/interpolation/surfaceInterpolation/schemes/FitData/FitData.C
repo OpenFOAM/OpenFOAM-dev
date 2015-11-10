@@ -253,11 +253,8 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::calcFit
         {
             // if (iIt == 7)
             // {
-            //     WarningIn
-            //     (
-            //         "FitData<Polynomial>::calcFit"
-            //         "(const List<point>& C, const label facei"
-            //     )   << "Cannot fit face " << facei << " iteration " << iIt
+            //     WarningInFunction
+            //         << "Cannot fit face " << facei << " iteration " << iIt
             //         << " with sum of weights " << sum(coeffsi) << nl
             //         << "    Weights " << coeffsi << nl
             //         << "    Linear weights " << wLin << " " << 1 - wLin << nl

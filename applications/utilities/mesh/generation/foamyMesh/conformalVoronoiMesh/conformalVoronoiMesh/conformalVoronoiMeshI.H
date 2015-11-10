@@ -122,7 +122,7 @@ inline Foam::scalar Foam::conformalVoronoiMesh::averageAnyCellSize
 
     if (sizeSum < 0)
     {
-        WarningIn("averageAnyCellSize(const Delaunay::Finite_facets_iterator&)")
+        WarningInFunction
             << "sizeSum = " << sizeSum
             << endl;
 
@@ -558,11 +558,7 @@ Foam::conformalVoronoiMesh::decomposition() const
 {
     if (!Pstream::parRun())
     {
-        FatalErrorIn
-        (
-            "inline const Foam::backgroundMeshDecomposition& "
-            "Foam::conformalVoronoiMesh::decomposition() const"
-        )
+        FatalErrorInFunction
             << "The backgroundMeshDecomposition cannot be asked for in serial."
             << exit(FatalError) << endl;
     }

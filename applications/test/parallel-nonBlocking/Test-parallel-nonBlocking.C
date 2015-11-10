@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
 
             if (data != procI)
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "From processor " << procI << " received " << data
                     << " but expected " << procI
                     << exit(FatalError);

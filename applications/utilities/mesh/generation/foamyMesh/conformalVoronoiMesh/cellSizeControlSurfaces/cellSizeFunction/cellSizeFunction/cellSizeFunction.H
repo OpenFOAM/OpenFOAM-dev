@@ -197,7 +197,7 @@ public:
             const pointField& pts
         )
         {
-            WarningIn("cellSizeFunction::setCellSize(const pointField&)")
+            WarningInFunction
                 << "Not overloaded."
                 << endl;
             return false;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,10 +47,8 @@ Foam::autoPtr<Foam::XiModel> Foam::XiModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "XiModel::New"
-        )   << "Unknown XiModel type "
+        FatalErrorInFunction
+            << "Unknown XiModel type "
             << modelType << nl << nl
             << "Valid XiModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ void Foam::channelIndex::walkOppositeFaces
 
                 if (oppositeFaceI == -1)
                 {
-                    FatalErrorIn("channelIndex::walkOppositeFaces(..)")
+                    FatalErrorInFunction
                         << "Face:" << faceI << " owner cell:" << ownCell
                         << " is not a hex?" << abort(FatalError);
                 }
@@ -135,7 +135,7 @@ void Foam::channelIndex::walkOppositeFaces
 
                 if (oppositeFaceI == -1)
                 {
-                    FatalErrorIn("channelIndex::walkOppositeFaces(..)")
+                    FatalErrorInFunction
                         << "Face:" << faceI << " neighbour cell:" << neiCell
                         << " is not a hex?" << abort(FatalError);
                 }
@@ -247,7 +247,7 @@ Foam::channelIndex::channelIndex
 
         if (patchI == -1)
         {
-            FatalErrorIn("channelIndex::channelIndex(const polyMesh&)")
+            FatalErrorInFunction
                 << "Illegal patch " << patchNames[i]
                 << ". Valid patches are " << patches.name()
                 << exit(FatalError);

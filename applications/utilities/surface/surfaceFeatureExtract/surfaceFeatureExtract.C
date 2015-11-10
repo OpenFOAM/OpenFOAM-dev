@@ -73,7 +73,7 @@ scalar calcVertexNormalWeight
 
     if (index == -1)
     {
-        FatalErrorIn("calcVertexNormals()")
+        FatalErrorInFunction
             << "Point not in face" << abort(FatalError);
     }
 
@@ -853,7 +853,7 @@ surfaceFeatures::edgeStatus checkFlatRegionEdge
             }
             else if (dir == 0)
             {
-                FatalErrorIn("problem.")
+                FatalErrorInFunction
                     << exit(FatalError);
             }
             else
@@ -1083,7 +1083,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "No initial feature set. Provide either one"
                 << " of extractFromFile (to read existing set)" << nl
                 << " or extractFromSurface (to construct new set from angle)"

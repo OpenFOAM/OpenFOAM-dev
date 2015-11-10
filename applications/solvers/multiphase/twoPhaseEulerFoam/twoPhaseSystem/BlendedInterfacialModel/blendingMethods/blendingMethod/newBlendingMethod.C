@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn("blendingMethod::New")
+        FatalErrorInFunction
             << "Unknown blendingMethodType type "
             << blendingMethodType << endl << endl
             << "Valid blendingMethod types are : " << endl

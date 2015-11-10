@@ -65,10 +65,8 @@ word cellShapeControlMesh::meshSubDir = "cellShapeControlMesh";
 //
 //    if (!surfHit.hit())
 //    {
-//        FatalErrorIn
-//        (
-//            "Foam::tensor Foam::conformalVoronoiMesh::requiredAlignment"
-//        )   << "findSurfaceNearest did not find a hit across the surfaces."
+//        FatalErrorInFunction
+//            << "findSurfaceNearest did not find a hit across the surfaces."
 //            << exit(FatalError) << endl;
 //    }
 //
@@ -174,13 +172,8 @@ word cellShapeControlMesh::meshSubDir = "cellShapeControlMesh";
 //
 //    if (closestSpokeSurface == -1)
 //    {
-////        WarningIn
-////        (
-////            "conformalVoronoiMesh::requiredAlignment"
-////            "("
-////                "const Foam::point& pt"
-////            ") const"
-////        )   << "No secondary surface hit found in spoke search "
+////        WarningInFunction
+////            << "No secondary surface hit found in spoke search "
 ////            << "using " << s
 ////            << " spokes, try increasing alignmentSearchSpokes."
 ////            << endl;
@@ -203,7 +196,7 @@ word cellShapeControlMesh::meshSubDir = "cellShapeControlMesh";
 //
 //    if (mag(ns) < SMALL)
 //    {
-//        FatalErrorIn("conformalVoronoiMesh::requiredAlignment")
+//        FatalErrorInFunction
 //            << "Parallel normals detected in spoke search." << nl
 //            << "point: " << pt << nl
 //            << "closest surface point: " << surfHit.hitPoint() << nl
@@ -355,10 +348,8 @@ void Foam::cellShapeControlMesh::writeTriangulation()
     }
     else
     {
-        FatalErrorIn
-        (
-            "Foam::triangulatedMesh::writeRefinementTriangulation()"
-        )   << "Triangulation is not valid"
+        FatalErrorInFunction
+            << "Triangulation is not valid"
             << abort(FatalError);
     }
 }
@@ -440,11 +431,8 @@ Foam::cellShapeControlMesh::cellShapeControlMesh(const Time& runTime)
             }
             else
             {
-                FatalErrorIn
-                (
-                    "Foam::cellShapeControlMesh::cellShapeControlMesh"
-                    "(const Time&)"
-                )   << "Cell size point field is not the same size as the "
+                FatalErrorInFunction
+                    << "Cell size point field is not the same size as the "
                     << "mesh."
                     << abort(FatalError);
             }

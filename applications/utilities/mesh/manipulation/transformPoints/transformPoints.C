@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
     // this is not actually stringent enough:
     if (args.options().empty())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "No options supplied, please use one or more of "
                "-translate, -rotate or -scale options."
             << exit(FatalError);

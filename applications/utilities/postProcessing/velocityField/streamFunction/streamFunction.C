@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
     if (nD != 2)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Case is not 2D, stream-function cannot be computed"
             << exit(FatalError);
     }
@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
                         }
                         else
                         {
-                            FatalErrorIn(args.executable())
+                            FatalErrorInFunction
                                 << "Cannot find initialisation face or a cell."
                                 << abort(FatalError);
                         }
@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            WarningIn(args.executable())
+            WarningInFunction
                 << "Flux field does not exist."
                 << " Stream function not calculated" << endl;
         }

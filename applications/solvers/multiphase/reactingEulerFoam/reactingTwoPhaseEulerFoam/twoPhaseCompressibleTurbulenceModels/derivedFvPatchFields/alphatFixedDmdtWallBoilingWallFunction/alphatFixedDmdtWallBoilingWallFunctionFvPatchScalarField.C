@@ -56,11 +56,7 @@ void alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::checkType()
 {
     if (!isA<wallFvPatch>(patch()))
     {
-        FatalErrorIn
-        (
-            "alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField"
-            "::checkType()"
-        )
+        FatalErrorInFunction
             << "Patch type for patch " << patch().name() << " must be wall\n"
             << "Current patch type is " << patch().type() << nl
             << exit(FatalError);

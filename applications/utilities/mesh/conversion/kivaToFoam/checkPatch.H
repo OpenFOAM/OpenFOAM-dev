@@ -88,7 +88,7 @@
     }
     else
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "bc not defined for active cell = " << i
             << exit(FatalError);
     }

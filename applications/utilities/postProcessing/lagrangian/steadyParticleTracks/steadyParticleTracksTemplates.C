@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,15 +57,7 @@ tmp<Field<Type> > readParticleField
         return tmp<Field<Type> >(new Field<Type>(newField.xfer()));
     }
 
-    FatalErrorIn
-    (
-        "template<class Type>"
-        "void readParticleField"
-        "("
-            "const word&, "
-            "const IOobjectList"
-        ")"
-    )
+    FatalErrorInFunction
         << "error: cloud field name " << name << " not found"
         << abort(FatalError);
 
@@ -94,16 +86,7 @@ void readFields
         }
         else
         {
-            FatalErrorIn
-            (
-                "template<class Type>"
-                "void readFields"
-                "("
-                    "PtrList<List<Type> >&, "
-                    "const List<word>&, "
-                    "const IOobjectList&"
-                ")"
-            )
+            FatalErrorInFunction
                 << "Unable to read field " << fieldNames[j]
                 << abort(FatalError);
         }

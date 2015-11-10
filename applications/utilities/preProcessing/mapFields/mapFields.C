@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Unknown mapMethod " << mapMethod << ". Valid options are: "
                 << "mapNearest, interpolate and cellPointInterpolate"
                 << exit(FatalError);

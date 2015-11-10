@@ -399,7 +399,7 @@ int main(int argc, char *argv[])
      || (collapseEdge && cellsToSplit)
     )
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Used more than one mesh modifying module "
             << "(boundary cutting, cell splitting, edge collapsing)" << nl
             << "Please do them in separate passes." << exit(FatalError);

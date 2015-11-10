@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,7 +155,7 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
 
         if (curPatch.coupled())
         {
-            WarningIn("mirrorFvMesh::mirrorFvMesh(const IOobject&)")
+            WarningInFunction
                 << "Found coupled patch " << curPatch.name() << endl
                 << "    Mirroring faces on coupled patches destroys"
                 << " the ordering. This might be fixed by running a dummy"

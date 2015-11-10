@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::SCOPE::SuRef
     }
     else
     {
-        FatalErrorIn("laminarFlameSpeedModels::SCOPE::SuRef(scalar phi)")
+        FatalErrorInFunction
             << "phi = " << phi
             << " cannot be handled by SCOPE function with the "
                "given coefficients"
@@ -210,7 +210,7 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::SCOPE::Ma
     }
     else
     {
-        FatalErrorIn("laminarFlameSpeedModels::SCOPE::Ma(scalar phi)")
+        FatalErrorInFunction
             << "phi = " << phi
             << " cannot be handled by SCOPE function with the "
                "given coefficients"

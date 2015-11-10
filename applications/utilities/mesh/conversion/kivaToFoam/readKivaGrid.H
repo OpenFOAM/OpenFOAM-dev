@@ -2,7 +2,7 @@ ifstream kivaFile(kivaFileName.c_str());
 
 if (!kivaFile.good())
 {
-    FatalErrorIn(args.executable())
+    FatalErrorInFunction
         << "Cannot open file " << kivaFileName
         << exit(FatalError);
 }
@@ -76,7 +76,7 @@ kivaFile >> mTable;
 
 if (mTable == 0)
 {
-    FatalErrorIn(args.executable())
+    FatalErrorInFunction
         << "mTable == 0. This is not supported."
            " kivaToFoam needs complete neighbour information"
         << exit(FatalError);

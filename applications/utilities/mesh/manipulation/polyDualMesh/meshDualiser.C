@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,10 +68,8 @@ void Foam::meshDualiser::checkPolyTopoChange(const polyTopoChange& meshMod)
         {
             if (newToOld[newI].size() != 1)
             {
-                FatalErrorIn
-                (
-                    "meshDualiser::checkPolyTopoChange(const polyTopoChange&)"
-                )   << "duplicate verts:" << newToOld[newI]
+                FatalErrorInFunction
+                    << "duplicate verts:" << newToOld[newI]
                     << " coords:"
                     << UIndirectList<point>(points, newToOld[newI])()
                     << abort(FatalError);
@@ -189,7 +187,7 @@ bool Foam::meshDualiser::sameDualCell
 {
     if (!mesh_.isInternalFace(faceI))
     {
-        FatalErrorIn("sameDualCell(const label, const label)")
+        FatalErrorInFunction
             << "face:" << faceI << " is not internal face."
             << abort(FatalError);
     }
@@ -236,7 +234,7 @@ Foam::label Foam::meshDualiser::addInternalFace
 
         if (nUnique < facePoints.size())
         {
-            FatalErrorIn("addInternalFace(..)")
+            FatalErrorInFunction
                 << "verts:" << verts << " newFace:" << newFace
                 << " face points:" << facePoints
                 << abort(FatalError);
@@ -607,7 +605,7 @@ void Foam::meshDualiser::createFaceFromInternalFace
             // Check: make sure that there is a midpoint on the edge.
             if (edgeToDualPoint_[edgeI] == -1)
             {
-                FatalErrorIn("createFacesFromInternalFace(..)")
+                FatalErrorInFunction
                     << "face:" << faceI << " verts:" << f
                     << " points:" << UIndirectList<point>(mesh_.points(), f)()
                     << " no feature edge between " << f[fp]
@@ -718,10 +716,8 @@ void Foam::meshDualiser::createFacesAroundBoundaryPoint
 
             if (faceI < pp.start() || faceI >= pp.start()+pp.size())
             {
-                FatalErrorIn
-                (
-                    "meshDualiser::createFacesAroundBoundaryPoint(..)"
-                )   << "Walked from face on patch:" << patchI
+                FatalErrorInFunction
+                    << "Walked from face on patch:" << patchI
                     << " to face:" << faceI
                     << " fc:" << mesh_.faceCentres()[faceI]
                     << " on patch:" << patches.whichPatch(faceI)
@@ -731,10 +727,8 @@ void Foam::meshDualiser::createFacesAroundBoundaryPoint
             // Check if different cell.
             if (dualCellI != findDualCell(own[faceI], pointI))
             {
-                FatalErrorIn
-                (
-                    "meshDualiser::createFacesAroundBoundaryPoint(..)"
-                )   << "Different dual cells but no feature edge"
+                FatalErrorInFunction
+                    << "Different dual cells but no feature edge"
                     << " inbetween point:" << pointI
                     << " coord:" << mesh_.points()[pointI]
                     << abort(FatalError);
@@ -926,12 +920,8 @@ void Foam::meshDualiser::setRefinement
 
         if (faceI != -1)
         {
-            FatalErrorIn
-            (
-                "meshDualiser::setRefinement"
-                "(const labelList&, const labelList&, const labelList&"
-                ", const labelList, polyTopoChange&)"
-            )   << "In split-face-mode (splitFace=true) but not all faces"
+            FatalErrorInFunction
+                << "In split-face-mode (splitFace=true) but not all faces"
                 << " marked as feature faces." << endl
                 << "First conflicting face:" << faceI
                 << " centre:" << mesh_.faceCentres()[faceI]
@@ -948,12 +938,8 @@ void Foam::meshDualiser::setRefinement
         if (edgeI != -1)
         {
             const edge& e = mesh_.edges()[edgeI];
-            FatalErrorIn
-            (
-                "meshDualiser::setRefinement"
-                "(const labelList&, const labelList&, const labelList&"
-                ", const labelList, polyTopoChange&)"
-            )   << "In split-face-mode (splitFace=true) but not all edges"
+            FatalErrorInFunction
+                << "In split-face-mode (splitFace=true) but not all edges"
                 << " marked as feature edges." << endl
                 << "First conflicting edge:" << edgeI
                 << " verts:" << e
@@ -979,12 +965,8 @@ void Foam::meshDualiser::setRefinement
         {
             if (!featureFaceSet[faceI])
             {
-                FatalErrorIn
-                (
-                    "meshDualiser::setRefinement"
-                    "(const labelList&, const labelList&, const labelList&"
-                    ", const labelList, polyTopoChange&)"
-                )   << "Not all boundary faces marked as feature faces."
+                FatalErrorInFunction
+                    << "Not all boundary faces marked as feature faces."
                     << endl
                     << "First conflicting face:" << faceI
                     << " centre:" << mesh_.faceCentres()[faceI]
@@ -1071,12 +1053,8 @@ void Foam::meshDualiser::setRefinement
 
         if (pointToDualCells_[pointI].size() > 0)
         {
-            FatalErrorIn
-            (
-                "meshDualiser::setRefinement"
-                "(const labelList&, const labelList&, const labelList&"
-                ", const labelList, polyTopoChange&)"
-            )   << "Point " << pointI << " at:" << mesh_.points()[pointI]
+            FatalErrorInFunction
+                << "Point " << pointI << " at:" << mesh_.points()[pointI]
                 << " is both in singleCellFeaturePoints"
                 << " and multiCellFeaturePoints."
                 << abort(FatalError);

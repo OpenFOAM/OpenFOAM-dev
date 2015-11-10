@@ -82,7 +82,7 @@ Foam::cellSizeFunction::cellSizeFunction
         }
         else
         {
-            FatalErrorIn("searchableSurfaceControl::searchableSurfaceControl")
+            FatalErrorInFunction
                 << "Unknown mode, expected: inside, outside or bothSides" << nl
                 << exit(FatalError);
         }
@@ -91,7 +91,7 @@ Foam::cellSizeFunction::cellSizeFunction
     {
         if (mode != "bothSides")
         {
-            WarningIn("searchableSurfaceControl::searchableSurfaceControl")
+            WarningInFunction
                 << "surface does not support volumeType, defaulting mode to "
                 << "bothSides."
                 << endl;
@@ -135,11 +135,8 @@ Foam::autoPtr<Foam::cellSizeFunction> Foam::cellSizeFunction::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "cellSizeFunction::New(dictionary&, "
-            "const conformalVoronoiMesh&, const searchableSurface&)"
-        )   << "Unknown cellSizeFunction type "
+        FatalErrorInFunction
+            << "Unknown cellSizeFunction type "
             << cellSizeFunctionTypeName
             << endl << endl
             << "Valid cellSizeFunction types are :" << endl

@@ -834,24 +834,14 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
 {
     if (!Pstream::parRun())
     {
-        FatalErrorIn
-        (
-            "Foam::backgroundMeshDecomposition::backgroundMeshDecomposition"
-            "("
-                "const dictionary& coeffsDict, "
-                "const conformalVoronoiMesh& foamyHexMesh"
-            ")"
-        )
+        FatalErrorInFunction
             << "This cannot be used when not running in parallel."
             << exit(FatalError);
     }
 
     if (!decomposerPtr_().parallelAware())
     {
-        FatalErrorIn
-        (
-            "void Foam::backgroundMeshDecomposition::initialRefinement() const"
-        )
+        FatalErrorInFunction
             << "You have selected decomposition method "
             << decomposerPtr_().typeName
             << " which is not parallel aware." << endl
@@ -1217,14 +1207,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorNearestPosition
 
         if (ptNearestProc[pI] < 0)
         {
-            FatalErrorIn
-            (
-                "Foam::labelList"
-                "Foam::backgroundMeshDecomposition::processorNearestPosition"
-                "("
-                    "const List<point>& pts"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "The position " << pts[pI]
                 << " did not find a nearest point on the background mesh."
                 << exit(FatalError);

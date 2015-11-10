@@ -57,7 +57,7 @@ bool validTri
     {
         if (f[fp] < 0 || f[fp] >= surf.points().size())
         {
-            WarningIn("validTri(const triSurface&, const label)")
+            WarningInFunction
                 << "triangle " << faceI << " vertices " << f
                 << " uses point indices outside point range 0.."
                 << surf.points().size()-1 << endl;
@@ -67,7 +67,7 @@ bool validTri
 
     if ((f[0] == f[1]) || (f[0] == f[2]) || (f[1] == f[2]))
     {
-        WarningIn("validTri(const triSurface&, const label)")
+        WarningInFunction
             << "triangle " << faceI
             << " uses non-unique vertices " << f
             << " coords:" << f.points(surf.points())
@@ -100,7 +100,7 @@ bool validTri
          && ((f[2] == nbrF[0]) || (f[2] == nbrF[1]) || (f[2] == nbrF[2]))
         )
         {
-            WarningIn("validTri(const triSurface&, const label)")
+            WarningInFunction
                 << "triangle " << faceI << " vertices " << f
                 << " has the same vertices as triangle " << nbrFaceI
                 << " vertices " << nbrF
@@ -146,11 +146,8 @@ labelList countBins
 
             if ((index < 0) || (index >= nBins))
             {
-                WarningIn
-                (
-                    "countBins(const scalar, const scalar, const label"
-                    ", const scalarField&)"
-                )   << "value " << val << " at index " << i
+                WarningInFunction
+                    << "value " << val << " at index " << i
                     << " outside range " << min << " .. " << max << endl;
 
                 if (index < 0)
@@ -257,7 +254,7 @@ int main(int argc, char *argv[])
 
             if (region < 0 || region >= regionSize.size())
             {
-                WarningIn(args.executable())
+                WarningInFunction
                     << "Triangle " << faceI << " vertices " << surf[faceI]
                     << " has region " << region << " which is outside the range"
                     << " of regions 0.." << surf.patches().size()-1
@@ -371,7 +368,7 @@ int main(int argc, char *argv[])
 
         if (triQ[minIndex] < SMALL)
         {
-            WarningIn(args.executable()) << "Minimum triangle quality is "
+            WarningInFunction
                 << triQ[minIndex] << ". This might give problems in"
                 << " self-intersection testing later on." << endl;
         }

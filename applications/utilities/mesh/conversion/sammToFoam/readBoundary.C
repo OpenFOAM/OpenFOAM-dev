@@ -116,7 +116,7 @@ void Foam::sammMesh::readBoundary()
         }
         else
         {
-            FatalErrorIn("void sammMesh::readBoundary()")
+            FatalErrorInFunction
                 << "Cannot read file "
                 << boundaryFileName
                 << abort(FatalError);
@@ -222,7 +222,7 @@ void Foam::sammMesh::readBoundary()
     }
     else
     {
-        FatalErrorIn("sammMesh::readBoundary()")
+        FatalErrorInFunction
             << "No boundary faces in file "
             << boundaryFileName
             << endl;

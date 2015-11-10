@@ -187,11 +187,8 @@ void Foam::conformationSurfaces::readFeatures
         }
         else
         {
-            WarningIn
-            (
-                "Foam::conformationSurfaces::readFeatures"
-                "(const label, const dictionary&, const word&, label&)"
-            )   << surface.name() << " of type "
+            WarningInFunction
+                << surface.name() << " of type "
                 << surface.type() << " does not have features"
                 << endl;
         }
@@ -202,7 +199,7 @@ void Foam::conformationSurfaces::readFeatures
     }
     else
     {
-        FatalErrorIn("Foam::conformationSurfaces::readFeatures")
+        FatalErrorInFunction
             << "No valid featureMethod found for surface " << surfaceName
             << nl << "Use \"extendedFeatureEdgeMesh\" "
             << "or \"extractFeatures\"."
@@ -252,7 +249,7 @@ void Foam::conformationSurfaces::readFeatures
     }
     else
     {
-        FatalErrorIn("Foam::conformationSurfaces::readFeatures")
+        FatalErrorInFunction
             << "No valid featureMethod found for surface " << surfaceName
             << nl << "Use \"extendedFeatureEdgeMesh\" "
             << "or \"extractFeatures\"."
@@ -383,7 +380,7 @@ Foam::conformationSurfaces::conformationSurfaces
             {
                 if (!surface.hasVolumeType())
                 {
-                    WarningIn("conformationSurfaces::conformationSurfaces(..)")
+                    WarningInFunction
                         << "Non-baffle surface "
                         << surface.name()
                         << " does not allow inside/outside queries."
@@ -463,9 +460,8 @@ Foam::conformationSurfaces::conformationSurfaces
 
     if (unmatchedKeys.size() > 0)
     {
-        IOWarningIn
+        IOWarningInFunction
         (
-            "conformationSurfaces::conformationSurfaces(..)",
             surfacesDict
         )   << "Not all entries in conformationSurfaces dictionary were used."
             << " The following entries were not used : "

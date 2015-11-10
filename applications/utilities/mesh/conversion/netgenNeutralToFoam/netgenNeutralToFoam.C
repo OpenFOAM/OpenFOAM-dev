@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 
         if (domain != 1)
         {
-            WarningIn(args.executable())
+            WarningInFunction
                 << "Cannot handle multiple domains"
                 << nl << "Ignoring domain " << domain << " setting on line "
                 << str.lineNumber() << endl;
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 
         if (patchI < 0)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Invalid boundary region number " << patchI
                 << " on line " << str.lineNumber()
                 << exit(FatalError);
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
     if (vertsToBoundary.size())
     {
         // Didn't find cells connected to boundary faces.
-        WarningIn(args.executable())
+        WarningInFunction
             << "There are boundary faces without attached cells."
             << "Boundary faces (as triFaces):" << vertsToBoundary.toc()
             << endl;

@@ -25,7 +25,7 @@
     {
         if (nAlphaSubCycles > 1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Sub-cycling is not supported "
                    "with the CrankNicolson ddt scheme"
                 << exit(FatalError);
@@ -36,7 +36,7 @@
     }
     else
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Only Euler and CrankNicolson ddt schemes are supported"
             << exit(FatalError);
     }

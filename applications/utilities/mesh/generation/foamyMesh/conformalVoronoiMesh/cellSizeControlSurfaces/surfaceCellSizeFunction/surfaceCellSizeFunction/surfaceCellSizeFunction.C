@@ -77,11 +77,8 @@ Foam::autoPtr<Foam::surfaceCellSizeFunction> Foam::surfaceCellSizeFunction::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "surfaceCellSizeFunction::New(dictionary&, "
-            "const conformalVoronoiMesh&, const searchableSurface&)"
-        )   << "Unknown surfaceCellSizeFunction type "
+        FatalErrorInFunction
+            << "Unknown surfaceCellSizeFunction type "
             << surfaceCellSizeFunctionTypeName
             << endl << endl
             << "Valid surfaceCellSizeFunction types are :" << endl

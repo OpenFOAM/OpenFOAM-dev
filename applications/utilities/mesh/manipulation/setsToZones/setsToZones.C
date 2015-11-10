@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        FatalErrorIn(args.executable())
+                        FatalErrorInFunction
                             << "One of owner or neighbour of internal face "
                             << faceI << " should be in cellSet " << cells.name()
                             << " to be able to determine orientation." << endl
@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
 
     if (!mesh.write())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing polyMesh."
             << exit(FatalError);
     }

@@ -133,14 +133,8 @@ Foam::Istream& Foam::operator>>(Istream& is, phasePairKey& key)
     }
     else
     {
-        FatalErrorIn
-        (
-            "friend Istream& operator>>"
-            "("
-                "Istream& is, "
-                "phasePairKey& key"
-            ")"
-        )   << "Phase pair type is not recognised. "
+        FatalErrorInFunction
+            << "Phase pair type is not recognised. "
             << temp
             << "Use (phaseDispersed in phaseContinuous) for an ordered"
             << "pair, or (phase1 and pase2) for an unordered pair."

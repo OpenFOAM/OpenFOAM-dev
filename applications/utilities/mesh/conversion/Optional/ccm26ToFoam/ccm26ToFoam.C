@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ void CheckError(CCMIOError const &err, const Foam::string& str)
 {
     if (err != kCCMIONoErr)
     {
-        FatalErrorIn("CheckError")
+        FatalErrorInFunction
             << str << exit(FatalError);
     }
 }
@@ -625,14 +625,14 @@ int main(int argc, char *argv[])
 
         if (!isFile(ccmFile))
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Cannot read file " << ccmFile
                 << exit(FatalError);
         }
 
         if (ccmExt != "ccm" && ccmExt != "ccmg")
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Illegal extension " << ccmExt << " for file " << ccmFile
                 << nl << "Allowed extensions are '.ccm', '.ccmg'"
                 << exit(FatalError);
@@ -697,7 +697,7 @@ int main(int argc, char *argv[])
             );
             if (err != kCCMIONoErr)
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Could not read the file."
                     << exit(FatalError);
             }
@@ -838,7 +838,7 @@ int main(int argc, char *argv[])
 
         if (nbr >= foamCellType.size() || own >= foamCellType.size())
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "face:" << faceI
                 << " nbr:" << nbr
                 << " own:" << own
@@ -864,7 +864,7 @@ int main(int argc, char *argv[])
         {
             if (f[fp] < 0 || f[fp] >= foamPoints.size())
             {
-                FatalErrorIn(args.executable()) << "face:" << faceI
+                FatalErrorInFunction
                     << " f:" << f << abort(FatalError);
             }
         }
@@ -1002,7 +1002,7 @@ int main(int argc, char *argv[])
 
     if (meshFaceI != foamOwner.size())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "meshFaceI:" << meshFaceI
             << " nFaces:" << foamOwner.size()
             << abort(FatalError);

@@ -126,10 +126,8 @@ void renamePatches
 
         if (isA<coupledPolyPatch>(pp))
         {
-            WarningIn
-            (
-                "renamePatches(fvMesh&, const word&, const labelList&"
-            )   << "Encountered coupled patch " << pp.name()
+            WarningInFunction
+                << "Encountered coupled patch " << pp.name()
                 << ". Will only rename the patch itself,"
                 << " not any referred patches."
                 << " This might have to be done by hand."
@@ -695,7 +693,7 @@ autoPtr<mapPolyMesh> createRegionMesh
         }
         else
         {
-            FatalErrorIn("createRegionMesh(..)")
+            FatalErrorInFunction
                 << "Exposed face:" << faceI
                 << " fc:" << mesh.faceCentres()[faceI]
                 << " has owner region " << ownRegion
@@ -1209,7 +1207,7 @@ void getZoneID
             }
             else
             {
-                FatalErrorIn("getZoneID(..)")
+                FatalErrorInFunction
                     << "Cell " << cellI << " with cell centre "
                     << mesh.cellCentres()[cellI]
                     << " is multiple zones. This is not allowed." << endl
@@ -1267,7 +1265,7 @@ void matchRegions
         {
             if (zoneNames[procI] != zoneNames[0])
             {
-                FatalErrorIn("matchRegions(..)")
+                FatalErrorInFunction
                     << "cellZones not synchronised across processors." << endl
                     << "Master has cellZones " << zoneNames[0] << endl
                     << "Processor " << procI
@@ -1501,7 +1499,7 @@ int main(int argc, char *argv[])
      && (useCellZones || blockedFacesName.size())
     )
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "You cannot specify both -cellZonesOnly or -cellZonesFileOnly"
             << " (which specify complete split)"
             << " in combination with -blockedFaces or -cellZones"
@@ -1526,7 +1524,7 @@ int main(int argc, char *argv[])
 
     if (insidePoint && largestOnly)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "You cannot specify both -largestOnly"
             << " (keep region with most cells)"
             << " and -insidePoint (keep region containing point)"
@@ -1566,7 +1564,7 @@ int main(int argc, char *argv[])
         label unzonedCellI = findIndex(zoneID, -1);
         if (unzonedCellI != -1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "For the cellZonesOnly option all cells "
                 << "have to be in a cellZone." << endl
                 << "Cell " << unzonedCellI
@@ -1615,7 +1613,7 @@ int main(int argc, char *argv[])
         label unzonedCellI = findIndex(newZoneID, -1);
         if (unzonedCellI != -1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "For the cellZonesFileOnly option all cells "
                 << "have to be in a cellZone." << endl
                 << "Cell " << unzonedCellI
@@ -2012,7 +2010,7 @@ int main(int argc, char *argv[])
 
             if (regionI == -1)
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Point " << insidePoint
                     << " is not inside the mesh." << nl
                     << "Bounding box of the mesh:" << mesh.bounds()

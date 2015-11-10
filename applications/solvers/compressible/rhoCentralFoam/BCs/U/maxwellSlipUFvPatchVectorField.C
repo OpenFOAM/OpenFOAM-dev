@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,14 +96,8 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
      || mag(accommodationCoeff_) > 2.0
     )
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "maxwellSlipUFvPatchScalarField::maxwellSlipUFvPatchScalarField"
-            "("
-                "const fvPatch&, "
-                "const DimensionedField<vector, volMesh>&, "
-                "const dictionary&"
-            ")",
             dict
         )   << "unphysical accommodationCoeff_ specified"
             << "(0 < accommodationCoeff_ <= 1)" << endl

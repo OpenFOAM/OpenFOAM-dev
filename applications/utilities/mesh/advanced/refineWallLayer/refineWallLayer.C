@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 
     if (!patchSet.size())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Cannot find any patches in set " << patches << endl
             << "Valid patches are " << mesh.boundaryMesh().names()
             << exit(FatalError);

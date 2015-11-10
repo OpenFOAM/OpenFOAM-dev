@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ static void splitTri
     }
     else
     {
-        FatalErrorIn("splitTri(..)")
+        FatalErrorInFunction
             << "Edge " << e << " not part of triangle " << f
             << " fp:" << fp
             << " fp1:" << fp1
@@ -206,14 +206,14 @@ static bool insertSorted
 {
     if (findIndex(sortedVerts, vertI) != -1)
     {
-        FatalErrorIn("insertSorted(..)") << "Trying to insert vertex " << vertI
+        FatalErrorInFunction
             << " which is already in list of sorted vertices "
             << sortedVerts << abort(FatalError);
     }
 
     if (weight <= 0 || weight >= 1)
     {
-        FatalErrorIn("insertSorted(..)") << "Trying to insert vertex " << vertI
+        FatalErrorInFunction
             << " with illegal weight " << weight
             << " into list of sorted vertices "
             << sortedVerts << abort(FatalError);
@@ -228,7 +228,7 @@ static bool insertSorted
 
         if (mag(w - weight) < SMALL)
         {
-            WarningIn("insertSorted(..)")
+            WarningInFunction
                 << "Trying to insert weight " << weight << " which is close to"
                 << " existing weight " << w << " in " << sortedWeights
                 << endl;
@@ -359,7 +359,7 @@ static void markCollapsedFaces
                 // Mark face as being collapsed
                 if (faceToEdge[faceI] != -1)
                 {
-                    FatalErrorIn("markCollapsedFaces(..)")
+                    FatalErrorInFunction
                         << "Cannot collapse face " << faceI << " since "
                         << " is marked to be collapsed both to edge "
                         << faceToEdge[faceI] << " and " << edgeI
@@ -386,7 +386,7 @@ static void markRegion
 {
     if (faceToEdge[faceI] == -1 || collapseRegion[faceI] != -1)
     {
-        FatalErrorIn("markRegion(..)")
+        FatalErrorInFunction
             << "Problem : crossed into uncollapsed/regionized face"
             << abort(FatalError);
     }
@@ -422,7 +422,7 @@ static void markRegion
                 }
                 else if (collapseRegion[nbrFaceI] != regionI)
                 {
-                    FatalErrorIn("markRegion(..)")
+                    FatalErrorInFunction
                         << "Edge:" << edgeI << " between face " << faceI
                         << " with region " << regionI
                         << " and face " << nbrFaceI
@@ -494,7 +494,7 @@ static label edgeType
         }
         else if (usesRegion != region)
         {
-            FatalErrorIn("edgeRegion") << abort(FatalError);
+            FatalErrorInFunction << abort(FatalError);
         }
         else
         {
@@ -519,7 +519,7 @@ static label edgeType
     {
         if (usesRegion == -1)
         {
-            FatalErrorIn("edgeRegion") << abort(FatalError);
+            FatalErrorInFunction << abort(FatalError);
             return -2;
         }
         else
@@ -640,7 +640,7 @@ static void projectNonSpanPoints
 
             if (!pHit.hit())
             {
-                FatalErrorIn("projectNonSpanPoints")
+                FatalErrorInFunction
                     << abort(FatalError);
             }
 
@@ -737,7 +737,7 @@ static void getSplitVerts
 
         if (i0 == -1 || i1 == -1)
         {
-            FatalErrorIn("getSplitVerts")
+            FatalErrorInFunction
                 << "Did not find edge in projected vertices." << nl
                 << "region:" << regionI << nl
                 << "spanPoints:" << spanPoints

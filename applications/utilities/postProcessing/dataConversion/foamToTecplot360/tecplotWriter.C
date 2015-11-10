@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Pout<< endl
         )
     )
     {
-//        FatalErrorIn("tecplotWriter::writeInit(..) const")
+//        FatalErrorInFunction
 //            << "Error in TECINI112." << exit(FatalError);
     }
 }
@@ -148,7 +148,7 @@ Pout<< "zoneName:" << zoneName
         )
     )
     {
-//        FatalErrorIn("tecplotWriter::writePolyhedralZone(..) const")
+//        FatalErrorInFunction
 //            << "Error in TECZNE112." << exit(FatalError);
     }
 }
@@ -228,7 +228,7 @@ Pout<< "zoneName:" << zoneName
         )
     )
     {
-//        FatalErrorIn("tecplotWriter::writePolygonalZone(..) const")
+//        FatalErrorInFunction
 //            << "Error in TECZNE112." << exit(FatalError);
     }
 }
@@ -308,7 +308,7 @@ Pout<< "zoneName:" << zoneName
         )
     )
     {
-//        FatalErrorIn("tecplotWriter::writePolygonalZone(..) const")
+//        FatalErrorInFunction
 //            << "Error in TECZNE112." << exit(FatalError);
     }
 }
@@ -379,7 +379,7 @@ void Foam::tecplotWriter::writeConnectivity(const fvMesh& mesh) const
         )
     )
     {
-//        FatalErrorIn("tecplotWriter::writeConnectivity(const fvMesh&) const")
+//        FatalErrorInFunction
 //            << "Error in TECPOLY112." << exit(FatalError);
     }
 }
@@ -493,7 +493,7 @@ void Foam::tecplotWriter::writeConnectivity
         )
     )
     {
-//        FatalErrorIn("tecplotWriter::writeConnectivity(..) const")
+//        FatalErrorInFunction
 //            << "Error in TECPOLY112." << exit(FatalError);
     }
 }
@@ -505,7 +505,7 @@ Pout<< "writeEnd" << endl;
 
     if (!TECEND112())
     {
-//        FatalErrorIn("tecplotWriter::writeEnd() const")
+//        FatalErrorInFunction
 //            << "Error in TECEND112." << exit(FatalError);
     }
 

@@ -92,10 +92,8 @@ Foam::cellSizeAndAlignmentControl::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "cellSizeAndAlignmentControl::New()"
-        )   << "Unknown cellSizeAndAlignmentControl type "
+        FatalErrorInFunction
+            << "Unknown cellSizeAndAlignmentControl type "
             << cellSizeAndAlignmentControlTypeName
             << endl << endl
             << "Valid cellSizeAndAlignmentControl types are :" << endl

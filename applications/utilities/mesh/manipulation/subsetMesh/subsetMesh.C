@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
 
         if (patchI == -1)
         {
-            FatalErrorIn(args.executable()) << "Illegal patch " << patchName
+            FatalErrorInFunction
                 << nl << "Valid patches are " << mesh.boundaryMesh().names()
                 << exit(FatalError);
         }

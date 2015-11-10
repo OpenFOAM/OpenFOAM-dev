@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
 
         if (blockPFaces.size() != blockNFaces.size())
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Inconsistent number of faces for glue pair "
                 << glueI << " between blocks " << blockPlabel + 1
                 << " and " << blockNlabel + 1
@@ -417,7 +417,7 @@ int main(int argc, char *argv[])
 
     if (changedPointMerge == true)
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Point merging failed after max number of passes."
             << abort(FatalError);
     }
@@ -448,7 +448,7 @@ int main(int argc, char *argv[])
 
                 if (pointMergeList[PpointLabel] == -1)
                 {
-                    FatalErrorIn(args.executable())
+                    FatalErrorInFunction
                         << "Unable to merge point " << blockPFacePointI
                         << " of face " << blockPFaceLabel
                         << " of block " << blockPlabel
@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
 
                 if (pointMergeList[NpointLabel] == -1)
                 {
-                    FatalErrorIn(args.executable())
+                    FatalErrorInFunction
                         << "Unable to merge point " << blockNFacePointI
                         << " of face " << blockNFaceLabel
                         << " of block " << blockNlabel
@@ -489,7 +489,7 @@ int main(int argc, char *argv[])
     {
         if (pointMergeList[pointLabel] > pointLabel)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "ouch" << abort(FatalError);
         }
 
@@ -692,7 +692,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    FatalErrorIn(args.executable())
+                    FatalErrorInFunction
                         << "Unrecognised CFX patch type "
                         << cfxPatchTypes[patchI]
                         << abort(FatalError);

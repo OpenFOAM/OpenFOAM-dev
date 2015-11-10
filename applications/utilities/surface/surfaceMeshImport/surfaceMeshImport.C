@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -189,8 +189,7 @@ int main(int argc, char *argv[])
 
         if (!ioPtr->headerOk())
         {
-            FatalErrorIn(args.executable())
-                << "Cannot open coordinateSystems file\n    "
+            FatalErrorInFunction
                 << ioPtr->objectPath() << nl
                 << exit(FatalError);
         }
@@ -204,7 +203,7 @@ int main(int argc, char *argv[])
             const label csIndex = csLst.findIndex(csName);
             if (csIndex < 0)
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Cannot find -from " << csName << nl
                     << "available coordinateSystems: " << csLst.toc() << nl
                     << exit(FatalError);
@@ -220,7 +219,7 @@ int main(int argc, char *argv[])
             const label csIndex = csLst.findIndex(csName);
             if (csIndex < 0)
             {
-                FatalErrorIn(args.executable())
+                FatalErrorInFunction
                     << "Cannot find -to " << csName << nl
                     << "available coordinateSystems: " << csLst.toc() << nl
                     << exit(FatalError);
@@ -233,8 +232,7 @@ int main(int argc, char *argv[])
         // maybe fix this later
         if (fromCsys.valid() && toCsys.valid())
         {
-            FatalErrorIn(args.executable())
-                << "Only allowed  '-from' or '-to' option at the moment."
+            FatalErrorInFunction
                 << exit(FatalError);
         }
     }

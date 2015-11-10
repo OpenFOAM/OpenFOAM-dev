@@ -60,10 +60,8 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
                         endAgg.append(globalNumbering.toGlobal(procI, remAgg));
                         if (startIndex.size() > maxDynListLength)
                         {
-                            FatalErrorIn
-                            (
-                                "shootRays"
-                            )   << "Dynamic list need from capacity."
+                            FatalErrorInFunction
+                                << "Dynamic list need from capacity."
                                 << "Actual size maxDynListLength : "
                                 <<  maxDynListLength
                                 << abort(FatalError);

@@ -70,11 +70,8 @@ autoPtr<faceAreaWeightModel> faceAreaWeightModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "faceAreaWeightModel::New(const dictionary&, "
-            "const conformalVoronoiMesh&)"
-        )   << "Unknown faceAreaWeightModel type "
+        FatalErrorInFunction
+            << "Unknown faceAreaWeightModel type "
             << faceAreaWeightModelTypeName
             << endl << endl
             << "Valid faceAreaWeightModel types are :" << endl

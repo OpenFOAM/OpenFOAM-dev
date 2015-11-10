@@ -96,11 +96,8 @@ autoPtr<initialPointsMethod> initialPointsMethod::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "initialPointsMethod::New(dictionary&, "
-            "const conformalVoronoiMesh&)"
-        )   << "Unknown initialPointsMethod type "
+        FatalErrorInFunction
+            << "Unknown initialPointsMethod type "
             << initialPointsMethodTypeName
             << endl << endl
             << "Valid initialPointsMethod types are :" << endl

@@ -219,7 +219,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //
 //            if (vertexToDualAddressing[vertI] != 0)
 //            {
-//                FatalErrorIn("conformalVoronoiMesh::writeMesh(..)")
+//                FatalErrorInFunction
 //                    << "Delaunay vertex " << vertI
 //                    << " from cell " << cellI
 //                    << " is already mapped to "
@@ -239,7 +239,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //
 //                if (vertexToDualAddressing[vertI] > 0)
 //                {
-//                    FatalErrorIn("conformalVoronoiMesh::writeMesh(..)")
+//                    FatalErrorInFunction
 //                        << "Delaunay vertex " << vertI
 //                        << " from patch " << patchI
 //                        << " local index " << i
@@ -310,14 +310,8 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //        label pointI = findIndex(pointDualAddressing, -1);
 //        if (pointI != -1)
 //        {
-//            WarningIn
-//            (
-//                "conformalVoronoiMesh::writeMesh\n"
-//                "(\n"
-//                "    const fileName& instance,\n"
-//                "    bool filterFaces\n"
-//                ")\n"
-//            )   << "Delaunay vertex " << pointI
+//            WarningInFunction
+//                << "Delaunay vertex " << pointI
 //                << " does not have a corresponding dual cell." << endl;
 //        }
 //
@@ -1060,7 +1054,7 @@ void Foam::conformalVoronoiMesh::writeMesh
 
     if (!mesh.write())
     {
-        FatalErrorIn("Foam::conformalVoronoiMesh::writeMesh(..)")
+        FatalErrorInFunction
             << "Failed writing polyMesh."
             << exit(FatalError);
     }

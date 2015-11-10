@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ void Foam::patchToPoly2DMesh::createNeighbours()
         }
         else
         {
-            FatalErrorIn("polyMesh neighbour construction")
+            FatalErrorInFunction
                 << abort(FatalError);
         }
     }
@@ -307,7 +307,7 @@ void Foam::patchToPoly2DMesh::createMesh()
     {
         if (patch_.edgeFaces()[edgeI].size() != 2)
         {
-            FatalErrorIn("patchToPoly2DMesh::patchToPoly2DMesh(..)")
+            FatalErrorInFunction
                 << "internal edge:" << edgeI
                 << " patch.edgeFaces()[edgeI]:" << patch_.edgeFaces()[edgeI]
                 << abort(FatalError);
@@ -323,7 +323,7 @@ void Foam::patchToPoly2DMesh::createMesh()
     {
         if (patch_.edgeFaces()[edgeI].size() != 1)
         {
-            FatalErrorIn("patchToPoly2DMesh::patchToPoly2DMesh(..)")
+            FatalErrorInFunction
                 << "boundary edge:" << edgeI
                 << " patch.edgeFaces()[edgeI]:" << patch_.edgeFaces()[edgeI]
                 << abort(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ void Foam::extrude2DMesh::check2D() const
     {
         if (faces[faceI].size() != 2)
         {
-            FatalErrorIn("void Foam::extrude2DMesh::check2D() const")
+            FatalErrorInFunction
                 << "Face " << faceI << " size " << faces[faceI].size()
                 << " is not of size 2: mesh is not a valid two-dimensional "
                 << "mesh" << exit(FatalError);

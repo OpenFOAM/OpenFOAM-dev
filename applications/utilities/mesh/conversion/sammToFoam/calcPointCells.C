@@ -36,7 +36,7 @@ void Foam::sammMesh::calcPointCells() const
 
     if (pointCellsPtr_)
     {
-        FatalErrorIn("sammMesh::calcPointCells()")
+        FatalErrorInFunction
             << "PointCells already calculated"
             << abort(FatalError);
     }

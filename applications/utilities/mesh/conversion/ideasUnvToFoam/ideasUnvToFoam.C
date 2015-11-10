@@ -222,10 +222,8 @@ void readPoints
         {
             hasWarned = true;
 
-            IOWarningIn
+            IOWarningInFunction
             (
-                "readPoints(IFstream&, label&, DynamicList<point>"
-                ", DynamicList<label>&)",
                 is
             )   << "Points not in order starting at point " << pointI
                 //<< " at line " << is.lineNumber()
@@ -464,7 +462,7 @@ void readCells
         {
             if (skippedElements.insert(feID))
             {
-                IOWarningIn("readCells(IFstream&, label&)", is)
+                IOWarningInFunction(is)
                     << "Cell type " << feID << " not supported" << endl;
             }
             is.getLine(line);  // Do nothing
@@ -552,7 +550,7 @@ void readSets
         }
         else
         {
-            IOWarningIn("readSets(..)", is)
+            IOWarningInFunction(is)
                 << "When reading patches expect entity type code 8"
                 << nl << "    Skipping group code " << groupType
                 << endl;
@@ -672,7 +670,7 @@ int main(int argc, char *argv[])
 
     if (!inFile.good())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Cannot open file " << ideasName
             << exit(FatalError);
     }
@@ -805,7 +803,7 @@ int main(int argc, char *argv[])
 
         if (findIndex(foamVerts, -1) != -1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Cell " << cellI
                 << " unv vertices " << cellVerts[cellI]
                 << " has some undefined vertices " << foamVerts
@@ -824,7 +822,7 @@ int main(int argc, char *argv[])
 
         if (findIndex(foamVerts, -1) != -1)
         {
-            FatalErrorIn(args.executable())
+            FatalErrorInFunction
                 << "Boundary face " << bFaceI
                 << " unv vertices " << boundaryFaces[bFaceI]
                 << " has some undefined vertices " << foamVerts
@@ -1045,7 +1043,7 @@ int main(int argc, char *argv[])
                 {
                     if (cnt != patchFaces.size())
                     {
-                        WarningIn(args.executable())
+                        WarningInFunction
                             << "For patch " << patchI << " there were "
                             << patchFaces.size()-cnt
                             << " faces not used because they seem"
@@ -1055,7 +1053,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        WarningIn(args.executable())
+                        WarningInFunction
                             << "Patch "
                             << patchI << " has faces that are already "
                             << " in use on other boundary-patches,"
@@ -1073,7 +1071,7 @@ int main(int argc, char *argv[])
                     {
                         if (cellCorrespondence[faceIndices[0]] < 0)
                         {
-                            FatalErrorIn(args.executable())
+                            FatalErrorInFunction
                                 << "The face index " << faceIndices[i]
                                 << " was not found amongst the cells."
                                 << " This kills the theory that "

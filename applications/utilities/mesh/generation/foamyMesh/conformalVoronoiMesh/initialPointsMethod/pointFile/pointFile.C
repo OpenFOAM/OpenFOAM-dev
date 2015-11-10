@@ -91,7 +91,7 @@ List<Vb::Point> pointFile::initialPoints() const
 
     if (points.empty())
     {
-        FatalErrorIn("List<Vb::Point> pointFile::initialPoints() const")
+        FatalErrorInFunction
             << "Point file contain no points"
             << exit(FatalError) << endl;
     }
