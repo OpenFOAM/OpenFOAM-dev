@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,6 +123,36 @@ void Foam::SolverPerformance<Type>::print
                 << endl;
         }
     }
+}
+
+
+template<class Type>
+void Foam::SolverPerformance<Type>::replace
+(
+    const Foam::label cmpt,
+    const Foam::SolverPerformance<typename pTraits<Type>::cmptType>& sp
+)
+{
+    initialResidual_.replace(cmpt, sp.initialResidual());
+    finalResidual_.replace(cmpt, sp.finalResidual());
+    singular_[cmpt] = sp.singular();
+}
+
+
+template<class Type>
+Foam::SolverPerformance<typename Foam::pTraits<Type>::cmptType>
+Foam::SolverPerformance<Type>::max()
+{
+    return SolverPerformance<typename pTraits<Type>::cmptType>
+    (
+        solverName_,
+        fieldName_,
+        cmptMax(initialResidual_),
+        cmptMax(finalResidual_),
+        noIterations_,
+        converged_,
+        singular()
+    );
 }
 
 

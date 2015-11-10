@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ const int64_t Foam::pTraits<int64_t>::max = INT64_MAX;
 const int64_t Foam::pTraits<int64_t>::rootMin = pTraits<int64_t>::min;
 const int64_t Foam::pTraits<int64_t>::rootMax = pTraits<int64_t>::max;
 
-const char* Foam::pTraits<int64_t>::componentNames[] = { "x" };
+const char* Foam::pTraits<int64_t>::componentNames[] = { "" };
 
 Foam::pTraits<int64_t>::pTraits(const int64_t& p)
 :

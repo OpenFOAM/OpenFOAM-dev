@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ void Foam::fvMatrix<Type>::setComponentReference
 
 
 template<class Type>
-Foam::solverPerformance Foam::fvMatrix<Type>::solve
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve
 (
     const dictionary& solverControls
 )
@@ -71,7 +71,7 @@ Foam::solverPerformance Foam::fvMatrix<Type>::solve
     {
         if (maxIter == 0)
         {
-            return solverPerformance();
+            return SolverPerformance<Type>();
         }
     }
 
@@ -95,13 +95,13 @@ Foam::solverPerformance Foam::fvMatrix<Type>::solve
             << "; currently supported solver types are segregated and coupled"
             << exit(FatalIOError);
 
-        return solverPerformance();
+        return SolverPerformance<Type>();
     }
 }
 
 
 template<class Type>
-Foam::solverPerformance Foam::fvMatrix<Type>::solveSegregated
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
 (
     const dictionary& solverControls
 )
@@ -118,7 +118,7 @@ Foam::solverPerformance Foam::fvMatrix<Type>::solveSegregated
     GeometricField<Type, fvPatchField, volMesh>& psi =
        const_cast<GeometricField<Type, fvPatchField, volMesh>&>(psi_);
 
-    solverPerformance solverPerfVec
+    SolverPerformance<Type> solverPerfVec
     (
         "fvMatrix<Type>::solveSegregated",
         psi.name()
@@ -135,11 +135,7 @@ Foam::solverPerformance Foam::fvMatrix<Type>::solveSegregated
 
     typename Type::labelType validComponents
     (
-        pow
-        (
-            psi.mesh().solutionD(),
-            pTraits<typename powProduct<Vector<label>, Type::rank>::type>::zero
-        )
+        psi.mesh().template validComponents<Type>()
     );
 
     for (direction cmpt=0; cmpt<Type::nComponents; cmpt++)
@@ -200,13 +196,12 @@ Foam::solverPerformance Foam::fvMatrix<Type>::solveSegregated
             solverControls
         )->solve(psiCmpt, sourceCmpt, cmpt);
 
-        if (solverPerformance::debug)
+        if (SolverPerformance<Type>::debug)
         {
             solverPerf.print(Info.masterStream(this->mesh().comm()));
         }
 
-        solverPerfVec = max(solverPerfVec, solverPerf);
-        solverPerfVec.solverName() = solverPerf.solverName();
+        solverPerfVec.replace(cmpt, solverPerf);
 
         psi.internalField().replace(cmpt, psiCmpt);
         diag() = saveDiag;
@@ -221,7 +216,7 @@ Foam::solverPerformance Foam::fvMatrix<Type>::solveSegregated
 
 
 template<class Type>
-Foam::solverPerformance Foam::fvMatrix<Type>::solveCoupled
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
 (
     const dictionary& solverControls
 )
@@ -274,9 +269,9 @@ Foam::solverPerformance Foam::fvMatrix<Type>::solveCoupled
 
     psi.correctBoundaryConditions();
 
-    // psi.mesh().setSolverPerformance(psi.name(), solverPerf);
+    psi.mesh().setSolverPerformance(psi.name(), solverPerf);
 
-    return solverPerformance();
+    return solverPerf;
 }
 
 
@@ -299,7 +294,7 @@ Foam::fvMatrix<Type>::solver()
 
 
 template<class Type>
-Foam::solverPerformance Foam::fvMatrix<Type>::fvSolver::solve()
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::fvSolver::solve()
 {
     return solve
     (
@@ -316,7 +311,7 @@ Foam::solverPerformance Foam::fvMatrix<Type>::fvSolver::solve()
 
 
 template<class Type>
-Foam::solverPerformance Foam::fvMatrix<Type>::solve()
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
 {
     return solve
     (

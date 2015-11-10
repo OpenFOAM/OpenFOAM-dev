@@ -32,10 +32,37 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::residuals::writeResidual
-(
-    const word& fieldName
-)
+void Foam::residuals::writeFileHeader(const word& fieldName)
+{
+    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
+
+    if (obr_.foundObject<fieldType>(fieldName))
+    {
+        const fieldType& field = obr_.lookupObject<fieldType>(fieldName);
+        const fvMesh& mesh = field.mesh();
+
+        typename pTraits<Type>::labelType validComponents
+        (
+            mesh.validComponents<Type>()
+        );
+
+        for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
+        {
+            if (component(validComponents, cmpt) != -1)
+            {
+                writeTabbed
+                (
+                    file(),
+                    fieldName + word(pTraits<Type>::componentNames[cmpt])
+                );
+            }
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::residuals::writeResidual(const word& fieldName)
 {
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
@@ -47,9 +74,25 @@ void Foam::residuals::writeResidual
 
         if (solverDict.found(fieldName))
         {
-            const List<solverPerformance> sp(solverDict.lookup(fieldName));
-            const scalar residual = sp.first().initialResidual();
-            file() << token::TAB << residual;
+            const List<SolverPerformance<Type> > sp
+            (
+                solverDict.lookup(fieldName)
+            );
+
+            const Type& residual = sp.first().initialResidual();
+
+            typename pTraits<Type>::labelType validComponents
+            (
+                mesh.validComponents<Type>()
+            );
+
+            for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
+            {
+                if (component(validComponents, cmpt) != -1)
+                {
+                    file() << token::TAB << component(residual, cmpt);
+                }
+            }
         }
     }
 }

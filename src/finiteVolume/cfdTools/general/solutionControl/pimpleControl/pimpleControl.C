@@ -70,15 +70,15 @@ bool Foam::pimpleControl::criteriaSatisfied()
         const label fieldI = applyToField(variableName);
         if (fieldI != -1)
         {
-            const List<solverPerformance> sp(iter().stream());
-            const scalar residual = sp.last().initialResidual();
+            scalar residual = 0;
+            const scalar firstResidual =
+                maxResidual(variableName, iter().stream(), residual);
 
             checked = true;
 
             if (storeIni)
             {
-                residualControl_[fieldI].initialResidual =
-                    sp.first().initialResidual();
+                residualControl_[fieldI].initialResidual = firstResidual;
             }
 
             const bool absCheck = residual < residualControl_[fieldI].absTol;

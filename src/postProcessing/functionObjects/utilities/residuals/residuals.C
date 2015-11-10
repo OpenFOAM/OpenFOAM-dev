@@ -35,6 +35,7 @@ namespace Foam
     defineTypeNameAndDebug(residuals, 0);
 }
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::residuals::residuals
@@ -98,7 +99,13 @@ void Foam::residuals::writeFileHeader(const label i)
 
         forAll(fieldSet_, fieldI)
         {
-            writeTabbed(file(), fieldSet_[fieldI]);
+            const word& fieldName = fieldSet_[fieldI];
+
+            writeFileHeader<scalar>(fieldName);
+            writeFileHeader<vector>(fieldName);
+            writeFileHeader<sphericalTensor>(fieldName);
+            writeFileHeader<symmTensor>(fieldName);
+            writeFileHeader<tensor>(fieldName);
         }
 
         file() << endl;
@@ -107,21 +114,15 @@ void Foam::residuals::writeFileHeader(const label i)
 
 
 void Foam::residuals::execute()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::residuals::end()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::residuals::timeSet()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::residuals::write()
@@ -149,5 +150,6 @@ void Foam::residuals::write()
         }
     }
 }
+
 
 // ************************************************************************* //

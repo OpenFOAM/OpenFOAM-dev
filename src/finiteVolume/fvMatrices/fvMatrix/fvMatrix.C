@@ -808,11 +808,7 @@ Foam::fvMatrix<Type>::H() const
 
     typename Type::labelType validComponents
     (
-        pow
-        (
-            psi_.mesh().solutionD(),
-            pTraits<typename powProduct<Vector<label>, Type::rank>::type>::zero
-        )
+        psi_.mesh().template validComponents<Type>()
     );
 
     for (direction cmpt=0; cmpt<Type::nComponents; cmpt++)
@@ -1350,7 +1346,7 @@ void Foam::checkMethod
 
 
 template<class Type>
-Foam::solverPerformance Foam::solve
+Foam::SolverPerformance<Type> Foam::solve
 (
     fvMatrix<Type>& fvm,
     const dictionary& solverControls
@@ -1360,13 +1356,13 @@ Foam::solverPerformance Foam::solve
 }
 
 template<class Type>
-Foam::solverPerformance Foam::solve
+Foam::SolverPerformance<Type> Foam::solve
 (
     const tmp<fvMatrix<Type> >& tfvm,
     const dictionary& solverControls
 )
 {
-    solverPerformance solverPerf =
+    SolverPerformance<Type> solverPerf =
         const_cast<fvMatrix<Type>&>(tfvm()).solve(solverControls);
 
     tfvm.clear();
@@ -1376,15 +1372,15 @@ Foam::solverPerformance Foam::solve
 
 
 template<class Type>
-Foam::solverPerformance Foam::solve(fvMatrix<Type>& fvm)
+Foam::SolverPerformance<Type> Foam::solve(fvMatrix<Type>& fvm)
 {
     return fvm.solve();
 }
 
 template<class Type>
-Foam::solverPerformance Foam::solve(const tmp<fvMatrix<Type> >& tfvm)
+Foam::SolverPerformance<Type> Foam::solve(const tmp<fvMatrix<Type> >& tfvm)
 {
-    solverPerformance solverPerf =
+    SolverPerformance<Type> solverPerf =
         const_cast<fvMatrix<Type>&>(tfvm()).solve();
 
     tfvm.clear();

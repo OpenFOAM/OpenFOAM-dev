@@ -239,11 +239,11 @@ public:
 
             //- Solve returning the solution statistics.
             //  Use the given solver controls
-            solverPerformance solve(const dictionary&);
+            SolverPerformance<Type> solve(const dictionary&);
 
             //- Solve returning the solution statistics.
             //  Solver controls read from fvSolution
-            solverPerformance solve();
+            SolverPerformance<Type> solve();
     };
 
 
@@ -389,19 +389,19 @@ public:
 
             //- Solve segregated or coupled returning the solution statistics.
             //  Use the given solver controls
-            solverPerformance solve(const dictionary&);
+            SolverPerformance<Type> solve(const dictionary&);
 
             //- Solve segregated returning the solution statistics.
             //  Use the given solver controls
-            solverPerformance solveSegregated(const dictionary&);
+            SolverPerformance<Type> solveSegregated(const dictionary&);
 
             //- Solve coupled returning the solution statistics.
             //  Use the given solver controls
-            solverPerformance solveCoupled(const dictionary&);
+            SolverPerformance<Type> solveCoupled(const dictionary&);
 
             //- Solve returning the solution statistics.
             //  Solver controls read from fvSolution
-            solverPerformance solve();
+            SolverPerformance<Type> solve();
 
             //- Return the matrix residual
             tmp<Field<Type> > residual() const;
@@ -549,14 +549,14 @@ void checkMethod
 //- Solve returning the solution statistics given convergence tolerance
 //  Use the given solver controls
 template<class Type>
-solverPerformance solve(fvMatrix<Type>&, const dictionary&);
+SolverPerformance<Type> solve(fvMatrix<Type>&, const dictionary&);
 
 
 //- Solve returning the solution statistics given convergence tolerance,
 //  deleting temporary matrix after solution.
 //  Use the given solver controls
 template<class Type>
-solverPerformance solve
+SolverPerformance<Type> solve
 (
     const tmp<fvMatrix<Type> >&,
     const dictionary&
@@ -566,14 +566,14 @@ solverPerformance solve
 //- Solve returning the solution statistics given convergence tolerance
 //  Solver controls read fvSolution
 template<class Type>
-solverPerformance solve(fvMatrix<Type>&);
+SolverPerformance<Type> solve(fvMatrix<Type>&);
 
 
 //- Solve returning the solution statistics given convergence tolerance,
 //  deleting temporary matrix after solution.
 //  Solver controls read fvSolution
 template<class Type>
-solverPerformance solve(const tmp<fvMatrix<Type> >&);
+SolverPerformance<Type> solve(const tmp<fvMatrix<Type> >&);
 
 
 //- Return the correction form of the given matrix

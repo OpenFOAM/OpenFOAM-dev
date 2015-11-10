@@ -115,6 +115,10 @@ protected:
         //- Disallow default bitwise assignment
         void operator=(const residuals&);
 
+        //- Output field header information
+        template<class Type>
+        void writeFileHeader(const word& fieldName);
+
         //- Output file header information
         virtual void writeFileHeader(const label i);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -324,6 +324,12 @@ public:
             //- Return face deltas as surfaceVectorField
             tmp<surfaceVectorField> delta() const;
 
+            //- Return a labelType of valid component indicators
+            //  1 : valid (solved)
+            // -1 : invalid (not solved)
+            template<class Type>
+            typename pTraits<Type>::labelType validComponents() const;
+
 
         // Edit
 
@@ -371,6 +377,11 @@ public:
 };
 
 
+template<>
+typename pTraits<sphericalTensor>::labelType
+fvMesh::validComponents<sphericalTensor>() const;
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
@@ -378,6 +389,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
+#   include "fvMeshTemplates.C"
 #   include "fvPatchFvMeshTemplates.C"
 #endif
 

@@ -884,6 +884,14 @@ bool Foam::fvMesh::write() const
 }
 
 
+template<>
+typename Foam::pTraits<Foam::sphericalTensor>::labelType
+Foam::fvMesh::validComponents<Foam::sphericalTensor>() const
+{
+    return Foam::pTraits<Foam::sphericalTensor>::labelType(1);
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 bool Foam::fvMesh::operator!=(const fvMesh& bm) const

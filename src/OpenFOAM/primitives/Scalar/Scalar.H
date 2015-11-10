@@ -50,6 +50,9 @@ public:
     //- Component type
     typedef Scalar cmptType;
 
+    //- Equivalent type of labels used for valid component indexing
+    typedef label labelType;
+
     // Member constants
 
         enum

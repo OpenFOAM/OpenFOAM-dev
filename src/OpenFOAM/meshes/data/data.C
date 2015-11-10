@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "data.H"
 #include "Time.H"
-#include "solverPerformance.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -57,43 +56,6 @@ Foam::data::data(const objectRegistry& obr)
 const Foam::dictionary& Foam::data::solverPerformanceDict() const
 {
     return subDict("solverPerformance");
-}
-
-
-void Foam::data::setSolverPerformance
-(
-    const word& name,
-    const solverPerformance& sp
-) const
-{
-    dictionary& dict = const_cast<dictionary&>(solverPerformanceDict());
-
-    List<solverPerformance> perfs;
-
-    if (prevTimeIndex_ != this->time().timeIndex())
-    {
-        // reset solver performance between iterations
-        prevTimeIndex_ = this->time().timeIndex();
-        dict.clear();
-    }
-    else
-    {
-        dict.readIfPresent(name, perfs);
-    }
-
-    // append to list
-    perfs.setSize(perfs.size()+1, sp);
-
-    dict.set(name, perfs);
-}
-
-
-void Foam::data::setSolverPerformance
-(
-    const solverPerformance& sp
-) const
-{
-    setSolverPerformance(sp.fieldName(), sp);
 }
 
 

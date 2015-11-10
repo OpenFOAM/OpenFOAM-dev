@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,16 +91,18 @@ public:
             const dictionary& solverPerformanceDict() const;
 
             //- Add/set the solverPerformance entry for the named field
+            template<class Type>
             void setSolverPerformance
             (
                 const word& name,
-                const solverPerformance&
+                const SolverPerformance<Type>&
             ) const;
 
             //- Add/set the solverPerformance entry, using its fieldName
+            template<class Type>
             void setSolverPerformance
             (
-                const solverPerformance&
+                const SolverPerformance<Type>&
             ) const;
 };
 
@@ -108,6 +110,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#   include "dataTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

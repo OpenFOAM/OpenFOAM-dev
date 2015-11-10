@@ -231,7 +231,7 @@ inline const word& token::wordToken() const
     }
     else
     {
-        parseError("word");
+        parseError(word::typeName);
         return word::null;
     }
 }
@@ -254,7 +254,7 @@ inline const string& token::stringToken() const
     }
     else
     {
-        parseError("string");
+        parseError(string::typeName);
         return string::null;
     }
 }
@@ -272,7 +272,7 @@ inline label token::labelToken() const
     }
     else
     {
-        parseError("label");
+        parseError(pTraits<label>::typeName);
         return 0;
     }
 }
@@ -332,7 +332,7 @@ inline scalar token::scalarToken() const
     }
     else
     {
-        parseError("scalar");
+        parseError(pTraits<scalar>::typeName);
         return 0.0;
     }
 }

@@ -122,6 +122,25 @@ protected:
         template<class Type>
         void storePrevIter() const;
 
+        template<class Type>
+        void maxTypeResidual
+        (
+            const word& fieldName,
+            ITstream& data,
+            scalar& firstRes,
+            scalar& lastRes
+        ) const;
+
+        scalar maxResidual
+        (
+            const word& fieldName,
+            ITstream& data,
+            scalar& lastRes
+        ) const;
+
+
+private:
+
         //- Disallow default bitwise copy construct
         solutionControl(const solutionControl&);
 

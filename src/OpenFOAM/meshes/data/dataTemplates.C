@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,27 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "uint32.H"
+#include "data.H"
+#include "Time.H"
+#include "solverPerformance.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const uint32_t Foam::pTraits<uint32_t>::zero = 0;
-const uint32_t Foam::pTraits<uint32_t>::one = 1;
-const uint32_t Foam::pTraits<uint32_t>::min = INT32_MIN;
-const uint32_t Foam::pTraits<uint32_t>::max = INT32_MAX;
-const uint32_t Foam::pTraits<uint32_t>::rootMin = pTraits<uint32_t>::min;
-const uint32_t Foam::pTraits<uint32_t>::rootMax = pTraits<uint32_t>::max;
-
-const char* Foam::pTraits<uint32_t>::componentNames[] = { "" };
-
-Foam::pTraits<uint32_t>::pTraits(const uint32_t& p)
-:
-    p_(p)
-{}
-
-Foam::pTraits<uint32_t>::pTraits(Istream& is)
+template<class Type>
+void Foam::data::setSolverPerformance
+(
+    const word& name,
+    const SolverPerformance<Type>& sp
+) const
 {
-    is >> p_;
+    dictionary& dict = const_cast<dictionary&>(solverPerformanceDict());
+
+    List<SolverPerformance<Type> > perfs;
+
+    if (prevTimeIndex_ != this->time().timeIndex())
+    {
+        // Reset solver performance between iterations
+        prevTimeIndex_ = this->time().timeIndex();
+        dict.clear();
+    }
+    else
+    {
+        dict.readIfPresent(name, perfs);
+    }
+
+    // Append to list
+    perfs.setSize(perfs.size()+1, sp);
+
+    dict.set(name, perfs);
+}
+
+
+template<class Type>
+void Foam::data::setSolverPerformance
+(
+    const SolverPerformance<Type>& sp
+) const
+{
+    setSolverPerformance(sp.fieldName(), sp);
 }
 
 

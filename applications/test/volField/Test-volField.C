@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,12 +83,34 @@ int main(int argc, char *argv[])
         zeroGradientFvPatchSymmTensorField::typeName
     );
 
-    solve
+    SolverPerformance<symmTensor> sP =
     (
-        fvm::ddt(st)
-      + fvm::div(phi, st)
-      - fvm::laplacian(dimensionedScalar("D", sqr(dimLength)/dimTime, 1), st)
+        solve
+        (
+            fvm::ddt(st)
+          + fvm::div(phi, st)
+          - fvm::laplacian
+            (
+                dimensionedScalar("D", sqr(dimLength)/dimTime, 1),
+                st
+            )
+         ==
+            dimensioned<symmTensor>
+            (
+                "source",
+                dimless/dimTime,
+                symmTensor(0, 2, 0, 1, 1.5, 0)
+            )
+        )
     );
+
+    Info<< nl
+        << "Detailed SolverPerformance<symmTensor>: " << nl
+        << "  " << sP << endl;
+
+    Info<< nl
+        << "solverPerformanceDict: "
+        << mesh.solverPerformanceDict() << endl;
 
     return 0;
 }
