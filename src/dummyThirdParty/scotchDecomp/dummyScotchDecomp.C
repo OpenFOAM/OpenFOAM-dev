@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,17 +67,8 @@ Foam::label Foam::scotchDecomp::decompose
     List<label>& finalDecomp
 )
 {
-    FatalErrorIn
-    (
-        "label scotchDecomp::decompose\n"
-        "(\n"
-            "const fileName& meshPath,\n"
-            "const List<label>&,\n"
-            "const List<label>&,\n"
-            "const scalarField&,\n"
-            "List<label>&\n"
-        ")\n"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return -1;
 }
@@ -103,14 +94,8 @@ Foam::labelList Foam::scotchDecomp::decompose
     const scalarField& pointWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList scotchDecomp::decompose"
-        "("
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList::null();
 }
@@ -124,15 +109,8 @@ Foam::labelList Foam::scotchDecomp::decompose
     const scalarField& pointWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList scotchDecomp::decompose"
-        "("
-            "const labelList&, "
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList::null();
 }
@@ -145,15 +123,8 @@ Foam::labelList Foam::scotchDecomp::decompose
     const scalarField& cWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList scotchDecomp::decompose"
-        "("
-            "const labelListList&, "
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList::null();
 }

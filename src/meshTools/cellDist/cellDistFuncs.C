@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,25 +186,25 @@ Foam::label Foam::cellDistFuncs::getPointNeighbours
 
             if (!nbs.found(nb))
             {
-                SeriousErrorIn("Foam::cellDistFuncs::getPointNeighbours")
+                SeriousErrorInFunction
                     << "getPointNeighbours : patchFaceI:" << patchFaceI
                     << " verts:" << f << endl;
 
                 forAll(f, fp)
                 {
-                    SeriousErrorIn("Foam::cellDistFuncs::getPointNeighbours")
+                    SeriousErrorInFunction
                         << "point:" << f[fp] << " pointFaces:"
                         << patch.pointFaces()[f[fp]] << endl;
                 }
 
                 for (label i = 0; i < nNeighbours; i++)
                 {
-                    SeriousErrorIn("Foam::cellDistFuncs::getPointNeighbours")
+                    SeriousErrorInFunction
                         << "fast nbr:" << neighbours[i]
                         << endl;
                 }
 
-                FatalErrorIn("getPointNeighbours")
+                FatalErrorInFunction
                     << "Problem: fast pointNeighbours routine included " << nb
                     << " which is not in proper neigbour list " << nbs.toc()
                     << abort(FatalError);
@@ -214,7 +214,7 @@ Foam::label Foam::cellDistFuncs::getPointNeighbours
 
         if (nbs.size())
         {
-            FatalErrorIn("getPointNeighbours")
+            FatalErrorInFunction
                 << "Problem: fast pointNeighbours routine did not find "
                 << nbs.toc() << abort(FatalError);
         }

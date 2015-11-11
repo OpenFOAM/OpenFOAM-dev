@@ -56,11 +56,8 @@ Foam::autoPtr<Foam::topoSet> Foam::topoSet::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "topoSet::New(const word&, "
-            "const polyMesh&, const word&, readOption, writeOption)"
-        )   << "Unknown set type " << setType
+        FatalErrorInFunction
+            << "Unknown set type " << setType
             << endl << endl
             << "Valid set types : " << endl
             << wordConstructorTablePtr_->sortedToc()
@@ -85,11 +82,8 @@ Foam::autoPtr<Foam::topoSet> Foam::topoSet::New
 
     if (cstrIter == sizeConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "topoSet::New(const word&, "
-            "const polyMesh&, const word&, const label, writeOption)"
-        )   << "Unknown set type " << setType
+        FatalErrorInFunction
+            << "Unknown set type " << setType
             << endl << endl
             << "Valid set types : " << endl
             << sizeConstructorTablePtr_->sortedToc()
@@ -114,11 +108,8 @@ Foam::autoPtr<Foam::topoSet> Foam::topoSet::New
 
     if (cstrIter == setConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "topoSet::New(const word&, "
-            "const polyMesh&, const word&, const topoSet&, writeOption)"
-        )   << "Unknown set type " << setType
+        FatalErrorInFunction
+            << "Unknown set type " << setType
             << endl << endl
             << "Valid set types : " << endl
             << setConstructorTablePtr_->sortedToc()
@@ -152,10 +143,8 @@ void Foam::topoSet::updateLabels(const labelList& map)
     {
         if ((iter.key() < 0) || (iter.key() > map.size()))
         {
-            FatalErrorIn
-            (
-                "topoSet::updateLabels(const labelList&, labelHashSet)"
-            )   << "Illegal content " << iter.key() << " of set:" << name()
+            FatalErrorInFunction
+                << "Illegal content " << iter.key() << " of set:" << name()
                 << " of type " << type() << endl
                 << "Value should be between 0 and " << map.size()-1
                 << abort(FatalError);
@@ -197,7 +186,7 @@ void Foam::topoSet::check(const label maxLabel)
     {
         if ((iter.key() < 0) || (iter.key() > maxLabel))
         {
-            FatalErrorIn("topoSet::check(const label)")
+            FatalErrorInFunction
                 << "Illegal content " << iter.key() << " of set:" << name()
                 << " of type " << type() << endl
                 << "Value should be between 0 and " << maxLabel

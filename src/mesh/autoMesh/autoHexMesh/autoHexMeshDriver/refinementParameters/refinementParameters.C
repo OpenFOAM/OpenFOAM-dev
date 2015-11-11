@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,10 +100,8 @@ const
 
         if (globalCellI == -1)
         {
-            FatalErrorIn
-            (
-                "refinementParameters::findCells(const polyMesh&) const"
-            )   << "Point " << keepPoint
+            FatalErrorInFunction
+                << "Point " << keepPoint
                 << " is not inside the mesh or on a face or edge." << nl
                 << "Bounding box of the mesh:" << mesh.bounds()
                 << exit(FatalError);

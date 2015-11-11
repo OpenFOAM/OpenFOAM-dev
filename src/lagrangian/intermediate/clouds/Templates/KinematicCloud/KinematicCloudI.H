@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -363,13 +363,7 @@ inline Foam::scalar Foam::KinematicCloud<CloudType>::penetration
 {
     if ((fraction < 0) || (fraction > 1))
     {
-        FatalErrorIn
-        (
-            "inline Foam::scalar Foam::KinematicCloud<CloudType>::penetration"
-            "("
-                "const scalar"
-            ") const"
-        )
+        FatalErrorInFunction
             << "fraction should be in the range 0 < fraction < 1"
             << exit(FatalError);
     }

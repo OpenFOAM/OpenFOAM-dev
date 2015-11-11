@@ -145,12 +145,8 @@ void Foam::ODESolver::solve
         }
     }
 
-    FatalErrorIn
-    (
-        "ODESolver::solve"
-        "(const scalar xStart, const scalar xEnd,"
-        "scalarField& y, scalar& dxTry) const"
-    )   << "Integration steps greater than maximum " << maxSteps_
+    FatalErrorInFunction
+        << "Integration steps greater than maximum " << maxSteps_
         << "xStart = " << xStart << ", xEnd = " << xEnd
         << ", x = " << x << ", dxDid = " << step.dxDid
         << exit(FatalError);

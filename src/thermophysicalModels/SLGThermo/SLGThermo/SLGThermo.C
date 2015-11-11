@@ -109,11 +109,8 @@ const Foam::basicSpecieMixture& Foam::SLGThermo::carrier() const
 {
     if (carrier_ == NULL)
     {
-        FatalErrorIn
-        (
-            "const Foam::basicSpecieMixture& "
-            "Foam::SLGThermo::carrier() const"
-        )   << "carrier requested, but object is not allocated"
+        FatalErrorInFunction
+            << "carrier requested, but object is not allocated"
             << abort(FatalError);
     }
 
@@ -125,11 +122,8 @@ const Foam::liquidMixtureProperties& Foam::SLGThermo::liquids() const
 {
     if (!liquids_.valid())
     {
-        FatalErrorIn
-        (
-            "const Foam::liquidMixtureProperties& "
-            "Foam::SLGThermo::liquids() const"
-        )   << "liquids requested, but object is not allocated"
+        FatalErrorInFunction
+            << "liquids requested, but object is not allocated"
             << abort(FatalError);
     }
 
@@ -141,11 +135,8 @@ const Foam::solidMixtureProperties& Foam::SLGThermo::solids() const
 {
     if (!solids_.valid())
     {
-        FatalErrorIn
-        (
-            "const Foam::solidMixtureProperties& "
-            "Foam::SLGThermo::solids() const"
-        )   << "solids requested, but object is not allocated"
+        FatalErrorInFunction
+            << "solids requested, but object is not allocated"
             << abort(FatalError);
     }
 
@@ -169,10 +160,8 @@ Foam::label Foam::SLGThermo::carrierId
 
     if (!allowNotfound)
     {
-        FatalErrorIn
-        (
-            "Foam::label Foam::SLGThermo::carrierId(const word&, bool) const"
-        )   << "Unknown carrier component " << cmptName
+        FatalErrorInFunction
+            << "Unknown carrier component " << cmptName
             << ". Valid carrier components are:" << nl
             << carrier_->species() << exit(FatalError);
     }
@@ -197,10 +186,8 @@ Foam::label Foam::SLGThermo::liquidId
 
     if (!allowNotfound)
     {
-        FatalErrorIn
-        (
-            "Foam::label Foam::SLGThermo::liquidId(const word&, bool) const"
-        )   << "Unknown liquid component " << cmptName << ". Valid liquids are:"
+        FatalErrorInFunction
+            << "Unknown liquid component " << cmptName << ". Valid liquids are:"
             << nl << liquids_->components() << exit(FatalError);
     }
 
@@ -224,10 +211,8 @@ Foam::label Foam::SLGThermo::solidId
 
     if (!allowNotfound)
     {
-        FatalErrorIn
-        (
-            "Foam::label Foam::SLGThermo::solidId(const word&, bool) const"
-        )   << "Unknown solid component " << cmptName << ". Valid solids are:"
+        FatalErrorInFunction
+            << "Unknown solid component " << cmptName << ". Valid solids are:"
             << nl << solids_->components() << exit(FatalError);
     }
 

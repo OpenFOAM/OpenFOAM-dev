@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,11 +105,8 @@ void Foam::edgeVertex::updateLabels
 
             if (newMaster == -1)
             {
-                WarningIn
-                (
-                    "edgeVertex::updateLabels(const labelList&, "
-                    "Map<label>&)"
-                )   << "master cell:" << iter.key()
+                WarningInFunction
+                    << "master cell:" << iter.key()
                     << " has disappeared" << endl;
             }
             else

@@ -158,12 +158,8 @@ void Foam::meshToMesh0::interpolateInternalField
 {
     if (fromVf.mesh() != fromMesh_)
     {
-        FatalErrorIn
-        (
-            "meshToMesh0::interpolateInternalField(Field<Type>&, "
-            "const GeometricField<Type, fvPatchField, volMesh>&, "
-            "meshToMesh0::order, const CombineOp&) const"
-        )   << "the argument field does not correspond to the right mesh. "
+        FatalErrorInFunction
+            << "the argument field does not correspond to the right mesh. "
             << "Field size: " << fromVf.size()
             << " mesh size: " << fromMesh_.nCells()
             << exit(FatalError);
@@ -171,12 +167,8 @@ void Foam::meshToMesh0::interpolateInternalField
 
     if (toF.size() != toMesh_.nCells())
     {
-        FatalErrorIn
-        (
-            "meshToMesh0::interpolateInternalField(Field<Type>&, "
-            "const GeometricField<Type, fvPatchField, volMesh>&, "
-            "meshToMesh0::order, const CombineOp&) const"
-        )   << "the argument field does not correspond to the right mesh. "
+        FatalErrorInFunction
+            << "the argument field does not correspond to the right mesh. "
             << "Field size: " << toF.size()
             << " mesh size: " << toMesh_.nCells()
             << exit(FatalError);
@@ -229,12 +221,8 @@ void Foam::meshToMesh0::interpolateInternalField
             break;
         }
         default:
-            FatalErrorIn
-            (
-                "meshToMesh0::interpolateInternalField(Field<Type>&, "
-                "const GeometricField<Type, fvPatchField, volMesh>&, "
-                "meshToMesh0::order, const CombineOp&) const"
-            )   << "unknown interpolation scheme " << ord
+            FatalErrorInFunction
+                << "unknown interpolation scheme " << ord
                 << exit(FatalError);
     }
 }
@@ -317,13 +305,8 @@ void Foam::meshToMesh0::interpolate
                 }
 
                 default:
-                    FatalErrorIn
-                    (
-                        "meshToMesh0::interpolate("
-                        "GeometricField<Type, fvPatchField, volMesh>&, "
-                        "const GeometricField<Type, fvPatchField, volMesh>&, "
-                        "meshToMesh0::order, const CombineOp&) const"
-                    )   << "unknown interpolation scheme " << ord
+                    FatalErrorInFunction
+                        << "unknown interpolation scheme " << ord
                         << exit(FatalError);
             }
 
@@ -398,12 +381,8 @@ Foam::meshToMesh0::interpolate
     // of boundary patches
     if (fromMesh_.boundary().size() != toMesh_.boundary().size())
     {
-        FatalErrorIn
-        (
-            "meshToMesh0::interpolate"
-            "(const GeometricField<Type, fvPatchField, volMesh>&,"
-            "meshToMesh0::order, const CombineOp&) const"
-        )   << "Incompatible meshes: different number of boundaries, "
+        FatalErrorInFunction
+            << "Incompatible meshes: different number of boundaries, "
                "only internal field may be interpolated"
             << exit(FatalError);
     }

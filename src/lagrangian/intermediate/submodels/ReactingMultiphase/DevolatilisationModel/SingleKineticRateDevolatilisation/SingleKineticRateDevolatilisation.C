@@ -43,15 +43,8 @@ SingleKineticRateDevolatilisation
 {
     if (volatileData_.empty())
     {
-        WarningIn
-        (
-            "Foam::SingleKineticRateDevolatilisation<CloudType>::"
-            "SingleKineticRateDevolatilisation"
-            "("
-                "const dictionary& dict, "
-                "CloudType& owner"
-            ")"
-        )   << "Devolatilisation model selected, but no volatiles defined"
+        WarningInFunction
+            << "Devolatilisation model selected, but no volatiles defined"
             << nl << endl;
     }
     else

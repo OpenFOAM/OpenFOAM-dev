@@ -90,7 +90,7 @@ void Foam::LESModels::maxDeltaxyz::calcDelta()
     }
     else if (nD == 2)
     {
-        WarningIn("maxDeltaxyz::calcDelta()")
+        WarningInFunction
             << "Case is 2D, LES is not strictly applicable\n"
             << endl;
 
@@ -98,7 +98,7 @@ void Foam::LESModels::maxDeltaxyz::calcDelta()
     }
     else
     {
-        FatalErrorIn("maxDeltaxyz::calcDelta()")
+        FatalErrorInFunction
             << "Case is not 3D or 2D, LES is not applicable"
             << exit(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -991,7 +991,7 @@ void Foam::autoLayerDriver::medialAxisSmoothingInfo
 
         if (nUnvisit > 0)
         {
-            WarningIn("autoLayerDriver::medialAxisSmoothingInfo(..)")
+            WarningInFunction
                 << "Walking did not visit all points." << nl
                 << "    Did not visit " << nUnvisit
                 << " out of " << mesh.globalData().nTotalPoints()

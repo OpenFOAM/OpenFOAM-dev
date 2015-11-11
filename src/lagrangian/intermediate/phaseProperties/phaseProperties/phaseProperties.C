@@ -90,10 +90,8 @@ void Foam::phaseProperties::reorder(const wordList& specieNames)
 
         if (!found)
         {
-            FatalErrorIn
-            (
-                "void phaseProperties::reorder(const wordList&)"
-            )   << "Could not find specie " << names0[i]
+            FatalErrorInFunction
+                << "Could not find specie " << names0[i]
                 << " in list " <<  names_
                 << " for phase " << phaseTypeNames[phase_]
                 << exit(FatalError);
@@ -121,11 +119,8 @@ void Foam::phaseProperties::setCarrierIds
         }
         if (carrierIds_[i] == -1)
         {
-            FatalErrorIn
-            (
-                "void phaseProperties::setCarrierIds"
-                "(const wordList& carrierNames)"
-            )   << "Could not find carrier specie " << names_[i]
+            FatalErrorInFunction
+                << "Could not find carrier specie " << names_[i]
                 << " in species list" <<  nl
                 << "Available species are: " << nl << carrierNames << nl
                 << exit(FatalError);
@@ -144,10 +139,8 @@ void Foam::phaseProperties::checkTotalMassFraction() const
 
     if (Y_.size() != 0 && mag(total - 1.0) > SMALL)
     {
-        FatalErrorIn
-        (
-            "void phaseProperties::checkTotalMassFraction() const"
-        )   << "Specie fractions must total to unity for phase "
+        FatalErrorInFunction
+            << "Specie fractions must total to unity for phase "
             << phaseTypeNames[phase_] << nl
             << "Species: " << nl << names_ << nl
             << exit(FatalError);
@@ -177,10 +170,8 @@ Foam::word Foam::phaseProperties::phaseToStateLabel(const phaseType pt) const
         }
         default:
         {
-            FatalErrorIn
-            (
-                "phaseProperties::phaseToStateLabel(phaseType pt)"
-            )   << "Invalid phase: " << phaseTypeNames[pt] << nl
+            FatalErrorInFunction
+                << "Invalid phase: " << phaseTypeNames[pt] << nl
                 << "    phase must be gas, liquid or solid" << nl
                 << exit(FatalError);
         }
@@ -258,15 +249,8 @@ void Foam::phaseProperties::reorder
         }
         default:
         {
-            FatalErrorIn
-            (
-                "phaseProperties::reorder"
-                "("
-                    "const wordList& gasNames, "
-                    "const wordList& liquidNames, "
-                    "const wordList& solidNames"
-                ")"
-            )   << "Invalid phase: " << phaseTypeNames[phase_] << nl
+            FatalErrorInFunction
+                << "Invalid phase: " << phaseTypeNames[phase_] << nl
                 << "    phase must be gas, liquid or solid" << nl
                 << exit(FatalError);
         }
@@ -302,10 +286,8 @@ const Foam::word& Foam::phaseProperties::name(const label speciei) const
 {
     if (speciei >= names_.size())
     {
-        FatalErrorIn
-        (
-            "const word& phaseProperties::name(const label) const"
-        )   << "Requested specie " << speciei << "out of range" << nl
+        FatalErrorInFunction
+            << "Requested specie " << speciei << "out of range" << nl
             << "Available phase species:" << nl << names_ << nl
             << exit(FatalError);
     }
@@ -324,10 +306,8 @@ Foam::scalar& Foam::phaseProperties::Y(const label speciei)
 {
     if (speciei >= Y_.size())
     {
-        FatalErrorIn
-        (
-            "const scalar& phaseProperties::Y(const label) const"
-        )   << "Requested specie " << speciei << "out of range" << nl
+        FatalErrorInFunction
+            << "Requested specie " << speciei << "out of range" << nl
             << "Available phase species:" << nl << names_ << nl
             << exit(FatalError);
     }

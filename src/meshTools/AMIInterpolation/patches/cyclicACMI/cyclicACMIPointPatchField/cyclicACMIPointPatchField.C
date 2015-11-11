@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,14 +59,8 @@ Foam::cyclicACMIPointPatchField<Type>::cyclicACMIPointPatchField
 {
     if (!isType<cyclicACMIPointPatch>(p))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "cyclicACMIPointPatchField<Type>::cyclicACMIPointPatchField\n"
-            "(\n"
-            "    const pointPatch&,\n"
-            "    const DimensionedField<Type, pointMesh>&,\n"
-            "    const dictionary&\n"
-            ")\n",
             dict
         )   << "patch " << this->patch().index() << " not cyclicACMI type. "
             << "Patch type = " << p.type()
@@ -91,16 +85,8 @@ Foam::cyclicACMIPointPatchField<Type>::cyclicACMIPointPatchField
 {
     if (!isType<cyclicACMIPointPatch>(this->patch()))
     {
-        FatalErrorIn
-        (
-            "cyclicACMIPointPatchField<Type>::cyclicACMIPointPatchField\n"
-            "(\n"
-            "    const cyclicACMIPointPatchField<Type>&,\n"
-            "    const pointPatch&,\n"
-            "    const DimensionedField<Type, pointMesh>&,\n"
-            "    const pointPatchFieldMapper&\n"
-            ")\n"
-        )   << "Field type does not correspond to patch type for patch "
+        FatalErrorInFunction
+            << "Field type does not correspond to patch type for patch "
             << this->patch().index() << "." << endl
             << "Field type: " << typeName << endl
             << "Patch type: " << this->patch().type()

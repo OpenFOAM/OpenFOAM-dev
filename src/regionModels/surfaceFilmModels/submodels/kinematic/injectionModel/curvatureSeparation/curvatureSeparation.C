@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,14 +233,7 @@ curvatureSeparation::curvatureSeparation
 {
     if (magG_ < ROOTVSMALL)
     {
-        FatalErrorIn
-        (
-            "curvatureSeparation::curvatureSeparation"
-            "("
-                "const surfaceFilmModel&, "
-                "const dictionary&"
-            ")"
-        )
+        FatalErrorInFunction
             << "Acceleration due to gravity must be non-zero"
             << exit(FatalError);
     }

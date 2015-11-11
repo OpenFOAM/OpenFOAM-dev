@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -949,7 +949,7 @@ Foam::Map<Foam::label> Foam::surfaceFeatures::nearestSamples
 
         if (!info.hit())
         {
-            FatalErrorIn("surfaceFeatures::nearestSamples")
+            FatalErrorInFunction
                 << "Problem for point "
                 << surfPointI << " in tree " << ppTree.bb()
                 << abort(FatalError);
@@ -1484,19 +1484,15 @@ void Foam::surfaceFeatures::operator=(const surfaceFeatures& rhs)
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn
-        (
-            "Foam::surfaceFeatures::operator=(const Foam::surfaceFeatures&)"
-        )   << "Attempted assignment to self"
+        FatalErrorInFunction
+            << "Attempted assignment to self"
             << abort(FatalError);
     }
 
     if (&surf_ != &rhs.surface())
     {
-        FatalErrorIn
-        (
-            "Foam::surfaceFeatures::operator=(const Foam::surfaceFeatures&)"
-        )   << "Operating on different surfaces"
+        FatalErrorInFunction
+            << "Operating on different surfaces"
             << abort(FatalError);
     }
 

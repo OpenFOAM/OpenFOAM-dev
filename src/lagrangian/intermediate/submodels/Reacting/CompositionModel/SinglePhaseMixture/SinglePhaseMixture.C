@@ -32,17 +32,13 @@ void Foam::SinglePhaseMixture<CloudType>::constructIds()
 {
     if (this->phaseProps().size() == 0)
     {
-        FatalErrorIn
-        (
-            "void Foam::SinglePhaseMixture<CloudType>::constructIds()"
-        )   << "Phase list is empty" << exit(FatalError);
+        FatalErrorInFunction
+            << "Phase list is empty" << exit(FatalError);
     }
     else if (this->phaseProps().size() > 1)
     {
-        FatalErrorIn
-        (
-            "void Foam::SinglePhaseMixture<CloudType>::constructIds()"
-        )   << "Only one phase permitted" << exit(FatalError);
+        FatalErrorInFunction
+            << "Only one phase permitted" << exit(FatalError);
     }
 
     switch (this->phaseProps()[0].phase())
@@ -64,10 +60,8 @@ void Foam::SinglePhaseMixture<CloudType>::constructIds()
         }
         default:
         {
-            FatalErrorIn
-            (
-                "void Foam::SinglePhaseMixture<CloudType>::constructIds()"
-            )   << "Unknown phase enumeration" << abort(FatalError);
+            FatalErrorInFunction
+                << "Unknown phase enumeration" << abort(FatalError);
         }
     }
 }

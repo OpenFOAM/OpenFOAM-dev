@@ -221,15 +221,8 @@ void Foam::ReactingParcel<ParcelType>::setCellValues
     {
         if (debug)
         {
-            WarningIn
-            (
-                "void Foam::ReactingParcel<ParcelType>::setCellValues"
-                "("
-                    "TrackData&, "
-                    "const scalar, "
-                    "const label"
-                ")"
-            )   << "Limiting observed pressure in cell " << cellI << " to "
+            WarningInFunction
+                << "Limiting observed pressure in cell " << cellI << " to "
                 << td.cloud().constProps().pMin() <<  nl << endl;
         }
 
@@ -289,16 +282,8 @@ void Foam::ReactingParcel<ParcelType>::cellValueSourceCorrection
     {
         if (debug)
         {
-            WarningIn
-            (
-                "void Foam::ReactingParcel<ParcelType>::"
-                "cellValueSourceCorrection"
-                "("
-                    "TrackData&, "
-                    "const scalar, "
-                    "const label"
-                ")"
-            )   << "Limiting observed temperature in cell " << cellI << " to "
+            WarningInFunction
+                << "Limiting observed temperature in cell " << cellI << " to "
                 << td.cloud().constProps().TMin() <<  nl << endl;
         }
 

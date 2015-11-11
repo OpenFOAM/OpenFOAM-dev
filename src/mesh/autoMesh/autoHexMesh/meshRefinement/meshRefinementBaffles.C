@@ -95,11 +95,8 @@ Foam::label Foam::meshRefinement::createBaffle
     {
         if (neiPatch == -1)
         {
-            FatalErrorIn
-            (
-                "meshRefinement::createBaffle"
-                "(const label, const label, const label, polyTopoChange&)"
-            )   << "No neighbour patch for internal face " << faceI
+            FatalErrorInFunction
+                << "No neighbour patch for internal face " << faceI
                 << " fc:" << mesh_.faceCentres()[faceI]
                 << " ownPatch:" << ownPatch << abort(FatalError);
         }
@@ -305,7 +302,7 @@ void Foam::meshRefinement::getBafflePatches
 
             if (ownPatch[faceI] == -1 || neiPatch[faceI] == -1)
             {
-                FatalErrorIn("getBafflePatches(..)")
+                FatalErrorInFunction
                     << "problem." << abort(FatalError);
             }
         }
@@ -374,7 +371,7 @@ Foam::Map<Foam::labelPair> Foam::meshRefinement::getZoneBafflePatches
 
                     if (!bafflePatch.insert(faceI, patches))
                     {
-                        FatalErrorIn("getZoneBafflePatches(..)")
+                        FatalErrorInFunction
                             << "Face " << faceI
                             << " fc:" << mesh_.faceCentres()[faceI]
                             << " in zone " << fZone.name()
@@ -402,11 +399,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createBaffles
      || neiPatch.size() != mesh_.nFaces()
     )
     {
-        FatalErrorIn
-        (
-            "meshRefinement::createBaffles"
-            "(const labelList&, const labelList&)"
-        )   << "Illegal size :"
+        FatalErrorInFunction
+            << "Illegal size :"
             << " ownPatch:" << ownPatch.size()
             << " neiPatch:" << neiPatch.size()
             << ". Should be number of faces:" << mesh_.nFaces()
@@ -428,11 +422,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createBaffles
              || (neiPatch[faceI] == -1 && syncedNeiPatch[faceI] != -1)
             )
             {
-                FatalErrorIn
-                (
-                    "meshRefinement::createBaffles"
-                    "(const labelList&, const labelList&)"
-                )   << "Non synchronised at face:" << faceI
+                FatalErrorInFunction
+                    << "Non synchronised at face:" << faceI
                     << " on patch:" << mesh_.boundaryMesh().whichPatch(faceI)
                     << " fc:" << mesh_.faceCentres()[faceI] << endl
                     << "ownPatch:" << ownPatch[faceI]
@@ -551,7 +542,7 @@ void Foam::meshRefinement::checkZoneFaces() const
 
                 if (zoneI != -1)
                 {
-                    FatalErrorIn("meshRefinement::checkZoneFaces")
+                    FatalErrorInFunction
                         << "face:" << faceI << " on patch " << pp.name()
                         << " is in zone " << fZones[zoneI].name()
                         << exit(FatalError);
@@ -641,7 +632,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createZoneBaffles
 
             if (baffleI != faceToPatch.size())
             {
-                FatalErrorIn("meshRefinement::createZoneBaffles(..)")
+                FatalErrorInFunction
                     << "Had " << faceToPatch.size() << " patches to create "
                     << " but encountered " << baffleI
                     << " slave faces originating from patcheable faces."
@@ -1337,12 +1328,8 @@ void Foam::meshRefinement::findCellZoneInsideWalk
 
         if (keepRegionI == -1)
         {
-            FatalErrorIn
-            (
-                "meshRefinement::findCellZoneInsideWalk"
-                "(const labelList&, const labelList&"
-                ", const labelList&, const labelList&)"
-            )   << "Point " << insidePoint
+            FatalErrorInFunction
+                << "Point " << insidePoint
                 << " is not inside the mesh." << nl
                 << "Bounding box of the mesh:" << mesh_.bounds()
                 << exit(FatalError);
@@ -1359,12 +1346,8 @@ void Foam::meshRefinement::findCellZoneInsideWalk
                 }
                 else if (cellToZone[cellI] != surfaceToCellZone[surfI])
                 {
-                    WarningIn
-                    (
-                        "meshRefinement::findCellZoneInsideWalk"
-                        "(const labelList&, const labelList&"
-                        ", const labelList&, const labelList&)"
-                    )   << "Cell " << cellI
+                    WarningInFunction
+                        << "Cell " << cellI
                         << " at " << mesh_.cellCentres()[cellI]
                         << " is inside surface " << surfaces_.names()[surfI]
                         << " but already marked as being in zone "
@@ -1502,11 +1485,8 @@ void Foam::meshRefinement::findCellZoneTopo
 
     if (keepRegionI == -1)
     {
-        FatalErrorIn
-        (
-            "meshRefinement::findCellZoneTopo"
-            "(const point&, const labelList&, const labelList&, labelList&)"
-        )   << "Point " << keepPoint
+        FatalErrorInFunction
+            << "Point " << keepPoint
             << " is not inside the mesh." << nl
             << "Bounding box of the mesh:" << mesh_.bounds()
             << exit(FatalError);
@@ -1625,11 +1605,8 @@ void Foam::meshRefinement::findCellZoneTopo
 
         if (zoneI ==  -2)
         {
-            FatalErrorIn
-            (
-                "meshRefinement::findCellZoneTopo"
-                "(const point&, const labelList&, const labelList&, labelList&)"
-            )   << "For region " << regionI << " haven't set cell zone."
+            FatalErrorInFunction
+                << "For region " << regionI << " haven't set cell zone."
                 << exit(FatalError);
         }
     }
@@ -1674,7 +1651,7 @@ void Foam::meshRefinement::makeConsistentFaceIndex
         }
         else if (ownZone != neiZone && namedSurfaceIndex[faceI] == -1)
         {
-            FatalErrorIn("meshRefinement::zonify()")
+            FatalErrorInFunction
                 << "Different cell zones on either side of face " << faceI
                 << " at " << mesh_.faceCentres()[faceI]
                 << " but face not marked with a surface."
@@ -1722,7 +1699,7 @@ void Foam::meshRefinement::makeConsistentFaceIndex
                 }
                 else if (ownZone != neiZone && namedSurfaceIndex[faceI] == -1)
                 {
-                    FatalErrorIn("meshRefinement::zonify()")
+                    FatalErrorInFunction
                         << "Different cell zones on either side of face "
                         << faceI << " at " << mesh_.faceCentres()[faceI]
                         << " but face not marked with a surface."
@@ -2062,7 +2039,7 @@ Foam::label Foam::meshRefinement::markPatchZones
     {
         if (!allFaceInfo[faceI].valid(dummyTrackData))
         {
-            FatalErrorIn("meshRefinement::markPatchZones(..)")
+            FatalErrorInFunction
                 << "Problem: unvisited face " << faceI
                 << " at " << patch.faceCentres()[faceI]
                 << exit(FatalError);
@@ -2287,7 +2264,7 @@ void Foam::meshRefinement::consistentOrientation
                 }
                 else
                 {
-                    FatalErrorIn("meshRefinement::consistentOrientation(..)")
+                    FatalErrorInFunction
                         << "Incorrect status for face " << meshFaceI
                         << abort(FatalError);
                 }
@@ -2315,7 +2292,7 @@ void Foam::meshRefinement::consistentOrientation
         }
         else
         {
-            FatalErrorIn("meshRefinement::consistentOrientation(..)")
+            FatalErrorInFunction
                 << "Problem : unvisited face " << faceI
                 << " centre:" << mesh_.faceCentres()[meshFaceI]
                 << abort(FatalError);
@@ -2576,11 +2553,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
 
     if (keepRegionI == -1)
     {
-        FatalErrorIn
-        (
-            "meshRefinement::splitMesh"
-            "(const label, const labelList&, const point&)"
-        )   << "Point " << keepPoint
+        FatalErrorInFunction
+            << "Point " << keepPoint
             << " is not inside the mesh." << nl
             << "Bounding box of the mesh:" << mesh_.bounds()
             << exit(FatalError);
@@ -2784,7 +2758,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
         }
         else
         {
-            WarningIn("meshRefinement::splitMesh(..)")
+            WarningInFunction
                 << "For exposed face " << faceI
                 << " fc:" << mesh_.faceCentres()[faceI]
                 << " found no patch." << endl

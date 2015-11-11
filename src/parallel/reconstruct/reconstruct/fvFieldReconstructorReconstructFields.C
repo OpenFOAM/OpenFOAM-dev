@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,15 +190,8 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                     // Check
                     if (cp[faceI] <= 0)
                     {
-                        FatalErrorIn
-                        (
-                            "fvFieldReconstructor::reconstructFvVolumeField\n"
-                            "(\n"
-                            "    const IOobject&,\n"
-                            "    const PtrList<GeometricField<Type,"
-                            " fvPatchField, volMesh> >&\n"
-                            ") const\n"
-                        )   << "Processor " << procI
+                        FatalErrorInFunction
+                            << "Processor " << procI
                             << " patch "
                             << procField.mesh().boundary()[patchI].name()
                             << " face " << faceI

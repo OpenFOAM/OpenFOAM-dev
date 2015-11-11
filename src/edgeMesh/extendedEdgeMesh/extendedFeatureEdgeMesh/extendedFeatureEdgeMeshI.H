@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ inline Foam::vector Foam::extendedFeatureEdgeMesh::edgeDirection
     }
     else
     {
-        FatalErrorIn("Foam::extendedFeatureEdgeMesh::edgeDirection")
+        FatalErrorInFunction
             << "Requested ptI " << ptI << " is not a point on the requested "
             << "edgeI " << edgeI << ". edgeI start and end: "
             << e.start() << " " << e.end()
@@ -182,7 +182,7 @@ inline Foam::vectorField Foam::extendedFeatureEdgeMesh::featurePointNormals
 {
     if (!featurePoint(ptI))
     {
-        WarningIn("vectorField extendedFeatureEdgeMesh::featurePointNormals")
+        WarningInFunction
             << "Requesting the normals of a non-feature point. "
             << "Returned zero length vectorField."
             << endl;

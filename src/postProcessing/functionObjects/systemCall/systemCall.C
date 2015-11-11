@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,13 +70,13 @@ void Foam::systemCall::read(const dictionary& dict)
 
     if (executeCalls_.empty() && endCalls_.empty() && writeCalls_.empty())
     {
-        WarningIn("Foam::system::read(const dictionary&)")
+        WarningInFunction
             << "no executeCalls, endCalls or writeCalls defined."
             << endl;
     }
     else if (!dynamicCode::allowSystemOperations)
     {
-        FatalErrorIn("systemCall::read(const dictionary&)")
+        FatalErrorInFunction
             << "Executing user-supplied system calls is not enabled by "
             << "default because of " << nl
             << "security issues.  If you trust the case you can enable this "

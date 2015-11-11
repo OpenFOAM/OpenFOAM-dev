@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,10 +42,8 @@ Foam::autoPtr<Foam::trimModel> Foam::trimModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "trimModel::New(const rotorDiskSource&, const dictionary&)"
-        )   << "Unknown " << typeName << " type "
+        FatalErrorInFunction
+            << "Unknown " << typeName << " type "
             << modelType << nl << nl
             << "Valid " << typeName << " types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

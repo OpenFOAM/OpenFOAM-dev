@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,13 +44,8 @@ Foam::sixDoFRigidBodyMotionRestraint::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "sixDoFRigidBodyMotionRestraint::New"
-            "("
-                "const dictionary& sDoFRBMRDict"
-            ")"
-        )   << "Unknown sixDoFRigidBodyMotionRestraint type "
+        FatalErrorInFunction
+            << "Unknown sixDoFRigidBodyMotionRestraint type "
             << restraintType << nl << nl
             << "Valid sixDoFRigidBodyMotionRestraint types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

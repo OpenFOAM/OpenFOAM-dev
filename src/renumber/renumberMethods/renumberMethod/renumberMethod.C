@@ -53,11 +53,8 @@ Foam::autoPtr<Foam::renumberMethod> Foam::renumberMethod::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "renumberMethod::New"
-            "(const dictionary& renumberDict)"
-        )   << "Unknown renumberMethod "
+        FatalErrorInFunction
+            << "Unknown renumberMethod "
             << methodType << nl << nl
             << "Valid renumberMethods are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

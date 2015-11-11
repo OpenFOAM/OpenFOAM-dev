@@ -546,7 +546,7 @@ Foam::scalar Foam::particle::trackToFace
         }
         else
         {
-            FatalErrorIn("Particle::trackToFace(const vector&, TrackData&)")
+            FatalErrorInFunction
                 << "addressing failure" << abort(FatalError);
         }
     }
@@ -948,14 +948,8 @@ void Foam::particle::hitWedgePatch
     TrackData&
 )
 {
-    FatalErrorIn
-    (
-        "void Foam::particle::hitWedgePatch"
-        "("
-            "const wedgePolyPatch& wpp, "
-            "TrackData&"
-        ")"
-    )   << "Hitting a wedge patch should not be possible."
+    FatalErrorInFunction
+        << "Hitting a wedge patch should not be possible."
         << abort(FatalError);
 
     vector nf = normal();
@@ -1059,16 +1053,7 @@ void Foam::particle::hitCyclicAMIPatch
 
     if (patchFaceI < 0)
     {
-        FatalErrorIn
-        (
-            "template<class TrackData>"
-            "void Foam::particle::hitCyclicAMIPatch"
-            "("
-                "const cyclicAMIPolyPatch&, "
-                "TrackData&, "
-                "const vector&"
-            ")"
-        )
+        FatalErrorInFunction
             << "Particle lost across " << cyclicAMIPolyPatch::typeName
             << " patches " << cpp.name() << " and " << receiveCpp.name()
             << " at position " << position_ << abort(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,10 +50,8 @@ void Foam::hierarchGeomDecomp::setDecompOrder()
 
     if (order.size() != 3)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "hierarchGeomDecomp::hierarchGeomDecomp"
-            "(const dictionary& decompositionDict)",
             decompositionDict_
         )   << "number of characters in order (" << order << ") != 3"
             << exit(FatalIOError);
@@ -75,10 +73,8 @@ void Foam::hierarchGeomDecomp::setDecompOrder()
         }
         else
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "hierarchGeomDecomp::hierarchGeomDecomp"
-                "(const dictionary& decompositionDict)",
                 decompositionDict_
             )   << "Illegal decomposition order " << order << endl
                 << "It should only contain x, y or z" << exit(FatalError);
@@ -229,7 +225,7 @@ void Foam::hierarchGeomDecomp::findBinary
 
         if (returnReduce(hasNotChanged, andOp<bool>()))
         {
-            WarningIn("hierarchGeomDecomp::findBinary(..)")
+            WarningInFunction
                 << "unable to find desired decomposition split, making do!"
                 << endl;
             break;
@@ -309,7 +305,7 @@ void Foam::hierarchGeomDecomp::findBinary
 
         if (returnReduce(hasNotChanged, andOp<bool>()))
         {
-            WarningIn("hierarchGeomDecomp::findBinary(..)")
+            WarningInFunction
                 << "unable to find desired deomposition split, making do!"
                 << endl;
             break;

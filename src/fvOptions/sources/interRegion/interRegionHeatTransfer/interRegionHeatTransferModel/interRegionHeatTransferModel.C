@@ -71,7 +71,7 @@ void Foam::fv::interRegionHeatTransferModel::setNbrModel()
 
     if (!nbrModelFound)
     {
-        FatalErrorIn("interRegionHeatTransferModel::setNbrModel()")
+        FatalErrorInFunction
             << "Neighbour model not found" << nbrModelName_
             << " in region " << nbrMesh.name() << nl
             << exit(FatalError);
@@ -241,14 +241,8 @@ void Foam::fv::interRegionHeatTransferModel::addSup
             }
             else
             {
-                FatalErrorIn
-                (
-                    "void Foam::fv::interRegionHeatTransferModel::addSup"
-                    "("
-                    "   fvMatrix<scalar>&, "
-                    "   const label "
-                    ")"
-                )   << " on mesh " << mesh_.name()
+                FatalErrorInFunction
+                    << " on mesh " << mesh_.name()
                     << " could not find object basicThermo."
                     << " The available objects are: "
                     << mesh_.names()

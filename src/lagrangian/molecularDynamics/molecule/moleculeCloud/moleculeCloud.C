@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::moleculeCloud::buildConstProps()
 
             if (siteIds[sI] == -1)
             {
-                FatalErrorIn("moleculeCloud::buildConstProps()")
+                FatalErrorInFunction
                     << siteId << " site not found."
                     << nl << abort(FatalError);
             }
@@ -485,7 +485,7 @@ void Foam::moleculeCloud::initialiseMolecules
 
     if (!cellZones.size())
     {
-        FatalErrorIn("void Foam::moleculeCloud::initialiseMolecules")
+        FatalErrorInFunction
             << "No cellZones found in the mesh."
             << abort(FatalError);
     }
@@ -525,7 +525,7 @@ void Foam::moleculeCloud::initialiseMolecules
 
                 if (latticeIds.size() != latticePositions.size())
                 {
-                    FatalErrorIn("Foam::moleculeCloud::initialiseMolecules")
+                    FatalErrorInFunction
                         << "latticeIds and latticePositions must be the same "
                         << " size." << nl
                         << abort(FatalError);
@@ -547,7 +547,7 @@ void Foam::moleculeCloud::initialiseMolecules
 
                     if (numberDensity < VSMALL)
                     {
-                        WarningIn("moleculeCloud::initialiseMolecules")
+                        WarningInFunction
                             << "numberDensity too small, not filling zone "
                             << zone.name() << endl;
 
@@ -580,7 +580,7 @@ void Foam::moleculeCloud::initialiseMolecules
 
                     if (massDensity < VSMALL)
                     {
-                        WarningIn("moleculeCloud::initialiseMolecules")
+                        WarningInFunction
                             << "massDensity too small, not filling zone "
                             << zone.name() << endl;
 
@@ -596,7 +596,7 @@ void Foam::moleculeCloud::initialiseMolecules
                 }
                 else
                 {
-                    FatalErrorIn("Foam::moleculeCloud::initialiseMolecules")
+                    FatalErrorInFunction
                         << "massDensity or numberDensity not specified " << nl
                         << abort(FatalError);
                 }
@@ -963,7 +963,7 @@ void Foam::moleculeCloud::initialiseMolecules
                      && !partOfLayerInBounds
                     )
                     {
-                        WarningIn("Foam::moleculeCloud::initialiseMolecules()")
+                        WarningInFunction
                             << "A whole layer of unit cells was placed "
                             << "outside the bounds of the mesh, but no "
                             << "molecules have been placed in zone '"
@@ -1011,7 +1011,7 @@ void Foam::moleculeCloud::createMolecule
 
     if (cell == -1)
     {
-        FatalErrorIn("Foam::moleculeCloud::createMolecule")
+        FatalErrorInFunction
             << "Position specified does not correspond to a mesh cell." << nl
             << abort(FatalError);
     }

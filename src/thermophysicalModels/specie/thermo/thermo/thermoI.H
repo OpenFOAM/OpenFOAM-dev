@@ -63,17 +63,8 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
 
         if (iter++ > maxIter_)
         {
-            FatalErrorIn
-            (
-                "thermo<Thermo, Type>::T(scalar f, scalar T0, "
-                "scalar (thermo<Thermo, Type>::*F)"
-                "(const scalar) const, "
-                "scalar (thermo<Thermo, Type>::*dFdT)"
-                "(const scalar) const, "
-                "scalar (thermo<Thermo, Type>::*limit)"
-                "(const scalar) const"
-                ") const"
-            )   << "Maximum number of iterations exceeded"
+            FatalErrorInFunction
+                << "Maximum number of iterations exceeded"
                 << abort(FatalError);
         }
 

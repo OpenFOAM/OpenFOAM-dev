@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ autoPtr<thermalBaffleModel> thermalBaffleModel::New(const fvMesh& mesh)
     if (cstrIter == meshConstructorTablePtr_->end())
     {
 
-        FatalErrorIn("thermalBaffleModel::New(const fvMesh&)")
+        FatalErrorInFunction
             << "Unknown thermalBaffleModel type " << modelType
             << nl << nl
             <<  "Valid thermalBaffleModel types are:" << nl
@@ -94,10 +94,8 @@ autoPtr<thermalBaffleModel> thermalBaffleModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
 
-        FatalErrorIn
-        (
-            "thermalBaffleModel::New(const fvMesh&, const dictionary&)"
-        )   << "Unknown thermalBaffleModel type " << modelType
+        FatalErrorInFunction
+            << "Unknown thermalBaffleModel type " << modelType
             << nl << nl
             <<  "Valid thermalBaffleModel types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

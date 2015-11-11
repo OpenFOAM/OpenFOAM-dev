@@ -146,10 +146,8 @@ Foam::label Foam::meshSearch::findNearestCellWalk
 {
     if (seedCellI < 0)
     {
-        FatalErrorIn
-        (
-            "meshSearch::findNearestCellWalk(const point&, const label)"
-        )   << "illegal seedCell:" << seedCellI << exit(FatalError);
+        FatalErrorInFunction
+            << "illegal seedCell:" << seedCellI << exit(FatalError);
     }
 
     // Walk in direction of face that decreases distance
@@ -245,10 +243,8 @@ Foam::label Foam::meshSearch::findNearestFaceWalk
 {
     if (seedFaceI < 0)
     {
-        FatalErrorIn
-        (
-            "meshSearch::findNearestFaceWalk(const point&, const label)"
-        )   << "illegal seedFace:" << seedFaceI << exit(FatalError);
+        FatalErrorInFunction
+            << "illegal seedFace:" << seedFaceI << exit(FatalError);
     }
 
     const vectorField& centres = mesh_.faceCentres();
@@ -335,10 +331,8 @@ Foam::label Foam::meshSearch::findCellWalk
 {
     if (seedCellI < 0)
     {
-        FatalErrorIn
-        (
-            "meshSearch::findCellWalk(const point&, const label)"
-        )   << "illegal seedCell:" << seedCellI << exit(FatalError);
+        FatalErrorInFunction
+            << "illegal seedCell:" << seedCellI << exit(FatalError);
     }
 
     if (mesh_.pointInCell(location, seedCellI, cellDecompMode_))
@@ -408,11 +402,8 @@ Foam::label Foam::meshSearch::findNearestBoundaryFaceWalk
 {
     if (seedFaceI < 0)
     {
-        FatalErrorIn
-        (
-            "meshSearch::findNearestBoundaryFaceWalk"
-            "(const point&, const label)"
-        )   << "illegal seedFace:" << seedFaceI << exit(FatalError);
+        FatalErrorInFunction
+            << "illegal seedFace:" << seedFaceI << exit(FatalError);
     }
 
     // Start off from seedFaceI

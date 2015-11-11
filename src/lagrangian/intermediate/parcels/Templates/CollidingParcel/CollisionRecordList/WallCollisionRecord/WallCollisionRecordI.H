@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,14 +47,7 @@ inline bool Foam::WallCollisionRecord<Type>::match
             << nl << "cosAcceptanceAngle " << cosAcceptanceAngle
             << endl;
 
-        FatalErrorIn
-        (
-            "inline bool Foam::WallCollisionRecord<Type>::match"
-            "("
-                "const vector& pRel,"
-                "scalar radius"
-            ") const"
-        )
+        FatalErrorInFunction
             << "Problem with matching WallCollisionRecord." << nl
             << "The given radius, " << radius << ", is smaller than distance "
             << "to the relative position of the WallInteractionSite, "

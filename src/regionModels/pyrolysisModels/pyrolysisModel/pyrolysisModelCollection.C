@@ -124,7 +124,7 @@ void pyrolysisModelCollection::evolve()
         {
             if (pyrolysis.primaryMesh().changing())
             {
-                FatalErrorIn("pyrolysisModelCollection::evolve()")
+                FatalErrorInFunction
                     << "Currently not possible to apply "
                     << pyrolysis.modelName()
                     << " model to moving mesh cases" << nl<< abort(FatalError);

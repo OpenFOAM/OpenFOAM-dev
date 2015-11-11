@@ -219,10 +219,8 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         }
         default:
         {
-            FatalErrorIn
-            (
-                "turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()"
-            )   << "Unknown heat source type. Valid types are: "
+            FatalErrorInFunction
+                << "Unknown heat source type. Valid types are: "
                 << heatSourceTypeNames_ << nl << exit(FatalError);
         }
     }

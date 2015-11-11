@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,10 +121,7 @@ bool Foam::fileFormats::STARCDsurfaceFormat<Face>::read
     IFstream is(baseName + ".cel");
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::STARCDsurfaceFormat::read(const fileName&)"
-        )
+        FatalErrorInFunction
             << "Cannot read file " << is.name()
             << exit(FatalError);
     }

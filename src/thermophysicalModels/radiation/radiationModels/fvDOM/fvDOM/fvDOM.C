@@ -90,7 +90,7 @@ void Foam::radiation::fvDOM::initialise()
         // Currently 2D solution is limited to the x-y plane
         if (mesh_.solutionD()[vector::Z] != -1)
         {
-            FatalErrorIn("fvDOM::initialise()")
+            FatalErrorInFunction
                 << "Currently 2D solution is limited to the x-y plane"
                 << exit(FatalError);
         }
@@ -130,7 +130,7 @@ void Foam::radiation::fvDOM::initialise()
         // Currently 1D solution is limited to the x-direction
         if (mesh_.solutionD()[vector::X] != 1)
         {
-            FatalErrorIn("fvDOM::initialise()")
+            FatalErrorInFunction
                 << "Currently 1D solution is limited to the x-direction"
                 << exit(FatalError);
         }

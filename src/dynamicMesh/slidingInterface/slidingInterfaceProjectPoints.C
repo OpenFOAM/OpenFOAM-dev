@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -368,10 +368,7 @@ bool Foam::slidingInterface::projectPoints() const
     }
     else
     {
-        FatalErrorIn
-        (
-            "bool slidingInterface::projectPoints() const"
-        )   << "Problem in point projection.  Unknown sliding match type "
+        FatalErrorInFunction
             << " for object " << name()
             << abort(FatalError);
     }
@@ -404,10 +401,7 @@ bool Foam::slidingInterface::projectPoints() const
 
         if (nShortEdges > 0)
         {
-            FatalErrorIn
-            (
-                "bool slidingInterface::projectPoints() const"
-            )   << "Problem in point projection.  " << nShortEdges
+            FatalErrorInFunction
                 << " short projected edges "
                 << "after adjustment for object " << name()
                 << abort(FatalError);
@@ -522,10 +516,7 @@ bool Foam::slidingInterface::projectPoints() const
 
         if (minEdgeLength < SMALL)
         {
-            FatalErrorIn
-            (
-                "bool slidingInterface::projectPoints() const"
-            )   << "Problem in point projection.  Short projected edge "
+            FatalErrorInFunction
                 << " after point merge for object " << name()
                 << abort(FatalError);
         }
@@ -687,10 +678,7 @@ bool Foam::slidingInterface::projectPoints() const
 
         if (minEdgeLength < SMALL)
         {
-            FatalErrorIn
-            (
-                "bool slidingInterface::projectPoints() const"
-            )   << "Problem in point projection.  Short projected edge "
+            FatalErrorInFunction
             << " after correction for object " << name()
             << abort(FatalError);
         }

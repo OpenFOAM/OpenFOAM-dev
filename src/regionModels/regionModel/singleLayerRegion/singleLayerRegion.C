@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ void Foam::regionModels::singleLayerRegion::initialise()
 
     if (nBoundaryFaces != regionMesh().nCells())
     {
-        FatalErrorIn("singleLayerRegion::initialise()")
+        FatalErrorInFunction
             << "Number of primary region coupled boundary faces not equal to "
             << "the number of cells in the local region" << nl << nl
             << "Number of cells = " << regionMesh().nCells() << nl
@@ -208,7 +208,7 @@ const Foam::volVectorField& Foam::regionModels::singleLayerRegion::nHat() const
 {
     if (!nHatPtr_.valid())
     {
-        FatalErrorIn("const fvMesh& singleLayerRegion::nHat() const")
+        FatalErrorInFunction
             << "Region patch normal vectors not available"
             << abort(FatalError);
     }
@@ -221,7 +221,7 @@ const Foam::volScalarField& Foam::regionModels::singleLayerRegion::magSf() const
 {
     if (!magSfPtr_.valid())
     {
-        FatalErrorIn("const fvMesh& singleLayerRegion::magSf() const")
+        FatalErrorInFunction
             << "Region patch areas not available"
             << abort(FatalError);
     }

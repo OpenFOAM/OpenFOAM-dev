@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,15 +63,8 @@ void Foam::ReactingCloud<CloudType>::checkSuppliedComposition
 {
     if (YSupplied.size() != Y.size())
     {
-        FatalErrorIn
-        (
-            "ReactingCloud<CloudType>::checkSuppliedComposition"
-            "("
-                "const scalarField&, "
-                "const scalarField&, "
-                "const word&"
-            ")"
-        )   << YName << " supplied, but size is not compatible with "
+        FatalErrorInFunction
+            << YName << " supplied, but size is not compatible with "
             << "parcel composition: " << nl << "    "
             << YName << "(" << YSupplied.size() << ") vs required composition "
             << YName << "(" << Y.size() << ")" << nl

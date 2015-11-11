@@ -208,10 +208,8 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
 
     if (iter > maxIters_)
     {
-        WarningIn
-        (
-            "scalar Foam::COxidationMurphyShaddix<CloudType>::calculate(...)"
-        )   << "iter limit reached (" << maxIters_ << ")" << nl << endl;
+        WarningInFunction
+            << "iter limit reached (" << maxIters_ << ")" << nl << endl;
     }
 
     // Calculate the number of molar units reacted

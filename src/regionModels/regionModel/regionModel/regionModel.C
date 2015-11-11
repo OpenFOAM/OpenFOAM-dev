@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ void Foam::regionModels::regionModel::initialise()
 
     if (returnReduce(nBoundaryFaces, sumOp<label>()) == 0)
     {
-        WarningIn("regionModel::initialise()")
+        WarningInFunction
             << "Region model has no mapped boundary conditions - transfer "
             << "between regions will not be possible" << endl;
     }
@@ -317,14 +317,7 @@ Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID
 
     if (regionPatchI > pbm.size() - 1)
     {
-        FatalErrorIn
-        (
-            "Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID"
-            "("
-                "const regionModel&, "
-                "const label"
-            ") const"
-        )
+        FatalErrorInFunction
             << "region patch index out of bounds: "
             << "region patch index = " << regionPatchI
             << ", maximum index = " << pbm.size() - 1
@@ -335,14 +328,7 @@ Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID
 
     if (!isA<mappedPatchBase>(pp))
     {
-        FatalErrorIn
-        (
-            "Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID"
-            "("
-                "const regionModel&, "
-                "const label"
-            ") const"
-        )
+        FatalErrorInFunction
             << "Expected a " << mappedPatchBase::typeName
             << " patch, but found a " << pp.type() << abort(FatalError);
     }
@@ -371,14 +357,7 @@ Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID
     {
         const polyPatch& p = regionMesh().boundaryMesh()[regionPatchI];
 
-        FatalErrorIn
-        (
-            "Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID"
-            "("
-                "const regionModel&, "
-                "const label"
-            ") const"
-        )
+        FatalErrorInFunction
             << "Unable to find patch pair for local patch "
             << p.name() << " and region " << nbrRegion.name()
             << abort(FatalError);

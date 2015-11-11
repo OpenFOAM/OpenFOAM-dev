@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,10 +61,8 @@ void Foam::attachDetach::checkDefinition()
      || !slavePatchID_.active()
     )
     {
-        FatalErrorIn
-        (
-            "void Foam::attachDetach::checkDefinition()"
-        )   << "Not all zones and patches needed in the definition "
+        FatalErrorInFunction
+            << "Not all zones and patches needed in the definition "
             << "have been found.  Please check your mesh definition."
             << abort(FatalError);
     }
@@ -97,10 +95,7 @@ void Foam::attachDetach::checkDefinition()
         // Check if there are faces in the master zone
         if (mesh.faceZones()[faceZoneID_.index()].empty())
         {
-            FatalErrorIn
-            (
-                "void Foam::attachDetach::checkDefinition()"
-            )   << "Attach/detach zone contains no faces.  Please check your "
+            FatalErrorInFunction
                 << "mesh definition."
                 << abort(FatalError);
         }
@@ -122,10 +117,8 @@ void Foam::attachDetach::checkDefinition()
 
             if (bouFacesInZone.size())
             {
-                FatalErrorIn
-                (
-                    "void Foam::attachDetach::checkDefinition()"
-                )   << "Found boundary faces in the zone defining "
+                FatalErrorInFunction
+                    << "Found boundary faces in the zone defining "
                     << "attach/detach boundary "
                     << " for object " << name()
                     << " : .  This is not allowed." << nl
@@ -158,10 +151,8 @@ void Foam::attachDetach::checkDefinition()
             )
         )
         {
-            FatalErrorIn
-            (
-                "void Foam::attachDetach::checkDefinition()"
-            )   << "Problem with sizes in mesh modifier. The face zone,"
+            FatalErrorInFunction
+                << "Problem with sizes in mesh modifier. The face zone,"
                 << " master and slave patch should have the same size"
                 << " for object " << name() << ". " << nl
                 << "Zone size: "
@@ -197,10 +188,8 @@ void Foam::attachDetach::checkDefinition()
 
             if (zoneProblemFaces.size())
             {
-                FatalErrorIn
-                (
-                    "void Foam::attachDetach::checkDefinition()"
-                )   << "Found faces in the zone defining "
+                FatalErrorInFunction
+                    << "Found faces in the zone defining "
                     << "attach/detach boundary which do not belong to "
                     << "either master or slave patch.  "
                     << "This is not allowed." << nl
@@ -224,10 +213,8 @@ void Foam::attachDetach::checkDefinition()
      || (triggerTimes_.empty() && !manualTrigger())
     )
     {
-        FatalErrorIn
-        (
-            "void Foam::attachDetach::checkDefinition()"
-        )   << "Problem with definition of trigger times: "
+        FatalErrorInFunction
+            << "Problem with definition of trigger times: "
             << triggerTimes_
             << abort(FatalError);
     }
@@ -439,10 +426,8 @@ void Foam::attachDetach::setRefinement(polyTopoChange& ref) const
         }
         else
         {
-            FatalErrorIn
-            (
-                "void attachDetach::setRefinement(polyTopoChange&) const"
-            )   << "Requested attach/detach event and currect state "
+            FatalErrorInFunction
+                << "Requested attach/detach event and currect state "
                 << "is not known."
                 << abort(FatalError);
         }

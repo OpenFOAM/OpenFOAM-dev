@@ -57,7 +57,7 @@ void Foam::axesRotation::calcTransform
 
     if (mag(b) < SMALL)
     {
-        FatalErrorIn("axesRotation::calcTransform()")
+        FatalErrorInFunction
             << "axis1, axis2 appear co-linear: "
             << axis1 << ", " << axis2 << endl
             << abort(FatalError);
@@ -86,15 +86,7 @@ void Foam::axesRotation::calcTransform
         }
         default:
         {
-            FatalErrorIn
-            (
-                "axesRotation::calcTransform"
-                "("
-                    "const vector&,"
-                    "const vector&,"
-                    "const axisOrder&"
-                ")"
-            )
+            FatalErrorInFunction
                 << "Unhandled axes specifictation" << endl
                 << abort(FatalError);
 
@@ -294,10 +286,8 @@ void Foam::axesRotation::operator=(const dictionary& dict)
     }
     else
     {
-        FatalErrorIn
-        (
-            "axesRotation::operator=(const dictionary&) "
-        )   << "not entry of the type (e1, e2) or (e2, e3) or (e3, e1) "
+        FatalErrorInFunction
+            << "not entry of the type (e1, e2) or (e2, e3) or (e3, e1) "
             << "found "
             << exit(FatalError);
     }

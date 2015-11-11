@@ -64,10 +64,7 @@ bool Foam::fileFormats::TRIsurfaceFormatCore::read
     IFstream is(filename);
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::TRIsurfaceFormatCore::read(const fileName&)"
-        )
+        FatalErrorInFunction
             << "Cannot read file " << filename
             << exit(FatalError);
     }

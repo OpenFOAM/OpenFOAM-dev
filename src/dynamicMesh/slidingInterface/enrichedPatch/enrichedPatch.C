@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ void Foam::enrichedPatch::calcMeshPoints() const
 {
     if (meshPointsPtr_)
     {
-        FatalErrorIn("void enrichedPatch::calcMeshPoints() const")
+        FatalErrorInFunction
             << "Mesh points already calculated."
             << abort(FatalError);
     }
@@ -58,7 +58,7 @@ void Foam::enrichedPatch::calcLocalFaces() const
 {
     if (localFacesPtr_)
     {
-        FatalErrorIn("void enrichedPatch::calcLocalFaces() const")
+        FatalErrorInFunction
             << "Local faces already calculated."
             << abort(FatalError);
     }
@@ -98,7 +98,7 @@ void Foam::enrichedPatch::calcLocalPoints() const
 {
     if (localPointsPtr_)
     {
-        FatalErrorIn("void enrichedPatch::calcLocalPoints() const")
+        FatalErrorInFunction
             << "Local points already calculated."
             << abort(FatalError);
     }
@@ -233,7 +233,7 @@ bool Foam::enrichedPatch::checkSupport() const
         {
             if (!pointMap().found(curFace[pointI]))
             {
-                WarningIn("void enrichedPatch::checkSupport()")
+                WarningInFunction
                     << "Point " << pointI << " of face " << faceI
                     << " global point index: " << curFace[pointI]
                     << " not supported in point map.  This is not allowed."

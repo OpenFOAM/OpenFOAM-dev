@@ -49,13 +49,8 @@ Foam::blockDescriptor::blockDescriptor
 {
     if (expand_.size() != 12)
     {
-        FatalErrorIn
-        (
-            "blockDescriptor::blockDescriptor"
-            "(const cellShape&, const pointField& blockPointField, "
-            "const curvedEdgeList&, const Vector<label>& meshDensity, "
-            "const scalarList& expand, const word& zoneName)"
-        )   << "Unknown definition of expansion ratios"
+        FatalErrorInFunction
+            << "Unknown definition of expansion ratios"
             << exit(FatalError);
     }
 
@@ -106,10 +101,8 @@ Foam::blockDescriptor::blockDescriptor
         }
         else
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "blockDescriptor::blockDescriptor"
-                "(const pointField&, const curvedEdgeList&, Istream&)",
                 is
             )   << "incorrect token while reading n, expected '(', found "
                 << t.info()
@@ -163,11 +156,8 @@ Foam::blockDescriptor::blockDescriptor
     }
     else
     {
-        FatalErrorIn
-        (
-            "blockDescriptor::blockDescriptor"
-            "(const pointField&, const curvedEdgeList&, Istream&)"
-        )   << "Unknown definition of expansion ratios: " << expRatios
+        FatalErrorInFunction
+            << "Unknown definition of expansion ratios: " << expRatios
             << exit(FatalError);
     }
 

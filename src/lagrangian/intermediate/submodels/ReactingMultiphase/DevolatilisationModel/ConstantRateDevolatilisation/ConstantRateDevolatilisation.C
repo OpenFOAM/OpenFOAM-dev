@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,15 +42,8 @@ Foam::ConstantRateDevolatilisation<CloudType>::ConstantRateDevolatilisation
 {
     if (volatileData_.empty())
     {
-        WarningIn
-        (
-            "Foam::ConstantRateDevolatilisation<CloudType>::"
-            "ConstantRateDevolatilisation"
-            "("
-                "const dictionary& dict, "
-                "CloudType& owner"
-            ")"
-        )   << "Devolatilisation model selected, but no volatiles defined"
+        WarningInFunction
+            << "Devolatilisation model selected, but no volatiles defined"
             << nl << endl;
     }
     else

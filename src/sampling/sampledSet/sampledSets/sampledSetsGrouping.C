@@ -106,7 +106,7 @@ Foam::label Foam::sampledSets::classifyFields()
             }
             else
             {
-                WarningIn("sampledSets::classifyFields()")
+                WarningInFunction
                     << "Cannot find field file matching "
                     << fieldSelection_[i] << endl;
             }
@@ -137,7 +137,7 @@ Foam::label Foam::sampledSets::classifyFields()
             }
             else
             {
-                WarningIn("sampledSets::classifyFields()")
+                WarningInFunction
                     << "Cannot find registered field matching "
                     << fieldSelection_[i] << endl;
             }

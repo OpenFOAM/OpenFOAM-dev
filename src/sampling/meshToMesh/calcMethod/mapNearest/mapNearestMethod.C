@@ -69,17 +69,7 @@ bool Foam::mapNearestMethod::findInitialSeeds
             }
             else
             {
-                FatalErrorIn
-                (
-                    "bool Foam::mapNearestMethod::findInitialSeeds"
-                    "("
-                        "const labelList&, "
-                        "const boolList&, "
-                        "const label, "
-                        "label&, "
-                        "label&"
-                    ") const"
-                )
+                FatalErrorInFunction
                     << "Unable to find nearest target cell"
                     << " for source cell " << srcI
                     << " with centre " << srcCc

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -318,12 +318,8 @@ bool Foam::primitiveMeshGeometry::checkFaceDotProduct
                     // Non-orthogonality greater than 90 deg
                     if (report)
                     {
-                        WarningIn
-                        (
-                            "primitiveMeshGeometry::checkFaceDotProduct"
-                            "(const bool, const scalar, const labelList&"
-                            ", labelHashSet*)"
-                        )   << "Severe non-orthogonality detected for face "
+                        WarningInFunction
+                            << "Severe non-orthogonality detected for face "
                             << faceI
                             << " between cells " << own[faceI] << " and "
                             << nei[faceI]
@@ -383,11 +379,8 @@ bool Foam::primitiveMeshGeometry::checkFaceDotProduct
     {
         if (report)
         {
-            SeriousErrorIn
-            (
-                "primitiveMeshGeometry::checkFaceDotProduct"
-                "(const bool, const scalar, const labelList&, labelHashSet*)"
-            )   << "Error in non-orthogonality detected" << endl;
+            SeriousErrorInFunction
+                << "Error in non-orthogonality detected" << endl;
         }
 
         return true;
@@ -497,12 +490,8 @@ bool Foam::primitiveMeshGeometry::checkFacePyramids
     {
         if (report)
         {
-            SeriousErrorIn
-            (
-                "primitiveMeshGeometry::checkFacePyramids("
-                "const bool, const scalar, const pointField&"
-                ", const labelList&, labelHashSet*)"
-            )   << "Error in face pyramids: faces pointing the wrong way!"
+            SeriousErrorInFunction
+                << "Error in face pyramids: faces pointing the wrong way!"
                 << endl;
         }
 
@@ -638,11 +627,7 @@ bool Foam::primitiveMeshGeometry::checkFaceSkewness
     {
         if (report)
         {
-            WarningIn
-            (
-                "primitiveMeshGeometry::checkFaceSkewness"
-                "(const bool, const scalar, const labelList&, labelHashSet*)"
-            )   << "Large face skewness detected.  Max skewness = "
+            WarningInFunction
                 << 100*maxSkew
                 << " percent.\nThis may impair the quality of the result." << nl
                 << nWarnSkew << " highly skew faces detected."
@@ -725,11 +710,7 @@ bool Foam::primitiveMeshGeometry::checkFaceWeights
     {
         if (report)
         {
-            WarningIn
-            (
-                "primitiveMeshGeometry::checkFaceWeights"
-                "(const bool, const scalar, const labelList&, labelHashSet*)"
-            )   << "Small interpolation weight detected.  Min weight = "
+            WarningInFunction
                 << minWeight << '.' << nl
                 << nWarnWeight << " faces with small weights detected."
                 << endl;
@@ -767,12 +748,8 @@ bool Foam::primitiveMeshGeometry::checkFaceAngles
 {
     if (maxDeg < -SMALL || maxDeg > 180+SMALL)
     {
-        FatalErrorIn
-        (
-            "primitiveMeshGeometry::checkFaceAngles"
-            "(const bool, const scalar, const pointField&, const labelList&"
-            ", labelHashSet*)"
-        )   << "maxDeg should be [0..180] but is now " << maxDeg
+        FatalErrorInFunction
+            << "maxDeg should be [0..180] but is now " << maxDeg
             << abort(FatalError);
     }
 
@@ -874,12 +851,8 @@ bool Foam::primitiveMeshGeometry::checkFaceAngles
     {
         if (report)
         {
-            WarningIn
-            (
-                "primitiveMeshGeometry::checkFaceAngles"
-                "(const bool, const scalar,  const pointField&"
-                ", const labelList&, labelHashSet*)"
-            )   << nConcave  << " face points with severe concave angle (> "
+            WarningInFunction
+                << nConcave  << " face points with severe concave angle (> "
                 << maxDeg << " deg) found.\n"
                 << endl;
         }
@@ -910,12 +883,8 @@ bool Foam::primitiveMeshGeometry::checkFaceAngles
 //{
 //    if (warnFlatness < 0 || warnFlatness > 1)
 //    {
-//        FatalErrorIn
-//        (
-//            "primitiveMeshGeometry::checkFaceFlatness"
-//            "(const bool, const scalar, const pointField&"
-//            ", const labelList&, labelHashSet*)"
-//        )   << "warnFlatness should be [0..1] but is now " << warnFlatness
+//        FatalErrorInFunction
+//            << "warnFlatness should be [0..1] but is now " << warnFlatness
 //            << abort(FatalError);
 //    }
 //
@@ -1011,12 +980,8 @@ bool Foam::primitiveMeshGeometry::checkFaceAngles
 //    {
 //        if (report)
 //        {
-//            WarningIn
-//            (
-//                "primitiveMeshGeometry::checkFaceFlatness"
-//                "(const bool, const scalar, const pointField&"
-//                ", const labelList&, labelHashSet*)"
-//            )   << nWarped  << " faces with severe warpage (flatness < "
+//            WarningInFunction
+//                << nWarped  << " faces with severe warpage (flatness < "
 //                << warnFlatness << ") found.\n"
 //                << endl;
 //        }
@@ -1047,12 +1012,8 @@ bool Foam::primitiveMeshGeometry::checkFaceTwist
 {
     if (minTwist < -1-SMALL || minTwist > 1+SMALL)
     {
-        FatalErrorIn
-        (
-            "primitiveMeshGeometry::checkFaceTwist"
-            "(const bool, const scalar, const primitiveMesh&, const pointField&"
-            ", const labelList&, labelHashSet*)"
-        )   << "minTwist should be [-1..1] but is now " << minTwist
+        FatalErrorInFunction
+            << "minTwist should be [-1..1] but is now " << minTwist
             << abort(FatalError);
     }
 
@@ -1129,12 +1090,8 @@ bool Foam::primitiveMeshGeometry::checkFaceTwist
     {
         if (report)
         {
-            WarningIn
-            (
-                "primitiveMeshGeometry::checkFaceTwist"
-                "(const bool, const scalar, const primitiveMesh&"
-                ", const pointField&, const labelList&, labelHashSet*)"
-            )   << nWarped  << " faces with severe warpage "
+            WarningInFunction
+                << nWarped  << " faces with severe warpage "
                 << "(cosine of the angle between triangle normal and "
                 << "face normal < " << minTwist << ") found.\n"
                 << endl;
@@ -1195,12 +1152,8 @@ bool Foam::primitiveMeshGeometry::checkFaceArea
     {
         if (report)
         {
-            WarningIn
-            (
-                "primitiveMeshGeometry::checkFaceArea"
-                "(const bool, const scalar, const primitiveMesh&"
-                ", const pointField&, const labelList&, labelHashSet*)"
-            )   << nZeroArea  << " faces with area < " << minArea
+            WarningInFunction
+                << nZeroArea  << " faces with area < " << minArea
                 << " found.\n"
                 << endl;
         }
@@ -1300,13 +1253,8 @@ bool Foam::primitiveMeshGeometry::checkCellDeterminant
     {
         if (report)
         {
-            WarningIn
-            (
-                "primitiveMeshGeometry::checkCellDeterminant"
-                "(const bool, const scalar, const primitiveMesh&"
-                ", const pointField&, const labelList&, const labelList&"
-                ", labelHashSet*)"
-            )   << nWarnDet << " cells with determinant < " << warnDet
+            WarningInFunction
+                << nWarnDet << " cells with determinant < " << warnDet
                 << " found.\n"
                 << endl;
         }

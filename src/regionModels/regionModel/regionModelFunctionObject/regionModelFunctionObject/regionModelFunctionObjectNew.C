@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,15 +44,8 @@ Foam::regionModels::regionModelFunctionObject::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "regionModelFunctionObject::New"
-            "("
-                "const dictionary&, "
-                "regionModel&, "
-                "const word&"
-            ")"
-        )   << "Unknown region model function type "
+        FatalErrorInFunction
+            << "Unknown region model function type "
             << modelType << nl << nl
             << "Valid region model function types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

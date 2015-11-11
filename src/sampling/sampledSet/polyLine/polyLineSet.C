@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,7 +137,7 @@ void Foam::polyLineSet::calcSamples
     // Check sampling points
     if (sampleCoords_.size() < 2)
     {
-        FatalErrorIn("polyLineSet::calcSamples()")
+        FatalErrorInFunction
             << "Incorrect sample specification. Too few points:"
             << sampleCoords_ << exit(FatalError);
     }
@@ -146,7 +146,7 @@ void Foam::polyLineSet::calcSamples
     {
         if (mag(sampleCoords_[sampleI] - oldPoint) < SMALL)
         {
-            FatalErrorIn("polyLineSet::calcSamples()")
+            FatalErrorInFunction
                 << "Incorrect sample specification."
                 << " Point " << sampleCoords_[sampleI-1]
                 << " at position " << sampleI-1

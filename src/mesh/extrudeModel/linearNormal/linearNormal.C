@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ linearNormal::linearNormal(const dictionary& dict)
 {
     if (thickness_ <= 0)
     {
-        FatalErrorIn("linearNormal(const dictionary&)")
+        FatalErrorInFunction
             << "thickness should be positive : " << thickness_
             << exit(FatalError);
     }
@@ -60,7 +60,7 @@ linearNormal::linearNormal(const dictionary& dict)
 
     if (firstCellThickness_ >= thickness_)
     {
-        FatalErrorIn("linearNormal(const dictionary&)")
+        FatalErrorInFunction
             << "firstCellThickness is larger than thickness"
             << exit(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -329,7 +329,7 @@ void Foam::basicThermo::validate
 {
     if (!(he().name() == phasePropertyName(a)))
     {
-        FatalErrorIn(app)
+        FatalErrorInFunction
             << "Supported energy type is " << phasePropertyName(a)
             << ", thermodynamics package provides " << he().name()
             << exit(FatalError);
@@ -351,7 +351,7 @@ void Foam::basicThermo::validate
         )
     )
     {
-        FatalErrorIn(app)
+        FatalErrorInFunction
             << "Supported energy types are " << phasePropertyName(a)
             << " and " << phasePropertyName(b)
             << ", thermodynamics package provides " << he().name()
@@ -376,7 +376,7 @@ void Foam::basicThermo::validate
         )
     )
     {
-        FatalErrorIn(app)
+        FatalErrorInFunction
             << "Supported energy types are " << phasePropertyName(a)
             << ", " << phasePropertyName(b)
             << " and " << phasePropertyName(c)
@@ -404,7 +404,7 @@ void Foam::basicThermo::validate
         )
     )
     {
-        FatalErrorIn(app)
+        FatalErrorInFunction
             << "Supported energy types are " << phasePropertyName(a)
             << ", " << phasePropertyName(b)
             << ", " << phasePropertyName(c)

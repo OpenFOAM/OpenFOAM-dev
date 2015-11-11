@@ -208,11 +208,8 @@ void Foam::mappedPatchBase::findSamples
         {
             if (samplePatch_.size() && samplePatch_ != "none")
             {
-                FatalErrorIn
-                (
-                    "mappedPatchBase::findSamples(const pointField&,"
-                    " labelList&, labelList&, pointField&) const"
-                )   << "No need to supply a patch name when in "
+                FatalErrorInFunction
+                    << "No need to supply a patch name when in "
                     << sampleModeNames_[mode] << " mode." << exit(FatalError);
             }
 
@@ -251,11 +248,8 @@ void Foam::mappedPatchBase::findSamples
         {
             if (samplePatch_.size() && samplePatch_ != "none")
             {
-                FatalErrorIn
-                (
-                    "mappedPatchBase::findSamples(const pointField&,"
-                    " labelList&, labelList&, pointField&) const"
-                )   << "No need to supply a patch name when in "
+                FatalErrorInFunction
+                    << "No need to supply a patch name when in "
                     << sampleModeNames_[mode] << " mode." << exit(FatalError);
             }
 
@@ -426,11 +420,8 @@ void Foam::mappedPatchBase::findSamples
         {
             if (samplePatch().size() && samplePatch() != "none")
             {
-                FatalErrorIn
-                (
-                    "mappedPatchBase::findSamples(const pointField&,"
-                    " labelList&, labelList&, pointField&) const"
-                )   << "No need to supply a patch name when in "
+                FatalErrorInFunction
+                    << "No need to supply a patch name when in "
                     << sampleModeNames_[mode] << " mode." << exit(FatalError);
             }
 
@@ -474,7 +465,7 @@ void Foam::mappedPatchBase::findSamples
 
         default:
         {
-            FatalErrorIn("mappedPatchBase::findSamples(..)")
+            FatalErrorInFunction
                 << "problem." << abort(FatalError);
         }
     }
@@ -530,7 +521,7 @@ void Foam::mappedPatchBase::calcMapping() const
     static bool hasWarned = false;
     if (mapPtr_.valid())
     {
-        FatalErrorIn("mappedPatchBase::calcMapping() const")
+        FatalErrorInFunction
             << "Mapping already calculated" << exit(FatalError);
     }
 
@@ -556,17 +547,8 @@ void Foam::mappedPatchBase::calcMapping() const
 
     if (sampleMyself && coincident)
     {
-        WarningIn
-        (
-            "mappedPatchBase::mappedPatchBase\n"
-            "(\n"
-            "    const polyPatch& pp,\n"
-            "    const word& sampleRegion,\n"
-            "    const sampleMode mode,\n"
-            "    const word& samplePatch,\n"
-            "    const vector& offset\n"
-            ")\n"
-        )   << "Invalid offset " << d << endl
+        WarningInFunction
+            << "Invalid offset " << d << endl
             << "Offset is the vector added to the patch face centres to"
             << " find the patch face supplying the data." << endl
             << "Setting it to " << d
@@ -618,17 +600,8 @@ void Foam::mappedPatchBase::calcMapping() const
         {
             if (!hasWarned)
             {
-                WarningIn
-                (
-                    "mappedPatchBase::mappedPatchBase\n"
-                    "(\n"
-                    "    const polyPatch& pp,\n"
-                    "    const word& sampleRegion,\n"
-                    "    const sampleMode mode,\n"
-                    "    const word& samplePatch,\n"
-                    "    const vector& offset\n"
-                    ")\n"
-                )   << "Did not find " << nNotFound
+                WarningInFunction
+                    << "Did not find " << nNotFound
                     << " out of " << sampleProcs.size() << " total samples."
                     << " Sampling these on owner cell centre instead." << endl
                     << "On patch " << patch_.name()
@@ -772,7 +745,7 @@ void Foam::mappedPatchBase::calcMapping() const
                 }
                 else
                 {
-                    FatalErrorIn("mappedPatchBase::calcMapping() const")
+                    FatalErrorInFunction
                         << "On patch " << patch_.name()
                         << " patchface " << faceI
                         << " is assigned to more than once."
@@ -784,7 +757,7 @@ void Foam::mappedPatchBase::calcMapping() const
         {
             if (used[faceI] == 0)
             {
-                FatalErrorIn("mappedPatchBase::calcMapping() const")
+                FatalErrorInFunction
                     << "On patch " << patch_.name()
                     << " patchface " << faceI
                     << " is never assigned to."
@@ -831,7 +804,7 @@ void Foam::mappedPatchBase::calcAMI() const
 {
     if (AMIPtr_.valid())
     {
-        FatalErrorIn("mappedPatchBase::calcAMI() const")
+        FatalErrorInFunction
             << "AMI already calculated" << exit(FatalError);
     }
 
@@ -914,10 +887,8 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::readListOrField
                 is >> static_cast<List<vector>&>(fld);
                 if (fld.size() != size)
                 {
-                    FatalIOErrorIn
+                    FatalIOErrorInFunction
                     (
-                        "mappedPatchBase::readListOrField"
-                        "(const word& keyword, const dictionary&, const label)",
                         dict
                     )   << "size " << fld.size()
                         << " is not equal to the given value of " << size
@@ -926,10 +897,8 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::readListOrField
             }
             else
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "mappedPatchBase::readListOrField"
-                    "(const word& keyword, const dictionary&, const label)",
                     dict
                 )   << "expected keyword 'uniform' or 'nonuniform', found "
                     << firstToken.wordToken()
@@ -940,10 +909,8 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::readListOrField
         {
             if (is.version() == 2.0)
             {
-                IOWarningIn
+                IOWarningInFunction
                 (
-                    "mappedPatchBase::readListOrField"
-                    "(const word& keyword, const dictionary&, const label)",
                     dict
                 )   << "expected keyword 'uniform' or 'nonuniform', "
                        "assuming List format for backwards compatibility."
@@ -1135,13 +1102,8 @@ Foam::mappedPatchBase::mappedPatchBase
     }
     else if (mode_ != NEARESTPATCHFACE && mode_ != NEARESTPATCHFACEAMI)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "mappedPatchBase::mappedPatchBase\n"
-            "(\n"
-            "    const polyPatch&,\n"
-            "    const dictionary&\n"
-            ")\n",
             dict
         )   << "Please supply the offsetMode as one of "
             << NamedEnum<offsetMode, 3>::words()
@@ -1175,14 +1137,8 @@ Foam::mappedPatchBase::mappedPatchBase
 {
     if (mode != NEARESTPATCHFACE && mode != NEARESTPATCHFACEAMI)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "mappedPatchBase::mappedPatchBase\n"
-            "(\n"
-            "    const polyPatch&,\n"
-            "    const sampleMode,\n"
-            "    const dictionary&\n"
-            ")\n",
             dict
         )   << "Construct from sampleMode and dictionary only applicable for "
             << " collocated patches in modes "
@@ -1293,7 +1249,7 @@ const Foam::polyPatch& Foam::mappedPatchBase::samplePolyPatch() const
 
     if (patchI == -1)
     {
-        FatalErrorIn("mappedPatchBase::samplePolyPatch()")
+        FatalErrorInFunction
             << "Cannot find patch " << samplePatch()
             << " in region " << sampleRegion_ << endl
             << "Valid patches are " << nbrMesh.boundaryMesh().names()
@@ -1418,7 +1374,7 @@ Foam::pointIndexHit Foam::mappedPatchBase::facePoint
 
         default:
         {
-            FatalErrorIn("mappedPatchBase::facePoint()")
+            FatalErrorInFunction
                 << "problem" << abort(FatalError);
             return pointIndexHit();
         }

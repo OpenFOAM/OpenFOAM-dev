@@ -67,14 +67,7 @@ Type Foam::fieldValues::fieldValueDelta::applyOperation
         }
         default:
         {
-            FatalErrorIn
-            (
-                "Type Foam::fieldValues::fieldValueDelta::applyOperation"
-                "("
-                    "const Type&, "
-                    "const Type&"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "Unable to process operation "
                 << operationTypeNames_[operation_]
                 << abort(FatalError);

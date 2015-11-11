@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ void Foam::regionModels::regionModel::toPrimary
         }
     }
 
-    FatalErrorIn("const void toPrimary(const label, List<Type>&) const")
+    FatalErrorInFunction
         << "Region patch ID " << regionPatchI << " not found in region mesh"
         << abort(FatalError);
 }
@@ -204,7 +204,7 @@ void Foam::regionModels::regionModel::toRegion
         }
     }
 
-    FatalErrorIn("const void toRegion(const label, List<Type>&) const")
+    FatalErrorInFunction
         << "Region patch ID " << regionPatchI << " not found in region mesh"
         << abort(FatalError);
 }
@@ -232,15 +232,8 @@ void Foam::regionModels::regionModel::toPrimary
         }
     }
 
-    FatalErrorIn
-    (
-        "const void toPrimary"
-        "("
-            "const label, "
-            "List<Type>&, "
-            "const CombineOp&"
-        ") const"
-    )   << "Region patch ID " << regionPatchI << " not found in region mesh"
+    FatalErrorInFunction
+        << "Region patch ID " << regionPatchI << " not found in region mesh"
         << abort(FatalError);
 }
 
@@ -267,10 +260,8 @@ void Foam::regionModels::regionModel::toRegion
         }
     }
 
-    FatalErrorIn
-    (
-        "const void toRegion(const label, List<Type>&, const CombineOp&) const"
-    )   << "Region patch ID " << regionPatchI << " not found in region mesh"
+    FatalErrorInFunction
+        << "Region patch ID " << regionPatchI << " not found in region mesh"
         << abort(FatalError);
 }
 

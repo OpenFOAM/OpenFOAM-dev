@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,14 +51,8 @@ autoPtr<filmRadiationModel> filmRadiationModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "filmRadiationModel::New"
-            "("
-                "surfaceFilmModel&, "
-                "const dictionary&"
-            ")"
-        )   << "Unknown radiationModel type " << modelType << nl << nl
+        FatalErrorInFunction
+            << "Unknown radiationModel type " << modelType << nl << nl
             << "Valid filmRadiationModel types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);

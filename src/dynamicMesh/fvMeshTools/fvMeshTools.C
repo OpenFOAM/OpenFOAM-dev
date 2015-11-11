@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -282,7 +282,7 @@ void Foam::fvMeshTools::trimPatches(fvMesh& mesh, const label nPatches)
 
     if (polyPatches.empty())
     {
-        FatalErrorIn("fvMeshTools::trimPatches(fvMesh&, const label)")
+        FatalErrorInFunction
             << "No patches in mesh"
             << abort(FatalError);
     }
@@ -296,7 +296,7 @@ void Foam::fvMeshTools::trimPatches(fvMesh& mesh, const label nPatches)
 
     if (nFaces)
     {
-        FatalErrorIn("fvMeshTools::trimPatches(fvMesh&, const label)")
+        FatalErrorInFunction
             << "There are still " << nFaces
             << " faces in " << polyPatches.size()-nPatches
             << " patches to be deleted" << abort(FatalError);

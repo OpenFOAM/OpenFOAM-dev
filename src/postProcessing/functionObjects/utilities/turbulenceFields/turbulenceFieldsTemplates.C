@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,14 +46,8 @@ void Foam::turbulenceFields::processField
     }
     else if (obr_.found(scopedName))
     {
-        WarningIn
-        (
-            "void Foam::turbulenceFields::processField"
-            "("
-                "const word&, "
-                "const tmp<GeometricField<Type, fvPatchField, volMesh> >&"
-            ")"
-        )   << "Cannot store turbulence field " << scopedName
+        WarningInFunction
+            << "Cannot store turbulence field " << scopedName
             << " since an object with that name already exists"
             << nl << endl;
     }

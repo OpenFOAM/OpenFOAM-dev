@@ -253,7 +253,7 @@ Foam::fileName Foam::cwd()
     }
     else
     {
-        FatalErrorIn("Foam::cwd()")
+        FatalErrorInFunction
             << "Couldn't get the current working directory"
             << exit(FatalError);
 
@@ -437,7 +437,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
         {
             case EPERM:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "The filesystem containing " << pathName
                     << " does not support the creation of directories."
                     << exit(FatalError);
@@ -453,7 +453,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             case EFAULT:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "" << pathName
                     << " points outside your accessible address space."
                     << exit(FatalError);
@@ -463,7 +463,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             case EACCES:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "The parent directory does not allow write "
                        "permission to the process,"<< nl
                     << "or one of the directories in " << pathName
@@ -475,7 +475,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             case ENAMETOOLONG:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "" << pathName << " is too long."
                     << exit(FatalError);
 
@@ -491,7 +491,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
                 }
                 else
                 {
-                    FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                    FatalErrorInFunction
                         << "Couldn't create directory " << pathName
                         << exit(FatalError);
 
@@ -501,7 +501,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             case ENOTDIR:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "A component used as a directory in " << pathName
                     << " is not, in fact, a directory."
                     << exit(FatalError);
@@ -511,7 +511,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             case ENOMEM:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "Insufficient kernel memory was available to make "
                        "directory " << pathName << '.'
                     << exit(FatalError);
@@ -521,7 +521,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             case EROFS:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "" << pathName
                     << " refers to a file on a read-only filesystem."
                     << exit(FatalError);
@@ -531,7 +531,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             case ELOOP:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "Too many symbolic links were encountered in resolving "
                     << pathName << '.'
                     << exit(FatalError);
@@ -541,7 +541,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             case ENOSPC:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "The device containing " << pathName
                     << " has no room for the new directory or "
                     << "the user's disk quota is exhausted."
@@ -552,7 +552,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 
             default:
             {
-                FatalErrorIn("Foam::mkDir(const fileName&, mode_t)")
+                FatalErrorInFunction
                     << "Couldn't create directory " << pathName
                     << exit(FatalError);
 
@@ -862,7 +862,7 @@ bool Foam::ln(const fileName& src, const fileName& dst)
 
     if (exists(dst))
     {
-        WarningIn("ln(const fileName&, const fileName&)")
+        WarningInFunction
             << "destination " << dst << " already exists. Not linking."
             << endl;
         return false;
@@ -870,7 +870,7 @@ bool Foam::ln(const fileName& src, const fileName& dst)
 
     if (src.isAbsolute() && !exists(src))
     {
-        WarningIn("ln(const fileName&, const fileName&)")
+        WarningInFunction
             << "source " << src << " does not exist." << endl;
         return false;
     }
@@ -881,7 +881,7 @@ bool Foam::ln(const fileName& src, const fileName& dst)
     }
     else
     {
-        WarningIn("ln(const fileName&, const fileName&)")
+        WarningInFunction
             << "symlink from " << src << " to " << dst << " failed." << endl;
         return false;
     }
@@ -987,7 +987,7 @@ bool Foam::rmDir(const fileName& directory)
     // Attempt to open directory and set the structure pointer
     if ((source = ::opendir(directory.c_str())) == NULL)
     {
-        WarningIn("rmDir(const fileName&)")
+        WarningInFunction
             << "cannot open directory " << directory << endl;
 
         return false;
@@ -1007,7 +1007,7 @@ bool Foam::rmDir(const fileName& directory)
                 {
                     if (!rmDir(path))
                     {
-                        WarningIn("rmDir(const fileName&)")
+                        WarningInFunction
                             << "failed to remove directory " << fName
                             << " while removing directory " << directory
                             << endl;
@@ -1021,7 +1021,7 @@ bool Foam::rmDir(const fileName& directory)
                 {
                     if (!rm(path))
                     {
-                        WarningIn("rmDir(const fileName&)")
+                        WarningInFunction
                             << "failed to remove file " << fName
                             << " while removing directory " << directory
                             << endl;
@@ -1037,7 +1037,7 @@ bool Foam::rmDir(const fileName& directory)
 
         if (!rm(directory))
         {
-            WarningIn("rmDir(const fileName&)")
+            WarningInFunction
                 << "failed to remove directory " << directory << endl;
 
             ::closedir(source);
@@ -1062,10 +1062,8 @@ void Foam::fdClose(const int fd)
 {
     if (close(fd) != 0)
     {
-        FatalErrorIn
-        (
-            "fdClose(const int fd)"
-        )   << "close error on " << fd << endl
+        FatalErrorInFunction
+            << "close error on " << fd << endl
             << abort(FatalError);
     }
 }
@@ -1085,10 +1083,8 @@ bool Foam::ping
 
     if ((hostPtr = ::gethostbyname(destName.c_str())) == NULL)
     {
-        FatalErrorIn
-        (
-            "Foam::ping(const string&, ...)"
-        )   << "gethostbyname error " << h_errno << " for host " << destName
+        FatalErrorInFunction
+            << "gethostbyname error " << h_errno << " for host " << destName
             << abort(FatalError);
     }
 
@@ -1099,10 +1095,8 @@ bool Foam::ping
     sockfd = ::socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
     {
-        FatalErrorIn
-        (
-            "Foam::ping(const string&, const label)"
-        )   << "socket error"
+        FatalErrorInFunction
+            << "socket error"
             << abort(FatalError);
     }
 
@@ -1176,7 +1170,7 @@ void* Foam::dlOpen(const fileName& lib, const bool check)
 
     if (!handle && check)
     {
-        WarningIn("dlOpen(const fileName&, const bool)")
+        WarningInFunction
             << "dlopen error : " << ::dlerror()
             << endl;
     }
@@ -1224,7 +1218,7 @@ void* Foam::dlSym(void* handle, const std::string& symbol)
 
     if (error)
     {
-        WarningIn("dlSym(void*, const std::string&)")
+        WarningInFunction
             << "Cannot lookup symbol " << symbol << " : " << error
             << endl;
     }

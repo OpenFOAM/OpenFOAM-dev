@@ -263,11 +263,7 @@ Foam::radiation::radiationModel::absorptionEmission() const
 {
     if (!absorptionEmission_.valid())
     {
-        FatalErrorIn
-        (
-            "const Foam::radiation::absorptionEmissionModel&"
-            "Foam::radiation::radiationModel::absorptionEmission() const"
-        )
+        FatalErrorInFunction
             << "Requested radiation absorptionEmission model, but model is "
             << "not activate" << abort(FatalError);
     }
@@ -281,11 +277,7 @@ Foam::radiation::radiationModel::soot() const
 {
     if (!soot_.valid())
     {
-        FatalErrorIn
-        (
-            "const Foam::radiation::sootModel&"
-            "Foam::radiation::radiationModel::soot() const"
-        )
+        FatalErrorInFunction
             << "Requested radiation sootModel model, but model is "
             << "not activate" << abort(FatalError);
     }

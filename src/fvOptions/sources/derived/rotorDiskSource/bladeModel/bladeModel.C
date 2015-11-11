@@ -125,7 +125,7 @@ Foam::bladeModel::bladeModel(const dictionary& dict)
     }
     else
     {
-        FatalErrorIn("Foam::bladeModel::bladeModel(const dictionary&)")
+        FatalErrorInFunction
             << "No blade data specified" << exit(FatalError);
     }
 }

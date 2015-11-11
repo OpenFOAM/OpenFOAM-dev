@@ -78,10 +78,8 @@ Foam::solidBodyMotionFunctions::tabulated6DoFMotion::transformation() const
 
     if (t < times_[0])
     {
-        FatalErrorIn
-        (
-            "solidBodyMotionFunctions::tabulated6DoFMotion::transformation()"
-        )   << "current time (" << t
+        FatalErrorInFunction
+            << "current time (" << t
             << ") is less than the minimum in the data table ("
             << times_[0] << ')'
             << exit(FatalError);
@@ -89,10 +87,8 @@ Foam::solidBodyMotionFunctions::tabulated6DoFMotion::transformation() const
 
     if (t > times_.last())
     {
-        FatalErrorIn
-        (
-            "solidBodyMotionFunctions::tabulated6DoFMotion::transformation()"
-        )   << "current time (" << t
+        FatalErrorInFunction
+            << "current time (" << t
             << ") is greater than the maximum in the data table ("
             << times_.last() << ')'
             << exit(FatalError);
@@ -156,11 +152,8 @@ bool Foam::solidBodyMotionFunctions::tabulated6DoFMotion::read
         }
         else
         {
-            FatalErrorIn
-            (
-                "solidBodyMotionFunctions::tabulated6DoFMotion::read"
-                "(const dictionary&)"
-            )   << "Cannot open time data file " << timeDataFileName_
+            FatalErrorInFunction
+                << "Cannot open time data file " << timeDataFileName_
                 << exit(FatalError);
         }
     }

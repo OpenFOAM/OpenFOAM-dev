@@ -136,7 +136,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New(Istream& is)
 
         if (cstrIter == ConstructorTablePtr_->end())
         {
-            FatalErrorIn("liquidProperties::New(Istream&)")
+            FatalErrorInFunction
                 << "Unknown liquidProperties type "
                 << liquidPropertiesType << nl << nl
                 << "Valid liquidProperties types are:" << nl
@@ -152,7 +152,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New(Istream& is)
     }
     else
     {
-        FatalErrorIn("liquidProperties::New(Istream&)")
+        FatalErrorInFunction
             << "liquidProperties type " << liquidPropertiesType
             << ", option " << coeffs << " given"
             << ", should be coeffs or defaultCoeffs"
@@ -185,10 +185,8 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 
         if (cstrIter == ConstructorTablePtr_->end())
         {
-            FatalErrorIn
-            (
-                "liquidProperties::New(const dictionary&)"
-            )   << "Unknown liquidProperties type "
+            FatalErrorInFunction
+                << "Unknown liquidProperties type "
                 << liquidPropertiesTypeName << nl << nl
                 << "Valid liquidProperties types are:" << nl
                 << ConstructorTablePtr_->sortedToc()
@@ -204,10 +202,8 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorIn
-            (
-                "liquidProperties::New(const dictionary&)"
-            )   << "Unknown liquidProperties type "
+            FatalErrorInFunction
+                << "Unknown liquidProperties type "
                 << liquidPropertiesTypeName << nl << nl
                 << "Valid liquidProperties types are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc()
@@ -326,10 +322,8 @@ Foam::scalar Foam::liquidProperties::pvInvert(scalar p) const
     {
         if (debug)
         {
-            WarningIn
-            (
-                "Foam::scalar Foam::liquidProperties::pvInvert(scalar) const"
-            )   << "Pressure below triple point pressure: "
+            WarningInFunction
+                << "Pressure below triple point pressure: "
                 << "p = " << p << " < Pt = " << Pt_ <<  nl << endl;
         }
         return -1;

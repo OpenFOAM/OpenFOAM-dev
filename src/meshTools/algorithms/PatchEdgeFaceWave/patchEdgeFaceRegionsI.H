@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ inline bool Foam::patchEdgeFaceRegions::updateEdge
 
     if (!faceInfo.valid(td))
     {
-        FatalErrorIn("patchEdgeFaceRegions::updateEdge(..)")
+        FatalErrorInFunction
             << "problem." << abort(FatalError);
     }
 
@@ -157,7 +157,7 @@ inline bool Foam::patchEdgeFaceRegions::updateEdge
 
     if (!edgeInfo.valid(td))
     {
-        FatalErrorIn("patchEdgeFaceRegions::updateEdge(..)")
+        FatalErrorInFunction
             << "problem." << abort(FatalError);
     }
 
@@ -217,7 +217,7 @@ inline bool Foam::patchEdgeFaceRegions::updateFace
 
     if (!edgeInfo.valid(td))
     {
-        FatalErrorIn("patchEdgeFaceRegions::updateFace(..)")
+        FatalErrorInFunction
             << "problem." << abort(FatalError);
     }
 

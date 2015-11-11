@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,16 +96,8 @@ uniformInterpolatedDisplacementPointPatchVectorField
 
     if (timeNames_.size() < 1)
     {
-        FatalErrorIn
-        (
-            "uniformInterpolatedDisplacementPointPatchVectorField::\n"
-            "uniformInterpolatedDisplacementPointPatchVectorField\n"
-            "(\n"
-            "    const pointPatch&,\n"
-            "    const DimensionedField<vector, pointMesh>&,\n"
-            "    const dictionary&\n"
-            ")\n"
-        )   << "Did not find any times with " << fieldName_
+        FatalErrorInFunction
+            << "Did not find any times with " << fieldName_
             << exit(FatalError);
     }
 

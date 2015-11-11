@@ -153,7 +153,7 @@ void Foam::meshToMesh0::calcAddressing()
 
             if (fromPatch.empty())
             {
-                WarningIn("meshToMesh0::calcAddressing()")
+                WarningInFunction
                     << "Source patch " << fromPatch.name()
                     << " has no faces. Not performing mapping for it."
                     << endl;

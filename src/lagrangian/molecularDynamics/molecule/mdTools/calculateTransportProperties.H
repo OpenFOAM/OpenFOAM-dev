@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ if (writeVacf)
 
     if (!vacf.writeAveraged(vacfFile))
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing to "
             << vacfFile.name()
             << abort(FatalError);
@@ -45,7 +45,7 @@ if (writePacf)
 
     if (!pacf.writeAveraged(pacfFile))
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing to "
             << pacfFile.name()
             << abort(FatalError);
@@ -65,7 +65,7 @@ if (writeHFacf)
 
     if (!hfacf.writeAveraged(hfacfFile))
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing to "
             << hfacfFile.name()
             << abort(FatalError);

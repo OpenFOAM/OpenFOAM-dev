@@ -102,13 +102,7 @@ bool Foam::sixDoFRigidBodyMotionConstraints::axis::read
     }
     else
     {
-        FatalErrorIn
-        (
-            "Foam::sixDoFRigidBodyMotionConstraints::axis::read"
-            "("
-                "const dictionary& sDoFRBMCDict"
-            ")"
-        )
+        FatalErrorInFunction
             << "axis has zero length"
             << abort(FatalError);
     }

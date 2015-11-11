@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -257,7 +257,7 @@ void Foam::removeFaces::mergeFaces
     if (fp.edgeLoops().size() != 1)
     {
         writeOBJ(fp, mesh_.time().path()/"facesToBeMerged.obj");
-        FatalErrorIn("removeFaces::mergeFaces")
+        FatalErrorInFunction
             << "Cannot merge faces " << faceLabels
             << " into single face since outside vertices " << fp.edgeLoops()
             << " do not form single loop but form " << fp.edgeLoops().size()
@@ -311,7 +311,7 @@ void Foam::removeFaces::mergeFaces
     if (masterIndex == -1)
     {
         writeOBJ(fp, mesh_.time().path()/"facesToBeMerged.obj");
-        FatalErrorIn("removeFaces::mergeFaces")
+        FatalErrorInFunction
             << "Problem" << abort(FatalError);
     }
 
@@ -602,11 +602,8 @@ Foam::label Foam::removeFaces::compatibleRemoves
 
         if (!mesh_.isInternalFace(faceI))
         {
-            FatalErrorIn
-            (
-                "removeFaces::compatibleRemoves(const labelList&"
-                ", labelList&, labelList&, labelList&)"
-            )   << "Not internal face:" << faceI << abort(FatalError);
+            FatalErrorInFunction
+                << "Not internal face:" << faceI << abort(FatalError);
         }
 
 
@@ -706,11 +703,8 @@ Foam::label Foam::removeFaces::compatibleRemoves
 
                 if (cellI < regionMaster[r])
                 {
-                    FatalErrorIn
-                    (
-                        "removeFaces::compatibleRemoves(const labelList&"
-                        ", labelList&, labelList&, labelList&)"
-                    )   << "Not lowest numbered : cell:" << cellI
+                    FatalErrorInFunction
+                        << "Not lowest numbered : cell:" << cellI
                         << " region:" << r
                         << " regionmaster:" << regionMaster[r]
                         << abort(FatalError);
@@ -722,11 +716,8 @@ Foam::label Foam::removeFaces::compatibleRemoves
         {
             if (nCells[region] == 1)
             {
-                FatalErrorIn
-                (
-                    "removeFaces::compatibleRemoves(const labelList&"
-                    ", labelList&, labelList&, labelList&)"
-                )   << "Region " << region
+                FatalErrorInFunction
+                    << "Region " << region
                     << " has only " << nCells[region] << " cells in it"
                     << abort(FatalError);
             }
@@ -792,11 +783,8 @@ void Foam::removeFaces::setRefinement
 
         if (!mesh_.isInternalFace(faceI))
         {
-            FatalErrorIn
-            (
-                "removeFaces::setRefinement(const labelList&"
-                ", const labelList&, const labelList&, polyTopoChange&)"
-            )   << "Face to remove is not internal face:" << faceI
+            FatalErrorInFunction
+                << "Face to remove is not internal face:" << faceI
                 << abort(FatalError);
         }
 
@@ -878,7 +866,7 @@ void Foam::removeFaces::setRefinement
                 {
                     const edge& e = mesh_.edges()[edgeI];
 
-                    FatalErrorIn("removeFaces::setRefinement")
+                    FatalErrorInFunction
                         << "Problem : edge has too few face neighbours:"
                         << eFaces << endl
                         << "edge:" << edgeI
@@ -959,7 +947,7 @@ void Foam::removeFaces::setRefinement
                     if (patch0 != patch1)
                     {
                         // Different patches. Do not merge edge.
-                        WarningIn("removeFaces::setRefinement")
+                        WarningInFunction
                             << "not merging faces " << f0 << " and "
                             << f1 << " across patch boundary edge " << edgeI
                             << endl;
@@ -982,7 +970,7 @@ void Foam::removeFaces::setRefinement
                             < minCos_
                         )
                         {
-                            WarningIn("removeFaces::setRefinement")
+                            WarningInFunction
                                 << "not merging faces " << f0 << " and "
                                 << f1 << " across edge " << edgeI
                                 << endl;
@@ -998,7 +986,7 @@ void Foam::removeFaces::setRefinement
                     const edge& e = mesh_.edges()[edgeI];
 
                     // Only found one boundary face. Problem.
-                    FatalErrorIn("removeFaces::setRefinement")
+                    FatalErrorInFunction
                         << "Problem : edge would have one boundary face"
                         << " and one internal face using it." << endl
                         << "Your remove pattern is probably incorrect." << endl
@@ -1023,7 +1011,7 @@ void Foam::removeFaces::setRefinement
             {
                 const edge& e = mesh_.edges()[edgeI];
 
-                FatalErrorIn("removeFaces::setRefinement")
+                FatalErrorInFunction
                     << "Problem : edge would get 1 face using it only"
                     << " edge:" << edgeI
                     << " nFaces:" << nFacesPerEdge[edgeI]
@@ -1163,7 +1151,7 @@ void Foam::removeFaces::setRefinement
 
             if (nRegion < 1)
             {
-                FatalErrorIn("setRefinement") << "Problem" << abort(FatalError);
+                FatalErrorInFunction << "Problem" << abort(FatalError);
             }
             else if (nRegion == 1)
             {
@@ -1206,7 +1194,7 @@ void Foam::removeFaces::setRefinement
             {
                 if (nbrRegion != myRegion)
                 {
-                    FatalErrorIn("removeFaces::setRefinement")
+                    FatalErrorInFunction
                         << "Inconsistent face region across coupled patches."
                         << endl
                         << "This side has for faceI:" << faceI
@@ -1227,7 +1215,7 @@ void Foam::removeFaces::setRefinement
                 // Second visit of this region.
                 if (toNbrRegion[myRegion] != nbrRegion)
                 {
-                    FatalErrorIn("removeFaces::setRefinement")
+                    FatalErrorInFunction
                         << "Inconsistent face region across coupled patches."
                         << endl
                         << "This side has for faceI:" << faceI
@@ -1288,7 +1276,7 @@ void Foam::removeFaces::setRefinement
         {
             if (nEdgesPerPoint[pointI] == 1)
             {
-                FatalErrorIn("removeFaces::setRefinement")
+                FatalErrorInFunction
                     << "Problem : point would get 1 edge using it only."
                     << " pointI:" << pointI
                     << " coord:" << mesh_.points()[pointI]
@@ -1420,7 +1408,7 @@ void Foam::removeFaces::setRefinement
 
             if (rFaces.size() <= 1)
             {
-                FatalErrorIn("setRefinement")
+                FatalErrorInFunction
                     << "Region:" << regionI
                     << " contains only faces " << rFaces
                     << abort(FatalError);

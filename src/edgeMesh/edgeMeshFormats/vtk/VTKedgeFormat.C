@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,10 +94,8 @@ bool Foam::fileFormats::VTKedgeFormat::read
     IFstream is(filename);
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::VTKedgeFormat::read(const fileName&)"
-        )   << "Cannot read file " << filename
+        FatalErrorInFunction
+            << "Cannot read file " << filename
             << exit(FatalError);
     }
 
@@ -162,11 +160,8 @@ void Foam::fileFormats::VTKedgeFormat::write
     OFstream os(filename);
     if (!os.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::VTKedgeFormat::write"
-            "(const fileName&, const edgeMesh&)"
-        )   << "Cannot open file for writing " << filename
+        FatalErrorInFunction
+            << "Cannot open file for writing " << filename
             << exit(FatalError);
     }
 

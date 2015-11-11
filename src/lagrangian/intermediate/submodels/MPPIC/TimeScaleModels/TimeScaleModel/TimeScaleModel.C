@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,13 +74,8 @@ Foam::autoPtr<Foam::TimeScaleModel> Foam::TimeScaleModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "TimeScaleModel::New"
-            "("
-                "const dictionary&"
-            ")"
-        )   << "Unknown time scale model type " << modelType
+        FatalErrorInFunction
+            << "Unknown time scale model type " << modelType
             << ", constructor not in hash table" << nl << nl
             << "    Valid time scale model types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

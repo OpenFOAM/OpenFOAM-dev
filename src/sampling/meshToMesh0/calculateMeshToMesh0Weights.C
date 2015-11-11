@@ -38,7 +38,7 @@ void Foam::meshToMesh0::calculateInverseDistanceWeights() const
 
     if (inverseDistanceWeightsPtr_)
     {
-        FatalErrorIn("meshToMesh0::calculateInverseDistanceWeights()")
+        FatalErrorInFunction
             << "weighting factors already calculated"
             << exit(FatalError);
     }
@@ -140,7 +140,7 @@ void Foam::meshToMesh0::calculateInverseVolumeWeights() const
 
     if (inverseVolumeWeightsPtr_)
     {
-        FatalErrorIn("meshToMesh0::calculateInverseVolumeWeights()")
+        FatalErrorInFunction
             << "weighting factors already calculated"
             << exit(FatalError);
     }
@@ -203,7 +203,7 @@ void Foam::meshToMesh0::calculateCellToCellAddressing() const
 
     if (cellToCellAddressingPtr_)
     {
-        FatalErrorIn("meshToMesh0::calculateCellToCellAddressing()")
+        FatalErrorInFunction
             << "addressing already calculated"
             << exit(FatalError);
     }

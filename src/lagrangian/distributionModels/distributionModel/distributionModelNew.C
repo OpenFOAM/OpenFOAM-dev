@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,14 +43,7 @@ Foam::distributionModels::distributionModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "distributionModels::distributionModel::New"
-            "("
-                "const dictionary&, "
-                "cachedRandom&"
-            ")"
-        )
+        FatalErrorInFunction
             << "Unknown distribution model type " << modelType << nl << nl
             << "Valid distribution model types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

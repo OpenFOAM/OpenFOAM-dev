@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -743,7 +743,7 @@ void Foam::autoLayerDriver::setNumLayers
     {
         if (maxLayers[i] == labelMin || minLayers[i] == labelMax)
         {
-            FatalErrorIn("setNumLayers(..)")
+            FatalErrorInFunction
                 << "Patchpoint:" << i << " coord:" << pp.localPoints()[i]
                 << " maxLayers:" << maxLayers
                 << " minLayers:" << minLayers
@@ -1189,7 +1189,7 @@ void Foam::autoLayerDriver::calculateLayerThickness
          || max(layerParams.minThickness()) > 2
         )
         {
-            FatalErrorIn("calculateLayerThickness(..)")
+            FatalErrorInFunction
                 << "Thickness should be factor of local undistorted cell size."
                 << " Valid values are [0..2]." << nl
                 << " minThickness:" << layerParams.minThickness()
@@ -1654,7 +1654,7 @@ void Foam::autoLayerDriver::getVertexString
 
     if (fp == -1)
     {
-        FatalErrorIn("autoLayerDriver::getVertexString(..)")
+        FatalErrorInFunction
             << "problem." << abort(FatalError);
     }
 
@@ -1741,7 +1741,7 @@ Foam::label Foam::autoLayerDriver::truncateDisplacement
 
         if (mesh.isInternalFace(faceI))
         {
-            FatalErrorIn("truncateDisplacement(..)")
+            FatalErrorInFunction
                 << "Faceset " << illegalPatchFaces.name()
                 << " contains internal face " << faceI << nl
                 << "It should only contain patch faces" << abort(FatalError);
@@ -3630,7 +3630,7 @@ void Foam::autoLayerDriver::doLayers
             }
             else
             {
-                WarningIn("autoLayerDriver::doLayers(..)")
+                WarningInFunction
                     << "Ignoring layers on coupled patch " << pp.name()
                     << endl;
             }

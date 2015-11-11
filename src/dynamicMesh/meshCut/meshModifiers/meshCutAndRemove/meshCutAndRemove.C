@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,10 +137,7 @@ Foam::label Foam::meshCutAndRemove::findInternalFacePoint
 
     if (pointLabels.empty())
     {
-        FatalErrorIn
-        (
-            "meshCutAndRemove::findInternalFacePoint(const labelList&)"
-        )
+        FatalErrorInFunction
             << "Empty pointLabels" << abort(FatalError);
     }
 
@@ -452,11 +449,8 @@ void Foam::meshCutAndRemove::splitFace
 
     if (startFp == -1)
     {
-        FatalErrorIn
-        (
-            "meshCutAndRemove::splitFace"
-            ", const face&, const label, const label, face&, face&)"
-        )   << "Cannot find vertex (new numbering) " << v0
+        FatalErrorInFunction
+            << "Cannot find vertex (new numbering) " << v0
             << " on face " << f
             << abort(FatalError);
     }
@@ -465,11 +459,8 @@ void Foam::meshCutAndRemove::splitFace
 
     if (endFp == -1)
     {
-        FatalErrorIn
-        (
-            "meshCutAndRemove::splitFace("
-            ", const face&, const label, const label, face&, face&)"
-        )   << "Cannot find vertex (new numbering) " << v1
+        FatalErrorInFunction
+            << "Cannot find vertex (new numbering) " << v1
             << " on face " << f
             << abort(FatalError);
     }
@@ -619,12 +610,8 @@ void Foam::meshCutAndRemove::setRefinement
 
     if (exposedPatchI < 0 || exposedPatchI >= patches.size())
     {
-        FatalErrorIn
-        (
-            "meshCutAndRemove::setRefinement("
-            ", const label, const cellCuts&, const labelList&"
-            ", polyTopoChange&)"
-        )   << "Illegal exposed patch " << exposedPatchI
+        FatalErrorInFunction
+            << "Illegal exposed patch " << exposedPatchI
             << abort(FatalError);
     }
 
@@ -642,12 +629,8 @@ void Foam::meshCutAndRemove::setRefinement
             // Check if there is any cell using this edge.
             if (debug && findCutCell(cuts, mesh().edgeCells()[edgeI]) == -1)
             {
-                FatalErrorIn
-                (
-                    "meshCutAndRemove::setRefinement("
-                    ", const label, const cellCuts&, const labelList&"
-                    ", polyTopoChange&)"
-                )   << "Problem: cut edge but none of the cells using it is\n"
+                FatalErrorInFunction
+                    << "Problem: cut edge but none of the cells using it is\n"
                     << "edge:" << edgeI << " verts:" << e
                     << abort(FatalError);
             }
@@ -748,12 +731,8 @@ void Foam::meshCutAndRemove::setRefinement
 
                     if (!usedPoint[pointI])
                     {
-                        FatalErrorIn
-                        (
-                            "meshCutAndRemove::setRefinement("
-                            ", const label, const cellCuts&, const labelList&"
-                            ", polyTopoChange&)"
-                        )   << "Problem: faceSplitCut not used by any loop"
+                        FatalErrorInFunction
+                            << "Problem: faceSplitCut not used by any loop"
                             << " or cell anchor point"
                             << "face:" << iter.key() << " point:" << pointI
                             << " coord:" << mesh().points()[pointI]
@@ -769,12 +748,8 @@ void Foam::meshCutAndRemove::setRefinement
             {
                 if (!usedPoint[pointI])
                 {
-                    FatalErrorIn
-                    (
-                        "meshCutAndRemove::setRefinement("
-                        ", const label, const cellCuts&, const labelList&"
-                        ", polyTopoChange&)"
-                    )   << "Problem: point is marked as cut but"
+                    FatalErrorInFunction
+                        << "Problem: point is marked as cut but"
                         << " not used by any loop"
                         << " or cell anchor point"
                         << "point:" << pointI
@@ -813,12 +788,8 @@ void Foam::meshCutAndRemove::setRefinement
         {
             if (cutPatch[cellI] < 0 || cutPatch[cellI] >= patches.size())
             {
-                FatalErrorIn
-                (
-                    "meshCutAndRemove::setRefinement("
-                    ", const label, const cellCuts&, const labelList&"
-                    ", polyTopoChange&)"
-                )   << "Illegal patch " << cutPatch[cellI]
+                FatalErrorInFunction
+                    << "Illegal patch " << cutPatch[cellI]
                     << " provided for cut cell " << cellI
                     << abort(FatalError);
             }

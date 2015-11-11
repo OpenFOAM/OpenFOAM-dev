@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,12 +55,8 @@ Foam::direction Foam::componentDisplacementMotionSolver::cmpt
     }
     else
     {
-        FatalErrorIn
-        (
-            "componentDisplacementMotionSolver::"
-            "componentDisplacementMotionSolver"
-            "(const polyMesh& mesh, const IOdictionary&)"
-        )   << "Given component name " << cmptName << " should be x, y or z"
+        FatalErrorInFunction
+            << "Given component name " << cmptName << " should be x, y or z"
             << exit(FatalError);
 
         return 0;
@@ -111,15 +107,8 @@ Foam::componentDisplacementMotionSolver::componentDisplacementMotionSolver
 {
     if (points0_.size() != mesh.nPoints())
     {
-        FatalErrorIn
-        (
-            "componentDisplacementMotionSolver::"
-            "componentDisplacementMotionSolver\n"
-            "(\n"
-            "    const polyMesh&,\n"
-            "    const IOdictionary&\n"
-            ")"
-        )   << "Number of points in mesh " << mesh.nPoints()
+        FatalErrorInFunction
+            << "Number of points in mesh " << mesh.nPoints()
             << " differs from number of points " << points0_.size()
             << " read from file "
             <<
@@ -199,11 +188,8 @@ void Foam::componentDisplacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
         }
         else
         {
-            FatalErrorIn
-            (
-                "displacementLaplacianFvMotionSolver::updateMesh"
-                "(const mapPolyMesh& mpm)"
-            )   << "Cannot work out coordinates of introduced vertices."
+            FatalErrorInFunction
+                << "Cannot work out coordinates of introduced vertices."
                 << " New vertex " << pointI << " at coordinate "
                 << points[pointI] << exit(FatalError);
         }

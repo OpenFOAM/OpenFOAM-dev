@@ -107,7 +107,7 @@ Foam::DSMCCloud<ParcelType>::constProps
 {
     if (typeId < 0 || typeId >= constProps_.size())
     {
-        FatalErrorIn("Foam::DSMCCloud<ParcelType>::constProps(label typeId)")
+        FatalErrorInFunction
             << "constantProperties for requested typeId index "
             << typeId << " do not exist" << nl
             << abort(FatalError);

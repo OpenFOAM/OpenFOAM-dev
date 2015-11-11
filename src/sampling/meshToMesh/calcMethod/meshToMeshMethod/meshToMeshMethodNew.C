@@ -44,15 +44,8 @@ Foam::autoPtr<Foam::meshToMeshMethod> Foam::meshToMeshMethod::New
 
     if (cstrIter == componentsConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "Foam::autoPtr<Foam::meshToMeshMethod> Foam::meshToMeshMethod::New"
-            "("
-                "const word&, "
-                "const polyMesh&, "
-                "const polyMesh&"
-            ")"
-        )   << "Unknown meshToMesh type "
+        FatalErrorInFunction
+            << "Unknown meshToMesh type "
             << methodName << nl << nl
             << "Valid meshToMesh types are:" << nl
             << componentsConstructorTablePtr_->sortedToc() << exit(FatalError);

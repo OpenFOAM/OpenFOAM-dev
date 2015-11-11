@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,8 @@ void Foam::sigStopAtWriteNow::sigHandler(int)
     // Reset old handling
     if (sigaction(signal_, &oldAction_, NULL) < 0)
     {
-        FatalErrorIn
-        (
-            "Foam::sigStopAtWriteNow::sigHandler(int)"
-        )   << "Cannot reset " << signal_ << " trapping"
+        FatalErrorInFunction
+            << "Cannot reset " << signal_ << " trapping"
             << abort(FatalError);
     }
 
@@ -127,10 +125,8 @@ Foam::sigStopAtWriteNow::~sigStopAtWriteNow()
     {
         if (sigaction(signal_, &oldAction_, NULL) < 0)
         {
-            FatalErrorIn
-            (
-                "Foam::sigStopAtWriteNow::~sigStopAtWriteNow()"
-            )   << "Cannot reset " << signal_ << " trapping"
+            FatalErrorInFunction
+                << "Cannot reset " << signal_ << " trapping"
                 << abort(FatalError);
         }
     }
@@ -146,11 +142,8 @@ void Foam::sigStopAtWriteNow::set(const bool verbose)
         // Check that the signal is different from the writeNowSignal
         if (sigWriteNow::signal_ == signal_)
         {
-            FatalErrorIn
-            (
-                "Foam::sigStopAtWriteNow::sigStopAtWriteNow"
-                "(const bool, const Time&)"
-            )   << "stopAtWriteNowSignal : " << signal_
+            FatalErrorInFunction
+                << "stopAtWriteNowSignal : " << signal_
                 << " cannot be the same as the writeNowSignal."
                 << " Please change this in the controlDict ("
                 << findEtcFile("controlDict", false) << ")."
@@ -164,11 +157,8 @@ void Foam::sigStopAtWriteNow::set(const bool verbose)
         sigemptyset(&newAction.sa_mask);
         if (sigaction(signal_, &newAction, &oldAction_) < 0)
         {
-            FatalErrorIn
-            (
-                "Foam::sigStopAtWriteNow::sigStopAtWriteNow"
-                "(const bool, const Time&)"
-            )   << "Cannot set " << signal_ << " trapping"
+            FatalErrorInFunction
+                << "Cannot set " << signal_ << " trapping"
                 << abort(FatalError);
         }
 

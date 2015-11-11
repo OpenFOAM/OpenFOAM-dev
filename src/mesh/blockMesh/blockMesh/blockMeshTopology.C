@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,10 +99,8 @@ bool Foam::blockMesh::readPatches
         {
             if (patchNames[nPatches] == patchNames[i])
             {
-                FatalErrorIn
-                (
-                    "blockMesh::createTopology(IOdictionary&)"
-                )   << "Duplicate patch " << patchNames[nPatches]
+                FatalErrorInFunction
+                    << "Duplicate patch " << patchNames[nPatches]
                     << " at line " << patchStream.lineNumber()
                     << ". Exiting !" << nl
                     << exit(FatalError);
@@ -126,7 +124,7 @@ bool Foam::blockMesh::readPatches
             word halfA = patchNames[nPatches-1] + "_half0";
             word halfB = patchNames[nPatches-1] + "_half1";
 
-            WarningIn("blockMesh::createTopology(IOdictionary&)")
+            WarningInFunction
                 << "Old-style cyclic definition."
                 << " Splitting patch "
                 << patchNames[nPatches-1] << " into two halves "
@@ -154,10 +152,8 @@ bool Foam::blockMesh::readPatches
             // Split faces
             if ((tmpBlocksPatches[nPatches-1].size() % 2) != 0)
             {
-                FatalErrorIn
-                (
-                    "blockMesh::createTopology(IOdictionary&)"
-                )   << "Size of cyclic faces is not a multiple of 2 :"
+                FatalErrorInFunction
+                    << "Size of cyclic faces is not a multiple of 2 :"
                     << tmpBlocksPatches[nPatches-1]
                     << exit(FatalError);
             }
@@ -212,7 +208,7 @@ bool Foam::blockMesh::readBoundary
 
         if (!patchInfo.isDict())
         {
-            FatalIOErrorIn("blockMesh::readBoundary(..)", meshDescription)
+            FatalIOErrorInFunction(meshDescription)
                 << "Entry " << patchInfo << " in boundary section is not a"
                 << " valid dictionary." << exit(FatalIOError);
         }
@@ -249,10 +245,8 @@ void Foam::blockMesh::createCellShapes
 
         if (tmpBlockCells[blockI].mag(blockPointField_) < 0.0)
         {
-            WarningIn
-            (
-                "blockMesh::createTopology(IOdictionary&)"
-            )   << "negative volume block : " << blockI
+            WarningInFunction
+                << "negative volume block : " << blockI
                 << ", probably defined inside-out" << endl;
         }
     }
@@ -465,7 +459,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
 
         if (!topologyOK)
         {
-            FatalErrorIn("blockMesh::createTopology(IOdictionary&)")
+            FatalErrorInFunction
                 << "Cannot create mesh due to errors in topology, exiting !"
                 << nl << exit(FatalError);
         }
@@ -510,9 +504,8 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             }
             else if (word(dict.lookup("type")) != patchTypes[patchI])
             {
-                IOWarningIn
+                IOWarningInFunction
                 (
-                    "blockMesh::createTopology(IOdictionary&)",
                     meshDescription
                 )   << "For patch " << patchNames[patchI]
                     << " overriding type '" << patchTypes[patchI]
@@ -565,7 +558,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
 
         if (!topologyOK)
         {
-            FatalErrorIn("blockMesh::createTopology(IOdictionary&)")
+            FatalErrorInFunction
                 << "Cannot create mesh due to errors in topology, exiting !"
                 << nl << exit(FatalError);
         }

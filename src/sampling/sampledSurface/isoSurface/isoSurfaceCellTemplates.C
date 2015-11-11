@@ -495,7 +495,7 @@ void Foam::isoSurfaceCell::generateTriPoints
 
     if (countNotFoundTets > 0)
     {
-        WarningIn("Foam::isoSurfaceCell::generateTriPoints")
+        WarningInFunction
             << "Could not find " << countNotFoundTets
             << " tet base points, which may lead to inverted triangles."
             << endl;

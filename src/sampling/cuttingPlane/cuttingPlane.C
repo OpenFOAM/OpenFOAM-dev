@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,7 +203,7 @@ bool Foam::cuttingPlane::walkCell
         if (nextEdgeI == -1)
         {
             // Did not find another cut edge on faceI. Do what?
-            WarningIn("Foam::cuttingPlane::walkCell")
+            WarningInFunction
                 << "Did not find closed walk along surface of cell " << cellI
                 << " starting from edge " << startEdgeI
                 << " in " << nIter << " iterations." << nl
@@ -219,7 +219,7 @@ bool Foam::cuttingPlane::walkCell
 
         if (nIter > 1000)
         {
-            WarningIn("Foam::cuttingPlane::walkCell")
+            WarningInFunction
                 << "Did not find closed walk along surface of cell " << cellI
                 << " starting from edge " << startEdgeI
                 << " in " << nIter << " iterations." << nl
@@ -237,7 +237,7 @@ bool Foam::cuttingPlane::walkCell
     }
     else
     {
-        WarningIn("Foam::cuttingPlane::walkCell")
+        WarningInFunction
             << "Did not find closed walk along surface of cell " << cellI
             << " starting from edge " << startEdgeI << nl
             << "Collected cutPoints so far:" << faceVerts
@@ -287,7 +287,7 @@ void Foam::cuttingPlane::walkCellCuts
         // Check for the unexpected ...
         if (startEdgeI == -1)
         {
-            FatalErrorIn("Foam::cuttingPlane::walkCellCuts(..)")
+            FatalErrorInFunction
                 << "Cannot find cut edge for cut cell " << cellI
                 << abort(FatalError);
         }
@@ -413,7 +413,7 @@ void Foam::cuttingPlane::operator=(const cuttingPlane& rhs)
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn ("Foam::cuttingPlane::operator=(const cuttingPlane&)")
+        FatalErrorInFunction
             << "Attempted assignment to self"
             << abort(FatalError);
     }

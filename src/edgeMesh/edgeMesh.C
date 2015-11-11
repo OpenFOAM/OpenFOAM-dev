@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ void Foam::edgeMesh::calcPointEdges() const
 {
     if (pointEdgesPtr_.valid())
     {
-        FatalErrorIn("edgeMesh::calcPointEdges() const")
+        FatalErrorInFunction
             << "pointEdges already calculated." << abort(FatalError);
     }
 

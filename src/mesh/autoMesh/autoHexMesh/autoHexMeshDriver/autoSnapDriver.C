@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ Foam::pointField Foam::autoSnapDriver::smoothPatchDisplacement
             }
             else
             {
-                FatalErrorIn("autoSnapDriver::smoothPatchDisplacement(..)")
+                FatalErrorInFunction
                     << "Both sides of baffle consisting of faces " << f0
                     << " and " << f1 << " are already slave faces."
                     << abort(FatalError);
@@ -825,11 +825,8 @@ Foam::labelList Foam::autoSnapDriver::getZoneSurfacePoints
 
     if (zoneI == -1)
     {
-        FatalErrorIn
-        (
-            "autoSnapDriver::getZoneSurfacePoints"
-            "(const fvMesh&, const indirectPrimitivePatch&, const word&)"
-        )   << "Cannot find zone " << zoneName
+        FatalErrorInFunction
+            << "Cannot find zone " << zoneName
             << exit(FatalError);
     }
 
@@ -1756,7 +1753,7 @@ Foam::vectorField Foam::autoSnapDriver::calcNearestSurface
         {
             if (snapSurf[pointI] == -1)
             {
-                WarningIn("autoSnapDriver::calcNearestSurface(..)")
+                WarningInFunction
                     << "For point:" << pointI
                     << " coordinate:" << localPoints[pointI]
                     << " did not find any surface within:"
@@ -2013,7 +2010,7 @@ Foam::vectorField Foam::autoSnapDriver::calcNearestSurface
 //    {
 //        if (snapSurf[pointI] == -1)
 //        {
-//            WarningIn("autoSnapDriver::calcNearestLocalSurface(..)")
+//            WarningInFunction
 //                << "For point:" << pointI
 //                << " coordinate:" << localPoints[pointI]
 //                << " did not find any surface within:"
@@ -3135,7 +3132,7 @@ void Foam::autoSnapDriver::doSnap
 
             if (!meshOk)
             {
-                WarningIn("autoSnapDriver::doSnap(..)")
+                WarningInFunction
                     << "Did not succesfully snap mesh."
                     << " Continuing to snap to resolve easy" << nl
                     << "    surfaces but the"

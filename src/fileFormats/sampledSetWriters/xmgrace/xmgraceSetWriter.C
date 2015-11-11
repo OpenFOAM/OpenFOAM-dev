@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ void Foam::xmgraceSetWriter<Type>::write
 {
     if (valueSets.size() != valueSetNames.size())
     {
-        FatalErrorIn("gnuplotSetWriter<Type>::write(..)")
+        FatalErrorInFunction
             << "Number of variables:" << valueSetNames.size() << endl
             << "Number of valueSets:" << valueSets.size()
             << exit(FatalError);

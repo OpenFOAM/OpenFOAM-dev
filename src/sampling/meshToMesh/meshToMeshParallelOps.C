@@ -789,21 +789,7 @@ void Foam::meshToMesh::distributeAndMergeCells
 
                 if (tgtFaceI == -1)
                 {
-                    FatalErrorIn
-                    (
-                        "void Foam::meshToMesh::"
-                        "distributeAndMergeCells"
-                        "("
-                            "const mapDistribute&, "
-                            "const polyMesh&, "
-                            "const globalIndex&, "
-                            "pointField&, "
-                            "faceList&, "
-                            "labelList&, "
-                            "labelList&, "
-                            "labelList&"
-                        ") const"
-                    )
+                    FatalErrorInFunction
                         << "Unvisited " << key
                         << abort(FatalError);
                 }

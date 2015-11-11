@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ void Foam::directions::check2D
     {
         if (mag(correct2DPtr->planeNormal() & vec) > 1e-6)
         {
-            FatalErrorIn("check2D") << "Specified vector " << vec
+            FatalErrorInFunction
                 << "is not normal to plane defined in dynamicMeshDict."
                 << endl
                 << "Either make case 3D or adjust vector."
@@ -161,7 +161,7 @@ Foam::vectorField Foam::directions::propagateDirection
 
             if (!hexMatcher().isA(mesh, cellI))
             {
-                FatalErrorIn("propagateDirection")
+                FatalErrorInFunction
                     << "useHexTopology specified but cell " << cellI
                     << " on face " << patchFaceI << " of patch " << pp.name()
                     << " is not a hex" << exit(FatalError);
@@ -229,7 +229,7 @@ Foam::vectorField Foam::directions::propagateDirection
         if (index == -3)
         {
             // Never visited
-            WarningIn("propagateDirection")
+            WarningInFunction
                 << "Cell " << cellI << " never visited to determine "
                 << "local coordinate system" << endl
                 << "Using direction " << defaultDir << " instead" << endl;
@@ -247,7 +247,7 @@ Foam::vectorField Foam::directions::propagateDirection
         }
         else if (index == -1)
         {
-            FatalErrorIn("propagateDirection")
+            FatalErrorInFunction
                 << "Illegal index " << index << endl
                 << "Value is only allowed on faces" << abort(FatalError);
         }
@@ -353,11 +353,8 @@ Foam::directions::directions
 
         if (patchI == -1)
         {
-            FatalErrorIn
-            (
-                "directions::directions(const polyMesh&, const dictionary&,"
-                "const twoDPointCorrector*)"
-            )   << "Cannot find patch "
+            FatalErrorInFunction
+                << "Cannot find patch "
                 << patchName
                 << exit(FatalError);
         }
@@ -373,11 +370,8 @@ Foam::directions::directions
         {
             tan1 = correct2DPtr->planeNormal() ^ n0;
 
-            WarningIn
-            (
-                "directions::directions(const polyMesh&, const dictionary&,"
-                "const twoDPointCorrector*)"
-            )   << "Discarding user specified tan1 since 2D case." << endl
+            WarningInFunction
+                << "Discarding user specified tan1 since 2D case." << endl
                 << "Recalculated tan1 from face normal and planeNormal as "
                 << tan1 << endl << endl;
         }
@@ -432,11 +426,8 @@ Foam::directions::directions
     }
     else
     {
-        FatalErrorIn
-        (
-            "directions::directions(const polyMesh&, const dictionary&,"
-            "const twoDPointCorrector*)"
-        )   << "Unknown coordinate system "
+        FatalErrorInFunction
+            << "Unknown coordinate system "
             << coordSystem << endl
             << "Known types are global and patchLocal"
             << exit(FatalError);

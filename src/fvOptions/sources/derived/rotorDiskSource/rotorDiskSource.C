@@ -101,7 +101,7 @@ void Foam::fv::rotorDiskSource::checkData()
                 }
                 default:
                 {
-                    FatalErrorIn("void rotorDiskSource::checkData()")
+                    FatalErrorInFunction
                         << "Unknown inlet velocity type" << abort(FatalError);
                 }
             }
@@ -111,7 +111,7 @@ void Foam::fv::rotorDiskSource::checkData()
         }
         default:
         {
-            FatalErrorIn("void rotorDiskSource::checkData()")
+            FatalErrorInFunction
                 << "Source cannot be used with '"
                 << selectionModeTypeNames_[selectionMode()]
                 << "' mode.  Please use one of: " << nl
@@ -374,7 +374,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
         }
         default:
         {
-            FatalErrorIn("rotorDiskSource::createCoordinateSystem()")
+            FatalErrorInFunction
                 << "Unknown geometryMode " << geometryModeTypeNames_[gm]
                 << ". Available geometry modes include "
                 << geometryModeTypeNames_ << exit(FatalError);
@@ -454,12 +454,8 @@ Foam::tmp<Foam::vectorField> Foam::fv::rotorDiskSource::inflowVelocity
         }
         default:
         {
-            FatalErrorIn
-            (
-                "Foam::tmp<Foam::vectorField> "
-                "Foam::fv::rotorDiskSource::inflowVelocity"
-                "(const volVectorField&) const"
-            )   << "Unknown inlet flow specification" << abort(FatalError);
+            FatalErrorInFunction
+                << "Unknown inlet flow specification" << abort(FatalError);
         }
     }
 

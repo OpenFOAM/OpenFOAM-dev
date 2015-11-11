@@ -60,10 +60,8 @@ atmBoundaryLayer::atmBoundaryLayer(const vectorField& p, const dictionary& dict)
 {
     if (mag(flowDir_) < SMALL || mag(zDir_) < SMALL)
     {
-        FatalErrorIn
-        (
-            "atmBoundaryLayer(const dictionary&)"
-        )   << "magnitude of n or z must be greater than zero"
+        FatalErrorInFunction
+            << "magnitude of n or z must be greater than zero"
             << abort(FatalError);
     }
 

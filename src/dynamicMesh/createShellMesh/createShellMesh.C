@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -432,7 +432,7 @@ Foam::createShellMesh::createShellMesh
 {
     if (pointRegions_.size() != patch_.size())
     {
-        FatalErrorIn("createShellMesh::createShellMesh(..)")
+        FatalErrorInFunction
             << "nFaces:" << patch_.size()
             << " pointRegions:" << pointRegions.size()
             << exit(FatalError);
@@ -455,7 +455,7 @@ void Foam::createShellMesh::setRefinement
 {
     if (firstLayerDisp.size() != regionPoints_.size())
     {
-        FatalErrorIn("createShellMesh::setRefinement(..)")
+        FatalErrorInFunction
             << "nRegions:" << regionPoints_.size()
             << " firstLayerDisp:" << firstLayerDisp.size()
             << exit(FatalError);
@@ -467,7 +467,7 @@ void Foam::createShellMesh::setRefinement
      && bottomPatchID.size() != patch_.size()
     )
     {
-        FatalErrorIn("createShellMesh::setRefinement(..)")
+        FatalErrorInFunction
             << "nFaces:" << patch_.size()
             << " topPatchID:" << topPatchID.size()
             << " bottomPatchID:" << bottomPatchID.size()
@@ -476,7 +476,7 @@ void Foam::createShellMesh::setRefinement
 
     if (extrudeEdgePatches.size() != patch_.nEdges())
     {
-        FatalErrorIn("createShellMesh::setRefinement(..)")
+        FatalErrorInFunction
             << "nEdges:" << patch_.nEdges()
             << " extrudeEdgePatches:" << extrudeEdgePatches.size()
             << exit(FatalError);
@@ -672,7 +672,7 @@ void Foam::createShellMesh::setRefinement
             // Internal face
             if (eFaces.size() != 2)
             {
-                FatalErrorIn("createShellMesh::setRefinement(..)")
+                FatalErrorInFunction
                     << "edge:" << edgeI
                     << " not internal but does not have side-patches defined."
                     << exit(FatalError);
@@ -682,7 +682,7 @@ void Foam::createShellMesh::setRefinement
         {
             if (eFaces.size() != ePatches.size())
             {
-                FatalErrorIn("createShellMesh::setRefinement(..)")
+                FatalErrorInFunction
                     << "external/feature edge:" << edgeI
                     << " has " << eFaces.size() << " connected extruded faces "
                     << " but only " << ePatches.size()

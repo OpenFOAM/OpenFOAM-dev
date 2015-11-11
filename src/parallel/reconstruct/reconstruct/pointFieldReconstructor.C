@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,17 +83,8 @@ Foam::pointFieldReconstructor::pointFieldReconstructor
 
                 if (procPatchAddr.size() && min(procPatchAddr) < 0)
                 {
-                    FatalErrorIn
-                    (
-                        "pointFieldReconstructor::pointFieldReconstructor"
-                        "(\n"
-                        "    const pointMesh& mesh,\n"
-                        "    const PtrList<pointMesh>& procMeshes,\n"
-                        "    const PtrList<labelIOList>& pointProcAddressing,\n"
-                        "    const PtrList<labelIOList>& "
-                        "boundaryProcAddressing\n"
-                        ")"
-                    )   << "Incomplete patch point addressing"
+                    FatalErrorInFunction
+                        << "Incomplete patch point addressing"
                         << abort(FatalError);
                 }
             }

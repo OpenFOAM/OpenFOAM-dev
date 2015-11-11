@@ -49,7 +49,7 @@ void Foam::fv::interRegionOption::setMapper()
 
         if (mesh_.name() == nbrMesh.name())
         {
-            FatalErrorIn("interRegionOption::setCellIds()")
+            FatalErrorInFunction
                 << "Inter-region model selected, but local and "
                 << "neighbour regions are the same: " << nl
                 << "    local region: " << mesh_.name() << nl
@@ -75,7 +75,7 @@ void Foam::fv::interRegionOption::setMapper()
         }
         else
         {
-            FatalErrorIn("interRegionOption::setCellSet()")
+            FatalErrorInFunction
                 << "regions " << mesh_.name() << " and "
                 << nbrMesh.name() <<  " do not intersect"
                 << exit(FatalError);

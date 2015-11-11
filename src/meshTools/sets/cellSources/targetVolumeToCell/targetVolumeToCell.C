@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,7 +163,7 @@ void Foam::targetVolumeToCell::combine(topoSet& set, const bool add) const
         // Check that maxPoint indeed selects all cells
         if (maxCells != nTotCells)
         {
-            WarningIn("targetVolumeToCell::combine(topoSet&, const bool) const")
+            WarningInFunction
                 << "Plane " << plane(points[maxPointI], n_)
                 << " selects " << maxCells
                 << " cells instead of all " << nTotCells
@@ -241,7 +241,7 @@ void Foam::targetVolumeToCell::combine(topoSet& set, const bool add) const
         }
         else
         {
-            WarningIn("targetVolumeToCell::combine(topoSet&, const bool) const")
+            WarningInFunction
                 << "Did not converge onto plane. " << nl
                 << "high plane:"
                 << plane(high*n_, n_)

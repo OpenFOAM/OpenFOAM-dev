@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ void Foam::pairPotentialList::readPairPotentialDict
                 }
                 else
                 {
-                    FatalErrorIn("pairPotentialList::buildPotentials") << nl
+                    FatalErrorInFunction
                         << "Pair pairPotential specification subDict "
                         << idA << "-" << idB << " not found"
                         << nl << abort(FatalError);
@@ -78,7 +78,7 @@ void Foam::pairPotentialList::readPairPotentialDict
 
                 else
                 {
-                    FatalErrorIn("pairPotentialList::buildPotentials") << nl
+                    FatalErrorInFunction
                         << "Pair pairPotential specification subDict "
                         << idA << "-" << idB << " or "
                         << idB << "-" << idA << " not found"
@@ -91,7 +91,7 @@ void Foam::pairPotentialList::readPairPotentialDict
                  && pairPotentialDict.found(idB+"-"+idA)
                 )
                 {
-                    FatalErrorIn("pairPotentialList::buildPotentials") << nl
+                    FatalErrorInFunction
                         << "Pair pairPotential specification subDict "
                         << idA << "-" << idB << " and "
                         << idB << "-" << idA << " found multiple definition"
@@ -126,7 +126,7 @@ void Foam::pairPotentialList::readPairPotentialDict
                     )
                 )
                 {
-                    FatalErrorIn("pairPotentialList::readPairPotentialDict")
+                    FatalErrorInFunction
                         << "Failed writing to "
                         << ppTabFile.name() << nl
                         << abort(FatalError);
@@ -137,7 +137,7 @@ void Foam::pairPotentialList::readPairPotentialDict
 
     if (!pairPotentialDict.found("electrostatic"))
     {
-        FatalErrorIn("pairPotentialList::buildPotentials") << nl
+        FatalErrorInFunction
             << "Pair pairPotential specification subDict electrostatic"
             << nl << abort(FatalError);
     }
@@ -159,7 +159,7 @@ void Foam::pairPotentialList::readPairPotentialDict
 
         if (!electrostaticPotential_->writeEnergyAndForceTables(ppTabFile))
         {
-            FatalErrorIn("pairPotentialList::readPairPotentialDict")
+            FatalErrorInFunction
                 << "Failed writing to "
                 << ppTabFile.name() << nl
                 << abort(FatalError);

@@ -110,16 +110,8 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::faceSource::getFieldValues
 
     if (mustGet)
     {
-        FatalErrorIn
-        (
-            "Foam::tmp<Foam::Field<Type> > "
-            "Foam::fieldValues::faceSource::getFieldValues"
-            "("
-                "const word&, "
-                "const bool, "
-                "const bool"
-            ") const"
-        )   << "Field " << fieldName << " not found in database"
+        FatalErrorInFunction
+            << "Field " << fieldName << " not found in database"
             << abort(FatalError);
     }
 
@@ -150,16 +142,7 @@ Type Foam::fieldValues::faceSource::processSameTypeValues
         }
         case opSumDirection:
         {
-            FatalErrorIn
-            (
-                "template<class Type>"
-                "Type Foam::fieldValues::faceSource::processSameTypeValues"
-                "("
-                    "const Field<Type>&, "
-                    "const vectorField&, "
-                    "const scalarField&"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "Operation " << operationTypeNames_[operation_]
                 << " not available for values of type "
                 << pTraits<Type>::typeName
@@ -170,16 +153,7 @@ Type Foam::fieldValues::faceSource::processSameTypeValues
         }
         case opSumDirectionBalance:
         {
-            FatalErrorIn
-            (
-                "template<class Type>"
-                "Type Foam::fieldValues::faceSource::processSameTypeValues"
-                "("
-                    "const Field<Type>&, "
-                    "const vectorField&, "
-                    "const scalarField&"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "Operation " << operationTypeNames_[operation_]
                 << " not available for values of type "
                 << pTraits<Type>::typeName
@@ -393,14 +367,8 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::faceSource::filterField
         }
         else
         {
-            FatalErrorIn
-            (
-                "fieldValues::faceSource::filterField"
-                "("
-                    "const GeometricField<Type, fvPatchField, volMesh>&, "
-                    "const bool"
-                ") const"
-            )   << type() << " " << name_ << ": "
+            FatalErrorInFunction
+                << type() << " " << name_ << ": "
                 << sourceTypeNames_[source_] << "(" << sourceName_ << "):"
                 << nl
                 << "    Unable to process internal faces for volume field "

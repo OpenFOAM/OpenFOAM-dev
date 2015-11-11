@@ -85,13 +85,8 @@ void Foam::laminarFlameSpeedModels::RaviPetersen::checkPointsMonotonicity
     {
         if (x[i] <= x[i-1])
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "laminarFlameSpeedModels::RaviPetersen::checkPointsMonotonicity"
-                "("
-                    "const word&, "
-                    "const List<scalar>&"
-                ") const",
                 coeffsDict_
             )   << "Data points for the " << name
                 << " do not increase monotonically" << endl
@@ -123,13 +118,8 @@ void Foam::laminarFlameSpeedModels::RaviPetersen::checkCoefficientArrayShape
 
     if (!ok)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "laminarFlameSpeedModels::RaviPetersen::checkCoefficientArrayShape"
-            "("
-                "const word&, "
-                "const List<List<List<scalar> > >&"
-            ") const",
             coeffsDict_
         )   << "Inconsistent size of " << name << " coefficients array" << endl
             << exit(FatalIOError);

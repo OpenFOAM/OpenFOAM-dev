@@ -264,10 +264,8 @@ void Foam::autoSnapDriver::calcNearestFace
         label zoneI = mesh.faceZones().findZoneID(faceZoneName);
         if (zoneI == -1)
         {
-            FatalErrorIn
-            (
-                "autoSnapDriver::calcNearestFace(..)"
-            )   << "Problem. Cannot find zone " << faceZoneName
+            FatalErrorInFunction
+                << "Problem. Cannot find zone " << faceZoneName
                 << exit(FatalError);
         }
         const faceZone& fZone = mesh.faceZones()[zoneI];
@@ -332,10 +330,8 @@ void Foam::autoSnapDriver::calcNearestFace
             }
             else
             {
-                WarningIn
-                (
-                    "autoSnapDriver::calcNearestFace(..)"
-                )   << "Did not find surface near face centre " << fc[hitI]
+                WarningInFunction
+                    << "Did not find surface near face centre " << fc[hitI]
                     << endl;
             }
         }
@@ -398,10 +394,8 @@ void Foam::autoSnapDriver::calcNearestFace
         }
         else
         {
-            WarningIn
-            (
-                "autoSnapDriver::calcNearestFace(..)"
-            )   << "Did not find surface near face centre " << fc[hitI]
+            WarningInFunction
+                << "Did not find surface near face centre " << fc[hitI]
                 << endl;
         }
     }
@@ -2637,11 +2631,8 @@ void Foam::autoSnapDriver::reverseAttractMeshPoints
                 }
                 else
                 {
-                    WarningIn
-                    (
-                        "autoSnapDriver::featureAttractionUsingFeatureEdges"
-                        "(..)"
-                    )   << "Did not find pp point near " << featPt
+                    WarningInFunction
+                        << "Did not find pp point near " << featPt
                         << endl;
                 }
             }

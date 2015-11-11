@@ -116,13 +116,7 @@ bool Foam::sixDoFRigidBodyMotionConstraints::line::read
     }
     else
     {
-        FatalErrorIn
-        (
-            "Foam::sixDoFRigidBodyMotionConstraints::line::read"
-            "("
-                "const dictionary& sDoFRBMCDict"
-            ")"
-        )
+        FatalErrorInFunction
             << "line direction has zero length"
             << abort(FatalError);
     }

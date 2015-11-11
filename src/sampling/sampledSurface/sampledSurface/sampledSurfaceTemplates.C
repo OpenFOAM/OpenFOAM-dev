@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,7 @@ bool Foam::sampledSurface::checkFieldSize(const Field<Type>& field) const
 
     if (field.size() != faces().size())
     {
-        FatalErrorIn
-        (
-            "sampledSurface::checkFieldSize(const Field<Type>&) const"
-        )
+        FatalErrorInFunction
             << "size mismatch: "
             << "field (" << field.size()
             << ") != surface (" << faces().size() << ")"

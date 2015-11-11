@@ -84,10 +84,7 @@ void Foam::fv::interRegionExplicitPorositySource::initialise()
     }
     else
     {
-        FatalErrorIn
-        (
-            "void Foam::fv::interRegionExplicitPorositySource::initialise()"
-        )
+        FatalErrorInFunction
             << "Unable to create porous cellZone " << zoneName
             << ": zone already exists"
             << abort(FatalError);

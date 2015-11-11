@@ -134,14 +134,8 @@ Foam::scalar Foam::liquidMixtureProperties::pvInvert
     }
     else if (p < pv(p, Tlo, X))
     {
-        WarningIn
-        (
-            "Foam::scalar Foam::liquidMixtureProperties::pvInvert"
-            "("
-            "    const scalar,"
-            "    const scalarField&"
-            ") const"
-        )   << "Pressure below triple point pressure: "
+        WarningInFunction
+            << "Pressure below triple point pressure: "
             << "p = " << p << " < Pt = " << pv(p, Tlo, X) <<  nl << endl;
         return -1;
     }

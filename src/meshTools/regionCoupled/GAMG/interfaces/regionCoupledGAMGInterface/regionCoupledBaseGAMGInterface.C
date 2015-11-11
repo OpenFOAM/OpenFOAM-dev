@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,19 +191,8 @@ Foam::regionCoupledBaseGAMGInterface::regionCoupledBaseGAMGInterface
         }
         else
         {
-            FatalErrorIn
-            (
-                "regionCoupledBaseGAMGInterface::"
-                "regionCoupledBaseGAMGInterface"
-                "("
-                "const label index,"
-                "const lduInterfacePtrsList& coarseInterfaces,"
-                "const lduInterface& fineInterface,"
-                "const labelField& localRestrictAddressing,"
-                "const labelField& neighbourRestrictAddressing,"
-                "const label fineLevelIndex"
-                ")"
-            )   << " GAMGAgglomeration was not found in the nbr mesh. "
+            FatalErrorInFunction
+                << " GAMGAgglomeration was not found in the nbr mesh. "
                 << " Check on the cacheAgglomeration flag in fvSolution"
                 << exit(FatalError);
         }
@@ -228,13 +217,6 @@ internalFieldTransfer
     const labelUList& iF
 ) const
 {
-//     WarningIn
-//     (
-//         "regionCoupledBaseGAMGInterface::internalFieldTransfer"
-//         "( const Pstream::commsTypes, const labelUList&)"
-//         " the internal field can not be transfered "
-//         " as the neighbFvPatch are in different meshes "
-//     );
     /*
     //const labelUList& nbrFaceCells = neighbPatch().faceCells();
 

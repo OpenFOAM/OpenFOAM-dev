@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -333,16 +333,8 @@ surfaceDisplacementPointPatchVectorField
 {
     if (velocity_.x() < 0 || velocity_.y() < 0 || velocity_.z() < 0)
     {
-        FatalErrorIn
-        (
-            "surfaceDisplacementPointPatchVectorField::\n"
-            "surfaceDisplacementPointPatchVectorField\n"
-            "(\n"
-            "    const pointPatch& p,\n"
-            "    const DimensionedField<vector, pointMesh>& iF,\n"
-            "    const dictionary& dict\n"
-            ")\n"
-        )   << "All components of velocity have to be positive : "
+        FatalErrorInFunction
+            << "All components of velocity have to be positive : "
             << velocity_ << nl
             << "Set velocity components to a great value if no clipping"
             << " necessary." << exit(FatalError);

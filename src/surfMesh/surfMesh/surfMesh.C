@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -369,10 +369,7 @@ void Foam::surfMesh::checkZones()
 
         if (count < nFaces())
         {
-            WarningIn
-            (
-                "surfMesh::checkZones()\n"
-            )
+            WarningInFunction
                 << "more faces " << nFaces() << " than zones " << count
                 << " ... extending final zone"
                 << endl;
@@ -381,10 +378,7 @@ void Foam::surfMesh::checkZones()
         }
         else if (count > size())
         {
-            FatalErrorIn
-            (
-                "surfMesh::checkZones()\n"
-            )
+            FatalErrorInFunction
                 << "more zones " << count << " than faces " << nFaces()
                 << exit(FatalError);
         }

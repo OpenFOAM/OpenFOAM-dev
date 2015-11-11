@@ -149,7 +149,7 @@ namespace Foam
                     if (!hasWarned)
                     {
                         hasWarned = true;
-                        WarningIn("fileMonitorWatcher(const bool, const label)")
+                        WarningInFunction
                             << "Failed allocating an inotify descriptor : "
                             << string(strerror(errno)) << endl
                             << "    Please increase the number of allowable "
@@ -166,7 +166,7 @@ namespace Foam
                     }
                 }
                 #else
-                    FatalErrorIn("fileMonitorWatcher(const bool, const label)")
+                    FatalErrorInFunction
                         << "You selected inotify but this file was compiled"
                         << " without FOAM_USE_INOTIFY"
                         << " Please select another fileModification test method"
@@ -191,7 +191,7 @@ namespace Foam
                     {
                         if (inotify_rm_watch(inotifyFd_, int(dirWatches_[i])))
                         {
-                            WarningIn("fileMonitor::~fileMonitor()")
+                            WarningInFunction
                                 << "Failed deleting directory watch "
                                 << dirWatches_[i] << endl;
                         }
@@ -229,7 +229,7 @@ namespace Foam
 
                     if (dirWatchID < 0)
                     {
-                        FatalErrorIn("addWatch(const label, const fileName&)")
+                        FatalErrorInFunction
                             << "Failed adding watch " << watchFd
                             << " to directory " << fName << " due to "
                             << string(strerror(errno))
@@ -240,7 +240,7 @@ namespace Foam
                 if (watchFd < dirWatches_.size() && dirWatches_[watchFd] != -1)
                 {
                     // Reuse of watchFd : should have dir watchID set to -1.
-                    FatalErrorIn("addWatch(const label, const fileName&)")
+                    FatalErrorInFunction
                         << "Problem adding watch " << watchFd
                         << " to file " << fName
                         << abort(FatalError);
@@ -255,7 +255,7 @@ namespace Foam
                 if (watchFd < lastMod_.size() && lastMod_[watchFd] != 0)
                 {
                     // Reuse of watchFd : should have lastMod set to 0.
-                    FatalErrorIn("addWatch(const label, const fileName&)")
+                    FatalErrorInFunction
                         << "Problem adding watch " << watchFd
                         << " to file " << fName
                         << abort(FatalError);
@@ -320,7 +320,7 @@ void Foam::fileMonitor::checkFiles() const
 
             if (ready < 0)
             {
-                FatalErrorIn("fileMonitor::checkFiles()")
+                FatalErrorInFunction
                     << "Problem in issuing select."
                     << abort(FatalError);
             }
@@ -336,7 +336,7 @@ void Foam::fileMonitor::checkFiles() const
 
                 if (nBytes < 0)
                 {
-                    FatalErrorIn("fileMonitor::checkFiles()")
+                    FatalErrorInFunction
                         << "read of " << watcher_->inotifyFd_
                         << " failed with " << label(nBytes)
                         << abort(FatalError);
@@ -473,7 +473,7 @@ Foam::label Foam::fileMonitor::addWatch(const fileName& fName)
 
     if (watchFd < 0)
     {
-        WarningIn("fileMonitor::addWatch(const fileName&)")
+        WarningInFunction
             << "could not add watch for file " << fName << endl;
     }
     else
@@ -593,11 +593,8 @@ void Foam::fileMonitor::updateStates
                             << endl;
                     }
 
-                    WarningIn
-                    (
-                        "fileMonitor::updateStates"
-                        "(const bool, const bool) const"
-                    )   << "Delaying reading " << watchFile_[watchFd]
+                    WarningInFunction
+                        << "Delaying reading " << watchFile_[watchFd]
                         << " due to inconsistent "
                            "file time-stamps between processors" << endl;
                 }

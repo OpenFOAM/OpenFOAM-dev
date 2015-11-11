@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ void Foam::faceZoneToCell::combine(topoSet& set, const bool add) const
 
     if (!hasMatched)
     {
-        WarningIn("faceZoneToCell::combine(topoSet&, const bool)")
+        WarningInFunction
             << "Cannot find any faceZone named " << zoneName_ << endl
             << "Valid names are " << mesh_.faceZones().names() << endl;
     }

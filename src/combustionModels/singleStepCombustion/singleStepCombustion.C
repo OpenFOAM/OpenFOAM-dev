@@ -68,16 +68,7 @@ singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
     }
     else
     {
-        FatalErrorIn
-        (
-            "singleStepCombustion<CombThermoType, ThermoType>::"
-            "singleStepCombustion"
-            "("
-                "const word&, "
-                "const fvMesh& "
-                "const word&"
-            ")"
-        )
+        FatalErrorInFunction
             << "Inconsistent thermo package for " << this->type() << " model:\n"
             << "    " << this->thermo().type() << nl << nl
             << "Please select a thermo package based on "

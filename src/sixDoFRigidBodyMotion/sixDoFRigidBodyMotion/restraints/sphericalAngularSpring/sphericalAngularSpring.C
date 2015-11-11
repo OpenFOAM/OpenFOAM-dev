@@ -126,14 +126,7 @@ bool Foam::sixDoFRigidBodyMotionRestraints::sphericalAngularSpring::read
 
     if (mag(mag(refQ_) - sqrt(3.0)) > 1e-9)
     {
-        FatalErrorIn
-        (
-            "Foam::sixDoFRigidBodyMotionRestraints::sphericalAngularSpring::"
-            "read"
-            "("
-                "const dictionary& sDoFRBMRDict"
-            ")"
-        )
+        FatalErrorInFunction
             << "referenceOrientation " << refQ_ << " is not a rotation tensor. "
             << "mag(referenceOrientation) - sqrt(3) = "
             << mag(refQ_) - sqrt(3.0) << nl

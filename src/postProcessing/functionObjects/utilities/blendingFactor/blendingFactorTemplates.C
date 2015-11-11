@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ void Foam::blendingFactor::calc()
 
     if (!isA<blendedSchemeBase<Type> >(interpScheme))
     {
-        FatalErrorIn("void Foam::blendingFactor::execute()")
+        FatalErrorInFunction
             << interpScheme.typeName << " is not a blended scheme"
             << exit(FatalError);
     }

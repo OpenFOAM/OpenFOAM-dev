@@ -85,7 +85,7 @@ patchInjection::patchInjection
 
     if (!patchIDs_.size())
     {
-        FatalErrorIn("patchInjection::patchInjection")
+        FatalErrorInFunction
             << "No patches selected"
             << exit(FatalError);
     }

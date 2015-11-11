@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ void Foam::triSurface::calcSortedEdgeFaces() const
 {
     if (sortedEdgeFacesPtr_)
     {
-        FatalErrorIn("triSurface::calcSortedEdgeFaces()")
+        FatalErrorInFunction
             << "sortedEdgeFacesPtr_ already set"
             << abort(FatalError);
     }
@@ -57,7 +57,7 @@ void Foam::triSurface::calcEdgeOwner() const
 {
     if (edgeOwnerPtr_)
     {
-        FatalErrorIn("triSurface::calcEdgeOwner()")
+        FatalErrorInFunction
             << "edgeOwnerPtr_ already set"
             << abort(FatalError);
     }
@@ -101,7 +101,7 @@ void Foam::triSurface::calcEdgeOwner() const
 
             if (edgeOwner[edgeI] == -1)
             {
-                FatalErrorIn("triSurface::calcEdgeOwner()")
+                FatalErrorInFunction
                     << "Edge " << edgeI << " vertices:" << e
                     << " is used by faces " << myFaces
                     << " vertices:"

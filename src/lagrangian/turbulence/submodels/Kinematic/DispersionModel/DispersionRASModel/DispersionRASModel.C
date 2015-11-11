@@ -49,11 +49,7 @@ Foam::DispersionRASModel<CloudType>::kModel() const
     }
     else
     {
-        FatalErrorIn
-        (
-            "Foam::tmp<Foam::volScalarField>"
-            "Foam::DispersionRASModel<CloudType>::kModel() const"
-        )
+        FatalErrorInFunction
             << "Turbulence model not found in mesh database" << nl
             << "Database objects include: " << obr.sortedToc()
             << abort(FatalError);
@@ -83,11 +79,7 @@ Foam::DispersionRASModel<CloudType>::epsilonModel() const
     }
     else
     {
-        FatalErrorIn
-        (
-            "Foam::tmp<Foam::volScalarField>"
-            "Foam::DispersionRASModel<CloudType>::epsilonModel() const"
-        )
+        FatalErrorInFunction
             << "Turbulence model not found in mesh database" << nl
             << "Database objects include: " << obr.sortedToc()
             << abort(FatalError);

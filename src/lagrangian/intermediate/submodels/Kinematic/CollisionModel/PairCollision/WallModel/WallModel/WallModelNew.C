@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,14 +44,8 @@ Foam::WallModel<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "WallModel<CloudType>::New"
-            "("
-                "const dictionary&, "
-                "CloudType&"
-            ")"
-        )   << "Unknown wall model type type " << WallModelType
+        FatalErrorInFunction
+            << "Unknown wall model type type " << WallModelType
             << ", constructor not in hash table" << nl << nl
             << "    Valid wall model types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);

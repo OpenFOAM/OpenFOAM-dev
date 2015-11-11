@@ -60,14 +60,8 @@ Foam::COxidationDiffusionLimitedRate<CloudType>::COxidationDiffusionLimitedRate
 
     if (Sb_ < 0)
     {
-        FatalErrorIn
-        (
-            "COxidationDiffusionLimitedRate<CloudType>"
-            "("
-                "const dictionary&, "
-                "CloudType&"
-            ")"
-        )   << "Stoichiometry of reaction, Sb, must be greater than zero" << nl
+        FatalErrorInFunction
+            << "Stoichiometry of reaction, Sb, must be greater than zero" << nl
             << exit(FatalError);
     }
 

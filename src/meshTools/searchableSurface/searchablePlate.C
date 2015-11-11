@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Foam::direction Foam::searchablePlate::calcNormal(const point& span)
     {
         if (span[dir] < 0)
         {
-            FatalErrorIn("searchablePlate::calcNormal()")
+            FatalErrorInFunction
                 << "Span should have two positive and one zero entry. Now:"
                 << span << exit(FatalError);
         }
@@ -69,7 +69,7 @@ Foam::direction Foam::searchablePlate::calcNormal(const point& span)
 
     if (normalDir == 3)
     {
-        FatalErrorIn("searchablePlate::calcNormal()")
+        FatalErrorInFunction
             << "Span should have two positive and one zero entry. Now:"
             << span << exit(FatalError);
     }
@@ -190,7 +190,7 @@ Foam::pointIndexHit Foam::searchablePlate::findLine
 
         if (!bb.contains(info.hitPoint()))
         {
-            FatalErrorIn("searchablePlate::findLine(..)")
+            FatalErrorInFunction
                 << "bb:" << bb << endl
                 << "origin_:" << origin_ << endl
                 << "span_:" << span_ << endl
@@ -440,11 +440,8 @@ void Foam::searchablePlate::getVolumeType
     List<volumeType>& volType
 ) const
 {
-    FatalErrorIn
-    (
-        "searchableCollection::getVolumeType(const pointField&"
-        ", List<volumeType>&) const"
-    )   << "Volume type not supported for plate."
+    FatalErrorInFunction
+        << "Volume type not supported for plate."
         << exit(FatalError);
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,11 +103,8 @@ Foam::ThermoCloud<CloudType>::radAreaP()
 {
     if (!radiation_)
     {
-        FatalErrorIn
-        (
-            "inline Foam::DimensionedField<Foam::scalar, Foam::volMesh> "
-            "Foam::ThermoCloud<CloudType>::radAreaP()"
-        )   << "Radiation field requested, but radiation model not active"
+        FatalErrorInFunction
+            << "Radiation field requested, but radiation model not active"
             << abort(FatalError);
     }
 
@@ -121,11 +118,8 @@ Foam::ThermoCloud<CloudType>::radAreaP() const
 {
     if (!radiation_)
     {
-        FatalErrorIn
-        (
-            "inline Foam::DimensionedField<Foam::scalar, Foam::volMesh> "
-            "Foam::ThermoCloud<CloudType>::radAreaP()"
-        )   << "Radiation field requested, but radiation model not active"
+        FatalErrorInFunction
+            << "Radiation field requested, but radiation model not active"
             << abort(FatalError);
     }
 
@@ -139,11 +133,8 @@ Foam::ThermoCloud<CloudType>::radT4()
 {
     if (!radiation_)
     {
-        FatalErrorIn
-        (
-            "inline Foam::DimensionedField<Foam::scalar, Foam::volMesh> "
-            "Foam::ThermoCloud<CloudType>::radT4()"
-        )   << "Radiation field requested, but radiation model not active"
+        FatalErrorInFunction
+            << "Radiation field requested, but radiation model not active"
             << abort(FatalError);
     }
 
@@ -157,11 +148,8 @@ Foam::ThermoCloud<CloudType>::radT4() const
 {
     if (!radiation_)
     {
-        FatalErrorIn
-        (
-            "inline Foam::DimensionedField<Foam::scalar, Foam::volMesh> "
-            "Foam::ThermoCloud<CloudType>::radT4()"
-        )   << "Radiation field requested, but radiation model not active"
+        FatalErrorInFunction
+            << "Radiation field requested, but radiation model not active"
             << abort(FatalError);
     }
 
@@ -175,11 +163,8 @@ Foam::ThermoCloud<CloudType>::radAreaPT4()
 {
     if (!radiation_)
     {
-        FatalErrorIn
-        (
-            "inline Foam::DimensionedField<Foam::scalar, Foam::volMesh> "
-            "Foam::ThermoCloud<CloudType>::radAreaPT4()"
-        )   << "Radiation field requested, but radiation model not active"
+        FatalErrorInFunction
+            << "Radiation field requested, but radiation model not active"
             << abort(FatalError);
     }
 
@@ -193,11 +178,8 @@ Foam::ThermoCloud<CloudType>::radAreaPT4() const
 {
     if (!radiation_)
     {
-        FatalErrorIn
-        (
-            "inline Foam::DimensionedField<Foam::scalar, Foam::volMesh> "
-            "Foam::ThermoCloud<CloudType>::radAreaPT4()"
-        )   << "Radiation field requested, but radiation model not active"
+        FatalErrorInFunction
+            << "Radiation field requested, but radiation model not active"
             << abort(FatalError);
     }
 

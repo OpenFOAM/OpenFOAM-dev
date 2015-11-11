@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,14 +114,7 @@ void thermalBaffleModel::init()
              && !constantThickness_
             )
             {
-                FatalErrorIn
-                (
-                    "thermalBaffleModel::thermalBaffleModel"
-                    "("
-                    "   const word&,"
-                    "   const fvMesh&"
-                    ")"
-                )   << "\n    patch type '" << pp.type()
+                FatalErrorInFunction
                     << "' not type '"
                     << mappedVariableThicknessWallPolyPatch::typeName
                     << "'. This is necessary for 1D solution "
@@ -131,14 +124,7 @@ void thermalBaffleModel::init()
             }
             else if (!isA<mappedWallPolyPatch>(pp))
             {
-                FatalErrorIn
-                (
-                    "thermalBaffleModel::thermalBaffleModel"
-                    "("
-                    "   const word&,"
-                    "   const fvMesh&"
-                    ")"
-                )   << "\n    patch type '" << pp.type()
+                FatalErrorInFunction
                     << "' not type '"
                     << mappedWallPolyPatch::typeName
                     << "'. This is necessary for 3D solution"
@@ -162,14 +148,8 @@ void thermalBaffleModel::init()
             // Check that thickness has the right size
             if (thickness_.size() != pp.size())
             {
-                FatalErrorIn
-                (
-                    "thermalBaffleModel::thermalBaffleModel"
-                    "("
-                    "   const word&,"
-                    "   const fvMesh&"
-                    ")"
-                )   << " coupled patches in thermalBaffle are " << nl
+                FatalErrorInFunction
+                    << " coupled patches in thermalBaffle are " << nl
                     << " different sizes from list thickness" << nl
                     << exit(FatalError);
             }

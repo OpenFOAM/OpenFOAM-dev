@@ -43,7 +43,7 @@ void v2WallFunctionFvPatchScalarField::checkType()
 {
     if (!isA<wallFvPatch>(patch()))
     {
-        FatalErrorIn("v2WallFunctionFvPatchScalarField::checkType()")
+        FatalErrorInFunction
             << "Invalid wall function specification" << nl
             << "    Patch type for patch " << patch().name()
             << " must be wall" << nl

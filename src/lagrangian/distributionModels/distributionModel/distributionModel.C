@@ -43,7 +43,7 @@ void Foam::distributionModels::distributionModel::check() const
 {
     if (minValue() < 0)
     {
-        FatalErrorIn("distributionModels::distributionModel::check() const")
+        FatalErrorInFunction
             << type() << "distribution: Minimum value must be greater than "
             << "zero." << nl << "Supplied minValue = " << minValue()
             << abort(FatalError);
@@ -51,7 +51,7 @@ void Foam::distributionModels::distributionModel::check() const
 
     if (maxValue() < minValue())
     {
-        FatalErrorIn("distributionModels::distributionModel::check() const")
+        FatalErrorInFunction
             << type() << "distribution: Maximum value is smaller than the "
             << "minimum value:" << nl << "    maxValue = " << maxValue()
             << ", minValue = " << minValue()

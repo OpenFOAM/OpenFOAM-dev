@@ -136,12 +136,8 @@ bool Foam::UOPstream::write
     }
     else
     {
-        FatalErrorIn
-        (
-            "UOPstream::write"
-            "(const int fromProcNo, char* buf, std::streamsize bufSize"
-            ", const int)"
-        )   << "Unsupported communications type "
+        FatalErrorInFunction
+            << "Unsupported communications type "
             << UPstream::commsTypeNames[commsType]
             << Foam::abort(FatalError);
     }

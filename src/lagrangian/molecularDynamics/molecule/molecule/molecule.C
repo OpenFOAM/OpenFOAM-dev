@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,7 @@ bool Foam::molecule::move(molecule::trackingData& td, const scalar trackTime)
     }
     else
     {
-        FatalErrorIn("molecule::move(trackingData&, const scalar)") << nl
+        FatalErrorInFunction
             << td.part() << " is an invalid part of the integration method."
             << abort(FatalError);
     }

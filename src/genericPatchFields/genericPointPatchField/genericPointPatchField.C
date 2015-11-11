@@ -97,12 +97,8 @@ genericPointPatchField<Type>::genericPointPatchField
                         }
                         else
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericPointPatchField<Type>::"
-                                "genericPointPatchField"
-                                "(const pointPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    token following 'nonuniform' "
                                   "is not a compound"
@@ -131,12 +127,8 @@ genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericPointPatchField<Type>::"
-                                "genericPointPatchField"
-                                "(const pointPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -169,12 +161,8 @@ genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericPointPatchField<Type>::"
-                                "genericPointPatchField"
-                                "(const pointPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -210,12 +198,8 @@ genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericPointPatchField<Type>::"
-                                "genericPointPatchField"
-                                "(const pointPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -251,12 +235,8 @@ genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericPointPatchField<Type>::"
-                                "genericPointPatchField"
-                                "(const pointPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -289,12 +269,8 @@ genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericPointPatchField<Type>::"
-                                "genericPointPatchField"
-                                "(const pointPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -312,12 +288,8 @@ genericPointPatchField<Type>::genericPointPatchField
                     }
                     else
                     {
-                        FatalIOErrorIn
+                        FatalIOErrorInFunction
                         (
-                            "genericPointPatchField<Type>::"
-                            "genericPointPatchField"
-                            "(const pointPatch&, const Field<Type>&, "
-                            "const dictionary&)",
                             dict
                         )   << "\n    compound " << fieldToken.compoundToken()
                             << " not supported"

@@ -44,10 +44,8 @@ Foam::radiation::absorptionEmissionModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "absorptionEmissionModel::New(const dictionary&, const fvMesh&)"
-        )   << "Unknown absorptionEmissionModel type "
+        FatalErrorInFunction
+            << "Unknown absorptionEmissionModel type "
             << modelType << nl << nl
             << "Valid absorptionEmissionModel types are :" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ bool Foam::fileFormats::edgeMeshFormat::read
 
     if (!io.headerOk())
     {
-        FatalErrorIn("fileFormats::edgeMeshFormat::read(const fileName&)")
+        FatalErrorInFunction
             << "Cannot read file " << filename
             << exit(FatalError);
     }
@@ -109,11 +109,7 @@ bool Foam::fileFormats::edgeMeshFormat::read
 {
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::edgeMeshFormat::read"
-            "(Istream&, pointField&, edgeList&)"
-        )
+        FatalErrorInFunction
             << "read error "
             << exit(FatalError);
     }
@@ -137,11 +133,7 @@ Foam::Ostream& Foam::fileFormats::edgeMeshFormat::write
 {
     if (!os.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::edgeMeshFormat::write"
-            "(Ostream&, const fileName&, const edgeMesh&)"
-        )
+        FatalErrorInFunction
             << "bad output stream " << os.name()
             << exit(FatalError);
     }
@@ -194,10 +186,8 @@ void Foam::fileFormats::edgeMeshFormat::write
 
     if (!osPtr().good())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "fileFormats::edgeMeshFormat::write"
-            "(const fileName&, const edgeMesh&)",
             osPtr()
         )   << "Cannot open file for writing " << filename
             << exit(FatalIOError);
@@ -208,10 +198,8 @@ void Foam::fileFormats::edgeMeshFormat::write
 
     if (!ok)
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "fileFormats::edgeMeshFormat::write"
-            "(const fileName&, const edgeMesh&)",
             os
         )   << "Cannot write header"
             << exit(FatalIOError);

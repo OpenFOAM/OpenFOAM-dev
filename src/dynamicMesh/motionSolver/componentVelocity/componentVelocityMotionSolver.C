@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,12 +55,8 @@ Foam::direction Foam::componentVelocityMotionSolver::cmpt
     }
     else
     {
-        FatalErrorIn
-        (
-            "componentVelocityMotionSolver::"
-            "componentVelocityMotionSolver"
-            "(const polyMesh& mesh, const IOdictionary&)"
-        )   << "Given component name " << cmptName << " should be x, y or z"
+        FatalErrorInFunction
+            << "Given component name " << cmptName << " should be x, y or z"
             << exit(FatalError);
 
         return 0;

@@ -63,8 +63,7 @@ Foam::fv::explicitPorositySource::explicitPorositySource
 
     if (selectionMode_ != smCellZone)
     {
-        FatalErrorIn("void Foam::fv::explicitPorositySource::initialise()")
-            << "The porosity region must be specified as a cellZone.  Current "
+        FatalErrorInFunction
             << "selection mode is " << selectionModeTypeNames_[selectionMode_]
             << exit(FatalError);
     }

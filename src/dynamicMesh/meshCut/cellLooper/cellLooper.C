@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,10 +50,8 @@ Foam::autoPtr<Foam::cellLooper> Foam::cellLooper::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "cellLooper::New(const word&, const polyMesh&)"
-        )   << "Unknown set type "
+        FatalErrorInFunction
+            << "Unknown set type "
             << type << nl << nl
             << "Valid cellLooper types : " << endl
             << wordConstructorTablePtr_->sortedToc()
@@ -124,10 +122,8 @@ Foam::label Foam::cellLooper::getFirstVertEdge
         }
     }
 
-    FatalErrorIn
-    (
-        "getFirstVertEdge(const label, const label)"
-    )   << "Can not find edge on face " << faceI
+    FatalErrorInFunction
+        << "Can not find edge on face " << faceI
         << " using vertex " << vertI
         << abort(FatalError);
 

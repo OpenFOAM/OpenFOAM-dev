@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New(Istream& is)
 
         if (cstrIter == ConstructorTablePtr_->end())
         {
-            FatalErrorIn("solidProperties::New(Istream&)")
+            FatalErrorInFunction
                 << "Unknown solidProperties type " << solidType << nl << nl
                 << "Valid solidProperties types are :" << endl
                 << ConstructorTablePtr_->sortedToc()
@@ -61,7 +61,7 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New(Istream& is)
     }
     else
     {
-        FatalErrorIn("solidProperties::New(Istream&)")
+        FatalErrorInFunction
             << "solidProperties type " << solidType
             << ", option " << coeffs << " given"
             << ", should be coeffs or defaultCoeffs"
@@ -93,7 +93,7 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
 
         if (cstrIter == ConstructorTablePtr_->end())
         {
-            FatalErrorIn("solidProperties::New(const dictionary&)")
+            FatalErrorInFunction
                 << "Unknown solidProperties type " << solidType << nl << nl
                 << "Valid solidProperties types are :" << endl
                 << ConstructorTablePtr_->sortedToc()

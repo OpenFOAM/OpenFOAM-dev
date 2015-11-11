@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,15 +87,8 @@ Foam::AveragingMethod<Type>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "Foam::AveragingMethod<Type>::New"
-            "("
-                "const IOobject&, "
-                "const dictionary&, "
-                "const fvMesh&"
-            ")"
-        )   << "Unknown averaging method " << averageType
+        FatalErrorInFunction
+            << "Unknown averaging method " << averageType
             << ", constructor not in hash table" << nl << nl
             << "    Valid averaging methods are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -355,16 +355,8 @@ Foam::scalar Foam::faceAreaIntersect::calc
         }
         default:
         {
-            FatalErrorIn
-            (
-                "Foam::scalar Foam::faceAreaIntersect::calc"
-                "("
-                    "const face&, "
-                    "const face&, "
-                    "const vector&, "
-                    "const triangulationMode&"
-                ")"
-            )   << "Unknown triangulation mode enumeration"
+            FatalErrorInFunction
+                << "Unknown triangulation mode enumeration"
                 << abort(FatalError);
         }
     }

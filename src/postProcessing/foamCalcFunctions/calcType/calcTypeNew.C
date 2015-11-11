@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,14 +43,14 @@ Foam::autoPtr<Foam::calcType> Foam::calcType::New
         // exit without stack trace
         if (calcTypeName == "-help")
         {
-            FatalErrorIn("calcType::New()")
+            FatalErrorInFunction
                 << "Valid calcType selections are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc() << nl
                 << exit(FatalError);
         }
         else
         {
-            FatalErrorIn("calcType::New()")
+            FatalErrorInFunction
                 << "Unknown calcType type " << calcTypeName << nl
                 << "Valid calcType selections are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc() << nl

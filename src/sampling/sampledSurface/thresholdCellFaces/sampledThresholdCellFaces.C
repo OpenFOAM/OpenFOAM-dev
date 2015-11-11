@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,10 +163,7 @@ Foam::sampledThresholdCellFaces::sampledThresholdCellFaces
 {
     if (!dict.found("lowerLimit") && !dict.found("upperLimit"))
     {
-        FatalErrorIn
-            (
-                "sampledThresholdCellFaces::sampledThresholdCellFaces(..)"
-            )
+        FatalErrorInFunction
             << "require at least one of 'lowerLimit' or 'upperLimit'" << endl
             << abort(FatalError);
     }

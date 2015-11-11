@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,11 +206,8 @@ Foam::scalar Foam::wallBoundedParticle::trackToEdge
 
         if (mesh_.isInternalFace(tetFace()))
         {
-            FatalErrorIn
-            (
-                "wallBoundedParticle::trackToEdge"
-                "(TrackData&, const vector&)"
-            )   << "Can only track on boundary faces."
+            FatalErrorInFunction
+                << "Can only track on boundary faces."
                 << " Face:" << tetFace()
                 << " at:" << mesh_.faceCentres()[tetFace()]
                 << abort(FatalError);
@@ -286,7 +283,7 @@ Foam::scalar Foam::wallBoundedParticle::trackToEdge
                 {
                     //Note: should not happen since boundary face so owner
                     //Pout<< "Real edge." << endl;
-                    FatalErrorIn("shold not happend") << info()
+                    FatalErrorInFunction
                         << abort(FatalError);
 
                     diagEdge_ = -1;
@@ -332,7 +329,7 @@ Foam::scalar Foam::wallBoundedParticle::trackToEdge
                 {
                     //Note: should not happen since boundary face so owner
                     //Pout<< "Real edge." << endl;
-                    FatalErrorIn("shold not happend") << info()
+                    FatalErrorInFunction
                         << abort(FatalError);
 
                     diagEdge_ = -1;

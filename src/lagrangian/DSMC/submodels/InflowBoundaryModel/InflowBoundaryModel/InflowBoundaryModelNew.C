@@ -44,11 +44,8 @@ Foam::InflowBoundaryModel<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "InflowBoundaryModel<CloudType>::New"
-            "(const dictionary&, CloudType&)"
-        )   << "Unknown InflowBoundaryModel type "
+        FatalErrorInFunction
+            << "Unknown InflowBoundaryModel type "
             << modelType << nl << nl
             << "Valid InflowBoundaryModel types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

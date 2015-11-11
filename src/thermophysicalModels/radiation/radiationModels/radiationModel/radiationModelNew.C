@@ -62,10 +62,8 @@ Foam::radiation::radiationModel::New
 
     if (cstrIter == TConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "radiationModel::New(const volScalarField&)"
-        )   << "Unknown radiationModel type "
+        FatalErrorInFunction
+            << "Unknown radiationModel type "
             << modelType << nl << nl
             << "Valid radiationModel types are:" << nl
             << TConstructorTablePtr_->sortedToc()
@@ -92,10 +90,8 @@ Foam::radiation::radiationModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "radiationModel::New(const dictionary&, const volScalarField&)"
-        )   << "Unknown radiationModel type "
+        FatalErrorInFunction
+            << "Unknown radiationModel type "
             << modelType << nl << nl
             << "Valid radiationModel types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

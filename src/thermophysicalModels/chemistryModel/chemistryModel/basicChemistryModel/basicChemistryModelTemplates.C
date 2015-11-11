@@ -98,12 +98,9 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
         }
         else
         {
-             FatalIOErrorIn
-             (
-                 (ChemistryModel::typeName + "::New(const mesh&)").c_str(),
-                 thermoDict
-             )   << "thermoType is in the old format and must be upgraded"
-                 << exit(FatalIOError);
+            FatalIOErrorInFunction(thermoDict)
+                << "thermoType is in the old format and must be upgraded"
+                << exit(FatalIOError);
         }
 
         // Construct the name of the chemistry type from the components
@@ -117,7 +114,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
 
         if (cstrIter == ChemistryModel::fvMeshConstructorTablePtr_->end())
         {
-            FatalErrorIn(ChemistryModel::typeName + "::New(const mesh&)")
+            FatalErrorInFunction
                 << "Unknown " << ChemistryModel::typeName << " type " << nl
                 << "chemistryType" << chemistryTypeDict << nl << nl
                 << "Valid " << ChemistryModel ::typeName << " types are:"
@@ -173,7 +170,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
 
         if (cstrIter == ChemistryModel::fvMeshConstructorTablePtr_->end())
         {
-            FatalErrorIn(ChemistryModel::typeName + "::New(const mesh&)")
+            FatalErrorInFunction
                 << "Unknown " << ChemistryModel::typeName << " type "
                 << chemistryTypeName << nl << nl
                 << "Valid ChemistryModel types are:" << nl

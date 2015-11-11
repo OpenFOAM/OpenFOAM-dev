@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::AMIMethod<SourcePatch, TargetPatch>::checkPatches() const
 
         if (!bbTgtInf.contains(bbSrc))
         {
-            WarningIn("AMIMethod<SourcePatch, TargetPatch>::checkPatches()")
+            WarningInFunction
                 << "Source and target patch bounding boxes are not similar"
                 << nl
                 << "    source box span     : " << bbSrc.span() << nl
@@ -94,18 +94,7 @@ bool Foam::AMIMethod<SourcePatch, TargetPatch>::initialise
     }
     else if (!tgtPatch_.size())
     {
-        WarningIn
-        (
-            "void Foam::AMIMethod<SourcePatch, TargetPatch>::initialise"
-            "("
-                "labelListList&, "
-                "scalarListList&, "
-                "labelListList&, "
-                "scalarListList&, "
-                "label&, "
-                "label&"
-            ")"
-        )
+        WarningInFunction
             << srcPatch_.size() << " source faces but no target faces" << endl;
 
         return false;
@@ -135,18 +124,8 @@ bool Foam::AMIMethod<SourcePatch, TargetPatch>::initialise
         {
             if (requireMatch_)
             {
-                FatalErrorIn
-                (
-                    "void Foam::AMIMethod<SourcePatch, TargetPatch>::initialise"
-                    "("
-                        "labelListList&, "
-                        "scalarListList&, "
-                        "labelListList&, "
-                        "scalarListList&, "
-                        "label&, "
-                        "label&"
-                    ")"
-                )   << "Unable to find initial target face"
+                FatalErrorInFunction
+                    << "Unable to find initial target face"
                     << abort(FatalError);
             }
 

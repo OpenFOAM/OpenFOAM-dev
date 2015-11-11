@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,11 +45,7 @@ bool Foam::fileFormats::STARCDCore::readHeader
 {
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::STARCDCore::readHeader(...)"
-        )
-            << "cannot read " << signature  << "  " << is.name()
+        FatalErrorInFunction
             << abort(FatalError);
     }
 
@@ -105,10 +101,7 @@ bool Foam::fileFormats::STARCDCore::readPoints
 {
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::STARCDedgeFormat::readPoints(...)"
-        )
+        FatalErrorInFunction
             << "Cannot read file " << is.name()
             << exit(FatalError);
     }

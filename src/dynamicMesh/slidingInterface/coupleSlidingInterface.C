@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,11 +125,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
         )
     )
     {
-        FatalErrorIn
-        (
-            "void slidingInterface::coupleInterface("
-            "polyTopoChange& ref) const"
-        )   << "Point projection addressing not available."
+        FatalErrorInFunction
+            << "Point projection addressing not available."
             << abort(FatalError);
     }
 
@@ -398,11 +395,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
     if (!cutPointEdgePairMapPtr_)
     {
-        FatalErrorIn
-        (
-            "void slidingInterface::coupleInterface("
-            "polyTopoChange& ref) const"
-        )   << "Cut point edge pair map pointer not set."
+        FatalErrorInFunction
+            << "Cut point edge pair map pointer not set."
             << abort(FatalError);
     }
 
@@ -1045,11 +1039,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
         }
         else
         {
-            FatalErrorIn
-            (
-                "void slidingInterface::coupleInterface("
-                "polyTopoChange& ref) const"
-            )   << "Face " << faceI << " in cut faces has neither a master "
+            FatalErrorInFunction
+                << "Face " << faceI << " in cut faces has neither a master "
                 << "nor a slave.  Error in the cutting algorithm on modify."
                 << abort(FatalError);
         }
@@ -1173,11 +1164,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             }
             else
             {
-                FatalErrorIn
-                (
-                    "void slidingInterface::coupleInterface("
-                    "polyTopoChange& ref) const"
-                )   << "Face " << faceI << " in cut faces has neither a master "
+                FatalErrorInFunction
+                    << "Face " << faceI << " in cut faces has neither a master "
                     << "nor a slave.  Error in the cutting algorithm on add."
                     << abort(FatalError);
             }
@@ -1414,12 +1402,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
                                      || max(edgePointWeights) > 1
                                     )
                                     {
-                                        FatalErrorIn
-                                        (
-                                            "void slidingInterface::"
-                                            "coupleInterface("
-                                            "polyTopoChange& ref) const"
-                                        )   << "Error in master stick-out edge "
+                                        FatalErrorInFunction
+                                            << "Error in master stick-out edge "
                                             << "point collection."
                                             << abort(FatalError);
                                     }
@@ -1474,11 +1458,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
         {
             if (newFaceLabels.size() < 3)
             {
-                FatalErrorIn
-                (
-                    "void slidingInterface::coupleInterface("
-                    "polyTopoChange& ref) const"
-                )   << "Face " << curFaceID << " reduced to less than "
+                FatalErrorInFunction
+                    << "Face " << curFaceID << " reduced to less than "
                     << "3 points.  Topological/cutting error A." << nl
                     << "Old face: " << oldFace << " new face: " << newFaceLabels
                     << abort(FatalError);
@@ -1728,12 +1709,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
                                      || max(edgePointWeights) > 1
                                     )
                                     {
-                                        FatalErrorIn
-                                        (
-                                            "void slidingInterface::"
-                                            "coupleInterface("
-                                            "polyTopoChange& ref) const"
-                                        )   << "Error in slave stick-out edge "
+                                        FatalErrorInFunction
+                                            << "Error in slave stick-out edge "
                                             << "point collection."
                                             << abort(FatalError);
                                         }
@@ -1788,11 +1765,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
         {
             if (newFaceLabels.size() < 3)
             {
-                FatalErrorIn
-                (
-                    "void slidingInterface::coupleInterface("
-                    "polyTopoChange& ref) const"
-                )   << "Face " << curFaceID << " reduced to less than "
+                FatalErrorInFunction
+                    << "Face " << curFaceID << " reduced to less than "
                     << "3 points.  Topological/cutting error B." << nl
                     << "Old face: " << oldFace << " new face: " << newFaceLabels
                     << abort(FatalError);
@@ -1866,11 +1840,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
     if (!retiredPointMapPtr_)
     {
-        FatalErrorIn
-        (
-            "void slidingInterface::coupleInterface("
-            "polyTopoChange& ref) const"
-        )   << "Retired point map pointer not set."
+        FatalErrorInFunction
+            << "Retired point map pointer not set."
             << abort(FatalError);
     }
 

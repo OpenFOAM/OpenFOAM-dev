@@ -34,7 +34,7 @@ void Foam::UPstream::addValidParOptions(HashTable<string>& validParOptions)
 
 bool Foam::UPstream::init(int& argc, char**& argv)
 {
-    FatalErrorIn("UPstream::init(int& argc, char**& argv)")
+    FatalErrorInFunction
         << "Trying to use the dummy Pstream library." << nl
         << "This dummy library cannot be used in parallel mode"
         << Foam::exit(FatalError);

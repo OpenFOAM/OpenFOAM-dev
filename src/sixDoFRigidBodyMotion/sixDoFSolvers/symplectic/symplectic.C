@@ -69,7 +69,7 @@ void Foam::sixDoFSolvers::symplectic::solve
 {
     if (!firstIter)
     {
-        FatalErrorIn("sixDoFSolvers::symplectic::solve")
+        FatalErrorInFunction
             << "The symplectic integrator is explicit "
                "and can only be solved once per time-step"
             << exit(FatalError);

@@ -56,11 +56,8 @@ const
         }
     }
 
-    FatalErrorIn
-    (
-        "PhaseChangeModel<CloudType>::enthalpyTransferType"
-        "PhaseChangeModel<CloudType>::wordToEnthalpyTransfer(const word&) const"
-    )   << "Unknown enthalpyType " << etName << ". Valid selections are:" << nl
+    FatalErrorInFunction
+        << "Unknown enthalpyType " << etName << ". Valid selections are:" << nl
         << enthalpyTransferTypeNames << exit(FatalError);
 
     return enthalpyTransferType(0);

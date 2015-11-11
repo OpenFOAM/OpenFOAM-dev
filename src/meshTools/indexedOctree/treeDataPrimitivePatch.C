@@ -171,11 +171,8 @@ Foam::volumeType Foam::treeDataPrimitivePatch<PatchType>::getVolumeType
 
     if (info.index() == -1)
     {
-        FatalErrorIn
-        (
-            "treeDataPrimitivePatch::getSampleType"
-            "(indexedOctree<treeDataPrimitivePatch>&, const point&)"
-        )   << "Could not find " << sample << " in octree."
+        FatalErrorInFunction
+            << "Could not find " << sample << " in octree."
             << abort(FatalError);
     }
 
@@ -588,16 +585,8 @@ bool Foam::treeDataPrimitivePatch<PatchType>::findSelfIntersectOp::operator()
 {
     if (edgeID_ == -1)
     {
-        FatalErrorIn
-        (
-            "findSelfIntersectOp::operator()\n"
-            "(\n"
-            "    const label index,\n"
-            "    const point& start,\n"
-            "    const point& end,\n"
-            "    point& intersectionPoint\n"
-            ") const"
-        )   << "EdgeID not set. Please set edgeID to the index of"
+        FatalErrorInFunction
+            << "EdgeID not set. Please set edgeID to the index of"
             << " the edge you are testing"
             << exit(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,7 @@ void Foam::topoCellLooper::subsetList
         // changed)
         if (freeI < 0)
         {
-            FatalErrorIn("topoCellLooper::subsetList")
-                << "startI:" << startI << "  freeI:" << freeI
+            FatalErrorInFunction
                 << "  lst:" << lst << abort(FatalError);
         }
         lst.setCapacity(freeI);
@@ -80,8 +79,7 @@ void Foam::topoCellLooper::subsetList
 
         if ((freeI - startI) < 0)
         {
-            FatalErrorIn("topoCellLooper::subsetList")
-                << "startI:" << startI << "  freeI:" << freeI
+            FatalErrorInFunction
                 << "  lst:" << lst << abort(FatalError);
         }
 
@@ -460,7 +458,7 @@ void Foam::topoCellLooper::walkSplitHex
             // On edge
             if (edgeI == -1)
             {
-                FatalErrorIn("walkSplitHex") << "Illegal edge and vert"
+                FatalErrorInFunction
                     << abort(FatalError);
             }
 
@@ -651,7 +649,7 @@ void Foam::topoCellLooper::walkSplitHex
                 }
                 else
                 {
-                    FatalErrorIn("walkFromVert") << "Not yet implemented"
+                    FatalErrorInFunction
                         << "Choosing from more than "
                         << "two candidates:" << nextFaces
                         << " when coming from vertex " << vertI << " on cell "

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ inline bool Foam::refinementDistanceData::update
     {
         if (!neighbourInfo.valid(td))
         {
-            FatalErrorIn("refinementDistanceData::update(..)")
+            FatalErrorInFunction
                 << "problem" << abort(FatalError);
         }
         operator=(neighbourInfo);

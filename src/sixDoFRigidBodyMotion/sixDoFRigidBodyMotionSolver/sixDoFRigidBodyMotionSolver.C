@@ -171,10 +171,8 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 
     if (mesh().nPoints() != points0().size())
     {
-        FatalErrorIn
-        (
-            "sixDoFRigidBodyMotionSolver::curPoints() const"
-        )   << "The number of points in the mesh seems to have changed." << endl
+        FatalErrorInFunction
+            << "The number of points in the mesh seems to have changed." << endl
             << "In constant/polyMesh there are " << points0().size()
             << " points; in the current mesh there are " << mesh().nPoints()
             << " points." << exit(FatalError);

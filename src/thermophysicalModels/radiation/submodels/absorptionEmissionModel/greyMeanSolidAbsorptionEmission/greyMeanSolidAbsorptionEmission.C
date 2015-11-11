@@ -98,15 +98,8 @@ greyMeanSolidAbsorptionEmission
 {
     if (!isA<basicSpecieMixture>(thermo_))
     {
-        FatalErrorIn
-        (
-            "radiation::greyMeanSolidAbsorptionEmission::"
-            "greyMeanSolidAbsorptionEmission"
-            "("
-                "const dictionary&, "
-                "const fvMesh&"
-            ")"
-        )   << "Model requires a multi-component thermo package"
+        FatalErrorInFunction
+            << "Model requires a multi-component thermo package"
             << abort(FatalError);
     }
 
@@ -123,15 +116,8 @@ greyMeanSolidAbsorptionEmission
         const word& key = iter().keyword();
         if (!mixture_.contains(key))
         {
-            WarningIn
-            (
-                "greyMeanSolidAbsorptionEmission::"
-                "greyMeanSolidAbsorptionEmission "
-                "("
-                "   const dictionary& dict,"
-                "   const fvMesh& mesh"
-                ")"
-            )   << " specie: " << key << " is not found in the solid mixture"
+            WarningInFunction
+                << " specie: " << key << " is not found in the solid mixture"
                 << nl
                 << " specie is the mixture are:" << mixture_.species() << nl
                 << nl << endl;

@@ -833,22 +833,16 @@ Foam::distributedTriSurfaceMesh::independentlyDistributedBbs
 
         if (!decomposer_().parallelAware())
         {
-            FatalErrorIn
-            (
-                "distributedTriSurfaceMesh::independentlyDistributedBbs"
-                "(const triSurface&)"
-            )   << "The decomposition method " << decomposer_().typeName
+            FatalErrorInFunction
+                << "The decomposition method " << decomposer_().typeName
                 << " does not decompose in parallel."
                 << " Please choose one that does." << exit(FatalError);
         }
 
         if (!isA<geomDecomp>(decomposer_()))
         {
-            FatalErrorIn
-            (
-                "distributedTriSurfaceMesh::independentlyDistributedBbs"
-                "(const triSurface&)"
-            )   << "The decomposition method " << decomposer_().typeName
+            FatalErrorInFunction
+                << "The decomposition method " << decomposer_().typeName
                 << " is not a geometric decomposition method." << endl
                 << "Only geometric decomposition methods are currently"
                 << " supported."
@@ -1381,8 +1375,7 @@ Foam::distributedTriSurfaceMesh::distributedTriSurfaceMesh(const IOobject& io)
         )
     )
     {
-        FatalErrorIn("Foam::distributedTriSurfaceMesh::read()")
-            << "    distributedTriSurfaceMesh is being constructed\n"
+        FatalErrorInFunction
             << "    using 'timeStampMaster' or 'inotifyMaster.'\n"
             << "    Modify the entry fileModificationChecking\n"
             << "    in the etc/controlDict.\n"
@@ -1465,8 +1458,7 @@ Foam::distributedTriSurfaceMesh::distributedTriSurfaceMesh
         )
     )
     {
-        FatalErrorIn("Foam::distributedTriSurfaceMesh::read()")
-            << "    distributedTriSurfaceMesh is being constructed\n"
+        FatalErrorInFunction
             << "    using 'timeStampMaster' or 'inotifyMaster.'\n"
             << "    Modify the entry fileModificationChecking\n"
             << "    in the etc/controlDict.\n"
@@ -2004,11 +1996,8 @@ void Foam::distributedTriSurfaceMesh::getVolumeType
     List<volumeType>& volType
 ) const
 {
-    FatalErrorIn
-    (
-        "distributedTriSurfaceMesh::getVolumeType"
-        "(const pointField&, List<volumeType>&) const"
-    )   << "Volume type not supported for distributed surfaces."
+    FatalErrorInFunction
+        << "Volume type not supported for distributed surfaces."
         << exit(FatalError);
 }
 
@@ -2090,7 +2079,7 @@ void Foam::distributedTriSurfaceMesh::distribute
             break;
 
             default:
-                FatalErrorIn("distributedTriSurfaceMesh::distribute(..)")
+                FatalErrorInFunction
                     << "Unsupported distribution type." << exit(FatalError);
             break;
         }

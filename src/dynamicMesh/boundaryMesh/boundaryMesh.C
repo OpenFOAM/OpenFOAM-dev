@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,7 +157,7 @@ Foam::labelList Foam::boundaryMesh::collectSegment
 
         if (featI == -1)
         {
-            FatalErrorIn("boundaryMesh::collectSegment")
+            FatalErrorInFunction
                 << "Problem" << abort(FatalError);
         }
         featLabels[featLabelI++] = featI;
@@ -1544,7 +1544,7 @@ Foam::label Foam::boundaryMesh::whichPatch(const label faceI) const
         }
     }
 
-    FatalErrorIn("boundaryMesh::whichPatch(const label)")
+    FatalErrorInFunction
         << "Cannot find face " << faceI << " in list of boundaryPatches "
         << patches_
         << abort(FatalError);
@@ -1610,14 +1610,14 @@ void Foam::boundaryMesh::deletePatch(const word& patchName)
 
     if (delPatchI == -1)
     {
-        FatalErrorIn("boundaryMesh::deletePatch(const word&")
+        FatalErrorInFunction
             << "Can't find patch named " << patchName
             << abort(FatalError);
     }
 
     if (patches_[delPatchI].size())
     {
-        FatalErrorIn("boundaryMesh::deletePatch(const word&")
+        FatalErrorInFunction
             << "Trying to delete non-empty patch " << patchName
             << endl << "Current size:" << patches_[delPatchI].size()
             << abort(FatalError);
@@ -1669,7 +1669,7 @@ void Foam::boundaryMesh::changePatchType
 
     if (changeI == -1)
     {
-        FatalErrorIn("boundaryMesh::changePatchType(const word&, const word&)")
+        FatalErrorInFunction
             << "Can't find patch named " << patchName
             << abort(FatalError);
     }
@@ -1718,7 +1718,7 @@ void Foam::boundaryMesh::changeFaces
 {
     if (patchIDs.size() != mesh().size())
     {
-        FatalErrorIn("boundaryMesh::changeFaces(const labelList& patchIDs)")
+        FatalErrorInFunction
             << "List of patchIDs not equal to number of faces." << endl
             << "PatchIDs size:" << patchIDs.size()
             << " nFaces::" << mesh().size()
@@ -1735,7 +1735,7 @@ void Foam::boundaryMesh::changeFaces
 
         if (patchID < 0 || patchID >= patches_.size())
         {
-            FatalErrorIn("boundaryMesh::changeFaces(const labelList&)")
+            FatalErrorInFunction
                 << "PatchID " << patchID << " out of range"
                 << abort(FatalError);
         }

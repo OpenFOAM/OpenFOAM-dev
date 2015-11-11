@@ -79,7 +79,7 @@ void Foam::fv::cellSetOption::setSelection(const dictionary& dict)
         }
         default:
         {
-            FatalErrorIn("::setSelection(const dictionary&)")
+            FatalErrorInFunction
                 << "Unknown selectionMode "
                 << selectionModeTypeNames_[selectionMode_]
                 << ". Valid selectionMode types are" << selectionModeTypeNames_
@@ -110,7 +110,7 @@ void Foam::fv::cellSetOption::setCellSet()
                 label globalCellI = returnReduce(cellI, maxOp<label>());
                 if (globalCellI < 0)
                 {
-                    WarningIn("cellSetOption::setCellSet()")
+                    WarningInFunction
                         << "Unable to find owner cell for point " << points_[i]
                         << endl;
                 }
@@ -139,7 +139,7 @@ void Foam::fv::cellSetOption::setCellSet()
             label zoneID = mesh_.cellZones().findZoneID(cellSetName_);
             if (zoneID == -1)
             {
-                FatalErrorIn("cellSetOption::setCellIds()")
+                FatalErrorInFunction
                     << "Cannot find cellZone " << cellSetName_ << endl
                     << "Valid cellZones are " << mesh_.cellZones().names()
                     << exit(FatalError);
@@ -157,7 +157,7 @@ void Foam::fv::cellSetOption::setCellSet()
         }
         default:
         {
-            FatalErrorIn("cellSetOption::setCellSet()")
+            FatalErrorInFunction
                 << "Unknown selectionMode "
                 << selectionModeTypeNames_[selectionMode_]
                 << ". Valid selectionMode types are" << selectionModeTypeNames_

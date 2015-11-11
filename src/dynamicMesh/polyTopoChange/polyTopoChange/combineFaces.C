@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -417,10 +417,8 @@ Foam::face Foam::combineFaces::getOutsideFace
 {
     if (fp.edgeLoops().size() != 1)
     {
-        FatalErrorIn
-        (
-            "combineFaces::getOutsideFace(const indirectPrimitivePatch&)"
-        )   << "Multiple outside loops:" << fp.edgeLoops()
+        FatalErrorInFunction
+            << "Multiple outside loops:" << fp.edgeLoops()
             << abort(FatalError);
     }
 
@@ -434,10 +432,8 @@ Foam::face Foam::combineFaces::getOutsideFace
 
     if (eFaces.size() != 1)
     {
-        FatalErrorIn
-        (
-            "combineFaces::getOutsideFace(const indirectPrimitivePatch&)"
-        )   << "boundary edge:" << bEdgeI
+        FatalErrorInFunction
+            << "boundary edge:" << bEdgeI
             << " points:" << fp.meshPoints()[e[0]]
             << ' ' << fp.meshPoints()[e[1]]
             << " on indirectPrimitivePatch has " << eFaces.size()
@@ -462,11 +458,8 @@ Foam::face Foam::combineFaces::getOutsideFace
 
         if (index0 == -1 || index1 == -1)
         {
-            FatalErrorIn
-            (
-                "combineFaces::getOutsideFace"
-                "(const indirectPrimitivePatch&)"
-            )   << "Cannot find boundary edge:" << e
+            FatalErrorInFunction
+                << "Cannot find boundary edge:" << e
                 << " points:" << fp.meshPoints()[e[0]]
                 << ' ' << fp.meshPoints()[e[1]]
                 << " in edgeLoop:" << outsideLoop << abort(FatalError);
@@ -481,11 +474,8 @@ Foam::face Foam::combineFaces::getOutsideFace
         }
         else
         {
-            FatalErrorIn
-            (
-                "combineFaces::getOutsideFace"
-                "(const indirectPrimitivePatch&)"
-            )   << "Cannot find boundary edge:" << e
+            FatalErrorInFunction
+                << "Cannot find boundary edge:" << e
                 << " points:" << fp.meshPoints()[e[0]]
                 << ' ' << fp.meshPoints()[e[1]]
                 << " on consecutive points in edgeLoop:"
@@ -510,11 +500,8 @@ Foam::face Foam::combineFaces::getOutsideFace
 
         if (index == -1)
         {
-            FatalErrorIn
-            (
-                "combineFaces::getOutsideFace"
-                "(const indirectPrimitivePatch&)"
-            )   << "Cannot find boundary edge:" << e
+            FatalErrorInFunction
+                << "Cannot find boundary edge:" << e
                 << " points:" << fp.meshPoints()[e[0]]
                 << ' ' << fp.meshPoints()[e[1]]
                 << " in face:" << eFaces[0]
@@ -531,11 +518,8 @@ Foam::face Foam::combineFaces::getOutsideFace
         }
         else
         {
-            FatalErrorIn
-            (
-                "combineFaces::getOutsideFace"
-                "(const indirectPrimitivePatch&)"
-            )   << "Cannot find boundary edge:" << e
+            FatalErrorInFunction
+                << "Cannot find boundary edge:" << e
                 << " points:" << fp.meshPoints()[e[0]]
                 << ' ' << fp.meshPoints()[e[1]]
                 << " in face:" << eFaces[0] << " verts:" << localF
@@ -602,12 +586,8 @@ void Foam::combineFaces::setRefinement
 
                 if (patchI == -1 || patches[patchI].coupled())
                 {
-                    FatalErrorIn
-                    (
-                        "combineFaces::setRefinement"
-                        "(const bool, const labelListList&"
-                        ", polyTopoChange&)"
-                    )   << "Can only merge non-coupled boundary faces"
+                    FatalErrorInFunction
+                        << "Can only merge non-coupled boundary faces"
                         << " but found internal or coupled face:"
                         << setFaces[i] << " in set " << setI
                         << abort(FatalError);
@@ -631,11 +611,8 @@ void Foam::combineFaces::setRefinement
 
         if (edgeLoops.size() != 1)
         {
-            FatalErrorIn
-            (
-                "combineFaces::setRefinement"
-                "(const bool, const labelListList&, polyTopoChange&)"
-            )   << "Faces to-be-merged " << setFaces
+            FatalErrorInFunction
+                << "Faces to-be-merged " << setFaces
                 << " do not form a single big face." << nl
                 << abort(FatalError);
         }
@@ -815,11 +792,8 @@ void Foam::combineFaces::updateMesh(const mapPolyMesh& map)
 
                         if (f[fp] < 0)
                         {
-                            FatalErrorIn
-                            (
-                                "combineFaces::updateMesh"
-                                "(const mapPolyMesh&)"
-                            )   << "In set " << setI << " at position " << i
+                            FatalErrorInFunction
+                                << "In set " << setI << " at position " << i
                                 << " with master face "
                                 << masterFace_[setI] << nl
                                 << "the points of the slave face " << faces[i]
@@ -849,12 +823,8 @@ void Foam::combineFaces::setUnrefinement
 {
     if (!undoable_)
     {
-        FatalErrorIn
-        (
-            "combineFaces::setUnrefinement"
-            "(const labelList&, polyTopoChange&"
-            ", Map<label>&, Map<label>&, Map<label>&)"
-        )   << "Can only call setUnrefinement if constructed with"
+        FatalErrorInFunction
+            << "Can only call setUnrefinement if constructed with"
             << " unrefinement capability." << exit(FatalError);
     }
 
@@ -881,12 +851,8 @@ void Foam::combineFaces::setUnrefinement
 
         if (iter == masterToSet.end())
         {
-            FatalErrorIn
-            (
-                "combineFaces::setUnrefinement"
-                "(const labelList&, polyTopoChange&"
-                ", Map<label>&, Map<label>&, Map<label>&)"
-            )   << "Master face " << masterFaceI
+            FatalErrorInFunction
+                << "Master face " << masterFaceI
                 << " is not the master of one of the merge sets"
                 << " or has already been merged"
                 << abort(FatalError);
@@ -902,12 +868,8 @@ void Foam::combineFaces::setUnrefinement
 
         if (faces.empty())
         {
-            FatalErrorIn
-            (
-                "combineFaces::setUnrefinement"
-                "(const labelList&, polyTopoChange&"
-                ", Map<label>&, Map<label>&, Map<label>&)"
-            )   << "Set " << setI << " with master face " << masterFaceI
+            FatalErrorInFunction
+                << "Set " << setI << " with master face " << masterFaceI
                 << " has already been merged." << abort(FatalError);
         }
 
@@ -964,12 +926,8 @@ void Foam::combineFaces::setUnrefinement
 
         if (mesh_.boundaryMesh()[patchI].coupled())
         {
-            FatalErrorIn
-            (
-                "combineFaces::setUnrefinement"
-                "(const labelList&, polyTopoChange&"
-                ", Map<label>&, Map<label>&, Map<label>&)"
-            )   << "Master face " << masterFaceI << " is on coupled patch "
+            FatalErrorInFunction
+                << "Master face " << masterFaceI << " is on coupled patch "
                 << mesh_.boundaryMesh()[patchI].name()
                 << abort(FatalError);
         }

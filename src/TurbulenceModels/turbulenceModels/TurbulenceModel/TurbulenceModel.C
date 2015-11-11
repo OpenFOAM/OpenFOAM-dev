@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,13 +110,8 @@ Foam::TurbulenceModel<Alpha, Rho, BasicTurbulenceModel, TransportModel>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "TurbulenceModel::New"
-            "(const alphaField&, const rhoField&, "
-            "const volVectorField&, const surfaceScalarField&, "
-            "transportModel&, const word&)"
-        )   << "Unknown TurbulenceModel type "
+        FatalErrorInFunction
+            << "Unknown TurbulenceModel type "
             << modelType << nl << nl
             << "Valid TurbulenceModel types:" << endl
             << dictionaryConstructorTablePtr_->sortedToc()

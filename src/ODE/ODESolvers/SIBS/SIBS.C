@@ -145,7 +145,7 @@ void Foam::SIBS::solve
 
             if (xNew_ == x)
             {
-                FatalErrorIn("ODES::SIBS")
+                FatalErrorInFunction
                     << "step size underflow"
                     << exit(FatalError);
             }

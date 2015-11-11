@@ -60,7 +60,7 @@ Foam::fv::patchMeanVelocityForce::patchMeanVelocityForce
 {
     if (patchi_ < 0)
     {
-        FatalErrorIn("fv::patchMeanVelocityForce::patchMeanVelocityForce")
+        FatalErrorInFunction
             << "Cannot find patch " << patch_
             << exit(FatalError);
     }

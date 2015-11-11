@@ -222,7 +222,7 @@ Foam::Reaction<ReactionThermo>::specieCoeffs::specieCoeffs
     }
     else
     {
-        FatalIOErrorIn("Reaction<ReactionThermo>::lrhs(Istream& is)", is)
+        FatalIOErrorInFunction(is)
             << "Expected a word but found " << t.info()
             << exit(FatalIOError);
     }
@@ -306,7 +306,7 @@ void Foam::Reaction<ReactionThermo>::setLRhs
         }
     }
 
-    FatalIOErrorIn("Reaction<ReactionThermo>::setLRhs(Istream& is)", is)
+    FatalIOErrorInFunction(is)
         << "Cannot continue reading reaction data from stream"
         << exit(FatalIOError);
 }
@@ -365,10 +365,8 @@ Foam::Reaction<ReactionThermo>::New
 {
     if (is.eof())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "Reaction<ReactionThermo>::New(const speciesTable&, "
-            " const HashPtrTable<ReactionThermo>&, Istream&)",
             is
         )   << "Reaction type not specified" << nl << nl
             << "Valid Reaction types are :" << nl
@@ -383,10 +381,8 @@ Foam::Reaction<ReactionThermo>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "Reaction<ReactionThermo>::New(const speciesTable&, "
-            " const HashPtrTable<ReactionThermo>&, Istream&)",
             is
         )   << "Unknown reaction type "
             << reactionTypeName << nl << nl
@@ -418,15 +414,8 @@ Foam::Reaction<ReactionThermo>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "Reaction<ReactionThermo>::New"
-            "("
-                "const speciesTable&, "
-                "const HashPtrTable<ReactionThermo>&, "
-                "const dictionary&"
-            ")"
-        )   << "Unknown reaction type "
+        FatalErrorInFunction
+            << "Unknown reaction type "
             << reactionTypeName << nl << nl
             << "Valid reaction types are :" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

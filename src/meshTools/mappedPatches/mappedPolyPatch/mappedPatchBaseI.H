@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ inline const Foam::word& Foam::mappedPatchBase::sampleRegion() const
     {
         if (!coupleGroup_.valid())
         {
-            FatalErrorIn("mappedPatchBase::sampleRegion()")
+            FatalErrorInFunction
                 << "Supply either a regionName or a coupleGroup"
                 << " for patch " << patch_.name()
                 << " in region " << patch_.boundaryMesh().mesh().name()
@@ -62,7 +62,7 @@ inline const Foam::word& Foam::mappedPatchBase::samplePatch() const
     {
         if (!coupleGroup_.valid())
         {
-            FatalErrorIn("mappedPatchBase::samplePolyPatch()")
+            FatalErrorInFunction
                 << "Supply either a patchName or a coupleGroup"
                 << " for patch " << patch_.name()
                 << " in region " << patch_.boundaryMesh().mesh().name()
@@ -115,7 +115,7 @@ inline Foam::label Foam::mappedPatchBase::sampleSize() const
         }
         default:
         {
-            FatalErrorIn("mappedPatchBase::sampleSize()")
+            FatalErrorInFunction
                 << "problem." << abort(FatalError);
             return -1;
         }

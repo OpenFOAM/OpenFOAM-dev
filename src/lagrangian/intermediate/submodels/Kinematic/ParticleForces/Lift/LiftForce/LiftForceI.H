@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,11 +31,8 @@ Foam::LiftForce<CloudType>::curlUcInterp() const
 {
     if (!curlUcInterpPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "inline const Foam::interpolation<Foam::vector>&"
-            "Foam::LiftForce<CloudType>::curlUcInterp() const"
-        )   << "Carrier phase curlUc interpolation object not set"
+        FatalErrorInFunction
+            << "Carrier phase curlUc interpolation object not set"
             << abort(FatalError);
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,7 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
     IFstream is(filename);
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::AC3DsurfaceFormat::read(const fileName&)"
-        )
+        FatalErrorInFunction
             << "Cannot read file " << filename
             << exit(FatalError);
     }
@@ -71,10 +68,7 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
 
     if (version != "b")
     {
-        WarningIn
-        (
-            "fileFormats::AC3DsurfaceFormat::read(const fileName&)"
-        )
+        WarningInFunction
             << "When reading AC3D file " << filename
             << " read header " << line << " with version "
             << version << endl
@@ -85,10 +79,7 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
 
     if (!cueTo(is, "OBJECT", args) || (args != "world"))
     {
-        FatalErrorIn
-        (
-            "fileFormats::AC3DsurfaceFormat::read(const fileName&)"
-        )
+        FatalErrorInFunction
             << "Cannot find \"OBJECT world\" in file " << filename
             << exit(FatalError);
     }
@@ -123,10 +114,7 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
             // zone should always end with 'kids' command ?not sure.
             if (!readCmd(is, cmd, args))
             {
-                FatalErrorIn
-                (
-                    "fileFormats::AC3DsurfaceFormat::read(const fileName&)"
-                )
+                FatalErrorInFunction
                     << "Did not read up to \"kids 0\" while reading zone "
                     << zoneI << " from file " << filename
                     << exit(FatalError);
@@ -151,11 +139,7 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
                 //     >> rotation.yx() >> rotation.yy() >> rotation.yz()
                 //     >> rotation.zx() >> rotation.zy() >> rotation.zz();
 
-                WarningIn
-                (
-                    "fileFormats::AC3DsurfaceFormat::read"
-                    "(const fileName&)"
-                )
+                WarningInFunction
                     << "rot (rotation tensor) command not implemented"
                     << "Line:" << cmd << ' ' << args << endl
                     << "while reading zone " << zoneI << endl;
@@ -245,10 +229,7 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
 
                 if (nKids != 0)
                 {
-                    FatalErrorIn
-                    (
-                        "fileFormats::AC3DsurfaceFormat::read(const fileName&)"
-                    )
+                    FatalErrorInFunction
                         << "Can only read objects without kids."
                         << " Encountered " << nKids << " kids when"
                         << " reading zone " << zoneI
@@ -293,11 +274,7 @@ void Foam::fileFormats::AC3DsurfaceFormat<Face>::write
 
     if (useFaceMap)
     {
-        FatalErrorIn
-        (
-            "fileFormats::AC3DsurfaceFormat::write"
-            "(const fileName&, const MeshedSurfaceProxy<Face>&)"
-        )
+        FatalErrorInFunction
             << "output with faceMap is not supported " << filename
             << exit(FatalError);
     }
@@ -306,11 +283,7 @@ void Foam::fileFormats::AC3DsurfaceFormat<Face>::write
     OFstream os(filename);
     if (!os.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::AC3DsurfaceFormat::write"
-            "(const fileName&, const MeshedSurfaceProxy<Face>&)"
-        )
+        FatalErrorInFunction
             << "Cannot open file for writing " << filename
             << exit(FatalError);
     }
@@ -395,11 +368,7 @@ void Foam::fileFormats::AC3DsurfaceFormat<Face>::write
         OFstream os(filename);
         if (!os.good())
         {
-            FatalErrorIn
-            (
-                "fileFormats::AC3DsurfaceFormat::write"
-                "(const fileName&, const MeshedSurfaceProxy<Face>&)"
-            )
+            FatalErrorInFunction
                 << "Cannot open file for writing " << filename
                 << exit(FatalError);
         }

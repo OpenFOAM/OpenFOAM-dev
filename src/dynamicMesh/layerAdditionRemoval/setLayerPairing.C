@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,10 +76,8 @@ bool Foam::layerAdditionRemoval::setLayerPairing() const
     // the master patch
     if (pointsPairingPtr_ || facesPairingPtr_)
     {
-        FatalErrorIn
-        (
-            "void Foam::layerAdditionRemoval::setLayerPairing() const"
-        )   << "Problem with layer pairing data"
+        FatalErrorInFunction
+            << "Problem with layer pairing data"
             << abort(FatalError);
     }
 
@@ -189,10 +187,8 @@ const Foam::labelList& Foam::layerAdditionRemoval::pointsPairing() const
 {
     if (!pointsPairingPtr_)
     {
-        FatalErrorIn
-        (
-            "const labelList& layerAdditionRemoval::pointsPairing() const"
-        )   << "Problem with layer pairing data for object " << name()
+        FatalErrorInFunction
+            << "Problem with layer pairing data for object " << name()
             << abort(FatalError);
     }
 
@@ -203,10 +199,8 @@ const Foam::labelList& Foam::layerAdditionRemoval::facesPairing() const
 {
     if (!facesPairingPtr_)
     {
-        FatalErrorIn
-        (
-            "const labelList& layerAdditionRemoval::facesPairing() const"
-        )   << "Problem with layer pairing data for object " << name()
+        FatalErrorInFunction
+            << "Problem with layer pairing data for object " << name()
             << abort(FatalError);
     }
 

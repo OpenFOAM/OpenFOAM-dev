@@ -108,7 +108,7 @@ void Foam::forceCoeffs::writeFileHeader(const label i)
     }
     else
     {
-        FatalErrorIn("void Foam::forces::writeFileHeader(const label)")
+        FatalErrorInFunction
             << "Unhandled file index: " << i
             << abort(FatalError);
     }

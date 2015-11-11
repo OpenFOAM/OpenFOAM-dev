@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,7 +156,7 @@ Foam::label Foam::bufferedAccumulator<Type>::addToBuffers
         {
             if (bufferToRefill != -1)
             {
-                FatalErrorIn("bufferedAccumulator<Type>::addToBuffers ")
+                FatalErrorInFunction
                     << "More than one bufferedAccumulator accumulation "
                     << "buffer filled at once, this is considered an error."
                     << abort(FatalError);
@@ -181,10 +181,8 @@ Foam::Field<Type> Foam::bufferedAccumulator<Type>::averaged() const
     }
     else
     {
-        WarningIn
-        (
-            "bufferedAccumulator<Type>::averagedbufferedAccumulator() const"
-        )   << "Averaged correlation function requested but averagesTaken = "
+        WarningInFunction
+            << "Averaged correlation function requested but averagesTaken = "
             << averagesTaken_
             << ". Returning empty field."
             << endl;
@@ -214,10 +212,8 @@ void Foam::bufferedAccumulator<Type>::operator=
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn
-        (
-            "bufferedAccumulator<Type>::operator=(const bufferedAccumulator&)"
-        )   << "Attempted assignment to self"
+        FatalErrorInFunction
+            << "Attempted assignment to self"
             << abort(FatalError);
     }
 

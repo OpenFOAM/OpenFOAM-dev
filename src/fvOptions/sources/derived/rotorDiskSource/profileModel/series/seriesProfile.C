@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,25 +100,13 @@ Foam::seriesProfile::seriesProfile
 
     if (CdCoeffs_.empty())
     {
-        FatalErrorIn
-        (
-            "Foam::seriesProfile::seriesProfile"
-            "("
-                "const dictionary&, "
-                "const word&"
-            ")"
-        )   << "CdCoeffs must be specified" << exit(FatalError);
+        FatalErrorInFunction
+            << "CdCoeffs must be specified" << exit(FatalError);
     }
     if (ClCoeffs_.empty())
     {
-        FatalErrorIn
-        (
-            "Foam::seriesProfile::seriesProfile"
-            "("
-                "const dictionary&, "
-                "const word&"
-            ")"
-        )   << "ClCoeffs must be specified" << exit(FatalError);
+        FatalErrorInFunction
+            << "ClCoeffs must be specified" << exit(FatalError);
     }
 }
 

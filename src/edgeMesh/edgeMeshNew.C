@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,11 +38,8 @@ Foam::autoPtr<Foam::edgeMesh> Foam::edgeMesh::New
 
     if (cstrIter == fileExtensionConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "edgeMesh<Face>::New(const fileName&, const word&) : "
-            "constructing edgeMesh"
-        )   << "Unknown file extension " << ext
+        FatalErrorInFunction
+            << "Unknown file extension " << ext
             << " for file " << name << nl << nl
             << "Valid extensions are :" << nl
             << fileExtensionConstructorTablePtr_->sortedToc()

@@ -160,14 +160,8 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
     }
     else
     {
-        FatalErrorIn
-        (
-            "void Foam::externalCoupledTemperatureMixedFvPatchScalarField::"
-            "transferData"
-            "("
-                "OFstream&"
-            ") const"
-        )   << "Condition requires either compressible turbulence and/or "
+        FatalErrorInFunction
+            << "Condition requires either compressible turbulence and/or "
             << "thermo model to be available" << exit(FatalError);
     }
 

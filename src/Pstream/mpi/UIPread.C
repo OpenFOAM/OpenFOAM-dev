@@ -137,7 +137,7 @@ Foam::UIPstream::UIPstream(const int fromProcNo, PstreamBuffers& buffers)
 {
     if (commsType() != UPstream::scheduled && !buffers.finishedSendsCalled_)
     {
-        FatalErrorIn("UIPstream::UIPstream(const int, PstreamBuffers&)")
+        FatalErrorInFunction
             << "PstreamBuffers::finishedSends() never called." << endl
             << "Please call PstreamBuffers::finishedSends() after doing"
             << " all your sends (using UOPstream) and before doing any"
@@ -269,11 +269,8 @@ Foam::label Foam::UIPstream::read
             )
         )
         {
-            FatalErrorIn
-            (
-                "UIPstream::read"
-                "(const int fromProcNo, char* buf, std::streamsize bufSize)"
-            )   << "MPI_Recv cannot receive incomming message"
+            FatalErrorInFunction
+                << "MPI_Recv cannot receive incomming message"
                 << Foam::abort(FatalError);
 
             return 0;
@@ -295,11 +292,8 @@ Foam::label Foam::UIPstream::read
 
         if (messageSize > bufSize)
         {
-            FatalErrorIn
-            (
-                "UIPstream::read"
-                "(const int fromProcNo, char* buf, std::streamsize bufSize)"
-            )   << "buffer (" << label(bufSize)
+            FatalErrorInFunction
+                << "buffer (" << label(bufSize)
                 << ") not large enough for incomming message ("
                 << messageSize << ')'
                 << Foam::abort(FatalError);
@@ -325,11 +319,8 @@ Foam::label Foam::UIPstream::read
             )
         )
         {
-            FatalErrorIn
-            (
-                "UIPstream::read"
-                "(const int fromProcNo, char* buf, std::streamsize bufSize)"
-            )   << "MPI_Recv cannot start non-blocking receive"
+            FatalErrorInFunction
+                << "MPI_Recv cannot start non-blocking receive"
                 << Foam::abort(FatalError);
 
             return 0;
@@ -351,11 +342,8 @@ Foam::label Foam::UIPstream::read
     }
     else
     {
-        FatalErrorIn
-        (
-            "UIPstream::read"
-            "(const int fromProcNo, char* buf, std::streamsize bufSize)"
-        )   << "Unsupported communications type "
+        FatalErrorInFunction
+            << "Unsupported communications type "
             << commsType
             << Foam::abort(FatalError);
 

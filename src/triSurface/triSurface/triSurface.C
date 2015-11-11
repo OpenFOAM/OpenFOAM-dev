@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,11 +104,8 @@ Foam::List<Foam::labelledTri> Foam::triSurface::convertToTri
 
         if (f.size() != 3)
         {
-            FatalErrorIn
-            (
-                "triSurface::convertToTri"
-                "(const faceList&, const label)"
-            )   << "Face at position " << faceI
+            FatalErrorInFunction
+                << "Face at position " << faceI
                 << " does not have three vertices:" << f
                 << abort(FatalError);
         }
@@ -196,7 +193,7 @@ void Foam::triSurface::checkTriangles(const bool verbose)
         {
             if (f[fp] < 0 || f[fp] > maxPointI)
             {
-                FatalErrorIn("triSurface::checkTriangles(bool)")
+                FatalErrorInFunction
                     << "triangle " << f
                     << " uses point indices outside point range 0.."
                     << maxPointI
@@ -226,10 +223,8 @@ void Foam::triSurface::checkTriangles(const bool verbose)
 
             if (verbose)
             {
-                WarningIn
-                (
-                    "triSurface::checkTriangles(bool verbose)"
-                )   << "triangle " << faceI
+                WarningInFunction
+                    << "triangle " << faceI
                     << " does not have three unique vertices:\n";
                 printTriangle(Warning, "    ", f, points());
             }
@@ -267,10 +262,8 @@ void Foam::triSurface::checkTriangles(const bool verbose)
 
                             if (verbose)
                             {
-                                WarningIn
-                                (
-                                    "triSurface::checkTriangles(bool verbose)"
-                                )   << "triangles share the same vertices:\n"
+                                WarningInFunction
+                                    << "triangles share the same vertices:\n"
                                     << "    face 1 :" << faceI << endl;
                                 printTriangle(Warning, "    ", f, points());
 
@@ -304,10 +297,8 @@ void Foam::triSurface::checkTriangles(const bool verbose)
 
         if (verbose)
         {
-            WarningIn
-            (
-                "triSurface::checkTriangles(bool verbose)"
-            )   << "Removing " << size() - newFaceI
+            WarningInFunction
+                << "Removing " << size() - newFaceI
                 << " illegal faces." << endl;
         }
         (*this).setSize(newFaceI);
@@ -329,17 +320,15 @@ void Foam::triSurface::checkEdges(const bool verbose)
 
         if (myFaces.empty())
         {
-            FatalErrorIn("triSurface::checkEdges(bool verbose)")
+            FatalErrorInFunction
                 << "Edge " << edgeI << " with vertices " << edges()[edgeI]
                 << " has no edgeFaces"
                 << exit(FatalError);
         }
         else if (myFaces.size() > 2 && verbose)
         {
-            WarningIn
-            (
-                "triSurface::checkEdges(bool verbose)"
-            )   << "Edge " << edgeI << " with vertices " << edges()[edgeI]
+            WarningInFunction
+                << "Edge " << edgeI << " with vertices " << edges()[edgeI]
                 << " has more than 2 faces connected to it : " << myFaces
                 << endl;
         }
@@ -366,10 +355,8 @@ bool Foam::triSurface::read
 {
     if (check && !exists(name))
     {
-        FatalErrorIn
-        (
-            "triSurface::read(const fileName&, const word&, const bool)"
-        )   << "Cannnot read " << name << exit(FatalError);
+        FatalErrorInFunction
+            << "Cannnot read " << name << exit(FatalError);
     }
 
     if (ext == "gz")
@@ -421,10 +408,8 @@ bool Foam::triSurface::read
     }
     else
     {
-        FatalErrorIn
-        (
-            "triSurface::read(const fileName&, const word&)"
-        )   << "unknown file extension " << ext
+        FatalErrorInFunction
+            << "unknown file extension " << ext
             << ". Supported extensions are '.ftr', '.stl', '.stlb', '.gts'"
             << ", '.obj', '.ac', '.off', '.nas', '.tri' and '.vtk'"
             << exit(FatalError);
@@ -490,10 +475,8 @@ void Foam::triSurface::write
     }
     else
     {
-        FatalErrorIn
-        (
-            "triSurface::write(const fileName&, const word&, const bool)"
-        )   << "unknown file extension " << ext
+        FatalErrorInFunction
+            << "unknown file extension " << ext
             << " for file " << name
             << ". Supported extensions are '.ftr', '.stl', '.stlb', "
             << "'.gts', '.obj', '.vtk'"
@@ -889,11 +872,7 @@ void Foam::triSurface::markZone
                         }
                         else if (faceZone[nbrFaceI] != currentZone)
                         {
-                            FatalErrorIn
-                            (
-                                "triSurface::markZone(const boolList&,"
-                                "const label, const label, labelList&) const"
-                            )
+                            FatalErrorInFunction
                                 << "Zones " << faceZone[nbrFaceI]
                                 << " at face " << nbrFaceI
                                 << " connects to zone " << currentZone
@@ -928,11 +907,7 @@ Foam::label Foam::triSurface::markZones
 
     if (borderEdge.size() != nEdges())
     {
-        FatalErrorIn
-        (
-            "triSurface::markZones"
-            "(const boolList&, labelList&)"
-        )
+        FatalErrorInFunction
             << "borderEdge boolList not same size as number of edges" << endl
             << "borderEdge:" << borderEdge.size() << endl
             << "nEdges    :" << nEdges()

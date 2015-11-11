@@ -606,7 +606,7 @@ void Foam::tetDecomposer::setRefinement
                     }
                     else
                     {
-                        FatalErrorIn("tetDecomposer::setRefinement(..)")
+                        FatalErrorInFunction
                             << "problem." << abort(FatalError);
                     }
 

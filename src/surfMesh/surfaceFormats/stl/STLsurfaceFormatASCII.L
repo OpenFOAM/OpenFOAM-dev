@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ using namespace Foam;
 //! \cond dummy
 int yyFlexLexer::yylex()
 {
-    FatalErrorIn("yyFlexLexer::yylex()")
+    FatalErrorInFunction
         << "Should not have called this function"
         << abort(FatalError);
     return 0;
@@ -371,10 +371,8 @@ endsolid              {space}("endsolid"|"ENDSOLID")({some_space}{word})*
 
 <stlError>.* {
         yy_pop_state();
-        FatalErrorIn
-        (
-            "fileFormats::STLsurfaceFormatCore::readASCII(const fileName&)"
-        )   << "while " << stateNames[YY_START] << " on line " << lineNo_ << nl
+        FatalErrorInFunction
+            << "while " << stateNames[YY_START] << " on line " << lineNo_ << nl
             << "    expected " << stateExpects[YY_START]
             << " but found '" << startError_.c_str() << YYText() << "'"
             << exit(FatalError);

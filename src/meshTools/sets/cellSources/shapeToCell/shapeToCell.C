@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,10 +105,8 @@ Foam::shapeToCell::shapeToCell
 {
     if (!cellModeller::lookup(type_) && (type_ != "splitHex"))
     {
-        FatalErrorIn
-        (
-            "shapeToCell::shapeToCell(const polyMesh&, const word&)"
-        )   << "Illegal cell type " << type_ << exit(FatalError);
+        FatalErrorInFunction
+            << "Illegal cell type " << type_ << exit(FatalError);
     }
 }
 
@@ -125,10 +123,8 @@ Foam::shapeToCell::shapeToCell
 {
     if (!cellModeller::lookup(type_) && (type_ != "splitHex"))
     {
-        FatalErrorIn
-        (
-            "shapeToCell::shapeToCell(const polyMesh&, const dictionary&)"
-        )   << "Illegal cell type " << type_ << exit(FatalError);
+        FatalErrorInFunction
+            << "Illegal cell type " << type_ << exit(FatalError);
     }
 }
 
@@ -145,10 +141,8 @@ Foam::shapeToCell::shapeToCell
 {
     if (!cellModeller::lookup(type_) && (type_ != "splitHex"))
     {
-        FatalErrorIn
-        (
-            "shapeToCell::shapeToCell(const polyMesh&, Istream&)"
-        )   << "Illegal cell type " << type_ << exit(FatalError);
+        FatalErrorInFunction
+            << "Illegal cell type " << type_ << exit(FatalError);
     }
 }
 

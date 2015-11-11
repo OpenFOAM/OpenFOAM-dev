@@ -241,14 +241,8 @@ Foam::singleStepReactingMixture<ThermoType>::singleStepReactingMixture
     }
     else
     {
-        FatalErrorIn
-        (
-            "singleStepReactingMixture::<ThermoType>::singleStepReactingMixture"
-            "("
-                "const dictionary&, "
-                "const fvMesh&"
-            ")"
-        )   << "Only one reaction required for single step reaction"
+        FatalErrorInFunction
+            << "Only one reaction required for single step reaction"
             << exit(FatalError);
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,11 +187,8 @@ void Foam::removeCells::setRefinement
 
     if (exposedFaceLabels.size() != exposedPatchIDs.size())
     {
-        FatalErrorIn
-        (
-            "removeCells::setRefinement(const labelList&"
-            ", const labelList&, const labelList&, polyTopoChange&)"
-        )   << "Size of exposedFaceLabels " << exposedFaceLabels.size()
+        FatalErrorInFunction
+            << "Size of exposedFaceLabels " << exposedFaceLabels.size()
             << " differs from size of exposedPatchIDs "
             << exposedPatchIDs.size()
             << abort(FatalError);
@@ -206,11 +203,8 @@ void Foam::removeCells::setRefinement
 
         if (patchI < 0 || patchI >= patches.size())
         {
-            FatalErrorIn
-            (
-                "removeCells::setRefinement(const labelList&"
-                ", const labelList&, const labelList&, polyTopoChange&)"
-            )   << "Invalid patch " << patchI
+            FatalErrorInFunction
+                << "Invalid patch " << patchI
                 << " for exposed face " << exposedFaceLabels[i] << endl
                 << "Valid patches 0.." << patches.size()-1
                 << abort(FatalError);
@@ -218,11 +212,8 @@ void Foam::removeCells::setRefinement
 
         if (patches[patchI].coupled())
         {
-            FatalErrorIn
-            (
-                "removeCells::setRefinement(const labelList&"
-                ", const labelList&, const labelList&, polyTopoChange&)"
-            )   << "Trying to put exposed face " << exposedFaceLabels[i]
+            FatalErrorInFunction
+                << "Trying to put exposed face " << exposedFaceLabels[i]
                 << " into a coupled patch : " << patches[patchI].name()
                 << endl
                 << "This is illegal."
@@ -295,12 +286,8 @@ void Foam::removeCells::setRefinement
             {
                 if (newPatchID[faceI] == -1)
                 {
-                    FatalErrorIn
-                    (
-                        "removeCells::setRefinement(const labelList&"
-                        ", const labelList&, const labelList&"
-                        ", polyTopoChange&)"
-                    )   << "No patchID provided for exposed face " << faceI
+                    FatalErrorInFunction
+                        << "No patchID provided for exposed face " << faceI
                         << " on cell " << nei << nl
                         << "Did you provide patch IDs for all exposed faces?"
                         << abort(FatalError);
@@ -344,12 +331,8 @@ void Foam::removeCells::setRefinement
         {
             if (newPatchID[faceI] == -1)
             {
-                FatalErrorIn
-                (
-                    "removeCells::setRefinement(const labelList&"
-                    ", const labelList&, const labelList&"
-                    ", polyTopoChange&)"
-                )   << "No patchID provided for exposed face " << faceI
+                FatalErrorInFunction
+                    << "No patchID provided for exposed face " << faceI
                     << " on cell " << own << nl
                     << "Did you provide patch IDs for all exposed faces?"
                     << abort(FatalError);
@@ -450,12 +433,8 @@ void Foam::removeCells::setRefinement
             {
                 if (newPatchID[faceI] != -1)
                 {
-                    FatalErrorIn
-                    (
-                        "removeCells::setRefinement(const labelList&"
-                        ", const labelList&, const labelList&"
-                        ", polyTopoChange&)"
-                    )   << "new patchID provided for boundary face " << faceI
+                    FatalErrorInFunction
+                        << "new patchID provided for boundary face " << faceI
                         << " even though it is not on a coupled face."
                         << abort(FatalError);
                 }
@@ -491,12 +470,8 @@ void Foam::removeCells::setRefinement
         }
         else if (nFacesUsingPoint[pointI] == 1)
         {
-            WarningIn
-            (
-                "removeCells::setRefinement(const labelList&"
-                ", const labelList&, const labelList&"
-                ", polyTopoChange&)"
-            )   << "point " << pointI << " at coordinate "
+            WarningInFunction
+                << "point " << pointI << " at coordinate "
                 << mesh_.points()[pointI]
                 << " is only used by 1 face after removing cells."
                 << " This probably results in an illegal mesh."

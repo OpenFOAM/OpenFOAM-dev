@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ Foam::labelList Foam::orientedSurface::edgeToFace
             {
                 if (flip[face1] == UNVISITED)
                 {
-                    FatalErrorIn("orientedSurface::edgeToFace(..)") << "Problem"
+                    FatalErrorInFunction
                         << abort(FatalError);
                 }
                 else
@@ -330,10 +330,8 @@ bool Foam::orientedSurface::flipSurface
     {
         if (flipState[faceI] == UNVISITED)
         {
-            FatalErrorIn
-            (
-                "orientSurface(const point&, const label, const point&)"
-            )   << "unvisited face " << faceI
+            FatalErrorInFunction
+                << "unvisited face " << faceI
                 << abort(FatalError);
         }
         else if (flipState[faceI] == FLIP)

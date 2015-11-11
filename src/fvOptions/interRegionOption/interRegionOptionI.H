@@ -37,10 +37,8 @@ Foam::fv::interRegionOption::meshInterp() const
 {
     if (!meshInterpPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "const meshToMesh& interRegionOption::meshInterp() const"
-        )   << "Interpolation object not set"
+        FatalErrorInFunction
+            << "Interpolation object not set"
             << abort(FatalError);
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,7 +194,7 @@ void Foam::streamLine::track()
             }
             else
             {
-                FatalErrorIn("streamLine::track()")
+                FatalErrorInFunction
                     << "Cannot find field " << fields_[i] << nl
                     << "Valid scalar fields are:"
                     << mesh.names(volScalarField::typeName) << nl
@@ -267,7 +267,7 @@ void Foam::streamLine::track()
 
     if (UIndex == -1)
     {
-        FatalErrorIn("streamLine::track()")
+        FatalErrorInFunction
             << "Cannot find field to move particles with : " << UName_ << nl
             << "This field has to be present in the sampled fields " << fields_
             << " and in the objectRegistry."
@@ -345,16 +345,8 @@ Foam::streamLine::streamLine
     else
     {
         active_ = false;
-        WarningIn
-        (
-            "streamLine::streamLine\n"
-            "(\n"
-                "const word&,\n"
-                "const objectRegistry&,\n"
-                "const dictionary&,\n"
-                "const bool\n"
-            ")"
-        )   << "No fvMesh available, deactivating."
+        WarningInFunction
+            << "No fvMesh available, deactivating."
             << nl << endl;
     }
 }
@@ -385,7 +377,7 @@ void Foam::streamLine::read(const dictionary& dict)
             UName_ = "U";
             if (dict.found("U"))
             {
-                IOWarningIn("streamLine::read(const dictionary&)", dict)
+                IOWarningInFunction(dict)
                     << "Using deprecated entry \"U\"."
                     << " Please use \"UName\" instead."
                     << endl;
@@ -395,7 +387,7 @@ void Foam::streamLine::read(const dictionary& dict)
 
         if (findIndex(fields_, UName_) == -1)
         {
-            FatalIOErrorIn("streamLine::read(const dictionary&)", dict)
+            FatalIOErrorInFunction(dict)
                 << "Velocity field for tracking " << UName_
                 << " should be present in the list of fields " << fields_
                 << exit(FatalIOError);
@@ -406,7 +398,7 @@ void Foam::streamLine::read(const dictionary& dict)
         dict.lookup("lifeTime") >> lifeTime_;
         if (lifeTime_ < 1)
         {
-            FatalErrorIn(":streamLine::read(const dictionary&)")
+            FatalErrorInFunction
                 << "Illegal value " << lifeTime_ << " for lifeTime"
                 << exit(FatalError);
         }
@@ -417,7 +409,7 @@ void Foam::streamLine::read(const dictionary& dict)
 
         if (subCycling && fixedLength)
         {
-            FatalIOErrorIn("streamLine::read(const dictionary&)", dict)
+            FatalIOErrorInFunction(dict)
                 << "Cannot both specify automatic time stepping (through '"
                 << "nSubCycle' specification) and fixed track length (through '"
                 << "trackLength')"

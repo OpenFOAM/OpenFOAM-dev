@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,14 +53,8 @@ Foam::NonSphereDragForce<CloudType>::NonSphereDragForce
 {
     if (phi_ <= 0 || phi_ > 1)
     {
-        FatalErrorIn
-        (
-            "NonSphereDrag<CloudType>::NonSphereDrag"
-            "("
-                "const dictionary&, "
-                "CloudType&"
-            ")"
-        )   << "Ratio of surface of sphere having same volume as particle to "
+        FatalErrorInFunction
+            << "Ratio of surface of sphere having same volume as particle to "
             << "actual surface area of particle (phi) must be greater than 0 "
             << "and less than or equal to 1" << exit(FatalError);
     }

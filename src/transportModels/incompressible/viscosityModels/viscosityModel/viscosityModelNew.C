@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,11 +46,8 @@ Foam::autoPtr<Foam::viscosityModel> Foam::viscosityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "viscosityModel::New(const volVectorField&, "
-            "const surfaceScalarField&)"
-        )   << "Unknown viscosityModel type "
+        FatalErrorInFunction
+            << "Unknown viscosityModel type "
             << modelType << nl << nl
             << "Valid viscosityModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

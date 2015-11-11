@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -290,7 +290,7 @@ Foam::labelList Foam::zoltanRenumber::renumber
 
     if (rc != ZOLTAN_OK)
     {
-        FatalErrorIn("zoltanRenumber::renumber(..)")
+        FatalErrorInFunction
             << "Failed initialising Zoltan" << exit(FatalError);
     }
 
@@ -350,7 +350,7 @@ Foam::labelList Foam::zoltanRenumber::renumber
 
     if (err != ZOLTAN_OK)
     {
-        FatalErrorIn("zoltanRenumber::renumber(..)")
+        FatalErrorInFunction
             << "Failed Zoltan_Order" << exit(FatalError);
     }
 

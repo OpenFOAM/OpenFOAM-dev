@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,10 +238,8 @@ void thermalBaffleFvPatchScalarField::createPatchMesh()
 
     if (extrudeMeshPtr_.empty())
     {
-        WarningIn
-        (
-            "thermalBaffleFvPatchScalarField::createPatchMesh()\n"
-        )   << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
+        WarningInFunction
+            << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
             << " patchMeshPtr not set."
             << endl;
     }

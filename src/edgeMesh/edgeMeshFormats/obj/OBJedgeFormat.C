@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,10 +101,7 @@ bool Foam::fileFormats::OBJedgeFormat::read(const fileName& filename)
     IFstream is(filename);
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::OBJedgeFormat::read(const fileName&)"
-        )
+        FatalErrorInFunction
             << "Cannot read file " << filename
             << exit(FatalError);
     }
@@ -241,11 +238,7 @@ void Foam::fileFormats::OBJedgeFormat::write
     OFstream os(filename);
     if (!os.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::OBJedgeFormat::write"
-            "(const fileName&, const edgeMesh&)"
-        )
+        FatalErrorInFunction
             << "Cannot open file for writing " << filename
             << exit(FatalError);
     }

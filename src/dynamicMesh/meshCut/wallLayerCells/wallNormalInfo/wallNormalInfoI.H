@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,10 +37,8 @@ inline bool Foam::wallNormalInfo::update
 {
     if (!w2.valid(td))
     {
-        FatalErrorIn
-        (
-            "wallNormalInfo::update(const wallNormalInfo&)"
-        ) << "Problem: w2 is not valid" << abort(FatalError);
+        FatalErrorInFunction
+          << "Problem: w2 is not valid" << abort(FatalError);
 
         return false;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,10 +85,8 @@ Foam::labelList Foam::manualDecomp::decompose
 
     if (finalDecomp.size() != points.size())
     {
-        FatalErrorIn
-        (
-            "manualDecomp::decompose(const pointField&, const scalarField&)"
-        )   << "Size of decomposition list does not correspond "
+        FatalErrorInFunction
+            << "Size of decomposition list does not correspond "
             << "to the number of points.  Size: "
             << finalDecomp.size() << " Number of points: "
             << points.size()
@@ -99,10 +97,8 @@ Foam::labelList Foam::manualDecomp::decompose
 
     if (min(finalDecomp) < 0 || max(finalDecomp) > nProcessors_ - 1)
     {
-        FatalErrorIn
-        (
-            "manualDecomp::decompose(const pointField&, const scalarField&)"
-        )   << "According to the decomposition, cells assigned to "
+        FatalErrorInFunction
+            << "According to the decomposition, cells assigned to "
             << "impossible processor numbers.  Min processor = "
             << min(finalDecomp) << " Max processor = " << max(finalDecomp)
             << ".\n" << "Manual decomposition data read from file "

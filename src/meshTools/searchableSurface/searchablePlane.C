@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -256,11 +256,8 @@ void Foam::searchablePlane::getVolumeType
     List<volumeType>& volType
 ) const
 {
-    FatalErrorIn
-    (
-        "searchableCollection::getVolumeType(const pointField&"
-        ", List<volumeType>&) const"
-    )   << "Volume type not supported for plane."
+    FatalErrorInFunction
+        << "Volume type not supported for plane."
         << exit(FatalError);
 }
 

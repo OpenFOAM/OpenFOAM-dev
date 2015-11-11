@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ inline bool Foam::cellInfo::update
      || (w2.type() == cellClassification::CUT)
     )
     {
-        FatalErrorIn("cellInfo::update(const cellInfo&)")
+        FatalErrorInFunction
             << "Problem: trying to propagate NOTSET or CUT type:" << w2.type()
             << " into cell/face with type:" << type() << endl
             << "thisFaceI:" << thisFaceI
@@ -77,7 +77,7 @@ inline bool Foam::cellInfo::update
     }
 
     // Two conflicting types
-    FatalErrorIn("cellInfo::update(const cellInfo&)")
+    FatalErrorInFunction
         << "Problem: trying to propagate conflicting types:" << w2.type()
         << " into cell/face with type:" << type() << endl
         << "thisFaceI:" << thisFaceI

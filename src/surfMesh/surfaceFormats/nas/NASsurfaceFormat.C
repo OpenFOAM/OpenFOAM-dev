@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,7 @@ bool Foam::fileFormats::NASsurfaceFormat<Face>::read
     IFstream is(filename);
     if (!is.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::NASsurfaceFormat::read(const fileName&)"
-        )
+        FatalErrorInFunction
             << "Cannot read file " << filename
             << exit(FatalError);
     }
@@ -296,10 +293,7 @@ bool Foam::fileFormats::NASsurfaceFormat<Face>::read
             is.getLine(line);
             if (line[0] != '*')
             {
-                FatalErrorIn
-                (
-                    "fileFormats::NASsurfaceFormat::read(const fileName&)"
-                )
+                FatalErrorInFunction
                     << "Expected continuation symbol '*' when reading GRID*"
                     << " (double precision coordinate) format" << nl
                     << "Read:" << line << nl

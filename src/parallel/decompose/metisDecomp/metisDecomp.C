@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,21 +88,15 @@ Foam::label Foam::metisDecomp::decompose
     {
         if (minWeights <= 0)
         {
-            WarningIn
-            (
-                "metisDecomp::decompose"
-                "(const pointField&, const scalarField&)"
-            )   << "Illegal minimum weight " << minWeights
+            WarningInFunction
+                << "Illegal minimum weight " << minWeights
                 << endl;
         }
 
         if (cWeights.size() != numCells)
         {
-            FatalErrorIn
-            (
-                "metisDecomp::decompose"
-                "(const pointField&, const scalarField&)"
-            )   << "Number of cell weights " << cWeights.size()
+            FatalErrorInFunction
+                << "Number of cell weights " << cWeights.size()
                 << " does not equal number of cells " << numCells
                 << exit(FatalError);
         }
@@ -126,7 +120,7 @@ Foam::label Foam::metisDecomp::decompose
         {
             if (method != "recursive" && method != "k-way")
             {
-                FatalErrorIn("metisDecomp::decompose()")
+                FatalErrorInFunction
                     << "Method " << method << " in metisCoeffs in dictionary : "
                     << decompositionDict_.name()
                     << " should be 'recursive' or 'k-way'"
@@ -141,7 +135,7 @@ Foam::label Foam::metisDecomp::decompose
         {
             if (options.size() != METIS_NOPTIONS)
             {
-                FatalErrorIn("metisDecomp::decompose()")
+                FatalErrorInFunction
                     << "Number of options in metisCoeffs in dictionary : "
                     << decompositionDict_.name()
                     << " should be " << METIS_NOPTIONS
@@ -158,7 +152,7 @@ Foam::label Foam::metisDecomp::decompose
 
             if (processorWeights.size() != nProcessors_)
             {
-                FatalErrorIn("metisDecomp::decompose(const pointField&)")
+                FatalErrorInFunction
                     << "Number of processor weights "
                     << processorWeights.size()
                     << " does not equal number of domains " << nProcessors_
@@ -185,7 +179,7 @@ Foam::label Foam::metisDecomp::decompose
         //
         //    if (cellWeights.size() != xadj.size()-1)
         //    {
-        //        FatalErrorIn("metisDecomp::decompose(const pointField&)")
+        //        FatalErrorInFunction
         //            << "Number of cell weights " << cellWeights.size()
         //            << " does not equal number of cells " << xadj.size()-1
         //            << exit(FatalError);
@@ -265,10 +259,8 @@ Foam::labelList Foam::metisDecomp::decompose
 {
     if (points.size() != mesh.nCells())
     {
-        FatalErrorIn
-        (
-            "metisDecomp::decompose(const pointField&,const scalarField&)"
-        )   << "Can use this decomposition method only for the whole mesh"
+        FatalErrorInFunction
+            << "Can use this decomposition method only for the whole mesh"
             << endl
             << "and supply one coordinate (cellCentre) for every cell." << endl
             << "The number of coordinates " << points.size() << endl
@@ -304,11 +296,8 @@ Foam::labelList Foam::metisDecomp::decompose
 {
     if (agglom.size() != mesh.nCells())
     {
-        FatalErrorIn
-        (
-            "metisDecomp::decompose"
-            "(const labelList&, const pointField&, const scalarField&)"
-        )   << "Size of cell-to-coarse map " << agglom.size()
+        FatalErrorInFunction
+            << "Size of cell-to-coarse map " << agglom.size()
             << " differs from number of cells in mesh " << mesh.nCells()
             << exit(FatalError);
     }
@@ -346,11 +335,8 @@ Foam::labelList Foam::metisDecomp::decompose
 {
     if (cellCentres.size() != globalCellCells.size())
     {
-        FatalErrorIn
-        (
-            "metisDecomp::decompose"
-            "(const pointField&, const labelListList&, const scalarField&)"
-        )   << "Inconsistent number of cells (" << globalCellCells.size()
+        FatalErrorInFunction
+            << "Inconsistent number of cells (" << globalCellCells.size()
             << ") and number of cell centres (" << cellCentres.size()
             << ")." << exit(FatalError);
     }

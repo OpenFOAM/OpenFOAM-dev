@@ -47,7 +47,7 @@ void omegaWallFunctionFvPatchScalarField::checkType()
 {
     if (!isA<wallFvPatch>(patch()))
     {
-        FatalErrorIn("omegaWallFunctionFvPatchScalarField::checkType()")
+        FatalErrorInFunction
             << "Invalid wall function specification" << nl
             << "    Patch type for patch " << patch().name()
             << " must be wall" << nl

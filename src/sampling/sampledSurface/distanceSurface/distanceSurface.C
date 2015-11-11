@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,10 +113,8 @@ void Foam::distanceSurface::createGeometry()
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "void Foam::distanceSurface::createGeometry()"
-                    )   << "getVolumeType failure, neither INSIDE or OUTSIDE"
+                    FatalErrorInFunction
+                        << "getVolumeType failure, neither INSIDE or OUTSIDE"
                         << exit(FatalError);
                 }
             }
@@ -165,10 +163,8 @@ void Foam::distanceSurface::createGeometry()
                     }
                     else
                     {
-                        FatalErrorIn
-                        (
-                            "void Foam::distanceSurface::createGeometry()"
-                        )   << "getVolumeType failure, "
+                        FatalErrorInFunction
+                            << "getVolumeType failure, "
                             << "neither INSIDE or OUTSIDE"
                             << exit(FatalError);
                     }
@@ -224,10 +220,8 @@ void Foam::distanceSurface::createGeometry()
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "void Foam::distanceSurface::createGeometry()"
-                    )   << "getVolumeType failure, neither INSIDE or OUTSIDE"
+                    FatalErrorInFunction
+                        << "getVolumeType failure, neither INSIDE or OUTSIDE"
                         << exit(FatalError);
                 }
             }

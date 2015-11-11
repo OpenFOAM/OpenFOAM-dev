@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ bool Foam::triSurface::readGTS(const fileName& GTSfileName)
 
     if (!GTSfile.good())
     {
-        FatalErrorIn("triSurface::readGTS(const fileName&)")
+        FatalErrorInFunction
             << "Cannot read file " << GTSfileName
             << exit(FatalError);
     }
@@ -113,7 +113,7 @@ bool Foam::triSurface::readGTS(const fileName& GTSfileName)
         label common01 = e0.commonVertex(e1);
         if (common01 == -1)
         {
-            FatalErrorIn("triSurface::readGTS(const fileName&)")
+            FatalErrorInFunction
                 << "Edges 0 and 1 of triangle " << trianglei
                 << " do not share a point.\n"
                 << "    edge0:" << e0 << endl
@@ -127,7 +127,7 @@ bool Foam::triSurface::readGTS(const fileName& GTSfileName)
         label common12 = e1.commonVertex(e2);
         if (common12 == -1)
         {
-            FatalErrorIn("triSurface::readGTS(const fileName&)")
+            FatalErrorInFunction
                 << "Edges 1 and 2 of triangle " << trianglei
                 << " do not share a point.\n"
                 << "    edge1:" << e1 << endl
@@ -139,7 +139,7 @@ bool Foam::triSurface::readGTS(const fileName& GTSfileName)
         // Does edge2 sit between edge1 and 0?
         if ((common12 != e1Far) || (e2Far != e0Far))
         {
-            FatalErrorIn("triSurface::readGTS(const fileName&)")
+            FatalErrorInFunction
                 << "Edges of triangle " << trianglei
                 << " reference more than three points.\n"
                 << "    edge0:" << e0 << endl

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ void Foam::faceOnlySet::calcSamples
     // distance vector between sampling points
     if (mag(end_ - start_) < SMALL)
     {
-        FatalErrorIn("faceOnlySet::calcSamples()")
+        FatalErrorInFunction
             << "Incorrect sample specification :"
             << " start equals end point." << endl
             << "  start:" << start_

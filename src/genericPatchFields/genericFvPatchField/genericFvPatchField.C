@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,11 +37,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 :
     calculatedFvPatchField<Type>(p, iF)
 {
-    FatalErrorIn
-    (
-        "genericFvPatchField<Type>::genericFvPatchField"
-        "(const fvPatch& p, const DimensionedField<Type, volMesh>& iF)"
-    )   << "Not Implemented\n    "
+    FatalErrorInFunction
         << "Trying to construct an genericFvPatchField on patch "
         << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()
@@ -63,10 +59,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 {
     if (!dict.found("value"))
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "genericFvPatchField<Type>::genericFvPatchField"
-            "(const fvPatch&, const Field<Type>&, const dictionary&)",
             dict
         )   << "\n    Cannot find 'value' entry"
             << " on patch " << this->patch().name()
@@ -120,11 +114,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                         }
                         else
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericFvPatchField<Type>::genericFvPatchField"
-                                "(const fvPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    token following 'nonuniform' "
                                   "is not a compound"
@@ -153,11 +144,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericFvPatchField<Type>::genericFvPatchField"
-                                "(const fvPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -190,11 +178,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericFvPatchField<Type>::genericFvPatchField"
-                                "(const fvPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -230,11 +215,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericFvPatchField<Type>::genericFvPatchField"
-                                "(const fvPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -270,11 +252,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericFvPatchField<Type>::genericFvPatchField"
-                                "(const fvPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -307,11 +286,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericFvPatchField<Type>::genericFvPatchField"
-                                "(const fvPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
@@ -329,11 +305,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                     }
                     else
                     {
-                        FatalIOErrorIn
+                        FatalIOErrorInFunction
                         (
-                            "genericFvPatchField<Type>::genericFvPatchField"
-                            "(const fvPatch&, const Field<Type>&, "
-                            "const dictionary&)",
                             dict
                         )   << "\n    compound " << fieldToken.compoundToken()
                             << " not supported"
@@ -419,11 +392,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                         }
                         else
                         {
-                            FatalIOErrorIn
+                            FatalIOErrorInFunction
                             (
-                                "genericFvPatchField<Type>::genericFvPatchField"
-                                "(const fvPatch&, const Field<Type>&, "
-                                "const dictionary&)",
                                 dict
                             )   << "\n    unrecognised native type " << l
                                 << "\n    on patch " << this->patch().name()
@@ -724,12 +694,8 @@ Foam::genericFvPatchField<Type>::valueInternalCoeffs
     const tmp<scalarField>&
 ) const
 {
-    FatalErrorIn
-    (
-        "genericFvPatchField<Type>::"
-        "valueInternalCoeffs(const tmp<scalarField>&) const"
-    )   << "\n    "
-           "valueInternalCoeffs cannot be called for a genericFvPatchField"
+    FatalErrorInFunction
+        << "cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()
@@ -749,12 +715,8 @@ Foam::genericFvPatchField<Type>::valueBoundaryCoeffs
     const tmp<scalarField>&
 ) const
 {
-    FatalErrorIn
-    (
-        "genericFvPatchField<Type>::"
-        "valueBoundaryCoeffs(const tmp<scalarField>&) const"
-    )   << "\n    "
-           "valueBoundaryCoeffs cannot be called for a genericFvPatchField"
+    FatalErrorInFunction
+        << "cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()
@@ -771,12 +733,8 @@ template<class Type>
 Foam::tmp<Foam::Field<Type> >
 Foam::genericFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    FatalErrorIn
-    (
-        "genericFvPatchField<Type>::"
-        "gradientInternalCoeffs() const"
-    )   << "\n    "
-           "gradientInternalCoeffs cannot be called for a genericFvPatchField"
+    FatalErrorInFunction
+        << "cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()
@@ -792,12 +750,8 @@ template<class Type>
 Foam::tmp<Foam::Field<Type> >
 Foam::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
-    FatalErrorIn
-    (
-        "genericFvPatchField<Type>::"
-        "gradientBoundaryCoeffs() const"
-    )   << "\n    "
-           "gradientBoundaryCoeffs cannot be called for a genericFvPatchField"
+    FatalErrorInFunction
+        << "cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->dimensionedInternalField().name()

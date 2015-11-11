@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::splitCell::~splitCell()
         }
         else
         {
-            FatalErrorIn("splitCell::~splitCell()") << "this not equal to"
+            FatalErrorInFunction
                 << " parent's master or slave pointer" << endl
                 << "Cell:" << cellLabel() << abort(FatalError);
         }
@@ -73,7 +73,7 @@ bool Foam::splitCell::isMaster() const
 
     if (!myParent)
     {
-        FatalErrorIn("splitCell::isMaster()") << "parent not set"
+        FatalErrorInFunction
             << "Cell:" << cellLabel() << abort(FatalError);
 
         return false;
@@ -88,7 +88,7 @@ bool Foam::splitCell::isMaster() const
     }
     else
     {
-        FatalErrorIn("splitCell::isMaster()") << "this not equal to"
+        FatalErrorInFunction
             << " parent's master or slave pointer" << endl
             << "Cell:" << cellLabel() << abort(FatalError);
 
@@ -109,7 +109,7 @@ Foam::splitCell* Foam::splitCell::getOther() const
 
     if (!myParent)
     {
-        FatalErrorIn("splitCell::getOther()") << "parent not set"
+        FatalErrorInFunction
             << "Cell:" << cellLabel() << abort(FatalError);
 
         return NULL;
@@ -124,7 +124,7 @@ Foam::splitCell* Foam::splitCell::getOther() const
     }
     else
     {
-        FatalErrorIn("splitCell::getOther()") << "this not equal to"
+        FatalErrorInFunction
             << " parent's master or slave pointer" << endl
             << "Cell:" << cellLabel() << abort(FatalError);
 

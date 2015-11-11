@@ -28,12 +28,12 @@
         #+END_SRC
         so
         #+BEGIN_SRC C++
-        WarningIn("className::functionName()")
+        WarningInFunction
             << "Warning message"
         #+END_SRC
         *not*
         #+BEGIN_SRC C++
-        WarningIn("className::functionName()")
+        WarningInFunction
         << "Warning message"
         #+END_SRC
 

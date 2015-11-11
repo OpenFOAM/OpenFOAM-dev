@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,7 +293,7 @@ void thermalBaffle::init()
 
         if (Qsb!= thickness_.size())
         {
-            FatalErrorIn("thermalBaffle::init()")
+            FatalErrorInFunction
                 << "the boundary field of Qs is "
                 << Qsb << " and " << nl
                 << "the field 'thickness' is " << thickness_.size() << nl

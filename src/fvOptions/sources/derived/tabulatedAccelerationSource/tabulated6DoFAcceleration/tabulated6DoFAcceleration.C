@@ -66,10 +66,8 @@ Foam::tabulated6DoFAcceleration::acceleration() const
 
     if (t < times_[0])
     {
-        FatalErrorIn
-        (
-            "tabulated6DoFAcceleration::acceleration()"
-        )   << "current time (" << t
+        FatalErrorInFunction
+            << "current time (" << t
             << ") is less than the minimum in the data table ("
             << times_[0] << ')'
             << exit(FatalError);
@@ -77,10 +75,8 @@ Foam::tabulated6DoFAcceleration::acceleration() const
 
     if (t > times_.last())
     {
-        FatalErrorIn
-        (
-            "tabulated6DoFAcceleration::acceleration()"
-        )   << "current time (" << t
+        FatalErrorInFunction
+            << "current time (" << t
             << ") is greater than the maximum in the data table ("
             << times_.last() << ')'
             << exit(FatalError);
@@ -138,10 +134,8 @@ bool Foam::tabulated6DoFAcceleration::read
         }
         else
         {
-            FatalErrorIn
-            (
-                "tabulated6DoFAcceleration::read(const dictionary&)"
-            )   << "Cannot open time data file " << timeDataFileName_
+            FatalErrorInFunction
+                << "Cannot open time data file " << timeDataFileName_
                 << exit(FatalError);
         }
     }

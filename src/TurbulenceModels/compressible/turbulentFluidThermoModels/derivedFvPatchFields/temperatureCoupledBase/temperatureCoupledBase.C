@@ -132,10 +132,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
             }
             else
             {
-                FatalErrorIn
-                (
-                    "temperatureCoupledBase::kappa(const scalarField&) const"
-                )
+                FatalErrorInFunction
                     << "Kappa defined to employ " << KMethodTypeNames_[method_]
                     << " method, but thermo package not available"
                     << exit(FatalError);
@@ -196,10 +193,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
             }
             else
             {
-                FatalErrorIn
-                (
-                    "temperatureCoupledBase::kappa(const scalarField&) const"
-                )
+                FatalErrorInFunction
                     << "Did not find field " << kappaName_
                     << " on mesh " << mesh.name() << " patch " << patch_.name()
                     << nl
@@ -215,10 +209,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 
         default:
         {
-            FatalErrorIn
-            (
-                "temperatureCoupledBase::kappa(const scalarField&) const"
-            )
+            FatalErrorInFunction
                 << "Unimplemented method " << KMethodTypeNames_[method_] << nl
                 << "Please set 'kappa' to one of " << KMethodTypeNames_.toc()
                 << " and 'kappaName' to the name of the volScalar"

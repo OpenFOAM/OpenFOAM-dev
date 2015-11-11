@@ -49,14 +49,8 @@ Foam::patchInjectionBase::patchInjectionBase
 {
     if (patchId_ < 0)
     {
-        FatalErrorIn
-        (
-            "patchInjectionBase::patchInjectionBase"
-            "("
-                "const polyMesh& mesh, "
-                "const word& patchName"
-            ")"
-        )   << "Requested patch " << patchName_ << " not found" << nl
+        FatalErrorInFunction
+            << "Requested patch " << patchName_ << " not found" << nl
             << "Available patches are: " << mesh.boundaryMesh().names() << nl
             << exit(FatalError);
     }

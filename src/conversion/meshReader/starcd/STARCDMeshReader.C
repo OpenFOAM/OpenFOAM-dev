@@ -69,8 +69,7 @@ bool Foam::meshReaders::STARCD::readHeader(IFstream& is, word fileSignature)
 {
     if (!is.good())
     {
-        FatalErrorIn("meshReaders::STARCD::readHeader()")
-            << "cannot read " << fileSignature  << "  " << is.name()
+        FatalErrorInFunction
             << abort(FatalError);
     }
 
@@ -194,7 +193,7 @@ void Foam::meshReaders::STARCD::readPoints
     }
     else
     {
-        FatalErrorIn("meshReaders::STARCD::readPoints()")
+        FatalErrorInFunction
             << "no points in file " << inputName
             << abort(FatalError);
     }
@@ -366,7 +365,7 @@ void Foam::meshReaders::STARCD::readCells(const fileName& inputName)
     // construct cellFaces_ and possibly cellShapes_
     if (nCells <= 0)
     {
-        FatalErrorIn("meshReaders::STARCD::readCells()")
+        FatalErrorInFunction
             << "no cells in file " << inputName
             << abort(FatalError);
     }
@@ -533,7 +532,7 @@ void Foam::meshReaders::STARCD::readCells(const fileName& inputName)
 
                 if (nFaces < 4)
                 {
-                    FatalErrorIn("meshReaders::STARCD::readCells()")
+                    FatalErrorInFunction
                         << "star cell " << starCellId << " has " << nFaces
                         << abort(FatalError);
                 }
@@ -597,7 +596,7 @@ void Foam::meshReaders::STARCD::readCells(const fileName& inputName)
 
     if (unknownVertices)
     {
-        FatalErrorIn("meshReaders::STARCD::readCells()")
+        FatalErrorInFunction
             << "cells with unknown vertices"
             << abort(FatalError);
     }

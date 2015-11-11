@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -214,10 +214,8 @@ void Foam::perfectInterface::setRefinement
 
         if (!matchOk)
         {
-            FatalErrorIn
-            (
-                "perfectInterface::setRefinement(polyTopoChange& ref) const"
-            )   << "Points on patch sides do not match to within tolerance "
+            FatalErrorInFunction
+                << "Points on patch sides do not match to within tolerance "
                 << typDim << exit(FatalError);
         }
 
@@ -244,10 +242,8 @@ void Foam::perfectInterface::setRefinement
 
     if (!matchOk)
     {
-        FatalErrorIn
-        (
-            "perfectInterface::setRefinement(polyTopoChange& ref) const"
-        )   << "Face centres of patch sides do not match to within tolerance "
+        FatalErrorInFunction
+            << "Face centres of patch sides do not match to within tolerance "
             << typDim << exit(FatalError);
     }
 
@@ -288,10 +284,8 @@ void Foam::perfectInterface::setRefinement
 
         if (affectedFaces.erase(faceI))
         {
-            WarningIn
-            (
-                "perfectInterface::setRefinement(polyTopoChange&) const"
-            )   << "Found face " << faceI << " vertices "
+            WarningInFunction
+                << "Found face " << faceI << " vertices "
                 << mesh.faces()[faceI] << " whose points are"
                 << " used both by master patch and slave patch" << endl;
         }

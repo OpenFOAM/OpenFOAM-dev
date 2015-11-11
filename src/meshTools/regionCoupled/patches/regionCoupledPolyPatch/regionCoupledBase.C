@@ -205,7 +205,7 @@ Foam::label Foam::regionCoupledBase::neighbPatchID() const
 
             if (nbrPatchID_ == -1)
             {
-                FatalErrorIn("cyclicPolyAMIPatch::neighbPatchID() const")
+                FatalErrorInFunction
                     << "Illegal neighbourPatch name " << nbrPatchName_
                     << nl << "Valid patch names are "
                     << mesh.boundaryMesh().names()
@@ -221,7 +221,7 @@ Foam::label Foam::regionCoupledBase::neighbPatchID() const
 
             if (nbrPatch.nbrPatchName() != patch_.name())
             {
-                WarningIn("regionCoupledBase::neighbPatchID() const")
+                WarningInFunction
                     << "Patch " << patch_.name()
                     << " specifies neighbour patch " << nbrPatchName()
                     << nl << " but that in return specifies "
@@ -283,10 +283,7 @@ const Foam::AMIPatchToPatchInterpolation& Foam::regionCoupledBase::AMI() const
 {
     if (!owner())
     {
-        FatalErrorIn
-        (
-            "const AMIPatchToPatchInterpolation& regionCoupledBase::AMI()"
-        )
+        FatalErrorInFunction
             << "AMI interpolator only available to owner patch"
             << abort(FatalError);
     }

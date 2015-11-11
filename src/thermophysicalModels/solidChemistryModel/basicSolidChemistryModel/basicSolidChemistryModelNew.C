@@ -121,7 +121,7 @@ New
 
     if (cstrIter == fvMeshConstructorTablePtr_->end())
     {
-        FatalErrorIn(typeName + "::New(const mesh&)")
+        FatalErrorInFunction
             << "Unknown " << typeName << " type " << nl
             << "chemistryType" << chemistryTypeDict << nl << nl
             << "Valid " << typeName << " types are:"

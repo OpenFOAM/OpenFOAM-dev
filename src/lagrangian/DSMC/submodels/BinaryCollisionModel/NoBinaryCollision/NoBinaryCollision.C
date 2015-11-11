@@ -64,14 +64,7 @@ Foam::scalar Foam::NoBinaryCollision<CloudType>::sigmaTcR
     const typename CloudType::parcelType& pQ
 ) const
 {
-    FatalErrorIn
-    (
-        "Foam::scalar Foam::NoBinaryCollision<CloudType>::sigmaTcR"
-        "("
-            "const typename CloudType::parcelType&, "
-            "const typename CloudType::parcelType"
-        ") const"
-    )
+    FatalErrorInFunction
         << "sigmaTcR called on NoBinaryCollision model, this should "
         << "not happen, this is not an actual model." << nl
         << "Enclose calls to sigmaTcR within a if (binaryCollision().active()) "

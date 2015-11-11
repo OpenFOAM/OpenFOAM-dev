@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ linearDirection::linearDirection(const dictionary& dict)
 
     if (thickness_ <= 0)
     {
-        FatalErrorIn("linearDirection(const dictionary&)")
+        FatalErrorInFunction
             << "thickness should be positive : " << thickness_
             << exit(FatalError);
     }

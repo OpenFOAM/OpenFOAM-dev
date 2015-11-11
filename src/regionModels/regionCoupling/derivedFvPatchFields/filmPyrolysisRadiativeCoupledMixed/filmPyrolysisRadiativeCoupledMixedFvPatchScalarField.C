@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,13 +55,7 @@ filmModel() const
         modelNames.append(iter()->regionMesh().name());
     }
 
-    FatalErrorIn
-    (
-        "const filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::"
-        "filmModelType& "
-        "filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::"
-        "filmModel() const"
-    )
+    FatalErrorInFunction
         << "Unable to locate film region " << filmRegionName_
         << ".  Available regions include: " << modelNames
         << abort(FatalError);
@@ -93,13 +87,7 @@ pyrModel() const
     }
 
 
-    FatalErrorIn
-    (
-        "const filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::"
-        "pyrolysisModelType& "
-        "filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::"
-        "pyrModel() const"
-    )
+    FatalErrorInFunction
         << "Unable to locate pyrolysis region " << pyrolysisRegionName_
         << ".  Available regions include: " << modelNames
         << abort(FatalError);
@@ -180,16 +168,7 @@ filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
 {
     if (!isA<mappedPatchBase>(this->patch().patch()))
     {
-        FatalErrorIn
-        (
-            "filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::"
-            "filmPyrolysisRadiativeCoupledMixedFvPatchScalarField\n"
-            "(\n"
-            "    const fvPatch& p,\n"
-            "    const DimensionedField<scalar, volMesh>& iF,\n"
-            "    const dictionary& dict\n"
-            ")\n"
-        )   << "\n    patch type '" << p.type()
+        FatalErrorInFunction
             << "' not type '" << mappedPatchBase::typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << dimensionedInternalField().name()
@@ -312,11 +291,7 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
     }
     else
     {
-        FatalErrorIn
-        (
-            "void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::"
-            "updateCoeffs()"
-        )
+        FatalErrorInFunction
             << type() << " condition is intended to be applied to either the "
             << "primary or pyrolysis regions only"
             << exit(FatalError);

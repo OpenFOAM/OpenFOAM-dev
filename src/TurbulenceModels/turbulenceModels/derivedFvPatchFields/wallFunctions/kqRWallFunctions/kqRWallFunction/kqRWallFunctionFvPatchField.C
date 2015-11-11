@@ -40,7 +40,7 @@ void kqRWallFunctionFvPatchField<Type>::checkType()
 {
     if (!isA<wallFvPatch>(this->patch()))
     {
-        FatalErrorIn("kqRWallFunctionFvPatchField::checkType()")
+        FatalErrorInFunction
             << "Invalid wall function specification" << nl
             << "    Patch type for patch " << this->patch().name()
             << " must be wall" << nl

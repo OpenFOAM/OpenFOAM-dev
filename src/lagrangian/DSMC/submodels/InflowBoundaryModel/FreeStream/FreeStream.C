@@ -97,14 +97,8 @@ Foam::FreeStream<CloudType>::FreeStream
 
         if (moleculeTypeIds_[i] == -1)
         {
-            FatalErrorIn
-            (
-                "Foam::FreeStream<CloudType>::FreeStream"
-                "("
-                    "const dictionary&, "
-                    "CloudType&"
-                ")"
-            )   << "typeId " << molecules[i] << "not defined in cloud." << nl
+            FatalErrorInFunction
+                << "typeId " << molecules[i] << "not defined in cloud." << nl
                 << abort(FatalError);
         }
     }
@@ -190,7 +184,7 @@ void Foam::FreeStream<CloudType>::inflow()
 
             if (min(boundaryT[patchi]) < SMALL)
             {
-                FatalErrorIn ("Foam::FreeStream<CloudType>::inflow()")
+                FatalErrorInFunction
                     << "Zero boundary temperature detected, check boundaryT "
                     << "condition." << nl
                     << nl << abort(FatalError);

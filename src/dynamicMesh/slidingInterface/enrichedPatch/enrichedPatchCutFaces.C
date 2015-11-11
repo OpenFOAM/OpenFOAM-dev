@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ void Foam::enrichedPatch::calcCutFaces() const
 {
     if (cutFacesPtr_ || cutFaceMasterPtr_ || cutFaceSlavePtr_)
     {
-        FatalErrorIn("void enrichedPatch::calcCutFaces() const")
+        FatalErrorInFunction
             << "Cut faces addressing already calculated."
             << abort(FatalError);
     }
@@ -256,11 +256,7 @@ void Foam::enrichedPatch::calcCutFaces() const
 
                         if (magNewDir < SMALL)
                         {
-                            FatalErrorIn
-                            (
-                                "void enrichedPatch::"
-                                "calcCutFaces() const"
-                            )   << "Zero length edge detected.  Probable "
+                            FatalErrorInFunction
                                 << "projection error: slave patch probably "
                                 << "does not project onto master.  "
                                 << "Please switch on "
@@ -617,11 +613,8 @@ void Foam::enrichedPatch::calcCutFaces() const
                                             [faceI - slavePatch_.size()];
                                     }
 
-                                    FatalErrorIn
-                                    (
-                                        "void enrichedPatch::"
-                                        "calcCutFaces() const"
-                                    )   << "Duplicate point found in cut face. "
+                                    FatalErrorInFunction
+                                        << "Duplicate point found in cut face. "
                                         << "Error in the face cutting "
                                         << "algorithm for global face "
                                         << origFace << " local face "

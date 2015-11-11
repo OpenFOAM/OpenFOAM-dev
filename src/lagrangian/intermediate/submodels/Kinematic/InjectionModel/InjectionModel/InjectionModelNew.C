@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,14 +44,8 @@ Foam::InjectionModel<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "InjectionModel<CloudType>::New"
-            "("
-                "const dictionary&, "
-                "CloudType&"
-            ")"
-        )   << "Unknown injection model type "
+        FatalErrorInFunction
+            << "Unknown injection model type "
             << modelType << nl << nl
             << "Valid injection model types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
@@ -78,16 +72,8 @@ Foam::InjectionModel<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "InjectionModel<CloudType>::New"
-            "("
-                "const dictionary&, "
-                "const word&, "
-                "const word&, "
-                "CloudType&"
-            ")"
-        )   << "Unknown injection model type "
+        FatalErrorInFunction
+            << "Unknown injection model type "
             << modelType << nl << nl
             << "Valid injection model types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);

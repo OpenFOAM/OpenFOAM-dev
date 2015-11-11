@@ -170,10 +170,8 @@ public:
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "edgeSurface::parentEdge(const label edgeI) const"
-                    )   << "Trying to get parent (i.e. surface) edge for"
+                    FatalErrorInFunction
+                        << "Trying to get parent (i.e. surface) edge for"
                         << " intersection edge " << edgeI
                         << abort(FatalError);
                     return -1;

@@ -48,10 +48,8 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::checkType()
 {
     if (!isA<wallFvPatch>(patch()))
     {
-        FatalErrorIn
-        (
-            "alphatJayatillekeWallFunctionFvPatchScalarField::checkType()"
-        )   << "Invalid wall function specification" << nl
+        FatalErrorInFunction
+            << "Invalid wall function specification" << nl
             << "    Patch type for patch " << patch().name()
             << " must be wall" << nl
             << "    Current patch type is " << patch().type() << nl << endl

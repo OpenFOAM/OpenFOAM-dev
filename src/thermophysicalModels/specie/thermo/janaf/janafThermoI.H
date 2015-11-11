@@ -102,10 +102,8 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::limit
 {
     if (T < Tlow_ || T > Thigh_)
     {
-        WarningIn
-        (
-            "janafThermo<EquationOfState>::limit(const scalar T) const"
-        )   << "attempt to use janafThermo<EquationOfState>"
+        WarningInFunction
+            << "attempt to use janafThermo<EquationOfState>"
                " out of temperature range "
             << Tlow_ << " -> " << Thigh_ << ";  T = " << T
             << endl;
@@ -247,11 +245,8 @@ inline void Foam::janafThermo<EquationOfState>::operator+=
 
     if (janafThermo<EquationOfState>::debug && notEqual(Tcommon_, jt.Tcommon_))
     {
-        FatalErrorIn
-        (
-            "janafThermo<EquationOfState>::operator+="
-            "(const janafThermo<EquationOfState>& jt) const"
-        )   << "Tcommon " << Tcommon_ << " for "
+        FatalErrorInFunction
+            << "Tcommon " << Tcommon_ << " for "
             << (this->name().size() ? this->name() : "others")
             << " != " << jt.Tcommon_ << " for "
             << (jt.name().size() ? jt.name() : "others")
@@ -294,11 +289,8 @@ inline void Foam::janafThermo<EquationOfState>::operator-=
 
     if (janafThermo<EquationOfState>::debug && notEqual(Tcommon_, jt.Tcommon_))
     {
-        FatalErrorIn
-        (
-            "janafThermo<EquationOfState>::operator-="
-            "(const janafThermo<EquationOfState>& jt) const"
-        )   << "Tcommon " << Tcommon_ << " for "
+        FatalErrorInFunction
+            << "Tcommon " << Tcommon_ << " for "
             << (this->name().size() ? this->name() : "others")
             << " != " << jt.Tcommon_ << " for "
             << (jt.name().size() ? jt.name() : "others")
@@ -363,12 +355,8 @@ inline Foam::janafThermo<EquationOfState> Foam::operator+
      && notEqual(jt1.Tcommon_, jt2.Tcommon_)
     )
     {
-        FatalErrorIn
-        (
-            "operator+"
-            "(const janafThermo<EquationOfState>& jt1,"
-            " const janafThermo<EquationOfState>& jt2)"
-        )   << "Tcommon " << jt1.Tcommon_ << " for "
+        FatalErrorInFunction
+            << "Tcommon " << jt1.Tcommon_ << " for "
             << (jt1.name().size() ? jt1.name() : "others")
             << " != " << jt2.Tcommon_ << " for "
             << (jt2.name().size() ? jt2.name() : "others")
@@ -425,12 +413,8 @@ inline Foam::janafThermo<EquationOfState> Foam::operator-
      && notEqual(jt1.Tcommon_, jt2.Tcommon_)
     )
     {
-        FatalErrorIn
-        (
-            "operator-"
-            "(const janafThermo<EquationOfState>& jt1,"
-            " const janafThermo<EquationOfState>& jt2)"
-        )   << "Tcommon " << jt1.Tcommon_ << " for "
+        FatalErrorInFunction
+            << "Tcommon " << jt1.Tcommon_ << " for "
             << (jt1.name().size() ? jt1.name() : "others")
             << " != " << jt2.Tcommon_ << " for "
             << (jt2.name().size() ? jt2.name() : "others")

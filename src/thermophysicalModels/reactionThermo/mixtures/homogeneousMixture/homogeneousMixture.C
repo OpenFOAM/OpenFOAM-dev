@@ -107,14 +107,8 @@ const ThermoType& Foam::homogeneousMixture<ThermoType>::getLocalThermo
     }
     else
     {
-        FatalErrorIn
-        (
-            "const ThermoType& Foam::homogeneousMixture<ThermoType>::"
-            "getLocalThermo"
-            "("
-                "const label "
-            ") const"
-        )   << "Unknown specie index " << speciei << ". Valid indices are 0..1"
+        FatalErrorInFunction
+            << "Unknown specie index " << speciei << ". Valid indices are 0..1"
             << abort(FatalError);
 
         return reactants_;

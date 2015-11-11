@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ inline Foam::label Foam::pairPotentialList::pairPotentialIndex
 
     if (index > size() - 1)
     {
-        FatalErrorIn("Foam::pairPotentialList::pairPotentialIndex ")
+        FatalErrorInFunction
             << "Attempting to access a pairPotential with too high an index."
             << nl << "a = " << a << ", b = " << b << ", index = " << index
             << nl << "max index = " << size() - 1

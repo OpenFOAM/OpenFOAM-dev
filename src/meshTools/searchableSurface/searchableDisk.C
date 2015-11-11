@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -317,11 +317,8 @@ void Foam::searchableDisk::getVolumeType
     List<volumeType>& volType
 ) const
 {
-    FatalErrorIn
-    (
-        "searchableDisk::getVolumeType(const pointField&"
-        ", List<volumeType>&) const"
-    )   << "Volume type not supported for disk."
+    FatalErrorInFunction
+        << "Volume type not supported for disk."
         << exit(FatalError);
 }
 

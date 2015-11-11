@@ -80,10 +80,8 @@ Foam::autoPtr<Foam::fv::option> Foam::fv::option::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "option::New(const word&, const dictionary&, const fvMesh&)"
-        )   << "Unknown Model type " << modelType << nl << nl
+        FatalErrorInFunction
+            << "Unknown Model type " << modelType << nl << nl
             << "Valid model types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
@@ -117,7 +115,7 @@ void Foam::fv::option::checkApplied() const
     {
         if (!applied_[i])
         {
-            WarningIn("void option::checkApplied() const")
+            WarningInFunction
                 << "Source " << name_ << " defined for field "
                 << fieldNames_[i] << " but never used" << endl;
         }

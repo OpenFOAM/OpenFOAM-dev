@@ -204,7 +204,7 @@ public:
             {
                 if (!meshPtr_)
                 {
-                    FatalErrorIn("boundaryMesh::mesh()")
+                    FatalErrorInFunction
                         << "No mesh available. Probably mesh not yet"
                         << " read." << abort(FatalError);
                 }

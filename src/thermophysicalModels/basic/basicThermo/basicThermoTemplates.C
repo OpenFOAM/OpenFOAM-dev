@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ typename Table::iterator Foam::basicThermo::lookupThermo
         // Print error message if package not found in the table
         if (cstrIter == tablePtr->end())
         {
-            FatalErrorIn(Thermo::typeName + "::New")
+            FatalErrorInFunction
                 << "Unknown " << Thermo::typeName << " type " << nl
                 << "thermoType" << thermoTypeDict << nl << nl
                 << "Valid " << Thermo::typeName << " types are:" << nl << nl;
@@ -120,7 +120,7 @@ typename Table::iterator Foam::basicThermo::lookupThermo
 
         if (cstrIter == tablePtr->end())
         {
-            FatalErrorIn(Thermo::typeName + "::New")
+            FatalErrorInFunction
                 << "Unknown " << Thermo::typeName << " type "
                 << thermoTypeName << nl << nl
                 << "Valid " << Thermo::typeName << " types are:" << nl

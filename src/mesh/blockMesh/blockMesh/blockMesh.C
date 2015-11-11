@@ -83,7 +83,7 @@ const Foam::polyMesh& Foam::blockMesh::topology() const
 {
     if (!topologyPtr_)
     {
-        FatalErrorIn("blockMesh::topology() const")
+        FatalErrorInFunction
             << "topologyPtr_ not allocated"
             << exit(FatalError);
     }

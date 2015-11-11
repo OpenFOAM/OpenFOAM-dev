@@ -271,15 +271,8 @@ bool Foam::pairPatchAgglomeration::agglomeratePatch
 {
     if (min(fineToCoarse) == -1)
     {
-        FatalErrorIn
-        (
-            "pairPatchAgglomeration::agglomeratePatch"
-            "("
-                "const bPatch&, "
-                "const labelList&, "
-                "const label"
-            ")"
-        )   << "min(fineToCoarse) == -1" << exit(FatalError);
+        FatalErrorInFunction
+            << "min(fineToCoarse) == -1" << exit(FatalError);
     }
 
     if (fineToCoarse.size() == 0)
@@ -289,15 +282,8 @@ bool Foam::pairPatchAgglomeration::agglomeratePatch
 
     if (fineToCoarse.size() != patch.size())
     {
-        FatalErrorIn
-        (
-            "pairPatchAgglomeration::agglomeratePatch"
-            "("
-                "const bPatch&, "
-                "const labelList&, "
-                "const label"
-            ")"
-        )   << "restrict map does not correspond to fine level. " << endl
+        FatalErrorInFunction
+            << "restrict map does not correspond to fine level. " << endl
             << " Sizes: restrictMap: " << fineToCoarse.size()
             << " nEqns: " << patch.size()
             << abort(FatalError);
@@ -540,11 +526,8 @@ Foam::tmp<Foam::labelField> Foam::pairPatchAgglomeration::agglomerateOneLevel
     {
         if (coarseCellMap[facei] < 0)
         {
-            FatalErrorIn
-            (
-                "pairPatchAgglomeration::agglomerateOneLevel "
-                "(label&, const bPatch&) "
-            ) << " face " << facei
+            FatalErrorInFunction
+              << " face " << facei
             << " is not part of a cluster"
             << exit(FatalError);
         }

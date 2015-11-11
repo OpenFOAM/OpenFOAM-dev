@@ -52,8 +52,7 @@ Foam::cylindricalCS Foam::arcEdge::calcAngle()
 
     if (mag(denom) < VSMALL)
     {
-        FatalErrorIn("cylindricalCS arcEdge::calcAngle()")
-            << "Invalid arc definition - are the points co-linear?  Denom ="
+        FatalErrorInFunction
             << denom
             << abort(FatalError);
     }
@@ -135,7 +134,7 @@ Foam::point Foam::arcEdge::position(const scalar lambda) const
 {
     if (lambda < -SMALL || lambda > 1 + SMALL)
     {
-        FatalErrorIn("arcEdge::position(const scalar lambda) const")
+        FatalErrorInFunction
             << "Parameter out of range, lambda = " << lambda
             << abort(FatalError);
     }

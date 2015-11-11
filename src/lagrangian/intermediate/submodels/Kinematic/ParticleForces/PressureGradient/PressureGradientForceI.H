@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,11 +31,8 @@ Foam::PressureGradientForce<CloudType>::DUcDtInterp() const
 {
     if (!DUcDtInterpPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "inline const Foam::interpolation<Foam::vector>&"
-            "Foam::PressureGradientForce<CloudType>::DUcDtInterp() const"
-        )   << "Carrier phase DUcDt interpolation object not set"
+        FatalErrorInFunction
+            << "Carrier phase DUcDt interpolation object not set"
             << abort(FatalError);
     }
 

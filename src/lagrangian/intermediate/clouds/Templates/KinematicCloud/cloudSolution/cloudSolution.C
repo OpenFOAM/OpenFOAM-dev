@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,7 +149,7 @@ void Foam::cloudSolution::read()
             }
             else
             {
-                FatalErrorIn("void cloudSolution::read()")
+                FatalErrorInFunction
                     << "Invalid scheme " << scheme << ". Valid schemes are "
                     << "explicit and semiImplicit" << exit(FatalError);
             }
@@ -171,7 +171,7 @@ Foam::scalar Foam::cloudSolution::relaxCoeff(const word& fieldName) const
         }
     }
 
-    FatalErrorIn("scalar cloudSolution::relaxCoeff(const word&) const")
+    FatalErrorInFunction
         << "Field name " << fieldName << " not found in schemes"
         << abort(FatalError);
 
@@ -189,7 +189,7 @@ bool Foam::cloudSolution::semiImplicit(const word& fieldName) const
         }
     }
 
-    FatalErrorIn("bool cloudSolution::semiImplicit(const word&) const")
+    FatalErrorInFunction
         << "Field name " << fieldName << " not found in schemes"
         << abort(FatalError);
 

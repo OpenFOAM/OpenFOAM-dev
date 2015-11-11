@@ -57,10 +57,8 @@ Foam::combustionModels::rhoCombustionModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "rhoCombustionModel::New"
-        )   << "Unknown rhoCombustionModel type "
+        FatalErrorInFunction
+            << "Unknown rhoCombustionModel type "
             << combTypeName << endl << endl
             << "Valid  combustionModels are : " << endl
             << dictionaryConstructorTablePtr_->toc()

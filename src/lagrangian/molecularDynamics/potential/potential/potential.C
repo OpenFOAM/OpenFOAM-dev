@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ void Foam::potential::setSiteIdList(const dictionary& moleculePropertiesDict)
 
         if (!moleculePropertiesDict.found(id))
         {
-            FatalErrorIn("potential::setSiteIdList(const dictionary&)")
+            FatalErrorInFunction
                 << id << " molecule subDict not found"
                 << nl << abort(FatalError);
         }
@@ -65,7 +65,7 @@ void Foam::potential::setSiteIdList(const dictionary& moleculePropertiesDict)
 
             if (findIndex(siteIdNames, siteId) == -1)
             {
-                FatalErrorIn("potential::setSiteIdList(const dictionary&)")
+                FatalErrorInFunction
                     << siteId << " in pairPotentialSiteIds is not in siteIds: "
                     << siteIdNames << nl << abort(FatalError);
             }
@@ -173,7 +173,7 @@ void Foam::potential::potential::readPotentialDict()
 
             if (removalOrder_[rO] == -1)
             {
-                FatalErrorIn("potential::readPotentialDict()")
+                FatalErrorInFunction
                     << "removalOrder entry: " << remOrd[rO]
                     << " not found in idList."
                     << nl << abort(FatalError);
@@ -186,7 +186,7 @@ void Foam::potential::potential::readPotentialDict()
 
     if (!potentialDict.found("pair"))
     {
-        FatalErrorIn("potential::readPotentialDict()")
+        FatalErrorInFunction
             << "pair potential specification subDict not found"
             << abort(FatalError);
     }
@@ -207,7 +207,7 @@ void Foam::potential::potential::readPotentialDict()
     {
         if (!potentialDict.found("tether"))
         {
-            FatalErrorIn("potential::readPotentialDict()")
+            FatalErrorInFunction
                 << "tether potential specification subDict not found"
                 << abort(FatalError);
         }
@@ -282,14 +282,8 @@ void Foam::potential::potential::readMdInitialiseDict
 
             if (!moleculePropertiesDict.found(id))
             {
-                FatalErrorIn
-                (
-                    "potential::readMdInitialiseDict"
-                    "("
-                        "const IOdictionary&, "
-                        "IOdictionary&"
-                    ")"
-                )   << "Molecule type " << id
+                FatalErrorInFunction
+                    << "Molecule type " << id
                     << " not found in moleculeProperties dictionary." << nl
                     << abort(FatalError);
             }
@@ -337,14 +331,7 @@ void Foam::potential::potential::readMdInitialiseDict
             }
             else
             {
-                FatalErrorIn
-                (
-                    "potential::readMdInitialiseDict"
-                    "("
-                        "const IOdictionary&, "
-                        "IOdictionary&"
-                    ")"
-                )   << "Tether id  " << tetherSiteId
+                FatalErrorInFunction
                     << " not found as a site of any molecule in zone." << nl
                     << abort(FatalError);
             }

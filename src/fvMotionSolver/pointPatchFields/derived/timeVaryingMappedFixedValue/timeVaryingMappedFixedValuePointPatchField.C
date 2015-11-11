@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -351,10 +351,8 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::checkTable()
 
     if (!foundTime)
     {
-        FatalErrorIn
-        (
-            "timeVaryingMappedFixedValuePointPatchField<Type>::checkTable"
-        )   << "Cannot find starting sampling values for current time "
+        FatalErrorInFunction
+            << "Cannot find starting sampling values for current time "
             << this->db().time().value() << nl
             << "Have sampling values for times "
             << pointToPointPlanarInterpolation::timeNames(sampleTimes_) << nl
@@ -416,11 +414,8 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::checkTable()
 
             if (vals.size() != mapperPtr_().sourceSize())
             {
-                FatalErrorIn
-                (
-                    "timeVaryingMappedFixedValuePointPatchField<Type>::"
-                    "checkTable()"
-                )   << "Number of values (" << vals.size()
+                FatalErrorInFunction
+                    << "Number of values (" << vals.size()
                     << ") differs from the number of points ("
                     <<  mapperPtr_().sourceSize()
                     << ") in file " << vals.objectPath() << exit(FatalError);
@@ -473,11 +468,8 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::checkTable()
 
             if (vals.size() != mapperPtr_().sourceSize())
             {
-                FatalErrorIn
-                (
-                    "timeVaryingMappedFixedValuePointPatchField<Type>::"
-                    "checkTable()"
-                )   << "Number of values (" << vals.size()
+                FatalErrorInFunction
+                    << "Number of values (" << vals.size()
                     << ") differs from the number of points ("
                     <<  mapperPtr_().sourceSize()
                     << ") in file " << vals.objectPath() << exit(FatalError);

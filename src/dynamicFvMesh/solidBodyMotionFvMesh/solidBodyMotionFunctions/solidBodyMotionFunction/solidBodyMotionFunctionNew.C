@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,14 +42,8 @@ Foam::autoPtr<Foam::solidBodyMotionFunction> Foam::solidBodyMotionFunction::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "solidBodyMotionFunction::New"
-            "("
-            "    const dictionary& SBMFCoeffs,"
-            "    const Time& runTime"
-            ")"
-        )   << "Unknown solidBodyMotionFunction type "
+        FatalErrorInFunction
+            << "Unknown solidBodyMotionFunction type "
             << motionType << nl << nl
             << "Valid solidBodyMotionFunctions are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

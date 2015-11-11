@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,11 +88,7 @@ void Foam::PairCollisionRecord<Type>::operator=
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn
-        (
-            "Foam::PairCollisionRecord<Type>::operator="
-            "(const Foam::PairCollisionRecord<Type>&)"
-        )
+        FatalErrorInFunction
             << "Attempted assignment to self"
             << abort(FatalError);
     }

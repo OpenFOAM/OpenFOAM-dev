@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,21 +33,21 @@ void Foam::janafThermo<EquationOfState>::checkInputData() const
 {
     if (Tlow_ >= Thigh_)
     {
-        FatalErrorIn("janafThermo<EquationOfState>::check()")
+        FatalErrorInFunction
             << "Tlow(" << Tlow_ << ") >= Thigh(" << Thigh_ << ')'
             << exit(FatalError);
     }
 
     if (Tcommon_ <= Tlow_)
     {
-        FatalErrorIn("janafThermo<EquationOfState>::check()")
+        FatalErrorInFunction
             << "Tcommon(" << Tcommon_ << ") <= Tlow(" << Tlow_ << ')'
             << exit(FatalError);
     }
 
     if (Tcommon_ > Thigh_)
     {
-        FatalErrorIn("janafThermo<EquationOfState>::check()")
+        FatalErrorInFunction
             << "Tcommon(" << Tcommon_ << ") > Thigh(" << Thigh_ << ')'
             << exit(FatalError);
     }

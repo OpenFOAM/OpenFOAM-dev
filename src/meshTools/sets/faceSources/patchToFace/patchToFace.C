@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ void Foam::patchToFace::combine(topoSet& set, const bool add) const
 
     if (patchIDs.empty())
     {
-        WarningIn("patchToFace::combine(topoSet&, const bool)")
+        WarningInFunction
             << "Cannot find any patch named " << patchName_ << endl
             << "Valid names are " << mesh_.boundaryMesh().names() << endl;
     }

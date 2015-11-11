@@ -78,14 +78,8 @@ Foam::LiquidEvaporationBoil<CloudType>::LiquidEvaporationBoil
 {
     if (activeLiquids_.size() == 0)
     {
-        WarningIn
-        (
-            "Foam::LiquidEvaporationBoil<CloudType>::LiquidEvaporationBoil"
-            "("
-                "const dictionary& dict, "
-                "CloudType& owner"
-            ")"
-        )   << "Evaporation model selected, but no active liquids defined"
+        WarningInFunction
+            << "Evaporation model selected, but no active liquids defined"
             << nl << endl;
     }
     else
@@ -156,24 +150,8 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
     {
         if (debug)
         {
-            WarningIn
-            (
-                "void Foam::LiquidEvaporationBoil<CloudType>::calculate"
-                "("
-                    "const scalar, "
-                    "const label, "
-                    "const scalar, "
-                    "const scalar, "
-                    "const scalar, "
-                    "const scalar, "
-                    "const scalar, "
-                    "const scalar, "
-                    "const scalar, "
-                    "const scalar, "
-                    "const scalarField&, "
-                    "scalarField&"
-                ") const"
-            )   << "Parcel reached critical conditions: "
+            WarningInFunction
+                << "Parcel reached critical conditions: "
                 << "evaporating all avaliable mass" << endl;
         }
 
@@ -355,16 +333,8 @@ Foam::scalar Foam::LiquidEvaporationBoil<CloudType>::dh
         }
         default:
         {
-            FatalErrorIn
-            (
-                "Foam::scalar Foam::LiquidEvaporationBoil<CloudType>::dh"
-                "("
-                    "const label, "
-                    "const label, "
-                    "const scalar, "
-                    "const scalar"
-                ") const"
-            )   << "Unknown enthalpyTransfer type" << abort(FatalError);
+            FatalErrorInFunction
+                << "Unknown enthalpyTransfer type" << abort(FatalError);
         }
     }
 

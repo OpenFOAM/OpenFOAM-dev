@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,13 +65,8 @@ Foam::CorrectionLimitingMethod::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "CorrectionLimitingMethod::New"
-            "("
-                "const dictionary&"
-            ")"
-        )   << "Unknown correction limiter type " << modelType
+        FatalErrorInFunction
+            << "Unknown correction limiter type " << modelType
             << ", constructor not in hash table" << nl << nl
             << "    Valid correction limiter types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

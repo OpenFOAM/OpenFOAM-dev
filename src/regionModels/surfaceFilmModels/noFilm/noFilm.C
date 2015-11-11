@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ void noFilm::addSources
 
 const volScalarField& noFilm::delta() const
 {
-    FatalErrorIn("const volScalarField& noFilm::delta() const")
+    FatalErrorInFunction
         << "delta field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -105,7 +105,7 @@ const volScalarField& noFilm::delta() const
 
 const volScalarField& noFilm::alpha() const
 {
-    FatalErrorIn("const volScalarField& noFilm::alpha() const")
+    FatalErrorInFunction
         << "alpha field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -114,7 +114,7 @@ const volScalarField& noFilm::alpha() const
 
 const volVectorField& noFilm::U() const
 {
-    FatalErrorIn("const volVectorField& noFilm::U() const")
+    FatalErrorInFunction
         << "U field not available for " << type() << abort(FatalError);
 
     return volVectorField::null();
@@ -123,7 +123,7 @@ const volVectorField& noFilm::U() const
 
 const volVectorField& noFilm::Us() const
 {
-    FatalErrorIn("const volVectorField& noFilm::Us() const")
+    FatalErrorInFunction
         << "Us field not available for " << type() << abort(FatalError);
 
     return volVectorField::null();
@@ -132,7 +132,7 @@ const volVectorField& noFilm::Us() const
 
 const volVectorField& noFilm::Uw() const
 {
-    FatalErrorIn("const volVectorField& noFilm::Uw() const")
+    FatalErrorInFunction
         << "Uw field not available for " << type() << abort(FatalError);
 
     return volVectorField::null();
@@ -141,7 +141,7 @@ const volVectorField& noFilm::Uw() const
 
 const volScalarField& noFilm::rho() const
 {
-    FatalErrorIn("const volScalarField& noFilm::rho() const")
+    FatalErrorInFunction
         << "rho field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -150,7 +150,7 @@ const volScalarField& noFilm::rho() const
 
 const volScalarField& noFilm::T() const
 {
-    FatalErrorIn("const volScalarField& noFilm::T() const")
+    FatalErrorInFunction
         << "T field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -159,7 +159,7 @@ const volScalarField& noFilm::T() const
 
 const volScalarField& noFilm::Ts() const
 {
-    FatalErrorIn("const volScalarField& noFilm::Ts() const")
+    FatalErrorInFunction
         << "Ts field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -168,7 +168,7 @@ const volScalarField& noFilm::Ts() const
 
 const volScalarField& noFilm::Tw() const
 {
-    FatalErrorIn("const volScalarField& noFilm::Tw() const")
+    FatalErrorInFunction
         << "Tw field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -177,7 +177,7 @@ const volScalarField& noFilm::Tw() const
 
 const volScalarField& noFilm::Cp() const
 {
-    FatalErrorIn("const volScalarField& noFilm::Cp() const")
+    FatalErrorInFunction
         << "Cp field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -186,7 +186,7 @@ const volScalarField& noFilm::Cp() const
 
 const volScalarField& noFilm::kappa() const
 {
-    FatalErrorIn("const volScalarField& noFilm::kappa() const")
+    FatalErrorInFunction
         << "kappa field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -195,7 +195,7 @@ const volScalarField& noFilm::kappa() const
 
 const volScalarField& noFilm::sigma() const
 {
-    FatalErrorIn("const volScalarField& noFilm::sigma() const")
+    FatalErrorInFunction
         << "sigma field not available for " << type() << abort(FatalError);
 
     return volScalarField::null();
@@ -226,7 +226,7 @@ tmp<volScalarField> noFilm::primaryMassTrans() const
 
 const volScalarField& noFilm::cloudMassTrans() const
 {
-    FatalErrorIn("const volScalarField& noFilm::cloudMassTrans() const")
+    FatalErrorInFunction
         << "cloudMassTrans field not available for " << type()
         << abort(FatalError);
 
@@ -236,7 +236,7 @@ const volScalarField& noFilm::cloudMassTrans() const
 
 const volScalarField& noFilm::cloudDiameterTrans() const
 {
-    FatalErrorIn("const volScalarField& noFilm::cloudDiameterTrans() const")
+    FatalErrorInFunction
         << "cloudDiameterTrans field not available for " << type()
         << abort(FatalError);
 

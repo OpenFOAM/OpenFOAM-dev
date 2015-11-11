@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,14 +63,8 @@ T Foam::meshRefinement::gAverage
 {
     if (values.size() != isMasterElem.size())
     {
-        FatalErrorIn
-        (
-            "meshRefinement::gAverage\n"
-            "(\n"
-            "    const PackedBoolList& isMasterElem,\n"
-            "    const UList<T>& values\n"
-            ")\n"
-        )   << "Number of elements in list " << values.size()
+        FatalErrorInFunction
+            << "Number of elements in list " << values.size()
             << " does not correspond to number of elements in isMasterElem "
             << isMasterElem.size()
             << exit(FatalError);
@@ -116,11 +110,8 @@ void Foam::meshRefinement::testSyncBoundaryFaceList
 
     if (faceData.size() != nBFaces || syncedFaceData.size() != nBFaces)
     {
-        FatalErrorIn
-        (
-            "meshRefinement::testSyncBoundaryFaceList"
-            "(const scalar, const string&, const List<T>&, const List<T>&)"
-        )   << "Boundary faces:" << nBFaces
+        FatalErrorInFunction
+            << "Boundary faces:" << nBFaces
             << " faceData:" << faceData.size()
             << " syncedFaceData:" << syncedFaceData.size()
             << abort(FatalError);
@@ -143,7 +134,7 @@ void Foam::meshRefinement::testSyncBoundaryFaceList
             {
                 label faceI = pp.start()+i;
 
-                FatalErrorIn("testSyncFaces")
+                FatalErrorInFunction
                     << msg
                     << "patchFace:" << i
                     << " face:" << faceI
@@ -303,7 +294,7 @@ void Foam::meshRefinement::weightedSum
      || meshPoints.size() != pointData.size()
     )
     {
-        FatalErrorIn("medialAxisMeshMover::weightedSum(..)")
+        FatalErrorInFunction
             << "Inconsistent sizes for edge or point data:"
             << " isMasterEdge:" << isMasterEdge.size()
             << " edgeWeights:" << edgeWeights.size()

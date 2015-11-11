@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,8 @@ bool Foam::cellFeatures::faceAlignedEdge(const label faceI, const label edgeI)
         }
     }
 
-    FatalErrorIn
-    (
-        "cellFeatures::faceAlignedEdge(const label, const label)"
-    )   << "Can not find edge " << mesh_.edges()[edgeI]
+    FatalErrorInFunction
+        << "Can not find edge " << mesh_.edges()[edgeI]
         << " on face " << faceI << abort(FatalError);
 
     return false;
@@ -101,11 +99,8 @@ Foam::label Foam::cellFeatures::nextEdge
         }
     }
 
-    FatalErrorIn
-    (
-        "cellFeatures::nextEdge(const label, const Map<label>"
-        ", const labelHashSet&, const label, const label, const label)"
-    )   << "Can not find edge in " << featureEdge_ << " connected to edge "
+    FatalErrorInFunction
+        << "Can not find edge in " << featureEdge_ << " connected to edge "
         << thisEdgeI << " at vertex " << thisVertI << endl
         << "This might mean that the externalEdges do not form a closed loop"
         << abort(FatalError);
@@ -359,7 +354,7 @@ void Foam::cellFeatures::calcSuperFaces() const
 
                 if (superFace.size() <= 2)
                 {
-                    WarningIn("cellFeatures::calcSuperFaces")
+                    WarningInFunction
                         << " Can not collapse faces " << faceMap_[superFaceI]
                         << " into one big face on cell " << cellI_ << endl
                         << "Try decreasing minCos:" << minCos_ << endl;
@@ -427,10 +422,8 @@ bool Foam::cellFeatures::isFeaturePoint(const label edge0, const label edge1)
      || (edge1 >= mesh_.nEdges())
     )
     {
-        FatalErrorIn
-        (
-            "cellFeatures::isFeatureVertex(const label, const label)"
-        )   << "Illegal edge labels : edge0:" << edge0 << " edge1:" << edge1
+        FatalErrorInFunction
+            << "Illegal edge labels : edge0:" << edge0 << " edge1:" << edge1
             << abort(FatalError);
     }
 
@@ -468,11 +461,8 @@ bool Foam::cellFeatures::isFeaturePoint(const label edge0, const label edge1)
     {
         cosAngle = GREAT;   // satisfy compiler
 
-        FatalErrorIn
-        (
-            "cellFeatures::isFeaturePoint(const label, const label"
-            ", const label)"
-        )   << "Edges do not share common vertex. e0:" << e0
+        FatalErrorInFunction
+            << "Edges do not share common vertex. e0:" << e0
             << " e1:" << e1 << abort(FatalError);
     }
 
@@ -499,10 +489,8 @@ bool Foam::cellFeatures::isFeatureVertex(const label faceI, const label vertI)
      || (vertI >= mesh_.nPoints())
     )
     {
-        FatalErrorIn
-        (
-            "cellFeatures::isFeatureVertex(const label, const label)"
-        )   << "Illegal face " << faceI << " or vertex " << vertI
+        FatalErrorInFunction
+            << "Illegal face " << faceI << " or vertex " << vertI
             << abort(FatalError);
     }
 
@@ -533,10 +521,8 @@ bool Foam::cellFeatures::isFeatureVertex(const label faceI, const label vertI)
 
     if (edge1 == -1)
     {
-        FatalErrorIn
-        (
-            "cellFeatures::isFeatureVertex(const label, const label)"
-        )   << "Did not find two edges sharing vertex " << vertI
+        FatalErrorInFunction
+            << "Did not find two edges sharing vertex " << vertI
             << " on face " << faceI << " vertices:" << mesh_.faces()[faceI]
             << abort(FatalError);
     }

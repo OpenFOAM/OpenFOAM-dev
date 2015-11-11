@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,15 +52,8 @@ autoPtr<filmViscosityModel> filmViscosityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "filmViscosityModel::New"
-            "("
-                "surfaceFilmModel&, "
-                "const dictionary&, "
-                "volScalarField&"
-            ")"
-        )   << "Unknown filmViscosityModel type " << modelType
+        FatalErrorInFunction
+            << "Unknown filmViscosityModel type " << modelType
             << nl << nl << "Valid filmViscosityModel types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);

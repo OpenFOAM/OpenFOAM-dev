@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,10 +68,8 @@ Foam::surfaceWriter::New(const word& writeType)
 
         if (cstrIter == wordConstructorTablePtr_->end())
         {
-            FatalErrorIn
-            (
-                "surfaceWriter::New(const word&)"
-            )   << "Unknown write type \"" << writeType << "\"\n\n"
+            FatalErrorInFunction
+                << "Unknown write type \"" << writeType << "\"\n\n"
                 << "Valid write types : "
                 << wordConstructorTablePtr_->sortedToc() << nl
                 << "Valid proxy types : "

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,9 +122,8 @@ Foam::surfaceZonesInfo::surfaceZonesInfo
             && !surface.hasVolumeType()
             )
             {
-                IOWarningIn
+                IOWarningInFunction
                 (
-                    "surfaceZonesInfo::surfaceZonesInfo(..)",
                     surfacesDict
                 )   << "Illegal entry zoneInside "
                     << areaSelectionAlgoNames[zoneInside_]
@@ -135,9 +134,8 @@ Foam::surfaceZonesInfo::surfaceZonesInfo
         }
         else if (hasSide)
         {
-            IOWarningIn
+            IOWarningInFunction
             (
-                "surfaceZonesInfo::surfaceZonesInfo(..)",
                 surfacesDict
             )   << "Unused entry zoneInside for faceZone "
                 << faceZoneName_
@@ -393,11 +391,8 @@ Foam::labelList Foam::surfaceZonesInfo::addCellZonesToMesh
     {
         if (allCellZones[procI] != allCellZones[0])
         {
-            FatalErrorIn
-            (
-                "meshRefinement::zonify"
-                "(const label, const point&)"
-            )   << "Zones not synchronised among processors." << nl
+            FatalErrorInFunction
+                << "Zones not synchronised among processors." << nl
                 << " Processor0 has cellZones:" << allCellZones[0]
                 << " , processor" << procI
                 << " has cellZones:" << allCellZones[procI]
@@ -459,11 +454,8 @@ Foam::labelList Foam::surfaceZonesInfo::addFaceZonesToMesh
     {
         if (allFaceZones[procI] != allFaceZones[0])
         {
-            FatalErrorIn
-            (
-                "meshRefinement::zonify"
-                "(const label, const point&)"
-            )   << "Zones not synchronised among processors." << nl
+            FatalErrorInFunction
+                << "Zones not synchronised among processors." << nl
                 << " Processor0 has faceZones:" << allFaceZones[0]
                 << " , processor" << procI
                 << " has faceZones:" << allFaceZones[procI]

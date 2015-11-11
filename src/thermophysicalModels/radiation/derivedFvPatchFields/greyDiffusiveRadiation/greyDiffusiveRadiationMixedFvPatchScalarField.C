@@ -172,11 +172,8 @@ updateCoeffs()
 
     if (dom.nLambda() != 1)
     {
-        FatalErrorIn
-        (
-            "Foam::radiation::"
-            "greyDiffusiveRadiationMixedFvPatchScalarField::updateCoeffs"
-        )   << " a grey boundary condition is used with a non-grey "
+        FatalErrorInFunction
+            << " a grey boundary condition is used with a non-grey "
             << "absorption model" << nl << exit(FatalError);
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ void Foam::Cloud<ParticleType>::checkPatches() const
 
     if (!ok)
     {
-        FatalErrorIn("void Foam::Cloud<ParticleType>::initCloud(const bool)")
+        FatalErrorInFunction
             << "Particle tracking across AMI patches is only currently "
             << "supported for cases where the AMI patches reside on a "
             << "single processor" << abort(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,14 +93,8 @@ Foam::IsotropyModel<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "IsotropyModel<CloudType>::New"
-            "("
-                "const dictionary&, "
-                "CloudType&"
-            ")"
-        )   << "Unknown isotropy model type " << modelType
+        FatalErrorInFunction
+            << "Unknown isotropy model type " << modelType
             << ", constructor not in hash table" << nl << nl
             << "    Valid isotropy model types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

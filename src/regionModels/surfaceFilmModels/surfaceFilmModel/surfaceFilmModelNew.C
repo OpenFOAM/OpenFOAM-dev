@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,8 @@ autoPtr<surfaceFilmModel> surfaceFilmModel::New
 
     if (cstrIter == meshConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "surfaceFilmModel::New(const fvMesh&, const dimensionedVector&)"
-        )   << "Unknown surfaceFilmModel type " << modelType
+        FatalErrorInFunction
+            << "Unknown surfaceFilmModel type " << modelType
             << nl << nl << "Valid surfaceFilmModel types are:" << nl
             << meshConstructorTablePtr_->toc()
             << exit(FatalError);

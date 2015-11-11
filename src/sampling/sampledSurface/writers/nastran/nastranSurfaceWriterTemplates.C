@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,20 +129,7 @@ void Foam::nastranSurfaceWriter::writeTemplate
 {
     if (!fieldMap_.found(fieldName))
     {
-        WarningIn
-        (
-            "void Foam::nastranSurfaceWriter::writeTemplate"
-            "("
-                "const fileName&, "
-                "const fileName&, "
-                "const pointField&, "
-                "const faceList&, "
-                "const word&, "
-                "const Field<Type>&, "
-                "const bool, "
-                "const bool"
-            ") const"
-        )
+        WarningInFunction
             << "No mapping found between field " << fieldName
             << " and corresponding Nastran field.  Available types are:"
             << fieldMap_

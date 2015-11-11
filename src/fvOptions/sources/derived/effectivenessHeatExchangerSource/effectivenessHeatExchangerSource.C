@@ -168,16 +168,7 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
 {
     if (zoneID_ < 0)
     {
-        FatalErrorIn
-        (
-            "effectivenessHeatExchangerSource::effectivenessHeatExchangerSource"
-            "("
-                "const word&, "
-                "const word&, "
-                "const dictionary&, "
-                "const fvMesh&"
-            ")"
-        )
+        FatalErrorInFunction
             << type() << " " << this->name() << ": "
             << "    Unknown face zone name: " << faceZoneName_
             << ". Valid face zones are: " << mesh_.faceZones().names()

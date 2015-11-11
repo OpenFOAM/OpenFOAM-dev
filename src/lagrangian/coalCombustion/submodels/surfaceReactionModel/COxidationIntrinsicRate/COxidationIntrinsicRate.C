@@ -66,14 +66,8 @@ Foam::COxidationIntrinsicRate<CloudType>::COxidationIntrinsicRate
 
     if (Sb_ < 0)
     {
-        FatalErrorIn
-        (
-            "COxidationIntrinsicRate<CloudType>"
-            "("
-                "const dictionary&, "
-                "CloudType&"
-            ")"
-        )   << "Stoichiometry of reaction, Sb, must be greater than zero" << nl
+        FatalErrorInFunction
+            << "Stoichiometry of reaction, Sb, must be greater than zero" << nl
             << exit(FatalError);
     }
 

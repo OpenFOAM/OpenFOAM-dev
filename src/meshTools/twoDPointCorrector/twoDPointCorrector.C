@@ -102,7 +102,7 @@ void Foam::twoDPointCorrector::calcAddressing() const
 
     if (mag(pn) < VSMALL)
     {
-        FatalErrorIn("twoDPointCorrector::calcAddressing()")
+        FatalErrorInFunction
             << "Cannot determine normal vector from patches."
             << abort(FatalError);
     }
@@ -148,7 +148,7 @@ void Foam::twoDPointCorrector::calcAddressing() const
     {
         if (meshPoints.size() % 2 != 0)
         {
-            WarningIn("twoDPointCorrector::calcAddressing()")
+            WarningInFunction
                 << "the number of vertices in the geometry "
                 << "is odd - this should not be the case for a 2-D case. "
                 << "Please check the geometry."
@@ -157,7 +157,7 @@ void Foam::twoDPointCorrector::calcAddressing() const
 
         if (2*nNormalEdges != meshPoints.size())
         {
-            WarningIn("twoDPointCorrector::calcAddressing()")
+            WarningInFunction
                 << "The number of points in the mesh is "
                 << "not equal to twice the number of edges normal to the plane "
                 << "- this may be OK only for wedge geometries.\n"
@@ -235,7 +235,7 @@ Foam::direction Foam::twoDPointCorrector::normalDir() const
     }
     else
     {
-        FatalErrorIn("direction twoDPointCorrector::normalDir() const")
+        FatalErrorInFunction
             << "Plane normal not aligned with the coordinate system" << nl
             << "    pn = " << pn
             << abort(FatalError);

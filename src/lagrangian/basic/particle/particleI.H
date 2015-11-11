@@ -331,10 +331,7 @@ inline void Foam::particle::tetNeighbour(label triI)
 
     if (tetBasePtI == -1)
     {
-        FatalErrorIn
-        (
-            "inline void Foam::particle::tetNeighbour(label triI)"
-        )
+        FatalErrorInFunction
             << "No base point for face " << tetFaceI_ << ", " << f
             << ", produces a valid tet decomposition."
             << abort(FatalError);
@@ -447,11 +444,7 @@ inline void Foam::particle::tetNeighbour(label triI)
         }
         default:
         {
-            FatalErrorIn
-            (
-                "inline void "
-                "Foam::particle::tetNeighbour(label triI)"
-            )
+            FatalErrorInFunction
                 << "Tet tri face index error, can only be 0..3, supplied "
                 << triI << abort(FatalError);
 
@@ -530,17 +523,7 @@ inline void Foam::particle::crossEdgeConnectedFace
 
             if (tetBasePtI == -1)
             {
-                FatalErrorIn
-                (
-                    "inline void "
-                    "Foam::particle::crossEdgeConnectedFace"
-                    "("
-                        "const label& cellI,"
-                        "label& tetFaceI,"
-                        "label& tetPtI,"
-                        "const edge& e"
-                    ")"
-                )
+                FatalErrorInFunction
                     << "No base point for face " << fI << ", " << f
                     << ", produces a decomposition that has a minimum "
                     << "volume greater than tolerance."
@@ -586,7 +569,7 @@ inline Foam::label Foam::particle::getNewParticleID() const
 
     if (id == labelMax)
     {
-        WarningIn("particle::getNewParticleID() const")
+        WarningInFunction
             << "Particle counter has overflowed. This might cause problems"
             << " when reconstructing particle tracks." << endl;
     }
@@ -698,7 +681,7 @@ inline void Foam::particle::initCellFacePt()
 
         if (cellI_ == -1)
         {
-            FatalErrorIn("void Foam::particle::initCellFacePt()")
+            FatalErrorInFunction
                 << "cell, tetFace and tetPt search failure at position "
                 << position_ << abort(FatalError);
         }
@@ -732,8 +715,7 @@ inline void Foam::particle::initCellFacePt()
                     // it should be in, then this is considered an
                     // error.
 
-                    FatalErrorIn("void Foam::particle::initCellFacePt()")
-                        << "    cell, tetFace and tetPt search failure at "
+                    FatalErrorInFunction
                         << "position " << position_ << nl
                         << "    for requested cell " << oldCellI << nl
                         << "    If this is a restart or "
@@ -783,14 +765,14 @@ inline void Foam::particle::initCellFacePt()
 
                 if (tetFaceI_ == -1)
                 {
-                    FatalErrorIn("void Foam::particle::initCellFacePt()")
+                    FatalErrorInFunction
                         << "cell, tetFace and tetPt search failure at position "
                         << position_ << abort(FatalError);
                 }
 
                 if (debug)
                 {
-                    WarningIn("void Foam::particle::initCellFacePt()")
+                    WarningInFunction
                         << "Particle moved from " << position_
                         << " to " << newPosition
                         << " in cell " << cellI_
@@ -809,7 +791,7 @@ inline void Foam::particle::initCellFacePt()
 
             if (debug && cellI_ != oldCellI)
             {
-                WarningIn("void Foam::particle::initCellFacePt()")
+                WarningInFunction
                     << "Particle at position " << position_
                     << " searched for a cell, tetFace and tetPt." << nl
                     << "    Found"

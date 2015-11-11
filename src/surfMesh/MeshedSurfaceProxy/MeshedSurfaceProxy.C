@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,10 +75,8 @@ void Foam::MeshedSurfaceProxy<Face>::write
 
     if (mfIter == writefileExtensionMemberFunctionTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "MeshedSurfaceProxy::write(const fileName&)"
-        )   << "Unknown file extension " << ext << nl << nl
+        FatalErrorInFunction
+            << "Unknown file extension " << ext << nl << nl
             << "Valid types are :" << endl
             << writeTypes()
             << exit(FatalError);

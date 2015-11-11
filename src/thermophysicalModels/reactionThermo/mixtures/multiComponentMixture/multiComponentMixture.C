@@ -59,11 +59,7 @@ void Foam::multiComponentMixture<ThermoType>::correctMassFractions()
 
     if (mag(max(Yt).value()) < ROOTVSMALL)
     {
-        FatalErrorIn
-        (
-            "void Foam::multiComponentMixture<ThermoType>::"
-            "correctMassFractions()"
-        )
+        FatalErrorInFunction
             << "Sum of mass fractions is zero for species " << this->species()
             << exit(FatalError);
     }

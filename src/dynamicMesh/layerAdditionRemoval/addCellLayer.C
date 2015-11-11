@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -442,11 +442,8 @@ void Foam::layerAdditionRemoval::addCellLayer
 
         if (patchID < 0)
         {
-            FatalErrorIn
-            (
-                "void Foam::layerAdditionRemoval::setRefinement("
-                "polyTopoChange& ref)"
-            )   << "Cannot find patch for edge " << meshEdges[curEdgeID]
+            FatalErrorInFunction
+                << "Cannot find patch for edge " << meshEdges[curEdgeID]
                 << ". Edge: " << mesh.edges()[meshEdges[curEdgeID]]
                 << abort(FatalError);
         }

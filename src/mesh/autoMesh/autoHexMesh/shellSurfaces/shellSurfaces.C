@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,8 @@ void Foam::shellSurfaces::setAndCheckLevels
 {
     if (modes_[shellI] != DISTANCE && distLevels.size() != 1)
     {
-        FatalErrorIn
-        (
-            "shellSurfaces::shellSurfaces"
-            "(const searchableSurfaces&, const dictionary&)"
-        )   << "For refinement mode "
+        FatalErrorInFunction
+            << "For refinement mode "
             << refineModeNames_[modes_[shellI]]
             << " specify only one distance+level."
             << " (its distance gets discarded)"
@@ -93,11 +90,8 @@ void Foam::shellSurfaces::setAndCheckLevels
              || (levels_[shellI][j] > levels_[shellI][j-1])
             )
             {
-                FatalErrorIn
-                (
-                    "shellSurfaces::shellSurfaces"
-                    "(const searchableSurfaces&, const dictionary&)"
-                )   << "For refinement mode "
+                FatalErrorInFunction
+                    << "For refinement mode "
                     << refineModeNames_[modes_[shellI]]
                     << " : Refinement should be specified in order"
                     << " of increasing distance"
@@ -126,12 +120,8 @@ void Foam::shellSurfaces::setAndCheckLevels
     {
         if (!allGeometry_[shells_[shellI]].hasVolumeType())
         {
-            FatalErrorIn
-            (
-                "shellSurfaces::shellSurfaces"
-                "(const searchableSurfaces&"
-                ", const PtrList<dictionary>&)"
-            )   << "Shell " << shell.name()
+            FatalErrorInFunction
+                << "Shell " << shell.name()
                 << " does not support testing for "
                 << refineModeNames_[modes_[shellI]] << endl
                 << "Probably it is not closed."
@@ -413,9 +403,8 @@ Foam::shellSurfaces::shellSurfaces
 
     if (unmatchedKeys.size() > 0)
     {
-        IOWarningIn
+        IOWarningInFunction
         (
-            "shellSurfaces::shellSurfaces(..)",
             shellsDict
         )   << "Not all entries in refinementRegions dictionary were used."
             << " The following entries were not used : "

@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
         dictionary dict;
 
-        IOWarningIn("main", dict) << "warning 3" << endl;
+        IOWarningInFunction(dict) << "warning 3" << endl;
 
         FatalErrorInFunction << "error 1" << endl;
         FatalErrorInFunction << "error 2" << exit(FatalError);

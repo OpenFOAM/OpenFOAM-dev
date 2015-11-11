@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -810,7 +810,7 @@ void Foam::searchableSurfacesQueries::signedDistance
                     }
                     default:
                     {
-                        FatalErrorIn("signedDistance()")
+                        FatalErrorInFunction
                             << "getVolumeType failure,"
                             << " neither INSIDE or OUTSIDE."
                             << " point:" << surfPoints[i]
@@ -879,11 +879,8 @@ Foam::pointIndexHit Foam::searchableSurfacesQueries::facesIntersection
         }
         else
         {
-            FatalErrorIn
-            (
-                "searchableSurfacesQueries::facesIntersection"
-                "(const labelList&, const scalar, const scalar, const point&)"
-            )   << "Did not find point within distance "
+            FatalErrorInFunction
+                << "Did not find point within distance "
                 << initDistSqr << " of starting point " << start
                 << " on surface "
                 << allSurfaces[surfacesToTest[i]].IOobject::name()

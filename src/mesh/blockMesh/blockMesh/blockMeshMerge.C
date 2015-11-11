@@ -95,7 +95,7 @@ void Foam::blockMesh::calcMergeInfo()
 
         if (!foundFace)
         {
-            FatalErrorIn("blockMesh::calcMergeInfo()")
+            FatalErrorInFunction
                 << "Cannot find merge face for block " << blockPlabel
                 << exit(FatalError);
         }
@@ -204,7 +204,7 @@ void Foam::blockMesh::calcMergeInfo()
 
         if (!foundFace)
         {
-            FatalErrorIn("blockMesh::calcMergeInfo()")
+            FatalErrorInFunction
                 << "Cannot find merge face for block " << blockNlabel
                 << exit(FatalError);
         }
@@ -214,7 +214,7 @@ void Foam::blockMesh::calcMergeInfo()
 
         if (blockPfaceFaces.size() != blockNfaceFaces.size())
         {
-            FatalErrorIn("blockMesh::calcMergeInfo()")
+            FatalErrorInFunction
                 << "Inconsistent number of faces between block pair "
                 << blockPlabel << " and " << blockNlabel
                 << exit(FatalError);
@@ -287,7 +287,7 @@ void Foam::blockMesh::calcMergeInfo()
             {
                 if (cp[blockPfaceFacePointLabel] == -1)
                 {
-                    FatalErrorIn("blockMesh::calcMergeInfo()")
+                    FatalErrorInFunction
                         << "Inconsistent point locations between block pair "
                         << blockPlabel << " and " << blockNlabel << nl
                         << "    probably due to inconsistent grading."
@@ -407,7 +407,7 @@ void Foam::blockMesh::calcMergeInfo()
 
         if (nPasses > 100)
         {
-            FatalErrorIn("blockMesh::calcMergeInfo()")
+            FatalErrorInFunction
                 << "Point merging failed after max number of passes."
                 << exit(FatalError);
         }
@@ -452,7 +452,7 @@ void Foam::blockMesh::calcMergeInfo()
 
         if (!foundFace)
         {
-            FatalErrorIn("blockMesh::calcMergeInfo()")
+            FatalErrorInFunction
                 << "Cannot find merge face for block " << blockPlabel
                 << exit(FatalError);
         }
@@ -479,7 +479,7 @@ void Foam::blockMesh::calcMergeInfo()
 
         if (!foundFace)
         {
-            FatalErrorIn("blockMesh::calcMergeInfo()")
+            FatalErrorInFunction
                 << "Cannot find merge face for block " << blockNlabel
                 << exit(FatalError);
         }
@@ -503,7 +503,7 @@ void Foam::blockMesh::calcMergeInfo()
 
                 if (mergeList_[PpointLabel] == -1)
                 {
-                    FatalErrorIn("blockMesh::calcMergeInfo()")
+                    FatalErrorInFunction
                         << "Unable to merge point "
                         << blockPfaceFacePointLabel
                         << ' ' << blockPpoints[blockPfaceFacePointLabel]
@@ -529,7 +529,7 @@ void Foam::blockMesh::calcMergeInfo()
 
                 if (mergeList_[NpointLabel] == -1)
                 {
-                    FatalErrorIn("blockMesh::calcMergeInfo()")
+                    FatalErrorInFunction
                         << "unable to merge point "
                         << blockNfaceFacePointLabel
                         << ' ' << blockNpoints[blockNfaceFacePointLabel]
@@ -552,7 +552,7 @@ void Foam::blockMesh::calcMergeInfo()
     {
         if (mergeList_[pointLabel] > pointLabel)
         {
-            FatalErrorIn("blockMesh::calcMergeInfo()")
+            FatalErrorInFunction
                 << "Merge list contains point index out of range"
                 << exit(FatalError);
         }

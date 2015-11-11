@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,11 +131,8 @@ Foam::boolList Foam::regionToCell::findRegions
 
         if (keepProcI == -1)
         {
-            FatalErrorIn
-            (
-                "outsideCellSelection::findRegions"
-                "(const bool, const regionSplit&)"
-            )   << "Did not find " << insidePoints_[i]
+            FatalErrorInFunction
+                << "Did not find " << insidePoints_[i]
                 << " in mesh." << " Mesh bounds are " << mesh_.bounds()
                 << exit(FatalError);
         }

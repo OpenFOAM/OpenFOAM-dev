@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,10 +44,7 @@ void Foam::MeshedSurface<Face>::checkZones()
 
         if (count < this->size())
         {
-            WarningIn
-            (
-                "MeshedSurface::checkZones()\n"
-            )
+            WarningInFunction
                 << "more faces " << this->size() << " than zones " << count
                 << " ... extending final zone"
                 << endl;
@@ -56,10 +53,7 @@ void Foam::MeshedSurface<Face>::checkZones()
         }
         else if (count > this->size())
         {
-            FatalErrorIn
-            (
-                "MeshedSurface::checkZones()\n"
-            )
+            FatalErrorInFunction
                 << "more zones " << count << " than faces " << this->size()
                 << exit(FatalError);
         }

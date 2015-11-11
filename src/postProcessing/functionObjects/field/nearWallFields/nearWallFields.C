@@ -242,16 +242,8 @@ Foam::nearWallFields::nearWallFields
     else
     {
         active_ = false;
-        WarningIn
-        (
-            "nearWallFields::nearWallFields"
-            "("
-                "const word&, "
-                "const objectRegistry&, "
-                "const dictionary&, "
-                "const bool"
-            ")"
-        )   << "No fvMesh available, deactivating " << name_
+        WarningInFunction
+            << "No fvMesh available, deactivating " << name_
             << endl;
     }
 

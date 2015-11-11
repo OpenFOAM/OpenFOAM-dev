@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,11 +104,8 @@ Foam::label Foam::surfaceIntersection::getEdge
         }
     }
 
-    FatalErrorIn
-    (
-        "surfaceIntersection::getEdge(const triSurface&"
-        ", const label, const label"
-    )   << "Problem:: Cannot find edge with vertices " << faceEdge
+    FatalErrorInFunction
+        << "Problem:: Cannot find edge with vertices " << faceEdge
         << " in face " << faceI
         << abort(FatalError);
 

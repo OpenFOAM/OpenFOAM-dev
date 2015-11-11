@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ inline Foam::molecule::constantProperties::constantProperties
 
         if (eigenValues(momOfInertia).x() < VSMALL)
         {
-            FatalErrorIn("molecule::constantProperties::constantProperties")
+            FatalErrorInFunction
                 << "An eigenvalue of the inertia tensor is zero, the molecule "
                 << dict.name() << " is not a valid 6DOF shape."
                 << nl << abort(FatalError);
@@ -264,7 +264,7 @@ inline void Foam::molecule::constantProperties::checkSiteListSizes() const
      || siteIds_.size() != siteCharges_.size()
     )
     {
-        FatalErrorIn("molecule::constantProperties::checkSiteListSizes")
+        FatalErrorInFunction
             << "Sizes of site id, charge and "
             << "referencePositions are not the same. "
             << nl << abort(FatalError);
@@ -378,7 +378,7 @@ inline bool Foam::molecule::constantProperties::pairPotentialSite
 
     if (s == -1)
     {
-        FatalErrorIn("moleculeI.H") << nl
+        FatalErrorInFunction
             << sId << " site not found."
             << nl << abort(FatalError);
     }
@@ -403,10 +403,8 @@ inline bool Foam::molecule::constantProperties::electrostaticSite
 
     if (s == -1)
     {
-        FatalErrorIn
-        (
-            "molecule::constantProperties::electrostaticSite(label)"
-        )   << sId << " site not found."
+        FatalErrorInFunction
+            << sId << " site not found."
             << nl << abort(FatalError);
     }
 

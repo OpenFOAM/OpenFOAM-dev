@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,10 +81,8 @@ Foam::multiSolidBodyMotionFvMesh::multiSolidBodyMotionFvMesh(const IOobject& io)
 {
     if (undisplacedPoints_.size() != nPoints())
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "multiSolidBodyMotionFvMesh::multiSolidBodyMotionFvMesh"
-            "(const IOobject&)",
             dynamicMeshCoeffs_
         )   << "Read " << undisplacedPoints_.size()
             << " undisplaced points from " << undisplacedPoints_.objectPath()
@@ -106,10 +104,8 @@ Foam::multiSolidBodyMotionFvMesh::multiSolidBodyMotionFvMesh(const IOobject& io)
 
             if (zoneIDs_[zoneI] == -1)
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "multiSolidBodyMotionFvMesh::"
-                    "multiSolidBodyMotionFvMesh(const IOobject&)",
                     dynamicMeshCoeffs_
                 )   << "Cannot find cellZone named " << iter().keyword()
                     << ". Valid zones are " << cellZones().names()
@@ -207,7 +203,7 @@ bool Foam::multiSolidBodyMotionFvMesh::update()
     {
         hasWarned = true;
 
-        WarningIn("multiSolidBodyMotionFvMesh::update()")
+        WarningInFunction
             << "Did not find volVectorField U."
             << " Not updating U boundary conditions." << endl;
     }

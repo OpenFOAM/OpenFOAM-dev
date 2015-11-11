@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ Foam::Kmesh::Kmesh(const fvMesh& mesh)
 
     if (nTot != mesh.nCells())
     {
-        FatalErrorIn("Kmesh::Kmesh(const fvMesh& mesh)")
+        FatalErrorInFunction
             << "calculated number of cells is incorrect"
             << abort(FatalError);
     }

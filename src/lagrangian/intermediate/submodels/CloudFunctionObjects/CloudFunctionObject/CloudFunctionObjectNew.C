@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,16 +45,8 @@ Foam::CloudFunctionObject<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "CloudFunctionObject<CloudType>::New"
-            "("
-                "const dictionary&, "
-                "CloudType&, "
-                "const word&, "
-                "const word&"
-            ")"
-        )   << "Unknown cloud function type "
+        FatalErrorInFunction
+            << "Unknown cloud function type "
             << objectType << nl << nl
             << "Valid cloud function types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ bool Foam::triSurface::readOFF(const fileName& OFFfileName)
 
     if (!OFFfile.good())
     {
-        FatalErrorIn("triSurface::readOFF(const fileName&)")
+        FatalErrorInFunction
             << "Cannot read file " << OFFfileName
             << exit(FatalError);
     }
@@ -47,7 +47,7 @@ bool Foam::triSurface::readOFF(const fileName& OFFfileName)
     string hdr = getLineNoComment(OFFfile);
     if (hdr != "OFF")
     {
-        FatalErrorIn("triSurface::readOFF(const fileName&)")
+        FatalErrorInFunction
             << "OFF file " << OFFfileName
             << " does not start with 'OFF'"
             << exit(FatalError);

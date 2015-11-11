@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,10 +68,8 @@ void Foam::edgeIntersections::checkEdges(const triSurface& surf)
 
         if (eMag < minSize)
         {
-            WarningIn
-            (
-                "Foam::edgeIntersections::checkEdges(const triSurface& surf)"
-            )   << "Edge " << edgeI << " vertices " << e
+            WarningInFunction
+                << "Edge " << edgeI << " vertices " << e
                 << " coords:" << localPoints[e[0]] << ' '
                 << localPoints[e[1]] << " is very small compared to bounding"
                 << " box dimensions " << bb << endl
@@ -81,10 +79,8 @@ void Foam::edgeIntersections::checkEdges(const triSurface& surf)
 
         if (edgeFaces[edgeI].size() == 1)
         {
-            WarningIn
-            (
-                "Foam::edgeIntersections::checkEdges(const triSurface& surf)"
-            )   << "Edge " << edgeI << " vertices " << e
+            WarningInFunction
+                << "Edge " << edgeI << " vertices " << e
                 << " coords:" << localPoints[e[0]] << ' '
                 << localPoints[e[1]] << " has only one face connected to it:"
                 << edgeFaces[edgeI] << endl
@@ -682,7 +678,7 @@ Foam::label Foam::edgeIntersections::removeDegenerates
 
         if (edgesToTest.empty())
         {
-            FatalErrorIn("perturb") << "oops" << abort(FatalError);
+            FatalErrorInFunction << "oops" << abort(FatalError);
         }
 
         // Re intersect moved edges.

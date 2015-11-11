@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::label Foam::directionInfo::findEdge
         }
     }
 
-    FatalErrorIn("directionInfo::findEdge")
+    FatalErrorInFunction
         << "Cannot find an edge among " << edgeLabels << endl
         << "that uses vertices " << v0
         << " and " << v1
@@ -77,7 +77,7 @@ Foam::label Foam::directionInfo::lowest
 
         if (b1 != a)
         {
-            FatalErrorIn("directionInfo::lowest")
+            FatalErrorInFunction
                 << "Problem : a:" << a << " b:" << b << " size:" << size
                 << abort(FatalError);
         }
@@ -99,7 +99,7 @@ Foam::label Foam::directionInfo::edgeToFaceIndex
 {
     if ((edgeI < 0) || (edgeI >= mesh.nEdges()))
     {
-        FatalErrorIn("directionInfo::edgeToFaceIndex")
+        FatalErrorInFunction
             << "Illegal edge label:" << edgeI
             << " when projecting cut edge from cell " << cellI
             << " to face " << faceI
@@ -184,7 +184,7 @@ Foam::label Foam::directionInfo::edgeToFaceIndex
                 return lowest(f.size(), fpA, fpB);
             }
 
-            FatalErrorIn("directionInfo::edgeToFaceIndex")
+            FatalErrorInFunction
                 << "Found connected faces " << mesh.faces()[f0I] << " and "
                 << mesh.faces()[f1I] << " sharing edge " << edgeI << endl
                 << "But none seems to be connected to face " << faceI

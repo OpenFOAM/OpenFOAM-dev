@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,11 +91,8 @@ void Foam::refinementFeatures::read
 
             if (fName.empty())
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "refinementFeatures::read"
-                    "(const objectRegistry&"
-                    ", const PtrList<dictionary>&)",
                     dict
                 )   << "Could not open " << featObj.objectPath()
                     << exit(FatalIOError);
@@ -192,12 +189,8 @@ void Foam::refinementFeatures::read
 
             if (dict.size() < 1)
             {
-                FatalErrorIn
-                (
-                    "refinementFeatures::read"
-                    "(const objectRegistry&"
-                    ", const PtrList<dictionary>&)"
-                )   << " : levels should be at least size 1" << endl
+                FatalErrorInFunction
+                    << " : levels should be at least size 1" << endl
                     << "levels : "  << dict["levels"]
                     << exit(FatalError);
             }
@@ -219,12 +212,8 @@ void Foam::refinementFeatures::read
                      || (levels_[featI][j] > levels_[featI][j-1])
                     )
                     {
-                        FatalErrorIn
-                        (
-                            "refinementFeatures::read"
-                            "(const objectRegistry&"
-                            ", const PtrList<dictionary>&)"
-                        )   << " : Refinement should be specified in order"
+                        FatalErrorInFunction
+                            << " : Refinement should be specified in order"
                             << " of increasing distance"
                             << " (and decreasing refinement level)." << endl
                             << "Distance:" << distances_[featI][j]

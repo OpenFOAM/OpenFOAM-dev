@@ -55,11 +55,8 @@ Foam::fv::SemiImplicitSource<Type>::wordToVolumeModeType
         }
     }
 
-    FatalErrorIn
-    (
-        "SemiImplicitSource<Type>::volumeModeType"
-        "SemiImplicitSource<Type>::wordToVolumeModeType(const word&)"
-    )   << "Unknown volumeMode type " << vmtName
+    FatalErrorInFunction
+        << "Unknown volumeMode type " << vmtName
         << ". Valid volumeMode types are:" << nl << volumeModeTypeNames_
         << exit(FatalError);
 

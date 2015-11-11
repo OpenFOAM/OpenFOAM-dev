@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,11 +125,8 @@ Foam::labelList Foam::polyDualMesh::getFaceOrder
     {
         if (oldToNew[faceI] == -1)
         {
-            FatalErrorIn
-            (
-                "polyDualMesh::getFaceOrder"
-                "(const labelList&, const labelList&, const label) const"
-            )   << "Did not determine new position"
+            FatalErrorInFunction
+                << "Did not determine new position"
                 << " for face " << faceI
                 << abort(FatalError);
         }
@@ -205,7 +202,7 @@ void Foam::polyDualMesh::getPointEdges
         }
     }
 
-    FatalErrorIn("getPointEdges") << "Cannot find two edges on face:" << faceI
+    FatalErrorInFunction
         << " vertices:" << patch.localFaces()[faceI]
         << " that uses point:" << pointI
         << abort(FatalError);
@@ -247,7 +244,7 @@ Foam::labelList Foam::polyDualMesh::collectPatchSideFace
     // Store dual vertex for starting edge.
     if (edgeToDualPoint[patch.meshEdges()[edgeI]] < 0)
     {
-        FatalErrorIn("polyDualMesh::collectPatchSideFace") << edgeI
+        FatalErrorInFunction
             << abort(FatalError);
     }
 
@@ -761,11 +758,8 @@ void Foam::polyDualMesh::calcDual
         {
             nonManifoldPoints.write();
 
-            FatalErrorIn
-            (
-                "polyDualMesh::calcDual(const polyMesh&, const labelList&"
-                ", const labelList&)"
-            )   << "There are " << nonManifoldPoints.size() << " points where"
+            FatalErrorInFunction
+                << "There are " << nonManifoldPoints.size() << " points where"
                 << " the outside of the mesh is non-manifold." << nl
                 << "Such a mesh cannot be converted to a dual." << nl
                 << "Writing points at non-manifold sites to pointSet "
@@ -918,7 +912,7 @@ void Foam::polyDualMesh::calcDual
 
         if (patchFaces.size() != 2)
         {
-            FatalErrorIn("polyDualMesh::calcDual")
+            FatalErrorInFunction
                 << "Cannot handle edges with " << patchFaces.size()
                 << " connected boundary faces."
                 << abort(FatalError);
@@ -1018,7 +1012,7 @@ void Foam::polyDualMesh::calcDual
             vector n = f.normal(dualPoints);
             if (((mesh.points()[owner] - dualPoints[f[0]]) & n) > 0)
             {
-                WarningIn("calcDual") << "Incorrect orientation"
+                WarningInFunction
                     << " on boundary edge:" << edgeI
                     << mesh.points()[mesh.edges()[edgeI][0]]
                     << mesh.points()[mesh.edges()[edgeI][1]]
@@ -1133,7 +1127,7 @@ void Foam::polyDualMesh::calcDual
                 vector n = f.normal(dualPoints);
                 if (((mesh.points()[owner] - dualPoints[f[0]]) & n) > 0)
                 {
-                    WarningIn("calcDual") << "Incorrect orientation"
+                    WarningInFunction
                         << " on internal edge:" << edgeI
                         << mesh.points()[mesh.edges()[edgeI][0]]
                         << mesh.points()[mesh.edges()[edgeI][1]]
@@ -1537,7 +1531,7 @@ void Foam::polyDualMesh::calcFeatures
             // Non-manifold. Problem?
             const edge& e = allBoundary.edges()[edgeI];
 
-            WarningIn("polyDualMesh::calcFeatures") << "Edge "
+            WarningInFunction
                 << meshPoints[e[0]] << ' ' << meshPoints[e[1]]
                 << "  coords:" << mesh.points()[meshPoints[e[0]]]
                 << mesh.points()[meshPoints[e[1]]]

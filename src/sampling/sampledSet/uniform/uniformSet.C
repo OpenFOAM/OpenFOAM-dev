@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,7 +217,7 @@ void Foam::uniformSet::calcSamples
     // distance vector between sampling points
     if ((nPoints_ < 2) || (mag(end_ - start_) < SMALL))
     {
-        FatalErrorIn("uniformSet::calcSamples()")
+        FatalErrorInFunction
             << "Incorrect sample specification. Either too few points or"
             << " start equals end point." << endl
             << "nPoints:" << nPoints_

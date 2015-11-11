@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,14 +144,8 @@ Foam::PatchPostProcessing<CloudType>::PatchPostProcessing
 
         if (patchIDs.empty())
         {
-            WarningIn
-            (
-                "Foam::PatchPostProcessing<CloudType>::PatchPostProcessing"
-                "("
-                    "const dictionary&, "
-                    "CloudType& "
-                ")"
-            )   << "Cannot find any patch names matching " << patchName[i]
+            WarningInFunction
+                << "Cannot find any patch names matching " << patchName[i]
                 << endl;
         }
 

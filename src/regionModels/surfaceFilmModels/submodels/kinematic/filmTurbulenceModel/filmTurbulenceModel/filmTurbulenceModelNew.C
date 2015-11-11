@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,14 +51,8 @@ autoPtr<filmTurbulenceModel> filmTurbulenceModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "filmTurbulenceModel::New"
-            "("
-                "surfaceFilmModel&, "
-                "const dictionary&"
-            ")"
-        )   << "Unknown filmTurbulenceModel type " << modelType
+        FatalErrorInFunction
+            << "Unknown filmTurbulenceModel type " << modelType
             << nl << nl << "Valid filmTurbulenceModel types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,12 +139,7 @@ void Foam::inclinedFilmNusseltHeightFvPatchScalarField::updateCoeffs()
 
     if (patch().size() && (max(mag(gTan)) < SMALL))
     {
-        WarningIn
-        (
-            "void Foam::inclinedFilmNusseltHeightFvPatchScalarField::"
-            "updateCoeffs()"
-        )
-            << "Tangential gravity component is zero.  This boundary condition "
+        WarningInFunction
             << "is designed to operate on patches inclined with respect to "
             << "gravity"
             << endl;

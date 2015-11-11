@@ -337,16 +337,8 @@ Foam::regionSizeDistribution::regionSizeDistribution
     else
     {
         active_ = false;
-        WarningIn
-        (
-            "regionSizeDistribution::regionSizeDistribution"
-            "("
-                "const word&,  "
-                "const objectRegistry&, "
-                "const dictionary&, "
-                "const bool"
-            ")"
-        )   << "No fvMesh available, deactivating " << name_ << nl
+        WarningInFunction
+            << "No fvMesh available, deactivating " << name_ << nl
             << endl;
     }
 }

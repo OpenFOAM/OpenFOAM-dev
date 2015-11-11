@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -492,7 +492,7 @@ void Foam::isoSurface::generateTriPoints
      || (snappedPoint.size() != mesh_.nPoints())
     )
     {
-        FatalErrorIn("isoSurface::generateTriPoints(..)")
+        FatalErrorInFunction
             << "Incorrect size." << endl
             << "mesh: nCells:" << mesh_.nCells()
             << " points:" << mesh_.nPoints() << endl
@@ -759,7 +759,7 @@ Foam::isoSurface::interpolate
         {
             if (nValues[i] == 0)
             {
-                FatalErrorIn("isoSurface::interpolate(..)")
+                FatalErrorInFunction
                     << "point:" << i << " nValues:" << nValues[i]
                     << abort(FatalError);
             }

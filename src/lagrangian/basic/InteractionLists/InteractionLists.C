@@ -1165,14 +1165,7 @@ void Foam::InteractionLists<ParticleType>::sendReferredData
 {
     if (mesh_.changing())
     {
-        WarningIn
-        (
-            "void Foam::InteractionLists<ParticleType>::sendReferredData"
-            "("
-                "const List<DynamicList<ParticleType*> >& cellOccupancy,"
-                "PstreamBuffers& pBufs"
-            ")"
-        )
+        WarningInFunction
             << "Mesh changing, rebuilding InteractionLists form scratch."
             << endl;
 

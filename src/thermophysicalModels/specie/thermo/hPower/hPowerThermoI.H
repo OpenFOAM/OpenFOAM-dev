@@ -36,10 +36,8 @@ inline void Foam::hPowerThermo<EquationOfState>::checkT
 {
     if (T < 0)
     {
-        FatalErrorIn
-        (
-            "hPowerThermo<EquationOfState>::checkT(const scalar T) const"
-        )   << "attempt to evaluate hPowerThermo<EquationOfState>"
+        FatalErrorInFunction
+            << "attempt to evaluate hPowerThermo<EquationOfState>"
                " for negative temperature " << T
             << abort(FatalError);
     }

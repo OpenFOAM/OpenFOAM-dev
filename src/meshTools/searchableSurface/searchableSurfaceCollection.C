@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -218,11 +218,8 @@ Foam::searchableSurfaceCollection::searchableSurfaceCollection
             // if all indices offset by globalSize() of the local region...
             if (s.size() != s.globalSize())
             {
-                FatalErrorIn
-                (
-                    "searchableSurfaceCollection::searchableSurfaceCollection"
-                    "(const IOobject&, const dictionary&)"
-                )   << "Cannot use a distributed surface in a collection."
+                FatalErrorInFunction
+                    << "Cannot use a distributed surface in a collection."
                     << exit(FatalError);
             }
 
@@ -532,10 +529,8 @@ void Foam::searchableSurfaceCollection::findLine
 
                     if (s < 0 || s > 1)
                     {
-                        FatalErrorIn
-                        (
-                            "searchableSurfaceCollection::findLine(..)"
-                        )   << "point:" << info[pointI]
+                        FatalErrorInFunction
+                            << "point:" << info[pointI]
                             << " s:" << s
                             << " outside vector "
                             << " start:" << start[pointI]
@@ -702,11 +697,8 @@ void Foam::searchableSurfaceCollection::getVolumeType
     List<volumeType>& volType
 ) const
 {
-    FatalErrorIn
-    (
-        "searchableSurfaceCollection::getVolumeType(const pointField&"
-        ", List<volumeType>&) const"
-    )   << "Volume type not supported for collection."
+    FatalErrorInFunction
+        << "Volume type not supported for collection."
         << exit(FatalError);
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,7 +248,7 @@ bool Foam::boundaryCutter::splitFace
 
     if (nSplitEdges == 0 && nModPoints == 0)
     {
-        FatalErrorIn("boundaryCutter::splitFace") << "Problem : face:" << faceI
+        FatalErrorInFunction
             << " nSplitEdges:" << nSplitEdges
             << " nTotalSplits:" << nTotalSplits
             << abort(FatalError);
@@ -302,7 +302,7 @@ bool Foam::boundaryCutter::splitFace
 
         if (startFp == -1)
         {
-            FatalErrorIn("boundaryCutter::splitFace")
+            FatalErrorInFunction
                 << "Problem" << abort(FatalError);
         }
 
@@ -508,7 +508,7 @@ void Foam::boundaryCutter::setRefinement
 
         if (faceToSplit.found(faceI))
         {
-            FatalErrorIn("boundaryCutter::setRefinement")
+            FatalErrorInFunction
                 << "Face " << faceI << " vertices " << f
                 << " is both marked for face-centre decomposition and"
                 << " diagonal splitting."
@@ -517,7 +517,7 @@ void Foam::boundaryCutter::setRefinement
 
         if (mesh_.isInternalFace(faceI))
         {
-            FatalErrorIn("boundaryCutter::setRefinement")
+            FatalErrorInFunction
                 << "Face " << faceI << " vertices " << f
                 << " is not an external face. Cannot split it"
                 << abort(FatalError);
@@ -637,7 +637,7 @@ void Foam::boundaryCutter::setRefinement
 
         if (faceAddedPoint_.found(faceI))
         {
-            FatalErrorIn("boundaryCutter::setRefinement")
+            FatalErrorInFunction
                 << "Face " << faceI << " vertices " << f
                 << " is both marked for face-centre decomposition and"
                 << " diagonal splitting."
@@ -662,7 +662,7 @@ void Foam::boundaryCutter::setRefinement
 
         if (fp0 == -1 || fp1 == -1 || fp0 == fp1)
         {
-            FatalErrorIn("boundaryCutter::setRefinement")
+            FatalErrorInFunction
                 << "Problem : Face " << faceI << " vertices " << f
                 << " newFace:" << newFace << " diagonal:" << f[diag[0]]
                 << ' ' << f[diag[1]]

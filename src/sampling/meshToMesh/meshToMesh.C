@@ -364,14 +364,7 @@ Foam::meshToMesh::interpolationMethodAMI(const interpolationMethod method)
         }
         default:
         {
-            FatalErrorIn
-            (
-                "Foam::AMIPatchToPatchInterpolation::interpolationMethod"
-                "Foam::meshToMesh::interpolationMethodAMI"
-                "("
-                    "const interpolationMethod method"
-                ") const"
-            )
+            FatalErrorInFunction
                 << "Unhandled enumeration " << method
                 << abort(FatalError);
         }
@@ -385,7 +378,7 @@ void Foam::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
 {
     if (!patchAMIs_.empty())
     {
-        FatalErrorIn("meshToMesh::calculatePatchAMIs()")
+        FatalErrorInFunction
             << "patch AMI already calculated"
             << exit(FatalError);
     }
@@ -456,16 +449,8 @@ void Foam::meshToMesh::constructNoCuttingPatches
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "Foam::meshToMesh::meshToMesh"
-                        "("
-                            "const polyMesh&, "
-                            "const polyMesh&, "
-                            "const interpolationMethod&, "
-                            "bool"
-                        ")"
-                    )   << "Source patch " << pp.name()
+                    FatalErrorInFunction
+                        << "Source patch " << pp.name()
                         << " not found in target mesh. "
                         << "Available target patches are " << tgtBM.names()
                         << exit(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,8 @@ Foam::labelList Foam::structuredRenumber::renumber
 {
     if (points.size() != mesh.nCells())
     {
-        FatalErrorIn
-        (
-            "structuredDecomp::renumber(const polyMesh&, const pointField&)"
-        )   << "Number of points " << points.size()
+        FatalErrorInFunction
+            << "Number of points " << points.size()
             << " should equal the number of cells " << mesh.nCells()
             << exit(FatalError);
     }
@@ -188,7 +186,7 @@ Foam::labelList Foam::structuredRenumber::renumber
         {
             if (!haveWarned)
             {
-                WarningIn("structuredDecomp::renumber(..)")
+                WarningInFunction
                     << "Did not visit some cells, e.g. cell " << cellI
                     << " at " << mesh.cellCentres()[cellI] << endl
                     << "Assigning these cells to domain 0." << endl;

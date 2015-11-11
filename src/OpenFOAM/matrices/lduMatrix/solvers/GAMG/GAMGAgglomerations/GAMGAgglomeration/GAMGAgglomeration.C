@@ -638,7 +638,7 @@ bool Foam::GAMGAgglomeration::checkRestriction
 
     if (nNewCoarse > nCoarse)
     {
-        //WarningIn("GAMGAgglomeration::checkRestriction(..)")
+        //WarningInFunction
         //    << "Have " << nCoarse
         //    << " agglomerated cells but " << nNewCoarse
         //    << " disconnected regions" << endl;

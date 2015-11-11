@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,10 +82,8 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
         }
         else
         {
-            WarningIn
-            (
-                "Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)"
-            )   << "Average point normal not visible for point:"
+            WarningInFunction
+                << "Average point normal not visible for point:"
                 << pp.meshPoints()[pointI] << endl;
 
             label visOctant =
@@ -176,11 +174,8 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
             {
                 pn[pointI] = vector::zero;
 
-                WarningIn
-                (
-                    "Foam::meshTools::calcBoxPointNormals"
-                    "(const primitivePatch& pp)"
-                )   << "No visible octant for point:" << pp.meshPoints()[pointI]
+                WarningInFunction
+                    << "No visible octant for point:" << pp.meshPoints()[pointI]
                     << " cooord:" << pp.points()[pp.meshPoints()[pointI]] << nl
                     << "Normal set to " << pn[pointI] << endl;
             }
@@ -412,11 +407,8 @@ Foam::label Foam::meshTools::getSharedEdge
             }
         }
     }
-    FatalErrorIn
-    (
-        "meshTools::getSharedEdge(const primitiveMesh&, const label"
-        ", const label)"
-    )   << "Faces " << f0 << " and " << f1 << " do not share an edge"
+    FatalErrorInFunction
+        << "Faces " << f0 << " and " << f1 << " do not share an edge"
         << abort(FatalError);
 
     return -1;
@@ -451,11 +443,8 @@ Foam::label Foam::meshTools::getSharedFace
     }
 
 
-    FatalErrorIn
-    (
-        "meshTools::getSharedFace(const primitiveMesh&, const label"
-        ", const label)"
-    )   << "No common face for"
+    FatalErrorInFunction
+        << "No common face for"
         << "  cell0I:" << cell0I << "  faces:" << cFaces
         << "  cell1I:" << cell1I << "  faces:"
         << mesh.cells()[cell1I]
@@ -501,11 +490,8 @@ void Foam::meshTools::getEdgeFaces
 
     if ((face0 == -1) || (face1 == -1))
     {
-        FatalErrorIn
-        (
-            "meshTools::getEdgeFaces(const primitiveMesh&, const label"
-            ", const label, label&, label&"
-        )   << "Can not find faces using edge " << mesh.edges()[edgeI]
+        FatalErrorInFunction
+            << "Can not find faces using edge " << mesh.edges()[edgeI]
             << " on cell " << cellI << abort(FatalError);
     }
 }
@@ -535,11 +521,8 @@ Foam::label Foam::meshTools::otherEdge
         }
     }
 
-    FatalErrorIn
-    (
-        "meshTools::otherEdge(const primitiveMesh&, const labelList&"
-        ", const label, const label)"
-    )   << "Can not find edge in "
+    FatalErrorInFunction
+        << "Can not find edge in "
         << UIndirectList<edge>(mesh.edges(), edgeLabels)()
         << " connected to edge "
         << thisEdgeI << " with vertices " << mesh.edges()[thisEdgeI]
@@ -584,11 +567,8 @@ Foam::label Foam::meshTools::otherCell
 {
     if (!mesh.isInternalFace(faceI))
     {
-        FatalErrorIn
-        (
-            "meshTools::otherCell(const primitiveMesh&, const label"
-            ", const label)"
-        )   << "Face " << faceI << " is not internal"
+        FatalErrorInFunction
+            << "Face " << faceI << " is not internal"
             << abort(FatalError);
     }
 
@@ -774,10 +754,8 @@ Foam::vector Foam::meshTools::edgeToCutDir
 {
     if (!hexMatcher().isA(mesh, cellI))
     {
-        FatalErrorIn
-        (
-            "Foam::meshTools::getCutDir(const label, const label)"
-        )   << "Not a hex : cell:" << cellI << abort(FatalError);
+        FatalErrorInFunction
+            << "Not a hex : cell:" << cellI << abort(FatalError);
     }
 
 
@@ -824,10 +802,8 @@ Foam::label Foam::meshTools::cutDirToEdge
 {
     if (!hexMatcher().isA(mesh, cellI))
     {
-        FatalErrorIn
-        (
-            "Foam::meshTools::getCutDir(const label, const vector&)"
-        )   << "Not a hex : cell:" << cellI << abort(FatalError);
+        FatalErrorInFunction
+            << "Not a hex : cell:" << cellI << abort(FatalError);
     }
 
     const labelList& cEdges = mesh.cellEdges()[cellI];
@@ -871,10 +847,8 @@ Foam::label Foam::meshTools::cutDirToEdge
     {
         if (!doneEdges.found(cEdges[cEdgeI]))
         {
-            FatalErrorIn
-            (
-                "meshTools::cutDirToEdge(const label, const vector&)"
-            )   << "Cell:" << cellI << " edges:" << cEdges << endl
+            FatalErrorInFunction
+                << "Cell:" << cellI << " edges:" << cEdges << endl
                 << "Edge:" << cEdges[cEdgeI] << " not yet handled"
                 << abort(FatalError);
         }
@@ -882,10 +856,8 @@ Foam::label Foam::meshTools::cutDirToEdge
 
     if (maxEdgeI == -1)
     {
-        FatalErrorIn
-        (
-            "meshTools::cutDirToEdge(const label, const vector&)"
-        )   << "Problem : did not find edge aligned with " << cutDir
+        FatalErrorInFunction
+            << "Problem : did not find edge aligned with " << cutDir
             << " on cell " << cellI << abort(FatalError);
     }
 

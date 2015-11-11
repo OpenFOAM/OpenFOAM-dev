@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,10 +51,8 @@ autoPtr<filmThermoModel> filmThermoModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "filmThermoModel::New(surfaceFilmModel&, const dictionary&)"
-        )   << "Unknown filmThermoModel type " << modelType << nl << nl
+        FatalErrorInFunction
+            << "Unknown filmThermoModel type " << modelType << nl << nl
             << "Valid filmThermoModel types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);

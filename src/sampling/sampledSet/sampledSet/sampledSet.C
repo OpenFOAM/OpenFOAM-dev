@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,8 @@ Foam::label Foam::sampledSet::getCell
 {
     if (faceI == -1)
     {
-        FatalErrorIn
-        (
-            "sampledSet::getCell(const label, const point&)"
-        )   << "Illegal face label " << faceI
+        FatalErrorInFunction
+            << "Illegal face label " << faceI
             << abort(FatalError);
     }
 
@@ -70,10 +68,8 @@ Foam::label Foam::sampledSet::getCell
 
         if (!mesh().pointInCell(sample, cellI, searchEngine_.decompMode()))
         {
-            FatalErrorIn
-            (
-                "sampledSet::getCell(const label, const point&)"
-            )   << "Found cell " << cellI << " using face " << faceI
+            FatalErrorInFunction
+                << "Found cell " << cellI << " using face " << faceI
                 << ". But cell does not contain point " << sample
                 << abort(FatalError);
         }
@@ -99,10 +95,8 @@ Foam::label Foam::sampledSet::getCell
             }
             else
             {
-                FatalErrorIn
-                (
-                    "sampledSet::getCell(const label, const point&)"
-                )   << "None of the neighbours of face "
+                FatalErrorInFunction
+                    << "None of the neighbours of face "
                     << faceI << " contains point " << sample
                     << abort(FatalError);
 
@@ -220,10 +214,8 @@ Foam::point Foam::sampledSet::pushIn
 
     if (tetFaceI == -1)
     {
-        FatalErrorIn
-        (
-            "sampledSet::pushIn(const point&, const label)"
-        )   << "After pushing " << facePt << " to " << newPosition
+        FatalErrorInFunction
+            << "After pushing " << facePt << " to " << newPosition
             << " it is still outside face " << faceI
             << " at " << mesh().faceCentres()[faceI]
             << " of cell " << cellI
@@ -378,7 +370,7 @@ void Foam::sampledSet::setSamples
      || (curveDist_.size() != size())
     )
     {
-        FatalErrorIn("sampledSet::setSamples()")
+        FatalErrorInFunction
             << "sizes not equal : "
             << "  points:" << size()
             << "  cells:" << cells_.size()
@@ -459,12 +451,8 @@ Foam::autoPtr<Foam::sampledSet> Foam::sampledSet::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "sampledSet::New"
-            "(const word&, const polyMesh&, const meshSearch&"
-            ", const dictionary&)"
-        )   << "Unknown sample type "
+        FatalErrorInFunction
+            << "Unknown sample type "
             << sampleType << nl << nl
             << "Valid sample types : " << endl
             << wordConstructorTablePtr_->sortedToc()

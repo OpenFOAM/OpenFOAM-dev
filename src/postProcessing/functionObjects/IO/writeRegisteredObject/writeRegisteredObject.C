@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ void Foam::writeRegisteredObject::write()
         }
         else
         {
-            WarningIn("Foam::writeRegisteredObject::write()")
+            WarningInFunction
                 << "Object " << objectNames_[i] << " not found in "
                 << "database. Available objects:" << nl << obr_.sortedToc()
                 << endl;

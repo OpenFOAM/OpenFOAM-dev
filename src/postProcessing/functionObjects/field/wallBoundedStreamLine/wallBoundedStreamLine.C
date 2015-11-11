@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -302,7 +302,7 @@ void Foam::wallBoundedStreamLine::track()
             }
             else
             {
-                FatalErrorIn("wallBoundedStreamLine::execute()")
+                FatalErrorInFunction
                     << "Cannot find field " << fields_[i] << endl
                     << "Valid scalar fields are:"
                     << mesh.names(volScalarField::typeName) << endl
@@ -375,7 +375,7 @@ void Foam::wallBoundedStreamLine::track()
 
     if (UIndex == -1)
     {
-        FatalErrorIn("wallBoundedStreamLine::execute()")
+        FatalErrorInFunction
             << "Cannot find field to move particles with : " << UName_
             << endl
             << "This field has to be present in the sampled fields "
@@ -454,16 +454,8 @@ Foam::wallBoundedStreamLine::wallBoundedStreamLine
     else
     {
         active_ = false;
-        WarningIn
-        (
-            "wallBoundedStreamLine::wallBoundedStreamLine\n"
-            "("
-                "const word&, "
-                "const objectRegistry&, "
-                "const dictionary&, "
-                "const bool "
-            ")"
-        )   << "No fvMesh available, deactivating " << name_
+        WarningInFunction
+            << "No fvMesh available, deactivating " << name_
             << nl << endl;
     }
 }
@@ -492,9 +484,8 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
             UName_ = "U";
             if (dict.found("U"))
             {
-                IOWarningIn
+                IOWarningInFunction
                 (
-                    "wallBoundedStreamLine::read(const dictionary&)",
                     dict
                 )   << "Using deprecated entry \"U\"."
                     << " Please use \"UName\" instead."
@@ -505,9 +496,8 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
 
         if (findIndex(fields_, UName_) == -1)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "wallBoundedStreamLine::read(const dictionary&)",
                 dict
             )   << "Velocity field for tracking " << UName_
                 << " should be present in the list of fields " << fields_
@@ -519,7 +509,7 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
         dict.lookup("lifeTime") >> lifeTime_;
         if (lifeTime_ < 1)
         {
-            FatalErrorIn(":wallBoundedStreamLine::read(const dictionary&)")
+            FatalErrorInFunction
                 << "Illegal value " << lifeTime_ << " for lifeTime"
                 << exit(FatalError);
         }
@@ -584,7 +574,7 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
             {
                 label nFaces = returnReduce(faces.size(), sumOp<label>());
 
-                WarningIn("wallBoundedStreamLine::read(const dictionary&)")
+                WarningInFunction
                     << "Found " << nFaces
                     <<" faces with low quality or negative volume "
                     << "decomposition tets. Writing to faceSet " << faces.name()
@@ -623,10 +613,8 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
                 {
                     if (iter() != 2)
                     {
-                        FatalErrorIn
-                        (
-                            "wallBoundedStreamLine::read(const dictionary&)"
-                        )   << "problem cell:" << cellI
+                        FatalErrorInFunction
+                            << "problem cell:" << cellI
                             << abort(FatalError);
                     }
                 }

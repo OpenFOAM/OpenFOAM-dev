@@ -78,10 +78,8 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "LESdelta::New(const word& name, const turbulenceModel& turbulence)"
-        )   << "Unknown LESdelta type "
+        FatalErrorInFunction
+            << "Unknown LESdelta type "
             << deltaType << nl << nl
             << "Valid LESdelta types are :" << endl
             << dictionaryConstructorTablePtr_->sortedToc()
@@ -119,12 +117,8 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorIn
-            (
-                "LESdelta::New(const word& name, "
-                "const turbulenceModel& turbulence, "
-                "const dictionaryConstructorTable&)"
-            )   << "Unknown LESdelta type "
+            FatalErrorInFunction
+                << "Unknown LESdelta type "
                 << deltaType << nl << nl
                 << "Valid LESdelta types are :" << endl
                 << additionalConstructors.sortedToc()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(addPatchCellLayer, 0);
+    defineTypeNameAndDebug(addPatchCellLayer, 0);
 }
 
 
@@ -705,12 +705,10 @@ void Foam::addPatchCellLayer::calcSidePatch
             if (edgeFaces[edgeI].size() == 1 && sidePatchID[edgeI] == -1)
             {
                 const edge& e = pp.edges()[edgeI];
-                //FatalErrorIn("addPatchCellLayer::calcSidePatch(..)")
-                WarningIn("addPatchCellLayer::calcSidePatch(..)")
+                WarningInFunction
                     << "Have no sidePatchID for edge " << edgeI << " points "
                     << pp.points()[pp.meshPoints()[e[0]]]
                     << pp.points()[pp.meshPoints()[e[1]]]
-                    //<< abort(FatalError);
                     << endl;
             }
         }
@@ -806,12 +804,8 @@ void Foam::addPatchCellLayer::setRefinement
      || pp.size() != nFaceLayers.size()
     )
     {
-        FatalErrorIn
-        (
-            "addPatchCellLayer::setRefinement"
-            "(const scalar, const indirectPrimitivePatch&"
-            ", const labelList&, const vectorField&, polyTopoChange&)"
-        )   << "Size of new points is not same as number of points used by"
+        FatalErrorInFunction
+            << "Size of new points is not same as number of points used by"
             << " the face subset" << endl
             << "  patch.nPoints:" << pp.nPoints()
             << "  displacement:" << firstLayerDisp.size()
@@ -825,12 +819,8 @@ void Foam::addPatchCellLayer::setRefinement
     {
         if (nPointLayers[i] < 0)
         {
-            FatalErrorIn
-            (
-                "addPatchCellLayer::setRefinement"
-                "(const scalar, const indirectPrimitivePatch&"
-                ", const labelList&, const vectorField&, polyTopoChange&)"
-            )   << "Illegal number of layers " << nPointLayers[i]
+            FatalErrorInFunction
+                << "Illegal number of layers " << nPointLayers[i]
                 << " at patch point " << i << abort(FatalError);
         }
     }
@@ -838,12 +828,8 @@ void Foam::addPatchCellLayer::setRefinement
     {
         if (nFaceLayers[i] < 0)
         {
-            FatalErrorIn
-            (
-                "addPatchCellLayer::setRefinement"
-                "(const scalar, const indirectPrimitivePatch&"
-                ", const labelList&, const vectorField&, polyTopoChange&)"
-            )   << "Illegal number of layers " << nFaceLayers[i]
+            FatalErrorInFunction
+                << "Illegal number of layers " << nFaceLayers[i]
                 << " at patch face " << i << abort(FatalError);
         }
     }
@@ -856,12 +842,8 @@ void Foam::addPatchCellLayer::setRefinement
 
             if (nPointLayers[e[0]] > 0 || nPointLayers[e[1]] > 0)
             {
-                FatalErrorIn
-                (
-                    "addPatchCellLayer::setRefinement"
-                    "(const scalar, const indirectPrimitivePatch&"
-                    ", const labelList&, const vectorField&, polyTopoChange&)"
-                )   << "Trying to extrude edge "
+                FatalErrorInFunction
+                    << "Trying to extrude edge "
                     << e.line(pp.localPoints())
                     << " which is non-manifold (has "
                     << globalEdgeFaces[edgeI].size()
@@ -897,13 +879,8 @@ void Foam::addPatchCellLayer::setRefinement
 
                 if (n[meshPointI] != nPointLayers[i])
                 {
-                    FatalErrorIn
-                    (
-                        "addPatchCellLayer::setRefinement"
-                        "(const scalar, const indirectPrimitivePatch&"
-                        ", const labelList&, const vectorField&"
-                        ", polyTopoChange&)"
-                    )   << "At mesh point:" << meshPointI
+                    FatalErrorInFunction
+                        << "At mesh point:" << meshPointI
                         << " coordinate:" << mesh_.points()[meshPointI]
                         << " specified nLayers:" << nPointLayers[i] << endl
                         << "On coupled point a different nLayers:"
@@ -945,13 +922,8 @@ void Foam::addPatchCellLayer::setRefinement
                  && nPointLayers[i] != nFromFace[meshPointI]
                 )
                 {
-                    FatalErrorIn
-                    (
-                        "addPatchCellLayer::setRefinement"
-                        "(const scalar, const indirectPrimitivePatch&"
-                        ", const labelList&, const vectorField&"
-                        ", polyTopoChange&)"
-                    )   << "At mesh point:" << meshPointI
+                    FatalErrorInFunction
+                        << "At mesh point:" << meshPointI
                         << " coordinate:" << mesh_.points()[meshPointI]
                         << " specified nLayers:" << nPointLayers[i] << endl
                         << "but the max nLayers of surrounding faces is:"
@@ -978,13 +950,8 @@ void Foam::addPatchCellLayer::setRefinement
 
                 if (mag(d[meshPointI] - firstLayerDisp[i]) > SMALL)
                 {
-                    FatalErrorIn
-                    (
-                        "addPatchCellLayer::setRefinement"
-                        "(const scalar, const indirectPrimitivePatch&"
-                        ", const labelList&, const vectorField&"
-                        ", polyTopoChange&)"
-                    )   << "At mesh point:" << meshPointI
+                    FatalErrorInFunction
+                        << "At mesh point:" << meshPointI
                         << " coordinate:" << mesh_.points()[meshPointI]
                         << " specified displacement:" << firstLayerDisp[i]
                         << endl
@@ -1014,13 +981,8 @@ void Foam::addPatchCellLayer::setRefinement
                 // First check: pp should be single connected.
                 if (eFaces.size() != 1)
                 {
-                    FatalErrorIn
-                    (
-                        "addPatchCellLayer::setRefinement"
-                        "(const scalar, const indirectPrimitivePatch&"
-                        ", const labelList&, const vectorField&"
-                        ", polyTopoChange&)"
-                    )   << "boundary-edge-to-be-extruded:"
+                    FatalErrorInFunction
+                        << "boundary-edge-to-be-extruded:"
                         << pp.points()[meshPoints[e[0]]]
                         << pp.points()[meshPoints[e[1]]]
                         << " has more than two faces using it:" << eFaces
@@ -1053,14 +1015,8 @@ void Foam::addPatchCellLayer::setRefinement
                             }
                             else
                             {
-                                FatalErrorIn
-                                (
-                                    "addPatchCellLayer::setRefinement"
-                                    "(const scalar"
-                                    ", const indirectPrimitivePatch&"
-                                    ", const labelList&, const vectorField&"
-                                    ", polyTopoChange&)"
-                                )   << "boundary-edge-to-be-extruded:"
+                                FatalErrorInFunction
+                                    << "boundary-edge-to-be-extruded:"
                                     << pp.points()[meshPoints[e[0]]]
                                     << pp.points()[meshPoints[e[1]]]
                                     << " has more than two boundary faces"
@@ -1690,10 +1646,8 @@ void Foam::addPatchCellLayer::setRefinement
                             {
                                 if (!verts.insert(newFace[fp]))
                                 {
-                                    FatalErrorIn
-                                    (
-                                        "addPatchCellLayer::setRefinement(..)"
-                                    )   << "Duplicate vertex in face"
+                                    FatalErrorInFunction
+                                        << "Duplicate vertex in face"
                                         << " to be added." << nl
                                         << "newFace:" << newFace << nl
                                         << "points:"

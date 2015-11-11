@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -284,20 +284,8 @@ void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
 
         if (errorOnNotFound)
         {
-            FatalErrorIn
-            (
-                "void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::"
-                "setNextFaces"
-                "("
-                    "label&, "
-                    "label&, "
-                    "label&, "
-                    "const boolList&, "
-                    "labelList&, "
-                    "const DynamicList<label>&, "
-                    "bool"
-                ") const"
-            )  << "Unable to set source and target faces" << abort(FatalError);
+            FatalErrorInFunction
+               << "Unable to set source and target faces" << abort(FatalError);
         }
     }
 }
@@ -348,15 +336,8 @@ Foam::scalar Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
     }
     else
     {
-        WarningIn
-        (
-            "void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::"
-            "interArea"
-            "("
-                "const label, "
-                "const label"
-            ") const"
-        )   << "Invalid normal for source face " << srcFaceI
+        WarningInFunction
+            << "Invalid normal for source face " << srcFaceI
             << " points " << UIndirectList<point>(srcPoints, src)
             << " target face " << tgtFaceI
             << " points " << UIndirectList<point>(tgtPoints, tgt)

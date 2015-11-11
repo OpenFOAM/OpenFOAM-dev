@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ void faceSet::sync(const polyMesh& mesh)
         }
         else if (found(faceI))
         {
-            FatalErrorIn("faceSet::sync(const polyMesh&)")
+            FatalErrorInFunction
                 << "Problem : syncing removed faces from set."
                 << abort(FatalError);
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ int Foam::chemkinReader::yyBufSize = YY_BUF_SIZE;
 //! \cond dummy
 int yyFlexLexer::yylex()
 {
-    FatalErrorIn("yyFlexLexer::yylex()")
+    FatalErrorInFunction
         << "should not have called this function"
         << abort(Foam::FatalError);
 
@@ -357,7 +357,7 @@ bool finishReaction = false;
         }
         else
         {
-            WarningIn("chemkinReader::lex()")
+            WarningInFunction
                 << "element " << currentElementName
                 << " already in table." << endl;
         }
@@ -412,7 +412,7 @@ bool finishReaction = false;
             }
             else
             {
-                WarningIn("chemkinReader::lex()")
+                WarningInFunction
                     << "specie " << specieName
                     << " already in table." << endl;
             }
@@ -719,7 +719,7 @@ bool finishReaction = false;
                 {
                     if (rrType != Arrhenius && rrType != thirdBodyArrhenius)
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Attempt to set reaction rate type to"
                                " thirdBodyArrhenius when it is already set to "
                             << reactionRateTypeNames[rrType]
@@ -729,7 +729,7 @@ bool finishReaction = false;
 
                     if (pDependentSpecieName.size())
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "A non-pressure dependent third-body appears in"
                                " the pressure dependent reaction on line "
                             << lineNo_
@@ -753,7 +753,7 @@ bool finishReaction = false;
 
                 case plasmaMomentumTransfer:
                 {
-                    FatalErrorIn("chemkinReader::lex()")
+                    FatalErrorInFunction
                         << "Plasma momentum-transfer in reaction on line "
                         << lineNo_ << "not yet supported"
                         << exit(FatalError);
@@ -764,7 +764,7 @@ bool finishReaction = false;
 
                 case collisionCrossSection:
                 {
-                    FatalErrorIn("chemkinReader::lex()")
+                    FatalErrorInFunction
                         << "Collision cross-section in reaction on line "
                         << lineNo_ << "not yet supported"
                         << exit(FatalError);
@@ -800,7 +800,7 @@ bool finishReaction = false;
 
                 default:
                 {
-                    FatalErrorIn("chemkinReader::lex()")
+                    FatalErrorInFunction
                         << "keyword " << keyword
                         << " should be followed by parameters"
                         << " on line " << lineNo_
@@ -871,7 +871,7 @@ bool finishReaction = false;
                 {
                     if (!pDependentSpecieName.size())
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "LOW keyword given for a unimolecular fall-off"
                                " reaction which does not contain a pressure"
                                " dependent specie" << " on line " << lineNo_
@@ -884,7 +884,7 @@ bool finishReaction = false;
                     }
                     else
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Attempt to set reaction rate type to"
                                " unimolecularFallOff when it is already set to "
                             << reactionRateTypeNames[rrType]
@@ -906,7 +906,7 @@ bool finishReaction = false;
                 {
                     if (!pDependentSpecieName.size())
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "HIGH keyword given for a chemically"
                                " activated bimolecular reaction which does not"
                                " contain a pressure dependent specie"
@@ -920,7 +920,7 @@ bool finishReaction = false;
                     }
                     else
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Attempt to set reaction rate type to"
                                " chemicallyActivatedBimolecular when it is"
                                " already set to "
@@ -943,7 +943,7 @@ bool finishReaction = false;
                 {
                     if (!pDependentSpecieName.size())
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "TROE keyword given for a"
                                " reaction which does not contain a pressure"
                                " dependent specie" << " on line " << lineNo_
@@ -960,7 +960,7 @@ bool finishReaction = false;
                     }
                     else
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Attempt to set fall-off function type to Troe"
                                " when it is already set to "
                             << fallOffFunctionNames[fofType]
@@ -977,7 +977,7 @@ bool finishReaction = false;
                 {
                     if (!pDependentSpecieName.size())
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "SRI keyword given for a"
                                " reaction which does not contain a pressure"
                                " dependent specie" << " on line " << lineNo_
@@ -994,7 +994,7 @@ bool finishReaction = false;
                     }
                     else
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Attempt to set fall-off function type to SRI"
                                " when it is already set to "
                             << fallOffFunctionNames[fofType]
@@ -1011,7 +1011,7 @@ bool finishReaction = false;
                 {
                     if (pDependentSpecieName.size())
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Landau-Teller reaction rate cannot be used"
                                " for the pressure-dependent reaction on line "
                             << lineNo_
@@ -1024,7 +1024,7 @@ bool finishReaction = false;
                     }
                     else
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Attempt to set reaction rate type to"
                                " LandauTeller when it is already set to "
                             << reactionRateTypeNames[rrType]
@@ -1042,7 +1042,7 @@ bool finishReaction = false;
                 {
                     if (pDependentSpecieName.size())
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Non-equilibrium Landau-Teller reaction rate"
                                " cannot be used"
                                " for the pressure-dependent reaction on line "
@@ -1052,7 +1052,7 @@ bool finishReaction = false;
 
                     if (rType != nonEquilibriumReversible)
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Reverse reaction Arrhenius coefficients not"
                                " given for reverse LandauTeller reaction."
                                " Please reorder 'REV' keyword to preceed 'RLT'"
@@ -1076,7 +1076,7 @@ bool finishReaction = false;
                     }
                     else
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Attempt to set reaction rate type to"
                                " Janev when it is already set to "
                             << reactionRateTypeNames[rrType]
@@ -1097,7 +1097,7 @@ bool finishReaction = false;
                     }
                     else
                     {
-                        FatalErrorIn("chemkinReader::lex()")
+                        FatalErrorInFunction
                             << "Attempt to set reaction rate type to"
                                " powerSeries when it is already set to "
                             << reactionRateTypeNames[rrType]
@@ -1112,7 +1112,7 @@ bool finishReaction = false;
 
                 case radiationActivatedReactionType:
                 {
-                    FatalErrorIn("chemkinReader::lex()")
+                    FatalErrorInFunction
                         << "Radiation activated reaction on line "
                         << lineNo_ << "not yet supported"
                         << exit(FatalError);
@@ -1123,7 +1123,7 @@ bool finishReaction = false;
 
                 case energyLossReactionType:
                 {
-                    FatalErrorIn("chemkinReader::lex()")
+                    FatalErrorInFunction
                         << "Energy loss in reaction on line "
                         << lineNo_ << "not yet supported"
                         << exit(FatalError);
@@ -1162,7 +1162,7 @@ bool finishReaction = false;
 
                 default:
                 {
-                    FatalErrorIn("chemkinReader::lex()")
+                    FatalErrorInFunction
                         << "unknown reaction keyword " << keyword
                         << " on line " << lineNo_
                         << exit(FatalError);
@@ -1182,7 +1182,7 @@ bool finishReaction = false;
             }
             else
             {
-                FatalErrorIn("chemkinReader::lex()")
+                FatalErrorInFunction
                     << "unknown third-body specie " << keyword
                     << " on line " << lineNo_ << nl
                     << "Valid species are : " << nl
@@ -1234,7 +1234,7 @@ bool finishReaction = false;
         }
         else
         {
-            FatalErrorIn("chemkinReader::lex()")
+            FatalErrorInFunction
                 << "unknown specie " << currentSpecieName
                 << " on line " << lineNo_ << nl
                 << "Valid species are : " << nl
@@ -1289,7 +1289,7 @@ bool finishReaction = false;
         {
             if (!lhsThirdBodyCounter || !rhsThirdBodyCounter)
             {
-                FatalErrorIn("chemkinReader::lex()")
+                FatalErrorInFunction
                     << "Third body not present on both sides of reaction"
                        " on line " << lineNo_
                 << exit(FatalError);
@@ -1297,7 +1297,7 @@ bool finishReaction = false;
 
             if (lhsThirdBodyCounter != 1)
             {
-                FatalErrorIn("chemkinReader::lex()")
+                FatalErrorInFunction
                     << "More than 1 third body present on l.h.s. side"
                        " of reaction on line " << lineNo_
                     << exit(FatalError);
@@ -1305,7 +1305,7 @@ bool finishReaction = false;
 
             if (rhsThirdBodyCounter != 1)
             {
-                FatalErrorIn("chemkinReader::lex()")
+                FatalErrorInFunction
                     << "More than 1 third body present on r.h.s. side"
                        " of reaction on line " << lineNo_
                     << exit(FatalError);
@@ -1338,7 +1338,7 @@ bool finishReaction = false;
 
         if (rrType == thirdBodyArrhenius)
         {
-            FatalErrorIn("chemkinReader::lex()")
+            FatalErrorInFunction
                 << "The pressure-dependent third-body '"
                 << pDependentSpecieName
                 << "' is given in non-pressure-dependent third-body reaction"
@@ -1354,7 +1354,7 @@ bool finishReaction = false;
         {
             if (pDependentSpecieName != rhsPDependentSpecieName)
             {
-                FatalErrorIn("chemkinReader::lex()")
+                FatalErrorInFunction
                     << "The third-body reactant '"
                     << pDependentSpecieName
                     << "' is not the same as the third-body product '"
@@ -1380,7 +1380,7 @@ bool finishReaction = false;
             }
             else
             {
-                FatalErrorIn("chemkinReader::lex()")
+                FatalErrorInFunction
                     << "unknown third-body specie " << pDependentSpecieName
                     << " on line " << lineNo_ << nl
                     << "Valid species are : " << nl
@@ -1404,7 +1404,7 @@ bool finishReaction = false;
 
 <readTdepSpecie>{specieName} {
         word specieName(foamName(foamSpecieString(YYText())));
-        FatalErrorIn("chemkinReader::lex()")
+        FatalErrorInFunction
             << "Temperature-dependent reaction on line "
             << lineNo_ << "not yet supported"
             << exit(FatalError);
@@ -1426,7 +1426,7 @@ bool finishReaction = false;
         }
         else
         {
-            FatalErrorIn("chemkinReader::lex()")
+            FatalErrorInFunction
                 << "unknown specie " << currentSpecieName
                 << " given in reaction-order specification"
                 << " on line " << lineNo_ << nl
@@ -1463,7 +1463,7 @@ bool finishReaction = false;
                 side = "r.h.s.";
             }
 
-            FatalErrorIn("chemkinReader::lex()")
+            FatalErrorInFunction
                 << "Specie " << currentSpecieName
                 << " on line " << lineNo_
                 << " not present in " << side << " of reaction " << nl << lrhs
@@ -1514,7 +1514,7 @@ bool finishReaction = false;
 
 <CHEMKINError>.* {
         yy_pop_state();
-        FatalErrorIn("chemkinReader::lex()")
+        FatalErrorInFunction
             << "while " << stateNames[YY_START] << " on line " << lineNo_ << nl
             << "    expected " << stateExpects[YY_START]
             << " but found '" << startError << YYText() << "'"

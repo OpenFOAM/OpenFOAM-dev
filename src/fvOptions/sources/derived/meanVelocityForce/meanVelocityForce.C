@@ -97,17 +97,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
 
     if (fieldNames_.size() != 1)
     {
-        FatalErrorIn
-        (
-            "Foam::fv::meanVelocityForce::"
-            "meanVelocityForce"
-            "("
-                "const word&, "
-                "const word&, "
-                "const dictionary&, "
-                "const fvMesh&"
-            ")"
-        )   << "Source can only be applied to a single field.  Current "
+        FatalErrorInFunction
             << "settings are:" << fieldNames_ << exit(FatalError);
     }
 

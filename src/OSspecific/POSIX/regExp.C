@@ -151,10 +151,8 @@ void Foam::regExp::set(const char* pattern, const bool ignoreCase) const
             char errbuf[200];
             regerror(err, preg_, errbuf, sizeof(errbuf));
 
-            FatalErrorIn
-            (
-                "regExp::set(const char*, const bool ignoreCase)"
-            )   << "Failed to compile regular expression '" << pattern << "'"
+            FatalErrorInFunction
+                << "Failed to compile regular expression '" << pattern << "'"
                 << nl << errbuf
                 << exit(FatalError);
         }

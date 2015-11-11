@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,17 +108,7 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::setNextNearestFaces
             {
                 const vectorField& srcCf = this->srcPatch_.faceCentres();
 
-                FatalErrorIn
-                (
-                    "void Foam::mapNearestAMI<SourcePatch, TargetPatch>::"
-                    "setNextNearestFaces"
-                    "("
-                        "boolList&, "
-                        "label&, "
-                        "label&, "
-                        "label&"
-                    ") const"
-                )
+                FatalErrorInFunction
                     << "Unable to find target face for source face "
                     << srcFaceI << " with face centre " << srcCf[srcFaceI]
                     << abort(FatalError);

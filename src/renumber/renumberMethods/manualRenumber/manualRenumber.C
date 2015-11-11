@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,8 @@ Foam::labelList Foam::manualRenumber::renumber
 
     if (newToOld.size() != points.size())
     {
-        FatalErrorIn
-        (
-            "manualRenumber::renumber(const pointField&, const scalarField&)"
-        )   << "Size of renumber list does not correspond "
+        FatalErrorInFunction
+            << "Size of renumber list does not correspond "
             << "to the number of points.  Size: "
             << newToOld.size() << " Number of points: "
             << points.size()
@@ -100,11 +98,8 @@ Foam::labelList Foam::manualRenumber::renumber
 
         if (origCellI < 0 || origCellI >= points.size())
         {
-            FatalErrorIn
-            (
-                "manualRenumber::renumber(const pointField&"
-                ", const scalarField&)"
-            )   << "Renumbering is not one-to-one. Index "
+            FatalErrorInFunction
+                << "Renumbering is not one-to-one. Index "
                 << i << " maps onto original cell " << origCellI
                 << ".\n" << "Manual renumbering data read from file "
                 << dataFile_ << "." << endl
@@ -117,11 +112,8 @@ Foam::labelList Foam::manualRenumber::renumber
         }
         else
         {
-            FatalErrorIn
-            (
-                "manualRenumber::renumber(const pointField&"
-                ", const scalarField&)"
-            )   << "Renumbering is not one-to-one. Both index "
+            FatalErrorInFunction
+                << "Renumbering is not one-to-one. Both index "
                 << oldToNew[origCellI]
                 << " and " << i << " map onto " << origCellI
                 << ".\n" << "Manual renumbering data read from file "

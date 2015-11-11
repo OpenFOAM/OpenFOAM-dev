@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,10 +46,8 @@ Foam::IntegrationScheme<Type>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "IntegrationScheme::New(const dictionary&)"
-        )   << "Unknown integration scheme type "
+        FatalErrorInFunction
+            << "Unknown integration scheme type "
             << schemeName << nl << nl
             << "Valid integration scheme types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << nl

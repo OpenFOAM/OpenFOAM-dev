@@ -127,7 +127,7 @@ public:
             // Check for assignment to self
             if (this == &s)
             {
-                FatalErrorIn("splitCell8::operator=(const Foam::splitCell8&)")
+                FatalErrorInFunction
                     << "Attempted assignment to self"
                     << abort(FatalError);
             }
@@ -293,7 +293,7 @@ public:
 
             if (index < 0)
             {
-                FatalErrorIn("refinementHistory::parentIndex(const label)")
+                FatalErrorInFunction
                     << "Cell " << cellI << " is not visible"
                     << abort(FatalError);
             }

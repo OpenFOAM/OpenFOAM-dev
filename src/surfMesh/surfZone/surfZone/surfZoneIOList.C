@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::surfZoneIOList::surfZoneIOList
 
             if (startFaceI != faceI)
             {
-                FatalErrorIn(functionName)
+                FatalErrorInFunction
                     << "surfZones are not ordered. Start of zone " << zoneI
                     << " does not correspond to sum of preceding zones." << nl
                     << "while reading " << io.objectPath() << endl

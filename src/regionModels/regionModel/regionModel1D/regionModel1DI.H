@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,11 +53,8 @@ Foam::regionModels::regionModel1D::nMagSf() const
 {
     if (!nMagSfPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "inline const Foam::surfaceScalarField&"
-            "Foam::regionModel1Ds::regionModel1D::nMagSf() const"
-        )<< "Face normal areas not available" << abort(FatalError);
+        FatalErrorInFunction
+         << "Face normal areas not available" << abort(FatalError);
     }
 
     return nMagSfPtr_();

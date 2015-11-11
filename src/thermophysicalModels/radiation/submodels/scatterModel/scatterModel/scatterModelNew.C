@@ -43,10 +43,8 @@ Foam::autoPtr<Foam::radiation::scatterModel> Foam::radiation::scatterModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "scatterModel::New(const dictionary&, const fvMesh&)"
-        )   << "Unknown scatterModel type "
+        FatalErrorInFunction
+            << "Unknown scatterModel type "
             << modelType << nl << nl
             << "Valid scatterModel types are :" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

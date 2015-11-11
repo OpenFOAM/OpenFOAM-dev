@@ -59,16 +59,8 @@ Foam::Peclet::Peclet
     if (!isA<fvMesh>(obr_))
     {
         active_ = false;
-        WarningIn
-        (
-            "Peclet::Peclet"
-            "("
-                "const word&, "
-                "const objectRegistry&, "
-                "const dictionary&, "
-                "const bool"
-            ")"
-        )   << "No fvMesh available, deactivating " << name_ << nl
+        WarningInFunction
+            << "No fvMesh available, deactivating " << name_ << nl
             << endl;
     }
 
@@ -179,7 +171,7 @@ void Foam::Peclet::execute()
         }
         else
         {
-            FatalErrorIn("void Foam::Peclet::write()")
+            FatalErrorInFunction
                 << "Unable to determine the viscosity"
                 << exit(FatalError);
         }

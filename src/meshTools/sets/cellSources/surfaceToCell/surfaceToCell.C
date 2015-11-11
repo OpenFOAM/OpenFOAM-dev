@@ -194,7 +194,7 @@ void Foam::surfaceToCell::combine(topoSet& set, const bool add) const
             label cellI = queryMesh.findCell(outsidePoint, -1, false);
             if (returnReduce(cellI, maxOp<label>()) == -1)
             {
-                FatalErrorIn("surfaceToCell::combine(topoSet&, const bool)")
+                FatalErrorInFunction
                     << "outsidePoint " << outsidePoint
                     << " is not inside any cell"
                     << exit(FatalError);
@@ -332,10 +332,8 @@ void Foam::surfaceToCell::checkSettings() const
         )
     )
     {
-        FatalErrorIn
-        (
-            "surfaceToCell:checkSettings()"
-        )   << "Illegal include cell specification."
+        FatalErrorInFunction
+            << "Illegal include cell specification."
             << " Result would be either all or no cells." << endl
             << "Please set one of includeCut, includeInside, includeOutside"
             << " to true, set nearDistance to a value > 0"
@@ -345,10 +343,8 @@ void Foam::surfaceToCell::checkSettings() const
 
     if (useSurfaceOrientation_ && includeCut_)
     {
-        FatalErrorIn
-        (
-            "surfaceToCell:checkSettings()"
-        )   << "Illegal include cell specification."
+        FatalErrorInFunction
+            << "Illegal include cell specification."
             << " You cannot specify both 'useSurfaceOrientation'"
             << " and 'includeCut'"
             << " since 'includeCut' specifies a topological split"

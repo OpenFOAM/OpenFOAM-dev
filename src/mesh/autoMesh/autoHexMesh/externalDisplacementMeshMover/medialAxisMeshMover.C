@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -507,11 +507,8 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
             }
             else
             {
-                WarningIn
-                (
-                    "medialAxisMeshMover::"
-                    "medialAxisSmoothingInfo(..)"
-                )   << "Walking did not visit all points." << nl
+                WarningInFunction
+                    << "Walking did not visit all points." << nl
                     << "    Did not visit " << nUnvisit
                     << " out of " << mesh().globalData().nTotalPoints()
                     << " points. This is not necessarily a problem" << nl

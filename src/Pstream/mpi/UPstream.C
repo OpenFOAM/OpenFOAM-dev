@@ -76,7 +76,7 @@ bool Foam::UPstream::init(int& argc, char**& argv)
 
     if (numprocs <= 1)
     {
-        FatalErrorIn("UPstream::init(int& argc, char**& argv)")
+        FatalErrorInFunction
             << "bool IPstream::init(int& argc, char**& argv) : "
                "attempt to run parallel on 1 processor"
             << Foam::abort(FatalError);
@@ -100,7 +100,7 @@ bool Foam::UPstream::init(int& argc, char**& argv)
     }
     else
     {
-        FatalErrorIn("UPstream::init(int& argc, char**& argv)")
+        FatalErrorInFunction
             << "UPstream::init(int& argc, char**& argv) : "
             << "environment variable MPI_BUFFER_SIZE not defined"
             << Foam::abort(FatalError);
@@ -137,7 +137,7 @@ void Foam::UPstream::exit(int errnum)
         label n = PstreamGlobals::outstandingRequests_.size();
         PstreamGlobals::outstandingRequests_.clear();
 
-        WarningIn("UPstream::exit(int)")
+        WarningInFunction
             << "There are still " << n << " outstanding MPI_Requests." << endl
             << "This means that your code exited before doing a"
             << " UPstream::waitRequests()." << endl
@@ -311,14 +311,8 @@ void Foam::UPstream::allocatePstreamCommunicator
     }
     else if (index > PstreamGlobals::MPIGroups_.size())
     {
-        FatalErrorIn
-        (
-            "UPstream::allocatePstreamCommunicator\n"
-            "(\n"
-            "    const label parentIndex,\n"
-            "    const labelList& subRanks\n"
-            ")\n"
-        )   << "PstreamGlobals out of sync with UPstream data. Problem."
+        FatalErrorInFunction
+            << "PstreamGlobals out of sync with UPstream data. Problem."
             << Foam::exit(FatalError);
     }
 
@@ -329,14 +323,8 @@ void Foam::UPstream::allocatePstreamCommunicator
 
         if (index != UPstream::worldComm)
         {
-            FatalErrorIn
-            (
-                "UPstream::allocateCommunicator\n"
-                "(\n"
-                "    const label parentIndex,\n"
-                "    const labelList& subRanks\n"
-                ")\n"
-            )   << "world communicator should always be index "
+            FatalErrorInFunction
+                << "world communicator should always be index "
                 << UPstream::worldComm << Foam::exit(FatalError);
         }
 
@@ -393,14 +381,8 @@ void Foam::UPstream::allocatePstreamCommunicator
                 )
             )
             {
-                FatalErrorIn
-                (
-                    "UPstream::allocatePstreamCommunicator\n"
-                    "(\n"
-                    "    const label,\n"
-                    "    const labelList&\n"
-                    ")\n"
-                )   << "Problem :"
+                FatalErrorInFunction
+                    << "Problem :"
                     << " when allocating communicator at " << index
                     << " from ranks " << procIDs_[index]
                     << " of parent " << parentIndex
@@ -473,10 +455,8 @@ void Foam::UPstream::waitRequests(const label start)
             )
         )
         {
-            FatalErrorIn
-            (
-                "UPstream::waitRequests()"
-            )   << "MPI_Waitall returned with error" << Foam::endl;
+            FatalErrorInFunction
+                << "MPI_Waitall returned with error" << Foam::endl;
         }
 
         resetRequests(start);
@@ -499,10 +479,8 @@ void Foam::UPstream::waitRequest(const label i)
 
     if (i >= PstreamGlobals::outstandingRequests_.size())
     {
-        FatalErrorIn
-        (
-            "UPstream::waitRequest(const label)"
-        )   << "There are " << PstreamGlobals::outstandingRequests_.size()
+        FatalErrorInFunction
+            << "There are " << PstreamGlobals::outstandingRequests_.size()
             << " outstanding send requests and you are asking for i=" << i
             << nl
             << "Maybe you are mixing blocking/non-blocking comms?"
@@ -518,10 +496,8 @@ void Foam::UPstream::waitRequest(const label i)
         )
     )
     {
-        FatalErrorIn
-        (
-            "UPstream::waitRequest()"
-        )   << "MPI_Wait returned with error" << Foam::endl;
+        FatalErrorInFunction
+            << "MPI_Wait returned with error" << Foam::endl;
     }
 
     if (debug)
@@ -542,10 +518,8 @@ bool Foam::UPstream::finishedRequest(const label i)
 
     if (i >= PstreamGlobals::outstandingRequests_.size())
     {
-        FatalErrorIn
-        (
-            "UPstream::finishedRequest(const label)"
-        )   << "There are " << PstreamGlobals::outstandingRequests_.size()
+        FatalErrorInFunction
+            << "There are " << PstreamGlobals::outstandingRequests_.size()
             << " outstanding send requests and you are asking for i=" << i
             << nl
             << "Maybe you are mixing blocking/non-blocking comms?"

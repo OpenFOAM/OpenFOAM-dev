@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,8 +151,7 @@ Foam::surfMesh::readUpdateState Foam::surfMesh::readUpdate()
 
         if (zonesChanged)
         {
-            WarningIn("surfMesh::readUpdateState surfMesh::readUpdate()")
-                << "Number of zones has changed.  This may have "
+            WarningInFunction
                 << "unexpected consequences.  Proceed with care." << endl;
 
             return surfMesh::TOPO_PATCH_CHANGE;

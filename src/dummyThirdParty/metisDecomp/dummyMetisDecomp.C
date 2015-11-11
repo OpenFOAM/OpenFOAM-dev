@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,16 +63,8 @@ Foam::label Foam::metisDecomp::decompose
     List<label>& finalDecomp
 )
 {
-    FatalErrorIn
-    (
-        "labelList metisDecomp::decompose"
-        "("
-            "const List<label>&, "
-            "const List<label>&, "
-            "const scalarField&, "
-            "List<label>&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return -1;
 }
@@ -98,14 +90,8 @@ Foam::labelList Foam::metisDecomp::decompose
     const scalarField& pointWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList metisDecomp::decompose"
-        "("
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList();
 }
@@ -119,15 +105,8 @@ Foam::labelList Foam::metisDecomp::decompose
     const scalarField& agglomWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList metisDecomp::decompose"
-        "("
-            "const labelList&, "
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList();
 }
@@ -140,15 +119,8 @@ Foam::labelList Foam::metisDecomp::decompose
     const scalarField& cellWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList metisDecomp::decompose"
-        "("
-            "const labelListList&, "
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList();
 }

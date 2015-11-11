@@ -131,7 +131,7 @@ void Foam::DSMCCloud<ParcelType>::initialise
 
                 if (typeId == -1)
                 {
-                    FatalErrorIn("Foam::DSMCCloud<ParcelType>::initialise")
+                    FatalErrorInFunction
                         << "typeId " << moleculeName << "not defined." << nl
                         << abort(FatalError);
                 }

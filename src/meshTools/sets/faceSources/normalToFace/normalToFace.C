@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,11 +62,8 @@ void Foam::normalToFace::setNormal()
 
     if (tol_ < -1 || tol_ > 1)
     {
-        FatalErrorIn
-        (
-            "normalToFace::normalToFace(const polyMesh&, const vector&"
-            ", const scalar)"
-        )   << "tolerance not within range -1..1 : " << tol_
+        FatalErrorInFunction
+            << "tolerance not within range -1..1 : " << tol_
             << exit(FatalError);
     }
 }

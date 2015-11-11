@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,11 +132,7 @@ void Foam::slidingInterface::calcAttachedAddressing() const
                 }
             }
 
-            FatalErrorIn
-            (
-                "void slidingInterface::calcAttachedAddressing()"
-                "const"
-            )   << "Error is zone face-cell addressing.  Probable error in "
+            FatalErrorInFunction
                 << "decoupled mesh or sliding interface definition."
                 << abort(FatalError);
         }
@@ -221,10 +217,7 @@ void Foam::slidingInterface::calcAttachedAddressing() const
     }
     else
     {
-        FatalErrorIn
-        (
-            "void slidingInterface::calcAttachedAddressing() const"
-        )   << "The interface is attached.  The zone face-cell addressing "
+        FatalErrorInFunction
             << "cannot be assembled for object " << name()
             << abort(FatalError);
     }
@@ -304,11 +297,8 @@ void Foam::slidingInterface::renumberAttachedAddressing
         // Check if all the mapped cells are live
         if (min(newMfc) < 0 || min(newSfc) < 0)
         {
-            FatalErrorIn
-            (
-                "void slidingInterface::renumberAttachedAddressing("
-                "const mapPolyMesh& m) const"
-            )   << "Error in cell renumbering for object " << name()
+            FatalErrorInFunction
+                << "Error in cell renumbering for object " << name()
                 << ".  Some of master cells next "
                 << "to the interface have been removed."
                 << abort(FatalError);
@@ -356,11 +346,8 @@ void Foam::slidingInterface::renumberAttachedAddressing
         // Check if all the mapped cells are live
         if (min(newMsof) < 0 || min(newSsof) < 0)
         {
-            FatalErrorIn
-            (
-                "void slidingInterface::renumberAttachedAddressing("
-                "const mapPolyMesh& m) const"
-            )   << "Error in face renumbering for object " << name()
+            FatalErrorInFunction
+                << "Error in face renumbering for object " << name()
                 << ".  Some of stick-out next "
                 << "to the interface have been removed."
                 << abort(FatalError);
@@ -391,11 +378,8 @@ void Foam::slidingInterface::renumberAttachedAddressing
             // Check if all the mapped cells are live
             if (key < 0 || value < 0)
             {
-                FatalErrorIn
-                (
-                    "void slidingInterface::renumberAttachedAddressing("
-                    "const mapPolyMesh& m) const"
-                )   << "Error in retired point numbering for object "
+                FatalErrorInFunction
+                    << "Error in retired point numbering for object "
                     << name() << ".  Some of master "
                     << "points have been removed."
                     << abort(FatalError);
@@ -431,11 +415,8 @@ void Foam::slidingInterface::renumberAttachedAddressing
             // Check if all the mapped cells are live
             if (key < 0 || ms < 0 || me < 0 || ss < 0 || se < 0)
             {
-                FatalErrorIn
-                (
-                    "void slidingInterface::renumberAttachedAddressing("
-                    "const mapPolyMesh& m) const"
-                )   << "Error in cut point edge pair map numbering for object "
+                FatalErrorInFunction
+                    << "Error in cut point edge pair map numbering for object "
                     << name() << ".  Some of master points have been removed."
                     << abort(FatalError);
             }
@@ -446,11 +427,8 @@ void Foam::slidingInterface::renumberAttachedAddressing
 
     if (!projectedSlavePointsPtr_)
     {
-        FatalErrorIn
-        (
-            "void slidingInterface::renumberAttachedAddressing("
-            "const mapPolyMesh& m) const"
-        )   << "Error in projected point numbering for object " << name()
+        FatalErrorInFunction
+            << "Error in projected point numbering for object " << name()
             << abort(FatalError);
     }
 
@@ -496,10 +474,8 @@ const Foam::labelList& Foam::slidingInterface::masterFaceCells() const
 {
     if (!masterFaceCellsPtr_)
     {
-        FatalErrorIn
-        (
-            "const labelList& slidingInterface::masterFaceCells() const"
-        )   << "Master zone face-cell addressing not available for object "
+        FatalErrorInFunction
+            << "Master zone face-cell addressing not available for object "
             << name()
             << abort(FatalError);
     }
@@ -512,10 +488,8 @@ const Foam::labelList& Foam::slidingInterface::slaveFaceCells() const
 {
     if (!slaveFaceCellsPtr_)
     {
-        FatalErrorIn
-        (
-            "const labelList& slidingInterface::slaveFaceCells() const"
-        )   << "Slave zone face-cell addressing not available for object "
+        FatalErrorInFunction
+            << "Slave zone face-cell addressing not available for object "
             << name()
             << abort(FatalError);
     }
@@ -528,10 +502,8 @@ const Foam::labelList& Foam::slidingInterface::masterStickOutFaces() const
 {
     if (!masterStickOutFacesPtr_)
     {
-        FatalErrorIn
-        (
-            "const labelList& slidingInterface::masterStickOutFaces() const"
-        )   << "Master zone stick-out face addressing not available for object "
+        FatalErrorInFunction
+            << "Master zone stick-out face addressing not available for object "
             << name()
             << abort(FatalError);
     }
@@ -544,10 +516,8 @@ const Foam::labelList& Foam::slidingInterface::slaveStickOutFaces() const
 {
     if (!slaveStickOutFacesPtr_)
     {
-        FatalErrorIn
-        (
-            "const labelList& slidingInterface::slaveStickOutFaces() const"
-        )   << "Slave zone stick-out face addressing not available for object "
+        FatalErrorInFunction
+            << "Slave zone stick-out face addressing not available for object "
             << name()
             << abort(FatalError);
     }
@@ -560,10 +530,8 @@ const Foam::Map<Foam::label>& Foam::slidingInterface::retiredPointMap() const
 {
     if (!retiredPointMapPtr_)
     {
-        FatalErrorIn
-        (
-            "const Map<label>& slidingInterface::retiredPointMap() const"
-        )   << "Retired point map not available for object " << name()
+        FatalErrorInFunction
+            << "Retired point map not available for object " << name()
             << abort(FatalError);
     }
 
@@ -576,11 +544,8 @@ Foam::slidingInterface::cutPointEdgePairMap() const
 {
     if (!cutPointEdgePairMapPtr_)
     {
-        FatalErrorIn
-        (
-            "const Map<Pair<edge> >& slidingInterface::"
-            "cutPointEdgePairMap() const"
-        )   << "Retired point map not available for object " << name()
+        FatalErrorInFunction
+            << "Retired point map not available for object " << name()
             << abort(FatalError);
     }
 

@@ -177,7 +177,7 @@ Foam::fvMesh::readUpdateState Foam::processorMeshes::readUpdate()
         }
         else if (stat != procStat)
         {
-            FatalErrorIn("processorMeshes::readUpdate()")
+            FatalErrorInFunction
                 << "Processor " << procI
                 << " has a different polyMesh at time "
                 << databases_[procI].timeName()
@@ -241,7 +241,7 @@ void Foam::processorMeshes::reconstructPoints(fvMesh& mesh)
 
         if (pointProcAddressingI.size() != procPoints.size())
         {
-            FatalErrorIn("processorMeshes")
+            FatalErrorInFunction
                 << "problem :"
                 << " pointProcAddressingI:" << pointProcAddressingI.size()
                 << " procPoints:" << procPoints.size()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::TAB<CloudType>::TAB
     else
     {
         SMDMethod_ = method2;
-        WarningIn("Foam::TAB<CloudType>::TAB(const dictionary&, CloudType&)")
+        WarningInFunction
             << "Unknown SMDCalculationMethod. Valid options are "
             << "(method1 | method2). Using method2" << endl;
     }

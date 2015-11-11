@@ -45,15 +45,7 @@ Foam::radiation::mixtureFractionSoot<ThermoType>::checkThermo
     }
     else
     {
-        FatalErrorIn
-        (
-            "template<class ThermoType> "
-            "Foam::radiation::mixtureFractionSoot "
-            "("
-                "const dictionary&, "
-                "const fvMesh&"
-            ")"
-        )
+        FatalErrorInFunction
             << "Inconsistent thermo package for " << thermo.type()
             << "Please select a thermo package based on "
             << "singleStepReactingMixture" << exit(FatalError);

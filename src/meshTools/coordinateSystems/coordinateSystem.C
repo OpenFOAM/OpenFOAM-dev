@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,11 +147,8 @@ Foam::coordinateSystem::coordinateSystem
 
         if (index < 0)
         {
-            FatalErrorIn
-            (
-                "coordinateSystem::coordinateSystem"
-                "(const objectRegistry&, const dictionary&):"
-            )   << "could not find coordinate system: " << key << nl
+            FatalErrorInFunction
+                << "could not find coordinate system: " << key << nl
                 << "available coordinate systems: " << lst.toc() << nl << nl
                 << exit(FatalError);
         }

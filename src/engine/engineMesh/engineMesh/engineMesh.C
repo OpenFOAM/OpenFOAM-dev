@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,21 +76,21 @@ Foam::engineMesh::engineMesh(const IOobject& io)
 
     if (!foundPiston)
     {
-        FatalErrorIn("engineMesh::engineMesh(const IOobject& io)")
+        FatalErrorInFunction
             << "cannot find piston patch"
             << exit(FatalError);
     }
 
     if (!foundLiner)
     {
-        FatalErrorIn("engineMesh::engineMesh(const IOobject& io)")
+        FatalErrorInFunction
             << "cannot find liner patch"
             << exit(FatalError);
     }
 
     if (!foundCylinderHead)
     {
-        FatalErrorIn("engineMesh::engineMesh(const IOobject& io)")
+        FatalErrorInFunction
             << "cannot find cylinderHead patch"
             << exit(FatalError);
     }

@@ -252,7 +252,7 @@ void Foam::seulex::solve
 
         if (mag(dx) <= mag(x)*sqr(SMALL))
         {
-             WarningIn("seulex::solve(scalar& x, scalarField& y, stepState&")
+             WarningInFunction
                     << "step size underflow :"  << dx << endl;
         }
 

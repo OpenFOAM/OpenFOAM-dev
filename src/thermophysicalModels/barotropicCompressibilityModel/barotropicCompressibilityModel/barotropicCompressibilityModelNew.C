@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,10 +47,8 @@ Foam::barotropicCompressibilityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "barotropicCompressibilityModel::New(const volScalarField&)"
-        )   << "Unknown barotropicCompressibilityModel type "
+        FatalErrorInFunction
+            << "Unknown barotropicCompressibilityModel type "
             << modelType << nl << nl
             << "Valid barotropicCompressibilityModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

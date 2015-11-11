@@ -71,11 +71,7 @@ Foam::BrownianMotionForce<CloudType>::kModel() const
     }
     else
     {
-        FatalErrorIn
-        (
-            "Foam::tmp<Foam::volScalarField>"
-            "Foam::DispersionRASModel<CloudType>::kModel() const"
-        )
+        FatalErrorInFunction
             << "Turbulence model not found in mesh database" << nl
             << "Database objects include: " << obr.sortedToc()
             << abort(FatalError);

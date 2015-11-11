@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -236,15 +236,7 @@ Foam::label Foam::InflationInjection<CloudType>::parcelsToInject
     {
         if (iterationNo > maxIterations)
         {
-            WarningIn
-            (
-                "Foam::label "
-                "Foam::InflationInjection<CloudType>::parcelsToInject"
-                "("
-                    "const scalar, "
-                    "const scalar"
-                ")"
-            )
+            WarningInFunction
                 << "Maximum particle split iterations ("
                 << maxIterations << ") exceeded" << endl;
 

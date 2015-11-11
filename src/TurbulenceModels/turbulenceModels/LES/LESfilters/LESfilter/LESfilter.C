@@ -51,10 +51,8 @@ Foam::autoPtr<Foam::LESfilter> Foam::LESfilter::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "LESfilter::New(const fvMesh&, const dictionary&)"
-        )   << "Unknown LESfilter type "
+        FatalErrorInFunction
+            << "Unknown LESfilter type "
             << filterType << nl << nl
             << "Valid LESfilter types are :" << endl
             << dictionaryConstructorTablePtr_->sortedToc()

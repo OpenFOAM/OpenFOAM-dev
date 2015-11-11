@@ -51,30 +51,27 @@ void Foam::SingleMixtureFraction<CloudType>::constructIds()
             }
             default:
             {
-                FatalErrorIn
-                (
-                    "void Foam::SingleMixtureFraction<CloudType>::"
-                    "constructIds()"
-                )   << "Unknown phase enumeration" << nl << abort(FatalError);
+                FatalErrorInFunction
+                    << "Unknown phase enumeration" << nl << abort(FatalError);
             }
         }
     }
 
     if (idGas_ < 0)
     {
-        FatalErrorIn("Foam::SingleMixtureFraction<CloudType>::constructIds()")
+        FatalErrorInFunction
             << "No gas phase found in phase list:" << nl
             << this->phaseTypes() << exit(FatalError);
     }
     if (idLiquid_ < 0)
     {
-        FatalErrorIn("Foam::SingleMixtureFraction<CloudType>::constructIds()")
+        FatalErrorInFunction
             << "No liquid phase found in phase list:" << nl
             << this->phaseTypes() << exit(FatalError);
     }
     if (idSolid_ < 0)
     {
-        FatalErrorIn("Foam::SingleMixtureFraction<CloudType>::constructIds()")
+        FatalErrorInFunction
             << "No solid phase found in phase list:" << nl
             << this->phaseTypes() << exit(FatalError);
     }
@@ -102,15 +99,8 @@ Foam::SingleMixtureFraction<CloudType>::SingleMixtureFraction
 
     if (this->phaseProps().size() != 3)
     {
-        FatalErrorIn
-        (
-            "Foam::SingleMixtureFraction<CloudType>::"
-            "SingleMixtureFraction"
-            "("
-                "const dictionary&, "
-                "CloudType&"
-            ")"
-        )   << "Incorrect numebr of phases: " << nl
+        FatalErrorInFunction
+            << "Incorrect numebr of phases: " << nl
             << "    Please specify 1 gas, 1 liquid and 1 solid"
             << exit(FatalError);
     }
@@ -121,15 +111,8 @@ Foam::SingleMixtureFraction<CloudType>::SingleMixtureFraction
 
     if (mag(sum(YMixture0_) - 1.0) > SMALL)
     {
-        FatalErrorIn
-        (
-            "Foam::SingleMixtureFraction<CloudType>::"
-            "SingleMixtureFraction"
-            "("
-                "const dictionary&, "
-                "CloudType&"
-            ")"
-        )   << "Sum of phases should be 1. Phase fractions:" << nl
+        FatalErrorInFunction
+            << "Sum of phases should be 1. Phase fractions:" << nl
             << YMixture0_ << exit(FatalError);
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,18 +71,8 @@ void Foam::allReduce
                     )
                 )
                 {
-                    FatalErrorIn
-                    (
-                        "void Foam::allReduce\n"
-                        "(\n"
-                        "    Type&,\n"
-                        "    int,\n"
-                        "    MPI_Datatype,\n"
-                        "    MPI_Op,\n"
-                        "    const BinaryOp&,\n"
-                        "    const int\n"
-                        ")\n"
-                    )   << "MPI_Recv failed"
+                    FatalErrorInFunction
+                        << "MPI_Recv failed"
                         << Foam::abort(FatalError);
                 }
 
@@ -104,18 +94,8 @@ void Foam::allReduce
                 )
             )
             {
-                FatalErrorIn
-                (
-                    "void Foam::allReduce\n"
-                    "(\n"
-                    "    Type&,\n"
-                    "    int,\n"
-                    "    MPI_Datatype,\n"
-                    "    MPI_Op,\n"
-                    "    const BinaryOp&,\n"
-                    "    const int\n"
-                    ")\n"
-                )   << "MPI_Send failed"
+                FatalErrorInFunction
+                    << "MPI_Send failed"
                     << Foam::abort(FatalError);
             }
         }
@@ -143,18 +123,8 @@ void Foam::allReduce
                     )
                 )
                 {
-                    FatalErrorIn
-                    (
-                        "void Foam::allReduce\n"
-                        "(\n"
-                        "    Type&,\n"
-                        "    int,\n"
-                        "    MPI_Datatype,\n"
-                        "    MPI_Op,\n"
-                        "    const BinaryOp&,\n"
-                        "    const int\n"
-                        ")\n"
-                    )   << "MPI_Send failed"
+                    FatalErrorInFunction
+                        << "MPI_Send failed"
                         << Foam::abort(FatalError);
                 }
             }
@@ -175,18 +145,8 @@ void Foam::allReduce
                 )
             )
             {
-                FatalErrorIn
-                (
-                    "void Foam::allReduce\n"
-                    "(\n"
-                    "    Type&,\n"
-                    "    int,\n"
-                    "    MPI_Datatype,\n"
-                    "    MPI_Op,\n"
-                    "    const BinaryOp&,\n"
-                    "    const int\n"
-                    ")\n"
-                )   << "MPI_Recv failed"
+                FatalErrorInFunction
+                    << "MPI_Recv failed"
                     << Foam::abort(FatalError);
             }
         }

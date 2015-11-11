@@ -48,7 +48,7 @@ plane::plane(const dictionary& dict)
 {
     if (nLayers_ != 1)
     {
-        IOWarningIn("plane::plane(const dictionary& dict)", dict)
+        IOWarningInFunction(dict)
             << "Expected nLayers (if specified) to be 1"
             << endl;
         nLayers_ = 1;

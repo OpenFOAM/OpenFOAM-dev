@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,21 +130,8 @@ public:
         {
             if (face_.size() < 3)
             {
-                FatalErrorIn
-                (
-                    "polyModifyFace::polyModifyFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label faceID,\n"
-                    "    const label owner,\n"
-                    "    const label neighbour,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const bool removeFromZone,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Invalid face: less than 3 points. This is not allowed\n"
+                FatalErrorInFunction
+                    << "Invalid face: less than 3 points. This is not allowed\n"
                     << "Face: " << face_
                     << " faceID:" << faceID_
                     << " owner:" << owner_
@@ -154,21 +141,7 @@ public:
 
             if (min(face_) < 0)
             {
-                FatalErrorIn
-                (
-                    "polyModifyFace::polyModifyFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label faceID,\n"
-                    "    const label owner,\n"
-                    "    const label neighbour,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const bool removeFromZone,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Face contains invalid vertex ID: " << face_ << ".  "
+                FatalErrorInFunction
                     << "This is not allowed.\n"
                     << " faceID:" << faceID_
                     << " owner:" << owner_
@@ -178,21 +151,7 @@ public:
 
             if (min(owner_, neighbour_) >= 0 && owner_ == neighbour_)
             {
-                FatalErrorIn
-                (
-                    "polyModifyFace::polyModifyFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label faceID,\n"
-                    "    const label owner,\n"
-                    "    const label neighbour,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const bool removeFromZone,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Face owner and neighbour are identical.  "
+                FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
                     << " faceID:" << faceID_
@@ -203,21 +162,7 @@ public:
 
             if (neighbour_ >= 0 && patchID_ >= 0)
             {
-                FatalErrorIn
-                (
-                    "polyModifyFace::polyModifyFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label faceID,\n"
-                    "    const label owner,\n"
-                    "    const label neighbour,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const bool removeFromZone,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Patch face has got a neighbour  "
+                FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
                     << " faceID:" << faceID_
@@ -229,21 +174,7 @@ public:
 
             if (zoneID_ < 0 && zoneFlip )
             {
-                FatalErrorIn
-                (
-                    "polyModifyFace::polyModifyFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label faceID,\n"
-                    "    const label owner,\n"
-                    "    const label neighbour,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const bool removeFromZone,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Specified zone flip for a face that does not  "
+                FatalErrorInFunction
                     << "belong to zone.  This is not allowed.\n"
                     << "Face: " << face_
                     << " faceID:" << faceID_

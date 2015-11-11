@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::distributionModels::normal::normal
 {
     if (minValue_ < 0)
     {
-        FatalErrorIn("normal::normal(const dictionary&, Random&)")
+        FatalErrorInFunction
             << "Minimum value must be greater than zero. "
             << "Supplied minValue = " << minValue_
             << abort(FatalError);
@@ -63,7 +63,7 @@ Foam::distributionModels::normal::normal
 
     if (maxValue_ < minValue_)
     {
-        FatalErrorIn("normal::normal(const dictionary&, Random&)")
+        FatalErrorInFunction
             << "Maximum value is smaller than the minimum value:"
             << "    maxValue = " << maxValue_ << ", minValue = " << minValue_
             << abort(FatalError);

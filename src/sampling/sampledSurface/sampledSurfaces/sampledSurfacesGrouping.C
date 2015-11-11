@@ -50,7 +50,7 @@ Foam::label Foam::sampledSurfaces::classifyFields()
             }
             else
             {
-                WarningIn("sampledSurfaces::classifyFields()")
+                WarningInFunction
                     << "Cannot find field file matching "
                     << fieldSelection_[i] << endl;
             }
@@ -72,7 +72,7 @@ Foam::label Foam::sampledSurfaces::classifyFields()
             }
             else
             {
-                WarningIn("sampledSurfaces::classifyFields()")
+                WarningInFunction
                     << "Cannot find registered field matching "
                     << fieldSelection_[i] << endl;
             }

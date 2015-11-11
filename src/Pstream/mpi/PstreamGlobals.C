@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,10 +76,8 @@ void PstreamGlobals::checkCommunicator
      || comm >= PstreamGlobals::MPICommunicators_.size()
     )
     {
-        FatalErrorIn
-        (
-            "PstreamGlobals::checkCommunicator(const label, const label)"
-        )   << "otherProcNo:" << otherProcNo << " : illegal communicator "
+        FatalErrorInFunction
+            << "otherProcNo:" << otherProcNo << " : illegal communicator "
             << comm << endl
             << "Communicator should be within range 0.."
             << PstreamGlobals::MPICommunicators_.size()-1 << abort(FatalError);

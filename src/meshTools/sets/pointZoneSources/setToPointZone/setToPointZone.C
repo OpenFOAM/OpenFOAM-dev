@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,11 +105,8 @@ void Foam::setToPointZone::applyToSet
 {
     if (!isA<pointZoneSet>(set))
     {
-        WarningIn
-        (
-            "setToPointZone::applyToSet(const topoSetSource::setAction"
-            ", topoSet"
-        )   << "Operation only allowed on a pointZoneSet." << endl;
+        WarningInFunction
+            << "Operation only allowed on a pointZoneSet." << endl;
     }
     else
     {

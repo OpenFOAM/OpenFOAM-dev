@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,10 +108,8 @@ Foam::sigWriteNow::~sigWriteNow()
     {
         if (sigaction(signal_, &oldAction_, NULL) < 0)
         {
-            FatalErrorIn
-            (
-                "Foam::sigWriteNow::~sigWriteNow()"
-            )   << "Cannot reset " << signal_ << " trapping"
+            FatalErrorInFunction
+                << "Cannot reset " << signal_ << " trapping"
                 << abort(FatalError);
         }
     }
@@ -130,10 +128,8 @@ void Foam::sigWriteNow::set(const bool verbose)
         sigemptyset(&newAction.sa_mask);
         if (sigaction(signal_, &newAction, &oldAction_) < 0)
         {
-            FatalErrorIn
-            (
-                "Foam::sigWriteNow::sigWriteNow(const bool, const Time&)"
-            )   << "Cannot set " << signal_ << " trapping"
+            FatalErrorInFunction
+                << "Cannot set " << signal_ << " trapping"
                 << abort(FatalError);
         }
 

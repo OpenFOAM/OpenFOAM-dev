@@ -116,11 +116,7 @@ Foam::fv::solidificationMeltingSource::Cp() const
         }
         default:
         {
-            FatalErrorIn
-            (
-                "Foam::tmp<Foam::volScalarField> "
-                "Foam::fv::solidificationMeltingSource::Cp() const"
-            )
+            FatalErrorInFunction
                 << "Unhandled thermo mode: " << thermoModeTypeNames_[mode_]
                 << abort(FatalError);
         }
@@ -240,10 +236,8 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
         }
         default:
         {
-            FatalErrorIn
-            (
-                "fv::solidificationMeltingSource::solidificationMeltingSource"
-            )   << "Unhandled thermo mode: " << thermoModeTypeNames_[mode_]
+            FatalErrorInFunction
+                << "Unhandled thermo mode: " << thermoModeTypeNames_[mode_]
                 << abort(FatalError);
         }
     }

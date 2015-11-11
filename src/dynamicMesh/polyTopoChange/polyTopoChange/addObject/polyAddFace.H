@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,22 +140,7 @@ public:
         {
             if (face_.size() < 3)
             {
-                FatalErrorIn
-                (
-                    "polyAddFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label owner,"
-                    "    const label neighbour,\n"
-                    "    const label masterPointID,\n"
-                    "    const label masterEdgeID,\n"
-                    "    const label masterFaceID,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Invalid face: less than 3 points.  "
+                FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
                     << " masterPointID:" << masterPointID_
@@ -169,22 +154,7 @@ public:
 
             if (min(face_) < 0)
             {
-                FatalErrorIn
-                (
-                    "polyAddFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label owner,"
-                    "    const label neighbour,\n"
-                    "    const label masterPointID,\n"
-                    "    const label masterEdgeID,\n"
-                    "    const label masterFaceID,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Face contains invalid vertex ID: " << face_ << ".  "
+                FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
                     << " masterPointID:" << masterPointID_
@@ -198,22 +168,7 @@ public:
 
             if (min(owner_, neighbour_) >= 0 && owner_ == neighbour_)
             {
-                FatalErrorIn
-                (
-                    "polyAddFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label owner,"
-                    "    const label neighbour,\n"
-                    "    const label masterPointID,\n"
-                    "    const label masterEdgeID,\n"
-                    "    const label masterFaceID,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Face owner and neighbour are identical.  "
+                FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
                     << " masterPointID:" << masterPointID_
@@ -227,22 +182,7 @@ public:
 
             if (neighbour_ >= 0 && patchID >= 0)
             {
-                FatalErrorIn
-                (
-                    "polyAddFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label owner,"
-                    "    const label neighbour,\n"
-                    "    const label masterPointID,\n"
-                    "    const label masterEdgeID,\n"
-                    "    const label masterFaceID,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Patch face has got a neighbour.  Patch ID: " << patchID
+                FatalErrorInFunction
                     << ".  This is not allowed.\n"
                     << "Face: " << face_
                     << " masterPointID:" << masterPointID_
@@ -256,21 +196,7 @@ public:
 
             if (owner_ < 0 && zoneID < 0)
             {
-                FatalErrorIn
-                (
-                    "polyAddFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label owner,"
-                    "    const label neighbour,\n"
-                    "    const label masterPointID,\n"
-                    "    const label masterEdgeID,\n"
-                    "    const label masterFaceID,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const label zoneID"
-                    ")"
-                )   << "Face has no owner and is not in a zone.  "
+                FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
                     << "Face: " << face_
@@ -285,22 +211,7 @@ public:
 
             if (zoneID_ == -1 && zoneFlip)
             {
-                FatalErrorIn
-                (
-                    "polyAddFace\n"
-                    "(\n"
-                    "    const face& f,\n"
-                    "    const label owner,"
-                    "    const label neighbour,\n"
-                    "    const label masterPointID,\n"
-                    "    const label masterEdgeID,\n"
-                    "    const label masterFaceID,\n"
-                    "    const bool flipFaceFlux,\n"
-                    "    const label patchID,\n"
-                    "    const label zoneID,\n"
-                    "    const bool zoneFlip\n"
-                    ")"
-                )   << "Specified zone flip for a face that does not  "
+                FatalErrorInFunction
                     << "belong to zone.  This is not allowed.\n"
                     << "Face: " << face_
                     << " masterPointID:" << masterPointID_

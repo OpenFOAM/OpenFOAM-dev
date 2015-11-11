@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,16 +48,8 @@ Foam::autoPtr<Foam::fieldValue> Foam::fieldValue::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "fieldValue::New"
-            "("
-                "const word&, "
-                "const objectRegistry&, "
-                "const dictionary&, "
-                "const bool"
-            ")"
-        )   << "Unknown " << typeName << " type "
+        FatalErrorInFunction
+            << "Unknown " << typeName << " type "
             << modelType << nl << nl
             << "Valid " << typeName << " types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

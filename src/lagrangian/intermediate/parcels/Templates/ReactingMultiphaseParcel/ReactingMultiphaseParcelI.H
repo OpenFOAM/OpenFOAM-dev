@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,11 +157,8 @@ hRetentionCoeff() const
 
     if ((value < 0) || (value > 1))
     {
-        FatalErrorIn
-        (
-            "ReactingMultiphaseParcel<ParcelType>::constantProperties::"
-            "constantProperties"
-        )   << "hRetentionCoeff must be in the range 0 to 1" << nl
+        FatalErrorInFunction
+            << "hRetentionCoeff must be in the range 0 to 1" << nl
             << exit(FatalError) << endl;
     }
 

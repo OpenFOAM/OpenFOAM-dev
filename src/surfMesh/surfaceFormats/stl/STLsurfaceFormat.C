@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,11 +197,7 @@ void Foam::fileFormats::STLsurfaceFormat<Face>::writeAscii
     OFstream os(filename);
     if (!os.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::STLsurfaceFormat::writeAscii"
-            "(const fileName&, const MeshedSurfaceProxy<Face>&)"
-        )
+        FatalErrorInFunction
             << "Cannot open file for writing " << filename
             << exit(FatalError);
     }
@@ -257,11 +253,7 @@ void Foam::fileFormats::STLsurfaceFormat<Face>::writeBinary
     std::ofstream os(filename.c_str(), std::ios::binary);
     if (!os.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::STLsurfaceFormat::writeBinary"
-            "(const fileName&, const MeshedSurfaceProxy<Face>&)"
-        )
+        FatalErrorInFunction
             << "Cannot open file for writing " << filename
             << exit(FatalError);
     }
@@ -343,11 +335,7 @@ void Foam::fileFormats::STLsurfaceFormat<Face>::writeAscii
     OFstream os(filename);
     if (!os.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::STLsurfaceFormat::writeAscii"
-            "(const fileName&, const UnsortedMeshedSurface<Face>&)"
-        )
+        FatalErrorInFunction
             << "Cannot open file for writing " << filename
             << exit(FatalError);
     }
@@ -395,11 +383,7 @@ void Foam::fileFormats::STLsurfaceFormat<Face>::writeBinary
     std::ofstream os(filename.c_str(), std::ios::binary);
     if (!os.good())
     {
-        FatalErrorIn
-        (
-            "fileFormats::STLsurfaceFormat::writeBinary"
-            "(const fileName&, const UnsortedMeshedSurface<Face>&)"
-        )
+        FatalErrorInFunction
             << "Cannot open file for writing " << filename
             << exit(FatalError);
     }

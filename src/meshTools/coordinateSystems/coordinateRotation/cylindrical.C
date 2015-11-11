@@ -152,7 +152,7 @@ Foam::cylindrical::cylindrical(const dictionary& dict)
     origin_(),
     e3_()
 {
-    FatalErrorIn("cylindrical(const dictionary&)")
+    FatalErrorInFunction
         << " cylindrical can not be constructed from dictionary "
         << " use the construtctor : "
            "("
@@ -210,10 +210,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindrical::transform
 {
     if (Rptr_->size() != vf.size())
     {
-        FatalErrorIn
-        (
-            "tmp<vectorField> cylindrical::transform(const vectorField&)"
-        )
+        FatalErrorInFunction
             << "vectorField st has different size to tensorField "
             << abort(FatalError);
     }
@@ -272,13 +269,7 @@ Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
 {
     if (Rptr_->size() != tf.size())
     {
-        FatalErrorIn
-        (
-            "tmp<tensorField> cylindrical::transformTensor"
-            "("
-                "const tensorField&"
-            ")"
-        )
+        FatalErrorInFunction
             << "tensorField st has different size to tensorField Tr"
             << abort(FatalError);
     }
@@ -305,14 +296,7 @@ Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
 {
     if (cellMap.size() != tf.size())
     {
-        FatalErrorIn
-        (
-            "tmp<tensorField> cylindrical::transformTensor"
-            "("
-                "const tensorField&, "
-                "const labelList&"
-            ")"
-        )
+        FatalErrorInFunction
             << "tensorField tf has different size to tensorField Tr"
             << abort(FatalError);
     }
@@ -338,7 +322,7 @@ Foam::tmp<Foam::symmTensorField> Foam::cylindrical::transformVector
 {
     if (Rptr_->size() != vf.size())
     {
-        FatalErrorIn("cylindrical::transformVector(const vectorField&)")
+        FatalErrorInFunction
             << "tensorField vf has different size to tensorField Tr"
             << abort(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,14 +56,8 @@ Foam::ThermoSurfaceFilm<CloudType>::interactionTypeEnum(const word& it) const
         }
     }
 
-    FatalErrorIn
-    (
-        "ThermoSurfaceFilm<CloudType>::interactionType "
-        "ThermoSurfaceFilm<CloudType>::interactionTypeEnum"
-        "("
-            "const word& it"
-        ") const"
-    )   << "Unknown interaction type " << it
+    FatalErrorInFunction
+        << "Unknown interaction type " << it
         << ". Valid interaction types include: " << interactionTypeNames_
         << abort(FatalError);
 
@@ -79,14 +73,8 @@ Foam::word Foam::ThermoSurfaceFilm<CloudType>::interactionTypeStr
 {
     if (it >= interactionTypeNames_.size())
     {
-        FatalErrorIn
-        (
-            "ThermoSurfaceFilm<CloudType>::interactionType "
-            "ThermoSurfaceFilm<CloudType>::interactionTypeStr"
-            "("
-                "const interactionType& it"
-            ") const"
-        )   << "Unknown interaction type enumeration" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown interaction type enumeration" << abort(FatalError);
     }
 
     return interactionTypeNames_[it];
@@ -617,15 +605,8 @@ bool Foam::ThermoSurfaceFilm<CloudType>::transferParcel
             }
             default:
             {
-                FatalErrorIn
-                (
-                    "bool ThermoSurfaceFilm<CloudType>::transferParcel"
-                    "("
-                        "parcelType&, "
-                        "const polyPatch&, "
-                        "bool&"
-                    ")"
-                )   << "Unknown interaction type enumeration"
+                FatalErrorInFunction
+                    << "Unknown interaction type enumeration"
                     << abort(FatalError);
             }
         }

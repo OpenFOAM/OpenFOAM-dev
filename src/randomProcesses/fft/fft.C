@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,8 @@ void fft::transform
         unsigned int dimCount = nn[idim];
         if (!dimCount || (dimCount & (dimCount - 1)))
         {
-            FatalErrorIn
-            (
-                 "fft::transform(complexField&, const labelList&, "
-                 "transformDirection)"
-            )   << "number of elements in direction " << idim
+            FatalErrorInFunction
+                << "number of elements in direction " << idim
                 << " is not a power of 2" << endl
                 << "    Number of elements in each direction = " << nn
                 << abort(FatalError);

@@ -153,14 +153,7 @@ bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
 
     if (mag(mag(refQ_) - sqrt(3.0)) > 1e-9)
     {
-        FatalErrorIn
-        (
-            "Foam::sixDoFRigidBodyMotionRestraints::"
-            "tabulatedAxialAngularSpring::read"
-            "("
-                "const dictionary& sDoFRBMRDict"
-            ")"
-        )
+        FatalErrorInFunction
             << "referenceOrientation " << refQ_ << " is not a rotation tensor. "
             << "mag(referenceOrientation) - sqrt(3) = "
             << mag(refQ_) - sqrt(3.0) << nl
@@ -177,14 +170,7 @@ bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
     }
     else
     {
-        FatalErrorIn
-        (
-            "Foam::sixDoFRigidBodyMotionRestraints::"
-            "tabulatedAxialAngularSpring::read"
-            "("
-                "const dictionary& sDoFRBMCDict"
-            ")"
-        )
+        FatalErrorInFunction
             << "axis has zero length"
             << abort(FatalError);
     }
@@ -203,14 +189,7 @@ bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
     }
     else
     {
-        FatalErrorIn
-        (
-            "Foam::sixDoFRigidBodyMotionRestraints::"
-            "tabulatedAxialAngularSpring::read"
-            "("
-                "const dictionary&"
-            ")"
-        )
+        FatalErrorInFunction
             << "angleFormat must be degree, degrees, radian or radians"
             << abort(FatalError);
     }

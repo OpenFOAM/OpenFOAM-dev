@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,10 +54,8 @@ void Foam::attachDetach::calcPointMatchMap() const
 
     if (pointMatchMapPtr_)
     {
-        FatalErrorIn
-        (
-            "void attachDetach::calcPointMatchMap() const"
-        )   << "Point match map already calculated for object " << name()
+        FatalErrorInFunction
+            << "Point match map already calculated for object " << name()
             << abort(FatalError);
     }
 

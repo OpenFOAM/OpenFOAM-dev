@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalErrorIn("thermophysicalFunction::New(Istream&)")
+        FatalErrorInFunction
             << "Unknown thermophysicalFunction type "
             << thermophysicalFunctionType
             << nl << nl
@@ -91,7 +91,7 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalErrorIn("thermophysicalFunction::New(const dictionary&)")
+        FatalErrorInFunction
             << "Unknown thermophysicalFunction type "
             << thermophysicalFunctionType
             << nl << nl

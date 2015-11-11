@@ -149,7 +149,7 @@ Foam::labelList Foam::structuredDecomp::decompose
         {
             if (!haveWarned)
             {
-                WarningIn("structuredDecomp::decompose(..)")
+                WarningInFunction
                     << "Did not visit some cells, e.g. cell " << cellI
                     << " at " << mesh.cellCentres()[cellI] << endl
                     << "Assigning  these cells to domain 0." << endl;

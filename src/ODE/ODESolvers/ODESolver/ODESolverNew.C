@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,11 +41,8 @@ Foam::autoPtr<Foam::ODESolver> Foam::ODESolver::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "ODESolver::New"
-            "(const dictionary& dict, const ODESystem& odes)"
-        )   << "Unknown ODESolver type "
+        FatalErrorInFunction
+            << "Unknown ODESolver type "
             << ODESolverTypeName << nl << nl
             << "Valid ODESolvers are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

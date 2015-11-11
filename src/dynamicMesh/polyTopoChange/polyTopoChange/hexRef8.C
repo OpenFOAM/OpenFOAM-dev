@@ -81,7 +81,7 @@ void Foam::hexRef8::reorder
 
         if (newI >= len)
         {
-            FatalErrorIn("hexRef8::reorder(..)") << abort(FatalError);
+            FatalErrorInFunction << abort(FatalError);
         }
 
         if (newI >= 0)
@@ -352,10 +352,8 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
 {
     if (cellLevel_.size() != mesh_.nCells())
     {
-        FatalErrorIn
-        (
-            "hexRef8::getLevel0EdgeLength() const"
-        )   << "Number of cells in mesh:" << mesh_.nCells()
+        FatalErrorInFunction
+            << "Number of cells in mesh:" << mesh_.nCells()
             << " does not equal size of cellLevel:" << cellLevel_.size()
             << endl
             << "This might be because of a restart with inconsistent cellLevel."
@@ -524,7 +522,7 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
 
     if (level0Size == -1)
     {
-        FatalErrorIn("hexRef8::getLevel0EdgeLength()")
+        FatalErrorInFunction
             << "Problem : typEdgeLenSqr:" << typEdgeLenSqr << abort(FatalError);
     }
 
@@ -573,7 +571,7 @@ Foam::label Foam::hexRef8::getAnchorCell
         Perr<< "cell:" << cellI << " anchorPoints:" << cellAnchorPoints[cellI]
             << endl;
 
-        FatalErrorIn("hexRef8::getAnchorCell(..)")
+        FatalErrorInFunction
             << "Could not find point " << pointI
             << " in the anchorPoints for cell " << cellI << endl
             << "Does your original mesh obey the 2:1 constraint and"
@@ -755,7 +753,7 @@ Foam::label Foam::hexRef8::findLevel
                 dumpCell(mesh_.faceNeighbour()[faceI]);
             }
 
-            FatalErrorIn("hexRef8::findLevel(..)")
+            FatalErrorInFunction
                 << "face:" << f
                 << " level:" << UIndirectList<label>(pointLevel_, f)()
                 << " startFp:" << startFp
@@ -783,7 +781,7 @@ Foam::label Foam::hexRef8::findLevel
         dumpCell(mesh_.faceNeighbour()[faceI]);
     }
 
-    FatalErrorIn("hexRef8::findLevel(..)")
+    FatalErrorInFunction
         << "face:" << f
         << " level:" << UIndirectList<label>(pointLevel_, f)()
         << " startFp:" << startFp
@@ -842,7 +840,7 @@ void Foam::hexRef8::checkInternalOrientation
 
     if ((dir & n) < 0)
     {
-        FatalErrorIn("checkInternalOrientation(..)")
+        FatalErrorInFunction
             << "cell:" << cellI << " old face:" << faceI
             << " newFace:" << newFace << endl
             << " coords:" << compactPoints
@@ -857,7 +855,7 @@ void Foam::hexRef8::checkInternalOrientation
 
     if (s < 0.1 || s > 0.9)
     {
-        FatalErrorIn("checkInternalOrientation(..)")
+        FatalErrorInFunction
             << "cell:" << cellI << " old face:" << faceI
             << " newFace:" << newFace << endl
             << " coords:" << compactPoints
@@ -888,7 +886,7 @@ void Foam::hexRef8::checkBoundaryOrientation
 
     if ((dir & n) < 0)
     {
-        FatalErrorIn("checkBoundaryOrientation(..)")
+        FatalErrorInFunction
             << "cell:" << cellI << " old face:" << faceI
             << " newFace:" << newFace
             << " coords:" << compactPoints
@@ -903,7 +901,7 @@ void Foam::hexRef8::checkBoundaryOrientation
 
     if (s < 0.7 || s > 1.3)
     {
-        WarningIn("checkBoundaryOrientation(..)")
+        WarningInFunction
             << "cell:" << cellI << " old face:" << faceI
             << " newFace:" << newFace
             << " coords:" << compactPoints
@@ -1273,7 +1271,7 @@ void Foam::hexRef8::createInternalFaces
                 dumpCell(mesh_.faceNeighbour()[faceI]);
             }
 
-            FatalErrorIn("createInternalFaces(..)")
+            FatalErrorInFunction
                 << "nAnchors:" << nAnchors
                 << " faceI:" << faceI
                 << abort(FatalError);
@@ -1315,7 +1313,7 @@ void Foam::hexRef8::createInternalFaces
 
                         const labelList& cPoints = mesh_.cellPoints(cellI);
 
-                        FatalErrorIn("createInternalFaces(..)")
+                        FatalErrorInFunction
                             << "cell:" << cellI << " cLevel:" << cLevel
                             << " cell points:" << cPoints
                             << " pointLevel:"
@@ -1388,7 +1386,7 @@ void Foam::hexRef8::createInternalFaces
 
                         const labelList& cPoints = mesh_.cellPoints(cellI);
 
-                        FatalErrorIn("createInternalFaces(..)")
+                        FatalErrorInFunction
                             << "cell:" << cellI << " cLevel:" << cLevel
                             << " cell points:" << cPoints
                             << " pointLevel:"
@@ -1672,10 +1670,8 @@ void Foam::hexRef8::checkWantedRefinementLevels
         {
             dumpCell(own);
             dumpCell(nei);
-            FatalErrorIn
-            (
-                "hexRef8::checkWantedRefinementLevels(const labelList&)"
-            )   << "cell:" << own
+            FatalErrorInFunction
+                << "cell:" << own
                 << " current level:" << cellLevel_[own]
                 << " level after refinement:" << ownLevel
                 << nl
@@ -1715,10 +1711,8 @@ void Foam::hexRef8::checkWantedRefinementLevels
             label patchI = mesh_.boundaryMesh().whichPatch(faceI);
 
             dumpCell(own);
-            FatalErrorIn
-            (
-                "hexRef8::checkWantedRefinementLevels(const labelList&)"
-            )   << "Celllevel does not satisfy 2:1 constraint."
+            FatalErrorInFunction
+                << "Celllevel does not satisfy 2:1 constraint."
                 << " On coupled face "
                 << faceI
                 << " on patch " << patchI << " "
@@ -2008,10 +2002,8 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
 
     if (history_.active() && history_.visibleCells().size() != mesh_.nCells())
     {
-        FatalErrorIn
-        (
-            "hexRef8::hexRef8(const polyMesh&)"
-        )   << "History enabled but number of visible cells "
+        FatalErrorInFunction
+            << "History enabled but number of visible cells "
             << history_.visibleCells().size() << " in "
             << history_.objectPath()
             << " is not equal to the number of cells in the mesh "
@@ -2025,10 +2017,8 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
      || pointLevel_.size() != mesh_.nPoints()
     )
     {
-        FatalErrorIn
-        (
-            "hexRef8::hexRef8(const polyMesh&)"
-        )   << "Restarted from inconsistent cellLevel or pointLevel files."
+        FatalErrorInFunction
+            << "Restarted from inconsistent cellLevel or pointLevel files."
             << endl
             << "cellLevel file " << cellLevel_.objectPath() << endl
             << "pointLevel file " << pointLevel_.objectPath() << endl
@@ -2127,11 +2117,8 @@ Foam::hexRef8::hexRef8
 {
     if (history_.active() && history_.visibleCells().size() != mesh_.nCells())
     {
-        FatalErrorIn
-        (
-            "hexRef8::hexRef8(const polyMesh&, const labelList&"
-            ", const labelList&, const refinementHistory&)"
-        )   << "History enabled but number of visible cells in it "
+        FatalErrorInFunction
+            << "History enabled but number of visible cells in it "
             << history_.visibleCells().size()
             << " is not equal to the number of cells in the mesh "
             << mesh_.nCells() << abort(FatalError);
@@ -2143,11 +2130,8 @@ Foam::hexRef8::hexRef8
      || pointLevel_.size() != mesh_.nPoints()
     )
     {
-        FatalErrorIn
-        (
-            "hexRef8::hexRef8(const polyMesh&, const labelList&"
-            ", const labelList&, const refinementHistory&)"
-        )   << "Incorrect cellLevel or pointLevel size." << endl
+        FatalErrorInFunction
+            << "Incorrect cellLevel or pointLevel size." << endl
             << "Number of cells in mesh:" << mesh_.nCells()
             << " does not equal size of cellLevel:" << cellLevel_.size() << endl
             << "Number of points in mesh:" << mesh_.nPoints()
@@ -2246,11 +2230,8 @@ Foam::hexRef8::hexRef8
      || pointLevel_.size() != mesh_.nPoints()
     )
     {
-        FatalErrorIn
-        (
-            "hexRef8::hexRef8(const polyMesh&, const labelList&"
-            ", const labelList&)"
-        )   << "Incorrect cellLevel or pointLevel size." << endl
+        FatalErrorInFunction
+            << "Incorrect cellLevel or pointLevel size." << endl
             << "Number of cells in mesh:" << mesh_.nCells()
             << " does not equal size of cellLevel:" << cellLevel_.size() << endl
             << "Number of points in mesh:" << mesh_.nPoints()
@@ -2362,12 +2343,8 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement
 
     if (maxFaceDiff <= 0)
     {
-        FatalErrorIn
-        (
-            "hexRef8::consistentSlowRefinement"
-            "(const label, const labelList&, const labelList&"
-            ", const label, const labelList&)"
-        )   << "Illegal maxFaceDiff " << maxFaceDiff << nl
+        FatalErrorInFunction
+            << "Illegal maxFaceDiff " << maxFaceDiff << nl
             << "Value should be >= 1" << exit(FatalError);
     }
 
@@ -2425,12 +2402,8 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement
         if (allFaceInfo[faceI].valid(dummyTrackData))
         {
             // Can only occur if face has already gone through loop below.
-            FatalErrorIn
-            (
-                "hexRef8::consistentSlowRefinement"
-                "(const label, const labelList&, const labelList&"
-                ", const label, const labelList&)"
-            )   << "Argument facesToCheck seems to have duplicate entries!"
+            FatalErrorInFunction
+                << "Argument facesToCheck seems to have duplicate entries!"
                 << endl
                 << "face:" << faceI << " occurs at positions "
                 << findIndices(facesToCheck, faceI)
@@ -2723,12 +2696,8 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement
             {
                 dumpCell(own);
                 dumpCell(nei);
-                FatalErrorIn
-                (
-                    "hexRef8::consistentSlowRefinement"
-                    "(const label, const labelList&, const labelList&"
-                    ", const label, const labelList&)"
-                )   << "cell:" << own
+                FatalErrorInFunction
+                    << "cell:" << own
                     << " current level:" << cellLevel_[own]
                     << " current refData:" << allCellInfo[own]
                     << " level after refinement:" << ownLevel
@@ -2784,12 +2753,8 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement
                 dumpCell(own);
                 label patchI = mesh_.boundaryMesh().whichPatch(faceI);
 
-                FatalErrorIn
-                (
-                    "hexRef8::consistentSlowRefinement"
-                    "(const label, const labelList&, const labelList&"
-                    ", const label, const labelList&)"
-                )   << "Celllevel does not satisfy 2:1 constraint."
+                FatalErrorInFunction
+                    << "Celllevel does not satisfy 2:1 constraint."
                     << " On coupled face "
                     << faceI
                     << " refData:" << allFaceInfo[faceI]
@@ -2859,11 +2824,8 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
 
     if (maxFaceDiff <= 0)
     {
-        FatalErrorIn
-        (
-            "hexRef8::consistentSlowRefinement2"
-            "(const label, const labelList&, const labelList&)"
-        )   << "Illegal maxFaceDiff " << maxFaceDiff << nl
+        FatalErrorInFunction
+            << "Illegal maxFaceDiff " << maxFaceDiff << nl
             << "Value should be >= 1" << exit(FatalError);
     }
 
@@ -2926,11 +2888,8 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
         if (allFaceInfo[faceI].valid(dummyTrackData))
         {
             // Can only occur if face has already gone through loop below.
-            FatalErrorIn
-            (
-                "hexRef8::consistentSlowRefinement2"
-                "(const label, const labelList&, const labelList&)"
-            )   << "Argument facesToCheck seems to have duplicate entries!"
+            FatalErrorInFunction
+                << "Argument facesToCheck seems to have duplicate entries!"
                 << endl
                 << "face:" << faceI << " occurs at positions "
                 << findIndices(facesToCheck, faceI)
@@ -3262,11 +3221,8 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
                 if (refineCell.get(cellI) && !savedRefineCell.get(cellI))
                 {
                     dumpCell(cellI);
-                    FatalErrorIn
-                    (
-                        "hexRef8::consistentSlowRefinement2"
-                        "(const label, const labelList&, const labelList&)"
-                    )   << "Cell:" << cellI << " cc:"
+                    FatalErrorInFunction
+                        << "Cell:" << cellI << " cc:"
                         << mesh_.cellCentres()[cellI]
                         << " was not marked for refinement but does not obey"
                         << " 2:1 constraints."
@@ -3741,11 +3697,8 @@ Foam::labelListList Foam::hexRef8::setRefinement
                     if (nAnchorPoints[cellI] == 8)
                     {
                         dumpCell(cellI);
-                        FatalErrorIn
-                        (
-                            "hexRef8::setRefinement(const labelList&"
-                            ", polyTopoChange&)"
-                        )   << "cell " << cellI
+                        FatalErrorInFunction
+                            << "cell " << cellI
                             << " of level " << cellLevel_[cellI]
                             << " uses more than 8 points of equal or"
                             << " lower level" << nl
@@ -3768,11 +3721,8 @@ Foam::labelListList Foam::hexRef8::setRefinement
 
                     const labelList& cPoints = mesh_.cellPoints(cellI);
 
-                    FatalErrorIn
-                    (
-                        "hexRef8::setRefinement(const labelList&"
-                        ", polyTopoChange&)"
-                    )   << "cell " << cellI
+                    FatalErrorInFunction
+                        << "cell " << cellI
                         << " of level " << cellLevel_[cellI]
                         << " does not seem to have 8 points of equal or"
                         << " lower level" << endl
@@ -4247,7 +4197,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
 
         if (minPointI != labelMax && minPointI != mesh_.nPoints())
         {
-            FatalErrorIn("hexRef8::setRefinement(..)")
+            FatalErrorInFunction
                 << "Added point labels not consecutive to existing mesh points."
                 << nl
                 << "mesh_.nPoints():" << mesh_.nPoints()
@@ -4420,7 +4370,7 @@ void Foam::hexRef8::updateMesh
 
             if (fnd == savedCellLevel_.end())
             {
-                FatalErrorIn("hexRef8::updateMesh(const mapPolyMesh&)")
+                FatalErrorInFunction
                     << "Problem : trying to restore old value for new cell "
                     << newCellI << " but cannot find old cell " << storedCellI
                     << " in map of stored values " << savedCellLevel_
@@ -4431,7 +4381,7 @@ void Foam::hexRef8::updateMesh
 
         //if (findIndex(cellLevel_, -1) != -1)
         //{
-        //    WarningIn("hexRef8::updateMesh(const mapPolyMesh&)")
+        //    WarningInFunction
         //        << "Problem : "
         //        << "cellLevel_ contains illegal value -1 after mapping
         //        << " at cell " << findIndex(cellLevel_, -1) << endl
@@ -4465,7 +4415,7 @@ void Foam::hexRef8::updateMesh
 
                 if (oldPointI == -1)
                 {
-                    //FatalErrorIn("hexRef8::updateMesh(const mapPolyMesh&)")
+                    //FatalErrorInFunction
                     //    << "Problem : point " << newPointI
                     //    << " at " << mesh_.points()[newPointI]
                     //    << " does not originate from another point"
@@ -4493,7 +4443,7 @@ void Foam::hexRef8::updateMesh
 
             if (fnd == savedPointLevel_.end())
             {
-                FatalErrorIn("hexRef8::updateMesh(const mapPolyMesh&)")
+                FatalErrorInFunction
                     << "Problem : trying to restore old value for new point "
                     << newPointI << " but cannot find old point "
                     << storedPointI
@@ -4505,7 +4455,7 @@ void Foam::hexRef8::updateMesh
 
         //if (findIndex(pointLevel_, -1) != -1)
         //{
-        //    WarningIn("hexRef8::updateMesh(const mapPolyMesh&)")
+        //    WarningInFunction
         //        << "Problem : "
         //        << "pointLevel_ contains illegal value -1 after mapping"
         //        << " at point" << findIndex(pointLevel_, -1) << endl
@@ -4551,11 +4501,8 @@ void Foam::hexRef8::subset
 
     if (history_.active())
     {
-        WarningIn
-        (
-            "hexRef8::subset(const labelList&, const labelList&"
-            ", const labelList&)"
-        )   << "Subsetting will not work in combination with unrefinement."
+        WarningInFunction
+            << "Subsetting will not work in combination with unrefinement."
             << nl
             << "Proceed at your own risk." << endl;
     }
@@ -4574,7 +4521,7 @@ void Foam::hexRef8::subset
 
         if (findIndex(cellLevel_, -1) != -1)
         {
-            FatalErrorIn("hexRef8::subset(..)")
+            FatalErrorInFunction
                 << "Problem : "
                 << "cellLevel_ contains illegal value -1 after mapping:"
                 << cellLevel_
@@ -4595,7 +4542,7 @@ void Foam::hexRef8::subset
 
         if (findIndex(pointLevel_, -1) != -1)
         {
-            FatalErrorIn("hexRef8::subset(..)")
+            FatalErrorInFunction
                 << "Problem : "
                 << "pointLevel_ contains illegal value -1 after mapping:"
                 << pointLevel_
@@ -4698,7 +4645,7 @@ void Foam::hexRef8::checkMesh() const
                     if (!cellToFace.insert(labelPair(own, nei[bFaceI]), faceI))
                     {
                         dumpCell(own);
-                        FatalErrorIn("hexRef8::checkMesh()")
+                        FatalErrorInFunction
                             << "Faces do not seem to be correct across coupled"
                             << " boundaries" << endl
                             << "Coupled face " << faceI
@@ -4743,7 +4690,7 @@ void Foam::hexRef8::checkMesh() const
 
                 dumpCell(mesh_.faceOwner()[faceI]);
 
-                FatalErrorIn("hexRef8::checkMesh()")
+                FatalErrorInFunction
                     << "Faces do not seem to be correct across coupled"
                     << " boundaries" << endl
                     << "Coupled face " << faceI
@@ -4785,7 +4732,7 @@ void Foam::hexRef8::checkMesh() const
 
                 label patchI = mesh_.boundaryMesh().whichPatch(faceI);
 
-                FatalErrorIn("hexRef8::checkMesh()")
+                FatalErrorInFunction
                     << "Faces do not seem to be correct across coupled"
                     << " boundaries" << endl
                     << "Coupled face " << faceI
@@ -4835,7 +4782,7 @@ void Foam::hexRef8::checkMesh() const
 
                 label patchI = mesh_.boundaryMesh().whichPatch(faceI);
 
-                FatalErrorIn("hexRef8::checkMesh()")
+                FatalErrorInFunction
                     << "Faces do not seem to be correct across coupled"
                     << " boundaries" << endl
                     << "Coupled face " << faceI
@@ -4876,7 +4823,7 @@ void Foam::hexRef8::checkRefinementLevels
      || pointLevel_.size() != mesh_.nPoints()
     )
     {
-        FatalErrorIn("hexRef8::checkRefinementLevels(const label)")
+        FatalErrorInFunction
             << "cellLevel size should be number of cells"
             << " and pointLevel size should be number of points."<< nl
             << "cellLevel:" << cellLevel_.size()
@@ -4902,10 +4849,8 @@ void Foam::hexRef8::checkRefinementLevels
                 dumpCell(own);
                 dumpCell(nei);
 
-                FatalErrorIn
-                (
-                    "hexRef8::checkRefinementLevels(const label)"
-                )   << "Celllevel does not satisfy 2:1 constraint." << nl
+                FatalErrorInFunction
+                    << "Celllevel does not satisfy 2:1 constraint." << nl
                     << "On face " << faceI << " owner cell " << own
                     << " has refinement " << cellLevel_[own]
                     << " neighbour cell " << nei << " has refinement "
@@ -4939,10 +4884,8 @@ void Foam::hexRef8::checkRefinementLevels
 
                 label patchI = mesh_.boundaryMesh().whichPatch(faceI);
 
-                FatalErrorIn
-                (
-                    "hexRef8::checkRefinementLevels(const label)"
-                )   << "Celllevel does not satisfy 2:1 constraint."
+                FatalErrorInFunction
+                    << "Celllevel does not satisfy 2:1 constraint."
                     << " On coupled face " << faceI
                     << " on patch " << patchI << " "
                     << mesh_.boundaryMesh()[patchI].name()
@@ -4975,10 +4918,8 @@ void Foam::hexRef8::checkRefinementLevels
         {
             if (pointLevel_[pointI] != syncPointLevel[pointI])
             {
-                FatalErrorIn
-                (
-                    "hexRef8::checkRefinementLevels(const label)"
-                )   << "PointLevel is not consistent across coupled patches."
+                FatalErrorInFunction
+                    << "PointLevel is not consistent across coupled patches."
                     << endl
                     << "point:" << pointI << " coord:" << mesh_.points()[pointI]
                     << " has level " << pointLevel_[pointI]
@@ -5036,10 +4977,8 @@ void Foam::hexRef8::checkRefinementLevels
                 {
                     dumpCell(cellI);
 
-                    FatalErrorIn
-                    (
-                        "hexRef8::checkRefinementLevels(const label)"
-                    )   << "Too big a difference between"
+                    FatalErrorInFunction
+                        << "Too big a difference between"
                         << " point-connected cells." << nl
                         << "cell:" << cellI
                         << " cellLevel:" << cellLevel_[cellI]
@@ -5110,10 +5049,8 @@ void Foam::hexRef8::checkRefinementLevels
     //
     //    if (returnReduce(nHanging, sumOp<label>()) > 0)
     //    {
-    //        FatalErrorIn
-    //        (
-    //            "hexRef8::checkRefinementLevels(const label)"
-    //        )   << "Detected a point used by two edges only (hanging point)"
+    //        FatalErrorInFunction
+    //            << "Detected a point used by two edges only (hanging point)"
     //            << nl << "This is not allowed"
     //            << abort(FatalError);
     //    }
@@ -5204,7 +5141,7 @@ Foam::labelList Foam::hexRef8::getSplitPoints() const
 
     if (!history_.active())
     {
-        FatalErrorIn("hexRef8::getSplitPoints()")
+        FatalErrorInFunction
             << "Only call if constructed with history capability"
             << abort(FatalError);
     }
@@ -5405,10 +5342,8 @@ Foam::labelList Foam::hexRef8::consistentUnrefinement
 
     if (maxSet)
     {
-        FatalErrorIn
-        (
-            "hexRef8::consistentUnrefinement(const labelList&, const bool"
-        )   << "maxSet not implemented yet."
+        FatalErrorInFunction
+            << "maxSet not implemented yet."
             << abort(FatalError);
     }
 
@@ -5478,13 +5413,13 @@ Foam::labelList Foam::hexRef8::consistentUnrefinement
                     // could also combine with unset:
                     // if (!unrefineCell.unset(own))
                     // {
-                    //     FatalErrorIn("hexRef8::consistentUnrefinement(..)")
+                    //     FatalErrorInFunction
                     //         << "problem cell already unset"
                     //         << abort(FatalError);
                     // }
                     if (unrefineCell.get(own) == 0)
                     {
-                        FatalErrorIn("hexRef8::consistentUnrefinement(..)")
+                        FatalErrorInFunction
                             << "problem" << abort(FatalError);
                     }
 
@@ -5502,7 +5437,7 @@ Foam::labelList Foam::hexRef8::consistentUnrefinement
                 {
                     if (unrefineCell.get(nei) == 0)
                     {
-                        FatalErrorIn("hexRef8::consistentUnrefinement(..)")
+                        FatalErrorInFunction
                             << "problem" << abort(FatalError);
                     }
 
@@ -5538,7 +5473,7 @@ Foam::labelList Foam::hexRef8::consistentUnrefinement
                 {
                     if (unrefineCell.get(own) == 0)
                     {
-                        FatalErrorIn("hexRef8::consistentUnrefinement(..)")
+                        FatalErrorInFunction
                             << "problem" << abort(FatalError);
                     }
 
@@ -5552,7 +5487,7 @@ Foam::labelList Foam::hexRef8::consistentUnrefinement
                 {
                     if (unrefineCell.get(own) == 1)
                     {
-                        FatalErrorIn("hexRef8::consistentUnrefinement(..)")
+                        FatalErrorInFunction
                             << "problem" << abort(FatalError);
                     }
 
@@ -5635,10 +5570,8 @@ void Foam::hexRef8::setUnrefinement
 {
     if (!history_.active())
     {
-        FatalErrorIn
-        (
-            "hexRef8::setUnrefinement(const labelList&, polyTopoChange&)"
-        )   << "Only call if constructed with history capability"
+        FatalErrorInFunction
+            << "Only call if constructed with history capability"
             << abort(FatalError);
     }
 
@@ -5653,14 +5586,8 @@ void Foam::hexRef8::setUnrefinement
         {
             if (cellLevel_[cellI] < 0)
             {
-                FatalErrorIn
-                (
-                    "hexRef8::setUnrefinement"
-                    "("
-                        "const labelList&, "
-                        "polyTopoChange&"
-                    ")"
-                )   << "Illegal cell level " << cellLevel_[cellI]
+                FatalErrorInFunction
+                    << "Illegal cell level " << cellLevel_[cellI]
                     << " for cell " << cellI
                     << abort(FatalError);
             }
@@ -5722,10 +5649,8 @@ void Foam::hexRef8::setUnrefinement
 
         if (facesToRemove.size() != splitFaces.size())
         {
-            FatalErrorIn
-            (
-                "hexRef8::setUnrefinement(const labelList&, polyTopoChange&)"
-            )   << "Ininitial set of split points to unrefine does not"
+            FatalErrorInFunction
+                << "Ininitial set of split points to unrefine does not"
                 << " seem to be consistent or not mid points of refined cells"
                 << abort(FatalError);
         }
@@ -5746,10 +5671,8 @@ void Foam::hexRef8::setUnrefinement
         // Check
         if (pCells.size() != 8)
         {
-            FatalErrorIn
-            (
-                "hexRef8::setUnrefinement(const labelList&, polyTopoChange&)"
-            )   << "splitPoint " << pointI
+            FatalErrorInFunction
+                << "splitPoint " << pointI
                 << " should have 8 cells using it. It has " << pCells
                 << abort(FatalError);
         }
@@ -5769,7 +5692,7 @@ void Foam::hexRef8::setUnrefinement
 
                 if (region == -1)
                 {
-                    FatalErrorIn("hexRef8::setUnrefinement(..)")
+                    FatalErrorInFunction
                         << "Ininitial set of split points to unrefine does not"
                         << " seem to be consistent or not mid points"
                         << " of refined cells" << nl
@@ -5780,7 +5703,7 @@ void Foam::hexRef8::setUnrefinement
 
                 if (masterCellI != cellRegionMaster[region])
                 {
-                    FatalErrorIn("hexRef8::setUnrefinement(..)")
+                    FatalErrorInFunction
                         << "cell:" << cellI << " on splitPoint:" << pointI
                         << " in region " << region
                         << " has master:" << cellRegionMaster[region]

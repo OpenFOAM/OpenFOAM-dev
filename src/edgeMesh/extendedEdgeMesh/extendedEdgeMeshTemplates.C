@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -242,15 +242,8 @@ void Foam::extendedEdgeMesh::sortPointsAndEdges
         }
         else if (eStat == NONE)
         {
-            FatalErrorIn
-            (
-                ":extendedEdgeMesh::sortPointsAndEdges"
-                "("
-                "    const Patch&,"
-                "    const labelList& featureEdges,"
-                "    const labelList& feaurePoints"
-                ")"
-            )   << nl << "classifyEdge returned NONE on edge "
+            FatalErrorInFunction
+                << nl << "classifyEdge returned NONE on edge "
                 << eds[i]
                 << ". There is a problem with definition of this edge."
                 << nl << abort(FatalError);
@@ -326,15 +319,8 @@ void Foam::extendedEdgeMesh::sortPointsAndEdges
         }
         else if (ptStatus == NONFEATURE)
         {
-            FatalErrorIn
-            (
-                ":extendedEdgeMesh::sortPointsAndEdges"
-                "("
-                "    const Patch&,"
-                "    const labelList& featureEdges,"
-                "    const labelList& feaurePoints"
-                ")"
-            )   << nl << "classifyFeaturePoint returned NONFEATURE on point at "
+            FatalErrorInFunction
+                << nl << "classifyFeaturePoint returned NONFEATURE on point at "
                 << points()[i]
                 << ". There is a problem with definition of this feature point."
                 << nl << abort(FatalError);

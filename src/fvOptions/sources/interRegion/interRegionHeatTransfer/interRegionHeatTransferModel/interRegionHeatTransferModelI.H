@@ -37,10 +37,8 @@ Foam::fv::interRegionHeatTransferModel::meshInterp() const
 {
     if (!meshInterpPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "const meshToMesh& interRegionHeatTransferModel::meshInterp() const"
-        )   << "Interpolation object not set"
+        FatalErrorInFunction
+            << "Interpolation object not set"
             << abort(FatalError);
     }
 
@@ -60,7 +58,7 @@ Foam::fv::interRegionHeatTransferModel::nbrModel() const
 {
     if (nbrModel_ == NULL)
     {
-        FatalErrorIn("const interRegionHeatTransferModel& nbrModel() const")
+        FatalErrorInFunction
             << "Neighbour model not set"
             << abort(FatalError);
     }
@@ -74,7 +72,7 @@ Foam::fv::interRegionHeatTransferModel::nbrModel()
 {
     if (nbrModel_ == NULL)
     {
-        FatalErrorIn("interRegionHeatTransferModel& nbrModel()")
+        FatalErrorInFunction
             << "Neighbour model not set"
             << abort(FatalError);
     }

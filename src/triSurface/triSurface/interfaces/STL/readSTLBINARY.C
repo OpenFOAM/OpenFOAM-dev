@@ -52,7 +52,7 @@ bool Foam::triSurface::readSTLBINARY(const fileName& STLfileName)
 
     if (!STLfile.good())
     {
-        FatalErrorIn("triSurface::readSTLBINARY(const fileName&)")
+        FatalErrorInFunction
             << "Cannot read file " << STLfileName
             << " or file " << STLfileName + ".gz"
             << exit(FatalError);

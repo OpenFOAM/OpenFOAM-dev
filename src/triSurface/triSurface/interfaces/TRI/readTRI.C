@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ bool Foam::triSurface::readTRI(const fileName& TRIfileName)
 
     if (!TRIfile.good())
     {
-        FatalErrorIn("triSurface::readTRI(const fileName&)")
+        FatalErrorInFunction
             << "Cannot read file " << TRIfileName
             << exit(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,11 +118,8 @@ void Foam::motionSmootherAlgo::checkConstraints
 
                 if (savedVal != pf[ppp])
                 {
-                    FatalErrorIn
-                    (
-                        "motionSmootherAlgo::checkConstraints"
-                        "(GeometricField<Type, pointPatchField, pointMesh>&)"
-                    )   << "Patch fields are not consistent on mesh point "
+                    FatalErrorInFunction
+                        << "Patch fields are not consistent on mesh point "
                         << ppp << " coordinate " << mesh.points()[ppp]
                         << " at patch " << bm[patchi].name() << '.'
                         << endl
@@ -290,12 +287,8 @@ void Foam::motionSmootherAlgo::testSyncField
     {
         if (mag(syncedFld[i] - fld[i]) > maxMag)
         {
-            FatalErrorIn
-            (
-                "motionSmootherAlgo::testSyncField"
-                "(const Field<Type>&, const CombineOp&"
-                ", const Type&, const bool)"
-            )   << "On element " << i << " value:" << fld[i]
+            FatalErrorInFunction
+                << "On element " << i << " value:" << fld[i]
                 << " synchronised value:" << syncedFld[i]
                 << abort(FatalError);
         }

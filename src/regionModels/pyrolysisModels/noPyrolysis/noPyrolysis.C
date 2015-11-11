@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ tmp<volScalarField> noPyrolysis::kappa() const
 
 const surfaceScalarField& noPyrolysis::phiGas() const
 {
-    FatalErrorIn("const volScalarField& noPyrolysis::phiGas() const")
+    FatalErrorInFunction
         << "phiGas field not available for " << type() << abort(FatalError);
     return surfaceScalarField::null();
 }

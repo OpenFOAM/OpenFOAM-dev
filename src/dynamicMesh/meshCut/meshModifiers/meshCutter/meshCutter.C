@@ -123,7 +123,7 @@ Foam::label Foam::meshCutter::findInternalFacePoint
 
     if (pointLabels.empty())
     {
-        FatalErrorIn("meshCutter::findInternalFacePoint(const labelList&)")
+        FatalErrorInFunction
             << "Empty pointLabels" << abort(FatalError);
     }
 
@@ -383,11 +383,8 @@ void Foam::meshCutter::splitFace
 
     if (startFp == -1)
     {
-        FatalErrorIn
-        (
-            "meshCutter::splitFace"
-            ", const face&, const label, const label, face&, face&)"
-        )   << "Cannot find vertex (new numbering) " << v0
+        FatalErrorInFunction
+            << "Cannot find vertex (new numbering) " << v0
             << " on face " << f
             << abort(FatalError);
     }
@@ -396,11 +393,8 @@ void Foam::meshCutter::splitFace
 
     if (endFp == -1)
     {
-        FatalErrorIn
-        (
-            "meshCutter::splitFace("
-            ", const face&, const label, const label, face&, face&)"
-        )   << "Cannot find vertex (new numbering) " << v1
+        FatalErrorInFunction
+            << "Cannot find vertex (new numbering) " << v1
             << " on face " << f
             << abort(FatalError);
     }
@@ -563,11 +557,8 @@ void Foam::meshCutter::setRefinement
             // Check if there is any cell using this edge.
             if (debug && findCutCell(cuts, mesh().edgeCells()[edgeI]) == -1)
             {
-                FatalErrorIn
-                (
-                    "meshCutter::setRefinement(const cellCuts&"
-                    ", polyTopoChange&)"
-                )   << "Problem: cut edge but none of the cells using it is\n"
+                FatalErrorInFunction
+                    << "Problem: cut edge but none of the cells using it is\n"
                     << "edge:" << edgeI << " verts:" << e
                     << abort(FatalError);
             }
@@ -939,11 +930,8 @@ void Foam::meshCutter::setRefinement
 
                     if (debug && (f != addEdgeCutsToFace(faceI)))
                     {
-                        FatalErrorIn
-                        (
-                            "meshCutter::setRefinement(const cellCuts&"
-                            ", polyTopoChange&)"
-                        )   << "Problem: edges added to face which does "
+                        FatalErrorInFunction
+                            << "Problem: edges added to face which does "
                             << " not use a marked cut" << endl
                             << "faceI:" << faceI << endl
                             << "face:" << f << endl

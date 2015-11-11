@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,11 +66,8 @@ inline const Foam::fvMesh& Foam::regionModels::regionModel::regionMesh() const
     }
     else if (!regionMeshPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "inline const Foam::fvMesh&"
-            "Foam::regionModels::regionModel::regionMesh() const"
-        )<< "Region mesh not available" << abort(FatalError);
+        FatalErrorInFunction
+         << "Region mesh not available" << abort(FatalError);
     }
 
     return regionMeshPtr_();
@@ -88,11 +85,8 @@ inline Foam::fvMesh& Foam::regionModels::regionModel::regionMesh()
     }
     else if (!regionMeshPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "inline Foam::fvMesh&"
-            "Foam::regionModels::regionModel::regionMesh()"
-        )<< "Region mesh not available" << abort(FatalError);
+        FatalErrorInFunction
+         << "Region mesh not available" << abort(FatalError);
     }
 
     return regionMeshPtr_();
@@ -117,11 +111,7 @@ Foam::regionModels::regionModel::outputProperties() const
 {
     if (!outputPropertiesPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "inline const Foam::IOdictionary& "
-            "Foam::regionModels::regionModel::outputProperties() const"
-        )
+        FatalErrorInFunction
             << "outputProperties dictionary not available"
             << abort(FatalError);
     }
@@ -135,11 +125,7 @@ Foam::regionModels::regionModel::outputProperties()
 {
     if (!outputPropertiesPtr_.valid())
     {
-        FatalErrorIn
-        (
-            "inline Foam::IOdictionary& "
-            "Foam::regionModels::regionModel::outputProperties()"
-        )
+        FatalErrorInFunction
             << "outputProperties dictionary not available"
             << abort(FatalError);
     }

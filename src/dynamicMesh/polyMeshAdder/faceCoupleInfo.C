@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ void Foam::faceCoupleInfo::writePointsFaces() const
             }
             else
             {
-                WarningIn("writePointsFaces()")
+                WarningInFunction
                     << "No master face for cut face " << cutFaceI
                     << " at position " << c[cutFaceI].centre(c.points())
                     << endl;
@@ -453,7 +453,7 @@ Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
 
             if (magEVec < VSMALL)
             {
-                WarningIn("faceCoupleInfo::mostAlignedEdge")
+                WarningInFunction
                     << "Crossing zero sized edge " << edgeI
                     << " coords:" << localPoints[otherPointI]
                     << localPoints[pointI]
@@ -532,11 +532,8 @@ void Foam::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
 
         if (stringedEdges.empty())
         {
-            FatalErrorIn
-            (
-                "faceCoupleInfo::setCutEdgeToPoints"
-                "(const labelList&)"
-            )   << "Did not match all of master edges to cutFace edges"
+            FatalErrorInFunction
+                << "Did not match all of master edges to cutFace edges"
                 << nl
                 << "First unmatched edge:" << masterEdgeI << " endPoints:"
                 << masterPatch().localPoints()[masterE[0]]
@@ -611,11 +608,8 @@ void Foam::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
                 // Check
                 if (oldStart == startVertI)
                 {
-                    FatalErrorIn
-                    (
-                        "faceCoupleInfo::setCutEdgeToPoints"
-                        "(const labelList&)"
-                    )   << " unsplitEdge:" << unsplitEdge
+                    FatalErrorInFunction
+                        << " unsplitEdge:" << unsplitEdge
                         << " does not correspond to split edges "
                         << UIndirectList<edge>(cutEdges, stringedEdges)()
                         << abort(FatalError);
@@ -652,12 +646,8 @@ Foam::label Foam::faceCoupleInfo::matchFaces
 {
     if (f0.size() != f1.size())
     {
-        FatalErrorIn
-        (
-            "faceCoupleInfo::matchFaces"
-            "(const scalar, const face&, const pointField&"
-            ", const face&, const pointField&)"
-        )   << "Different sizes for supposedly matching faces." << nl
+        FatalErrorInFunction
+            << "Different sizes for supposedly matching faces." << nl
             << "f0:" << f0 << " coords:" << UIndirectList<point>(points0, f0)()
             << nl
             << "f1:" << f1 << " coords:" << UIndirectList<point>(points1, f1)()
@@ -708,12 +698,8 @@ Foam::label Foam::faceCoupleInfo::matchFaces
 
     if (matchFp == -1)
     {
-        FatalErrorIn
-        (
-            "faceCoupleInfo::matchFaces"
-            "(const scalar, const face&, const pointField&"
-            ", const face&, const pointField&)"
-        )   << "No unique match between two faces" << nl
+        FatalErrorInFunction
+            << "No unique match between two faces" << nl
             << "Face " << f0 << " coords "
             << UIndirectList<point>(points0, f0)() << nl
             << "Face " << f1 << " coords "
@@ -783,7 +769,7 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
             //const point& patchPt = patchPoints[patchPointI];
             //if (mag(cutPt - patchPt) > SMALL)
             //{
-            //    FatalErrorIn("matchPointsThroughFaces")
+            //    FatalErrorInFunction
             //    << "cutP:" << cutPt
             //    << " patchP:" << patchPt
             //    << abort(FatalError);
@@ -1159,11 +1145,8 @@ Foam::label Foam::faceCoupleInfo::growCutFaces
 
                                 const face& nbrF = masterPatch()[masterFaceI];
 
-                                FatalErrorIn
-                                (
-                                    "faceCoupleInfo::growCutFaces"
-                                    "(const labelList&, Map<labelList>&)"
-                                )   << "Cut face "
+                                FatalErrorInFunction
+                                    << "Cut face "
                                     << cutFaces()[faceI].points(cutPoints)
                                     << " has master "
                                     << myMaster
@@ -1240,10 +1223,7 @@ void Foam::faceCoupleInfo::checkMatch(const labelList& cutToMasterEdges) const
 
                         const face& nbrF = masterLocalFaces[masterFaceI];
 
-                        FatalErrorIn
-                        (
-                            "faceCoupleInfo::checkMatch(const labelList&) const"
-                        )
+                        FatalErrorInFunction
                             << "Internal CutEdge " << e
                             << " coord:"
                             << cutLocalPoints[e[0]]
@@ -1535,11 +1515,8 @@ void Foam::faceCoupleInfo::perfectPointMatch
 
     if (!matchedAllFaces)
     {
-        FatalErrorIn
-        (
-            "faceCoupleInfo::perfectPointMatch"
-            "(const scalar, const bool)"
-        )   << "Did not match all of the master faces to the slave faces"
+        FatalErrorInFunction
+            << "Did not match all of the master faces to the slave faces"
             << endl
             << "This usually means that the slave patch and master patch"
             << " do not align to within " << absTol << " metre."
@@ -1685,11 +1662,8 @@ void Foam::faceCoupleInfo::subDivisionMatch
 
     if (!matchedAllPoints)
     {
-        FatalErrorIn
-        (
-            "faceCoupleInfo::subDivisionMatch"
-            "(const polyMesh&, const bool, const scalar)"
-        )   << "Did not match all of the master points to the slave points"
+        FatalErrorInFunction
+            << "Did not match all of the master points to the slave points"
             << endl
             << "This usually means that the slave patch is not a"
             << " subdivision of the master patch"
@@ -1775,11 +1749,8 @@ void Foam::faceCoupleInfo::subDivisionMatch
                     false
                 );
 
-                FatalErrorIn
-                (
-                    "faceCoupleInfo::subDivisionMatch"
-                    "(const polyMesh&, const bool, const scalar)"
-                )   << "Problem in finding cut edges corresponding to"
+                FatalErrorInFunction
+                    << "Problem in finding cut edges corresponding to"
                     << " master edge " << masterEdge
                     << " points:" << masterPoints[masterEdge[0]]
                     << ' ' << masterPoints[masterEdge[1]]
@@ -1884,11 +1855,8 @@ void Foam::faceCoupleInfo::subDivisionMatch
         {
             const face& cutF = cutFaces()[cutFaceI];
 
-            FatalErrorIn
-            (
-                "faceCoupleInfo::subDivisionMatch"
-                "(const polyMesh&, const bool, const scalar)"
-            )   << "Did not match all of cutFaces to a master face" << nl
+            FatalErrorInFunction
+                << "Did not match all of cutFaces to a master face" << nl
                 << "First unmatched cut face:" << cutFaceI << " with points:"
                 << UIndirectList<point>(cutFaces().points(), cutF)()
                 << nl
@@ -2042,11 +2010,8 @@ Foam::faceCoupleInfo::faceCoupleInfo
 {
     if (perfectMatch && (masterAddressing.size() != slaveAddressing.size()))
     {
-        FatalErrorIn
-        (
-            "faceCoupleInfo::faceCoupleInfo(const primitiveMesh&"
-            ", const primitiveMesh&, const scalar, const bool"
-        )   << "Perfect match specified but number of master and slave faces"
+        FatalErrorInFunction
+            << "Perfect match specified but number of master and slave faces"
             << " differ." << endl
             << "master:" << masterAddressing.size()
             << "  slave:" << slaveAddressing.size()
@@ -2059,11 +2024,8 @@ Foam::faceCoupleInfo::faceCoupleInfo
      && min(masterAddressing) < masterMesh.nInternalFaces()
     )
     {
-        FatalErrorIn
-        (
-            "faceCoupleInfo::faceCoupleInfo(const primitiveMesh&"
-            ", const primitiveMesh&, const scalar, const bool"
-        )   << "Supplied internal face on master mesh to couple." << nl
+        FatalErrorInFunction
+            << "Supplied internal face on master mesh to couple." << nl
             << "Faces to be coupled have to be boundary faces."
             << abort(FatalError);
     }
@@ -2073,11 +2035,8 @@ Foam::faceCoupleInfo::faceCoupleInfo
      && min(slaveAddressing) < slaveMesh.nInternalFaces()
     )
     {
-        FatalErrorIn
-        (
-            "faceCoupleInfo::faceCoupleInfo(const primitiveMesh&"
-            ", const primitiveMesh&, const scalar, const bool"
-        )   << "Supplied internal face on slave mesh to couple." << nl
+        FatalErrorInFunction
+            << "Supplied internal face on slave mesh to couple." << nl
             << "Faces to be coupled have to be boundary faces."
             << abort(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,10 +40,8 @@ void Foam::sigSegv::sigHandler(int)
     // Reset old handling
     if (sigaction(SIGSEGV, &oldAction_, NULL) < 0)
     {
-        FatalErrorIn
-        (
-            "Foam::sigSegv::sigHandler()"
-        )   << "Cannot reset SIGSEGV trapping"
+        FatalErrorInFunction
+            << "Cannot reset SIGSEGV trapping"
             << abort(FatalError);
     }
 
@@ -72,10 +70,8 @@ Foam::sigSegv::~sigSegv()
     // Reset old handling
     if (sigaction(SIGSEGV, &oldAction_, NULL) < 0)
     {
-        FatalErrorIn
-        (
-            "Foam::sigSegv::~sigSegv()"
-        )   << "Cannot reset SIGSEGV trapping"
+        FatalErrorInFunction
+            << "Cannot reset SIGSEGV trapping"
             << abort(FatalError);
     }
 }
@@ -87,10 +83,8 @@ void Foam::sigSegv::set(const bool)
 {
     if (oldAction_.sa_handler)
     {
-        FatalErrorIn
-        (
-            "Foam::sigSegv::set()"
-        )   << "Cannot call sigSegv::set() more than once"
+        FatalErrorInFunction
+            << "Cannot call sigSegv::set() more than once"
             << abort(FatalError);
     }
 
@@ -100,10 +94,8 @@ void Foam::sigSegv::set(const bool)
     sigemptyset(&newAction.sa_mask);
     if (sigaction(SIGSEGV, &newAction, &oldAction_) < 0)
     {
-        FatalErrorIn
-        (
-            "Foam::sigSegv::set()"
-        )   << "Cannot set SIGSEGV trapping"
+        FatalErrorInFunction
+            << "Cannot set SIGSEGV trapping"
             << abort(FatalError);
     }
 }

@@ -44,11 +44,7 @@ Foam::BinaryCollisionModel<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "BinaryCollisionModel<CloudType>::New"
-            "(const dictionary&, CloudType&)"
-        )
+        FatalErrorInFunction
             << "Unknown BinaryCollisionModel type "
             << modelType << nl << nl
             << "Valid BinaryCollisionModel types are:" << nl

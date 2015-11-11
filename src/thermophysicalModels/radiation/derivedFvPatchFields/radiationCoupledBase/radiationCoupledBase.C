@@ -101,13 +101,8 @@ Foam::radiationCoupledBase::radiationCoupledBase
         {
             if (!isA<mappedPatchBase>(patch_.patch()))
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "radiationCoupledBase::radiationCoupledBase\n"
-                    "(\n"
-                    "    const fvPatch& p,\n"
-                    "    const dictionary& dict\n"
-                    ")\n",
                     dict
                 )   << "\n    patch type '" << patch_.type()
                     << "' not type '" << mappedPatchBase::typeName << "'"
@@ -123,13 +118,8 @@ Foam::radiationCoupledBase::radiationCoupledBase
         {
             if (!dict.found("emissivity"))
             {
-                FatalIOErrorIn
+                FatalIOErrorInFunction
                 (
-                    "radiationCoupledBase::radiationCoupledBase\n"
-                    "(\n"
-                    "    const fvPatch& p,\n"
-                    "    const dictionary& dict\n"
-                    ")\n",
                     dict
                 )   << "\n    emissivity key does not exist for patch "
                     << patch_.name()
@@ -200,10 +190,8 @@ Foam::scalarField Foam::radiationCoupledBase::emissivity() const
 
         default:
         {
-            FatalErrorIn
-            (
-                "radiationCoupledBase::emissivity(const scalarField&)"
-            )   << "Unimplemented method " << method_ << endl
+            FatalErrorInFunction
+                << "Unimplemented method " << method_ << endl
                 << "Please set 'emissivity' to one of "
                 << emissivityMethodTypeNames_.toc()
                 << exit(FatalError);

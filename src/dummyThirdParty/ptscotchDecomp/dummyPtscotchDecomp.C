@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,17 +68,8 @@ Foam::label Foam::ptscotchDecomp::decompose
     List<label>& finalDecomp
 ) const
 {
-    FatalErrorIn
-    (
-        "label ptscotchDecomp::decompose"
-        "("
-            "onst fileName&,"
-            "const List<label>&, "
-            "const List<label>&, "
-            "const scalarField&, "
-            "List<label>&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return -1;
 }
@@ -95,19 +86,8 @@ Foam::label Foam::ptscotchDecomp::decompose
     List<label>& finalDecomp
 ) const
 {
-    FatalErrorIn
-    (
-        "label ptscotchDecomp::decompose"
-        "("
-            "const fileName&,"
-            "const int,"
-            "const int,"
-            "const int,"
-            "const int,"
-            "const scalarField&,"
-            "List<label>&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return -1;
 }
@@ -133,14 +113,8 @@ Foam::labelList Foam::ptscotchDecomp::decompose
     const scalarField& pointWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList ptscotchDecomp::decompose"
-        "("
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList::null();
 }
@@ -154,15 +128,8 @@ Foam::labelList Foam::ptscotchDecomp::decompose
     const scalarField& pointWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList ptscotchDecomp::decompose"
-        "("
-            "const labelList&, "
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList::null();
 }
@@ -175,15 +142,8 @@ Foam::labelList Foam::ptscotchDecomp::decompose
     const scalarField& cWeights
 )
 {
-    FatalErrorIn
-    (
-        "labelList ptscotchDecomp::decompose"
-        "("
-            "const labelListList&, "
-            "const pointField&, "
-            "const scalarField&"
-        ")"
-    )   << notImplementedMessage << exit(FatalError);
+    FatalErrorInFunction
+        << notImplementedMessage << exit(FatalError);
 
     return labelList::null();
 }

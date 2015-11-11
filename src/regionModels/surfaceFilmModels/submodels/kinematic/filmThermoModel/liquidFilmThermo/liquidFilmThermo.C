@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,10 +56,7 @@ const thermoSingleLayer& liquidFilmThermo::thermoFilm() const
 {
     if (!isA<thermoSingleLayer>(owner_))
     {
-        FatalErrorIn
-        (
-            "const thermoSingleLayer& liquidFilmThermo::thermoFilm() const"
-        )
+        FatalErrorInFunction
             << "Thermo model requires a " << thermoSingleLayer::typeName
             << " film to supply the pressure and temperature, but "
             << owner_.type() << " film model selected.  "

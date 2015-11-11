@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,11 +106,8 @@ void Foam::setToFaceZone::applyToSet
 {
     if (!isA<faceZoneSet>(set))
     {
-        WarningIn
-        (
-            "setToFaceZone::applyToSet(const topoSetSource::setAction"
-            ", topoSet"
-        )   << "Operation only allowed on a faceZoneSet." << endl;
+        WarningInFunction
+            << "Operation only allowed on a faceZoneSet." << endl;
     }
     else
     {

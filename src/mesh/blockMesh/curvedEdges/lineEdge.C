@@ -67,7 +67,7 @@ Foam::point Foam::lineEdge::position(const scalar lambda) const
 {
     if (lambda < -SMALL || lambda > 1+SMALL)
     {
-        FatalErrorIn("lineEdge::position(const scalar)")
+        FatalErrorInFunction
             << "Parameter out of range, lambda = " << lambda
             << abort(FatalError);
     }

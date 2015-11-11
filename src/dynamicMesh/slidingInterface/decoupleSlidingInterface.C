@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,11 +211,8 @@ void Foam::slidingInterface::decoupleInterface
         {
             if (newFaceLabels.size() < 3)
             {
-                FatalErrorIn
-                (
-                    "void slidingInterface::decoupleInterface("
-                    "polyTopoChange& ref) const"
-                )   << "Face " << curFaceID << " reduced to less than "
+                FatalErrorInFunction
+                    << "Face " << curFaceID << " reduced to less than "
                     << "3 points.  Topological/cutting error." << nl
                     << "Old face: " << oldFace << " new face: " << newFaceLabels
                     << abort(FatalError);
@@ -341,11 +338,8 @@ void Foam::slidingInterface::decoupleInterface
         {
             if (newFaceLabels.size() < 3)
             {
-                FatalErrorIn
-                (
-                    "void slidingInterface::decoupleInterface("
-                    "polyTopoChange& ref) const"
-                )   << "Face " << curFaceID << " reduced to less than "
+                FatalErrorInFunction
+                    << "Face " << curFaceID << " reduced to less than "
                     << "3 points.  Topological/cutting error." << nl
                     << "Old face: " << oldFace << " new face: " << newFaceLabels
                     << abort(FatalError);

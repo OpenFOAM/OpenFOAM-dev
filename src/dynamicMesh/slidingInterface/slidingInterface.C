@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,10 +79,8 @@ void Foam::slidingInterface::checkDefinition()
      || !slavePatchID_.active()
     )
     {
-        FatalErrorIn
-        (
-            "void slidingInterface::checkDefinition()"
-        )   << "Not all zones and patches needed in the definition "
+        FatalErrorInFunction
+            << "Not all zones and patches needed in the definition "
             << "have been found.  Please check your mesh definition."
             << abort(FatalError);
     }
@@ -94,8 +92,7 @@ void Foam::slidingInterface::checkDefinition()
      || mesh.faceZones()[slaveFaceZoneID_.index()].empty()
     )
     {
-        FatalErrorIn("void slidingInterface::checkDefinition()")
-            << "Master or slave face zone contain no faces.  "
+        FatalErrorInFunction
             << "Please check your mesh definition."
             << abort(FatalError);
     }
@@ -199,23 +196,8 @@ Foam::slidingInterface::slidingInterface
 
     if (attached_)
     {
-        FatalErrorIn
-        (
-            "Foam::slidingInterface::slidingInterface\n"
-            "(\n"
-            "    const word& name,\n"
-            "    const label index,\n"
-            "    const polyTopoChanger& mme,\n"
-            "    const word& masterFaceZoneName,\n"
-            "    const word& slaveFaceZoneName,\n"
-            "    const word& cutFaceZoneName,\n"
-            "    const word& cutPointZoneName,\n"
-            "    const word& masterPatchName,\n"
-            "    const word& slavePatchName,\n"
-            "    const typeOfMatch tom,\n"
-            "    const bool coupleDecouple\n"
-            ")"
-        )   << "Creation of a sliding interface from components "
+        FatalErrorInFunction
+            << "Creation of a sliding interface from components "
             << "in attached state not supported."
             << abort(FatalError);
     }
@@ -644,11 +626,8 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                 }
                 else
                 {
-                    FatalErrorIn
-                    (
-                        "void slidingInterface::modifyMotionPoints"
-                        "(pointField&) const"
-                    )   << "Cut point " << cutPoints[pointI]
+                    FatalErrorInFunction
+                        << "Cut point " << cutPoints[pointI]
                         << " not recognised as either the projected "
                         << "or as intersection point.  Error in point "
                         << "projection or data mapping"

@@ -202,11 +202,8 @@ Foam::volumeType Foam::treeDataFace::getVolumeType
 
     if (info.index() == -1)
     {
-        FatalErrorIn
-        (
-            "treeDataFace::getSampleType"
-            "(indexedOctree<treeDataFace>&, const point&)"
-        )   << "Could not find " << sample << " in octree."
+        FatalErrorInFunction
+            << "Could not find " << sample << " in octree."
             << abort(FatalError);
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::ParticleErosion<CloudType>::write()
     }
     else
     {
-        FatalErrorIn("void Foam::ParticleErosion<CloudType>::write()")
+        FatalErrorInFunction
             << "QPtr not valid" << abort(FatalError);
     }
 }
@@ -87,14 +87,8 @@ Foam::ParticleErosion<CloudType>::ParticleErosion
 
         if (patchIDs.empty())
         {
-            WarningIn
-            (
-                "Foam::ParticleErosion<CloudType>::ParticleErosion"
-                "("
-                    "const dictionary&, "
-                    "CloudType& "
-                ")"
-            )   << "Cannot find any patch names matching " << patchName[i]
+            WarningInFunction
+                << "Cannot find any patch names matching " << patchName[i]
                 << endl;
         }
 

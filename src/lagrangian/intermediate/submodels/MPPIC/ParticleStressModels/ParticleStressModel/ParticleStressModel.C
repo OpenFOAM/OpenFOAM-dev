@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,13 +72,8 @@ Foam::autoPtr<Foam::ParticleStressModel> Foam::ParticleStressModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "ParticleStressModel::New"
-            "("
-                "const dictionary&"
-            ")"
-        )   << "Unknown particle stress model type " << modelType
+        FatalErrorInFunction
+            << "Unknown particle stress model type " << modelType
             << ", constructor not in hash table" << nl << nl
             << "    Valid particle stress model types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()

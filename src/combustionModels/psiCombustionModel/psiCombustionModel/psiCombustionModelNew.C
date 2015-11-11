@@ -57,10 +57,8 @@ Foam::combustionModels::psiCombustionModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "psiCombustionModel::New"
-        )   << "Unknown psiCombustionModel type "
+        FatalErrorInFunction
+            << "Unknown psiCombustionModel type "
             << combModelName << endl << endl
             << "Valid  combustionModels are : " << endl
             << dictionaryConstructorTablePtr_->toc()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ void Foam::tetherPotentialList::readTetherPotentialDict
 
         if (tetherId == -1)
         {
-            FatalErrorIn("tetherPotentialList::readTetherPotentialDict")
+            FatalErrorInFunction
                 << nl
                 << "No matching entry found in siteIdList for tether name "
                 << tetherPotentialName
@@ -57,7 +57,7 @@ void Foam::tetherPotentialList::readTetherPotentialDict
         }
         else if (!tetherPotentialDict.found(tetherPotentialName))
         {
-            FatalErrorIn("tetherPotentialList::readTetherPotentialDict")
+            FatalErrorInFunction
                 << nl << "tether potential specification subDict "
                 << tetherPotentialName << " not found"
                 << abort(FatalError);

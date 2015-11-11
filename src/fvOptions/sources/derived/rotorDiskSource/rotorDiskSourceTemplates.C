@@ -190,7 +190,7 @@ void Foam::fv::rotorDiskSource::writeField
 
         if (cells_.size() != values.size())
         {
-            FatalErrorIn("") << "cells_.size() != values_.size()"
+            FatalErrorInFunction
                 << abort(FatalError);
         }
 

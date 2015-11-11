@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,10 +185,8 @@ void Foam::filmPyrolysisVelocityCoupledFvPatchVectorField::updateCoeffs()
     }
     else
     {
-        FatalErrorIn
-        (
-            "filmPyrolysisVelocityCoupledFvPatchVectorField::updateCoeffs()"
-        )   << "Unable to process flux field phi with dimensions "
+        FatalErrorInFunction
+            << "Unable to process flux field phi with dimensions "
             << phi.dimensions() << nl
             << "    on patch " << patch().name()
             << " of field " << dimensionedInternalField().name()

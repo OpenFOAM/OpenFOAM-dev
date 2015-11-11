@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,11 +59,8 @@ Foam::MeshedSurface<Face>::New(const fileName& name, const word& ext)
         // nothing left to try, issue error
         supported += readTypes();
 
-        FatalErrorIn
-        (
-            "MeshedSurface<Face>::New(const fileName&, const word&) : "
-            "constructing MeshedSurface"
-        )   << "Unknown file extension " << ext << nl << nl
+        FatalErrorInFunction
+            << "Unknown file extension " << ext << nl << nl
             << "Valid types are :" << nl
             << supported
             << exit(FatalError);

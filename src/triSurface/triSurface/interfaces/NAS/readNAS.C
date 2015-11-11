@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ bool triSurface::readNAS(const fileName& fName)
 
     if (!is.good())
     {
-        FatalErrorIn("triSurface::readNAS(const fileName&)")
+        FatalErrorInFunction
             << "Cannot read file " << fName
             << exit(FatalError);
     }
@@ -287,7 +287,7 @@ bool triSurface::readNAS(const fileName& fName)
             is.getLine(line);
             if (line[0] != '*')
             {
-                FatalErrorIn("triSurface::readNAS(const fileName&)")
+                FatalErrorInFunction
                     << "Expected continuation symbol '*' when reading GRID*"
                     << " (double precision coordinate) output" << nl
                     << "Read:" << line << nl

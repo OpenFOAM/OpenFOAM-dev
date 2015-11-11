@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ void Foam::correlationFunction<Type>::calculateCorrelationFunction
 {
     if (measurandFieldSize() != currentValues.size())
     {
-        FatalErrorIn("correlationFunction<Type>::calculateCorrelationFunction")
+        FatalErrorInFunction
             << "Trying to supply a Field of length"
             << currentValues.size()
             << " to calculate the correlation function. "
@@ -186,7 +186,7 @@ void Foam::correlationFunction<Type>::calculateCorrelationFunction
 {
     if (measurandFieldSize() != 1)
     {
-        FatalErrorIn("correlationFunction<Type>::calculateCorrelationFunction")
+        FatalErrorInFunction
             << "Trying to supply a single value to calculate the correlation "
             << "function.  Expecting a Field of length "
             << measurandFieldSize()

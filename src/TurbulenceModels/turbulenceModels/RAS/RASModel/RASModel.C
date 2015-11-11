@@ -148,17 +148,8 @@ Foam::RASModel<BasicTurbulenceModel>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "RASModel::New"
-            "("
-                "const volScalarField&, "
-                "const volVectorField&, "
-                "const surfaceScalarField&, "
-                "transportModel&, "
-                "const word&"
-            ")"
-        )   << "Unknown RASModel type "
+        FatalErrorInFunction
+            << "Unknown RASModel type "
             << modelType << nl << nl
             << "Valid RASModel types:" << endl
             << dictionaryConstructorTablePtr_->sortedToc()

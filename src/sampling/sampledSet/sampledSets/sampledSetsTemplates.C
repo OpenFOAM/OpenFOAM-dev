@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,17 +158,8 @@ void Foam::sampledSets::writeSampleFile
     }
     else
     {
-        WarningIn
-        (
-            "void Foam::sampledSets::writeSampleFile"
-            "("
-                "const coordSet&, "
-                "const PtrList<volFieldSampler<Type> >&, "
-                "const label, "
-                "const fileName&, "
-                "const writer<Type>&"
-            ")"
-        )   << "File " << ofs.name() << " could not be opened. "
+        WarningInFunction
+            << "File " << ofs.name() << " could not be opened. "
             << "No data will be written" << endl;
     }
 }

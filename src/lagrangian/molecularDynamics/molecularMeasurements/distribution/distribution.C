@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ Foam::label Foam::distribution::totalEntries() const
 
         if (sumOfEntries < 0)
         {
-            WarningIn("label distribution::totalEntries()")
+            WarningInFunction
                 << "Accumulated distribution values total has become negative: "
                 << "sumOfEntries = " << sumOfEntries
                 << ". This is most likely to be because too many samples "
@@ -228,7 +228,7 @@ void Foam::distribution::add(const scalar valueToAdd)
 
     if ((*this)[n] < 0)
     {
-        FatalErrorIn("distribution::add(const scalar valueToAdd)")
+        FatalErrorInFunction
             << "Accumulated distribution value has become negative: "
             << "bin = " << (0.5 + scalar(n)) * binWidth_
             << ", value = " << (*this)[n]
@@ -446,7 +446,7 @@ void Foam::distribution::operator=(const distribution& rhs)
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn("distribution::operator=(const distribution&)")
+        FatalErrorInFunction
             << "Attempted assignment to self"
             << abort(FatalError);
     }

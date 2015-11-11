@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,11 +279,8 @@ Foam::sampledCuttingPlane::sampledCuttingPlane
 
         if (mesh.boundaryMesh().findPatchID(exposedPatchName_) == -1)
         {
-            FatalErrorIn
-            (
-                "sampledCuttingPlane::sampledCuttingPlane"
-                "(const word&, const polyMesh&, const dictionary&)"
-            )   << "Cannot find patch " << exposedPatchName_
+            FatalErrorInFunction
+                << "Cannot find patch " << exposedPatchName_
                 << " in which to put exposed faces." << endl
                 << "Valid patches are " << mesh.boundaryMesh().names()
                 << exit(FatalError);

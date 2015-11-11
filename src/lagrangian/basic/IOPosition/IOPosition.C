@@ -107,9 +107,8 @@ void Foam::IOPosition<CloudType>::readData(CloudType& c, bool checkClass)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorIn
+            FatalIOErrorInFunction
             (
-                "void IOPosition<CloudType>::readData(CloudType&, bool)",
                 is
             )   << "incorrect first token, '(', found "
                 << firstToken.info() << exit(FatalIOError);
@@ -133,9 +132,8 @@ void Foam::IOPosition<CloudType>::readData(CloudType& c, bool checkClass)
     }
     else
     {
-        FatalIOErrorIn
+        FatalIOErrorInFunction
         (
-            "void IOPosition<ParticleType>::readData(CloudType&, bool)",
             is
         )   << "incorrect first token, expected <int> or '(', found "
             << firstToken.info() << exit(FatalIOError);

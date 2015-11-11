@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ void Foam::reducedUnits::calcRefValues()
      || refMass_ < VSMALL
     )
     {
-        FatalErrorIn("Foam::reducedUnits::calcRefValues() ")
+        FatalErrorInFunction
             << "One of more referencence values too small for floating point "
             << "calculation: "
             << "refTime_ = " << refTime_
@@ -152,10 +152,8 @@ void Foam::reducedUnits::operator=(const reducedUnits& rhs)
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn
-        (
-            "Foam::reducedUnits::operator=(const Foam::reducedUnits&)"
-        )   << "Attempted assignment to self"
+        FatalErrorInFunction
+            << "Attempted assignment to self"
             << abort(FatalError);
     }
 }

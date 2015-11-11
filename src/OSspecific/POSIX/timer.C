@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,8 @@ Foam::timer::timer(const unsigned int newTimeOut)
         // Is singleton since handler is static function
         if (oldTimeOut_ != 0)
         {
-            FatalErrorIn
-            (
-                "Foam::timer::timer(const unsigned int)"
-            )   << "timer already used."
+            FatalErrorInFunction
+                << "timer already used."
                 << abort(FatalError);
         }
 
@@ -84,10 +82,8 @@ Foam::timer::timer(const unsigned int newTimeOut)
 
         if (sigaction(SIGALRM, &newAction, &oldAction_) < 0)
         {
-            FatalErrorIn
-            (
-                "Foam::timer::timer(const unsigned int)"
-            )   << "sigaction(SIGALRM) error"
+            FatalErrorInFunction
+                << "sigaction(SIGALRM) error"
                 << abort(FatalError);
         }
 
@@ -125,11 +121,8 @@ Foam::timer::~timer()
         // Restore signal handler
         if (sigaction(SIGALRM, &oldAction_, NULL) < 0)
         {
-            FatalErrorIn
-            (
-                "Foam::timer::~timer(const struct sigaction&"
-                "const struct sigaction&)"
-            )   << "sigaction(SIGALRM) error"
+            FatalErrorInFunction
+                << "sigaction(SIGALRM) error"
                 << abort(FatalError);
         }
     }

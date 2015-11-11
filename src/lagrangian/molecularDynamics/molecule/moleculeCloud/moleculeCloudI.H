@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,7 +207,7 @@ inline bool Foam::moleculeCloud::evaluatePotentialLimit
 
                     if (rsIsJMag < SMALL)
                     {
-                        WarningIn("moleculeCloud::removeHighEnergyOverlaps()")
+                        WarningInFunction
                             << "Molecule site pair closer than "
                             << SMALL
                             << ": mag separation = " << rsIsJMag
@@ -256,7 +256,7 @@ inline bool Foam::moleculeCloud::evaluatePotentialLimit
 
                     if (rsIsJMag < SMALL)
                     {
-                        WarningIn("moleculeCloud::removeHighEnergyOverlaps()")
+                        WarningInFunction
                             << "Molecule site pair closer than "
                             << SMALL
                             << ": mag separation = " << rsIsJMag

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ bool Foam::hexCellLooper::cut
     {
         if (loop.empty())
         {
-            WarningIn("hexCellLooper")
+            WarningInFunction
                 << "could not cut cell " << cellI << endl;
 
             fileName cutsFile("hexCellLooper_" + name(cellI) + ".obj");
@@ -245,7 +245,7 @@ bool Foam::hexCellLooper::cut
 
             if (loopSet.found(elem))
             {
-                FatalErrorIn("hexCellLooper::walkHex") << " duplicate cut"
+                FatalErrorInFunction
                     << abort(FatalError);
             }
             loopSet.insert(elem);
@@ -259,7 +259,7 @@ bool Foam::hexCellLooper::cut
 
         if ((faceVerts.mag(facePoints) < SMALL) || (loop.size() < 3))
         {
-            FatalErrorIn("hexCellLooper::walkHex") << "Face:" << faceVerts
+            FatalErrorInFunction
                 << " on points:" << facePoints << endl
                 << UIndirectList<point>(facePoints, faceVerts)()
                 << abort(FatalError);

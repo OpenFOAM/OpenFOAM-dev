@@ -93,7 +93,7 @@ Foam::autoPtr<Foam::curvedEdge> Foam::curvedEdge::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalErrorIn("curvedEdge::New(const pointField&, Istream&)")
+        FatalErrorInFunction
             << "Unknown curvedEdge type "
             << edgeType << nl << nl
             << "Valid curvedEdge types are" << endl

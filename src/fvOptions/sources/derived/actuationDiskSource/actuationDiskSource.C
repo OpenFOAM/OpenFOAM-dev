@@ -52,25 +52,25 @@ void Foam::fv::actuationDiskSource::checkData() const
 {
     if (magSqr(diskArea_) <= VSMALL)
     {
-        FatalErrorIn("Foam::fv::actuationDiskSource::checkData()")
+        FatalErrorInFunction
            << "diskArea is approximately zero"
            << exit(FatalIOError);
     }
     if (Cp_ <= VSMALL || Ct_ <= VSMALL)
     {
-        FatalErrorIn("Foam::fv::actuationDiskSource::checkData()")
+        FatalErrorInFunction
            << "Cp and Ct must be greater than zero"
            << exit(FatalIOError);
     }
     if (mag(diskDir_) < VSMALL)
     {
-        FatalErrorIn("Foam::fv::actuationDiskSource::checkData()")
+        FatalErrorInFunction
            << "disk direction vector is approximately zero"
            << exit(FatalIOError);
     }
     if (returnReduce(upstreamCellId_, maxOp<label>()) == -1)
     {
-        FatalErrorIn("Foam::fv::actuationDiskSource::checkData()")
+        FatalErrorInFunction
            << "upstream location " << upstreamPoint_  << " not found in mesh"
            << exit(FatalIOError);
     }

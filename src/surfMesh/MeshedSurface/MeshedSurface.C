@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,11 +141,8 @@ void Foam::MeshedSurface<Face>::write
         }
         else
         {
-            FatalErrorIn
-            (
-                "MeshedSurface::write"
-                "(const fileName&, const MeshedSurface&)"
-            )   << "Unknown file extension " << ext << nl << nl
+            FatalErrorInFunction
+                << "Unknown file extension " << ext << nl << nl
                 << "Valid types are :" << endl
                 << (supported | writeTypes())
                 << exit(FatalError);
@@ -692,7 +689,7 @@ bool Foam::MeshedSurface<Face>::checkFaces
             {
                 if (f[fp] < 0 || f[fp] > maxPointI)
                 {
-                    FatalErrorIn("MeshedSurface::checkFaces(bool)")
+                    FatalErrorInFunction
                         << "face " << f
                         << " uses point indices outside point range 0.."
                     << maxPointI
@@ -711,10 +708,8 @@ bool Foam::MeshedSurface<Face>::checkFaces
             changed = true;
             if (verbose)
             {
-                WarningIn
-                (
-                    "MeshedSurface::checkFaces(bool verbose)"
-                )   << "face[" << faceI << "] = " << f
+                WarningInFunction
+                    << "face[" << faceI << "] = " << f
                     << " does not have three unique vertices" << endl;
             }
         }
@@ -759,10 +754,8 @@ bool Foam::MeshedSurface<Face>::checkFaces
 
                 if (verbose)
                 {
-                    WarningIn
-                    (
-                        "MeshedSurface::checkFaces(bool verbose)"
-                    )   << "faces share the same vertices:" << nl
+                    WarningInFunction
+                        << "faces share the same vertices:" << nl
                         << "    face[" << faceI << "] : " << f << nl
                         << "    face[" << neiFaceI << "] : " << nei << endl;
                     // printFace(Warning, "    ", f, points());
@@ -793,10 +786,8 @@ bool Foam::MeshedSurface<Face>::checkFaces
 
         if (verbose)
         {
-            WarningIn
-            (
-                "MeshedSurface::checkFaces(bool verbose)"
-            )   << "Removed " << faceLst.size() - newFaceI
+            WarningInFunction
+                << "Removed " << faceLst.size() - newFaceI
                 << " illegal faces." << endl;
         }
 

@@ -56,14 +56,8 @@ Foam::patchInteractionDataList::patchInteractionDataList
 
         if (patchIDs.empty())
         {
-            WarningIn
-            (
-                "Foam::patchInteractionDataList::patchInteractionDataList"
-                "("
-                    "const polyMesh&, "
-                    "const dictionary&"
-                ")"
-            )   << "Cannot find any patch names matching " << patchName
+            WarningInFunction
+                << "Cannot find any patch names matching " << patchName
                 << endl;
         }
 
@@ -88,14 +82,8 @@ Foam::patchInteractionDataList::patchInteractionDataList
 
     if (badPatches.size() > 0)
     {
-        FatalErrorIn
-        (
-            "Foam::patchInteractionDataList::patchInteractionDataList"
-            "("
-                "const polyMesh&, "
-                "const dictionary&"
-            ")"
-        )   << "All patches must be specified when employing local patch "
+        FatalErrorInFunction
+            << "All patches must be specified when employing local patch "
             << "interaction. Please specify data for patches:" << nl
             << badPatches << nl << exit(FatalError);
     }

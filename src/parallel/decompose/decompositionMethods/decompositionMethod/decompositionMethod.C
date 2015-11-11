@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,11 +66,8 @@ Foam::autoPtr<Foam::decompositionMethod> Foam::decompositionMethod::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "decompositionMethod::New"
-            "(const dictionary& decompositionDict)"
-        )   << "Unknown decompositionMethod "
+        FatalErrorInFunction
+            << "Unknown decompositionMethod "
             << methodType << nl << nl
             << "Valid decompositionMethods are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
@@ -768,17 +765,8 @@ Foam::labelList Foam::decompositionMethod::decompose
 
     if (nWeights > 0 && cellWeights.size() != mesh.nCells())
     {
-        FatalErrorIn
-        (
-            "decompositionMethod::decompose\n"
-            "(\n"
-            "   const polyMesh&,\n"
-            "   const scalarField&,\n"
-            "   const boolList&,\n"
-            "   const PtrList<labelList>&,\n"
-            "   const labelList&,\n"
-            "   const List<labelPair>&\n"
-        )   << "Number of weights " << cellWeights.size()
+        FatalErrorInFunction
+            << "Number of weights " << cellWeights.size()
             << " differs from number of cells " << mesh.nCells()
             << exit(FatalError);
     }
@@ -938,18 +926,8 @@ Foam::labelList Foam::decompositionMethod::decompose
             }
             else if (blockedFace[f0] != blockedFace[f1])
             {
-                FatalErrorIn
-                (
-                    "labelList decompose\n"
-                    "(\n"
-                    "    const polyMesh&,\n"
-                    "    const scalarField&,\n"
-                    "    const boolList&,\n"
-                    "    const PtrList<labelList>&,\n"
-                    "    const labelList&,\n"
-                    "    const List<labelPair>&\n"
-                    ")"
-                )   << "On explicit connection between faces " << f0
+                FatalErrorInFunction
+                    << "On explicit connection between faces " << f0
                     << " and " << f1
                     << " the two blockedFace status are not equal : "
                     << blockedFace[f0] << " and " << blockedFace[f1]
@@ -1093,7 +1071,7 @@ Foam::labelList Foam::decompositionMethod::decompose
                             label nbrProc = nbrDecomp[bFaceI];
                             if (ownProc != nbrProc)
                             {
-                                FatalErrorIn("decompositionMethod::decompose()")
+                                FatalErrorInFunction
                                     << "patch:" << pp.name()
                                     << " face:" << faceI
                                     << " at:" << mesh.faceCentres()[faceI]
@@ -1145,7 +1123,7 @@ void Foam::decompositionMethod::setConstraints
 
             if (patchI == -1)
             {
-                FatalErrorIn("decompositionMethod::decompose(const polyMesh&)")
+                FatalErrorInFunction
                     << "Unknown preservePatch " << pNames[i]
                     << endl << "Valid patches are " << patches.names()
                     << exit(FatalError);
@@ -1179,7 +1157,7 @@ void Foam::decompositionMethod::setConstraints
 
             if (zoneI == -1)
             {
-                FatalErrorIn("decompositionMethod::decompose(const polyMesh&)")
+                FatalErrorInFunction
                     << "Unknown preserveFaceZone " << zNames[i]
                     << endl << "Valid faceZones are " << fZones.names()
                     << exit(FatalError);

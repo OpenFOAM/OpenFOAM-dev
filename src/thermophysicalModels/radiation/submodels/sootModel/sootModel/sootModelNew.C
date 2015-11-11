@@ -49,10 +49,8 @@ Foam::radiation::sootModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "sootModel::New(const dictionary&, const fvMesh&)"
-        )   << "Unknown sootModel type "
+        FatalErrorInFunction
+            << "Unknown sootModel type "
             << modelType << nl << nl
             << "Valid sootModel types are :" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);

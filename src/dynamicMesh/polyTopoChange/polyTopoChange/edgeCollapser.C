@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -635,7 +635,7 @@ Foam::edgeCollapser::collapseType Foam::edgeCollapser::collapseFace
 
     if (middle == -1)
     {
-//        SeriousErrorIn("collapseFace")
+//        SeriousErrorInFunction
 //            << "middle == -1, " << f << " " << d
 //            << endl;//abort(FatalError);
 
@@ -662,10 +662,7 @@ Foam::edgeCollapser::collapseType Foam::edgeCollapser::collapseFace
 
     if (dNeg.size() == 0 || dPos.size() == 0)
     {
-        WarningIn
-        (
-            "Foam::conformalVoronoiMesh::collapseFace"
-        )
+        WarningInFunction
             << "All points on one side of face centre, not collapsing."
             << endl;
     }
@@ -1066,18 +1063,8 @@ Foam::label Foam::edgeCollapser::syncCollapse
 
                 if (!collapsePointToLocation.found(otherVertex))
                 {
-                    FatalErrorIn
-                    (
-                        "syncCollapse\n"
-                        "(\n"
-                        "   const polyMesh&,\n"
-                        "   const globalIndex&,\n"
-                        "   const labelList&,\n"
-                        "   const PackedBoolList&,\n"
-                        "   Map<point>&,\n"
-                        "   List<pointEdgeCollapse>&\n"
-                        ")\n"
-                    )   << masterPointI << " on edge " << edgeI << " " << e
+                    FatalErrorInFunction
+                        << masterPointI << " on edge " << edgeI << " " << e
                         << " is not marked for collapse."
                         << abort(FatalError);
                 }
@@ -1160,11 +1147,8 @@ void Foam::edgeCollapser::filterFace
         }
         else if (collapseIndex == -1)
         {
-            WarningIn
-            (
-                "filterFace"
-                "(const label, const Map<DynamicList<label> >&, face&)"
-            )   << "Point " << pointI << " was not visited by PointEdgeWave"
+            WarningInFunction
+                << "Point " << pointI << " was not visited by PointEdgeWave"
                 << endl;
         }
         else
@@ -1196,32 +1180,23 @@ void Foam::edgeCollapser::filterFace
 
         if (index == fp1)
         {
-            WarningIn
-            (
-                "Foam::edgeCollapser::filterFace(const label faceI, "
-                "face& f) const"
-            )   << "Removing consecutive duplicate vertex in face "
+            WarningInFunction
+                << "Removing consecutive duplicate vertex in face "
                 << f << endl;
             // Don't store current pointI
         }
         else if (index == fp2)
         {
-            WarningIn
-            (
-                "Foam::edgeCollapser::filterFace(const label faceI, "
-                "face& f) const"
-            )   << "Removing non-consecutive duplicate vertex in face "
+            WarningInFunction
+                << "Removing non-consecutive duplicate vertex in face "
                 << f << endl;
             // Don't store current pointI and remove previous
             newFp--;
         }
         else if (index != -1)
         {
-            WarningIn
-            (
-                "Foam::edgeCollapser::filterFace(const label faceI, "
-                "face& f) const"
-            )   << "Pinched face " << f << endl;
+            WarningInFunction
+                << "Pinched face " << f << endl;
             f[newFp++] = pointI;
         }
         else
@@ -1812,15 +1787,8 @@ void Foam::edgeCollapser::consistentCollapse
 
                 if (nFaces < 4)
                 {
-                    FatalErrorIn
-                    (
-                        "consistentCollapse\n"
-                        "(\n"
-                        "   labelList&,\n"
-                        "   Map<point>&,\n"
-                        "   bool&,\n"
-                        ")"
-                    )   << "Cell " << cellI << " " << cFaces << nl
+                    FatalErrorInFunction
+                        << "Cell " << cellI << " " << cFaces << nl
                         << "is " << nFaces << ", "
                         << "but cell collapse has been disabled."
                         << abort(FatalError);
@@ -2045,7 +2013,7 @@ Foam::labelPair Foam::edgeCollapser::markSmallSliverFaces
         }
         else
         {
-            FatalErrorIn("collapseFaces(const polyMesh&, List<labelPair>&)")
+            FatalErrorInFunction
                 << "Face is marked to be collapsed to " << flagCollapseFace
                 << ". Currently can only collapse to point/edge."
                 << abort(FatalError);
@@ -2112,7 +2080,7 @@ Foam::labelPair Foam::edgeCollapser::markFaceZoneEdges
         }
         else
         {
-            FatalErrorIn("collapseFaces(const polyMesh&, List<labelPair>&)")
+            FatalErrorInFunction
                 << "Face is marked to be collapsed to " << flagCollapseFace
                 << ". Currently can only collapse to point/edge."
                 << abort(FatalError);

@@ -103,13 +103,13 @@ void Foam::LESModels::IDDESDelta::calcDelta()
 
     if (nD == 2)
     {
-        WarningIn("IDDESDelta::calcDelta()")
+        WarningInFunction
             << "Case is 2D, LES is not strictly applicable" << nl
             << endl;
     }
     else if (nD != 3)
     {
-        FatalErrorIn("IDDESDelta::calcDelta()")
+        FatalErrorInFunction
             << "Case must be either 2D or 3D" << exit(FatalError);
     }
 

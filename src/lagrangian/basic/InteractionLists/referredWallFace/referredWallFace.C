@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,15 +48,8 @@ Foam::referredWallFace::referredWallFace
 {
     if (this->size() != pts_.size())
     {
-        FatalErrorIn
-        (
-            "Foam::referredWallFace::referredWallFace"
-            "("
-                "const face& f, "
-                "const pointField& pts, "
-                "label patchI"
-            ")"
-        )   << "Face and pointField are not the same size. " << nl << (*this)
+        FatalErrorInFunction
+            << "Face and pointField are not the same size. " << nl << (*this)
             << abort(FatalError);
     }
 }
@@ -70,13 +63,8 @@ Foam::referredWallFace::referredWallFace(const referredWallFace& rWF)
 {
     if (this->size() != pts_.size())
     {
-        FatalErrorIn
-        (
-            "Foam::referredWallFace::referredWallFace"
-            "("
-                "const referredWallFace& rWF"
-            ")"
-        )   << "Face and pointField are not the same size. " << nl << (*this)
+        FatalErrorInFunction
+            << "Face and pointField are not the same size. " << nl << (*this)
             << abort(FatalError);
     }
 }

@@ -44,11 +44,7 @@ Foam::WallInteractionModel<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "WallInteractionModel<CloudType>::New"
-            "(const dictionary&, CloudType&)"
-        )
+        FatalErrorInFunction
             << "Unknown WallInteractionModel type "
             << modelType << nl << nl
             << "Valid WallInteractionModel types are:" << nl

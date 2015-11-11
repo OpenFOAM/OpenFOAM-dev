@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ void noThermo::evolveRegion()
 
 const tmp<volScalarField> noThermo::Cp() const
 {
-    FatalErrorIn("const tmp<volScalarField>& noThermo::Cp() const")
+    FatalErrorInFunction
         << "Cp field not available for " << type()
         << abort(FatalError);
 
@@ -112,7 +112,7 @@ const tmp<volScalarField> noThermo::Cp() const
 
 const volScalarField& noThermo::kappaRad() const
 {
-    FatalErrorIn("const volScalarField& noThermo::kappaRad() const")
+    FatalErrorInFunction
         << "kappa field not available for " << type()
         << abort(FatalError);
     return volScalarField::null();
@@ -121,7 +121,7 @@ const volScalarField& noThermo::kappaRad() const
 
 const volScalarField& noThermo::rho() const
 {
-    FatalErrorIn("const volScalarField& noThermo::rho() const")
+    FatalErrorInFunction
         << "rho field not available for " << type()
         << abort(FatalError);
     return volScalarField::null();
@@ -130,7 +130,7 @@ const volScalarField& noThermo::rho() const
 
 const volScalarField& noThermo::kappa() const
 {
-   FatalErrorIn("const volScalarField& noThermo::kappa() const")
+   FatalErrorInFunction
         << "K field not available for " << type()
         << abort(FatalError);
     return volScalarField::null();
@@ -139,7 +139,7 @@ const volScalarField& noThermo::kappa() const
 
 const volScalarField& noThermo::T() const
 {
-    FatalErrorIn("const volScalarField& noThermo::T() const")
+    FatalErrorInFunction
         << "T field not available for " << type()
         << abort(FatalError);
     return volScalarField::null();
@@ -148,7 +148,7 @@ const volScalarField& noThermo::T() const
 
 const solidThermo& noThermo::thermo() const
 {
-    FatalErrorIn("const volScalarField& noThermo::T() const")
+    FatalErrorInFunction
         << "T field not available for " << type()
         << abort(FatalError);
     return NullObjectRef<solidThermo>();

@@ -178,11 +178,7 @@ void sixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
         {
             if (lookupGravity_ == -2)
             {
-                FatalErrorIn
-                (
-                    "void sixDoFRigidBodyDisplacementPointPatchVectorField"
-                    "::updateCoeffs()"
-                )
+                FatalErrorInFunction
                     << "Specifying the value of g in this boundary condition "
                     << "when g is available from the database is considered "
                     << "a fatal error to avoid the possibility of inconsistency"

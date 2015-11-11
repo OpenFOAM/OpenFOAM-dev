@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -242,7 +242,7 @@ bool Foam::intersectedSurface::sameEdgeOrder
             }
             else
             {
-                FatalErrorIn("intersectedSurface::sameEdgeOrder")
+                FatalErrorInFunction
                     << "Triangle:" << fA << " and triangle:" << fB
                     << " share a point but not an edge"
                     << abort(FatalError);
@@ -250,7 +250,7 @@ bool Foam::intersectedSurface::sameEdgeOrder
         }
     }
 
-    FatalErrorIn("intersectedSurface::sameEdgeOrder")
+    FatalErrorInFunction
         << "Triangle:" << fA << " and triangle:" << fB
         << " do not share an edge"
         << abort(FatalError);
@@ -341,11 +341,8 @@ Foam::intersectedSurface::calcPointEdgeAddressing
         // Check on dangling points.
         if (iter().empty())
         {
-            FatalErrorIn
-            (
-                "intersectedSurface::calcPointEdgeAddressing"
-                "(const edgeSurface&, const label)"
-            )   << "Point:" << iter.key() << " used by too few edges:"
+            FatalErrorInFunction
+                << "Point:" << iter.key() << " used by too few edges:"
                 << iter() << abort(FatalError);
         }
     }
@@ -411,12 +408,8 @@ Foam::label Foam::intersectedSurface::nextEdge
             writeLocalOBJ(points, edges, connectedEdges, "faceEdges.obj");
         }
 
-        FatalErrorIn
-        (
-            "intersectedSurface::nextEdge(const pointField&, const edgeList&"
-            ", const vector&, Map<DynamicList<label> >, const label"
-            ", const label)"
-        )   << "Problem: prevVertI:" << prevVertI << " on edge " << prevEdgeI
+        FatalErrorInFunction
+            << "Problem: prevVertI:" << prevVertI << " on edge " << prevEdgeI
             << " has less than 2 connected edges."
             << " connectedEdges:" << connectedEdges << abort(FatalError);
 
@@ -471,7 +464,7 @@ Foam::label Foam::intersectedSurface::nextEdge
             writeLocalOBJ(points, edges, connectedEdges, "faceEdges.obj");
         }
 
-        FatalErrorIn("intersectedSurface::nextEdge")
+        FatalErrorInFunction
             << "Unnormalized normal e1:" << e1
             << " formed from cross product of e0:" << e0 << " n:" << n
             << abort(FatalError);
@@ -539,13 +532,8 @@ Foam::label Foam::intersectedSurface::nextEdge
             writeLocalOBJ(points, edges, connectedEdges, "faceEdges.obj");
         }
 
-        FatalErrorIn
-        (
-            "intersectedSurface::nextEdge(const pointField&, const edgeList&"
-            ", const Map<label>&, const vector&"
-            ", const Map<DynamicList<label> >&"
-            ", const label, const label"
-        )   << "Trying to step from edge " << edges[prevEdgeI]
+        FatalErrorInFunction
+            << "Trying to step from edge " << edges[prevEdgeI]
             << ", vertex " << prevVertI
             << " but cannot find 'unvisited' edges among candidates:"
             << connectedEdges
@@ -687,12 +675,12 @@ void Foam::intersectedSurface::findNearestVisited
     {
         const labelList& fEdges = eSurf.faceEdges()[faceI];
 
-        SeriousErrorIn("intersectedSurface::findNearestVisited")
+        SeriousErrorInFunction
             << "Dumping face edges to faceEdges.obj" << endl;
 
         writeLocalOBJ(eSurf.points(), eSurf.edges(), fEdges, "faceEdges.obj");
 
-        FatalErrorIn("intersectedSurface::findNearestVisited")
+        FatalErrorInFunction
             << "No fully visited edge found for pt " << pt
             << abort(FatalError);
     }
@@ -1069,12 +1057,12 @@ Foam::faceList Foam::intersectedSurface::splitFace
 
         if (eSurf.isSurfaceEdge(edgeI) && stat != BOTH)
         {
-            SeriousErrorIn("Foam::intersectedSurface::splitFace")
+            SeriousErrorInFunction
                 << "Dumping face edges to faceEdges.obj" << endl;
 
             writeLocalOBJ(points, edges, fEdges, "faceEdges.obj");
 
-            FatalErrorIn("intersectedSurface::splitFace")
+            FatalErrorInFunction
                << "Problem: edge " << edgeI << " vertices "
                 << edges[edgeI] << " on face " << faceI
                 << " has visited status " << stat << " from a "
@@ -1261,10 +1249,8 @@ Foam::intersectedSurface::intersectedSurface
                     {
                         if (t[i] < 0 || t[i] >= eSurf.points().size())
                         {
-                            FatalErrorIn
-                            (
-                                "intersectedSurface::intersectedSurface"
-                            )   << "Face triangulation of face " << faceI
+                            FatalErrorInFunction
+                                << "Face triangulation of face " << faceI
                                 << " uses points outside range 0.."
                                 << eSurf.points().size()-1 << endl
                                 << "Triangulation:"
@@ -1359,7 +1345,7 @@ Foam::intersectedSurface::intersectedSurface
         }
         else
         {
-            FatalErrorIn("intersectedSurface::intersectedSurface")
+            FatalErrorInFunction
                 << "Cannot find edge among candidates " << pEdges
                 << " which uses points " << surfStartI
                 << " and " << surfEndI

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,10 +63,8 @@ Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
 
     if (!IOobjectConstructorTablePtr_)
     {
-        FatalErrorIn
-        (
-            "dynamicFvMesh::New(const IOobject&)"
-        )   << "dynamicFvMesh table is empty"
+        FatalErrorInFunction
+            << "dynamicFvMesh table is empty"
             << exit(FatalError);
     }
 
@@ -75,10 +73,8 @@ Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
 
     if (cstrIter == IOobjectConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "dynamicFvMesh::New(const IOobject&)"
-        )   << "Unknown dynamicFvMesh type "
+        FatalErrorInFunction
+            << "Unknown dynamicFvMesh type "
             << dynamicFvMeshTypeName << nl << nl
             << "Valid dynamicFvMesh types are :" << endl
             << IOobjectConstructorTablePtr_->sortedToc()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ bool Foam::triSurface::readOBJ(const fileName& OBJfileName)
 
     if (!OBJfile.good())
     {
-        FatalErrorIn("triSurface::readOBJ(const fileName&)")
+        FatalErrorInFunction
             << "Cannot read file " << OBJfileName
             << exit(FatalError);
     }
