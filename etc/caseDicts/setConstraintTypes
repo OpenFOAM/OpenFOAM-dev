@@ -39,11 +39,13 @@ nonuniformTransformCyclic
 processor
 {
     type  processor;
+    value $internalField;
 }
 
 processorCyclic
 {
     type  processorCyclic;
+    value $internalField;
 }
 
 symmetryPlane
