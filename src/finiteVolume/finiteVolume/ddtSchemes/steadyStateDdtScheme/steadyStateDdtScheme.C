@@ -294,7 +294,7 @@ steadyStateDdtScheme<Type>::fvcDdtUfCorr
             dimensioned<typename flux<Type>::type>
             (
                 "0",
-                mesh().Sf().dimensions()*Uf.dimensions()*dimArea/dimTime,
+                Uf.dimensions()*dimArea/dimTime,
                 pTraits<typename flux<Type>::type>::zero
             )
         )
