@@ -21,12 +21,7 @@ internalField   uniform 101325;
 
 boundaryField
 {
-    outlet
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-    sides
+    "(outlet|sides)"
     {
         type            totalPressure;
         p0              $internalField;
@@ -34,14 +29,16 @@ boundaryField
         phi             phi;
         rho             rho;
         psi             none;
-        gamma           0;
+        gamma           1;
         value           $internalField;
     }
+
     base
     {
         type            fixedFluxPressure;
         value           $internalField;
     }
+
     inlet
     {
         type            fixedFluxPressure;

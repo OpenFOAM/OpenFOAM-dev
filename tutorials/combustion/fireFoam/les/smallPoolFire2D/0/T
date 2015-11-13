@@ -21,18 +21,11 @@ internalField   uniform 300;
 
 boundaryField
 {
-    outlet
+    "(outlet|sides)"
     {
         type            inletOutlet;
-        inletValue      uniform 300;
-        value           uniform 300;
-    }
-
-    sides
-    {
-        type            inletOutlet;
-        inletValue      uniform 300;
-        value           uniform 300;
+        inletValue      $internalField;
+        value           $internalField;
     }
 
     base

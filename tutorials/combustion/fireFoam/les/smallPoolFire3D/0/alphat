@@ -21,23 +21,20 @@ internalField   uniform 0;
 
 boundaryField
 {
-    outlet
-    {
-        type            zeroGradient;
-    }
-    sides
-    {
-        type            zeroGradient;
-    }
-    base
-    {
-        type            zeroGradient;
-    }
-    inlet
+    "(outlet|sides)"
     {
         type            zeroGradient;
     }
 
+    base
+    {
+        type            zeroGradient;
+    }
+
+    inlet
+    {
+        type            zeroGradient;
+    }
 }
 
 

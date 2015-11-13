@@ -21,31 +21,24 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    outlet
-    {
-
-        type            inletOutlet;
-        inletValue      uniform (0 0 0);
-        value           uniform (0 0 0);
-
-    }
-    sides
+    "(outlet|sides)"
     {
         type            pressureInletOutletVelocity;
         value           uniform (0 0 0);
         phi             phi;
     }
+
     base
     {
         type            fixedValue;
         value           uniform (0 0 0);
     }
+
     inlet
     {
         type            fixedValue;
         value           uniform (0 0.01 0);
     }
-
 }
 
 
