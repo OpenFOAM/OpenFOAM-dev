@@ -76,6 +76,11 @@ int main(int argc, char *argv[])
 
     //#include "pUf/createDDtU.H"
 
+    int nEnergyCorrectors
+    (
+        pimple.dict().lookupOrDefault<int>("nEnergyCorrectors", 1)
+    );
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
