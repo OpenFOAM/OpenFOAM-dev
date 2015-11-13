@@ -9,7 +9,6 @@ FoamFile
 {
     version         2.0;
     format          ascii;
-    location        "";
     note            "Created Wed Jul  1 19:20:21 2009. Blocks = 8, cells = 9340, vertices = 36";
     class           dictionary;
     object          blockMeshDict;
