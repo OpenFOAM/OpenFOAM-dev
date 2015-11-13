@@ -44,10 +44,25 @@ int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
 
+    argList::addOption
+    (
+        "fields",
+        "wordReList",
+        "specify which turbulence fields (k, epsilon, omega, R) to write"
+        " - eg '(k omega)' or '(R)' or '(.*)'."
+    );
+
     #include "setRootCase.H"
     #include "createTime.H"
 
     instantList timeDirs = timeSelector::select0(runTime, args);
+
+    const bool selectedFields = args.optionFound("fields");
+    wordReList fieldPatterns;
+    if (selectedFields)
+    {
+        fieldPatterns = wordReList(args.optionLookup("fields")());
+    }
 
     #include "createMesh.H"
 
@@ -59,69 +74,77 @@ int main(int argc, char *argv[])
 
         #include "createFields.H"
 
-        Info<< "\nRetrieving field k from turbulence model" << endl;
-        const volScalarField k(RASModel->k());
-
-        Info<< "\nRetrieving field epsilon from turbulence model" << endl;
-        const volScalarField epsilon(RASModel->epsilon());
-
-        Info<< "\nRetrieving field R from turbulence model" << endl;
-        const volSymmTensorField R(RASModel->R());
-
-        // Check availability of tubulence fields
-
-        if (!IOobject("k", runTime.timeName(), mesh).headerOk())
+        if (findStrings(fieldPatterns, "k"))
         {
-            Info<< "\nWriting turbulence field k" << endl;
-            k.write();
-        }
-        else
-        {
-            Info<< "\nTurbulence k field already exists" << endl;
+            if (!IOobject("k", runTime.timeName(), mesh).headerOk())
+            {
+                Info<< "    Writing turbulence field k" << endl;
+                const volScalarField k(RASModel->k());
+                k.write();
+            }
+            else
+            {
+                Info<< "    Turbulence k field already exists" << endl;
+            }
         }
 
-        if (!IOobject("epsilon", runTime.timeName(), mesh).headerOk())
+        if (findStrings(fieldPatterns, "epsilon"))
         {
-            Info<< "\nWriting turbulence field epsilon" << endl;
-            epsilon.write();
-        }
-        else
-        {
-            Info<< "\nTurbulence epsilon field already exists" << endl;
-        }
-
-        if (!IOobject("R", runTime.timeName(), mesh).headerOk())
-        {
-            Info<< "\nWriting turbulence field R" << endl;
-            R.write();
-        }
-        else
-        {
-            Info<< "\nTurbulence R field already exists" << endl;
+            if (!IOobject("epsilon", runTime.timeName(), mesh).headerOk())
+            {
+                Info<< "    Writing turbulence field epsilon" << endl;
+                const volScalarField epsilon(RASModel->epsilon());
+                epsilon.write();
+            }
+            else
+            {
+                Info<< "    Turbulence epsilon field already exists" << endl;
+            }
         }
 
-        if (!IOobject("omega", runTime.timeName(), mesh).headerOk())
+        if (findStrings(fieldPatterns, "R"))
         {
-            const scalar Cmu = 0.09;
+            if (!IOobject("R", runTime.timeName(), mesh).headerOk())
+            {
+                Info<< "    Writing turbulence field R" << endl;
+                const volSymmTensorField R(RASModel->R());
+                R.write();
+            }
+            else
+            {
+                Info<< "    Turbulence R field already exists" << endl;
+            }
+        }
 
-            Info<< "creating omega" << endl;
-            volScalarField omega
-            (
-                IOobject
+        if (findStrings(fieldPatterns, "omega"))
+        {
+            if (!IOobject("omega", runTime.timeName(), mesh).headerOk())
+            {
+                const scalar Cmu = 0.09;
+
+                // Assume k and epsilon are available
+                const volScalarField k(RASModel->k());
+                const volScalarField epsilon(RASModel->epsilon());
+
+                volScalarField omega
                 (
-                    "omega",
-                    runTime.timeName(),
-                    mesh
-                ),
-                epsilon/(Cmu*k),
-                epsilon.boundaryField().types()
-            );
-            Info<< "\nWriting turbulence field omega" << endl;
-            omega.write();
-        }
-        else
-        {
-            Info<< "\nTurbulence omega field already exists" << endl;
+                    IOobject
+                    (
+                        "omega",
+                        runTime.timeName(),
+                        mesh
+                    ),
+                    epsilon/(Cmu*k),
+                    epsilon.boundaryField().types()
+                );
+
+                Info<< "    Writing turbulence field omega" << endl;
+                omega.write();
+            }
+            else
+            {
+                Info<< "    Turbulence omega field already exists" << endl;
+            }
         }
     }
 
