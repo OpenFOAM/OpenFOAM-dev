@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -90,6 +90,7 @@ cleanCase()
             allOwner* cell* face* meshModifiers* \
             owner* neighbour* point* edge* \
             cellLevel* pointLevel* refinementHistory* level0Edge* surfaceIndex* sets \
+            boundary \
             > /dev/null 2>&1 \
         )
     fi
@@ -104,9 +105,9 @@ cleanCase()
     rm -rf VTK > /dev/null 2>&1
     rm -f 0/cellLevel 0/pointLevel 0/cellDist constant/cellDecomposition
 
-    if [ -e constant/polyMesh/blockMeshDict.m4 ]
+    if [ -e system/blockMeshDict.m4 ]
     then
-        rm -f constant/polyMesh/blockMeshDict > /dev/null 2>&1
+        rm -f system/blockMeshDict > /dev/null 2>&1
     fi
 }
 
