@@ -9,10 +9,7 @@ application=`getApplication`
 
 runApplication star3ToFoam prostar/nacaAirfoil
 
-mv constant/polyMesh/boundary temp
-sed -e s/"\([\t ]*type[\t ]*\)symmetryPlane"/"\1empty"/g \
-    temp > constant/polyMesh/boundary
-rm temp
+sed -i 's/symmetry\([)]*;\)/empty\1/' constant/polyMesh/boundary
 
 runApplication $application
 
