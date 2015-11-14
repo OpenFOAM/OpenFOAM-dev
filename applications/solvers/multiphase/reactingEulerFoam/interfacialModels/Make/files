@@ -25,6 +25,7 @@ liftModels/constantLiftCoefficient/constantLiftCoefficient.C
 liftModels/Moraga/Moraga.C
 liftModels/LegendreMagnaudet/LegendreMagnaudet.C
 liftModels/TomiyamaLift/TomiyamaLift.C
+liftModels/wallDampedLift/wallDampedLift.C
 
 heatTransferModels/heatTransferModel/heatTransferModel.C
 heatTransferModels/heatTransferModel/newHeatTransferModel.C
@@ -60,5 +61,10 @@ aspectRatioModels/VakhrushevEfremov/VakhrushevEfremov.C
 aspectRatioModels/Wellek/Wellek.C
 
 wallDependentModel/wallDependentModel.C
+
+wallDampingModels/wallDampingModel/wallDampingModel.C
+wallDampingModels/wallDampingModel/newWallDampingModel.C
+wallDampingModels/noWallDamping/noWallDamping.C
+wallDampingModels/linear/linearWallDamping.C
 
 LIB = $(FOAM_LIBBIN)/libreactingEulerianInterfacialModels
