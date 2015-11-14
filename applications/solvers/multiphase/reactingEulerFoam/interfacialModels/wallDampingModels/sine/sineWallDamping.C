@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "linearWallDamping.H"
+#include "sineWallDamping.H"
 #include "phasePair.H"
 #include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,11 +34,11 @@ namespace Foam
 {
 namespace wallDampingModels
 {
-    defineTypeNameAndDebug(linear, 0);
+    defineTypeNameAndDebug(sine, 0);
     addToRunTimeSelectionTable
     (
         wallDampingModel,
-        linear,
+        sine,
         dictionary
     );
 }
@@ -48,15 +48,19 @@ namespace wallDampingModels
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::wallDampingModels::linear::limiter() const
+Foam::wallDampingModels::sine::limiter() const
 {
-    return min(yWall()/(Cd_*pair_.dispersed().d()), scalar(1));
+    return sin
+    (
+        constant::mathematical::piByTwo
+       *min(yWall()/(Cd_*pair_.dispersed().d()), scalar(1))
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallDampingModels::linear::linear
+Foam::wallDampingModels::sine::sine
 (
     const dictionary& dict,
     const phasePair& pair
@@ -69,14 +73,14 @@ Foam::wallDampingModels::linear::linear
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallDampingModels::linear::~linear()
+Foam::wallDampingModels::sine::~sine()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::wallDampingModels::linear::damp
+Foam::wallDampingModels::sine::damp
 (
     const tmp<volScalarField>& F
 ) const
@@ -86,7 +90,7 @@ Foam::wallDampingModels::linear::damp
 
 
 Foam::tmp<Foam::volVectorField>
-Foam::wallDampingModels::linear::damp
+Foam::wallDampingModels::sine::damp
 (
     const tmp<volVectorField>& F
 ) const
@@ -96,7 +100,7 @@ Foam::wallDampingModels::linear::damp
 
 
 Foam::tmp<Foam::surfaceScalarField>
-Foam::wallDampingModels::linear::damp
+Foam::wallDampingModels::sine::damp
 (
     const tmp<surfaceScalarField>& Ff
 ) const

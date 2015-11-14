@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "linearWallDamping.H"
+#include "cosineWallDamping.H"
 #include "phasePair.H"
 #include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,11 +34,11 @@ namespace Foam
 {
 namespace wallDampingModels
 {
-    defineTypeNameAndDebug(linear, 0);
+    defineTypeNameAndDebug(cosine, 0);
     addToRunTimeSelectionTable
     (
         wallDampingModel,
-        linear,
+        cosine,
         dictionary
     );
 }
@@ -48,15 +48,26 @@ namespace wallDampingModels
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::wallDampingModels::linear::limiter() const
+Foam::wallDampingModels::cosine::limiter() const
 {
-    return min(yWall()/(Cd_*pair_.dispersed().d()), scalar(1));
+    return
+    (
+        0.5*
+        (
+            1
+          - cos
+            (
+                constant::mathematical::pi
+               *min(yWall()/(Cd_*pair_.dispersed().d()), scalar(1))
+            )
+        )
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallDampingModels::linear::linear
+Foam::wallDampingModels::cosine::cosine
 (
     const dictionary& dict,
     const phasePair& pair
@@ -69,14 +80,14 @@ Foam::wallDampingModels::linear::linear
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallDampingModels::linear::~linear()
+Foam::wallDampingModels::cosine::~cosine()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::wallDampingModels::linear::damp
+Foam::wallDampingModels::cosine::damp
 (
     const tmp<volScalarField>& F
 ) const
@@ -86,7 +97,7 @@ Foam::wallDampingModels::linear::damp
 
 
 Foam::tmp<Foam::volVectorField>
-Foam::wallDampingModels::linear::damp
+Foam::wallDampingModels::cosine::damp
 (
     const tmp<volVectorField>& F
 ) const
@@ -96,7 +107,7 @@ Foam::wallDampingModels::linear::damp
 
 
 Foam::tmp<Foam::surfaceScalarField>
-Foam::wallDampingModels::linear::damp
+Foam::wallDampingModels::cosine::damp
 (
     const tmp<surfaceScalarField>& Ff
 ) const

@@ -66,5 +66,7 @@ wallDampingModels/wallDampingModel/wallDampingModel.C
 wallDampingModels/wallDampingModel/newWallDampingModel.C
 wallDampingModels/noWallDamping/noWallDamping.C
 wallDampingModels/linear/linearWallDamping.C
+wallDampingModels/cosine/cosineWallDamping.C
+wallDampingModels/sine/sineWallDamping.C
 
 LIB = $(FOAM_LIBBIN)/libreactingEulerianInterfacialModels
