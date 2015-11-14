@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -68,16 +68,9 @@ $(SFILES): $(MAKE_DIR)/files
 	# Add a newline to files to ensure the last line is followed by a newline
 	@echo "" >> $(SFILES)
 	# Remove commented lines, blank lines, and trailing blanks from files
-	@sed -i \
-	    -e '/^#/ d'         \
-	    -e '/^[ \t]*$$/ d'   \
-	    -e 's,[ \t]*$$,,'    \
-	     $(SFILES)
+	@sed -i -e '/^#/ d' -e '/^[ \t]*$$/ d' -e 's,[ \t]*$$,,' $(SFILES)
 	# Add backslashes
-	@sed -i \
-	    -e 's,$$, \\,'    \
-	    -e '$$s,\\,,'    \
-	    $(SFILES)
+	@sed -i -e 's,$$, \\,' -e '$$s,\\,,' $(SFILES)
 
 $(VARS): $(SFILES)
 

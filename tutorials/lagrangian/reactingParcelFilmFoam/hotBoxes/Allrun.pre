@@ -30,7 +30,7 @@ rm -rf system/wallFilmRegion
 cp -r system/wallFilmRegion.org system/wallFilmRegion
 
 find ./0 -maxdepth 1 -type f -exec \
-    sed -i "s/wallFilm/\"(region0_to.*)\"/g" {} \;
+    sed -i -e "s/wallFilm/\"(region0_to.*)\"/g" {} \;
 
 paraFoam -touch
 paraFoam -touch -region wallFilmRegion

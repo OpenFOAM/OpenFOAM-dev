@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -290,7 +290,7 @@ checkCopyright()
                 then
                     echo "Updated copyright for: $f" 1>&2
                     echo "$f"
-                    sed -i "s/$startYear-$endYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
+                    sed -i -e "s/$startYear-$endYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
                 fi
             else
                 # Date is of type 2011 OpenFOAM Foundation
@@ -298,7 +298,7 @@ checkCopyright()
                 then
                     echo "$f"
                     echo "Updated copyright for: $f" 1>&2
-                    sed -i "s/$startYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
+                    sed -i -e "s/$startYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
                 fi
             fi
         fi
