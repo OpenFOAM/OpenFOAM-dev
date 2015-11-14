@@ -28,9 +28,10 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(phi,U)      Gauss limitedLinear 1;
+    div(phi,U)      Gauss LUST grad(U);
+    div(phi,K)      Gauss limitedLinear 1;
     div(phi,k)      Gauss limitedLinear 1;
-    div(phi,Yi_h)  Gauss multivariateSelection
+    div(phi,Yi_h)   Gauss multivariateSelection
     {
         O2              linearUpwind grad(O2);
         N2              linearUpwind grad(N2);
@@ -40,7 +41,6 @@ divSchemes
         h               linearUpwind grad(h);
     };
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
-    div(phi,K)          Gauss limitedLinear 1;
     div(Ji,Ii_h)        Gauss upwind;
 }
 

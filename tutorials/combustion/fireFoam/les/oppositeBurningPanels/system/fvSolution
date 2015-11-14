@@ -17,19 +17,13 @@ FoamFile
 
 solvers
 {
-    rho
+    "rho.*"
     {
         solver          PCG;
         preconditioner  DIC;
         tolerance       1e-6;
         relTol          0;
     };
-
-    "(rho)Final"
-    {
-        $rho;
-        relTol          0;
-    }
 
     p_rgh
     {
@@ -39,17 +33,15 @@ solvers
         smoother            GaussSeidel;
         cacheAgglomeration  true;
         nCellsInCoarsestLevel   10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
+        agglomerator        faceAreaPair;
+        mergeLevels         1;
     };
 
     p_rghFinal
     {
         $p_rgh;
-        tolerance           1e-6;
         relTol              0;
     };
-
 
     "(U|Yi|k|h|omega)"
     {
@@ -63,10 +55,8 @@ solvers
     "(U|Yi|k|h|omega)Final"
     {
         $U;
-        tolerance       1e-6;
         relTol          0;
     };
-
 
     Ii
     {
@@ -90,7 +80,6 @@ solvers
         tolerance       1e-04;
         relTol          0;
     }
-
 }
 
 PIMPLE
@@ -105,9 +94,9 @@ relaxationFactors
 {
     equations
     {
-        "(U|k).*"                   1;
-        "(C3H8|O2|H2O|CO2|h).*"     1;
+        ".*"            1;
     }
 }
+
 
 // ************************************************************************* //

@@ -27,19 +27,13 @@ boundaryField
         value           $internalField;
     }
 
-    top
-    {
-        type            zeroGradient;
-        value           $internalField;
-    }
-
     burner
     {
         type            fixedFluxPressure;
         value           $internalField;
     }
 
-    sides
+    "(top|sides)"
     {
         type            totalPressure;
         U               U;

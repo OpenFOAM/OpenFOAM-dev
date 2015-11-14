@@ -27,13 +27,6 @@ boundaryField
         value           $internalField;
     }
 
-    top
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
-    }
-
     burner
     {
         type            flowRateInletVelocity;
@@ -41,7 +34,7 @@ boundaryField
         value           uniform (0 0 0);
     }
 
-    sides
+    "(top|sides)"
     {
         type            pressureInletOutletVelocity;
         phi             phi;
