@@ -77,10 +77,6 @@ protected:
         HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
             iDmdt_;
 
-        //- Wall Mass transfer rate
-        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            wDmdt_;
-
 
 public:
 
@@ -98,6 +94,9 @@ public:
 
         //- Return the saturationModel
         const saturationModel& saturation() const;
+
+        //- Return the heat transfer matrices
+        virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;

@@ -39,7 +39,6 @@ namespace compressible
 
 defineTypeNameAndDebug(alphatPhaseChangeWallFunctionFvPatchScalarField,0);
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 alphatPhaseChangeWallFunctionFvPatchScalarField::
@@ -50,7 +49,8 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    dmdt_(p.size(), 0.0)
+    dmdt_(p.size(), 0.0),
+    mDotL_(p.size(), 0.0)
 {}
 
 
@@ -63,11 +63,17 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    dmdt_(p.size(), 0.0)
+    dmdt_(p.size(), 0.0),
+    mDotL_(p.size(), 0.0)
 {
     if (dict.found("dmdt"))
     {
         dmdt_ = scalarField("dmdt", dict, p.size());
+    }
+
+    if (dict.found("mDotL"))
+    {
+        dmdt_ = scalarField("mDotL", dict, p.size());
     }
 }
 
@@ -82,7 +88,8 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    dmdt_(ptf.dmdt_, mapper)
+    dmdt_(ptf.dmdt_, mapper),
+    mDotL_(ptf.mDotL_, mapper)
 {}
 
 
@@ -93,7 +100,8 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(awfpsf),
-    dmdt_(awfpsf.dmdt_)
+    dmdt_(awfpsf.dmdt_),
+    mDotL_(awfpsf.mDotL_)
 {}
 
 
@@ -105,7 +113,8 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(awfpsf, iF),
-    dmdt_(awfpsf.dmdt_)
+    dmdt_(awfpsf.dmdt_),
+    mDotL_(awfpsf.mDotL_)
 {}
 
 
@@ -115,6 +124,7 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     dmdt_.writeEntry("dmdt", os);
+    mDotL_.writeEntry("mDotL", os);
     writeEntry("value", os);
 }
 
