@@ -25,7 +25,6 @@ License
 
 #include "sineWallDamping.H"
 #include "phasePair.H"
-#include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -45,7 +44,7 @@ namespace wallDampingModels
 }
 
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
 Foam::wallDampingModels::sine::limiter() const
@@ -66,7 +65,7 @@ Foam::wallDampingModels::sine::sine
     const phasePair& pair
 )
 :
-    wallDampingModel(dict, pair),
+    interpolated(dict, pair),
     Cd_("Cd", dimless, dict)
 {}
 
@@ -75,38 +74,6 @@ Foam::wallDampingModels::sine::sine
 
 Foam::wallDampingModels::sine::~sine()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField>
-Foam::wallDampingModels::sine::damp
-(
-    const tmp<volScalarField>& F
-) const
-{
-    return limiter()*F;
-}
-
-
-Foam::tmp<Foam::volVectorField>
-Foam::wallDampingModels::sine::damp
-(
-    const tmp<volVectorField>& F
-) const
-{
-    return limiter()*F;
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::wallDampingModels::sine::damp
-(
-    const tmp<surfaceScalarField>& Ff
-) const
-{
-    return fvc::interpolate(limiter())*Ff;
-}
 
 
 // ************************************************************************* //

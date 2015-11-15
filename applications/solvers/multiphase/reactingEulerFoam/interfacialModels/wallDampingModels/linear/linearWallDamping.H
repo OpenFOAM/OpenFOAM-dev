@@ -34,7 +34,7 @@ SourceFiles
 #ifndef linearWallDamping_H
 #define linearWallDamping_H
 
-#include "wallDampingModel.H"
+#include "interpolatedWallDamping.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +52,7 @@ namespace wallDampingModels
 
 class linear
 :
-    public wallDampingModel
+    public interpolated
 {
     // Private data
 
@@ -60,10 +60,12 @@ class linear
         const dimensionedScalar Cd_;
 
 
-    // Private member functions
+protected:
+
+    // Protected member functions
 
         //- Return the force limiter field
-        tmp<volScalarField> limiter() const;
+        virtual tmp<volScalarField> limiter() const;
 
 
 public:
@@ -84,27 +86,6 @@ public:
 
     //- Destructor
     virtual ~linear();
-
-
-    // Member Functions
-
-        //- Return damped coefficient
-        virtual tmp<volScalarField> damp
-        (
-            const tmp<volScalarField>&
-        ) const;
-
-        //- Return damped force
-        virtual tmp<volVectorField> damp
-        (
-            const tmp<volVectorField>&
-        ) const;
-
-        //- Return damped face force
-        virtual tmp<surfaceScalarField> damp
-        (
-            const tmp<surfaceScalarField>&
-        ) const;
 };
 
 

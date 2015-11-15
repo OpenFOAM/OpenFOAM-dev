@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallDampingModels::cosine
+    Foam::wallDampingModels::interpolated
 
 Description
 
 SourceFiles
-    cosineWallDamping.C
+    interpolatedWallDamping.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cosineWallDamping_H
-#define cosineWallDamping_H
+#ifndef interpolatedWallDamping_H
+#define interpolatedWallDamping_H
 
-#include "interpolatedWallDamping.H"
+#include "wallDampingModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,37 +47,31 @@ namespace wallDampingModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class cosine Declaration
+                           Class interpolated Declaration
 \*---------------------------------------------------------------------------*/
 
-class cosine
+class interpolated
 :
-    public interpolated
+    public wallDampingModel
 {
-    // Private data
-
-        //- Diameter coefficient
-        const dimensionedScalar Cd_;
-
-
 protected:
 
     // Protected member functions
 
         //- Return the force limiter field
-        virtual tmp<volScalarField> limiter() const;
+        virtual tmp<volScalarField> limiter() const = 0;
 
 
 public:
 
     //- Runtime type information
-    TypeName("cosine");
+    TypeName("interpolated");
 
 
     // Constructors
 
         //- Construct from components
-        cosine
+        interpolated
         (
             const dictionary& dict,
             const phasePair& pair
@@ -85,7 +79,28 @@ public:
 
 
     //- Destructor
-    virtual ~cosine();
+    virtual ~interpolated();
+
+
+    // Member Functions
+
+        //- Return damped coefficient
+        virtual tmp<volScalarField> damp
+        (
+            const tmp<volScalarField>&
+        ) const;
+
+        //- Return damped force
+        virtual tmp<volVectorField> damp
+        (
+            const tmp<volVectorField>&
+        ) const;
+
+        //- Return damped face force
+        virtual tmp<surfaceScalarField> damp
+        (
+            const tmp<surfaceScalarField>&
+        ) const;
 };
 
 

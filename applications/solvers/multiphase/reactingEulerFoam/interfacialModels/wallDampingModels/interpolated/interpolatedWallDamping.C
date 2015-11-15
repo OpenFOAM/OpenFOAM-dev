@@ -21,81 +21,71 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::wallDampingModels::cosine
-
-Description
-
-SourceFiles
-    cosineWallDamping.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef cosineWallDamping_H
-#define cosineWallDamping_H
-
 #include "interpolatedWallDamping.H"
+#include "phasePair.H"
+#include "surfaceInterpolate.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace wallDampingModels
 {
+    defineTypeNameAndDebug(interpolated, 0);
+}
+}
 
-/*---------------------------------------------------------------------------*\
-                           Class cosine Declaration
-\*---------------------------------------------------------------------------*/
 
-class cosine
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::wallDampingModels::interpolated::interpolated
+(
+    const dictionary& dict,
+    const phasePair& pair
+)
 :
-    public interpolated
+    wallDampingModel(dict, pair)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::wallDampingModels::interpolated::~interpolated()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::wallDampingModels::interpolated::damp
+(
+    const tmp<volScalarField>& F
+) const
 {
-    // Private data
-
-        //- Diameter coefficient
-        const dimensionedScalar Cd_;
+    return limiter()*F;
+}
 
 
-protected:
-
-    // Protected member functions
-
-        //- Return the force limiter field
-        virtual tmp<volScalarField> limiter() const;
-
-
-public:
-
-    //- Runtime type information
-    TypeName("cosine");
+Foam::tmp<Foam::volVectorField>
+Foam::wallDampingModels::interpolated::damp
+(
+    const tmp<volVectorField>& F
+) const
+{
+    return limiter()*F;
+}
 
 
-    // Constructors
+Foam::tmp<Foam::surfaceScalarField>
+Foam::wallDampingModels::interpolated::damp
+(
+    const tmp<surfaceScalarField>& Ff
+) const
+{
+    return fvc::interpolate(limiter())*Ff;
+}
 
-        //- Construct from components
-        cosine
-        (
-            const dictionary& dict,
-            const phasePair& pair
-        );
-
-
-    //- Destructor
-    virtual ~cosine();
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace wallDampingModels
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //
