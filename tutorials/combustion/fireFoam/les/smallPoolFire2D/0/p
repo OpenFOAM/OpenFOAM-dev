@@ -11,7 +11,7 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      p_rgh;
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -23,8 +23,8 @@ boundaryField
 {
     "(outlet|sides)"
     {
-        type           calculated;
-        value          $internalField;
+        type            calculated;
+        value           $internalField;
     }
 
     base

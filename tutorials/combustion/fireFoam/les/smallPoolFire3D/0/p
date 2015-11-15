@@ -23,20 +23,20 @@ boundaryField
 {
     "(outlet|sides)"
     {
-        type           calculated;
-        value          $internalField;
+        type            calculated;
+        value           $internalField;
     }
 
     base
     {
-        type           calculated;
-        value          $internalField;
+        type            calculated;
+        value           $internalField;
     }
 
     inlet
     {
-        type           calculated;
-        value          $internalField;
+        type            calculated;
+        value           $internalField;
     }
 }
 
