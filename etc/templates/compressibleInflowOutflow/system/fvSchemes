@@ -49,7 +49,7 @@ divSchemes
     div(phid,p)     bounded Gauss upwind;
     div((phi|interpolate(rho)),p)  bounded Gauss upwind;
 
-    div((muEff*dev2(T(grad(U)))))      Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U)))))    Gauss linear;
 }
 
 laplacianSchemes

@@ -37,7 +37,7 @@ boundaryField
 
     wall
     {
-        type            compressible::omegaWallFunction;
+        type            omegaWallFunction;
         value           uniform $omegaInlet;
     }
 

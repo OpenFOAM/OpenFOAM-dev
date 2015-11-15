@@ -37,7 +37,7 @@ boundaryField
 
     wall
     {
-        type            compressible::kqRWallFunction;
+        type            kqRWallFunction;
         value           uniform $kInlet;
     }
 

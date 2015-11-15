@@ -24,7 +24,7 @@ boundaryField
 {
     inlet
     {
-        type            compressible::turbulentMixingLengthDissipationRateInlet;
+        type            turbulentMixingLengthDissipationRateInlet;
         mixingLength    0.05;
         value           uniform $epsilonInlet;
     }
@@ -37,7 +37,7 @@ boundaryField
     }
     wall
     {
-        type            compressible::epsilonWallFunction;
+        type            epsilonWallFunction;
         value           uniform $epsilonInlet;
     }
 
