@@ -146,7 +146,7 @@ public:
 
     // Member Functions
 
-        //- Read LESProperties dictionary
+        //- Read model coefficients if they have changed
         virtual bool read();
 };
 

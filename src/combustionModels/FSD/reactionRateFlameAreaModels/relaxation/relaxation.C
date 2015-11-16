@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,6 @@ void Foam::reactionRateFlameAreaModels::relaxation::correct
     const volScalarField& sigma
 )
 {
-
     dimensionedScalar omega0
     (
         "omega0",
@@ -97,13 +96,19 @@ void Foam::reactionRateFlameAreaModels::relaxation::correct
         1e-4
     );
 
-    const compressible::LESModel& lesModel =
-        omega_.db().lookupObject<compressible::LESModel>("LESProperties");
+    dimensionedScalar kMin
+    (
+        "kMin",
+        sqr(dimVelocity),
+        SMALL
+    );
 
-    // Total strain : resolved and sub-grid (just LES for now)
+    const compressibleTurbulenceModel& turbulence = combModel_.turbulence();
+
+    // Total strain
     const volScalarField sigmaTotal
     (
-        sigma + alpha_*lesModel.epsilon()/(lesModel.k() + lesModel.kMin())
+        sigma + alpha_*turbulence.epsilon()/(turbulence.k() + kMin)
     );
 
     const volScalarField omegaInf(correlation_.omega0Sigma(sigmaTotal));

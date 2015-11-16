@@ -189,7 +189,10 @@ void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
 
     // Calculation of the mixture fraction variance (ftVar)
     const compressible::LESModel& lesModel =
-        YO2.db().lookupObject<compressible::LESModel>("LESProperties");
+        YO2.db().lookupObject<compressible::LESModel>
+        (
+            turbulenceModel::propertiesName
+        );
 
     const volScalarField& delta = lesModel.delta();
     const volScalarField ftVar(Cv_*sqr(delta)*sqr(mgft));
