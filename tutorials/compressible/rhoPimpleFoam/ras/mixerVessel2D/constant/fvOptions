@@ -29,8 +29,8 @@ porosity1
 
         DarcyForchheimerCoeffs
         {
-            d   d [0 -2 0 0 0 0 0] (1e5 -1000 -1000);
-            f   f [0 -1 0 0 0 0 0] (0 0 0);
+            d   (1e5 -1000 -1000);
+            f   (0 0 0);
 
             coordinateSystem
             {

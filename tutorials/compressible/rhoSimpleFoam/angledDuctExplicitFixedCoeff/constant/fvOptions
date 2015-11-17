@@ -45,8 +45,8 @@ porosity1
 
         fixedCoeffCoeffs
         {
-            alpha       alpha [0 0 -1 0 0 0 0] (500 -1000 -1000);
-            beta        beta  [0 -1 0 0 0 0 0] (0 0 0);
+            alpha       (500 -1000 -1000);
+            beta        (0 0 0);
             rhoRef      1;
 
             coordinateSystem
@@ -56,8 +56,8 @@ porosity1
                 coordinateRotation
                 {
                     type    axesRotation;
-                    e1  (0.70710678 0.70710678 0);
-                    e2  (0 0 1);
+                    e1      (0.70710678 0.70710678 0);
+                    e2      (0 0 1);
                 }
             }
         }

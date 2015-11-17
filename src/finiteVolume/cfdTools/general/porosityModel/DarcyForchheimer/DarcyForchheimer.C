@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,8 @@ Foam::porosityModels::DarcyForchheimer::DarcyForchheimer
 )
 :
     porosityModel(name, modelType, mesh, dict, cellZoneName),
-    dXYZ_(coeffs_.lookup("d")),
-    fXYZ_(coeffs_.lookup("f")),
+    dXYZ_("d", dimless/sqr(dimLength), coeffs_),
+    fXYZ_("f", dimless/dimLength, coeffs_),
     D_(cellZoneIDs_.size()),
     F_(cellZoneIDs_.size()),
     rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho")),

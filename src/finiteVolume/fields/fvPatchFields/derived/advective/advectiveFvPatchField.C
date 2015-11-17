@@ -30,6 +30,7 @@ License
 #include "EulerDdtScheme.H"
 #include "CrankNicolsonDdtScheme.H"
 #include "backwardDdtScheme.H"
+#include "localEulerDdtScheme.H"
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -189,10 +190,11 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         return;
     }
 
+    const fvMesh& mesh = this->dimensionedInternalField().mesh();
+
     word ddtScheme
     (
-        this->dimensionedInternalField().mesh()
-       .ddtScheme(this->dimensionedInternalField().name())
+        mesh.ddtScheme(this->dimensionedInternalField().name())
     );
     scalar deltaT = this->db().time().deltaTValue();
 
@@ -243,6 +245,30 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
 
             this->valueFraction() = (1.5 + k)/(1.5 + alpha + k);
         }
+        else if
+        (
+            ddtScheme == fv::localEulerDdtScheme<scalar>::typeName
+        )
+        {
+            const volScalarField& rDeltaT =
+                fv::localEulerDdt::localRDeltaT(mesh);
+
+            // Calculate the field wave coefficient alpha (See notes)
+            const scalarField alpha
+            (
+                w*this->patch().deltaCoeffs()/rDeltaT.boundaryField()[patchi]
+            );
+
+            // Calculate the field relaxation coefficient k (See notes)
+            const scalarField k(w/(rDeltaT.boundaryField()[patchi]*lInf_));
+
+            this->refValue() =
+            (
+                field.oldTime().boundaryField()[patchi] + k*fieldInf_
+            )/(1.0 + k);
+
+            this->valueFraction() = (1.0 + k)/(1.0 + alpha + k);
+        }
         else
         {
             FatalErrorInFunction
@@ -274,6 +300,24 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
             )/1.5;
 
             this->valueFraction() = 1.5/(1.5 + alpha);
+        }
+        else if
+        (
+            ddtScheme == fv::localEulerDdtScheme<scalar>::typeName
+        )
+        {
+            const volScalarField& rDeltaT =
+                fv::localEulerDdt::localRDeltaT(mesh);
+
+            // Calculate the field wave coefficient alpha (See notes)
+            const scalarField alpha
+            (
+                w*this->patch().deltaCoeffs()/rDeltaT.boundaryField()[patchi]
+            );
+
+            this->refValue() = field.oldTime().boundaryField()[patchi];
+
+            this->valueFraction() = 1.0/(1.0 + alpha);
         }
         else
         {

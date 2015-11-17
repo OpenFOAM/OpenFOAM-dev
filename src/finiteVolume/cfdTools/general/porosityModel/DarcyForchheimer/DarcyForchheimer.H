@@ -70,8 +70,6 @@ class DarcyForchheimer
 :
     public porosityModel
 {
-private:
-
     // Private data
 
         //- Darcy coeffient XYZ components (user-supplied) [1/m2]

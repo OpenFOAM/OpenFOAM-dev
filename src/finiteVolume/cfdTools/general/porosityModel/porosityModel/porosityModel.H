@@ -57,8 +57,6 @@ class porosityModel
 :
     public regIOobject
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -267,6 +265,7 @@ public:
         //- Read porosity dictionary
         virtual bool read(const dictionary& dict);
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
