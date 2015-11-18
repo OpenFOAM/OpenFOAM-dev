@@ -116,6 +116,9 @@ License
         );
     }
 
+    // Update tho boundary values of the reciprocal time-step
+    rDeltaT.correctBoundaryConditions();
+
     Info<< "    Overall     = "
         << gMin(1/rDeltaT.internalField())
         << ", " << gMax(1/rDeltaT.internalField()) << endl;

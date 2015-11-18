@@ -4,8 +4,7 @@ rho = min(rho, rhoMax);
 rho.relax();
 
 volScalarField rAU(1.0/UEqn().A());
-surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-
+volScalarField rAtU(1.0/(1.0/rAU - UEqn().H1()));
 volVectorField HbyA("HbyA", U);
 HbyA = rAU*UEqn().H();
 
@@ -22,11 +21,22 @@ if (pimple.transonic())
         fvc::interpolate(psi)
        *(
             (fvc::interpolate(HbyA) & mesh.Sf())
-          + rhorAUf*fvc::ddtCorr(rho, U, phi)/fvc::interpolate(rho)
+          + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi)
+           /fvc::interpolate(rho)
         )
     );
 
     MRF.makeRelative(fvc::interpolate(psi), phid);
+
+    surfaceScalarField phic
+    (
+        "phic",
+        fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf()
+    );
+
+    HbyA -= (rAU - rAtU)*fvc::grad(p);
+
+    volScalarField rhorAtU("rhorAtU", rho*rAtU);
 
     while (pimple.correctNonOrthogonal())
     {
@@ -34,7 +44,8 @@ if (pimple.transonic())
         (
             fvm::ddt(psi, p)
           + fvm::div(phid, p)
-          - fvm::laplacian(rhorAUf, p)
+          + fvc::div(phic)
+          - fvm::laplacian(rhorAtU, p)
          ==
             fvOptions(psi, p, rho.name())
         );
@@ -43,7 +54,7 @@ if (pimple.transonic())
 
         if (pimple.finalNonOrthogonalIter())
         {
-            phi == pEqn.flux();
+            phi == phic + pEqn.flux();
         }
     }
 }
@@ -54,11 +65,16 @@ else
         "phiHbyA",
         (
             (fvc::interpolate(rho*HbyA) & mesh.Sf())
-          + rhorAUf*fvc::ddtCorr(rho, U, phi)
+          + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi)
         )
     );
 
     MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
+
+    phiHbyA += fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf();
+    HbyA -= (rAU - rAtU)*fvc::grad(p);
+
+    volScalarField rhorAtU("rhorAtU", rho*rAtU);
 
     while (pimple.correctNonOrthogonal())
     {
@@ -66,7 +82,7 @@ else
         (
             fvm::ddt(psi, p)
           + fvc::div(phiHbyA)
-          - fvm::laplacian(rhorAUf, p)
+          - fvm::laplacian(rhorAtU, p)
          ==
             fvOptions(psi, p, rho.name())
         );
@@ -86,15 +102,7 @@ else
 // Explicitly relax pressure for momentum corrector
 p.relax();
 
-// Recalculate density from the relaxed pressure
-rho = thermo.rho();
-rho = max(rho, rhoMin);
-rho = min(rho, rhoMax);
-rho.relax();
-Info<< "rho max/min : " << max(rho).value()
-    << " " << min(rho).value() << endl;
-
-U = HbyA - rAU*fvc::grad(p);
+U = HbyA - rAtU*fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
 K = 0.5*magSqr(U);
@@ -103,3 +111,15 @@ if (thermo.dpdt())
 {
     dpdt = fvc::ddt(p);
 }
+
+// Recalculate density from the relaxed pressure
+rho = thermo.rho();
+rho = max(rho, rhoMin);
+rho = min(rho, rhoMax);
+
+if (!pimple.transonic())
+{
+    rho.relax();
+}
+
+Info<< "rho max/min : " << max(rho).value() << " " << min(rho).value() << endl;

@@ -45,6 +45,28 @@ const volScalarField& T = thermo.T();
 
 #include "compressibleCreatePhi.H"
 
+dimensionedScalar rhoMax
+(
+    dimensionedScalar::lookupOrDefault
+    (
+        "rhoMax",
+        pimple.dict(),
+        dimDensity,
+        GREAT
+    )
+);
+
+dimensionedScalar rhoMin
+(
+    dimensionedScalar::lookupOrDefault
+    (
+        "rhoMin",
+        pimple.dict(),
+        dimDensity,
+        0
+    )
+);
+
 mesh.setFluxRequired(p.name());
 
 Info << "Creating turbulence model.\n" << nl;
