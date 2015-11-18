@@ -44,7 +44,7 @@
     {
         autoPtr<compressible::RASModel> turbulence
         (
-            compressible::RASModel::New
+            compressible::New<compressible::RASModel>
             (
                 rho,
                 U,
@@ -59,7 +59,7 @@
     {
         autoPtr<compressible::LESModel> turbulence
         (
-            compressible::LESModel::New
+            compressible::New<compressible::LESModel>
             (
                 rho,
                 U,

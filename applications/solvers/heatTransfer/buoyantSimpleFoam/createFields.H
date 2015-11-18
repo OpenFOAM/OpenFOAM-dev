@@ -39,7 +39,7 @@ volVectorField U
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::RASModel> turbulence
 (
-    compressible::RASModel::New
+    compressible::New<compressible::RASModel>
     (
         rho,
         U,

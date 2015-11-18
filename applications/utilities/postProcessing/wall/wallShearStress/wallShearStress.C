@@ -55,7 +55,7 @@ void calcIncompressible
 
     autoPtr<incompressible::RASModel> model
     (
-        incompressible::RASModel::New(U, phi, laminarTransport)
+        incompressible::New<incompressible::RASModel>(U, phi, laminarTransport)
     );
 
     const volSymmTensorField Reff(model->devReff());
@@ -104,7 +104,7 @@ void calcCompressible
 
     autoPtr<compressible::RASModel> model
     (
-        compressible::RASModel::New
+        compressible::New<compressible::RASModel>
         (
             rho,
             U,

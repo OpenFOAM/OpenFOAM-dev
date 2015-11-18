@@ -33,7 +33,7 @@ singlePhaseTransportModel laminarTransport(U, phi);
 
 autoPtr<incompressible::RASModel> turbulence
 (
-    incompressible::RASModel::New(U, phi, laminarTransport)
+    incompressible::New<incompressible::RASModel>(U, phi, laminarTransport)
 );
 
 dimensionedVector Ubar("Ubar", dimVelocity, laminarTransport);

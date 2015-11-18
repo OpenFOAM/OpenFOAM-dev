@@ -49,7 +49,7 @@ volVectorField U
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<incompressible::RASModel> turbulence
 (
-    incompressible::RASModel::New(U, phi, laminarTransport)
+    incompressible::New<incompressible::RASModel>(U, phi, laminarTransport)
 );
 
 // Kinematic density for buoyancy force
