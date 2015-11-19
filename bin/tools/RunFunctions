@@ -40,40 +40,80 @@ getApplication()
 
 runApplication()
 {
-    APP_RUN=$1
-    APP_NAME=${1##*/}
-    shift
+    APP_RUN=
+    LOG_IGNORE=false
+    LOG_APPEND=false
 
-    if [ -f log.$APP_NAME ]
+    # Parse options and executable
+    while [ $# -gt 0 ] && [ -z "$APP_RUN" ]; do
+        key="$1"
+        case "$key" in
+            -append)
+                LOG_IGNORE=true
+                LOG_APPEND=true
+                ;;
+            -overwrite)
+                LOG_IGNORE=true
+                ;;
+            *)
+                APP_RUN="$key"
+                APP_NAME="${key##*/}"
+                ;;
+        esac
+    shift
+    done
+
+    if [ -f log.$APP_NAME ] && [ "$LOG_IGNORE" = "false" ]
     then
         echo "$APP_NAME already run on $PWD: remove log file to re-run"
     else
         echo "Running $APP_RUN on $PWD"
-        $APP_RUN "$@" > log.$APP_NAME 2>&1
+        if [ "$LOG_APPEND" = "true" ]; then
+            $APP_RUN "$@" >> log.$APP_NAME 2>&1
+        else
+            $APP_RUN "$@" > log.$APP_NAME 2>&1
+        fi
     fi
 }
 
 runParallel()
 {
-    APP_RUN=$1
-    APP_NAME=${1##*/}
-    shift
+    APP_RUN=
+    LOG_IGNORE=false
+    LOG_APPEND=false
 
-    if [ -f log.$APP_NAME ]
+    # Parse options and executable
+    while [ $# -gt 0 ] && [ -z "$APP_RUN" ]; do
+        key="$1"
+        case "$key" in
+            -append)
+                LOG_IGNORE=true
+                LOG_APPEND=true
+                ;;
+            -overwrite)
+                LOG_IGNORE=true
+                ;;
+            *)
+                APP_RUN="$key"
+                APP_NAME="${key##*/}"
+                # also read number of processors
+                nProcs="$2"
+                shift
+                ;;
+        esac
+    shift
+    done
+
+    if [ -f log.$APP_NAME ] && [ "$LOG_IGNORE" = "false" ]
     then
         echo "$APP_NAME already run on $PWD: remove log file to re-run"
     else
-        nProcs=$1
-        shift
         echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
-
-        #if [ "$WM_SCHEDULER" ]
-        #then
-        #    echo "$PWD: $WM_SCHEDULER -np $nProcs" 1>&2
-        #    $WM_SCHEDULER -np $nProcs "( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null > log.$APP_NAME 2>&1 )"
-        #else
+        if [ "$LOG_APPEND" = "true" ]; then
+            ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null >> log.$APP_NAME 2>&1 )
+        else
             ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null > log.$APP_NAME 2>&1 )
-        #fi
+        fi
     fi
 }
 
