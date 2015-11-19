@@ -21,34 +21,9 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::compressible::turbulenceModel
-
-Typedef
-    Foam::compressible::RASModel
-
-Typedef
-    Foam::compressible::LESModel
-
-Description
-    Typedefs for turbulence, RAS and LES models for compressible flow
-    based on the standard laminar transport package.
-
-SourceFiles
-    turbulentFluidThermoModel.C
-    turbulentFluidThermoModels.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef turbulentFluidThermoModel_H
-#define turbulentFluidThermoModel_H
-
-#include "CompressibleTurbulenceModel.H"
-#include "ThermalDiffusivity.H"
-#include "EddyDiffusivity.H"
-#include "RASModel.H"
-#include "LESModel.H"
-#include "fluidThermo.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,12 +31,6 @@ namespace Foam
 {
     namespace compressible
     {
-        typedef ThermalDiffusivity<CompressibleTurbulenceModel<fluidThermo> >
-            turbulenceModel;
-
-        typedef RASModel<EddyDiffusivity<turbulenceModel> > RASModel;
-        typedef LESModel<EddyDiffusivity<turbulenceModel> > LESModel;
-
         template<class BasicCompressibleTurbulenceModel>
         autoPtr<BasicCompressibleTurbulenceModel> New
         (
@@ -70,20 +39,22 @@ namespace Foam
             const surfaceScalarField& phi,
             const typename BasicCompressibleTurbulenceModel::transportModel&
                 transport,
-            const word& propertiesName = turbulenceModel::propertiesName
-        );
+            const word& propertiesName
+        )
+        {
+            return BasicCompressibleTurbulenceModel::New
+            (
+                geometricOneField(),
+                rho,
+                U,
+                phi,
+                phi,
+                transport,
+                propertiesName
+            );
+        }
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-#   include "turbulentFluidThermoModel.C"
-#endif
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

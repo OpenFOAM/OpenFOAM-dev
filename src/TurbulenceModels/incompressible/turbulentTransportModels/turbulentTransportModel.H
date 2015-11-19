@@ -35,6 +35,7 @@ Description
     based on the standard laminar transport package.
 
 SourceFiles
+    turbulentTransportModel.C
     turbulentTransportModels.C
 
 \*---------------------------------------------------------------------------*/
@@ -66,22 +67,16 @@ namespace Foam
             const typename BasicCompressibleTurbulenceModel::transportModel&
                 transport,
             const word& propertiesName = turbulenceModel::propertiesName
-        )
-        {
-            return BasicCompressibleTurbulenceModel::New
-            (
-                geometricOneField(),
-                geometricOneField(),
-                U,
-                phi,
-                phi,
-                transport,
-                propertiesName
-            );
-        }
+        );
     }
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#   include "turbulentTransportModel.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
