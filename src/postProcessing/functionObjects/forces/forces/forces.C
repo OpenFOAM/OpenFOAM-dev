@@ -402,7 +402,8 @@ void Foam::forces::writeForces()
         << "        porous   : " << sum(moment_[2])
         << endl;
 
-    file(0) << obr_.time().value() << tab << setw(1) << '('
+    writeTime(file(0));
+    file(0) << tab << setw(1) << '('
         << sum(force_[0]) << setw(1) << ' '
         << sum(force_[1]) << setw(1) << ' '
         << sum(force_[2]) << setw(3) << ") ("
@@ -420,7 +421,8 @@ void Foam::forces::writeForces()
         vectorField localMomentT(coordSys_.localVector(moment_[1]));
         vectorField localMomentP(coordSys_.localVector(moment_[2]));
 
-        file(0) << obr_.time().value() << tab << setw(1) << '('
+        writeTime(file(0));
+        file(0) << tab << setw(1) << '('
             << sum(localForceN) << setw(1) << ' '
             << sum(localForceT) << setw(1) << ' '
             << sum(localForceP) << setw(3) << ") ("
@@ -456,7 +458,7 @@ void Foam::forces::writeBins()
         }
     }
 
-    file(1) << obr_.time().value();
+    writeTime(file(1));
 
     forAll(f[0], i)
     {

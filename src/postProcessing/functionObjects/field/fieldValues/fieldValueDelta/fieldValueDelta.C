@@ -155,7 +155,7 @@ void Foam::fieldValues::fieldValueDelta::write()
 
     if (Pstream::master())
     {
-        file()<< obr_.time().value();
+        writeTime(file());
     }
 
     if (log_) Info<< type() << " " << name_ << " output:" << endl;

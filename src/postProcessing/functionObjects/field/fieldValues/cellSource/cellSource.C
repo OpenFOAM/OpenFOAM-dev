@@ -234,7 +234,7 @@ void Foam::fieldValues::cellSource::write()
     {
         if (Pstream::master())
         {
-            file() << obr_.time().value();
+            writeTime(file());
         }
 
         if (writeVolume_)

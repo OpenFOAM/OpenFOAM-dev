@@ -129,8 +129,9 @@ void Foam::cloudInfo::write()
 
             if (Pstream::master())
             {
+                writeTime(file(i));
                 file(i)
-                    << obr_.time().value() << token::TAB
+                    << token::TAB
                     << nParcels << token::TAB
                     << massInSystem << endl;
             }

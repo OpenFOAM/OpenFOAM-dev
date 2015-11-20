@@ -166,7 +166,7 @@ void Foam::fieldMinMax::write()
     {
         functionObjectFile::write();
 
-        if (!location_) file()<< obr_.time().value();
+        if (!location_) writeTime(file());
         if (log_) Info<< type() << " " << name_ <<  " output:" << nl;
 
         forAll(fieldSet_, fieldI)

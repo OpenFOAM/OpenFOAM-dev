@@ -675,7 +675,7 @@ void Foam::fieldValues::faceSource::write()
 
         if (Pstream::master())
         {
-            file() << obr_.time().value();
+            writeTime(file());
         }
 
         if (writeArea_)

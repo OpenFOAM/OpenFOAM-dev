@@ -125,7 +125,7 @@ void Foam::residuals::write()
 
         if (Pstream::master())
         {
-            file()<< obr_.time().value();
+            writeTime(file());
 
             forAll(fieldSet_, fieldI)
             {

@@ -223,8 +223,9 @@ void Foam::forceCoeffs::write()
         scalar Clf = Cl/2.0 + Cm;
         scalar Clr = Cl/2.0 - Cm;
 
+        writeTime(file(0));
         file(0)
-            << obr_.time().value() << tab << Cm << tab  << Cd
+            << tab << Cm << tab  << Cd
             << tab << Cl << tab << Clf << tab << Clr << endl;
 
         if (log_) Info<< type() << " " << name_ << " output:" << nl
@@ -246,7 +247,7 @@ void Foam::forceCoeffs::write()
                 }
             }
 
-            file(1)<< obr_.time().value();
+            writeTime(file(1));
 
             forAll(coeffs[0], i)
             {

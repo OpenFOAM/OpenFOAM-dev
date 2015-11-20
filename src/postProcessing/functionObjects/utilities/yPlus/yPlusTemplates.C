@@ -77,7 +77,8 @@ void Foam::yPlus::calcYPlus
                     << " y+ : min = " << minYplus << ", max = " << maxYplus
                     << ", average = " << avgYplus << nl;
 
-                file() << obr_.time().value()
+                writeTime(file());
+                file()
                     << token::TAB << patch.name()
                     << token::TAB << minYplus
                     << token::TAB << maxYplus
@@ -107,7 +108,8 @@ void Foam::yPlus::calcYPlus
                     << " y+ : min = " << minYplus << ", max = " << maxYplus
                     << ", average = " << avgYplus << nl;
 
-                file() << obr_.time().value()
+                writeTime(file());
+                file()
                     << token::TAB << patch.name()
                     << token::TAB << minYplus
                     << token::TAB << maxYplus

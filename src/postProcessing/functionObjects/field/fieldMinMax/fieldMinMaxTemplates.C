@@ -45,7 +45,7 @@ void Foam::fieldMinMax::output
 
     if (location_)
     {
-        file<< obr_.time().value();
+        writeTime(file());
 
         writeTabbed(file, fieldName);
 

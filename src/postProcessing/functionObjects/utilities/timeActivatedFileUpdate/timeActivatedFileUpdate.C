@@ -32,7 +32,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(timeActivatedFileUpdate, 0);
+    defineTypeNameAndDebug(timeActivatedFileUpdate, 0);
 }
 
 

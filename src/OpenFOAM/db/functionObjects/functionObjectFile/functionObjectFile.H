@@ -180,6 +180,9 @@ public:
             const string& str
         ) const;
 
+        //- Write the current time to stream
+        void writeTime(Ostream& os) const;
+
         //- Write a (commented) header property and value pair
         template<class Type>
         void writeHeaderValue
