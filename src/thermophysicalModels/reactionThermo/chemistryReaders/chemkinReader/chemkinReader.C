@@ -774,9 +774,12 @@ void Foam::chemkinReader::addReaction
 void Foam::chemkinReader::read
 (
     const fileName& CHEMKINFileName,
-    const fileName& thermoFileName
+    const fileName& thermoFileName,
+    const fileName& transportFileName
 )
 {
+    transportDict_.read(IFstream(transportFileName)());
+
     if (thermoFileName != fileName::null)
     {
         std::ifstream thermoStream(thermoFileName.c_str());
@@ -824,8 +827,9 @@ void Foam::chemkinReader::read
 
 Foam::chemkinReader::chemkinReader
 (
-    const fileName& CHEMKINFileName,
     speciesTable& species,
+    const fileName& CHEMKINFileName,
+    const fileName& transportFileName,
     const fileName& thermoFileName,
     const bool newFormat
 )
@@ -837,7 +841,7 @@ Foam::chemkinReader::chemkinReader
     newFormat_(newFormat),
     imbalanceTol_(ROOTSMALL)
 {
-    read(CHEMKINFileName, thermoFileName);
+    read(CHEMKINFileName, thermoFileName, transportFileName);
 }
 
 
@@ -868,6 +872,11 @@ Foam::chemkinReader::chemkinReader
         thermoFile = fileName(thermoDict.lookup("CHEMKINThermoFile")).expand();
     }
 
+    fileName transportFile
+    (
+        fileName(thermoDict.lookup("CHEMKINTransportFile")).expand()
+    );
+
     // allow relative file names
     fileName relPath = thermoDict.name().path();
     if (relPath.size())
@@ -877,13 +886,18 @@ Foam::chemkinReader::chemkinReader
             chemkinFile = relPath/chemkinFile;
         }
 
-        if (!thermoFile.isAbsolute())
+        if (thermoFile != fileName::null && !thermoFile.isAbsolute())
         {
             thermoFile = relPath/thermoFile;
         }
+
+        if (!transportFile.isAbsolute())
+        {
+            transportFile = relPath/transportFile;
+        }
     }
 
-    read(chemkinFile, thermoFile);
+    read(chemkinFile, thermoFile, transportFile);
 }
 
 

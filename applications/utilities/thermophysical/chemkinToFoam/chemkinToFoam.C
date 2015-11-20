@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
 {
     argList::validArgs.append("CHEMKINFile");
     argList::validArgs.append("CHEMKINThermodynamicsFile");
+    argList::validArgs.append("CHEMKINTransport");
     argList::validArgs.append("FOAMChemistryFile");
     argList::validArgs.append("FOAMThermodynamicsFile");
 
@@ -57,16 +58,16 @@ int main(int argc, char *argv[])
 
     speciesTable species;
 
-    chemkinReader cr(args[1], species, args[2], newFormat);
+    chemkinReader cr(species, args[1], args[3], args[2], newFormat);
 
-    OFstream reactionsFile(args[3]);
+    OFstream reactionsFile(args[4]);
     reactionsFile
         << "species" << cr.species() << token::END_STATEMENT << nl << nl;
 
     cr.reactions().write(reactionsFile);
 
 
-    OFstream thermoFile(args[4]);
+    OFstream thermoFile(args[5]);
     cr.speciesThermo().write(thermoFile);
 
     Info<< "End\n" << endl;

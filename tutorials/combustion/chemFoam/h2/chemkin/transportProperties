@@ -10,41 +10,18 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      thermophysicalProperties;
+    location    "chemkin";
+    object      transportProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType
+".*"
 {
-    type            hePsiThermo;
-    mixture         reactingMixture;
-    transport       sutherland;
-    thermo          janaf;
-    energy          sensibleEnthalpy;
-    equationOfState perfectGas;
-    specie          specie;
-}
-
-CHEMKINFile     "$FOAM_CASE/chemkin/chem.inp";
-CHEMKINThermoFile "$FOAM_CASE/chemkin/therm.dat";
-CHEMKINTransportFile "$FOAM_CASE/chemkin/transportProperties";
-
-newFormat       yes;
-
-inertSpecie     N2;
-
-liquids
-{
-    C7H16
+    transport
     {
-        defaultCoeffs   yes;
+        As 0;
+        Ts 0;
     }
-}
-
-solids
-{
-    // none
 }
 
 // ************************************************************************* //

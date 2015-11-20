@@ -645,8 +645,7 @@ bool finishReaction = false;
                     highCpCoeffs,
                     lowCpCoeffs
                 ),
-                1.67212e-6,
-                170.672
+                transportDict_.subDict(currentSpecieName)
             )
         );
 

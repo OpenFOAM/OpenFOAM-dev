@@ -27,8 +27,7 @@ thermoType
 }
 
 CHEMKINFile     "$FOAM_CASE/chemkin/chem.inp";
-
 CHEMKINThermoFile "$FOAM_CASE/chemkin/therm.dat";
-
+CHEMKINTransportFile "$FOAM_CASE/chemkin/transportProperties";
 
 // ************************************************************************* //
