@@ -51,6 +51,7 @@ class metisDecomp
 
     // Private Member Functions
 
+        //- Call Metis with options from dictionary.
         label decompose
         (
             const List<label>& adjncy,
@@ -131,7 +132,6 @@ public:
             const pointField& cc,
             const scalarField& cWeights
         );
-
 };
 
 

@@ -30,8 +30,8 @@ License
 
 extern "C"
 {
-#define OMPI_SKIP_MPICXX
-#   include "metis.h"
+    #define OMPI_SKIP_MPICXX
+    #include "metis.h"
 }
 
 
@@ -40,14 +40,12 @@ extern "C"
 namespace Foam
 {
     defineTypeNameAndDebug(metisDecomp, 0);
-
     addToRunTimeSelectionTable(decompositionMethod, metisDecomp, dictionary);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Call Metis with options from dictionary.
 Foam::label Foam::metisDecomp::decompose
 (
     const List<label>& adjncy,
@@ -57,9 +55,6 @@ Foam::label Foam::metisDecomp::decompose
     List<label>& finalDecomp
 )
 {
-    // C style numbering
-    //int numFlag = 0;
-
     // Method of decomposition
     // recursive: multi-level recursive bisection (default)
     // k-way: multi-level k-way
@@ -187,15 +182,15 @@ Foam::label Foam::metisDecomp::decompose
         //}
     }
 
-    int ncon = 1;
+    label ncon = 1;
 
-    int nProcs = nProcessors_;
+    label nProcs = nProcessors_;
 
     // output: cell -> processor addressing
     finalDecomp.setSize(numCells);
 
     // output: number of cut edges
-    int edgeCut = 0;
+    label edgeCut = 0;
 
     if (method == "recursive")
     {
