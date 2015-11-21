@@ -95,7 +95,7 @@ Foam::saturationModels::Antoine::Tsat
     const volScalarField& p
 ) const
 {
-    return B_/(A_ - log10(p)) - C_;
+    return B_/(log(p) - A_) - C_;
 }
 
 
