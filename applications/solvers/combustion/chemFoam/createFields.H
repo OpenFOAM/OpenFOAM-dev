@@ -86,20 +86,6 @@
 
     #include "createPhi.H"
 
-    Info << "Creating turbulence model.\n" << endl;
-    autoPtr<compressible::turbulenceModel> turbulence
-    (
-        compressible::turbulenceModel::New
-        (
-            rho,
-            U,
-            phi,
-            thermo
-        )
-    );
-
     OFstream post(args.path()/"chemFoam.out");
     post<< "# Time" << token::TAB << "Temperature [K]" << token::TAB
         << "Pressure [Pa]" << endl;
-
-
