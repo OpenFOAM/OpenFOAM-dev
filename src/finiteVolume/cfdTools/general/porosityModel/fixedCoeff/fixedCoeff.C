@@ -119,7 +119,7 @@ Foam::porosityModels::fixedCoeff::fixedCoeff
     adjustNegativeResistance(alphaXYZ_);
     adjustNegativeResistance(betaXYZ_);
 
-    calcTranformModelData();
+    calcTransformModelData();
 }
 
 
@@ -131,7 +131,7 @@ Foam::porosityModels::fixedCoeff::~fixedCoeff()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::porosityModels::fixedCoeff::calcTranformModelData()
+void Foam::porosityModels::fixedCoeff::calcTransformModelData()
 {
     if (coordSys_.R().uniform())
     {

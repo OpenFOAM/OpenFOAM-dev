@@ -713,7 +713,7 @@ void Foam::searchableSurfaceCollection::distribute
 {
     forAll(subGeom_, surfI)
     {
-        // Note:Tranform the bounding boxes? Something like
+        // Note:Transform the bounding boxes? Something like
         // pointField bbPoints =
         // cmptDivide
         // (

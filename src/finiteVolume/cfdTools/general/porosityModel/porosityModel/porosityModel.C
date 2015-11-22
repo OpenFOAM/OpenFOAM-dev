@@ -137,7 +137,7 @@ void Foam::porosityModel::transformModelData()
 {
     if (!mesh_.upToDatePoints(*this))
     {
-        calcTranformModelData();
+        calcTransformModelData();
 
         // set model up-to-date wrt points
         mesh_.setUpToDatePoints(*this);

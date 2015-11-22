@@ -66,7 +66,7 @@ Foam::porosityModels::powerLaw::~powerLaw()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::porosityModels::powerLaw::calcTranformModelData()
+void Foam::porosityModels::powerLaw::calcTransformModelData()
 {
     // nothing to be transformed
 }

@@ -63,7 +63,7 @@ Foam::porosityModels::DarcyForchheimer::DarcyForchheimer
     adjustNegativeResistance(dXYZ_);
     adjustNegativeResistance(fXYZ_);
 
-    calcTranformModelData();
+    calcTransformModelData();
 }
 
 
@@ -75,7 +75,7 @@ Foam::porosityModels::DarcyForchheimer::~DarcyForchheimer()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::porosityModels::DarcyForchheimer::calcTranformModelData()
+void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
 {
     if (coordSys_.R().uniform())
     {
