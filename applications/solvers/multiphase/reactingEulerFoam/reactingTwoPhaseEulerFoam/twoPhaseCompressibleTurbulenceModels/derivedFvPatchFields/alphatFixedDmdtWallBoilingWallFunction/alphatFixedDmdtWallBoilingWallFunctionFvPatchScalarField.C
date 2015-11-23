@@ -27,12 +27,11 @@ License
 #include "compressibleTurbulenceModel.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
-#include "addToRunTimeSelectionTable.H"
 #include "twoPhaseSystem.H"
-#include "phaseSystem.H"
 #include "ThermalPhaseChangePhaseSystem.H"
 #include "MomentumTransferPhaseSystem.H"
 #include "wallFvPatch.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -131,6 +130,7 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
     Cmu_(0.09),
     kappa_(0.41),
     E_(9.8),
+    dmdtRelax_(1.0),
     fixedDmdt_(0.0)
 {
     checkType();
@@ -150,6 +150,7 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
     Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     E_(dict.lookupOrDefault<scalar>("E", 9.8)),
+    dmdtRelax_(dict.lookupOrDefault<scalar>("dmdtRelax", 1.0)),
     fixedDmdt_(dict.lookupOrDefault<scalar>("fixedDmdt", 0.0))
 {}
 
@@ -168,6 +169,7 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
     Cmu_(ptf.Cmu_),
     kappa_(ptf.kappa_),
     E_(ptf.E_),
+    dmdtRelax_(ptf.dmdtRelax_),
     fixedDmdt_(ptf.fixedDmdt_)
 {}
 
@@ -183,6 +185,7 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
     Cmu_(awfpsf.Cmu_),
     kappa_(awfpsf.kappa_),
     E_(awfpsf.E_),
+    dmdtRelax_(awfpsf.dmdtRelax_),
     fixedDmdt_(awfpsf.fixedDmdt_)
 {}
 
@@ -199,6 +202,7 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
     Cmu_(awfpsf.Cmu_),
     kappa_(awfpsf.kappa_),
     E_(awfpsf.E_),
+    dmdtRelax_(awfpsf.dmdtRelax_),
     fixedDmdt_(awfpsf.fixedDmdt_)
 {}
 
@@ -328,7 +332,7 @@ void alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
         alphatConv[faceI] = max(0.0, alphaEff - alphaw[faceI]);
     }
 
-    dmdt_ = fixedDmdt_;
+    dmdt_ = (1 - dmdtRelax_)*dmdt_ + dmdtRelax_*fixedDmdt_;
 
     operator==(alphatConv);
 
@@ -346,6 +350,7 @@ void alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::write
     os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
     os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
     os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
+    os.writeKeyword("dmdtRelax") << dmdtRelax_ << token::END_STATEMENT << nl;
     os.writeKeyword("fixedDmdt") << fixedDmdt_ << token::END_STATEMENT << nl;
     dmdt_.writeEntry("dmdt", os);
     writeEntry("value", os);
