@@ -70,7 +70,6 @@ int main(int argc, char *argv[])
     pimpleControl pimple(mesh);
 
     #include "readCombustionProperties.H"
-    #include "readGravitationalAcceleration.H"
     #include "createFields.H"
     #include "createMRF.H"
     #include "createFvOptions.H"

@@ -6,8 +6,7 @@
       + MRF.DDt(rho, U)
       + turbulence->divDevRhoReff(U)
      ==
-        rho*g
-      + fvOptions(rho, U)
+        fvOptions(rho, U)
     );
 
     UEqn.relax();
