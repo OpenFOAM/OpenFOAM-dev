@@ -44,7 +44,8 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    q_(p.size(), 0.0)
+    q_(p.size(), 0.0),
+    relax_(1.0)
 {}
 
 
@@ -57,44 +58,48 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    q_("q", dict, p.size())
+    q_("q", dict, p.size()),
+    relax_(dict.lookupOrDefault<scalar>("relax", 1.0))
 {}
 
 
 Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
 fixedMultiPhaseHeatFluxFvPatchScalarField
 (
-    const fixedMultiPhaseHeatFluxFvPatchScalarField& ptf,
+    const fixedMultiPhaseHeatFluxFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    q_(ptf.q_, mapper)
+    fixedValueFvPatchScalarField(psf, p, iF, mapper),
+    q_(psf.q_, mapper),
+    relax_(psf.relax_)
 {}
 
 
 Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
 fixedMultiPhaseHeatFluxFvPatchScalarField
 (
-    const fixedMultiPhaseHeatFluxFvPatchScalarField& awfpsf
+    const fixedMultiPhaseHeatFluxFvPatchScalarField& psf
 )
 :
-    fixedValueFvPatchScalarField(awfpsf),
-    q_(awfpsf.q_)
+    fixedValueFvPatchScalarField(psf),
+    q_(psf.q_),
+    relax_(psf.relax_)
 {}
 
 
 Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
 fixedMultiPhaseHeatFluxFvPatchScalarField
 (
-    const fixedMultiPhaseHeatFluxFvPatchScalarField& awfpsf,
+    const fixedMultiPhaseHeatFluxFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(awfpsf, iF),
-    q_(awfpsf.q_)
+    fixedValueFvPatchScalarField(psf, iF),
+    q_(psf.q_),
+    relax_(psf.relax_)
 {}
 
 
@@ -165,8 +170,7 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::updateCoeffs()
             << gMin(Q) << " - " << gMax(Q) << endl;
     }
 
-    scalar relax(1);
-    operator==((1 - relax)*Tp + relax*(q_ + A)/(B));
+    operator==((1 - relax_)*Tp + relax_*(q_ + A)/(B));
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }
@@ -175,6 +179,7 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::updateCoeffs()
 void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
+    os.writeKeyword("relax") << relax_ << token::END_STATEMENT << nl;
     q_.writeEntry("q", os);
     writeEntry("value", os);
 }

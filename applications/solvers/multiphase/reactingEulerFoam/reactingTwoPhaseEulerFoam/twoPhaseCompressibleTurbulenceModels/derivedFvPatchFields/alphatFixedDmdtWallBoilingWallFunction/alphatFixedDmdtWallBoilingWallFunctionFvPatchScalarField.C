@@ -83,10 +83,10 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::yPlusTherm
 ) const
 {
 
-    tmp<scalarField> typtf(new scalarField(this->size()));
-    scalarField& yptf = typtf();
+    tmp<scalarField> typsf(new scalarField(this->size()));
+    scalarField& ypsf = typsf();
 
-    forAll(yptf, faceI)
+    forAll(ypsf, faceI)
     {
         scalar ypt = 11.0;
 
@@ -98,11 +98,11 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::yPlusTherm
 
             if (yptNew < VSMALL)
             {
-                yptf[faceI] =  0;
+                ypsf[faceI] =  0;
             }
             else if (mag(yptNew - ypt) < tolerance_)
             {
-                yptf[faceI] = yptNew;
+                ypsf[faceI] = yptNew;
             }
             else
             {
@@ -110,10 +110,10 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::yPlusTherm
             }
         }
 
-        yptf[faceI] = ypt;
+        ypsf[faceI] = ypt;
     }
 
-    return typtf;
+    return typsf;
 }
 
 
@@ -160,52 +160,52 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
 (
-    const alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField& ptf,
+    const alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    alphatPhaseChangeWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
-    Prt_(ptf.Prt_),
-    Cmu_(ptf.Cmu_),
-    kappa_(ptf.kappa_),
-    E_(ptf.E_),
-    dmdtRelax_(ptf.dmdtRelax_),
-    fixedDmdt_(ptf.fixedDmdt_)
+    alphatPhaseChangeWallFunctionFvPatchScalarField(psf, p, iF, mapper),
+    Prt_(psf.Prt_),
+    Cmu_(psf.Cmu_),
+    kappa_(psf.kappa_),
+    E_(psf.E_),
+    dmdtRelax_(psf.dmdtRelax_),
+    fixedDmdt_(psf.fixedDmdt_)
 {}
 
 
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
 (
-    const alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField& awfpsf
+    const alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField& psf
 )
 :
-    alphatPhaseChangeWallFunctionFvPatchScalarField(awfpsf),
-    Prt_(awfpsf.Prt_),
-    Cmu_(awfpsf.Cmu_),
-    kappa_(awfpsf.kappa_),
-    E_(awfpsf.E_),
-    dmdtRelax_(awfpsf.dmdtRelax_),
-    fixedDmdt_(awfpsf.fixedDmdt_)
+    alphatPhaseChangeWallFunctionFvPatchScalarField(psf),
+    Prt_(psf.Prt_),
+    Cmu_(psf.Cmu_),
+    kappa_(psf.kappa_),
+    E_(psf.E_),
+    dmdtRelax_(psf.dmdtRelax_),
+    fixedDmdt_(psf.fixedDmdt_)
 {}
 
 
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
 (
-    const alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField& awfpsf,
+    const alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    alphatPhaseChangeWallFunctionFvPatchScalarField(awfpsf, iF),
-    Prt_(awfpsf.Prt_),
-    Cmu_(awfpsf.Cmu_),
-    kappa_(awfpsf.kappa_),
-    E_(awfpsf.E_),
-    dmdtRelax_(awfpsf.dmdtRelax_),
-    fixedDmdt_(awfpsf.fixedDmdt_)
+    alphatPhaseChangeWallFunctionFvPatchScalarField(psf, iF),
+    Prt_(psf.Prt_),
+    Cmu_(psf.Cmu_),
+    kappa_(psf.kappa_),
+    E_(psf.E_),
+    dmdtRelax_(psf.dmdtRelax_),
+    fixedDmdt_(psf.fixedDmdt_)
 {}
 
 

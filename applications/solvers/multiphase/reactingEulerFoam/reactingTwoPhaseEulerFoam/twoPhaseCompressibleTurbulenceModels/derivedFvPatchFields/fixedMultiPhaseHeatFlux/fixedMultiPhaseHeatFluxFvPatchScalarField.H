@@ -67,6 +67,9 @@ class fixedMultiPhaseHeatFluxFvPatchScalarField
         //- Heat power [W] or flux [W/m2]
         scalarField q_;
 
+        //- Relaxation factor
+        scalar relax_;
+
 
 public:
 

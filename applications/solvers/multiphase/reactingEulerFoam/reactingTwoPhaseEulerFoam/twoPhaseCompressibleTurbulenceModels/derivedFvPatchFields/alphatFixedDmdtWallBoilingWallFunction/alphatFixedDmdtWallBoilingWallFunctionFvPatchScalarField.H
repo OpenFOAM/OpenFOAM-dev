@@ -73,7 +73,7 @@ class alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
         //- E coefficient
         scalar E_;
 
-        //- dmdt relaxationFactor
+        //- dmdt relaxation factor
         scalar dmdtRelax_;
 
         //- Reference dmdt
