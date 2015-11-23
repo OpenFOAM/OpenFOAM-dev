@@ -24,14 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField.H"
-#include "compressibleTurbulenceModel.H"
 #include "fvPatchFieldMapper.H"
-#include "volFields.H"
+#include "addToRunTimeSelectionTable.H"
+
 #include "twoPhaseSystem.H"
 #include "ThermalPhaseChangePhaseSystem.H"
 #include "MomentumTransferPhaseSystem.H"
+#include "compressibleTurbulenceModel.H"
+#include "ThermalDiffusivity.H"
+#include "PhaseCompressibleTurbulenceModel.H"
 #include "wallFvPatch.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -242,15 +244,7 @@ void alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
     const label patchi = patch().index();
 
     // Retrieve turbulence properties from model
-    const compressibleTurbulenceModel& turbModel =
-        db().lookupObject<compressibleTurbulenceModel>
-        (
-            IOobject::groupName
-            (
-                compressibleTurbulenceModel::propertiesName,
-                dimensionedInternalField().group()
-            )
-        );
+    const phaseCompressibleTurbulenceModel& turbModel = liquid.turbulence();
 
     const scalar Cmu25 = pow025(Cmu_);
 
