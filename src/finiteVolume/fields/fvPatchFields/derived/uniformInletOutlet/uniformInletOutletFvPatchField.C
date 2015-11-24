@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,37 +46,6 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
 template<class Type>
 Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
 (
-    const uniformInletOutletFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchField<Type>(p, iF),
-    phiName_(ptf.phiName_),
-    uniformInletValue_(ptf.uniformInletValue_, false)
-{
-    this->patchType() = ptf.patchType();
-
-    // For safety re-evaluate
-    const scalar t = this->db().time().timeOutputValue();
-    this->refValue() = uniformInletValue_->value(t);
-    this->refGrad() = pTraits<Type>::zero;
-    this->valueFraction() = 0.0;
-
-    // Map value (unmapped get refValue)
-    if (notNull(iF) && iF.size())
-    {
-        fvPatchField<Type>::operator=(this->refValue());
-    }
-    this->map(ptf, mapper);
-
-}
-
-
-template<class Type>
-Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -103,6 +72,35 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
 
     this->refGrad() = pTraits<Type>::zero;
     this->valueFraction() = 0.0;
+}
+
+
+template<class Type>
+Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
+(
+    const uniformInletOutletFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchField<Type>(p, iF),  // Don't map
+    phiName_(ptf.phiName_),
+    uniformInletValue_(ptf.uniformInletValue_, false)
+{
+    this->patchType() = ptf.patchType();
+
+    // Evaluate refValue since not mapped
+    const scalar t = this->db().time().timeOutputValue();
+    this->refValue() = uniformInletValue_->value(t);
+
+    this->refGrad() = pTraits<Type>::zero;
+    this->valueFraction() = 0.0;
+
+    // Initialize the patch value to the refValue
+    fvPatchField<Type>::operator=(this->refValue());
+
+    this->map(ptf, mapper);
 }
 
 

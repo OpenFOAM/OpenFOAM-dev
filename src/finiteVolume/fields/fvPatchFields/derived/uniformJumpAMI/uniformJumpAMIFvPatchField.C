@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
 )
 :
     fixedJumpAMIFvPatchField<Type>(ptf, p, iF, mapper),
-    jumpTable_(ptf.jumpTable_().clone().ptr())
+    jumpTable_(ptf.jumpTable_, false)
 {}
 
 
@@ -87,7 +87,7 @@ Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
 )
 :
     fixedJumpAMIFvPatchField<Type>(ptf),
-    jumpTable_(ptf.jumpTable_().clone().ptr())
+    jumpTable_(ptf.jumpTable_, false)
 {}
 
 
@@ -99,7 +99,7 @@ Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
 )
 :
     fixedJumpAMIFvPatchField<Type>(ptf, iF),
-    jumpTable_(ptf.jumpTable_().clone().ptr())
+    jumpTable_(ptf.jumpTable_, false)
 {}
 
 

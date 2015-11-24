@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,8 @@ oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
     refValue_(ptf.refValue_, mapper),
     offset_(ptf.offset_),
-    amplitude_(ptf.amplitude_().clone().ptr()),
-    frequency_(ptf.frequency_().clone().ptr()),
+    amplitude_(ptf.amplitude_, false),
+    frequency_(ptf.frequency_, false),
     curTimeIndex_(-1)
 {}
 
@@ -122,8 +122,8 @@ oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
     fixedValueFvPatchField<Type>(ptf),
     refValue_(ptf.refValue_),
     offset_(ptf.offset_),
-    amplitude_(ptf.amplitude_().clone().ptr()),
-    frequency_(ptf.frequency_().clone().ptr()),
+    amplitude_(ptf.amplitude_, false),
+    frequency_(ptf.frequency_, false),
     curTimeIndex_(-1)
 {}
 
@@ -138,8 +138,8 @@ oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
     fixedValueFvPatchField<Type>(ptf, iF),
     refValue_(ptf.refValue_),
     offset_(ptf.offset_),
-    amplitude_(ptf.amplitude_().clone().ptr()),
-    frequency_(ptf.frequency_().clone().ptr()),
+    amplitude_(ptf.amplitude_, false),
+    frequency_(ptf.frequency_, false),
     curTimeIndex_(-1)
 {}
 

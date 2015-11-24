@@ -55,24 +55,6 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 template<class Type>
 Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
-    const uniformFixedValueFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<Type>(p, iF),  // bypass mapper
-    uniformValue_(ptf.uniformValue_().clone().ptr())
-{
-    // Evaluate since value not mapped
-    const scalar t = this->db().time().timeOutputValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
-}
-
-
-template<class Type>
-Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -81,8 +63,24 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
     fixedValueFvPatchField<Type>(p, iF),
     uniformValue_(DataEntry<Type>::New("uniformValue", dict))
 {
-    const scalar t = this->db().time().timeOutputValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
+    this->evaluate();
+}
+
+
+template<class Type>
+Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+(
+    const uniformFixedValueFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<Type>(p, iF),   // Don't map
+    uniformValue_(ptf.uniformValue_, false)
+{
+    // Evaluate since value not mapped
+    this->evaluate();
 }
 
 
@@ -93,12 +91,7 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf),
-    uniformValue_
-    (
-        ptf.uniformValue_.valid()
-      ? ptf.uniformValue_().clone().ptr()
-      : NULL
-    )
+    uniformValue_(ptf.uniformValue_, false)
 {}
 
 
@@ -110,19 +103,12 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, iF),
-    uniformValue_
-    (
-        ptf.uniformValue_.valid()
-      ? ptf.uniformValue_().clone().ptr()
-      : NULL
-    )
+    uniformValue_(ptf.uniformValue_, false)
 {
-    // For safety re-evaluate
-    const scalar t = this->db().time().timeOutputValue();
-
+    // Evaluate the profile if defined
     if (ptf.uniformValue_.valid())
     {
-        fvPatchField<Type>::operator==(uniformValue_->value(t));
+        this->evaluate();
     }
 }
 

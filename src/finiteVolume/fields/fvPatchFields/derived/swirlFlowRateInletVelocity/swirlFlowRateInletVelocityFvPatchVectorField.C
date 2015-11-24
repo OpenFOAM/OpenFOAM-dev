@@ -59,8 +59,8 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
-    flowRate_(ptf.flowRate_().clone().ptr()),
-    rpm_(ptf.rpm_().clone().ptr())
+    flowRate_(ptf.flowRate_, false),
+    rpm_(ptf.rpm_, false)
 {}
 
 
@@ -89,8 +89,8 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
-    flowRate_(ptf.flowRate_().clone().ptr()),
-    rpm_(ptf.rpm_().clone().ptr())
+    flowRate_(ptf.flowRate_, false),
+    rpm_(ptf.rpm_, false)
 {}
 
 
@@ -104,8 +104,8 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, iF),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
-    flowRate_(ptf.flowRate_().clone().ptr()),
-    rpm_(ptf.rpm_().clone().ptr())
+    flowRate_(ptf.flowRate_, false),
+    rpm_(ptf.rpm_, false)
 {}
 
 

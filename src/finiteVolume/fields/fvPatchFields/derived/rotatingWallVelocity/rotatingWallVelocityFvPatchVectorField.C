@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ rotatingWallVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
     origin_(ptf.origin_),
     axis_(ptf.axis_),
-    omega_(ptf.omega_().clone().ptr())
+    omega_(ptf.omega_, false)
 {}
 
 
@@ -97,7 +97,7 @@ rotatingWallVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(rwvpvf),
     origin_(rwvpvf.origin_),
     axis_(rwvpvf.axis_),
-    omega_(rwvpvf.omega_().clone().ptr())
+    omega_(rwvpvf.omega_, false)
 {}
 
 
@@ -111,7 +111,7 @@ rotatingWallVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(rwvpvf, iF),
     origin_(rwvpvf.origin_),
     axis_(rwvpvf.axis_),
-    omega_(rwvpvf.omega_().clone().ptr())
+    omega_(rwvpvf.omega_, false)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,9 +60,9 @@ cylindricalInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
     centre_(ptf.centre_),
     axis_(ptf.axis_),
-    axialVelocity_(ptf.axialVelocity_().clone().ptr()),
-    radialVelocity_(ptf.radialVelocity_().clone().ptr()),
-    rpm_(ptf.rpm_().clone().ptr())
+    axialVelocity_(ptf.axialVelocity_, false),
+    radialVelocity_(ptf.radialVelocity_, false),
+    rpm_(ptf.rpm_, false)
 {}
 
 
@@ -92,9 +92,9 @@ cylindricalInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf),
     centre_(ptf.centre_),
     axis_(ptf.axis_),
-    axialVelocity_(ptf.axialVelocity_().clone().ptr()),
-    radialVelocity_(ptf.radialVelocity_().clone().ptr()),
-    rpm_(ptf.rpm_().clone().ptr())
+    axialVelocity_(ptf.axialVelocity_, false),
+    radialVelocity_(ptf.radialVelocity_, false),
+    rpm_(ptf.rpm_, false)
 {}
 
 
@@ -108,9 +108,9 @@ cylindricalInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, iF),
     centre_(ptf.centre_),
     axis_(ptf.axis_),
-    axialVelocity_(ptf.axialVelocity_().clone().ptr()),
-    radialVelocity_(ptf.radialVelocity_().clone().ptr()),
-    rpm_(ptf.rpm_().clone().ptr())
+    axialVelocity_(ptf.axialVelocity_, false),
+    radialVelocity_(ptf.radialVelocity_, false),
+    rpm_(ptf.rpm_, false)
 {}
 
 
