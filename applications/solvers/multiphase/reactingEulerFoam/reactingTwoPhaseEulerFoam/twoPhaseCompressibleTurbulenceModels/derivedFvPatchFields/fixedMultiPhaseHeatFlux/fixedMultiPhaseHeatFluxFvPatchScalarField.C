@@ -148,7 +148,11 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::updateCoeffs()
 
         const scalarField kappaEff
         (
-            thermo.kappaEff(phase.turbulence().alphat(), patch().index())
+            thermo.kappaEff
+            (
+                phase.turbulence().alphat(patch().index()),
+                patch().index()
+            )
         );
 
         if (debug)
