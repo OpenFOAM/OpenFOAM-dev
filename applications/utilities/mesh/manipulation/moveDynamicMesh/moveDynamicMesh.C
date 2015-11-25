@@ -32,6 +32,7 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "dynamicFvMesh.H"
+#include "pimpleControl.H"
 #include "vtkSurfaceWriter.H"
 #include "cyclicAMIPolyPatch.H"
 
@@ -129,13 +130,23 @@ int main(int argc, char *argv[])
         Info<< "Writing VTK files with weights of AMI patches." << nl << endl;
     }
 
+    pimpleControl pimple(mesh);
+
+    bool moveMeshOuterCorrectors
+    (
+        pimple.dict().lookupOrDefault<Switch>("moveMeshOuterCorrectors", false)
+    );
+
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << endl;
 
-        for (int i = 0; i<2; i++)
+        while (pimple.loop())
         {
-            mesh.update();
+            if (pimple.firstIter() || moveMeshOuterCorrectors)
+            {
+                mesh.update();
+            }
         }
 
         mesh.checkMesh(true);

@@ -33,7 +33,7 @@ solvers
         relTol          0;
     }
 
-    cellDisplacement
+    "cellDisplacement.*"
     {
         solver          GAMG;
         tolerance       1e-08;
@@ -52,6 +52,9 @@ solvers
         relTol          0;
     }
 }
+
+PIMPLE
+{}
 
 
 // ************************************************************************* //
