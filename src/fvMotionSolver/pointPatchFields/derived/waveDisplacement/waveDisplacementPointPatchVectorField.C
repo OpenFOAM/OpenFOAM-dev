@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,14 +29,9 @@ License
 #include "Time.H"
 #include "polyMesh.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-waveDisplacementPointPatchVectorField::
+Foam::waveDisplacementPointPatchVectorField::
 waveDisplacementPointPatchVectorField
 (
     const pointPatch& p,
@@ -50,7 +45,7 @@ waveDisplacementPointPatchVectorField
 {}
 
 
-waveDisplacementPointPatchVectorField::
+Foam::waveDisplacementPointPatchVectorField::
 waveDisplacementPointPatchVectorField
 (
     const pointPatch& p,
@@ -61,7 +56,7 @@ waveDisplacementPointPatchVectorField
     fixedValuePointPatchField<vector>(p, iF, dict),
     amplitude_(dict.lookup("amplitude")),
     omega_(readScalar(dict.lookup("omega"))),
-    waveNumber_(dict.lookupOrDefault<vector>("waveLength", vector::zero))
+    waveNumber_(dict.lookupOrDefault<vector>("waveNumber", vector::zero))
 {
     if (!dict.found("value"))
     {
@@ -70,7 +65,7 @@ waveDisplacementPointPatchVectorField
 }
 
 
-waveDisplacementPointPatchVectorField::
+Foam::waveDisplacementPointPatchVectorField::
 waveDisplacementPointPatchVectorField
 (
     const waveDisplacementPointPatchVectorField& ptf,
@@ -86,7 +81,7 @@ waveDisplacementPointPatchVectorField
 {}
 
 
-waveDisplacementPointPatchVectorField::
+Foam::waveDisplacementPointPatchVectorField::
 waveDisplacementPointPatchVectorField
 (
     const waveDisplacementPointPatchVectorField& ptf,
@@ -102,7 +97,7 @@ waveDisplacementPointPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void waveDisplacementPointPatchVectorField::updateCoeffs()
+void Foam::waveDisplacementPointPatchVectorField::updateCoeffs()
 {
     if (this->updated())
     {
@@ -123,7 +118,7 @@ void waveDisplacementPointPatchVectorField::updateCoeffs()
 }
 
 
-void waveDisplacementPointPatchVectorField::write(Ostream& os) const
+void Foam::waveDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
     os.writeKeyword("amplitude")
@@ -138,14 +133,13 @@ void waveDisplacementPointPatchVectorField::write(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makePointPatchTypeField
-(
-    pointPatchVectorField,
-    waveDisplacementPointPatchVectorField
-);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+namespace Foam
+{
+    makePointPatchTypeField
+    (
+        pointPatchVectorField,
+        waveDisplacementPointPatchVectorField
+    );
+}
 
 // ************************************************************************* //
