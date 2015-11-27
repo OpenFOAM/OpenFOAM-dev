@@ -89,7 +89,8 @@ continuousGasKEpsilon<BasicTurbulenceModel>::continuousGasKEpsilon
 {
     if (type == typeName)
     {
-        kEpsilon<BasicTurbulenceModel>::correctNut();
+        // Cannot correct nut yet: construction of the phases is not complete
+        // kEpsilon<BasicTurbulenceModel>::correctNut();
         this->printCoeffs(type);
     }
 }
