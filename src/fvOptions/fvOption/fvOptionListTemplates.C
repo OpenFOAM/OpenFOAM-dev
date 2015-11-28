@@ -192,6 +192,57 @@ Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
 
 
 template<class Type>
+Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
+(
+    const geometricOneField& alpha,
+    const geometricOneField& rho,
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    return this->operator()(field, field.name());
+}
+
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
+(
+    const volScalarField& alpha,
+    const geometricOneField& rho,
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    volScalarField one
+    (
+        IOobject
+        (
+            "one",
+            this->mesh_.time().timeName(),
+            this->mesh_,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        this->mesh_,
+        dimensionedScalar("one", dimless, 1.0)
+    );
+
+    return this->operator()(alpha, one, field, field.name());
+}
+
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type> > Foam::fv::optionList::operator()
+(
+    const geometricOneField& alpha,
+    const volScalarField& rho,
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    return this->operator()(rho, field, field.name());
+}
+
+
+template<class Type>
 void Foam::fv::optionList::constrain(fvMatrix<Type>& eqn)
 {
     checkApplied();

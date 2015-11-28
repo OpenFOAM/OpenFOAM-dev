@@ -38,6 +38,7 @@ SourceFile
 #include "fvOption.H"
 #include "PtrList.H"
 #include "GeometricField.H"
+#include "geometricOneField.H"
 #include "fvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -171,6 +172,33 @@ public:
                 const volScalarField& rho,
                 GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
+            );
+
+            //- Return source for equation
+            template<class Type>
+            tmp<fvMatrix<Type> > operator()
+            (
+                const volScalarField& alpha,
+                const geometricOneField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field
+            );
+
+            //- Return source for equation
+            template<class Type>
+            tmp<fvMatrix<Type> > operator()
+            (
+                const geometricOneField& alpha,
+                const volScalarField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field
+            );
+
+            //- Return source for equation
+            template<class Type>
+            tmp<fvMatrix<Type> > operator()
+            (
+                const geometricOneField& alpha,
+                const geometricOneField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field
             );
 
 

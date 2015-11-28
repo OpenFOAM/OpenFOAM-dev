@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kEpsilon.H"
+#include "fvOptionList.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -238,6 +239,14 @@ void kEpsilon<BasicTurbulenceModel>::correct()
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
 
+    // const_cast needed because the operators and functions of fvOptions
+    // are currently non-const.
+    fv::optionList& fvOptions = const_cast<fv::optionList&>
+    (
+        this->mesh_.objectRegistry::template
+            lookupObject<fv::optionList>("fvOptions")
+    );
+
     eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
 
     volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
@@ -260,11 +269,14 @@ void kEpsilon<BasicTurbulenceModel>::correct()
       - fvm::SuSp(((2.0/3.0)*C1_ + C3_)*alpha*rho*divU, epsilon_)
       - fvm::Sp(C2_*alpha*rho*epsilon_/k_, epsilon_)
       + epsilonSource()
+      + fvOptions(alpha, rho, epsilon_)
     );
 
     epsEqn().relax();
+    fvOptions.constrain(epsEqn());
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
+    fvOptions.correct(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
     // Turbulent kinetic energy equation
@@ -278,13 +290,17 @@ void kEpsilon<BasicTurbulenceModel>::correct()
       - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
       - fvm::Sp(alpha*rho*epsilon_/k_, k_)
       + kSource()
+      + fvOptions(alpha, rho, k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, this->kMin_);
 
     correctNut();
+    fvOptions.correct(nut);
 }
 
 
