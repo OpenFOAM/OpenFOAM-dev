@@ -259,8 +259,8 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
     // Liquid temperature at y+=250 is estimated from logarithmic
     // thermal wall function (Koncar, Krepper & Egorov, 2005)
-    scalarField Tplus_y250(Prt_*(Foam::log(E_*250)/kappa_ + P));
-    scalarField Tplus(Prt_*(Foam::log(E_*yPlus)/kappa_ + P));
+    scalarField Tplus_y250(Prt_*(log(E_*250)/kappa_ + P));
+    scalarField Tplus(Prt_*(log(E_*yPlus)/kappa_ + P));
     scalarField Tl(Tw - (Tplus_y250/Tplus)*(Tw - Tc));
     Tl = max(Tc - 40, min(Tc, Tl));
 
@@ -268,39 +268,42 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
     // Reformulation of Lemmert & Chawla (Egorov & Menter, 2004)
     const scalarField N
     (
-        0.8*9.922e5*Foam::pow(max(0.0, (Tw - Tsatw)/10), 1.805)
+        0.8*9.922e5*pow(max((Tw - Tsatw)/10, scalar(0)), 1.805)
     );
 
     // Bubble departure diameter:
     // Tolubinski and Kostanchuk (1970)
-    const scalarField Tsub(max(0.0, Tsatw - Tl));
+    const scalarField Tsub(max(Tsatw - Tl, scalar(0)));
     const scalarField Ddep
     (
-       max(1e-6, min(0.0006*Foam::exp(-Tsub/45), 0.0014))
+        max(min(0.0006*exp(-Tsub/45), scalar(0.0014)), scalar(1e-6))
     );
 
     // Bubble departure frequency:
     // Cole (1960)
     const scalarField F
     (
-        sqrt(4*mag(g).value()*(max(0.1, rhoc - rhoVaporp))/(3*Ddep*rhow))
+        sqrt
+        (
+            4*mag(g).value()*(max(rhoc - rhoVaporp, scalar(0.1)))/(3*Ddep*rhow)
+        )
     );
 
     // Area fractions:
 
     // Del Valle & Kenning (1985)
     const scalarField Ja(rhoc*Cpw*Tsub/(rhoVaporp*L));
-    const scalarField Al(4.8*Foam::exp(-Ja/80));
+    const scalarField Al(4.8*exp(-Ja/80));
 
     // Liquid phase fraction at the wall
     const scalarField liquidw(liquid.boundaryField()[patchi]);
 
     // Damp boiling at high void fractions.
-    const scalarField W(min(1.,liquidw/0.2));
+    const scalarField W(min(liquidw/0.2, scalar(0.1)));
 
-    const scalarField A2(W*min(M_PI*sqr(Ddep)*N*Al/4, 1.0));
-    const scalarField A1(max(1e-4, 1 - A2));
-    const scalarField A2E(W*min(M_PI*sqr(Ddep)*N*Al/4, 5.0));
+    const scalarField A2(W*min(M_PI*sqr(Ddep)*N*Al/4, scalar(1)));
+    const scalarField A1(max(1 - A2, scalar(1e-4)));
+    const scalarField A2E(W*min(M_PI*sqr(Ddep)*N*Al/4, scalar(5)));
 
     // Wall evaporation heat flux [kg/s3 = J/m2s]
     const scalarField Qe((1.0/6.0)*A2E*Ddep*rhoVaporw*F*L);
@@ -318,7 +321,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
     );
 
     // Quenching heat flux
-    const scalarField Qq(A2*hQ*max(0.0, Tw - Tl));
+    const scalarField Qq(A2*hQ*max(Tw - Tl, scalar(0)));
 
     // Convective heat flux
     alphatConv_ = calcAlphat(alphatConv_);
@@ -329,7 +332,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
     operator==
     (
-        A1*alphatConv_ + (Qq + Qe)/max(liquidw*hew.snGrad(), 1e-16)
+        A1*alphatConv_ + (Qq + Qe)/max(liquidw*hew.snGrad(), scalar(1e-16))
     );
 
     if(debug)
