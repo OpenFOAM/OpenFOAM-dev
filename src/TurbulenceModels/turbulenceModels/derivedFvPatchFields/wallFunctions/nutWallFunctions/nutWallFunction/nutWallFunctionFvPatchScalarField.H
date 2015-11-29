@@ -34,12 +34,27 @@ Description
 
     \heading Patch usage
 
-    Example of the boundary condition specification:
+    \table
+        Property  | Description         | Required   | Default value
+        Cmu       | Cmu coefficient     | no         | 0.09
+        kappa     | Von Karman constant | no         | 0.41
+        E         | E coefficient       | no         | 9.8
+    \endtable
+
+    Examples of the boundary condition specification:
     \verbatim
     myPatch
     {
         type            nutWallFunction;
+        value           uniform 0.0;
     }
+    \endverbatim
+
+    Reference for the default model coefficients:
+    \verbatim
+        H. Versteeg, W. Malalasekera
+        An Introduction to Computational Fluid Dynamics: The Finite Volume
+        Method, subsection "3.5.2 k-epsilon model"
     \endverbatim
 
 SeeAlso
