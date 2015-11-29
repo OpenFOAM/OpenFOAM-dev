@@ -243,8 +243,8 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
 
     // Mirror boundary faces patch by patch
 
-    wordList newPatchTypes(boundary().size());
-    wordList newPatchNames(boundary().size());
+
+    labelList newToOldPatch(boundary().size(), -1);
     labelList newPatchSizes(boundary().size(), -1);
     labelList newPatchStarts(boundary().size(), -1);
     label nNewPatches = 0;
@@ -303,8 +303,8 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
         // If patch exists, grab the name and type of the original patch
         if (nNewFaces > newPatchStarts[nNewPatches])
         {
-            newPatchTypes[nNewPatches] = boundaryMesh()[patchI].type();
-            newPatchNames[nNewPatches] = boundaryMesh()[patchI].name();
+            newToOldPatch[nNewPatches] = patchI;
+
             newPatchSizes[nNewPatches] =
                 nNewFaces - newPatchStarts[nNewPatches];
 
@@ -316,8 +316,7 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     newFaces.setSize(nNewFaces);
     Info<< " New faces: " << nNewFaces << endl;
 
-    newPatchTypes.setSize(nNewPatches);
-    newPatchNames.setSize(nNewPatches);
+    newToOldPatch.setSize(nNewPatches);
     newPatchSizes.setSize(nNewPatches);
     newPatchStarts.setSize(nNewPatches);
 
@@ -377,18 +376,16 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     fvMesh& pMesh = *mirrorMeshPtr_;
 
     // Add the boundary patches
-    List<polyPatch*> p(newPatchTypes.size());
+    List<polyPatch*> p(newPatchSizes.size());
 
     forAll(p, patchI)
     {
-        p[patchI] = polyPatch::New
+        p[patchI] = boundaryMesh()[newToOldPatch[patchI]].clone
         (
-            newPatchTypes[patchI],
-            newPatchNames[patchI],
-            newPatchSizes[patchI],
-            newPatchStarts[patchI],
+            pMesh.boundaryMesh(),
             patchI,
-            pMesh.boundaryMesh()
+            newPatchSizes[patchI],
+            newPatchStarts[patchI]
         ).ptr();
     }
 
