@@ -4,10 +4,11 @@ PtrList<volScalarField> rhoFluid(fluidRegions.size());
 PtrList<volVectorField> UFluid(fluidRegions.size());
 PtrList<surfaceScalarField> phiFluid(fluidRegions.size());
 PtrList<uniformDimensionedVectorField> gFluid(fluidRegions.size());
-PtrList<compressible::turbulenceModel> turbulence(fluidRegions.size());
-PtrList<volScalarField> p_rghFluid(fluidRegions.size());
+PtrList<uniformDimensionedScalarField> hRefFluid(fluidRegions.size());
 PtrList<volScalarField> ghFluid(fluidRegions.size());
 PtrList<surfaceScalarField> ghfFluid(fluidRegions.size());
+PtrList<compressible::turbulenceModel> turbulence(fluidRegions.size());
+PtrList<volScalarField> p_rghFluid(fluidRegions.size());
 PtrList<radiation::radiationModel> radiation(fluidRegions.size());
 PtrList<volScalarField> KFluid(fluidRegions.size());
 PtrList<volScalarField> dpdtFluid(fluidRegions.size());
@@ -104,6 +105,54 @@ forAll(fluidRegions, i)
         )
     );
 
+    Info<< "    Adding to hRefFluid\n" << endl;
+    hRefFluid.set
+    (
+        i,
+        new uniformDimensionedScalarField
+        (
+            IOobject
+            (
+                "hRef",
+                runTime.constant(),
+                fluidRegions[i],
+                IOobject::READ_IF_PRESENT,
+                IOobject::NO_WRITE
+            ),
+            dimensionedScalar("hRef", dimLength, 0)
+        )
+    );
+
+    dimensionedScalar ghRef
+    (
+        mag(gFluid[i].value()) > SMALL
+      ? gFluid[i]
+          & (cmptMag(gFluid[i].value())/mag(gFluid[i].value()))*hRefFluid[i]
+      : dimensionedScalar("ghRef", gFluid[i].dimensions()*dimLength, 0)
+    );
+
+    Info<< "    Adding to ghFluid\n" << endl;
+    ghFluid.set
+    (
+        i,
+        new volScalarField
+        (
+            "gh",
+            (gFluid[i] & fluidRegions[i].C()) - ghRef
+        )
+    );
+
+    Info<< "    Adding to ghfFluid\n" << endl;
+    ghfFluid.set
+    (
+        i,
+        new surfaceScalarField
+        (
+            "ghf",
+            (gFluid[i] & fluidRegions[i].Cf()) - ghRef
+        )
+    );
+
     Info<< "    Adding to turbulence\n" << endl;
     turbulence.set
     (
@@ -115,20 +164,6 @@ forAll(fluidRegions, i)
             phiFluid[i],
             thermoFluid[i]
         ).ptr()
-    );
-
-    Info<< "    Adding to ghFluid\n" << endl;
-    ghFluid.set
-    (
-        i,
-        new volScalarField("gh", gFluid[i] & fluidRegions[i].C())
-    );
-
-    Info<< "    Adding to ghfFluid\n" << endl;
-    ghfFluid.set
-    (
-        i,
-        new surfaceScalarField("ghf", gFluid[i] & fluidRegions[i].Cf())
     );
 
     p_rghFluid.set
