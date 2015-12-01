@@ -49,6 +49,7 @@ Description
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
 #include "simpleControl.H"
+#include "fvIOoptionList.H"
 
 template<class Type>
 void zeroCells
@@ -76,8 +77,11 @@ int main(int argc, char *argv[])
     simpleControl simple(mesh);
 
     #include "createFields.H"
+    #include "createFvOptions.H"
     #include "initContinuityErrs.H"
     #include "initAdjointContinuityErrs.H"
+
+    turbulence->validate();
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -108,11 +112,17 @@ int main(int argc, char *argv[])
                 fvm::div(phi, U)
               + turbulence->divDevReff(U)
               + fvm::Sp(alpha, U)
+             ==
+                fvOptions(U)
             );
 
             UEqn().relax();
 
+            fvOptions.constrain(UEqn());
+
             solve(UEqn() == -fvc::grad(p));
+
+            fvOptions.correct(U);
 
             volScalarField rAU(1.0/UEqn().A());
             volVectorField HbyA("HbyA", U);
@@ -150,6 +160,7 @@ int main(int argc, char *argv[])
             // Momentum corrector
             U = HbyA - rAU*fvc::grad(p);
             U.correctBoundaryConditions();
+            fvOptions.correct(U);
         }
 
         // Adjoint Pressure-velocity SIMPLE corrector
@@ -173,11 +184,17 @@ int main(int argc, char *argv[])
               - adjointTransposeConvection
               + turbulence->divDevReff(Ua)
               + fvm::Sp(alpha, Ua)
+             ==
+                fvOptions(Ua)
             );
 
             UaEqn().relax();
 
+            fvOptions.constrain(UaEqn());
+
             solve(UaEqn() == -fvc::grad(pa));
+
+            fvOptions.correct(Ua);
 
             volScalarField rAUa(1.0/UaEqn().A());
             volVectorField HbyAa("HbyAa", Ua);
@@ -215,6 +232,7 @@ int main(int argc, char *argv[])
             // Adjoint momentum corrector
             Ua = HbyAa - rAUa*fvc::grad(pa);
             Ua.correctBoundaryConditions();
+            fvOptions.correct(Ua);
         }
 
         laminarTransport.correct();
