@@ -9,5 +9,4 @@ LIB_LIBS = \
     -lincompressibleTransportModels \
     -lturbulenceModels \
     -lfiniteVolume \
-    -lmeshTools \
-    -lfvOptions
+    -lmeshTools

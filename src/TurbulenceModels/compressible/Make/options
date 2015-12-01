@@ -17,5 +17,4 @@ LIB_LIBS = \
     -lturbulenceModels \
     -lspecie \
     -lfiniteVolume \
-    -lmeshTools \
-    -lfvOptions
+    -lmeshTools

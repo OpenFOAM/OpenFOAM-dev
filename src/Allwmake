@@ -41,6 +41,8 @@ wmake $targetType edgeMesh
 parallel/decompose/AllwmakeLnInclude
 dummyThirdParty/Allwmake $targetType $*
 
+wmakeLnInclude fvOptions
+
 wmake $targetType finiteVolume
 wmake $targetType lagrangian/basic
 wmake $targetType lagrangian/distributionModels
