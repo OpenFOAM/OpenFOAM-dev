@@ -79,6 +79,8 @@ int main(int argc, char *argv[])
     #include "correctPhi.H"
     #include "createUf.H"
 
+    turbulence->validate();
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;

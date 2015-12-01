@@ -82,6 +82,8 @@ int main(int argc, char *argv[])
     #include "correctPhi.H"
     #include "createUf.H"
 
+    turbulence->validate();
+
     if (!LTS)
     {
         #include "CourantNo.H"

@@ -79,9 +79,11 @@ autoPtr<incompressible::turbulenceModel> turbulence
     incompressible::turbulenceModel::New(U, phi, mixture)
 );
 
+
 #include "readGravitationalAcceleration.H"
 #include "readhRef.H"
 #include "gh.H"
+
 
 volScalarField p
 (

@@ -59,6 +59,8 @@ int main(int argc, char *argv[])
     #include "setInitialDeltaT.H"
     #include "startSummary.H"
 
+    turbulence->validate();
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;

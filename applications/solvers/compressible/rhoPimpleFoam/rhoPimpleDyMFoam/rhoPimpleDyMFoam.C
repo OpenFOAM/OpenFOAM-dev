@@ -65,6 +65,8 @@ int main(int argc, char *argv[])
     #include "createRhoUf.H"
     #include "createControls.H"
 
+    turbulence->validate();
+
     if (!LTS)
     {
         #include "compressibleCourantNo.H"

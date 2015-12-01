@@ -54,6 +54,8 @@ int main(int argc, char *argv[])
     #include "createZones.H"
     #include "initContinuityErrs.H"
 
+    turbulence->validate();
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;

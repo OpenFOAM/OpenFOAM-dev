@@ -256,4 +256,6 @@ forAll(fluidRegions, i)
         i,
         new fv::IOoptionList(fluidRegions[i])
     );
+
+    turbulence[i].validate();
 }
