@@ -17,6 +17,7 @@ EXE_LIBS = \
     -lfluidThermophysicalModels \
     -lspecie \
     -lfiniteVolume \
+    -lfvOptions \
     -lgenericPatchFields \
     -lmeshTools \
     -lsampling

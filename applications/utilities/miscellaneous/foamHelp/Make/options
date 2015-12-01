@@ -11,4 +11,5 @@ EXE_LIBS = \
     -lradiationModels \
     -lfluidThermophysicalModels \
     -lfiniteVolume \
-    -lmeshTools
+    -lmeshTools \
+    -lfvOptions

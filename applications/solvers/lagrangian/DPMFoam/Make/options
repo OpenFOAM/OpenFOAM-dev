@@ -32,4 +32,5 @@ EXE_LIBS = \
     -lsurfaceFilmModels \
     -lsampling \
     -lfiniteVolume \
+    -lfvOptions \
     -lmeshTools

@@ -17,6 +17,7 @@ EXE_LIBS = \
     -lincompressibleTurbulenceModels \
     -lbarotropicCompressibilityModel \
     -lfiniteVolume \
+    -lfvOptions \
     -ldynamicMesh \
     -ldynamicFvMesh \
     -lmeshTools

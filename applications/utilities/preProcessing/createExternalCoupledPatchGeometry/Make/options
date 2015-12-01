@@ -6,4 +6,5 @@ EXE_LIBS = \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
     -lfiniteVolume \
+    -lfvOptions \
     -lmeshTools

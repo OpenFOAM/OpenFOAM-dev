@@ -28,6 +28,7 @@ EXE_LIBS = \
     -lincompressibleTurbulenceModels \
     -lincompressibleTransportModels \
     -lfiniteVolume \
+    -lfvOptions \
     -lmeshTools \
     -lregionModels \
     -lsurfaceFilmModels

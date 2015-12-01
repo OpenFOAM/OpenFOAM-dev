@@ -19,4 +19,5 @@ EXE_LIBS = \
     -lfluidThermophysicalModels \
     -lsolidThermo \
     -lfiniteVolume \
+    -lfvOptions \
     -lmeshTools

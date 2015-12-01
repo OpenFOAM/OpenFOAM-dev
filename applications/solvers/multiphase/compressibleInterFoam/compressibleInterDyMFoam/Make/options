@@ -25,4 +25,5 @@ EXE_LIBS = \
     -ldynamicMesh \
     -lmeshTools \
     -ldynamicFvMesh \
-    -lfiniteVolume
+    -lfiniteVolume \
+    -lfvOptions

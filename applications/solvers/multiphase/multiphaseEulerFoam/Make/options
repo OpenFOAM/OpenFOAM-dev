@@ -22,4 +22,5 @@ EXE_LIBS = \
     -lturbulenceModels \
     -lincompressibleTurbulenceModels \
     -lfiniteVolume \
+    -lfvOptions \
     -lmeshTools
