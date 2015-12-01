@@ -2,7 +2,7 @@ if (ign.ignited())
 {
     volScalarField& heau = thermo.heu();
 
-    solve
+    fvScalarMatrix heauEqn
     (
         betav*fvm::ddt(rho, heau) + mvConvection->fvmDiv(phi, heau)
       + (betav*fvc::ddt(rho, K) + fvc::div(phi, K))*rho/thermo.rhou()
@@ -23,5 +23,13 @@ if (ign.ignited())
         // A possible solution would be to solve for ftu as well as ft.
         //- fvm::div(muEff*fvc::grad(b)/(b + 0.001), heau)
         //+ fvm::Sp(fvc::div(muEff*fvc::grad(b)/(b + 0.001)), heau)
+     ==
+        betav*fvOptions(rho, heau)
     );
+
+    fvOptions.constrain(heauEqn);
+
+    heauEqn.solve();
+
+    fvOptions.correct(heau);
 }

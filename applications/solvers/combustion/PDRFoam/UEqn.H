@@ -7,7 +7,10 @@
       + turbulence->divDevRhoReff(U)
      ==
         betav*rho*g
+      + betav*fvOptions(rho, U)
     );
+
+    fvOptions.constrain(UEqn);
 
     volSymmTensorField invA(inv(I*UEqn.A() + drag->Dcu()));
 
@@ -15,5 +18,6 @@
     {
         U = invA & (UEqn.H() - betav*fvc::grad(p));
         U.correctBoundaryConditions();
+        fvOptions.correct(U);
         K = 0.5*magSqr(U);
     }

@@ -77,6 +77,7 @@ Description
 #include "Switch.H"
 #include "bound.H"
 #include "pimpleControl.H"
+#include "fvIOoptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -93,11 +94,13 @@ int main(int argc, char *argv[])
     #include "readGravitationalAcceleration.H"
     #include "createFields.H"
     #include "createMRF.H"
+    #include "createFvOptions.H"
     #include "initContinuityErrs.H"
     #include "createTimeControls.H"
     #include "compressibleCourantNo.H"
     #include "setInitialDeltaT.H"
 
+    turbulence->validate();
     scalar StCoNum = 0.0;
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
