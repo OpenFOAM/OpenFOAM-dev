@@ -593,6 +593,10 @@ bool kkLOmega::read()
 }
 
 
+void kkLOmega::validate()
+{}
+
+
 void kkLOmega::correct()
 {
     eddyViscosity<incompressible::RASModel>::correct();

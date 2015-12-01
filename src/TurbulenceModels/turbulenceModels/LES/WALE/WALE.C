@@ -144,14 +144,6 @@ WALE<BasicTurbulenceModel>::WALE
     if (type == typeName)
     {
         this->printCoeffs(type);
-
-        // Correct nut for single-phase solvers only.
-        // For multiphase solvers the phase construction is not complete
-        // at this point.
-        if (isType<geometricOneField>(alpha))
-        {
-            correctNut();
-        }
     }
 }
 

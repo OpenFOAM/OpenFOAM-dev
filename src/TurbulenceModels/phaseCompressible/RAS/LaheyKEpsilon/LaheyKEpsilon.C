@@ -107,9 +107,6 @@ LaheyKEpsilon<BasicTurbulenceModel>::LaheyKEpsilon
     if (type == typeName)
     {
         this->printCoeffs(type);
-
-        // Cannot correct nut yet: construction of the phases is not complete
-        // correctNut();
     }
 }
 

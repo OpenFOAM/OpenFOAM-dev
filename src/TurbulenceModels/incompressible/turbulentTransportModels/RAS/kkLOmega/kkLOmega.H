@@ -301,6 +301,10 @@ public:
             return epsilon_;
         }
 
+        //- Validate the turbulence fields after construction
+        //  Update turbulence viscosity and other derived fields as requires
+        virtual void validate();
+
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
 };

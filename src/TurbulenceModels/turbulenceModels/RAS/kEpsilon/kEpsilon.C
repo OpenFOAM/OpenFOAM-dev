@@ -42,6 +42,16 @@ void kEpsilon<BasicTurbulenceModel>::correctNut()
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
 
+    // const_cast needed because the operators and functions of fvOptions
+    // are currently non-const.
+    fv::optionList& fvOptions = const_cast<fv::optionList&>
+    (
+        this->mesh_.objectRegistry::template
+            lookupObject<fv::optionList>("fvOptions")
+    );
+
+    fvOptions.correct(this->nut_);
+
     BasicTurbulenceModel::correctNut();
 }
 
@@ -189,14 +199,6 @@ kEpsilon<BasicTurbulenceModel>::kEpsilon
     if (type == typeName)
     {
         this->printCoeffs(type);
-
-        // Correct nut for single-phase solvers only.
-        // For multiphase solvers the phase construction is not complete
-        // at this point.
-        if (isType<geometricOneField>(alpha))
-        {
-            correctNut();
-        }
     }
 }
 
@@ -300,7 +302,6 @@ void kEpsilon<BasicTurbulenceModel>::correct()
     bound(k_, this->kMin_);
 
     correctNut();
-    fvOptions.correct(nut);
 }
 
 

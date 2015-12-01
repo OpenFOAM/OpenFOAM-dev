@@ -122,6 +122,13 @@ Foam::eddyViscosity<BasicTurbulenceModel>::R() const
 
 
 template<class BasicTurbulenceModel>
+void Foam::eddyViscosity<BasicTurbulenceModel>::validate()
+{
+    correctNut();
+}
+
+
+template<class BasicTurbulenceModel>
 void Foam::eddyViscosity<BasicTurbulenceModel>::correct()
 {
     BasicTurbulenceModel::correct();

@@ -205,6 +205,10 @@ public:
         //- Return the Reynolds stress tensor
         virtual tmp<volSymmTensorField> R() const = 0;
 
+        //- Validate the turbulence fields after construction
+        //  Update derived fields as required
+        virtual void validate();
+
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct() = 0;
 };

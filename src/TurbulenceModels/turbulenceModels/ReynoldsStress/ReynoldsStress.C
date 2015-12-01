@@ -296,6 +296,13 @@ Foam::ReynoldsStress<BasicTurbulenceModel>::divDevRhoReff
 
 
 template<class BasicTurbulenceModel>
+void Foam::ReynoldsStress<BasicTurbulenceModel>::validate()
+{
+    correctNut();
+}
+
+
+template<class BasicTurbulenceModel>
 void Foam::ReynoldsStress<BasicTurbulenceModel>::correct()
 {
     BasicTurbulenceModel::correct();

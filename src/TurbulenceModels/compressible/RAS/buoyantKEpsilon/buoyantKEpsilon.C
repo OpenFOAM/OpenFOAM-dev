@@ -74,7 +74,6 @@ buoyantKEpsilon<BasicTurbulenceModel>::buoyantKEpsilon
 {
     if (type == typeName)
     {
-        kEpsilon<BasicTurbulenceModel>::correctNut();
         this->printCoeffs(type);
     }
 }

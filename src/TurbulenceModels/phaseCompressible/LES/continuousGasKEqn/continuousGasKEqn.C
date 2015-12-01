@@ -75,7 +75,6 @@ continuousGasKEqn<BasicTurbulenceModel>::continuousGasKEqn
 {
     if (type == typeName)
     {
-        kEqn<BasicTurbulenceModel>::correctNut();
         this->printCoeffs(type);
     }
 }
