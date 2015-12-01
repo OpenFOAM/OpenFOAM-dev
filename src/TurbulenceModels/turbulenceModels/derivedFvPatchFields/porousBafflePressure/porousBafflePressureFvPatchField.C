@@ -130,7 +130,7 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
 
     scalarField Un(phip/patch().magSf());
 
-    if (phi.dimensions() == dimensionSet(0, 3, -1, 0, 0))
+    if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
     {
         Un /= patch().lookupPatchField<volScalarField, scalar>(rhoName_);
     }
