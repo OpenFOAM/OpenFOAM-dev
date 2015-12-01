@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cloudAbsorptionEmission.H"
-#include "addToRunTimeSelectionTable.H"
-
 #include "thermoCloud.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -159,7 +158,8 @@ Foam::radiation::cloudAbsorptionEmission::EDisp(const label bandI) const
         tE() += tc.Ep();
     }
 
-    return tE;
+    // Total emission is 4 times the projected emission
+    return 4*tE;
 }
 
 

@@ -239,7 +239,7 @@ void Foam::radiation::P1::calculate()
         fvm::laplacian(gamma, G_)
       - fvm::Sp(a_, G_)
      ==
-      - 4.0*(e_*physicoChemical::sigma*pow4(T_) + E_)
+      - 4.0*(e_*physicoChemical::sigma*pow4(T_) ) - E_
     );
 
     // Calculate radiative heat flux on boundaries.
@@ -286,7 +286,7 @@ Foam::radiation::P1::Ru() const
     const DimensionedField<scalar, volMesh> a =
         absorptionEmission_->aCont()().dimensionedInternalField();
 
-    return a*G - 4.0*E;
+    return a*G - E;
 }
 
 
