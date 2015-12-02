@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kOmega.H"
+#include "fvOptions.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -33,7 +34,6 @@ namespace Foam
 namespace RASModels
 {
 
-
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
@@ -41,6 +41,9 @@ void kOmega<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = k_/omega_;
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
+
+    BasicTurbulenceModel::correctNut();
 }
 
 
@@ -188,6 +191,7 @@ void kOmega<BasicTurbulenceModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
+    fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
 
@@ -214,13 +218,14 @@ void kOmega<BasicTurbulenceModel>::correct()
         gamma_*alpha*rho*G*omega_/k_
       - fvm::SuSp(((2.0/3.0)*gamma_)*alpha*rho*divU, omega_)
       - fvm::Sp(beta_*alpha*rho*omega_, omega_)
+      + fvOptions(alpha, rho, omega_)
     );
 
     omegaEqn().relax();
-
+    fvOptions.constrain(omegaEqn());
     omegaEqn().boundaryManipulate(omega_.boundaryField());
-
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_, this->omegaMin_);
 
 
@@ -234,10 +239,13 @@ void kOmega<BasicTurbulenceModel>::correct()
         alpha*rho*G
       - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
       - fvm::Sp(Cmu_*alpha*rho*omega_, k_)
+      + fvOptions(alpha, rho, k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, this->kMin_);
 
     correctNut();
