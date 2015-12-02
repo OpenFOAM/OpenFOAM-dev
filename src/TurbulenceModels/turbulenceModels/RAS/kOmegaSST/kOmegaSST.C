@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kOmegaSST.H"
+#include "fvOptions.H"
 #include "bound.H"
 #include "wallDist.H"
 
@@ -112,6 +113,7 @@ void kOmegaSST<BasicTurbulenceModel>::correctNut(const volScalarField& S2)
 {
     this->nut_ = a1_*k_/max(a1_*omega_, b1_*F23()*sqrt(S2));
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
 }
@@ -399,6 +401,7 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
+    fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
 
@@ -446,13 +449,14 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
             )
           + Qsas(S2, gamma, beta)
           + omegaSource()
+          + fvOptions(alpha, rho, omega_)
         );
 
         omegaEqn().relax();
-
+        fvOptions.constrain(omegaEqn());
         omegaEqn().boundaryManipulate(omega_.boundaryField());
-
         solve(omegaEqn);
+        fvOptions.correct(omega_);
         bound(omega_, this->omegaMin_);
     }
 
@@ -467,10 +471,13 @@ void kOmegaSST<BasicTurbulenceModel>::correct()
       - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
       - fvm::Sp(alpha*rho*betaStar_*omega_, k_)
       + kSource()
+      + fvOptions(alpha, rho, k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, this->kMin_);
 
     correctNut(S2);
