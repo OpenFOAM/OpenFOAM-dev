@@ -41,9 +41,7 @@ void kEpsilon<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-
-    fv::options& fvOptions(fv::options::New(this->mesh_));
-    fvOptions.correct(this->nut_);
+    fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
 }
