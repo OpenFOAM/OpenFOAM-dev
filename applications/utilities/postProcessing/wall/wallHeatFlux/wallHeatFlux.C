@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
             if (isA<wallFvPatch>(mesh.boundary()[patchi]))
             {
                 scalar convFlux = gSum(magSf[patchi]*patchHeatFlux[patchi]);
-                scalar radFlux = gSum(magSf[patchi]*patchRadHeatFlux[patchi]);
+                scalar radFlux = -gSum(magSf[patchi]*patchRadHeatFlux[patchi]);
 
                 Info<< mesh.boundary()[patchi].name() << endl
                     << "    convective: " << convFlux << endl
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
             forAll(totalWallHeatFlux.boundaryField(), patchi)
             {
                 totalWallHeatFlux.boundaryField()[patchi] =
-                    patchHeatFlux[patchi] + patchRadHeatFlux[patchi];
+                    patchHeatFlux[patchi] - patchRadHeatFlux[patchi];
             }
 
             totalWallHeatFlux.write();
