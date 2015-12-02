@@ -13,7 +13,7 @@
     const volScalarField& psi = thermo.psi();
 
     IOMRFZoneList& MRF = MRFfluid[i];
-    fv::IOoptionList& fvOptions = fluidFvOptions[i];
+    fv::options& fvOptions = fluidFvOptions[i];
 
     const dimensionedScalar initialMass
     (

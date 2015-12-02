@@ -36,7 +36,7 @@ Description
 #include "turbulentTransportModel.H"
 #include "simpleControl.H"
 #include "IOporosityModelList.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

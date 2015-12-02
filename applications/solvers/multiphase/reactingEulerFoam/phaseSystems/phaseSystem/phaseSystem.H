@@ -45,7 +45,7 @@ SourceFiles
 #include "PtrListDictionary.H"
 
 #include "IOMRFZoneList.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -177,7 +177,7 @@ protected:
         IOMRFZoneList MRF_;
 
         //- Optional FV-options
-        mutable fv::IOoptionList fvOptions_;
+        mutable fv::options fvOptions_;
 
         //- Blending methods
         blendingMethodTable blendingMethods_;
@@ -320,7 +320,7 @@ public:
         inline const IOMRFZoneList& MRF() const;
 
         //- Optional FV-options
-        inline fv::IOoptionList& fvOptions() const;
+        inline fv::options& fvOptions() const;
 
         //- Access a sub model between a phase pair
         template <class modelType>

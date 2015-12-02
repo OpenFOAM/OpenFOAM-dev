@@ -23,20 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "fvMesh.H"
 #include "Time.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    namespace fv
+    {
+        defineTypeNameAndDebug(options, 0);
+    }
+}
+
+
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::IOobject Foam::fv::IOoptionList::createIOobject
+Foam::IOobject Foam::fv::options::createIOobject
 (
     const fvMesh& mesh
 ) const
 {
     IOobject io
     (
-        "fvOptions",
+        typeName,
         mesh.time().constant(),
         mesh,
         IOobject::MUST_READ,
@@ -79,7 +90,7 @@ Foam::IOobject Foam::fv::IOoptionList::createIOobject
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::IOoptionList::IOoptionList
+Foam::fv::options::options
 (
     const fvMesh& mesh
 )
@@ -89,9 +100,34 @@ Foam::fv::IOoptionList::IOoptionList
 {}
 
 
-bool Foam::fv::IOoptionList::read()
+Foam::fv::options& Foam::fv::options::New(const fvMesh& mesh)
 {
-    if (regIOobject::read())
+    if (mesh.thisDb().foundObject<options>(typeName))
+    {
+        return const_cast<options&>
+        (
+            mesh.lookupObject<options>(typeName)
+        );
+    }
+    else
+    {
+        if (debug)
+        {
+            InfoInFunction
+                << "Constructing " << typeName
+                << " for region " << mesh.name() << endl;
+        }
+
+        options* objectPtr = new options(mesh);
+        regIOobject::store(objectPtr);
+        return *objectPtr;
+    }
+}
+
+
+bool Foam::fv::options::read()
+{
+    if (IOdictionary::regIOobject::read())
     {
         optionList::read(*this);
         return true;

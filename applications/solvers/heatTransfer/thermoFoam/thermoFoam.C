@@ -35,7 +35,7 @@ Description
 #include "turbulentFluidThermoModel.H"
 #include "LESModel.H"
 #include "radiationModel.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "simpleControl.H"
 #include "pimpleControl.H"
 

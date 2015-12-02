@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::IOoptionList
+    Foam::fv::options
 
 Description
-    IOoptionList
+    Finite-volume options
 
 SourceFiles
-    IOoptionList.C
+    options.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IOoptionList_H
-#define IOoptionList_H
+#ifndef options_H
+#define options_H
 
 #include "fvOptionList.H"
 #include "IOdictionary.H"
@@ -47,38 +47,44 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class IOoptionList Declaration
+                        Class options Declaration
 \*---------------------------------------------------------------------------*/
 
-class IOoptionList
+class options
 :
     public IOdictionary,
     public optionList
 {
-private:
-
     // Private Member Functions
 
         //- Create IO object if dictionary is present
         IOobject createIOobject(const fvMesh& mesh) const;
 
         //- Disallow default bitwise copy construct
-        IOoptionList(const IOoptionList&);
+        options(const options&);
 
         //- Disallow default bitwise assignment
-        void operator=(const IOoptionList&);
+        void operator=(const options&);
 
 
 public:
 
+    // Declare name of the class and its debug switch
+    ClassName("fvOptions");
+
+
     // Constructors
 
         //- Construct from components with list of field names
-        IOoptionList(const fvMesh& mesh);
+        options(const fvMesh& mesh);
+
+        //- Construct fvOptions and register to datbase if not present
+        //  otherwise lookup and return
+        static options& New(const fvMesh& mesh);
 
 
     //- Destructor
-    virtual ~IOoptionList()
+    virtual ~options()
     {}
 
 

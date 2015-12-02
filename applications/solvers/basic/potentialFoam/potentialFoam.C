@@ -36,7 +36,6 @@ Description
 
 #include "fvCFD.H"
 #include "pisoControl.H"
-#include "fvIOoptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,7 +80,6 @@ int main(int argc, char *argv[])
 
     #include "createFields.H"
     #include "createMRF.H"
-    #include "createFvOptions.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

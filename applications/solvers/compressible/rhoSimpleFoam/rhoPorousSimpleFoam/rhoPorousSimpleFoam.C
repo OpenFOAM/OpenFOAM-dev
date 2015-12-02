@@ -34,7 +34,7 @@ Description
 #include "fvCFD.H"
 #include "rhoThermo.H"
 #include "turbulentFluidThermoModel.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "IOporosityModelList.H"
 #include "simpleControl.H"
 

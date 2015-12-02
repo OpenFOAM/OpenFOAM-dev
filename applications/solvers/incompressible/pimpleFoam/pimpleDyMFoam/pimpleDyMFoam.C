@@ -38,7 +38,7 @@ Description
 #include "turbulentTransportModel.H"
 #include "pimpleControl.H"
 #include "CorrectPhi.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

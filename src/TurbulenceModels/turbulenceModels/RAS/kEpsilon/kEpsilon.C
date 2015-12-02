@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kEpsilon.H"
-#include "fvOptionList.H"
+#include "fvOptions.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -42,14 +42,7 @@ void kEpsilon<BasicTurbulenceModel>::correctNut()
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
 
-    // const_cast needed because the operators and functions of fvOptions
-    // are currently non-const.
-    fv::optionList& fvOptions = const_cast<fv::optionList&>
-    (
-        this->mesh_.objectRegistry::template
-            lookupObject<fv::optionList>("fvOptions")
-    );
-
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     fvOptions.correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
@@ -240,14 +233,7 @@ void kEpsilon<BasicTurbulenceModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-
-    // const_cast needed because the operators and functions of fvOptions
-    // are currently non-const.
-    fv::optionList& fvOptions = const_cast<fv::optionList&>
-    (
-        this->mesh_.objectRegistry::template
-            lookupObject<fv::optionList>("fvOptions")
-    );
+    fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
 

@@ -37,7 +37,7 @@ Description
 #include "psiCombustionModel.H"
 #include "radiationModel.H"
 #include "SLGThermo.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "pimpleControl.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 

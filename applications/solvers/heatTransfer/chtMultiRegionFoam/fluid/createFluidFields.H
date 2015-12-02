@@ -17,7 +17,7 @@ List<scalar> initialMassFluid(fluidRegions.size());
 List<bool> frozenFlowFluid(fluidRegions.size(), false);
 
 PtrList<IOMRFZoneList> MRFfluid(fluidRegions.size());
-PtrList<fv::IOoptionList> fluidFvOptions(fluidRegions.size());
+PtrList<fv::options> fluidFvOptions(fluidRegions.size());
 
 // Populate fluid field pointer lists
 forAll(fluidRegions, i)
@@ -244,7 +244,7 @@ forAll(fluidRegions, i)
     fluidFvOptions.set
     (
         i,
-        new fv::IOoptionList(fluidRegions[i])
+        new fv::options(fluidRegions[i])
     );
 
     turbulence[i].validate();

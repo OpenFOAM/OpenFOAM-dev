@@ -425,4 +425,10 @@ $(SRF)/SRFModel/rpm/rpm.C
 $(SRF)/derivedFvPatchFields/SRFVelocityFvPatchVectorField/SRFVelocityFvPatchVectorField.C
 $(SRF)/derivedFvPatchFields/SRFFreestreamVelocityFvPatchVectorField/SRFFreestreamVelocityFvPatchVectorField.C
 
+fvOptions = $(general)/fvOptions
+$(fvOptions)/fvOption.C
+$(fvOptions)/fvOptionIO.C
+$(fvOptions)/fvOptionList.C
+$(fvOptions)/fvOptions.C
+
 LIB = $(FOAM_LIBBIN)/libfiniteVolume

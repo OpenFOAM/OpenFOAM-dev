@@ -37,7 +37,7 @@ Description
 #include "multiphaseMixture.H"
 #include "turbulentTransportModel.H"
 #include "pimpleControl.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "CorrectPhi.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 

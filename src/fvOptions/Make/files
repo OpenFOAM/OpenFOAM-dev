@@ -1,8 +1,3 @@
-fvOption/fvOption.C
-fvOption/fvOptionIO.C
-fvOption/fvOptionList.C
-fvOption/fvIOoptionList.C
-
 cellSetOption/cellSetOption.C
 cellSetOption/cellSetOptionIO.C
 

@@ -35,7 +35,7 @@ Description
 #include "turbulentTransportModel.H"
 #include "SRFModel.H"
 #include "simpleControl.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

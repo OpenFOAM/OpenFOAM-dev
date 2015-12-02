@@ -65,7 +65,6 @@ void Foam::fv::CodedSource<Type>::prepare
     dynCode.setMakeOptions
         (
             "EXE_INC = -g \\\n"
-            "-I$(LIB_SRC)/fvOptions/lnInclude \\\n"
             "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
             "-I$(LIB_SRC)/meshTools/lnInclude \\\n"
             "-I$(LIB_SRC)/sampling/lnInclude \\\n"

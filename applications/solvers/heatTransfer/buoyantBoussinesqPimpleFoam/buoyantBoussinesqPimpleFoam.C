@@ -49,7 +49,7 @@ Description
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
 #include "radiationModel.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "pimpleControl.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 

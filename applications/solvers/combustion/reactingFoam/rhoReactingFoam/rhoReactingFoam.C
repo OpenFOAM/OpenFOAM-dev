@@ -35,7 +35,7 @@ Description
 #include "turbulentFluidThermoModel.H"
 #include "multivariateScheme.H"
 #include "pimpleControl.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 

@@ -46,7 +46,7 @@ Description
 #include "immiscibleIncompressibleTwoPhaseMixture.H"
 #include "turbulentTransportModel.H"
 #include "pimpleControl.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "CorrectPhi.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "localEulerDdtScheme.H"

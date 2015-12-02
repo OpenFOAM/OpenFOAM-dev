@@ -38,7 +38,7 @@ Description
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "wallFvPatch.H"
 #include "makeGraph.H"
 

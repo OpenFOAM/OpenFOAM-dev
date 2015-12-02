@@ -32,7 +32,7 @@ License
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvcAverage.H"
-#include "fvOptionList.H"
+#include "fvOptions.H"
 #include "mathematicalConstants.H"
 #include "fundamentalConstants.H"
 #include "addToRunTimeSelectionTable.H"
@@ -156,12 +156,7 @@ void Foam::diameterModels::IATE::correct()
         R -= sources_[j].R();
     }
 
-    // const_cast needed because the operators and functions of fvOptions
-    // are currently non-const.
-    fv::optionList& fvOptions = const_cast<fv::optionList&>
-    (
-        phase_.U().mesh().lookupObject<fv::optionList>("fvOptions")
-    );
+    fv::options& fvOptions(fv::options::New(phase_.mesh()));
 
     // Construct the interfacial curvature equation
     fvScalarMatrix kappaiEqn

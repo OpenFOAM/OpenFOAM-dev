@@ -34,7 +34,7 @@ Description
 #include "twoPhaseSystem.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "pimpleControl.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "fixedValueFvsPatchFields.H"
 

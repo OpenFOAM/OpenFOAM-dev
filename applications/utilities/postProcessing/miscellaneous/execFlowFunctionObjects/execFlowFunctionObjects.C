@@ -43,7 +43,7 @@ Description
 #include "pointFields.H"
 #include "uniformDimensionedFields.H"
 #include "ReadFields.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
@@ -285,8 +285,6 @@ void calc
             ),
             mesh
         );
-
-        #include "createFvOptions.H"
 
         if (phi.dimensions() == dimVolume/dimTime)
         {

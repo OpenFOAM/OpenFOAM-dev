@@ -43,7 +43,7 @@ Description
 #include "bound.H"
 #include "pimpleControl.H"
 #include "CorrectPhi.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 
