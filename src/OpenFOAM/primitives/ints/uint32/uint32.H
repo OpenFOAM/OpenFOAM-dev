@@ -119,7 +119,7 @@ public:
             return p_;
         }
 
-        //- Access to the uint value
+        //- Access to the uint32_t value
         operator uint32_t&()
         {
             return p_;
