@@ -154,8 +154,7 @@ Foam::phaseSystem::phaseSystem
         dimensionedScalar("dpdt", dimPressure/dimTime, 0)
     ),
 
-    MRF_(mesh_),
-    fvOptions_(mesh_)
+    MRF_(mesh_)
 {
     phi_.writeOpt() = IOobject::AUTO_WRITE;
 

@@ -176,9 +176,6 @@ protected:
         //- Optional MRF zones
         IOMRFZoneList MRF_;
 
-        //- Optional FV-options
-        mutable fv::options fvOptions_;
-
         //- Blending methods
         blendingMethodTable blendingMethods_;
 
