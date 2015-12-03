@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dynamicKEqn.H"
+#include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -107,6 +108,9 @@ void dynamicKEqn<BasicTurbulenceModel>::correctNut
 {
     this->nut_ = Ck(D, KK)*sqrt(k_)*this->delta();
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
+
+    BasicTurbulenceModel::correctNut();
 }
 
 
@@ -243,6 +247,7 @@ void dynamicKEqn<BasicTurbulenceModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
+    fv::options& fvOptions(fv::options::New(this->mesh_));
 
     LESeddyViscosity<BasicTurbulenceModel>::correct();
 
@@ -266,10 +271,13 @@ void dynamicKEqn<BasicTurbulenceModel>::correct()
       - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
       - fvm::Sp(Ce(D, KK)*alpha*rho*sqrt(k_)/this->delta(), k_)
       + kSource()
+      + fvOptions(alpha, rho, k_)
     );
 
     kEqn().relax();
-    kEqn().solve();
+    fvOptions.constrain(kEqn());
+    solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, this->kMin_);
 
     correctNut(D, KK);
