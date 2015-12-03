@@ -24,9 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LaheyKEpsilon.H"
-#include "addToRunTimeSelectionTable.H"
+#include "fvOptions.H"
 #include "twoPhaseSystem.H"
-#include "dragModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -176,6 +175,9 @@ void LaheyKEpsilon<BasicTurbulenceModel>::correctNut()
        *(mag(this->U_ - gasTurbulence.U()));
 
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
+
+    BasicTurbulenceModel::correctNut();
 }
 
 
