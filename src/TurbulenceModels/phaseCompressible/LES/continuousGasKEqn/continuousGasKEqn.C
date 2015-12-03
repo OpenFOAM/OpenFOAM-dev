@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "continuousGasKEqn.H"
-#include "addToRunTimeSelectionTable.H"
 #include "twoPhaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
