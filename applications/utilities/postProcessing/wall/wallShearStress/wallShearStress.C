@@ -25,8 +25,8 @@ Application
     wallShearStress
 
 Description
-    Calculates and reports wall shear stress for all patches, for the
-    specified times when using RAS turbulence models.
+    Calculates and reports the turbulent wall shear stress for all patches,
+    for the specified times.
 
     Compressible modes is automatically selected based on the existence of the
     "thermophysicalProperties" dictionary required to construct the
@@ -53,9 +53,9 @@ void calcIncompressible
 
     singlePhaseTransportModel laminarTransport(U, phi);
 
-    autoPtr<incompressible::RASModel> model
+    autoPtr<incompressible::turbulenceModel> model
     (
-        incompressible::New<incompressible::RASModel>(U, phi, laminarTransport)
+        incompressible::turbulenceModel::New(U, phi, laminarTransport)
     );
 
     const volSymmTensorField Reff(model->devReff());
@@ -102,15 +102,9 @@ void calcCompressible
     autoPtr<fluidThermo> pThermo(fluidThermo::New(mesh));
     fluidThermo& thermo = pThermo();
 
-    autoPtr<compressible::RASModel> model
+    autoPtr<compressible::turbulenceModel> model
     (
-        compressible::New<compressible::RASModel>
-        (
-            rho,
-            U,
-            phi,
-            thermo
-        )
+        compressible::turbulenceModel::New(rho, U, phi, thermo)
     );
 
     const volSymmTensorField Reff(model->devRhoReff());
