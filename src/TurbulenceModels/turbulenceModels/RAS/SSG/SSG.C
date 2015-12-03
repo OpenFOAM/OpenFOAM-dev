@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SSG.H"
+#include "fvOptions.H"
 #include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -40,6 +41,7 @@ void SSG<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = this->Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
 }
@@ -290,6 +292,7 @@ void SSG<BasicTurbulenceModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volSymmTensorField& R = this->R_;
+    fv::options& fvOptions(fv::options::New(this->mesh_));
 
     ReynoldsStress<RASModel<BasicTurbulenceModel> >::correct();
 
@@ -311,13 +314,14 @@ void SSG<BasicTurbulenceModel>::correct()
      ==
         Ceps1_*alpha*rho*G*epsilon_/k_
       - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
+      + fvOptions(alpha, rho, epsilon_)
     );
 
     epsEqn().relax();
-
+    fvOptions.constrain(epsEqn());
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
-
     solve(epsEqn);
+    fvOptions.correct(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -364,10 +368,13 @@ void SSG<BasicTurbulenceModel>::correct()
           + C4_*dev(twoSymm(b&S))
           + C5_*twoSymm(b&Omega)
         )
+      + fvOptions(alpha, rho, R)
     );
 
     REqn().relax();
+    fvOptions.constrain(REqn());
     solve(REqn);
+    fvOptions.correct(R);
 
     this->boundNormalStress(R);
 
