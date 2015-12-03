@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Smagorinsky.H"
+#include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,6 +70,7 @@ void Smagorinsky<BasicTurbulenceModel>::correctNut()
 
     this->nut_ = Ck_*this->delta()*sqrt(k);
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
 }
