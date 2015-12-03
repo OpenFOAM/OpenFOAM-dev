@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SmagorinskyZhang.H"
+#include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -142,6 +143,9 @@ void SmagorinskyZhang<BasicTurbulenceModel>::correctNut()
        *(mag(this->U_ - gasTurbulence.U()));
 
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
+
+    BasicTurbulenceModel::correctNut();
 }
 
 
