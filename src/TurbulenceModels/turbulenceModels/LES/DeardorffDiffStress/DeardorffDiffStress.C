@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "DeardorffDiffStress.H"
+#include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -39,6 +40,7 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Ck_*sqrt(this->k())*this->delta();
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
 }
@@ -174,6 +176,7 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volSymmTensorField& R = this->R_;
+    fv::options& fvOptions(fv::options::New(this->mesh_));
 
     ReynoldsStress<LESModel<BasicTurbulenceModel> >::correct();
 
@@ -196,12 +199,15 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correct()
         alpha*rho*P
       + (4.0/5.0)*alpha*rho*k*D
       - ((2.0/3.0)*(1.0 - Cm_/this->Ce_)*I)*(alpha*rho*this->epsilon())
+      + fvOptions(alpha, rho, R)
     );
 
     REqn().relax();
+    fvOptions.constrain(REqn());
     REqn().solve();
-
+    fvOptions.correct(R);
     this->boundNormalStress(R);
+
     correctNut();
 }
 
