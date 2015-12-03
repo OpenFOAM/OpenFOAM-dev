@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SpalartAllmaras.H"
+#include "fvOptions.H"
 #include "bound.H"
 #include "wallDist.H"
 
@@ -124,6 +125,7 @@ void SpalartAllmaras<BasicTurbulenceModel>::correctNut
 {
     this->nut_ = nuTilda_*fv1;
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
 }
@@ -354,6 +356,7 @@ void SpalartAllmaras<BasicTurbulenceModel>::correct()
     const alphaField& alpha = this->alpha_;
     const rhoField& rho = this->rho_;
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
+    fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
 
@@ -371,10 +374,13 @@ void SpalartAllmaras<BasicTurbulenceModel>::correct()
      ==
         Cb1_*alpha*rho*Stilda*nuTilda_
       - fvm::Sp(Cw1_*alpha*rho*fw(Stilda)*nuTilda_/sqr(y_), nuTilda_)
+      + fvOptions(alpha, rho, nuTilda_)
     );
 
     nuTildaEqn().relax();
+    fvOptions.constrain(nuTildaEqn());
     solve(nuTildaEqn);
+    fvOptions.correct(nuTilda_);
     bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();
 
