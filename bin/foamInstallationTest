@@ -344,9 +344,9 @@ checkOpenFOAMEnvironment()
         echo ""
         echo "FATAL ERROR: OpenFOAM environment not configured."
         echo ""
-        echo "    Please refer to the installation section of the README file:"
-        echo "    <OpenFOAM installation dir>/OpenFOAM-${WM_PROJECT_VERSION}/README"
-        echo "    to source the OpenFOAM environment."
+        echo "    Please follow the download and installation link in README.html:"
+        echo "    <OpenFOAM installation dir>/OpenFOAM-${WM_PROJECT_VERSION}/README.html"
+        echo "    for information on setting-up the OpenFOAM environment."
         echo ""
         exit 1
     }
