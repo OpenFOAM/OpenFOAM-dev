@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LaunderSharmaKE.H"
+#include "fvOptions.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,6 +57,7 @@ void LaunderSharmaKE<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Cmu_*fMu()*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
 }
@@ -246,6 +248,7 @@ void LaunderSharmaKE<BasicTurbulenceModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
+    fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
 
@@ -274,10 +277,14 @@ void LaunderSharmaKE<BasicTurbulenceModel>::correct()
       - fvm::Sp(C2_*f2()*alpha*rho*epsilon_/k_, epsilon_)
       + alpha*rho*E
       + epsilonSource()
+      + fvOptions(alpha, rho, epsilon_)
     );
 
     epsEqn().relax();
+    fvOptions.constrain(epsEqn());
+    epsEqn().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
+    fvOptions.correct(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -291,10 +298,13 @@ void LaunderSharmaKE<BasicTurbulenceModel>::correct()
         alpha*rho*G - fvm::SuSp(2.0/3.0*alpha*rho*divU, k_)
       - fvm::Sp(alpha*rho*(epsilon_ + D)/k_, k_)
       + kSource()
+      + fvOptions(alpha, rho, k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, this->kMin_);
 
     correctNut();
