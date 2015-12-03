@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "WALE.H"
+#include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -89,6 +90,7 @@ void WALE<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Ck_*this->delta()*sqrt(this->k(fvc::grad(this->U_)));
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
 }
