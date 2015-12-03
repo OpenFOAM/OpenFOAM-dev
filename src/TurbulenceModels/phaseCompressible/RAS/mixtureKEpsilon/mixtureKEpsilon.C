@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mixtureKEpsilon.H"
+#include "fvOptions.H"
 #include "bound.H"
 #include "twoPhaseSystem.H"
-#include "dragModel.H"
 #include "virtualMassModel.H"
 #include "fixedValueFvPatchFields.H"
 #include "inletOutletFvPatchFields.H"
@@ -335,6 +335,9 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correctNut()
 {
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nut_);
+
+    BasicTurbulenceModel::correctNut();
 }
 
 
@@ -575,6 +578,8 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
     volScalarField& km = km_();
     volScalarField& epsilonm = epsilonm_();
 
+    fv::options& fvOptions(fv::options::New(this->mesh_));
+
     eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
 
     // Update the effective mixture density
@@ -657,13 +662,14 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
       - fvm::SuSp(((2.0/3.0)*C1_)*divUm, epsilonm)
       - fvm::Sp(C2_*epsilonm/km, epsilonm)
       + epsilonSource()
+      + fvOptions(epsilonm)
     );
 
     epsEqn().relax();
-
+    fvOptions.constrain(epsEqn());
     epsEqn().boundaryManipulate(epsilonm.boundaryField());
-
     solve(epsEqn);
+    fvOptions.correct(epsilonm);
     bound(epsilonm, this->epsilonMin_);
 
 
@@ -679,10 +685,13 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
       - fvm::SuSp((2.0/3.0)*divUm, km)
       - fvm::Sp(epsilonm/km, km)
       + kSource()
+      + fvOptions(km)
     );
 
     kmEqn().relax();
+    fvOptions.constrain(kmEqn());
     solve(kmEqn);
+    fvOptions.correct(km);
     bound(km, this->kMin_);
     km.correctBoundaryConditions();
 
