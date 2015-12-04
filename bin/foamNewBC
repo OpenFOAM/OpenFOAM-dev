@@ -1,0 +1,216 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamNewBC
+#
+# Description
+#     Create directory of source and compilation files for a new BC
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+DIR="$FOAM_ETC/codeTemplates/BC"
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: $Script [-h | -help] <base> <type> <boundaryConditionName>
+
+* Create directory of source and compilation files for a new boundary condition
+  <boundaryConditionName> (dir)
+  - .C and .H source files
+  - Make (dir)
+    - files
+    - options
+  Compiles a library named lib<boundaryConditionName>.so in \$FOAM_USER_LIBBIN:
+  $FOAM_USER_LIBBIN
+
+<base> conditions:
+-f | -fixedValue    | fixedValue
+-m | -mixed         | mixed
+
+<type> options:
+-a | -all    | all  | template (creates a template class)
+-s | -scalar | scalar
+-v | -vector | vector
+-t | -tensor | tensor
+-symmTensor  | symmTensor
+-sphericalTensor | sphericalTensor
+
+USAGE
+    exit 1
+}
+
+cap() {
+    echo $1 | sed -e 's/^./\U&/'
+}
+
+# Implicitly covers a lone -help
+[ "$#" -gt 1 ] || usage
+
+case "$1" in
+(-h | -help)
+    usage
+    ;;
+(-f | -fixedValue | fixedValue)
+    BASE=fixedValue
+    ;;
+(-m | -mixed | mixed )
+    BASE=mixed
+    ;;
+(*)
+    usage "Unknown <base> condition '$1'"
+    ;;
+esac
+shift
+
+case "$1" in
+(-a | -all | all | template)
+    TYPE=Type
+    UNIT='VALUE-or-(VALUE 0 0)'
+    ;;
+(-s | -scalar | scalar)
+    TYPE=scalar
+    UNIT=VALUE
+    ;;
+(-v | -vector | vector)
+    TYPE=vector
+    UNIT='(VALUE 0 0)'
+    ;;
+(-t | -tensor | tensor)
+    TYPE=tensor
+    UNIT='(VALUE 0 0 0 0 0 0 0 0)'
+    ;;
+(-symmTensor | symmTensor)
+    TYPE=symmTensor
+    UNIT='(VALUE 0 0 0 0 0)'
+    ;;
+(-sphericalTensor | sphericalTensor)
+    TYPE=sphericalTensor
+    UNIT=VALUE
+    ;;
+(*)
+    usage "Unknown <type> option '$1'"
+    ;;
+esac
+shift
+[ "$#" -eq 1 ] || usage "Wrong number of arguments"
+NAME=$1
+
+# Prevents over-writing of existing directory
+[ -d $NAME ] && usage "$NAME directory already exists, aborting..."
+echo "Creating $NAME directory" && mkdir $NAME
+
+# Establish meta template files to copy
+FILES=$(cd ${DIR} && ls *.*)
+[ "$TYPE" = "Type" ] || FILES=$(cd ${DIR} && ls BC.[CH])
+
+# Substitutions for meta-template files
+FIELD="Field<${TYPE}>"
+[ "$TYPE" = "Type" ] || FIELD=${TYPE}Field
+
+FVPATCHF=fvPatch$(cap $FIELD)
+CLASS=$NAME$(cap $FVPATCHF)
+PARENT=$BASE$(cap $FVPATCHF)
+CONSTRUCT=$(echo $CLASS | sed 's/<Type>//g')
+
+# Create some example values for the Description
+n=0
+for N in $(echo "ZERO ONE TWO THREE FOUR")
+do
+   eval $(expr $N='$(echo $UNIT | sed "s#VALUE#$n#g")')
+   n=$(( $n + 1 ))
+done
+
+# Make substitutions to meta-template files
+for F in $FILES
+do
+    EXT=$(echo $F | sed "s#BC##")
+    NEWFILE=${CONSTRUCT}${EXT}
+    echo "   Adding file ${NEWFILE}..."
+
+    # Adds readScalar function when TYPE = scalar
+    sed -e "s#TYPE#${TYPE}#g" \
+        -e "s#NAME#${NAME}#g" \
+        -e "s#BASE#${BASE}#g" \
+        -e "s#CONSTRUCT#${CONSTRUCT}#g" \
+        -e "s#CLASS#${CLASS}#g" \
+        -e "s#FIELD#${FIELD}#g" \
+        -e "s#FVPATCHF#${FVPATCHF}#g" \
+        -e "s#PARENT#${PARENT}#g" \
+        -e "s#ZERO#${ZERO}#g" \
+        -e "s#ONE#${ONE}#g" \
+        -e "s#TWO#${TWO}#g" \
+        -e "s#THREE#${THREE}#g" \
+        -e "s#FOUR#${FOUR}#g" \
+        -e 's/>>/> >/g' \
+        ${DIR}/${F} > ${NAME}/${NEWFILE}
+
+    case $BASE in
+        fixedValue)
+            # refValue(), refGrad(), valueFraction() removed
+            # phip removed
+            sed -i \
+                -e '/refValue/d' \
+                -e '/refGrad/d' \
+                -e '/valueFraction/d' \
+                -e '/phip/,/lookupPatchField/d' \
+                ${NAME}/${NEWFILE}
+            ;;
+        mixed)
+            # evaluate() removed
+            # operator== becomes refValue() =
+            sed -i \
+                -e '/evaluate/d' \
+                -e 's/operator==/refValue() =/g' \
+                ${NAME}/${NEWFILE}
+            ;;
+    esac
+
+    case $TYPE in
+        Type)
+            # Build Macro removed (in ..Fields.C)
+            sed -i -e '/Build Macro/,/^}/d' \
+                ${NAME}/${NEWFILE}
+            ;;
+        *)
+            # template<class Type> removed
+            # this-> removed
+            # .template functionTemplate<...> becomes functionTemplate<...>
+            # template instantiation repository removed
+            sed -i \
+                -e '/^template<class Type>$/d' \
+                -e 's/this->//g' \
+                -e 's/\.template[\t ]*\([a-Z]\)/\.\1/g' \
+                -e '/#ifdef NoRepository/,/\/\/ */d' \
+                ${NAME}/${NEWFILE}
+            ;;
+    esac
+done
+
+echo "Creating Make subdirectory" && cp -r ${DIR}/Make ${NAME}
+COMPILED=$(cd ${NAME} && ls -r1 *C | head -1) # ...Fields.C for template class
+sed -i -e "s#NAME#${NAME}#g" -e "s#COMPILED.*#${COMPILED}#g" ${NAME}/Make/files
+
+#------------------------------------------------------------------------------
