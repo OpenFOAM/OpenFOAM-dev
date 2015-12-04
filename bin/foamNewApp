@@ -1,0 +1,73 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamNewApp
+#
+# Description
+#     Create directory with source and compilation files for a new application
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+DIR="$FOAM_ETC/codeTemplates/app"
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: $Script [-h | -help] <applicationName>
+
+* Create directory with source and compilation files for a new application
+  <applicationName> (dir)
+  - <applicationName>.C
+  - Make (dir)
+    - files
+    - options
+  Compiles an executable named <applicationName> in \$FOAM_USER_APPBIN:
+  $FOAM_USER_APPBIN
+USAGE
+    exit 1
+}
+
+case "$1" in
+(-h | -help)
+    usage
+    ;;
+-*)
+    usage "$1 is not a valid filename"
+    ;;
+esac
+
+[ "$#" -eq 1 ] || usage "Wrong number of arguments"
+[ -d "$1" ] && usage "$1 directory already exists, aborting..."
+
+NAME=$1
+
+echo "Creating application code directory $NAME" && mkdir $NAME
+sed "s#NAME#${NAME}#g" ${DIR}/app.C > $NAME/$NAME.C
+
+echo "Creating Make subdirectory" && mkdir $NAME/Make
+sed "s#NAME#${NAME}#g" ${DIR}/Make/files > $NAME/Make/files
+cp ${DIR}/Make/options $NAME/Make
+
+#------------------------------------------------------------------------------
