@@ -95,7 +95,9 @@ Foam::saturationModels::Antoine::Tsat
     const volScalarField& p
 ) const
 {
-    return B_/(log(p) - A_) - C_;
+    return
+        B_/(log(p*dimensionedScalar("one", dimless/dimPressure, 1)) - A_)
+      - C_;
 }
 
 
