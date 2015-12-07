@@ -47,8 +47,6 @@ average
     const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf
 )
 {
-    Info<< "average" << endl;
-
     const fvMesh& mesh = ssf.mesh();
 
     tmp<GeometricField<Type, fvPatchField, volMesh> > taverage
