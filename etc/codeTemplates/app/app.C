@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
         << nl << endl;
 
-    Info<< "\nEnd\n" << endl;
+    Info<< "End\n" << endl;
+
     return 0;
 }
 
