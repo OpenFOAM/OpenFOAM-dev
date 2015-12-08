@@ -55,8 +55,8 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     uniformInletValue_(DataEntry<Type>::New("uniformInletValue", dict))
 {
-    const scalar t = this->db().time().timeOutputValue();
-    this->refValue() = uniformInletValue_->value(t);
+    this->refValue() =
+        uniformInletValue_->value(this->db().time().timeOutputValue());
 
     if (dict.found("value"))
     {
@@ -91,8 +91,8 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     this->patchType() = ptf.patchType();
 
     // Evaluate refValue since not mapped
-    const scalar t = this->db().time().timeOutputValue();
-    this->refValue() = uniformInletValue_->value(t);
+    this->refValue() =
+        uniformInletValue_->value(this->db().time().timeOutputValue());
 
     this->refGrad() = pTraits<Type>::zero;
     this->valueFraction() = 0.0;
@@ -139,6 +139,9 @@ void Foam::uniformInletOutletFvPatchField<Type>::updateCoeffs()
         return;
     }
 
+    this->refValue() =
+        uniformInletValue_->value(this->db().time().timeOutputValue());
+
     const Field<scalar>& phip =
         this->patch().template lookupPatchField<surfaceScalarField, scalar>
         (
@@ -175,8 +178,8 @@ void Foam::uniformInletOutletFvPatchField<Type>::autoMap
     mixedFvPatchField<Type>::autoMap(m);
 
     // Override
-    const scalar t = this->db().time().timeOutputValue();
-    this->refValue() = uniformInletValue_->value(t);
+    this->refValue() =
+        uniformInletValue_->value(this->db().time().timeOutputValue());
 }
 
 
@@ -190,8 +193,8 @@ void Foam::uniformInletOutletFvPatchField<Type>::rmap
     mixedFvPatchField<Type>::rmap(ptf, addr);
 
     // Override
-    const scalar t = this->db().time().timeOutputValue();
-    this->refValue() = uniformInletValue_->value(t);
+    this->refValue() =
+        uniformInletValue_->value(this->db().time().timeOutputValue());
 }
 
 
