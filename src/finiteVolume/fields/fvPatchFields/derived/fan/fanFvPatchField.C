@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,23 @@ Foam::fanFvPatchField<Type>::fanFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    uniformJumpFvPatchField<Type>(p, iF)
+    uniformJumpFvPatchField<Type>(p, iF),
+    phiName_("phi"),
+    rhoName_("rho")
+{}
+
+
+template<class Type>
+Foam::fanFvPatchField<Type>::fanFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    uniformJumpFvPatchField<Type>(p, iF, dict),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {}
 
 
@@ -59,19 +75,9 @@ Foam::fanFvPatchField<Type>::fanFvPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    uniformJumpFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-Foam::fanFvPatchField<Type>::fanFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    uniformJumpFvPatchField<Type>(p, iF, dict)
+    uniformJumpFvPatchField<Type>(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_),
+    rhoName_(ptf.rhoName_)
 {}
 
 
@@ -81,7 +87,9 @@ Foam::fanFvPatchField<Type>::fanFvPatchField
     const fanFvPatchField<Type>& ptf
 )
 :
-    uniformJumpFvPatchField<Type>(ptf)
+    uniformJumpFvPatchField<Type>(ptf),
+    phiName_(ptf.phiName_),
+    rhoName_(ptf.rhoName_)
 {}
 
 
@@ -92,7 +100,9 @@ Foam::fanFvPatchField<Type>::fanFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    uniformJumpFvPatchField<Type>(ptf, iF)
+    uniformJumpFvPatchField<Type>(ptf, iF),
+    phiName_(ptf.phiName_),
+    rhoName_(ptf.rhoName_)
 {}
 
 
@@ -110,6 +120,15 @@ void Foam::fanFvPatchField<Type>::updateCoeffs()
 
     // Call fixedJump variant - uniformJump will overwrite the jump value
     fixedJumpFvPatchField<Type>::updateCoeffs();
+}
+
+
+template<class Type>
+void Foam::fanFvPatchField<Type>::write(Ostream& os) const
+{
+    uniformJumpFvPatchField<Type>::write(os);
+    this->template writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    this->template writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
 }
 
 

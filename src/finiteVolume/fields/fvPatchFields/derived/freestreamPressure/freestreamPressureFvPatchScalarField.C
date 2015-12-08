@@ -42,7 +42,7 @@ freestreamPressureFvPatchScalarField
     zeroGradientFvPatchScalarField(p, iF),
     UName_("U"),
     phiName_("phi"),
-    rhoName_("none")
+    rhoName_("rho")
 {}
 
 
@@ -57,7 +57,7 @@ freestreamPressureFvPatchScalarField
     zeroGradientFvPatchScalarField(p, iF, dict),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "none"))
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {}
 
 
@@ -150,6 +150,16 @@ void Foam::freestreamPressureFvPatchScalarField::updateCoeffs()
     }
 
     zeroGradientFvPatchScalarField::updateCoeffs();
+}
+
+
+void Foam::freestreamPressureFvPatchScalarField::write(Ostream& os) const
+{
+    fvPatchScalarField::write(os);
+    writeEntryIfDifferent<word>(os, "U", "U", UName_);
+    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
+    writeEntry("value", os);
 }
 
 

@@ -243,6 +243,7 @@ void Foam::syringePressureFvPatchScalarField::write(Ostream& os) const
     os.writeKeyword("psI") << psI_ << token::END_STATEMENT << nl;
     os.writeKeyword("psi") << psi_ << token::END_STATEMENT << nl;
     os.writeKeyword("ams") << ams_ << token::END_STATEMENT << nl;
+    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
 
     writeEntry("value", os);
 }
