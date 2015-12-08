@@ -26,15 +26,10 @@ License
 #include "fixedGradientFvPatchField.H"
 #include "dictionary.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
+Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -46,7 +41,22 @@ fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 
 
 template<class Type>
-fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
+Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict),
+    gradient_("gradient", dict, p.size())
+{
+    evaluate();
+}
+
+
+template<class Type>
+Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 (
     const fixedGradientFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -70,22 +80,7 @@ fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 
 
 template<class Type>
-fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict),
-    gradient_("gradient", dict, p.size())
-{
-    evaluate();
-}
-
-
-template<class Type>
-fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
+Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 (
     const fixedGradientFvPatchField<Type>& ptf
 )
@@ -96,7 +91,7 @@ fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 
 
 template<class Type>
-fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
+Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 (
     const fixedGradientFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -110,7 +105,7 @@ fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void fixedGradientFvPatchField<Type>::autoMap
+void Foam::fixedGradientFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -121,7 +116,7 @@ void fixedGradientFvPatchField<Type>::autoMap
 
 
 template<class Type>
-void fixedGradientFvPatchField<Type>::rmap
+void Foam::fixedGradientFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -137,7 +132,7 @@ void fixedGradientFvPatchField<Type>::rmap
 
 
 template<class Type>
-void fixedGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void Foam::fixedGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!this->updated())
     {
@@ -154,7 +149,8 @@ void fixedGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-tmp<Field<Type> > fixedGradientFvPatchField<Type>::valueInternalCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedGradientFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -164,7 +160,8 @@ tmp<Field<Type> > fixedGradientFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedGradientFvPatchField<Type>::valueBoundaryCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedGradientFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -174,8 +171,8 @@ tmp<Field<Type> > fixedGradientFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedGradientFvPatchField<Type>::
-gradientInternalCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedGradientFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return tmp<Field<Type> >
     (
@@ -185,23 +182,19 @@ gradientInternalCoeffs() const
 
 
 template<class Type>
-tmp<Field<Type> > fixedGradientFvPatchField<Type>::
-gradientBoundaryCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return gradient();
 }
 
 
 template<class Type>
-void fixedGradientFvPatchField<Type>::write(Ostream& os) const
+void Foam::fixedGradientFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     gradient_.writeEntry("gradient", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

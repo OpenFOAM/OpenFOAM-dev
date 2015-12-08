@@ -28,15 +28,10 @@ License
 #include "fvMesh.H"
 #include "fvPatchFieldMapper.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-fvsPatchField<Type>::fvsPatchField
+Foam::fvsPatchField<Type>::fvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -49,7 +44,7 @@ fvsPatchField<Type>::fvsPatchField
 
 
 template<class Type>
-fvsPatchField<Type>::fvsPatchField
+Foam::fvsPatchField<Type>::fvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -63,7 +58,7 @@ fvsPatchField<Type>::fvsPatchField
 
 
 template<class Type>
-fvsPatchField<Type>::fvsPatchField
+Foam::fvsPatchField<Type>::fvsPatchField
 (
     const fvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -78,7 +73,7 @@ fvsPatchField<Type>::fvsPatchField
 
 
 template<class Type>
-fvsPatchField<Type>::fvsPatchField
+Foam::fvsPatchField<Type>::fvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -108,7 +103,7 @@ fvsPatchField<Type>::fvsPatchField
 
 
 template<class Type>
-fvsPatchField<Type>::fvsPatchField
+Foam::fvsPatchField<Type>::fvsPatchField
 (
     const fvsPatchField<Type>& ptf
 )
@@ -120,7 +115,7 @@ fvsPatchField<Type>::fvsPatchField
 
 
 template<class Type>
-fvsPatchField<Type>::fvsPatchField
+Foam::fvsPatchField<Type>::fvsPatchField
 (
     const fvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -135,14 +130,14 @@ fvsPatchField<Type>::fvsPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-const objectRegistry& fvsPatchField<Type>::db() const
+const Foam::objectRegistry& Foam::fvsPatchField<Type>::db() const
 {
     return patch_.boundaryMesh().mesh();
 }
 
 
 template<class Type>
-void fvsPatchField<Type>::check(const fvsPatchField<Type>& ptf) const
+void Foam::fvsPatchField<Type>::check(const fvsPatchField<Type>& ptf) const
 {
     if (&patch_ != &(ptf.patch_))
     {
@@ -153,9 +148,8 @@ void fvsPatchField<Type>::check(const fvsPatchField<Type>& ptf) const
 }
 
 
-// Map from self
 template<class Type>
-void fvsPatchField<Type>::autoMap
+void Foam::fvsPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -164,9 +158,8 @@ void fvsPatchField<Type>::autoMap
 }
 
 
-// Reverse-map the given fvsPatchField onto this fvsPatchField
 template<class Type>
-void fvsPatchField<Type>::rmap
+void Foam::fvsPatchField<Type>::rmap
 (
     const fvsPatchField<Type>& ptf,
     const labelList& addr
@@ -176,9 +169,8 @@ void fvsPatchField<Type>::rmap
 }
 
 
-// Write
 template<class Type>
-void fvsPatchField<Type>::write(Ostream& os) const
+void Foam::fvsPatchField<Type>::write(Ostream& os) const
 {
     os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
     this->writeEntry("value", os);
@@ -188,7 +180,7 @@ void fvsPatchField<Type>::write(Ostream& os) const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
-void fvsPatchField<Type>::operator=
+void Foam::fvsPatchField<Type>::operator=
 (
     const UList<Type>& ul
 )
@@ -198,7 +190,7 @@ void fvsPatchField<Type>::operator=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator=
+void Foam::fvsPatchField<Type>::operator=
 (
     const fvsPatchField<Type>& ptf
 )
@@ -209,7 +201,7 @@ void fvsPatchField<Type>::operator=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator+=
+void Foam::fvsPatchField<Type>::operator+=
 (
     const fvsPatchField<Type>& ptf
 )
@@ -220,7 +212,7 @@ void fvsPatchField<Type>::operator+=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator-=
+void Foam::fvsPatchField<Type>::operator-=
 (
     const fvsPatchField<Type>& ptf
 )
@@ -231,7 +223,7 @@ void fvsPatchField<Type>::operator-=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator*=
+void Foam::fvsPatchField<Type>::operator*=
 (
     const fvsPatchField<scalar>& ptf
 )
@@ -248,7 +240,7 @@ void fvsPatchField<Type>::operator*=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator/=
+void Foam::fvsPatchField<Type>::operator/=
 (
     const fvsPatchField<scalar>& ptf
 )
@@ -264,7 +256,7 @@ void fvsPatchField<Type>::operator/=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator+=
+void Foam::fvsPatchField<Type>::operator+=
 (
     const Field<Type>& tf
 )
@@ -274,7 +266,7 @@ void fvsPatchField<Type>::operator+=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator-=
+void Foam::fvsPatchField<Type>::operator-=
 (
     const Field<Type>& tf
 )
@@ -284,7 +276,7 @@ void fvsPatchField<Type>::operator-=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator*=
+void Foam::fvsPatchField<Type>::operator*=
 (
     const scalarField& tf
 )
@@ -294,7 +286,7 @@ void fvsPatchField<Type>::operator*=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator/=
+void Foam::fvsPatchField<Type>::operator/=
 (
     const scalarField& tf
 )
@@ -304,7 +296,7 @@ void fvsPatchField<Type>::operator/=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator=
+void Foam::fvsPatchField<Type>::operator=
 (
     const Type& t
 )
@@ -314,7 +306,7 @@ void fvsPatchField<Type>::operator=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator+=
+void Foam::fvsPatchField<Type>::operator+=
 (
     const Type& t
 )
@@ -324,7 +316,7 @@ void fvsPatchField<Type>::operator+=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator-=
+void Foam::fvsPatchField<Type>::operator-=
 (
     const Type& t
 )
@@ -334,7 +326,7 @@ void fvsPatchField<Type>::operator-=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator*=
+void Foam::fvsPatchField<Type>::operator*=
 (
     const scalar s
 )
@@ -344,7 +336,7 @@ void fvsPatchField<Type>::operator*=
 
 
 template<class Type>
-void fvsPatchField<Type>::operator/=
+void Foam::fvsPatchField<Type>::operator/=
 (
     const scalar s
 )
@@ -353,9 +345,8 @@ void fvsPatchField<Type>::operator/=
 }
 
 
-// Force an assignment, overriding fixedValue status
 template<class Type>
-void fvsPatchField<Type>::operator==
+void Foam::fvsPatchField<Type>::operator==
 (
     const fvsPatchField<Type>& ptf
 )
@@ -365,7 +356,7 @@ void fvsPatchField<Type>::operator==
 
 
 template<class Type>
-void fvsPatchField<Type>::operator==
+void Foam::fvsPatchField<Type>::operator==
 (
     const Field<Type>& tf
 )
@@ -375,7 +366,7 @@ void fvsPatchField<Type>::operator==
 
 
 template<class Type>
-void fvsPatchField<Type>::operator==
+void Foam::fvsPatchField<Type>::operator==
 (
     const Type& t
 )
@@ -387,7 +378,7 @@ void fvsPatchField<Type>::operator==
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class Type>
-Ostream& operator<<(Ostream& os, const fvsPatchField<Type>& ptf)
+Foam::Ostream& Foam::operator<<(Ostream& os, const fvsPatchField<Type>& ptf)
 {
     ptf.write(os);
 
@@ -399,10 +390,6 @@ Ostream& operator<<(Ostream& os, const fvsPatchField<Type>& ptf)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#   include "fvsPatchFieldNew.C"
+#include "fvsPatchFieldNew.C"
 
 // ************************************************************************* //

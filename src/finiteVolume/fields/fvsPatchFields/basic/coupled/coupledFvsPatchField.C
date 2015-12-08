@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "coupledFvsPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+Foam::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -44,7 +39,7 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+Foam::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -56,7 +51,19 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+Foam::coupledFvsPatchField<Type>::coupledFvsPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, surfaceMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvsPatchField<Type>(p, iF, dict)
+{}
+
+
+template<class Type>
+Foam::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const coupledFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -69,19 +76,7 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvsPatchField<Type>(p, iF, dict)
-{}
-
-
-template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+Foam::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const coupledFvsPatchField<Type>& ptf
 )
@@ -91,7 +86,7 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+Foam::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const coupledFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -100,9 +95,5 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
     fvsPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

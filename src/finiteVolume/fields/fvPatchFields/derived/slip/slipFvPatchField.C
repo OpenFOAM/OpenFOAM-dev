@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "slipFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+Foam::slipFvPatchField<Type>::slipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -44,7 +39,19 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+Foam::slipFvPatchField<Type>::slipFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    basicSymmetryFvPatchField<Type>(p, iF, dict)
+{}
+
+
+template<class Type>
+Foam::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -57,19 +64,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    basicSymmetryFvPatchField<Type>(p, iF, dict)
-{}
-
-
-template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+Foam::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -80,7 +75,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+Foam::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf
 )
@@ -88,9 +83,5 @@ slipFvPatchField<Type>::slipFvPatchField
     basicSymmetryFvPatchField<Type>(ptf)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

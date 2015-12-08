@@ -25,15 +25,10 @@ License
 
 #include "fixedValueFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -44,7 +39,7 @@ fixedValueFvPatchField<Type>::fixedValueFvPatchField
 
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -56,7 +51,7 @@ fixedValueFvPatchField<Type>::fixedValueFvPatchField
 
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -79,7 +74,7 @@ fixedValueFvPatchField<Type>::fixedValueFvPatchField
 
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fixedValueFvPatchField<Type>& ptf
 )
@@ -89,7 +84,7 @@ fixedValueFvPatchField<Type>::fixedValueFvPatchField
 
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fixedValueFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -102,7 +97,8 @@ fixedValueFvPatchField<Type>::fixedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvPatchField<Type>::valueInternalCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedValueFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -115,7 +111,8 @@ tmp<Field<Type> > fixedValueFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvPatchField<Type>::valueBoundaryCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedValueFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -125,29 +122,27 @@ tmp<Field<Type> > fixedValueFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvPatchField<Type>::gradientInternalCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedValueFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -pTraits<Type>::one*this->patch().deltaCoeffs();
 }
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return this->patch().deltaCoeffs()*(*this);
 }
 
 
 template<class Type>
-void fixedValueFvPatchField<Type>::write(Ostream& os) const
+void Foam::fixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

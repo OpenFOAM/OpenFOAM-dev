@@ -25,15 +25,10 @@ License
 
 #include "symmetryFvsPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+Foam::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -44,7 +39,29 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
 
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+Foam::symmetryFvsPatchField<Type>::symmetryFvsPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, surfaceMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvsPatchField<Type>(p, iF, dict)
+{
+    if (!isType<symmetryFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "patch " << this->patch().index() << " not symmetry type. "
+            << "Patch type = " << p.type()
+            << exit(FatalIOError);
+    }
+}
+
+
+template<class Type>
+Foam::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const symmetryFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -67,29 +84,7 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
 
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvsPatchField<Type>(p, iF, dict)
-{
-    if (!isType<symmetryFvPatch>(p))
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "patch " << this->patch().index() << " not symmetry type. "
-            << "Patch type = " << p.type()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+Foam::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const symmetryFvsPatchField<Type>& ptf
 )
@@ -99,7 +94,7 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
 
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+Foam::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const symmetryFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -108,9 +103,5 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
     fvsPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

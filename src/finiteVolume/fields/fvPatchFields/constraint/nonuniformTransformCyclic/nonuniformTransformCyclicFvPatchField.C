@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "nonuniformTransformCyclicFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+Foam::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const fvPatch& p,
@@ -45,7 +40,20 @@ nonuniformTransformCyclicFvPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+Foam::nonuniformTransformCyclicFvPatchField<Type>::
+nonuniformTransformCyclicFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    cyclicFvPatchField<Type>(p, iF, dict)
+{}
+
+
+template<class Type>
+Foam::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const nonuniformTransformCyclicFvPatchField<Type>& ptf,
@@ -59,20 +67,7 @@ nonuniformTransformCyclicFvPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
-nonuniformTransformCyclicFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    cyclicFvPatchField<Type>(p, iF, dict)
-{}
-
-
-template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+Foam::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const nonuniformTransformCyclicFvPatchField<Type>& ptf
@@ -83,7 +78,7 @@ nonuniformTransformCyclicFvPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+Foam::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const nonuniformTransformCyclicFvPatchField<Type>& ptf,
@@ -93,9 +88,5 @@ nonuniformTransformCyclicFvPatchField
     cyclicFvPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

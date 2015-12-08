@@ -27,15 +27,10 @@ License
 #include "Time.H"
 #include "AverageIOField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-timeVaryingMappedFixedValueFvPatchField<Type>::
+Foam::timeVaryingMappedFixedValueFvPatchField<Type>::
 timeVaryingMappedFixedValueFvPatchField
 (
     const fvPatch& p,
@@ -59,7 +54,7 @@ timeVaryingMappedFixedValueFvPatchField
 
 
 template<class Type>
-timeVaryingMappedFixedValueFvPatchField<Type>::
+Foam::timeVaryingMappedFixedValueFvPatchField<Type>::
 timeVaryingMappedFixedValueFvPatchField
 (
     const fvPatch& p,
@@ -121,7 +116,7 @@ timeVaryingMappedFixedValueFvPatchField
 
 
 template<class Type>
-timeVaryingMappedFixedValueFvPatchField<Type>::
+Foam::timeVaryingMappedFixedValueFvPatchField<Type>::
 timeVaryingMappedFixedValueFvPatchField
 (
     const timeVaryingMappedFixedValueFvPatchField<Type>& ptf,
@@ -148,7 +143,7 @@ timeVaryingMappedFixedValueFvPatchField
 
 
 template<class Type>
-timeVaryingMappedFixedValueFvPatchField<Type>::
+Foam::timeVaryingMappedFixedValueFvPatchField<Type>::
 timeVaryingMappedFixedValueFvPatchField
 (
     const timeVaryingMappedFixedValueFvPatchField<Type>& ptf
@@ -172,7 +167,7 @@ timeVaryingMappedFixedValueFvPatchField
 
 
 template<class Type>
-timeVaryingMappedFixedValueFvPatchField<Type>::
+Foam::timeVaryingMappedFixedValueFvPatchField<Type>::
 timeVaryingMappedFixedValueFvPatchField
 (
     const timeVaryingMappedFixedValueFvPatchField<Type>& ptf,
@@ -199,7 +194,7 @@ timeVaryingMappedFixedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void timeVaryingMappedFixedValueFvPatchField<Type>::autoMap
+void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -218,7 +213,7 @@ void timeVaryingMappedFixedValueFvPatchField<Type>::autoMap
 
 
 template<class Type>
-void timeVaryingMappedFixedValueFvPatchField<Type>::rmap
+void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -240,7 +235,7 @@ void timeVaryingMappedFixedValueFvPatchField<Type>::rmap
 
 
 template<class Type>
-void timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
+void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
 {
     // Initialise
     if (mapperPtr_.empty())
@@ -451,7 +446,7 @@ void timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
 
 
 template<class Type>
-void timeVaryingMappedFixedValueFvPatchField<Type>::updateCoeffs()
+void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -556,7 +551,10 @@ void timeVaryingMappedFixedValueFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void timeVaryingMappedFixedValueFvPatchField<Type>::write(Ostream& os) const
+void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::write
+(
+    Ostream& os
+) const
 {
     fvPatchField<Type>::write(os);
     os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
@@ -588,9 +586,5 @@ void timeVaryingMappedFixedValueFvPatchField<Type>::write(Ostream& os) const
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "coupledPointPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * //
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+Foam::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -44,7 +39,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+Foam::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -56,7 +51,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+Foam::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const coupledPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -69,7 +64,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+Foam::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const coupledPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -78,9 +73,5 @@ coupledPointPatchField<Type>::coupledPointPatchField
     pointPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

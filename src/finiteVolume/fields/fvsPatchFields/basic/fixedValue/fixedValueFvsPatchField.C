@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "fixedValueFvsPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -44,7 +39,19 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, surfaceMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvsPatchField<Type>(p, iF, Field<Type>("value", dict, p.size()))
+{}
+
+
+template<class Type>
+Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -57,19 +64,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvsPatchField<Type>(p, iF, Field<Type>("value", dict, p.size()))
-{}
-
-
-template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf
 )
@@ -79,7 +74,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -92,7 +87,8 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueInternalCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedValueFvsPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -105,7 +101,8 @@ tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -115,21 +112,19 @@ tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::gradientInternalCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedValueFvsPatchField<Type>::gradientInternalCoeffs() const
 {
     return -pTraits<Type>::one*this->patch().deltaCoeffs();
 }
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::gradientBoundaryCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::fixedValueFvsPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return this->patch().deltaCoeffs()*(*this);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

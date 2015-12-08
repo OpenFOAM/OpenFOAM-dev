@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,15 +26,10 @@ License
 #include "processorPointPatchField.H"
 #include "processorPolyPatch.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+Foam::processorPointPatchField<Type>::processorPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -46,7 +41,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+Foam::processorPointPatchField<Type>::processorPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -59,7 +54,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+Foam::processorPointPatchField<Type>::processorPointPatchField
 (
     const processorPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -73,7 +68,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+Foam::processorPointPatchField<Type>::processorPointPatchField
 (
     const processorPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -87,12 +82,8 @@ processorPointPatchField<Type>::processorPointPatchField
 // * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
 template<class Type>
-processorPointPatchField<Type>::~processorPointPatchField()
+Foam::processorPointPatchField<Type>::~processorPointPatchField()
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,15 +26,10 @@ License
 #include "mixedFixedValueSlipFvPatchField.H"
 #include "symmTransformField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -47,7 +42,21 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    transformFvPatchField<Type>(p, iF),
+    refValue_("refValue", dict, p.size()),
+    valueFraction_("valueFraction", dict, p.size())
+{}
+
+
+template<class Type>
+Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -62,21 +71,7 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    transformFvPatchField<Type>(p, iF),
-    refValue_("refValue", dict, p.size()),
-    valueFraction_("valueFraction", dict, p.size())
-{}
-
-
-template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf
 )
@@ -86,8 +81,9 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
     valueFraction_(ptf.valueFraction_)
 {}
 
+
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -101,9 +97,8 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Map from self
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::autoMap
+void Foam::mixedFixedValueSlipFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -114,9 +109,8 @@ void mixedFixedValueSlipFvPatchField<Type>::autoMap
 }
 
 
-// Reverse-map the given fvPatchField onto this fvPatchField
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::rmap
+void Foam::mixedFixedValueSlipFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -132,9 +126,9 @@ void mixedFixedValueSlipFvPatchField<Type>::rmap
 }
 
 
-// Return gradient at boundary
 template<class Type>
-tmp<Field<Type> > mixedFixedValueSlipFvPatchField<Type>::snGrad() const
+Foam::tmp<Foam::Field<Type> >
+Foam::mixedFixedValueSlipFvPatchField<Type>::snGrad() const
 {
     tmp<vectorField> nHat = this->patch().nf();
     Field<Type> pif(this->patchInternalField());
@@ -147,9 +141,11 @@ tmp<Field<Type> > mixedFixedValueSlipFvPatchField<Type>::snGrad() const
 }
 
 
-// Evaluate the field on the patch
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void Foam::mixedFixedValueSlipFvPatchField<Type>::evaluate
+(
+    const Pstream::commsTypes
+)
 {
     if (!this->updated())
     {
@@ -170,10 +166,9 @@ void mixedFixedValueSlipFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 }
 
 
-// Return defining fields
 template<class Type>
-tmp<Field<Type> >
-mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
+Foam::tmp<Foam::Field<Type> >
+Foam::mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 {
     vectorField nHat(this->patch().nf());
     vectorField diag(nHat.size());
@@ -189,18 +184,13 @@ mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 }
 
 
-// Write
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
+void Foam::mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
     refValue_.writeEntry("refValue", os);
     valueFraction_.writeEntry("valueFraction", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

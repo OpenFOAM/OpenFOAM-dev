@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "zeroFixedValuePointPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * //
 
 template<class Type>
-zeroFixedValuePointPatchField<Type>::
+Foam::zeroFixedValuePointPatchField<Type>::
 zeroFixedValuePointPatchField
 (
     const pointPatch& p,
@@ -45,7 +40,7 @@ zeroFixedValuePointPatchField
 
 
 template<class Type>
-zeroFixedValuePointPatchField<Type>::
+Foam::zeroFixedValuePointPatchField<Type>::
 zeroFixedValuePointPatchField
 (
     const pointPatch& p,
@@ -60,7 +55,7 @@ zeroFixedValuePointPatchField
 
 
 template<class Type>
-zeroFixedValuePointPatchField<Type>::
+Foam::zeroFixedValuePointPatchField<Type>::
 zeroFixedValuePointPatchField
 (
     const zeroFixedValuePointPatchField<Type>& ptf,
@@ -77,7 +72,7 @@ zeroFixedValuePointPatchField
 
 
 template<class Type>
-zeroFixedValuePointPatchField<Type>::
+Foam::zeroFixedValuePointPatchField<Type>::
 zeroFixedValuePointPatchField
 (
     const zeroFixedValuePointPatchField<Type>& ptf
@@ -88,7 +83,7 @@ zeroFixedValuePointPatchField
 
 
 template<class Type>
-zeroFixedValuePointPatchField<Type>::
+Foam::zeroFixedValuePointPatchField<Type>::
 zeroFixedValuePointPatchField
 (
     const zeroFixedValuePointPatchField<Type>& ptf,
@@ -101,9 +96,5 @@ zeroFixedValuePointPatchField
     fixedValuePointPatchField<Type>::operator=(pTraits<Type>::zero);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

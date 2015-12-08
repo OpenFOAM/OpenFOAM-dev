@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,11 +27,8 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
 template<class Type>
-const word& pointPatchField<Type>::calculatedType()
+const Foam::word& Foam::pointPatchField<Type>::calculatedType()
 {
     return calculatedPointPatchField<Type>::typeName;
 }
@@ -40,7 +37,7 @@ const word& pointPatchField<Type>::calculatedType()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-calculatedPointPatchField<Type>::calculatedPointPatchField
+Foam::calculatedPointPatchField<Type>::calculatedPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -51,7 +48,7 @@ calculatedPointPatchField<Type>::calculatedPointPatchField
 
 
 template<class Type>
-calculatedPointPatchField<Type>::calculatedPointPatchField
+Foam::calculatedPointPatchField<Type>::calculatedPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -63,7 +60,7 @@ calculatedPointPatchField<Type>::calculatedPointPatchField
 
 
 template<class Type>
-calculatedPointPatchField<Type>::calculatedPointPatchField
+Foam::calculatedPointPatchField<Type>::calculatedPointPatchField
 (
     const calculatedPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -76,7 +73,7 @@ calculatedPointPatchField<Type>::calculatedPointPatchField
 
 
 template<class Type>
-calculatedPointPatchField<Type>::calculatedPointPatchField
+Foam::calculatedPointPatchField<Type>::calculatedPointPatchField
 (
     const calculatedPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -88,8 +85,8 @@ calculatedPointPatchField<Type>::calculatedPointPatchField
 
 template<class Type>
 template<class Type2>
-autoPtr<pointPatchField<Type> >
-pointPatchField<Type>::NewCalculatedType
+Foam::autoPtr<Foam::pointPatchField<Type> >
+Foam::pointPatchField<Type>::NewCalculatedType
 (
     const pointPatchField<Type2>& pf
 )
@@ -121,9 +118,5 @@ pointPatchField<Type>::NewCalculatedType
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

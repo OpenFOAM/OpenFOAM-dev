@@ -28,15 +28,10 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "wallFvPatch.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void kqRWallFunctionFvPatchField<Type>::checkType()
+void Foam::kqRWallFunctionFvPatchField<Type>::checkType()
 {
     if (!isA<wallFvPatch>(this->patch()))
     {
@@ -54,7 +49,7 @@ void kqRWallFunctionFvPatchField<Type>::checkType()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
+Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -67,7 +62,21 @@ kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 
 
 template<class Type>
-kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
+Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    zeroGradientFvPatchField<Type>(p, iF, dict)
+{
+    checkType();
+}
+
+
+template<class Type>
+Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
     const kqRWallFunctionFvPatchField& ptf,
     const fvPatch& p,
@@ -82,21 +91,7 @@ kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 
 
 template<class Type>
-kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    zeroGradientFvPatchField<Type>(p, iF, dict)
-{
-    checkType();
-}
-
-
-template<class Type>
-kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
+Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
     const kqRWallFunctionFvPatchField& tkqrwfpf
 )
@@ -108,7 +103,7 @@ kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 
 
 template<class Type>
-kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
+Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
     const kqRWallFunctionFvPatchField& tkqrwfpf,
     const DimensionedField<Type, volMesh>& iF
@@ -123,7 +118,7 @@ kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void kqRWallFunctionFvPatchField<Type>::evaluate
+void Foam::kqRWallFunctionFvPatchField<Type>::evaluate
 (
     const Pstream::commsTypes commsType
 )
@@ -133,15 +128,11 @@ void kqRWallFunctionFvPatchField<Type>::evaluate
 
 
 template<class Type>
-void kqRWallFunctionFvPatchField<Type>::write(Ostream& os) const
+void Foam::kqRWallFunctionFvPatchField<Type>::write(Ostream& os) const
 {
     zeroGradientFvPatchField<Type>::write(os);
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

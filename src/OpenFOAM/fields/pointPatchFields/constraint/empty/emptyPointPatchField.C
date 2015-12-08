@@ -25,15 +25,10 @@ License
 
 #include "emptyPointPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-emptyPointPatchField<Type>::emptyPointPatchField
+Foam::emptyPointPatchField<Type>::emptyPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -44,7 +39,7 @@ emptyPointPatchField<Type>::emptyPointPatchField
 
 
 template<class Type>
-emptyPointPatchField<Type>::emptyPointPatchField
+Foam::emptyPointPatchField<Type>::emptyPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -66,7 +61,7 @@ emptyPointPatchField<Type>::emptyPointPatchField
 
 
 template<class Type>
-emptyPointPatchField<Type>::emptyPointPatchField
+Foam::emptyPointPatchField<Type>::emptyPointPatchField
 (
     const emptyPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -89,7 +84,7 @@ emptyPointPatchField<Type>::emptyPointPatchField
 
 
 template<class Type>
-emptyPointPatchField<Type>::emptyPointPatchField
+Foam::emptyPointPatchField<Type>::emptyPointPatchField
 (
     const emptyPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -98,9 +93,5 @@ emptyPointPatchField<Type>::emptyPointPatchField
     pointPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

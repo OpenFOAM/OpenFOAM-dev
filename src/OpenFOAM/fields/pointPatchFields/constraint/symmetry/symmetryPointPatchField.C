@@ -25,15 +25,10 @@ License
 
 #include "symmetryPointPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-symmetryPointPatchField<Type>::symmetryPointPatchField
+Foam::symmetryPointPatchField<Type>::symmetryPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -44,7 +39,7 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 
 
 template<class Type>
-symmetryPointPatchField<Type>::symmetryPointPatchField
+Foam::symmetryPointPatchField<Type>::symmetryPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -66,7 +61,7 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 
 
 template<class Type>
-symmetryPointPatchField<Type>::symmetryPointPatchField
+Foam::symmetryPointPatchField<Type>::symmetryPointPatchField
 (
     const symmetryPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -89,7 +84,7 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 
 
 template<class Type>
-symmetryPointPatchField<Type>::symmetryPointPatchField
+Foam::symmetryPointPatchField<Type>::symmetryPointPatchField
 (
     const symmetryPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -98,9 +93,5 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
     basicSymmetryPointPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

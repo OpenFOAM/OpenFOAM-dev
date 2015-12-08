@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,15 +26,10 @@ License
 #include "fixedValuePointPatchField.H"
 #include "boolList.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+Foam::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -45,7 +40,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+Foam::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -58,7 +53,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+Foam::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const fixedValuePointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -71,7 +66,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+Foam::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const fixedValuePointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -80,9 +75,5 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
     valuePointPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

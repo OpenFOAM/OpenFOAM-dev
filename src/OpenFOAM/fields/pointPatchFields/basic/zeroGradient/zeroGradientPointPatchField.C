@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "zeroGradientPointPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
+Foam::zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -44,7 +39,7 @@ zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 
 
 template<class Type>
-zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
+Foam::zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -56,7 +51,7 @@ zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 
 
 template<class Type>
-zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
+Foam::zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 (
     const zeroGradientPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -69,7 +64,7 @@ zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 
 
 template<class Type>
-zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
+Foam::zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 (
     const zeroGradientPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -78,9 +73,5 @@ zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
     pointPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

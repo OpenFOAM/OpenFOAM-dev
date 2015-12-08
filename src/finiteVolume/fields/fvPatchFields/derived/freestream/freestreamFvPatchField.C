@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,10 @@ License
 
 #include "freestreamFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+Foam::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -44,20 +39,7 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
-(
-    const freestreamFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    inletOutletFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+Foam::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -85,7 +67,20 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+Foam::freestreamFvPatchField<Type>::freestreamFvPatchField
+(
+    const freestreamFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    inletOutletFvPatchField<Type>(ptf, p, iF, mapper)
+{}
+
+
+template<class Type>
+Foam::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const freestreamFvPatchField<Type>& ptf
 )
@@ -95,7 +90,7 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+Foam::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const freestreamFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -108,7 +103,7 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void freestreamFvPatchField<Type>::write(Ostream& os) const
+void Foam::freestreamFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     if (this->phiName_ != "phi")
@@ -120,9 +115,5 @@ void freestreamFvPatchField<Type>::write(Ostream& os) const
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

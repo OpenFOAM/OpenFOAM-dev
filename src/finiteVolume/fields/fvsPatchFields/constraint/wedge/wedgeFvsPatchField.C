@@ -25,15 +25,10 @@ License
 
 #include "wedgeFvsPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+Foam::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -44,7 +39,29 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
 
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+Foam::wedgeFvsPatchField<Type>::wedgeFvsPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, surfaceMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvsPatchField<Type>(p, iF, dict)
+{
+    if (!isType<wedgeFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "patch " << this->patch().index() << " not wedge type. "
+            << "Patch type = " << p.type()
+            << exit(FatalIOError);
+    }
+}
+
+
+template<class Type>
+Foam::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const wedgeFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -67,29 +84,7 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
 
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvsPatchField<Type>(p, iF, dict)
-{
-    if (!isType<wedgeFvPatch>(p))
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "patch " << this->patch().index() << " not wedge type. "
-            << "Patch type = " << p.type()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+Foam::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const wedgeFvsPatchField<Type>& ptf
 )
@@ -99,7 +94,7 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
 
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+Foam::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const wedgeFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -108,9 +103,5 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
     fvsPatchField<Type>(ptf, iF)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

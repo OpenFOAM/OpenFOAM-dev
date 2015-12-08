@@ -25,15 +25,10 @@ License
 
 #include "mixedFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+Foam::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -47,7 +42,24 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+Foam::mixedFvPatchField<Type>::mixedFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict),
+    refValue_("refValue", dict, p.size()),
+    refGrad_("refGradient", dict, p.size()),
+    valueFraction_("valueFraction", dict, p.size())
+{
+    evaluate();
+}
+
+
+template<class Type>
+Foam::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const mixedFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -73,24 +85,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict),
-    refValue_("refValue", dict, p.size()),
-    refGrad_("refGradient", dict, p.size()),
-    valueFraction_("valueFraction", dict, p.size())
-{
-    evaluate();
-}
-
-
-template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+Foam::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const mixedFvPatchField<Type>& ptf
 )
@@ -103,7 +98,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+Foam::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const mixedFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -119,7 +114,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void mixedFvPatchField<Type>::autoMap
+void Foam::mixedFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -132,7 +127,7 @@ void mixedFvPatchField<Type>::autoMap
 
 
 template<class Type>
-void mixedFvPatchField<Type>::rmap
+void Foam::mixedFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -150,7 +145,7 @@ void mixedFvPatchField<Type>::rmap
 
 
 template<class Type>
-void mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void Foam::mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!this->updated())
     {
@@ -173,7 +168,8 @@ void mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::snGrad() const
+Foam::tmp<Foam::Field<Type> >
+Foam::mixedFvPatchField<Type>::snGrad() const
 {
     return
         valueFraction_
@@ -184,7 +180,8 @@ tmp<Field<Type> > mixedFvPatchField<Type>::snGrad() const
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::valueInternalCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::mixedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -195,7 +192,8 @@ tmp<Field<Type> > mixedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::valueBoundaryCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::mixedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -207,14 +205,16 @@ tmp<Field<Type> > mixedFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::gradientInternalCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::mixedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -Type(pTraits<Type>::one)*valueFraction_*this->patch().deltaCoeffs();
 }
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return
         valueFraction_*this->patch().deltaCoeffs()*refValue_
@@ -223,7 +223,7 @@ tmp<Field<Type> > mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
 
 
 template<class Type>
-void mixedFvPatchField<Type>::write(Ostream& os) const
+void Foam::mixedFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     refValue_.writeEntry("refValue", os);
@@ -232,9 +232,5 @@ void mixedFvPatchField<Type>::write(Ostream& os) const
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

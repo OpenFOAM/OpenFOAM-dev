@@ -25,15 +25,10 @@ License
 
 #include "processorFvsPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+Foam::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -45,7 +40,7 @@ processorFvsPatchField<Type>::processorFvsPatchField
 
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+Foam::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -57,9 +52,31 @@ processorFvsPatchField<Type>::processorFvsPatchField
 {}
 
 
-// Construct by mapping given processorFvsPatchField<Type>
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+Foam::processorFvsPatchField<Type>::processorFvsPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, surfaceMesh>& iF,
+    const dictionary& dict
+)
+:
+    coupledFvsPatchField<Type>(p, iF, dict),
+    procPatch_(refCast<const processorFvPatch>(p))
+{
+    if (!isType<processorFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "patch " << this->patch().index() << " not processor type. "
+            << "Patch type = " << p.type()
+            << exit(FatalIOError);
+    }
+}
+
+
+template<class Type>
+Foam::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const processorFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -83,30 +100,7 @@ processorFvsPatchField<Type>::processorFvsPatchField
 
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    coupledFvsPatchField<Type>(p, iF, dict),
-    procPatch_(refCast<const processorFvPatch>(p))
-{
-    if (!isType<processorFvPatch>(p))
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "patch " << this->patch().index() << " not processor type. "
-            << "Patch type = " << p.type()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+Foam::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const processorFvsPatchField<Type>& ptf
 )
@@ -117,7 +111,7 @@ processorFvsPatchField<Type>::processorFvsPatchField
 
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+Foam::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const processorFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -131,12 +125,8 @@ processorFvsPatchField<Type>::processorFvsPatchField
 // * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
 template<class Type>
-processorFvsPatchField<Type>::~processorFvsPatchField()
+Foam::processorFvsPatchField<Type>::~processorFvsPatchField()
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

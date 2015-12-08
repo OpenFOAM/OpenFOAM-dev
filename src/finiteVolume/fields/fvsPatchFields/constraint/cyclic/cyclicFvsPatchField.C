@@ -25,15 +25,10 @@ License
 
 #include "cyclicFvsPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+Foam::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -45,7 +40,30 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
 
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+Foam::cyclicFvsPatchField<Type>::cyclicFvsPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, surfaceMesh>& iF,
+    const dictionary& dict
+)
+:
+    coupledFvsPatchField<Type>(p, iF, dict),
+    cyclicPatch_(refCast<const cyclicFvPatch>(p))
+{
+    if (!isA<cyclicFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "patch " << this->patch().index() << " not cyclic type. "
+            << "Patch type = " << p.type()
+            << exit(FatalIOError);
+    }
+}
+
+
+template<class Type>
+Foam::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const cyclicFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -69,30 +87,7 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
 
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    coupledFvsPatchField<Type>(p, iF, dict),
-    cyclicPatch_(refCast<const cyclicFvPatch>(p))
-{
-    if (!isA<cyclicFvPatch>(p))
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "patch " << this->patch().index() << " not cyclic type. "
-            << "Patch type = " << p.type()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+Foam::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const cyclicFvsPatchField<Type>& ptf
 )
@@ -103,7 +98,7 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
 
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+Foam::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const cyclicFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -113,9 +108,5 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
     cyclicPatch_(ptf.cyclicPatch_)
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

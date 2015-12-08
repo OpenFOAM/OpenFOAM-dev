@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,11 +28,8 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
 template<class Type>
-const word& fvsPatchField<Type>::calculatedType()
+const Foam::word& Foam::fvsPatchField<Type>::calculatedType()
 {
     return calculatedFvsPatchField<Type>::typeName;
 }
@@ -40,7 +37,7 @@ const word& fvsPatchField<Type>::calculatedType()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+Foam::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -51,7 +48,19 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+Foam::calculatedFvsPatchField<Type>::calculatedFvsPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, surfaceMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvsPatchField<Type>(p, iF, Field<Type>("value", dict, p.size()))
+{}
+
+
+template<class Type>
+Foam::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const calculatedFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -64,19 +73,7 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvsPatchField<Type>(p, iF, Field<Type>("value", dict, p.size()))
-{}
-
-
-template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+Foam::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const calculatedFvsPatchField<Type>& ptf
 )
@@ -86,7 +83,7 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+Foam::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const calculatedFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -97,7 +94,8 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::NewCalculatedType
+Foam::tmp<Foam::fvsPatchField<Type> >
+Foam::fvsPatchField<Type>::NewCalculatedType
 (
     const fvPatch& p
 )
@@ -129,7 +127,8 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::NewCalculatedType
 
 template<class Type>
 template<class Type2>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::NewCalculatedType
+Foam::tmp<Foam::fvsPatchField<Type> >
+Foam::fvsPatchField<Type>::NewCalculatedType
 (
     const fvsPatchField<Type2>& pf
 )
@@ -137,9 +136,5 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::NewCalculatedType
     return NewCalculatedType(pf.patch());
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

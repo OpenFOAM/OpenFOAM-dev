@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,19 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mappedFieldFvPatchField.H"
-
 #include "volFields.H"
 #include "interpolationCell.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
+Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -49,7 +43,21 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 
 
 template<class Type>
-mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
+Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<Type>(p, iF, dict),
+    mappedPatchBase(p.patch(), dict),
+    mappedPatchFieldBase<Type>(*this, *this, dict)
+{}
+
+
+template<class Type>
+Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 (
     const mappedFieldFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -64,21 +72,7 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 
 
 template<class Type>
-mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<Type>(p, iF, dict),
-    mappedPatchBase(p.patch(), dict),
-    mappedPatchFieldBase<Type>(*this, *this, dict)
-{}
-
-
-template<class Type>
-mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
+Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -118,7 +112,7 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 
 
 template<class Type>
-mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
+Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 (
     const mappedFieldFvPatchField<Type>& ptf
 )
@@ -130,7 +124,7 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 
 
 template<class Type>
-mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
+Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 (
     const mappedFieldFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -145,7 +139,7 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void mappedFieldFvPatchField<Type>::updateCoeffs()
+void Foam::mappedFieldFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -169,7 +163,7 @@ void mappedFieldFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void mappedFieldFvPatchField<Type>::write(Ostream& os) const
+void Foam::mappedFieldFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     mappedPatchBase::write(os);
@@ -177,9 +171,5 @@ void mappedFieldFvPatchField<Type>::write(Ostream& os) const
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

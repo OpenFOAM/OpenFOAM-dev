@@ -25,15 +25,10 @@ License
 
 #include "slicedFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+Foam::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -48,7 +43,7 @@ slicedFvPatchField<Type>::slicedFvPatchField
 
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+Foam::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -59,7 +54,21 @@ slicedFvPatchField<Type>::slicedFvPatchField
 
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+Foam::slicedFvPatchField<Type>::slicedFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict)
+{
+    NotImplemented;
+}
+
+
+template<class Type>
+Foam::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const slicedFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -74,21 +83,7 @@ slicedFvPatchField<Type>::slicedFvPatchField
 
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict)
-{
-    NotImplemented;
-}
-
-
-template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+Foam::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const slicedFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -100,8 +95,10 @@ slicedFvPatchField<Type>::slicedFvPatchField
     UList<Type>::operator=(ptf);
 }
 
+
 template<class Type>
-tmp<fvPatchField<Type> > slicedFvPatchField<Type>::clone() const
+Foam::tmp<Foam::fvPatchField<Type> >
+Foam::slicedFvPatchField<Type>::clone() const
 {
     return tmp<fvPatchField<Type> >
     (
@@ -111,7 +108,7 @@ tmp<fvPatchField<Type> > slicedFvPatchField<Type>::clone() const
 
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+Foam::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const slicedFvPatchField<Type>& ptf
 )
@@ -129,7 +126,8 @@ slicedFvPatchField<Type>::slicedFvPatchField
 
 
 template<class Type>
-tmp<fvPatchField<Type> > slicedFvPatchField<Type>::clone
+Foam::tmp<Foam::fvPatchField<Type> >
+Foam::slicedFvPatchField<Type>::clone
 (
     const DimensionedField<Type, volMesh>& iF
 ) const
@@ -142,7 +140,7 @@ tmp<fvPatchField<Type> > slicedFvPatchField<Type>::clone
 
 
 template<class Type>
-slicedFvPatchField<Type>::~slicedFvPatchField<Type>()
+Foam::slicedFvPatchField<Type>::~slicedFvPatchField()
 {
     // Set the fvPatchField storage pointer to NULL before its destruction
     // to protect the field it a slice of.
@@ -153,7 +151,7 @@ slicedFvPatchField<Type>::~slicedFvPatchField<Type>()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::snGrad() const
+Foam::tmp<Foam::Field<Type> > Foam::slicedFvPatchField<Type>::snGrad() const
 {
     NotImplemented;
 
@@ -162,14 +160,15 @@ tmp<Field<Type> > slicedFvPatchField<Type>::snGrad() const
 
 
 template<class Type>
-void slicedFvPatchField<Type>::updateCoeffs()
+void Foam::slicedFvPatchField<Type>::updateCoeffs()
 {
     NotImplemented;
 }
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::patchInternalField() const
+Foam::tmp<Foam::Field<Type> >
+Foam::slicedFvPatchField<Type>::patchInternalField() const
 {
     NotImplemented;
 
@@ -178,14 +177,15 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchInternalField() const
 
 
 template<class Type>
-void slicedFvPatchField<Type>::patchInternalField(Field<Type>&) const
+void Foam::slicedFvPatchField<Type>::patchInternalField(Field<Type>&) const
 {
     NotImplemented;
 }
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField
+Foam::tmp<Foam::Field<Type> >
+Foam::slicedFvPatchField<Type>::patchNeighbourField
 (
     const Field<Type>& iField
 ) const
@@ -197,7 +197,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField() const
+Foam::tmp<Foam::Field<Type> >
+Foam::slicedFvPatchField<Type>::patchNeighbourField() const
 {
     NotImplemented;
 
@@ -206,7 +207,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::valueInternalCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::slicedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -218,7 +220,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::valueBoundaryCoeffs
+Foam::tmp<Foam::Field<Type> >
+Foam::slicedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -230,7 +233,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::gradientInternalCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::slicedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     NotImplemented;
 
@@ -239,7 +243,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::gradientBoundaryCoeffs() const
+Foam::tmp<Foam::Field<Type> >
+Foam::slicedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     NotImplemented;
 
@@ -248,15 +253,11 @@ tmp<Field<Type> > slicedFvPatchField<Type>::gradientBoundaryCoeffs() const
 
 
 template<class Type>
-void slicedFvPatchField<Type>::write(Ostream& os) const
+void Foam::slicedFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     this->writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -26,15 +26,10 @@ License
 #include "oscillatingFixedValueFvPatchField.H"
 #include "mathematicalConstants.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-scalar oscillatingFixedValueFvPatchField<Type>::currentScale() const
+Foam::scalar Foam::oscillatingFixedValueFvPatchField<Type>::currentScale() const
 {
     const scalar t = this->db().time().timeOutputValue();
     const scalar a = amplitude_->value(t);
@@ -47,7 +42,7 @@ scalar oscillatingFixedValueFvPatchField<Type>::currentScale() const
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
+Foam::oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -63,25 +58,7 @@ oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
 
 
 template<class Type>
-oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
-(
-    const oscillatingFixedValueFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    refValue_(ptf.refValue_, mapper),
-    offset_(ptf.offset_),
-    amplitude_(ptf.amplitude_, false),
-    frequency_(ptf.frequency_, false),
-    curTimeIndex_(-1)
-{}
-
-
-template<class Type>
-oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
+Foam::oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -114,7 +91,25 @@ oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
 
 
 template<class Type>
-oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
+Foam::oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
+(
+    const oscillatingFixedValueFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
+    refValue_(ptf.refValue_, mapper),
+    offset_(ptf.offset_),
+    amplitude_(ptf.amplitude_, false),
+    frequency_(ptf.frequency_, false),
+    curTimeIndex_(-1)
+{}
+
+
+template<class Type>
+Foam::oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
 (
     const oscillatingFixedValueFvPatchField<Type>& ptf
 )
@@ -129,7 +124,7 @@ oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
 
 
 template<class Type>
-oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
+Foam::oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
 (
     const oscillatingFixedValueFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -147,7 +142,7 @@ oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void oscillatingFixedValueFvPatchField<Type>::autoMap
+void Foam::oscillatingFixedValueFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -158,7 +153,7 @@ void oscillatingFixedValueFvPatchField<Type>::autoMap
 
 
 template<class Type>
-void oscillatingFixedValueFvPatchField<Type>::rmap
+void Foam::oscillatingFixedValueFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -174,7 +169,7 @@ void oscillatingFixedValueFvPatchField<Type>::rmap
 
 
 template<class Type>
-void oscillatingFixedValueFvPatchField<Type>::updateCoeffs()
+void Foam::oscillatingFixedValueFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -197,7 +192,7 @@ void oscillatingFixedValueFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void oscillatingFixedValueFvPatchField<Type>::write(Ostream& os) const
+void Foam::oscillatingFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fixedValueFvPatchField<Type>::write(os);
     refValue_.writeEntry("refValue", os);
@@ -206,9 +201,5 @@ void oscillatingFixedValueFvPatchField<Type>::write(Ostream& os) const
     frequency_->writeData(os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

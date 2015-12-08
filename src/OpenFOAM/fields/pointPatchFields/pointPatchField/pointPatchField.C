@@ -27,15 +27,10 @@ License
 #include "pointMesh.H"
 #include "dictionary.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-pointPatchField<Type>::pointPatchField
+Foam::pointPatchField<Type>::pointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -49,7 +44,7 @@ pointPatchField<Type>::pointPatchField
 
 
 template<class Type>
-pointPatchField<Type>::pointPatchField
+Foam::pointPatchField<Type>::pointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -80,7 +75,7 @@ Foam::pointPatchField<Type>::pointPatchField
 
 
 template<class Type>
-pointPatchField<Type>::pointPatchField
+Foam::pointPatchField<Type>::pointPatchField
 (
     const pointPatchField<Type>& ptf
 )
@@ -93,7 +88,7 @@ pointPatchField<Type>::pointPatchField
 
 
 template<class Type>
-pointPatchField<Type>::pointPatchField
+Foam::pointPatchField<Type>::pointPatchField
 (
     const pointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -109,14 +104,14 @@ pointPatchField<Type>::pointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-const objectRegistry& pointPatchField<Type>::db() const
+const Foam::objectRegistry& Foam::pointPatchField<Type>::db() const
 {
     return patch_.boundaryMesh().mesh()();
 }
 
 
 template<class Type>
-void pointPatchField<Type>::write(Ostream& os) const
+void Foam::pointPatchField<Type>::write(Ostream& os) const
 {
     os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
 
@@ -129,7 +124,8 @@ void pointPatchField<Type>::write(Ostream& os) const
 
 
 template<class Type>
-tmp<Field<Type> > pointPatchField<Type>::patchInternalField() const
+Foam::tmp<Foam::Field<Type> >
+Foam::pointPatchField<Type>::patchInternalField() const
 {
     return patchInternalField(internalField());
 }
@@ -137,7 +133,8 @@ tmp<Field<Type> > pointPatchField<Type>::patchInternalField() const
 
 template<class Type>
 template<class Type1>
-tmp<Field<Type1> > pointPatchField<Type>::patchInternalField
+Foam::tmp<Foam::Field<Type1> >
+Foam::pointPatchField<Type>::patchInternalField
 (
     const Field<Type1>& iF,
     const labelList& meshPoints
@@ -159,7 +156,8 @@ tmp<Field<Type1> > pointPatchField<Type>::patchInternalField
 
 template<class Type>
 template<class Type1>
-tmp<Field<Type1> > pointPatchField<Type>::patchInternalField
+Foam::tmp<Foam::Field<Type1> >
+Foam::pointPatchField<Type>::patchInternalField
 (
     const Field<Type1>& iF
 ) const
@@ -170,7 +168,7 @@ tmp<Field<Type1> > pointPatchField<Type>::patchInternalField
 
 template<class Type>
 template<class Type1>
-void pointPatchField<Type>::addToInternalField
+void Foam::pointPatchField<Type>::addToInternalField
 (
     Field<Type1>& iF,
     const Field<Type1>& pF
@@ -207,7 +205,7 @@ void pointPatchField<Type>::addToInternalField
 
 template<class Type>
 template<class Type1>
-void pointPatchField<Type>::addToInternalField
+void Foam::pointPatchField<Type>::addToInternalField
 (
     Field<Type1>& iF,
     const Field<Type1>& pF,
@@ -246,7 +244,7 @@ void pointPatchField<Type>::addToInternalField
 
 template<class Type>
 template<class Type1>
-void pointPatchField<Type>::setInInternalField
+void Foam::pointPatchField<Type>::setInInternalField
 (
     Field<Type1>& iF,
     const Field<Type1>& pF,
@@ -281,7 +279,7 @@ void pointPatchField<Type>::setInInternalField
 
 template<class Type>
 template<class Type1>
-void pointPatchField<Type>::setInInternalField
+void Foam::pointPatchField<Type>::setInInternalField
 (
     Field<Type1>& iF,
     const Field<Type1>& pF
@@ -292,7 +290,7 @@ void pointPatchField<Type>::setInInternalField
 
 
 template<class Type>
-void pointPatchField<Type>::evaluate(const Pstream::commsTypes)
+void Foam::pointPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!updated_)
     {
@@ -306,7 +304,7 @@ void pointPatchField<Type>::evaluate(const Pstream::commsTypes)
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class Type>
-Ostream& operator<<
+Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
     const pointPatchField<Type>& ptf
@@ -319,10 +317,6 @@ Ostream& operator<<
     return os;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
