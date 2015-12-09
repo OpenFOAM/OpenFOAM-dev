@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,6 +95,24 @@ public:
     ) const;
 };
 
+template<>
+inline tmp<volScalarField> magSqr<scalar>::operator()
+(
+    const volScalarField& phi
+) const;
+
+template<>
+inline tmp<volScalarField> magSqr<symmTensor>::operator()
+(
+    const volSymmTensorField& phi
+) const;
+
+template<>
+inline tmp<volScalarField> magSqr<tensor>::operator()
+(
+    const volTensorField& phi
+) const;
+
 
 template<class Type>
 class rhoMagSqr
@@ -109,6 +127,12 @@ public:
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 };
+
+template<>
+inline tmp<volScalarField> rhoMagSqr<scalar>::operator()
+(
+    const volScalarField& phi
+) const;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
