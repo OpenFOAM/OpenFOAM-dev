@@ -25,7 +25,6 @@ License
 
 #include "metisDecomp.H"
 #include "addToRunTimeSelectionTable.H"
-#include "floatScalar.H"
 #include "Time.H"
 
 extern "C"
@@ -68,7 +67,7 @@ Foam::label Foam::metisDecomp::decompose
 
     // processor weights initialised with no size, only used if specified in
     // a file
-    Field<floatScalar> processorWeights;
+    Field<scalar> processorWeights;
 
     // cell weights (so on the vertices of the dual)
     List<label> cellWeights;
