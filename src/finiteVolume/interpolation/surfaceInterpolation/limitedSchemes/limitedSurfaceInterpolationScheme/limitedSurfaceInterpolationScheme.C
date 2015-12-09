@@ -28,16 +28,11 @@ License
 #include "surfaceFields.H"
 #include "coupledFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<limitedSurfaceInterpolationScheme<Type> >
-limitedSurfaceInterpolationScheme<Type>::New
+Foam::tmp<Foam::limitedSurfaceInterpolationScheme<Type> >
+Foam::limitedSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -84,10 +79,9 @@ limitedSurfaceInterpolationScheme<Type>::New
 }
 
 
-// Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<limitedSurfaceInterpolationScheme<Type> >
-limitedSurfaceInterpolationScheme<Type>::New
+Foam::tmp<Foam::limitedSurfaceInterpolationScheme<Type> >
+Foam::limitedSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
     const surfaceScalarField& faceFlux,
@@ -138,14 +132,16 @@ limitedSurfaceInterpolationScheme<Type>::New
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-limitedSurfaceInterpolationScheme<Type>::~limitedSurfaceInterpolationScheme()
+Foam::limitedSurfaceInterpolationScheme<Type>::
+~limitedSurfaceInterpolationScheme()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
+Foam::tmp<Foam::surfaceScalarField>
+Foam::limitedSurfaceInterpolationScheme<Type>::weights
 (
     const GeometricField<Type, fvPatchField, volMesh>& phi,
     const surfaceScalarField& CDweights,
@@ -187,7 +183,8 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
 }
 
 template<class Type>
-tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
+Foam::tmp<Foam::surfaceScalarField>
+Foam::limitedSurfaceInterpolationScheme<Type>::weights
 (
     const GeometricField<Type, fvPatchField, volMesh>& phi
 ) const
@@ -201,8 +198,8 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
-limitedSurfaceInterpolationScheme<Type>::flux
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::limitedSurfaceInterpolationScheme<Type>::flux
 (
     const GeometricField<Type, fvPatchField, volMesh>& phi
 ) const
@@ -210,9 +207,5 @@ limitedSurfaceInterpolationScheme<Type>::flux
     return faceFlux_*this->interpolate(phi);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

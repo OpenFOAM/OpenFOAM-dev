@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,15 +26,10 @@ License
 #include "interpolationCellPatchConstrained.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
 template<class Type>
-interpolationCellPatchConstrained<Type>::interpolationCellPatchConstrained
+Foam::interpolationCellPatchConstrained<Type>::interpolationCellPatchConstrained
 (
     const GeometricField<Type, fvPatchField, volMesh>& psi
 )
@@ -46,7 +41,7 @@ interpolationCellPatchConstrained<Type>::interpolationCellPatchConstrained
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type interpolationCellPatchConstrained<Type>::interpolate
+Type Foam::interpolationCellPatchConstrained<Type>::interpolate
 (
     const vector& pt,
     const label cellI,
@@ -68,9 +63,5 @@ Type interpolationCellPatchConstrained<Type>::interpolate
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

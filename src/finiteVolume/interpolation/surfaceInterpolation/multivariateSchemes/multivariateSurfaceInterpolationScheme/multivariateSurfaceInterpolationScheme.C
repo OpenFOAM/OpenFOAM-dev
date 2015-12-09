@@ -31,16 +31,11 @@ Description
 #include "volFields.H"
 #include "surfaceFields.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 //- Construct from face-flux field and coefficient
 template<class Type>
-multivariateSurfaceInterpolationScheme<Type>::
+Foam::multivariateSurfaceInterpolationScheme<Type>::
 multivariateSurfaceInterpolationScheme
 (
     const fvMesh& mesh,
@@ -56,10 +51,9 @@ multivariateSurfaceInterpolationScheme
 
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
-// Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<multivariateSurfaceInterpolationScheme<Type> >
-multivariateSurfaceInterpolationScheme<Type>::New
+Foam::tmp<Foam::multivariateSurfaceInterpolationScheme<Type> >
+Foam::multivariateSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
     const multivariateSurfaceInterpolationScheme<Type>::fieldTable& vtfs,
@@ -99,13 +93,9 @@ multivariateSurfaceInterpolationScheme<Type>::New
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-multivariateSurfaceInterpolationScheme<Type>::
+Foam::multivariateSurfaceInterpolationScheme<Type>::
 ~multivariateSurfaceInterpolationScheme()
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

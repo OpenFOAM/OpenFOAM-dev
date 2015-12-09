@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,10 @@ License
 #include "findCellPointFaceTet.H"
 #include "findCellPointFaceTriangle.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
 template<class Type>
-interpolationCellPointFace<Type>::interpolationCellPointFace
+Foam::interpolationCellPointFace<Type>::interpolationCellPointFace
 (
     const GeometricField<Type, fvPatchField, volMesh>& psi
 )
@@ -61,7 +56,7 @@ interpolationCellPointFace<Type>::interpolationCellPointFace
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type interpolationCellPointFace<Type>::interpolate
+Type Foam::interpolationCellPointFace<Type>::interpolate
 (
     const vector& position,
     const label cellI,
@@ -258,8 +253,7 @@ Type interpolationCellPointFace<Type>::interpolate
         }
         else
         {
-            Info<< "interpolationCellPointFace<Type>::interpolate"
-                << "(const vector&, const label cellI) const : "
+            InfoInFunction
                 << "search failed; using closest cellFace value" << endl
                 << "cell number " << cellI << tab
                 << "position " << position << endl;
@@ -362,9 +356,5 @@ Type interpolationCellPointFace<Type>::interpolate
     return t;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

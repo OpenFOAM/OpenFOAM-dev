@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,19 +30,17 @@ License
 #include "globalMeshData.H"
 #include "twoDPointCorrector.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-defineTypeNameAndDebug(pointConstraints, 0);
+    defineTypeNameAndDebug(pointConstraints, 0);
+}
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void pointConstraints::makePatchPatchAddressing()
+void Foam::pointConstraints::makePatchPatchAddressing()
 {
     if (debug)
     {
@@ -325,7 +323,7 @@ void pointConstraints::makePatchPatchAddressing()
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
-pointConstraints::pointConstraints(const pointMesh& pm)
+Foam::pointConstraints::pointConstraints(const pointMesh& pm)
 :
     MeshObject<pointMesh, Foam::UpdateableMeshObject, pointConstraints>(pm)
 {
@@ -342,7 +340,7 @@ pointConstraints::pointConstraints(const pointMesh& pm)
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
-pointConstraints::~pointConstraints()
+Foam::pointConstraints::~pointConstraints()
 {
     if (debug)
     {
@@ -353,19 +351,19 @@ pointConstraints::~pointConstraints()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void pointConstraints::updateMesh(const mapPolyMesh&)
+void Foam::pointConstraints::updateMesh(const mapPolyMesh&)
 {
     makePatchPatchAddressing();
 }
 
 
-bool pointConstraints::movePoints()
+bool Foam::pointConstraints::movePoints()
 {
     return true;
 }
 
 
-void pointConstraints::constrainDisplacement
+void Foam::pointConstraints::constrainDisplacement
 (
     pointVectorField& pf,
     const bool overrideFixedValue
@@ -402,10 +400,8 @@ void pointConstraints::constrainDisplacement
 }
 
 
-// Specialisation of constrainCorners for scalars because
-// no constraint need be applied
 template<>
-void pointConstraints::constrainCorners<scalar>
+void Foam::pointConstraints::constrainCorners<Foam::scalar>
 (
     GeometricField<scalar, pointPatchField, pointMesh>& pf
 ) const
@@ -413,15 +409,11 @@ void pointConstraints::constrainCorners<scalar>
 
 
 template<>
-void pointConstraints::constrainCorners<label>
+void Foam::pointConstraints::constrainCorners<Foam::label>
 (
     GeometricField<label, pointPatchField, pointMesh>& pf
 ) const
 {}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

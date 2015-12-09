@@ -27,16 +27,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-namespace limitFuncs
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type>
-inline tmp<volScalarField> magSqr<Type>::operator()
+inline Foam::tmp<Foam::volScalarField>
+Foam::limitFuncs::magSqr<Type>::operator()
 (
     const GeometricField<Type, fvPatchField, volMesh>& phi
 ) const
@@ -46,7 +39,8 @@ inline tmp<volScalarField> magSqr<Type>::operator()
 
 
 template<>
-inline tmp<volScalarField> magSqr<scalar>::operator()
+inline Foam::tmp<Foam::volScalarField>
+Foam::limitFuncs::magSqr<Foam::scalar>::operator()
 (
     const volScalarField& phi
 ) const
@@ -56,7 +50,8 @@ inline tmp<volScalarField> magSqr<scalar>::operator()
 
 
 template<>
-inline tmp<volScalarField> magSqr<symmTensor>::operator()
+inline Foam::tmp<Foam::volScalarField>
+Foam::limitFuncs::magSqr<Foam::symmTensor>::operator()
 (
     const volSymmTensorField& phi
 ) const
@@ -66,7 +61,8 @@ inline tmp<volScalarField> magSqr<symmTensor>::operator()
 
 
 template<>
-inline tmp<volScalarField> magSqr<tensor>::operator()
+inline Foam::tmp<Foam::volScalarField>
+Foam::limitFuncs::magSqr<Foam::tensor>::operator()
 (
     const volTensorField& phi
 ) const
@@ -76,7 +72,8 @@ inline tmp<volScalarField> magSqr<tensor>::operator()
 
 
 template<class Type>
-inline tmp<volScalarField> rhoMagSqr<Type>::operator()
+inline Foam::tmp<Foam::volScalarField>
+Foam::limitFuncs::rhoMagSqr<Type>::operator()
 (
     const GeometricField<Type, fvPatchField, volMesh>& phi
 ) const
@@ -88,7 +85,8 @@ inline tmp<volScalarField> rhoMagSqr<Type>::operator()
 
 
 template<>
-inline tmp<volScalarField> rhoMagSqr<scalar>::operator()
+inline Foam::tmp<Foam::volScalarField>
+Foam::limitFuncs::rhoMagSqr<Foam::scalar>::operator()
 (
     const volScalarField& phi
 ) const
@@ -98,10 +96,5 @@ inline tmp<volScalarField> rhoMagSqr<scalar>::operator()
     return phi/rho;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace limitFuncs
-} // End namespace Foam
 
 // ************************************************************************* //

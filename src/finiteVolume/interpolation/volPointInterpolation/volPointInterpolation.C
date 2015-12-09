@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,19 +31,17 @@ License
 #include "pointConstraints.H"
 #include "surfaceFields.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-defineTypeNameAndDebug(volPointInterpolation, 0);
+    defineTypeNameAndDebug(volPointInterpolation, 0);
+}
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void volPointInterpolation::calcBoundaryAddressing()
+void Foam::volPointInterpolation::calcBoundaryAddressing()
 {
     if (debug)
     {
@@ -154,7 +152,7 @@ void volPointInterpolation::calcBoundaryAddressing()
 }
 
 
-void volPointInterpolation::makeInternalWeights(scalarField& sumWeights)
+void Foam::volPointInterpolation::makeInternalWeights(scalarField& sumWeights)
 {
     if (debug)
     {
@@ -194,7 +192,7 @@ void volPointInterpolation::makeInternalWeights(scalarField& sumWeights)
 }
 
 
-void volPointInterpolation::makeBoundaryWeights(scalarField& sumWeights)
+void Foam::volPointInterpolation::makeBoundaryWeights(scalarField& sumWeights)
 {
     if (debug)
     {
@@ -242,7 +240,7 @@ void volPointInterpolation::makeBoundaryWeights(scalarField& sumWeights)
 }
 
 
-void volPointInterpolation::makeWeights()
+void Foam::volPointInterpolation::makeWeights()
 {
     if (debug)
     {
@@ -348,7 +346,7 @@ void volPointInterpolation::makeWeights()
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
-volPointInterpolation::volPointInterpolation(const fvMesh& vm)
+Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
 :
     MeshObject<fvMesh, Foam::UpdateableMeshObject, volPointInterpolation>(vm)
 {
@@ -358,19 +356,19 @@ volPointInterpolation::volPointInterpolation(const fvMesh& vm)
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
-volPointInterpolation::~volPointInterpolation()
+Foam::volPointInterpolation::~volPointInterpolation()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void volPointInterpolation::updateMesh(const mapPolyMesh&)
+void Foam::volPointInterpolation::updateMesh(const mapPolyMesh&)
 {
     makeWeights();
 }
 
 
-bool volPointInterpolation::movePoints()
+bool Foam::volPointInterpolation::movePoints()
 {
     makeWeights();
 
@@ -378,7 +376,7 @@ bool volPointInterpolation::movePoints()
 }
 
 
-void volPointInterpolation::interpolateDisplacement
+void Foam::volPointInterpolation::interpolateDisplacement
 (
     const volVectorField& vf,
     pointVectorField& pf
@@ -395,9 +393,5 @@ void volPointInterpolation::interpolateDisplacement
     pcs.constrainDisplacement(pf, false);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

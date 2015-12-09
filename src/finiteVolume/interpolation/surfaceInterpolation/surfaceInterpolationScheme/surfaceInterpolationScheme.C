@@ -21,9 +21,6 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Abstract base class for surface interpolation schemes.
-
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceInterpolationScheme.H"
@@ -31,16 +28,11 @@ Description
 #include "surfaceFields.H"
 #include "coupledFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
-// Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
+Foam::tmp<Foam::surfaceInterpolationScheme<Type> >
+Foam::surfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -64,7 +56,7 @@ tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
     {
         Info<< "surfaceInterpolationScheme<Type>::New"
                "(const fvMesh&, Istream&)"
-               " : discretisation scheme = "
+               " : discretisation scheme === "
             << schemeName
             << endl;
     }
@@ -88,9 +80,9 @@ tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
 }
 
 
-// Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
+Foam::tmp<Foam::surfaceInterpolationScheme<Type> >
+Foam::surfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
     const surfaceScalarField& faceFlux,
@@ -142,17 +134,15 @@ tmp<surfaceInterpolationScheme<Type> > surfaceInterpolationScheme<Type>::New
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-surfaceInterpolationScheme<Type>::~surfaceInterpolationScheme()
+Foam::surfaceInterpolationScheme<Type>::~surfaceInterpolationScheme()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//- Return the face-interpolate of the given cell field
-//  with the given owner and neighbour weighting factors
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
-surfaceInterpolationScheme<Type>::interpolate
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::surfaceInterpolationScheme<Type>::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
     const tmp<surfaceScalarField>& tlambdas,
@@ -234,11 +224,9 @@ surfaceInterpolationScheme<Type>::interpolate
 }
 
 
-//- Return the face-interpolate of the given cell field
-//  with the given weighting factors
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
-surfaceInterpolationScheme<Type>::interpolate
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::surfaceInterpolationScheme<Type>::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
     const tmp<surfaceScalarField>& tlambdas
@@ -313,11 +301,9 @@ surfaceInterpolationScheme<Type>::interpolate
 }
 
 
-//- Return the face-interpolate of the given cell field
-//  with explicit correction
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
-surfaceInterpolationScheme<Type>::interpolate
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::surfaceInterpolationScheme<Type>::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
@@ -345,11 +331,9 @@ surfaceInterpolationScheme<Type>::interpolate
 }
 
 
-//- Return the face-interpolate of the given cell field
-//  with explicit correction
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
-surfaceInterpolationScheme<Type>::interpolate
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::surfaceInterpolationScheme<Type>::interpolate
 (
     const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
 ) const
@@ -360,9 +344,5 @@ surfaceInterpolationScheme<Type>::interpolate
     return tinterpVf;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //
