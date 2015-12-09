@@ -89,8 +89,17 @@ void Foam::MULES::explicitSolve
 )
 {
     const fvMesh& mesh = psi.mesh();
-    const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
-    explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
+
+    if (fv::localEulerDdt::enabled(mesh))
+    {
+        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
+        explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
+    }
+    else
+    {
+        const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
+        explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
+    }
 }
 
 

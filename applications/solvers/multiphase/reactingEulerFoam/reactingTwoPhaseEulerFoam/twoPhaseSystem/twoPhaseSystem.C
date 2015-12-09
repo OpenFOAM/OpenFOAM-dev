@@ -186,18 +186,17 @@ Foam::twoPhaseSystem::dmdt() const
 
 void Foam::twoPhaseSystem::solve()
 {
-    const fvMesh& mesh = this->mesh();
-    const Time& runTime = mesh.time();
+    const Time& runTime = mesh_.time();
 
     volScalarField& alpha1 = phase1_;
     volScalarField& alpha2 = phase2_;
 
-    const dictionary& alphaControls = mesh.solverDict(alpha1.name());
+    const dictionary& alphaControls = mesh_.solverDict(alpha1.name());
 
     label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
     label nAlphaCorr(readLabel(alphaControls.lookup("nAlphaCorr")));
 
-    bool LTS = fv::localEulerDdt::enabled(mesh);
+    bool LTS = fv::localEulerDdt::enabled(mesh_);
 
     word alphaScheme("div(phi," + alpha1.name() + ')');
     word alpharScheme("div(phir," + alpha1.name() + ')');
@@ -264,9 +263,9 @@ void Foam::twoPhaseSystem::solve()
             (
                 "Sp",
                 runTime.timeName(),
-                mesh
+                mesh_
             ),
-            mesh,
+            mesh_,
             dimensionedScalar("Sp", dimless/dimTime, 0.0)
         );
 
@@ -276,7 +275,7 @@ void Foam::twoPhaseSystem::solve()
             (
                 "Su",
                 runTime.timeName(),
-                mesh
+                mesh_
             ),
             // Divergence term is handled explicitly to be
             // consistent with the explicit transport solution
@@ -345,7 +344,7 @@ void Foam::twoPhaseSystem::solve()
             if (LTS)
             {
                 trSubDeltaT =
-                    fv::localEulerDdt::localRSubDeltaT(mesh, nAlphaSubCycles);
+                    fv::localEulerDdt::localRSubDeltaT(mesh_, nAlphaSubCycles);
             }
 
             for
@@ -420,7 +419,7 @@ void Foam::twoPhaseSystem::solve()
             fvc::interpolate(phase2_.rho())*phase2_.alphaPhi();
 
         Info<< alpha1.name() << " volume fraction = "
-            << alpha1.weightedAverage(mesh.V()).value()
+            << alpha1.weightedAverage(mesh_.V()).value()
             << "  Min(alpha1) = " << min(alpha1).value()
             << "  Max(alpha1) = " << max(alpha1).value()
             << endl;
