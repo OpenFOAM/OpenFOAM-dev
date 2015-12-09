@@ -1,13 +1,21 @@
 {
     volScalarField& rDeltaT = trDeltaT();
 
+    const dictionary& pimpleDict = pimple.dict();
+
+    scalar maxCo
+    (
+        pimpleDict.lookupOrDefault<scalar>("maxCo", 0.2)
+    );
+
+    scalar maxDeltaT
+    (
+        pimpleDict.lookupOrDefault<scalar>("maxDeltaT", GREAT)
+    );
+
     scalar rDeltaTSmoothingCoeff
     (
-        runTime.controlDict().lookupOrDefault<scalar>
-        (
-            "rDeltaTSmoothingCoeff",
-            0.02
-        )
+        pimpleDict.lookupOrDefault<scalar>("rDeltaTSmoothingCoeff", 0.02)
     );
 
     surfaceScalarField maxPhi("maxPhi", phi);
