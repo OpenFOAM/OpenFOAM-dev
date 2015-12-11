@@ -250,7 +250,7 @@ MPICH)
 *)
     echo
     echo "Unsupported WM_MPLIB setting : $WM_MPLIB"
-    printUsage
+    usage
     exit 1
 esac
 

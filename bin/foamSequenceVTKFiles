@@ -72,7 +72,7 @@ do
       shift 2
       ;;
    -h | -help)
-      printUsage
+      usage
       ;;
    -o | -out)
       [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
