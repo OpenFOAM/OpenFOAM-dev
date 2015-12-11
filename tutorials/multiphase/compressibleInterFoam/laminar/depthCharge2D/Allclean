@@ -1,6 +1,11 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 
-foamCleanTutorials cases
-rm -rf processor*
-rm -rf 0/p_rgh.gz 0/p.gz 0/alpha.water.gz 0/T*.gz
+# Source tutorial clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+cleanCase
+
+\rm -rf 0
+
+# ----------------------------------------------------------------- end-of-file
