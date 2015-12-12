@@ -246,7 +246,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
 
                     vector pW = nearPt - pos;
 
-                    scalar normalAlignment = normal & pW/mag(pW);
+                    scalar normalAlignment = normal & pW/(mag(pW) + ROOTSMALL);
 
                     // Find the patchIndex and wallData for WallSiteData object
                     label patchI = patchID[realFaceI - mesh.nInternalFaces()];
