@@ -39,13 +39,14 @@
 #
 #     [-o | -old] [dir1 .. dirN]:
 #     Remove *.dep files that are without a corresponding .C or .L source file.
-#     This often occurs when a directory has been moved.
-#         - print questionable directory and the *.dep file
+#     This occurs when a directory has been moved.
+#         - prints the questionable directory and *.dep file
 #
 #     -update:
 #     Search all the "src" and "application" directories of the project for
 #     broken symbolic links for source code files and then remove all .dep
 #     files that relate to files that no longer exist.
+#     Must be executed in the project top-level directory: $WM_PROJECT_DIR.
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
@@ -68,17 +69,17 @@ Usage:
     $Script [-o | -old] [dir1 .. dirN]
 
         Remove *.dep files that are without a corresponding .C or .L file.
-        This often occurs when a directory has been moved.
-          - print questionable directory and file
+        This occurs when a directory has been moved.
+          - prints the questionable directory and *.dep file
 
-        Note: For removing empty source code folders, run: wclean rmdir
+        Note: to remove empty directories, run: wclean empty
 
     $Script -update
 
         Search all the "src" and "application" directories of the project for
         broken symbolic links for source code files and then remove all .dep
         files that relate to files that no longer exist.
-        Must be executed in main project source code folder: $WM_PROJECT_DIR
+        Must be executed in the project top-level directory: $WM_PROJECT_DIR
 
 USAGE
     exit 1
@@ -189,7 +190,7 @@ oldFolders)
 
 updateMode)
 
-    [ -d bin -a -d src ] || usage "not in the project top level directory"
+    [ -d bin -a -d src ] || usage "Not in the project top-level directory"
 
     echo "Purging all dep files that relate to files that no longer exist..."
     fileNameList=$(find -L src applications -name '*.[CHL]' -type l \
