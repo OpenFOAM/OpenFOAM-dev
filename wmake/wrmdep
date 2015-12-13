@@ -24,12 +24,28 @@
 #
 # Script
 #     wrmdep [-a | -all | all] [file]
+#     wrmdep [-o | -old] [dir1 .. dirN]
+#     wrmdep -update
 #
 # Description
+#     This is a catch-all script for pruning .dep files, depending on the
+#     provided arguments.
+#
+#     [-a | -all | all] [file]:
 #     Remove all .dep files from the object directory tree corresponding to the
 #     current source derectory or remove only the .dep files referring to the
 #     optionally specified [file].  With the -a/-all/all option the .dep files
 #     are removed for all platforms rather than just the current platform.
+#
+#     [-o | -old] [dir1 .. dirN]:
+#     Remove *.dep files that are without a corresponding .C or .L source file.
+#     This often occurs when a directory has been moved.
+#         - print questionable directory and the *.dep file
+#
+#     -update:
+#     Search all the "src" and "application" directories of the project for
+#     broken symbolic links for source code files and then remove all .dep
+#     files that relate to files that no longer exist.
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
@@ -41,11 +57,28 @@ usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-Usage: $Script [-a | -all | all] [file]
+Usage:
 
-Remove all .dep files or remove .dep files referring to <file>
-With the -a/-all/all option the .dep files are removed for all platform
-rather than just the current platform.
+    $Script [-a | -all | all] [file]
+
+        Remove all .dep files or remove .dep files referring to <file>
+        With the -a/-all/all option the .dep files are removed for all
+        platform rather than just the current platform.
+
+    $Script [-o | -old] [dir1 .. dirN]
+
+        Remove *.dep files that are without a corresponding .C or .L file.
+        This often occurs when a directory has been moved.
+          - print questionable directory and file
+
+        Note: For removing empty source code folders, run: wclean rmdir
+
+    $Script -update
+
+        Search all the "src" and "application" directories of the project for
+        broken symbolic links for source code files and then remove all .dep
+        files that relate to files that no longer exist.
+        Must be executed in main project source code folder: $WM_PROJECT_DIR
 
 USAGE
     exit 1
@@ -55,6 +88,9 @@ USAGE
 #------------------------------------------------------------------------------
 # Parse arguments and options
 #------------------------------------------------------------------------------
+
+# Default is for removing all .dep files in the current directory
+rmdepMode="files"
 
 # Default to processing only the current platform
 all=
@@ -71,6 +107,14 @@ do
         all="all"
         shift
         ;;
+    -o | -old)
+        rmdepMode="oldFolders"
+        shift
+        ;;
+    -update)
+        rmdepMode="updateMode"
+        shift
+        ;;
     -*)
        usage "unknown option: '$*'"
        ;;
@@ -84,33 +128,96 @@ done
 checkEnv
 
 
-#------------------------------------------------------------------------------
-# Remove the selected .dep files from the object tree
-#------------------------------------------------------------------------------
+case "$rmdepMode" in
+files)
 
-findObjectDir .
+    #-------------------------------------------------------------------------
+    # Remove the selected .dep files from the object tree
+    #-------------------------------------------------------------------------
 
-# With the -a/-all option replace the current platform with a wildcard
-if [ "$all" = "all" ]
-then
-    objectsDir=$(echo $objectsDir | sed s%$WM_OPTIONS%*% )
-fi
+    findObjectDir .
 
-if [ "$#" -eq 0 ]
-then
-    echo "removing all .dep files ..."
-    find $objectsDir -name '*.dep' -print | xargs -t rm 2>/dev/null
-else
-    echo "removing .dep files referring to $1 ..."
-    find $objectsDir -name '*.dep' -exec grep "$1" '{}' \; -exec rm '{}' \;
-fi
+    # With the -a/-all option replace the current platform with a wildcard
+    if [ "$all" = "all" ]
+    then
+        objectsDir=$(echo $objectsDir | sed s%$WM_OPTIONS%*% )
+    fi
+
+    if [ "$#" -eq 0 ]
+    then
+        echo "removing all .dep files ..."
+        find $objectsDir -name '*.dep' -print | xargs -t rm 2>/dev/null
+    else
+        echo "removing .dep files referring to $1 ..."
+        find $objectsDir -name '*.dep' -exec grep "$1" '{}' \; \
+             -exec rm '{}' \;
+    fi
+
+    ;;
+
+oldFolders)
+
+    # Default is the current directory
+    [ "$#" -gt 0 ] || set -- .
+
+    for checkDir
+    do
+        findObjectDir $checkDir
+
+        if [ -d $objectsDir ]
+        then
+            echo "Searching: $objectsDir"
+        else
+            echo "Skipping non-dir: $objectsDir"
+            continue
+        fi
+
+        find $objectsDir -name '*.dep' -print | while read depFile
+        do
+            depToSource $depFile
+
+            # Check C++ or Flex source file exists
+            if [ ! -r "$sourceFile" ];
+            then
+                echo "rm $depFile"
+                rm -f $depFile 2>/dev/null
+            fi
+        done
+    done
+
+    ;;
+
+updateMode)
+
+    [ -d bin -a -d src ] || usage "not in the project top level directory"
+
+    echo "Purging all dep files that relate to files that no longer exist..."
+    fileNameList=$(find -L src applications -name '*.[CHL]' -type l \
+                        -exec basename {} \;)
+
+    for fileName in $fileNameList
+    do
+        echo "Purging from 'src': $fileName"
+        cd src
+        $Script -a $fileName
+
+        echo "Purging from 'applications': $fileName"
+        cd ../applications
+        $Script -a $fileName
+
+        cd ..
+    done
+
+    ;;
+
+esac
 
 
 #------------------------------------------------------------------------------
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage
+unset Script usage rmdepMode all
 
 
 #------------------------------------------------------------------------------
