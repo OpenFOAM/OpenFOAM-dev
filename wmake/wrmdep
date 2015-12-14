@@ -190,7 +190,8 @@ oldFolders)
 
 updateMode)
 
-    [ -d bin -a -d src ] || usage "Not in the project top-level directory"
+    [ "$PWD" = "$WM_PROJECT_DIR" ] \
+        || usage "Not in the project top-level directory"
 
     echo "Purging all dep files that relate to files that no longer exist..."
     fileNameList=$(find -L src applications -name '*.[CHL]' -type l \

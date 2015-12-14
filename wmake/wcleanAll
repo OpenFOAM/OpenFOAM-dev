@@ -61,7 +61,8 @@ do
     esac
 done
 
-[ -d bin -a -d src ] || usage "not in the project top level directory"
+[ "$PWD" = "$WM_PROJECT_DIR" ] \
+    || usage "Not in the project top-level directory"
 
 
 echo "Removing platforms/sub-directories"
