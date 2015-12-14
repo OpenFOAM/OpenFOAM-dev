@@ -19,7 +19,7 @@ runApplication simpleFoam
 # Copy the mesh from the steady state case and map the results to a
 # mesh motion case, then solve transient.
 cd ../wingMotion2D_pimpleDyMFoam
-cp -r ../wingMotion2D_simpleFoam/constant/polyMesh/* constant/polyMesh/
+cp -r ../wingMotion2D_simpleFoam/constant/polyMesh constant
 cp -r 0.org 0
 runApplication mapFields ../wingMotion2D_simpleFoam -sourceTime latestTime -consistent
 mv 0/pointDisplacement.unmapped 0/pointDisplacement
