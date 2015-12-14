@@ -55,6 +55,7 @@ options:
   -j                Compile using all local cores/hyperthreads
   -jN or -j N       Compile using N cores/hyperthreads
   -no-scheduler     Compile without wmakeScheduler
+  -update           Update lnInclude directories and dep files
 USAGE
 
     # Print options for building code documentation
@@ -121,6 +122,11 @@ do
         # Disable scheduled parallel compilation
         -no-scheduler)
             unset WM_SCHEDULER
+            ;;
+        # Update lnInclude directories and dep files following a pull
+        -update)
+            wrmdep -update
+            wmakeLnIncludeAll
             ;;
         # Generate documentation
         doc)
