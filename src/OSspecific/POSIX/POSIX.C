@@ -246,19 +246,44 @@ Foam::fileName Foam::home(const string& userName)
 
 Foam::fileName Foam::cwd()
 {
-    char buf[256];
-    if (::getcwd(buf, sizeof(buf)))
-    {
-        return buf;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Couldn't get the current working directory"
-            << exit(FatalError);
+    label pathLengthLimit = POSIX::pathLengthChunk;
+    List<char> path(pathLengthLimit);
 
-        return fileName::null;
+    // Resize path if getcwd fails with an ERANGE error
+    while(pathLengthLimit == path.size())
+    {
+        if (::getcwd(path.data(), path.size()))
+        {
+            return path.data();
+        }
+        else if(errno == ERANGE)
+        {
+            // Increment path length upto the pathLengthMax limit
+            if
+            (
+                (pathLengthLimit += POSIX::pathLengthChunk)
+             >= POSIX::pathLengthMax
+            )
+            {
+                FatalErrorInFunction
+                    << "Attempt to increase path length beyond limit of "
+                    << POSIX::pathLengthMax
+                    << exit(FatalError);
+            }
+
+            path.setSize(pathLengthLimit);
+        }
+        else
+        {
+            break;
+        }
     }
+
+    FatalErrorInFunction
+        << "Couldn't get the current working directory"
+        << exit(FatalError);
+
+    return fileName::null;
 }
 
 
@@ -670,8 +695,8 @@ Foam::fileNameList Foam::readDir
 
     if (POSIX::debug)
     {
-        Info<< "readDir(const fileName&, const fileType, const bool filtergz)"
-            << " : reading directory " << directory << endl;
+        InfoInFunction
+            << "reading directory " << directory << endl;
     }
 
     // Setup empty string list MAXTVALUES long
@@ -691,9 +716,8 @@ Foam::fileNameList Foam::readDir
 
         if (POSIX::debug)
         {
-            Info<< "readDir(const fileName&, const fileType, "
-                   "const bool filtergz) : cannot open directory "
-                << directory << endl;
+            InfoInFunction
+                << "cannot open directory " << directory << endl;
         }
     }
     else
@@ -824,7 +848,8 @@ bool Foam::cp(const fileName& src, const fileName& dest)
         {
             if (POSIX::debug)
             {
-                Info<< "Copying : " << src/contents[i]
+                InfoInFunction
+                    << "Copying : " << src/contents[i]
                     << " to " << destFile/contents[i] << endl;
             }
 
@@ -838,7 +863,8 @@ bool Foam::cp(const fileName& src, const fileName& dest)
         {
             if (POSIX::debug)
             {
-                Info<< "Copying : " << src/subdirs[i]
+                InfoInFunction
+                    << "Copying : " << src/subdirs[i]
                     << " to " << destFile << endl;
             }
 
@@ -856,7 +882,8 @@ bool Foam::ln(const fileName& src, const fileName& dst)
 {
     if (POSIX::debug)
     {
-        Info<< "Create softlink from : " << src << " to " << dst
+        InfoInFunction
+            << "Create softlink from : " << src << " to " << dst
             << endl;
     }
 
@@ -893,7 +920,8 @@ bool Foam::mv(const fileName& src, const fileName& dst)
 {
     if (POSIX::debug)
     {
-        Info<< "Move : " << src << " to " << dst << endl;
+        InfoInFunction
+            << "Move : " << src << " to " << dst << endl;
     }
 
     if
@@ -919,7 +947,8 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
 {
     if (POSIX::debug)
     {
-        Info<< "mvBak : " << src << " to extension " << ext << endl;
+        InfoInFunction
+            << "mvBak : " << src << " to extension " << ext << endl;
     }
 
     if (exists(src, false))
@@ -956,7 +985,8 @@ bool Foam::rm(const fileName& file)
 {
     if (POSIX::debug)
     {
-        Info<< "Removing : " << file << endl;
+        InfoInFunction
+            << "Removing : " << file << endl;
     }
 
     // Try returning plain file name; if not there, try with .gz
@@ -976,7 +1006,7 @@ bool Foam::rmDir(const fileName& directory)
 {
     if (POSIX::debug)
     {
-        Info<< "rmDir(const fileName&) : "
+        InfoInFunction
             << "removing directory " << directory << endl;
     }
 

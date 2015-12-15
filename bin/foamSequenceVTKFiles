@@ -72,7 +72,7 @@ do
       shift 2
       ;;
    -h | -help)
-      printUsage
+      usage
       ;;
    -o | -out)
       [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
@@ -94,7 +94,7 @@ if [ ! -d $DIR ]; then
 fi
 
 FILES=$(find $DIR -type f -name *vtk)
-NAMES=$(basename -s .vtk -a $FILES | sort -u)
+NAMES=$(for f in $FILES; do basename $f .vtk; done | sort -u)
 
 if [ -d $OUT ]; then
     echo "$OUT directory already exists.  Deleting links within it..."
