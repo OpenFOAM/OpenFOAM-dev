@@ -75,10 +75,10 @@ for checkDir
 do
     if [ -d $checkDir ]
     then
-        echo "searching: $checkDir for 'Make' directories"
+        echo "Searching: $checkDir for 'Make' directories"
         echo "---------"
     else
-        echo "skipping non-dir: $checkDir"
+        echo "Skipping non-dir: $checkDir"
         echo "----------------"
         continue
     fi
