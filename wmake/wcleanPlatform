@@ -1,0 +1,125 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wcleanPlatform
+#
+# Description
+#     Deletes the specified platforms object files directories from the
+#     the project top-level platforms directory $WM_PROJECT_DIR.
+#
+#     You need to be in the project top-level directory to run this script.
+#
+#     If either -current or no platform is specified then the current platform
+#     $WM_OPTIONS is deleted.
+#
+#     If the -all option is specified all platforms and lnInclude directories
+#     are deleted
+#
+#     Usage: wcleanPlatform [ -current | -all ]
+#            wcleanPlatform <platform> [ ... <platformN> ]
+#
+#     -current: clean the current platform
+#     -all: clean all platforms
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: $Script [ -current | -all ]
+       $Script <platform> [ ... <platformN> ]
+
+  Deletes the specified platforms object files directories from the
+  the project top-level platforms directory $WM_PROJECT_DIR.
+
+  You need to be in the project top-level directory to run this script.
+
+  If either -current or no platform is specified then the current platform
+  $WM_OPTIONS is deleted.
+
+  If the -all option is specified all platforms and lnInclude directories
+  are deleted.
+
+USAGE
+    exit 1
+}
+
+# Print help message
+if [ "$1" = "-h" -o "$1" = "-help" ]; then
+    usage
+fi
+
+# Check the script is executed from the project top-level directory
+[ "$PWD" = "$WM_PROJECT_DIR" ] || \
+    usage "Not in the project top-level directory " $WM_PROJECT_DIR
+
+# Get the platforms from the arguments
+platforms="$@"
+
+# If no arguments are provided select the current platform
+if [ "$#" -lt 1 ]; then
+    platforms="-current"
+fi
+
+if [ "$platforms" = "-all" ]; then
+    echo "Removing all platforms/sub-directories"
+    rm -rf platforms/*
+
+    echo "Removing lnInclude directories"
+    find . -depth -type d \( -name lnInclude \) | xargs rm -rf
+
+    tutorials/Allclean
+else
+    # Loop over the platforms specified and delete the object directories
+    for platform in $platforms
+    do
+        if [ "$platform" = "-current" ]
+        then
+            platform="$WM_OPTIONS"
+            echo "Current platform $platform"
+            [ -n "$platform" ] || continue
+        fi
+
+        if [ -d platforms/${platform} ]
+        then
+            echo "Cleaning platform $platform"
+            rm -rf platforms/${platform}*
+        else
+            echo "Platform $platform not built"
+        fi
+    done
+fi
+
+
+#------------------------------------------------------------------------------
+# Cleanup local variables and functions
+#------------------------------------------------------------------------------
+
+unset Script platforms
+
+
+#------------------------------------------------------------------------------

@@ -26,6 +26,9 @@
 #     wcleanMachine
 #
 # Description
+#
+#     Deprecated: replaced by wcleanPlatform
+#
 #     Searches the directory tree starting at the current directory for the
 #     object file directories of the specified machine type(s) and deletes them.
 #     If a machine type is not provided the current machine type is assumed.
@@ -40,6 +43,8 @@ usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
+Deprecated: replaced by wcleanPlatform
+
 Usage: $Script machineType [... machineTypeN] [ -current ]
 
   Searches the directory tree starting at the current directory for the

@@ -26,7 +26,9 @@
 #     wcleanAll
 #
 # Description
-#     search all the directories below the current for the object file
+#     Deprecated: replaced by wcleanPlatform -all
+#
+#     Search all the directories below the current for the object file
 #     directories of all machines and delete them.
 #
 #------------------------------------------------------------------------------
@@ -36,6 +38,8 @@ usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
+Deprecated: replaced by wcleanPlatform -all
+
 Usage: $Script
 
     Remove all object and related files

@@ -49,8 +49,8 @@
 #         wdep -h
 #
 # See also
-#     wmakeLnInclude, wmakeLnIncludeAll, wdep, wrmdep, wrmo and wrmdepold,
-#     wclean, wcleanMachine, wcleanAll, wcleanLnIncludeAll
+#     wmakeLnInclude, wmakeLnIncludeAll, wdep, wrmdep, wrmo,
+#     wclean, wcleanPlatform, wcleanLnIncludeAll
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
