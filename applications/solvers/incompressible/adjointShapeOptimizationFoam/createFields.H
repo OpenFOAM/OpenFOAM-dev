@@ -80,9 +80,9 @@ mesh.setFluxRequired(pa.name());
 
 singlePhaseTransportModel laminarTransport(U, phi);
 
-autoPtr<incompressible::RASModel> turbulence
+autoPtr<incompressible::turbulenceModel> turbulence
 (
-    incompressible::New<incompressible::RASModel>(U, phi, laminarTransport)
+    incompressible::turbulenceModel::New(U, phi, laminarTransport)
 );
 
 

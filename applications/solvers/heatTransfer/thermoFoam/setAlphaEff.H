@@ -1,65 +1,21 @@
     Info<< "Creating turbulence model\n" << endl;
     tmp<volScalarField> talphaEff;
 
-    IOobject turbulenceHeader
+    IOobject turbulencePropertiesHeader
     (
         "turbulenceProperties",
         runTime.constant(),
         mesh,
-        IOobject::MUST_READ
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE,
+        false
     );
 
-    IOobject RASHeader
-    (
-        "RASProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ
-    );
-
-    IOobject LESHeader
-    (
-        "LESProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ
-    );
-
-    if (turbulenceHeader.headerOk())
+    if (turbulencePropertiesHeader.headerOk())
     {
         autoPtr<compressible::turbulenceModel> turbulence
         (
             compressible::turbulenceModel::New
-            (
-                rho,
-                U,
-                phi,
-                thermo
-            )
-        );
-
-        talphaEff = turbulence->alphaEff();
-    }
-    else if (RASHeader.headerOk())
-    {
-        autoPtr<compressible::RASModel> turbulence
-        (
-            compressible::New<compressible::RASModel>
-            (
-                rho,
-                U,
-                phi,
-                thermo
-            )
-        );
-
-        talphaEff = turbulence->alphaEff();
-    }
-    else if (LESHeader.headerOk())
-    {
-        autoPtr<compressible::LESModel> turbulence
-        (
-            compressible::New<compressible::LESModel>
             (
                 rho,
                 U,
