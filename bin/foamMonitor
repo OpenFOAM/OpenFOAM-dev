@@ -154,7 +154,12 @@ i=1
 for field in $KEYS
 do
     i=$(expr $i + 1)
-    echo "\"$FILE\" using 1:${i} with lines title \"$field\", \\" >> $GPFILE
+    PLOTLINE="\"$FILE\" using 1:${i} with lines title \"$field\""
+    if [[ $i -lt $NCOLS ]]
+    then
+       PLOTLINE="$PLOTLINE, \\"
+    fi
+    echo $PLOTLINE >> $GPFILE
 done
 plotFileFooter >> $GPFILE
 
