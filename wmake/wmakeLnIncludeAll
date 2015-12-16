@@ -25,9 +25,12 @@
 # Script
 #     wmakeLnIncludeAll
 #
+# Usage
+#     wmakeLnIncludeAll [dir1 .. dirN]
+#
 # Description
 #     Find directories with a 'Make/files' that contains a 'LIB =' directive
-#     and execute 'wmakeLnInclude -f' for each one
+#     and execute 'wmakeLnInclude -update' for each one
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
@@ -39,7 +42,7 @@ usage() {
 Usage: $Script [dir1 .. dirN]
 
     Find directories with a 'Make/files' that contains a 'LIB =' directive
-    and execute 'wmakeLnInclude -f' for each one
+    and execute 'wmakeLnInclude -update' for each one
 
 USAGE
     exit 1
@@ -90,7 +93,7 @@ do
         then
             if grep -e '^ *LIB *=' "$MakeDir/files" >/dev/null 2>&1
             then
-                wmakeLnInclude -f $topDir
+                wmakeLnInclude -update $topDir
             elif [ -d "$topDir/lnInclude" ]
             then
                 echo "removing spurious $topDir/lnInclude"

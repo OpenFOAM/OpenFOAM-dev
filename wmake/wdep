@@ -23,6 +23,9 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
+#     wdep
+#
+# Usage
 #     wdep <file>
 #     cat `wdep <file>`
 #

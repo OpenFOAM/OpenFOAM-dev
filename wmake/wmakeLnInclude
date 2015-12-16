@@ -25,17 +25,17 @@
 # Script
 #     wmakeLnInclude
 #
+# Usage
+#     wmakeLnInclude [-u | -update] [-s | -silent] <dir>
+#
 # Description
 #     Link all the source files in the <dir> directory into <dir>/lnInclude
-#
-#     Usage: wmakeLnInclude [-f] <dir>
 #
 #     The desired source files:
 #         *.C *.H *.h *.cpp *.cxx *.hpp *.hxx
 #
 #     Avoid
 #         *.c (C source)
-#         .#* (cvs recovered files)
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
@@ -48,14 +48,14 @@ usage() {
 Usage: $Script [OPTION] dir
 
 options:
-  -f | -force       force update
+  -u | -update      update
   -s | -silent      use 'silent' mode (do not echo command)
   -help             print the usage
 
     Link all the source files in the <dir> into <dir>/lnInclude
 
 Note
-    The '-f' option forces an update when the lnInclude directory already exists
+    The '-u' option forces an update when the lnInclude directory already exists
     and changes the default linking from 'ln -s' to 'ln -sf'.
 
 USAGE
@@ -73,7 +73,7 @@ unset findOpt
 # Default 'ln' option
 lnOpt="-s"
 
-unset forceUpdate silentOpt
+unset update silentOpt
 
 while [ "$#" -gt 0 ]
 do
@@ -81,8 +81,8 @@ do
     -h | -help)   # provide immediate help
         usage
         ;;
-    -f | -force)
-        forceUpdate=true
+    -u | -update)
+        update=true
         lnOpt="-sf"
         shift
         ;;
@@ -126,7 +126,7 @@ incDir=$baseDir/lnInclude
 
 if [ -d $incDir ]
 then
-    [ "$forceUpdate" = true ] || {
+    [ "$update" = true ] || {
         # echo "$Script error: include directory $incDir already exists" 1>&2
         exit 0
     }
@@ -150,7 +150,7 @@ fi
 #------------------------------------------------------------------------------
 # Remove any broken links first (this helps when file locations have moved)
 #------------------------------------------------------------------------------
-find -L . -type l | xargs rm
+find -L . -type l | xargs rm -f
 
 
 #------------------------------------------------------------------------------

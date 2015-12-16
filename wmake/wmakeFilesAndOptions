@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -25,11 +25,12 @@
 # Script
 #     wmakeFilesAndOptions
 #
+# Usage
+#     wmakeFilesAndOptions
+#
 # Description
 #     Scan current directory for directories and source files
 #     and construct Make/files and Make/options
-#
-#     Usage : wmakeFilesAndOptions
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}

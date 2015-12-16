@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -24,6 +24,9 @@
 #
 # Script
 #     wmakePrintBuild
+#
+# Usage
+#     wmakePrintBuild [OPTION]
 #
 # Description
 #     Print the version used when building the project

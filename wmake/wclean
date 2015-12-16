@@ -25,6 +25,10 @@
 # Script
 #     wclean
 #
+# Usage
+#     wclean [OPTION] [dir]
+#     wclean [OPTION] target [dir [MakeDir]]
+#
 # Description
 #     Clean up the wmake control directory Make/\$WM_OPTIONS and remove the
 #     lnInclude directories generated for libraries.

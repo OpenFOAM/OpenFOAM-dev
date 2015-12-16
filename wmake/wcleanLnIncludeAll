@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -25,10 +25,13 @@
 # Script
 #     wcleanLnIncludeAll
 #
+# Usage
+#     wcleanLnIncludeAll [dir1] .. [dirN]
+#
 # Description
 #     Delete all the lnInclude directories in the tree.
 #
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 Script=${0##*/}
 
 # Default to the CWD

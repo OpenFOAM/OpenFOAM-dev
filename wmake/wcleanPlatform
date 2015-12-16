@@ -25,23 +25,25 @@
 # Script
 #     wcleanPlatform
 #
+# Usage
+#    wcleanPlatform [ -current | -all ]
+#    wcleanPlatform <platform> [ ... <platformN> ]
+#
 # Description
 #     Deletes the specified platforms object files directories from the
 #     the project top-level platforms directory $WM_PROJECT_DIR.
 #
 #     You need to be in the project top-level directory to run this script.
 #
+#     Options
+#         -current: clean the current platform
+#         -all: clean all platforms
+#
 #     If either -current or no platform is specified then the current platform
 #     $WM_OPTIONS is deleted.
 #
 #     If the -all option is specified all platforms and lnInclude directories
 #     are deleted
-#
-#     Usage: wcleanPlatform [ -current | -all ]
-#            wcleanPlatform <platform> [ ... <platformN> ]
-#
-#     -current: clean the current platform
-#     -all: clean all platforms
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}

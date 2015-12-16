@@ -22,7 +22,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     MakefileFiles
+#     wmake/makefiles/files
 #
 # Description
 #     A Makefile for the 'options' and 'files' files, used by wmake

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -25,20 +25,6 @@
 # Script
 #     wmakeScheduler
 #
-# Description
-#     Scheduler for network distributed compilations using wmake.
-#     - WM_HOSTS contains a list of hosts and number of concurrent processes
-#     eg,
-#        export WM_HOSTS="hostA:1 hostB:2 hostC:1"
-#     - WM_COLOURS contains a list of colours to cycle through
-#        export WM_COLOURS="black blue green cyan red magenta yellow"
-#
-#     Sources the relevant cshrc/bashrc if not set.
-#
-#     WM_PROJECT_DIR, WM_PROJECT and WM_PROJECT_VERSION will have been set
-#     before calling this routine.
-#     FOAM_INST_DIR may possibly have been set (to find installation)
-#
 # Usage
 #     wmakeScheduler COMMAND
 #         run 'COMMAND' on one of the slots listed in WM_HOSTS
@@ -46,6 +32,20 @@
 #     wmakeScheduler -count
 #         count the total number of slots available in WM_HOSTS
 #         eg,  export WM_NCOMPPROCS=$(wmakeScheduler -count)
+#
+# Description
+#     Scheduler for network distributed compilations using wmake.
+#     - WM_HOSTS contains a list of hosts and number of concurrent processes
+#     eg,
+#         export WM_HOSTS="hostA:1 hostB:2 hostC:1"
+#     - WM_COLOURS contains a list of colours to cycle through
+#         export WM_COLOURS="black blue green cyan red magenta yellow"
+#
+#     Sources the relevant cshrc/bashrc if not set.
+#
+#     WM_PROJECT_DIR, WM_PROJECT and WM_PROJECT_VERSION will have been set
+#     before calling this routine.
+#     FOAM_INST_DIR may possibly have been set (to find installation)
 #
 #-------------------------------------------------------------------------------
 Script=${0##*/}

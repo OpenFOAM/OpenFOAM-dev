@@ -23,6 +23,9 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
+#     wrmo
+#
+# Usage
 #     wrmo [-a | -all | all] [file]
 #
 # Description

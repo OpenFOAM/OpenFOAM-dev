@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -25,6 +25,14 @@
 # Script
 #     wmakeSchedulerUptime
 #
+# Usage
+#     wmakeSchedulerUptime COMMAND
+#         run 'COMMAND' on one of the slots listed in WM_HOSTS
+#
+#     wmakeScheduler -count
+#         count the total number of slots available in WM_HOSTS
+#         eg,  export WM_NCOMPPROCS=$(wmakeScheduler -count)
+#
 # Description
 #     Scheduler for network distributed compilations using wmake.
 #     - WM_HOSTS contains a list of hosts and number of concurrent processes
@@ -38,14 +46,6 @@
 #     WM_PROJECT_DIR, WM_PROJECT and WM_PROJECT_VERSION will have been set
 #     before calling this routine.
 #     FOAM_INST_DIR may possibly have been set (to find installation)
-#
-# Usage
-#     wmakeSchedulerUptime COMMAND
-#         run 'COMMAND' on one of the slots listed in WM_HOSTS
-#
-#     wmakeScheduler -count
-#         count the total number of slots available in WM_HOSTS
-#         eg,  export WM_NCOMPPROCS=$(wmakeScheduler -count)
 #
 #-------------------------------------------------------------------------------
 Script=${0##*/}
