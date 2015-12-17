@@ -31,7 +31,7 @@ boundaryField
         p0              $internalField;
         U               U.air;
         phi             phi.air;
-        rho             rho.air;
+        rho             thermo:rho.air;
         value           $internalField;
     }
     walls

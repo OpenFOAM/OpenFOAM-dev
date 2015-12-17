@@ -58,7 +58,7 @@ prghTotalPressureFvPatchScalarField
     fixedValueFvPatchScalarField(p, iF),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rhoName", "rho")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     p0_("p0", dict, p.size())
 {
     if (dict.found("value"))

@@ -33,12 +33,14 @@ Description
 
         \f[
             p_rgh = p - \rho g (h - hRef)
+            p = p0 - 0.5 \rho |U|^2
         \f]
 
     where
     \vartable
         p_rgh   | Pseudo hydrostatic pressure [Pa]
         p       | Static pressure [Pa]
+        p0      | Total pressure [Pa]
         h       | Height in the opposite direction to gravity
         hRef    | Reference height in the opposite direction to gravity
         \rho    | density
@@ -49,8 +51,10 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        rhoName      | rho field name          | no          | rho
-        p            | static pressure         | yes         |
+        U            | velocity field name     | no          | U
+        phi          | flux field name         | no          | phi
+        rho          | density field name      | no          | rho
+        p0           | total pressure          | yes         |
     \endtable
 
     Example of the boundary condition specification:
@@ -58,8 +62,10 @@ Description
     myPatch
     {
         type            prghTotalPressure;
-        rhoName         rho;
-        p               uniform 0;
+        U               U;
+        phi             phi;
+        rho             rho;
+        p0              uniform 0;
         value           uniform 0; // optional initial value
     }
     \endverbatim
@@ -179,18 +185,6 @@ public:
     // Member functions
 
         // Access
-
-            //- Return the rhoName
-            const word& rhoName() const
-            {
-                return rhoName_;
-            }
-
-            //- Return reference to the rhoName to allow adjustment
-            word& rhoName()
-            {
-                return rhoName_;
-            }
 
             //- Return the total pressure
             const scalarField& p0() const
