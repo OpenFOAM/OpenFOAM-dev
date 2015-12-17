@@ -364,7 +364,6 @@ void v2f<BasicTurbulenceModel>::correct()
      ==
       - fvm::Sp(1.0/L2, f_)
       - 1.0/L2/k_*(v2fAlpha - C2_*G)
-      + fvOptions(alpha, rho, f_)
     );
 
     fEqn().relax();
