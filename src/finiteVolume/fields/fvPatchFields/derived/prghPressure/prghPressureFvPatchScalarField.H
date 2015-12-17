@@ -49,7 +49,7 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        rhoName      | rho field name          | no          | rho
+        rho          | rho field name          | no          | rho
         p            | static pressure         | yes         |
     \endtable
 
@@ -58,7 +58,7 @@ Description
     myPatch
     {
         type            prghPressure;
-        rhoName         rho;
+        rho             rho;
         p               uniform 0;
         value           uniform 0; // optional initial value
     }
@@ -173,18 +173,6 @@ public:
     // Member functions
 
         // Access
-
-            //- Return the rhoName
-            const word& rhoName() const
-            {
-                return rhoName_;
-            }
-
-            //- Return reference to the rhoName to allow adjustment
-            word& rhoName()
-            {
-                return rhoName_;
-            }
 
             //- Return the static pressure
             const scalarField& p() const
