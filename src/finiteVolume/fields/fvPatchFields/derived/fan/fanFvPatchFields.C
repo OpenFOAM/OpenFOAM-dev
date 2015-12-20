@@ -30,17 +30,6 @@ License
 #include "Tuple2.H"
 #include "PolynomialEntry.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    makeTemplatePatchTypeField
-    (
-        fvPatchScalarField,
-        fanFvPatchScalarField
-    );
-}
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<>
@@ -130,6 +119,18 @@ Foam::fanFvPatchField<Foam::scalar>::fanFvPatchField
     {
         this->evaluate(Pstream::blocking);
     }
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    makeTemplatePatchTypeField
+    (
+        fvPatchScalarField,
+        fanFvPatchScalarField
+    );
 }
 
 
