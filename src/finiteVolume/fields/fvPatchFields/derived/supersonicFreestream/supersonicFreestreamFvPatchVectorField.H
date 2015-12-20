@@ -40,9 +40,9 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        TName        | Temperature field name  | no          | T
-        pName        | Pressure field name     | no          | p
-        psiName      | Compressibility field name | no       | thermo:psi
+        T            | Temperature field name  | no          | T
+        p            | Pressure field name     | no          | p
+        psi          | Compressibility field name | no       | thermo:psi
         UInf         | free-stream velocity    | yes         |
         pInf         | free-stream pressure    | yes         |
         TInf         | free-stream temperature | yes         |

@@ -55,26 +55,6 @@ supersonicFreestreamFvPatchVectorField
 Foam::supersonicFreestreamFvPatchVectorField::
 supersonicFreestreamFvPatchVectorField
 (
-    const supersonicFreestreamFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchVectorField(ptf, p, iF, mapper),
-    TName_(ptf.TName_),
-    pName_(ptf.pName_),
-    psiName_(ptf.psiName_),
-    UInf_(ptf.UInf_),
-    pInf_(ptf.pInf_),
-    TInf_(ptf.TInf_),
-    gamma_(ptf.gamma_)
-{}
-
-
-Foam::supersonicFreestreamFvPatchVectorField::
-supersonicFreestreamFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -117,6 +97,26 @@ supersonicFreestreamFvPatchVectorField
             << exit(FatalIOError);
     }
 }
+
+
+Foam::supersonicFreestreamFvPatchVectorField::
+supersonicFreestreamFvPatchVectorField
+(
+    const supersonicFreestreamFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchVectorField(ptf, p, iF, mapper),
+    TName_(ptf.TName_),
+    pName_(ptf.pName_),
+    psiName_(ptf.psiName_),
+    UInf_(ptf.UInf_),
+    pInf_(ptf.pInf_),
+    TInf_(ptf.TInf_),
+    gamma_(ptf.gamma_)
+{}
 
 
 Foam::supersonicFreestreamFvPatchVectorField::
