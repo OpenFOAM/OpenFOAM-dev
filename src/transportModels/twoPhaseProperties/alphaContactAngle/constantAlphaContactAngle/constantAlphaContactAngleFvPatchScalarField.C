@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantAlphaContactAngleFvPatchScalarField.H"
-#include "addToRunTimeSelectionTable.H"
 #include "volMesh.H"
 #include "fvPatchFieldMapper.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -45,20 +45,6 @@ constantAlphaContactAngleFvPatchScalarField
 Foam::constantAlphaContactAngleFvPatchScalarField::
 constantAlphaContactAngleFvPatchScalarField
 (
-    const constantAlphaContactAngleFvPatchScalarField& gcpsf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    alphaContactAngleFvPatchScalarField(gcpsf, p, iF, mapper),
-    theta0_(gcpsf.theta0_)
-{}
-
-
-Foam::constantAlphaContactAngleFvPatchScalarField::
-constantAlphaContactAngleFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -69,6 +55,20 @@ constantAlphaContactAngleFvPatchScalarField
 {
     evaluate();
 }
+
+
+Foam::constantAlphaContactAngleFvPatchScalarField::
+constantAlphaContactAngleFvPatchScalarField
+(
+    const constantAlphaContactAngleFvPatchScalarField& gcpsf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    alphaContactAngleFvPatchScalarField(gcpsf, p, iF, mapper),
+    theta0_(gcpsf.theta0_)
+{}
 
 
 Foam::constantAlphaContactAngleFvPatchScalarField::

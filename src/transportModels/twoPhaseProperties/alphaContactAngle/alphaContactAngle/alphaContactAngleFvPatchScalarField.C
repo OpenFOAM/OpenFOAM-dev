@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphaContactAngleFvPatchScalarField.H"
-#include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
 #include "volMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,19 +71,6 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 
 Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 (
-    const alphaContactAngleFvPatchScalarField& acpsf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedGradientFvPatchScalarField(acpsf, p, iF, mapper),
-    limit_(acpsf.limit_)
-{}
-
-
-Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -104,6 +91,19 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
         gradient() = 0.0;
     }
 }
+
+
+Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
+(
+    const alphaContactAngleFvPatchScalarField& acpsf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedGradientFvPatchScalarField(acpsf, p, iF, mapper),
+    limit_(acpsf.limit_)
+{}
 
 
 Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
