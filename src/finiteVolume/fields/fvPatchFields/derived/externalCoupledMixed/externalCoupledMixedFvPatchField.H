@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,40 +32,52 @@ Description
     Values are transferred as plain text files, where OpenFOAM data is written
     as:
 
-        # Patch: \<patch name\>
-        \<magSf1\> \<value1\> \<surfaceNormalGradient1\>
-        \<magSf2\> \<value2\> \<surfaceNormalGradient2\>
-        \<magSf3\> \<value3\> \<surfaceNormalGradient3\>
+    \verbatim
+        # Patch: <patch name>
+        <magSf1> <value1> <surfaceNormalGradient1>
+        <magSf2> <value2> <surfaceNormalGradient2>
+        <magSf3> <value3> <surfaceNormalGradient3>
         ...
-        \<magSfN\> \<valueN\> \<surfaceNormalGradientN\>
+        <magSfN> <valueN> <surfaceNormalGradientN>
+    \endverbatim
 
     and received as the constituent pieces of the `mixed' condition, i.e.
 
-        # Patch: \<patch name\>
-        \<value1\> \<gradient1\> \<valueFracion1\>
-        \<value2\> \<gradient2\> \<valueFracion2\>
-        \<value3\> \<gradient3\> \<valueFracion3\>
+    \verbatim
+        # Patch: <patch name>
+        <value1> <gradient1> <valueFracion1>
+        <value2> <gradient2> <valueFracion2>
+        <value3> <gradient3> <valueFracion3>
         ...
-        \<valueN\> \<gradientN\> \<valueFracionN\>
+        <valueN> <gradientN> <valueFracionN>
+    \endverbatim
 
     Data is sent/received as a single file for all patches from the directory
 
-        $FOAM_CASE/\<commsDir\>
+    \verbatim
+        $FOAM_CASE/<commsDir>
+    \endverbatim
 
     At start-up, the boundary creates a lock file, i.e..
 
+    \verbatim
         OpenFOAM.lock
+    \endverbatim
 
     ... to signal the external source to wait.  During the boundary condition
     update, boundary values are written to file, e.g.
 
-        \<fileName\>.out
+    \verbatim
+        <fileName>.out
+    \endverbatim
 
     The lock file is then removed, instructing the external source to take
     control of the program execution.  When ready, the external program
     should create the return values, e.g. to file
 
-        \<fileName\>.in
+    \verbatim
+        <fileName>.in
+    \endverbatim
 
     ... and then re-instate the lock file.  The boundary condition will then
     read the return values, and pass program execution back to OpenFOAM.
