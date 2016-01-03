@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "patchInteractionDataList.H"
 #include "stringListOps.H"
 #include "emptyPolyPatch.H"
+#include "cyclicAMIPolyPatch.H"
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
@@ -73,6 +74,7 @@ Foam::patchInteractionDataList::patchInteractionDataList
         (
             !pp.coupled()
          && !isA<emptyPolyPatch>(pp)
+         && !isA<cyclicAMIPolyPatch>(pp)
          && applyToPatch(pp.index()) < 0
         )
         {
