@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -225,7 +225,7 @@ void Foam::LISAAtomization<CloudType>::update
     }
     else
     {
-        k = rhoAv*sqr(Urel)/2.0*sigma;
+        k = rhoAv*sqr(Urel)/(2.0*sigma);
 
         scalar J = 0.5*traveledTime*hSheet;
 
