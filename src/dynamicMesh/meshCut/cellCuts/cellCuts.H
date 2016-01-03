@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -277,6 +277,7 @@ class cellCuts
 
             //- Walk across faceI following cuts, starting at cut. Stores cuts
             //  visited
+            // Returns true if valid walk.
             bool walkFace
             (
                 const label cellI,
@@ -374,8 +375,8 @@ class cellCuts
                 const labelList& loop
             ) const;
 
-            //- Determines if loop through cellI consistent with existing
-            //  pattern.
+            //- Determine compatibility of loop with existing cut pattern.
+            //  Does not use cut-addressing (faceCuts_, cutCuts_)
             bool conservativeValidLoop
             (
                 const label cellI,
@@ -395,8 +396,9 @@ class cellCuts
                 labelList& anchorPoints
             ) const;
 
-            //- Update basic cut information from cellLoops. Assumes cellLoops_
-            //  already set and consistent.
+            //- Update basic cut information from cellLoops.
+            //  Assumes cellLoops_ and edgeWeight_ already set and consistent.
+            //  Does not use any other information.
             void setFromCellLoops();
 
             //- Update basic cut information for single cell from cellLoop.
@@ -424,7 +426,8 @@ class cellCuts
                 const List<refineCell>& refCells
             );
 
-            //- Same as above but now cut with prescribed plane.
+            //- Same as above but now cut with prescribed plane (instead of
+            //  just normal).
             void setFromCellCutter
             (
                 const cellLooper&,
@@ -436,6 +439,7 @@ class cellCuts
             void orientPlanesAndLoops();
 
             //- Top level driver: adressing calculation and loop detection
+            //  (loops splitting cells).
             void calcLoopsAndAddressing(const labelList& cutCells);
 
             //- Check various consistencies.
