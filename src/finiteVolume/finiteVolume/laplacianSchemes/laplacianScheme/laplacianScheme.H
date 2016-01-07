@@ -77,6 +77,8 @@ protected:
         tmp<snGradScheme<Type> > tsnGradScheme_;
 
 
+private:
+
     // Private Member Functions
 
         //- Disallow copy construct
