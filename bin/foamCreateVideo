@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -43,6 +43,7 @@ options:
   -h | -help          help
   -i | -image <name>  name of image sequence (default = image)
   -o | -out <name>    name of output video file (default = video)
+  -s | -start <frame> specify the start frame number for avconv
   -w | -webm          WebM output video file format
 
 Creates a video file from a sequence of PNG images
@@ -64,6 +65,7 @@ IMAGE='image'
 VIDEO='video'
 FPS=10
 FMT='mp4'
+START_NUMBER=''
 
 while [ "$#" -gt 0 ]
 do
@@ -91,6 +93,11 @@ do
       VIDEO=$2
       shift 2
       ;;
+   -s | -start)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      START_NUMBER="-start_number $2"
+      shift 2
+      ;;
    -w | -webm)
       FMT=webm
       echo "Selected $FMT format, requires avconv..."
@@ -116,6 +123,7 @@ if [ "$FMT" = "webm" ] ; then
         echo "Creating image with avconv..."
         avconv \
             -r $FPS \
+            $START_NUMBER \
             -i ${DIR}/${IMAGE}.%04d.png \
             -c:v libvpx -crf 15 -b:v 1M \
             $VIDEO.$FMT
@@ -127,6 +135,7 @@ else
         echo "Creating image with avconv..."
         avconv \
             -r $FPS \
+            $START_NUMBER \
             -i ${DIR}/${IMAGE}.%04d.png \
             -c:v libx264 -pix_fmt yuv420p \
             $VIDEO.$FMT
