@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -94,11 +94,14 @@ cleanCase()
             > /dev/null 2>&1 \
         )
     fi
-    (cd constant && \
-        rm -rf \
-        cellToRegion cellLevel* pointLevel* \
-        > /dev/null 2>&1 \
-    )
+    if [ -d constant ]
+    then
+        (cd constant && \
+            rm -rf \
+            cellToRegion cellLevel* pointLevel* \
+            > /dev/null 2>&1 \
+        )
+    fi
 
     rm -rf constant/tetDualMesh > /dev/null 2>&1
 
