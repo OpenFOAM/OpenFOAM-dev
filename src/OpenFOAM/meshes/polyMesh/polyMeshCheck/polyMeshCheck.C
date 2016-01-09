@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -441,7 +441,7 @@ bool Foam::polyMesh::checkCellDeterminant
     scalar minDet = min(cellDeterminant);
     scalar sumDet = sum(cellDeterminant);
 
-    forAll (cellDeterminant, cellI)
+    forAll(cellDeterminant, cellI)
     {
         if (cellDeterminant[cellI] < warnDet)
         {
@@ -529,7 +529,7 @@ bool Foam::polyMesh::checkFaceWeight
     // Statistics only for internal and masters of coupled faces
     PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(*this));
 
-    forAll (faceWght, faceI)
+    forAll(faceWght, faceI)
     {
         if (faceWght[faceI] < minWeight)
         {
@@ -618,7 +618,7 @@ bool Foam::polyMesh::checkVolRatio
     // Statistics only for internal and masters of coupled faces
     PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(*this));
 
-    forAll (volRatio, faceI)
+    forAll(volRatio, faceI)
     {
         if (volRatio[faceI] < minRatio)
         {

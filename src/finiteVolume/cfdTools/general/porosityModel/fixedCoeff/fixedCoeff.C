@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,7 +135,7 @@ void Foam::porosityModels::fixedCoeff::calcTransformModelData()
 {
     if (coordSys_.R().uniform())
     {
-        forAll (cellZoneIDs_, zoneI)
+        forAll(cellZoneIDs_, zoneI)
         {
             alpha_[zoneI].setSize(1);
             beta_[zoneI].setSize(1);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,7 @@ void Foam::activePressureForceBaffleVelocityFvPatchVectorField::autoMap
     //- Note: we don't want to use Sf here since triggers rebuilding of
     //  fvMesh::S() which will give problems when mapped (since already
     //  on new mesh)
-    forAll (patch().boundaryMesh().mesh().faceAreas(), i)
+    forAll(patch().boundaryMesh().mesh().faceAreas(), i)
     {
         if (mag(patch().boundaryMesh().mesh().faceAreas()[i]) == 0)
         {

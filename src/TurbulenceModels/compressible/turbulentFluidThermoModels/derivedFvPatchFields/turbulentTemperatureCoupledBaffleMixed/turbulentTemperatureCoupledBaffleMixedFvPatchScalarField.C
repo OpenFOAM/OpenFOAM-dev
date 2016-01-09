@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
         if (thicknessLayers_.size() > 0)
         {
             // Calculate effective thermal resistance by harmonic averaging
-            forAll (thicknessLayers_, iLayer)
+            forAll(thicknessLayers_, iLayer)
             {
                 contactRes_ += thicknessLayers_[iLayer]/kappaLayers_[iLayer];
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -446,7 +446,7 @@ Foam::label Foam::checkTopology
                     if (returnReduce(mp.size(), sumOp<label>()) > 0)
                     {
                         boundBox bb(point::max, point::min);
-                        forAll (mp, i)
+                        forAll(mp, i)
                         {
                             bb.min() = min(bb.min(), pts[mp[i]]);
                             bb.max() = max(bb.max(), pts[mp[i]]);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -234,7 +234,7 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
             else
             {
                 scalar invWt = 0.0;
-                forAll (mixture.Y(), s)
+                forAll(mixture.Y(), s)
                 {
                     invWt += mixture.Y(s)[cellI]/mixture.W(s);
                 }

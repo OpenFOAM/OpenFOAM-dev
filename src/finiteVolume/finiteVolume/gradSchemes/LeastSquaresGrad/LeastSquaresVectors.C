@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ void Foam::fv::LeastSquaresVectors<Stencil>::calcLeastSquaresVectors()
     // including components for the "empty" directions
     symmTensor dd0(sqr((Vector<label>::one - mesh.geometricD())/2));
 
-    forAll (vectors_, i)
+    forAll(vectors_, i)
     {
         List<vector>& lsvi = vectors_[i];
         symmTensor dd(dd0);

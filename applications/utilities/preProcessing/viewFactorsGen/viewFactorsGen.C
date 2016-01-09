@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -381,7 +381,7 @@ int main(int argc, char *argv[])
 
     DynamicList<label> localAgg(nCoarseFaces);
 
-    forAll (viewFactorsPatches, i)
+    forAll(viewFactorsPatches, i)
     {
         const label patchID = viewFactorsPatches[i];
 
@@ -689,7 +689,7 @@ int main(int argc, char *argv[])
 
     if (mesh.nSolutionD() == 3)
     {
-        forAll (localCoarseSf, coarseFaceI)
+        forAll(localCoarseSf, coarseFaceI)
         {
             const List<point>& localFineSf = compactFineSf[coarseFaceI];
             const vector Ai = sum(localFineSf);
@@ -709,12 +709,12 @@ int main(int argc, char *argv[])
                 const label toPatchId = compactPatchId[compactJ];
 
                 scalar Fij = 0;
-                forAll (localFineSf, i)
+                forAll(localFineSf, i)
                 {
                     const vector& dAi = localFineSf[i];
                     const vector& dCi = localFineCf[i];
 
-                    forAll (remoteFineSj, j)
+                    forAll(remoteFineSj, j)
                     {
                         const vector& dAj = remoteFineSj[j];
                         const vector& dCj = remoteFineCj[j];
@@ -762,7 +762,7 @@ int main(int argc, char *argv[])
             patchArea[fromPatchId] += mag(Ai);
 
             const labelList& visCoarseFaces = visibleFaceFaces[coarseFaceI];
-            forAll (visCoarseFaces, visCoarseFaceI)
+            forAll(visCoarseFaces, visCoarseFaceI)
             {
                 F[coarseFaceI].setSize(visCoarseFaces.size());
                 label compactJ = visCoarseFaces[visCoarseFaceI];
@@ -847,7 +847,7 @@ int main(int argc, char *argv[])
                 const scalar Fij = sum(F[compactI]);
                 const label coarseFaceID = coarsePatchFace[coarseI];
                 const labelList& fineFaces = coarseToFine[coarseFaceID];
-                forAll (fineFaces, fineId)
+                forAll(fineFaces, fineId)
                 {
                     const label faceID = fineFaces[fineId];
                     viewFactorField.boundaryField()[patchID][faceID] = Fij;

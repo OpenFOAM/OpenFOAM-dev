@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
 {
     if (coordSys_.R().uniform())
     {
-        forAll (cellZoneIDs_, zoneI)
+        forAll(cellZoneIDs_, zoneI)
         {
             D_[zoneI].setSize(1);
             F_[zoneI].setSize(1);

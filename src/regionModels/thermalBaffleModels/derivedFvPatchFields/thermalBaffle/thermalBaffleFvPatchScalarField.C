@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ void thermalBaffleFvPatchScalarField::createPatchMesh()
     dicts[topPatchID].add("sampleMode", mpp.sampleModeNames_[mpp.mode()]);
 
 
-    forAll (regionPatches, patchI)
+    forAll(regionPatches, patchI)
     {
         dictionary&  patchDict = dicts[patchI];
         patchDict.set("nFaces", 0);

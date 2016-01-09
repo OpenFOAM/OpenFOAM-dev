@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ extrudePatchMesh::extrudePatchMesh
     List<word> patchTypes(regionPatches.size());
     PtrList<dictionary> dicts(regionPatches.size());
 
-    forAll (dicts, patchI)
+    forAll(dicts, patchI)
     {
         if (!dicts.set(patchI))
         {
@@ -122,13 +122,13 @@ extrudePatchMesh::extrudePatchMesh
     dicts[sidePatchID] = dict_.subDict("sideCoeffs");
     dicts[topPatchID] = dict_.subDict("topCoeffs");
 
-    forAll (dicts, patchI)
+    forAll(dicts, patchI)
     {
         dicts[patchI].lookup("name") >> patchNames[patchI];
         dicts[patchI].lookup("type") >> patchTypes[patchI];
     }
 
-    forAll (regionPatches, patchI)
+    forAll(regionPatches, patchI)
     {
         dictionary&  patchDict = dicts[patchI];
         patchDict.set("nFaces", 0);
@@ -267,7 +267,7 @@ void extrudePatchMesh::extrudeMesh(const List<polyPatch*>& regionPatches)
         List<word> patchTypes(regionPatches.size());
         PtrList<dictionary> dicts(regionPatches.size());
 
-        forAll (dicts, patchI)
+        forAll(dicts, patchI)
         {
             if (!dicts.set(patchI))
             {
@@ -279,13 +279,13 @@ void extrudePatchMesh::extrudeMesh(const List<polyPatch*>& regionPatches)
         dicts[sidePatchID] = dict_.subDict("sideCoeffs");
         dicts[topPatchID] = dict_.subDict("topCoeffs");
 
-        forAll (dicts, patchI)
+        forAll(dicts, patchI)
         {
             dicts[patchI].lookup("name") >> patchNames[patchI];
             dicts[patchI].lookup("type") >> patchTypes[patchI];
         }
 
-        forAll (regionPatches, patchI)
+        forAll(regionPatches, patchI)
         {
             dictionary&  patchDict = dicts[patchI];
             patchDict.set("nFaces", 0);

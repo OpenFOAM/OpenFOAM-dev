@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void thermalBaffleModel::init()
         reduce(nTotalEdges, sumOp<label>());
 
         label nFaces = 0;
-        forAll (rbm, patchi)
+        forAll(rbm, patchi)
         {
             if (
                    rbm[patchi].size()
@@ -157,7 +157,7 @@ void thermalBaffleModel::init()
             // Calculate thickness of the baffle on the first face only.
             if (delta_.value() == 0.0)
             {
-                forAll (ppCoupled, localFaceI)
+                forAll(ppCoupled, localFaceI)
                 {
                     label faceI = ppCoupled.start() + localFaceI;
 

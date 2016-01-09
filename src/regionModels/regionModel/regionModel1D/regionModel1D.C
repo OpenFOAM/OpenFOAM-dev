@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ void Foam::regionModels::regionModel1D::initialise()
         {
             const vector& n = pNormals[localFaceI];
             const labelList& faces = boundaryFaceFaces_[localPyrolysisFaceI++];
-            forAll (faces, faceI)
+            forAll(faces, faceI)
             {
                 const label faceID = faces[faceI];
                 nMagSf[faceID] = regionMesh().Sf()[faceID] & n;

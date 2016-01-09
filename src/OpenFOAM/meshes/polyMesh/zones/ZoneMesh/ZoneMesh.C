@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,7 +186,7 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
         // Nothing read. Use supplied zones
         PtrList<ZoneType>& zones = *this;
         zones.setSize(pzm.size());
-        forAll (zones, zoneI)
+        forAll(zones, zoneI)
         {
             zones.set(zoneI, pzm[zoneI].clone(*this).ptr());
         }
