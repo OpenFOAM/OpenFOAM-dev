@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -365,7 +365,7 @@ void Foam::meshToMesh0::interpolate
 
 
 template<class Type, class CombineOp>
-Foam::tmp< Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
 Foam::meshToMesh0::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& fromVf,
@@ -437,7 +437,7 @@ Foam::meshToMesh0::interpolate
 
 
 template<class Type, class CombineOp>
-Foam::tmp< Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
 Foam::meshToMesh0::interpolate
 (
     const tmp<GeometricField<Type, fvPatchField, volMesh> >& tfromVf,

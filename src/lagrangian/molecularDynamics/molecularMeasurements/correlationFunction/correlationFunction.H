@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class correlationFunction
 
         const polyMesh& mesh_;
 
-        Field< Field<Type> > tZeroBuffers_;
+        Field<Field<Type>> tZeroBuffers_;
 
         scalar duration_;
         scalar sampleInterval_;
@@ -137,7 +137,7 @@ public:
 
     // Access
 
-        inline const Field< Field<Type> >& tZeroBuffers() const;
+        inline const Field<Field<Type>>& tZeroBuffers() const;
 
         inline scalar duration() const;
 

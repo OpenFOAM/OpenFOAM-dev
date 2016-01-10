@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SourceFiles
 // Only used internally
 #define makeTypeSetWritersTypeName(typeWriter, dataType)                      \
                                                                               \
-    defineNamedTemplateTypeNameAndDebug(typeWriter< dataType >, 0)
+    defineNamedTemplateTypeNameAndDebug(typeWriter<dataType>, 0)
 
 // Sometimes used externally
 #define makeSetWritersTypeName(typeWriter)                                    \
@@ -55,7 +55,7 @@ SourceFiles
 // Define type info for single dataType template instantiation (eg, vector)
 #define makeSetWriterType(typeWriter, dataType)                               \
                                                                               \
-    defineNamedTemplateTypeNameAndDebug(typeWriter< dataType >, 0);           \
+    defineNamedTemplateTypeNameAndDebug(typeWriter<dataType>, 0);           \
     addTemplatedToRunTimeSelectionTable                                       \
     (                                                                         \
         writer, typeWriter, dataType, word                                    \

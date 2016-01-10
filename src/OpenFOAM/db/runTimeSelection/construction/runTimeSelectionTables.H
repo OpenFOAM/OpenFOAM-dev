@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,10 +50,10 @@ Description
 (autoPtr,baseType,argNames,argList,parList)                                   \
                                                                               \
     /* Construct from argList function pointer type */                        \
-    typedef autoPtr< baseType > (*argNames##ConstructorPtr)argList;           \
+    typedef autoPtr<baseType> (*argNames##ConstructorPtr)argList;             \
                                                                               \
     /* Construct from argList function table type */                          \
-    typedef HashTable< argNames##ConstructorPtr, word, string::hash >         \
+    typedef HashTable<argNames##ConstructorPtr, word, string::hash>           \
         argNames##ConstructorTable;                                           \
                                                                               \
     /* Construct from argList function pointer table pointer */               \
@@ -66,14 +66,14 @@ Description
     static void destroy##argNames##ConstructorTables();                       \
                                                                               \
     /* Class to add constructor from argList to table */                      \
-    template< class baseType##Type >                                          \
+    template<class baseType##Type>                                            \
     class add##argNames##ConstructorToTable                                   \
     {                                                                         \
     public:                                                                   \
                                                                               \
-        static autoPtr< baseType > New argList                                \
+        static autoPtr<baseType> New argList                                  \
         {                                                                     \
-            return autoPtr< baseType >(new baseType##Type parList);           \
+            return autoPtr<baseType>(new baseType##Type parList);             \
         }                                                                     \
                                                                               \
         add##argNames##ConstructorToTable                                     \
@@ -99,7 +99,7 @@ Description
                                                                               \
     /* Class to add constructor from argList to table */                      \
     /* Remove only the entry (not the table) upon destruction */              \
-    template< class baseType##Type >                                          \
+    template<class baseType##Type>                                            \
     class addRemovable##argNames##ConstructorToTable                          \
     {                                                                         \
         /* retain lookup name for later removal */                            \
@@ -107,9 +107,9 @@ Description
                                                                               \
     public:                                                                   \
                                                                               \
-        static autoPtr< baseType > New argList                                \
+        static autoPtr<baseType> New argList                                  \
         {                                                                     \
-            return autoPtr< baseType >(new baseType##Type parList);           \
+            return autoPtr<baseType>(new baseType##Type parList);             \
         }                                                                     \
                                                                               \
         addRemovable##argNames##ConstructorToTable                            \
@@ -141,10 +141,10 @@ Description
 (autoPtr,baseType,argNames,argList,parList)                                   \
                                                                               \
     /* Construct from argList function pointer type */                        \
-    typedef autoPtr< baseType > (*argNames##ConstructorPtr)argList;           \
+    typedef autoPtr<baseType> (*argNames##ConstructorPtr)argList;             \
                                                                               \
     /* Construct from argList function table type */                          \
-    typedef HashTable< argNames##ConstructorPtr, word, string::hash >         \
+    typedef HashTable<argNames##ConstructorPtr, word, string::hash>           \
         argNames##ConstructorTable;                                           \
                                                                               \
     /* Construct from argList function pointer table pointer */               \
@@ -157,14 +157,14 @@ Description
     static void destroy##argNames##ConstructorTables();                       \
                                                                               \
     /* Class to add constructor from argList to table */                      \
-    template< class baseType##Type >                                          \
+    template<class baseType##Type>                                            \
     class add##argNames##ConstructorToTable                                   \
     {                                                                         \
     public:                                                                   \
                                                                               \
-        static autoPtr< baseType > New##baseType argList                      \
+        static autoPtr<baseType> New##baseType argList                        \
         {                                                                     \
-            return autoPtr< baseType >(baseType##Type::New parList.ptr());    \
+            return autoPtr<baseType>(baseType##Type::New parList.ptr());      \
         }                                                                     \
                                                                               \
         add##argNames##ConstructorToTable                                     \
@@ -196,7 +196,7 @@ Description
     };                                                                        \
                                                                               \
     /* Class to add constructor from argList to table */                      \
-    template< class baseType##Type >                                          \
+    template<class baseType##Type>                                            \
     class addRemovable##argNames##ConstructorToTable                          \
     {                                                                         \
         /* retain lookup name for later removal */                            \
@@ -204,9 +204,9 @@ Description
                                                                               \
     public:                                                                   \
                                                                               \
-        static autoPtr< baseType > New##baseType argList                      \
+        static autoPtr<baseType> New##baseType argList                        \
         {                                                                     \
-            return autoPtr< baseType >(baseType##Type::New parList.ptr());    \
+            return autoPtr<baseType>(baseType##Type::New parList.ptr());      \
         }                                                                     \
                                                                               \
         addRemovable##argNames##ConstructorToTable                            \
@@ -325,14 +325,14 @@ Description
 (baseType,argNames,Targ)                                                      \
                                                                               \
     /* Table constructor called from the table add function */                \
-    void baseType< Targ >::construct##argNames##ConstructorTables()           \
+    void baseType<Targ>::construct##argNames##ConstructorTables()             \
     {                                                                         \
         static bool constructed = false;                                      \
         if (!constructed)                                                     \
         {                                                                     \
             constructed = true;                                               \
-            baseType< Targ >::argNames##ConstructorTablePtr_                  \
-                = new baseType< Targ >::argNames##ConstructorTable;           \
+            baseType<Targ>::argNames##ConstructorTablePtr_                    \
+                = new baseType<Targ>::argNames##ConstructorTable;             \
         }                                                                     \
     }
 
@@ -344,12 +344,12 @@ Description
 (baseType,argNames,Targ)                                                      \
                                                                               \
     /* Table destructor called from the table add function destructor */      \
-    void baseType< Targ >::destroy##argNames##ConstructorTables()             \
+    void baseType<Targ>::destroy##argNames##ConstructorTables()               \
     {                                                                         \
-        if (baseType< Targ >::argNames##ConstructorTablePtr_)                 \
+        if (baseType<Targ>::argNames##ConstructorTablePtr_)                   \
         {                                                                     \
-            delete baseType< Targ >::argNames##ConstructorTablePtr_;          \
-            baseType< Targ >::argNames##ConstructorTablePtr_ = NULL;          \
+            delete baseType<Targ>::argNames##ConstructorTablePtr_;            \
+            baseType<Targ>::argNames##ConstructorTablePtr_ = NULL;            \
         }                                                                     \
     }
 
@@ -361,8 +361,8 @@ Description
 (baseType,argNames,Targ)                                                      \
                                                                               \
     /* Define the constructor function table */                               \
-    baseType< Targ >::argNames##ConstructorTable*                             \
-        baseType< Targ >::argNames##ConstructorTablePtr_ = NULL
+    baseType<Targ>::argNames##ConstructorTable*                               \
+        baseType<Targ>::argNames##ConstructorTablePtr_ = NULL
 
 
 // external use:

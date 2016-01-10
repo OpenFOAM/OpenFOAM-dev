@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,9 +92,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp< fvPatch${FieldType} > clone() const
+        virtual tmp<fvPatch${FieldType} > clone() const
         {
-            return tmp< fvPatch${FieldType} >
+            return tmp<fvPatch${FieldType} >
             (
                 new ${typeName}FixedValueFvPatch${FieldType}(*this)
             );
@@ -108,12 +108,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp< fvPatch${FieldType} > clone
+        virtual tmp<fvPatch${FieldType} > clone
         (
             const DimensionedField<${TemplateType}, volMesh>& iF
         ) const
         {
-            return tmp< fvPatch${FieldType} >
+            return tmp<fvPatch${FieldType} >
             (
                 new ${typeName}FixedValueFvPatch${FieldType}(*this, iF)
             );

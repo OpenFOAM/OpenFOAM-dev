@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ bool Foam::fileFormats::FTRsurfaceFormat<Face>::read
     is >> this->storedPoints();
 
     // triFaces read with attached keys
-    List< Keyed<triFace> > facesRead(is);
+    List<Keyed<triFace>> facesRead(is);
 
     List<Face>  faceLst(facesRead.size());
     List<label> zoneIds(facesRead.size());

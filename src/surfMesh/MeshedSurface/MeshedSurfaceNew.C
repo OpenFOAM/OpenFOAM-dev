@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 
 template<class Face>
-Foam::autoPtr< Foam::MeshedSurface<Face> >
+Foam::autoPtr<Foam::MeshedSurface<Face>>
 Foam::MeshedSurface<Face>::New(const fileName& name, const word& ext)
 {
     if (debug)
@@ -50,7 +50,7 @@ Foam::MeshedSurface<Face>::New(const fileName& name, const word& ext)
         if (supported.found(ext))
         {
             // create indirectly
-            autoPtr< MeshedSurface<Face> > surf(new MeshedSurface<Face>);
+            autoPtr<MeshedSurface<Face>> surf(new MeshedSurface<Face>);
             surf().transfer(FriendType::New(name, ext)());
 
             return surf;
@@ -66,12 +66,12 @@ Foam::MeshedSurface<Face>::New(const fileName& name, const word& ext)
             << exit(FatalError);
     }
 
-    return autoPtr< MeshedSurface<Face> >(cstrIter()(name));
+    return autoPtr<MeshedSurface<Face>>(cstrIter()(name));
 }
 
 
 template<class Face>
-Foam::autoPtr< Foam::MeshedSurface<Face> >
+Foam::autoPtr<Foam::MeshedSurface<Face>>
 Foam::MeshedSurface<Face>::New(const fileName& name)
 {
     word ext = name.ext();

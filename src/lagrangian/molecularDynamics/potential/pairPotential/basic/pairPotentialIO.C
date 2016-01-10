@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ bool Foam::pairPotential::writeEnergyAndForceTables(Ostream& os) const
     Info<< "Writing energy and force tables to file for potential "
         << name_ << endl;
 
-    List< Pair <scalar> > eTab(energyTable());
+    List<Pair <scalar> > eTab(energyTable());
 
-    List< Pair <scalar> > fTab(forceTable());
+    List<Pair <scalar> > fTab(forceTable());
 
     forAll(eTab, e)
     {

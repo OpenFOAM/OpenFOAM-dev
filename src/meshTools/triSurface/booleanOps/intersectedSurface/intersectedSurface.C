@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -334,7 +334,7 @@ Foam::intersectedSurface::calcPointEdgeAddressing
     }
 
     // Shrink it
-    forAllIter(Map< DynamicList<label> >, facePointEdges, iter)
+    forAllIter(Map<DynamicList<label>>, facePointEdges, iter)
     {
         iter().shrink();
 
@@ -361,7 +361,7 @@ Foam::intersectedSurface::calcPointEdgeAddressing
         }
 
         Pout<< "    Constructed point-edge adressing:" << endl;
-        forAllConstIter(Map< DynamicList<label> >, facePointEdges, iter)
+        forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
             Pout<< "    vertex " << iter.key() << " is connected to edges "
                 << iter() << endl;

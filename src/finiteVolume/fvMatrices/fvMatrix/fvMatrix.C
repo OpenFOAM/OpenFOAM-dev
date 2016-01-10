@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2178,7 +2178,7 @@ Foam::tmp<Foam::fvMatrix<Type> > Foam::operator*
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type> > Foam::operator*
 (
-    const tmp< DimensionedField<scalar, volMesh> >& tdsf,
+    const tmp<DimensionedField<scalar, volMesh> >& tdsf,
     const fvMatrix<Type>& A
 )
 {

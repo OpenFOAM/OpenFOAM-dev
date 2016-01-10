@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ public:
         hashedWordList(const UList<word>& names);
 
         //- Construct by transferring the parameter contents
-        hashedWordList(const Xfer< List<word> >& names);
+        hashedWordList(const Xfer<List<word>>& names);
 
         //- Construct from number and list of names
         hashedWordList(const label nNames, const char** names);

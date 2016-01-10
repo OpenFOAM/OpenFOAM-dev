@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,8 +95,8 @@ int main(int argc, char *argv[])
     Info<< endl;
 
 
-    ::List< ::Vector> vert;     // global list of vertices
-    ::List< ::tridata> tri;     // global list of triangles
+    ::List<::Vector> vert;     // global list of vertices
+    ::List<::tridata> tri;     // global list of triangles
 
 
     // Convert triSurface to progmesh format. Note: can use global point
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
     ::ProgressiveMesh(vert,tri,collapse_map,permutation);
 
     // rearrange the vertex list
-    ::List< ::Vector> temp_list;
+    ::List<::Vector> temp_list;
     for (int i=0;i<vert.num;i++)
     {
         temp_list.Add(vert[i]);

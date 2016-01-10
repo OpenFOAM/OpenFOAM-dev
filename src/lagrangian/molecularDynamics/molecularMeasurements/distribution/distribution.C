@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Foam::distribution::distribution(const scalar binWidth)
 
 Foam::distribution::distribution(const distribution& d)
 :
-    Map<label>(static_cast< Map<label> >(d)),
+    Map<label>(static_cast<Map<label>>(d)),
     binWidth_(d.binWidth())
 {}
 

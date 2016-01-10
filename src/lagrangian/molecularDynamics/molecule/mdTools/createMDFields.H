@@ -1,24 +1,24 @@
 // Fields for data gathering
 
-List< scalarField > allSpeciesN_RU
+List<scalarField> allSpeciesN_RU
 (
     molecules.potential().nIds(),
     scalarField (mesh.nCells(), 0.0)
 );
 
-List< scalarField > allSpeciesM_RU
+List<scalarField> allSpeciesM_RU
 (
     molecules.potential().nIds(),
     scalarField (mesh.nCells(), 0.0)
 );
 
-List< vectorField > allSpeciesVelocitySum_RU
+List<vectorField> allSpeciesVelocitySum_RU
 (
     molecules.potential().nIds(),
     vectorField (mesh.nCells(), vector::zero)
 );
 
-List< scalarField > allSpeciesVelocityMagSquaredSum_RU
+List<scalarField> allSpeciesVelocityMagSquaredSum_RU
 (
     molecules.potential().nIds(),
     scalarField (mesh.nCells(), 0.0)

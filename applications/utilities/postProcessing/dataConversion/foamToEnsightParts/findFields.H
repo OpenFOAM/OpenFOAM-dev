@@ -4,7 +4,7 @@
 HashTable<word> volumeFields;
 
 // 2. the fields for each cloud:
-HashTable< HashTable<word> > cloudFields;
+HashTable<HashTable<word>> cloudFields;
 
 if (timeDirs.size())
 {

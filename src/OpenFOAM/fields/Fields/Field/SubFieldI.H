@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ inline void Foam::SubField<Type>::operator=(const SubField<Type>& rhs)
 template<class Type>
 inline Foam::SubField<Type>::operator const Foam::Field<Type>&() const
 {
-    return *reinterpret_cast< const Field<Type>* >(this);
+    return *reinterpret_cast<const Field<Type>* >(this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 // Only used internally
 #define makeTypeTableReadersTypeName(typeTableReader, dataType)               \
                                                                               \
-    defineNamedTemplateTypeNameAndDebug(typeTableReader< dataType >, 0)
+    defineNamedTemplateTypeNameAndDebug(typeTableReader<dataType>, 0)
 
 // Sometimes used externally
 #define makeTableReadersTypeName(typeTableReader)                             \
@@ -51,7 +51,7 @@ SourceFiles
 // Define type info for single dataType template instantiation (eg, vector)
 #define makeTableReaderType(typeTableReader, dataType)                        \
                                                                               \
-    defineNamedTemplateTypeNameAndDebug(typeTableReader< dataType >, 0);      \
+    defineNamedTemplateTypeNameAndDebug(typeTableReader<dataType>, 0);      \
     addTemplatedToRunTimeSelectionTable                                       \
     (                                                                         \
         tableReader, typeTableReader, dataType, dictionary                    \

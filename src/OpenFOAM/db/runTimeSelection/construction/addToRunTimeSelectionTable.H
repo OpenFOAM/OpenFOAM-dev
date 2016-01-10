@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
 (baseType,thisType,argNames)                                                  \
                                                                               \
     /* Add the thisType constructor function to the table */                  \
-    baseType::add##argNames##ConstructorToTable< thisType >                   \
+    baseType::add##argNames##ConstructorToTable<thisType>                     \
         add##thisType##argNames##ConstructorTo##baseType##Table_
 
 
@@ -46,7 +46,7 @@ Description
 (baseType,thisType,argNames,lookup)                                           \
                                                                               \
     /* Add the thisType constructor function to the table, find by lookup */  \
-    baseType::add##argNames##ConstructorToTable< thisType >                   \
+    baseType::add##argNames##ConstructorToTable<thisType>                     \
         add_##lookup##_##thisType##argNames##ConstructorTo##baseType##Table_  \
         (#lookup)
 
@@ -56,7 +56,7 @@ Description
 (baseType,thisType,argNames)                                                  \
                                                                               \
     /* Add the thisType constructor function to the table */                  \
-    baseType::addRemovable##argNames##ConstructorToTable< thisType >          \
+    baseType::addRemovable##argNames##ConstructorToTable<thisType>            \
         addRemovable##thisType##argNames##ConstructorTo##baseType##Table_
 
 
@@ -65,7 +65,7 @@ Description
 (baseType,thisType,argNames,lookup)                                           \
                                                                               \
     /* Add the thisType constructor function to the table, find by lookup */  \
-    baseType::addRemovable##argNames##ConstructorToTable< thisType >          \
+    baseType::addRemovable##argNames##ConstructorToTable<thisType>            \
         addRemovable_##lookup##_##thisType##argNames##ConstructorTo           \
         ##baseType##Table_(#lookup)
 
@@ -79,7 +79,7 @@ Description
 (baseType,thisType,Targ,argNames)                                             \
                                                                               \
     /* Add the thisType constructor function to the table */                  \
-    baseType::add##argNames##ConstructorToTable< thisType< Targ > >           \
+    baseType::add##argNames##ConstructorToTable<thisType<Targ>>               \
         add##thisType##Targ##argNames##ConstructorTo##baseType##Table_
 
 
@@ -89,7 +89,7 @@ Description
 (baseType,thisType,Targ,argNames,lookup)                                      \
                                                                               \
     /* Add the thisType constructor function to the table, find by lookup */  \
-    baseType::add##argNames##ConstructorToTable< thisType< Targ > >           \
+    baseType::add##argNames##ConstructorToTable<thisType<Targ>>               \
         add_##lookup##_##thisType##Targ##argNames##ConstructorTo##baseType    \
         ##Table_(#lookup)
 
@@ -103,7 +103,7 @@ Description
 (baseType,thisType,Targ,argNames)                                             \
                                                                               \
     /* Add the thisType constructor function to the table */                  \
-    baseType< Targ >::add##argNames##ConstructorToTable< thisType< Targ > >   \
+    baseType<Targ>::add##argNames##ConstructorToTable<thisType<Targ>>         \
         add##thisType##Targ##argNames##ConstructorTo##baseType##Targ##Table_
 
 
@@ -113,7 +113,7 @@ Description
 (baseType,thisType,Targ,argNames,lookup)                                      \
                                                                               \
     /* Add the thisType constructor function to the table, find by lookup */  \
-    baseType< Targ >::add##argNames##ConstructorToTable< thisType< Targ > >   \
+    baseType<Targ>::add##argNames##ConstructorToTable<thisType<Targ>>         \
         add_##lookup##_##thisType##Targ##argNames##ConstructorTo##baseType##  \
         Targ##Table_(#lookup)
 

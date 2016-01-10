@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Ostream& operator<<(Ostream&, const Distribution<Type>&);
 template<class Type>
 class Distribution
 :
-    public List< List<scalar> >
+    public List<List<scalar>>
 {
     // Private data
 
@@ -125,18 +125,18 @@ public:
 
         //- Return the normalised distribution (probability density)
         //  and bins
-        List< List<Pair<scalar> > > normalised() const;
+        List<List<Pair<scalar>> > normalised() const;
 
         //- Return the distribution of the total bin weights
-        List< List < Pair<scalar> > > raw() const;
+        List<List < Pair<scalar> > > raw() const;
 
         //- Return the cumulative normalised distribution and
         //  integration locations (at end of bins)
-        List< List<Pair<scalar> > > cumulativeNormalised() const;
+        List<List<Pair<scalar>> > cumulativeNormalised() const;
 
         //- Return the cumulative total bin weights and integration
         //  locations (at end of bins)
-        List< List<Pair<scalar> > > cumulativeRaw() const;
+        List<List<Pair<scalar>> > cumulativeRaw() const;
 
         //- Resets the Distribution by clearing the stored lists.
         //  Leaves the same number of them and the same binWidth.

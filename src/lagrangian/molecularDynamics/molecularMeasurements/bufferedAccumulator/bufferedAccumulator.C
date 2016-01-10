@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ void Foam::bufferedAccumulator<Type>::accumulateAndResetBuffer(const label b)
 template<class Type>
 Foam::bufferedAccumulator<Type>::bufferedAccumulator()
 :
-    List< Field<Type> >(),
+    List<Field<Type>>(),
     averagesTaken_(),
     bufferOffsets_()
 {}
@@ -66,7 +66,7 @@ Foam::bufferedAccumulator<Type>::bufferedAccumulator
     const label bufferingInterval
 )
 :
-    List< Field<Type> >(),
+    List<Field<Type>>(),
     averagesTaken_(),
     bufferOffsets_()
 {
@@ -85,7 +85,7 @@ Foam::bufferedAccumulator<Type>::bufferedAccumulator
     const bufferedAccumulator<Type>& bA
 )
 :
-    List< Field<Type> >(static_cast< List< Field<Type> > >(bA)),
+    List<Field<Type>>(static_cast<List<Field<Type>>>(bA)),
     averagesTaken_(bA.averagesTaken()),
     bufferOffsets_(bA.bufferOffsets())
 {}
@@ -217,7 +217,7 @@ void Foam::bufferedAccumulator<Type>::operator=
             << abort(FatalError);
     }
 
-    List< Field<Type> >::operator=(rhs);
+    List<Field<Type>>::operator=(rhs);
 
     averagesTaken_ = rhs.averagesTaken();
 

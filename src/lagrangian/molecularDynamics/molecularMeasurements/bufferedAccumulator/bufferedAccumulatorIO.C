@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::operator<<(Ostream& os, const bufferedAccumulator<Type>& bA)
 {
 
     os  << bA.averagesTaken_
-        << static_cast<const List< Field<Type> >&>(bA)
+        << static_cast<const List<Field<Type>>&>(bA)
         << bA.bufferOffsets();
 
     // Check state of Ostream

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-inline const Foam::Field< Foam::Field<Type> >&
+inline const Foam::Field<Foam::Field<Type>>&
 Foam::correlationFunction<Type>::tZeroBuffers() const
 {
     return tZeroBuffers_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -311,7 +311,7 @@ template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::Xfer<Foam::List<T> >
 Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::xfer()
 {
-    return xferMoveTo< List<T> >(*this);
+    return xferMoveTo<List<T>>(*this);
 }
 
 
