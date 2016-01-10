@@ -62,7 +62,7 @@ class fvBoundaryMesh
 
     // Private Member Functions
 
-        //- Disable default copy construct
+        //- Disallow default copy construct
         fvBoundaryMesh(const fvBoundaryMesh&);
 
         //- Disallow assignment

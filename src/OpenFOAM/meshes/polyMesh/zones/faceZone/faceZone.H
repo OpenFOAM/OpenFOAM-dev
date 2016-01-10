@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,16 @@ class faceZone
         //- The name associated with the zone-labels dictionary entry
         static const word labelsName_;
 
+
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        faceZone(const faceZone&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceZone&);
+
+
 protected:
 
     // Protected data
@@ -98,13 +108,7 @@ protected:
             mutable labelList* mePtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        faceZone(const faceZone&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceZone&);
+    // Protected Member Functions
 
         //- Build primitive patch
         void calcFaceZonePatch() const;
