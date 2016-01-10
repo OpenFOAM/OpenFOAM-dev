@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,7 +173,7 @@ public:
             //  Note, optimized to avoid overwriting data (with Xfer::null)
             void reset
             (
-                const Xfer<List<point> >& points,
+                const Xfer<List<point>>& points,
                 const Xfer<faceList>& faces,
                 const Xfer<surfZoneList>& zones
             );

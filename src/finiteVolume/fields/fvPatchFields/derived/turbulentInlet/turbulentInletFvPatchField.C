@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ void Foam::turbulentInletFvPatchField<Type>::rmap
     fixedValueFvPatchField<Type>::rmap(ptf, addr);
 
     const turbulentInletFvPatchField<Type>& tiptf =
-        refCast<const turbulentInletFvPatchField<Type> >(ptf);
+        refCast<const turbulentInletFvPatchField<Type>>(ptf);
 
     referenceField_.rmap(tiptf.referenceField_, addr);
 }

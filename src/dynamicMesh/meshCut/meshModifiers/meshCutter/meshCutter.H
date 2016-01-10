@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ class meshCutter
 
         //- Points added in last setRefinement. Per split edge label of added
         //  point
-        HashTable<label, edge, Hash<edge> > addedPoints_;
+        HashTable<label, edge, Hash<edge>> addedPoints_;
 
 
     // Private Static Functions
@@ -307,7 +307,7 @@ public:
             }
 
             //- Points added. Per split edge label of added point
-            const HashTable<label, edge, Hash<edge> >& addedPoints() const
+            const HashTable<label, edge, Hash<edge>>& addedPoints() const
             {
                 return addedPoints_;
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,13 +73,13 @@ public:
         // Source terms
 
             //- Return const reference to momentum source
-            inline tmp<DimensionedField<vector, volMesh> > UTrans() const;
+            inline tmp<DimensionedField<vector, volMesh>> UTrans() const;
 
             //- Return tmp momentum source term
             inline tmp<fvVectorMatrix> SU(volVectorField& U) const;
 
             //- Sensible enthalpy transfer [J/kg]
-            inline tmp<DimensionedField<scalar, volMesh> > hsTrans() const;
+            inline tmp<DimensionedField<scalar, volMesh>> hsTrans() const;
 
             //- Return sensible enthalpy source term [J/kg/m3/s]
             inline tmp<fvScalarMatrix> Sh(volScalarField& hs) const;
@@ -93,15 +93,15 @@ public:
             ) const;
 
             //- Return total mass transfer [kg/m3]
-            inline tmp<DimensionedField<scalar, volMesh> > rhoTrans() const;
+            inline tmp<DimensionedField<scalar, volMesh>> rhoTrans() const;
 
             //- Return tmp total mass source for carrier phase
             //  - fully explicit
-            inline tmp<DimensionedField<scalar, volMesh> > Srho() const;
+            inline tmp<DimensionedField<scalar, volMesh>> Srho() const;
 
             //- Return tmp total mass source for carrier phase specie i
             //  - fully explicit
-            inline tmp<DimensionedField<scalar, volMesh> > Srho
+            inline tmp<DimensionedField<scalar, volMesh>> Srho
             (
                 const label i
             ) const;

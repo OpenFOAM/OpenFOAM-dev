@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,7 +169,7 @@ protected:
 
         //- 2D look up table efficiency = function of primary and secondary
         // mass flow rates [kg/s]
-        autoPtr<interpolation2DTable<scalar> > eTable_;
+        autoPtr<interpolation2DTable<scalar>> eTable_;
 
         //- Name of velocity field; default = U
         word UName_;

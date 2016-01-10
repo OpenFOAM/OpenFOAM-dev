@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,9 +179,9 @@ public:
         fvsPatchField(const fvsPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >(new fvsPatchField<Type>(*this));
+            return tmp<fvsPatchField<Type>>(new fvsPatchField<Type>(*this));
         }
 
         //- Construct as copy setting internal field reference
@@ -192,12 +192,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new fvsPatchField<Type>(*this, iF)
             );
@@ -209,7 +209,7 @@ public:
         //- Return a pointer to a new patchField created on freestore given
         //  patch and internal field
         //  (does not set the patch field values)
-        static tmp<fvsPatchField<Type> > New
+        static tmp<fvsPatchField<Type>> New
         (
             const word&,
             const fvPatch&,
@@ -220,7 +220,7 @@ public:
         //  patch and internal field
         //  (does not set the patch field values)
         //  Allows override of constraint type
-        static tmp<fvsPatchField<Type> > New
+        static tmp<fvsPatchField<Type>> New
         (
             const word&,
             const word& actualPatchType,
@@ -230,7 +230,7 @@ public:
 
         //- Return a pointer to a new patchField created on freestore from
         //  a given fvsPatchField mapped onto a new patch
-        static tmp<fvsPatchField<Type> > New
+        static tmp<fvsPatchField<Type>> New
         (
             const fvsPatchField<Type>&,
             const fvPatch&,
@@ -240,7 +240,7 @@ public:
 
         //- Return a pointer to a new patchField created on freestore
         //  from dictionary
-        static tmp<fvsPatchField<Type> > New
+        static tmp<fvsPatchField<Type>> New
         (
             const fvPatch&,
             const DimensionedField<Type, surfaceMesh>&,
@@ -249,7 +249,7 @@ public:
 
         //- Return a pointer to a new calculatedFvsPatchField created on
         //  freestore without setting patchField values
-        static tmp<fvsPatchField<Type> > NewCalculatedType
+        static tmp<fvsPatchField<Type>> NewCalculatedType
         (
             const fvPatch&
         );
@@ -257,7 +257,7 @@ public:
         //- Return a pointer to a new calculatedFvsPatchField created on
         //  freestore without setting patchField values
         template<class Type2>
-        static tmp<fvsPatchField<Type> > NewCalculatedType
+        static tmp<fvsPatchField<Type>> NewCalculatedType
         (
             const fvsPatchField<Type2>&
         );

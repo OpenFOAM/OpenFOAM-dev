@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,13 +173,13 @@ public:
             // Interpolators for continuous phase fields
 
                 //- Density interpolator
-                autoPtr<interpolation<scalar> > rhoInterp_;
+                autoPtr<interpolation<scalar>> rhoInterp_;
 
                 //- Velocity interpolator
-                autoPtr<interpolation<vector> > UInterp_;
+                autoPtr<interpolation<vector>> UInterp_;
 
                 //- Dynamic viscosity interpolator
-                autoPtr<interpolation<scalar> > muInterp_;
+                autoPtr<interpolation<scalar>> muInterp_;
 
 
             //- Local gravitational or other body-force acceleration
@@ -386,9 +386,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<KinematicParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<KinematicParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<KinematicParcel<ParcelType> >
+                return autoPtr<KinematicParcel<ParcelType>>
                 (
                     new KinematicParcel<ParcelType>(mesh_, is, true)
                 );

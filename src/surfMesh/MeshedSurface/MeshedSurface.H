@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,8 +145,8 @@ protected:
         //- Sort faces by zones and store sorted faces
         void sortFacesAndStore
         (
-            const Xfer<List<Face> >& unsortedFaces,
-            const Xfer<List<label> >& zoneIds,
+            const Xfer<List<Face>>& unsortedFaces,
+            const Xfer<List<label>>& zoneIds,
             const bool sorted
         );
 
@@ -192,7 +192,7 @@ public:
         MeshedSurface
         (
             const Xfer<pointField>&,
-            const Xfer<List<Face> >&,
+            const Xfer<List<Face>>&,
             const Xfer<surfZoneList>&
         );
 
@@ -201,7 +201,7 @@ public:
         MeshedSurface
         (
             const Xfer<pointField>&,
-            const Xfer<List<Face> >&,
+            const Xfer<List<Face>>&,
             const labelUList& zoneSizes = labelUList(),
             const UList<word>& zoneNames = UList<word>()
         );
@@ -223,10 +223,10 @@ public:
         MeshedSurface(const surfMesh&);
 
         //- Construct by transferring the contents from a UnsortedMeshedSurface
-        MeshedSurface(const Xfer<UnsortedMeshedSurface<Face> >&);
+        MeshedSurface(const Xfer<UnsortedMeshedSurface<Face>>&);
 
         //- Construct by transferring the contents from a MeshedSurface
-        MeshedSurface(const Xfer<MeshedSurface<Face> >&);
+        MeshedSurface(const Xfer<MeshedSurface<Face>>&);
 
         //- Construct from file name (uses extension to determine type)
         MeshedSurface(const fileName&);
@@ -354,7 +354,7 @@ public:
             virtual void reset
             (
                 const Xfer<pointField >& points,
-                const Xfer<List<Face> >& faces,
+                const Xfer<List<Face>>& faces,
                 const Xfer<surfZoneList>& zones
             );
 
@@ -362,8 +362,8 @@ public:
             //  Note, optimized to avoid overwriting data (with Xfer::null)
             virtual void reset
             (
-                const Xfer<List<point> >& points,
-                const Xfer<List<Face> >& faces,
+                const Xfer<List<point>>& points,
+                const Xfer<List<Face>>& faces,
                 const Xfer<surfZoneList >& zones
             );
 
@@ -412,7 +412,7 @@ public:
             void transfer(UnsortedMeshedSurface<Face>&);
 
             //- Transfer contents to the Xfer container
-            Xfer<MeshedSurface<Face> > xfer();
+            Xfer<MeshedSurface<Face>> xfer();
 
 
         // Read

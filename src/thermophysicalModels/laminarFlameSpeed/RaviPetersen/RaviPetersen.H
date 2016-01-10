@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,10 @@ class RaviPetersen
         List<scalar> EqRPoints_;
 
         //- Correlation alpha coefficients
-        List<List<List<scalar> > > alpha_;
+        List<List<List<scalar>>> alpha_;
 
         //- Correlation beta coefficients
-        List<List<List<scalar> > > beta_;
+        List<List<List<scalar>>> beta_;
 
         //- Reference temperature
         scalar TRef_;
@@ -96,7 +96,7 @@ class RaviPetersen
         void checkCoefficientArrayShape
         (
             const word& name,
-            const List<List<List<scalar> > >& x
+            const List<List<List<scalar>>>& x
         ) const;
 
         //- Find and interpolate a value in the data point arrays

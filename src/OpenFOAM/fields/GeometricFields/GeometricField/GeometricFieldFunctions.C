@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void pow
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh, int r>
-tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh> >
+tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>>
 pow
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf,
@@ -87,7 +87,7 @@ pow
 {
     typedef typename powProduct<Type, r>::type powProductType;
 
-    tmp<GeometricField<powProductType, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<powProductType, PatchField, GeoMesh>> tPow
     (
         new GeometricField<powProductType, PatchField, GeoMesh>
         (
@@ -111,10 +111,10 @@ pow
 
 
 template<class Type, template<class> class PatchField, class GeoMesh, int r>
-tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh> >
+tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>>
 pow
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf,
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
     typename powProduct<Type, r>::type
 )
 {
@@ -122,7 +122,7 @@ pow
 
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<powProductType, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<powProductType, PatchField, GeoMesh>> tPow
     (
         new GeometricField<powProductType, PatchField, GeoMesh>
         (
@@ -173,7 +173,7 @@ sqr(const GeometricField<Type, PatchField, GeoMesh>& gf)
 {
     typedef typename outerProduct<Type, Type>::type outerProductType;
 
-    tmp<GeometricField<outerProductType, PatchField, GeoMesh> > tSqr
+    tmp<GeometricField<outerProductType, PatchField, GeoMesh>> tSqr
     (
         new GeometricField<outerProductType, PatchField, GeoMesh>
         (
@@ -205,13 +205,13 @@ tmp
         GeoMesh
     >
 >
-sqr(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
+sqr(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
 {
     typedef typename outerProduct<Type, Type>::type outerProductType;
 
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<outerProductType, PatchField, GeoMesh> > tSqr
+    tmp<GeometricField<outerProductType, PatchField, GeoMesh>> tSqr
     (
         new GeometricField<outerProductType, PatchField, GeoMesh>
         (
@@ -248,12 +248,12 @@ void magSqr
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
+tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tMagSqr
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tMagSqr
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -276,14 +276,14 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
+tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 {
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tMagSqr
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tMagSqr
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -320,12 +320,12 @@ void mag
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
+tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tMag
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tMag
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -348,14 +348,14 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
+tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 {
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tMag
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tMag
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -411,7 +411,7 @@ cmptAv(const GeometricField<Type, PatchField, GeoMesh>& gf)
     typedef typename GeometricField<Type, PatchField, GeoMesh>::cmptType
         cmptType;
 
-    tmp<GeometricField<cmptType, PatchField, GeoMesh> > CmptAv
+    tmp<GeometricField<cmptType, PatchField, GeoMesh>> CmptAv
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -443,14 +443,14 @@ tmp
         GeoMesh
     >
 >
-cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
+cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
 {
     typedef typename GeometricField<Type, PatchField, GeoMesh>::cmptType
         cmptType;
 
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<cmptType, PatchField, GeoMesh> > CmptAv
+    tmp<GeometricField<cmptType, PatchField, GeoMesh>> CmptAv
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -494,7 +494,7 @@ dimensioned<returnType> func                                                  \
 template<class Type, template<class> class PatchField, class GeoMesh>         \
 dimensioned<returnType> func                                                  \
 (                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
 )                                                                             \
 {                                                                             \
     dimensioned<returnType> res = func(tgf1());                               \
@@ -527,7 +527,7 @@ dimensioned<returnType> func                                                  \
 template<class Type, template<class> class PatchField, class GeoMesh>         \
 dimensioned<returnType> func                                                  \
 (                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
 )                                                                             \
 {                                                                             \
     dimensioned<returnType> res = func(tgf1());                               \
@@ -598,7 +598,7 @@ operator op                                                                   \
 )                                                                             \
 {                                                                             \
     typedef typename product<Type1, Type2>::type productType;                 \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes               \
     (                                                                         \
         new GeometricField<productType, PatchField, GeoMesh>                  \
         (                                                                     \
@@ -629,14 +629,14 @@ tmp                                                                           \
 operator op                                                                   \
 (                                                                             \
     const GeometricField<Type1, PatchField, GeoMesh>& gf1,                    \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2              \
+    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2              \
 )                                                                             \
 {                                                                             \
     typedef typename product<Type1, Type2>::type productType;                 \
                                                                               \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();           \
                                                                               \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =             \
         reuseTmpGeometricField<productType, Type2, PatchField, GeoMesh>::New  \
         (                                                                     \
             tgf2,                                                             \
@@ -660,7 +660,7 @@ tmp                                                                           \
 >                                                                             \
 operator op                                                                   \
 (                                                                             \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,             \
+    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,             \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2                     \
 )                                                                             \
 {                                                                             \
@@ -668,7 +668,7 @@ operator op                                                                   \
                                                                               \
     const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();           \
                                                                               \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =             \
         reuseTmpGeometricField<productType, Type1, PatchField, GeoMesh>::New  \
         (                                                                     \
             tgf1,                                                             \
@@ -692,8 +692,8 @@ tmp                                                                           \
 >                                                                             \
 operator op                                                                   \
 (                                                                             \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,             \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2              \
+    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,             \
+    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2              \
 )                                                                             \
 {                                                                             \
     typedef typename product<Type1, Type2>::type productType;                 \
@@ -701,7 +701,7 @@ operator op                                                                   \
     const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();           \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();           \
                                                                               \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =             \
         reuseTmpTmpGeometricField                                             \
         <productType, Type1, Type1, Type2, PatchField, GeoMesh>::New          \
         (                                                                     \
@@ -736,7 +736,7 @@ void opFunc                                                                   \
                                                                               \
 template                                                                      \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh> > \
+tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>> \
 operator op                                                                   \
 (                                                                             \
     const GeometricField<Type, PatchField, GeoMesh>& gf1,                     \
@@ -745,7 +745,7 @@ operator op                                                                   \
 {                                                                             \
     typedef typename product<Type, Form>::type productType;                   \
                                                                               \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes               \
     (                                                                         \
         new GeometricField<productType, PatchField, GeoMesh>                  \
         (                                                                     \
@@ -775,7 +775,7 @@ template                                                                      \
     class Type, template<class> class PatchField,                             \
     class GeoMesh                                                             \
 >                                                                             \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
 operator op                                                                   \
 (                                                                             \
     const GeometricField<Type, PatchField, GeoMesh>& gf1,                     \
@@ -788,10 +788,10 @@ operator op                                                                   \
                                                                               \
 template                                                                      \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh> > \
+tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>> \
 operator op                                                                   \
 (                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1,              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,              \
     const dimensioned<Form>& dvs                                              \
 )                                                                             \
 {                                                                             \
@@ -799,7 +799,7 @@ operator op                                                                   \
                                                                               \
     const GeometricField<Type, PatchField, GeoMesh>& gf1 = tgf1();            \
                                                                               \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =             \
         reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>::New   \
         (                                                                     \
             tgf1,                                                             \
@@ -823,10 +823,10 @@ template                                                                      \
     class Type, template<class> class PatchField,                             \
     class GeoMesh                                                             \
 >                                                                             \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
 operator op                                                                   \
 (                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1,              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
 )                                                                             \
 {                                                                             \
@@ -850,7 +850,7 @@ void opFunc                                                                   \
                                                                               \
 template                                                                      \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
 operator op                                                                   \
 (                                                                             \
     const dimensioned<Form>& dvs,                                             \
@@ -858,7 +858,7 @@ operator op                                                                   \
 )                                                                             \
 {                                                                             \
     typedef typename product<Form, Type>::type productType;                   \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes               \
     (                                                                         \
         new GeometricField<productType, PatchField, GeoMesh>                  \
         (                                                                     \
@@ -888,7 +888,7 @@ template                                                                      \
     class Type, template<class> class PatchField,                             \
     class GeoMesh                                                             \
 >                                                                             \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
 operator op                                                                   \
 (                                                                             \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
@@ -900,18 +900,18 @@ operator op                                                                   \
                                                                               \
 template                                                                      \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
 operator op                                                                   \
 (                                                                             \
     const dimensioned<Form>& dvs,                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
 )                                                                             \
 {                                                                             \
     typedef typename product<Form, Type>::type productType;                   \
                                                                               \
     const GeometricField<Type, PatchField, GeoMesh>& gf1 = tgf1();            \
                                                                               \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =             \
         reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>::New   \
         (                                                                     \
             tgf1,                                                             \
@@ -935,11 +935,11 @@ template                                                                      \
     class Type, template<class> class PatchField,                             \
     class GeoMesh                                                             \
 >                                                                             \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
 operator op                                                                   \
 (                                                                             \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
 )                                                                             \
 {                                                                             \
     return dimensioned<Form>(static_cast<const Form&>(vs)) op tgf1;           \

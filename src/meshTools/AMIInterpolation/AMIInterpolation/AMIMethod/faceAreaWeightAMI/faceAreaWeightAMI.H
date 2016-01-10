@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,10 @@ protected:
             //- Calculate addressing and weights using temporary storage
             virtual void calcAddressing
             (
-                List<DynamicList<label> >& srcAddress,
-                List<DynamicList<scalar> >& srcWeights,
-                List<DynamicList<label> >& tgtAddress,
-                List<DynamicList<scalar> >& tgtWeights,
+                List<DynamicList<label>>& srcAddress,
+                List<DynamicList<scalar>>& srcWeights,
+                List<DynamicList<label>>& tgtAddress,
+                List<DynamicList<scalar>>& tgtWeights,
                 label srcFaceI,
                 label tgtFaceI
             );
@@ -89,19 +89,19 @@ protected:
                 const label tgtStartFaceI,
                 DynamicList<label>& nbrFaces,
                 DynamicList<label>& visitedFaces,
-                List<DynamicList<label> >& srcAddr,
-                List<DynamicList<scalar> >& srcWght,
-                List<DynamicList<label> >& tgtAddr,
-                List<DynamicList<scalar> >& tgtWght
+                List<DynamicList<label>>& srcAddr,
+                List<DynamicList<scalar>>& srcWght,
+                List<DynamicList<label>>& tgtAddr,
+                List<DynamicList<scalar>>& tgtWght
             );
 
             //- Attempt to re-evaluate source faces that have not been included
             virtual void restartUncoveredSourceFace
             (
-                List<DynamicList<label> >& srcAddr,
-                List<DynamicList<scalar> >& srcWght,
-                List<DynamicList<label> >& tgtAddr,
-                List<DynamicList<scalar> >& tgtWght
+                List<DynamicList<label>>& srcAddr,
+                List<DynamicList<scalar>>& srcWght,
+                List<DynamicList<label>>& tgtAddr,
+                List<DynamicList<scalar>>& tgtWght
             );
 
             //- Set the source and target seed faces

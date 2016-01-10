@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,26 +50,26 @@ Foam::phaseChangeTwoPhaseMixture::phaseChangeTwoPhaseMixture
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::Pair<Foam::tmp<Foam::volScalarField> >
+Foam::Pair<Foam::tmp<Foam::volScalarField>>
 Foam::phaseChangeTwoPhaseMixture::vDotAlphal() const
 {
     volScalarField alphalCoeff(1.0/rho1() - alpha1_*(1.0/rho1() - 1.0/rho2()));
-    Pair<tmp<volScalarField> > mDotAlphal = this->mDotAlphal();
+    Pair<tmp<volScalarField>> mDotAlphal = this->mDotAlphal();
 
-    return Pair<tmp<volScalarField> >
+    return Pair<tmp<volScalarField>>
     (
         alphalCoeff*mDotAlphal[0],
         alphalCoeff*mDotAlphal[1]
     );
 }
 
-Foam::Pair<Foam::tmp<Foam::volScalarField> >
+Foam::Pair<Foam::tmp<Foam::volScalarField>>
 Foam::phaseChangeTwoPhaseMixture::vDotP() const
 {
     dimensionedScalar pCoeff(1.0/rho1() - 1.0/rho2());
-    Pair<tmp<volScalarField> > mDotP = this->mDotP();
+    Pair<tmp<volScalarField>> mDotP = this->mDotP();
 
-    return Pair<tmp<volScalarField> >(pCoeff*mDotP[0], pCoeff*mDotP[1]);
+    return Pair<tmp<volScalarField>>(pCoeff*mDotP[0], pCoeff*mDotP[1]);
 }
 
 

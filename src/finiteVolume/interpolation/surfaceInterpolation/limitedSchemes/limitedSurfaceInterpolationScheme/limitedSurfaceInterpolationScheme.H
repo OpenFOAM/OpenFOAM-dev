@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,14 +141,14 @@ public:
     // Selectors
 
         //- Return new tmp interpolation scheme
-        static tmp<limitedSurfaceInterpolationScheme<Type> > New
+        static tmp<limitedSurfaceInterpolationScheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
         );
 
         //- Return new tmp interpolation scheme
-        static tmp<limitedSurfaceInterpolationScheme<Type> > New
+        static tmp<limitedSurfaceInterpolationScheme<Type>> New
         (
             const fvMesh& mesh,
             const surfaceScalarField& faceFlux,
@@ -184,7 +184,7 @@ public:
         ) const;
 
         //- Return the interpolation weighting factors
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         flux
         (
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -204,17 +204,17 @@ public:
                                                                                \
 defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
                                                                                \
-surfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type> >         \
+surfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type>>         \
     add##SS##Type##MeshConstructorToTable_;                                    \
                                                                                \
-surfaceInterpolationScheme<Type>::addMeshFluxConstructorToTable<SS<Type> >     \
+surfaceInterpolationScheme<Type>::addMeshFluxConstructorToTable<SS<Type>>     \
     add##SS##Type##MeshFluxConstructorToTable_;                                \
                                                                                \
-limitedSurfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type> >  \
+limitedSurfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type>>  \
     add##SS##Type##MeshConstructorToLimitedTable_;                             \
                                                                                \
 limitedSurfaceInterpolationScheme<Type>::                                      \
-    addMeshFluxConstructorToTable<SS<Type> >                                   \
+    addMeshFluxConstructorToTable<SS<Type>>                                   \
     add##SS##Type##MeshFluxConstructorToLimitedTable_;
 
 #define makelimitedSurfaceInterpolationScheme(SS)                              \

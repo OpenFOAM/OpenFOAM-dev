@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -265,7 +265,7 @@ class isoSurfaceCell
         void calcAddressing
         (
             const triSurface& surf,
-            List<FixedList<label, 3> >& faceEdges,
+            List<FixedList<label, 3>>& faceEdges,
             labelList& edgeFace0,
             labelList& edgeFace1,
             Map<labelList>& edgeFacesRest
@@ -275,7 +275,7 @@ class isoSurfaceCell
         //static void walkOrientation
         //(
         //    const triSurface& surf,
-        //    const List<FixedList<label, 3> >& faceEdges,
+        //    const List<FixedList<label, 3>>& faceEdges,
         //    const labelList& edgeFace0,
         //    const labelList& edgeFace1,
         //    const label seedTriI,
@@ -286,7 +286,7 @@ class isoSurfaceCell
         //static void orientSurface
         //(
         //    triSurface&,
-        //    const List<FixedList<label, 3> >& faceEdges,
+        //    const List<FixedList<label, 3>>& faceEdges,
         //    const labelList& edgeFace0,
         //    const labelList& edgeFace1,
         //    const Map<labelList>& edgeFacesRest
@@ -302,7 +302,7 @@ class isoSurfaceCell
         //- Mark all non-fully connected triangles
         static label markDanglingTriangles
         (
-            const List<FixedList<label, 3> >& faceEdges,
+            const List<FixedList<label, 3>>& faceEdges,
             const labelList& edgeFace0,
             const labelList& edgeFace1,
             const Map<labelList>& edgeFacesRest,
@@ -358,7 +358,7 @@ public:
         //- Interpolates cCoords,pCoords. Takes the original fields
         //  used to create the iso surface.
         template<class Type>
-        tmp<Field<Type> > interpolate
+        tmp<Field<Type>> interpolate
         (
             const scalarField& cVals,
             const scalarField& pVals,
@@ -368,7 +368,7 @@ public:
 
         //- Interpolates cCoords,pCoords.
         template<class Type>
-        tmp<Field<Type> > interpolate
+        tmp<Field<Type>> interpolate
         (
             const Field<Type>& cCoords,
             const Field<Type>& pCoords

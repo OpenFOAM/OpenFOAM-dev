@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,9 +204,9 @@ public:
         fvPatchField(const fvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >(new fvPatchField<Type>(*this));
+            return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this));
         }
 
         //- Construct as copy setting internal field reference
@@ -217,12 +217,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >(new fvPatchField<Type>(*this, iF));
+            return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this, iF));
         }
 
 
@@ -231,7 +231,7 @@ public:
         //- Return a pointer to a new patchField created on freestore given
         //  patch and internal field
         //  (does not set the patch field values)
-        static tmp<fvPatchField<Type> > New
+        static tmp<fvPatchField<Type>> New
         (
             const word&,
             const fvPatch&,
@@ -242,7 +242,7 @@ public:
         //  patch and internal field
         //  (does not set the patch field values).
         //  Allows override of constraint type
-        static tmp<fvPatchField<Type> > New
+        static tmp<fvPatchField<Type>> New
         (
             const word&,
             const word& actualPatchType,
@@ -252,7 +252,7 @@ public:
 
         //- Return a pointer to a new patchField created on freestore from
         //  a given fvPatchField mapped onto a new patch
-        static tmp<fvPatchField<Type> > New
+        static tmp<fvPatchField<Type>> New
         (
             const fvPatchField<Type>&,
             const fvPatch&,
@@ -262,7 +262,7 @@ public:
 
         //- Return a pointer to a new patchField created on freestore
         //  from dictionary
-        static tmp<fvPatchField<Type> > New
+        static tmp<fvPatchField<Type>> New
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
@@ -271,7 +271,7 @@ public:
 
         //- Return a pointer to a new calculatedFvPatchField created on
         //  freestore without setting patchField values
-        static tmp<fvPatchField<Type> > NewCalculatedType
+        static tmp<fvPatchField<Type>> NewCalculatedType
         (
             const fvPatch&
         );
@@ -279,7 +279,7 @@ public:
         //- Return a pointer to a new calculatedFvPatchField created on
         //  freestore without setting patchField values
         template<class Type2>
-        static tmp<fvPatchField<Type> > NewCalculatedType
+        static tmp<fvPatchField<Type>> NewCalculatedType
         (
             const fvPatchField<Type2>&
         );
@@ -377,11 +377,11 @@ public:
         // Evaluation functions
 
             //- Return patch-normal gradient
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Return patch-normal gradient for coupled-patches
             //  using the deltaCoeffs provided
-            virtual tmp<Field<Type> > snGrad
+            virtual tmp<Field<Type>> snGrad
             (
                 const scalarField& deltaCoeffs
             ) const
@@ -400,13 +400,13 @@ public:
             virtual void updateCoeffs(const scalarField& weights);
 
             //- Return internal field next to patch as patch field
-            virtual tmp<Field<Type> > patchInternalField() const;
+            virtual tmp<Field<Type>> patchInternalField() const;
 
             //- Return internal field next to patch as patch field
             virtual void patchInternalField(Field<Type>&) const;
 
             //- Return patchField on the opposite patch of a coupled patch
-            virtual tmp<Field<Type> > patchNeighbourField() const
+            virtual tmp<Field<Type>> patchNeighbourField() const
             {
                 NotImplemented;
                 return *this;
@@ -428,9 +428,9 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
-                const tmp<Field<scalar> >&
+                const tmp<Field<scalar>>&
             ) const
             {
                 NotImplemented;
@@ -439,9 +439,9 @@ public:
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
-                const tmp<Field<scalar> >&
+                const tmp<Field<scalar>>&
             ) const
             {
                 NotImplemented;
@@ -450,7 +450,7 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const
             {
                 NotImplemented;
                 return *this;
@@ -459,7 +459,7 @@ public:
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this coupled patchField
             //  using the deltaCoeffs provided
-            virtual tmp<Field<Type> > gradientInternalCoeffs
+            virtual tmp<Field<Type>> gradientInternalCoeffs
             (
                 const scalarField& deltaCoeffs
             ) const
@@ -470,7 +470,7 @@ public:
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const
             {
                 NotImplemented;
                 return *this;
@@ -479,7 +479,7 @@ public:
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this coupled patchField
             //  using the deltaCoeffs provided
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs
             (
                 const scalarField& deltaCoeffs
             ) const

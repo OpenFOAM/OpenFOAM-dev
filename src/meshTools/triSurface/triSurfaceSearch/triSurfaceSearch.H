@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class triSurfaceSearch
         label maxTreeDepth_;
 
         //- Octree for searches
-        mutable autoPtr<indexedOctree<treeDataTriSurface> > treePtr_;
+        mutable autoPtr<indexedOctree<treeDataTriSurface>> treePtr_;
 
 
     // Private Member Functions
@@ -176,7 +176,7 @@ public:
         (
             const pointField& start,
             const pointField& end,
-            List<List<pointIndexHit> >& info
+            List<List<pointIndexHit>>& info
         ) const;
 };
 

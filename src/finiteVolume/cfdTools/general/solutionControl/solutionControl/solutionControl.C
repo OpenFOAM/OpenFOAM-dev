@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,7 +185,7 @@ void Foam::solutionControl::maxTypeResidual
 
     if (mesh_.foundObject<fieldType>(fieldName))
     {
-        const List<SolverPerformance<Type> > sp(data);
+        const List<SolverPerformance<Type>> sp(data);
         firstRes = cmptMax(sp.first().initialResidual());
         lastRes = cmptMax(sp.last().initialResidual());
     }

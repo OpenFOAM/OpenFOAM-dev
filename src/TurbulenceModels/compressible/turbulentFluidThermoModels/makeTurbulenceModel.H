@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ License
             dictionary                                                         \
         );                                                                     \
                                                                                \
-        typedef TDModel<BaseModel<Transport> >                                 \
+        typedef TDModel<BaseModel<Transport>>                                 \
             Transport##BaseModel;                                              \
                                                                                \
                                                                                \
@@ -60,7 +60,7 @@ License
         );                                                                     \
                                                                                \
                                                                                \
-        typedef RASModel<EddyDiffusivity<Transport##BaseModel> >               \
+        typedef RASModel<EddyDiffusivity<Transport##BaseModel>>               \
             RAS##Transport##BaseModel;                                         \
                                                                                \
         defineNamedTemplateTypeNameAndDebug(RAS##Transport##BaseModel, 0);     \
@@ -76,7 +76,7 @@ License
         );                                                                     \
                                                                                \
                                                                                \
-        typedef LESModel<EddyDiffusivity<Transport##BaseModel> >               \
+        typedef LESModel<EddyDiffusivity<Transport##BaseModel>>               \
             LES##Transport##BaseModel;                                         \
                                                                                \
         defineNamedTemplateTypeNameAndDebug(LES##Transport##BaseModel, 0);     \
@@ -94,7 +94,7 @@ License
 
 
 #define makeTemplatedTurbulenceModel(BaseModel, SType, Type)                   \
-    typedef Foam::SType##Models::Type<Foam::EddyDiffusivity<Foam::BaseModel> > \
+    typedef Foam::SType##Models::Type<Foam::EddyDiffusivity<Foam::BaseModel>> \
         Type##SType##BaseModel;                                                \
     defineNamedTemplateTypeNameAndDebug(Type##SType##BaseModel, 0);            \
                                                                                \
@@ -102,7 +102,7 @@ License
     {                                                                          \
         namespace SType##Models                                                \
         {                                                                      \
-            typedef Type<EddyDiffusivity<BaseModel> > Type##SType##BaseModel;  \
+            typedef Type<EddyDiffusivity<BaseModel>> Type##SType##BaseModel;  \
                                                                                \
             addToRunTimeSelectionTable                                         \
             (                                                                  \

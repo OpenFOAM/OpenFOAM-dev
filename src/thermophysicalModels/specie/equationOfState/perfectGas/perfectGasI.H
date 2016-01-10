@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,28 +48,28 @@ inline Foam::perfectGas<Specie>::perfectGas
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::perfectGas<Specie> >
+inline Foam::autoPtr<Foam::perfectGas<Specie>>
 Foam::perfectGas<Specie>::clone() const
 {
-    return autoPtr<perfectGas<Specie> >(new perfectGas<Specie>(*this));
+    return autoPtr<perfectGas<Specie>>(new perfectGas<Specie>(*this));
 }
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::perfectGas<Specie> >
+inline Foam::autoPtr<Foam::perfectGas<Specie>>
 Foam::perfectGas<Specie>::New(Istream& is)
 {
-    return autoPtr<perfectGas<Specie> >(new perfectGas<Specie>(is));
+    return autoPtr<perfectGas<Specie>>(new perfectGas<Specie>(is));
 }
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::perfectGas<Specie> > Foam::perfectGas<Specie>::New
+inline Foam::autoPtr<Foam::perfectGas<Specie>> Foam::perfectGas<Specie>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<perfectGas<Specie> >(new perfectGas<Specie>(dict));
+    return autoPtr<perfectGas<Specie>>(new perfectGas<Specie>(dict));
 }
 
 

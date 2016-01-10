@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,8 +84,8 @@ void Foam::DelaunayMesh<Triangulation>::addPatches
     faceList& faces,
     labelList& owner,
     PtrList<dictionary>& patchDicts,
-    const List<DynamicList<face> >& patchFaces,
-    const List<DynamicList<label> >& patchOwners
+    const List<DynamicList<face>>& patchFaces,
+    const List<DynamicList<label>>& patchOwners
 ) const
 {
     label nPatches = patchFaces.size();
@@ -353,8 +353,8 @@ Foam::DelaunayMesh<Triangulation>::createMesh
     PtrList<dictionary> patchDicts(1);
     patchDicts.set(0, new dictionary());
 
-    List<DynamicList<face> > patchFaces(1, DynamicList<face>());
-    List<DynamicList<label> > patchOwners(1, DynamicList<label>());
+    List<DynamicList<face>> patchFaces(1, DynamicList<face>());
+    List<DynamicList<label>> patchOwners(1, DynamicList<label>());
 
     vertexMap.resize(vertexCount());
     cellMap.setSize(Triangulation::number_of_finite_cells(), -1);

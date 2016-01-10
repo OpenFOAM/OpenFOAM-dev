@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,10 @@ public:
     //- Class used to pass tracking data to the trackToFace function
     class trackingData
     :
-        public particle::TrackingData<Cloud<findCellParticle> >
+        public particle::TrackingData<Cloud<findCellParticle>>
     {
         labelListList& cellToData_;
-        List<List<point> >& cellToEnd_;
+        List<List<point>>& cellToEnd_;
 
     public:
 
@@ -82,10 +82,10 @@ public:
             (
                 Cloud<findCellParticle>& cloud,
                 labelListList& cellToData,
-                List<List<point> >& cellToEnd
+                List<List<point>>& cellToEnd
             )
             :
-                particle::TrackingData<Cloud<findCellParticle> >(cloud),
+                particle::TrackingData<Cloud<findCellParticle>>(cloud),
                 cellToData_(cellToData),
                 cellToEnd_(cellToEnd)
             {}
@@ -98,7 +98,7 @@ public:
                 return cellToData_;
             }
 
-            List<List<point> >& cellToEnd()
+            List<List<point>>& cellToEnd()
             {
                 return cellToEnd_;
             }

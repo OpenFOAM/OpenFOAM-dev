@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,10 +66,10 @@ Foam::CLASSNAME<TemplateArgument>::CLASSNAME
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<TemplateClassArgument>
-Foam::autoPtr<Foam::CLASSNAME<TemplateArgument> >
+Foam::autoPtr<Foam::CLASSNAME<TemplateArgument>>
 Foam::CLASSNAME<TemplateArgument>::New()
 {
-    return autoPtr<CLASSNAME<TemplateArgument> >
+    return autoPtr<CLASSNAME<TemplateArgument>>
     (
         new CLASSNAME<TemplateArgument>
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
     ),
     semiImplicit_(readBool(this->coeffs_.lookup("semiImplicit")))
 {
-    if (isA<singleStepReactingMixture<ThermoType> >(this->thermo()))
+    if (isA<singleStepReactingMixture<ThermoType>>(this->thermo()))
     {
         singleMixturePtr_ =
             &dynamic_cast<singleStepReactingMixture<ThermoType>&>

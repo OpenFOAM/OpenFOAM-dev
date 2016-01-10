@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ void Foam::laminarFlameSpeedModels::RaviPetersen::checkPointsMonotonicity
 void Foam::laminarFlameSpeedModels::RaviPetersen::checkCoefficientArrayShape
 (
     const word& name,
-    const List<List<List<scalar> > >& x
+    const List<List<List<scalar>>>& x
 ) const
 {
     bool ok = true;

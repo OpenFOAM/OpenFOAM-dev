@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::CloudFunctionObjectList<CloudType>::CloudFunctionObjectList
     CloudType& owner
 )
 :
-    PtrList<CloudFunctionObject<CloudType> >(),
+    PtrList<CloudFunctionObject<CloudType>>(),
     owner_(owner),
     dict_(dictionary::null)
 {}
@@ -48,7 +48,7 @@ Foam::CloudFunctionObjectList<CloudType>::CloudFunctionObjectList
     const bool readFields
 )
 :
-    PtrList<CloudFunctionObject<CloudType> >(),
+    PtrList<CloudFunctionObject<CloudType>>(),
     owner_(owner),
     dict_(dict)
 {
@@ -98,7 +98,7 @@ Foam::CloudFunctionObjectList<CloudType>::CloudFunctionObjectList
     const CloudFunctionObjectList& cfol
 )
 :
-    PtrList<CloudFunctionObject<CloudType> >(cfol),
+    PtrList<CloudFunctionObject<CloudType>>(cfol),
     owner_(cfol.owner_),
     dict_(cfol.dict_)
 {}

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ template<class Type>
 void Foam::turbulenceFields::processField
 (
     const word& fieldName,
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvalue
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue
 )
 {
     typedef GeometricField<Type, fvPatchField, volMesh> FieldType;

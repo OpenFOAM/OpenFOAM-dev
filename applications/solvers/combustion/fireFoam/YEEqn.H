@@ -1,4 +1,4 @@
-tmp<fv::convectionScheme<scalar> > mvConvection
+tmp<fv::convectionScheme<scalar>> mvConvection
 (
     fv::convectionScheme<scalar>::New
     (

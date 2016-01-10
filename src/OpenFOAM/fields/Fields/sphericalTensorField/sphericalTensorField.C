@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ BINARY_TYPE_OPERATOR(sphericalTensor, scalar, sphericalTensor, /, divide)
 
 
 template<>
-tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
+tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
 (
     const tensorField& tf
 )
@@ -55,12 +55,12 @@ tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
 }
 
 template<>
-tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
+tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
 (
     const tmp<tensorField>& ttf
 )
 {
-    tmp<Field<sphericalTensor> > ret =
+    tmp<Field<sphericalTensor>> ret =
         transformFieldMask<sphericalTensor>(ttf());
     ttf.clear();
     return ret;
@@ -68,7 +68,7 @@ tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
 
 
 template<>
-tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
+tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
 (
     const symmTensorField& stf
 )
@@ -77,12 +77,12 @@ tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
 }
 
 template<>
-tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
+tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
 (
     const tmp<symmTensorField>& tstf
 )
 {
-    tmp<Field<sphericalTensor> > ret =
+    tmp<Field<sphericalTensor>> ret =
         transformFieldMask<sphericalTensor>(tstf());
     tstf.clear();
     return ret;

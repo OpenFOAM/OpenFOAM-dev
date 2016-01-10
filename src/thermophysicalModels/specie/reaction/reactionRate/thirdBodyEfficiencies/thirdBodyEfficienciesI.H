@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
 {
     if (dict.found("coeffs"))
     {
-        List<Tuple2<word, scalar> > coeffs(dict.lookup("coeffs"));
+        List<Tuple2<word, scalar>> coeffs(dict.lookup("coeffs"));
         if (coeffs.size() != species_.size())
         {
             FatalErrorInFunction
@@ -151,7 +151,7 @@ inline Foam::scalar Foam::thirdBodyEfficiencies::M(const scalarList& c) const
 
 inline void Foam::thirdBodyEfficiencies::write(Ostream& os) const
 {
-    List<Tuple2<word, scalar> > coeffs(species_.size());
+    List<Tuple2<word, scalar>> coeffs(species_.size());
     forAll(coeffs, i)
     {
         coeffs[i].first() = species_[i];

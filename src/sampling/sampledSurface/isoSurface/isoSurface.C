@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1205,7 +1205,7 @@ bool Foam::isoSurface::validTri(const triSurface& surf, const label faceI)
 void Foam::isoSurface::calcAddressing
 (
     const triSurface& surf,
-    List<FixedList<label, 3> >& faceEdges,
+    List<FixedList<label, 3>>& faceEdges,
     labelList& edgeFace0,
     labelList& edgeFace1,
     Map<labelList>& edgeFacesRest
@@ -1404,7 +1404,7 @@ void Foam::isoSurface::calcAddressing
 void Foam::isoSurface::walkOrientation
 (
     const triSurface& surf,
-    const List<FixedList<label, 3> >& faceEdges,
+    const List<FixedList<label, 3>>& faceEdges,
     const labelList& edgeFace0,
     const labelList& edgeFace1,
     const label seedTriI,
@@ -1490,7 +1490,7 @@ void Foam::isoSurface::walkOrientation
 void Foam::isoSurface::orientSurface
 (
     triSurface& surf,
-    const List<FixedList<label, 3> >& faceEdges,
+    const List<FixedList<label, 3>>& faceEdges,
     const labelList& edgeFace0,
     const labelList& edgeFace1,
     const Map<labelList>& edgeFacesRest
@@ -1585,7 +1585,7 @@ bool Foam::isoSurface::danglingTriangle
 // Mark triangles to keep. Returns number of dangling triangles.
 Foam::label Foam::isoSurface::markDanglingTriangles
 (
-    const List<FixedList<label, 3> >& faceEdges,
+    const List<FixedList<label, 3>>& faceEdges,
     const labelList& edgeFace0,
     const labelList& edgeFace1,
     const Map<labelList>& edgeFacesRest,
@@ -2021,7 +2021,7 @@ Foam::isoSurface::isoSurface
 
     if (false)
     {
-        List<FixedList<label, 3> > faceEdges;
+        List<FixedList<label, 3>> faceEdges;
         labelList edgeFace0, edgeFace1;
         Map<labelList> edgeFacesRest;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ inline T* Foam::UPtrList<T>::set(const label i, T* ptr)
 
 
 template<class T>
-inline Foam::Xfer<Foam::UPtrList<T> > Foam::UPtrList<T>::xfer()
+inline Foam::Xfer<Foam::UPtrList<T>> Foam::UPtrList<T>::xfer()
 {
     return xferMove(*this);
 }

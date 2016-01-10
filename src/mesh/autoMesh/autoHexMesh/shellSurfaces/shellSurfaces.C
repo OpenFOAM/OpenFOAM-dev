@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ const NamedEnum<shellSurfaces::refineMode, 3> shellSurfaces::refineModeNames_;
 void Foam::shellSurfaces::setAndCheckLevels
 (
     const label shellI,
-    const List<Tuple2<scalar, label> >& distLevels
+    const List<Tuple2<scalar, label>>& distLevels
 )
 {
     if (modes_[shellI] != DISTANCE && distLevels.size() != 1)

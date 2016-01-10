@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 curl
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -49,11 +49,11 @@ curl
     word nameCurlVf = "curl(" + vf.name() + ')';
 
     // Gausses theorem curl
-    // tmp<GeometricField<Type, fvPatchField, volMesh> > tcurlVf =
+    // tmp<GeometricField<Type, fvPatchField, volMesh>> tcurlVf =
     //     fvc::surfaceIntegrate(vf.mesh().Sf() ^ fvc::interpolate(vf));
 
     // Calculate curl as the Hodge dual of the skew-symmetric part of grad
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tcurlVf =
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tcurlVf =
         2.0*(*skew(fvc::grad(vf, nameCurlVf)));
 
     tcurlVf().rename(nameCurlVf);
@@ -63,13 +63,13 @@ curl
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 curl
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh> > Curl(fvc::curl(tvf()));
+    tmp<GeometricField<Type, fvPatchField, volMesh>> Curl(fvc::curl(tvf()));
     tvf.clear();
     return Curl;
 }

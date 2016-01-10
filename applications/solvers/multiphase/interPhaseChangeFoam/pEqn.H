@@ -33,7 +33,7 @@
         )/(mesh.magSf().boundaryField()*rAUf.boundaryField())
     );
 
-    Pair<tmp<volScalarField> > vDotP = mixture->vDotP();
+    Pair<tmp<volScalarField>> vDotP = mixture->vDotP();
     const volScalarField& vDotcP = vDotP[0]();
     const volScalarField& vDotvP = vDotP[1]();
 

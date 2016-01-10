@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,11 +106,11 @@ autoPtr<refinementSurfaces> createRefinementSurfaces
     labelList globalMaxLevel(surfI, 0);
     labelList globalLevelIncr(surfI, 0);
     PtrList<dictionary> globalPatchInfo(surfI);
-    List<Map<label> > regionMinLevel(surfI);
-    List<Map<label> > regionMaxLevel(surfI);
-    List<Map<label> > regionLevelIncr(surfI);
-    List<Map<scalar> > regionAngle(surfI);
-    List<Map<autoPtr<dictionary> > > regionPatchInfo(surfI);
+    List<Map<label>> regionMinLevel(surfI);
+    List<Map<label>> regionMaxLevel(surfI);
+    List<Map<label>> regionLevelIncr(surfI);
+    List<Map<scalar>> regionAngle(surfI);
+    List<Map<autoPtr<dictionary>>> regionPatchInfo(surfI);
 
     HashSet<word> unmatchedKeys(surfacesDict.toc());
 
@@ -300,8 +300,8 @@ autoPtr<refinementSurfaces> createRefinementSurfaces
               + regionLevelIncr[surfI][iter.key()];
         }
 
-        const Map<autoPtr<dictionary> >& localInfo = regionPatchInfo[surfI];
-        forAllConstIter(Map<autoPtr<dictionary> >, localInfo, iter)
+        const Map<autoPtr<dictionary>>& localInfo = regionPatchInfo[surfI];
+        forAllConstIter(Map<autoPtr<dictionary>>, localInfo, iter)
         {
             label globalRegionI = regionOffset[surfI] + iter.key();
             patchInfo.set(globalRegionI, iter()().clone());
@@ -684,7 +684,7 @@ int main(int argc, char *argv[])
 //                    runTime,
 //                    IOobject::NO_READ
 //                ),
-//                xferMove<Field<vector> >(bb.points()()),
+//                xferMove<Field<vector>>(bb.points()()),
 //                faces.xfer(),
 //                owner.xfer(),
 //                neighbour.xfer()
@@ -1045,7 +1045,7 @@ int main(int argc, char *argv[])
         (
             100.0,      // max size ratio
             1e-9,       // intersection tolerance
-            autoPtr<writer<scalar> >(new vtkSetWriter<scalar>()),
+            autoPtr<writer<scalar>>(new vtkSetWriter<scalar>()),
             0.01,       // min triangle quality
             true
         );

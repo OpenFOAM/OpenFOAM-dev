@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
 Foam::dimFieldDecomposer::decomposeField
 (
     const DimensionedField<Type, volMesh>& field
@@ -38,7 +38,7 @@ Foam::dimFieldDecomposer::decomposeField
     Field<Type> mappedField(field, cellAddressing_);
 
     // Create the field for the processor
-    return tmp<DimensionedField<Type, volMesh> >
+    return tmp<DimensionedField<Type, volMesh>>
     (
         new DimensionedField<Type, volMesh>
         (

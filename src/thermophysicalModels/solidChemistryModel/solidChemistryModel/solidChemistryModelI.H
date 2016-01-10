@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,14 +28,14 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CompType, class SolidThermo>
-inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >&
+inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
 Foam::solidChemistryModel<CompType, SolidThermo>::RRs()
 {
     return RRs_;
 }
 
 template<class CompType, class SolidThermo>
-inline const Foam::PtrList<Foam::Reaction<SolidThermo> >&
+inline const Foam::PtrList<Foam::Reaction<SolidThermo>>&
 Foam::solidChemistryModel<CompType, SolidThermo>::reactions() const
 {
     return reactions_;
@@ -63,10 +63,10 @@ Foam::solidChemistryModel<CompType, SolidThermo>::RRs
 
 
 template<class CompType, class SolidThermo>
-inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
+inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::solidChemistryModel<CompType, SolidThermo>::RRs() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tRRs
+    tmp<DimensionedField<scalar, volMesh>> tRRs
     (
         new DimensionedField<scalar, volMesh>
         (

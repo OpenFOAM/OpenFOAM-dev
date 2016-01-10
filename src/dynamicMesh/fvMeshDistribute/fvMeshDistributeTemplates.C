@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ void Foam::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 template<class T, class Mesh>
 void Foam::fvMeshDistribute::saveBoundaryFields
 (
-    PtrList<FieldField<fvsPatchField, T> >& bflds
+    PtrList<FieldField<fvsPatchField, T>>& bflds
 ) const
 {
     typedef GeometricField<T, fvsPatchField, Mesh> fldType;
@@ -89,7 +89,7 @@ template<class T, class Mesh>
 void Foam::fvMeshDistribute::mapBoundaryFields
 (
     const mapPolyMesh& map,
-    const PtrList<FieldField<fvsPatchField, T> >& oldBflds
+    const PtrList<FieldField<fvsPatchField, T>>& oldBflds
 )
 {
     const labelList& oldPatchStarts = map.oldPatchStarts();

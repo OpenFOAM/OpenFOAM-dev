@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,14 +91,14 @@ public:
     // Selectors
 
         //- Return a reference to the specified interpolation scheme
-        static autoPtr<interpolation<Type> > New
+        static autoPtr<interpolation<Type>> New
         (
             const word& interpolationType,
             const GeometricField<Type, fvPatchField, volMesh>& psi
         );
 
         //- Return a reference to the selected interpolation scheme
-        static autoPtr<interpolation<Type> > New
+        static autoPtr<interpolation<Type>> New
         (
             const dictionary& interpolationSchemes,
             const GeometricField<Type, fvPatchField, volMesh>& psi
@@ -161,7 +161,7 @@ public:
                                                                                \
 defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
                                                                                \
-interpolation<Type>::adddictionaryConstructorToTable<SS<Type> >                \
+interpolation<Type>::adddictionaryConstructorToTable<SS<Type>>                \
     add##SS##Type##ConstructorToTable_;
 
 

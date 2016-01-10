@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ Foam::tabulatedWallFunctions::general::general
     log10YPlus_(coeffDict_.lookup("log10YPlus")),
     log10UPlus_(coeffDict_.lookup("log10UPlus"))
 {
-    List<Tuple2<scalar, scalar> > inputTable = coeffDict_.lookup("inputTable");
+    List<Tuple2<scalar, scalar>> inputTable = coeffDict_.lookup("inputTable");
     if (inputTable.size() < 2)
     {
         FatalErrorInFunction

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ class featurePointConformer
         (
             const DynamicList<point>& masterPoints,
             const DynamicList<indexedVertexEnum::vertexType>& masterPointsTypes,
-            const Map<DynamicList<autoPtr<plane> > >& masterPointReflections,
+            const Map<DynamicList<autoPtr<plane>>>& masterPointReflections,
             DynamicList<Vb>& pts,
             const label ptI
         ) const;

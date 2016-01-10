@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ void Foam::moleculeCloud::calculatePairForce()
 
         const labelListList& ril = il_.ril();
 
-        List<IDLList<molecule> >& referredMols = il_.referredParticles();
+        List<IDLList<molecule>>& referredMols = il_.referredParticles();
 
         forAll(ril, r)
         {
@@ -376,7 +376,7 @@ void Foam::moleculeCloud::removeHighEnergyOverlaps()
 
         const labelListList& ril(il_.ril());
 
-        List<IDLList<molecule> >& referredMols = il_.referredParticles();
+        List<IDLList<molecule>>& referredMols = il_.referredParticles();
 
         forAll(ril, r)
         {

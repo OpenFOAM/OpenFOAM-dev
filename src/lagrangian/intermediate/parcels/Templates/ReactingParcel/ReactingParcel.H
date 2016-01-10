@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ public:
             // Interpolators for continuous phase fields
 
                 //- Interpolator for continuous phase pressure field
-                autoPtr<interpolation<scalar> > pInterp_;
+                autoPtr<interpolation<scalar>> pInterp_;
 
 
     public:
@@ -301,9 +301,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<ReactingParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<ReactingParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<ReactingParcel<ParcelType> >
+                return autoPtr<ReactingParcel<ParcelType>>
                 (
                     new ReactingParcel<ParcelType>(mesh_, is, true)
                 );

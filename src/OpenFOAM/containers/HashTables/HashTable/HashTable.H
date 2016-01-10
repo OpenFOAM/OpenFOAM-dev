@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -205,7 +205,7 @@ public:
         HashTable(const HashTable<T, Key, Hash>&);
 
         //- Construct by transferring the parameter contents
-        HashTable(const Xfer<HashTable<T, Key, Hash> >&);
+        HashTable(const Xfer<HashTable<T, Key, Hash>>&);
 
 
     //- Destructor
@@ -290,7 +290,7 @@ public:
             void transfer(HashTable<T, Key, Hash>&);
 
             //- Transfer contents to the Xfer container
-            inline Xfer<HashTable<T, Key, Hash> > xfer();
+            inline Xfer<HashTable<T, Key, Hash>> xfer();
 
 
     // Member Operators

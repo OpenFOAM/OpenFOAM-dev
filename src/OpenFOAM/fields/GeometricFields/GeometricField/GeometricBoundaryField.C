@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -336,7 +336,7 @@ GeometricBoundaryField
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
-    const PtrList<PatchField<Type> >& ptfl
+    const PtrList<PatchField<Type>>& ptfl
 )
 :
     FieldField<PatchField, Type>(bmesh.size()),
@@ -350,7 +350,7 @@ GeometricBoundaryField
                "("
                     "const BoundaryMesh&, "
                     "const DimensionedField<Type, GeoMesh>&, "
-                    "const PtrLIst<PatchField<Type> >&"
+                    "const PtrLIst<PatchField<Type>>&"
                ")"
             << endl;
     }
@@ -573,12 +573,12 @@ interfaces() const
 
     forAll(interfaces, patchi)
     {
-        if (isA<LduInterfaceField<Type> >(this->operator[](patchi)))
+        if (isA<LduInterfaceField<Type>>(this->operator[](patchi)))
         {
             interfaces.set
             (
                 patchi,
-                &refCast<const LduInterfaceField<Type> >
+                &refCast<const LduInterfaceField<Type>>
                 (
                     this->operator[](patchi)
                 )

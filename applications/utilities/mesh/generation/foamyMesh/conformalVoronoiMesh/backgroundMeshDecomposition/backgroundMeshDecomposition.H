@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ class backgroundMeshDecomposition
         autoPtr<bPatch> boundaryFacesPtr_;
 
         //- Search tree for the boundaryFaces_ patch
-        autoPtr<indexedOctree<treeDataBPatch> > bFTreePtr_;
+        autoPtr<indexedOctree<treeDataBPatch>> bFTreePtr_;
 
         //- The bounds of all background meshes on all processors
         treeBoundBoxList allBackgroundMeshBounds_;
@@ -275,7 +275,7 @@ public:
         //  launched from, it is assumed that the point is on that processor.
         //  The index data member of the pointIndexHit is replaced with the
         //  processor index.
-        List<List<pointIndexHit> > intersectsProcessors
+        List<List<pointIndexHit>> intersectsProcessors
         (
             const List<point>& starts,
             const List<point>& ends,

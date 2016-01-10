@@ -67,10 +67,10 @@ inline Foam::PengRobinsonGas<Specie>::PengRobinsonGas
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::PengRobinsonGas <Specie> >
+inline Foam::autoPtr<Foam::PengRobinsonGas <Specie>>
 Foam::PengRobinsonGas<Specie>::clone() const
 {
-    return autoPtr<PengRobinsonGas<Specie> >
+    return autoPtr<PengRobinsonGas<Specie>>
     (
         new PengRobinsonGas<Specie>(*this)
     );
@@ -78,24 +78,24 @@ Foam::PengRobinsonGas<Specie>::clone() const
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::PengRobinsonGas<Specie> >
+inline Foam::autoPtr<Foam::PengRobinsonGas<Specie>>
 Foam::PengRobinsonGas<Specie>::New
 (
     Istream& is
 )
 {
-    return autoPtr<PengRobinsonGas<Specie> >(new PengRobinsonGas<Specie>(is));
+    return autoPtr<PengRobinsonGas<Specie>>(new PengRobinsonGas<Specie>(is));
 }
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::PengRobinsonGas<Specie> >
+inline Foam::autoPtr<Foam::PengRobinsonGas<Specie>>
 Foam::PengRobinsonGas<Specie>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<PengRobinsonGas<Specie> >
+    return autoPtr<PengRobinsonGas<Specie>>
     (
         new PengRobinsonGas<Specie>(dict)
     );

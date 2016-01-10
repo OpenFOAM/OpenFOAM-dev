@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ template
     template<class> class SlicedPatchField,
     class GeoMesh
 >
-Foam::tmp<Foam::FieldField<PatchField, Type> >
+Foam::tmp<Foam::FieldField<PatchField, Type>>
 Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 slicedBoundaryField
 (
@@ -45,7 +45,7 @@ slicedBoundaryField
     const bool preserveProcessorOnly
 )
 {
-    tmp<FieldField<PatchField, Type> > tbf
+    tmp<FieldField<PatchField, Type>> tbf
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );
@@ -113,7 +113,7 @@ template
     template<class> class SlicedPatchField,
     class GeoMesh
 >
-Foam::tmp<Foam::FieldField<PatchField, Type> >
+Foam::tmp<Foam::FieldField<PatchField, Type>>
 Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 slicedBoundaryField
 (
@@ -122,7 +122,7 @@ slicedBoundaryField
     const bool preserveCouples
 )
 {
-    tmp<FieldField<PatchField, Type> > tbf
+    tmp<FieldField<PatchField, Type>> tbf
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );

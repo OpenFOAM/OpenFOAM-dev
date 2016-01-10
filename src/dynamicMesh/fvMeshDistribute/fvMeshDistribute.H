@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ class fvMeshDistribute
             template<class T, class Mesh>
             void saveBoundaryFields
             (
-                PtrList<FieldField<fvsPatchField, T> >& bflds
+                PtrList<FieldField<fvsPatchField, T>>& bflds
             ) const;
 
             //- Map boundary fields
@@ -114,7 +114,7 @@ class fvMeshDistribute
             void mapBoundaryFields
             (
                 const mapPolyMesh& map,
-                const PtrList<FieldField<fvsPatchField, T> >& oldBflds
+                const PtrList<FieldField<fvsPatchField, T>>& oldBflds
             );
 
             //- Init patch fields of certain type
@@ -232,7 +232,7 @@ class fvMeshDistribute
             (
                 const labelList&, // processor that neighbour is now on
                 const labelList&, // -1 or patch that face originated from
-                List<Map<label> >& procPatchID
+                List<Map<label>>& procPatchID
             );
 
             //- Get boundary faces to be repatched. Is -1 or new patchID
@@ -240,7 +240,7 @@ class fvMeshDistribute
             (
                 const labelList& neighbourNewProc,  // new processor per b. face
                 const labelList& referPatchID,      // -1 or original patch
-                const List<Map<label> >& procPatchID// patchID
+                const List<Map<label>>& procPatchID// patchID
             );
 
             //- Send mesh and coupling data.

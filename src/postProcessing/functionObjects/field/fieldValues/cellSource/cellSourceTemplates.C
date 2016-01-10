@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ bool Foam::fieldValues::cellSource::validField(const word& fieldName) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::fieldValues::cellSource::setFieldValues
+Foam::tmp<Foam::Field<Type>> Foam::fieldValues::cellSource::setFieldValues
 (
     const word& fieldName,
     const bool mustGet
@@ -63,7 +63,7 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::cellSource::setFieldValues
             << abort(FatalError);
     }
 
-    return tmp<Field<Type> >(new Field<Type>(0.0));
+    return tmp<Field<Type>>(new Field<Type>(0.0));
 }
 
 
@@ -211,12 +211,12 @@ bool Foam::fieldValues::cellSource::writeValues(const word& fieldName)
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::fieldValues::cellSource::filterField
+Foam::tmp<Foam::Field<Type>> Foam::fieldValues::cellSource::filterField
 (
     const Field<Type>& field
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(field, cellId_));
+    return tmp<Field<Type>>(new Field<Type>(field, cellId_));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ public:
         }
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -132,7 +132,7 @@ public:
                     centralWeight_
                 );
 
-            tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > sft
+            tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> sft
             (
                 stencil.weightedSum(vf, cfd.coeffs())
             );
@@ -169,7 +169,7 @@ public:
         namespace fv                                                           \
         {                                                                      \
             snGradScheme<TYPE>::addMeshConstructorToTable                      \
-                <CentredFitSnGradScheme<TYPE, POLYNOMIAL, STENCIL> >           \
+                <CentredFitSnGradScheme<TYPE, POLYNOMIAL, STENCIL>>           \
                 add##SS##STENCIL##TYPE##MeshConstructorToTable_;               \
         }                                                                      \
     }

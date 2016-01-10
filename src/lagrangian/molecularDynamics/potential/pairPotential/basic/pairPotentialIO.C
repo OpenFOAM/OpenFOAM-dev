@@ -31,9 +31,9 @@ bool Foam::pairPotential::writeEnergyAndForceTables(Ostream& os) const
     Info<< "Writing energy and force tables to file for potential "
         << name_ << endl;
 
-    List<Pair <scalar> > eTab(energyTable());
+    List<Pair <scalar>> eTab(energyTable());
 
-    List<Pair <scalar> > fTab(forceTable());
+    List<Pair <scalar>> fTab(forceTable());
 
     forAll(eTab, e)
     {

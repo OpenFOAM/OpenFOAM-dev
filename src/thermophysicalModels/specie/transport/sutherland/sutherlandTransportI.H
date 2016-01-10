@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,10 +88,10 @@ inline Foam::sutherlandTransport<Thermo>::sutherlandTransport
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::sutherlandTransport<Thermo> >
+inline Foam::autoPtr<Foam::sutherlandTransport<Thermo>>
 Foam::sutherlandTransport<Thermo>::clone() const
 {
-    return autoPtr<sutherlandTransport<Thermo> >
+    return autoPtr<sutherlandTransport<Thermo>>
     (
         new sutherlandTransport<Thermo>(*this)
     );
@@ -99,13 +99,13 @@ Foam::sutherlandTransport<Thermo>::clone() const
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::sutherlandTransport<Thermo> >
+inline Foam::autoPtr<Foam::sutherlandTransport<Thermo>>
 Foam::sutherlandTransport<Thermo>::New
 (
     Istream& is
 )
 {
-    return autoPtr<sutherlandTransport<Thermo> >
+    return autoPtr<sutherlandTransport<Thermo>>
     (
         new sutherlandTransport<Thermo>(is)
     );
@@ -113,13 +113,13 @@ Foam::sutherlandTransport<Thermo>::New
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::sutherlandTransport<Thermo> >
+inline Foam::autoPtr<Foam::sutherlandTransport<Thermo>>
 Foam::sutherlandTransport<Thermo>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<sutherlandTransport<Thermo> >
+    return autoPtr<sutherlandTransport<Thermo>>
     (
         new sutherlandTransport<Thermo>(dict)
     );

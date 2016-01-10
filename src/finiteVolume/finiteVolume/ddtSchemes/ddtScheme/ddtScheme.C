@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<ddtScheme<Type> > ddtScheme<Type>::New
+tmp<ddtScheme<Type>> ddtScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -96,7 +96,7 @@ ddtScheme<Type>::~ddtScheme()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> > ddtScheme<Type>::fvcDdt
+tmp<GeometricField<Type, fvPatchField, volMesh>> ddtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -105,7 +105,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > ddtScheme<Type>::fvcDdt
 {
     NotImplemented;
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         GeometricField<Type, fvPatchField, volMesh>::null()
     );
@@ -113,7 +113,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > ddtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<fvMatrix<Type> > ddtScheme<Type>::fvmDdt
+tmp<fvMatrix<Type>> ddtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -122,7 +122,7 @@ tmp<fvMatrix<Type> > ddtScheme<Type>::fvmDdt
 {
     NotImplemented;
 
-    return tmp<fvMatrix<Type> >
+    return tmp<fvMatrix<Type>>
     (
         new fvMatrix<Type>
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,9 +94,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<vector> > clone() const
+        virtual autoPtr<pointPatchField<vector>> clone() const
         {
-            return autoPtr<pointPatchField<vector> >
+            return autoPtr<pointPatchField<vector>>
             (
                 new angularOscillatingDisplacementPointPatchVectorField
                 (
@@ -113,12 +113,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<vector> > clone
+        virtual autoPtr<pointPatchField<vector>> clone
         (
             const DimensionedField<vector, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<vector> >
+            return autoPtr<pointPatchField<vector>>
             (
                 new angularOscillatingDisplacementPointPatchVectorField
                 (

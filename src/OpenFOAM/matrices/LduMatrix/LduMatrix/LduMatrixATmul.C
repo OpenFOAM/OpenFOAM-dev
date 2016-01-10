@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ template<class Type, class DType, class LUType>
 void Foam::LduMatrix<Type, DType, LUType>::Amul
 (
     Field<Type>& Apsi,
-    const tmp<Field<Type> >& tpsi
+    const tmp<Field<Type>>& tpsi
 ) const
 {
     Type* __restrict__ ApsiPtr = Apsi.begin();
@@ -117,7 +117,7 @@ template<class Type, class DType, class LUType>
 void Foam::LduMatrix<Type, DType, LUType>::Tmul
 (
     Field<Type>& Tpsi,
-    const tmp<Field<Type> >& tpsi
+    const tmp<Field<Type>>& tpsi
 ) const
 {
     Type* __restrict__ TpsiPtr = Tpsi.begin();
@@ -280,12 +280,12 @@ void Foam::LduMatrix<Type, DType, LUType>::residual
 
 
 template<class Type, class DType, class LUType>
-Foam::tmp<Foam::Field<Type> > Foam::LduMatrix<Type, DType, LUType>::residual
+Foam::tmp<Foam::Field<Type>> Foam::LduMatrix<Type, DType, LUType>::residual
 (
     const Field<Type>& psi
 ) const
 {
-    tmp<Field<Type> > trA(new Field<Type>(psi.size()));
+    tmp<Field<Type>> trA(new Field<Type>(psi.size()));
     residual(trA(), psi);
     return trA;
 }

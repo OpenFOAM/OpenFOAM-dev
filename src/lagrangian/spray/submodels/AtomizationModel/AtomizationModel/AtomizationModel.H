@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ public:
         AtomizationModel(const AtomizationModel<CloudType>& am);
 
         //- Construct and return a clone
-        virtual autoPtr<AtomizationModel<CloudType> > clone() const = 0;
+        virtual autoPtr<AtomizationModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -99,7 +99,7 @@ public:
 
 
     //- Selector
-    static autoPtr<AtomizationModel<CloudType> > New
+    static autoPtr<AtomizationModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -169,7 +169,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<sprayCloudType>, 0);         \
                                                                               \
     Foam::AtomizationModel<sprayCloudType>::                                  \
-        adddictionaryConstructorToTable<Foam::SS<sprayCloudType> >            \
+        adddictionaryConstructorToTable<Foam::SS<sprayCloudType>>            \
             add##SS##CloudType##sprayCloudType##ConstructorToTable_;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ calcAddressing() const
 
     // faceFaces created using a dynamic list.  Cannot guess size because
     // of multiple connections
-    List<DynamicList<label> > ff(locFcs.size());
+    List<DynamicList<label>> ff(locFcs.size());
 
     faceEdgesPtr_ = new labelListList(locFcs.size());
     labelListList& faceEdges = *faceEdgesPtr_;
@@ -132,8 +132,8 @@ calcAddressing() const
         const edgeList& curEdges = faceIntoEdges[faceI];
 
         // Record the neighbour face.  Multiple connectivity allowed
-        List<DynamicList<label> > neiFaces(curF.size());
-        List<DynamicList<label> > edgeOfNeiFace(curF.size());
+        List<DynamicList<label>> neiFaces(curF.size());
+        List<DynamicList<label>> edgeOfNeiFace(curF.size());
 
         label nNeighbours = 0;
 

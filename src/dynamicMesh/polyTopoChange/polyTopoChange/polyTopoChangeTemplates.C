@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,11 +53,11 @@ template<class T>
 void Foam::polyTopoChange::reorder
 (
     const labelList& oldToNew,
-    List<DynamicList<T> >& lst
+    List<DynamicList<T>>& lst
 )
 {
     // Create copy
-    List<DynamicList<T> > oldLst(lst);
+    List<DynamicList<T>> oldLst(lst);
 
     forAll(oldToNew, elemI)
     {

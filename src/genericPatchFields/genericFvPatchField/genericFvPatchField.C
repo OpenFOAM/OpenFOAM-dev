@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,13 +130,13 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<scalar> >::typeName
+                     == token::Compound<List<scalar>>::typeName
                     )
                     {
                         scalarField* fPtr = new scalarField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<scalar> > >
+                            dynamicCast<token::Compound<List<scalar>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -164,13 +164,13 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<vector> >::typeName
+                     == token::Compound<List<vector>>::typeName
                     )
                     {
                         vectorField* fPtr = new vectorField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<vector> > >
+                            dynamicCast<token::Compound<List<vector>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -198,7 +198,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<sphericalTensor> >::typeName
+                     == token::Compound<List<sphericalTensor>>::typeName
                     )
                     {
                         sphericalTensorField* fPtr = new sphericalTensorField;
@@ -206,7 +206,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                         (
                             dynamicCast
                             <
-                                token::Compound<List<sphericalTensor> >
+                                token::Compound<List<sphericalTensor>>
                             >
                             (
                                 fieldToken.transferCompoundToken(is)
@@ -235,7 +235,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<symmTensor> >::typeName
+                     == token::Compound<List<symmTensor>>::typeName
                     )
                     {
                         symmTensorField* fPtr = new symmTensorField;
@@ -243,7 +243,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                         (
                             dynamicCast
                             <
-                                token::Compound<List<symmTensor> >
+                                token::Compound<List<symmTensor>>
                             >
                             (
                                 fieldToken.transferCompoundToken(is)
@@ -272,13 +272,13 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<tensor> >::typeName
+                     == token::Compound<List<tensor>>::typeName
                     )
                     {
                         tensorField* fPtr = new tensorField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<tensor> > >
+                            dynamicCast<token::Compound<List<tensor>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -603,7 +603,7 @@ void Foam::genericFvPatchField<Type>::rmap
     calculatedFvPatchField<Type>::rmap(ptf, addr);
 
     const genericFvPatchField<Type>& dptf =
-        refCast<const genericFvPatchField<Type> >(ptf);
+        refCast<const genericFvPatchField<Type>>(ptf);
 
     forAllIter
     (
@@ -688,7 +688,7 @@ void Foam::genericFvPatchField<Type>::rmap
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::genericFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
@@ -709,7 +709,7 @@ Foam::genericFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::genericFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
@@ -730,7 +730,7 @@ Foam::genericFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::genericFvPatchField<Type>::gradientInternalCoeffs() const
 {
     FatalErrorInFunction
@@ -747,7 +747,7 @@ Foam::genericFvPatchField<Type>::gradientInternalCoeffs() const
 }
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     FatalErrorInFunction

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ class mapDistribute
 
 
         //- Schedule
-        mutable autoPtr<List<labelPair> > schedulePtr_;
+        mutable autoPtr<List<labelPair>> schedulePtr_;
 
 
    // Private Member Functions
@@ -190,13 +190,13 @@ class mapDistribute
         (
             const globalIndex& globalNumbering,
             const labelList& elements,
-            List<Map<label> >& compactMap
+            List<Map<label>>& compactMap
         ) const;
         void calcCompactAddressing
         (
             const globalIndex& globalNumbering,
             const labelListList& elements,
-            List<Map<label> >& compactMap
+            List<Map<label>>& compactMap
         ) const;
 
         void exchangeAddressing
@@ -204,7 +204,7 @@ class mapDistribute
             const int tag,
             const globalIndex& globalNumbering,
             labelList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             labelList& compactStart
         );
         void exchangeAddressing
@@ -212,7 +212,7 @@ class mapDistribute
             const int tag,
             const globalIndex& globalNumbering,
             labelListList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             labelList& compactStart
         );
 
@@ -268,7 +268,7 @@ public:
             (
                 const vectorTensorTransform& vt,
                 const bool forward,
-                List<List<Type> >& flds
+                List<List<Type>>& flds
             ) const
             {
                 forAll(flds, i)
@@ -325,7 +325,7 @@ public:
             (
                 const vectorTensorTransform& vt,
                 const bool forward,
-                List<List<point> >& flds
+                List<List<point>>& flds
             ) const
             {
                 forAll(flds, i)
@@ -403,7 +403,7 @@ public:
         (
             const globalIndex&,
             labelList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -414,7 +414,7 @@ public:
         (
             const globalIndex&,
             labelListList& cellCells,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -431,7 +431,7 @@ public:
             const globalIndexAndTransform&,
             const labelPairList& transformedElements,
             labelList& transformedIndices,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -443,7 +443,7 @@ public:
             const globalIndexAndTransform&,
             const List<labelPairList>& transformedElements,
             labelListList& transformedIndices,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -535,7 +535,7 @@ public:
             static label renumber
             (
                 const globalIndex&,
-                const List<Map<label> >& compactMap,
+                const List<Map<label>>& compactMap,
                 const label globalElement
             );
 

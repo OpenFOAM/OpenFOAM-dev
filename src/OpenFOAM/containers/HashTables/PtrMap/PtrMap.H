@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace Foam
 template<class T>
 class PtrMap
 :
-    public HashPtrTable<T, label, Hash<label> >
+    public HashPtrTable<T, label, Hash<label>>
 {
 
 public:
@@ -59,19 +59,19 @@ public:
         //- Construct given initial map size
         PtrMap(const label size = 128)
         :
-            HashPtrTable<T, label, Hash<label> >(size)
+            HashPtrTable<T, label, Hash<label>>(size)
         {}
 
         //- Construct from Istream
         PtrMap(Istream& is)
         :
-            HashPtrTable<T, label, Hash<label> >(is)
+            HashPtrTable<T, label, Hash<label>>(is)
         {}
 
         //- Construct as copy
         PtrMap(const PtrMap<T>& map)
         :
-            HashPtrTable<T, label, Hash<label> >(map)
+            HashPtrTable<T, label, Hash<label>>(map)
         {}
 };
 

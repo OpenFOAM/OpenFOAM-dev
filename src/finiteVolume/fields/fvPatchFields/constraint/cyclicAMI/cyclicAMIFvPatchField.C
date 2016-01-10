@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ bool Foam::cyclicAMIFvPatchField<Type>::coupled() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
@@ -139,7 +139,7 @@ Foam::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
 
     Field<Type> pnf(iField, nbrFaceCells);
 
-    tmp<Field<Type> > tpnf;
+    tmp<Field<Type>> tpnf;
     if (cyclicAMIPatch_.applyLowWeightCorrection())
     {
         tpnf = cyclicAMIPatch_.interpolate(pnf, this->patchInternalField()());
@@ -168,7 +168,7 @@ Foam::cyclicAMIFvPatchField<Type>::neighbourPatchField() const
             this->internalField()
         );
 
-    return refCast<const cyclicAMIFvPatchField<Type> >
+    return refCast<const cyclicAMIFvPatchField<Type>>
     (
         fld.boundaryField()[cyclicAMIPatch_.neighbPatchID()]
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,10 +97,10 @@ Foam::slicedFvPatchField<Type>::slicedFvPatchField
 
 
 template<class Type>
-Foam::tmp<Foam::fvPatchField<Type> >
+Foam::tmp<Foam::fvPatchField<Type>>
 Foam::slicedFvPatchField<Type>::clone() const
 {
-    return tmp<fvPatchField<Type> >
+    return tmp<fvPatchField<Type>>
     (
         new slicedFvPatchField<Type>(*this)
     );
@@ -126,13 +126,13 @@ Foam::slicedFvPatchField<Type>::slicedFvPatchField
 
 
 template<class Type>
-Foam::tmp<Foam::fvPatchField<Type> >
+Foam::tmp<Foam::fvPatchField<Type>>
 Foam::slicedFvPatchField<Type>::clone
 (
     const DimensionedField<Type, volMesh>& iF
 ) const
 {
-    return tmp<fvPatchField<Type> >
+    return tmp<fvPatchField<Type>>
     (
         new slicedFvPatchField<Type>(*this, iF)
     );
@@ -151,7 +151,7 @@ Foam::slicedFvPatchField<Type>::~slicedFvPatchField()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::slicedFvPatchField<Type>::snGrad() const
+Foam::tmp<Foam::Field<Type>> Foam::slicedFvPatchField<Type>::snGrad() const
 {
     NotImplemented;
 
@@ -167,7 +167,7 @@ void Foam::slicedFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::slicedFvPatchField<Type>::patchInternalField() const
 {
     NotImplemented;
@@ -184,7 +184,7 @@ void Foam::slicedFvPatchField<Type>::patchInternalField(Field<Type>&) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::slicedFvPatchField<Type>::patchNeighbourField
 (
     const Field<Type>& iField
@@ -197,7 +197,7 @@ Foam::slicedFvPatchField<Type>::patchNeighbourField
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::slicedFvPatchField<Type>::patchNeighbourField() const
 {
     NotImplemented;
@@ -207,7 +207,7 @@ Foam::slicedFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::slicedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
@@ -220,7 +220,7 @@ Foam::slicedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::slicedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
@@ -233,7 +233,7 @@ Foam::slicedFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::slicedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     NotImplemented;
@@ -243,7 +243,7 @@ Foam::slicedFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::slicedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     NotImplemented;

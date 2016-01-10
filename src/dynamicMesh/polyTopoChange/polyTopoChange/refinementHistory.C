@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -258,7 +258,7 @@ void Foam::refinementHistory::freeSplitCell(const label index)
     // Make sure parent does not point to me anymore.
     if (split.parent_ >= 0)
     {
-        autoPtr<FixedList<label, 8> >& subCellsPtr =
+        autoPtr<FixedList<label, 8>>& subCellsPtr =
             splitCells_[split.parent_].addedCellsPtr_;
 
         if (subCellsPtr.valid())

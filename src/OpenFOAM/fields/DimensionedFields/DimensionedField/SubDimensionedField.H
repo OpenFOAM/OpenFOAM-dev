@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,13 +103,13 @@ public:
         static inline const SubDimensionedField<Type, GeoMesh>& null();
 
         //- Return a component field of the field
-        inline tmp<DimensionedField<cmptType, GeoMesh> > component
+        inline tmp<DimensionedField<cmptType, GeoMesh>> component
         (
             const direction
         ) const;
 
         //- Return the field transpose (only defined for second rank tensors)
-        tmp<DimensionedField<Type, GeoMesh> > T() const;
+        tmp<DimensionedField<Type, GeoMesh>> T() const;
 
 
     // Member operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,10 @@ License
 template<class SourcePatch, class TargetPatch>
 void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::calcAddressing
 (
-    List<DynamicList<label> >& srcAddr,
-    List<DynamicList<scalar> >& srcWght,
-    List<DynamicList<label> >& tgtAddr,
-    List<DynamicList<scalar> >& tgtWght,
+    List<DynamicList<label>>& srcAddr,
+    List<DynamicList<scalar>>& srcWght,
+    List<DynamicList<label>>& tgtAddr,
+    List<DynamicList<scalar>>& tgtWght,
     label srcFaceI,
     label tgtFaceI
 )
@@ -117,10 +117,10 @@ bool Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::processSourceFace
     DynamicList<label>& visitedFaces,
 
     // temporary storage for addressing and weights
-    List<DynamicList<label> >& srcAddr,
-    List<DynamicList<scalar> >& srcWght,
-    List<DynamicList<label> >& tgtAddr,
-    List<DynamicList<scalar> >& tgtWght
+    List<DynamicList<label>>& srcAddr,
+    List<DynamicList<scalar>>& srcWght,
+    List<DynamicList<label>>& tgtAddr,
+    List<DynamicList<scalar>>& tgtWght
 )
 {
     if (tgtStartFaceI == -1)
@@ -358,10 +358,10 @@ template<class SourcePatch, class TargetPatch>
 void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::
 restartUncoveredSourceFace
 (
-    List<DynamicList<label> >& srcAddr,
-    List<DynamicList<scalar> >& srcWght,
-    List<DynamicList<label> >& tgtAddr,
-    List<DynamicList<scalar> >& tgtWght
+    List<DynamicList<label>>& srcAddr,
+    List<DynamicList<scalar>>& srcWght,
+    List<DynamicList<label>>& tgtAddr,
+    List<DynamicList<scalar>>& tgtWght
 )
 {
     // Collect all src faces with a low weight
@@ -518,10 +518,10 @@ void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
     }
 
     // temporary storage for addressing and weights
-    List<DynamicList<label> > srcAddr(this->srcPatch_.size());
-    List<DynamicList<scalar> > srcWght(srcAddr.size());
-    List<DynamicList<label> > tgtAddr(this->tgtPatch_.size());
-    List<DynamicList<scalar> > tgtWght(tgtAddr.size());
+    List<DynamicList<label>> srcAddr(this->srcPatch_.size());
+    List<DynamicList<scalar>> srcWght(srcAddr.size());
+    List<DynamicList<label>> tgtAddr(this->tgtPatch_.size());
+    List<DynamicList<scalar>> tgtWght(tgtAddr.size());
 
     calcAddressing
     (

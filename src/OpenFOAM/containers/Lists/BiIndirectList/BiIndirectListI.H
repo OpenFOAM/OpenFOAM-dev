@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ inline Foam::BiIndirectList<T>::BiIndirectList
 (
     const UList<T>& posList,
     const UList<T>& negList,
-    const Xfer<List<label> >& addr
+    const Xfer<List<label>>& addr
 )
 :
     posList_(const_cast<UList<T>&>(posList)),
@@ -104,7 +104,7 @@ inline void Foam::BiIndirectList<T>::resetAddressing
 template<class T>
 inline void Foam::BiIndirectList<T>::resetAddressing
 (
-    const Xfer<List<label> >& addr
+    const Xfer<List<label>>& addr
 )
 {
     addressing_.transfer(addr());

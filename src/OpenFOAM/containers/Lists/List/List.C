@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ Foam::List<T>::List(const List<T>& a)
 
 // Construct by transferring the parameter contents
 template<class T>
-Foam::List<T>::List(const Xfer<List<T> >& lst)
+Foam::List<T>::List(const Xfer<List<T>>& lst)
 {
     transfer(lst());
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,14 +107,14 @@ void checkFields
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField()
 :
-    PtrList<Field<Type> >()
+    PtrList<Field<Type>>()
 {}
 
 
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(const label size)
 :
-    PtrList<Field<Type> >(size)
+    PtrList<Field<Type>>(size)
 {}
 
 
@@ -125,7 +125,7 @@ FieldField<Field, Type>::FieldField
     const FieldField<Field, Type>& ff
 )
 :
-    PtrList<Field<Type> >(ff.size())
+    PtrList<Field<Type>>(ff.size())
 {
     forAll(*this, i)
     {
@@ -138,7 +138,7 @@ template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(const FieldField<Field, Type>& f)
 :
     refCount(),
-    PtrList<Field<Type> >(f)
+    PtrList<Field<Type>>(f)
 {}
 
 
@@ -146,23 +146,23 @@ template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(FieldField<Field, Type>& f, bool reUse)
 :
     refCount(),
-    PtrList<Field<Type> >(f, reUse)
+    PtrList<Field<Type>>(f, reUse)
 {}
 
 
 template<template<class> class Field, class Type>
-FieldField<Field, Type>::FieldField(const PtrList<Field<Type> >& tl)
+FieldField<Field, Type>::FieldField(const PtrList<Field<Type>>& tl)
 :
-    PtrList<Field<Type> >(tl)
+    PtrList<Field<Type>>(tl)
 {}
 
 
 // Construct as copy of tmp<FieldField>
 #ifndef NoConstructFromTmp
 template<template<class> class Field, class Type>
-FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type> >& tf)
+FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type>>& tf)
 :
-    PtrList<Field<Type> >
+    PtrList<Field<Type>>
     (
         const_cast<FieldField<Field, Type>&>(tf()),
         tf.isTmp()
@@ -176,20 +176,20 @@ FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type> >& tf)
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(Istream& is)
 :
-    PtrList<Field<Type> >(is)
+    PtrList<Field<Type>>(is)
 {}
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > FieldField<Field, Type>::clone() const
+tmp<FieldField<Field, Type>> FieldField<Field, Type>::clone() const
 {
-    return tmp<FieldField<Field, Type> >(new FieldField<Field, Type>(*this));
+    return tmp<FieldField<Field, Type>>(new FieldField<Field, Type>(*this));
 }
 
 
 template<template<class> class Field, class Type>
 template<class Type2>
-tmp<FieldField<Field, Type> > FieldField<Field, Type>::NewCalculatedType
+tmp<FieldField<Field, Type>> FieldField<Field, Type>::NewCalculatedType
 (
     const FieldField<Field, Type2>& ff
 )
@@ -204,7 +204,7 @@ tmp<FieldField<Field, Type> > FieldField<Field, Type>::NewCalculatedType
         nffPtr->set(i, Field<Type>::NewCalculatedType(ff[i]).ptr());
     }
 
-    return tmp<FieldField<Field, Type> >(nffPtr);
+    return tmp<FieldField<Field, Type>>(nffPtr);
 }
 
 
@@ -221,13 +221,13 @@ void FieldField<Field, Type>::negate()
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType> >
+tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>>
 FieldField<Field, Type>::component
 (
     const direction d
 ) const
 {
-    tmp<FieldField<Field, cmptType> > Component
+    tmp<FieldField<Field, cmptType>> Component
     (
         FieldField<Field, typename FieldField<Field, Type>::cmptType>::
             NewCalculatedType(*this)
@@ -268,9 +268,9 @@ void FieldField<Field, Type>::replace
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > FieldField<Field, Type>::T() const
+tmp<FieldField<Field, Type>> FieldField<Field, Type>::T() const
 {
-    tmp<FieldField<Field, Type> > transpose
+    tmp<FieldField<Field, Type>> transpose
     (
         FieldField<Field, Type>::NewCalculatedType(*this)
     );
@@ -311,7 +311,7 @@ void FieldField<Field, Type>::operator=(const tmp<FieldField>& tf)
 
     // This is dodgy stuff, don't try this at home.
     FieldField* fieldPtr = tf.ptr();
-    PtrList<Field<Type> >::transfer(*fieldPtr);
+    PtrList<Field<Type>>::transfer(*fieldPtr);
     delete fieldPtr;
 }
 
@@ -340,7 +340,7 @@ void FieldField<Field, Type>::operator op(const FieldField<Field, TYPE>& f)   \
 template<template<class> class Field, class Type>                             \
 void FieldField<Field, Type>::operator op                                     \
 (                                                                             \
-    const tmp<FieldField<Field, TYPE> >& tf                                   \
+    const tmp<FieldField<Field, TYPE>>& tf                                   \
 )                                                                             \
 {                                                                             \
     operator op(tf());                                                        \
@@ -369,13 +369,13 @@ COMPUTED_ASSIGNMENT(scalar, /=)
 template<template<class> class Field, class Type>
 Ostream& operator<<(Ostream& os, const FieldField<Field, Type>& f)
 {
-    os << static_cast<const PtrList<Field<Type> >&>(f);
+    os << static_cast<const PtrList<Field<Type>>&>(f);
     return os;
 }
 
 
 template<template<class> class Field, class Type>
-Ostream& operator<<(Ostream& os, const tmp<FieldField<Field, Type> >& tf)
+Ostream& operator<<(Ostream& os, const tmp<FieldField<Field, Type>>& tf)
 {
     os << tf();
     tf.clear();

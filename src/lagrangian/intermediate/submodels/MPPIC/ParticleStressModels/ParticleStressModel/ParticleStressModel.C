@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ Foam::scalar Foam::ParticleStressModel::alphaPacked() const
 }
 
 
-Foam::tmp<Foam::FieldField<Foam::Field, Foam::scalar> >
+Foam::tmp<Foam::FieldField<Foam::Field, Foam::scalar>>
 Foam::ParticleStressModel::tau
 (
     const FieldField<Field, scalar>& alpha,
@@ -106,7 +106,7 @@ Foam::ParticleStressModel::tau
     const FieldField<Field, scalar>& uRms
 ) const
 {
-    tmp<FieldField<Field, scalar> > value
+    tmp<FieldField<Field, scalar>> value
     (
         new FieldField<Field, scalar>(alpha.size())
     );

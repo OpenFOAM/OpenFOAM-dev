@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Foam::processorGAMGInterface::processorGAMGInterface
     );
 
     // From coarse cell pair to coarse face
-    HashTable<label, labelPair, labelPair::Hash<> > cellsToCoarseFace
+    HashTable<label, labelPair, labelPair::Hash<>> cellsToCoarseFace
     (
         2*localRestrictAddressing.size()
     );
@@ -114,7 +114,7 @@ Foam::processorGAMGInterface::processorGAMGInterface
             );
         }
 
-        HashTable<label, labelPair, labelPair::Hash<> >::const_iterator fnd =
+        HashTable<label, labelPair, labelPair::Hash<>>::const_iterator fnd =
             cellsToCoarseFace.find(cellPair);
 
         if (fnd == cellsToCoarseFace.end())
@@ -213,7 +213,7 @@ Foam::tmp<Foam::labelField> Foam::processorGAMGInterface::internalFieldTransfer
     label oldWarn = UPstream::warnComm;
     UPstream::warnComm = comm();
 
-    tmp<Field<label> > tfld(receive<label>(commsType, this->size()));
+    tmp<Field<label>> tfld(receive<label>(commsType, this->size()));
 
     UPstream::warnComm = oldWarn;
 

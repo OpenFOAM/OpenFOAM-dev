@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ namespace Foam
     bool addFieldsToList
     (
         const fvMesh& mesh,
-        PtrList<GeometricField<Type, fvPatchField, volMesh> >& list,
+        PtrList<GeometricField<Type, fvPatchField, volMesh>>& list,
         const wordList& fieldNames
     )
     {

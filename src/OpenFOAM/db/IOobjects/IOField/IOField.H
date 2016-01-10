@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ public:
         IOField(const IOobject&, const Field<Type>&);
 
         //- Construct by transferring the Field contents
-        IOField(const IOobject&, const Xfer<Field<Type> >&);
+        IOField(const IOobject&, const Xfer<Field<Type>>&);
 
 
     //- Destructor

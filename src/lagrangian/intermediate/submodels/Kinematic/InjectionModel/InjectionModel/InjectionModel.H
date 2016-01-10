@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -220,7 +220,7 @@ public:
         InjectionModel(const InjectionModel<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModel<CloudType> > clone() const = 0;
+        virtual autoPtr<InjectionModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -230,14 +230,14 @@ public:
     // Selectors
 
         //- Selector with lookup from dictionary
-        static autoPtr<InjectionModel<CloudType> > New
+        static autoPtr<InjectionModel<CloudType>> New
         (
             const dictionary& dict,
             CloudType& owner
         );
 
         //- Selector with name and type
-        static autoPtr<InjectionModel<CloudType> > New
+        static autoPtr<InjectionModel<CloudType>> New
         (
             const dictionary& dict,
             const word& modelName,
@@ -374,7 +374,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);     \
                                                                               \
     Foam::InjectionModel<kinematicCloudType>::                                \
-        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType> >        \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>        \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

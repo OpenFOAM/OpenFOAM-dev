@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ public:
                 const pointField& start,
                 const pointField& end,
                 labelListList& surfaces,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //Find intersections of edge nearest to both endpoints.
@@ -237,7 +237,7 @@ public:
             bool checkIntersection
             (
                 const scalar tol,
-                const autoPtr<writer<scalar> >&,
+                const autoPtr<writer<scalar>>&,
                 const bool report
             ) const;
 
@@ -256,7 +256,7 @@ public:
             (
                 const scalar maxRatio,
                 const scalar tolerance,
-                const autoPtr<writer<scalar> >& setWriter,
+                const autoPtr<writer<scalar>>& setWriter,
                 const scalar minQuality,
                 const bool report
             ) const;

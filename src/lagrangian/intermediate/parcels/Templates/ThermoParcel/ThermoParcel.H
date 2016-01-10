@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -167,16 +167,16 @@ public:
             // Interpolators for continuous phase fields
 
                 //- Temperature field interpolator
-                autoPtr<interpolation<scalar> > TInterp_;
+                autoPtr<interpolation<scalar>> TInterp_;
 
                 //- Specific heat capacity field interpolator
-                autoPtr<interpolation<scalar> > CpInterp_;
+                autoPtr<interpolation<scalar>> CpInterp_;
 
                 //- Thermal conductivity field interpolator
-                autoPtr<interpolation<scalar> > kappaInterp_;
+                autoPtr<interpolation<scalar>> kappaInterp_;
 
                 //- Radiation field interpolator
-                autoPtr<interpolation<scalar> > GInterp_;
+                autoPtr<interpolation<scalar>> GInterp_;
 
 
     public:
@@ -349,9 +349,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<ThermoParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<ThermoParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<ThermoParcel<ParcelType> >
+                return autoPtr<ThermoParcel<ParcelType>>
                 (
                     new ThermoParcel<ParcelType>(mesh_, is, true)
                 );

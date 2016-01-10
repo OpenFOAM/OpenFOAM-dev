@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ Foam::TimeScaleModels::equilibrium::~equilibrium()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::FieldField<Foam::Field, Foam::scalar> >
+Foam::tmp<Foam::FieldField<Foam::Field, Foam::scalar>>
 Foam::TimeScaleModels::equilibrium::oneByTau
 (
     const FieldField<Field, scalar>& alpha,

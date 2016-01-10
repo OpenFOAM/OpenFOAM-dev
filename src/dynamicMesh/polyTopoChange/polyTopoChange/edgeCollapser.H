@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -231,7 +231,7 @@ private:
         //- Renumber f with new vertices. Removes consecutive duplicates
         void filterFace
         (
-            const Map<DynamicList<label> >& collapseStrings,
+            const Map<DynamicList<label>>& collapseStrings,
             const List<pointEdgeCollapse>& allPointInfo,
             face& f
         ) const;

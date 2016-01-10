@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,46 +151,46 @@ public:
 
         //- Reconstruct volume internal field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> >
+        tmp<DimensionedField<Type, volMesh>>
         reconstructFvVolumeInternalField
         (
             const IOobject& fieldIoObject,
-            const PtrList<DimensionedField<Type, volMesh> >& procFields
+            const PtrList<DimensionedField<Type, volMesh>>& procFields
         ) const;
 
         //- Read and reconstruct volume internal field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> >
+        tmp<DimensionedField<Type, volMesh>>
         reconstructFvVolumeInternalField(const IOobject& fieldIoObject) const;
 
 
         //- Reconstruct volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         reconstructFvVolumeField
         (
             const IOobject& fieldIoObject,
-            const PtrList<GeometricField<Type, fvPatchField, volMesh> >&
+            const PtrList<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 
         //- Read and reconstruct volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         reconstructFvVolumeField(const IOobject& fieldIoObject) const;
 
 
         //- Reconstruct surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         reconstructFvSurfaceField
         (
             const IOobject& fieldIoObject,
-            const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
 
         //- Read and reconstruct surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         reconstructFvSurfaceField(const IOobject& fieldIoObject) const;
 
         //- Read, reconstruct and write all/selected volume internal fields

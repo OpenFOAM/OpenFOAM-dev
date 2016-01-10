@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,10 +59,10 @@ inline Foam::RectangularMatrix<Type>::RectangularMatrix(Istream& is)
 {}
 
 template<class Type>
-inline Foam::autoPtr<Foam::RectangularMatrix<Type> >
+inline Foam::autoPtr<Foam::RectangularMatrix<Type>>
 Foam::RectangularMatrix<Type>::clone() const
 {
-    return autoPtr<RectangularMatrix<Type> >
+    return autoPtr<RectangularMatrix<Type>>
     (
         new RectangularMatrix<Type>(*this)
     );

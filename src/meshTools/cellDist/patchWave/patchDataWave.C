@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ Foam::patchDataWave<TransferType>::patchDataWave
 (
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
-    const UPtrList<Field<Type> >& initialPatchValuePtrs,
+    const UPtrList<Field<Type>>& initialPatchValuePtrs,
     const bool correctWalls
 )
 :

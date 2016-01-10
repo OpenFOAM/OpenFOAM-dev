@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
     const wordList& stateLabels = compModel.stateLabels();
 
     // Set storage for each Y... for each parcel
-    forAllIter(typename Cloud<ReactingMultiphaseParcel<ParcelType> >, c, iter)
+    forAllIter(typename Cloud<ReactingMultiphaseParcel<ParcelType>>, c, iter)
     {
         ReactingMultiphaseParcel<ParcelType>& p = iter();
         p.YGas_.setSize(gasNames.size(), 0.0);
@@ -148,7 +148,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         label i = 0;
         forAllIter
         (
-            typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+            typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
             c,
             iter
         )
@@ -172,7 +172,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         label i = 0;
         forAllIter
         (
-            typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+            typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
             c,
             iter
         )
@@ -196,7 +196,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         label i = 0;
         forAllIter
         (
-            typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+            typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
             c,
             iter
         )
@@ -250,7 +250,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
             label i = 0;
             forAllConstIter
             (
-                typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+                typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
                 c,
                 iter
             )
@@ -279,7 +279,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
             label i = 0;
             forAllConstIter
             (
-                typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+                typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
                 c,
                 iter
             )
@@ -308,7 +308,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
             label i = 0;
             forAllConstIter
             (
-                typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+                typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
                 c,
                 iter
             )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ Foam::transformFvPatchField<Type>::transformFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::transformFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
@@ -100,7 +100,7 @@ Foam::transformFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::transformFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
@@ -117,7 +117,7 @@ Foam::transformFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::transformFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -this->patch().deltaCoeffs()*snGradTransformDiag();
@@ -125,7 +125,7 @@ Foam::transformFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::transformFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return

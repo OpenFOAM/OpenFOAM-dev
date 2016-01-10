@@ -36,7 +36,7 @@ else
 
 // add information for clouds
 // multiple clouds currently require the same time index
-forAllConstIter(HashTable<HashTable<word> >, cloudFields, cloudIter)
+forAllConstIter(HashTable<HashTable<word>>, cloudFields, cloudIter)
 {
     const word& cloudName = cloudIter.key();
 
@@ -91,7 +91,7 @@ forAllConstIter(HashTable<word>, volumeFields, fieldIter)
 
 
 label cloudNo = 0;
-forAllConstIter(HashTable<HashTable<word> >, cloudFields, cloudIter)
+forAllConstIter(HashTable<HashTable<word>>, cloudFields, cloudIter)
 {
     const word& cloudName = cloudIter.key();
 
@@ -175,7 +175,7 @@ if (fieldTimesUsed.size())
 
 // TODO: allow similar/different time-steps for each cloud
 cloudNo = 0;
-forAllConstIter(HashTable<DynamicList<label> >, cloudTimesUsed, cloudIter)
+forAllConstIter(HashTable<DynamicList<label>>, cloudTimesUsed, cloudIter)
 {
     // const word& cloudName = cloudIter.key();
     const DynamicList<label>& timesUsed = cloudIter();

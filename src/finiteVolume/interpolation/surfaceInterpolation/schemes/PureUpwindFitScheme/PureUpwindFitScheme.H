@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ public:
         }
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -168,11 +168,11 @@ defineTemplateTypeNameAndDebugWithName                                        \
     (PureUpwindFitScheme##TYPE##POLYNOMIAL##STENCIL##_, #SS, 0);              \
                                                                               \
 surfaceInterpolationScheme<TYPE>::addMeshConstructorToTable                   \
-<PureUpwindFitScheme<TYPE, POLYNOMIAL, STENCIL> >                             \
+<PureUpwindFitScheme<TYPE, POLYNOMIAL, STENCIL>>                             \
     add##SS##STENCIL##TYPE##MeshConstructorToTable_;                          \
                                                                               \
 surfaceInterpolationScheme<TYPE>::addMeshFluxConstructorToTable               \
-<PureUpwindFitScheme<TYPE, POLYNOMIAL, STENCIL> >                             \
+<PureUpwindFitScheme<TYPE, POLYNOMIAL, STENCIL>>                             \
     add##SS##STENCIL##TYPE##MeshFluxConstructorToTable_;
 
 #define makePureUpwindFitSurfaceInterpolationScheme(SS, POLYNOMIAL, STENCIL)  \

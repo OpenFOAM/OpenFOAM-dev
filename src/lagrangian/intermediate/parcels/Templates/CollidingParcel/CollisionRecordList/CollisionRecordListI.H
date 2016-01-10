@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class PairType, class WallType>
-const Foam::DynamicList<Foam::PairCollisionRecord<PairType> >&
+const Foam::DynamicList<Foam::PairCollisionRecord<PairType>>&
 Foam::CollisionRecordList<PairType, WallType>::pairRecords() const
 {
     return pairRecords_;
@@ -36,7 +36,7 @@ Foam::CollisionRecordList<PairType, WallType>::pairRecords() const
 
 
 template<class PairType, class WallType>
-const Foam::DynamicList<Foam::WallCollisionRecord<WallType> >&
+const Foam::DynamicList<Foam::WallCollisionRecord<WallType>>&
 Foam::CollisionRecordList<PairType, WallType>::wallRecords() const
 {
     return wallRecords_;

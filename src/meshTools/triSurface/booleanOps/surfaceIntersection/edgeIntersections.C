@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,7 +146,7 @@ void Foam::edgeIntersections::intersectEdges
         edgeDirs[i] = n;
     }
 
-    List<List<pointIndexHit> > edgeIntersections;
+    List<List<pointIndexHit>> edgeIntersections;
     querySurf2.findLineAll
     (
         start,
@@ -457,7 +457,7 @@ bool Foam::edgeIntersections::offsetPerturb
 // Construct null
 Foam::edgeIntersections::edgeIntersections()
 :
-    List<List<pointIndexHit> >(),
+    List<List<pointIndexHit>>(),
     classification_()
 {}
 
@@ -470,7 +470,7 @@ Foam::edgeIntersections::edgeIntersections
     const scalarField& surf1PointTol
 )
 :
-    List<List<pointIndexHit> >(surf1.nEdges()),
+    List<List<pointIndexHit>>(surf1.nEdges()),
     classification_(surf1.nEdges())
 {
     checkEdges(surf1);
@@ -500,11 +500,11 @@ Foam::edgeIntersections::edgeIntersections
 // Construct from components
 Foam::edgeIntersections::edgeIntersections
 (
-    const List<List<pointIndexHit> >& intersections,
+    const List<List<pointIndexHit>>& intersections,
     const labelListList& classification
 )
 :
-    List<List<pointIndexHit> >(intersections),
+    List<List<pointIndexHit>>(intersections),
     classification_(classification)
 {}
 

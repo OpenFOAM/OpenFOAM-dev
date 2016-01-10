@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,8 +154,8 @@ private:
             faceList& faces,
             labelList& owner,
             PtrList<dictionary>& patchDicts,
-            const List<DynamicList<face> >& patchFaces,
-            const List<DynamicList<label> >& patchOwners
+            const List<DynamicList<face>>& patchFaces,
+            const List<DynamicList<label>>& patchOwners
         ) const;
 
         //- Disallow default bitwise copy construct

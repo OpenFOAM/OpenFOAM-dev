@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ void Foam::PatchTools::gatherAndMerge
     // Collect points from all processors
     labelList pointSizes;
     {
-        List<Field<PointType> > gatheredPoints(Pstream::nProcs());
+        List<Field<PointType>> gatheredPoints(Pstream::nProcs());
         gatheredPoints[Pstream::myProcNo()] = p.points();
 
         Pstream::gatherList(gatheredPoints);
@@ -61,13 +61,13 @@ void Foam::PatchTools::gatherAndMerge
             pointSizes = ListListOps::subSizes
             (
                 gatheredPoints,
-                accessOp<Field<PointType> >()
+                accessOp<Field<PointType>>()
             );
 
-            mergedPoints = ListListOps::combine<Field<PointType> >
+            mergedPoints = ListListOps::combine<Field<PointType>>
             (
                 gatheredPoints,
-                accessOp<Field<PointType> >()
+                accessOp<Field<PointType>>()
             );
         }
     }
@@ -75,7 +75,7 @@ void Foam::PatchTools::gatherAndMerge
     // Collect faces from all processors and renumber using sizes of
     // gathered points
     {
-        List<List<Face> > gatheredFaces(Pstream::nProcs());
+        List<List<Face>> gatheredFaces(Pstream::nProcs());
         gatheredFaces[Pstream::myProcNo()] = p;
         Pstream::gatherList(gatheredFaces);
 
@@ -83,11 +83,11 @@ void Foam::PatchTools::gatherAndMerge
         {
             mergedFaces = static_cast<const List<Face>&>
             (
-                ListListOps::combineOffset<List<Face> >
+                ListListOps::combineOffset<List<Face>>
                 (
                     gatheredFaces,
                     pointSizes,
-                    accessOp<List<Face> >(),
+                    accessOp<List<Face>>(),
                     offsetOp<Face>()
                 )
             );

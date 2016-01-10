@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<MPPICCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<MPPICCloud<CloudType>> cloudCopyPtr_;
 
 
     // Private Member Functions
@@ -106,14 +106,14 @@ protected:
         // References to the cloud sub-models
 
             //- Packing model
-            autoPtr<PackingModel<MPPICCloud<CloudType> > > packingModel_;
+            autoPtr<PackingModel<MPPICCloud<CloudType>>> packingModel_;
 
             //- Damping model
-            autoPtr<DampingModel<MPPICCloud<CloudType> > >
+            autoPtr<DampingModel<MPPICCloud<CloudType>>>
                 dampingModel_;
 
             //- Exchange model
-            autoPtr<IsotropyModel<MPPICCloud<CloudType> > >
+            autoPtr<IsotropyModel<MPPICCloud<CloudType>>>
                 isotropyModel_;
 
 
@@ -154,18 +154,18 @@ public:
         );
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new MPPICCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new MPPICCloud(this->mesh(), name, *this)
             );
@@ -184,25 +184,25 @@ public:
             inline const MPPICCloud& cloudCopy() const;
 
             //- Return const access to the packing model
-            inline const PackingModel<MPPICCloud<CloudType> >&
+            inline const PackingModel<MPPICCloud<CloudType>>&
                 packingModel() const;
 
             //- Return a reference to the packing model
-            inline PackingModel<MPPICCloud<CloudType> >& packingModel();
+            inline PackingModel<MPPICCloud<CloudType>>& packingModel();
 
             //- Return condt access to the damping model
-            inline const DampingModel<MPPICCloud<CloudType> >&
+            inline const DampingModel<MPPICCloud<CloudType>>&
                 dampingModel() const;
 
             //- Return a reference to the damping model
-            inline DampingModel<MPPICCloud<CloudType> >& dampingModel();
+            inline DampingModel<MPPICCloud<CloudType>>& dampingModel();
 
             //- Return condt access to the isotropy model
-            inline const IsotropyModel<MPPICCloud<CloudType> >&
+            inline const IsotropyModel<MPPICCloud<CloudType>>&
                 isotropyModel() const;
 
             //- Return a reference to the isotropy model
-            inline IsotropyModel<MPPICCloud<CloudType> >& isotropyModel();
+            inline IsotropyModel<MPPICCloud<CloudType>>& isotropyModel();
 
 
         // Cloud evolution functions

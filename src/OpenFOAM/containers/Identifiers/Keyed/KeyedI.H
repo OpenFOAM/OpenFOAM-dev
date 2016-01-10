@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,10 +75,10 @@ inline Foam::label& Foam::Keyed<T>::key()
 
 
 template<class T>
-inline Foam::List<Foam::Keyed<T> >
+inline Foam::List<Foam::Keyed<T>>
 Foam::Keyed<T>::createList(const List<T>& lst, const label key)
 {
-    List<Keyed<T> > newList(lst.size());
+    List<Keyed<T>> newList(lst.size());
 
     forAll(lst, elemI)
     {
@@ -89,7 +89,7 @@ Foam::Keyed<T>::createList(const List<T>& lst, const label key)
 
 
 template<class T>
-inline Foam::List<Foam::Keyed<T> >
+inline Foam::List<Foam::Keyed<T>>
 Foam::Keyed<T>::createList(const List<T>& lst, const labelUList& keys)
 {
     if (lst.size() != keys.size())
@@ -101,7 +101,7 @@ Foam::Keyed<T>::createList(const List<T>& lst, const labelUList& keys)
             << abort(FatalError);
     }
 
-    List<Keyed<T> > newList(lst.size());
+    List<Keyed<T>> newList(lst.size());
 
     forAll(lst, elemI)
     {

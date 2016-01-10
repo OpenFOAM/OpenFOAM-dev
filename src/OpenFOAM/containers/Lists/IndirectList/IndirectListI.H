@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ inline Foam::IndirectListAddressing::IndirectListAddressing
 
 inline Foam::IndirectListAddressing::IndirectListAddressing
 (
-    const Xfer<List<label> >& addr
+    const Xfer<List<label>>& addr
 )
 :
     addressing_(addr)
@@ -64,7 +64,7 @@ template<class T>
 inline Foam::IndirectList<T>::IndirectList
 (
     const UList<T>& completeList,
-    const Xfer<List<label> >& addr
+    const Xfer<List<label>>& addr
 )
 :
     IndirectListAddressing(addr),
@@ -126,7 +126,7 @@ inline void Foam::IndirectListAddressing::resetAddressing
 
 inline void Foam::IndirectListAddressing::resetAddressing
 (
-    const Xfer<List<label> >& addr
+    const Xfer<List<label>>& addr
 )
 {
     addressing_.transfer(addr());

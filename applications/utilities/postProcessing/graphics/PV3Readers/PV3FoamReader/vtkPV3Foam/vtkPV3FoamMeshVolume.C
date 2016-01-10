@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -325,7 +325,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             // but avoids crashes when there is no vtkPolyhedron support
 
             // establish unique node ids used
-            HashSet<vtkIdType, Hash<label> > hashUniqId(2*256);
+            HashSet<vtkIdType, Hash<label>> hashUniqId(2*256);
 
             forAll(cFaces, cFaceI)
             {

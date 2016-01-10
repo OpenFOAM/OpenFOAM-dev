@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,14 +125,14 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 GeometricField<Type, fvPatchField, volMesh>& field
             );
 
             //- Return source for equation with specified name
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
@@ -140,7 +140,7 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& rho,
                 GeometricField<Type, fvPatchField, volMesh>& field
@@ -148,7 +148,7 @@ public:
 
             //- Return source for equation with specified name
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& rho,
                 GeometricField<Type, fvPatchField, volMesh>& field,
@@ -157,7 +157,7 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
@@ -166,7 +166,7 @@ public:
 
             //- Return source for equation with specified name
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
@@ -176,7 +176,7 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& alpha,
                 const geometricOneField& rho,
@@ -185,7 +185,7 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const geometricOneField& alpha,
                 const volScalarField& rho,
@@ -194,7 +194,7 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const geometricOneField& alpha,
                 const geometricOneField& rho,

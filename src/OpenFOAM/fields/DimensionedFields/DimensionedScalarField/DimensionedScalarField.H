@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,16 +49,16 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh> > stabilise
+tmp<DimensionedField<scalar, GeoMesh>> stabilise
 (
     const DimensionedField<scalar, GeoMesh>&,
     const dimensioned<scalar>&
 );
 
 template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh> > stabilise
+tmp<DimensionedField<scalar, GeoMesh>> stabilise
 (
-    const tmp<DimensionedField<scalar, GeoMesh> >&,
+    const tmp<DimensionedField<scalar, GeoMesh>>&,
     const dimensioned<scalar>&
 );
 
@@ -124,17 +124,17 @@ UNARY_FUNCTION(scalar, scalar, y1, trans)
 #define BesselFunc(func)                                                       \
                                                                                \
 template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh> > func                                   \
+tmp<DimensionedField<scalar, GeoMesh>> func                                   \
 (                                                                              \
     const int n,                                                               \
     const DimensionedField<scalar, GeoMesh>&                                   \
 );                                                                             \
                                                                                \
 template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh> > func                                   \
+tmp<DimensionedField<scalar, GeoMesh>> func                                   \
 (                                                                              \
     const int n,                                                               \
-    const tmp<DimensionedField<scalar, GeoMesh> >&                             \
+    const tmp<DimensionedField<scalar, GeoMesh>>&                             \
 );
 
 BesselFunc(jn)

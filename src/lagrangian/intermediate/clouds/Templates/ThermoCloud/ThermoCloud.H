@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<ThermoCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<ThermoCloud<CloudType>> cloudCopyPtr_;
 
 
     // Private member functions
@@ -117,7 +117,7 @@ protected:
         // References to the cloud sub-models
 
             //- Heat transfer model
-            autoPtr<HeatTransferModel<ThermoCloud<CloudType> > >
+            autoPtr<HeatTransferModel<ThermoCloud<CloudType>>>
                 heatTransferModel_;
 
 
@@ -133,22 +133,22 @@ protected:
             Switch radiation_;
 
             //- Radiation sum of parcel projected areas
-            autoPtr<DimensionedField<scalar, volMesh> > radAreaP_;
+            autoPtr<DimensionedField<scalar, volMesh>> radAreaP_;
 
             //- Radiation sum of parcel temperature^4
-            autoPtr<DimensionedField<scalar, volMesh> > radT4_;
+            autoPtr<DimensionedField<scalar, volMesh>> radT4_;
 
             //- Radiation sum of parcel projected areas * temperature^4
-            autoPtr<DimensionedField<scalar, volMesh> > radAreaPT4_;
+            autoPtr<DimensionedField<scalar, volMesh>> radAreaPT4_;
 
 
         // Sources
 
             //- Sensible enthalpy transfer [J/kg]
-            autoPtr<DimensionedField<scalar, volMesh> > hsTrans_;
+            autoPtr<DimensionedField<scalar, volMesh>> hsTrans_;
 
             //- Coefficient for carrier phase hs equation [W/K]
-            autoPtr<DimensionedField<scalar, volMesh> > hsCoeff_;
+            autoPtr<DimensionedField<scalar, volMesh>> hsCoeff_;
 
 
     // Protected Member Functions
@@ -192,18 +192,18 @@ public:
         );
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new ThermoCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new ThermoCloud(this->mesh(), name, *this)
             );
@@ -241,7 +241,7 @@ public:
             // Sub-models
 
                 //- Return reference to heat transfer model
-                inline const HeatTransferModel<ThermoCloud<CloudType> >&
+                inline const HeatTransferModel<ThermoCloud<CloudType>>&
                     heatTransfer() const;
 
 

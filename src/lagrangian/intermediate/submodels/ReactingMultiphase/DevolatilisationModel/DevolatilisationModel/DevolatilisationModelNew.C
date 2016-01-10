@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::autoPtr<Foam::DevolatilisationModel<CloudType> >
+Foam::autoPtr<Foam::DevolatilisationModel<CloudType>>
 Foam::DevolatilisationModel<CloudType>::New
 (
     const dictionary& dict,
@@ -52,7 +52,7 @@ Foam::DevolatilisationModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<DevolatilisationModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<DevolatilisationModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

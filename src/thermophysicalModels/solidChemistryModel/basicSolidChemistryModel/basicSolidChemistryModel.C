@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::basicSolidChemistryModel::RR(const label i)
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::basicSolidChemistryModel::calculateRR
 (
     const label reactionI,
@@ -86,7 +86,7 @@ Foam::basicSolidChemistryModel::calculateRR
 {
     NotImplemented;
 
-    return dynamic_cast<tmp<DimensionedField<scalar, volMesh> >&>
+    return dynamic_cast<tmp<DimensionedField<scalar, volMesh>>&>
     (
         const_cast<DimensionedField<scalar, volMesh>& >
         (

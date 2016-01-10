@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ public:
         SurfaceReactionModel(const SurfaceReactionModel<CloudType>& srm);
 
         //- Construct and return a clone
-        virtual autoPtr<SurfaceReactionModel<CloudType> > clone() const = 0;
+        virtual autoPtr<SurfaceReactionModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -109,7 +109,7 @@ public:
 
 
     //- Selector
-    static autoPtr<SurfaceReactionModel<CloudType> > New
+    static autoPtr<SurfaceReactionModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& cloud
@@ -186,7 +186,7 @@ public:
                                                                               \
     Foam::SurfaceReactionModel<reactingMultiphaseCloudType>::                 \
         adddictionaryConstructorToTable                                       \
-        <Foam::SS<reactingMultiphaseCloudType> >                              \
+        <Foam::SS<reactingMultiphaseCloudType>>                              \
         add##SS##CloudType##reactingMultiphaseCloudType##ConstructorToTable_;
 
 

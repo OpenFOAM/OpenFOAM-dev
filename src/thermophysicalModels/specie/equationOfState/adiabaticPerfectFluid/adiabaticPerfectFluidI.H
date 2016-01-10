@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,10 +63,10 @@ inline Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::adiabaticPerfectFluid<Specie> >
+inline Foam::autoPtr<Foam::adiabaticPerfectFluid<Specie>>
 Foam::adiabaticPerfectFluid<Specie>::clone() const
 {
-    return autoPtr<adiabaticPerfectFluid<Specie> >
+    return autoPtr<adiabaticPerfectFluid<Specie>>
     (
         new adiabaticPerfectFluid<Specie>(*this)
     );
@@ -74,10 +74,10 @@ Foam::adiabaticPerfectFluid<Specie>::clone() const
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::adiabaticPerfectFluid<Specie> >
+inline Foam::autoPtr<Foam::adiabaticPerfectFluid<Specie>>
 Foam::adiabaticPerfectFluid<Specie>::New(Istream& is)
 {
-    return autoPtr<adiabaticPerfectFluid<Specie> >
+    return autoPtr<adiabaticPerfectFluid<Specie>>
     (
         new adiabaticPerfectFluid<Specie>(is)
     );
@@ -85,13 +85,13 @@ Foam::adiabaticPerfectFluid<Specie>::New(Istream& is)
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::adiabaticPerfectFluid<Specie> >
+inline Foam::autoPtr<Foam::adiabaticPerfectFluid<Specie>>
 Foam::adiabaticPerfectFluid<Specie>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<adiabaticPerfectFluid<Specie> >
+    return autoPtr<adiabaticPerfectFluid<Specie>>
     (
         new adiabaticPerfectFluid<Specie>(dict)
     );

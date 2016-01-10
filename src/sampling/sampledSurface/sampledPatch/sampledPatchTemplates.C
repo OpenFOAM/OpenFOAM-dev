@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,14 +28,14 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::sampledPatch::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
     // One value per face
-    tmp<Field<Type> > tvalues(new Field<Type>(patchFaceLabels_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels_.size()));
     Field<Type>& values = tvalues();
     forAll(patchFaceLabels_, i)
     {
@@ -49,14 +49,14 @@ Foam::sampledPatch::sampleField
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::sampledPatch::sampleField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
 ) const
 {
     // One value per face
-    tmp<Field<Type> > tvalues(new Field<Type>(patchFaceLabels_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels_.size()));
     Field<Type>& values = tvalues();
 
     forAll(patchFaceLabels_, i)
@@ -70,14 +70,14 @@ Foam::sampledPatch::sampleField
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::sampledPatch::interpolateField
 (
     const interpolation<Type>& interpolator
 ) const
 {
     // One value per vertex
-    tmp<Field<Type> > tvalues(new Field<Type>(points().size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
     Field<Type>& values = tvalues();
 
     const labelList& own = mesh().faceOwner();

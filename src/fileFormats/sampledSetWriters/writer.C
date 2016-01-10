@@ -49,7 +49,7 @@ Foam::autoPtr<Foam::writer<Type>> Foam::writer<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<writer<Type> >(cstrIter()());
+    return autoPtr<writer<Type>>(cstrIter()());
 }
 
 
@@ -155,7 +155,7 @@ void Foam::writer<Type>::write
 (
     const coordSet& points,
     const wordList& valueSetNames,
-    const List<Field<Type> >& valueSets,
+    const List<Field<Type>>& valueSets,
     Ostream& os
 ) const
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Su
 (
     const GeometricField<Type, fvPatchField, volMesh>& su,
@@ -50,10 +50,10 @@ Su
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Su
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tsu,
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tsu,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -62,7 +62,7 @@ Su
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Sp
 (
     const volScalarField& sp,
@@ -73,7 +73,7 @@ Sp
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Sp
 (
     const tmp<volScalarField>& tsp,
@@ -85,7 +85,7 @@ Sp
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Sp
 (
     const dimensionedScalar& sp,
@@ -97,7 +97,7 @@ Sp
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 SuSp
 (
     const volScalarField& sp,
@@ -108,7 +108,7 @@ SuSp
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 SuSp
 (
     const tmp<volScalarField>& tsp,

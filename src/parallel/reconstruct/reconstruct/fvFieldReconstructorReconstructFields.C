@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,11 +34,11 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
 Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
 (
     const IOobject& fieldIoObject,
-    const PtrList<DimensionedField<Type, volMesh> >& procFields
+    const PtrList<DimensionedField<Type, volMesh>>& procFields
 ) const
 {
     // Create the internalField
@@ -56,7 +56,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
         );
     }
 
-    return tmp<DimensionedField<Type, volMesh> >
+    return tmp<DimensionedField<Type, volMesh>>
     (
         new DimensionedField<Type, volMesh>
         (
@@ -70,14 +70,14 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
 
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
 Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
 (
     const IOobject& fieldIoObject
 ) const
 {
     // Read the field for all the processors
-    PtrList<DimensionedField<Type, volMesh> > procFields
+    PtrList<DimensionedField<Type, volMesh>> procFields
     (
         procMeshes_.size()
     );
@@ -119,18 +119,18 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvFieldReconstructor::reconstructFvVolumeField
 (
     const IOobject& fieldIoObject,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh> >& procFields
+    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& procFields
 ) const
 {
     // Create the internalField
     Field<Type> internalField(mesh_.nCells());
 
     // Create the patch fields
-    PtrList<fvPatchField<Type> > patchFields(mesh_.boundary().size());
+    PtrList<fvPatchField<Type>> patchFields(mesh_.boundary().size());
 
     forAll(procFields, procI)
     {
@@ -282,7 +282,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
 
     // Now construct and write the field
     // setting the internalField and patchFields
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -297,14 +297,14 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvFieldReconstructor::reconstructFvVolumeField
 (
     const IOobject& fieldIoObject
 ) const
 {
     // Read the field for all the processors
-    PtrList<GeometricField<Type, fvPatchField, volMesh> > procFields
+    PtrList<GeometricField<Type, fvPatchField, volMesh>> procFields
     (
         procMeshes_.size()
     );
@@ -345,18 +345,18 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvFieldReconstructor::reconstructFvSurfaceField
 (
     const IOobject& fieldIoObject,
-    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& procFields
+    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& procFields
 ) const
 {
     // Create the internalField
     Field<Type> internalField(mesh_.nInternalFaces());
 
     // Create the patch fields
-    PtrList<fvsPatchField<Type> > patchFields(mesh_.boundary().size());
+    PtrList<fvsPatchField<Type>> patchFields(mesh_.boundary().size());
 
 
     forAll(procMeshes_, procI)
@@ -523,7 +523,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
 
     // Now construct and write the field
     // setting the internalField and patchFields
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -538,14 +538,14 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvFieldReconstructor::reconstructFvSurfaceField
 (
     const IOobject& fieldIoObject
 ) const
 {
     // Read the field for all the processors
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> > procFields
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>> procFields
     (
         procMeshes_.size()
     );

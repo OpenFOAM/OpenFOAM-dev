@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -232,7 +232,7 @@ public:
             //  Only makes sense for closed surfaces.
             volumeType getVolumeType
             (
-                const indexedOctree<treeDataPrimitivePatch<PatchType> >&,
+                const indexedOctree<treeDataPrimitivePatch<PatchType>>&,
                 const point&
             ) const;
 
@@ -254,7 +254,7 @@ public:
             //- Helper: find intersection of line with shapes
             static bool findIntersection
             (
-                const indexedOctree<treeDataPrimitivePatch<PatchType> >& tree,
+                const indexedOctree<treeDataPrimitivePatch<PatchType>>& tree,
                 const label index,
                 const point& start,
                 const point& end,

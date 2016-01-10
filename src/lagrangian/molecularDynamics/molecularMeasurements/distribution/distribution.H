@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ public:
             static void write
             (
                 const fileName& file,
-                const List<Pair<scalar> >& pairs
+                const List<Pair<scalar>>& pairs
             );
 
 
@@ -108,13 +108,13 @@ public:
 
         void insertMissingKeys();
 
-        List<Pair<scalar> > normalised();
+        List<Pair<scalar>> normalised();
 
-        List<Pair<scalar> > normalisedMinusMean();
+        List<Pair<scalar>> normalisedMinusMean();
 
-        List<Pair<scalar> > normalisedShifted(scalar shiftValue);
+        List<Pair<scalar>> normalisedShifted(scalar shiftValue);
 
-        List<Pair<scalar> > raw();
+        List<Pair<scalar>> raw();
 
 
         // Access

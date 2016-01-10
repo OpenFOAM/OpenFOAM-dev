@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,10 +197,10 @@ Foam::AveragingMethods::Moment<Type>::interpolateGrad
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::AveragingMethods::Moment<Type>::internalField() const
 {
-    return tmp<Field<Type> >(data_);
+    return tmp<Field<Type>>(data_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,8 @@ void Foam::mapNearestMethod::calculateAddressing
     label& startSeedI
 )
 {
-    List<DynamicList<label> > srcToTgt(src_.nCells());
-    List<DynamicList<label> > tgtToSrc(tgt_.nCells());
+    List<DynamicList<label>> srcToTgt(src_.nCells());
+    List<DynamicList<label>> tgtToSrc(tgt_.nCells());
 
     const scalarField& srcVc = src_.cellVolumes();
     const scalarField& tgtVc = tgt_.cellVolumes();
@@ -284,7 +284,7 @@ void Foam::mapNearestMethod::setNextNearestCells
 Foam::label Foam::mapNearestMethod::findMappedSrcCell
 (
     const label tgtCellI,
-    const List<DynamicList<label> >& tgtToSrc
+    const List<DynamicList<label>>& tgtToSrc
 ) const
 {
     DynamicList<label> testCells(10);

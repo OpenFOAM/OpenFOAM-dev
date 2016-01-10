@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ void Foam::mixedFixedValueSlipFvPatchField<Type>::rmap
     transformFvPatchField<Type>::rmap(ptf, addr);
 
     const mixedFixedValueSlipFvPatchField<Type>& dmptf =
-        refCast<const mixedFixedValueSlipFvPatchField<Type> >(ptf);
+        refCast<const mixedFixedValueSlipFvPatchField<Type>>(ptf);
 
     refValue_.rmap(dmptf.refValue_, addr);
     valueFraction_.rmap(dmptf.valueFraction_, addr);
@@ -127,7 +127,7 @@ void Foam::mixedFixedValueSlipFvPatchField<Type>::rmap
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::mixedFixedValueSlipFvPatchField<Type>::snGrad() const
 {
     tmp<vectorField> nHat = this->patch().nf();
@@ -167,7 +167,7 @@ void Foam::mixedFixedValueSlipFvPatchField<Type>::evaluate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 {
     vectorField nHat(this->patch().nf());

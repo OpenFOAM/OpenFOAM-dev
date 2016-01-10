@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::RASModels::phasePressureModel::phasePressureModel
 :
     eddyViscosity
     <
-        RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel> >
+        RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
     >
     (
         type,
@@ -90,7 +90,7 @@ bool Foam::RASModels::phasePressureModel::read()
     (
         eddyViscosity
         <
-            RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel> >
+            RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
         >::read()
     )
     {

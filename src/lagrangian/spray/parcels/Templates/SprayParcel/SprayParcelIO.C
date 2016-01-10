@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,7 +171,7 @@ void Foam::SprayParcel<ParcelType>::readFields
     c.checkFieldIOobject(c, user);
 
     label i = 0;
-    forAllIter(typename Cloud<SprayParcel<ParcelType> >, c, iter)
+    forAllIter(typename Cloud<SprayParcel<ParcelType>>, c, iter)
     {
         SprayParcel<ParcelType>& p = iter();
         p.d0_ = d0[i];
@@ -239,7 +239,7 @@ void Foam::SprayParcel<ParcelType>::writeFields
     IOField<scalar> user(c.fieldIOobject("user", IOobject::NO_READ), np);
 
     label i = 0;
-    forAllConstIter(typename Cloud<SprayParcel<ParcelType> >, c, iter)
+    forAllConstIter(typename Cloud<SprayParcel<ParcelType>>, c, iter)
     {
         const SprayParcel<ParcelType>& p = iter();
         d0[i] = p.d0_;

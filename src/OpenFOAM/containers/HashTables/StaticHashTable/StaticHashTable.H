@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,10 +111,10 @@ class StaticHashTable
     // Private data type for table entries
 
         //- The lookup keys, ordered per hash value
-        List<List<Key> > keys_;
+        List<List<Key>> keys_;
 
         //- For each key the corresponding object.
-        List<List<T> > objects_;
+        List<List<T>> objects_;
 
         //- The current number of elements in table
         label nElmts_;
@@ -178,7 +178,7 @@ public:
         StaticHashTable(const StaticHashTable<T, Key, Hash>&);
 
         //- Construct by transferring the parameter contents
-        StaticHashTable(const Xfer<StaticHashTable<T, Key, Hash> >&);
+        StaticHashTable(const Xfer<StaticHashTable<T, Key, Hash>>&);
 
 
     //- Destructor
@@ -246,7 +246,7 @@ public:
             void transfer(StaticHashTable<T, Key, Hash>&);
 
             //- Transfer contents to the Xfer container
-            inline Xfer<StaticHashTable<T, Key, Hash> > xfer();
+            inline Xfer<StaticHashTable<T, Key, Hash>> xfer();
 
 
     // Member Operators

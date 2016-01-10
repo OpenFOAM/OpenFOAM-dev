@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,10 +84,10 @@ inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix(Istream& is)
 
 
 template<class Type>
-inline Foam::autoPtr<Foam::SymmetricSquareMatrix<Type> >
+inline Foam::autoPtr<Foam::SymmetricSquareMatrix<Type>>
 Foam::SymmetricSquareMatrix<Type>::clone() const
 {
-    return autoPtr<SymmetricSquareMatrix<Type> >
+    return autoPtr<SymmetricSquareMatrix<Type>>
     (
         new SymmetricSquareMatrix<Type>(*this)
     );

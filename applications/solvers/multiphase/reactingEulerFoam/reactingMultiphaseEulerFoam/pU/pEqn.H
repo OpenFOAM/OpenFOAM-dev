@@ -37,7 +37,7 @@ forAll(phases, phasei)
 // Lift, wall-lubrication and turbulent diffusion fluxes
 PtrList<surfaceScalarField> phiFs(phases.size());
 {
-    autoPtr<PtrList<volVectorField> > Fs = fluid.Fs();
+    autoPtr<PtrList<volVectorField>> Fs = fluid.Fs();
 
     forAll(phases, phasei)
     {
@@ -58,7 +58,7 @@ PtrList<surfaceScalarField> phiFs(phases.size());
     }
 }
 {
-    autoPtr<PtrList<surfaceScalarField> > phiDs = fluid.phiDs(rAUs);
+    autoPtr<PtrList<surfaceScalarField>> phiDs = fluid.phiDs(rAUs);
 
     forAll(phases, phasei)
     {

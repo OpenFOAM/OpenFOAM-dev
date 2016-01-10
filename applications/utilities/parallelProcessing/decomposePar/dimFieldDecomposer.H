@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ public:
 
         //- Decompose field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> > decomposeField
+        tmp<DimensionedField<Type, volMesh>> decomposeField
         (
             const DimensionedField<Type, volMesh>& field
         ) const;

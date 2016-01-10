@@ -460,16 +460,16 @@ int main(int argc, char *argv[])
 
             // Construct the dimensioned fields
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            PtrList<DimensionedField<scalar, volMesh> > dimScalarFields;
+            PtrList<DimensionedField<scalar, volMesh>> dimScalarFields;
             readFields(mesh, objects, dimScalarFields);
-            PtrList<DimensionedField<vector, volMesh> > dimVectorFields;
+            PtrList<DimensionedField<vector, volMesh>> dimVectorFields;
             readFields(mesh, objects, dimVectorFields);
-            PtrList<DimensionedField<sphericalTensor, volMesh> >
+            PtrList<DimensionedField<sphericalTensor, volMesh>>
                 dimSphericalTensorFields;
             readFields(mesh, objects, dimSphericalTensorFields);
-            PtrList<DimensionedField<symmTensor, volMesh> > dimSymmTensorFields;
+            PtrList<DimensionedField<symmTensor, volMesh>> dimSymmTensorFields;
             readFields(mesh, objects, dimSymmTensorFields);
-            PtrList<DimensionedField<tensor, volMesh> > dimTensorFields;
+            PtrList<DimensionedField<tensor, volMesh>> dimTensorFields;
             readFields(mesh, objects, dimTensorFields);
 
 
@@ -512,64 +512,64 @@ int main(int argc, char *argv[])
             );
 
             // Particles
-            PtrList<Cloud<indexedParticle> > lagrangianPositions
+            PtrList<Cloud<indexedParticle>> lagrangianPositions
             (
                 cloudDirs.size()
             );
             // Particles per cell
-            PtrList<List<SLList<indexedParticle*>*> > cellParticles
+            PtrList<List<SLList<indexedParticle*>*>> cellParticles
             (
                 cloudDirs.size()
             );
 
-            PtrList<PtrList<labelIOField> > lagrangianLabelFields
+            PtrList<PtrList<labelIOField>> lagrangianLabelFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<labelFieldCompactIOField> >
+            PtrList<PtrList<labelFieldCompactIOField>>
             lagrangianLabelFieldFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<scalarIOField> > lagrangianScalarFields
+            PtrList<PtrList<scalarIOField>> lagrangianScalarFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<scalarFieldCompactIOField> >
+            PtrList<PtrList<scalarFieldCompactIOField>>
             lagrangianScalarFieldFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<vectorIOField> > lagrangianVectorFields
+            PtrList<PtrList<vectorIOField>> lagrangianVectorFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<vectorFieldCompactIOField> >
+            PtrList<PtrList<vectorFieldCompactIOField>>
             lagrangianVectorFieldFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<sphericalTensorIOField> >
+            PtrList<PtrList<sphericalTensorIOField>>
             lagrangianSphericalTensorFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<sphericalTensorFieldCompactIOField> >
+            PtrList<PtrList<sphericalTensorFieldCompactIOField>>
                 lagrangianSphericalTensorFieldFields(cloudDirs.size());
-            PtrList<PtrList<symmTensorIOField> > lagrangianSymmTensorFields
+            PtrList<PtrList<symmTensorIOField>> lagrangianSymmTensorFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<symmTensorFieldCompactIOField> >
+            PtrList<PtrList<symmTensorFieldCompactIOField>>
             lagrangianSymmTensorFieldFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<tensorIOField> > lagrangianTensorFields
+            PtrList<PtrList<tensorIOField>> lagrangianTensorFields
             (
                 cloudDirs.size()
             );
-            PtrList<PtrList<tensorFieldCompactIOField> >
+            PtrList<PtrList<tensorFieldCompactIOField>>
             lagrangianTensorFieldFields
             (
                 cloudDirs.size()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,7 @@ class globalMeshData
             //      edges : meshEdges(), meshEdgeMap()
             mutable autoPtr<indirectPrimitivePatch> coupledPatchPtr_;
             mutable autoPtr<labelList> coupledPatchMeshEdgesPtr_;
-            mutable autoPtr<Map<label> > coupledPatchMeshEdgeMapPtr_;
+            mutable autoPtr<Map<label>> coupledPatchMeshEdgeMapPtr_;
 
             //- Global numbering for coupledPatch points
             mutable autoPtr<globalIndex> globalPointNumberingPtr_;

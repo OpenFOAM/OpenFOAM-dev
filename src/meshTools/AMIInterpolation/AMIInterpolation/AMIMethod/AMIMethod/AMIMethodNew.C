@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class SourcePatch, class TargetPatch>
-Foam::autoPtr<Foam::AMIMethod<SourcePatch, TargetPatch> >
+Foam::autoPtr<Foam::AMIMethod<SourcePatch, TargetPatch>>
 Foam::AMIMethod<SourcePatch, TargetPatch>::New
 (
     const word& methodName,
@@ -56,7 +56,7 @@ Foam::AMIMethod<SourcePatch, TargetPatch>::New
             << componentsConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<AMIMethod<SourcePatch, TargetPatch> >
+    return autoPtr<AMIMethod<SourcePatch, TargetPatch>>
     (
         cstrIter()
         (

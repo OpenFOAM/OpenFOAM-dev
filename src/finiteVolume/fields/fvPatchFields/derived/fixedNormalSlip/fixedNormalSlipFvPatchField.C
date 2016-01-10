@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,14 +116,14 @@ void Foam::fixedNormalSlipFvPatchField<Type>::rmap
     transformFvPatchField<Type>::rmap(ptf, addr);
 
     const fixedNormalSlipFvPatchField<Type>& dmptf =
-        refCast<const fixedNormalSlipFvPatchField<Type> >(ptf);
+        refCast<const fixedNormalSlipFvPatchField<Type>>(ptf);
 
     fixedValue_.rmap(dmptf.fixedValue_, addr);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::fixedNormalSlipFvPatchField<Type>::snGrad() const
 {
     const vectorField nHat(this->patch().nf());
@@ -160,7 +160,7 @@ void Foam::fixedNormalSlipFvPatchField<Type>::evaluate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::fixedNormalSlipFvPatchField<Type>::snGradTransformDiag() const
 {
     const vectorField nHat(this->patch().nf());

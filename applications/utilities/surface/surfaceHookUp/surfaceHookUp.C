@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ void greenRefine
 void createBoundaryEdgeTrees
 (
     const PtrList<triSurfaceMesh>& surfs,
-    PtrList<indexedOctree<treeDataEdge> >& bEdgeTrees,
+    PtrList<indexedOctree<treeDataEdge>>& bEdgeTrees,
     labelListList& treeBoundaryEdges
 )
 {
@@ -325,11 +325,11 @@ int main(int argc, char *argv[])
         Info<< decrIndent;
     }
 
-    PtrList<indexedOctree<treeDataEdge> > bEdgeTrees(surfs.size());
+    PtrList<indexedOctree<treeDataEdge>> bEdgeTrees(surfs.size());
     labelListList treeBoundaryEdges(surfs.size());
 
-    List<DynamicList<labelledTri> > newFaces(surfs.size());
-    List<DynamicList<point> > newPoints(surfs.size());
+    List<DynamicList<labelledTri>> newFaces(surfs.size());
+    List<DynamicList<point>> newPoints(surfs.size());
     List<PackedBoolList> visitedFace(surfs.size());
 
     PtrList<triSurfaceMesh> newSurfaces(surfs.size());

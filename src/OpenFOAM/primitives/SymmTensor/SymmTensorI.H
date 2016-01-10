@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -536,7 +536,7 @@ public:
 };
 
 template<class Cmpt>
-class outerProduct<Cmpt, SymmTensor<Cmpt> >
+class outerProduct<Cmpt, SymmTensor<Cmpt>>
 {
 public:
 
@@ -544,7 +544,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<SymmTensor<Cmpt>, SymmTensor<Cmpt> >
+class innerProduct<SymmTensor<Cmpt>, SymmTensor<Cmpt>>
 {
 public:
 
@@ -552,7 +552,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<SymmTensor<Cmpt>, Vector<Cmpt> >
+class innerProduct<SymmTensor<Cmpt>, Vector<Cmpt>>
 {
 public:
 
@@ -560,7 +560,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<Vector<Cmpt>, SymmTensor<Cmpt> >
+class innerProduct<Vector<Cmpt>, SymmTensor<Cmpt>>
 {
 public:
 
@@ -569,7 +569,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfSum<SphericalTensor<Cmpt>, SymmTensor<Cmpt> >
+class typeOfSum<SphericalTensor<Cmpt>, SymmTensor<Cmpt>>
 {
 public:
 
@@ -577,7 +577,7 @@ public:
 };
 
 template<class Cmpt>
-class typeOfSum<SymmTensor<Cmpt>, SphericalTensor<Cmpt> >
+class typeOfSum<SymmTensor<Cmpt>, SphericalTensor<Cmpt>>
 {
 public:
 
@@ -585,7 +585,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<SphericalTensor<Cmpt>, SymmTensor<Cmpt> >
+class innerProduct<SphericalTensor<Cmpt>, SymmTensor<Cmpt>>
 {
 public:
 
@@ -593,7 +593,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<SymmTensor<Cmpt>, SphericalTensor<Cmpt> >
+class innerProduct<SymmTensor<Cmpt>, SphericalTensor<Cmpt>>
 {
 public:
 

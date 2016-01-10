@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,7 +145,7 @@ Foam::List<Foam::labelPair> Foam::mapDistribute::schedule
     List<labelPair> allComms;
 
     {
-        HashSet<labelPair, labelPair::Hash<> > commsSet(Pstream::nProcs());
+        HashSet<labelPair, labelPair::Hash<>> commsSet(Pstream::nProcs());
 
         // Find what communication is required
         forAll(subMap, procI)
@@ -365,7 +365,7 @@ void Foam::mapDistribute::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
     const labelList& elements,
-    List<Map<label> >& compactMap
+    List<Map<label>>& compactMap
 ) const
 {
     compactMap.setSize(Pstream::nProcs());
@@ -414,7 +414,7 @@ void Foam::mapDistribute::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
     const labelListList& cellCells,
-    List<Map<label> >& compactMap
+    List<Map<label>>& compactMap
 ) const
 {
     compactMap.setSize(Pstream::nProcs());
@@ -474,7 +474,7 @@ void Foam::mapDistribute::exchangeAddressing
     const int tag,
     const globalIndex& globalNumbering,
     labelList& elements,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     labelList& compactStart
 )
 {
@@ -554,7 +554,7 @@ void Foam::mapDistribute::exchangeAddressing
     const int tag,
     const globalIndex& globalNumbering,
     labelListList& cellCells,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     labelList& compactStart
 )
 {
@@ -754,7 +754,7 @@ Foam::mapDistribute::mapDistribute
 (
     const globalIndex& globalNumbering,
     labelList& elements,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -812,7 +812,7 @@ Foam::mapDistribute::mapDistribute
 (
     const globalIndex& globalNumbering,
     labelListList& cellCells,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -873,7 +873,7 @@ Foam::mapDistribute::mapDistribute
     const globalIndexAndTransform& globalTransforms,
     const labelPairList& transformedElements,
     labelList& transformedIndices,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -979,7 +979,7 @@ Foam::mapDistribute::mapDistribute
     const globalIndexAndTransform& globalTransforms,
     const List<labelPairList>& transformedElements,
     labelListList& transformedIndices,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -1141,7 +1141,7 @@ Foam::Xfer<Foam::mapDistribute> Foam::mapDistribute::xfer()
 Foam::label Foam::mapDistribute::renumber
 (
     const globalIndex& globalNumbering,
-    const List<Map<label> >& compactMap,
+    const List<Map<label>>& compactMap,
     const label globalI
 )
 {

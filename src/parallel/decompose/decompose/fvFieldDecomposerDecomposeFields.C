@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvFieldDecomposer::decomposeField
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
@@ -41,7 +41,7 @@ Foam::fvFieldDecomposer::decomposeField
 ) const
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type> > patchFields(boundaryAddressing_.size());
+    PtrList<fvPatchField<Type>> patchFields(boundaryAddressing_.size());
 
     forAll(boundaryAddressing_, patchi)
     {
@@ -58,7 +58,7 @@ Foam::fvFieldDecomposer::decomposeField
     }
 
     // Create the field for the processor
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tresF
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -160,7 +160,7 @@ Foam::fvFieldDecomposer::decomposeField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvFieldDecomposer::decomposeField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field
@@ -212,7 +212,7 @@ Foam::fvFieldDecomposer::decomposeField
 
 
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvsPatchField<Type> > patchFields(boundaryAddressing_.size());
+    PtrList<fvsPatchField<Type>> patchFields(boundaryAddressing_.size());
 
     forAll(boundaryAddressing_, patchi)
     {
@@ -228,7 +228,7 @@ Foam::fvFieldDecomposer::decomposeField
         );
     }
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tresF
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tresF
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (

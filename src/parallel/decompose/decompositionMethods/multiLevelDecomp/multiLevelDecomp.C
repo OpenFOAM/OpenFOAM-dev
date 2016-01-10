@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ void Foam::multiLevelDecomp::subsetGlobalCellCells
     subCellCells = UIndirectList<labelList>(cellCells, set);
 
     // Get new indices for neighbouring processors
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     mapDistribute map(globalCells, subCellCells, compactMap);
     map.distribute(oldToNew);
     labelList allDist(dist);

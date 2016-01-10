@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,34 +54,34 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
         const dimensioned<Type>,
         const fvMesh&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
         const dimensionedScalar&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
         const volScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
         const volScalarField&,
         const volScalarField&,
@@ -89,14 +89,14 @@ namespace fvc
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
         const one&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
         const GeometricField<Type, fvPatchField, volMesh>&,
         const one&

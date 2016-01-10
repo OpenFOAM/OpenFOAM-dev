@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ public:
 //class dummyTransformList
 //{
 //public:
-//    void operator()(const coupledPolyPatch&, Field<List<T> >&) const
+//    void operator()(const coupledPolyPatch&, Field<List<T>>&) const
 //    {}
 //};
 //// Dummy template specialisation. Used in synchronisation.

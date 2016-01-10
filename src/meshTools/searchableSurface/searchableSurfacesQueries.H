@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ class searchableSurfacesQueries
         //    const pointField& start,
         //    const pointField& end,
         //    const vectorField& smallVec,
-        //    List<List<pointIndexHit> >&
+        //    List<List<pointIndexHit>>&
         //);
 
         static void mergeHits
@@ -155,7 +155,7 @@ public:
                 const pointField& start,
                 const pointField& end,
                 labelListList& surfaces,
-                List<List<pointIndexHit> >& surfaceHits
+                List<List<pointIndexHit>>& surfaceHits
             );
 
             //Find intersections of edge nearest to both endpoints.

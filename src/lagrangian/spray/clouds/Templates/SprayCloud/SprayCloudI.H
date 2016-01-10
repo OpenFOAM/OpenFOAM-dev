@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::SprayCloud<CloudType>::cloudCopy() const
 
 
 template<class CloudType>
-inline const Foam::AtomizationModel<Foam::SprayCloud<CloudType> >&
+inline const Foam::AtomizationModel<Foam::SprayCloud<CloudType>>&
 Foam::SprayCloud<CloudType>::atomization() const
 {
     return atomizationModel_;
@@ -42,7 +42,7 @@ Foam::SprayCloud<CloudType>::atomization() const
 
 
 template<class CloudType>
-inline Foam::AtomizationModel<Foam::SprayCloud<CloudType> >&
+inline Foam::AtomizationModel<Foam::SprayCloud<CloudType>>&
 Foam::SprayCloud<CloudType>::atomization()
 {
     return atomizationModel_();
@@ -50,7 +50,7 @@ Foam::SprayCloud<CloudType>::atomization()
 
 
 template<class CloudType>
-inline const Foam::BreakupModel<Foam::SprayCloud<CloudType> >&
+inline const Foam::BreakupModel<Foam::SprayCloud<CloudType>>&
 Foam::SprayCloud<CloudType>::breakup() const
 {
     return breakupModel_;
@@ -58,7 +58,7 @@ Foam::SprayCloud<CloudType>::breakup() const
 
 
 template<class CloudType>
-inline Foam::BreakupModel<Foam::SprayCloud<CloudType> >&
+inline Foam::BreakupModel<Foam::SprayCloud<CloudType>>&
 Foam::SprayCloud<CloudType>::breakup()
 {
     return breakupModel_();

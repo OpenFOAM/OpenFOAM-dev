@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ void Foam::tecplotWriter::writeField(const Field<Type>& fld) const
 
 
 template<class Type>
-Foam::tmp<Field<Type> > Foam::tecplotWriter::getPatchField
+Foam::tmp<Field<Type>> Foam::tecplotWriter::getPatchField
 (
     const bool nearCellValue,
     const GeometricField<Type, fvPatchField, volMesh>& vfld,
@@ -84,7 +84,7 @@ Foam::tmp<Field<Type> > Foam::tecplotWriter::getPatchField
 
 
 template<class Type>
-Foam::tmp<Field<Type> > Foam::tecplotWriter::getFaceField
+Foam::tmp<Field<Type>> Foam::tecplotWriter::getFaceField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sfld,
     const labelList& faceLabels
@@ -92,7 +92,7 @@ Foam::tmp<Field<Type> > Foam::tecplotWriter::getFaceField
 {
     const polyBoundaryMesh& patches = sfld.mesh().boundaryMesh();
 
-    tmp<Field<Type> > tfld(new Field<Type>(faceLabels.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(faceLabels.size()));
     Field<Type>& fld = tfld();
 
     forAll(faceLabels, i)

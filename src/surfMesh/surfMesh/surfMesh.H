@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,7 +171,7 @@ public:
         surfMesh
         (
             const IOobject&,
-            const Xfer<MeshedSurface<face> >& surf,
+            const Xfer<MeshedSurface<face>>& surf,
             const word& surfName=""
         );
 
@@ -271,7 +271,7 @@ public:
         //  Storage management
 
             //- Transfer contents to the Xfer container as a MeshedSurface
-            Xfer<MeshedSurface<face> > xfer();
+            Xfer<MeshedSurface<face>> xfer();
 
             //- Clear geometry
             void clearGeom();

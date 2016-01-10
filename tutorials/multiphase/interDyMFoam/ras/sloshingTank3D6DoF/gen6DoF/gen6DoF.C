@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     // Frequency of the rotation [rad/s]
     const vector rotOmega(0.4, 0.7, 0.5);
 
-    List<Tuple2<scalar,  Vector2D<vector> > > timeValues(nTimes);
+    List<Tuple2<scalar,  Vector2D<vector>>> timeValues(nTimes);
 
     forAll(timeValues, i)
     {

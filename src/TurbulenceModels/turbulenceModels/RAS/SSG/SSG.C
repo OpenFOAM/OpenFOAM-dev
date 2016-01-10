@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ SSG<BasicTurbulenceModel>::SSG
     const word& type
 )
 :
-    ReynoldsStress<RASModel<BasicTurbulenceModel> >
+    ReynoldsStress<RASModel<BasicTurbulenceModel>>
     (
         type,
         alpha,
@@ -225,7 +225,7 @@ SSG<BasicTurbulenceModel>::SSG
 template<class BasicTurbulenceModel>
 bool SSG<BasicTurbulenceModel>::read()
 {
-    if (ReynoldsStress<RASModel<BasicTurbulenceModel> >::read())
+    if (ReynoldsStress<RASModel<BasicTurbulenceModel>>::read())
     {
         Cmu_.readIfPresent(this->coeffDict());
         C1_.readIfPresent(this->coeffDict());
@@ -294,7 +294,7 @@ void SSG<BasicTurbulenceModel>::correct()
     volSymmTensorField& R = this->R_;
     fv::options& fvOptions(fv::options::New(this->mesh_));
 
-    ReynoldsStress<RASModel<BasicTurbulenceModel> >::correct();
+    ReynoldsStress<RASModel<BasicTurbulenceModel>>::correct();
 
     tmp<volTensorField> tgradU(fvc::grad(U));
     const volTensorField& gradU = tgradU();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ Foam::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-Foam::tmp<Foam::fvsPatchField<Type> >
+Foam::tmp<Foam::fvsPatchField<Type>>
 Foam::fvsPatchField<Type>::NewCalculatedType
 (
     const fvPatch& p
@@ -113,7 +113,7 @@ Foam::fvsPatchField<Type>::NewCalculatedType
     }
     else
     {
-        return tmp<fvsPatchField<Type> >
+        return tmp<fvsPatchField<Type>>
         (
             new calculatedFvsPatchField<Type>
             (
@@ -127,7 +127,7 @@ Foam::fvsPatchField<Type>::NewCalculatedType
 
 template<class Type>
 template<class Type2>
-Foam::tmp<Foam::fvsPatchField<Type> >
+Foam::tmp<Foam::fvsPatchField<Type>>
 Foam::fvsPatchField<Type>::NewCalculatedType
 (
     const fvsPatchField<Type2>& pf

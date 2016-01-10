@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -256,14 +256,14 @@ void Foam::fvMeshAdder::MapVolFields
     HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fields
     (
         mesh.objectRegistry::lookupClass
-        <GeometricField<Type, fvPatchField, volMesh> >
+        <GeometricField<Type, fvPatchField, volMesh>>
         ()
     );
 
     HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fieldsToAdd
     (
         meshToAdd.objectRegistry::lookupClass
-        <GeometricField<Type, fvPatchField, volMesh> >
+        <GeometricField<Type, fvPatchField, volMesh>>
         ()
     );
 

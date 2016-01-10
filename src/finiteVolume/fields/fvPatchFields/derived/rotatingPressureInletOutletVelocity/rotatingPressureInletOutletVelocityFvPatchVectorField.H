@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ class rotatingPressureInletOutletVelocityFvPatchVectorField
     // Private data
 
         //- Angular velocity of the frame
-        autoPtr<DataEntry<vector> > omega_;
+        autoPtr<DataEntry<vector>> omega_;
 
 
     // Private Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,13 +36,13 @@ namespace Foam
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> > singleCellFvMesh::interpolate
+tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type> > patchFields(vf.boundaryField().size());
+    PtrList<fvPatchField<Type>> patchFields(vf.boundaryField().size());
 
     forAll(patchFields, patchI)
     {
@@ -59,7 +59,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > singleCellFvMesh::interpolate
     }
 
     // Create the complete field from the pieces
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tresF
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (

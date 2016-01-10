@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ Description
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::lduMatrix::H(const Field<Type>& psi) const
+Foam::tmp<Foam::Field<Type>> Foam::lduMatrix::H(const Field<Type>& psi) const
 {
-    tmp<Field<Type> > tHpsi
+    tmp<Field<Type>> tHpsi
     (
         new Field<Type>(lduAddr().size(), pTraits<Type>::zero)
     );
@@ -65,17 +65,17 @@ Foam::tmp<Foam::Field<Type> > Foam::lduMatrix::H(const Field<Type>& psi) const
 }
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
-Foam::lduMatrix::H(const tmp<Field<Type> >& tpsi) const
+Foam::tmp<Foam::Field<Type>>
+Foam::lduMatrix::H(const tmp<Field<Type>>& tpsi) const
 {
-    tmp<Field<Type> > tHpsi(H(tpsi()));
+    tmp<Field<Type>> tHpsi(H(tpsi()));
     tpsi.clear();
     return tHpsi;
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::lduMatrix::faceH(const Field<Type>& psi) const
 {
     if (lowerPtr_ || upperPtr_)
@@ -86,7 +86,7 @@ Foam::lduMatrix::faceH(const Field<Type>& psi) const
         const labelUList& l = lduAddr().lowerAddr();
         const labelUList& u = lduAddr().upperAddr();
 
-        tmp<Field<Type> > tfaceHpsi(new Field<Type> (Lower.size()));
+        tmp<Field<Type>> tfaceHpsi(new Field<Type> (Lower.size()));
         Field<Type> & faceHpsi = tfaceHpsi();
 
         for (label face=0; face<l.size(); face++)
@@ -105,16 +105,16 @@ Foam::lduMatrix::faceH(const Field<Type>& psi) const
                " the matrix does not have any off-diagonal coefficients."
             << exit(FatalError);
 
-        return tmp<Field<Type> >(NULL);
+        return tmp<Field<Type>>(NULL);
     }
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
-Foam::lduMatrix::faceH(const tmp<Field<Type> >& tpsi) const
+Foam::tmp<Foam::Field<Type>>
+Foam::lduMatrix::faceH(const tmp<Field<Type>>& tpsi) const
 {
-    tmp<Field<Type> > tfaceHpsi(faceH(tpsi()));
+    tmp<Field<Type>> tfaceHpsi(faceH(tpsi()));
     tpsi.clear();
     return tfaceHpsi;
 }

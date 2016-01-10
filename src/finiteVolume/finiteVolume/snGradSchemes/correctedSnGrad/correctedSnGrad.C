@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Foam::fv::correctedSnGrad<Type>::~correctedSnGrad()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fv::correctedSnGrad<Type>::fullGradCorrection
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -49,7 +49,7 @@ Foam::fv::correctedSnGrad<Type>::fullGradCorrection
     const fvMesh& mesh = this->mesh();
 
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tssf =
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf =
         mesh.nonOrthCorrectionVectors()
       & linear<typename outerProduct<vector, Type>::type>(mesh).interpolate
         (
@@ -66,7 +66,7 @@ Foam::fv::correctedSnGrad<Type>::fullGradCorrection
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fv::correctedSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -75,7 +75,7 @@ Foam::fv::correctedSnGrad<Type>::correction
     const fvMesh& mesh = this->mesh();
 
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tssf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (

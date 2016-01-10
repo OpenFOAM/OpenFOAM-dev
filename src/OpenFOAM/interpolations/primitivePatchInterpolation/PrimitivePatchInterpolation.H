@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,41 +107,41 @@ public:
 
         //- Interpolate from faces to points
         template<class Type>
-        tmp<Field<Type> > faceToPointInterpolate
+        tmp<Field<Type>> faceToPointInterpolate
         (
             const Field<Type>& ff
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > faceToPointInterpolate
+        tmp<Field<Type>> faceToPointInterpolate
         (
-            const tmp<Field<Type> >& tff
+            const tmp<Field<Type>>& tff
         ) const;
 
         //- Interpolate from points to faces
         template<class Type>
-        tmp<Field<Type> > pointToFaceInterpolate
+        tmp<Field<Type>> pointToFaceInterpolate
         (
             const Field<Type>& pf
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > pointToFaceInterpolate
+        tmp<Field<Type>> pointToFaceInterpolate
         (
-            const tmp<Field<Type> >& tpf
+            const tmp<Field<Type>>& tpf
         ) const;
 
         //- Interpolate from faces to edges
         template<class Type>
-        tmp<Field<Type> > faceToEdgeInterpolate
+        tmp<Field<Type>> faceToEdgeInterpolate
         (
             const Field<Type>& ff
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > faceToEdgeInterpolate
+        tmp<Field<Type>> faceToEdgeInterpolate
         (
-            const tmp<Field<Type> >& tff
+            const tmp<Field<Type>>& tff
         ) const;
 
         //- Do what is neccessary if the mesh has moved

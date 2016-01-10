@@ -232,7 +232,7 @@ const char* kivaPatchNames[nBCs] =
 };
 
 
-List<SLList<face> > pFaces[nBCs];
+List<SLList<face>> pFaces[nBCs];
 
 face quadFace(4);
 face triFace(3);

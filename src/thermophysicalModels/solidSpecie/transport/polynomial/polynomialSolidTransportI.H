@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,10 +66,10 @@ polynomialSolidTransport
 
 
 template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::polynomialSolidTransport<Thermo, PolySize> >
+inline Foam::autoPtr<Foam::polynomialSolidTransport<Thermo, PolySize>>
 Foam::polynomialSolidTransport<Thermo, PolySize>::clone() const
 {
-    return autoPtr<polynomialSolidTransport<Thermo, PolySize> >
+    return autoPtr<polynomialSolidTransport<Thermo, PolySize>>
     (
         new polynomialSolidTransport<Thermo, PolySize>(*this)
     );
@@ -77,10 +77,10 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::clone() const
 
 
 template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::polynomialSolidTransport<Thermo, PolySize> >
+inline Foam::autoPtr<Foam::polynomialSolidTransport<Thermo, PolySize>>
 Foam::polynomialSolidTransport<Thermo, PolySize>::New(Istream& is)
 {
-    return autoPtr<polynomialSolidTransport<Thermo, PolySize> >
+    return autoPtr<polynomialSolidTransport<Thermo, PolySize>>
     (
         new polynomialSolidTransport<Thermo, PolySize>(is)
     );
@@ -88,10 +88,10 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::New(Istream& is)
 
 
 template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::polynomialSolidTransport<Thermo, PolySize> >
+inline Foam::autoPtr<Foam::polynomialSolidTransport<Thermo, PolySize>>
 Foam::polynomialSolidTransport<Thermo, PolySize>::New(const dictionary& dict)
 {
-    return autoPtr<polynomialSolidTransport<Thermo, PolySize> >
+    return autoPtr<polynomialSolidTransport<Thermo, PolySize>>
     (
         new polynomialSolidTransport<Thermo, PolySize>(dict)
     );

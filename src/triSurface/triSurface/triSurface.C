@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -632,9 +632,9 @@ Foam::triSurface::triSurface
 
 Foam::triSurface::triSurface
 (
-    const Xfer<List<labelledTri> >& triangles,
+    const Xfer<List<labelledTri>>& triangles,
     const geometricSurfacePatchList& patches,
-    const Xfer<List<point> >& points
+    const Xfer<List<point>>& points
 )
 :
     ParentType(triangles, points),

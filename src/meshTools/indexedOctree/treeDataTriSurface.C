@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 template<>
 Foam::volumeType Foam::treeDataPrimitivePatch<Foam::triSurface>::getVolumeType
 (
-    const indexedOctree<treeDataPrimitivePatch<triSurface> >& oc,
+    const indexedOctree<treeDataPrimitivePatch<triSurface>>& oc,
     const point& sample
 ) const
 {

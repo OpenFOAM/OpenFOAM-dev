@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::FreeStream<CloudType>::FreeStream
     {
         const polyPatch& patch = cloud.mesh().boundaryMesh()[patches_[p]];
 
-        particleFluxAccumulators_[p] = List<Field<scalar> >
+        particleFluxAccumulators_[p] = List<Field<scalar>>
         (
             molecules.size(),
             Field<scalar>(patch.size(), 0.0)
@@ -128,7 +128,7 @@ void Foam::FreeStream<CloudType>::autoMap(const mapPolyMesh& mapper)
         label patchi = patches_[p];
 
         const polyPatch& patch = mesh.boundaryMesh()[patchi];
-        List<Field<scalar> >& pFA = particleFluxAccumulators_[p];
+        List<Field<scalar>>& pFA = particleFluxAccumulators_[p];
 
         forAll(pFA, facei)
         {
@@ -174,7 +174,7 @@ void Foam::FreeStream<CloudType>::inflow()
         // velocity to point flux into the domain.
 
         // Take a reference to the particleFluxAccumulator for this patch
-        List<Field<scalar> >& pFA = particleFluxAccumulators_[p];
+        List<Field<scalar>>& pFA = particleFluxAccumulators_[p];
 
         forAll(pFA, i)
         {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::CollidingCloud<CloudType>::constProps() const
 
 
 template<class CloudType>
-inline const Foam::CollisionModel<Foam::CollidingCloud<CloudType> >&
+inline const Foam::CollisionModel<Foam::CollidingCloud<CloudType>>&
 Foam::CollidingCloud<CloudType>::collision() const
 {
     return collisionModel_();
@@ -50,7 +50,7 @@ Foam::CollidingCloud<CloudType>::collision() const
 
 
 template<class CloudType>
-inline Foam::CollisionModel<Foam::CollidingCloud<CloudType> >&
+inline Foam::CollisionModel<Foam::CollidingCloud<CloudType>>&
 Foam::CollidingCloud<CloudType>::collision()
 {
     return collisionModel_();

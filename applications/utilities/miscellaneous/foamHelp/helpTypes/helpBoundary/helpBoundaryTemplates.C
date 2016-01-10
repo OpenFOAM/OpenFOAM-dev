@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ void Foam::helpTypes::helpBoundary::fixedValueFieldConditions
 
             fvPatch fvp(pp, mesh.boundary());
 
-            tmp<fvPatchField<Type> > pf
+            tmp<fvPatchField<Type>> pf
             (
                 fvPatchField<Type>::New
                 (

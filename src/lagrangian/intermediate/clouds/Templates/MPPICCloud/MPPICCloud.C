@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ void Foam::MPPICCloud<CloudType>::setModels()
 {
     packingModel_.reset
     (
-        PackingModel<MPPICCloud<CloudType> >::New
+        PackingModel<MPPICCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -45,7 +45,7 @@ void Foam::MPPICCloud<CloudType>::setModels()
     );
     dampingModel_.reset
     (
-        DampingModel<MPPICCloud<CloudType> >::New
+        DampingModel<MPPICCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -53,7 +53,7 @@ void Foam::MPPICCloud<CloudType>::setModels()
     );
     isotropyModel_.reset
     (
-        IsotropyModel<MPPICCloud<CloudType> >::New
+        IsotropyModel<MPPICCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -164,7 +164,7 @@ void Foam::MPPICCloud<CloudType>::evolve()
     if (this->solution().canEvolve())
     {
         typename parcelType::template
-            TrackingData<MPPICCloud<CloudType> > td(*this);
+            TrackingData<MPPICCloud<CloudType>> td(*this);
 
         this->solve(td);
     }

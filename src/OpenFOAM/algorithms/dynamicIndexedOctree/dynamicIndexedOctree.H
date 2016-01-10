@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ SourceFiles
 namespace Foam
 {
 
-typedef DynamicList<autoPtr<DynamicList<label > > > contentListList;
+typedef DynamicList<autoPtr<DynamicList<label >>> contentListList;
 
 // Forward declaration of classes
 template<class Type> class dynamicIndexedOctree;
@@ -181,7 +181,7 @@ private:
             //  according to where they are in relation to mid.
             void divide
             (
-                const autoPtr<DynamicList<label> >& indices,
+                const autoPtr<DynamicList<label>>& indices,
                 const treeBoundBox& bb,
                 contentListList& result
             ) const;
@@ -435,9 +435,9 @@ public:
         );
 
         //- Clone
-        autoPtr<dynamicIndexedOctree<Type> > clone() const
+        autoPtr<dynamicIndexedOctree<Type>> clone() const
         {
-            return autoPtr<dynamicIndexedOctree<Type> >
+            return autoPtr<dynamicIndexedOctree<Type>>
             (
                 new dynamicIndexedOctree<Type>(*this)
             );

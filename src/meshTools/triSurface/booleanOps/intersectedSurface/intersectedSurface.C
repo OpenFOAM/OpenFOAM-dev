@@ -282,7 +282,7 @@ void Foam::intersectedSurface::incCount
 // Calculate point to edge addressing for the face given by the edge
 // subset faceEdges. Constructs facePointEdges which for every point
 // gives a list of edge labels connected to it.
-Foam::Map<Foam::DynamicList<Foam::label> >
+Foam::Map<Foam::DynamicList<Foam::label>>
 Foam::intersectedSurface::calcPointEdgeAddressing
 (
     const edgeSurface& eSurf,
@@ -294,7 +294,7 @@ Foam::intersectedSurface::calcPointEdgeAddressing
 
     const labelList& fEdges = eSurf.faceEdges()[faceI];
 
-    Map<DynamicList<label> > facePointEdges(4*fEdges.size());
+    Map<DynamicList<label>> facePointEdges(4*fEdges.size());
 
     forAll(fEdges, i)
     {
@@ -303,7 +303,7 @@ Foam::intersectedSurface::calcPointEdgeAddressing
         const edge& e = edges[edgeI];
 
         // Add e.start to point-edges
-        Map<DynamicList<label> >::iterator iter =
+        Map<DynamicList<label>>::iterator iter =
             facePointEdges.find(e.start());
 
         if (iter == facePointEdges.end())
@@ -318,7 +318,7 @@ Foam::intersectedSurface::calcPointEdgeAddressing
         }
 
         // Add e.end to point-edges
-        Map<DynamicList<label> >::iterator iter2 =
+        Map<DynamicList<label>>::iterator iter2 =
             facePointEdges.find(e.end());
 
         if (iter2 == facePointEdges.end())
@@ -383,7 +383,7 @@ Foam::label Foam::intersectedSurface::nextEdge
     const Map<label>& visited,
     const label faceI,
     const vector& n,
-    const Map<DynamicList<label> >& facePointEdges,
+    const Map<DynamicList<label>>& facePointEdges,
     const label prevEdgeI,
     const label prevVertI
 )
@@ -561,7 +561,7 @@ Foam::face Foam::intersectedSurface::walkFace
     const edgeSurface& eSurf,
     const label faceI,
     const vector& n,
-    const Map<DynamicList<label> >& facePointEdges,
+    const Map<DynamicList<label>>& facePointEdges,
 
     const label startEdgeI,
     const label startVertI,
@@ -637,7 +637,7 @@ void Foam::intersectedSurface::findNearestVisited
 (
     const edgeSurface& eSurf,
     const label faceI,
-    const Map<DynamicList<label> >& facePointEdges,
+    const Map<DynamicList<label>>& facePointEdges,
     const Map<label>& pointVisited,
     const point& pt,
     const label excludePointI,
@@ -699,7 +699,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
 (
     const triSurface& surf,
     const label faceI,
-    const Map<DynamicList<label> >& facePointEdges,
+    const Map<DynamicList<label>>& facePointEdges,
     const Map<label>& visited,
     edgeSurface& eSurf
 )
@@ -786,7 +786,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
     {
         scalar minDist = GREAT;
 
-        forAllConstIter(Map<DynamicList<label> >, facePointEdges, iter)
+        forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
             label pointI = iter.key();
 
@@ -831,7 +831,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
     {
         scalar minDist = GREAT;
 
-        forAllConstIter(Map<DynamicList<label> >, facePointEdges, iter)
+        forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
             label pointI = iter.key();
 
@@ -918,7 +918,7 @@ Foam::faceList Foam::intersectedSurface::splitFace
     const labelList& fEdges = eSurf.faceEdges()[faceI];
 
     // Create local (for the face only) point-edge connectivity.
-    Map<DynamicList<label> > facePointEdges
+    Map<DynamicList<label>> facePointEdges
     (
         calcPointEdgeAddressing
         (

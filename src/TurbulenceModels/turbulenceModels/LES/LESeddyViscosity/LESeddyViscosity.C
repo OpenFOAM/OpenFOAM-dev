@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ LESeddyViscosity<BasicTurbulenceModel>::LESeddyViscosity
     const word& propertiesName
 )
 :
-    eddyViscosity<LESModel<BasicTurbulenceModel> >
+    eddyViscosity<LESModel<BasicTurbulenceModel>>
     (
         type,
         alpha,
@@ -76,7 +76,7 @@ LESeddyViscosity<BasicTurbulenceModel>::LESeddyViscosity
 template<class BasicTurbulenceModel>
 bool LESeddyViscosity<BasicTurbulenceModel>::read()
 {
-    if (eddyViscosity<LESModel<BasicTurbulenceModel> >::read())
+    if (eddyViscosity<LESModel<BasicTurbulenceModel>>::read())
     {
         Ce_.readIfPresent(this->coeffDict());
 

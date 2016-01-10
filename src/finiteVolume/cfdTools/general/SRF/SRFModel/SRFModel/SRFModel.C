@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,10 +118,10 @@ const Foam::dimensionedVector& Foam::SRF::SRFModel::omega() const
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::SRF::SRFModel::Fcoriolis() const
 {
-    return tmp<DimensionedField<vector, volMesh> >
+    return tmp<DimensionedField<vector, volMesh>>
     (
         new DimensionedField<vector, volMesh>
         (
@@ -139,10 +139,10 @@ Foam::SRF::SRFModel::Fcoriolis() const
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::SRF::SRFModel::Fcentrifugal() const
 {
-    return tmp<DimensionedField<vector, volMesh> >
+    return tmp<DimensionedField<vector, volMesh>>
     (
         new DimensionedField<vector, volMesh>
         (
@@ -160,7 +160,7 @@ Foam::SRF::SRFModel::Fcentrifugal() const
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::SRF::SRFModel::Su() const
 {
     return Fcoriolis() + Fcentrifugal();

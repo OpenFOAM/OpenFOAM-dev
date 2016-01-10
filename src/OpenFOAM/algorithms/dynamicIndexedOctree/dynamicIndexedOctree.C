@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ bool Foam::dynamicIndexedOctree<Type>::overlaps
 template<class Type>
 void Foam::dynamicIndexedOctree<Type>::divide
 (
-    const autoPtr<DynamicList<label> >& indices,
+    const autoPtr<DynamicList<label>>& indices,
     const treeBoundBox& bb,
     contentListList& result
 ) const
@@ -157,7 +157,7 @@ void Foam::dynamicIndexedOctree<Type>::divide
     {
         result.append
         (
-            autoPtr<DynamicList<label> >
+            autoPtr<DynamicList<label>>
             (
                 new DynamicList<label>(indices().size()/8)
             )
@@ -197,7 +197,7 @@ Foam::dynamicIndexedOctree<Type>::divide
     const label octantToBeDivided
 )
 {
-    const autoPtr<DynamicList<label> >& indices = contents_[contentI];
+    const autoPtr<DynamicList<label>>& indices = contents_[contentI];
 
     node nod;
 
@@ -226,7 +226,7 @@ Foam::dynamicIndexedOctree<Type>::divide
 
     for (direction octant = 0; octant < dividedIndices.size(); octant++)
     {
-        autoPtr<DynamicList<label> >& subIndices = dividedIndices[octant];
+        autoPtr<DynamicList<label>>& subIndices = dividedIndices[octant];
 
         if (subIndices().size())
         {
@@ -245,7 +245,7 @@ Foam::dynamicIndexedOctree<Type>::divide
 
                 contents_.append
                 (
-                    autoPtr<DynamicList<label> >
+                    autoPtr<DynamicList<label>>
                     (
                         new DynamicList<label>()
                     )
@@ -2677,7 +2677,7 @@ bool Foam::dynamicIndexedOctree<Type>::insert(label startIndex, label endIndex)
     {
         contents_.append
         (
-            autoPtr<DynamicList<label> >
+            autoPtr<DynamicList<label>>
             (
                 new DynamicList<label>(1)
             )
@@ -2771,7 +2771,7 @@ bool Foam::dynamicIndexedOctree<Type>::insertIndex
 
                 contents_.append
                 (
-                    autoPtr<DynamicList<label> >(new DynamicList<label>(1))
+                    autoPtr<DynamicList<label>>(new DynamicList<label>(1))
                 );
 
                 contents_[sz]().append(index);

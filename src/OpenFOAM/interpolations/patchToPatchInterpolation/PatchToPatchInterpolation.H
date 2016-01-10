@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,17 +208,17 @@ public:
 
         //- Interpolate point field
         template<class Type>
-        tmp<Field<Type> > pointInterpolate(const Field<Type>& pf) const;
+        tmp<Field<Type>> pointInterpolate(const Field<Type>& pf) const;
 
         template<class Type>
-        tmp<Field<Type> > pointInterpolate(const tmp<Field<Type> >& tpf) const;
+        tmp<Field<Type>> pointInterpolate(const tmp<Field<Type>>& tpf) const;
 
         //- Interpolate face field
         template<class Type>
-        tmp<Field<Type> > faceInterpolate(const Field<Type>& pf) const;
+        tmp<Field<Type>> faceInterpolate(const Field<Type>& pf) const;
 
         template<class Type>
-        tmp<Field<Type> > faceInterpolate(const tmp<Field<Type> >& tpf) const;
+        tmp<Field<Type>> faceInterpolate(const tmp<Field<Type>>& tpf) const;
 
 };
 

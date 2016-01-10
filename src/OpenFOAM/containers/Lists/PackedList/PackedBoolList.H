@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ public:
         inline PackedBoolList(const Xfer<PackedBoolList>&);
 
         //- Construct by transferring the parameter contents
-        inline PackedBoolList(const Xfer<PackedList<1> >&);
+        inline PackedBoolList(const Xfer<PackedList<1>>&);
 
         //- Construct from a list of bools
         explicit inline PackedBoolList(const Foam::UList<bool>&);

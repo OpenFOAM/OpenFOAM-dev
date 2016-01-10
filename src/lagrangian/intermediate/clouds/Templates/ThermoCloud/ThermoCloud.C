@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ void Foam::ThermoCloud<CloudType>::setModels()
 {
     heatTransferModel_.reset
     (
-        HeatTransferModel<ThermoCloud<CloudType> >::New
+        HeatTransferModel<ThermoCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -472,7 +472,7 @@ void Foam::ThermoCloud<CloudType>::evolve()
     if (this->solution().canEvolve())
     {
         typename parcelType::template
-            TrackingData<ThermoCloud<CloudType> > td(*this);
+            TrackingData<ThermoCloud<CloudType>> td(*this);
 
         this->solve(td);
     }
@@ -482,7 +482,7 @@ void Foam::ThermoCloud<CloudType>::evolve()
 template<class CloudType>
 void Foam::ThermoCloud<CloudType>::autoMap(const mapPolyMesh& mapper)
 {
-    typedef typename particle::TrackingData<ThermoCloud<CloudType> > tdType;
+    typedef typename particle::TrackingData<ThermoCloud<CloudType>> tdType;
 
     tdType td(*this);
 

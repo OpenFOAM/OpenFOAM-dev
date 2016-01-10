@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ void Foam::SprayCloud<CloudType>::setModels()
 {
     atomizationModel_.reset
     (
-        AtomizationModel<SprayCloud<CloudType> >::New
+        AtomizationModel<SprayCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -43,7 +43,7 @@ void Foam::SprayCloud<CloudType>::setModels()
 
     breakupModel_.reset
     (
-        BreakupModel<SprayCloud<CloudType> >::New
+        BreakupModel<SprayCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -218,7 +218,7 @@ void Foam::SprayCloud<CloudType>::evolve()
     if (this->solution().canEvolve())
     {
         typename parcelType::template
-            TrackingData<SprayCloud<CloudType> > td(*this);
+            TrackingData<SprayCloud<CloudType>> td(*this);
 
         this->solve(td);
     }

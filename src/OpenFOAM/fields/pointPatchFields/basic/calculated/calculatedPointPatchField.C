@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::calculatedPointPatchField<Type>::calculatedPointPatchField
 
 template<class Type>
 template<class Type2>
-Foam::autoPtr<Foam::pointPatchField<Type> >
+Foam::autoPtr<Foam::pointPatchField<Type>>
 Foam::pointPatchField<Type>::NewCalculatedType
 (
     const pointPatchField<Type2>& pf
@@ -96,7 +96,7 @@ Foam::pointPatchField<Type>::NewCalculatedType
 
     if (patchTypeCstrIter != pointPatchConstructorTablePtr_->end())
     {
-        return autoPtr<pointPatchField<Type> >
+        return autoPtr<pointPatchField<Type>>
         (
             patchTypeCstrIter()
             (
@@ -107,7 +107,7 @@ Foam::pointPatchField<Type>::NewCalculatedType
     }
     else
     {
-        return autoPtr<pointPatchField<Type> >
+        return autoPtr<pointPatchField<Type>>
         (
             new calculatedPointPatchField<Type>
             (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace Foam
 namespace fvm
 {
     template<class Type>
-    tmp<fvMatrix<Type> > div
+    tmp<fvMatrix<Type>> div
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -60,7 +60,7 @@ namespace fvm
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > div
+    tmp<fvMatrix<Type>> div
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -69,14 +69,14 @@ namespace fvm
 
 
     template<class Type>
-    tmp<fvMatrix<Type> > div
+    tmp<fvMatrix<Type>> div
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > div
+    tmp<fvMatrix<Type>> div
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&

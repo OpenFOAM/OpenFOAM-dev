@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,35 +72,35 @@ protected:
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<dragModel> >,
+            autoPtr<BlendedInterfacialModel<dragModel>>,
             phasePairKey,
             phasePairKey::hash
         > dragModelTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<virtualMassModel> >,
+            autoPtr<BlendedInterfacialModel<virtualMassModel>>,
             phasePairKey,
             phasePairKey::hash
         > virtualMassModelTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<liftModel> >,
+            autoPtr<BlendedInterfacialModel<liftModel>>,
             phasePairKey,
             phasePairKey::hash
         > liftModelTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<wallLubricationModel> >,
+            autoPtr<BlendedInterfacialModel<wallLubricationModel>>,
             phasePairKey,
             phasePairKey::hash
         > wallLubricationModelTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<turbulentDispersionModel> >,
+            autoPtr<BlendedInterfacialModel<turbulentDispersionModel>>,
             phasePairKey,
             phasePairKey::hash
         > turbulentDispersionModelTable;
@@ -187,10 +187,10 @@ public:
         virtual tmp<volVectorField> F(const phasePairKey& key) const;
 
         //- Return the combined force (lift + wall-lubrication)
-        virtual autoPtr<PtrList<volVectorField> > Fs() const;
+        virtual autoPtr<PtrList<volVectorField>> Fs() const;
 
         //- Return the turbulent dispersion force on faces for phase pair
-        virtual autoPtr<PtrList<surfaceScalarField> > phiDs
+        virtual autoPtr<PtrList<surfaceScalarField>> phiDs
         (
             const PtrList<volScalarField>& rAUs
         ) const;

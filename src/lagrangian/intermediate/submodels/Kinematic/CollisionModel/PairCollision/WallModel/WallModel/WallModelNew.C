@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::autoPtr<Foam::WallModel<CloudType> >
+Foam::autoPtr<Foam::WallModel<CloudType>>
 Foam::WallModel<CloudType>::New
 (
     const dictionary& dict,
@@ -51,7 +51,7 @@ Foam::WallModel<CloudType>::New
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<WallModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<WallModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

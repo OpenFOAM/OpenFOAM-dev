@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,7 +161,7 @@ void Foam::writeFuns::write
 (
     std::ostream& os,
     const bool binary,
-    const PtrList<GeometricField<Type, PatchField, GeoMesh> >& flds,
+    const PtrList<GeometricField<Type, PatchField, GeoMesh>>& flds,
     const vtkMesh& vMesh
 )
 {
@@ -178,7 +178,7 @@ void Foam::writeFuns::write
     std::ostream& os,
     const bool binary,
     const volPointInterpolation& pInterp,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh> >& flds,
+    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds,
     const vtkMesh& vMesh
 )
 {

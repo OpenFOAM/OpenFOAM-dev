@@ -25,7 +25,7 @@ fvMesh mesh
         runTime,
         IOobject::READ_IF_PRESENT
     ),
-    xferMove<Field<vector> >(points),
+    xferMove<Field<vector>>(points),
     faces.xfer(),
     owner.xfer(),
     neighbour.xfer()

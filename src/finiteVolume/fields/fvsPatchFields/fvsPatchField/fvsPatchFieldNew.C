@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ namespace Foam
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 (
     const word& patchFieldType,
     const word& actualPatchType,
@@ -86,7 +86,7 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 (
     const word& patchFieldType,
     const fvPatch& p,
@@ -98,7 +98,7 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -170,7 +170,7 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 // Return a pointer to a new patch created on freestore from
 // a given fvsPatchField<Type> mapped onto a new patch
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 (
     const fvsPatchField<Type>& ptf,
     const fvPatch& p,

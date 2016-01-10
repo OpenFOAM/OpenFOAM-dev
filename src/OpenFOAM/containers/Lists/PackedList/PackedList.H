@@ -226,7 +226,7 @@ public:
         inline PackedList(const PackedList<nBits>&);
 
         //- Construct by transferring the parameter contents
-        inline PackedList(const Xfer<PackedList<nBits> >&);
+        inline PackedList(const Xfer<PackedList<nBits>>&);
 
         //- Construct from a list of labels
         explicit inline PackedList(const labelUList&);
@@ -344,7 +344,7 @@ public:
             inline void transfer(PackedList<nBits>&);
 
             //- Transfer contents to the Xfer container
-            inline Xfer<PackedList<nBits> > xfer();
+            inline Xfer<PackedList<nBits>> xfer();
 
 
         // IO

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,9 +162,9 @@ public:
         (
             typename CloudType::parcelType& p,
             const List<point>& flatSitePoints,
-            const List<WallSiteData<vector> >& flatSiteData,
+            const List<WallSiteData<vector>>& flatSiteData,
             const List<point>& sharpSitePoints,
-            const List<WallSiteData<vector> >& sharpSiteData
+            const List<WallSiteData<vector>>& sharpSiteData
         ) const;
 };
 

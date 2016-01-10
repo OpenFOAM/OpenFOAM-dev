@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ namespace CGAL
                        Class indexedFace Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Gt, class Fb=CGAL::Triangulation_face_base_2<Gt> >
+template<class Gt, class Fb=CGAL::Triangulation_face_base_2<Gt>>
 class indexedFace
 :
     public Fb

@@ -256,7 +256,7 @@
     they are macros, they will fail if the iterated object contains
     any commas /e.g./ following will FAIL!:
     #+BEGIN_SRC C++
-    forAllIter(HashTable<labelPair, edge, Hash<edge> >, foo, iter)
+    forAllIter(HashTable<labelPair, edge, Hash<edge>>, foo, iter)
     #+END_SRC
     These convenience macros are also generally avoided in other
     container classes and OpenFOAM primitive classes.

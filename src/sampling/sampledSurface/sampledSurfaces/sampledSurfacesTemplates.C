@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ void Foam::sampledSurfaces::writeSurface
     if (Pstream::parRun())
     {
         // Collect values from all processors
-        List<Field<Type> > gatheredValues(Pstream::nProcs());
+        List<Field<Type>> gatheredValues(Pstream::nProcs());
         gatheredValues[Pstream::myProcNo()] = values;
         Pstream::gatherList(gatheredValues);
 
@@ -54,10 +54,10 @@ void Foam::sampledSurfaces::writeSurface
             // Combine values into single field
             Field<Type> allValues
             (
-                ListListOps::combine<Field<Type> >
+                ListListOps::combine<Field<Type>>
                 (
                     gatheredValues,
-                    accessOp<Field<Type> >()
+                    accessOp<Field<Type>>()
                 )
             );
 
@@ -113,7 +113,7 @@ void Foam::sampledSurfaces::sampleAndWrite
 )
 {
     // interpolator for this field
-    autoPtr<interpolation<Type> > interpolatorPtr;
+    autoPtr<interpolation<Type>> interpolatorPtr;
 
     const word& fieldName = vField.name();
     const fileName outputDir = outputPath_/vField.time().timeName();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ void subsetVolFields
     const label patchI,
     const Type& exposedValue,
     const word GeomVolType,
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& subFields
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -201,7 +201,7 @@ void subsetSurfaceFields
     const label patchI,
     const Type& exposedValue,
     const word GeomSurfType,
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& subFields
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -580,10 +580,10 @@ int main(int argc, char *argv[])
     );
 
     // Per faceSet the patch to put the baffles into
-    const List<Pair<word> > setsAndPatches(dict.lookup("blockedFaces"));
+    const List<Pair<word>> setsAndPatches(dict.lookup("blockedFaces"));
 
     // Per faceSet the patch to put the coupled baffles into
-    DynamicList<FixedList<word, 3> > coupledAndPatches(10);
+    DynamicList<FixedList<word, 3>> coupledAndPatches(10);
     const dictionary& functionDicts = dict.subDict("coupledFaces");
     forAllConstIter(dictionary, functionDicts, iter)
     {

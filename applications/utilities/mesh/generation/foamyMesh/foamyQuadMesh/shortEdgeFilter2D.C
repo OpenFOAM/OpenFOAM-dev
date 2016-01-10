@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ void Foam::shortEdgeFilter2D::addRegion
 
 void Foam::shortEdgeFilter2D::assignBoundaryPointRegions
 (
-    List<DynamicList<label> >& boundaryPointRegions
+    List<DynamicList<label>>& boundaryPointRegions
 ) const
 {
     forAllConstIter(EdgeMap<label>, mapEdgesRegion_, iter)
@@ -72,7 +72,7 @@ void Foam::shortEdgeFilter2D::assignBoundaryPointRegions
 void Foam::shortEdgeFilter2D::updateEdgeRegionMap
 (
     const MeshedSurface<face>& surfMesh,
-    const List<DynamicList<label> >& boundaryPtRegions,
+    const List<DynamicList<label>>& boundaryPtRegions,
     const labelList& surfPtToBoundaryPt,
     EdgeMap<label>& mapEdgesRegion,
     labelList& patchSizes
@@ -250,7 +250,7 @@ Foam::shortEdgeFilter2D::filter()
 
     // Check if the point is a boundary point. Flag if it is so that
     // it will not be deleted.
-    List<DynamicList<label> > boundaryPointRegions
+    List<DynamicList<label>> boundaryPointRegions
     (
         points.size(),
         DynamicList<label>()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ public:
         DampingModel(const DampingModel<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<DampingModel<CloudType> > clone() const = 0;
+        virtual autoPtr<DampingModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -111,7 +111,7 @@ public:
 
 
     //- Selector
-    static autoPtr<DampingModel<CloudType> > New
+    static autoPtr<DampingModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -162,7 +162,7 @@ public:
                                                                                \
     Foam::DampingModel<MPPICCloudType>::                                       \
         adddictionaryConstructorToTable                                        \
-        <Foam::DampingModels::SS<MPPICCloudType> >                             \
+        <Foam::DampingModels::SS<MPPICCloudType>>                             \
             add##SS##CloudType##MPPICCloudType##ConstructorToTable_;
 
 

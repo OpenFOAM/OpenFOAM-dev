@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ namespace Foam
 template<class Type>
 class interpolationTable
 :
-    public List<Tuple2<scalar, Type> >
+    public List<Tuple2<scalar, Type>>
 {
 public:
 
@@ -104,7 +104,7 @@ private:
         fileName fileName_;
 
         //- The actual reader
-        autoPtr<tableReader<Type> > reader_;
+        autoPtr<tableReader<Type>> reader_;
 
     // Private Member Functions
 
@@ -122,7 +122,7 @@ public:
         //- Construct from components
         interpolationTable
         (
-            const List<Tuple2<scalar, Type> >& values,
+            const List<Tuple2<scalar, Type>>& values,
             const boundsHandling bounds,
             const fileName& fName
         );

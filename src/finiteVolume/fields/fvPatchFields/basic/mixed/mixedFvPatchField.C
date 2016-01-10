@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,7 @@ void Foam::mixedFvPatchField<Type>::rmap
     fvPatchField<Type>::rmap(ptf, addr);
 
     const mixedFvPatchField<Type>& mptf =
-        refCast<const mixedFvPatchField<Type> >(ptf);
+        refCast<const mixedFvPatchField<Type>>(ptf);
 
     refValue_.rmap(mptf.refValue_, addr);
     refGrad_.rmap(mptf.refGrad_, addr);
@@ -168,7 +168,7 @@ void Foam::mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::mixedFvPatchField<Type>::snGrad() const
 {
     return
@@ -180,7 +180,7 @@ Foam::mixedFvPatchField<Type>::snGrad() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::mixedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
@@ -192,7 +192,7 @@ Foam::mixedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::mixedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
@@ -205,7 +205,7 @@ Foam::mixedFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::mixedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -Type(pTraits<Type>::one)*valueFraction_*this->patch().deltaCoeffs();
@@ -213,7 +213,7 @@ Foam::mixedFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return

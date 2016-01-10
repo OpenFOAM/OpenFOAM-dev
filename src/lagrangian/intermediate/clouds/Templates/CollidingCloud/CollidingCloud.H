@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<CollidingCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<CollidingCloud<CloudType>> cloudCopyPtr_;
 
 
     // Private Member Functions
@@ -104,7 +104,7 @@ protected:
         // References to the cloud sub-models
 
             //- Collision model
-            autoPtr<CollisionModel<CollidingCloud<CloudType> > >
+            autoPtr<CollisionModel<CollidingCloud<CloudType>>>
                 collisionModel_;
 
 
@@ -155,18 +155,18 @@ public:
         );
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new CollidingCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new CollidingCloud(this->mesh(), name, *this)
             );
@@ -199,11 +199,11 @@ public:
             // Sub-models
 
                 //- Return const access to the collision model
-                inline const CollisionModel<CollidingCloud<CloudType> >&
+                inline const CollisionModel<CollidingCloud<CloudType>>&
                     collision() const;
 
                 //- Return reference to the collision model
-                inline CollisionModel<CollidingCloud<CloudType> >&
+                inline CollisionModel<CollidingCloud<CloudType>>&
                     collision();
 
         // Check

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ UNARY_FUNCTION(tensor, symmTensor, eigenVectors)
 
 
 template<>
-tmp<Field<tensor> > transformFieldMask<tensor>
+tmp<Field<tensor>> transformFieldMask<tensor>
 (
     const symmTensorField& stf
 )
@@ -138,12 +138,12 @@ tmp<Field<tensor> > transformFieldMask<tensor>
 }
 
 template<>
-tmp<Field<tensor> > transformFieldMask<tensor>
+tmp<Field<tensor>> transformFieldMask<tensor>
 (
     const tmp<symmTensorField>& tstf
 )
 {
-    tmp<Field<tensor> > ret = transformFieldMask<tensor>(tstf());
+    tmp<Field<tensor>> ret = transformFieldMask<tensor>(tstf());
     tstf.clear();
     return ret;
 }

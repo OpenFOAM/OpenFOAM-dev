@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,10 +101,10 @@ public:
         static inline const SubField<Type>& null();
 
         //- Return a component field of the field
-        inline tmp<Field<cmptType> > component(const direction) const;
+        inline tmp<Field<cmptType>> component(const direction) const;
 
         //- Return the field transpose (only defined for second rank tensors)
-        tmp<Field<Type> > T() const;
+        tmp<Field<Type>> T() const;
 
 
     // Member operators

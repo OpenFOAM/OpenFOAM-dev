@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
         Random rndGen(43544*Pstream::myProcNo());
 
         // Generate random data.
-        List<Tuple2<label, List<scalar> > > complexData(100);
+        List<Tuple2<label, List<scalar>>> complexData(100);
         forAll(complexData, i)
         {
             complexData[i].first() = rndGen.integer(0, Pstream::nProcs()-1);

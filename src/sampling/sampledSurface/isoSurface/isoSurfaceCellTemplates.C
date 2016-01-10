@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -507,7 +507,7 @@ void Foam::isoSurfaceCell::generateTriPoints
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::isoSurfaceCell::interpolate
 (
     const scalarField& cVals,
@@ -543,7 +543,7 @@ Foam::isoSurfaceCell::interpolate
 
 
     // One value per point
-    tmp<Field<Type> > tvalues(new Field<Type>(points().size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
     Field<Type>& values = tvalues();
 
     forAll(triPoints, i)
@@ -561,7 +561,7 @@ Foam::isoSurfaceCell::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::isoSurfaceCell::interpolate
 (
     const Field<Type>& cCoords,
@@ -595,7 +595,7 @@ Foam::isoSurfaceCell::interpolate
 
 
     // One value per point
-    tmp<Field<Type> > tvalues(new Field<Type>(points().size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
     Field<Type>& values = tvalues();
 
     forAll(triPoints, i)

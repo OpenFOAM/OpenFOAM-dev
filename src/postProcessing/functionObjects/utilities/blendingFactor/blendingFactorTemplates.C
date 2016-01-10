@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,16 +88,16 @@ void Foam::blendingFactor::calc()
     const surfaceScalarField& phi =
         mesh.lookupObject<surfaceScalarField>(phiName_);
 
-    tmp<fv::convectionScheme<Type> > cs =
+    tmp<fv::convectionScheme<Type>> cs =
         fv::convectionScheme<Type>::New(mesh, phi, its);
 
     const fv::gaussConvectionScheme<Type>& gcs =
-        refCast<const fv::gaussConvectionScheme<Type> >(cs());
+        refCast<const fv::gaussConvectionScheme<Type>>(cs());
 
     const surfaceInterpolationScheme<Type>& interpScheme =
         gcs.interpScheme();
 
-    if (!isA<blendedSchemeBase<Type> >(interpScheme))
+    if (!isA<blendedSchemeBase<Type>>(interpScheme))
     {
         FatalErrorInFunction
             << interpScheme.typeName << " is not a blended scheme"
@@ -106,7 +106,7 @@ void Foam::blendingFactor::calc()
 
     // retrieve the face-based blending factor
     const blendedSchemeBase<Type>& blendedScheme =
-        refCast<const blendedSchemeBase<Type> >(interpScheme);
+        refCast<const blendedSchemeBase<Type>>(interpScheme);
     const surfaceScalarField factorf(blendedScheme.blendingFactor(field));
 
     // convert into vol field whose values represent the local face maxima

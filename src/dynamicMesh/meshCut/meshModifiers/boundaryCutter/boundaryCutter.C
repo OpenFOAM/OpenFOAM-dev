@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -405,7 +405,7 @@ Foam::boundaryCutter::~boundaryCutter()
 void Foam::boundaryCutter::setRefinement
 (
     const Map<point>& pointToPos,
-    const Map<List<point> >& edgeToCuts,
+    const Map<List<point>>& edgeToCuts,
     const Map<labelPair>& faceToSplit,
     const Map<point>& faceToFeaturePoint,
     polyTopoChange& meshMod
@@ -446,7 +446,7 @@ void Foam::boundaryCutter::setRefinement
     // Map from edge label to sorted list of points
     Map<labelList> edgeToAddedPoints(edgeToCuts.size());
 
-    forAllConstIter(Map<List<point> >, edgeToCuts, iter)
+    forAllConstIter(Map<List<point>>, edgeToCuts, iter)
     {
         label edgeI = iter.key();
 
@@ -869,12 +869,12 @@ void Foam::boundaryCutter::updateMesh(const mapPolyMesh& morphMap)
 
     {
         // Create copy since we're deleting entries
-        HashTable<labelList, edge, Hash<edge> >
+        HashTable<labelList, edge, Hash<edge>>
             newEdgeAddedPoints(edgeAddedPoints_.size());
 
         for
         (
-            HashTable<labelList, edge, Hash<edge> >::const_iterator iter =
+            HashTable<labelList, edge, Hash<edge>>::const_iterator iter =
                 edgeAddedPoints_.begin();
             iter != edgeAddedPoints_.end();
             ++iter

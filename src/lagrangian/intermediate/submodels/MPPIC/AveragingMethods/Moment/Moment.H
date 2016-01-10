@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,9 +120,9 @@ public:
         Moment(const Moment<Type>& am);
 
         //- Construct and return a clone
-        virtual autoPtr<AveragingMethod<Type> > clone() const
+        virtual autoPtr<AveragingMethod<Type>> clone() const
         {
-            return autoPtr<AveragingMethod<Type> >
+            return autoPtr<AveragingMethod<Type>>
             (
                 new Moment<Type>(*this)
             );
@@ -158,10 +158,10 @@ public:
         ) const;
 
         //- Return an internal field of the average
-        tmp<Field<Type> > internalField() const;
+        tmp<Field<Type>> internalField() const;
 
         //- Return an internal field of the gradient
-        tmp<Field<TypeGrad> > internalFieldGrad() const;
+        tmp<Field<TypeGrad>> internalFieldGrad() const;
 };
 
 

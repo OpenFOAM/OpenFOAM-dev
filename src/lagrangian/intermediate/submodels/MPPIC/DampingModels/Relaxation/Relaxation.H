@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ private:
         const AveragingMethod<vector>* uAverage_;
 
         //- Reciprocal of the time scale average
-        autoPtr<AveragingMethod<scalar> > oneByTimeScaleAverage_;
+        autoPtr<AveragingMethod<scalar>> oneByTimeScaleAverage_;
 
 
 public:
@@ -90,9 +90,9 @@ public:
         Relaxation(const Relaxation<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<DampingModel<CloudType> > clone() const
+        virtual autoPtr<DampingModel<CloudType>> clone() const
         {
-            return autoPtr<DampingModel<CloudType> >
+            return autoPtr<DampingModel<CloudType>>
             (
                 new Relaxation<CloudType>(*this)
             );

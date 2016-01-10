@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ class ConeInjection
     // Private data
 
         //- List of position and axis for each injector
-        List<Tuple2<vector, vector> > positionAxis_;
+        List<Tuple2<vector, vector>> positionAxis_;
 
         //- List of cell labels corresponding to injector positions
         labelList injectorCells_;
@@ -129,9 +129,9 @@ public:
         ConeInjection(const ConeInjection<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModel<CloudType> > clone() const
+        virtual autoPtr<InjectionModel<CloudType>> clone() const
         {
-            return autoPtr<InjectionModel<CloudType> >
+            return autoPtr<InjectionModel<CloudType>>
             (
                 new ConeInjection<CloudType>(*this)
             );

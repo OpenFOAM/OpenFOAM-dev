@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ template<template<class> class Field, class Type>
 Ostream& operator<<
 (
     Ostream&,
-    const tmp<FieldField<Field, Type> >&
+    const tmp<FieldField<Field, Type>>&
 );
 
 
@@ -74,7 +74,7 @@ template<template<class> class Field, class Type>
 class FieldField
 :
     public refCount,
-    public PtrList<Field<Type> >
+    public PtrList<Field<Type>>
 {
 
 public:
@@ -105,23 +105,23 @@ public:
         FieldField(FieldField<Field, Type>&, bool reUse);
 
         //- Construct as copy of a PtrList<Field, Type>
-        FieldField(const PtrList<Field<Type> >&);
+        FieldField(const PtrList<Field<Type>>&);
 
         //- Construct as copy of tmp<FieldField>
         #ifndef NoConstructFromTmp
-        FieldField(const tmp<FieldField<Field, Type> >&);
+        FieldField(const tmp<FieldField<Field, Type>>&);
         #endif
 
         //- Construct from Istream
         FieldField(Istream&);
 
         //- Clone
-        tmp<FieldField<Field, Type> > clone() const;
+        tmp<FieldField<Field, Type>> clone() const;
 
         //- Return a pointer to a new calculatedFvPatchFieldField created on
         //  freestore without setting patchField values
         template<class Type2>
-        static tmp<FieldField<Field, Type> > NewCalculatedType
+        static tmp<FieldField<Field, Type>> NewCalculatedType
         (
             const FieldField<Field, Type2>& ff
         );
@@ -133,7 +133,7 @@ public:
         void negate();
 
         //- Return a component field of the field
-        tmp<FieldField<Field, cmptType> > component(const direction) const;
+        tmp<FieldField<Field, cmptType>> component(const direction) const;
 
         //- Replace a component field of the field
         void replace(const direction, const FieldField<Field, cmptType>&);
@@ -142,26 +142,26 @@ public:
         void replace(const direction, const cmptType&);
 
         //- Return the field transpose (only defined for second rank tensors)
-        tmp<FieldField<Field, Type> > T() const;
+        tmp<FieldField<Field, Type>> T() const;
 
 
     // Member operators
 
         void operator=(const FieldField<Field, Type>&);
-        void operator=(const tmp<FieldField<Field, Type> >&);
+        void operator=(const tmp<FieldField<Field, Type>>&);
         void operator=(const Type&);
 
         void operator+=(const FieldField<Field, Type>&);
-        void operator+=(const tmp<FieldField<Field, Type> >&);
+        void operator+=(const tmp<FieldField<Field, Type>>&);
 
         void operator-=(const FieldField<Field, Type>&);
-        void operator-=(const tmp<FieldField<Field, Type> >&);
+        void operator-=(const tmp<FieldField<Field, Type>>&);
 
         void operator*=(const FieldField<Field, scalar>&);
-        void operator*=(const tmp<FieldField<Field, scalar> >&);
+        void operator*=(const tmp<FieldField<Field, scalar>>&);
 
         void operator/=(const FieldField<Field, scalar>&);
-        void operator/=(const tmp<FieldField<Field, scalar> >&);
+        void operator/=(const tmp<FieldField<Field, scalar>>&);
 
         void operator+=(const Type&);
         void operator-=(const Type&);
@@ -181,7 +181,7 @@ public:
         friend Ostream& operator<< <Field, Type>
         (
             Ostream&,
-            const tmp<FieldField<Field, Type> >&
+            const tmp<FieldField<Field, Type>>&
         );
 };
 

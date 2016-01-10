@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,56 +52,56 @@ template<class Type>
 void transform(Field<Type>&, const tensorField&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tensorField&, const Field<Type>&);
+tmp<Field<Type>> transform(const tensorField&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tensorField&, const tmp<Field<Type> >&);
+tmp<Field<Type>> transform(const tensorField&, const tmp<Field<Type>>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tmp<tensorField>&, const Field<Type>&);
+tmp<Field<Type>> transform(const tmp<tensorField>&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tmp<tensorField>&, const tmp<Field<Type> >&);
+tmp<Field<Type>> transform(const tmp<tensorField>&, const tmp<Field<Type>>&);
 
 
 template<class Type>
 void transform(Field<Type>&, const tensor&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tensor&, const Field<Type>&);
+tmp<Field<Type>> transform(const tensor&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tensor&, const tmp<Field<Type> >&);
+tmp<Field<Type>> transform(const tensor&, const tmp<Field<Type>>&);
 
 
 template<class Type1, class Type2>
-tmp<Field<Type1> > transformFieldMask(const Field<Type2>&);
+tmp<Field<Type1>> transformFieldMask(const Field<Type2>&);
 
 template<class Type1, class Type2>
-tmp<Field<Type1> > transformFieldMask(const tmp<Field<Type2> >&);
+tmp<Field<Type1>> transformFieldMask(const tmp<Field<Type2>>&);
 
 
 template<>
-tmp<Field<symmTensor> > transformFieldMask<symmTensor>
+tmp<Field<symmTensor>> transformFieldMask<symmTensor>
 (
     const tensorField&
 );
 
 template<>
-tmp<Field<symmTensor> > transformFieldMask<symmTensor>
+tmp<Field<symmTensor>> transformFieldMask<symmTensor>
 (
     const tmp<tensorField>&
 );
 
 
 template<>
-tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
+tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
 (
     const tensorField&
 );
 
 template<>
-tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
+tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
 (
     const tmp<tensorField>&
 );

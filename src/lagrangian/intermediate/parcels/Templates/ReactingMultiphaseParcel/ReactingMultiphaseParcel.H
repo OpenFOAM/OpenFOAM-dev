@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -348,12 +348,12 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<ReactingMultiphaseParcel<ParcelType> > operator()
+            autoPtr<ReactingMultiphaseParcel<ParcelType>> operator()
             (
                 Istream& is
             ) const
             {
-                return autoPtr<ReactingMultiphaseParcel<ParcelType> >
+                return autoPtr<ReactingMultiphaseParcel<ParcelType>>
                 (
                     new ReactingMultiphaseParcel<ParcelType>(mesh_, is, true)
                 );

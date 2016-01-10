@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ void Foam::UpwindFitData<Polynomial>::calcFit()
     // ~~~~~~~~~~~~~~~~~~~~~
 
     // Get the cell/face centres in stencil order.
-    List<List<point> > stencilPoints(mesh.nFaces());
+    List<List<point>> stencilPoints(mesh.nFaces());
     this->stencil().collectData
     (
         this->stencil().ownMap(),

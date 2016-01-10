@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ void Foam::sampledSets::combineSampledSets
         const sampledSet& samplePts = sampledSets[setI];
 
         // Collect data from all processors
-        List<List<point> > gatheredPts(Pstream::nProcs());
+        List<List<point>> gatheredPts(Pstream::nProcs());
         gatheredPts[Pstream::myProcNo()] = samplePts;
         Pstream::gatherList(gatheredPts);
 
@@ -79,9 +79,9 @@ void Foam::sampledSets::combineSampledSets
         // Combine processor lists into one big list.
         List<point> allPts
         (
-            ListListOps::combine<List<point> >
+            ListListOps::combine<List<point>>
             (
-                gatheredPts, accessOp<List<point> >()
+                gatheredPts, accessOp<List<point>>()
             )
         );
         labelList allSegments

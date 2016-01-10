@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -543,10 +543,10 @@ Foam::volVectorField& Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::setF
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::PtrList<Foam::volVectorField> >
+Foam::autoPtr<Foam::PtrList<Foam::volVectorField>>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
 {
-    autoPtr<PtrList<volVectorField> > tFs
+    autoPtr<PtrList<volVectorField>> tFs
     (
         new PtrList<volVectorField>(this->phases().size())
     );
@@ -628,13 +628,13 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::setPhiD
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::PtrList<Foam::surfaceScalarField> >
+Foam::autoPtr<Foam::PtrList<Foam::surfaceScalarField>>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiDs
 (
     const PtrList<volScalarField>& rAUs
 ) const
 {
-    autoPtr<PtrList<surfaceScalarField> > tphiDs
+    autoPtr<PtrList<surfaceScalarField>> tphiDs
     (
         new PtrList<surfaceScalarField>(this->phases().size())
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,9 +99,9 @@ public:
     // Member Operators
 
         template<class Type>
-        tmp<Field<Type> > operator()(const Field<Type>& f) const
+        tmp<Field<Type>> operator()(const Field<Type>& f) const
         {
-            return tmp<Field<Type> >(new Field<Type>(f, *this));
+            return tmp<Field<Type>>(new Field<Type>(f, *this));
         }
 };
 

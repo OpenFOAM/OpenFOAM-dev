@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ bool outsideTriangle
                        Class indexedVertex Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Gt, class Vb=CGAL::Triangulation_vertex_base_2<Gt> >
+template<class Gt, class Vb=CGAL::Triangulation_vertex_base_2<Gt>>
 class indexedVertex
 :
     public Vb

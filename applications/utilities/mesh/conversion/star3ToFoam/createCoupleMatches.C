@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,9 +51,9 @@ void Foam::starMesh::createCoupleMatches()
     );
 
     // Store newly created faces for each cell
-    Map<SLList<face> > cellAddedFaces(cellMapSize);
+    Map<SLList<face>> cellAddedFaces(cellMapSize);
 
-    Map<SLList<label> > cellRemovedFaces(cellMapSize);
+    Map<SLList<label>> cellRemovedFaces(cellMapSize);
 
     // In order to remove often allocation, remember the number of live points.
     // If you run out of space in point creation, increase it by the number of
@@ -115,7 +115,7 @@ void Foam::starMesh::createCoupleMatches()
         {
             // Master face is replaced by a set of slave faces
 
-            Map<SLList<label> >::iterator crfIter =
+            Map<SLList<label>>::iterator crfIter =
                 cellRemovedFaces.find(fp.masterCell());
 
             if (crfIter == cellRemovedFaces.end())
@@ -131,7 +131,7 @@ void Foam::starMesh::createCoupleMatches()
                 crfIter().append(fp.masterFace());
             }
 
-            Map<SLList<face> >::iterator cafIter =
+            Map<SLList<face>>::iterator cafIter =
                 cellAddedFaces.find(fp.masterCell());
             if (cafIter == cellAddedFaces.end())
             {
@@ -155,11 +155,11 @@ void Foam::starMesh::createCoupleMatches()
 
             // Master data
             edgeList masterEdges = masterFace.edges();
-            List<SLList<label> > masterEdgePoints(masterEdges.size());
+            List<SLList<label>> masterEdgePoints(masterEdges.size());
 
             // Slave data
             edgeList slaveEdges = slaveFace.edges();
-            List<SLList<label> > slaveEdgePoints(slaveEdges.size());
+            List<SLList<label>> slaveEdgePoints(slaveEdges.size());
 
             // Find common plane
             vector n = masterFace.normal(points_);
@@ -1354,7 +1354,7 @@ void Foam::starMesh::createCoupleMatches()
             // Add the new face to both master and slave
 
             // Master face is replaced by a set of slave faces
-            Map<SLList<label> >::iterator crfMasterIter =
+            Map<SLList<label>>::iterator crfMasterIter =
                 cellRemovedFaces.find(fp.masterCell());
 
             if (crfMasterIter == cellRemovedFaces.end())
@@ -1370,7 +1370,7 @@ void Foam::starMesh::createCoupleMatches()
                 crfMasterIter().append(fp.masterFace());
             }
 
-            Map<SLList<label> >::iterator crfSlaveIter =
+            Map<SLList<label>>::iterator crfSlaveIter =
                 cellRemovedFaces.find(fp.slaveCell());
 
             if (crfSlaveIter == cellRemovedFaces.end())
@@ -1386,7 +1386,7 @@ void Foam::starMesh::createCoupleMatches()
                 crfSlaveIter().append(fp.slaveFace());
             }
 
-            Map<SLList<face> >::iterator cafMasterIter =
+            Map<SLList<face>>::iterator cafMasterIter =
                 cellAddedFaces.find(fp.masterCell());
             if (cafMasterIter == cellAddedFaces.end())
             {
@@ -1401,7 +1401,7 @@ void Foam::starMesh::createCoupleMatches()
                 cafMasterIter().append(intersectedFace);
             }
 
-            Map<SLList<face> >::iterator cafSlaveIter =
+            Map<SLList<face>>::iterator cafSlaveIter =
                 cellAddedFaces.find(fp.slaveCell());
             if (cafSlaveIter == cellAddedFaces.end())
             {

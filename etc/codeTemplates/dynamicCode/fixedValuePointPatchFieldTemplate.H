@@ -93,9 +93,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<${TemplateType}> > clone() const
+        virtual autoPtr<pointPatchField<${TemplateType}>> clone() const
         {
-            return autoPtr<pointPatchField<${TemplateType}> >
+            return autoPtr<pointPatchField<${TemplateType}>>
             (
                 new ${typeName}FixedValuePointPatch${FieldType}(*this)
             );
@@ -109,12 +109,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<${TemplateType}> > clone
+        virtual autoPtr<pointPatchField<${TemplateType}>> clone
         (
             const DimensionedField<${TemplateType}, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<${TemplateType}> >
+            return autoPtr<pointPatchField<${TemplateType}>>
             (
                 new ${typeName}FixedValuePointPatch${FieldType}(*this, iF)
             );

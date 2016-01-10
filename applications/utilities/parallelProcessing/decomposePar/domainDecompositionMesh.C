@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,8 @@ void Foam::domainDecomposition::addInterProcFace
     const label ownerProc,
     const label nbrProc,
 
-    List<Map<label> >& nbrToInterPatch,
-    List<DynamicList<DynamicList<label> > >& interPatchFaces
+    List<Map<label>>& nbrToInterPatch,
+    List<DynamicList<DynamicList<label>>>& interPatchFaces
 ) const
 {
     Map<label>::iterator patchIter = nbrToInterPatch[ownerProc].find(nbrProc);
@@ -209,10 +209,10 @@ void Foam::domainDecomposition::decomposeMesh()
 
     // Per processor, from neighbour processor to the inter-processor patch
     // that communicates with that neighbour
-    List<Map<label> > procNbrToInterPatch(nProcs_);
+    List<Map<label>> procNbrToInterPatch(nProcs_);
 
     // Per processor the faces per inter-processor patch
-    List<DynamicList<DynamicList<label> > > interPatchFaces(nProcs_);
+    List<DynamicList<DynamicList<label>>> interPatchFaces(nProcs_);
 
     // Processor boundaries from internal faces
     forAll(neighbour, facei)
@@ -336,7 +336,7 @@ void Foam::domainDecomposition::decomposeMesh()
 
         sortedOrder(nbrs, order);
 
-        DynamicList<DynamicList<label> >& curInterPatchFaces =
+        DynamicList<DynamicList<label>>& curInterPatchFaces =
             interPatchFaces[procI];
 
         forAll(nbrs, i)

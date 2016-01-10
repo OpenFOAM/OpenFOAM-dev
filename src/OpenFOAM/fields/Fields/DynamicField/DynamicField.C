@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,10 +36,10 @@ Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField(Istream& is)
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-Foam::tmp<Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv> >
+Foam::tmp<Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>>
 Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::clone() const
 {
-    return tmp<DynamicField<T, SizeInc, SizeMult, SizeDiv> >
+    return tmp<DynamicField<T, SizeInc, SizeMult, SizeDiv>>
     (
         new DynamicField<T, SizeInc, SizeMult, SizeDiv>(*this)
     );

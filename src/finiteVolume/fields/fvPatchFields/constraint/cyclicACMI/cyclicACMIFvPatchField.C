@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ bool Foam::cyclicACMIFvPatchField<Type>::coupled() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::cyclicACMIFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
@@ -145,7 +145,7 @@ Foam::cyclicACMIFvPatchField<Type>::patchNeighbourField() const
     Field<Type> pnfCoupled(iField, nbrFaceCellsCoupled);
     Field<Type> pfNonOverlap(iField, faceCellsNonOverlap);
 
-    tmp<Field<Type> > tpnf
+    tmp<Field<Type>> tpnf
     (
         new Field<Type>
         (
@@ -176,7 +176,7 @@ Foam::cyclicACMIFvPatchField<Type>::neighbourPatchField() const
             this->internalField()
         );
 
-    return refCast<const cyclicACMIFvPatchField<Type> >
+    return refCast<const cyclicACMIFvPatchField<Type>>
     (
         fld.boundaryField()[cyclicACMIPatch_.neighbPatchID()]
     );
@@ -259,7 +259,7 @@ void Foam::cyclicACMIFvPatchField<Type>::updateInterfaceMatrix
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::cyclicACMIFvPatchField<Type>::snGrad
+Foam::tmp<Foam::Field<Type>> Foam::cyclicACMIFvPatchField<Type>::snGrad
 (
     const scalarField& deltaCoeffs
 ) const
@@ -330,7 +330,7 @@ void Foam::cyclicACMIFvPatchField<Type>::evaluate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::cyclicACMIFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>& w
@@ -343,7 +343,7 @@ Foam::cyclicACMIFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::cyclicACMIFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>& w
@@ -356,7 +356,7 @@ Foam::cyclicACMIFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs
 (
     const scalarField& deltaCoeffs
@@ -369,7 +369,7 @@ Foam::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs() const
 {
     // note: do not blend based on mask field
@@ -379,7 +379,7 @@ Foam::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::cyclicACMIFvPatchField<Type>::gradientBoundaryCoeffs
 (
     const scalarField& deltaCoeffs
@@ -392,7 +392,7 @@ Foam::cyclicACMIFvPatchField<Type>::gradientBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::cyclicACMIFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     // note: do not blend based on mask field

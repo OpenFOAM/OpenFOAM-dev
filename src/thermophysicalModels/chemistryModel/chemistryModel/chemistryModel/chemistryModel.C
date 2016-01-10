@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -629,7 +629,7 @@ Foam::label Foam::chemistryModel<CompType, ThermoType>::nEqns() const
 
 
 template<class CompType, class ThermoType>
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::chemistryModel<CompType, ThermoType>::calculateRR
 (
     const label reactionI,
@@ -653,7 +653,7 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
         this->thermo().rho()
     );
 
-    tmp<DimensionedField<scalar, volMesh> > tRR
+    tmp<DimensionedField<scalar, volMesh>> tRR
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -850,7 +850,7 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::solve
     // Don't allow the time-step to change more than a factor of 2
     return min
     (
-        this->solve<UniformField<scalar> >(UniformField<scalar>(deltaT)),
+        this->solve<UniformField<scalar>>(UniformField<scalar>(deltaT)),
         2*deltaT
     );
 }

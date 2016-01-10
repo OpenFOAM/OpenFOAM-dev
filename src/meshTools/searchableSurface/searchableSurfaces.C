@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -332,7 +332,7 @@ void Foam::searchableSurfaces::findAllIntersections
     const pointField& start,
     const pointField& end,
     labelListList& hitSurfaces,
-    List<List<pointIndexHit> >& hitInfo
+    List<List<pointIndexHit>>& hitInfo
 ) const
 {
     searchableSurfacesQueries::findAllIntersections
@@ -609,7 +609,7 @@ bool Foam::searchableSurfaces::checkSizes
 bool Foam::searchableSurfaces::checkIntersection
 (
     const scalar tolerance,
-    const autoPtr<writer<scalar> >& setWriter,
+    const autoPtr<writer<scalar>>& setWriter,
     const bool report
 ) const
 {
@@ -837,7 +837,7 @@ Foam::label Foam::searchableSurfaces::checkGeometry
 (
     const scalar maxRatio,
     const scalar tol,
-    const autoPtr<writer<scalar> >& setWriter,
+    const autoPtr<writer<scalar>>& setWriter,
     const scalar minQuality,
     const bool report
 ) const

@@ -232,7 +232,7 @@ template<class Type, class CombineOp>
 void Foam::meshToMesh0::interpolateInternalField
 (
     Field<Type>& toF,
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tfromVf,
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
     meshToMesh0::order ord,
     const CombineOp& cop
 ) const
@@ -310,9 +310,9 @@ void Foam::meshToMesh0::interpolate
                         << exit(FatalError);
             }
 
-            if (isA<mixedFvPatchField<Type> >(toVf.boundaryField()[patchi]))
+            if (isA<mixedFvPatchField<Type>>(toVf.boundaryField()[patchi]))
             {
-                refCast<mixedFvPatchField<Type> >
+                refCast<mixedFvPatchField<Type>>
                 (
                     toVf.boundaryField()[patchi]
                 ).refValue() = toVf.boundaryField()[patchi];
@@ -354,7 +354,7 @@ template<class Type, class CombineOp>
 void Foam::meshToMesh0::interpolate
 (
     GeometricField<Type, fvPatchField, volMesh>& toVf,
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tfromVf,
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
     meshToMesh0::order ord,
     const CombineOp& cop
 ) const
@@ -365,7 +365,7 @@ void Foam::meshToMesh0::interpolate
 
 
 template<class Type, class CombineOp>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::meshToMesh0::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& fromVf,
@@ -388,7 +388,7 @@ Foam::meshToMesh0::interpolate
     }
 
     // Create and map the patch field values
-    PtrList<fvPatchField<Type> > patchFields
+    PtrList<fvPatchField<Type>> patchFields
     (
         boundaryAddressing_.size()
     );
@@ -413,7 +413,7 @@ Foam::meshToMesh0::interpolate
 
 
     // Create the complete field from the pieces
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ttoF
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ttoF
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -437,15 +437,15 @@ Foam::meshToMesh0::interpolate
 
 
 template<class Type, class CombineOp>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::meshToMesh0::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tfromVf,
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
     meshToMesh0::order ord,
     const CombineOp& cop
 ) const
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tint =
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tint =
         interpolate(tfromVf(), ord, cop);
     tfromVf.clear();
 

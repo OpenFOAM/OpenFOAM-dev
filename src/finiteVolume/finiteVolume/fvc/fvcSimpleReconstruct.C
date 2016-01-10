@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ reconstruct
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > treconField
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> treconField
     (
         new GeometricField<GradType, fvPatchField, volMesh>
         (
@@ -131,11 +131,11 @@ tmp
 >
 reconstruct
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >& tssf
+    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tvf
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tvf
     (
         fvc::reconstruct(tssf())
     );

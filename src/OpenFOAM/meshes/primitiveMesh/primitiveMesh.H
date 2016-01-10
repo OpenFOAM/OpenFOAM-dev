@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,7 +212,7 @@ class primitiveMesh
             //- Helper: return (after optional creation) edge between two points
             static label getEdge
             (
-                List<DynamicList<label> >&,
+                List<DynamicList<label>>&,
                 DynamicList<edge>&,
                 const label,
                 const label

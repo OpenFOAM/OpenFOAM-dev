@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::word
 Foam::species::thermo<Thermo, Type>::heName()
 {
-    return Type<thermo<Thermo, Type> >::name();
+    return Type<thermo<Thermo, Type>>::name();
 }
 
 
@@ -101,7 +101,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::he(const scalar p, const scalar T) const
 {
-    return Type<thermo<Thermo, Type> >::he(*this, p, T);
+    return Type<thermo<Thermo, Type>>::he(*this, p, T);
 }
 
 
@@ -117,7 +117,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::cpv(const scalar p, const scalar T) const
 {
-    return Type<thermo<Thermo, Type> >::cpv(*this, p, T);
+    return Type<thermo<Thermo, Type>>::cpv(*this, p, T);
 }
 
 
@@ -138,7 +138,7 @@ Foam::species::thermo<Thermo, Type>::cpBycpv
     const scalar T
 ) const
 {
-    return Type<thermo<Thermo, Type> >::cpBycpv(*this, p, T);
+    return Type<thermo<Thermo, Type>>::cpBycpv(*this, p, T);
 }
 
 
@@ -202,7 +202,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::HE(const scalar p, const scalar T) const
 {
-    return Type<thermo<Thermo, Type> >::HE(*this, p, T);
+    return Type<thermo<Thermo, Type>>::HE(*this, p, T);
 }
 
 
@@ -362,7 +362,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::THE
     const scalar T0
 ) const
 {
-    return Type<thermo<Thermo, Type> >::THE(*this, he, p, T0);
+    return Type<thermo<Thermo, Type>>::THE(*this, he, p, T0);
 }
 
 

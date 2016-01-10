@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -355,7 +355,7 @@ template<class PairType, class WallType>
 void Foam::CollisionRecordList<PairType, WallType>::update()
 {
     {
-        DynamicList<PairCollisionRecord<PairType> > updatedRecords;
+        DynamicList<PairCollisionRecord<PairType>> updatedRecords;
 
         forAll(pairRecords_, i)
         {
@@ -371,7 +371,7 @@ void Foam::CollisionRecordList<PairType, WallType>::update()
     }
 
     {
-        DynamicList<WallCollisionRecord<WallType> > updatedRecords;
+        DynamicList<WallCollisionRecord<WallType>> updatedRecords;
 
         forAll(wallRecords_, i)
         {

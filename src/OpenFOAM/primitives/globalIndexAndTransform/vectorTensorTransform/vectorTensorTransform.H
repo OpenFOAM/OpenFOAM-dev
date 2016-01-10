@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,7 +146,7 @@ public:
 
             //- Transform the given field
             template<class Type>
-            tmp<Field<Type> > transform(const Field<Type>&) const;
+            tmp<Field<Type>> transform(const Field<Type>&) const;
 
 
     // Member operators
@@ -186,11 +186,11 @@ inline bool contiguous<vectorTensorTransform>() {return true;}
 
 //- Template specialisations
 template<>
-tmp<Field<bool> > vectorTensorTransform::transform(const Field<bool>&) const;
+tmp<Field<bool>> vectorTensorTransform::transform(const Field<bool>&) const;
 template<>
-tmp<Field<label> > vectorTensorTransform::transform(const Field<label>&) const;
+tmp<Field<label>> vectorTensorTransform::transform(const Field<label>&) const;
 template<>
-tmp<Field<scalar> > vectorTensorTransform::transform(const Field<scalar>&)
+tmp<Field<scalar>> vectorTensorTransform::transform(const Field<scalar>&)
 const;
 
 

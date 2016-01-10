@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,9 +152,9 @@ public:
 
         scalar force (const scalar r) const;
 
-        List<Pair<scalar> > energyTable() const;
+        List<Pair<scalar>> energyTable() const;
 
-        List<Pair<scalar> > forceTable() const;
+        List<Pair<scalar>> forceTable() const;
 
         inline bool writeTables() const;
 

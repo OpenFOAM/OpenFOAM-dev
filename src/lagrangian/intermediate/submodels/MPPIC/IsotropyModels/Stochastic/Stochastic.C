@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,38 +103,38 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
     const scalar oneBySqrtThree = sqrt(1.0/3.0);
 
     const AveragingMethod<scalar>& volumeAverage =
-        mesh.lookupObject<AveragingMethod<scalar> >
+        mesh.lookupObject<AveragingMethod<scalar>>
         (
             this->owner().name() + ":volumeAverage"
         );
     const AveragingMethod<scalar>& radiusAverage =
-        mesh.lookupObject<AveragingMethod<scalar> >
+        mesh.lookupObject<AveragingMethod<scalar>>
         (
             this->owner().name() + ":radiusAverage"
         );
     const AveragingMethod<vector>& uAverage =
-        mesh.lookupObject<AveragingMethod<vector> >
+        mesh.lookupObject<AveragingMethod<vector>>
         (
             this->owner().name() + ":uAverage"
         );
     const AveragingMethod<scalar>& uSqrAverage =
-        mesh.lookupObject<AveragingMethod<scalar> >
+        mesh.lookupObject<AveragingMethod<scalar>>
         (
             this->owner().name() + ":uSqrAverage"
         );
     const AveragingMethod<scalar>& frequencyAverage =
-        mesh.lookupObject<AveragingMethod<scalar> >
+        mesh.lookupObject<AveragingMethod<scalar>>
         (
             this->owner().name() + ":frequencyAverage"
         );
     const AveragingMethod<scalar>& massAverage =
-        mesh.lookupObject<AveragingMethod<scalar> >
+        mesh.lookupObject<AveragingMethod<scalar>>
         (
             this->owner().name() + ":massAverage"
         );
 
     // calculate time scales and pdf exponent
-    autoPtr<AveragingMethod<scalar> > exponentAveragePtr
+    autoPtr<AveragingMethod<scalar>> exponentAveragePtr
     (
         AveragingMethod<scalar>::New
         (
@@ -183,7 +183,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
     }
 
     // correction velocity averages
-    autoPtr<AveragingMethod<vector> > uTildeAveragePtr
+    autoPtr<AveragingMethod<vector>> uTildeAveragePtr
     (
         AveragingMethod<vector>::New
         (
@@ -206,7 +206,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
     }
     uTildeAverage.average(massAverage);
 
-    autoPtr<AveragingMethod<scalar> > uTildeSqrAveragePtr
+    autoPtr<AveragingMethod<scalar>> uTildeSqrAveragePtr
     (
         AveragingMethod<scalar>::New
         (

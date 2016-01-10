@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,24 +28,24 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::extendedUpwindCellToFaceStencil::weightedSum
 (
     const surfaceScalarField& phi,
     const GeometricField<Type, fvPatchField, volMesh>& fld,
-    const List<List<scalar> >& ownWeights,
-    const List<List<scalar> >& neiWeights
+    const List<List<scalar>>& ownWeights,
+    const List<List<scalar>>& neiWeights
 ) const
 {
     const fvMesh& mesh = fld.mesh();
 
     // Collect internal and boundary values
-    List<List<Type> > ownFld;
+    List<List<Type>> ownFld;
     collectData(ownMap(), ownStencil(), fld, ownFld);
-    List<List<Type> > neiFld;
+    List<List<Type>> neiFld;
     collectData(neiMap(), neiStencil(), fld, neiFld);
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (

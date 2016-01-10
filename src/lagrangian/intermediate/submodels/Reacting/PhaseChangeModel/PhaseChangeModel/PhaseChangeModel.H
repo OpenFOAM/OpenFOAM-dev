@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ public:
         PhaseChangeModel(const PhaseChangeModel<CloudType>& pcm);
 
         //- Construct and return a clone
-        virtual autoPtr<PhaseChangeModel<CloudType> > clone() const = 0;
+        virtual autoPtr<PhaseChangeModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -137,7 +137,7 @@ public:
 
 
     //- Selector
-    static autoPtr<PhaseChangeModel<CloudType> > New
+    static autoPtr<PhaseChangeModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -225,7 +225,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<reactingCloudType>, 0);      \
                                                                               \
     Foam::PhaseChangeModel<reactingCloudType>::                               \
-        adddictionaryConstructorToTable<Foam::SS<reactingCloudType> >         \
+        adddictionaryConstructorToTable<Foam::SS<reactingCloudType>>         \
             add##SS##CloudType##reactingCloudType##ConstructorToTable_;
 
 

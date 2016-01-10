@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,34 +51,34 @@ namespace Foam
 namespace fvm
 {
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const one&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const dimensionedScalar&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const volScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const volScalarField&,
         const volScalarField&,
@@ -86,23 +86,23 @@ namespace fvm
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
-    (
-        const one&,
-        const one&,
-        const GeometricField<Type, fvPatchField, volMesh>&
-    );
-
-    template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const one&,
+        const one&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
+
+    template<class Type>
+    tmp<fvMatrix<Type>> ddt
+    (
+        const one&,
         const volScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const volScalarField&,
         const one&,

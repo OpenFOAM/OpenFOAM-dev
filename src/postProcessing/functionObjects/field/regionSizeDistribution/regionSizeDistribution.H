@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,7 +166,7 @@ class regionSizeDistribution
         wordReList fields_;
 
         //- Output formatter to write
-        autoPtr<writer<scalar> > formatterPtr_;
+        autoPtr<writer<scalar>> formatterPtr_;
 
         //- Optional coordinate system
         autoPtr<coordinateSystem> coordSysPtr_;

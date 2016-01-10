@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,15 +51,15 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const GeometricField<Type, fvsPatchField, surfaceMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
-        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>&
     );
 
 
@@ -81,7 +81,7 @@ namespace fvc
         <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
     > div
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
         const word& name
     );
 
@@ -103,12 +103,12 @@ namespace fvc
         <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
     > div
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -116,7 +116,7 @@ namespace fvc
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -124,48 +124,48 @@ namespace fvc
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const surfaceScalarField&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
         const word& name
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const tmp<surfaceScalarField>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
         const word& name
     );
 
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const surfaceScalarField&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > div
+    tmp<GeometricField<Type, fvPatchField, volMesh>> div
     (
         const tmp<surfaceScalarField>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 }
 

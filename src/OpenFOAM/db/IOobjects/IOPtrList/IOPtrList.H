@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ public:
         IOPtrList(const IOobject&, const PtrList<T>&);
 
         //- Construct by transferring the PtrList contents
-        IOPtrList(const IOobject&, const Xfer<PtrList<T> >&);
+        IOPtrList(const IOobject&, const Xfer<PtrList<T>>&);
 
 
     //- Destructor

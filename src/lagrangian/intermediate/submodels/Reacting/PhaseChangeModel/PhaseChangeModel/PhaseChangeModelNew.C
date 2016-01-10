@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::autoPtr<Foam::PhaseChangeModel<CloudType> >
+Foam::autoPtr<Foam::PhaseChangeModel<CloudType>>
 Foam::PhaseChangeModel<CloudType>::New
 (
     const dictionary& dict,
@@ -52,7 +52,7 @@ Foam::PhaseChangeModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<PhaseChangeModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<PhaseChangeModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

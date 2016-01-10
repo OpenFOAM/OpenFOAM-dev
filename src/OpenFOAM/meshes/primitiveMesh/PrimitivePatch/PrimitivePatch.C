@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,8 +73,8 @@ template
 Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
 PrimitivePatch
 (
-    const Xfer<FaceList<Face> >& faces,
-    const Xfer<List<PointType> >& points
+    const Xfer<FaceList<Face>>& faces,
+    const Xfer<List<PointType>>& points
 )
 :
     FaceList<Face>(faces),

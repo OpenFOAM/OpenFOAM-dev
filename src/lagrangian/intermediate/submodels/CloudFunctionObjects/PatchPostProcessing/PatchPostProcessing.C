@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,11 +56,11 @@ void Foam::PatchPostProcessing<CloudType>::write()
 {
     forAll(patchData_, i)
     {
-        List<List<scalar> > procTimes(Pstream::nProcs());
+        List<List<scalar>> procTimes(Pstream::nProcs());
         procTimes[Pstream::myProcNo()] = times_[i];
         Pstream::gatherList(procTimes);
 
-        List<List<string> > procData(Pstream::nProcs());
+        List<List<string>> procData(Pstream::nProcs());
         procData[Pstream::myProcNo()] = patchData_[i];
         Pstream::gatherList(procData);
 
@@ -82,17 +82,17 @@ void Foam::PatchPostProcessing<CloudType>::write()
             );
 
             List<string> globalData;
-            globalData = ListListOps::combine<List<string> >
+            globalData = ListListOps::combine<List<string>>
             (
                 procData,
-                accessOp<List<string> >()
+                accessOp<List<string>>()
             );
 
             List<scalar> globalTimes;
-            globalTimes = ListListOps::combine<List<scalar> >
+            globalTimes = ListListOps::combine<List<scalar>>
             (
                 procTimes,
-                accessOp<List<scalar> >()
+                accessOp<List<scalar>>()
             );
 
             labelList indices;

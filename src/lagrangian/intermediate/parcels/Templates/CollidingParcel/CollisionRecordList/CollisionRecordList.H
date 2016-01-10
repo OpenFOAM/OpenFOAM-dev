@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,10 @@ class CollisionRecordList
     // Private data
 
         //- List of active pair collisions
-        DynamicList<PairCollisionRecord<PairType> > pairRecords_;
+        DynamicList<PairCollisionRecord<PairType>> pairRecords_;
 
         //- List of active wall collisions
-        DynamicList<WallCollisionRecord<WallType> > wallRecords_;
+        DynamicList<WallCollisionRecord<WallType>> wallRecords_;
 
 
 public:
@@ -115,11 +115,11 @@ public:
     // Member Functions
 
         //- Return the active pair collisions
-        inline const DynamicList<PairCollisionRecord<PairType> >&
+        inline const DynamicList<PairCollisionRecord<PairType>>&
             pairRecords() const;
 
         //- Return the active wall collisions
-        inline const DynamicList<WallCollisionRecord<WallType> >&
+        inline const DynamicList<WallCollisionRecord<WallType>>&
             wallRecords() const;
 
         // Fields representing the data from each record, i.e if the

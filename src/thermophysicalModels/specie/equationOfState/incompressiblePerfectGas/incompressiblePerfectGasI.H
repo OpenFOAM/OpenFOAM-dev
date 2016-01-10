@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,10 +63,10 @@ inline Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::incompressiblePerfectGas<Specie> >
+inline Foam::autoPtr<Foam::incompressiblePerfectGas<Specie>>
 Foam::incompressiblePerfectGas<Specie>::clone() const
 {
-    return autoPtr<incompressiblePerfectGas<Specie> >
+    return autoPtr<incompressiblePerfectGas<Specie>>
     (
         new incompressiblePerfectGas<Specie>(*this)
     );
@@ -74,13 +74,13 @@ Foam::incompressiblePerfectGas<Specie>::clone() const
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::incompressiblePerfectGas<Specie> >
+inline Foam::autoPtr<Foam::incompressiblePerfectGas<Specie>>
 Foam::incompressiblePerfectGas<Specie>::New
 (
     Istream& is
 )
 {
-    return autoPtr<incompressiblePerfectGas<Specie> >
+    return autoPtr<incompressiblePerfectGas<Specie>>
     (
         new incompressiblePerfectGas<Specie>(is)
     );
@@ -88,13 +88,13 @@ Foam::incompressiblePerfectGas<Specie>::New
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::incompressiblePerfectGas<Specie> >
+inline Foam::autoPtr<Foam::incompressiblePerfectGas<Specie>>
 Foam::incompressiblePerfectGas<Specie>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<incompressiblePerfectGas<Specie> >
+    return autoPtr<incompressiblePerfectGas<Specie>>
     (
         new incompressiblePerfectGas<Specie>(dict)
     );

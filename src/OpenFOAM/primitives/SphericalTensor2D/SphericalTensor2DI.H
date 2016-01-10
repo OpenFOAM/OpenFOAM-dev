@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ public:
 };
 
 template<class Cmpt>
-class outerProduct<Cmpt, SphericalTensor2D<Cmpt> >
+class outerProduct<Cmpt, SphericalTensor2D<Cmpt>>
 {
 public:
 
@@ -181,7 +181,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<SphericalTensor2D<Cmpt>, SphericalTensor2D<Cmpt> >
+class innerProduct<SphericalTensor2D<Cmpt>, SphericalTensor2D<Cmpt>>
 {
 public:
 
@@ -190,7 +190,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<SphericalTensor2D<Cmpt>, Vector2D<Cmpt> >
+class innerProduct<SphericalTensor2D<Cmpt>, Vector2D<Cmpt>>
 {
 public:
 
@@ -198,7 +198,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<Vector2D<Cmpt>, SphericalTensor2D<Cmpt> >
+class innerProduct<Vector2D<Cmpt>, SphericalTensor2D<Cmpt>>
 {
 public:
 

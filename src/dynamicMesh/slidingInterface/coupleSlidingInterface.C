@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,8 +239,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
     // For every master and slave edge make a list of points to be added into
     // that edge.
-    List<DynamicList<label> > pointsIntoMasterEdges(masterEdges.size());
-    List<DynamicList<label> > pointsIntoSlaveEdges(slaveEdges.size());
+    List<DynamicList<label>> pointsIntoMasterEdges(masterEdges.size());
+    List<DynamicList<label>> pointsIntoSlaveEdges(slaveEdges.size());
 
     // Add all points from the slave patch that have hit the edge
     forAll(slavePointEdgeHits, pointI)
@@ -400,7 +400,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             << abort(FatalError);
     }
 
-    Map<Pair<edge> >& addToCpepm = *cutPointEdgePairMapPtr_;
+    Map<Pair<edge>>& addToCpepm = *cutPointEdgePairMapPtr_;
 
     // Clear the old map
     addToCpepm.clear();

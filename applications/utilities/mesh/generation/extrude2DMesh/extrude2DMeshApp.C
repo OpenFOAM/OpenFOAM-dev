@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     // Point generator
     autoPtr<extrudeModel> model(extrudeModel::New(extrude2DMeshDict));
 
-    autoPtr<MeshedSurface<face> > fMesh;
+    autoPtr<MeshedSurface<face>> fMesh;
 
     autoPtr<polyMesh> mesh;
 

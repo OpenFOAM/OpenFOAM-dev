@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,12 +118,12 @@ void Foam::featurePointConformer::addMasterAndSlavePoints
 (
     const DynamicList<Foam::point>& masterPoints,
     const DynamicList<Foam::indexedVertexEnum::vertexType>& masterPointsTypes,
-    const Map<DynamicList<autoPtr<plane> > >& masterPointReflections,
+    const Map<DynamicList<autoPtr<plane>>>& masterPointReflections,
     DynamicList<Vb>& pts,
     const label ptI
 ) const
 {
-    typedef DynamicList<autoPtr<plane> >        planeDynList;
+    typedef DynamicList<autoPtr<plane>>        planeDynList;
     typedef Foam::indexedVertexEnum::vertexType vertexType;
 
     forAll(masterPoints, pI)
@@ -199,7 +199,7 @@ void Foam::featurePointConformer::createMasterAndSlavePoints
     DynamicList<Vb>& pts
 ) const
 {
-    typedef DynamicList<autoPtr<plane> >          planeDynList;
+    typedef DynamicList<autoPtr<plane>>          planeDynList;
     typedef indexedVertexEnum::vertexType         vertexType;
     typedef extendedFeatureEdgeMesh::edgeStatus   edgeStatus;
 

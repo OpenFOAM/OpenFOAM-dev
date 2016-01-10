@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,12 +58,12 @@ namespace fv
 template<class Stencil>
 class LeastSquaresVectors
 :
-    public MeshObject<fvMesh, MoveableMeshObject, LeastSquaresVectors<Stencil> >
+    public MeshObject<fvMesh, MoveableMeshObject, LeastSquaresVectors<Stencil>>
 {
     // Private data
 
         //- Least-squares gradient vectors
-        List<List<vector> > vectors_;
+        List<List<vector>> vectors_;
 
 
     // Private Member Functions
@@ -100,7 +100,7 @@ public:
         }
 
         //- Return reference to the least square vectors
-        const List<List<vector> >& vectors() const
+        const List<List<vector>>& vectors() const
         {
             return vectors_;
         }

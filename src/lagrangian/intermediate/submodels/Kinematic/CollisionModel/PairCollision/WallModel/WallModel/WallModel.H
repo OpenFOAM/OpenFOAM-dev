@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ public:
 
 
     //- Selector
-    static autoPtr<WallModel<CloudType> > New
+    static autoPtr<WallModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -141,9 +141,9 @@ public:
         (
             typename CloudType::parcelType& p,
             const List<point>& flatSitePoints,
-            const List<WallSiteData<vector> >& flatSiteData,
+            const List<WallSiteData<vector>>& flatSiteData,
             const List<point>& sharpSitePoints,
-            const List<WallSiteData<vector> >& sharpSiteData
+            const List<WallSiteData<vector>>& sharpSiteData
         ) const = 0;
 };
 
@@ -173,7 +173,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<Foam::CloudType>, 0);        \
                                                                               \
     Foam::WallModel<Foam::CloudType>::                                        \
-        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType> >           \
+        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType>>           \
             add##SS##CloudType##ConstructorToTable_;
 
 

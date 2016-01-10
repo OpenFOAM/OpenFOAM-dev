@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,10 +65,10 @@ inline Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
 
 
 template<class Specie, int PolySize>
-inline Foam::autoPtr<Foam::icoPolynomial<Specie, PolySize> >
+inline Foam::autoPtr<Foam::icoPolynomial<Specie, PolySize>>
 Foam::icoPolynomial<Specie, PolySize>::clone() const
 {
-    return autoPtr<icoPolynomial<Specie, PolySize> >
+    return autoPtr<icoPolynomial<Specie, PolySize>>
     (
         new icoPolynomial<Specie, PolySize>(*this)
     );
@@ -76,10 +76,10 @@ Foam::icoPolynomial<Specie, PolySize>::clone() const
 
 
 template<class Specie, int PolySize>
-inline Foam::autoPtr<Foam::icoPolynomial<Specie, PolySize> >
+inline Foam::autoPtr<Foam::icoPolynomial<Specie, PolySize>>
 Foam::icoPolynomial<Specie, PolySize>::New(Istream& is)
 {
-    return autoPtr<icoPolynomial<Specie, PolySize> >
+    return autoPtr<icoPolynomial<Specie, PolySize>>
     (
         new icoPolynomial<Specie, PolySize>(is)
     );
@@ -87,10 +87,10 @@ Foam::icoPolynomial<Specie, PolySize>::New(Istream& is)
 
 
 template<class Specie, int PolySize>
-inline Foam::autoPtr<Foam::icoPolynomial<Specie, PolySize> >
+inline Foam::autoPtr<Foam::icoPolynomial<Specie, PolySize>>
 Foam::icoPolynomial<Specie, PolySize>::New(const dictionary& dict)
 {
-    return autoPtr<icoPolynomial<Specie, PolySize> >
+    return autoPtr<icoPolynomial<Specie, PolySize>>
     (
         new icoPolynomial<Specie, PolySize>(dict)
     );

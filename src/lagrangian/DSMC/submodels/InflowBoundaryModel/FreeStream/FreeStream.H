@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class FreeStream
         // + Inner List - one Field for every species to be introduced
         // + Each field entry corresponding to a face to be injected across
         //   with a particular species
-        List<List<Field<scalar> > > particleFluxAccumulators_;
+        List<List<Field<scalar>>> particleFluxAccumulators_;
 
 
 public:

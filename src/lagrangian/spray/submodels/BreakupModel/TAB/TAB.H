@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,9 +102,9 @@ public:
         TAB(const TAB<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<BreakupModel<CloudType> > clone() const
+        virtual autoPtr<BreakupModel<CloudType>> clone() const
         {
-            return autoPtr<BreakupModel<CloudType> >
+            return autoPtr<BreakupModel<CloudType>>
             (
                 new TAB<CloudType>(*this)
             );

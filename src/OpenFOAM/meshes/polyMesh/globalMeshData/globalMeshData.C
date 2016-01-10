@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1051,7 +1051,7 @@ void Foam::globalMeshData::calcGlobalEdgeSlaves() const
     // Construct map
     globalEdgeTransformedSlavesPtr_.reset(new labelListList());
 
-    List<Map<label> > compactMap(Pstream::nProcs());
+    List<Map<label>> compactMap(Pstream::nProcs());
     globalEdgeSlavesMapPtr_.reset
     (
         new mapDistribute
@@ -1435,7 +1435,7 @@ void Foam::globalMeshData::calcGlobalPointBoundaryFaces() const
     }
 
     // Construct a map to get the face data directly
-    List<Map<label> > compactMap(Pstream::nProcs());
+    List<Map<label>> compactMap(Pstream::nProcs());
 
     globalPointTransformedBoundaryFacesPtr_.reset
     (
@@ -1662,7 +1662,7 @@ void Foam::globalMeshData::calcGlobalPointBoundaryCells() const
     }
 
     // Construct a map to get the cell data directly
-    List<Map<label> > compactMap(Pstream::nProcs());
+    List<Map<label>> compactMap(Pstream::nProcs());
 
     globalPointTransformedBoundaryCellsPtr_.reset
     (

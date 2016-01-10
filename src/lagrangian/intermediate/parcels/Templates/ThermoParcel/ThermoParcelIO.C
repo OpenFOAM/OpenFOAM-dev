@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ void Foam::ThermoParcel<ParcelType>::readFields(CloudType& c)
 
 
     label i = 0;
-    forAllIter(typename Cloud<ThermoParcel<ParcelType> >, c, iter)
+    forAllIter(typename Cloud<ThermoParcel<ParcelType>>, c, iter)
     {
         ThermoParcel<ParcelType>& p = iter();
 
@@ -119,7 +119,7 @@ void Foam::ThermoParcel<ParcelType>::writeFields(const CloudType& c)
     IOField<scalar> Cp(c.fieldIOobject("Cp", IOobject::NO_READ), np);
 
     label i = 0;
-    forAllConstIter(typename Cloud<ThermoParcel<ParcelType> >, c, iter)
+    forAllConstIter(typename Cloud<ThermoParcel<ParcelType>>, c, iter)
     {
         const ThermoParcel<ParcelType>& p = iter();
 

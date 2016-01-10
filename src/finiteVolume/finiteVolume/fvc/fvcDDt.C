@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,14 +40,14 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 DDt
 (
     const surfaceScalarField& phi,
     const GeometricField<Type, fvPatchField, volMesh>& psi
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddtDivPhiPsi
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddtDivPhiPsi
         = fvc::ddt(psi) + fvc::div(phi, psi);
 
     if (phi.mesh().moving())
@@ -62,14 +62,14 @@ DDt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 DDt
 (
     const tmp<surfaceScalarField>& tphi,
     const GeometricField<Type, fvPatchField, volMesh>& psi
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh> > DDtPsi
+    tmp<GeometricField<Type, fvPatchField, volMesh>> DDtPsi
     (
         fvc::DDt(tphi(), psi)
     );

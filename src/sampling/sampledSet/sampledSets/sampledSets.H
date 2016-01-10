@@ -108,7 +108,7 @@ class sampledSets
         template<class Type>
         class volFieldSampler
         :
-            public List<Field<Type> >
+            public List<Field<Type>>
         {
             //- Name of this collection of values
             const word name_;
@@ -133,7 +133,7 @@ class sampledSets
             //- Construct from components
             volFieldSampler
             (
-                const List<Field<Type> >& values,
+                const List<Field<Type>>& values,
                 const word& name
             );
 
@@ -224,16 +224,16 @@ class sampledSets
         template<class T>
         void combineSampledValues
         (
-            const PtrList<volFieldSampler<T> >& sampledFields,
+            const PtrList<volFieldSampler<T>>& sampledFields,
             const labelListList& indexSets,
-            PtrList<volFieldSampler<T> >& masterFields
+            PtrList<volFieldSampler<T>>& masterFields
         );
 
         template<class Type>
         void writeSampleFile
         (
             const coordSet& masterSampleSet,
-            const PtrList<volFieldSampler<Type> >& masterFields,
+            const PtrList<volFieldSampler<Type>>& masterFields,
             const label setI,
             const fileName& timeDir,
             const writer<Type>& formatter

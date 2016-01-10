@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ void Foam::CSV<Type>::read()
             << exit(FatalIOError);
     }
 
-    DynamicList<Tuple2<scalar, Type> > values;
+    DynamicList<Tuple2<scalar, Type>> values;
 
     // skip header
     for (label i = 0; i < nHeaderLine_; i++)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ class smoothAlignmentSolver
     // Private Member Functions
 
         template<class Triangulation, class Type>
-        tmp<Field<Type> > filterFarPoints
+        tmp<Field<Type>> filterFarPoints
         (
             const Triangulation& mesh,
             const Field<Type>& field

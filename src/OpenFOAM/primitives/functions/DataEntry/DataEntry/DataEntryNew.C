@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::autoPtr<Foam::DataEntry<Type> > Foam::DataEntry<Type>::New
+Foam::autoPtr<Foam::DataEntry<Type>> Foam::DataEntry<Type>::New
 (
     const word& entryName,
     const dictionary& dict
@@ -71,7 +71,7 @@ Foam::autoPtr<Foam::DataEntry<Type> > Foam::DataEntry<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<DataEntry<Type> >(cstrIter()(entryName, dict));
+    return autoPtr<DataEntry<Type>>(cstrIter()(entryName, dict));
 }
 
 

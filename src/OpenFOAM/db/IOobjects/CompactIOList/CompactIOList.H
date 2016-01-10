@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ public:
         CompactIOList(const IOobject&, const List<T>&);
 
         //- Construct by transferring the List contents
-        CompactIOList(const IOobject&, const Xfer<List<T> >&);
+        CompactIOList(const IOobject&, const Xfer<List<T>>&);
 
 
     // Destructor

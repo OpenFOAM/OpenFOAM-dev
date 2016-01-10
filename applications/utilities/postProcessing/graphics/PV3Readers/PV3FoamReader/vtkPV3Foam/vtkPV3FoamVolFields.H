@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ template<class Type>
 void Foam::vtkPV3Foam::convertVolFields
 (
     const fvMesh& mesh,
-    const PtrList<PrimitivePatchInterpolation<primitivePatch> >& ppInterpList,
+    const PtrList<PrimitivePatchInterpolation<primitivePatch>>& ppInterpList,
     const IOobjectList& objects,
     const bool interpFields,
     vtkMultiBlockDataSet* output
@@ -74,7 +74,7 @@ void Foam::vtkPV3Foam::convertVolFields
         );
 
         // Interpolated field (demand driven)
-        autoPtr<GeometricField<Type, pointPatchField, pointMesh> > ptfPtr;
+        autoPtr<GeometricField<Type, pointPatchField, pointMesh>> ptfPtr;
         if (interpFields)
         {
             if (debug)
@@ -144,7 +144,7 @@ void Foam::vtkPV3Foam::convertVolFields
 
             if
             (
-                isType<emptyFvPatchField<Type> >(ptf)
+                isType<emptyFvPatchField<Type>>(ptf)
              ||
                 (
                     reader_->GetExtrapolatePatches()
@@ -154,7 +154,7 @@ void Foam::vtkPV3Foam::convertVolFields
             {
                 fvPatch p(ptf.patch().patch(), tf.mesh().boundary());
 
-                tmp<Field<Type> > tpptf
+                tmp<Field<Type>> tpptf
                 (
                     fvPatchField<Type>(p, tf).patchInternalField()
                 );
@@ -284,7 +284,7 @@ template<class Type>
 void Foam::vtkPV3Foam::convertVolFieldBlock
 (
     const GeometricField<Type, fvPatchField, volMesh>& tf,
-    autoPtr<GeometricField<Type, pointPatchField, pointMesh> >& ptfPtr,
+    autoPtr<GeometricField<Type, pointPatchField, pointMesh>>& ptfPtr,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
     const List<polyDecomp>& decompLst

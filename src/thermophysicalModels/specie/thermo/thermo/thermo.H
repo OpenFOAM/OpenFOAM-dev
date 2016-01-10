@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ template<class Thermo, template<class> class Type>
 class thermo
 :
     public Thermo,
-    public Type<thermo<Thermo, Type> >
+    public Type<thermo<Thermo, Type>>
 {
     // Private data
 
@@ -151,7 +151,7 @@ public:
         {
             return
                   Thermo::typeName() + ','
-                + Type<thermo<Thermo, Type> >::typeName();
+                + Type<thermo<Thermo, Type>>::typeName();
         }
 
         // Fundamental properties

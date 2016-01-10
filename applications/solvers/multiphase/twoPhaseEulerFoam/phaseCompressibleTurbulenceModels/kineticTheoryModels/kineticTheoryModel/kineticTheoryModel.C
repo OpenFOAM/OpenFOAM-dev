@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         RASModel<EddyDiffusivity<ThermalDiffusivity
         <
             PhaseCompressibleTurbulenceModel<phaseModel>
-        > > >
+        >>>
     >
     (
         type,
@@ -192,7 +192,7 @@ bool Foam::RASModels::kineticTheoryModel::read()
             RASModel<EddyDiffusivity<ThermalDiffusivity
             <
                 PhaseCompressibleTurbulenceModel<phaseModel>
-            > > >
+            >>>
         >::read()
     )
     {

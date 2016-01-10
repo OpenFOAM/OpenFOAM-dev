@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ Foam::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::fixedJumpFvPatchField<Type>::jump() const
+Foam::tmp<Foam::Field<Type>> Foam::fixedJumpFvPatchField<Type>::jump() const
 {
     if (this->cyclicPatch().owner())
     {
@@ -117,7 +117,7 @@ Foam::tmp<Foam::Field<Type> > Foam::fixedJumpFvPatchField<Type>::jump() const
     }
     else
     {
-        return refCast<const fixedJumpFvPatchField<Type> >
+        return refCast<const fixedJumpFvPatchField<Type>>
         (
             this->neighbourPatchField()
         ).jump();
@@ -146,7 +146,7 @@ void Foam::fixedJumpFvPatchField<Type>::rmap
     jumpCyclicFvPatchField<Type>::rmap(ptf, addr);
 
     const fixedJumpFvPatchField<Type>& tiptf =
-        refCast<const fixedJumpFvPatchField<Type> >(ptf);
+        refCast<const fixedJumpFvPatchField<Type>>(ptf);
     jump_.rmap(tiptf.jump_, addr);
 }
 

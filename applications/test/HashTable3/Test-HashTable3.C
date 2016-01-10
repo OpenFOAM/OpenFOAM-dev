@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,9 +48,9 @@ int main(int argc, char *argv[])
 
     // ie, a
     // Map<label> map(2 * nSize);
-    // HashTable<label, label, Hash<label> > map(2 * nSize);
-    // StaticHashTable<label, label, Hash<label> > map(2 * nSize);
-    HashTable<label, label, Hash<label> > map(2 * nSize);
+    // HashTable<label, label, Hash<label>> map(2 * nSize);
+    // StaticHashTable<label, label, Hash<label>> map(2 * nSize);
+    HashTable<label, label, Hash<label>> map(2 * nSize);
 
     Info<< "Constructed map of size: " << nSize
         << " (size " << map.size() << " capacity " << map.capacity() << ") "

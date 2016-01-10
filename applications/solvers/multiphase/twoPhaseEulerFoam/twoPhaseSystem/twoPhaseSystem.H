@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,23 +97,23 @@ class twoPhaseSystem
         HashTable<autoPtr<blendingMethod>, word, word::hash> blendingMethods_;
 
         //- Drag model
-        autoPtr<BlendedInterfacialModel<dragModel> > drag_;
+        autoPtr<BlendedInterfacialModel<dragModel>> drag_;
 
         //- Virtual mass model
-        autoPtr<BlendedInterfacialModel<virtualMassModel> > virtualMass_;
+        autoPtr<BlendedInterfacialModel<virtualMassModel>> virtualMass_;
 
         //- Heat transfer model
-        autoPtr<BlendedInterfacialModel<heatTransferModel> > heatTransfer_;
+        autoPtr<BlendedInterfacialModel<heatTransferModel>> heatTransfer_;
 
         //- Lift model
-        autoPtr<BlendedInterfacialModel<liftModel> > lift_;
+        autoPtr<BlendedInterfacialModel<liftModel>> lift_;
 
         //- Wall lubrication model
-        autoPtr<BlendedInterfacialModel<wallLubricationModel> >
+        autoPtr<BlendedInterfacialModel<wallLubricationModel>>
             wallLubrication_;
 
         //- Wall lubrication model
-        autoPtr<BlendedInterfacialModel<turbulentDispersionModel> >
+        autoPtr<BlendedInterfacialModel<turbulentDispersionModel>>
             turbulentDispersion_;
 
 

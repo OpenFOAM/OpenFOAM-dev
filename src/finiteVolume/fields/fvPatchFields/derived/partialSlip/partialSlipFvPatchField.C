@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,14 +115,14 @@ void Foam::partialSlipFvPatchField<Type>::rmap
     transformFvPatchField<Type>::rmap(ptf, addr);
 
     const partialSlipFvPatchField<Type>& dmptf =
-        refCast<const partialSlipFvPatchField<Type> >(ptf);
+        refCast<const partialSlipFvPatchField<Type>>(ptf);
 
     valueFraction_.rmap(dmptf.valueFraction_, addr);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::partialSlipFvPatchField<Type>::snGrad() const
 {
     tmp<vectorField> nHat = this->patch().nf();
@@ -159,7 +159,7 @@ void Foam::partialSlipFvPatchField<Type>::evaluate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::partialSlipFvPatchField<Type>::snGradTransformDiag() const
 {
     const vectorField nHat(this->patch().nf());

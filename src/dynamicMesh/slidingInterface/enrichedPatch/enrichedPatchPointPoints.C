@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ void Foam::enrichedPatch::calcPointPoints() const
     // Go through all faces and add the previous and next point as the
     // neighbour for each point. While inserting points, reject the
     // duplicates (as every internal edge will be visited twice).
-    List<DynamicList<label, primitiveMesh::edgesPerPoint_> >
+    List<DynamicList<label, primitiveMesh::edgesPerPoint_>>
         pp(meshPoints().size());
 
     const faceList& lf = localFaces();

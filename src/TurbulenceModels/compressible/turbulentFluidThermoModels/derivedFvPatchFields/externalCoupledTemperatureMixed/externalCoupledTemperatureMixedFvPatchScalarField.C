@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,22 +178,22 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
     {
         int tag = Pstream::msgType() + 1;
 
-        List<Field<scalar> > magSfs(Pstream::nProcs());
+        List<Field<scalar>> magSfs(Pstream::nProcs());
         magSfs[Pstream::myProcNo()].setSize(this->patch().size());
         magSfs[Pstream::myProcNo()] = this->patch().magSf();
         Pstream::gatherList(magSfs, tag);
 
-        List<Field<scalar> > values(Pstream::nProcs());
+        List<Field<scalar>> values(Pstream::nProcs());
         values[Pstream::myProcNo()].setSize(this->patch().size());
         values[Pstream::myProcNo()] = Tp;
         Pstream::gatherList(values, tag);
 
-        List<Field<scalar> > qDots(Pstream::nProcs());
+        List<Field<scalar>> qDots(Pstream::nProcs());
         qDots[Pstream::myProcNo()].setSize(this->patch().size());
         qDots[Pstream::myProcNo()] = qDot;
         Pstream::gatherList(qDots, tag);
 
-        List<Field<scalar> > htcs(Pstream::nProcs());
+        List<Field<scalar>> htcs(Pstream::nProcs());
         htcs[Pstream::myProcNo()].setSize(this->patch().size());
         htcs[Pstream::myProcNo()] = htc;
         Pstream::gatherList(htcs, tag);

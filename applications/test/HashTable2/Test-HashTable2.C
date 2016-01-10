@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     Info<< "table1: " << table1 << nl
         << "toc: " << table1.toc() << endl;
 
-    HashTable<label, label, Hash<label> > table2(10);
+    HashTable<label, label, Hash<label>> table2(10);
 
     table2.insert(3, 10);
     table2.insert(5, 12);

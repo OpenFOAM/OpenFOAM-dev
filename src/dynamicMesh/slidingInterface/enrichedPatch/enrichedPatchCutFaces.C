@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,8 +94,8 @@ void Foam::enrichedPatch::calcCutFaces() const
     //    the points projected onto the face.
 
     // Create a set of edge usage parameters
-    HashSet<edge, Hash<edge> > edgesUsedOnce(pp.size());
-    HashSet<edge, Hash<edge> > edgesUsedTwice
+    HashSet<edge, Hash<edge>> edgesUsedOnce(pp.size());
+    HashSet<edge, Hash<edge>> edgesUsedTwice
         (pp.size()*primitiveMesh::edgesPerPoint_);
 
 
@@ -361,7 +361,7 @@ void Foam::enrichedPatch::calcCutFaces() const
                         );
 
                         // Increment the usage count using two hash sets
-                        HashSet<edge, Hash<edge> >::iterator euoIter =
+                        HashSet<edge, Hash<edge>>::iterator euoIter =
                             edgesUsedOnce.find(curCutFaceEdge);
 
                         if (euoIter == edgesUsedOnce.end())

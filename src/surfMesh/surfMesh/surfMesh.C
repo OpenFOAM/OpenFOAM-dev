@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,7 +157,7 @@ Foam::surfMesh::surfMesh
 Foam::surfMesh::surfMesh
 (
     const IOobject& io,
-    const Xfer<MeshedSurface<face> >& surf,
+    const Xfer<MeshedSurface<face>>& surf,
     const word& surfName
 )
 :
@@ -288,9 +288,9 @@ void Foam::surfMesh::transfer
 }
 
 
-Foam::Xfer<Foam::MeshedSurface<Foam::face> > Foam::surfMesh::xfer()
+Foam::Xfer<Foam::MeshedSurface<Foam::face>> Foam::surfMesh::xfer()
 {
-    Xfer<MeshedSurface<face> > xf;
+    Xfer<MeshedSurface<face>> xf;
 
     xf().storedPoints().transfer(this->storedPoints());
     xf().storedFaces().transfer(this->storedFaces());

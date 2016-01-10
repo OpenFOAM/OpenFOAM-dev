@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ class timeActivatedFileUpdate
         fileName fileToUpdate_;
 
         //- List of times vs filenames
-        List<Tuple2<scalar, fileName> > timeVsFile_;
+        List<Tuple2<scalar, fileName>> timeVsFile_;
 
         //- Index of last file copied
         label lastIndex_;

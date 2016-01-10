@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ void Foam::ReactingCloud<CloudType>::setModels()
 {
     compositionModel_.reset
     (
-        CompositionModel<ReactingCloud<CloudType> >::New
+        CompositionModel<ReactingCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -44,7 +44,7 @@ void Foam::ReactingCloud<CloudType>::setModels()
 
     phaseChangeModel_.reset
     (
-        PhaseChangeModel<ReactingCloud<CloudType> >::New
+        PhaseChangeModel<ReactingCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -322,7 +322,7 @@ void Foam::ReactingCloud<CloudType>::evolve()
     if (this->solution().canEvolve())
     {
         typename parcelType::template
-            TrackingData<ReactingCloud<CloudType> > td(*this);
+            TrackingData<ReactingCloud<CloudType>> td(*this);
 
         this->solve(td);
     }
@@ -332,7 +332,7 @@ void Foam::ReactingCloud<CloudType>::evolve()
 template<class CloudType>
 void Foam::ReactingCloud<CloudType>::autoMap(const mapPolyMesh& mapper)
 {
-    typedef typename particle::TrackingData<ReactingCloud<CloudType> > tdType;
+    typedef typename particle::TrackingData<ReactingCloud<CloudType>> tdType;
 
     tdType td(*this);
 

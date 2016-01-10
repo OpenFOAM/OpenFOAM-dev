@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ bool Foam::tabulated6DoFAcceleration::read
 
         if (dataStream.good())
         {
-            List<Tuple2<scalar, accelerationVectors> > timeValues
+            List<Tuple2<scalar, accelerationVectors>> timeValues
             (
                 dataStream
             );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::distanceSurface::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
@@ -39,14 +39,14 @@ Foam::distanceSurface::sampleField
 {
     if (cell_)
     {
-        return tmp<Field<Type> >
+        return tmp<Field<Type>>
         (
             new Field<Type>(vField, isoSurfCellPtr_().meshCells())
         );
     }
     else
     {
-        return tmp<Field<Type> >
+        return tmp<Field<Type>>
         (
             new Field<Type>(vField, isoSurfPtr_().meshCells())
         );
@@ -55,7 +55,7 @@ Foam::distanceSurface::sampleField
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::distanceSurface::interpolateField
 (
     const interpolation<Type>& interpolator
@@ -67,7 +67,7 @@ Foam::distanceSurface::interpolateField
     const GeometricField<Type, fvPatchField, volMesh>& volFld =
         interpolator.psi();
 
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > pointFld
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> pointFld
     (
         volPointInterpolation::New(fvm).interpolate(volFld)
     );

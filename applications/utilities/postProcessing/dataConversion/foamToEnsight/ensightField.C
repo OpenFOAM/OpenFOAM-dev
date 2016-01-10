@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ using namespace Foam;
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 volField
 (
     const fvMeshSubset& meshSubsetter,
@@ -49,7 +49,7 @@ volField
 {
     if (meshSubsetter.hasSubMesh())
     {
-        tmp<GeometricField<Type, fvPatchField, volMesh> > tfld
+        tmp<GeometricField<Type, fvPatchField, volMesh>> tfld
         (
             meshSubsetter.interpolate(vf)
         );
@@ -725,7 +725,7 @@ void ensightField
 {
     if (nodeValues)
     {
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > pfld
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> pfld
         (
             volPointInterpolation::New(vf.mesh()).interpolate(vf)
         );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ void Foam::ensightSetWriter<Type>::write
     const bool writeTracks,
     const PtrList<coordSet>& tracks,
     const wordList& valueSetNames,
-    const List<List<Field<Type> > >& valueSets,
+    const List<List<Field<Type>>>& valueSets,
     Ostream& os
 ) const
 {
@@ -279,7 +279,7 @@ void Foam::ensightSetWriter<Type>::write
         {
             os  << pTraits<Type>::typeName << nl;
 
-            const List<Field<Type> >& fieldVals = valueSets[setI];
+            const List<Field<Type>>& fieldVals = valueSets[setI];
             forAll(fieldVals, trackI)
             {
                 os  << "part" << nl

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,14 +197,14 @@ void Foam::fvPatchField<Type>::check(const fvPatchField<Type>& ptf) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::fvPatchField<Type>::snGrad() const
+Foam::tmp<Foam::Field<Type>> Foam::fvPatchField<Type>::snGrad() const
 {
     return patch_.deltaCoeffs()*(*this - patchInternalField());
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::fvPatchField<Type>::patchInternalField() const
 {
     return patch_.patchInternalField(internalField_);

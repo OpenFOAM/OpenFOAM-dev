@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ License
 
 #define makeChemistrySolverType(SS, Comp, Thermo)                             \
                                                                               \
-    typedef SS<chemistryModel<Comp, Thermo> > SS##Comp##Thermo;               \
+    typedef SS<chemistryModel<Comp, Thermo>> SS##Comp##Thermo;               \
                                                                               \
     defineTemplateTypeNameAndDebugWithName                                    \
     (                                                                         \

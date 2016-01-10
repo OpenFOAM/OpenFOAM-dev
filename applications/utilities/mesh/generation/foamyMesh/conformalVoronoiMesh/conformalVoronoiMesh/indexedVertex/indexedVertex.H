@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class Istream;
 template<class Gt, class Vb> Ostream& operator<<
 (
     Ostream&,
-    const Foam::InfoProxy<CGAL::indexedVertex<Gt, Vb> >&
+    const Foam::InfoProxy<CGAL::indexedVertex<Gt, Vb>>&
 );
 
 template<class Gt, class Vb> Ostream& operator<<
@@ -98,7 +98,7 @@ namespace CGAL
                        Class indexedVertex Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Gt, class Vb = CGAL::Triangulation_vertex_base_3<Gt> >
+template<class Gt, class Vb = CGAL::Triangulation_vertex_base_3<Gt>>
 class indexedVertex
 :
     public Foam::indexedVertexEnum,
@@ -294,7 +294,7 @@ public:
 
         //- Return info proxy.
         //  Used to print indexedVertex information to a stream
-        Foam::InfoProxy<indexedVertex<Gt, Vb> > info() const
+        Foam::InfoProxy<indexedVertex<Gt, Vb>> info() const
         {
             return *this;
         }
@@ -302,7 +302,7 @@ public:
         friend Foam::Ostream& Foam::operator<< <Gt, Vb>
         (
             Foam::Ostream&,
-            const Foam::InfoProxy<indexedVertex<Gt, Vb> >&
+            const Foam::InfoProxy<indexedVertex<Gt, Vb>>&
         );
 
         friend Foam::Ostream& Foam::operator<< <Gt, Vb>

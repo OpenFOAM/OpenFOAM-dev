@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,10 @@ inline Foam::Boussinesq<Specie>::Boussinesq
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::Boussinesq<Specie> >
+inline Foam::autoPtr<Foam::Boussinesq<Specie>>
 Foam::Boussinesq<Specie>::clone() const
 {
-    return autoPtr<Boussinesq<Specie> >
+    return autoPtr<Boussinesq<Specie>>
     (
         new Boussinesq<Specie>(*this)
     );
@@ -80,13 +80,13 @@ Foam::Boussinesq<Specie>::clone() const
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::Boussinesq<Specie> >
+inline Foam::autoPtr<Foam::Boussinesq<Specie>>
 Foam::Boussinesq<Specie>::New
 (
     Istream& is
 )
 {
-    return autoPtr<Boussinesq<Specie> >
+    return autoPtr<Boussinesq<Specie>>
     (
         new Boussinesq<Specie>(is)
     );
@@ -94,13 +94,13 @@ Foam::Boussinesq<Specie>::New
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::Boussinesq<Specie> >
+inline Foam::autoPtr<Foam::Boussinesq<Specie>>
 Foam::Boussinesq<Specie>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<Boussinesq<Specie> >
+    return autoPtr<Boussinesq<Specie>>
     (
         new Boussinesq<Specie>(dict)
     );

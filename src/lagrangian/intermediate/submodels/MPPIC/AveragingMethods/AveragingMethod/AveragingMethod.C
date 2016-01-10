@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::AveragingMethod<Type>::AveragingMethod
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::autoPtr<Foam::AveragingMethod<Type> >
+Foam::autoPtr<Foam::AveragingMethod<Type>>
 Foam::AveragingMethod<Type>::New
 (
     const IOobject& io,
@@ -95,7 +95,7 @@ Foam::AveragingMethod<Type>::New
             << abort(FatalError);
     }
 
-    return autoPtr<AveragingMethod<Type> >(cstrIter()(io, dict, mesh));
+    return autoPtr<AveragingMethod<Type>>(cstrIter()(io, dict, mesh));
 }
 
 

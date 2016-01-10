@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -408,9 +408,9 @@ Foam::tmp<Foam::scalarField> Foam::TableBase<Type>::x() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::TableBase<Type>::y() const
+Foam::tmp<Foam::Field<Type>> Foam::TableBase<Type>::y() const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(table_.size(), pTraits<Type>::zero));
+    tmp<Field<Type>> tfld(new Field<Type>(table_.size(), pTraits<Type>::zero));
     Field<Type>& fld = tfld();
 
     forAll(table_, i)

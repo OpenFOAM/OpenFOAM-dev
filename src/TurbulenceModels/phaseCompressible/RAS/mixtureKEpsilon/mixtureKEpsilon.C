@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ mixtureKEpsilon<BasicTurbulenceModel>::mixtureKEpsilon
     const word& type
 )
 :
-    eddyViscosity<RASModel<BasicTurbulenceModel> >
+    eddyViscosity<RASModel<BasicTurbulenceModel>>
     (
         type,
         alpha,
@@ -311,7 +311,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::initMixtureFields()
 template<class BasicTurbulenceModel>
 bool mixtureKEpsilon<BasicTurbulenceModel>::read()
 {
-    if (eddyViscosity<RASModel<BasicTurbulenceModel> >::read())
+    if (eddyViscosity<RASModel<BasicTurbulenceModel>>::read())
     {
         Cmu_.readIfPresent(this->coeffDict());
         C1_.readIfPresent(this->coeffDict());
@@ -357,7 +357,7 @@ mixtureKEpsilon<BasicTurbulenceModel>::liquidTurbulence() const
         liquidTurbulencePtr_ =
            &const_cast<mixtureKEpsilon<BasicTurbulenceModel>&>
             (
-                U.db().lookupObject<mixtureKEpsilon<BasicTurbulenceModel> >
+                U.db().lookupObject<mixtureKEpsilon<BasicTurbulenceModel>>
                 (
                     IOobject::groupName
                     (
@@ -580,7 +580,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
 
     fv::options& fvOptions(fv::options::New(this->mesh_));
 
-    eddyViscosity<RASModel<BasicTurbulenceModel> >::correct();
+    eddyViscosity<RASModel<BasicTurbulenceModel>>::correct();
 
     // Update the effective mixture density
     rhom = this->rhom();

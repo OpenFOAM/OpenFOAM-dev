@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,13 +28,13 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Triangulation, class Type>
-Foam::tmp<Foam::Field<Type> > Foam::smoothAlignmentSolver::filterFarPoints
+Foam::tmp<Foam::Field<Type>> Foam::smoothAlignmentSolver::filterFarPoints
 (
     const Triangulation& mesh,
     const Field<Type>& field
 )
 {
-    tmp<Field<Type> > tNewField(new Field<Type>(field.size()));
+    tmp<Field<Type>> tNewField(new Field<Type>(field.size()));
     Field<Type>& newField = tNewField();
 
     label added = 0;
@@ -92,7 +92,7 @@ Foam::autoPtr<Foam::mapDistribute> Foam::smoothAlignmentSolver::buildReferredMap
 
     indices.transfer(dynIndices);
 
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     return autoPtr<mapDistribute>
     (
         new mapDistribute
@@ -156,7 +156,7 @@ Foam::autoPtr<Foam::mapDistribute> Foam::smoothAlignmentSolver::buildMap
         pointPoints[vit->index()].transfer(indices);
     }
 
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     return autoPtr<mapDistribute>
     (
         new mapDistribute

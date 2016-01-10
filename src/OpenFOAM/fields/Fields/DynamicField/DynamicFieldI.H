@@ -61,7 +61,7 @@ inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
-    const Xfer<List<T> >& lst
+    const Xfer<List<T>>& lst
 )
 :
     Field<T>(lst),
@@ -121,7 +121,7 @@ inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
-    const Xfer<DynamicField<T, SizeInc, SizeMult, SizeDiv> >& lst
+    const Xfer<DynamicField<T, SizeInc, SizeMult, SizeDiv>>& lst
 )
 :
     Field<T>(lst),
@@ -308,7 +308,7 @@ Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::shrink()
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline Foam::Xfer<Foam::List<T> >
+inline Foam::Xfer<Foam::List<T>>
 Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::xfer()
 {
     return xferMoveTo<List<T>>(*this);

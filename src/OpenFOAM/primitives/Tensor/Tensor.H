@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ public:
         inline Tensor(const SymmTensor<Cmpt>&);
 
         //- Construct given triad
-        inline Tensor(const Vector<Vector<Cmpt> >&);
+        inline Tensor(const Vector<Vector<Cmpt>>&);
 
         //- Construct given the three vector components
         inline Tensor
@@ -171,7 +171,7 @@ public:
         inline void operator=(const SymmTensor<Cmpt>&);
 
         //- Assign to a triad
-        inline void operator=(const Vector<Vector<Cmpt> >&);
+        inline void operator=(const Vector<Vector<Cmpt>>&);
 };
 
 

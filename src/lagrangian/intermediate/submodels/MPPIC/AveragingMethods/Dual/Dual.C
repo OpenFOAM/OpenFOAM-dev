@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,10 +243,10 @@ void Foam::AveragingMethods::Dual<Type>::average
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::AveragingMethods::Dual<Type>::internalField() const
 {
-    return tmp<Field<Type> >(dataCell_);
+    return tmp<Field<Type>>(dataCell_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::ParticleStressModels::HarrisCrighton::~HarrisCrighton()
 
 // * * * * * * * * * * * * * Privare Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::Field<Foam::scalar> >
+Foam::tmp<Foam::Field<Foam::scalar>>
 Foam::ParticleStressModels::HarrisCrighton::denominator
 (
     const Field<scalar>& alpha
@@ -95,7 +95,7 @@ Foam::ParticleStressModels::HarrisCrighton::denominator
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::Field<Foam::scalar> >
+Foam::tmp<Foam::Field<Foam::scalar>>
 Foam::ParticleStressModels::HarrisCrighton::tau
 (
     const Field<scalar>& alpha,
@@ -112,7 +112,7 @@ Foam::ParticleStressModels::HarrisCrighton::tau
 }
 
 
-Foam::tmp<Foam::Field<Foam::scalar> >
+Foam::tmp<Foam::Field<Foam::scalar>>
 Foam::ParticleStressModels::HarrisCrighton::dTaudTheta
 (
     const Field<scalar>& alpha,

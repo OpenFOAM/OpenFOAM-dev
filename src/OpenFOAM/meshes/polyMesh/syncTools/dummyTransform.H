@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ public:
 
 
 template<class T>
-class pTraits<List<T> >
+class pTraits<List<T>>
 :
     public List<T>
 {
@@ -76,7 +76,7 @@ public:
 };
 
 template<class T>
-class pTraits<UList<T> >
+class pTraits<UList<T>>
 :
     public UList<T>
 {
@@ -90,7 +90,7 @@ public:
 };
 
 template<class T>
-class pTraits<Field<T> >
+class pTraits<Field<T>>
 :
     public Field<T>
 {

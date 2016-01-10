@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ private:
         mutable bool needsUpdate_;
 
         //- Search tree for all non-coupled boundary faces
-        mutable autoPtr<indexedOctree<treeDataFace> > boundaryTreePtr_;
+        mutable autoPtr<indexedOctree<treeDataFace>> boundaryTreePtr_;
 
         //- From local surface triangle to mesh cell/face.
         labelList sampleElements_;
@@ -134,14 +134,14 @@ private:
 
         //- Sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
 
         template<class Type>
-        tmp<Field<Type> >
+        tmp<Field<Type>>
         interpolateField(const interpolation<Type>&) const;
 
         bool update(const meshSearch& meshSearcher);

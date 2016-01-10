@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ public:
         explicit SortableList(const UList<T>&);
 
         //- Construct from transferred List, sorting immediately.
-        explicit SortableList(const Xfer<List<T> >&);
+        explicit SortableList(const Xfer<List<T>>&);
 
         //- Construct given size. Sort later on.
         //  The indices remain empty until the list is sorted
@@ -113,7 +113,7 @@ public:
         void reverseSort();
 
         //- Transfer contents to the Xfer container as a plain List
-        inline Xfer<List<T> > xfer();
+        inline Xfer<List<T>> xfer();
 
 
     // Member Operators

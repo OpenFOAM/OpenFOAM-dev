@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class gaussGrad
 {
     // Private data
 
-        tmp<surfaceInterpolationScheme<Type> > tinterpScheme_;
+        tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
     // Private Member Functions
@@ -97,7 +97,7 @@ public:
             if (is.eof())
             {
                 tinterpScheme_ =
-                    tmp<surfaceInterpolationScheme<Type> >
+                    tmp<surfaceInterpolationScheme<Type>>
                     (
                         new linear<Type>(mesh)
                     );
@@ -105,7 +105,7 @@ public:
             else
             {
                 tinterpScheme_ =
-                    tmp<surfaceInterpolationScheme<Type> >
+                    tmp<surfaceInterpolationScheme<Type>>
                     (
                         surfaceInterpolationScheme<Type>::New(mesh, is)
                     );

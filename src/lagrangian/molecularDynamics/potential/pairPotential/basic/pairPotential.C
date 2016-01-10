@@ -116,7 +116,7 @@ Foam::scalar Foam::pairPotential::force(const scalar r) const
 Foam::List<Foam::Pair<Foam::scalar>>
 Foam::pairPotential::forceTable() const
 {
-    List<Pair<scalar> > forceTab(forceLookup_.size());
+    List<Pair<scalar>> forceTab(forceLookup_.size());
 
     forAll(forceLookup_,k)
     {
@@ -153,7 +153,7 @@ Foam::scalar Foam::pairPotential::energy(const scalar r) const
 Foam::List<Foam::Pair<Foam::scalar>>
     Foam::pairPotential::energyTable() const
 {
-    List<Pair<scalar> > energyTab(energyLookup_.size());
+    List<Pair<scalar>> energyTab(energyLookup_.size());
 
     forAll(energyLookup_,k)
     {

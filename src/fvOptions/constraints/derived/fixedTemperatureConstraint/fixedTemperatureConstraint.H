@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ protected:
         temperatureMode mode_;
 
         //- Uniform temperature [K]
-        autoPtr<DataEntry<scalar> > Tuniform_;
+        autoPtr<DataEntry<scalar>> Tuniform_;
 
         //- Temperature field name
         word TName_;

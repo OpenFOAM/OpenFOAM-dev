@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::wordList Foam::fvMotionSolverCore::cellMotionBoundaryTypes
 
     forAll(cmUbf, patchi)
     {
-        if (isA<fixedValuePointPatchField<Type> >(pmUbf[patchi]))
+        if (isA<fixedValuePointPatchField<Type>>(pmUbf[patchi]))
         {
             cmUbf[patchi] = cellMotionFvPatchField<Type>::typeName;
         }

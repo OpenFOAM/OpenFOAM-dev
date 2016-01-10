@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -311,7 +311,7 @@ public:
             void interpolateInternalField
             (
                 Field<Type>&,
-                const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+                const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
                 order=INTERPOLATE,
                 const CombineOp& cop = eqOp<Type>()
             ) const;
@@ -331,7 +331,7 @@ public:
             void interpolate
             (
                 GeometricField<Type, fvPatchField, volMesh>&,
-                const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+                const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
                 order=INTERPOLATE,
                 const CombineOp& cop = eqOp<Type>()
             ) const;
@@ -339,7 +339,7 @@ public:
 
             //- Interpolate volume field
             template<class Type, class CombineOp>
-            tmp<GeometricField<Type, fvPatchField, volMesh> > interpolate
+            tmp<GeometricField<Type, fvPatchField, volMesh>> interpolate
             (
                 const GeometricField<Type, fvPatchField, volMesh>&,
                 order=INTERPOLATE,
@@ -347,9 +347,9 @@ public:
             ) const;
 
             template<class Type, class CombineOp>
-            tmp<GeometricField<Type, fvPatchField, volMesh> > interpolate
+            tmp<GeometricField<Type, fvPatchField, volMesh>> interpolate
             (
-                const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+                const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
                 order=INTERPOLATE,
                 const CombineOp& cop = eqOp<Type>()
             ) const;

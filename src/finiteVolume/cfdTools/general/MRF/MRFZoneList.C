@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -230,13 +230,13 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::relative
 }
 
 
-Foam::tmp<Foam::FieldField<Foam::fvsPatchField, Foam::scalar> >
+Foam::tmp<Foam::FieldField<Foam::fvsPatchField, Foam::scalar>>
 Foam::MRFZoneList::relative
 (
-    const tmp<FieldField<fvsPatchField, scalar> >& phi
+    const tmp<FieldField<fvsPatchField, scalar>>& phi
 ) const
 {
-    tmp<FieldField<fvsPatchField, scalar> > rphi(phi.ptr());
+    tmp<FieldField<fvsPatchField, scalar>> rphi(phi.ptr());
 
     forAll(*this, i)
     {

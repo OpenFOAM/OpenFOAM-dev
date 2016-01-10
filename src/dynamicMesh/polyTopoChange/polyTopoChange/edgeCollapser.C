@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1120,7 +1120,7 @@ Foam::label Foam::edgeCollapser::syncCollapse
 
 void Foam::edgeCollapser::filterFace
 (
-    const Map<DynamicList<label> >& collapseStrings,
+    const Map<DynamicList<label>>& collapseStrings,
     const List<pointEdgeCollapse>& allPointInfo,
     face& f
 ) const
@@ -1317,7 +1317,7 @@ bool Foam::edgeCollapser::setRefinement
 
     // Create strings of edges.
     // Map from collapseIndex(=global master point) to set of points
-    Map<DynamicList<label> > collapseStrings;
+    Map<DynamicList<label>> collapseStrings;
     {
         // 1. Count elements per collapseIndex
         Map<label> nPerIndex(mesh_.nPoints()/10);
@@ -1363,7 +1363,7 @@ bool Foam::edgeCollapser::setRefinement
 
 //    OFstream str2("collapseStrings_" + name(count) + ".obj");
 //    // Dump point collapses
-//    forAllConstIter(Map<DynamicList<label> >, collapseStrings, iter)
+//    forAllConstIter(Map<DynamicList<label>>, collapseStrings, iter)
 //    {
 //        const label masterPoint = iter.key();
 //        const DynamicList<label>& edgeCollapses = iter();

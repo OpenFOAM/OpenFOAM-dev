@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Foam::fv::SemiImplicitSource<Type>::volumeMode() const
 
 
 template<class Type>
-inline const Foam::List<Foam::Tuple2<Type, Foam::scalar> >&
+inline const Foam::List<Foam::Tuple2<Type, Foam::scalar>>&
 Foam::fv::SemiImplicitSource<Type>::injectionRate() const
 {
     return injectionRate_;
@@ -53,7 +53,7 @@ Foam::fv::SemiImplicitSource<Type>::volumeMode()
 
 template<class Type>
 inline Foam::List<Foam::Tuple2<Type,
-Foam::scalar> >& Foam::fv::SemiImplicitSource<Type>::injectionRate()
+Foam::scalar>>& Foam::fv::SemiImplicitSource<Type>::injectionRate()
 {
     return injectionRate_;
 }

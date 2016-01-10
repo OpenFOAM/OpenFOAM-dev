@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,10 +62,10 @@ class PatchPostProcessing
         labelList patchIDs_;
 
         //- List of time for each data record
-        List<DynamicList<scalar> > times_;
+        List<DynamicList<scalar>> times_;
 
         //- List of output data per patch
-        List<DynamicList<string> > patchData_;
+        List<DynamicList<string>> patchData_;
 
 
     // Private Member Functions
@@ -102,9 +102,9 @@ public:
         PatchPostProcessing(const PatchPostProcessing<CloudType>& ppm);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new PatchPostProcessing<CloudType>(*this)
             );

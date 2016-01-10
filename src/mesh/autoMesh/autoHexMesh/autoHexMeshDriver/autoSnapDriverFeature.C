@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -450,9 +450,9 @@ void Foam::autoSnapDriver::calcNearestFacePointProperties
     const vectorField& faceSurfaceNormal,
     const labelList& faceSurfaceGlobalRegion,
 
-    List<List<point> >& pointFaceSurfNormals,
-    List<List<point> >& pointFaceDisp,
-    List<List<point> >& pointFaceCentres,
+    List<List<point>>& pointFaceSurfNormals,
+    List<List<point>>& pointFaceDisp,
+    List<List<point>>& pointFaceCentres,
     List<labelList>&    pointFacePatchID
 ) const
 {
@@ -827,9 +827,9 @@ void Foam::autoSnapDriver::featureAttractionUsingReconstruction
     const vectorField& nearestDisp,
     const label pointI,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     DynamicList<point>& surfacePoints,
@@ -1020,9 +1020,9 @@ void Foam::autoSnapDriver::featureAttractionUsingReconstruction
     const scalarField& snapDist,
     const vectorField& nearestDisp,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     vectorField& patchAttraction,
@@ -1314,7 +1314,7 @@ void Foam::autoSnapDriver::releasePointsNextToMultiPatch
     const indirectPrimitivePatch& pp,
     const scalarField& snapDist,
 
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     const vectorField& rawPatchAttraction,
@@ -1609,8 +1609,8 @@ Foam::autoSnapDriver::findNearFeatureEdge
     const label pointI,
     const point& estimatedPt,
 
-    List<List<DynamicList<point> > >& edgeAttractors,
-    List<List<DynamicList<pointConstraint> > >& edgeConstraints,
+    List<List<DynamicList<point>>>& edgeAttractors,
+    List<List<DynamicList<pointConstraint>>>& edgeConstraints,
     vectorField& patchAttraction,
     List<pointConstraint>& patchConstraints
 ) const
@@ -1679,10 +1679,10 @@ Foam::autoSnapDriver::findNearFeaturePoint
 
     // Feature-point to pp point
     List<labelList>& pointAttractor,
-    List<List<pointConstraint> >& pointConstraints,
+    List<List<pointConstraint>>& pointConstraints,
     // Feature-edge to pp point
-    List<List<DynamicList<point> > >& edgeAttractors,
-    List<List<DynamicList<pointConstraint> > >& edgeConstraints,
+    List<List<DynamicList<point>>>& edgeAttractors,
+    List<List<DynamicList<pointConstraint>>>& edgeConstraints,
     // pp point to nearest feature
     vectorField& patchAttraction,
     List<pointConstraint>& patchConstraints
@@ -1783,17 +1783,17 @@ void Foam::autoSnapDriver::determineFeatures
     const scalarField& snapDist,
     const vectorField& nearestDisp,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     // Feature-point to pp point
     List<labelList>& pointAttractor,
-    List<List<pointConstraint> >& pointConstraints,
+    List<List<pointConstraint>>& pointConstraints,
     // Feature-edge to pp point
-    List<List<DynamicList<point> > >& edgeAttractors,
-    List<List<DynamicList<pointConstraint> > >& edgeConstraints,
+    List<List<DynamicList<point>>>& edgeAttractors,
+    List<List<DynamicList<pointConstraint>>>& edgeConstraints,
     // pp point to nearest feature
     vectorField& patchAttraction,
     List<pointConstraint>& patchConstraints
@@ -2205,10 +2205,10 @@ void Foam::autoSnapDriver::determineBaffleFeatures
 
     // Feature-point to pp point
     List<labelList>& pointAttractor,
-    List<List<pointConstraint> >& pointConstraints,
+    List<List<pointConstraint>>& pointConstraints,
     // Feature-edge to pp point
-    List<List<DynamicList<point> > >& edgeAttractors,
-    List<List<DynamicList<pointConstraint> > >& edgeConstraints,
+    List<List<DynamicList<point>>>& edgeAttractors,
+    List<List<DynamicList<pointConstraint>>>& edgeConstraints,
     // pp point to nearest feature
     vectorField& patchAttraction,
     List<pointConstraint>& patchConstraints
@@ -2218,7 +2218,7 @@ void Foam::autoSnapDriver::determineBaffleFeatures
     const refinementFeatures& features = meshRefiner_.features();
 
     // Calculate edge-faces
-    List<List<point> > edgeFaceNormals(pp.nEdges());
+    List<List<point>> edgeFaceNormals(pp.nEdges());
 
     // Fill local data
     forAll(pp.edgeFaces(), edgeI)
@@ -2462,10 +2462,10 @@ void Foam::autoSnapDriver::reverseAttractMeshPoints
 
     // Feature-point to pp point
     const List<labelList>& pointAttractor,
-    const List<List<pointConstraint> >& pointConstraints,
+    const List<List<pointConstraint>>& pointConstraints,
     // Feature-edge to pp point
-    const List<List<DynamicList<point> > >& edgeAttractors,
-    const List<List<DynamicList<pointConstraint> > >& edgeConstraints,
+    const List<List<DynamicList<point>>>& edgeAttractors,
+    const List<List<DynamicList<pointConstraint>>>& edgeConstraints,
 
     const vectorField& rawPatchAttraction,
     const List<pointConstraint>& rawPatchConstraints,
@@ -2594,8 +2594,8 @@ void Foam::autoSnapDriver::reverseAttractMeshPoints
 
     forAll(edgeAttractors, featI)
     {
-        const List<DynamicList<point> >& edgeAttr = edgeAttractors[featI];
-        const List<DynamicList<pointConstraint> >& edgeConstr =
+        const List<DynamicList<point>>& edgeAttr = edgeAttractors[featI];
+        const List<DynamicList<pointConstraint>>& edgeConstr =
             edgeConstraints[featI];
 
         forAll(edgeAttr, featEdgeI)
@@ -2723,9 +2723,9 @@ void Foam::autoSnapDriver::featureAttractionUsingFeatureEdges
     const scalarField& snapDist,
     const vectorField& nearestDisp,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     vectorField& patchAttraction,
@@ -2739,8 +2739,8 @@ void Foam::autoSnapDriver::featureAttractionUsingFeatureEdges
 
     // Per feature, per feature-edge a list of attraction points and their
     // originating vertex.
-    List<List<DynamicList<point> > > edgeAttractors(features.size());
-    List<List<DynamicList<pointConstraint> > > edgeConstraints
+    List<List<DynamicList<point>>> edgeAttractors(features.size());
+    List<List<DynamicList<pointConstraint>>> edgeConstraints
     (
         features.size()
     );
@@ -2755,7 +2755,7 @@ void Foam::autoSnapDriver::featureAttractionUsingFeatureEdges
     // This list is only used to subset the feature-points that are actually
     // used.
     List<labelList> pointAttractor(features.size());
-    List<List<pointConstraint> > pointConstraints(features.size());
+    List<List<pointConstraint>> pointConstraints(features.size());
     forAll(features, featI)
     {
         label nFeatPoints = features[featI].points().size();
@@ -3076,9 +3076,9 @@ Foam::vectorField Foam::autoSnapDriver::calcNearestSurfaceFeature
     // - faceSurfaceNormal
     // - faceDisp
     // - faceCentres
-    List<List<point> > pointFaceSurfNormals;
-    List<List<point> > pointFaceDisp;
-    List<List<point> > pointFaceCentres;
+    List<List<point>> pointFaceSurfNormals;
+    List<List<point>> pointFaceDisp;
+    List<List<point>> pointFaceCentres;
     List<labelList> pointFacePatchID;
 
     {

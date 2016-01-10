@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,10 @@ inline Foam::Matrix<Form, Type>::Matrix()
 
 
 template<class Form, class Type>
-inline Foam::autoPtr<Foam::Matrix<Form, Type> > Foam::Matrix<Form, Type>::
+inline Foam::autoPtr<Foam::Matrix<Form, Type>> Foam::Matrix<Form, Type>::
 clone() const
 {
-    return autoPtr<Matrix<Form, Type> >(new Matrix<Form, Type>(*this));
+    return autoPtr<Matrix<Form, Type>>(new Matrix<Form, Type>(*this));
 }
 
 
@@ -47,7 +47,7 @@ clone() const
 template<class Form, class Type>
 inline const Foam::Matrix<Form, Type>& Foam::Matrix<Form, Type>::null()
 {
-    return NullObjectRef<Matrix<Form, Type> >();
+    return NullObjectRef<Matrix<Form, Type>>();
 }
 
 

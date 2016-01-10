@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,12 +135,12 @@ class sampledSurface
         void project
         (
             Field<ReturnType>&,
-            const tmp<Field<Type> >&
+            const tmp<Field<Type>>&
         ) const;
 
         //- Project field onto surface
         template<class ReturnType, class Type>
-        tmp<Field<ReturnType> > project(const tmp<Field<Type> >&) const;
+        tmp<Field<ReturnType>> project(const tmp<Field<Type>>&) const;
 
 
 protected:
@@ -295,7 +295,7 @@ public:
 
         //- Integration of a field across the surface
         template<class Type>
-        Type integrate(const tmp<Field<Type> >&) const;
+        Type integrate(const tmp<Field<Type>>&) const;
 
         //- Area-averaged value of a field across the surface
         template<class Type>
@@ -303,26 +303,26 @@ public:
 
         //- Area-averaged value of a field across the surface
         template<class Type>
-        Type average(const tmp<Field<Type> >&) const;
+        Type average(const tmp<Field<Type>>&) const;
 
         //- Project field onto surface
-        tmp<Field<scalar> > project(const Field<scalar>&) const;
+        tmp<Field<scalar>> project(const Field<scalar>&) const;
 
         //- Project field onto surface
-        tmp<Field<scalar> > project(const Field<vector>&) const;
+        tmp<Field<scalar>> project(const Field<vector>&) const;
 
         //- Project field onto surface
-        tmp<Field<vector> > project(const Field<sphericalTensor>&) const;
+        tmp<Field<vector>> project(const Field<sphericalTensor>&) const;
 
         //- Project field onto surface
-        tmp<Field<vector> > project(const Field<symmTensor>&) const;
+        tmp<Field<vector>> project(const Field<symmTensor>&) const;
 
         //- Project field onto surface
-        tmp<Field<vector> > project(const Field<tensor>&) const;
+        tmp<Field<vector>> project(const Field<tensor>&) const;
 
         //- Interpolate from points to cell centre
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > pointAverage
+        tmp<GeometricField<Type, fvPatchField, volMesh>> pointAverage
         (
             const GeometricField<Type, pointPatchField, pointMesh>& pfld
         ) const;

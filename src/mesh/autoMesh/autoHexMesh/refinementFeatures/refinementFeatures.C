@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,7 +185,7 @@ void Foam::refinementFeatures::read
 
         if (dict.found("levels"))
         {
-            List<Tuple2<scalar, label> > distLevels(dict["levels"]);
+            List<Tuple2<scalar, label>> distLevels(dict["levels"]);
 
             if (dict.size() < 1)
             {
@@ -298,16 +298,16 @@ void Foam::refinementFeatures::buildTrees(const label featI)
 }
 
 
-const Foam::PtrList<Foam::indexedOctree<Foam::treeDataEdge> >&
+const Foam::PtrList<Foam::indexedOctree<Foam::treeDataEdge>>&
 Foam::refinementFeatures::regionEdgeTrees() const
 {
     if (!regionEdgeTreesPtr_.valid())
     {
         regionEdgeTreesPtr_.reset
         (
-            new PtrList<indexedOctree<treeDataEdge> >(size())
+            new PtrList<indexedOctree<treeDataEdge>>(size())
         );
-        PtrList<indexedOctree<treeDataEdge> >& trees = regionEdgeTreesPtr_();
+        PtrList<indexedOctree<treeDataEdge>>& trees = regionEdgeTreesPtr_();
 
         forAll(*this, featI)
         {
@@ -597,7 +597,7 @@ void Foam::refinementFeatures::findNearestRegionEdge
     nearNormal = vector::zero;
 
 
-    const PtrList<indexedOctree<treeDataEdge> >& regionTrees =
+    const PtrList<indexedOctree<treeDataEdge>>& regionTrees =
         regionEdgeTrees();
 
     forAll(regionTrees, featI)

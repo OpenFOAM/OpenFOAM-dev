@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::autoPtr<Foam::interpolation<Type> > Foam::interpolation<Type>::New
+Foam::autoPtr<Foam::interpolation<Type>> Foam::interpolation<Type>::New
 (
     const word& interpolationType,
     const GeometricField<Type, fvPatchField, volMesh>& psi
@@ -48,12 +48,12 @@ Foam::autoPtr<Foam::interpolation<Type> > Foam::interpolation<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<interpolation<Type> >(cstrIter()(psi));
+    return autoPtr<interpolation<Type>>(cstrIter()(psi));
 }
 
 
 template<class Type>
-Foam::autoPtr<Foam::interpolation<Type> > Foam::interpolation<Type>::New
+Foam::autoPtr<Foam::interpolation<Type>> Foam::interpolation<Type>::New
 (
     const dictionary& interpolationSchemes,
     const GeometricField<Type, fvPatchField, volMesh>& psi

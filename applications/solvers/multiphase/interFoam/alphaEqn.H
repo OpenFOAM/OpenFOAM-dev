@@ -2,7 +2,7 @@
     word alphaScheme("div(phi,alpha)");
     word alpharScheme("div(phirb,alpha)");
 
-    tmp<fv::ddtScheme<scalar> > ddtAlpha
+    tmp<fv::ddtScheme<scalar>> ddtAlpha
     (
         fv::ddtScheme<scalar>::New
         (
@@ -15,13 +15,13 @@
     scalar ocCoeff = 0;
     if
     (
-        isType<fv::EulerDdtScheme<scalar> >(ddtAlpha())
-     || isType<fv::localEulerDdtScheme<scalar> >(ddtAlpha())
+        isType<fv::EulerDdtScheme<scalar>>(ddtAlpha())
+     || isType<fv::localEulerDdtScheme<scalar>>(ddtAlpha())
     )
     {
         ocCoeff = 0;
     }
-    else if (isType<fv::CrankNicolsonDdtScheme<scalar> >(ddtAlpha()))
+    else if (isType<fv::CrankNicolsonDdtScheme<scalar>>(ddtAlpha()))
     {
         if (nAlphaSubCycles > 1)
         {
@@ -32,7 +32,7 @@
         }
 
         ocCoeff =
-            refCast<fv::CrankNicolsonDdtScheme<scalar> >(ddtAlpha()).ocCoeff();
+            refCast<fv::CrankNicolsonDdtScheme<scalar>>(ddtAlpha()).ocCoeff();
     }
     else
     {

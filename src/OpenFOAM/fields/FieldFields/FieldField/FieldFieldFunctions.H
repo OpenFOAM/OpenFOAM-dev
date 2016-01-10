@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void pow
 );
 
 template<template<class> class Field, class Type, int r>
-tmp<FieldField<Field, typename powProduct<Type, r>::type> >
+tmp<FieldField<Field, typename powProduct<Type, r>::type>>
 pow
 (
     const FieldField<Field, Type>& f, typename powProduct<Type, r>::type
@@ -63,10 +63,10 @@ pow
 );
 
 template<template<class> class Field, class Type, int r>
-tmp<FieldField<Field, typename powProduct<Type, r>::type> >
+tmp<FieldField<Field, typename powProduct<Type, r>::type>>
 pow
 (
-    const tmp<FieldField<Field, Type> >& tf, typename powProduct<Type, r>::type
+    const tmp<FieldField<Field, Type>>& tf, typename powProduct<Type, r>::type
         = pTraits<typename powProduct<Type, r>::type>::zero
 );
 
@@ -79,30 +79,30 @@ void sqr
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename outerProduct<Type, Type>::type> >
+tmp<FieldField<Field, typename outerProduct<Type, Type>::type>>
 sqr(const FieldField<Field, Type>& f);
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename outerProduct<Type, Type>::type> >
-sqr(const tmp<FieldField<Field, Type> >& tf);
+tmp<FieldField<Field, typename outerProduct<Type, Type>::type>>
+sqr(const tmp<FieldField<Field, Type>>& tf);
 
 template<template<class> class Field, class Type>
 void magSqr(FieldField<Field, scalar>& sf, const FieldField<Field, Type>& f);
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, scalar> > magSqr(const FieldField<Field, Type>& f);
+tmp<FieldField<Field, scalar>> magSqr(const FieldField<Field, Type>& f);
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, scalar> > magSqr(const tmp<FieldField<Field, Type> >& tf);
+tmp<FieldField<Field, scalar>> magSqr(const tmp<FieldField<Field, Type>>& tf);
 
 template<template<class> class Field, class Type>
 void mag(FieldField<Field, scalar>& sf, const FieldField<Field, Type>& f);
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, scalar> > mag(const FieldField<Field, Type>& f);
+tmp<FieldField<Field, scalar>> mag(const FieldField<Field, Type>& f);
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, scalar> > mag(const tmp<FieldField<Field, Type> >& tf);
+tmp<FieldField<Field, scalar>> mag(const tmp<FieldField<Field, Type>>& tf);
 
 
 template<template<class> class Field, class Type>
@@ -113,15 +113,15 @@ void cmptMax
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType> > cmptMax
+tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptMax
 (
     const FieldField<Field, Type>& f
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType> > cmptMax
+tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptMax
 (
-    const tmp<FieldField<Field, Type> >& tf
+    const tmp<FieldField<Field, Type>>& tf
 );
 
 
@@ -133,15 +133,15 @@ void cmptMin
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType> > cmptMin
+tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptMin
 (
     const FieldField<Field, Type>& f
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType> > cmptMin
+tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptMin
 (
-    const tmp<FieldField<Field, Type> >& tf
+    const tmp<FieldField<Field, Type>>& tf
 );
 
 
@@ -153,15 +153,15 @@ void cmptAv
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType> > cmptAv
+tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptAv
 (
     const FieldField<Field, Type>& f
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType> > cmptAv
+tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptAv
 (
-    const tmp<FieldField<Field, Type> >& tf
+    const tmp<FieldField<Field, Type>>& tf
 );
 
 
@@ -173,22 +173,22 @@ void cmptMag
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > cmptMag
+tmp<FieldField<Field, Type>> cmptMag
 (
     const FieldField<Field, Type>& f
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > cmptMag
+tmp<FieldField<Field, Type>> cmptMag
 (
-    const tmp<FieldField<Field, Type> >& tf
+    const tmp<FieldField<Field, Type>>& tf
 );
 
 
 #define TMP_UNARY_FUNCTION(returnType, func)                                  \
                                                                               \
 template<template<class> class Field, class Type>                             \
-returnType func(const tmp<FieldField<Field, Type> >& tf1);
+returnType func(const tmp<FieldField<Field, Type>>& tf1);
 
 template<template<class> class Field, class Type>
 Type max(const FieldField<Field, Type>& f);
@@ -288,7 +288,7 @@ template                                                                       \
     class Type1,                                                               \
     class Type2                                                                \
 >                                                                              \
-tmp<FieldField<Field1, typename product<Type1, Type2>::type> >                 \
+tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                 \
 operator op                                                                    \
 (                                                                              \
     const FieldField<Field1, Type1>& f1,                                       \
@@ -296,11 +296,11 @@ operator op                                                                    \
 );                                                                             \
                                                                                \
 template<template<class> class Field, class Type1, class Type2>                \
-tmp<FieldField<Field, typename product<Type1, Type2>::type> >                  \
+tmp<FieldField<Field, typename product<Type1, Type2>::type>>                  \
 operator op                                                                    \
 (                                                                              \
     const FieldField<Field, Type1>& f1,                                        \
-    const tmp<FieldField<Field, Type2> >& tf2                                  \
+    const tmp<FieldField<Field, Type2>>& tf2                                  \
 );                                                                             \
                                                                                \
 template                                                                       \
@@ -310,11 +310,11 @@ template                                                                       \
     class Type1,                                                               \
     class Type2                                                                \
 >                                                                              \
-tmp<FieldField<Field1, typename product<Type1, Type2>::type> >                 \
+tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                 \
 operator op                                                                    \
 (                                                                              \
     const FieldField<Field1, Type1>& f1,                                       \
-    const tmp<FieldField<Field2, Type2> >& tf2                                 \
+    const tmp<FieldField<Field2, Type2>>& tf2                                 \
 );                                                                             \
                                                                                \
 template                                                                       \
@@ -324,10 +324,10 @@ template                                                                       \
     class Type1,                                                               \
     class Type2                                                                \
 >                                                                              \
-tmp<FieldField<Field1, typename product<Type1, Type2>::type> >                 \
+tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                 \
 operator op                                                                    \
 (                                                                              \
-    const tmp<FieldField<Field1, Type1> >& tf1,                                \
+    const tmp<FieldField<Field1, Type1>>& tf1,                                \
     const FieldField<Field2, Type2>& f2                                        \
 );                                                                             \
                                                                                \
@@ -338,11 +338,11 @@ template                                                                       \
     class Type1,                                                               \
     class Type2                                                                \
 >                                                                              \
-tmp<FieldField<Field1, typename product<Type1, Type2>::type> >                 \
+tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                 \
 operator op                                                                    \
 (                                                                              \
-    const tmp<FieldField<Field1, Type1> >& tf1,                                \
-    const tmp<FieldField<Field2, Type2> >& tf2                                 \
+    const tmp<FieldField<Field1, Type1>>& tf1,                                \
+    const tmp<FieldField<Field2, Type2>>& tf2                                 \
 );                                                                             \
                                                                                \
 template                                                                       \
@@ -356,7 +356,7 @@ void opFunc                                                                    \
                                                                                \
 template                                                                       \
 <template<class> class Field, class Type, class Form, class Cmpt, int nCmpt>   \
-tmp<FieldField<Field, typename product<Type, Form>::type> >                    \
+tmp<FieldField<Field, typename product<Type, Form>::type>>                    \
 operator op                                                                    \
 (                                                                              \
     const FieldField<Field, Type>& f1,                                         \
@@ -365,10 +365,10 @@ operator op                                                                    \
                                                                                \
 template                                                                       \
 <template<class> class Field, class Type, class Form, class Cmpt, int nCmpt>   \
-tmp<FieldField<Field, typename product<Type, Form>::type> >                    \
+tmp<FieldField<Field, typename product<Type, Form>::type>>                    \
 operator op                                                                    \
 (                                                                              \
-    const tmp<FieldField<Field, Type> >& tf1,                                  \
+    const tmp<FieldField<Field, Type>>& tf1,                                  \
     const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
 );                                                                             \
                                                                                \
@@ -383,7 +383,7 @@ void opFunc                                                                    \
                                                                                \
 template                                                                       \
 <template<class> class Field, class Form, class Cmpt, int nCmpt, class Type>   \
-tmp<FieldField<Field, typename product<Form, Type>::type> >                    \
+tmp<FieldField<Field, typename product<Form, Type>::type>>                    \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
@@ -392,11 +392,11 @@ operator op                                                                    \
                                                                                \
 template                                                                       \
 <template<class> class Field, class Form, class Cmpt, int nCmpt, class Type>   \
-tmp<FieldField<Field, typename product<Form, Type>::type> >                    \
+tmp<FieldField<Field, typename product<Form, Type>::type>>                    \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
-    const tmp<FieldField<Field, Type> >& tf1                                   \
+    const tmp<FieldField<Field, Type>>& tf1                                   \
 );
 
 PRODUCT_OPERATOR(typeOfSum, +, add)

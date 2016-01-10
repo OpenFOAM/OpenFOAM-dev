@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ inline Tensor<Cmpt>::Tensor(const SymmTensor<Cmpt>& st)
 
 
 template<class Cmpt>
-inline Tensor<Cmpt>::Tensor(const Vector<Vector<Cmpt> >& tr)
+inline Tensor<Cmpt>::Tensor(const Vector<Vector<Cmpt>>& tr)
 {
     this->v_[XX] = tr.x().x();
     this->v_[XY] = tr.x().y();
@@ -315,7 +315,7 @@ inline void Tensor<Cmpt>::operator=(const SymmTensor<Cmpt>& st)
 
 
 template<class Cmpt>
-inline void Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt> >& tr)
+inline void Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt>>& tr)
 {
     this->v_[XX] = tr.x().x();
     this->v_[XY] = tr.x().y();
@@ -353,7 +353,7 @@ inline Tensor<Cmpt> operator*(const Vector<Cmpt>& v)
 
 
 template<class Cmpt>
-inline typename innerProduct<Tensor<Cmpt>, Tensor<Cmpt> >::type
+inline typename innerProduct<Tensor<Cmpt>, Tensor<Cmpt>>::type
 operator&(const Tensor<Cmpt>& t1, const Tensor<Cmpt>& t2)
 {
     return Tensor<Cmpt>
@@ -374,7 +374,7 @@ operator&(const Tensor<Cmpt>& t1, const Tensor<Cmpt>& t2)
 
 
 template<class Cmpt>
-inline typename innerProduct<Tensor<Cmpt>, Vector<Cmpt> >::type
+inline typename innerProduct<Tensor<Cmpt>, Vector<Cmpt>>::type
 operator&(const Tensor<Cmpt>& t, const Vector<Cmpt>& v)
 {
     return Vector<Cmpt>
@@ -387,7 +387,7 @@ operator&(const Tensor<Cmpt>& t, const Vector<Cmpt>& v)
 
 
 template<class Cmpt>
-inline typename innerProduct<Vector<Cmpt>, Tensor<Cmpt> >::type
+inline typename innerProduct<Vector<Cmpt>, Tensor<Cmpt>>::type
 operator&(const Vector<Cmpt>& v, const Tensor<Cmpt>& t)
 {
     return Vector<Cmpt>
@@ -400,7 +400,7 @@ operator&(const Vector<Cmpt>& v, const Tensor<Cmpt>& t)
 
 
 template<class Cmpt>
-inline typename outerProduct<Vector<Cmpt>, Vector<Cmpt> >::type
+inline typename outerProduct<Vector<Cmpt>, Vector<Cmpt>>::type
 operator*(const Vector<Cmpt>& v1, const Vector<Cmpt>& v2)
 {
     return Tensor<Cmpt>
@@ -413,7 +413,7 @@ operator*(const Vector<Cmpt>& v1, const Vector<Cmpt>& v2)
 
 
 template<class Cmpt>
-inline typename innerProduct<Vector<Cmpt>, Tensor<Cmpt> >::type
+inline typename innerProduct<Vector<Cmpt>, Tensor<Cmpt>>::type
 operator/(const Vector<Cmpt>& v, const Tensor<Cmpt>& t)
 {
     return inv(t) & v;
@@ -698,7 +698,7 @@ operator&&(const Tensor<Cmpt>& t1, const SphericalTensor<Cmpt>& st2)
 
 
 template<class Cmpt>
-class typeOfSum<SphericalTensor<Cmpt>, Tensor<Cmpt> >
+class typeOfSum<SphericalTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -707,7 +707,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfSum<Tensor<Cmpt>, SphericalTensor<Cmpt> >
+class typeOfSum<Tensor<Cmpt>, SphericalTensor<Cmpt>>
 {
 public:
 
@@ -716,7 +716,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<SphericalTensor<Cmpt>, Tensor<Cmpt> >
+class innerProduct<SphericalTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -725,7 +725,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<Tensor<Cmpt>, SphericalTensor<Cmpt> >
+class innerProduct<Tensor<Cmpt>, SphericalTensor<Cmpt>>
 {
 public:
 
@@ -860,7 +860,7 @@ operator&&(const Tensor<Cmpt>& t1, const SymmTensor<Cmpt>& st2)
 
 
 template<class Cmpt>
-class typeOfSum<SymmTensor<Cmpt>, Tensor<Cmpt> >
+class typeOfSum<SymmTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -869,7 +869,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfSum<Tensor<Cmpt>, SymmTensor<Cmpt> >
+class typeOfSum<Tensor<Cmpt>, SymmTensor<Cmpt>>
 {
 public:
 
@@ -878,7 +878,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<SymmTensor<Cmpt>, Tensor<Cmpt> >
+class innerProduct<SymmTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -887,7 +887,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<Tensor<Cmpt>, SymmTensor<Cmpt> >
+class innerProduct<Tensor<Cmpt>, SymmTensor<Cmpt>>
 {
 public:
 

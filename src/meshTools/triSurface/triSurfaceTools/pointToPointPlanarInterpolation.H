@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,11 +67,11 @@ class pointToPointPlanarInterpolation
 
         //- Current interpolation addressing to face centres of underlying
         //  patch
-        List<FixedList<label, 3> > nearestVertex_;
+        List<FixedList<label, 3>> nearestVertex_;
 
         //- Current interpolation factors to face centres of underlying
         //  patch
-        List<FixedList<scalar, 3> > nearestVertexWeight_;
+        List<FixedList<scalar, 3>> nearestVertexWeight_;
 
     // Private Member Functions
 
@@ -130,14 +130,14 @@ public:
         }
 
         //  patch
-        const List<FixedList<label, 3> >& nearestVertex() const
+        const List<FixedList<label, 3>>& nearestVertex() const
         {
             return nearestVertex_;
         }
 
         //- Current interpolation factors to face centres of underlying
         //  patch
-        const List<FixedList<scalar, 3> >& nearestVertexWeight() const
+        const List<FixedList<scalar, 3>>& nearestVertexWeight() const
         {
             return nearestVertexWeight_;
         }
@@ -157,7 +157,7 @@ public:
 
         //- Interpolate from field on source points to dest points
         template<class Type>
-        tmp<Field<Type> > interpolate(const Field<Type>& sourceFld) const;
+        tmp<Field<Type>> interpolate(const Field<Type>& sourceFld) const;
 
 };
 

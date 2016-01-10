@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ convectionScheme<Type>::convectionScheme(const convectionScheme& cs)
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<convectionScheme<Type> > convectionScheme<Type>::New
+tmp<convectionScheme<Type>> convectionScheme<Type>::New
 (
     const fvMesh& mesh,
     const surfaceScalarField& faceFlux,
@@ -101,7 +101,7 @@ tmp<convectionScheme<Type> > convectionScheme<Type>::New
 
 
 template<class Type>
-tmp<convectionScheme<Type> > convectionScheme<Type>::New
+tmp<convectionScheme<Type>> convectionScheme<Type>::New
 (
     const fvMesh& mesh,
     const typename multivariateSurfaceInterpolationScheme<Type>::

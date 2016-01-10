@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,7 +222,7 @@ inline Foam::PackedList<nBits>::PackedList(const PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline Foam::PackedList<nBits>::PackedList(const Xfer<PackedList<nBits> >& lst)
+inline Foam::PackedList<nBits>::PackedList(const Xfer<PackedList<nBits>>& lst)
 {
     transfer(lst());
 }
@@ -257,10 +257,10 @@ inline Foam::PackedList<nBits>::PackedList(const UIndirectList<label>& lst)
 
 
 template<unsigned nBits>
-inline Foam::autoPtr<Foam::PackedList<nBits> >
+inline Foam::autoPtr<Foam::PackedList<nBits>>
 Foam::PackedList<nBits>::clone() const
 {
-    return autoPtr<PackedList<nBits> >(new PackedList<nBits>(*this));
+    return autoPtr<PackedList<nBits>>(new PackedList<nBits>(*this));
 }
 
 
@@ -954,7 +954,7 @@ inline void Foam::PackedList<nBits>::transfer(PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline Foam::Xfer<Foam::PackedList<nBits> > Foam::PackedList<nBits>::xfer()
+inline Foam::Xfer<Foam::PackedList<nBits>> Foam::PackedList<nBits>::xfer()
 {
     return xferMove(*this);
 }

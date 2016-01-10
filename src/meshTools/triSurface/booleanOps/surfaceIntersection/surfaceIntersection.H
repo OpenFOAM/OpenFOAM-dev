@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,9 +119,9 @@ class surfaceIntersection
             Ostream&
         );
 
-        //- Transfer contents of List<DynamicList<..> > to List<List<..>>
+        //- Transfer contents of List<DynamicList<..>> to List<List<..>>
         template<class T>
-        static void transfer(List<DynamicList<T> >&,  List<List<T> >&);
+        static void transfer(List<DynamicList<T>>&,  List<List<T>>&);
 
         //- Get minimum length of all edges connected to point
         static scalar minEdgeLen(const triSurface& surf, const label pointI);
@@ -216,7 +216,7 @@ class surfaceIntersection
 
             DynamicList<edge>& allCutEdges,
             DynamicList<point>& allCutPoints,
-            List<DynamicList<label> >& surfEdgeCuts
+            List<DynamicList<label>>& surfEdgeCuts
         );
 
         //- Cut edges of surf1 with surface 2.
@@ -229,7 +229,7 @@ class surfaceIntersection
 
             DynamicList<edge>& allCutEdges,
             DynamicList<point>& allCutPoints,
-            List<DynamicList<label> >& surfEdgeCuts
+            List<DynamicList<label>>& surfEdgeCuts
         );
 
 

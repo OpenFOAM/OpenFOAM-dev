@@ -48,7 +48,7 @@ if (timeDirs.size())
         cloudFields.insert(cloudName, HashTable<word>());
 
         // Identify the new cloud within the hash table
-        HashTable<HashTable<word> >::iterator cloudIter =
+        HashTable<HashTable<word>>::iterator cloudIter =
             cloudFields.find(cloudName);
 
         IOobjectList objs

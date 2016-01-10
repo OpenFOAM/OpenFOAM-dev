@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ namespace fvm
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 div
 (
     const surfaceScalarField& flux,
@@ -58,7 +58,7 @@ div
 }
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
@@ -66,14 +66,14 @@ div
     const word& name
 )
 {
-    tmp<fvMatrix<Type> > Div(fvm::div(tflux(), vf, name));
+    tmp<fvMatrix<Type>> Div(fvm::div(tflux(), vf, name));
     tflux.clear();
     return Div;
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 div
 (
     const surfaceScalarField& flux,
@@ -84,14 +84,14 @@ div
 }
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > Div(fvm::div(tflux(), vf));
+    tmp<fvMatrix<Type>> Div(fvm::div(tflux(), vf));
     tflux.clear();
     return Div;
 }

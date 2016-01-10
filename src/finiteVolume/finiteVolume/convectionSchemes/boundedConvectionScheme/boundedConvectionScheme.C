@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 boundedConvectionScheme<Type>::interpolate
 (
     const surfaceScalarField& phi,
@@ -53,7 +53,7 @@ boundedConvectionScheme<Type>::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 boundedConvectionScheme<Type>::flux
 (
     const surfaceScalarField& faceFlux,
@@ -65,7 +65,7 @@ boundedConvectionScheme<Type>::flux
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 boundedConvectionScheme<Type>::fvmDiv
 (
     const surfaceScalarField& faceFlux,
@@ -79,7 +79,7 @@ boundedConvectionScheme<Type>::fvmDiv
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 boundedConvectionScheme<Type>::fvcDiv
 (
     const surfaceScalarField& faceFlux,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,14 +222,14 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
 
     // List of lists of particles to be transfered for all of the
     // neighbour processors
-    List<IDLList<ParticleType> > particleTransferLists
+    List<IDLList<ParticleType>> particleTransferLists
     (
         neighbourProcs.size()
     );
 
     // List of destination processorPatches indices for all of the
     // neighbour processors
-    List<DynamicList<label> > patchIndexTransferLists
+    List<DynamicList<label>> patchIndexTransferLists
     (
         neighbourProcs.size()
     );

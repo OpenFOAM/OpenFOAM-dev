@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ inline Cmpt& Vector<Cmpt>::z()
 template<class Cmpt>
 inline const Vector<Cmpt>& Vector<Cmpt>::centre
 (
-    const Foam::List<Vector<Cmpt> >&
+    const Foam::List<Vector<Cmpt>>&
 )const
 {
     return *this;
@@ -114,7 +114,7 @@ inline const Vector<Cmpt>& Vector<Cmpt>::centre
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline typename innerProduct<Vector<Cmpt>, Vector<Cmpt> >::type
+inline typename innerProduct<Vector<Cmpt>, Vector<Cmpt>>::type
 operator&(const Vector<Cmpt>& v1, const Vector<Cmpt>& v2)
 {
     return Cmpt(v1.x()*v2.x() + v1.y()*v2.y() + v1.z()*v2.z());

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ public:
             const mapDistribute& map,
             const labelListList& stencil,
             const GeometricField<Type, fvPatchField, volMesh>& fld,
-            const List<List<WeightType> >& stencilWeights
+            const List<List<WeightType>>& stencilWeights
         );
 };
 

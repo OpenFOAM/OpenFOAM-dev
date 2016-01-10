@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ public:
 
 
     //- Selector
-    static autoPtr<BinaryCollisionModel<CloudType> > New
+    static autoPtr<BinaryCollisionModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -171,7 +171,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                    \
                                                                               \
     BinaryCollisionModel<CloudType>::                                         \
-        adddictionaryConstructorToTable<SS<CloudType> >                       \
+        adddictionaryConstructorToTable<SS<CloudType>>                       \
             add##SS##CloudType##ConstructorToTable_;
 
 

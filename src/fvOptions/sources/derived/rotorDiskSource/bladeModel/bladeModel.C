@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ Foam::bladeModel::bladeModel(const dictionary& dict)
     chord_(),
     fName_(fileName::null)
 {
-    List<Tuple2<word, vector> > data;
+    List<Tuple2<word, vector>> data;
     if (readFromFile())
     {
         IFstream is(fName_);

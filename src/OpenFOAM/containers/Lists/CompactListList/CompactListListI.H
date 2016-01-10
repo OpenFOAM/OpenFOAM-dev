@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,10 +63,10 @@ inline Foam::CompactListList<T, Container>::CompactListList
 
 
 template<class T, class Container>
-inline Foam::autoPtr<Foam::CompactListList<T, Container> >
+inline Foam::autoPtr<Foam::CompactListList<T, Container>>
 Foam::CompactListList<T, Container>::clone() const
 {
-    return autoPtr<CompactListList<T, Container> >
+    return autoPtr<CompactListList<T, Container>>
     (
         new CompactListList<T, Container>(*this)
     );
@@ -79,7 +79,7 @@ template<class T, class Container>
 inline const Foam::CompactListList<T, Container>&
 Foam::CompactListList<T, Container>::null()
 {
-    return NullObjectRef<CompactListList<T, Container> >();
+    return NullObjectRef<CompactListList<T, Container>>();
 }
 
 
@@ -165,7 +165,7 @@ inline Foam::label Foam::CompactListList<T, Container>::whichColumn
 
 
 template<class T, class Container>
-inline Foam::Xfer<Foam::CompactListList<T, Container> >
+inline Foam::Xfer<Foam::CompactListList<T, Container>>
 Foam::CompactListList<T, Container>::xfer()
 {
     return xferMove(*this);

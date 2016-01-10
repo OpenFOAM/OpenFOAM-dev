@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,7 +184,7 @@ Foam::edgeList Foam::surfaceIntersection::filterEdges
     labelList& map
 )
 {
-    HashSet<edge, Hash<edge> > uniqueEdges(10*edges.size());
+    HashSet<edge, Hash<edge>> uniqueEdges(10*edges.size());
 
     edgeList newEdges(edges.size());
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,12 +105,12 @@ template<class Type>
 void Foam::csvTableReader<Type>::operator()
 (
     const fileName& fName,
-    List<Tuple2<scalar, Type> >& data
+    List<Tuple2<scalar, Type>>& data
 )
 {
     IFstream in(fName);
 
-    DynamicList<Tuple2<scalar, Type> > values;
+    DynamicList<Tuple2<scalar, Type>> values;
 
     // Skip header
     if (headerLine_)
@@ -162,7 +162,7 @@ template<class Type>
 void Foam::csvTableReader<Type>::operator()
 (
     const fileName& fName,
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >& data
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& data
 )
 {
     NotImplemented;

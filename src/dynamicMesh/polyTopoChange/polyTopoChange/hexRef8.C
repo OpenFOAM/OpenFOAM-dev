@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -4632,7 +4632,7 @@ void Foam::hexRef8::checkMesh() const
             {
                 // Check how many faces between owner and neighbour. Should
                 // be only one.
-                HashTable<label, labelPair, labelPair::Hash<> >
+                HashTable<label, labelPair, labelPair::Hash<>>
                     cellToFace(2*pp.size());
 
                 label faceI = pp.start();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 template<class CloudType>
 Foam::InjectionModelList<CloudType>::InjectionModelList(CloudType& owner)
 :
-    PtrList<InjectionModel<CloudType> >()
+    PtrList<InjectionModel<CloudType>>()
 {}
 
 
@@ -41,7 +41,7 @@ Foam::InjectionModelList<CloudType>::InjectionModelList
     CloudType& owner
 )
 :
-    PtrList<InjectionModel<CloudType> >()
+    PtrList<InjectionModel<CloudType>>()
 {
     wordList modelNames(dict.toc());
 
@@ -96,7 +96,7 @@ Foam::InjectionModelList<CloudType>::InjectionModelList
     const InjectionModelList<CloudType>& iml
 )
 :
-    PtrList<InjectionModel<CloudType> >(iml)
+    PtrList<InjectionModel<CloudType>>(iml)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,10 +56,10 @@ class limitWith
     // Private Member Functions
 
         //- Interpolation scheme
-        tmp<surfaceInterpolationScheme<Type> > tInterp_;
+        tmp<surfaceInterpolationScheme<Type>> tInterp_;
 
         //- Limiter
-        tmp<limitedSurfaceInterpolationScheme<Type> > tLimiter_;
+        tmp<limitedSurfaceInterpolationScheme<Type>> tLimiter_;
 
 
         //- Disallow default bitwise copy construct
@@ -141,7 +141,7 @@ public:
 
         //- Return the explicit correction to the face-interpolate
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>& vf) const
         {
             return tLimiter_().limiter(vf)*tInterp_().correction(vf);

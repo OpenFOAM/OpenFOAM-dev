@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ public:
         DevolatilisationModel(const DevolatilisationModel<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DevolatilisationModel<CloudType> > clone() const = 0;
+        virtual autoPtr<DevolatilisationModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -107,7 +107,7 @@ public:
 
 
     //- Selector
-    static autoPtr<DevolatilisationModel<CloudType> > New
+    static autoPtr<DevolatilisationModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -176,7 +176,7 @@ public:
                                                                               \
     Foam::DevolatilisationModel<reactingMultiphaseCloudType>::                \
         adddictionaryConstructorToTable                                       \
-        <Foam::SS<reactingMultiphaseCloudType> >                              \
+        <Foam::SS<reactingMultiphaseCloudType>>                              \
         add##SS##CloudType##reactingMultiphaseCloudType##ConstructorToTable_;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ protected:
             mutable wordList interRegionAMINames_;
 
             //- List of AMI objects per coupled region
-            mutable PtrList<PtrList<AMIPatchToPatchInterpolation> >
+            mutable PtrList<PtrList<AMIPatchToPatchInterpolation>>
                 interRegionAMI_;
 
 
@@ -260,7 +260,7 @@ public:
 
             //- Map patch field from another region model to local patch
             template<class Type>
-            tmp<Foam::Field<Type> > mapRegionPatchField
+            tmp<Foam::Field<Type>> mapRegionPatchField
             (
                 const regionModel& nbrRegion,
                 const label regionPatchI,
@@ -271,7 +271,7 @@ public:
 
             //- Map patch field from another region model to local patch
             template<class Type>
-            tmp<Field<Type> > mapRegionPatchField
+            tmp<Field<Type>> mapRegionPatchField
             (
                 const regionModel& nbrRegion,
                 const word& fieldName,
@@ -282,7 +282,7 @@ public:
             //- Map patch internal field from another region model to local
             //  patch
             template<class Type>
-            tmp<Field<Type> > mapRegionPatchInternalField
+            tmp<Field<Type>> mapRegionPatchInternalField
             (
                 const regionModel& nbrRegion,
                 const word& fieldName,

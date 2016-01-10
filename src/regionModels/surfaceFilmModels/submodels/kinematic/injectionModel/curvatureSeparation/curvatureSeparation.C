@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -240,10 +240,10 @@ curvatureSeparation::curvatureSeparation
 
     gHat_ = owner.g().value()/magG_;
 
-    List<Tuple2<word, scalar> > prIn(coeffDict_.lookup("definedPatchRadii"));
+    List<Tuple2<word, scalar>> prIn(coeffDict_.lookup("definedPatchRadii"));
     const wordList& allPatchNames = owner.regionMesh().boundaryMesh().names();
 
-    DynamicList<Tuple2<label, scalar> > prData(allPatchNames.size());
+    DynamicList<Tuple2<label, scalar>> prData(allPatchNames.size());
 
     labelHashSet uniquePatchIDs;
 

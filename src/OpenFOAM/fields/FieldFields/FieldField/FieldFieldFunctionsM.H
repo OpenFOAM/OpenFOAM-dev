@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,15 +40,15 @@ void Func                                                                     \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > Func                                      \
+tmp<FieldField<Field, ReturnType>> Func                                      \
 (                                                                             \
     const FieldField<Field, Type1>& f                                         \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > Func                                      \
+tmp<FieldField<Field, ReturnType>> Func                                      \
 (                                                                             \
-    const tmp<FieldField<Field, Type1> >& tf                                  \
+    const tmp<FieldField<Field, Type1>>& tf                                  \
 );
 
 
@@ -64,15 +64,15 @@ void OpFunc                                                                   \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
     const FieldField<Field, Type1>& f                                         \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
-    const tmp<FieldField<Field, Type1> >& tf                                  \
+    const tmp<FieldField<Field, Type1>>& tf                                  \
 );
 
 
@@ -89,31 +89,31 @@ void func                                                                     \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > func                                      \
+tmp<FieldField<Field, ReturnType>> func                                      \
 (                                                                             \
     const FieldField<Field, Type1>& f1,                                       \
     const FieldField<Field, Type2>& f2                                        \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > func                                      \
+tmp<FieldField<Field, ReturnType>> func                                      \
 (                                                                             \
     const FieldField<Field, Type1>& f1,                                       \
-    const tmp<FieldField<Field, Type2> >& tf2                                 \
+    const tmp<FieldField<Field, Type2>>& tf2                                 \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > func                                      \
+tmp<FieldField<Field, ReturnType>> func                                      \
 (                                                                             \
-    const tmp<FieldField<Field, Type1> >& tf1,                                \
+    const tmp<FieldField<Field, Type1>>& tf1,                                \
     const FieldField<Field, Type2>& f2                                        \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > func                                      \
+tmp<FieldField<Field, ReturnType>> func                                      \
 (                                                                             \
-    const tmp<FieldField<Field, Type1> >& tf1,                                \
-    const tmp<FieldField<Field, Type2> >& tf2                                 \
+    const tmp<FieldField<Field, Type1>>& tf1,                                \
+    const tmp<FieldField<Field, Type2>>& tf2                                 \
 );
 
 
@@ -130,17 +130,17 @@ void func                                                                     \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > func                                      \
+tmp<FieldField<Field, ReturnType>> func                                      \
 (                                                                             \
     const Type1& s1,                                                          \
     const FieldField<Field, Type1>& f2                                        \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > func                                      \
+tmp<FieldField<Field, ReturnType>> func                                      \
 (                                                                             \
     const Type1& s1,                                                          \
-    const tmp<FieldField<Field, Type1> >& tf2                                 \
+    const tmp<FieldField<Field, Type1>>& tf2                                 \
 );
 
 
@@ -155,16 +155,16 @@ void func                                                                     \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > func                                      \
+tmp<FieldField<Field, ReturnType>> func                                      \
 (                                                                             \
     const FieldField<Field, Type1>& f1,                                       \
     const Type2& s                                                            \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > func                                      \
+tmp<FieldField<Field, ReturnType>> func                                      \
 (                                                                             \
-    const tmp<FieldField<Field, Type1> >& tf1,                                \
+    const tmp<FieldField<Field, Type1>>& tf1,                                \
     const Type2& s                                                            \
 );
 
@@ -187,31 +187,31 @@ void OpFunc                                                                   \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
     const FieldField<Field, Type1>& f1,                                       \
     const FieldField<Field, Type2>& f2                                        \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
     const FieldField<Field, Type1>& f1,                                       \
-    const tmp<FieldField<Field, Type2> >& tf2                                 \
+    const tmp<FieldField<Field, Type2>>& tf2                                 \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
-    const tmp<FieldField<Field, Type1> >& tf1,                                \
+    const tmp<FieldField<Field, Type1>>& tf1,                                \
     const FieldField<Field, Type2>& f2                                        \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
-    const tmp<FieldField<Field, Type1> >& tf1,                                \
-    const tmp<FieldField<Field, Type2> >& tf2                                 \
+    const tmp<FieldField<Field, Type1>>& tf1,                                \
+    const tmp<FieldField<Field, Type2>>& tf2                                 \
 );
 
 
@@ -228,17 +228,17 @@ void OpFunc                                                                   \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
     const Type1& s1,                                                          \
     const FieldField<Field, Type2>& f2                                        \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
     const Type1& s1,                                                          \
-    const tmp<FieldField<Field, Type2> >& tf2                                 \
+    const tmp<FieldField<Field, Type2>>& tf2                                 \
 );
 
 
@@ -253,16 +253,16 @@ void OpFunc                                                                   \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
     const FieldField<Field, Type1>& f1,                                       \
     const Type2& s2                                                           \
 );                                                                            \
                                                                               \
 TEMPLATE                                                                      \
-tmp<FieldField<Field, ReturnType> > operator Op                               \
+tmp<FieldField<Field, ReturnType>> operator Op                               \
 (                                                                             \
-    const tmp<FieldField<Field, Type1> >& tf1,                                \
+    const tmp<FieldField<Field, Type1>>& tf1,                                \
     const Type2& s2                                                           \
 );
 

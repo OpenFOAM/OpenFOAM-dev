@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,9 +105,9 @@ public:
         ParticleForce(const ParticleForce& pf);
 
         //- Construct and return a clone
-        virtual autoPtr<ParticleForce<CloudType> > clone() const
+        virtual autoPtr<ParticleForce<CloudType>> clone() const
         {
-            return autoPtr<ParticleForce<CloudType> >
+            return autoPtr<ParticleForce<CloudType>>
             (
                 new ParticleForce<CloudType>(*this)
             );
@@ -119,7 +119,7 @@ public:
 
 
     //- Selector
-    static autoPtr<ParticleForce<CloudType> > New
+    static autoPtr<ParticleForce<CloudType>> New
     (
         CloudType& owner,
         const fvMesh& mesh,
@@ -215,7 +215,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);      \
                                                                                \
     Foam::ParticleForce<kinematicCloudType>::                                  \
-        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType> >         \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>         \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

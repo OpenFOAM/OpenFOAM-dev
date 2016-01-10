@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,10 +66,10 @@ class fixedBlended
     // Private Member Functions
 
         //- Scheme 1
-        tmp<surfaceInterpolationScheme<Type> > tScheme1_;
+        tmp<surfaceInterpolationScheme<Type>> tScheme1_;
 
         //- Scheme 2
-        tmp<surfaceInterpolationScheme<Type> > tScheme2_;
+        tmp<surfaceInterpolationScheme<Type>> tScheme2_;
 
 
         //- Disallow default bitwise copy construct
@@ -179,7 +179,7 @@ public:
 
         //- Return the face-interpolate of the given cell field
         //  with explicit correction
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -200,7 +200,7 @@ public:
 
         //- Return the explicit correction to the face-interpolate
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -237,7 +237,7 @@ public:
             }
             else
             {
-                return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+                return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
                 (
                     NULL
                 );

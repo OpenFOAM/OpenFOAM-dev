@@ -4,7 +4,7 @@
 
     surfaceScalarField phir("phir", phic*interface.nHatf());
 
-    Pair<tmp<volScalarField> > vDotAlphal =
+    Pair<tmp<volScalarField>> vDotAlphal =
         mixture->vDotAlphal();
     const volScalarField& vDotcAlphal = vDotAlphal[0]();
     const volScalarField& vDotvAlphal = vDotAlphal[1]();

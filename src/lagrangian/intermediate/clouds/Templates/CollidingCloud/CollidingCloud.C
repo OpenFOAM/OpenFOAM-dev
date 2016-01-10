@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ void Foam::CollidingCloud<CloudType>::setModels()
 {
     collisionModel_.reset
     (
-        CollisionModel<CollidingCloud<CloudType> >::New
+        CollisionModel<CollidingCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -182,7 +182,7 @@ void Foam::CollidingCloud<CloudType>::evolve()
     if (this->solution().canEvolve())
     {
         typename parcelType::template
-            TrackingData<CollidingCloud<CloudType> > td(*this);
+            TrackingData<CollidingCloud<CloudType>> td(*this);
 
         this->solve(td);
     }

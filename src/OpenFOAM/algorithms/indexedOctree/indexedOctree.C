@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ void Foam::indexedOctree<Type>::divide
     labelListList& result
 ) const
 {
-    List<DynamicList<label> > subIndices(8);
+    List<DynamicList<label>> subIndices(8);
     for (direction octant = 0; octant < subIndices.size(); octant++)
     {
         subIndices[octant].setCapacity(indices.size()/8);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::regionCoupledBase::interpolate
+Foam::tmp<Foam::Field<Type>> Foam::regionCoupledBase::interpolate
 (
     const Field<Type>& fld
 ) const
@@ -43,9 +43,9 @@ Foam::tmp<Foam::Field<Type> > Foam::regionCoupledBase::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::regionCoupledBase::interpolate
+Foam::tmp<Foam::Field<Type>> Foam::regionCoupledBase::interpolate
 (
-    const tmp<Field<Type> >& tFld
+    const tmp<Field<Type>>& tFld
 ) const
 {
     if (owner())

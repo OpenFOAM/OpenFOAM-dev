@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2012-2015 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2012-2016 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -229,7 +229,7 @@ public:
             //    start[i] = points[edges[i][0]];
             //    end[i] = points[edges[i][1]];
             //}
-            //Foam::List<Foam::List<pointIndexHit> > hitInfo;
+            //Foam::List<Foam::List<pointIndexHit>> hitInfo;
             //labelListList hitSurfaces;
             //searchableSurfacesQueries::findAllIntersections
             //(

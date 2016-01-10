@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::epsilonLowReWallFunctionFvPatchScalarField::calculate
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     const DimensionedField<scalar, volMesh>& G =
-        db().lookupObject<DimensionedField<scalar, volMesh> >
+        db().lookupObject<DimensionedField<scalar, volMesh>>
         (
             turbModel.GName()
         );

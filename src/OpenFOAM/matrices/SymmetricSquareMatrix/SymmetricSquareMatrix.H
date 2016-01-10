@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ public:
         inline SymmetricSquareMatrix(Istream&);
 
         //- Clone
-        inline autoPtr<SymmetricSquareMatrix<Type> > clone() const;
+        inline autoPtr<SymmetricSquareMatrix<Type>> clone() const;
 
 
         //- Return subscript-checked row of Matrix.

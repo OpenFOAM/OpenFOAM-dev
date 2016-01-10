@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,12 +98,12 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         const volScalarField& rhoc = this->owner().rho();
 
         const AveragingMethod<scalar>& rhoAverage =
-            mesh.lookupObject<AveragingMethod<scalar> >
+            mesh.lookupObject<AveragingMethod<scalar>>
             (
                 cloudName + ":rhoAverage"
             );
         const AveragingMethod<scalar>& uSqrAverage =
-            mesh.lookupObject<AveragingMethod<scalar> >
+            mesh.lookupObject<AveragingMethod<scalar>>
             (
                 cloudName + ":uSqrAverage"
             );

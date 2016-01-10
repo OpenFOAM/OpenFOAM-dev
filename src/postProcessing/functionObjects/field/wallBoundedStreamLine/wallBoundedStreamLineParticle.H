@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,15 +72,15 @@ public:
     public:
 
 
-        const PtrList<interpolation<scalar> >& vsInterp_;
-        const PtrList<interpolation<vector> >& vvInterp_;
+        const PtrList<interpolation<scalar>>& vsInterp_;
+        const PtrList<interpolation<vector>>& vvInterp_;
         const label UIndex_;
         const bool trackForward_;
         const scalar trackLength_;
 
         DynamicList<vectorList>& allPositions_;
-        List<DynamicList<scalarList> >& allScalars_;
-        List<DynamicList<vectorList> >& allVectors_;
+        List<DynamicList<scalarList>>& allScalars_;
+        List<DynamicList<vectorList>>& allVectors_;
 
 
         // Constructors
@@ -88,16 +88,16 @@ public:
             trackingData
             (
                 Cloud<wallBoundedStreamLineParticle>& cloud,
-                const PtrList<interpolation<scalar> >& vsInterp,
-                const PtrList<interpolation<vector> >& vvInterp,
+                const PtrList<interpolation<scalar>>& vsInterp,
+                const PtrList<interpolation<vector>>& vvInterp,
                 const label UIndex,
                 const bool trackForward,
                 const scalar trackLength,
                 const PackedBoolList& isWallPatch,
 
-                DynamicList<List<point> >& allPositions,
-                List<DynamicList<scalarList> >& allScalars,
-                List<DynamicList<vectorList> >& allVectors
+                DynamicList<List<point>>& allPositions,
+                List<DynamicList<scalarList>>& allScalars,
+                List<DynamicList<vectorList>>& allVectors
             )
             :
                 wallBoundedParticle::TrackingData
@@ -132,10 +132,10 @@ private:
         DynamicList<point> sampledPositions_;
 
         //- Sampled scalars
-        List<DynamicList<scalar> > sampledScalars_;
+        List<DynamicList<scalar>> sampledScalars_;
 
         //- Sampled vectors
-        List<DynamicList<vector> > sampledVectors_;
+        List<DynamicList<vector>> sampledVectors_;
 
 
     // Private Member Functions

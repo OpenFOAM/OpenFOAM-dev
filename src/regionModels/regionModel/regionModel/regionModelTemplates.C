@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::regionModels::regionModel::mapRegionPatchField
 (
     const regionModel& nbrRegion,
@@ -40,7 +40,7 @@ Foam::regionModels::regionModel::mapRegionPatchField
     const AMIPatchToPatchInterpolation& ami =
         interRegionAMI(nbrRegion, regionPatchI, nbrPatchI, flip);
 
-    tmp<Field<Type> > tresult(ami.interpolateToSource(nbrField));
+    tmp<Field<Type>> tresult(ami.interpolateToSource(nbrField));
 
     UPstream::msgType() = oldTag;
 
@@ -49,7 +49,7 @@ Foam::regionModels::regionModel::mapRegionPatchField
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::regionModels::regionModel::mapRegionPatchField
 (
     const regionModel& nbrRegion,
@@ -77,7 +77,7 @@ Foam::regionModels::regionModel::mapRegionPatchField
 
         const Field<Type>& nbrFieldp = nbrField.boundaryField()[nbrPatchI];
 
-        tmp<Field<Type> > tresult(ami.interpolateToSource(nbrFieldp));
+        tmp<Field<Type>> tresult(ami.interpolateToSource(nbrFieldp));
 
         UPstream::msgType() = oldTag;
 
@@ -88,7 +88,7 @@ Foam::regionModels::regionModel::mapRegionPatchField
         const polyPatch& p = regionMesh().boundaryMesh()[regionPatchI];
 
         return
-            tmp<Field<Type> >
+            tmp<Field<Type>>
             (
                 new Field<Type>
                 (
@@ -101,7 +101,7 @@ Foam::regionModels::regionModel::mapRegionPatchField
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::regionModels::regionModel::mapRegionPatchInternalField
 (
     const regionModel& nbrRegion,
@@ -130,7 +130,7 @@ Foam::regionModels::regionModel::mapRegionPatchInternalField
         const fvPatchField<Type>& nbrFieldp =
             nbrField.boundaryField()[nbrPatchI];
 
-        tmp<Field<Type> > tresult
+        tmp<Field<Type>> tresult
         (
             ami.interpolateToSource(nbrFieldp.patchInternalField())
         );
@@ -144,7 +144,7 @@ Foam::regionModels::regionModel::mapRegionPatchInternalField
         const polyPatch& p = regionMesh().boundaryMesh()[regionPatchI];
 
         return
-            tmp<Field<Type> >
+            tmp<Field<Type>>
             (
                 new Field<Type>
                 (

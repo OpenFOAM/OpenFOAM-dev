@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ defineNamedTemplateTypeNameAndDebug
     0
 );
 Foam::AveragingMethod<Foam::scalar>::
-adddictionaryConstructorToTable<Foam::AveragingMethods::Basic<Foam::scalar> >
+adddictionaryConstructorToTable<Foam::AveragingMethods::Basic<Foam::scalar>>
     addBasicscalarConstructorToTable_;
 
 defineNamedTemplateTypeNameAndDebug
@@ -70,7 +70,7 @@ defineNamedTemplateTypeNameAndDebug
     0
 );
 Foam::AveragingMethod<Foam::vector>::
-adddictionaryConstructorToTable<Foam::AveragingMethods::Basic<Foam::vector> >
+adddictionaryConstructorToTable<Foam::AveragingMethods::Basic<Foam::vector>>
     addBasicvectorConstructorToTable_;
 
 
@@ -81,7 +81,7 @@ defineNamedTemplateTypeNameAndDebug
     0
 );
 Foam::AveragingMethod<Foam::scalar>::
-adddictionaryConstructorToTable<Foam::AveragingMethods::Dual<Foam::scalar> >
+adddictionaryConstructorToTable<Foam::AveragingMethods::Dual<Foam::scalar>>
     addDualscalarConstructorToTable_;
 
 defineNamedTemplateTypeNameAndDebug
@@ -90,7 +90,7 @@ defineNamedTemplateTypeNameAndDebug
     0
 );
 Foam::AveragingMethod<Foam::vector>::
-adddictionaryConstructorToTable<Foam::AveragingMethods::Dual<Foam::vector> >
+adddictionaryConstructorToTable<Foam::AveragingMethods::Dual<Foam::vector>>
     addDualvectorConstructorToTable_;
 
 
@@ -101,7 +101,7 @@ defineNamedTemplateTypeNameAndDebug
     0
 );
 Foam::AveragingMethod<Foam::scalar>::
-adddictionaryConstructorToTable<Foam::AveragingMethods::Moment<Foam::scalar> >
+adddictionaryConstructorToTable<Foam::AveragingMethods::Moment<Foam::scalar>>
     addMomentscalarConstructorToTable_;
 
 defineNamedTemplateTypeNameAndDebug
@@ -110,7 +110,7 @@ defineNamedTemplateTypeNameAndDebug
     0
 );
 Foam::AveragingMethod<Foam::vector>::
-adddictionaryConstructorToTable<Foam::AveragingMethods::Moment<Foam::vector> >
+adddictionaryConstructorToTable<Foam::AveragingMethods::Moment<Foam::vector>>
     addMomentvectorConstructorToTable_;
 
 

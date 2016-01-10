@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,7 +173,7 @@ Foam::KinematicCloud<CloudType>::functions()
 
 
 template<class CloudType>
-inline const Foam::InjectionModelList<Foam::KinematicCloud<CloudType> >&
+inline const Foam::InjectionModelList<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::injectors() const
 {
     return injectors_;
@@ -181,7 +181,7 @@ Foam::KinematicCloud<CloudType>::injectors() const
 
 
 template<class CloudType>
-inline Foam::InjectionModelList<Foam::KinematicCloud<CloudType> >&
+inline Foam::InjectionModelList<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::injectors()
 {
     return injectors_;
@@ -189,7 +189,7 @@ Foam::KinematicCloud<CloudType>::injectors()
 
 
 template<class CloudType>
-inline const Foam::DispersionModel<Foam::KinematicCloud<CloudType> >&
+inline const Foam::DispersionModel<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::dispersion() const
 {
     return dispersionModel_;
@@ -197,7 +197,7 @@ Foam::KinematicCloud<CloudType>::dispersion() const
 
 
 template<class CloudType>
-inline Foam::DispersionModel<Foam::KinematicCloud<CloudType> >&
+inline Foam::DispersionModel<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::dispersion()
 {
     return dispersionModel_();
@@ -205,7 +205,7 @@ Foam::KinematicCloud<CloudType>::dispersion()
 
 
 template<class CloudType>
-inline const Foam::PatchInteractionModel<Foam::KinematicCloud<CloudType> >&
+inline const Foam::PatchInteractionModel<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::patchInteraction() const
 {
     return patchInteractionModel_;
@@ -213,7 +213,7 @@ Foam::KinematicCloud<CloudType>::patchInteraction() const
 
 
 template<class CloudType>
-inline Foam::PatchInteractionModel<Foam::KinematicCloud<CloudType> >&
+inline Foam::PatchInteractionModel<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::patchInteraction()
 {
     return patchInteractionModel_();
@@ -221,7 +221,7 @@ Foam::KinematicCloud<CloudType>::patchInteraction()
 
 
 template<class CloudType>
-inline const Foam::StochasticCollisionModel<Foam::KinematicCloud<CloudType> >&
+inline const Foam::StochasticCollisionModel<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::stochasticCollision() const
 {
     return stochasticCollisionModel_();
@@ -229,7 +229,7 @@ Foam::KinematicCloud<CloudType>::stochasticCollision() const
 
 
 template<class CloudType>
-inline Foam::StochasticCollisionModel<Foam::KinematicCloud<CloudType> >&
+inline Foam::StochasticCollisionModel<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::stochasticCollision()
 {
     return stochasticCollisionModel_();
@@ -237,7 +237,7 @@ Foam::KinematicCloud<CloudType>::stochasticCollision()
 
 
 template<class CloudType>
-inline const Foam::SurfaceFilmModel<Foam::KinematicCloud<CloudType> >&
+inline const Foam::SurfaceFilmModel<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::surfaceFilm() const
 {
     return surfaceFilmModel_();
@@ -245,7 +245,7 @@ Foam::KinematicCloud<CloudType>::surfaceFilm() const
 
 
 template<class CloudType>
-inline Foam::SurfaceFilmModel<Foam::KinematicCloud<CloudType> >&
+inline Foam::SurfaceFilmModel<Foam::KinematicCloud<CloudType>>&
 Foam::KinematicCloud<CloudType>::surfaceFilm()
 {
     return surfaceFilmModel_();
@@ -380,8 +380,8 @@ inline Foam::scalar Foam::KinematicCloud<CloudType>::penetration
     }
 
     // lists of parcels mass and distance from initial injection point
-    List<List<scalar> > procMass(Pstream::nProcs());
-    List<List<scalar> > procDist(Pstream::nProcs());
+    List<List<scalar>> procMass(Pstream::nProcs());
+    List<List<scalar>> procDist(Pstream::nProcs());
 
     List<scalar>& mass = procMass[Pstream::myProcNo()];
     List<scalar>& dist = procDist[Pstream::myProcNo()];
@@ -499,7 +499,7 @@ inline Foam::cachedRandom& Foam::KinematicCloud<CloudType>::rndGen()
 
 
 template<class CloudType>
-inline Foam::List<Foam::DynamicList<typename CloudType::particleType*> >&
+inline Foam::List<Foam::DynamicList<typename CloudType::particleType*>>&
 Foam::KinematicCloud<CloudType>::cellOccupancy()
 {
     if (cellOccupancyPtr_.empty())

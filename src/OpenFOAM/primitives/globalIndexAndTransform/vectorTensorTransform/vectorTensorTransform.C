@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::word Foam::name(const vectorTensorTransform& s)
 
 
 template<>
-Foam::tmp<Foam::Field<bool> > Foam::vectorTensorTransform::transform
+Foam::tmp<Foam::Field<bool>> Foam::vectorTensorTransform::transform
 (
     const Field<bool>& fld
 ) const
@@ -77,7 +77,7 @@ Foam::tmp<Foam::Field<bool> > Foam::vectorTensorTransform::transform
     return fld;
 }
 template<>
-Foam::tmp<Foam::Field<Foam::label> > Foam::vectorTensorTransform::transform
+Foam::tmp<Foam::Field<Foam::label>> Foam::vectorTensorTransform::transform
 (
     const Field<label>& fld
 ) const
@@ -85,7 +85,7 @@ Foam::tmp<Foam::Field<Foam::label> > Foam::vectorTensorTransform::transform
     return fld;
 }
 template<>
-Foam::tmp<Foam::Field<Foam::scalar> > Foam::vectorTensorTransform::transform
+Foam::tmp<Foam::Field<Foam::scalar>> Foam::vectorTensorTransform::transform
 (
     const Field<scalar>& fld
 ) const

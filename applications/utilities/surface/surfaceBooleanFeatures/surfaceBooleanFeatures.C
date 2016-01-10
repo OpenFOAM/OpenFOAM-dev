@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -509,8 +509,8 @@ int main(int argc, char *argv[])
     (
         2*nFeatEds
     );
-    List<DynamicList<label> > edgeNormals(nFeatEds);
-    List<DynamicList<label> > normalDirections(nFeatEds);
+    List<DynamicList<label>> edgeNormals(nFeatEds);
+    List<DynamicList<label>> normalDirections(nFeatEds);
 
     forAllConstIter(labelPairLookup, inter.facePairToEdge(), iter)
     {

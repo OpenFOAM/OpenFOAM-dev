@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -595,10 +595,10 @@ public:
             void sumMagOffDiag(Field<LUType>& sumOff) const;
 
             //- Matrix multiplication
-            void Amul(Field<Type>&, const tmp<Field<Type> >&) const;
+            void Amul(Field<Type>&, const tmp<Field<Type>>&) const;
 
             //- Matrix transpose multiplication
-            void Tmul(Field<Type>&, const tmp<Field<Type> >&) const;
+            void Tmul(Field<Type>&, const tmp<Field<Type>>&) const;
 
 
             //- Sum the coefficients on each row of the matrix
@@ -607,7 +607,7 @@ public:
 
             void residual(Field<Type>& rA, const Field<Type>& psi) const;
 
-            tmp<Field<Type> > residual(const Field<Type>& psi) const;
+            tmp<Field<Type>> residual(const Field<Type>& psi) const;
 
 
             //- Initialise the update of interfaced interfaces
@@ -628,11 +628,11 @@ public:
             ) const;
 
 
-            tmp<Field<Type> > H(const Field<Type>&) const;
-            tmp<Field<Type> > H(const tmp<Field<Type> >&) const;
+            tmp<Field<Type>> H(const Field<Type>&) const;
+            tmp<Field<Type>> H(const tmp<Field<Type>>&) const;
 
-            tmp<Field<Type> > faceH(const Field<Type>&) const;
-            tmp<Field<Type> > faceH(const tmp<Field<Type> >&) const;
+            tmp<Field<Type>> faceH(const Field<Type>&) const;
+            tmp<Field<Type>> faceH(const tmp<Field<Type>>&) const;
 
 
     // Member operators

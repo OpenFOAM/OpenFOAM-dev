@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ public:
 
             //- Raw field receive function returning field
             template<class Type>
-            tmp<Field<Type> > receive
+            tmp<Field<Type>> receive
             (
                 const Pstream::commsTypes commsType,
                 const label size
@@ -144,7 +144,7 @@ public:
 
             //- Raw field receive function with data compression returning field
             template<class Type>
-            tmp<Field<Type> > compressedReceive
+            tmp<Field<Type>> compressedReceive
             (
                 const Pstream::commsTypes commsType,
                 const label size

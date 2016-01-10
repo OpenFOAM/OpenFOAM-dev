@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,9 @@ Foam::labelList Foam::medialAxisMeshMover::getFixedValueBCs
         const pointPatchField<vector>& patchFld =
             fld.boundaryField()[patchI];
 
-        if (isA<valuePointPatchField<vector> >(patchFld))
+        if (isA<valuePointPatchField<vector>>(patchFld))
         {
-            if (isA<zeroFixedValuePointPatchField<vector> >(patchFld))
+            if (isA<zeroFixedValuePointPatchField<vector>>(patchFld))
             {
                 // Special condition of fixed boundary condition. Does not
                 // get adapted
@@ -1116,8 +1116,8 @@ handleFeatureAngleLayerTerminations
     // edge for extrusion.
 
 
-    List<List<point> > edgeFaceNormals(pp.nEdges());
-    List<List<bool> > edgeFaceExtrude(pp.nEdges());
+    List<List<point>> edgeFaceNormals(pp.nEdges());
+    List<List<bool>> edgeFaceExtrude(pp.nEdges());
 
     const labelListList& edgeFaces = pp.edgeFaces();
     const vectorField& faceNormals = pp.faceNormals();
@@ -1141,7 +1141,7 @@ handleFeatureAngleLayerTerminations
         mesh(),
         meshEdges,
         edgeFaceNormals,
-        globalMeshData::ListPlusEqOp<List<point> >(),   // combine operator
+        globalMeshData::ListPlusEqOp<List<point>>(),   // combine operator
         List<point>()               // null value
     );
 
@@ -1150,7 +1150,7 @@ handleFeatureAngleLayerTerminations
         mesh(),
         meshEdges,
         edgeFaceExtrude,
-        globalMeshData::ListPlusEqOp<List<bool> >(),    // combine operator
+        globalMeshData::ListPlusEqOp<List<bool>>(),    // combine operator
         List<bool>()                // null value
     );
 

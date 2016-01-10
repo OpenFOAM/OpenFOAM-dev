@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ private:
 
         const potential& pot_;
 
-        List<DynamicList<molecule*> > cellOccupancy_;
+        List<DynamicList<molecule*>> cellOccupancy_;
 
         InteractionLists<molecule> il_;
 
@@ -185,7 +185,7 @@ public:
 
             inline const potential& pot() const;
 
-            inline const List<DynamicList<molecule*> >& cellOccupancy() const;
+            inline const List<DynamicList<molecule*>>& cellOccupancy() const;
 
             inline const InteractionLists<molecule>& il() const;
 

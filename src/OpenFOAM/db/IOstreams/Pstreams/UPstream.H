@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,11 +188,11 @@ private:
 
         static LIFOStack<label> freeComms_;
         static DynamicList<int> myProcNo_;
-        static DynamicList<List<int> > procIDs_;
+        static DynamicList<List<int>> procIDs_;
         static DynamicList<label> parentCommunicator_;
 
-        static DynamicList<List<commsStruct> > linearCommunication_;
-        static DynamicList<List<commsStruct> > treeCommunication_;
+        static DynamicList<List<commsStruct>> linearCommunication_;
+        static DynamicList<List<commsStruct>> treeCommunication_;
 
 
     // Private Member Functions
@@ -211,7 +211,7 @@ private:
         static void collectReceives
         (
             const label procID,
-            const List<DynamicList<label> >& receives,
+            const List<DynamicList<label>>& receives,
             DynamicList<label>& allReceives
         );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,10 +70,10 @@ class polyBoundaryMesh
 
         mutable autoPtr<labelList> patchIDPtr_;
 
-        mutable autoPtr<HashTable<labelList, word> > groupPatchIDsPtr_;
+        mutable autoPtr<HashTable<labelList, word>> groupPatchIDsPtr_;
 
         //- Edges of neighbouring patches
-        mutable autoPtr<List<labelPairList> > neighbourEdgesPtr_;
+        mutable autoPtr<List<labelPairList>> neighbourEdgesPtr_;
 
 
     // Private Member Functions

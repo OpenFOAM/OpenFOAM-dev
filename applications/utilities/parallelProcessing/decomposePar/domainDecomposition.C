@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -599,7 +599,7 @@ bool Foam::domainDecomposition::writeDecomposition(const bool decomposeSets)
             // Go through all the zoned points and find out if they
             // belong to a zone.  If so, add it to the zone as
             // necessary
-            List<DynamicList<label> > zonePoints(pz.size());
+            List<DynamicList<label>> zonePoints(pz.size());
 
             // Estimate size
             forAll(zonePoints, zoneI)
@@ -665,8 +665,8 @@ bool Foam::domainDecomposition::writeDecomposition(const bool decomposeSets)
             // Go through all the zoned face and find out if they
             // belong to a zone.  If so, add it to the zone as
             // necessary
-            List<DynamicList<label> > zoneFaces(fz.size());
-            List<DynamicList<bool> > zoneFaceFlips(fz.size());
+            List<DynamicList<label>> zoneFaces(fz.size());
+            List<DynamicList<bool>> zoneFaceFlips(fz.size());
 
             // Estimate size
             forAll(zoneFaces, zoneI)
@@ -759,7 +759,7 @@ bool Foam::domainDecomposition::writeDecomposition(const bool decomposeSets)
             // Go through all the zoned cells and find out if they
             // belong to a zone.  If so, add it to the zone as
             // necessary
-            List<DynamicList<label> > zoneCells(cz.size());
+            List<DynamicList<label>> zoneCells(cz.size());
 
             // Estimate size
             forAll(zoneCells, zoneI)

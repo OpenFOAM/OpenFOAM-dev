@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,14 +110,14 @@ public:
         DataEntry(const DataEntry<Type>& de);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
+        virtual tmp<DataEntry<Type>> clone() const
         {
-            return tmp<DataEntry<Type> >(new DataEntry<Type>(*this));
+            return tmp<DataEntry<Type>>(new DataEntry<Type>(*this));
         }
 
 
     //- Selector
-    static autoPtr<DataEntry<Type> > New
+    static autoPtr<DataEntry<Type>> New
     (
         const word& entryName,
         const dictionary& dict
@@ -148,13 +148,13 @@ public:
             virtual Type value(const scalar x) const;
 
             //- Return value as a function of (scalar) independent variable
-            virtual tmp<Field<Type> > value(const scalarField& x) const;
+            virtual tmp<Field<Type>> value(const scalarField& x) const;
 
             //- Integrate between two (scalar) values
             virtual Type integrate(const scalar x1, const scalar x2) const;
 
             //- Integrate between two (scalar) values
-            virtual tmp<Field<Type> > integrate
+            virtual tmp<Field<Type>> integrate
             (
                 const scalarField& x1,
                 const scalarField& x2
@@ -164,7 +164,7 @@ public:
             virtual dimensioned<Type> dimValue(const scalar x) const;
 
             //- Return dimensioned type as a function of (scalar)
-            virtual tmp<Field<dimensioned<Type> > > dimValue
+            virtual tmp<Field<dimensioned<Type>>> dimValue
             (
                 const scalarField& x
             ) const;
@@ -178,7 +178,7 @@ public:
 
             //- Integrate between two scalar fields and return a field of
             //  dimensioned type
-            virtual tmp<Field<dimensioned<Type> > > dimIntegrate
+            virtual tmp<Field<dimensioned<Type>>> dimIntegrate
             (
                 const scalarField& x1,
                 const scalarField& x2
@@ -220,7 +220,7 @@ public:
                                                                               \
     defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                         \
                                                                               \
-    DataEntry<Type>::adddictionaryConstructorToTable<SS<Type> >               \
+    DataEntry<Type>::adddictionaryConstructorToTable<SS<Type>>               \
         add##SS##Type##ConstructorToTable_;
 
 

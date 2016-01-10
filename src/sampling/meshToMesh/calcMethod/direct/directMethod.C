@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,8 +116,8 @@ void Foam::directMethod::calculateAddressing
     // store a list of src cells already mapped
     labelList srcTgtSeed(src_.nCells(), -1);
 
-    List<DynamicList<label> > srcToTgt(src_.nCells());
-    List<DynamicList<label> > tgtToSrc(tgt_.nCells());
+    List<DynamicList<label>> srcToTgt(src_.nCells());
+    List<DynamicList<label>> tgtToSrc(tgt_.nCells());
 
     DynamicList<label> srcSeeds(10);
 

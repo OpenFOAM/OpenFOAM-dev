@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ protected:
 
         //- List of radii for patches - if patch not defined, radius
         // calculated based on mesh geometry
-        List<Tuple2<label, scalar> > definedPatchRadii_;
+        List<Tuple2<label, scalar>> definedPatchRadii_;
 
         //- Magnitude of gravity vector
         scalar magG_;

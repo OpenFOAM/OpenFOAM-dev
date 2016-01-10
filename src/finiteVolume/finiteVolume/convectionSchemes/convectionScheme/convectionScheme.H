@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ public:
     // Selectors
 
         //- Return a pointer to a new convectionScheme created on freestore
-        static tmp<convectionScheme<Type> > New
+        static tmp<convectionScheme<Type>> New
         (
             const fvMesh& mesh,
             const surfaceScalarField& faceFlux,
@@ -137,7 +137,7 @@ public:
 
         //- Return a pointer to a new multivariate convectionScheme
         //  created on freestore
-        static tmp<convectionScheme<Type> > New
+        static tmp<convectionScheme<Type>> New
         (
             const fvMesh& mesh,
             const typename multivariateSurfaceInterpolationScheme<Type>::
@@ -159,26 +159,26 @@ public:
             return mesh_;
         }
 
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         interpolate
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const = 0;
 
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > flux
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmDiv
+        virtual tmp<fvMatrix<Type>> fvmDiv
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDiv
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDiv
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -210,7 +210,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            convectionScheme<Type>::addIstreamConstructorToTable<SS<Type> >    \
+            convectionScheme<Type>::addIstreamConstructorToTable<SS<Type>>    \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }
@@ -232,7 +232,7 @@ makeFvConvectionTypeScheme(SS, tensor)
         namespace fv                                                           \
         {                                                                      \
             convectionScheme<Type>::                                           \
-                addMultivariateConstructorToTable<SS<Type> >                   \
+                addMultivariateConstructorToTable<SS<Type>>                   \
                 add##SS##Type##MultivariateConstructorToTable_;                \
         }                                                                      \
     }

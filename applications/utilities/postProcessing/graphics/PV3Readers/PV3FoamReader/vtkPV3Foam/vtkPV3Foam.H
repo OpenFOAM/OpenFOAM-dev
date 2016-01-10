@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -497,7 +497,7 @@ class vtkPV3Foam
             void convertVolFields
             (
                 const fvMesh&,
-                const PtrList<PrimitivePatchInterpolation<primitivePatch> >&,
+                const PtrList<PrimitivePatchInterpolation<primitivePatch>>&,
                 const IOobjectList&,
                 const bool interpFields,
                 vtkMultiBlockDataSet* output
@@ -508,7 +508,7 @@ class vtkPV3Foam
             void convertVolFieldBlock
             (
                 const GeometricField<Type, fvPatchField, volMesh>&,
-                autoPtr<GeometricField<Type, pointPatchField, pointMesh> >&,
+                autoPtr<GeometricField<Type, pointPatchField, pointMesh>>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const List<polyDecomp>& decompLst

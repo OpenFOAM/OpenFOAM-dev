@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ inline Foam::scalar Foam::DSMCCloud<ParcelType>::nParticle() const
 
 
 template<class ParcelType>
-inline const Foam::List<Foam::DynamicList<ParcelType*> >&
+inline const Foam::List<Foam::DynamicList<ParcelType*>>&
 Foam::DSMCCloud<ParcelType>::cellOccupancy() const
 {
     return cellOccupancy_;
@@ -205,7 +205,7 @@ Foam::DSMCCloud<ParcelType>::boundaryU() const
 
 
 template<class ParcelType>
-inline const Foam::BinaryCollisionModel<Foam::DSMCCloud<ParcelType> >&
+inline const Foam::BinaryCollisionModel<Foam::DSMCCloud<ParcelType>>&
 Foam::DSMCCloud<ParcelType>::binaryCollision() const
 {
     return binaryCollisionModel_;
@@ -213,7 +213,7 @@ Foam::DSMCCloud<ParcelType>::binaryCollision() const
 
 
 template<class ParcelType>
-inline Foam::BinaryCollisionModel<Foam::DSMCCloud<ParcelType> >&
+inline Foam::BinaryCollisionModel<Foam::DSMCCloud<ParcelType>>&
 Foam::DSMCCloud<ParcelType>::binaryCollision()
 {
     return binaryCollisionModel_();
@@ -221,7 +221,7 @@ Foam::DSMCCloud<ParcelType>::binaryCollision()
 
 
 template<class ParcelType>
-inline const Foam::WallInteractionModel<Foam::DSMCCloud<ParcelType> >&
+inline const Foam::WallInteractionModel<Foam::DSMCCloud<ParcelType>>&
 Foam::DSMCCloud<ParcelType>::wallInteraction() const
 {
     return wallInteractionModel_;
@@ -229,7 +229,7 @@ Foam::DSMCCloud<ParcelType>::wallInteraction() const
 
 
 template<class ParcelType>
-inline Foam::WallInteractionModel<Foam::DSMCCloud<ParcelType> >&
+inline Foam::WallInteractionModel<Foam::DSMCCloud<ParcelType>>&
 Foam::DSMCCloud<ParcelType>::wallInteraction()
 {
     return wallInteractionModel_();
@@ -237,7 +237,7 @@ Foam::DSMCCloud<ParcelType>::wallInteraction()
 
 
 template<class ParcelType>
-inline const Foam::InflowBoundaryModel<Foam::DSMCCloud<ParcelType> >&
+inline const Foam::InflowBoundaryModel<Foam::DSMCCloud<ParcelType>>&
 Foam::DSMCCloud<ParcelType>::inflowBoundary() const
 {
     return inflowBoundaryModel_;
@@ -245,7 +245,7 @@ Foam::DSMCCloud<ParcelType>::inflowBoundary() const
 
 
 template<class ParcelType>
-inline Foam::InflowBoundaryModel<Foam::DSMCCloud<ParcelType> >&
+inline Foam::InflowBoundaryModel<Foam::DSMCCloud<ParcelType>>&
 Foam::DSMCCloud<ParcelType>::inflowBoundary()
 {
     return inflowBoundaryModel_();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1089,9 +1089,9 @@ void kinematicSingleLayer::info()
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > kinematicSingleLayer::Srho() const
+tmp<DimensionedField<scalar, volMesh>> kinematicSingleLayer::Srho() const
 {
-    return tmp<DimensionedField<scalar, volMesh> >
+    return tmp<DimensionedField<scalar, volMesh>>
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -1111,12 +1111,12 @@ tmp<DimensionedField<scalar, volMesh> > kinematicSingleLayer::Srho() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > kinematicSingleLayer::Srho
+tmp<DimensionedField<scalar, volMesh>> kinematicSingleLayer::Srho
 (
     const label i
 ) const
 {
-    return tmp<DimensionedField<scalar, volMesh> >
+    return tmp<DimensionedField<scalar, volMesh>>
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -1136,9 +1136,9 @@ tmp<DimensionedField<scalar, volMesh> > kinematicSingleLayer::Srho
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > kinematicSingleLayer::Sh() const
+tmp<DimensionedField<scalar, volMesh>> kinematicSingleLayer::Sh() const
 {
-    return tmp<DimensionedField<scalar, volMesh> >
+    return tmp<DimensionedField<scalar, volMesh>>
     (
         new DimensionedField<scalar, volMesh>
         (

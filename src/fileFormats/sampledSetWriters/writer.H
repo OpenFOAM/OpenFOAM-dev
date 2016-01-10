@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
     Example:
     \verbatim
         // Construct writer of xmgr type
-        autoPtr<writer<scalar> > scalarFormatter(writer<scalar>::New("xmgr"));
+        autoPtr<writer<scalar>> scalarFormatter(writer<scalar>::New("xmgr"));
 
         // Output list of points and corresponding values
         scalarFormatter().write
@@ -165,7 +165,7 @@ public:
         (
             const coordSet&,
             const wordList&,
-            const List<Field<Type> >&,
+            const List<Field<Type>>&,
             Ostream&
         ) const;
 
@@ -178,7 +178,7 @@ public:
             const bool writeTracks,
             const PtrList<coordSet>&,
             const wordList& valueSetNames,
-            const List<List<Field<Type> > >&,
+            const List<List<Field<Type>>>&,
             Ostream&
         ) const = 0;
 

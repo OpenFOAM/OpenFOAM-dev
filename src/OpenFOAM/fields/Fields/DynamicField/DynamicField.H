@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ public:
         explicit inline DynamicField(const UList<T>&);
 
         //- Construct by transferring the parameter contents
-        explicit inline DynamicField(const Xfer<List<T> >&);
+        explicit inline DynamicField(const Xfer<List<T>>&);
 
         //- Construct by 1 to 1 mapping from the given field
         inline DynamicField
@@ -139,14 +139,14 @@ public:
         //- Construct by transferring the Field contents
         inline DynamicField
         (
-            const Xfer<DynamicField<T, SizeInc, SizeMult, SizeDiv> >&
+            const Xfer<DynamicField<T, SizeInc, SizeMult, SizeDiv>>&
         );
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicField(Istream&);
 
         //- Clone
-        tmp<DynamicField<T, SizeInc, SizeMult, SizeDiv> > clone() const;
+        tmp<DynamicField<T, SizeInc, SizeMult, SizeDiv>> clone() const;
 
 
     // Member Functions
@@ -200,7 +200,7 @@ public:
             inline DynamicField<T, SizeInc, SizeMult, SizeDiv>& shrink();
 
             //- Transfer contents to the Xfer container as a plain List
-            inline Xfer<List<T> > xfer();
+            inline Xfer<List<T>> xfer();
 
 
         // Member Operators

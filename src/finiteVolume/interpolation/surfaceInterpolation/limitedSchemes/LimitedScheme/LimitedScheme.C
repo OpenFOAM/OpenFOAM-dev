@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,13 +39,13 @@ void Foam::LimitedScheme<Type, Limiter, LimitFunc>::calcLimiter
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<typename Limiter::phiType, fvPatchField, volMesh> >
+    tmp<GeometricField<typename Limiter::phiType, fvPatchField, volMesh>>
         tlPhi = LimitFunc<Type>()(phi);
 
     const GeometricField<typename Limiter::phiType, fvPatchField, volMesh>&
         lPhi = tlPhi();
 
-    tmp<GeometricField<typename Limiter::gradPhiType, fvPatchField, volMesh> >
+    tmp<GeometricField<typename Limiter::gradPhiType, fvPatchField, volMesh>>
         tgradc(fvc::grad(lPhi));
     const GeometricField<typename Limiter::gradPhiType, fvPatchField, volMesh>&
         gradc = tgradc();

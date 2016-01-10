@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ template<class T, class Container> Ostream& operator<<
                        Class CompactListList Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T, class Container = List<T> >
+template<class T, class Container = List<T>>
 class CompactListList
 {
     // Private data
@@ -102,7 +102,7 @@ public:
         //- Null constructor.
         inline CompactListList();
 
-        //- Construct by converting given List<List<T> >
+        //- Construct by converting given List<List<T>>
         explicit CompactListList(const List<Container>&);
 
         //- Construct given size of offset table (number of rows)
@@ -120,7 +120,7 @@ public:
         CompactListList(const labelUList& rowSizes, const T&);
 
         //- Construct by transferring the parameter contents
-        explicit CompactListList(const Xfer<CompactListList<T, Container> >&);
+        explicit CompactListList(const Xfer<CompactListList<T, Container>>&);
 
         //- Construct as copy or re-use as specified.
         CompactListList(CompactListList<T, Container>&, bool reUse);
@@ -129,7 +129,7 @@ public:
         CompactListList(Istream&);
 
         //- Clone
-        inline autoPtr<CompactListList<T, Container> > clone() const;
+        inline autoPtr<CompactListList<T, Container>> clone() const;
 
 
     // Member Functions
@@ -194,7 +194,7 @@ public:
             void transfer(CompactListList<T, Container>&);
 
             //- Transfer the contents to the Xfer container
-            inline Xfer<CompactListList<T, Container> > xfer();
+            inline Xfer<CompactListList<T, Container>> xfer();
 
         // Other
 

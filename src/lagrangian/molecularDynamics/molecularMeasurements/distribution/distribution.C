@@ -38,7 +38,7 @@ namespace Foam
 void Foam::distribution::write
 (
     const fileName& file,
-    const List<Pair<scalar> >& pairs
+    const List<Pair<scalar>>& pairs
 )
 {
     OFstream os(file);
@@ -156,7 +156,7 @@ Foam::scalar Foam::distribution::median()
 
     scalar runningSum = 0.0;
 
-    List<Pair<scalar> > normDist(normalised());
+    List<Pair<scalar>> normDist(normalised());
 
     if (normDist.size())
     {
@@ -268,7 +268,7 @@ void Foam::distribution::insertMissingKeys()
 }
 
 
-Foam::List<Foam::Pair<Foam::scalar> > Foam::distribution::normalised()
+Foam::List<Foam::Pair<Foam::scalar>> Foam::distribution::normalised()
 {
     scalar totEnt = approxTotalEntries();
 
@@ -278,7 +278,7 @@ Foam::List<Foam::Pair<Foam::scalar> > Foam::distribution::normalised()
 
     sort(keys);
 
-    List<Pair<scalar> > normDist(size());
+    List<Pair<scalar>> normDist(size());
 
     forAll(keys,k)
     {
@@ -298,20 +298,20 @@ Foam::List<Foam::Pair<Foam::scalar> > Foam::distribution::normalised()
 }
 
 
-Foam::List<Foam::Pair<Foam::scalar> > Foam::distribution::normalisedMinusMean()
+Foam::List<Foam::Pair<Foam::scalar>> Foam::distribution::normalisedMinusMean()
 {
     return normalisedShifted(mean());
 }
 
 
-Foam::List<Foam::Pair<Foam::scalar> > Foam::distribution::normalisedShifted
+Foam::List<Foam::Pair<Foam::scalar>> Foam::distribution::normalisedShifted
 (
     scalar shiftValue
 )
 {
-    List<Pair<scalar> > oldDist(normalised());
+    List<Pair<scalar>> oldDist(normalised());
 
-    List<Pair<scalar> > newDist(oldDist.size());
+    List<Pair<scalar>> newDist(oldDist.size());
 
     forAll(oldDist,u)
     {
@@ -416,7 +416,7 @@ Foam::List<Foam::Pair<Foam::scalar> > Foam::distribution::normalisedShifted
 }
 
 
-Foam::List<Foam::Pair<Foam::scalar> > Foam::distribution::raw()
+Foam::List<Foam::Pair<Foam::scalar>> Foam::distribution::raw()
 {
     insertMissingKeys();
 
@@ -424,7 +424,7 @@ Foam::List<Foam::Pair<Foam::scalar> > Foam::distribution::raw()
 
     sort(keys);
 
-    List<Pair<scalar> > rawDist(size());
+    List<Pair<scalar>> rawDist(size());
 
     forAll(keys,k)
     {

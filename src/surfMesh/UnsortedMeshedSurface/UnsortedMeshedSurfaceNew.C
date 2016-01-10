@@ -48,7 +48,7 @@ Foam::UnsortedMeshedSurface<Face>::New(const fileName& name, const word& ext)
         if (supported.found(ext))
         {
             // create indirectly
-            autoPtr<UnsortedMeshedSurface<Face> > surf
+            autoPtr<UnsortedMeshedSurface<Face>> surf
             (
                 new UnsortedMeshedSurface<Face>
             );
@@ -67,7 +67,7 @@ Foam::UnsortedMeshedSurface<Face>::New(const fileName& name, const word& ext)
             << exit(FatalError);
     }
 
-    return autoPtr<UnsortedMeshedSurface<Face> >(cstrIter()(name));
+    return autoPtr<UnsortedMeshedSurface<Face>>(cstrIter()(name));
 }
 
 

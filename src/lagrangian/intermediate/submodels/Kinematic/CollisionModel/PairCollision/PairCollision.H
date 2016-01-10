@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,10 +77,10 @@ class PairCollision
     // Private data
 
         //- PairModel to calculate the interaction between two parcels
-        autoPtr<PairModel<CloudType> > pairModel_;
+        autoPtr<PairModel<CloudType>> pairModel_;
 
         //- WallModel to calculate the interaction between the parcel and walls
-        autoPtr<WallModel<CloudType> > wallModel_;
+        autoPtr<WallModel<CloudType>> wallModel_;
 
         //- Interactions lists determining which cells are in
         //  interaction range of each other
@@ -133,9 +133,9 @@ class PairCollision
         (
             typename CloudType::parcelType& p,
             const List<point>& flatSitePoints,
-            const List<WallSiteData<vector> >& flatSiteData,
+            const List<WallSiteData<vector>>& flatSiteData,
             const List<point>& sharpSitePoints,
-            const List<WallSiteData<vector> >& sharpSiteData
+            const List<WallSiteData<vector>>& sharpSiteData
         ) const;
 
 
@@ -154,9 +154,9 @@ public:
         PairCollision(const PairCollision<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CollisionModel<CloudType> > clone() const
+        virtual autoPtr<CollisionModel<CloudType>> clone() const
         {
-            return autoPtr<CollisionModel<CloudType> >
+            return autoPtr<CollisionModel<CloudType>>
             (
                 new PairCollision<CloudType>(*this)
             );

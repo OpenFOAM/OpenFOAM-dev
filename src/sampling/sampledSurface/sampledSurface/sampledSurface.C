@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,10 +287,10 @@ Foam::tmp<Foam::tensorField> Foam::sampledSurface::sample
 }
 
 
-Foam::tmp<Foam::Field<Foam::scalar> >
+Foam::tmp<Foam::Field<Foam::scalar>>
 Foam::sampledSurface::project(const Field<scalar>& field) const
 {
-    tmp<Field<scalar> > tRes(new Field<scalar>(faces().size()));
+    tmp<Field<scalar>> tRes(new Field<scalar>(faces().size()));
     Field<scalar>& res = tRes();
 
     forAll(faces(), faceI)
@@ -302,37 +302,37 @@ Foam::sampledSurface::project(const Field<scalar>& field) const
 }
 
 
-Foam::tmp<Foam::Field<Foam::scalar> >
+Foam::tmp<Foam::Field<Foam::scalar>>
 Foam::sampledSurface::project(const Field<vector>& field) const
 {
-    tmp<Field<scalar> > tRes(new Field<scalar>(faces().size()));
+    tmp<Field<scalar>> tRes(new Field<scalar>(faces().size()));
     project(tRes(), field);
     return tRes;
 }
 
 
-Foam::tmp<Foam::Field<Foam::vector> >
+Foam::tmp<Foam::Field<Foam::vector>>
 Foam::sampledSurface::project(const Field<sphericalTensor>& field) const
 {
-    tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
+    tmp<Field<vector>> tRes(new Field<vector>(faces().size()));
     project(tRes(), field);
     return tRes;
 }
 
 
-Foam::tmp<Foam::Field<Foam::vector> >
+Foam::tmp<Foam::Field<Foam::vector>>
 Foam::sampledSurface::project(const Field<symmTensor>& field) const
 {
-    tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
+    tmp<Field<vector>> tRes(new Field<vector>(faces().size()));
     project(tRes(), field);
     return tRes;
 }
 
 
-Foam::tmp<Foam::Field<Foam::vector> >
+Foam::tmp<Foam::Field<Foam::vector>>
 Foam::sampledSurface::project(const Field<tensor>& field) const
 {
-    tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
+    tmp<Field<vector>> tRes(new Field<vector>(faces().size()));
     project(tRes(), field);
     return tRes;
 }

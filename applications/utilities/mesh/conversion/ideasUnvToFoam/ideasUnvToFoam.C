@@ -849,7 +849,7 @@ int main(int argc, char *argv[])
     HashTable<label, label> faceToCell[2];
 
     {
-        HashTable<label, face, Hash<face> > faceToFaceID(boundaryFaces.size());
+        HashTable<label, face, Hash<face>> faceToFaceID(boundaryFaces.size());
         forAll(boundaryFaces, faceI)
         {
             SortableList<label> sortedVerts(boundaryFaces[faceI]);
@@ -862,7 +862,7 @@ int main(int argc, char *argv[])
             forAll(faces, i)
             {
                 SortableList<label> sortedVerts(faces[i]);
-                HashTable<label, face, Hash<face> >::const_iterator fnd =
+                HashTable<label, face, Hash<face>>::const_iterator fnd =
                     faceToFaceID.find(face(sortedVerts));
 
                 if (fnd != faceToFaceID.end())
@@ -956,7 +956,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        List<DynamicList<face> > dynPatchFaces(dofVertIndices.size());
+        List<DynamicList<face>> dynPatchFaces(dofVertIndices.size());
 
         forAll(cellVerts, cellI)
         {

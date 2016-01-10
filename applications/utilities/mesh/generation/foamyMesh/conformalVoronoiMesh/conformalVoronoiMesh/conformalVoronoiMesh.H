@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ public:
     typedef Delaunay::Facet            Facet;
     typedef Delaunay::Point            Point;
 
-    typedef List<DynamicList<Pair<labelPair> > > labelPairPairDynListList;
+    typedef List<DynamicList<Pair<labelPair>>> labelPairPairDynListList;
 
     typedef Tuple2<pointIndexHit, label>         pointIndexHitAndFeature;
     typedef List<pointIndexHitAndFeature>        pointIndexHitAndFeatureList;
@@ -170,13 +170,13 @@ private:
         featurePointConformer ftPtConformer_;
 
         //- Search tree for edge point locations
-        mutable autoPtr<dynamicIndexedOctree<dynamicTreeDataPoint> >
+        mutable autoPtr<dynamicIndexedOctree<dynamicTreeDataPoint>>
             edgeLocationTreePtr_;
 
         mutable DynamicList<Foam::point> existingEdgeLocations_;
 
         //- Search tree for surface point locations
-        mutable autoPtr<dynamicIndexedOctree<dynamicTreeDataPoint> >
+        mutable autoPtr<dynamicIndexedOctree<dynamicTreeDataPoint>>
             surfacePtLocationTreePtr_;
 
         mutable DynamicList<Foam::point> existingSurfacePtLocations_;
@@ -710,7 +710,7 @@ private:
         (
             labelList& owner,
             labelList& neighbour,
-            const HashSet<labelPair, labelPair::Hash<> >& deferredCollapseFaces
+            const HashSet<labelPair, labelPair::Hash<>>& deferredCollapseFaces
         ) const;
 
         //- Check whether the cell sizes are fine enough. Creates a polyMesh.
@@ -783,9 +783,9 @@ private:
         //  on both processors
         void sortProcPatches
         (
-            List<DynamicList<face> >& patchFaces,
-            List<DynamicList<label> >& patchOwners,
-            List<DynamicList<label> >& patchPointPairSlaves,
+            List<DynamicList<face>>& patchFaces,
+            List<DynamicList<label>>& patchOwners,
+            List<DynamicList<label>>& patchPointPairSlaves,
             labelPairPairDynListList& patchSortingIndices
         ) const;
 
@@ -797,9 +797,9 @@ private:
             labelList& owner,
             PtrList<dictionary>& patchDicts,
             PackedBoolList& boundaryFacesToRemove,
-            const List<DynamicList<face> >& patchFaces,
-            const List<DynamicList<label> >& patchOwners,
-            const List<DynamicList<bool> >& indirectPatchFace
+            const List<DynamicList<face>>& patchFaces,
+            const List<DynamicList<label>>& patchOwners,
+            const List<DynamicList<bool>>& indirectPatchFace
         ) const;
 
         //- Remove points that are no longer used by any faces

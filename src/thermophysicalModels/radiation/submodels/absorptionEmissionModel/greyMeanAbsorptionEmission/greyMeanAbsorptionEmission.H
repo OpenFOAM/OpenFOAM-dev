@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ private:
         FixedList<label, nSpecies_> specieIndex_;
 
         //- Look-up table of species related to ft
-        mutable autoPtr<interpolationLookUpTable<scalar> > lookUpTablePtr_;
+        mutable autoPtr<interpolationLookUpTable<scalar>> lookUpTablePtr_;
 
         //- SLG thermo package
         const fluidThermo& thermo_;

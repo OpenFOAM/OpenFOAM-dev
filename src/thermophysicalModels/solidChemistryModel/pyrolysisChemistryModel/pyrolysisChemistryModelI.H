@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CompType, class SolidThermo, class GasThermo>
-inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >&
+inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
 Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::RRg()
 {
     return RRg_;
@@ -75,11 +75,11 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::RRg
 
 
 template<class CompType, class SolidThermo, class GasThermo>
-inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
+inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::
 RRg() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tRRg
+    tmp<DimensionedField<scalar, volMesh>> tRRg
     (
         new DimensionedField<scalar, volMesh>
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ template<class Gt, class Cb>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const InfoProxy<CGAL::indexedCell<Gt, Cb> >& p
+    const InfoProxy<CGAL::indexedCell<Gt, Cb>>& p
 )
 {
     const CGAL::indexedCell<Gt, Cb>& iv = p.t_;

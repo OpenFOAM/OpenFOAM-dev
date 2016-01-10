@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    List<Tuple2<string, string> > rawList(IFstream("testRegexps")());
+    List<Tuple2<string, string>> rawList(IFstream("testRegexps")());
     Info<< "Test expressions:" << rawList << endl;
     IOobject::writeDivider(Info) << endl;
 

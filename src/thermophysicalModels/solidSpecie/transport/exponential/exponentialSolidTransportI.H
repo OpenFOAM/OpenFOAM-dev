@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,13 +56,13 @@ inline Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::exponentialSolidTransport<Thermo> >
+inline Foam::autoPtr<Foam::exponentialSolidTransport<Thermo>>
 Foam::exponentialSolidTransport<Thermo>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<exponentialSolidTransport<Thermo> >
+    return autoPtr<exponentialSolidTransport<Thermo>>
     (
         new exponentialSolidTransport<Thermo>(dict)
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,10 +301,10 @@ public:
             const DimensionedField<scalar, volMesh>& V00() const;
 
             //- Return sub-cycle cell volumes
-            tmp<DimensionedField<scalar, volMesh> > Vsc() const;
+            tmp<DimensionedField<scalar, volMesh>> Vsc() const;
 
             //- Return sub-cycl old-time cell volumes
-            tmp<DimensionedField<scalar, volMesh> > Vsc0() const;
+            tmp<DimensionedField<scalar, volMesh>> Vsc0() const;
 
             //- Return cell face area vectors
             const surfaceVectorField& Sf() const;

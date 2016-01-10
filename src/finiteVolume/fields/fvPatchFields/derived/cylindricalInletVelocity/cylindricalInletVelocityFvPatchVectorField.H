@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,13 +97,13 @@ class cylindricalInletVelocityFvPatchVectorField
         const vector axis_;
 
         //- Axial velocity
-        autoPtr<DataEntry<scalar> > axialVelocity_;
+        autoPtr<DataEntry<scalar>> axialVelocity_;
 
         //- Radial velocity
-        autoPtr<DataEntry<scalar> > radialVelocity_;
+        autoPtr<DataEntry<scalar>> radialVelocity_;
 
         //- RPM
-        autoPtr<DataEntry<scalar> > rpm_;
+        autoPtr<DataEntry<scalar>> rpm_;
 
 
 public:

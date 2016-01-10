@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
     const word& type
 )
 :
-    ReynoldsStress<LESModel<BasicTurbulenceModel> >
+    ReynoldsStress<LESModel<BasicTurbulenceModel>>
     (
         type,
         alpha,
@@ -123,7 +123,7 @@ DeardorffDiffStress<BasicTurbulenceModel>::DeardorffDiffStress
 template<class BasicTurbulenceModel>
 bool DeardorffDiffStress<BasicTurbulenceModel>::read()
 {
-    if (ReynoldsStress<LESModel<BasicTurbulenceModel> >::read())
+    if (ReynoldsStress<LESModel<BasicTurbulenceModel>>::read())
     {
         Ck_.readIfPresent(this->coeffDict());
         Cm_.readIfPresent(this->coeffDict());
@@ -178,7 +178,7 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correct()
     volSymmTensorField& R = this->R_;
     fv::options& fvOptions(fv::options::New(this->mesh_));
 
-    ReynoldsStress<LESModel<BasicTurbulenceModel> >::correct();
+    ReynoldsStress<LESModel<BasicTurbulenceModel>>::correct();
 
     tmp<volTensorField> tgradU(fvc::grad(U));
     const volTensorField& gradU = tgradU();

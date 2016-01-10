@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -424,7 +424,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     );
 
     {
-        List<Map<label> > compactMap(Pstream::nProcs());
+        List<Map<label>> compactMap(Pstream::nProcs());
         ownMapPtr_.reset
         (
             new mapDistribute
@@ -438,7 +438,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
 
     {
 
-        List<Map<label> > compactMap(Pstream::nProcs());
+        List<Map<label>> compactMap(Pstream::nProcs());
         neiMapPtr_.reset
         (
             new mapDistribute
@@ -455,7 +455,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     {
         const fvMesh& mesh = dynamic_cast<const fvMesh&>(stencil.mesh());
 
-        List<List<point> > stencilPoints(ownStencil_.size());
+        List<List<point>> stencilPoints(ownStencil_.size());
 
         // Owner stencil
         // ~~~~~~~~~~~~~
@@ -533,7 +533,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     ownStencil_ = stencil;
 
     {
-        List<Map<label> > compactMap(Pstream::nProcs());
+        List<Map<label>> compactMap(Pstream::nProcs());
         ownMapPtr_.reset
         (
             new mapDistribute
@@ -547,7 +547,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
 
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(stencil.mesh());
 
-    List<List<point> > stencilPoints(ownStencil_.size());
+    List<List<point>> stencilPoints(ownStencil_.size());
     collectData(ownMapPtr_(), ownStencil_, mesh.C(), stencilPoints);
 
     // Split stencil into owner and neighbour

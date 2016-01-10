@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Foam::tmp<Foam::SlicedGeometricField
     Foam::fvPatchField,
     Foam::slicedFvPatchField,
     Foam::volMesh
-> >
+>>
 Foam::isoSurface::adaptPatchFields
 (
     const GeometricField<Type, fvPatchField, volMesh>& fld
@@ -125,7 +125,7 @@ Foam::isoSurface::adaptPatchFields
 
             const scalarField& w = mesh.weights().boundaryField()[patchI];
 
-            tmp<Field<Type> > f =
+            tmp<Field<Type>> f =
                 w*pfld.patchInternalField()
               + (1.0-w)*pfld.patchNeighbourField();
 
@@ -682,15 +682,15 @@ void Foam::isoSurface::generateTriPoints
 
 
 //template<class Type>
-//Foam::tmp<Foam::Field<Type> >
+//Foam::tmp<Foam::Field<Type>>
 //Foam::isoSurface::sample(const Field<Type>& vField) const
 //{
-//    return tmp<Field<Type> >(new Field<Type>(vField, meshCells()));
+//    return tmp<Field<Type>>(new Field<Type>(vField, meshCells()));
 //}
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::isoSurface::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& cCoords,
@@ -704,7 +704,7 @@ Foam::isoSurface::interpolate
         fvPatchField,
         slicedFvPatchField,
         volMesh
-    > > c2(adaptPatchFields(cCoords));
+    >> c2(adaptPatchFields(cCoords));
 
 
     DynamicList<Type> triPoints(nCutCells_);
@@ -733,7 +733,7 @@ Foam::isoSurface::interpolate
 
 
     // One value per point
-    tmp<Field<Type> > tvalues
+    tmp<Field<Type>> tvalues
     (
         new Field<Type>(points().size(), pTraits<Type>::zero)
     );

@@ -1,4 +1,4 @@
-const List<DynamicList<molecule*> >& cellOccupancy = molecules.cellOccupancy();
+const List<DynamicList<molecule*>>& cellOccupancy = molecules.cellOccupancy();
 
 forAll(cellOccupancy, cell)
 {

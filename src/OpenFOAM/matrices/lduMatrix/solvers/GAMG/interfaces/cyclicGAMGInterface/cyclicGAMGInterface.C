@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ Foam::cyclicGAMGInterface::cyclicGAMGInterface
     );
 
     // From coarse cell pair to coarse face
-    HashTable<label, labelPair, labelPair::Hash<> > cellsToCoarseFace
+    HashTable<label, labelPair, labelPair::Hash<>> cellsToCoarseFace
     (
         2*localRestrictAddressing.size()
     );
@@ -126,7 +126,7 @@ Foam::cyclicGAMGInterface::cyclicGAMGInterface
             );
         }
 
-        HashTable<label, labelPair, labelPair::Hash<> >::const_iterator fnd =
+        HashTable<label, labelPair, labelPair::Hash<>>::const_iterator fnd =
             cellsToCoarseFace.find(cellPair);
 
         if (fnd == cellsToCoarseFace.end())

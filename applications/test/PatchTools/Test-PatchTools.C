@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ using namespace Foam;
 //
 //
 //    // Collect local pointFaces
-//    List<List<point> > pointFaceNormals(map.constructSize());
+//    List<List<point>> pointFaceNormals(map.constructSize());
 //    {
 //        const vectorField& faceAreas = mesh.faceAreas();
 //

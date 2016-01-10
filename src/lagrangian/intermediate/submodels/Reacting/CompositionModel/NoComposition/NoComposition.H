@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,9 +67,9 @@ public:
         NoComposition(const NoComposition<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CompositionModel<CloudType> > clone() const
+        virtual autoPtr<CompositionModel<CloudType>> clone() const
         {
-            return autoPtr<CompositionModel<CloudType> >
+            return autoPtr<CompositionModel<CloudType>>
             (
                 new NoComposition<CloudType>(*this)
             );

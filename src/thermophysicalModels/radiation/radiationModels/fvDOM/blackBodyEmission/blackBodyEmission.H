@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class blackBodyEmission
 public:
 
     //- Static table of black body emissive power
-    static const List<Tuple2<scalar, scalar> > emissivePowerTable;
+    static const List<Tuple2<scalar, scalar>> emissivePowerTable;
 
 
 private:

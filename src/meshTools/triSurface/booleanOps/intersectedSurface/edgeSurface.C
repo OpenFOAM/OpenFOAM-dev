@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ Foam::edgeSurface::edgeSurface
 
     DynamicList<edge> allEdges(surf.nEdges() + inter.cutEdges().size());
     DynamicList<label> allParentEdges(surf.nEdges());
-    List<DynamicList<label> > allFaceEdges(surf.size());
+    List<DynamicList<label>> allFaceEdges(surf.size());
 
 
     // Copy surface edges (can be split!)

@@ -73,8 +73,8 @@ protected:
     // Protected data
 
         const fvMesh& mesh_;
-        tmp<surfaceInterpolationScheme<GType> > tinterpGammaScheme_;
-        tmp<snGradScheme<Type> > tsnGradScheme_;
+        tmp<surfaceInterpolationScheme<GType>> tinterpGammaScheme_;
+        tmp<snGradScheme<Type>> tsnGradScheme_;
 
 
 private:
@@ -123,12 +123,12 @@ public:
             tinterpGammaScheme_(NULL),
             tsnGradScheme_(NULL)
         {
-            tinterpGammaScheme_ = tmp<surfaceInterpolationScheme<GType> >
+            tinterpGammaScheme_ = tmp<surfaceInterpolationScheme<GType>>
             (
                 surfaceInterpolationScheme<GType>::New(mesh, is)
             );
 
-            tsnGradScheme_ = tmp<snGradScheme<Type> >
+            tsnGradScheme_ = tmp<snGradScheme<Type>>
             (
                 snGradScheme<Type>::New(mesh, is)
             );
@@ -138,8 +138,8 @@ public:
         laplacianScheme
         (
             const fvMesh& mesh,
-            const tmp<surfaceInterpolationScheme<GType> >& igs,
-            const tmp<snGradScheme<Type> >& sngs
+            const tmp<surfaceInterpolationScheme<GType>>& igs,
+            const tmp<snGradScheme<Type>>& sngs
         )
         :
             mesh_(mesh),
@@ -151,7 +151,7 @@ public:
     // Selectors
 
         //- Return a pointer to a new laplacianScheme created on freestore
-        static tmp<laplacianScheme<Type, GType> > New
+        static tmp<laplacianScheme<Type, GType>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
@@ -170,30 +170,30 @@ public:
             return mesh_;
         }
 
-        virtual tmp<fvMatrix<Type> > fvmLaplacian
+        virtual tmp<fvMatrix<Type>> fvmLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmLaplacian
+        virtual tmp<fvMatrix<Type>> fvmLaplacian
         (
             const GeometricField<GType, fvPatchField, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcLaplacian
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcLaplacian
         (
             const GeometricField<GType, fvPatchField, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -224,7 +224,7 @@ public:
             typedef SS<Type, GType> SS##Type##GType;                           \
                                                                                \
             laplacianScheme<Type, GType>::                                     \
-                addIstreamConstructorToTable<SS<Type, GType> >                 \
+                addIstreamConstructorToTable<SS<Type, GType>>                 \
                 add##SS##Type##GType##IstreamConstructorToTable_;              \
         }                                                                      \
     }

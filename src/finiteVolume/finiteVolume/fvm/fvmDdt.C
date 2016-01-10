@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ namespace fvm
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -56,7 +56,7 @@ ddt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const one&,
@@ -68,7 +68,7 @@ ddt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const dimensionedScalar& rho,
@@ -84,7 +84,7 @@ ddt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const volScalarField& rho,
@@ -100,7 +100,7 @@ ddt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const volScalarField& alpha,
@@ -123,7 +123,7 @@ ddt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const one&,
@@ -136,7 +136,7 @@ ddt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const one&,
@@ -149,7 +149,7 @@ ddt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const volScalarField& alpha,

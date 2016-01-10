@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ void Foam::PairCollision<CloudType>::realRealInteraction()
     typename CloudType::parcelType* pA_ptr = NULL;
     typename CloudType::parcelType* pB_ptr = NULL;
 
-    List<DynamicList<typename CloudType::parcelType*> >& cellOccupancy =
+    List<DynamicList<typename CloudType::parcelType*>>& cellOccupancy =
         this->owner().cellOccupancy();
 
     forAll(dil, realCellI)
@@ -127,10 +127,10 @@ void Foam::PairCollision<CloudType>::realReferredInteraction()
     // Referred interaction list (ril)
     const labelListList& ril = il_.ril();
 
-    List<IDLList<typename CloudType::parcelType> >& referredParticles =
+    List<IDLList<typename CloudType::parcelType>>& referredParticles =
         il_.referredParticles();
 
-    List<DynamicList<typename CloudType::parcelType*> >& cellOccupancy =
+    List<DynamicList<typename CloudType::parcelType*>>& cellOccupancy =
         this->owner().cellOccupancy();
 
     // Loop over all referred cells
@@ -185,19 +185,19 @@ void Foam::PairCollision<CloudType>::wallInteraction()
 
     const volVectorField& U = mesh.lookupObject<volVectorField>(il_.UName());
 
-    List<DynamicList<typename CloudType::parcelType*> >& cellOccupancy =
+    List<DynamicList<typename CloudType::parcelType*>>& cellOccupancy =
         this->owner().cellOccupancy();
 
     // Storage for the wall interaction sites
     DynamicList<point> flatSitePoints;
     DynamicList<scalar> flatSiteExclusionDistancesSqr;
-    DynamicList<WallSiteData<vector> > flatSiteData;
+    DynamicList<WallSiteData<vector>> flatSiteData;
     DynamicList<point> otherSitePoints;
     DynamicList<scalar> otherSiteDistances;
-    DynamicList<WallSiteData<vector> > otherSiteData;
+    DynamicList<WallSiteData<vector>> otherSiteData;
     DynamicList<point> sharpSitePoints;
     DynamicList<scalar> sharpSiteExclusionDistancesSqr;
-    DynamicList<WallSiteData<vector> > sharpSiteData;
+    DynamicList<WallSiteData<vector>> sharpSiteData;
 
     forAll(dil, realCellI)
     {
@@ -537,9 +537,9 @@ void Foam::PairCollision<CloudType>::evaluateWall
 (
     typename CloudType::parcelType& p,
     const List<point>& flatSitePoints,
-    const List<WallSiteData<vector> >& flatSiteData,
+    const List<WallSiteData<vector>>& flatSiteData,
     const List<point>& sharpSitePoints,
-    const List<WallSiteData<vector> >& sharpSiteData
+    const List<WallSiteData<vector>>& sharpSiteData
 ) const
 {
     wallModel_->evaluateWall

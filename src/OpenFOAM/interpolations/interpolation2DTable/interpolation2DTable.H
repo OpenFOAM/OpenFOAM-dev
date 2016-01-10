@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace Foam
 template<class Type>
 class interpolation2DTable
 :
-    public List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >
+    public List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>
 {
 public:
 
@@ -67,7 +67,7 @@ public:
         };
 
         //- Cconvenience typedef
-        typedef List<Tuple2<scalar, List<Tuple2<scalar, Type> > > > table;
+        typedef List<Tuple2<scalar, List<Tuple2<scalar, Type>>>> table;
 
 
 private:
@@ -81,7 +81,7 @@ private:
         fileName fileName_;
 
         //- The actual reader
-        autoPtr<tableReader<Type> > reader_;
+        autoPtr<tableReader<Type>> reader_;
 
 
     // Private Member Functions
@@ -92,7 +92,7 @@ private:
         //- Return interpolated value in List
         Type interpolateValue
         (
-            const List<Tuple2<scalar, Type> >& data,
+            const List<Tuple2<scalar, Type>>& data,
             const scalar
         ) const;
 
@@ -116,7 +116,7 @@ public:
         //- Construct from components
         interpolation2DTable
         (
-            const List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >& values,
+            const List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& values,
             const boundsHandling bounds,
             const fileName& fName
         );
@@ -153,7 +153,7 @@ public:
     // Member Operators
 
         //- Return an element of constant Tuple2<scalar, Type>
-        const List<Tuple2<scalar, Type> >& operator[](const label) const;
+        const List<Tuple2<scalar, Type>>& operator[](const label) const;
 
         //- Return an interpolated value
         Type operator()(const scalar, const scalar) const;

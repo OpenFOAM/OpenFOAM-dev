@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ void thermoSingleLayer::correctHsForMappedT()
     forAll(T_.boundaryField(), patchI)
     {
         const fvPatchField<scalar>& Tp = T_.boundaryField()[patchI];
-        if (isA<mappedFieldFvPatchField<scalar> >(Tp))
+        if (isA<mappedFieldFvPatchField<scalar>>(Tp))
         {
             hs_.boundaryField()[patchI] == hs(Tp, patchI);
         }
@@ -731,9 +731,9 @@ void thermoSingleLayer::info()
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho() const
+tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tSrho
+    tmp<DimensionedField<scalar, volMesh>> tSrho
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -778,14 +778,14 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho
+tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho
 (
     const label i
 ) const
 {
     const label vapId = thermo_.carrierId(filmThermo_->name());
 
-    tmp<DimensionedField<scalar, volMesh> > tSrho
+    tmp<DimensionedField<scalar, volMesh>> tSrho
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -833,9 +833,9 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Sh() const
+tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Sh() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tSh
+    tmp<DimensionedField<scalar, volMesh>> tSh
     (
         new DimensionedField<scalar, volMesh>
         (

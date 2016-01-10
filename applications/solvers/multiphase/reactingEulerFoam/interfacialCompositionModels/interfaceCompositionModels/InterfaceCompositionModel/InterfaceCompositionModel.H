@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,10 +150,10 @@ public:
 // Instantiation for multi-component-multi-component pairs
 #define makeInterfaceCompositionType(Type, Thermo, Comp, Mix, Phys, OtherThermo, OtherComp, OtherMix, OtherPhys)\
                                                                                \
-    typedef Thermo<Comp, SpecieMixture<Mix<Phys> > >                           \
+    typedef Thermo<Comp, SpecieMixture<Mix<Phys>>>                           \
         Type##Thermo##Comp##Mix##Phys;                                         \
                                                                                \
-    typedef OtherThermo<OtherComp, OtherMix<OtherPhys> >                       \
+    typedef OtherThermo<OtherComp, OtherMix<OtherPhys>>                       \
         Type##Other##OtherThermo##OtherComp##OtherMix##OtherPhys;              \
                                                                                \
     addInterfaceCompositionToRunTimeSelectionTable                             \
@@ -166,10 +166,10 @@ public:
 // Instantiation for multi-component-single-component pairs
 #define makeSpecieInterfaceCompositionType(Type, Thermo, Comp, Mix, Phys, OtherThermo, OtherComp, OtherMix, OtherPhys)\
                                                                                \
-    typedef Thermo<Comp, SpecieMixture<Mix<Phys> > >                           \
+    typedef Thermo<Comp, SpecieMixture<Mix<Phys>>>                           \
         Type##Thermo##Comp##Mix##Phys;                                         \
                                                                                \
-    typedef OtherThermo<OtherComp, SpecieMixture<OtherMix<OtherPhys> > >       \
+    typedef OtherThermo<OtherComp, SpecieMixture<OtherMix<OtherPhys>>>       \
         Type##Other##OtherThermo##OtherComp##OtherMix##OtherPhys;              \
                                                                                \
     addInterfaceCompositionToRunTimeSelectionTable                             \

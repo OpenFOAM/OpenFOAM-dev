@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ class CONSTRUCT
         FIELD fieldData_;
 
         //- Type specified as a function of time for time-varying BCs
-        autoPtr<DataEntry<TYPE> > timeVsData_;
+        autoPtr<DataEntry<TYPE>> timeVsData_;
 
         //- Word entry, e.g. pName_ for name of the pressure field on database
         word wordData_;

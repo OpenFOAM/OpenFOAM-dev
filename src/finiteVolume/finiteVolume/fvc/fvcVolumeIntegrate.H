@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,28 +55,28 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    tmp<Field<Type> > volumeIntegrate
+    tmp<Field<Type>> volumeIntegrate
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<Field<Type> > volumeIntegrate
+    tmp<Field<Type>> volumeIntegrate
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 
 
     template<class Type>
-    tmp<Field<Type> > volumeIntegrate
+    tmp<Field<Type>> volumeIntegrate
     (
         const DimensionedField<Type, volMesh>&
     );
 
     template<class Type>
-    tmp<Field<Type> > volumeIntegrate
+    tmp<Field<Type>> volumeIntegrate
     (
-        const tmp<DimensionedField<Type, volMesh> >&
+        const tmp<DimensionedField<Type, volMesh>>&
     );
 
 
@@ -89,7 +89,7 @@ namespace fvc
     template<class Type>
     dimensioned<Type> domainIntegrate
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 
 
@@ -102,7 +102,7 @@ namespace fvc
     template<class Type>
     dimensioned<Type> domainIntegrate
     (
-        const tmp<DimensionedField<Type, volMesh> >&
+        const tmp<DimensionedField<Type, volMesh>>&
     );
 }
 

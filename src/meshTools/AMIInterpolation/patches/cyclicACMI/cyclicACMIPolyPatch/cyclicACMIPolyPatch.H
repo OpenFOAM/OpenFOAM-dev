@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -280,7 +280,7 @@ public:
 
                 //- Interpolate field
                 template<class Type>
-                tmp<Field<Type> > interpolate
+                tmp<Field<Type>> interpolate
                 (
                     const Field<Type>& fldCouple,
                     const Field<Type>& fldNonOverlap
@@ -288,10 +288,10 @@ public:
 
                 //- Interpolate tmp field
                 template<class Type>
-                tmp<Field<Type> > interpolate
+                tmp<Field<Type>> interpolate
                 (
-                    const tmp<Field<Type> >& tFldCouple,
-                    const tmp<Field<Type> >& tFldNonOverlap
+                    const tmp<Field<Type>>& tFldCouple,
+                    const tmp<Field<Type>>& tFldNonOverlap
                 ) const;
 
                 //- Low-level interpolate List

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -236,7 +236,7 @@ class isoSurface
         //- Return input field with coupled (and empty) patch values rewritten
         template<class Type>
         tmp<SlicedGeometricField
-        <Type, fvPatchField, slicedFvPatchField, volMesh> >
+        <Type, fvPatchField, slicedFvPatchField, volMesh>>
         adaptPatchFields
         (
             const GeometricField<Type, fvPatchField, volMesh>& fld
@@ -338,7 +338,7 @@ class isoSurface
         void calcAddressing
         (
             const triSurface& surf,
-            List<FixedList<label, 3> >& faceEdges,
+            List<FixedList<label, 3>>& faceEdges,
             labelList& edgeFace0,
             labelList& edgeFace1,
             Map<labelList>& edgeFacesRest
@@ -348,7 +348,7 @@ class isoSurface
         static void walkOrientation
         (
             const triSurface& surf,
-            const List<FixedList<label, 3> >& faceEdges,
+            const List<FixedList<label, 3>>& faceEdges,
             const labelList& edgeFace0,
             const labelList& edgeFace1,
             const label seedTriI,
@@ -359,7 +359,7 @@ class isoSurface
         static void orientSurface
         (
             triSurface&,
-            const List<FixedList<label, 3> >& faceEdges,
+            const List<FixedList<label, 3>>& faceEdges,
             const labelList& edgeFace0,
             const labelList& edgeFace1,
             const Map<labelList>& edgeFacesRest
@@ -375,7 +375,7 @@ class isoSurface
         //- Mark all non-fully connected triangles
         static label markDanglingTriangles
         (
-            const List<FixedList<label, 3> >& faceEdges,
+            const List<FixedList<label, 3>>& faceEdges,
             const labelList& edgeFace0,
             const labelList& edgeFace1,
             const Map<labelList>& edgeFacesRest,
@@ -428,7 +428,7 @@ public:
         //- Interpolates cCoords,pCoords. Uses the references to the original
         //  fields used to create the iso surface.
         template<class Type>
-        tmp<Field<Type> > interpolate
+        tmp<Field<Type>> interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>& cCoords,
             const Field<Type>& pCoords

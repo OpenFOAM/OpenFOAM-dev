@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,7 +201,7 @@ class polyTopoChange
         template<class T>
         static void reorder(const labelList& map, DynamicList<T>&);
         template<class T>
-        static void reorder(const labelList& map, List<DynamicList<T> >&);
+        static void reorder(const labelList& map, List<DynamicList<T>>&);
         template<class T>
         static void renumberKey(const labelList& map, Map<T>&);
 
@@ -322,7 +322,7 @@ class polyTopoChange
         //- Calculate mapping for patchpoints only
         void calcPatchPointMap
         (
-            const List<Map<label> >&,
+            const List<Map<label>>&,
             const polyBoundaryMesh&,
             labelListList&
         ) const;
@@ -356,7 +356,7 @@ class polyTopoChange
         void calcFaceZonePointMap
         (
             const polyMesh&,
-            const List<Map<label> >&,
+            const List<Map<label>>&,
             labelListList&
         ) const;
 
@@ -391,10 +391,10 @@ class polyTopoChange
             List<objectMap>& cellsFromEdges,
             List<objectMap>& cellsFromFaces,
             List<objectMap>& cellsFromCells,
-            List<Map<label> >& oldPatchMeshPointMaps,
+            List<Map<label>>& oldPatchMeshPointMaps,
             labelList& oldPatchNMeshPoints,
             labelList& oldPatchStarts,
-            List<Map<label> >& oldFaceZoneMeshPointMaps
+            List<Map<label>>& oldFaceZoneMeshPointMaps
         );
 
 public:

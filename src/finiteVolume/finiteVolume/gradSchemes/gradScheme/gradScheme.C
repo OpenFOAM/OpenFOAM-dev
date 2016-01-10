@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::fv::gradScheme<Type> > Foam::fv::gradScheme<Type>::New
+Foam::tmp<Foam::fv::gradScheme<Type>> Foam::fv::gradScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -200,7 +200,7 @@ Foam::tmp
 >
 Foam::fv::gradScheme<Type>::grad
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvsf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvsf
 ) const
 {
     typedef typename outerProduct<vector, Type>::type GradType;

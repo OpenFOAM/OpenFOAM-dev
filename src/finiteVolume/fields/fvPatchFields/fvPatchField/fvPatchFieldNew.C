@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
+Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
 (
     const word& patchFieldType,
     const word& actualPatchType,
@@ -77,7 +77,7 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
     }
     else
     {
-        tmp<fvPatchField<Type> > tfvp = cstrIter()(p, iF);
+        tmp<fvPatchField<Type>> tfvp = cstrIter()(p, iF);
 
         // Check if constraint type override and store patchType if so
         if ((patchTypeCstrIter != patchConstructorTablePtr_->end()))
@@ -90,7 +90,7 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 
 
 template<class Type>
-Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
+Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
 (
     const word& patchFieldType,
     const fvPatch& p,
@@ -102,7 +102,7 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 
 
 template<class Type>
-Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
+Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -172,7 +172,7 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 
 
 template<class Type>
-Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
+Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
 (
     const fvPatchField<Type>& ptf,
     const fvPatch& p,

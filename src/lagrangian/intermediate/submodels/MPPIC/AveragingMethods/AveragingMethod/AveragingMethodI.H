@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ inline void Foam::AveragingMethod<Type>::operator=
 template<class Type>
 inline void Foam::AveragingMethod<Type>::operator=
 (
-    tmp<FieldField<Field, Type> > x
+    tmp<FieldField<Field, Type>> x
 )
 {
     FieldField<Field, Type>::operator=(x());
@@ -61,7 +61,7 @@ inline void Foam::AveragingMethod<Type>::operator=
 template<class Type>
 inline void Foam::AveragingMethod<Type>::operator+=
 (
-    tmp<FieldField<Field, Type> > x
+    tmp<FieldField<Field, Type>> x
 )
 {
     FieldField<Field, Type>::operator+=(x());
@@ -72,7 +72,7 @@ inline void Foam::AveragingMethod<Type>::operator+=
 template<class Type>
 inline void Foam::AveragingMethod<Type>::operator*=
 (
-    tmp<FieldField<Field, Type> > x
+    tmp<FieldField<Field, Type>> x
 )
 {
     FieldField<Field, Type>::operator*=(x());
@@ -83,7 +83,7 @@ inline void Foam::AveragingMethod<Type>::operator*=
 template<class Type>
 inline void Foam::AveragingMethod<Type>::operator/=
 (
-    tmp<FieldField<Field, scalar> > x
+    tmp<FieldField<Field, scalar>> x
 )
 {
     FieldField<Field, Type>::operator/=(x());

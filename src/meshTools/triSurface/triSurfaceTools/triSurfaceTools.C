@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -451,8 +451,8 @@ void Foam::triSurfaceTools::getMergedEdges
     const triSurface& surf,
     const label edgeI,
     const labelHashSet& collapsedFaces,
-    HashTable<label, label, Hash<label> >& edgeToEdge,
-    HashTable<label, label, Hash<label> >& edgeToFace
+    HashTable<label, label, Hash<label>>& edgeToEdge,
+    HashTable<label, label, Hash<label>>& edgeToFace
 )
 {
     const edge& e = surf.edges()[edgeI];
@@ -534,8 +534,8 @@ Foam::scalar Foam::triSurfaceTools::edgeCosAngle
     const label v1,
     const point& pt,
     const labelHashSet& collapsedFaces,
-    const HashTable<label, label, Hash<label> >& edgeToEdge,
-    const HashTable<label, label, Hash<label> >& edgeToFace,
+    const HashTable<label, label, Hash<label>>& edgeToEdge,
+    const HashTable<label, label, Hash<label>>& edgeToFace,
     const label faceI,
     const label edgeI
 )
@@ -632,8 +632,8 @@ Foam::scalar Foam::triSurfaceTools::collapseMinCosAngle
     const label v1,
     const point& pt,
     const labelHashSet& collapsedFaces,
-    const HashTable<label, label, Hash<label> >& edgeToEdge,
-    const HashTable<label, label, Hash<label> >& edgeToFace
+    const HashTable<label, label, Hash<label>>& edgeToEdge,
+    const HashTable<label, label, Hash<label>>& edgeToFace
 )
 {
     const labelList& v1Faces = surf.pointFaces()[v1];
@@ -686,8 +686,8 @@ bool Foam::triSurfaceTools::collapseCreatesFold
     const label v1,
     const point& pt,
     const labelHashSet& collapsedFaces,
-    const HashTable<label, label, Hash<label> >& edgeToEdge,
-    const HashTable<label, label, Hash<label> >& edgeToFace,
+    const HashTable<label, label, Hash<label>>& edgeToEdge,
+    const HashTable<label, label, Hash<label>>& edgeToFace,
     const scalar minCos
 )
 {
@@ -751,7 +751,7 @@ bool Foam::triSurfaceTools::collapseCreatesFold
 //    // neighbours actually contains the
 //    // edge with which triangle connects to collapsedFaces.
 //
-//    HashTable<label, label, Hash<label> > neighbours;
+//    HashTable<label, label, Hash<label>> neighbours;
 //
 //    labelList collapsed = collapsedFaces.toc();
 //
@@ -2621,8 +2621,8 @@ void Foam::triSurfaceTools::calcInterpolationWeights
 (
     const triSurface& s,
     const pointField& samplePts,
-    List<FixedList<label, 3> >& allVerts,
-    List<FixedList<scalar, 3> >& allWeights
+    List<FixedList<label, 3>>& allVerts,
+    List<FixedList<scalar, 3>>& allWeights
 )
 {
     allVerts.setSize(samplePts.size());

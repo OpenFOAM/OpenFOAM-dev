@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ SourceFiles
 namespace Foam
 {
 
-typedef HashTable<labelList, edge, Hash<edge> > edgeLookup;
+typedef HashTable<labelList, edge, Hash<edge>> edgeLookup;
 
 
 // Forward declaration of classes

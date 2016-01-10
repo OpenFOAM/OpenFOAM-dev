@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ namespace Foam
 template<class CloudType>
 class InjectionModelList
 :
-    public PtrList<InjectionModel<CloudType> >
+    public PtrList<InjectionModel<CloudType>>
 {
 public:
 
@@ -66,9 +66,9 @@ public:
         InjectionModelList(const InjectionModelList<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModelList<CloudType> > clone() const
+        virtual autoPtr<InjectionModelList<CloudType>> clone() const
         {
-            return autoPtr<InjectionModelList<CloudType> >
+            return autoPtr<InjectionModelList<CloudType>>
             (
                 new InjectionModelList<CloudType>(*this)
             );

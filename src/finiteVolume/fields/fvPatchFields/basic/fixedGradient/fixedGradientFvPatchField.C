@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ void Foam::fixedGradientFvPatchField<Type>::rmap
     fvPatchField<Type>::rmap(ptf, addr);
 
     const fixedGradientFvPatchField<Type>& fgptf =
-        refCast<const fixedGradientFvPatchField<Type> >(ptf);
+        refCast<const fixedGradientFvPatchField<Type>>(ptf);
 
     gradient_.rmap(fgptf.gradient_, addr);
 }
@@ -149,18 +149,18 @@ void Foam::fixedGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::fixedGradientFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(this->size(), pTraits<Type>::one));
+    return tmp<Field<Type>>(new Field<Type>(this->size(), pTraits<Type>::one));
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::fixedGradientFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
@@ -171,10 +171,10 @@ Foam::fixedGradientFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::fixedGradientFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
         new Field<Type>(this->size(), pTraits<Type>::zero)
     );
@@ -182,7 +182,7 @@ Foam::fixedGradientFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::fixedGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return gradient();

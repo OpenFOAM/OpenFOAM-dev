@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,10 @@ inline Foam::hPowerThermo<EquationOfState>::hPowerThermo
 
 
 template<class EquationOfState>
-inline Foam::autoPtr<Foam::hPowerThermo<EquationOfState> >
+inline Foam::autoPtr<Foam::hPowerThermo<EquationOfState>>
 Foam::hPowerThermo<EquationOfState>::clone() const
 {
-    return autoPtr<hPowerThermo<EquationOfState> >
+    return autoPtr<hPowerThermo<EquationOfState>>
     (
         new hPowerThermo<EquationOfState>(*this)
     );
@@ -91,10 +91,10 @@ Foam::hPowerThermo<EquationOfState>::clone() const
 
 
 template<class EquationOfState>
-inline Foam::autoPtr<Foam::hPowerThermo<EquationOfState> >
+inline Foam::autoPtr<Foam::hPowerThermo<EquationOfState>>
 Foam::hPowerThermo<EquationOfState>::New(Istream& is)
 {
-    return autoPtr<hPowerThermo<EquationOfState> >
+    return autoPtr<hPowerThermo<EquationOfState>>
     (
         new hPowerThermo<EquationOfState>(is)
     );
@@ -102,10 +102,10 @@ Foam::hPowerThermo<EquationOfState>::New(Istream& is)
 
 
 template<class EquationOfState>
-inline Foam::autoPtr<Foam::hPowerThermo<EquationOfState> >
+inline Foam::autoPtr<Foam::hPowerThermo<EquationOfState>>
 Foam::hPowerThermo<EquationOfState>::New(const dictionary& dict)
 {
-    return autoPtr<hPowerThermo<EquationOfState> >
+    return autoPtr<hPowerThermo<EquationOfState>>
     (
         new hPowerThermo<EquationOfState>(dict)
     );

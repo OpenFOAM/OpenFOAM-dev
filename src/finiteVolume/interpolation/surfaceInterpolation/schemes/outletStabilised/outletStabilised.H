@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ class outletStabilised
     // Private member data
 
         const surfaceScalarField& faceFlux_;
-        tmp<surfaceInterpolationScheme<Type> > tScheme_;
+        tmp<surfaceInterpolationScheme<Type>> tScheme_;
 
 
     // Private Member Functions
@@ -141,10 +141,10 @@ public:
             {
                 if
                 (
-                    isA<zeroGradientFvPatchField<Type> >
+                    isA<zeroGradientFvPatchField<Type>>
                         (vf.boundaryField()[patchi])
-                 || isA<mixedFvPatchField<Type> >(vf.boundaryField()[patchi])
-                 || isA<directionMixedFvPatchField<Type> >
+                 || isA<mixedFvPatchField<Type>>(vf.boundaryField()[patchi])
+                 || isA<directionMixedFvPatchField<Type>>
                     (vf.boundaryField()[patchi])
                 )
                 {
@@ -180,7 +180,7 @@ public:
 
         //- Return the explicit correction to the face-interpolate
         //  set to zero on the near-boundary faces where upwinf is applied
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -188,7 +188,7 @@ public:
         {
             if (tScheme_().corrected())
             {
-                tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tcorr =
+                tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tcorr =
                     tScheme_().correction(vf);
 
                 GeometricField<Type, fvsPatchField, surfaceMesh>& corr =
@@ -201,9 +201,9 @@ public:
                 {
                     if
                     (
-                        isA<zeroGradientFvPatchField<Type> >
+                        isA<zeroGradientFvPatchField<Type>>
                             (vf.boundaryField()[patchi])
-                     || isA<mixedFvPatchField<Type> >
+                     || isA<mixedFvPatchField<Type>>
                             (vf.boundaryField()[patchi])
                     )
                     {
@@ -232,7 +232,7 @@ public:
             }
             else
             {
-                return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+                return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
                 (
                     NULL
                 );

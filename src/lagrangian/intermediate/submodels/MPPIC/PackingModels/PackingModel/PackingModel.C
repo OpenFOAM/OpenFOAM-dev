@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::PackingModel<CloudType>::~PackingModel()
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::autoPtr<Foam::PackingModel<CloudType> >
+Foam::autoPtr<Foam::PackingModel<CloudType>>
 Foam::PackingModel<CloudType>::New
 (
     const dictionary& dict,
@@ -99,7 +99,7 @@ Foam::PackingModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<PackingModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<PackingModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ namespace Foam
     bool fieldOk(const IOobjectList& cloudObjs, const word& name);
 
     template<class Type>
-    tmp<Field<Type> > readParticleField
+    tmp<Field<Type>> readParticleField
     (
         const word& name,
         const IOobjectList cloudObjs
@@ -51,7 +51,7 @@ namespace Foam
     template<class Type>
     void readFields
     (
-        PtrList<List<Type> >& values,
+        PtrList<List<Type>>& values,
         const List<word>& fields,
         const IOobjectList& cloudObjs
     );
@@ -63,15 +63,15 @@ namespace Foam
     void writeVTKFields
     (
         OFstream& os,
-        const PtrList<List<Type> >& values,
-        const List<SortableList<scalar> >& agePerTrack,
+        const PtrList<List<Type>>& values,
+        const List<SortableList<scalar>>& agePerTrack,
         const List<word>& fieldNames
     );
 
     void processFields
     (
         OFstream& os,
-        const List<SortableList<scalar> >& agePerTrack,
+        const List<SortableList<scalar>>& agePerTrack,
         const List<word>& userFieldNames,
         const IOobjectList& cloudObjs
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Foam::ReactionList<ThermoType>::ReactionList
     const HashPtrTable<ThermoType>& thermoDb
 )
 :
-    SLPtrList<Reaction<ThermoType> >(),
+    SLPtrList<Reaction<ThermoType>>(),
     species_(species),
     thermoDb_(thermoDb),
     dict_(dictionary::null)
@@ -51,7 +51,7 @@ Foam::ReactionList<ThermoType>::ReactionList
     const dictionary& dict
 )
 :
-    SLPtrList<Reaction<ThermoType> >(),
+    SLPtrList<Reaction<ThermoType>>(),
     species_(species),
     thermoDb_(thermoDb),
     dict_(dict)
@@ -68,7 +68,7 @@ Foam::ReactionList<ThermoType>::ReactionList
     const fileName& fName
 )
 :
-    SLPtrList<Reaction<ThermoType> >
+    SLPtrList<Reaction<ThermoType>>
     (
         dictionary(IFstream(fName)()).lookup("reactions"),
         Reaction<ThermoType>::iNew(species, thermoDb)
@@ -82,7 +82,7 @@ Foam::ReactionList<ThermoType>::ReactionList
 template<class ThermoType>
 Foam::ReactionList<ThermoType>::ReactionList(const ReactionList& reactions)
 :
-    SLPtrList<Reaction<ThermoType> >(reactions),
+    SLPtrList<Reaction<ThermoType>>(reactions),
     species_(reactions.species_),
     thermoDb_(reactions.thermoDb_),
     dict_(reactions.dict_)
@@ -128,7 +128,7 @@ void Foam::ReactionList<ThermoType>::write(Ostream& os) const
     os  << "reactions" << nl;
     os  << token::BEGIN_BLOCK << incrIndent << nl;
 
-    forAllConstIter(typename SLPtrList<Reaction<ThermoType> >, *this, iter)
+    forAllConstIter(typename SLPtrList<Reaction<ThermoType>>, *this, iter)
     {
         const Reaction<ThermoType>& r = iter();
         os  << indent << r.name() << nl

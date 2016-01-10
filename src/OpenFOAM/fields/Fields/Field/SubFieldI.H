@@ -84,12 +84,12 @@ inline Foam::SubField<Type>::SubField
 template<class Type>
 inline const Foam::SubField<Type>& Foam::SubField<Type>::null()
 {
-    return NullObjectRef<SubField<Type> >();
+    return NullObjectRef<SubField<Type>>();
 }
 
 
 template<class Type>
-inline Foam::tmp<Foam::Field<typename Foam::SubField<Type>::cmptType> >
+inline Foam::tmp<Foam::Field<typename Foam::SubField<Type>::cmptType>>
 Foam::SubField<Type>::component
 (
     const direction d
@@ -100,7 +100,7 @@ Foam::SubField<Type>::component
 
 
 template<class Type>
-inline Foam::tmp<Foam::Field<Type> > Foam::SubField<Type>::T() const
+inline Foam::tmp<Foam::Field<Type>> Foam::SubField<Type>::T() const
 {
     return (reinterpret_cast<const Field<Type>&>(*this)).T();
 }

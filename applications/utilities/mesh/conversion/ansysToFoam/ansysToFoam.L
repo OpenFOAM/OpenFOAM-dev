@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,8 +66,8 @@ SLList<label> slCellMap;
 SLList<label> slCellType;
 label maxCelli = 0;
 
-PtrList<SLList<label> > slPatchCells;
-PtrList<SLList<label> > slPatchCellFaces;
+PtrList<SLList<label>> slPatchCells;
+PtrList<SLList<label>> slPatchCellFaces;
 
 // Cell types
 Map<word> cellTypes;

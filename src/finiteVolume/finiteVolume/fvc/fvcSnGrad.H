@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,29 +51,29 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > snGrad
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> snGrad
     (
         const GeometricField<Type, fvPatchField, volMesh>&,
         const word& name
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > snGrad
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> snGrad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
         const word& name
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > snGrad
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> snGrad
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > snGrad
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> snGrad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 }
 

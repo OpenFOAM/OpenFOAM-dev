@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ Foam::coupledFvPatchField<Type>::coupledFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::coupledFvPatchField<Type>::snGrad
+Foam::tmp<Foam::Field<Type>> Foam::coupledFvPatchField<Type>::snGrad
 (
     const scalarField& deltaCoeffs
 ) const
@@ -145,7 +145,7 @@ void Foam::coupledFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::coupledFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>& w
@@ -156,7 +156,7 @@ Foam::coupledFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::coupledFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>& w
@@ -167,7 +167,7 @@ Foam::coupledFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::coupledFvPatchField<Type>::gradientInternalCoeffs
 (
     const scalarField& deltaCoeffs
@@ -178,7 +178,7 @@ Foam::coupledFvPatchField<Type>::gradientInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::coupledFvPatchField<Type>::gradientInternalCoeffs() const
 {
     NotImplemented;
@@ -187,7 +187,7 @@ Foam::coupledFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::coupledFvPatchField<Type>::gradientBoundaryCoeffs
 (
     const scalarField& deltaCoeffs
@@ -198,7 +198,7 @@ Foam::coupledFvPatchField<Type>::gradientBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::coupledFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     NotImplemented;

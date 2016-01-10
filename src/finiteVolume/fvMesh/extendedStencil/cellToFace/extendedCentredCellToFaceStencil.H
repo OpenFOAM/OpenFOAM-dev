@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ public:
         void collectData
         (
             const GeometricField<T, fvPatchField, volMesh>& fld,
-            List<List<T> >& stencilFld
+            List<List<T>>& stencilFld
         ) const
         {
             extendedCellToFaceStencil::collectData
@@ -116,10 +116,10 @@ public:
 
         //- Sum vol field contributions to create face values
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > weightedSum
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> weightedSum
         (
             const GeometricField<Type, fvPatchField, volMesh>& fld,
-            const List<List<scalar> >& stencilWeights
+            const List<List<scalar>>& stencilWeights
         ) const
         {
             return extendedCellToFaceStencil::weightedSum

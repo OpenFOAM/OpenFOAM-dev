@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ void storeCellInZone
     const label cellI,
     const label cellType,
     Map<label>& typeToZone,
-    List<DynamicList<label> >& zoneCells
+    List<DynamicList<label>>& zoneCells
 )
 {
     if (cellType >= 0)
@@ -1022,7 +1022,7 @@ int main(int argc, char *argv[])
         // From foamCellType physical region to Foam cellZone
         Map<label> typeToZone;
         // Storage for cell zones.
-        List<DynamicList<label> > zoneCells(0);
+        List<DynamicList<label>> zoneCells(0);
 
         forAll(foamCellType, cellI)
         {

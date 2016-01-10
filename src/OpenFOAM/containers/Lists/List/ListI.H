@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ inline Foam::List<T>::List()
 
 
 template<class T>
-inline Foam::autoPtr<Foam::List<T> > Foam::List<T>::clone() const
+inline Foam::autoPtr<Foam::List<T>> Foam::List<T>::clone() const
 {
-    return autoPtr<List<T> >(new List<T>(*this));
+    return autoPtr<List<T>>(new List<T>(*this));
 }
 
 
@@ -42,7 +42,7 @@ inline Foam::autoPtr<Foam::List<T> > Foam::List<T>::clone() const
 template<class T>
 inline const Foam::List<T>& Foam::List<T>::null()
 {
-    return NullObjectRef<List<T> >();
+    return NullObjectRef<List<T>>();
 }
 
 
@@ -87,7 +87,7 @@ inline Foam::label Foam::List<T>::size() const
 
 
 template<class T>
-inline Foam::Xfer<Foam::List<T> > Foam::List<T>::xfer()
+inline Foam::Xfer<Foam::List<T>> Foam::List<T>::xfer()
 {
     return xferMove(*this);
 }

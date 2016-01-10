@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ public:
 
 
     //- Selector
-    static autoPtr<PairModel<CloudType> > New
+    static autoPtr<PairModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -163,7 +163,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<Foam::CloudType>, 0);        \
                                                                               \
     Foam::PairModel<Foam::CloudType>::                                        \
-        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType> >           \
+        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType>>           \
         add##SS##CloudType##ConstructorToTable_;
 
 

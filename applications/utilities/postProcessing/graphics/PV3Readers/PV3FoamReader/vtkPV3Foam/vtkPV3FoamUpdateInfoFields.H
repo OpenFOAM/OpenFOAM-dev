@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,27 +73,27 @@ void Foam::vtkPV3Foam::updateInfoFields
     IOobjectList objects(dbPtr_(), dbPtr_().timeName(), regionPrefix);
 
     //- Add volume fields to GUI
-    addToSelection<GeometricField<scalar, patchType, meshType> >
+    addToSelection<GeometricField<scalar, patchType, meshType>>
     (
         select,
         objects
     );
-    addToSelection<GeometricField<vector, patchType, meshType> >
+    addToSelection<GeometricField<vector, patchType, meshType>>
     (
         select,
         objects
     );
-    addToSelection<GeometricField<sphericalTensor, patchType, meshType> >
+    addToSelection<GeometricField<sphericalTensor, patchType, meshType>>
     (
         select,
         objects
     );
-    addToSelection<GeometricField<symmTensor, patchType, meshType> >
+    addToSelection<GeometricField<symmTensor, patchType, meshType>>
     (
         select,
         objects
     );
-    addToSelection<GeometricField<tensor, patchType, meshType> >
+    addToSelection<GeometricField<tensor, patchType, meshType>>
     (
         select,
         objects

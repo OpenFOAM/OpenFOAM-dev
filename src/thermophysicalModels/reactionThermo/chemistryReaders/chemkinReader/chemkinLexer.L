@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -547,7 +547,7 @@ bool finishReaction = false;
 
         currentSpecieComposition.setSize(nSpecieElements);
 
-        HashTable<List<specieElement> >::iterator specieCompositionIter
+        HashTable<List<specieElement>>::iterator specieCompositionIter
         (
             specieComposition_.find(currentSpecieName)
         );
@@ -631,7 +631,7 @@ bool finishReaction = false;
             currentSpecieName,
             new gasHThermoPhysics
             (
-                janafThermo<perfectGas<specie> >
+                janafThermo<perfectGas<specie>>
                 (
                     specie
                     (

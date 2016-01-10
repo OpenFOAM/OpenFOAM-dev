@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ protected:
 
         //- Fields to process
         //wordList fieldSet_;
-        List<Tuple2<word, word> > fieldSet_;
+        List<Tuple2<word, word>> fieldSet_;
 
         //- Locally constructed fields
         PtrList<surfaceScalarField> ssf_;
@@ -125,7 +125,7 @@ protected:
         template<class Type>
         void interpolateFields
         (
-            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
 
 

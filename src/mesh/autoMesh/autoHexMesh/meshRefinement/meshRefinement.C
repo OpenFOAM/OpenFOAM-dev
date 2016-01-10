@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1015,7 +1015,7 @@ Pout<< "face:" << faceI << " verts:" << f
 //
 //
 //    // Transfer lists.
-//    PtrList<HashSet<edge, Hash<edge> > > regionConnectivity
+//    PtrList<HashSet<edge, Hash<edge>>> regionConnectivity
 //    (Pstream::nProcs());
 //    forAll(regionConnectivity, procI)
 //    {
@@ -1024,7 +1024,7 @@ Pout<< "face:" << faceI << " verts:" << f
 //            regionConnectivity.set
 //            (
 //                procI,
-//                new HashSet<edge, Hash<edge> >
+//                new HashSet<edge, Hash<edge>>
 //                (
 //                    coupledRegionToShifted.size()
 //                  / Pstream::nProcs()
@@ -1123,7 +1123,7 @@ Pout<< "face:" << faceI << " verts:" << f
 //        {
 //            for
 //            (
-//                HashSet<edge, Hash<edge> >::const_iterator iter =
+//                HashSet<edge, Hash<edge>>::const_iterator iter =
 //                    regionConnectivity[procI].begin();
 //                iter != regionConnectivity[procI].end();
 //                ++iter

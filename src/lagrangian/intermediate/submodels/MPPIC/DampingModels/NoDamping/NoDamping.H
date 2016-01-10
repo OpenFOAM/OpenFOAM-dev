@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,9 @@ public:
         NoDamping(const NoDamping<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<DampingModel<CloudType> > clone() const
+        virtual autoPtr<DampingModel<CloudType>> clone() const
         {
-            return autoPtr<DampingModel<CloudType> >
+            return autoPtr<DampingModel<CloudType>>
             (
                 new NoDamping<CloudType>(*this)
             );

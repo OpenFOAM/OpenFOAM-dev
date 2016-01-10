@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,7 @@ void Foam::nearWallFields::calcAddressing()
 
 
     // Rework cell-to-globalpatchface into a map
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     getPatchDataMapPtr_.reset
     (
         new mapDistribute

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ void printInfo
 
 int main(int argc, char *argv[])
 {
-    List<DynamicList<label, 1, 0> > ldl(2);
+    List<DynamicList<label, 1, 0>> ldl(2);
 
     ldl[0](0) = 0;
     ldl[0](2) = 2;
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     }
     Info<< endl;
 
-    List<List<label> > ll(2);
+    List<List<label>> ll(2);
     ll[0].transfer(ldl[0]);
     ll[1].transfer(ldl[1].shrink());
 

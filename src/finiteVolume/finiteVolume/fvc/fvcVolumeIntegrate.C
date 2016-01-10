@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 volumeIntegrate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -51,30 +51,30 @@ volumeIntegrate
 
 
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 volumeIntegrate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 )
 {
-    tmp<Field<Type> > tvivf = tvf().mesh().V()*tvf().internalField();
+    tmp<Field<Type>> tvivf = tvf().mesh().V()*tvf().internalField();
     tvf.clear();
     return tvivf;
 }
 
 
 template<class Type>
-tmp<Field<Type> > volumeIntegrate(const DimensionedField<Type, volMesh>& df)
+tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, volMesh>& df)
 {
     return df.mesh().V()*df.field();
 }
 
 
 template<class Type>
-tmp<Field<Type> >
-volumeIntegrate(const tmp<DimensionedField<Type, volMesh> >& tdf)
+tmp<Field<Type>>
+volumeIntegrate(const tmp<DimensionedField<Type, volMesh>>& tdf)
 {
-    tmp<Field<Type> > tdidf = tdf().mesh().V()*tdf().field();
+    tmp<Field<Type>> tdidf = tdf().mesh().V()*tdf().field();
     tdf.clear();
     return tdidf;
 }
@@ -99,7 +99,7 @@ domainIntegrate
 template<class Type>
 dimensioned<Type> domainIntegrate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 )
 {
     dimensioned<Type> integral = domainIntegrate(tvf());
@@ -126,7 +126,7 @@ dimensioned<Type> domainIntegrate
 template<class Type>
 dimensioned<Type> domainIntegrate
 (
-    const tmp<DimensionedField<Type, volMesh> >& tdf
+    const tmp<DimensionedField<Type, volMesh>>& tdf
 )
 {
     dimensioned<Type> integral = domainIntegrate(tdf());

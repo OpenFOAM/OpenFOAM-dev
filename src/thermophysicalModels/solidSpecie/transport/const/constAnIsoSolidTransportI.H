@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,13 +50,13 @@ inline Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::constAnIsoSolidTransport<Thermo> >
+inline Foam::autoPtr<Foam::constAnIsoSolidTransport<Thermo>>
 Foam::constAnIsoSolidTransport<Thermo>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<constAnIsoSolidTransport<Thermo> >
+    return autoPtr<constAnIsoSolidTransport<Thermo>>
     (
         new constAnIsoSolidTransport<Thermo>(dict)
     );

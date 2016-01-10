@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ protected:
         labelList srcNonOverlap_;
 
         //- Octree used to find face seeds
-        autoPtr<indexedOctree<treeType> > treePtr_;
+        autoPtr<indexedOctree<treeType>> treePtr_;
 
         //- Face triangulation mode
         const faceAreaIntersect::triangulationMode triMode_;

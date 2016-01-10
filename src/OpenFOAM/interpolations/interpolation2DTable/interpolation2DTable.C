@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::interpolation2DTable<Type>::readTable()
 template<class Type>
 Foam::interpolation2DTable<Type>::interpolation2DTable()
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(),
     boundsHandling_(interpolation2DTable::WARN),
     fileName_("fileNameIsUndefined"),
     reader_(NULL)
@@ -64,12 +64,12 @@ Foam::interpolation2DTable<Type>::interpolation2DTable()
 template<class Type>
 Foam::interpolation2DTable<Type>::interpolation2DTable
 (
-    const List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >& values,
+    const List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& values,
     const boundsHandling bounds,
     const fileName& fName
 )
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(values),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(values),
     boundsHandling_(bounds),
     fileName_(fName),
     reader_(NULL)
@@ -79,7 +79,7 @@ Foam::interpolation2DTable<Type>::interpolation2DTable
 template<class Type>
 Foam::interpolation2DTable<Type>::interpolation2DTable(const fileName& fName)
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(),
     boundsHandling_(interpolation2DTable::WARN),
     fileName_(fName),
     reader_(new openFoamTableReader<Type>(dictionary()))
@@ -91,7 +91,7 @@ Foam::interpolation2DTable<Type>::interpolation2DTable(const fileName& fName)
 template<class Type>
 Foam::interpolation2DTable<Type>::interpolation2DTable(const dictionary& dict)
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(),
     boundsHandling_(wordToBoundsHandling(dict.lookup("outOfBounds"))),
     fileName_(dict.lookup("fileName")),
     reader_(tableReader<Type>::New(dict))
@@ -106,7 +106,7 @@ Foam::interpolation2DTable<Type>::interpolation2DTable
      const interpolation2DTable& interpTable
 )
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(interpTable),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(interpTable),
     boundsHandling_(interpTable.boundsHandling_),
     fileName_(interpTable.fileName_),
     reader_(interpTable.reader_)    // note: steals reader. Used in write().
@@ -119,7 +119,7 @@ Foam::interpolation2DTable<Type>::interpolation2DTable
 template<class Type>
 Type Foam::interpolation2DTable<Type>::interpolateValue
 (
-    const List<Tuple2<scalar, Type> >& data,
+    const List<Tuple2<scalar, Type>>& data,
     const scalar lookupValue
 ) const
 {

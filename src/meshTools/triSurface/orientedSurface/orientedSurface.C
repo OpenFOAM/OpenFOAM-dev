@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -259,7 +259,7 @@ void Foam::orientedSurface::findZoneSide
     isOutside = false;
 
     pointField start(1, outsidePoint);
-    List<List<pointIndexHit> > hits(1, List<pointIndexHit>());
+    List<List<pointIndexHit>> hits(1, List<pointIndexHit>());
 
     forAll(faceZone, faceI)
     {

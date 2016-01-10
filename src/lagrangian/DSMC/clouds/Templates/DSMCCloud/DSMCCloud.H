@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ class DSMCCloud
         scalar nParticle_;
 
         //- A data structure holding which particles are in which cell
-        List<DynamicList<ParcelType*> > cellOccupancy_;
+        List<DynamicList<ParcelType*>> cellOccupancy_;
 
         //- A field holding the value of (sigmaT * cR)max for each
         //  cell (see Bird p220). Initialised with the parcels,
@@ -149,15 +149,15 @@ class DSMCCloud
         // References to the cloud sub-models
 
             //- Binary collision model
-            autoPtr<BinaryCollisionModel<DSMCCloud<ParcelType> > >
+            autoPtr<BinaryCollisionModel<DSMCCloud<ParcelType>>>
                 binaryCollisionModel_;
 
             //- Wall interaction model
-            autoPtr<WallInteractionModel<DSMCCloud<ParcelType> > >
+            autoPtr<WallInteractionModel<DSMCCloud<ParcelType>>>
                 wallInteractionModel_;
 
             //- Inflow boundary model
-            autoPtr<InflowBoundaryModel<DSMCCloud<ParcelType> > >
+            autoPtr<InflowBoundaryModel<DSMCCloud<ParcelType>>>
                 inflowBoundaryModel_;
 
 
@@ -244,7 +244,7 @@ public:
                 inline scalar nParticle() const;
 
                 //- Return the cell occupancy addressing
-                inline const List<DynamicList<ParcelType*> >&
+                inline const List<DynamicList<ParcelType*>>&
                     cellOccupancy() const;
 
                 //- Return the sigmaTcRMax field.  non-const access to allow
@@ -398,27 +398,27 @@ public:
             // Sub-models
 
                 //- Return reference to binary elastic collision model
-                inline const BinaryCollisionModel<DSMCCloud<ParcelType> >&
+                inline const BinaryCollisionModel<DSMCCloud<ParcelType>>&
                     binaryCollision() const;
 
                 //- Return non-const reference to binary elastic collision model
-                inline BinaryCollisionModel<DSMCCloud<ParcelType> >&
+                inline BinaryCollisionModel<DSMCCloud<ParcelType>>&
                     binaryCollision();
 
                 //- Return reference to wall interaction model
-                inline const WallInteractionModel<DSMCCloud<ParcelType> >&
+                inline const WallInteractionModel<DSMCCloud<ParcelType>>&
                     wallInteraction() const;
 
                 //- Return non-const reference to wall interaction model
-                inline WallInteractionModel<DSMCCloud<ParcelType> >&
+                inline WallInteractionModel<DSMCCloud<ParcelType>>&
                     wallInteraction();
 
                 //- Return reference to wall interaction model
-                inline const InflowBoundaryModel<DSMCCloud<ParcelType> >&
+                inline const InflowBoundaryModel<DSMCCloud<ParcelType>>&
                     inflowBoundary() const;
 
                 //- Return non-const reference to wall interaction model
-                inline InflowBoundaryModel<DSMCCloud<ParcelType> >&
+                inline InflowBoundaryModel<DSMCCloud<ParcelType>>&
                     inflowBoundary();
 
 

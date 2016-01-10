@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,10 +154,10 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
 
     const label patchI = patch().index();
 
-    const LESModel<EddyDiffusivity<compressible::turbulenceModel> >& turbModel =
+    const LESModel<EddyDiffusivity<compressible::turbulenceModel>>& turbModel =
         db().lookupObject
         <
-            LESModel<EddyDiffusivity<compressible::turbulenceModel> >
+            LESModel<EddyDiffusivity<compressible::turbulenceModel>>
         >
         (
             IOobject::groupName

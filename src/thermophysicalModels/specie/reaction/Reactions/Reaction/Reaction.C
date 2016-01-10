@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -355,7 +355,7 @@ Foam::Reaction<ReactionThermo>::Reaction
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::autoPtr<Foam::Reaction<ReactionThermo> >
+Foam::autoPtr<Foam::Reaction<ReactionThermo>>
 Foam::Reaction<ReactionThermo>::New
 (
     const speciesTable& species,
@@ -391,7 +391,7 @@ Foam::Reaction<ReactionThermo>::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<Reaction<ReactionThermo> >
+    return autoPtr<Reaction<ReactionThermo>>
     (
         cstrIter()(species, thermoDatabase, is)
     );
@@ -399,7 +399,7 @@ Foam::Reaction<ReactionThermo>::New
 
 
 template<class ReactionThermo>
-Foam::autoPtr<Foam::Reaction<ReactionThermo> >
+Foam::autoPtr<Foam::Reaction<ReactionThermo>>
 Foam::Reaction<ReactionThermo>::New
 (
     const speciesTable& species,
@@ -422,7 +422,7 @@ Foam::Reaction<ReactionThermo>::New
             << exit(FatalError);
     }
 
-    return autoPtr<Reaction<ReactionThermo> >
+    return autoPtr<Reaction<ReactionThermo>>
     (
         cstrIter()(species, thermoDatabase, dict)
     );
@@ -497,7 +497,7 @@ const Foam::List<typename Foam::Reaction<ReactionThermo>::specieCoeffs>&
 Foam::Reaction<ReactionThermo>::glhs() const
 {
     NotImplemented;
-    return NullObjectRef<List<specieCoeffs> >();
+    return NullObjectRef<List<specieCoeffs>>();
 }
 
 
@@ -506,7 +506,7 @@ const Foam::List<typename Foam::Reaction<ReactionThermo>::specieCoeffs>&
 Foam::Reaction<ReactionThermo>::grhs() const
 {
     NotImplemented;
-    return NullObjectRef<List<specieCoeffs> >();
+    return NullObjectRef<List<specieCoeffs>>();
 }
 
 

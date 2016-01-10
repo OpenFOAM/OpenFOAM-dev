@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ class cloudSolution
             Switch resetSourcesOnStartup_;
 
             //- List schemes, e.g. U semiImplicit 1
-            List<Tuple2<word, Tuple2<bool, scalar> > > schemes_;
+            List<Tuple2<word, Tuple2<bool, scalar>>> schemes_;
 
 
     // Private Member Functions

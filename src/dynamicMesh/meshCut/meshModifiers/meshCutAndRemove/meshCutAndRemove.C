@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -492,7 +492,7 @@ Foam::face Foam::meshCutAndRemove::addEdgeCutsToFace(const label faceI) const
         // Check if edge has been cut.
         label fp1 = f.fcIndex(fp);
 
-        HashTable<label, edge, Hash<edge> >::const_iterator fnd =
+        HashTable<label, edge, Hash<edge>>::const_iterator fnd =
             addedPoints_.find(edge(f[fp], f[fp1]));
 
         if (fnd != addedPoints_.end())
@@ -554,7 +554,7 @@ Foam::face Foam::meshCutAndRemove::loopToFace
                 if (edgeI != -1)
                 {
                     // Existing edge. Insert split-edge point if any.
-                    HashTable<label, edge, Hash<edge> >::const_iterator fnd =
+                    HashTable<label, edge, Hash<edge>>::const_iterator fnd =
                         addedPoints_.find(mesh().edges()[edgeI]);
 
                     if (fnd != addedPoints_.end())
@@ -1315,11 +1315,11 @@ void Foam::meshCutAndRemove::updateMesh(const mapPolyMesh& map)
     }
 
     {
-        HashTable<label, edge, Hash<edge> > newAddedPoints(addedPoints_.size());
+        HashTable<label, edge, Hash<edge>> newAddedPoints(addedPoints_.size());
 
         for
         (
-            HashTable<label, edge, Hash<edge> >::const_iterator iter =
+            HashTable<label, edge, Hash<edge>>::const_iterator iter =
                 addedPoints_.begin();
             iter != addedPoints_.end();
             ++iter

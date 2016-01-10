@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 template<class Type>
 void Foam::fieldValue::combineFields(Field<Type>& field)
 {
-    List<Field<Type> > allValues(Pstream::nProcs());
+    List<Field<Type>> allValues(Pstream::nProcs());
 
     allValues[Pstream::myProcNo()] = field;
 
@@ -41,17 +41,17 @@ void Foam::fieldValue::combineFields(Field<Type>& field)
     if (Pstream::master())
     {
         field =
-            ListListOps::combine<Field<Type> >
+            ListListOps::combine<Field<Type>>
             (
                 allValues,
-                accessOp<Field<Type> >()
+                accessOp<Field<Type>>()
             );
     }
 }
 
 
 template<class Type>
-void Foam::fieldValue::combineFields(tmp<Field<Type> >& field)
+void Foam::fieldValue::combineFields(tmp<Field<Type>>& field)
 {
     combineFields(field());
 }

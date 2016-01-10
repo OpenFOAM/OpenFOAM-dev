@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ public:
 
         //- Return the blended force
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > F() const;
+        tmp<GeometricField<Type, fvPatchField, volMesh>> F() const;
 
         //- Return the face blended force
         tmp<surfaceScalarField> Ff() const;

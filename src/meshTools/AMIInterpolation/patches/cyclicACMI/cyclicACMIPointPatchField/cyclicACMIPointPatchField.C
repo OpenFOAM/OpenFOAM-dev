@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,13 +129,13 @@ void Foam::cyclicACMIPointPatchField<Type>::swapAddSeparated
 
         // Get neighbouring pointPatchField
         const GeometricField<Type, pointPatchField, pointMesh>& fld =
-            refCast<const GeometricField<Type, pointPatchField, pointMesh> >
+            refCast<const GeometricField<Type, pointPatchField, pointMesh>>
             (
                 this->dimensionedInternalField()
             );
 
         const cyclicACMIPointPatchField<Type>& nbr =
-            refCast<const cyclicACMIPointPatchField<Type> >
+            refCast<const cyclicACMIPointPatchField<Type>>
             (
                 fld.boundaryField()[nbrPatch.index()]
             );

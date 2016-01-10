@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,10 +293,10 @@ void Foam::GAMGSolver::gatherMatrices
     const lduInterfaceFieldPtrsList& interfaces,
 
     PtrList<lduMatrix>& otherMats,
-    PtrList<FieldField<Field, scalar> >& otherBouCoeffs,
-    PtrList<FieldField<Field, scalar> >& otherIntCoeffs,
+    PtrList<FieldField<Field, scalar>>& otherBouCoeffs,
+    PtrList<FieldField<Field, scalar>>& otherIntCoeffs,
     List<boolList>& otherTransforms,
-    List<List<label> >& otherRanks
+    List<List<label>>& otherRanks
 ) const
 {
     if (debug)
@@ -448,10 +448,10 @@ void Foam::GAMGSolver::procAgglomerateMatrix
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     PtrList<lduMatrix> otherMats;
-    PtrList<FieldField<Field, scalar> > otherBouCoeffs;
-    PtrList<FieldField<Field, scalar> > otherIntCoeffs;
+    PtrList<FieldField<Field, scalar>> otherBouCoeffs;
+    PtrList<FieldField<Field, scalar>> otherIntCoeffs;
     List<boolList> otherTransforms;
-    List<List<label> > otherRanks;
+    List<List<label>> otherRanks;
     gatherMatrices
     (
         agglomProcIDs,
@@ -751,15 +751,15 @@ void Foam::GAMGSolver::procAgglomerateMatrix
 )
 {
     autoPtr<lduMatrix> allMatrixPtr;
-    autoPtr<FieldField<Field, scalar> > allInterfaceBouCoeffs
+    autoPtr<FieldField<Field, scalar>> allInterfaceBouCoeffs
     (
         new FieldField<Field, scalar>(0)
     );
-    autoPtr<FieldField<Field, scalar> > allInterfaceIntCoeffs
+    autoPtr<FieldField<Field, scalar>> allInterfaceIntCoeffs
     (
         new FieldField<Field, scalar>(0)
     );
-    autoPtr<PtrList<lduInterfaceField> > allPrimitiveInterfaces
+    autoPtr<PtrList<lduInterfaceField>> allPrimitiveInterfaces
     (
         new PtrList<lduInterfaceField>(0)
     );

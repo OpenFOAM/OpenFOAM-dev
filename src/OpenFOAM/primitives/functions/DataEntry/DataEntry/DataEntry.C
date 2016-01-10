@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,12 +86,12 @@ Type Foam::DataEntry<Type>::integrate(const scalar x1, const scalar x2) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::DataEntry<Type>::value
+Foam::tmp<Foam::Field<Type>> Foam::DataEntry<Type>::value
 (
     const scalarField& x
 ) const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(x.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(x.size()));
     Field<Type>& fld = tfld();
 
     forAll(x, i)
@@ -103,13 +103,13 @@ Foam::tmp<Foam::Field<Type> > Foam::DataEntry<Type>::value
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> > Foam::DataEntry<Type>::integrate
+Foam::tmp<Foam::Field<Type>> Foam::DataEntry<Type>::integrate
 (
     const scalarField& x1,
     const scalarField& x2
 ) const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(x1.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(x1.size()));
     Field<Type>& fld = tfld();
 
     forAll(x1, i)
@@ -144,23 +144,23 @@ Foam::dimensioned<Type> Foam::DataEntry<Type>::dimIntegrate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Foam::dimensioned<Type> > >
+Foam::tmp<Foam::Field<Foam::dimensioned<Type>>>
 Foam::DataEntry<Type>::dimValue
 (
     const scalarField& x
 ) const
 {
 
-    tmp<Field<dimensioned<Type> > > tfld
+    tmp<Field<dimensioned<Type>>> tfld
     (
-        new Field<dimensioned<Type> >
+        new Field<dimensioned<Type>>
         (
             x.size(),
             dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
         )
     );
 
-    Field<dimensioned<Type> >& fld = tfld();
+    Field<dimensioned<Type>>& fld = tfld();
 
     forAll(x, i)
     {
@@ -171,19 +171,19 @@ Foam::DataEntry<Type>::dimValue
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Foam::dimensioned<Type> > >
+Foam::tmp<Foam::Field<Foam::dimensioned<Type>>>
 Foam::DataEntry<Type>::dimIntegrate
 (
     const scalarField& x1,
     const scalarField& x2
 ) const
 {
-    tmp<Field<dimensioned<Type> > > tfld
+    tmp<Field<dimensioned<Type>>> tfld
     (
-        new Field<dimensioned<Type> >(x1.size())
+        new Field<dimensioned<Type>>(x1.size())
     );
 
-    Field<dimensioned<Type> >& fld = tfld();
+    Field<dimensioned<Type>>& fld = tfld();
 
     forAll(x1, i)
     {

@@ -83,7 +83,7 @@ public:
 
     //- Hashing function class.
     //  Use Hasher directly for contiguous data. Otherwise hash incrementally.
-    template<class HashT=Hash<T> >
+    template<class HashT=Hash<T>>
     class Hash
     {
     public:
@@ -127,7 +127,7 @@ public:
         FixedList(Istream&);
 
         //- Clone
-        inline autoPtr<FixedList<T, Size> > clone() const;
+        inline autoPtr<FixedList<T, Size>> clone() const;
 
 
     // Member Functions

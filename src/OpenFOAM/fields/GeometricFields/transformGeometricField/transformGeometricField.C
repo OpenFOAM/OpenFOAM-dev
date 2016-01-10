@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,13 +51,13 @@ void transform
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh> > transform
+tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 (
     const GeometricField<tensor, PatchField, GeoMesh>& trf,
     const GeometricField<Type, PatchField, GeoMesh>& tf
 )
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh> > tranf
+    tmp<GeometricField<Type, PatchField, GeoMesh>> tranf
     (
         new GeometricField<Type, PatchField, GeoMesh>
         (
@@ -81,13 +81,13 @@ tmp<GeometricField<Type, PatchField, GeoMesh> > transform
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh> > transform
+tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 (
     const GeometricField<tensor, PatchField, GeoMesh>& trf,
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& ttf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& ttf
 )
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh> > tranf =
+    tmp<GeometricField<Type, PatchField, GeoMesh>> tranf =
         transform(trf, ttf());
     ttf.clear();
     return tranf;
@@ -95,13 +95,13 @@ tmp<GeometricField<Type, PatchField, GeoMesh> > transform
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh> > transform
+tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 (
-    const tmp<GeometricField<tensor, PatchField, GeoMesh> >& ttrf,
+    const tmp<GeometricField<tensor, PatchField, GeoMesh>>& ttrf,
     const GeometricField<Type, PatchField, GeoMesh>& tf
 )
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh> > tranf =
+    tmp<GeometricField<Type, PatchField, GeoMesh>> tranf =
         transform(ttrf(), tf);
     ttrf.clear();
     return tranf;
@@ -109,13 +109,13 @@ tmp<GeometricField<Type, PatchField, GeoMesh> > transform
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh> > transform
+tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 (
-    const tmp<GeometricField<tensor, PatchField, GeoMesh> >& ttrf,
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& ttf
+    const tmp<GeometricField<tensor, PatchField, GeoMesh>>& ttrf,
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& ttf
 )
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh> > tranf =
+    tmp<GeometricField<Type, PatchField, GeoMesh>> tranf =
         transform(ttrf(), ttf());
     ttf.clear();
     ttrf.clear();
@@ -137,13 +137,13 @@ void transform
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh> > transform
+tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 (
     const dimensionedTensor& t,
     const GeometricField<Type, PatchField, GeoMesh>& tf
 )
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh> > tranf
+    tmp<GeometricField<Type, PatchField, GeoMesh>> tranf
     (
         new GeometricField<vector, PatchField, GeoMesh>
         (
@@ -167,13 +167,13 @@ tmp<GeometricField<Type, PatchField, GeoMesh> > transform
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh> > transform
+tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 (
     const dimensionedTensor& t,
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& ttf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& ttf
 )
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh> > tranf =
+    tmp<GeometricField<Type, PatchField, GeoMesh>> tranf =
         transform(t, ttf());
     ttf.clear();
     return tranf;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ Foam::procFacesGAMGProcAgglomeration::singleCellMesh
 ) const
 {
     // Count number of faces per processor
-    List<Map<label> > procFaces(UPstream::nProcs(mesh.comm()));
+    List<Map<label>> procFaces(UPstream::nProcs(mesh.comm()));
     Map<label>& myNeighbours = procFaces[UPstream::myProcNo(mesh.comm())];
 
     {

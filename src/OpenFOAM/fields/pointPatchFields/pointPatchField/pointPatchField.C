@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ void Foam::pointPatchField<Type>::write(Ostream& os) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::pointPatchField<Type>::patchInternalField() const
 {
     return patchInternalField(internalField());
@@ -133,7 +133,7 @@ Foam::pointPatchField<Type>::patchInternalField() const
 
 template<class Type>
 template<class Type1>
-Foam::tmp<Foam::Field<Type1> >
+Foam::tmp<Foam::Field<Type1>>
 Foam::pointPatchField<Type>::patchInternalField
 (
     const Field<Type1>& iF,
@@ -150,13 +150,13 @@ Foam::pointPatchField<Type>::patchInternalField
             << abort(FatalError);
     }
 
-    return tmp<Field<Type1> >(new Field<Type1>(iF, meshPoints));
+    return tmp<Field<Type1>>(new Field<Type1>(iF, meshPoints));
 }
 
 
 template<class Type>
 template<class Type1>
-Foam::tmp<Foam::Field<Type1> >
+Foam::tmp<Foam::Field<Type1>>
 Foam::pointPatchField<Type>::patchInternalField
 (
     const Field<Type1>& iF

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1316,7 +1316,7 @@ Foam::labelList Foam::polyTopoChange::selectFaces
 // label)
 void Foam::polyTopoChange::calcPatchPointMap
 (
-    const List<Map<label> >& oldPatchMeshPointMaps,
+    const List<Map<label>>& oldPatchMeshPointMaps,
     const polyBoundaryMesh& boundary,
     labelListList& patchPointMap
 ) const
@@ -1867,7 +1867,7 @@ void Foam::polyTopoChange::resetZones
 void Foam::polyTopoChange::calcFaceZonePointMap
 (
     const polyMesh& mesh,
-    const List<Map<label> >& oldFaceZoneMeshPointMaps,
+    const List<Map<label>>& oldFaceZoneMeshPointMaps,
     labelListList& faceZonePointMap
 ) const
 {
@@ -2051,10 +2051,10 @@ void Foam::polyTopoChange::compactAndReorder
     List<objectMap>& cellsFromEdges,
     List<objectMap>& cellsFromFaces,
     List<objectMap>& cellsFromCells,
-    List<Map<label> >& oldPatchMeshPointMaps,
+    List<Map<label>>& oldPatchMeshPointMaps,
     labelList& oldPatchNMeshPoints,
     labelList& oldPatchStarts,
-    List<Map<label> >& oldFaceZoneMeshPointMaps
+    List<Map<label>>& oldFaceZoneMeshPointMaps
 )
 {
     if (mesh.boundaryMesh().size() != nPatches_)
@@ -3059,10 +3059,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
     List<objectMap> cellsFromFaces;
     List<objectMap> cellsFromCells;
     // old mesh info
-    List<Map<label> > oldPatchMeshPointMaps;
+    List<Map<label>> oldPatchMeshPointMaps;
     labelList oldPatchNMeshPoints;
     labelList oldPatchStarts;
-    List<Map<label> > oldFaceZoneMeshPointMaps;
+    List<Map<label>> oldFaceZoneMeshPointMaps;
 
     // Compact, reorder patch faces and calculate mesh/patch maps.
     compactAndReorder
@@ -3328,10 +3328,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
     List<objectMap> cellsFromCells;
 
     // old mesh info
-    List<Map<label> > oldPatchMeshPointMaps;
+    List<Map<label>> oldPatchMeshPointMaps;
     labelList oldPatchNMeshPoints;
     labelList oldPatchStarts;
-    List<Map<label> > oldFaceZoneMeshPointMaps;
+    List<Map<label>> oldFaceZoneMeshPointMaps;
 
     // Compact, reorder patch faces and calculate mesh/patch maps.
     compactAndReorder

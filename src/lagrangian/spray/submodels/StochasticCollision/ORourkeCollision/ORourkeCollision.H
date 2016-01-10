@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,9 +108,9 @@ public:
         ORourkeCollision(const ORourkeCollision<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<StochasticCollisionModel<CloudType> > clone() const
+        virtual autoPtr<StochasticCollisionModel<CloudType>> clone() const
         {
-            return autoPtr<StochasticCollisionModel<CloudType> >
+            return autoPtr<StochasticCollisionModel<CloudType>>
             (
                 new ORourkeCollision<CloudType>(*this)
             );

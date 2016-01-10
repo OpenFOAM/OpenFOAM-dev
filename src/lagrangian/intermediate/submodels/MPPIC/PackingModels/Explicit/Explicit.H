@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ private:
         const AveragingMethod<vector>* uAverage_;
 
         //- Stress average field
-        autoPtr<AveragingMethod<scalar> > stressAverage_;
+        autoPtr<AveragingMethod<scalar>> stressAverage_;
 
         //- Correction limiter
         autoPtr<CorrectionLimitingMethod> correctionLimiting_;
@@ -98,9 +98,9 @@ public:
         Explicit(const Explicit<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<PackingModel<CloudType> > clone() const
+        virtual autoPtr<PackingModel<CloudType>> clone() const
         {
-            return autoPtr<PackingModel<CloudType> >
+            return autoPtr<PackingModel<CloudType>>
             (
                 new Explicit<CloudType>(*this)
             );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Description
     Requiring data:
 
     \verbatim
-    List<DynamicList<typename CloudType::parcelType*> > cellOccupancy_;
+    List<DynamicList<typename CloudType::parcelType*>> cellOccupancy_;
     \endverbatim
 
 SourceFiles
@@ -146,7 +146,7 @@ class InteractionLists
         List<vector> referredWallData_;
 
         //- Referred particle container
-        List<IDLList<ParticleType> > referredParticles_;
+        List<IDLList<ParticleType>> referredParticles_;
 
 
     // Private Member Functions
@@ -178,7 +178,7 @@ class InteractionLists
         //  will be referred
         void prepareParticlesToRefer
         (
-            const List<DynamicList<ParticleType*> >& cellOccupancy
+            const List<DynamicList<ParticleType*>>& cellOccupancy
         );
 
         //- Prepare particle to be referred
@@ -233,7 +233,7 @@ public:
         //  nonBlocking communication
         void sendReferredData
         (
-            const List<DynamicList<ParticleType*> >& cellOccupancy,
+            const List<DynamicList<ParticleType*>>& cellOccupancy,
             PstreamBuffers& pBufs
         );
 
@@ -293,11 +293,11 @@ public:
             inline const List<vector>& referredWallData() const;
 
             //- Return access to the referred particle container
-            inline const List<IDLList<ParticleType> >&
+            inline const List<IDLList<ParticleType>>&
             referredParticles() const;
 
             //- Return non-const access to the referred particle container
-            inline List<IDLList<ParticleType> >& referredParticles();
+            inline List<IDLList<ParticleType>>& referredParticles();
 };
 
 

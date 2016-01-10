@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -327,9 +327,9 @@ Foam::conformationSurfaces::conformationSurfaces
     regionOffset_.setSize(surfI, 0);
 
     PtrList<dictionary> globalPatchInfo(surfI);
-    List<Map<autoPtr<dictionary> > > regionPatchInfo(surfI);
+    List<Map<autoPtr<dictionary>>> regionPatchInfo(surfI);
     List<sideVolumeType> globalVolumeTypes(surfI);
-    List<Map<sideVolumeType> > regionVolumeTypes(surfI);
+    List<Map<sideVolumeType>> regionVolumeTypes(surfI);
 
     HashSet<word> unmatchedKeys(surfacesDict.toc());
 
@@ -514,8 +514,8 @@ Foam::conformationSurfaces::conformationSurfaces
                 regionVolumeTypes[surfI][iter.key()];
         }
 
-        const Map<autoPtr<dictionary> >& localInfo = regionPatchInfo[surfI];
-        forAllConstIter(Map<autoPtr<dictionary> >, localInfo, iter)
+        const Map<autoPtr<dictionary>>& localInfo = regionPatchInfo[surfI];
+        forAllConstIter(Map<autoPtr<dictionary>>, localInfo, iter)
         {
             label globalRegionI = regionOffset_[surfI] + iter.key();
 
@@ -659,7 +659,7 @@ Foam::Field<bool> Foam::conformationSurfaces::wellInOutSide
     const bool testForInside
 ) const
 {
-    List<List<volumeType> > surfaceVolumeTests
+    List<List<volumeType>> surfaceVolumeTests
     (
         surfaces_.size(),
         List<volumeType>
@@ -896,7 +896,7 @@ void Foam::conformationSurfaces::findSurfaceAllIntersections
 ) const
 {
     labelListList hitSurfaces;
-    List<List<pointIndexHit> > hitInfo;
+    List<List<pointIndexHit>> hitInfo;
 
     searchableSurfacesQueries::findAllIntersections
     (
@@ -1173,7 +1173,7 @@ void Foam::conformationSurfaces::findAllNearestEdges
 (
     const point& sample,
     const scalar searchRadiusSqr,
-    List<List<pointIndexHit> >& edgeHitsByFeature,
+    List<List<pointIndexHit>>& edgeHitsByFeature,
     List<label>& featuresHit
 ) const
 {

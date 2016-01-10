@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
         CFCCellToCellStencil stencil(mesh);
 
         // Construct exchange map and renumber stencil
-        List<Map<label> > compactMap(Pstream::nProcs());
+        List<Map<label>> compactMap(Pstream::nProcs());
         mapDistribute map
         (
             stencil.globalNumbering(),
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 
 
         // Collect the data in stencil form
-        List<List<vector> > stencilPoints;
+        List<List<vector>> stencilPoints;
         {
             const volVectorField& fld = mesh.C();
 

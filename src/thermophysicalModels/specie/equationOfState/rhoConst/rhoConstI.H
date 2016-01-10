@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,18 +54,18 @@ inline Foam::rhoConst<Specie>::rhoConst
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::rhoConst<Specie> >
+inline Foam::autoPtr<Foam::rhoConst<Specie>>
 Foam::rhoConst<Specie>::clone() const
 {
-    return autoPtr<rhoConst<Specie> >(new rhoConst<Specie>(*this));
+    return autoPtr<rhoConst<Specie>>(new rhoConst<Specie>(*this));
 }
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::rhoConst<Specie> >
+inline Foam::autoPtr<Foam::rhoConst<Specie>>
 Foam::rhoConst<Specie>::New(Istream& is)
 {
-    return autoPtr<rhoConst<Specie> >(new rhoConst<Specie>(is));
+    return autoPtr<rhoConst<Specie>>(new rhoConst<Specie>(is));
 }
 
 

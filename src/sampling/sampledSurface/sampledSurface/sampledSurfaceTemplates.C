@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Type Foam::sampledSurface::integrate(const Field<Type>& field) const
 
 
 template<class Type>
-Type Foam::sampledSurface::integrate(const tmp<Field<Type> >& field) const
+Type Foam::sampledSurface::integrate(const tmp<Field<Type>>& field) const
 {
     Type value = integrate(field());
     field.clear();
@@ -95,7 +95,7 @@ Type Foam::sampledSurface::average(const Field<Type>& field) const
 
 
 template<class Type>
-Type Foam::sampledSurface::average(const tmp<Field<Type> >& field) const
+Type Foam::sampledSurface::average(const tmp<Field<Type>>& field) const
 {
     Type value = average(field());
     field.clear();
@@ -130,7 +130,7 @@ template<class ReturnType, class Type>
 void Foam::sampledSurface::project
 (
     Field<ReturnType>& res,
-    const tmp<Field<Type> >& field
+    const tmp<Field<Type>>& field
 ) const
 {
     project(res, field());
@@ -139,20 +139,20 @@ void Foam::sampledSurface::project
 
 
 template<class ReturnType, class Type>
-Foam::tmp<Foam::Field<ReturnType> >
+Foam::tmp<Foam::Field<ReturnType>>
 Foam::sampledSurface::project
 (
-    const tmp<Field<Type> >& field
+    const tmp<Field<Type>>& field
 ) const
 {
-    tmp<Field<ReturnType> > tRes(new Field<ReturnType>(faces().size()));
+    tmp<Field<ReturnType>> tRes(new Field<ReturnType>(faces().size()));
     project(tRes(), field);
     return tRes;
 }
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::sampledSurface::pointAverage
 (
     const GeometricField<Type, pointPatchField, pointMesh>& pfld
@@ -160,7 +160,7 @@ Foam::sampledSurface::pointAverage
 {
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(pfld.mesh()());
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tcellAvg
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tcellAvg
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (

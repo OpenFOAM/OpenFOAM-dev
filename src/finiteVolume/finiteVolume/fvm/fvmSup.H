@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,23 +53,23 @@ namespace fvm
    // Explicit source
 
         template<class Type>
-        tmp<fvMatrix<Type> > Su
+        tmp<fvMatrix<Type>> Su
         (
             const DimensionedField<Type, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<fvMatrix<Type> > Su
+        tmp<fvMatrix<Type>> Su
         (
-            const tmp<DimensionedField<Type, volMesh> >&,
+            const tmp<DimensionedField<Type, volMesh>>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<fvMatrix<Type> > Su
+        tmp<fvMatrix<Type>> Su
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
@@ -84,21 +84,21 @@ namespace fvm
     // Implicit source
 
         template<class Type>
-        tmp<fvMatrix<Type> > Sp
+        tmp<fvMatrix<Type>> Sp
         (
             const DimensionedField<scalar, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<fvMatrix<Type> > Sp
+        tmp<fvMatrix<Type>> Sp
         (
-            const tmp<DimensionedField<scalar, volMesh> >&,
+            const tmp<DimensionedField<scalar, volMesh>>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<fvMatrix<Type> > Sp
+        tmp<fvMatrix<Type>> Sp
         (
             const tmp<volScalarField>&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -106,7 +106,7 @@ namespace fvm
 
 
         template<class Type>
-        tmp<fvMatrix<Type> > Sp
+        tmp<fvMatrix<Type>> Sp
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -124,21 +124,21 @@ namespace fvm
     // Implicit/Explicit source depending on sign of coefficient
 
         template<class Type>
-        tmp<fvMatrix<Type> > SuSp
+        tmp<fvMatrix<Type>> SuSp
         (
             const DimensionedField<scalar, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<fvMatrix<Type> > SuSp
+        tmp<fvMatrix<Type>> SuSp
         (
-            const tmp<DimensionedField<scalar, volMesh> >&,
+            const tmp<DimensionedField<scalar, volMesh>>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<fvMatrix<Type> > SuSp
+        tmp<fvMatrix<Type>> SuSp
         (
             const tmp<volScalarField>&,
             const GeometricField<Type, fvPatchField, volMesh>&

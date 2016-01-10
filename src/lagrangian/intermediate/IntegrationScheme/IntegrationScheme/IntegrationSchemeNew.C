@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::autoPtr<Foam::IntegrationScheme<Type> >
+Foam::autoPtr<Foam::IntegrationScheme<Type>>
 Foam::IntegrationScheme<Type>::New
 (
     const word& phiName,
@@ -54,7 +54,7 @@ Foam::IntegrationScheme<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<IntegrationScheme<Type> >(cstrIter()(phiName, dict));
+    return autoPtr<IntegrationScheme<Type>>(cstrIter()(phiName, dict));
 }
 
 // ************************************************************************* //

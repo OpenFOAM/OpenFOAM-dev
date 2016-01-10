@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,18 +31,18 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::sampledCuttingPlane::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(vField, surface().meshCells()));
+    return tmp<Field<Type>>(new Field<Type>(vField, surface().meshCells()));
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::sampledCuttingPlane::interpolateField
 (
     const interpolation<Type>& interpolator
@@ -54,13 +54,13 @@ Foam::sampledCuttingPlane::interpolateField
 
     if (subMeshPtr_.valid())
     {
-        tmp<GeometricField<Type, fvPatchField, volMesh> > tvolSubFld =
+        tmp<GeometricField<Type, fvPatchField, volMesh>> tvolSubFld =
             subMeshPtr_().interpolate(volFld);
 
         const GeometricField<Type, fvPatchField, volMesh>& volSubFld =
             tvolSubFld();
 
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > tpointSubFld =
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> tpointSubFld =
             volPointInterpolation::New(volSubFld.mesh()).interpolate(volSubFld);
 
         // Sample.
@@ -76,7 +76,7 @@ Foam::sampledCuttingPlane::interpolateField
     }
     else
     {
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > tpointFld
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> tpointFld
         (
             volPointInterpolation::New(volFld.mesh()).interpolate(volFld)
         );

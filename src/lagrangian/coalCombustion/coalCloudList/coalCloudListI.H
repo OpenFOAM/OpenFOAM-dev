@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,10 +27,10 @@ License
 #include "volFields.H"
 #include "DimensionedField.H"
 
-Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::coalCloudList::UTrans() const
 {
-    tmp<DimensionedField<vector, volMesh> > tfld
+    tmp<DimensionedField<vector, volMesh>> tfld
     (
         new DimensionedField<vector, volMesh>
         (
@@ -75,10 +75,10 @@ Foam::tmp<Foam::fvVectorMatrix> Foam::coalCloudList::SU
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::coalCloudList::hsTrans() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tfld
+    tmp<DimensionedField<scalar, volMesh>> tfld
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -141,10 +141,10 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::coalCloudList::SYi
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::coalCloudList::rhoTrans() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tfld
+    tmp<DimensionedField<scalar, volMesh>> tfld
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -177,10 +177,10 @@ Foam::coalCloudList::rhoTrans() const
 
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::coalCloudList::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tfld
+    tmp<DimensionedField<scalar, volMesh>> tfld
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -208,13 +208,13 @@ Foam::coalCloudList::Srho() const
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh> >
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::coalCloudList::Srho
 (
     const label i
 ) const
 {
-    tmp<DimensionedField<scalar, volMesh> > tfld
+    tmp<DimensionedField<scalar, volMesh>> tfld
     (
         new DimensionedField<scalar, volMesh>
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -353,7 +353,7 @@ Foam::BlendedInterfacialModel<ModelType>::Kf() const
 
 template<class ModelType>
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::BlendedInterfacialModel<ModelType>::F() const
 {
     tmp<volScalarField> f1, f2;
@@ -368,7 +368,7 @@ Foam::BlendedInterfacialModel<ModelType>::F() const
         f2 = blending_.f2(phase1_, phase2_);
     }
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > x
+    tmp<GeometricField<Type, fvPatchField, volMesh>> x
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (

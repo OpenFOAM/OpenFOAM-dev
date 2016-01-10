@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ class fvDOM
         scalar maxIter_;
 
         //- List of cached fvMatrices for rays
-        List<PtrList<fvScalarMatrix> >fvRayDiv_;
+        List<PtrList<fvScalarMatrix>>fvRayDiv_;
 
         //- Cache convection div matrix
         bool cacheDiv_;
@@ -200,7 +200,7 @@ public:
             virtual tmp<volScalarField> Rp() const;
 
             //- Source term component (constant)
-            virtual tmp<DimensionedField<scalar, volMesh> > Ru() const;
+            virtual tmp<DimensionedField<scalar, volMesh>> Ru() const;
 
 
         // Access

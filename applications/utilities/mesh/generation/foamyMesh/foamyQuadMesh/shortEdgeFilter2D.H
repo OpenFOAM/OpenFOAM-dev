@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,13 +78,13 @@ class shortEdgeFilter2D
 
         void assignBoundaryPointRegions
         (
-            List<DynamicList<label> >& boundaryPointRegions
+            List<DynamicList<label>>& boundaryPointRegions
         ) const;
 
         void updateEdgeRegionMap
         (
             const MeshedSurface<face>& surfMesh,
-            const List<DynamicList<label> >& boundaryPtRegions,
+            const List<DynamicList<label>>& boundaryPtRegions,
             const labelList& surfPtToBoundaryPt,
             EdgeMap<label>& mapEdgesRegion,
             labelList& patchSizes

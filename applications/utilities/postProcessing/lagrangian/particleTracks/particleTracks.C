@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     label nTracks = nParticle/sampleFrequency;
 
     // storage for all particle tracks
-    List<DynamicList<vector> > allTracks(nTracks);
+    List<DynamicList<vector>> allTracks(nTracks);
 
     Info<< "\nGenerating " << nTracks << " particle tracks for cloud "
         << cloudName << nl << endl;
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
             tracks[trackI].transfer(allTracks[trackI]);
         }
 
-        autoPtr<writer<scalar> > scalarFormatterPtr = writer<scalar>::New
+        autoPtr<writer<scalar>> scalarFormatterPtr = writer<scalar>::New
         (
             setFormat
         );
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
             true,           // writeTracks
             tracks,
             wordList(0),
-            List<List<scalarField> >(0),
+            List<List<scalarField>>(0),
             vtkTracks
         );
     }

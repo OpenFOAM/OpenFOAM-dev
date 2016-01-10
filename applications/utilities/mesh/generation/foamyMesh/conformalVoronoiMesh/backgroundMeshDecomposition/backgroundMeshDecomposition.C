@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1219,7 +1219,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorNearestPosition
 
 
 
-Foam::List<Foam::List<Foam::pointIndexHit> >
+Foam::List<Foam::List<Foam::pointIndexHit>>
 Foam::backgroundMeshDecomposition::intersectsProcessors
 (
     const List<point>& starts,
@@ -1295,7 +1295,7 @@ Foam::backgroundMeshDecomposition::intersectsProcessors
         segmentIntersectsCandidate
     );
 
-    List<List<pointIndexHit> > segmentHitProcs(starts.size());
+    List<List<pointIndexHit>> segmentHitProcs(starts.size());
 
     // Working storage for assessing processors
     DynamicList<pointIndexHit> tmpProcHits;

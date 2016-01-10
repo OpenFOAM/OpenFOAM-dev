@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ class uniformTotalPressureFvPatchScalarField
         scalar gamma_;
 
         //- Table of time vs total pressure, including the bounding treatment
-        autoPtr<DataEntry<scalar> > pressure_;
+        autoPtr<DataEntry<scalar>> pressure_;
 
 
 public:

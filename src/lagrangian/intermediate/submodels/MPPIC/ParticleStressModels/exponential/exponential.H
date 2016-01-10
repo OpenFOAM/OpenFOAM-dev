@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ public:
     //- Member Functions
 
         //- Collision stress
-        tmp<Field<scalar> > tau
+        tmp<Field<scalar>> tau
         (
             const Field<scalar>& alpha,
             const Field<scalar>& rho,
@@ -104,7 +104,7 @@ public:
         ) const;
 
         //- Collision stress derivaive w.r.t. the volume fraction
-        tmp<Field<scalar> > dTaudTheta
+        tmp<Field<scalar>> dTaudTheta
         (
             const Field<scalar>& alpha,
             const Field<scalar>& rho,

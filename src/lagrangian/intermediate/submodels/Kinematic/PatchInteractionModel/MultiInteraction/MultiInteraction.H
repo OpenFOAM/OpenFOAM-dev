@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ class MultiInteraction
         Switch oneInteractionOnly_;
 
         //- Submodels
-        PtrList<PatchInteractionModel<CloudType> > models_;
+        PtrList<PatchInteractionModel<CloudType>> models_;
 
 
     // Private Member Functions
@@ -117,9 +117,9 @@ public:
         MultiInteraction(const MultiInteraction<CloudType>& pim);
 
         //- Construct and return a clone using supplied owner cloud
-        virtual autoPtr<PatchInteractionModel<CloudType> > clone() const
+        virtual autoPtr<PatchInteractionModel<CloudType>> clone() const
         {
-            return autoPtr<PatchInteractionModel<CloudType> >
+            return autoPtr<PatchInteractionModel<CloudType>>
             (
                 new MultiInteraction<CloudType>(*this)
             );

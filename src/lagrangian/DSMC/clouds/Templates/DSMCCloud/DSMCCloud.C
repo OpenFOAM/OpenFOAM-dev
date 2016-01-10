@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,7 +221,7 @@ void Foam::DSMCCloud<ParcelType>::collisions()
     }
 
     // Temporary storage for subCells
-    List<DynamicList<label> > subCells(8);
+    List<DynamicList<label>> subCells(8);
 
     scalar deltaT = mesh().time().deltaTValue();
 
@@ -681,7 +681,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
     ),
     binaryCollisionModel_
     (
-        BinaryCollisionModel<DSMCCloud<ParcelType> >::New
+        BinaryCollisionModel<DSMCCloud<ParcelType>>::New
         (
             particleProperties_,
             *this
@@ -689,7 +689,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
     ),
     wallInteractionModel_
     (
-        WallInteractionModel<DSMCCloud<ParcelType> >::New
+        WallInteractionModel<DSMCCloud<ParcelType>>::New
         (
             particleProperties_,
             *this
@@ -697,7 +697,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
     ),
     inflowBoundaryModel_
     (
-        InflowBoundaryModel<DSMCCloud<ParcelType> >::New
+        InflowBoundaryModel<DSMCCloud<ParcelType>>::New
         (
             particleProperties_,
             *this

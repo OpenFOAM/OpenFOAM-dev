@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-Foam::tmp<Foam::fvPatchField<Type> >
+Foam::tmp<Foam::fvPatchField<Type>>
 Foam::fvPatchField<Type>::NewCalculatedType
 (
     const fvPatch& p
@@ -115,7 +115,7 @@ Foam::fvPatchField<Type>::NewCalculatedType
     }
     else
     {
-        return tmp<fvPatchField<Type> >
+        return tmp<fvPatchField<Type>>
         (
             new calculatedFvPatchField<Type>
             (
@@ -129,7 +129,7 @@ Foam::fvPatchField<Type>::NewCalculatedType
 
 template<class Type>
 template<class Type2>
-Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::NewCalculatedType
+Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::NewCalculatedType
 (
     const fvPatchField<Type2>& pf
 )
@@ -141,7 +141,7 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::NewCalculatedType
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::calculatedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
@@ -161,7 +161,7 @@ Foam::calculatedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::calculatedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
@@ -181,7 +181,7 @@ Foam::calculatedFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     FatalErrorInFunction
@@ -198,7 +198,7 @@ Foam::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     FatalErrorInFunction

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -721,17 +721,17 @@ void Foam::externalCoupledMixedFvPatchField<Type>::transferData
     {
         int tag = Pstream::msgType() + 1;
 
-        List<Field<scalar> > magSfs(Pstream::nProcs());
+        List<Field<scalar>> magSfs(Pstream::nProcs());
         magSfs[Pstream::myProcNo()].setSize(this->patch().size());
         magSfs[Pstream::myProcNo()] = this->patch().magSf();
         Pstream::gatherList(magSfs, tag);
 
-        List<Field<Type> > values(Pstream::nProcs());
+        List<Field<Type>> values(Pstream::nProcs());
         values[Pstream::myProcNo()].setSize(this->patch().size());
         values[Pstream::myProcNo()] = this->refValue();
         Pstream::gatherList(values, tag);
 
-        List<Field<Type> > snGrads(Pstream::nProcs());
+        List<Field<Type>> snGrads(Pstream::nProcs());
         snGrads[Pstream::myProcNo()].setSize(this->patch().size());
         snGrads[Pstream::myProcNo()] = this->snGrad();
         Pstream::gatherList(snGrads, tag);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,7 +162,7 @@ void Foam::oscillatingFixedValueFvPatchField<Type>::rmap
     fixedValueFvPatchField<Type>::rmap(ptf, addr);
 
     const oscillatingFixedValueFvPatchField<Type>& tiptf =
-        refCast<const oscillatingFixedValueFvPatchField<Type> >(ptf);
+        refCast<const oscillatingFixedValueFvPatchField<Type>>(ptf);
 
     refValue_.rmap(tiptf.refValue_, addr);
 }

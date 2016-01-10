@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::autoPtr<Foam::CloudFunctionObject<CloudType> >
+Foam::autoPtr<Foam::CloudFunctionObject<CloudType>>
 Foam::CloudFunctionObject<CloudType>::New
 (
     const dictionary& dict,
@@ -53,7 +53,7 @@ Foam::CloudFunctionObject<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<CloudFunctionObject<CloudType> >
+    return autoPtr<CloudFunctionObject<CloudType>>
     (
         cstrIter()
         (

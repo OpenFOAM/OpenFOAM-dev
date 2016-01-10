@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ namespace Foam
 template<class GeoField>
 tmp<GeoField> uniformInterpolate
 (
-    const HashPtrTable<GeoField, label, Hash<label> >& fields,
+    const HashPtrTable<GeoField, label, Hash<label>>& fields,
     const labelList& indices,
     const scalarField& weights
 );

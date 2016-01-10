@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,7 +145,7 @@ public:
         const GeometricField<Type, fvPatchField, volMesh>& sampleField() const;
 
         //- Map sampleField onto *this patch
-        virtual tmp<Field<Type> > mappedField() const;
+        virtual tmp<Field<Type>> mappedField() const;
 
         //- Write
         virtual void write(Ostream&) const;

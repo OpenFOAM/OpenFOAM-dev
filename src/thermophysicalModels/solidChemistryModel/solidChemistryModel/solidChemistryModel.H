@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ protected:
         PtrList<volScalarField>& Ys_;
 
         //- Reactions
-        const PtrList<Reaction<SolidThermo> >& reactions_;
+        const PtrList<Reaction<SolidThermo>>& reactions_;
 
         //- Thermodynamic data of solids
         const PtrList<SolidThermo>& solidThermo_;
@@ -90,7 +90,7 @@ protected:
         label nReaction_;
 
         //- List of reaction rate per solid [kg/m3/s]
-        PtrList<DimensionedField<scalar, volMesh> > RRs_;
+        PtrList<DimensionedField<scalar, volMesh>> RRs_;
 
         //- List of active reacting cells
         List<bool> reactingCells_;
@@ -99,7 +99,7 @@ protected:
     // Protected Member Functions
 
         //- Write access to source terms for solids
-        inline PtrList<DimensionedField<scalar, volMesh> >& RRs();
+        inline PtrList<DimensionedField<scalar, volMesh>>& RRs();
 
         //- Set reacting status of cell, cellI
         void setCellReacting(const label cellI, const bool active);
@@ -124,7 +124,7 @@ public:
     // Member Functions
 
         //- The reactions
-        inline const PtrList<Reaction<SolidThermo> >& reactions() const;
+        inline const PtrList<Reaction<SolidThermo>>& reactions() const;
 
         //- The number of reactions
         inline label nReaction() const;
@@ -185,7 +185,7 @@ public:
             ) const;
 
             //- Return total solid source term
-            inline tmp<DimensionedField<scalar, volMesh> > RRs() const;
+            inline tmp<DimensionedField<scalar, volMesh>> RRs() const;
 
             //- Solve the reaction system for the given time step
             //  and return the characteristic time

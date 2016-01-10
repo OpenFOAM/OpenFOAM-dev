@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ public:
     // Selectors
 
         //- Return a pointer to a new d2dt2Scheme created on freestore
-        static tmp<d2dt2Scheme<Type> > New
+        static tmp<d2dt2Scheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
@@ -138,29 +138,29 @@ public:
             return mesh_;
         }
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type>> fvmD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type>> fvmD2dt2
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type>> fvmD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -187,7 +187,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            d2dt2Scheme<Type>::addIstreamConstructorToTable<SS<Type> >         \
+            d2dt2Scheme<Type>::addIstreamConstructorToTable<SS<Type>>         \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }

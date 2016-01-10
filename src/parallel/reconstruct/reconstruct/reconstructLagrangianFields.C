@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::IOField<Type> > Foam::reconstructLagrangianField
+Foam::tmp<Foam::IOField<Type>> Foam::reconstructLagrangianField
 (
     const word& cloudName,
     const polyMesh& mesh,
@@ -39,7 +39,7 @@ Foam::tmp<Foam::IOField<Type> > Foam::reconstructLagrangianField
 )
 {
     // Construct empty field on mesh
-    tmp<IOField<Type> > tfield
+    tmp<IOField<Type>> tfield
     (
         new IOField<Type>
         (
@@ -89,7 +89,7 @@ Foam::tmp<Foam::IOField<Type> > Foam::reconstructLagrangianField
 
 
 template<class Type>
-Foam::tmp<Foam::CompactIOField<Foam::Field<Type>, Type> >
+Foam::tmp<Foam::CompactIOField<Foam::Field<Type>, Type>>
 Foam::reconstructLagrangianFieldField
 (
     const word& cloudName,
@@ -99,7 +99,7 @@ Foam::reconstructLagrangianFieldField
 )
 {
     // Construct empty field on mesh
-    tmp<CompactIOField<Field<Type>, Type > > tfield
+    tmp<CompactIOField<Field<Type>, Type >> tfield
     (
         new CompactIOField<Field<Type>, Type>
         (
@@ -112,10 +112,10 @@ Foam::reconstructLagrangianFieldField
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            Field<Field<Type> >(0)
+            Field<Field<Type>>(0)
         )
     );
-    Field<Field<Type> >& field = tfield();
+    Field<Field<Type>>& field = tfield();
 
     forAll(meshes, i)
     {
@@ -236,7 +236,7 @@ void Foam::reconstructLagrangianFieldFields
     }
 
     {
-        const word fieldClassName(IOField<Field<Type> >::typeName);
+        const word fieldClassName(IOField<Field<Type>>::typeName);
 
         IOobjectList fields = objects.lookupClass(fieldClassName);
 

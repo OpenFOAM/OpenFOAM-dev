@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ void Foam::symmetryPlanePointPatchField<Type>::evaluate
 {
     vector nHat = symmetryPlanePatch_.n();
 
-    tmp<Field<Type> > tvalues =
+    tmp<Field<Type>> tvalues =
     (
         (
             this->patchInternalField()

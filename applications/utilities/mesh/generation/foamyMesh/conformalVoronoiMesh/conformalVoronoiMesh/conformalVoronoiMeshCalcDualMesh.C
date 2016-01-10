@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,9 +160,9 @@ void Foam::conformalVoronoiMesh::calcTetMesh
 
     label nPatches = patchNames.size();
 
-    List<DynamicList<face> > patchFaces(nPatches, DynamicList<face>(0));
+    List<DynamicList<face>> patchFaces(nPatches, DynamicList<face>(0));
 
-    List<DynamicList<label> > patchOwners(nPatches, DynamicList<label>(0));
+    List<DynamicList<label>> patchOwners(nPatches, DynamicList<label>(0));
 
     faces.setSize(number_of_finite_facets());
 
@@ -278,7 +278,7 @@ void Foam::conformalVoronoiMesh::calcTetMesh
     sortFaces(faces, owner, neighbour);
 
 //    PackedBoolList boundaryFacesToRemove;
-//    List<DynamicList<bool> > indirectPatchFace;
+//    List<DynamicList<bool>> indirectPatchFace;
 //
 //    addPatches
 //    (
@@ -673,7 +673,7 @@ void Foam::conformalVoronoiMesh::deferredCollapseFaceSet
 (
     labelList& owner,
     labelList& neighbour,
-    const HashSet<labelPair, labelPair::Hash<> >& deferredCollapseFaces
+    const HashSet<labelPair, labelPair::Hash<>>& deferredCollapseFaces
 ) const
 {
     DynamicList<label> faceLabels;
@@ -1750,12 +1750,12 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
         }
     }
 
-    List<DynamicList<face> > patchFaces(nPatches, DynamicList<face>(0));
-    List<DynamicList<label> > patchOwners(nPatches, DynamicList<label>(0));
+    List<DynamicList<face>> patchFaces(nPatches, DynamicList<face>(0));
+    List<DynamicList<label>> patchOwners(nPatches, DynamicList<label>(0));
     // Per patch face the index of the slave node of the point pair
-    List<DynamicList<label> > patchPPSlaves(nPatches, DynamicList<label>(0));
+    List<DynamicList<label>> patchPPSlaves(nPatches, DynamicList<label>(0));
 
-    List<DynamicList<bool> > indirectPatchFace(nPatches, DynamicList<bool>(0));
+    List<DynamicList<bool>> indirectPatchFace(nPatches, DynamicList<bool>(0));
 
 
     faces.setSize(number_of_finite_edges());
@@ -2134,7 +2134,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
                             // Use this processor's vertex index as the master
                             // for sorting
 
-                            DynamicList<Pair<labelPair> >& sortingIndex =
+                            DynamicList<Pair<labelPair>>& sortingIndex =
                                 procPatchSortingIndex[patchIndex];
 
                             if (vB->internalOrBoundaryPoint() && vB->referred())
@@ -2165,7 +2165,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
                             // Use the other processor's vertex index as the
                             // master for sorting
 
-                            DynamicList<Pair<labelPair> >& sortingIndex =
+                            DynamicList<Pair<labelPair>>& sortingIndex =
                                 procPatchSortingIndex[patchIndex];
 
                             if (vA->internalOrBoundaryPoint() && vA->referred())
@@ -2450,9 +2450,9 @@ void Foam::conformalVoronoiMesh::sortFaces
 
 void Foam::conformalVoronoiMesh::sortProcPatches
 (
-    List<DynamicList<face> >& patchFaces,
-    List<DynamicList<label> >& patchOwners,
-    List<DynamicList<label> >& patchPointPairSlaves,
+    List<DynamicList<face>>& patchFaces,
+    List<DynamicList<label>>& patchOwners,
+    List<DynamicList<label>>& patchPointPairSlaves,
     labelPairPairDynListList& patchSortingIndices
 ) const
 {
@@ -2466,7 +2466,7 @@ void Foam::conformalVoronoiMesh::sortProcPatches
         faceList& faces = patchFaces[patchI];
         labelList& owner = patchOwners[patchI];
         DynamicList<label>& slaves = patchPointPairSlaves[patchI];
-        DynamicList<Pair<labelPair> >& sortingIndices
+        DynamicList<Pair<labelPair>>& sortingIndices
             = patchSortingIndices[patchI];
 
         if (!sortingIndices.empty())
@@ -2511,9 +2511,9 @@ void Foam::conformalVoronoiMesh::addPatches
     labelList& owner,
     PtrList<dictionary>& patchDicts,
     PackedBoolList& boundaryFacesToRemove,
-    const List<DynamicList<face> >& patchFaces,
-    const List<DynamicList<label> >& patchOwners,
-    const List<DynamicList<bool> >& indirectPatchFace
+    const List<DynamicList<face>>& patchFaces,
+    const List<DynamicList<label>>& patchOwners,
+    const List<DynamicList<bool>>& indirectPatchFace
 ) const
 {
     label nBoundaryFaces = 0;

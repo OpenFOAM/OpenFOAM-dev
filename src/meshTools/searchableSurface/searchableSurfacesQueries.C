@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -263,7 +263,7 @@ bool Foam::searchableSurfacesQueries::morphTet
 //    const pointField& start,
 //    const pointField& end,
 //    const vectorField& smallVec,
-//    List<List<pointIndexHit> >& surfaceHitInfo
+//    List<List<pointIndexHit>>& surfaceHitInfo
 //)
 //{
 //    surfaceHitInfo.setSize(start.size());
@@ -460,7 +460,7 @@ void Foam::searchableSurfacesQueries::findAllIntersections
     const pointField& start,
     const pointField& end,
     labelListList& hitSurfaces,
-    List<List<pointIndexHit> >& hitInfo
+    List<List<pointIndexHit>>& hitInfo
 )
 {
     // Note: maybe move the single-surface all intersections test into
@@ -505,7 +505,7 @@ void Foam::searchableSurfacesQueries::findAllIntersections
         // Test the other surfaces and merge (according to distance from start).
         for (label testI = 1; testI < surfacesToTest.size(); testI++)
         {
-            List<List<pointIndexHit> > surfHits;
+            List<List<pointIndexHit>> surfHits;
             allSurfaces[surfacesToTest[testI]].findLineAll
             (
                 start,

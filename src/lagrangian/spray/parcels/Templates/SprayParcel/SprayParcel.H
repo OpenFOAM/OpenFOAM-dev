@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,9 +270,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<SprayParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<SprayParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<SprayParcel<ParcelType> >
+                return autoPtr<SprayParcel<ParcelType>>
                 (
                     new SprayParcel<ParcelType>(mesh_, is, true)
                 );

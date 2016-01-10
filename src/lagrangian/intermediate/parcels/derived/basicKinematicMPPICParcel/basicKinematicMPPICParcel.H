@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ SourceFiles
 
 namespace Foam
 {
-    typedef MPPICParcel<KinematicParcel<particle> > basicKinematicMPPICParcel;
+    typedef MPPICParcel<KinematicParcel<particle>> basicKinematicMPPICParcel;
 
     template<>
     inline bool contiguous<basicKinematicMPPICParcel>()

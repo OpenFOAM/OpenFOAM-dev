@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,7 +158,7 @@ private:
         List<labelPair> interfaces_;
 
         //- List of cells/faces id pairs for each baffle
-        List<List<cellFaceIdentifier> > baffleIds_;
+        List<List<cellFaceIdentifier>> baffleIds_;
 
         //- Global face list for polyMesh
         faceList meshFaces_;
@@ -261,7 +261,7 @@ protected:
 
         //- Identify boundary faces by cells and their faces
         //  for each patch
-        List<List<cellFaceIdentifier> > boundaryIds_;
+        List<List<cellFaceIdentifier>> boundaryIds_;
 
         //- Boundary patch types
         wordList patchTypes_;

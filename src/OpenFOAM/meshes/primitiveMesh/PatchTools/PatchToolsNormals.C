@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::PatchTools::pointNormals
 
     {
         // Collect local pointFaces (sized on patch points only)
-        List<List<point> > pointFaceNormals(map.constructSize());
+        List<List<point>> pointFaceNormals(map.constructSize());
         forAll(p.meshPoints(), patchPointI)
         {
             label meshPointI = p.meshPoints()[patchPointI];

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,9 +111,9 @@ public:
         CloudFunctionObject(const CloudFunctionObject<CloudType>& ppm);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new CloudFunctionObject<CloudType>(*this)
             );
@@ -125,7 +125,7 @@ public:
 
 
     //- Selector
-    static autoPtr<CloudFunctionObject<CloudType> > New
+    static autoPtr<CloudFunctionObject<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner,
@@ -213,7 +213,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);      \
                                                                                \
     Foam::CloudFunctionObject<kinematicCloudType>::                            \
-        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType> >         \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>         \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

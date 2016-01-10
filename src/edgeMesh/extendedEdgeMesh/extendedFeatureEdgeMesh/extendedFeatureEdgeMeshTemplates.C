@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ void Foam::extendedFeatureEdgeMesh::sortPointsAndEdges
     }
 
     // Reorder the edges by classification
-    List<DynamicList<label> > allEds(nEdgeTypes);
+    List<DynamicList<label>> allEds(nEdgeTypes);
 
     DynamicList<label>& externalEds(allEds[0]);
     DynamicList<label>& internalEds(allEds[1]);
@@ -295,7 +295,7 @@ void Foam::extendedFeatureEdgeMesh::sortPointsAndEdges
 
     // Reorder the feature points by classification
 
-    List<DynamicList<label> > allPts(3);
+    List<DynamicList<label>> allPts(3);
 
     DynamicList<label>& convexPts(allPts[0]);
     DynamicList<label>& concavePts(allPts[1]);

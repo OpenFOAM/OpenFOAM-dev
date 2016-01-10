@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ void Foam::phaseSystem::generatePairsAndSubModels
     const word& modelName,
     HashTable
     <
-        autoPtr<BlendedInterfacialModel<modelType> >,
+        autoPtr<BlendedInterfacialModel<modelType>>,
         phasePairKey,
         phasePairKey::hash
     >& models
@@ -118,7 +118,7 @@ void Foam::phaseSystem::generatePairsAndSubModels
         models.insert
         (
             key,
-            autoPtr<BlendedInterfacialModel<modelType> >
+            autoPtr<BlendedInterfacialModel<modelType>>
             (
                 new BlendedInterfacialModel<modelType>
                 (
@@ -141,7 +141,7 @@ void Foam::phaseSystem::generatePairsAndSubModels
     const word& modelName,
     HashTable
     <
-        HashTable<autoPtr<modelType> >,
+        HashTable<autoPtr<modelType>>,
         phasePairKey,
         phasePairKey::hash
     >& models
@@ -169,7 +169,7 @@ void Foam::phaseSystem::generatePairsAndSubModels
                 models.insert
                 (
                     key,
-                    HashTable<autoPtr<modelType> >()
+                    HashTable<autoPtr<modelType>>()
                 );
             }
 

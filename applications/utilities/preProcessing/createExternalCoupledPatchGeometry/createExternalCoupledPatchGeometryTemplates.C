@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,13 @@ void processField
 
         forAll(bf, patchI)
         {
-            if (isA<externalCoupledMixedFvPatchField<Type> >(bf[patchI]))
+            if (isA<externalCoupledMixedFvPatchField<Type>>(bf[patchI]))
             {
                 Info<< "Generating external coupled geometry for field "
                     << fieldName << endl;
 
                 const externalCoupledMixedFvPatchField<Type>& pf =
-                    refCast<const externalCoupledMixedFvPatchField<Type> >
+                    refCast<const externalCoupledMixedFvPatchField<Type>>
                     (
                         bf[patchI]
                     );

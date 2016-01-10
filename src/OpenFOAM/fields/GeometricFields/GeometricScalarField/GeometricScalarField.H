@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,16 +57,16 @@ void stabilise
 );
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
+tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
 (
     const GeometricField<scalar, PatchField, GeoMesh>&,
     const dimensioned<scalar>&
 );
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
+tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
 (
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >&,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&,
     const dimensioned<scalar>&
 );
 
@@ -140,17 +140,17 @@ void func                                                                      \
 );                                                                             \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh> > func                         \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                         \
 (                                                                              \
     const int n,                                                               \
     const GeometricField<scalar, PatchField, GeoMesh>&                         \
 );                                                                             \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh> > func                         \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                         \
 (                                                                              \
     const int n,                                                               \
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >&                   \
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&                   \
 );
 
 BesselFunc(jn)

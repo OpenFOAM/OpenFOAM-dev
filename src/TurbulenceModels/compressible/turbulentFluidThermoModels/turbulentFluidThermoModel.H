@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,11 +56,11 @@ namespace Foam
 {
     namespace compressible
     {
-        typedef ThermalDiffusivity<CompressibleTurbulenceModel<fluidThermo> >
+        typedef ThermalDiffusivity<CompressibleTurbulenceModel<fluidThermo>>
             turbulenceModel;
 
-        typedef RASModel<EddyDiffusivity<turbulenceModel> > RASModel;
-        typedef LESModel<EddyDiffusivity<turbulenceModel> > LESModel;
+        typedef RASModel<EddyDiffusivity<turbulenceModel>> RASModel;
+        typedef LESModel<EddyDiffusivity<turbulenceModel>> LESModel;
 
         template<class BasicCompressibleTurbulenceModel>
         autoPtr<BasicCompressibleTurbulenceModel> New

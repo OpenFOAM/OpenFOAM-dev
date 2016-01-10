@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ void setBlockFaceCorrespondence
     const cellList& topoCells,
     const faceList::subList& topoInternalFaces,
     const labelList& topoFaceCell,
-    List<Pair<label> >& mergeBlock
+    List<Pair<label>>& mergeBlock
 )
 {
     forAll(topoInternalFaces, topoFacei)
@@ -338,7 +338,7 @@ void Foam::blockMesh::calcMergeInfoFast()
         topology().nInternalFaces()
     );
 
-    List<Pair<label> > mergeBlockP(topoInternalFaces.size());
+    List<Pair<label>> mergeBlockP(topoInternalFaces.size());
     setBlockFaceCorrespondence
     (
         topoCells,
@@ -347,7 +347,7 @@ void Foam::blockMesh::calcMergeInfoFast()
         mergeBlockP
     );
 
-    List<Pair<label> > mergeBlockN(topoInternalFaces.size());
+    List<Pair<label>> mergeBlockN(topoInternalFaces.size());
     setBlockFaceCorrespondence
     (
         topoCells,

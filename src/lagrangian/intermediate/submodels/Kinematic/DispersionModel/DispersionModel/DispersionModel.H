@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ public:
         DispersionModel(const DispersionModel<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DispersionModel<CloudType> > clone() const = 0;
+        virtual autoPtr<DispersionModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -96,7 +96,7 @@ public:
 
 
     //- Selector
-    static autoPtr<DispersionModel<CloudType> > New
+    static autoPtr<DispersionModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -145,7 +145,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);     \
                                                                               \
     Foam::DispersionModel<kinematicCloudType>::                               \
-        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType> >        \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>        \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

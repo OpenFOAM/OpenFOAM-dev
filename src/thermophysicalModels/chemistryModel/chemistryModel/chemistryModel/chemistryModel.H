@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ protected:
         PtrList<volScalarField>& Y_;
 
         //- Reactions
-        const PtrList<Reaction<ThermoType> >& reactions_;
+        const PtrList<Reaction<ThermoType>>& reactions_;
 
         //- Thermodynamic data of the species
         const PtrList<ThermoType>& specieThermo_;
@@ -101,14 +101,14 @@ protected:
         scalar Treact_;
 
         //- List of reaction rate per specie [kg/m3/s]
-        PtrList<DimensionedField<scalar, volMesh> > RR_;
+        PtrList<DimensionedField<scalar, volMesh>> RR_;
 
 
     // Protected Member Functions
 
         //- Write access to chemical source terms
         //  (e.g. for multi-chemistry model)
-        inline PtrList<DimensionedField<scalar, volMesh> >& RR();
+        inline PtrList<DimensionedField<scalar, volMesh>>& RR();
 
 
 public:
@@ -130,7 +130,7 @@ public:
     // Member Functions
 
         //- The reactions
-        inline const PtrList<Reaction<ThermoType> >& reactions() const;
+        inline const PtrList<Reaction<ThermoType>>& reactions() const;
 
         //- Thermodynamic data of the species
         inline const PtrList<ThermoType>& specieThermo() const;
@@ -208,7 +208,7 @@ public:
             );
 
             //- Return reaction rate of the speciei in reactionI
-            virtual tmp<DimensionedField<scalar, volMesh> > calculateRR
+            virtual tmp<DimensionedField<scalar, volMesh>> calculateRR
             (
                 const label reactionI,
                 const label speciei

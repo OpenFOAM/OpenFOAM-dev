@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,13 +79,13 @@ protected:
         label nSpecie_;
 
         //- List of reaction rate per gas [kg/m3/s]
-        PtrList<DimensionedField<scalar, volMesh> > RRg_;
+        PtrList<DimensionedField<scalar, volMesh>> RRg_;
 
 
     // Protected Member Functions
 
         //- Write access to source terms for gases
-        inline PtrList<DimensionedField<scalar, volMesh> >& RRg();
+        inline PtrList<DimensionedField<scalar, volMesh>>& RRg();
 
 
 private:
@@ -186,7 +186,7 @@ public:
             ) const;
 
             //- Return total gas source term
-            inline tmp<DimensionedField<scalar, volMesh> > RRg() const;
+            inline tmp<DimensionedField<scalar, volMesh>> RRg() const;
 
             //- Return sensible enthalpy for gas i [J/Kg]
             virtual tmp<volScalarField> gasHs

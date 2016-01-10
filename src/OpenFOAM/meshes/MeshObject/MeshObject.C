@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,7 +287,7 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
 {
     HashTable<GeometricMeshObject<Mesh>*> meshObjects
     (
-        obr.lookupClass<GeometricMeshObject<Mesh> >()
+        obr.lookupClass<GeometricMeshObject<Mesh>>()
     );
 
     if (meshObject::debug)
@@ -304,7 +304,7 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
         iter
     )
     {
-        if (isA<MoveableMeshObject<Mesh> >(*iter()))
+        if (isA<MoveableMeshObject<Mesh>>(*iter()))
         {
             if (meshObject::debug)
             {
@@ -329,7 +329,7 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
 {
     HashTable<GeometricMeshObject<Mesh>*> meshObjects
     (
-        obr.lookupClass<GeometricMeshObject<Mesh> >()
+        obr.lookupClass<GeometricMeshObject<Mesh>>()
     );
 
     if (meshObject::debug)
@@ -346,7 +346,7 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
         iter
     )
     {
-        if (isA<UpdateableMeshObject<Mesh> >(*iter()))
+        if (isA<UpdateableMeshObject<Mesh>>(*iter()))
         {
             if (meshObject::debug)
             {
@@ -371,7 +371,7 @@ void Foam::meshObject::clear(objectRegistry& obr)
 {
     HashTable<MeshObjectType<Mesh>*> meshObjects
     (
-        obr.lookupClass<MeshObjectType<Mesh> >()
+        obr.lookupClass<MeshObjectType<Mesh>>()
     );
 
     if (meshObject::debug)
@@ -402,7 +402,7 @@ void Foam::meshObject::clearUpto(objectRegistry& obr)
 {
     HashTable<FromType<Mesh>*> meshObjects
     (
-        obr.lookupClass<FromType<Mesh> >()
+        obr.lookupClass<FromType<Mesh>>()
     );
 
     if (meshObject::debug)
@@ -414,7 +414,7 @@ void Foam::meshObject::clearUpto(objectRegistry& obr)
 
     forAllIter(typename HashTable<FromType<Mesh>*>, meshObjects, iter)
     {
-        if (!isA<ToType<Mesh> >(*iter()))
+        if (!isA<ToType<Mesh>>(*iter()))
         {
             if (meshObject::debug)
             {

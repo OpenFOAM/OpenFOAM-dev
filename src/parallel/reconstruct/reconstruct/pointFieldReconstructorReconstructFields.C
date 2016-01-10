@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,11 +28,11 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
 {
     // Read the field for all the processors
-    PtrList<GeometricField<Type, pointPatchField, pointMesh> > procFields
+    PtrList<GeometricField<Type, pointPatchField, pointMesh>> procFields
     (
         procMeshes_.size()
     );
@@ -62,7 +62,7 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
     Field<Type> internalField(mesh_.size());
 
     // Create the patch fields
-    PtrList<pointPatchField<Type> > patchFields(mesh_.boundary().size());
+    PtrList<pointPatchField<Type>> patchFields(mesh_.boundary().size());
 
 
     forAll(procMeshes_, proci)
@@ -117,7 +117,7 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
 
     // Construct and write the field
     // setting the internalField and patchFields
-    return tmp<GeometricField<Type, pointPatchField, pointMesh> >
+    return tmp<GeometricField<Type, pointPatchField, pointMesh>>
     (
         new GeometricField<Type, pointPatchField, pointMesh>
         (

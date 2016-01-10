@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1124,7 +1124,7 @@ bool Foam::isoSurfaceCell::validTri(const triSurface& surf, const label faceI)
 void Foam::isoSurfaceCell::calcAddressing
 (
     const triSurface& surf,
-    List<FixedList<label, 3> >& faceEdges,
+    List<FixedList<label, 3>>& faceEdges,
     labelList& edgeFace0,
     labelList& edgeFace1,
     Map<labelList>& edgeFacesRest
@@ -1225,7 +1225,7 @@ void Foam::isoSurfaceCell::calcAddressing
 //void Foam::isoSurfaceCell::walkOrientation
 //(
 //    const triSurface& surf,
-//    const List<FixedList<label, 3> >& faceEdges,
+//    const List<FixedList<label, 3>>& faceEdges,
 //    const labelList& edgeFace0,
 //    const labelList& edgeFace1,
 //    const label seedTriI,
@@ -1293,7 +1293,7 @@ void Foam::isoSurfaceCell::calcAddressing
 //void Foam::isoSurfaceCell::orientSurface
 //(
 //    triSurface& surf,
-//    const List<FixedList<label, 3> >& faceEdges,
+//    const List<FixedList<label, 3>>& faceEdges,
 //    const labelList& edgeFace0,
 //    const labelList& edgeFace1,
 //    const Map<labelList>& edgeFacesRest
@@ -1388,7 +1388,7 @@ bool Foam::isoSurfaceCell::danglingTriangle
 // Mark triangles to keep. Returns number of dangling triangles.
 Foam::label Foam::isoSurfaceCell::markDanglingTriangles
 (
-    const List<FixedList<label, 3> >& faceEdges,
+    const List<FixedList<label, 3>>& faceEdges,
     const labelList& edgeFace0,
     const labelList& edgeFace1,
     const Map<labelList>& edgeFacesRest,
@@ -1671,7 +1671,7 @@ Foam::isoSurfaceCell::isoSurfaceCell
 
     if (regularise)
     {
-        List<FixedList<label, 3> > faceEdges;
+        List<FixedList<label, 3>> faceEdges;
         labelList edgeFace0, edgeFace1;
         Map<labelList> edgeFacesRest;
 

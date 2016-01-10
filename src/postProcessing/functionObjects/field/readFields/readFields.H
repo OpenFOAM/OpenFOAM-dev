@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,8 +128,8 @@ protected:
         void loadField
         (
             const word&,
-            PtrList<GeometricField<Type, fvPatchField, volMesh> >&,
-            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>&,
+            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
 
 

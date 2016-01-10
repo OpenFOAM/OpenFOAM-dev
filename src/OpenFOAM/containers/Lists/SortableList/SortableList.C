@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::SortableList<T>::SortableList(const UList<T>& values)
 
 
 template<class T>
-Foam::SortableList<T>::SortableList(const Xfer<List<T> >& values)
+Foam::SortableList<T>::SortableList(const Xfer<List<T>>& values)
 :
     List<T>(values)
 {
@@ -122,9 +122,9 @@ void Foam::SortableList<T>::reverseSort()
 
 
 template<class T>
-Foam::Xfer<Foam::List<T> > Foam::SortableList<T>::xfer()
+Foam::Xfer<Foam::List<T>> Foam::SortableList<T>::xfer()
 {
-    return xferMoveTo<List<T> >(*this);
+    return xferMoveTo<List<T>>(*this);
 }
 
 

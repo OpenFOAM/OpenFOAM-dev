@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 //        writeStencilStats(addressing.stencil());
 //
 //        // Collect stencil cell centres
-//        List<List<point> > stencilPoints(mesh.nFaces());
+//        List<List<point>> stencilPoints(mesh.nFaces());
 //        addressing.collectData
 //        (
 //            mesh.C(),
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
 //        //// Do some interpolation.
 //        //{
 //        //    const labelListList& stencil = addressing.stencil();
-//        //    List<List<scalar> > stencilWeights(stencil.size());
+//        //    List<List<scalar>> stencilWeights(stencil.size());
 //        //    forAll(stencil, faceI)
 //        //    {
 //        //        const labelList& fStencil = stencil[faceI];
@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
 //
 //
 //        // Collect stencil cell centres
-//        List<List<point> > stencilPoints(mesh.nFaces());
+//        List<List<point>> stencilPoints(mesh.nFaces());
 //        addressing.collectData
 //        (
 //            mesh.C(),
@@ -260,7 +260,7 @@ int main(int argc, char *argv[])
 //        //
 //        //
 //        //// Collect stencil cell centres
-//        //List<List<point> > stencilPoints(mesh.nFaces());
+//        //List<List<point>> stencilPoints(mesh.nFaces());
 //        //addressing.collectData
 //        //(
 //        //    mesh.C(),
@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
 //        //
 //        //
 //        //// Collect stencil cell centres
-//        //List<List<point> > stencilPoints(mesh.nFaces());
+//        //List<List<point>> stencilPoints(mesh.nFaces());
 //        //addressing.collectData
 //        //(
 //        //    mesh.C(),
@@ -331,7 +331,7 @@ int main(int argc, char *argv[])
     //
     //    {
     //        // Collect stencil cell centres
-    //        List<List<point> > ownPoints(mesh.nFaces());
+    //        List<List<point>> ownPoints(mesh.nFaces());
     //        addressing.collectData
     //        (
     //            addressing.ownMap(),
@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
     //    }
     //    {
     //        // Collect stencil cell centres
-    //        List<List<point> > neiPoints(mesh.nFaces());
+    //        List<List<point>> neiPoints(mesh.nFaces());
     //        addressing.collectData
     //        (
     //            addressing.neiMap(),
@@ -391,7 +391,7 @@ int main(int argc, char *argv[])
     //
     //    {
     //        // Collect stencil cell centres
-    //        List<List<point> > ownPoints(mesh.nFaces());
+    //        List<List<point>> ownPoints(mesh.nFaces());
     //        addressing.collectData
     //        (
     //            addressing.ownMap(),
@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
     //    }
     //    {
     //        // Collect stencil cell centres
-    //        List<List<point> > neiPoints(mesh.nFaces());
+    //        List<List<point>> neiPoints(mesh.nFaces());
     //        addressing.collectData
     //        (
     //            addressing.neiMap(),
@@ -451,7 +451,7 @@ int main(int argc, char *argv[])
         writeStencilStats(addressing.stencil());
 
         // Collect stencil cell centres
-        List<List<point> > stencilPoints(mesh.nCells());
+        List<List<point>> stencilPoints(mesh.nCells());
         addressing.collectData
         (
             mesh.C(),
@@ -479,7 +479,7 @@ int main(int argc, char *argv[])
         writeStencilStats(addressing.stencil());
 
         // Collect stencil cell centres
-        List<List<point> > stencilPoints(mesh.nCells());
+        List<List<point>> stencilPoints(mesh.nCells());
         addressing.collectData
         (
             mesh.C(),
@@ -507,7 +507,7 @@ int main(int argc, char *argv[])
         writeStencilStats(addressing.stencil());
 
         // Collect stencil cell centres
-        List<List<point> > stencilPoints(mesh.nCells());
+        List<List<point>> stencilPoints(mesh.nCells());
         addressing.collectData
         (
             mesh.C(),
@@ -528,7 +528,7 @@ int main(int argc, char *argv[])
 
 //XXXXXX
 //    // Evaluate
-//    List<List<scalar> > stencilData(faceStencils.size());
+//    List<List<scalar>> stencilData(faceStencils.size());
 //    collectStencilData
 //    (
 //        distMap,

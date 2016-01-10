@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ void reconstructLagrangianPositions
 
 
 template<class Type>
-tmp<IOField<Type> > reconstructLagrangianField
+tmp<IOField<Type>> reconstructLagrangianField
 (
     const word& cloudName,
     const polyMesh& mesh,
@@ -69,7 +69,7 @@ tmp<IOField<Type> > reconstructLagrangianField
 
 
 template<class Type>
-tmp<CompactIOField<Field<Type>, Type> > reconstructLagrangianFieldField
+tmp<CompactIOField<Field<Type>, Type>> reconstructLagrangianFieldField
 (
     const word& cloudName,
     const polyMesh& mesh,

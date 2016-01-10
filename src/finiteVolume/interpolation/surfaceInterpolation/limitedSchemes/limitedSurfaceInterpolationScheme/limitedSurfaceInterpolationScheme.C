@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::limitedSurfaceInterpolationScheme<Type> >
+Foam::tmp<Foam::limitedSurfaceInterpolationScheme<Type>>
 Foam::limitedSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
@@ -80,7 +80,7 @@ Foam::limitedSurfaceInterpolationScheme<Type>::New
 
 
 template<class Type>
-Foam::tmp<Foam::limitedSurfaceInterpolationScheme<Type> >
+Foam::tmp<Foam::limitedSurfaceInterpolationScheme<Type>>
 Foam::limitedSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
@@ -198,7 +198,7 @@ Foam::limitedSurfaceInterpolationScheme<Type>::weights
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh> >
+Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::limitedSurfaceInterpolationScheme<Type>::flux
 (
     const GeometricField<Type, fvPatchField, volMesh>& phi

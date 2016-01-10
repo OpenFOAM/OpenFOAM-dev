@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,10 @@ inline Foam::constTransport<Thermo>::constTransport
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::constTransport<Thermo> >
+inline Foam::autoPtr<Foam::constTransport<Thermo>>
 Foam::constTransport<Thermo>::clone() const
 {
-    return autoPtr<constTransport<Thermo> >
+    return autoPtr<constTransport<Thermo>>
     (
         new constTransport<Thermo>(*this)
     );
@@ -64,13 +64,13 @@ Foam::constTransport<Thermo>::clone() const
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::constTransport<Thermo> >
+inline Foam::autoPtr<Foam::constTransport<Thermo>>
 Foam::constTransport<Thermo>::New
 (
     Istream& is
 )
 {
-    return autoPtr<constTransport<Thermo> >
+    return autoPtr<constTransport<Thermo>>
     (
         new constTransport<Thermo>(is)
     );
@@ -78,13 +78,13 @@ Foam::constTransport<Thermo>::New
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::constTransport<Thermo> >
+inline Foam::autoPtr<Foam::constTransport<Thermo>>
 Foam::constTransport<Thermo>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<constTransport<Thermo> >
+    return autoPtr<constTransport<Thermo>>
     (
         new constTransport<Thermo>(dict)
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ public:
         explicit inline DynamicList(const UIndirectList<T>&);
 
         //- Construct by transferring the parameter contents
-        explicit inline DynamicList(const Xfer<List<T> >&);
+        explicit inline DynamicList(const Xfer<List<T>>&);
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicList(Istream&);
@@ -178,7 +178,7 @@ public:
             inline void transfer(DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
 
             //- Transfer contents to the Xfer container as a plain List
-            inline Xfer<List<T> > xfer();
+            inline Xfer<List<T>> xfer();
 
 
         // Member Operators

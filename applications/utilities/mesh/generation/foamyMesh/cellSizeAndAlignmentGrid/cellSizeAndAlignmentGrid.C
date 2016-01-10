@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,13 +55,13 @@ using namespace Foam;
 // Main program:
 
 template<class Triangulation, class Type>
-Foam::tmp<Foam::Field<Type> > filterFarPoints
+Foam::tmp<Foam::Field<Type>> filterFarPoints
 (
     const Triangulation& mesh,
     const Field<Type>& field
 )
 {
-    tmp<Field<Type> > tNewField(new Field<Type>(field.size()));
+    tmp<Field<Type>> tNewField(new Field<Type>(field.size()));
     Field<Type>& newField = tNewField();
 
     label added = 0;
@@ -139,7 +139,7 @@ autoPtr<mapDistribute> buildMap
         pointPoints[vit->index()].transfer(indices);
     }
 
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
 
     return autoPtr<mapDistribute>
     (

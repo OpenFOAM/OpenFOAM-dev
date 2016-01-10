@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ private:
             label findMappedSrcFace
             (
                 const label tgtFaceI,
-                const List<DynamicList<label> >& tgtToSrc
+                const List<DynamicList<label>>& tgtToSrc
             ) const;
 
 

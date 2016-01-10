@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,9 @@ public:
         NoIsotropy(const NoIsotropy<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<IsotropyModel<CloudType> > clone() const
+        virtual autoPtr<IsotropyModel<CloudType>> clone() const
         {
-            return autoPtr<IsotropyModel<CloudType> >
+            return autoPtr<IsotropyModel<CloudType>>
             (
                 new NoIsotropy<CloudType>(*this)
             );

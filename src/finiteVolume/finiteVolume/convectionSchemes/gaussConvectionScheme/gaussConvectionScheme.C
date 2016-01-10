@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ gaussConvectionScheme<Type>::interpScheme() const
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 gaussConvectionScheme<Type>::interpolate
 (
     const surfaceScalarField&,
@@ -60,7 +60,7 @@ gaussConvectionScheme<Type>::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 gaussConvectionScheme<Type>::flux
 (
     const surfaceScalarField& faceFlux,
@@ -72,7 +72,7 @@ gaussConvectionScheme<Type>::flux
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 gaussConvectionScheme<Type>::fvmDiv
 (
     const surfaceScalarField& faceFlux,
@@ -82,7 +82,7 @@ gaussConvectionScheme<Type>::fvmDiv
     tmp<surfaceScalarField> tweights = tinterpScheme_().weights(vf);
     const surfaceScalarField& weights = tweights();
 
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -116,14 +116,14 @@ gaussConvectionScheme<Type>::fvmDiv
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 gaussConvectionScheme<Type>::fvcDiv
 (
     const surfaceScalarField& faceFlux,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tConvection
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tConvection
     (
         fvc::surfaceIntegrate(flux(faceFlux, vf))
     );

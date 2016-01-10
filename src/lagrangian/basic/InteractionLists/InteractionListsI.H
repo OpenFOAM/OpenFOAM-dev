@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,7 @@ Foam::InteractionLists<ParticleType>::referredWallData() const
 
 
 template<class ParticleType>
-const Foam::List<Foam::IDLList<ParticleType> >&
+const Foam::List<Foam::IDLList<ParticleType>>&
 Foam::InteractionLists<ParticleType>::referredParticles() const
 {
     return referredParticles_;
@@ -144,7 +144,7 @@ Foam::InteractionLists<ParticleType>::referredParticles() const
 
 
 template<class ParticleType>
-Foam::List<Foam::IDLList<ParticleType> >&
+Foam::List<Foam::IDLList<ParticleType>>&
 Foam::InteractionLists<ParticleType>::referredParticles()
 {
     return referredParticles_;

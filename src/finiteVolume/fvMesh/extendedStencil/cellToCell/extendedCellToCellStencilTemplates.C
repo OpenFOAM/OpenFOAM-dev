@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::tmp
     const mapDistribute& map,
     const labelListList& stencil,
     const GeometricField<Type, fvPatchField, volMesh>& fld,
-    const List<List<WeightType> >& stencilWeights
+    const List<List<WeightType>>& stencilWeights
 )
 {
     typedef typename outerProduct<WeightType, Type>::type WeightedType;
@@ -52,7 +52,7 @@ Foam::tmp
     const fvMesh& mesh = fld.mesh();
 
     // Collect internal and boundary values
-    List<List<Type> > stencilFld;
+    List<List<Type>> stencilFld;
     extendedCellToFaceStencil::collectData(map, stencil, fld, stencilFld);
 
     tmp<WeightedFieldType> twf

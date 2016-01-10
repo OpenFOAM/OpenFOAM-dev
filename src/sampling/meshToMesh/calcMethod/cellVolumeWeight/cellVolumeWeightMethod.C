@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,11 +106,11 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
     label srcCellI = srcSeedI;
     label tgtCellI = tgtSeedI;
 
-    List<DynamicList<label> > srcToTgtAddr(src_.nCells());
-    List<DynamicList<scalar> > srcToTgtWght(src_.nCells());
+    List<DynamicList<label>> srcToTgtAddr(src_.nCells());
+    List<DynamicList<scalar>> srcToTgtWght(src_.nCells());
 
-    List<DynamicList<label> > tgtToSrcAddr(tgt_.nCells());
-    List<DynamicList<scalar> > tgtToSrcWght(tgt_.nCells());
+    List<DynamicList<label>> tgtToSrcAddr(tgt_.nCells());
+    List<DynamicList<scalar>> tgtToSrcWght(tgt_.nCells());
 
     // list of tgt cell neighbour cells
     DynamicList<label> nbrTgtCells(10);
