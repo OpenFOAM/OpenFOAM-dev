@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -101,9 +101,9 @@ export ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$paraview
 if [ -r $ParaView_DIR -o -r $paraviewInstDir ]
 then
     export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview-$ParaView_MAJOR
-    if [ ! -d $ParaView_INCLUDE_DIR -a -d $ParaView_DIR/include/paraview ]
+    if [ ! -d $ParaView_INCLUDE_DIR -a -d $ParaView_DIR/include/paraview-3.0 ]
     then
-        export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview
+        export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview-3.0
     fi
 
     ParaView_LIB_DIR=$ParaView_DIR/lib/paraview-$ParaView_MAJOR

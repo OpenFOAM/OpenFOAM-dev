@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -97,8 +97,8 @@ if ( -r $ParaView_DIR || -r $paraviewInstDir ) then
     endif
 
     set ParaView_LIB_DIR=${ParaView_DIR}/lib/paraview-${ParaView_MAJOR}
-    if (! -r $ParaView_LIB_DIR && -r ${ParaView_DIR}/lib/paraview) then
-        set ParaView_LIB_DIR=${ParaView_DIR}/lib/paraview
+    if (! -r $ParaView_LIB_DIR && -r ${ParaView_DIR}/lib/paraview-3.0) then
+        set ParaView_LIB_DIR=${ParaView_DIR}/lib/paraview-3.0
     endif
 
     setenv PATH ${ParaView_DIR}/bin:${PATH}
