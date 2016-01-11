@@ -34,11 +34,11 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeMPPICParcelDampingModels(CloudType)                               \
-                                                                              \
-    makeDampingModel(CloudType);                                              \
-                                                                              \
-    makeDampingModelType(NoDamping, CloudType);                               \
+#define makeMPPICParcelDampingModels(CloudType)                                \
+                                                                               \
+    makeDampingModel(CloudType);                                               \
+                                                                               \
+    makeDampingModelType(NoDamping, CloudType);                                \
     makeDampingModelType(Relaxation, CloudType);
 
 

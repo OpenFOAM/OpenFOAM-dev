@@ -147,31 +147,31 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeHeatTransferModel(CloudType)                                      \
-                                                                              \
-    typedef Foam::CloudType::thermoCloudType thermoCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        Foam::HeatTransferModel<thermoCloudType>,                             \
-        0                                                                     \
-    );                                                                        \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            HeatTransferModel<thermoCloudType>,                               \
-            dictionary                                                        \
-        );                                                                    \
+#define makeHeatTransferModel(CloudType)                                       \
+                                                                               \
+    typedef Foam::CloudType::thermoCloudType thermoCloudType;                  \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::HeatTransferModel<thermoCloudType>,                              \
+        0                                                                      \
+    );                                                                         \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            HeatTransferModel<thermoCloudType>,                                \
+            dictionary                                                         \
+        );                                                                     \
     }
 
 
-#define makeHeatTransferModelType(SS, CloudType)                              \
-                                                                              \
-    typedef Foam::CloudType::thermoCloudType thermoCloudType;                 \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<thermoCloudType>, 0);        \
-                                                                              \
-    Foam::HeatTransferModel<thermoCloudType>::                                \
-        adddictionaryConstructorToTable<Foam::SS<thermoCloudType>>           \
+#define makeHeatTransferModelType(SS, CloudType)                               \
+                                                                               \
+    typedef Foam::CloudType::thermoCloudType thermoCloudType;                  \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<thermoCloudType>, 0);         \
+                                                                               \
+    Foam::HeatTransferModel<thermoCloudType>::                                 \
+        adddictionaryConstructorToTable<Foam::SS<thermoCloudType>>             \
             add##SS##CloudType##thermoCloudType##ConstructorToTable_;
 
 

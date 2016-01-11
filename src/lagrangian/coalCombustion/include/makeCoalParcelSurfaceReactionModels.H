@@ -37,16 +37,16 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeCoalParcelSurfaceReactionModels(CloudType)                        \
-                                                                              \
-    makeSurfaceReactionModelType(COxidationDiffusionLimitedRate, CloudType);  \
-    makeSurfaceReactionModelType                                              \
-    (                                                                         \
-        COxidationKineticDiffusionLimitedRate,                                \
-        CloudType                                                             \
-    );                                                                        \
-    makeSurfaceReactionModelType(COxidationIntrinsicRate, CloudType);         \
-    makeSurfaceReactionModelType(COxidationHurtMitchell, CloudType);          \
+#define makeCoalParcelSurfaceReactionModels(CloudType)                         \
+                                                                               \
+    makeSurfaceReactionModelType(COxidationDiffusionLimitedRate, CloudType);   \
+    makeSurfaceReactionModelType                                               \
+    (                                                                          \
+        COxidationKineticDiffusionLimitedRate,                                 \
+        CloudType                                                              \
+    );                                                                         \
+    makeSurfaceReactionModelType(COxidationIntrinsicRate, CloudType);          \
+    makeSurfaceReactionModelType(COxidationHurtMitchell, CloudType);           \
     makeSurfaceReactionModelType(COxidationMurphyShaddix, CloudType);
 
 

@@ -210,7 +210,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            convectionScheme<Type>::addIstreamConstructorToTable<SS<Type>>    \
+            convectionScheme<Type>::addIstreamConstructorToTable<SS<Type>>     \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }
@@ -232,7 +232,7 @@ makeFvConvectionTypeScheme(SS, tensor)
         namespace fv                                                           \
         {                                                                      \
             convectionScheme<Type>::                                           \
-                addMultivariateConstructorToTable<SS<Type>>                   \
+                addMultivariateConstructorToTable<SS<Type>>                    \
                 add##SS##Type##MultivariateConstructorToTable_;                \
         }                                                                      \
     }

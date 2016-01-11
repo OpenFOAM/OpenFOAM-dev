@@ -40,87 +40,87 @@ Description
 // ~~~~~~~~~~~~~
 // declare a run-time selection:
 #define declareGlobalFunctionSelectionTable\
-(returnType,memberFunction,argNames,argList,parList)                          \
-                                                                              \
-    /* Construct from argList function pointer type */                        \
+(returnType,memberFunction,argNames,argList,parList)                           \
+                                                                               \
+    /* Construct from argList function pointer type */                         \
     typedef returnType (*memberFunction##argNames##MemberFunctionPtr)argList; \
-                                                                              \
-    /* Construct from argList function table type */                          \
-    typedef HashTable                                                         \
-        <memberFunction##argNames##MemberFunctionPtr, word, string::hash>     \
-        memberFunction##argNames##MemberFunctionTable;                        \
-                                                                              \
-    /* Construct from argList function pointer table pointer */               \
-    extern memberFunction##argNames##MemberFunctionTable*                     \
-        memberFunction##argNames##MemberFunctionTablePtr_;                    \
-                                                                              \
-    /* Table memberFunction called from the table add function */             \
-    void construct##memberFunction##argNames##MemberFunctionTables();         \
-                                                                              \
-    /* Table destructor called from the table add function destructor */      \
-    void destroy##memberFunction##argNames##MemberFunctionTables();           \
-                                                                              \
-    /* Class to add constructor from argList to table */                      \
-    class add##memberFunction##argNames##GlobalMemberFunctionToTable          \
-    {                                                                         \
-    public:                                                                   \
-                                                                              \
-        add##memberFunction##argNames##GlobalMemberFunctionToTable            \
-        (                                                                     \
-            const word& lookup,                                               \
-            memberFunction##argNames##MemberFunctionPtr function              \
-        )                                                                     \
-        {                                                                     \
-            construct##memberFunction##argNames##MemberFunctionTables();      \
-            memberFunction##argNames##MemberFunctionTablePtr_->insert         \
-            (                                                                 \
-                lookup,                                                       \
-                function                                                      \
-            );                                                                \
-        }                                                                     \
-                                                                              \
-        ~add##memberFunction##argNames##GlobalMemberFunctionToTable()         \
-        {                                                                     \
-            destroy##memberFunction##argNames##MemberFunctionTables();        \
-        }                                                                     \
+                                                                               \
+    /* Construct from argList function table type */                           \
+    typedef HashTable                                                          \
+        <memberFunction##argNames##MemberFunctionPtr, word, string::hash>      \
+        memberFunction##argNames##MemberFunctionTable;                         \
+                                                                               \
+    /* Construct from argList function pointer table pointer */                \
+    extern memberFunction##argNames##MemberFunctionTable*                      \
+        memberFunction##argNames##MemberFunctionTablePtr_;                     \
+                                                                               \
+    /* Table memberFunction called from the table add function */              \
+    void construct##memberFunction##argNames##MemberFunctionTables();          \
+                                                                               \
+    /* Table destructor called from the table add function destructor */       \
+    void destroy##memberFunction##argNames##MemberFunctionTables();            \
+                                                                               \
+    /* Class to add constructor from argList to table */                       \
+    class add##memberFunction##argNames##GlobalMemberFunctionToTable           \
+    {                                                                          \
+    public:                                                                    \
+                                                                               \
+        add##memberFunction##argNames##GlobalMemberFunctionToTable             \
+        (                                                                      \
+            const word& lookup,                                                \
+            memberFunction##argNames##MemberFunctionPtr function               \
+        )                                                                      \
+        {                                                                      \
+            construct##memberFunction##argNames##MemberFunctionTables();       \
+            memberFunction##argNames##MemberFunctionTablePtr_->insert          \
+            (                                                                  \
+                lookup,                                                        \
+                function                                                       \
+            );                                                                 \
+        }                                                                      \
+                                                                               \
+        ~add##memberFunction##argNames##GlobalMemberFunctionToTable()          \
+        {                                                                      \
+            destroy##memberFunction##argNames##MemberFunctionTables();         \
+        }                                                                      \
     }
 
 
 // internal use:
 // constructor/destructor aid
 #define defineGlobalFunctionSelectionTableConstructDestruct\
-(memberFunction,argNames)                                                     \
-                                                                              \
-    /* Table constructor called from the table add function */                \
-    void construct##memberFunction##argNames##MemberFunctionTables()          \
-    {                                                                         \
-        static bool constructed = false;                                      \
-        if (!constructed)                                                     \
-        {                                                                     \
-            constructed = true;                                               \
-            memberFunction##argNames##MemberFunctionTablePtr_                 \
-                = new memberFunction##argNames##MemberFunctionTable;          \
-        }                                                                     \
-    }                                                                         \
-                                                                              \
-    /* Table destructor called from the table add function destructor */      \
-    void destroy##memberFunction##argNames##MemberFunctionTables()            \
-    {                                                                         \
-        if (memberFunction##argNames##MemberFunctionTablePtr_)                \
-        {                                                                     \
-            delete memberFunction##argNames##MemberFunctionTablePtr_;         \
-            memberFunction##argNames##MemberFunctionTablePtr_ = NULL;         \
-        }                                                                     \
+(memberFunction,argNames)                                                      \
+                                                                               \
+    /* Table constructor called from the table add function */                 \
+    void construct##memberFunction##argNames##MemberFunctionTables()           \
+    {                                                                          \
+        static bool constructed = false;                                       \
+        if (!constructed)                                                      \
+        {                                                                      \
+            constructed = true;                                                \
+            memberFunction##argNames##MemberFunctionTablePtr_                  \
+                = new memberFunction##argNames##MemberFunctionTable;           \
+        }                                                                      \
+    }                                                                          \
+                                                                               \
+    /* Table destructor called from the table add function destructor */       \
+    void destroy##memberFunction##argNames##MemberFunctionTables()             \
+    {                                                                          \
+        if (memberFunction##argNames##MemberFunctionTablePtr_)                 \
+        {                                                                      \
+            delete memberFunction##argNames##MemberFunctionTablePtr_;          \
+            memberFunction##argNames##MemberFunctionTablePtr_ = NULL;          \
+        }                                                                      \
     }
 
 
 // internal use:
 // create pointer to hash-table of functions
 #define defineGlobalFunctionSelectionTablePtr\
-(memberFunction,argNames)                                                     \
-                                                                              \
-    /* Define the memberFunction table */                                     \
-    memberFunction##argNames##MemberFunctionTable*                            \
+(memberFunction,argNames)                                                      \
+                                                                               \
+    /* Define the memberFunction table */                                      \
+    memberFunction##argNames##MemberFunctionTable*                             \
         memberFunction##argNames##MemberFunctionTablePtr_ = NULL
 
 
@@ -130,11 +130,11 @@ Description
 // ~~~~~~~~~~~~~
 // define run-time selection table
 #define defineGlobalFunctionSelectionTable\
-(memberFunction,argNames)                                                     \
-                                                                              \
-    defineGlobalFunctionSelectionTablePtr                                     \
-        (memberFunction,argNames);                                            \
-    defineGlobalFunctionSelectionTableConstructDestruct                       \
+(memberFunction,argNames)                                                      \
+                                                                               \
+    defineGlobalFunctionSelectionTablePtr                                      \
+        (memberFunction,argNames);                                             \
+    defineGlobalFunctionSelectionTableConstructDestruct                        \
         (memberFunction,argNames)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

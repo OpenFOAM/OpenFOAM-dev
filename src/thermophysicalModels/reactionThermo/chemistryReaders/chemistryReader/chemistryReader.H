@@ -134,28 +134,28 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
-#define makeChemistryReader(Thermo)                                           \
-    defineTemplateTypeNameAndDebug(chemistryReader<Thermo>, 0);               \
+#define makeChemistryReader(Thermo)                                            \
+    defineTemplateTypeNameAndDebug(chemistryReader<Thermo>, 0);                \
     defineTemplateRunTimeSelectionTable(chemistryReader<Thermo>, dictionary)
 
 
-#define makeChemistryReaderType(Reader, Thermo)                               \
-    defineNamedTemplateTypeNameAndDebug(Reader<Thermo>, 0);                   \
+#define makeChemistryReaderType(Reader, Thermo)                                \
+    defineNamedTemplateTypeNameAndDebug(Reader<Thermo>, 0);                    \
     chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader<Thermo>> \
         add##Reader##Thermo##ConstructorToTable_
 
 
 // for non-templated chemistry readers
-#define addChemistryReaderType(Reader, Thermo)                                \
-    defineTypeNameAndDebug(Reader, 0);                                        \
-    chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader>          \
+#define addChemistryReaderType(Reader, Thermo)                                 \
+    defineTypeNameAndDebug(Reader, 0);                                         \
+    chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader>           \
         add##Reader##Thermo##ConstructorToTable_
 
 
 // for templated chemistry readers
-#define addTemplateChemistryReaderType(Reader, Thermo)                        \
-    defineNamedTemplateTypeNameAndDebug(Reader, 0);                           \
-    chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader>          \
+#define addTemplateChemistryReaderType(Reader, Thermo)                         \
+    defineNamedTemplateTypeNameAndDebug(Reader, 0);                            \
+    chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader>           \
         add##Reader##Thermo##ConstructorToTable_
 
 

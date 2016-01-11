@@ -712,25 +712,25 @@ void Foam::Field<Type>::operator=(const VectorSpace<Form,Cmpt,nCmpt>& vs)
 }
 
 
-#define COMPUTED_ASSIGNMENT(TYPE, op)                                         \
-                                                                              \
-template<class Type>                                                          \
-void Foam::Field<Type>::operator op(const UList<TYPE>& f)                     \
-{                                                                             \
-    TFOR_ALL_F_OP_F(Type, *this, op, TYPE, f)                                 \
-}                                                                             \
-                                                                              \
-template<class Type>                                                          \
-void Foam::Field<Type>::operator op(const tmp<Field<TYPE>>& tf)              \
-{                                                                             \
-    operator op(tf());                                                        \
-    tf.clear();                                                               \
-}                                                                             \
-                                                                              \
-template<class Type>                                                          \
-void Foam::Field<Type>::operator op(const TYPE& t)                            \
-{                                                                             \
-    TFOR_ALL_F_OP_S(Type, *this, op, TYPE, t)                                 \
+#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+                                                                               \
+template<class Type>                                                           \
+void Foam::Field<Type>::operator op(const UList<TYPE>& f)                      \
+{                                                                              \
+    TFOR_ALL_F_OP_F(Type, *this, op, TYPE, f)                                  \
+}                                                                              \
+                                                                               \
+template<class Type>                                                           \
+void Foam::Field<Type>::operator op(const tmp<Field<TYPE>>& tf)                \
+{                                                                              \
+    operator op(tf());                                                         \
+    tf.clear();                                                                \
+}                                                                              \
+                                                                               \
+template<class Type>                                                           \
+void Foam::Field<Type>::operator op(const TYPE& t)                             \
+{                                                                              \
+    TFOR_ALL_F_OP_S(Type, *this, op, TYPE, t)                                  \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)

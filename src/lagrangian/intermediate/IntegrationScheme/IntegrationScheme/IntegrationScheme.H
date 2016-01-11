@@ -190,22 +190,22 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeIntegrationScheme(Type)                                           \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(IntegrationScheme<Type>, 0);          \
-                                                                              \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        IntegrationScheme<Type>,                                              \
-        dictionary                                                            \
+#define makeIntegrationScheme(Type)                                            \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(IntegrationScheme<Type>, 0);           \
+                                                                               \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        IntegrationScheme<Type>,                                               \
+        dictionary                                                             \
     );
 
 
-#define makeIntegrationSchemeType(SS, Type)                                   \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                         \
-                                                                              \
-    IntegrationScheme<Type>::adddictionaryConstructorToTable<SS<Type>>       \
+#define makeIntegrationSchemeType(SS, Type)                                    \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
+                                                                               \
+    IntegrationScheme<Type>::adddictionaryConstructorToTable<SS<Type>>         \
         add##SS##Type##ConstructorToTable_;
 
 

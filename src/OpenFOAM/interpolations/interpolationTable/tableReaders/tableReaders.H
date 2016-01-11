@@ -35,36 +35,36 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Only used internally
-#define makeTypeTableReadersTypeName(typeTableReader, dataType)               \
-                                                                              \
+#define makeTypeTableReadersTypeName(typeTableReader, dataType)                \
+                                                                               \
     defineNamedTemplateTypeNameAndDebug(typeTableReader<dataType>, 0)
 
 // Sometimes used externally
-#define makeTableReadersTypeName(typeTableReader)                             \
-                                                                              \
-    makeTypeTableReadersTypeName(typeTableReader, scalar);                    \
-    makeTypeTableReadersTypeName(typeTableReader, vector);                    \
-    makeTypeTableReadersTypeName(typeTableReader, sphericalTensor);           \
-    makeTypeTableReadersTypeName(typeTableReader, symmTensor);                \
+#define makeTableReadersTypeName(typeTableReader)                              \
+                                                                               \
+    makeTypeTableReadersTypeName(typeTableReader, scalar);                     \
+    makeTypeTableReadersTypeName(typeTableReader, vector);                     \
+    makeTypeTableReadersTypeName(typeTableReader, sphericalTensor);            \
+    makeTypeTableReadersTypeName(typeTableReader, symmTensor);                 \
     makeTypeTableReadersTypeName(typeTableReader, tensor)
 
 // Define type info for single dataType template instantiation (eg, vector)
-#define makeTableReaderType(typeTableReader, dataType)                        \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(typeTableReader<dataType>, 0);      \
-    addTemplatedToRunTimeSelectionTable                                       \
-    (                                                                         \
-        tableReader, typeTableReader, dataType, dictionary                    \
+#define makeTableReaderType(typeTableReader, dataType)                         \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(typeTableReader<dataType>, 0);         \
+    addTemplatedToRunTimeSelectionTable                                        \
+    (                                                                          \
+        tableReader, typeTableReader, dataType, dictionary                     \
     )
 
 
 // Define type info for scalar, vector etc. instantiations
-#define makeTableReaders(typeTableReader)                                     \
-                                                                              \
-    makeTableReaderType(typeTableReader, scalar);                             \
-    makeTableReaderType(typeTableReader, vector);                             \
-    makeTableReaderType(typeTableReader, sphericalTensor);                    \
-    makeTableReaderType(typeTableReader, symmTensor);                         \
+#define makeTableReaders(typeTableReader)                                      \
+                                                                               \
+    makeTableReaderType(typeTableReader, scalar);                              \
+    makeTableReaderType(typeTableReader, vector);                              \
+    makeTableReaderType(typeTableReader, sphericalTensor);                     \
+    makeTableReaderType(typeTableReader, symmTensor);                          \
     makeTableReaderType(typeTableReader, tensor)
 
 

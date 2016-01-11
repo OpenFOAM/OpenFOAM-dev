@@ -169,7 +169,7 @@ public:
         namespace fv                                                           \
         {                                                                      \
             snGradScheme<TYPE>::addMeshConstructorToTable                      \
-                <CentredFitSnGradScheme<TYPE, POLYNOMIAL, STENCIL>>           \
+                <CentredFitSnGradScheme<TYPE, POLYNOMIAL, STENCIL>>            \
                 add##SS##STENCIL##TYPE##MeshConstructorToTable_;               \
         }                                                                      \
     }

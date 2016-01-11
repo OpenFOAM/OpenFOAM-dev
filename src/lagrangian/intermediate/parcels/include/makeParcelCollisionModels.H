@@ -38,17 +38,17 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeParcelCollisionModels(CloudType)                                  \
-                                                                              \
-    makeCollisionModel(CloudType);                                            \
-    makeCollisionModelType(NoCollision, CloudType);                           \
-    makeCollisionModelType(PairCollision, CloudType);                         \
-                                                                              \
-    makePairModel(CloudType);                                                 \
-    makePairModelType(PairSpringSliderDashpot, CloudType);                    \
-                                                                              \
-    makeWallModel(CloudType);                                                 \
-    makeWallModelType(WallSpringSliderDashpot, CloudType);                    \
+#define makeParcelCollisionModels(CloudType)                                   \
+                                                                               \
+    makeCollisionModel(CloudType);                                             \
+    makeCollisionModelType(NoCollision, CloudType);                            \
+    makeCollisionModelType(PairCollision, CloudType);                          \
+                                                                               \
+    makePairModel(CloudType);                                                  \
+    makePairModelType(PairSpringSliderDashpot, CloudType);                     \
+                                                                               \
+    makeWallModel(CloudType);                                                  \
+    makeWallModelType(WallSpringSliderDashpot, CloudType);                     \
     makeWallModelType(WallLocalSpringSliderDashpot, CloudType);
 
 

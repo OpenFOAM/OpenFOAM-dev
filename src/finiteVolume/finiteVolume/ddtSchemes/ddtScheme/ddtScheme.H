@@ -263,7 +263,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            ddtScheme<Type>::addIstreamConstructorToTable<SS<Type>>           \
+            ddtScheme<Type>::addIstreamConstructorToTable<SS<Type>>            \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }

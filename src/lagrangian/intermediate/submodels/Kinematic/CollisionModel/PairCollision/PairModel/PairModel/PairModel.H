@@ -144,26 +144,26 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makePairModel(CloudType)                                              \
-                                                                              \
+#define makePairModel(CloudType)                                               \
+                                                                               \
     defineNamedTemplateTypeNameAndDebug(Foam::PairModel<Foam::CloudType>, 0); \
-                                                                              \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            PairModel<Foam::CloudType>,                                       \
-            dictionary                                                        \
-        );                                                                    \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            PairModel<Foam::CloudType>,                                        \
+            dictionary                                                         \
+        );                                                                     \
     }
 
 
-#define makePairModelType(SS, CloudType)                                      \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<Foam::CloudType>, 0);        \
-                                                                              \
-    Foam::PairModel<Foam::CloudType>::                                        \
-        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType>>           \
+#define makePairModelType(SS, CloudType)                                       \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<Foam::CloudType>, 0);         \
+                                                                               \
+    Foam::PairModel<Foam::CloudType>::                                         \
+        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType>>             \
         add##SS##CloudType##ConstructorToTable_;
 
 

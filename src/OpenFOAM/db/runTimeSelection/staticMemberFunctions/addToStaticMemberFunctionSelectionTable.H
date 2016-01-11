@@ -37,12 +37,12 @@ Description
 
 // add to hash-table of functions with 'lookup' as the key
 #define addNamedToStaticMemberFunctionSelectionTable\
-(baseType,thisType,memberFunction,argNames,lookup,functionPtr)                \
-                                                                              \
-    /* Add the thisType memberFunction to the table, find by lookup name */   \
-    baseType::add##memberFunction##argNames##                                 \
-    StaticMemberFunctionToTable<thisType>                                     \
-    add_##lookup##_##thisType##memberFunction##argNames##                     \
+(baseType,thisType,memberFunction,argNames,lookup,functionPtr)                 \
+                                                                               \
+    /* Add the thisType memberFunction to the table, find by lookup name */    \
+    baseType::add##memberFunction##argNames##                                  \
+    StaticMemberFunctionToTable<thisType>                                      \
+    add_##lookup##_##thisType##memberFunction##argNames##                      \
     StaticMemberFunctionTo##baseType##Table_(#lookup, functionPtr)
 
 

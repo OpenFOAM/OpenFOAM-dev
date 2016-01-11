@@ -33,10 +33,10 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeReactingParcelSurfaceFilmModels(CloudType)                        \
-                                                                              \
-    makeSurfaceFilmModel(CloudType);                                          \
-    makeSurfaceFilmModelType(NoSurfaceFilm, CloudType);                       \
+#define makeReactingParcelSurfaceFilmModels(CloudType)                         \
+                                                                               \
+    makeSurfaceFilmModel(CloudType);                                           \
+    makeSurfaceFilmModelType(NoSurfaceFilm, CloudType);                        \
     makeSurfaceFilmModelType(ThermoSurfaceFilm, CloudType);
 
 

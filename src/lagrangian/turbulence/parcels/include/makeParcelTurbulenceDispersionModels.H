@@ -33,17 +33,17 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeParcelTurbulenceDispersionModels(CloudType)                       \
-                                                                              \
-    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        Foam::DispersionRASModel<kinematicCloudType>,                         \
-        0                                                                     \
-    );                                                                        \
-                                                                              \
-    makeDispersionModelType(GradientDispersionRAS, CloudType);                \
-    makeDispersionModelType(StochasticDispersionRAS, CloudType);              \
+#define makeParcelTurbulenceDispersionModels(CloudType)                        \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::DispersionRASModel<kinematicCloudType>,                          \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    makeDispersionModelType(GradientDispersionRAS, CloudType);                 \
+    makeDispersionModelType(StochasticDispersionRAS, CloudType);               \
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

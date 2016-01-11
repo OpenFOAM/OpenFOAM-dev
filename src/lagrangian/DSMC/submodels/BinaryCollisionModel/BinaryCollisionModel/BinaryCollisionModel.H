@@ -151,27 +151,27 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeBinaryCollisionModel(CloudType)                                   \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        BinaryCollisionModel<CloudType>,                                      \
-        0                                                                     \
-    );                                                                        \
-                                                                              \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        BinaryCollisionModel<CloudType>,                                      \
-        dictionary                                                            \
+#define makeBinaryCollisionModel(CloudType)                                    \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        BinaryCollisionModel<CloudType>,                                       \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        BinaryCollisionModel<CloudType>,                                       \
+        dictionary                                                             \
     );
 
 
-#define makeBinaryCollisionModelType(SS, CloudType)                           \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                    \
-                                                                              \
-    BinaryCollisionModel<CloudType>::                                         \
-        adddictionaryConstructorToTable<SS<CloudType>>                       \
+#define makeBinaryCollisionModelType(SS, CloudType)                            \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                     \
+                                                                               \
+    BinaryCollisionModel<CloudType>::                                          \
+        adddictionaryConstructorToTable<SS<CloudType>>                         \
             add##SS##CloudType##ConstructorToTable_;
 
 

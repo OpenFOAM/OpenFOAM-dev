@@ -36,10 +36,10 @@ Description
 
 // add to hash-table of functions with 'lookup' as the key
 #define addNamedToGlobalFunctionSelectionTable\
-(memberFunction,argNames,lookup,functionPtr)                                  \
-                                                                              \
-    /* Add to the table, find by lookup name */                               \
-    add##memberFunction##argNames##GlobalMemberFunctionToTable                \
+(memberFunction,argNames,lookup,functionPtr)                                   \
+                                                                               \
+    /* Add to the table, find by lookup name */                                \
+    add##memberFunction##argNames##GlobalMemberFunctionToTable                 \
     add_##lookup##_##memberFunction##argNames##GlobalMemberFunctionTo##Table_ \
     (#lookup, functionPtr)
 

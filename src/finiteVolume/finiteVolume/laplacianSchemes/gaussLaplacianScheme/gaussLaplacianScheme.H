@@ -139,21 +139,21 @@ public:
 // Use macros to emulate partial-specialisation of the the Laplacian functions
 // for scalar diffusivity gamma
 
-#define defineFvmLaplacianScalarGamma(Type)                                 \
-                                                                            \
-template<>                                                                  \
-tmp<fvMatrix<Type>> gaussLaplacianScheme<Type, scalar>::fvmLaplacian       \
-(                                                                           \
-    const GeometricField<scalar, fvsPatchField, surfaceMesh>&,              \
-    const GeometricField<Type, fvPatchField, volMesh>&                      \
-);                                                                          \
-                                                                            \
-template<>                                                                  \
-tmp<GeometricField<Type, fvPatchField, volMesh>>                           \
-gaussLaplacianScheme<Type, scalar>::fvcLaplacian                            \
-(                                                                           \
-    const GeometricField<scalar, fvsPatchField, surfaceMesh>&,              \
-    const GeometricField<Type, fvPatchField, volMesh>&                      \
+#define defineFvmLaplacianScalarGamma(Type)                                    \
+                                                                               \
+template<>                                                                     \
+tmp<fvMatrix<Type>> gaussLaplacianScheme<Type, scalar>::fvmLaplacian           \
+(                                                                              \
+    const GeometricField<scalar, fvsPatchField, surfaceMesh>&,                 \
+    const GeometricField<Type, fvPatchField, volMesh>&                         \
+);                                                                             \
+                                                                               \
+template<>                                                                     \
+tmp<GeometricField<Type, fvPatchField, volMesh>>                               \
+gaussLaplacianScheme<Type, scalar>::fvcLaplacian                               \
+(                                                                              \
+    const GeometricField<scalar, fvsPatchField, surfaceMesh>&,                 \
+    const GeometricField<Type, fvPatchField, volMesh>&                         \
 );
 
 

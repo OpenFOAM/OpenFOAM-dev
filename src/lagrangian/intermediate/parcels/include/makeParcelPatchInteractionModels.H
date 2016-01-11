@@ -36,14 +36,14 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeParcelPatchInteractionModels(CloudType)                           \
-                                                                              \
-    makePatchInteractionModel(CloudType);                                     \
-                                                                              \
-    makePatchInteractionModelType(LocalInteraction, CloudType);               \
-    makePatchInteractionModelType(NoInteraction, CloudType);                  \
-    makePatchInteractionModelType(Rebound, CloudType);                        \
-    makePatchInteractionModelType(StandardWallInteraction, CloudType);        \
+#define makeParcelPatchInteractionModels(CloudType)                            \
+                                                                               \
+    makePatchInteractionModel(CloudType);                                      \
+                                                                               \
+    makePatchInteractionModelType(LocalInteraction, CloudType);                \
+    makePatchInteractionModelType(NoInteraction, CloudType);                   \
+    makePatchInteractionModelType(Rebound, CloudType);                         \
+    makePatchInteractionModelType(StandardWallInteraction, CloudType);         \
     makePatchInteractionModelType(MultiInteraction, CloudType);
 
 

@@ -37,60 +37,60 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 #define makeSolidReactionMixtureThermo(BaseThermo,Cthermo,Mixture,ThermoPhys) \
-                                                                              \
-typedef SpecieMixture                                                         \
-    <                                                                         \
-        Mixture                                                               \
-        <                                                                     \
-            ThermoPhys                                                        \
-        >                                                                     \
-    > SpecieMixture##Mixture##ThermoPhys;                                     \
-                                                                              \
-typedef                                                                       \
-    heThermo                                                                  \
-    <                                                                         \
-        BaseThermo,                                                           \
-        SpecieMixture##Mixture##ThermoPhys                                    \
-    > heThermo##Mixture##ThermoPhys;                                          \
-                                                                              \
-typedef                                                                       \
-    Cthermo                                                                   \
-    <                                                                         \
-        BaseThermo,                                                           \
-        SpecieMixture##Mixture##ThermoPhys                                    \
-    > Cthermo##Mixture##ThermoPhys;                                           \
-                                                                              \
-                                                                              \
-defineTemplateTypeNameAndDebugWithName                                        \
-(                                                                             \
-    Cthermo##Mixture##ThermoPhys,                                             \
-    (                                                                         \
-        #Cthermo"<"#Mixture"<"                                                \
-      + ThermoPhys::typeName()                                                \
-      + ">>"                                                                  \
-    ).c_str(),                                                                \
-    0                                                                         \
-);                                                                            \
-                                                                              \
-addToRunTimeSelectionTable                                                    \
-(                                                                             \
-    basicThermo,                                                              \
-    Cthermo##Mixture##ThermoPhys,                                             \
-    fvMesh                                                                    \
-);                                                                            \
-                                                                              \
-addToRunTimeSelectionTable                                                    \
-(                                                                             \
-    BaseThermo,                                                               \
-    Cthermo##Mixture##ThermoPhys,                                             \
-    fvMesh                                                                    \
-);                                                                            \
-                                                                              \
-addToRunTimeSelectionTable                                                    \
-(                                                                             \
-    BaseThermo,                                                               \
-    Cthermo##Mixture##ThermoPhys,                                             \
-    dictionary                                                                \
+                                                                               \
+typedef SpecieMixture                                                          \
+    <                                                                          \
+        Mixture                                                                \
+        <                                                                      \
+            ThermoPhys                                                         \
+        >                                                                      \
+    > SpecieMixture##Mixture##ThermoPhys;                                      \
+                                                                               \
+typedef                                                                        \
+    heThermo                                                                   \
+    <                                                                          \
+        BaseThermo,                                                            \
+        SpecieMixture##Mixture##ThermoPhys                                     \
+    > heThermo##Mixture##ThermoPhys;                                           \
+                                                                               \
+typedef                                                                        \
+    Cthermo                                                                    \
+    <                                                                          \
+        BaseThermo,                                                            \
+        SpecieMixture##Mixture##ThermoPhys                                     \
+    > Cthermo##Mixture##ThermoPhys;                                            \
+                                                                               \
+                                                                               \
+defineTemplateTypeNameAndDebugWithName                                         \
+(                                                                              \
+    Cthermo##Mixture##ThermoPhys,                                              \
+    (                                                                          \
+        #Cthermo"<"#Mixture"<"                                                 \
+      + ThermoPhys::typeName()                                                 \
+      + ">>"                                                                   \
+    ).c_str(),                                                                 \
+    0                                                                          \
+);                                                                             \
+                                                                               \
+addToRunTimeSelectionTable                                                     \
+(                                                                              \
+    basicThermo,                                                               \
+    Cthermo##Mixture##ThermoPhys,                                              \
+    fvMesh                                                                     \
+);                                                                             \
+                                                                               \
+addToRunTimeSelectionTable                                                     \
+(                                                                              \
+    BaseThermo,                                                                \
+    Cthermo##Mixture##ThermoPhys,                                              \
+    fvMesh                                                                     \
+);                                                                             \
+                                                                               \
+addToRunTimeSelectionTable                                                     \
+(                                                                              \
+    BaseThermo,                                                                \
+    Cthermo##Mixture##ThermoPhys,                                              \
+    dictionary                                                                 \
 );
 
 

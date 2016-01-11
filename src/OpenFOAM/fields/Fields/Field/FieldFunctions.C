@@ -297,14 +297,14 @@ tmp<Field<Type>> cmptMag(const tmp<Field<Type>>& tf)
 }
 
 
-#define TMP_UNARY_FUNCTION(ReturnType, Func)                                  \
-                                                                              \
-template<class Type>                                                          \
-ReturnType Func(const tmp<Field<Type>>& tf1)                                 \
-{                                                                             \
-    ReturnType res = Func(tf1());                                             \
-    tf1.clear();                                                              \
-    return res;                                                               \
+#define TMP_UNARY_FUNCTION(ReturnType, Func)                                   \
+                                                                               \
+template<class Type>                                                           \
+ReturnType Func(const tmp<Field<Type>>& tf1)                                   \
+{                                                                              \
+    ReturnType res = Func(tf1());                                              \
+    tf1.clear();                                                               \
+    return res;                                                                \
 }
 
 template<class Type>
@@ -527,15 +527,15 @@ Type average(const UList<Type>& f)
 TMP_UNARY_FUNCTION(Type, average)
 
 
-#define G_UNARY_FUNCTION(ReturnType, gFunc, Func, rFunc)                      \
-                                                                              \
-template<class Type>                                                          \
-ReturnType gFunc(const UList<Type>& f, const label comm)                      \
-{                                                                             \
-    ReturnType res = Func(f);                                                 \
-    reduce(res, rFunc##Op<Type>(), Pstream::msgType(), comm);                 \
-    return res;                                                               \
-}                                                                             \
+#define G_UNARY_FUNCTION(ReturnType, gFunc, Func, rFunc)                       \
+                                                                               \
+template<class Type>                                                           \
+ReturnType gFunc(const UList<Type>& f, const label comm)                       \
+{                                                                              \
+    ReturnType res = Func(f);                                                  \
+    reduce(res, rFunc##Op<Type>(), Pstream::msgType(), comm);                  \
+    return res;                                                                \
+}                                                                              \
 TMP_UNARY_FUNCTION(ReturnType, gFunc)
 
 G_UNARY_FUNCTION(Type, gMax, max, max)
@@ -633,137 +633,137 @@ BINARY_TYPE_OPERATOR_FS(Type, Type, scalar, /, divide)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define PRODUCT_OPERATOR(product, Op, OpFunc)                                 \
-                                                                              \
-template<class Type1, class Type2>                                            \
-void OpFunc                                                                   \
-(                                                                             \
-    Field<typename product<Type1, Type2>::type>& res,                         \
-    const UList<Type1>& f1,                                                   \
-    const UList<Type2>& f2                                                    \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-    TFOR_ALL_F_OP_F_OP_F(productType, res, =, Type1, f1, Op, Type2, f2)       \
-}                                                                             \
-                                                                              \
-template<class Type1, class Type2>                                            \
-tmp<Field<typename product<Type1, Type2>::type>>                             \
-operator Op(const UList<Type1>& f1, const UList<Type2>& f2)                   \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-    tmp<Field<productType>> tRes(new Field<productType>(f1.size()));         \
-    OpFunc(tRes(), f1, f2);                                                   \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template<class Type1, class Type2>                                            \
-tmp<Field<typename product<Type1, Type2>::type>>                             \
-operator Op(const UList<Type1>& f1, const tmp<Field<Type2>>& tf2)            \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-    tmp<Field<productType>> tRes = reuseTmp<productType, Type2>::New(tf2);   \
-    OpFunc(tRes(), f1, tf2());                                                \
-    reuseTmp<productType, Type2>::clear(tf2);                                 \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template<class Type1, class Type2>                                            \
-tmp<Field<typename product<Type1, Type2>::type>>                             \
-operator Op(const tmp<Field<Type1>>& tf1, const UList<Type2>& f2)            \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-    tmp<Field<productType>> tRes = reuseTmp<productType, Type1>::New(tf1);   \
-    OpFunc(tRes(), tf1(), f2);                                                \
-    reuseTmp<productType, Type1>::clear(tf1);                                 \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template<class Type1, class Type2>                                            \
-tmp<Field<typename product<Type1, Type2>::type>>                             \
-operator Op(const tmp<Field<Type1>>& tf1, const tmp<Field<Type2>>& tf2)     \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-    tmp<Field<productType>> tRes =                                           \
-        reuseTmpTmp<productType, Type1, Type1, Type2>::New(tf1, tf2);         \
-    OpFunc(tRes(), tf1(), tf2());                                             \
-    reuseTmpTmp<productType, Type1, Type1, Type2>::clear(tf1, tf2);           \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template<class Type, class Form, class Cmpt, int nCmpt>                       \
-void OpFunc                                                                   \
-(                                                                             \
-    Field<typename product<Type, Form>::type>& res,                           \
-    const UList<Type>& f1,                                                    \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type, Form>::type productType;                   \
-    TFOR_ALL_F_OP_F_OP_S                                                      \
+#define PRODUCT_OPERATOR(product, Op, OpFunc)                                  \
+                                                                               \
+template<class Type1, class Type2>                                             \
+void OpFunc                                                                    \
+(                                                                              \
+    Field<typename product<Type1, Type2>::type>& res,                          \
+    const UList<Type1>& f1,                                                    \
+    const UList<Type2>& f2                                                     \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+    TFOR_ALL_F_OP_F_OP_F(productType, res, =, Type1, f1, Op, Type2, f2)        \
+}                                                                              \
+                                                                               \
+template<class Type1, class Type2>                                             \
+tmp<Field<typename product<Type1, Type2>::type>>                               \
+operator Op(const UList<Type1>& f1, const UList<Type2>& f2)                    \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+    tmp<Field<productType>> tRes(new Field<productType>(f1.size()));           \
+    OpFunc(tRes(), f1, f2);                                                    \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template<class Type1, class Type2>                                             \
+tmp<Field<typename product<Type1, Type2>::type>>                               \
+operator Op(const UList<Type1>& f1, const tmp<Field<Type2>>& tf2)              \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+    tmp<Field<productType>> tRes = reuseTmp<productType, Type2>::New(tf2);     \
+    OpFunc(tRes(), f1, tf2());                                                 \
+    reuseTmp<productType, Type2>::clear(tf2);                                  \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template<class Type1, class Type2>                                             \
+tmp<Field<typename product<Type1, Type2>::type>>                               \
+operator Op(const tmp<Field<Type1>>& tf1, const UList<Type2>& f2)              \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+    tmp<Field<productType>> tRes = reuseTmp<productType, Type1>::New(tf1);     \
+    OpFunc(tRes(), tf1(), f2);                                                 \
+    reuseTmp<productType, Type1>::clear(tf1);                                  \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template<class Type1, class Type2>                                             \
+tmp<Field<typename product<Type1, Type2>::type>>                               \
+operator Op(const tmp<Field<Type1>>& tf1, const tmp<Field<Type2>>& tf2)        \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+    tmp<Field<productType>> tRes =                                             \
+        reuseTmpTmp<productType, Type1, Type1, Type2>::New(tf1, tf2);          \
+    OpFunc(tRes(), tf1(), tf2());                                              \
+    reuseTmpTmp<productType, Type1, Type1, Type2>::clear(tf1, tf2);            \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template<class Type, class Form, class Cmpt, int nCmpt>                        \
+void OpFunc                                                                    \
+(                                                                              \
+    Field<typename product<Type, Form>::type>& res,                            \
+    const UList<Type>& f1,                                                     \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type, Form>::type productType;                    \
+    TFOR_ALL_F_OP_F_OP_S                                                       \
         (productType, res, =,Type, f1, Op, Form, static_cast<const Form&>(vs))\
-}                                                                             \
-                                                                              \
-template<class Type, class Form, class Cmpt, int nCmpt>                       \
-tmp<Field<typename product<Type, Form>::type>>                               \
-operator Op(const UList<Type>& f1, const VectorSpace<Form,Cmpt,nCmpt>& vs)    \
-{                                                                             \
-    typedef typename product<Type, Form>::type productType;                   \
-    tmp<Field<productType>> tRes(new Field<productType>(f1.size()));         \
-    OpFunc(tRes(), f1, static_cast<const Form&>(vs));                         \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template<class Type, class Form, class Cmpt, int nCmpt>                       \
-tmp<Field<typename product<Type, Form>::type>>                               \
-operator Op                                                                   \
-(                                                                             \
-    const tmp<Field<Type>>& tf1,                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type, Form>::type productType;                   \
-    tmp<Field<productType>> tRes = reuseTmp<productType, Type>::New(tf1);    \
-    OpFunc(tRes(), tf1(), static_cast<const Form&>(vs));                      \
-    reuseTmp<productType, Type>::clear(tf1);                                  \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template<class Form, class Cmpt, int nCmpt, class Type>                       \
-void OpFunc                                                                   \
-(                                                                             \
-    Field<typename product<Form, Type>::type>& res,                           \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
-    const UList<Type>& f1                                                     \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Form, Type>::type productType;                   \
-    TFOR_ALL_F_OP_S_OP_F                                                      \
+}                                                                              \
+                                                                               \
+template<class Type, class Form, class Cmpt, int nCmpt>                        \
+tmp<Field<typename product<Type, Form>::type>>                                 \
+operator Op(const UList<Type>& f1, const VectorSpace<Form,Cmpt,nCmpt>& vs)     \
+{                                                                              \
+    typedef typename product<Type, Form>::type productType;                    \
+    tmp<Field<productType>> tRes(new Field<productType>(f1.size()));           \
+    OpFunc(tRes(), f1, static_cast<const Form&>(vs));                          \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template<class Type, class Form, class Cmpt, int nCmpt>                        \
+tmp<Field<typename product<Type, Form>::type>>                                 \
+operator Op                                                                    \
+(                                                                              \
+    const tmp<Field<Type>>& tf1,                                               \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type, Form>::type productType;                    \
+    tmp<Field<productType>> tRes = reuseTmp<productType, Type>::New(tf1);      \
+    OpFunc(tRes(), tf1(), static_cast<const Form&>(vs));                       \
+    reuseTmp<productType, Type>::clear(tf1);                                   \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template<class Form, class Cmpt, int nCmpt, class Type>                        \
+void OpFunc                                                                    \
+(                                                                              \
+    Field<typename product<Form, Type>::type>& res,                            \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
+    const UList<Type>& f1                                                      \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Form, Type>::type productType;                    \
+    TFOR_ALL_F_OP_S_OP_F                                                       \
         (productType, res, =,Form,static_cast<const Form&>(vs), Op, Type, f1) \
-}                                                                             \
-                                                                              \
-template<class Form, class Cmpt, int nCmpt, class Type>                       \
-tmp<Field<typename product<Form, Type>::type>>                               \
-operator Op(const VectorSpace<Form,Cmpt,nCmpt>& vs, const UList<Type>& f1)    \
-{                                                                             \
-    typedef typename product<Form, Type>::type productType;                   \
-    tmp<Field<productType>> tRes(new Field<productType>(f1.size()));         \
-    OpFunc(tRes(), static_cast<const Form&>(vs), f1);                         \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template<class Form, class Cmpt, int nCmpt, class Type>                       \
-tmp<Field<typename product<Form, Type>::type>>                               \
-operator Op                                                                   \
-(                                                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs, const tmp<Field<Type>>& tf1      \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Form, Type>::type productType;                   \
-    tmp<Field<productType>> tRes = reuseTmp<productType, Type>::New(tf1);    \
-    OpFunc(tRes(), static_cast<const Form&>(vs), tf1());                      \
-    reuseTmp<productType, Type>::clear(tf1);                                  \
-    return tRes;                                                              \
+}                                                                              \
+                                                                               \
+template<class Form, class Cmpt, int nCmpt, class Type>                        \
+tmp<Field<typename product<Form, Type>::type>>                                 \
+operator Op(const VectorSpace<Form,Cmpt,nCmpt>& vs, const UList<Type>& f1)     \
+{                                                                              \
+    typedef typename product<Form, Type>::type productType;                    \
+    tmp<Field<productType>> tRes(new Field<productType>(f1.size()));           \
+    OpFunc(tRes(), static_cast<const Form&>(vs), f1);                          \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template<class Form, class Cmpt, int nCmpt, class Type>                        \
+tmp<Field<typename product<Form, Type>::type>>                                 \
+operator Op                                                                    \
+(                                                                              \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs, const tmp<Field<Type>>& tf1        \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Form, Type>::type productType;                    \
+    tmp<Field<productType>> tRes = reuseTmp<productType, Type>::New(tf1);      \
+    OpFunc(tRes(), static_cast<const Form&>(vs), tf1());                       \
+    reuseTmp<productType, Type>::clear(tf1);                                   \
+    return tRes;                                                               \
 }
 
 PRODUCT_OPERATOR(typeOfSum, +, add)

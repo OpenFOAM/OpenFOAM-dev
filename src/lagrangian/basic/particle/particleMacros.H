@@ -39,23 +39,23 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define DefinePropertyList(str)                                               \
-                                                                              \
-    static string propertyList_;                                              \
-                                                                              \
-    static string propertyList()                                              \
-    {                                                                         \
-        return str;                                                           \
+#define DefinePropertyList(str)                                                \
+                                                                               \
+    static string propertyList_;                                               \
+                                                                               \
+    static string propertyList()                                               \
+    {                                                                          \
+        return str;                                                            \
     }
 
 
-#define AddToPropertyList(ParcelType, str)                                    \
-                                                                              \
-    static string propertyList_;                                              \
-                                                                              \
-    static string propertyList()                                              \
-    {                                                                         \
-        return ParcelType::propertyList() + str;                              \
+#define AddToPropertyList(ParcelType, str)                                     \
+                                                                               \
+    static string propertyList_;                                               \
+                                                                               \
+    static string propertyList()                                               \
+    {                                                                          \
+        return ParcelType::propertyList() + str;                               \
     }
 
 

@@ -39,15 +39,15 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeChemistryModel(SS, Comp, Thermo)                                  \
-                                                                              \
-    typedef SS<Comp, Thermo> SS##Comp##Thermo;                                \
-                                                                              \
-    defineTemplateTypeNameAndDebugWithName                                    \
-    (                                                                         \
-        SS##Comp##Thermo,                                                     \
-        (#SS"<"#Comp"," + Thermo::typeName() + ">").c_str(),                  \
-        0                                                                     \
+#define makeChemistryModel(SS, Comp, Thermo)                                   \
+                                                                               \
+    typedef SS<Comp, Thermo> SS##Comp##Thermo;                                 \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        SS##Comp##Thermo,                                                      \
+        (#SS"<"#Comp"," + Thermo::typeName() + ">").c_str(),                   \
+        0                                                                      \
     );
 
 

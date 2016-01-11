@@ -205,22 +205,22 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeDataEntry(Type)                                                   \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(DataEntry<Type>, 0);                  \
-                                                                              \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        DataEntry<Type>,                                                      \
-        dictionary                                                            \
+#define makeDataEntry(Type)                                                    \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(DataEntry<Type>, 0);                   \
+                                                                               \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        DataEntry<Type>,                                                       \
+        dictionary                                                             \
     );
 
 
-#define makeDataEntryType(SS, Type)                                           \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                         \
-                                                                              \
-    DataEntry<Type>::adddictionaryConstructorToTable<SS<Type>>               \
+#define makeDataEntryType(SS, Type)                                            \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
+                                                                               \
+    DataEntry<Type>::adddictionaryConstructorToTable<SS<Type>>                 \
         add##SS##Type##ConstructorToTable_;
 
 

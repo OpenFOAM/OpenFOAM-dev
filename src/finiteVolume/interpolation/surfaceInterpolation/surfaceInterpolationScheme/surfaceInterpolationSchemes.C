@@ -32,20 +32,20 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeBaseSurfaceInterpolationScheme(Type)                              \
-                                                                              \
-defineNamedTemplateTypeNameAndDebug(surfaceInterpolationScheme<Type>, 0);     \
-                                                                              \
-defineTemplateRunTimeSelectionTable                                           \
-(                                                                             \
-    surfaceInterpolationScheme<Type>,                                         \
-    Mesh                                                                      \
-);                                                                            \
-                                                                              \
-defineTemplateRunTimeSelectionTable                                           \
-(                                                                             \
-    surfaceInterpolationScheme<Type>,                                         \
-    MeshFlux                                                                  \
+#define makeBaseSurfaceInterpolationScheme(Type)                               \
+                                                                               \
+defineNamedTemplateTypeNameAndDebug(surfaceInterpolationScheme<Type>, 0);      \
+                                                                               \
+defineTemplateRunTimeSelectionTable                                            \
+(                                                                              \
+    surfaceInterpolationScheme<Type>,                                          \
+    Mesh                                                                       \
+);                                                                             \
+                                                                               \
+defineTemplateRunTimeSelectionTable                                            \
+(                                                                              \
+    surfaceInterpolationScheme<Type>,                                          \
+    MeshFlux                                                                   \
 );
 
 makeBaseSurfaceInterpolationScheme(scalar)

@@ -32,8 +32,8 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeThermoParcelTurbulenceForces(CloudType)                           \
-                                                                              \
+#define makeThermoParcelTurbulenceForces(CloudType)                            \
+                                                                               \
     makeParticleForceModelType(BrownianMotionForce, CloudType);
 
 

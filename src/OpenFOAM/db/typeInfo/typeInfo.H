@@ -62,13 +62,13 @@ Description
 // declarations (for use in header files)
 
 //- Declare a ClassNameNoDebug() with extra virtual type info
-#define TypeNameNoDebug(TypeNameString)                                       \
-    ClassNameNoDebug(TypeNameString);                                         \
+#define TypeNameNoDebug(TypeNameString)                                        \
+    ClassNameNoDebug(TypeNameString);                                          \
     virtual const word& type() const { return typeName; }
 
 //- Declare a ClassName() with extra virtual type info
-#define TypeName(TypeNameString)                                              \
-    ClassName(TypeNameString);                                                \
+#define TypeName(TypeNameString)                                               \
+    ClassName(TypeNameString);                                                 \
     virtual const word& type() const { return typeName; }
 
 

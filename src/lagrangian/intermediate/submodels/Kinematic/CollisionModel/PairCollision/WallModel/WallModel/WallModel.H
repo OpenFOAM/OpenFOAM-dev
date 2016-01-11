@@ -154,26 +154,26 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeWallModel(CloudType)                                              \
-                                                                              \
+#define makeWallModel(CloudType)                                               \
+                                                                               \
     defineNamedTemplateTypeNameAndDebug(Foam::WallModel<Foam::CloudType>, 0); \
-                                                                              \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            WallModel<Foam::CloudType>,                                       \
-            dictionary                                                        \
-        );                                                                    \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            WallModel<Foam::CloudType>,                                        \
+            dictionary                                                         \
+        );                                                                     \
     }
 
 
-#define makeWallModelType(SS, CloudType)                                      \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<Foam::CloudType>, 0);        \
-                                                                              \
-    Foam::WallModel<Foam::CloudType>::                                        \
-        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType>>           \
+#define makeWallModelType(SS, CloudType)                                       \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<Foam::CloudType>, 0);         \
+                                                                               \
+    Foam::WallModel<Foam::CloudType>::                                         \
+        adddictionaryConstructorToTable<Foam::SS<Foam::CloudType>>             \
             add##SS##CloudType##ConstructorToTable_;
 
 

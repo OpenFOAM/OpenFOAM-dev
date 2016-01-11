@@ -36,48 +36,48 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeChemistrySolverType(SS, Comp, Thermo)                             \
-                                                                              \
-    typedef SS<chemistryModel<Comp, Thermo>> SS##Comp##Thermo;               \
-                                                                              \
-    defineTemplateTypeNameAndDebugWithName                                    \
-    (                                                                         \
-        SS##Comp##Thermo,                                                     \
-        (#SS"<" + word(Comp::typeName_())                                     \
-      + "," + Thermo::typeName() + ">").c_str(),                              \
-        0                                                                     \
-    );                                                                        \
-                                                                              \
-    addToRunTimeSelectionTable                                                \
-    (                                                                         \
-        Comp,                                                                 \
-        SS##Comp##Thermo,                                                     \
-        fvMesh                                                                \
+#define makeChemistrySolverType(SS, Comp, Thermo)                              \
+                                                                               \
+    typedef SS<chemistryModel<Comp, Thermo>> SS##Comp##Thermo;                 \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        SS##Comp##Thermo,                                                      \
+        (#SS"<" + word(Comp::typeName_())                                      \
+      + "," + Thermo::typeName() + ">").c_str(),                               \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        Comp,                                                                  \
+        SS##Comp##Thermo,                                                      \
+        fvMesh                                                                 \
     );
 
 
-#define makeChemistrySolverTypes(CompChemModel,Thermo)                        \
-                                                                              \
-    makeChemistrySolverType                                                   \
-    (                                                                         \
-        noChemistrySolver,                                                    \
-        CompChemModel,                                                        \
-        Thermo                                                                \
-    );                                                                        \
-                                                                              \
-    makeChemistrySolverType                                                   \
-    (                                                                         \
-        EulerImplicit,                                                        \
-        CompChemModel,                                                        \
-        Thermo                                                                \
-    );                                                                        \
-                                                                              \
-    makeChemistrySolverType                                                   \
-    (                                                                         \
-        ode,                                                                  \
-        CompChemModel,                                                        \
-        Thermo                                                                \
-    );                                                                        \
+#define makeChemistrySolverTypes(CompChemModel,Thermo)                         \
+                                                                               \
+    makeChemistrySolverType                                                    \
+    (                                                                          \
+        noChemistrySolver,                                                     \
+        CompChemModel,                                                         \
+        Thermo                                                                 \
+    );                                                                         \
+                                                                               \
+    makeChemistrySolverType                                                    \
+    (                                                                          \
+        EulerImplicit,                                                         \
+        CompChemModel,                                                         \
+        Thermo                                                                 \
+    );                                                                         \
+                                                                               \
+    makeChemistrySolverType                                                    \
+    (                                                                          \
+        ode,                                                                   \
+        CompChemModel,                                                         \
+        Thermo                                                                 \
+    );                                                                         \
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

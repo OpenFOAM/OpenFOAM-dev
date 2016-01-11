@@ -124,28 +124,28 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeDispersionModel(CloudType)                                        \
-                                                                              \
-    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
-    defineTemplateTypeNameAndDebug                                            \
-        (Foam::DispersionModel<kinematicCloudType>, 0);                       \
-                                                                              \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            DispersionModel<kinematicCloudType>,                              \
-            dictionary                                                        \
-        );                                                                    \
+#define makeDispersionModel(CloudType)                                         \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineTemplateTypeNameAndDebug                                             \
+        (Foam::DispersionModel<kinematicCloudType>, 0);                        \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            DispersionModel<kinematicCloudType>,                               \
+            dictionary                                                         \
+        );                                                                     \
     }
 
-#define makeDispersionModelType(SS, CloudType)                                \
-                                                                              \
-    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);     \
-                                                                              \
-    Foam::DispersionModel<kinematicCloudType>::                               \
-        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>        \
+#define makeDispersionModelType(SS, CloudType)                                 \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);      \
+                                                                               \
+    Foam::DispersionModel<kinematicCloudType>::                                \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>          \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

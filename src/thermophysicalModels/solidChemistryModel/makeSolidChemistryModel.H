@@ -34,31 +34,31 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeSolidChemistryModel(sChemistry, SS, Comp, SThermo)                \
-                                                                              \
-    typedef Foam::sChemistry<Foam::Comp, Foam::SThermo>                       \
-        sChemistry##Comp##SThermo;                                            \
-                                                                              \
-    defineTemplateTypeNameAndDebugWithName                                    \
-    (                                                                         \
-        sChemistry##Comp##SThermo,                                            \
-        (Foam::word(sChemistry##Comp##SThermo::typeName_()) + "<"#Comp","     \
-        + SThermo::typeName() + ">").c_str(),                                 \
-        0                                                                     \
+#define makeSolidChemistryModel(sChemistry, SS, Comp, SThermo)                 \
+                                                                               \
+    typedef Foam::sChemistry<Foam::Comp, Foam::SThermo>                        \
+        sChemistry##Comp##SThermo;                                             \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        sChemistry##Comp##SThermo,                                             \
+        (Foam::word(sChemistry##Comp##SThermo::typeName_()) + "<"#Comp","      \
+        + SThermo::typeName() + ">").c_str(),                                  \
+        0                                                                      \
     );
 
 
-#define makeSolidGasChemistryModel(sChemistry, SS, Comp, SThermo, GThermo)    \
-                                                                              \
-    typedef Foam::SS<Foam::Comp, Foam::SThermo, Foam::GThermo>                \
-        SS##Comp##SThermo##GThermo;                                           \
-                                                                              \
-    defineTemplateTypeNameAndDebugWithName                                    \
-    (                                                                         \
-        SS##Comp##SThermo##GThermo,                                           \
-        (Foam::word(SS##Comp##SThermo##GThermo::typeName_()) + "<"#Comp","    \
-        + SThermo::typeName() + "," + GThermo::typeName() + ">").c_str(),     \
-        0                                                                     \
+#define makeSolidGasChemistryModel(sChemistry, SS, Comp, SThermo, GThermo)     \
+                                                                               \
+    typedef Foam::SS<Foam::Comp, Foam::SThermo, Foam::GThermo>                 \
+        SS##Comp##SThermo##GThermo;                                            \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        SS##Comp##SThermo##GThermo,                                            \
+        (Foam::word(SS##Comp##SThermo##GThermo::typeName_()) + "<"#Comp","     \
+        + SThermo::typeName() + "," + GThermo::typeName() + ">").c_str(),      \
+        0                                                                      \
     );
 
 

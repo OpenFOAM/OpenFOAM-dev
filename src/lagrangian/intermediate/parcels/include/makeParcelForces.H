@@ -46,21 +46,21 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeParcelForces(CloudType)                                           \
-                                                                              \
-    makeParticleForceModel(CloudType);                                        \
-    makeParticleForceModelType(SphereDragForce, CloudType);                   \
-    makeParticleForceModelType(NonSphereDragForce, CloudType);                \
-    makeParticleForceModelType(WenYuDragForce, CloudType);                    \
-    makeParticleForceModelType(ErgunWenYuDragForce, CloudType);               \
-    makeParticleForceModelType(PlessisMasliyahDragForce, CloudType);          \
-    makeParticleForceModelType(SaffmanMeiLiftForce, CloudType);               \
-    makeParticleForceModelType(TomiyamaLiftForce, CloudType);                 \
-    makeParticleForceModelType(GravityForce, CloudType);                      \
-    makeParticleForceModelType(NonInertialFrameForce, CloudType);             \
-    makeParticleForceModelType(ParamagneticForce, CloudType);                 \
-    makeParticleForceModelType(PressureGradientForce, CloudType);             \
-    makeParticleForceModelType(SRFForce, CloudType);                          \
+#define makeParcelForces(CloudType)                                            \
+                                                                               \
+    makeParticleForceModel(CloudType);                                         \
+    makeParticleForceModelType(SphereDragForce, CloudType);                    \
+    makeParticleForceModelType(NonSphereDragForce, CloudType);                 \
+    makeParticleForceModelType(WenYuDragForce, CloudType);                     \
+    makeParticleForceModelType(ErgunWenYuDragForce, CloudType);                \
+    makeParticleForceModelType(PlessisMasliyahDragForce, CloudType);           \
+    makeParticleForceModelType(SaffmanMeiLiftForce, CloudType);                \
+    makeParticleForceModelType(TomiyamaLiftForce, CloudType);                  \
+    makeParticleForceModelType(GravityForce, CloudType);                       \
+    makeParticleForceModelType(NonInertialFrameForce, CloudType);              \
+    makeParticleForceModelType(ParamagneticForce, CloudType);                  \
+    makeParticleForceModelType(PressureGradientForce, CloudType);              \
+    makeParticleForceModelType(SRFForce, CloudType);                           \
     makeParticleForceModelType(VirtualMassForce, CloudType);
 
 

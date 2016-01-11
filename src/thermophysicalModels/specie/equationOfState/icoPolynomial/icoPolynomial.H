@@ -226,13 +226,13 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeIcoPolynomial(PolySize)                                          \
-                                                                             \
-defineTemplateTypeNameAndDebugWithName                                       \
-(                                                                            \
-    icoPolynomial<Specie, PolySize>,                                         \
-    "icoPolynomial<"#PolySize">",                                            \
-    0                                                                        \
+#define makeIcoPolynomial(PolySize)                                            \
+                                                                               \
+defineTemplateTypeNameAndDebugWithName                                         \
+(                                                                              \
+    icoPolynomial<Specie, PolySize>,                                           \
+    "icoPolynomial<"#PolySize">",                                              \
+    0                                                                          \
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

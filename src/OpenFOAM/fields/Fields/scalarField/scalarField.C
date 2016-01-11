@@ -164,25 +164,25 @@ UNARY_FUNCTION(scalar, scalar, atmToPa)
 UNARY_FUNCTION(scalar, scalar, paToAtm)
 
 
-#define BesselFunc(func)                                                      \
-void func(scalarField& res, const int n, const UList<scalar>& sf)             \
-{                                                                             \
-    TFOR_ALL_F_OP_FUNC_S_F(scalar, res, =, ::Foam::func, int, n, scalar, sf)  \
-}                                                                             \
-                                                                              \
-tmp<scalarField> func(const int n, const UList<scalar>& sf)                   \
-{                                                                             \
-    tmp<scalarField> tRes(new scalarField(sf.size()));                        \
-    func(tRes(), n, sf);                                                      \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-tmp<scalarField> func(const int n, const tmp<scalarField>& tsf)               \
-{                                                                             \
-    tmp<scalarField> tRes = reuseTmp<scalar, scalar>::New(tsf);               \
-    func(tRes(), n, tsf());                                                   \
-    reuseTmp<scalar, scalar>::clear(tsf);                                     \
-    return tRes;                                                              \
+#define BesselFunc(func)                                                       \
+void func(scalarField& res, const int n, const UList<scalar>& sf)              \
+{                                                                              \
+    TFOR_ALL_F_OP_FUNC_S_F(scalar, res, =, ::Foam::func, int, n, scalar, sf)   \
+}                                                                              \
+                                                                               \
+tmp<scalarField> func(const int n, const UList<scalar>& sf)                    \
+{                                                                              \
+    tmp<scalarField> tRes(new scalarField(sf.size()));                         \
+    func(tRes(), n, sf);                                                       \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+tmp<scalarField> func(const int n, const tmp<scalarField>& tsf)                \
+{                                                                              \
+    tmp<scalarField> tRes = reuseTmp<scalar, scalar>::New(tsf);                \
+    func(tRes(), n, tsf());                                                    \
+    reuseTmp<scalar, scalar>::clear(tsf);                                      \
+    return tRes;                                                               \
 }
 
 BesselFunc(jn)

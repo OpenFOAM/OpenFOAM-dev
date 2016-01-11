@@ -31,18 +31,18 @@ License
 
 #if (UINT_MAX == 0xFFFFFFFF)
 // 32-bit counting, Hamming weight method
-#   define COUNT_PACKEDBITS(sum, x)                                           \
-{                                                                             \
-    x -= (x >> 1) & 0x55555555;                                               \
-    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);                           \
-    sum += (((x + (x >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;                \
+#   define COUNT_PACKEDBITS(sum, x)                                            \
+{                                                                              \
+    x -= (x >> 1) & 0x55555555;                                                \
+    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);                            \
+    sum += (((x + (x >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;                 \
 }
 #elif (UINT_MAX == 0xFFFFFFFFFFFFFFFF)
 // 64-bit counting, Hamming weight method
-#   define COUNT_PACKEDBITS(sum, x)                                           \
-{                                                                             \
-    x -= (x >> 1) & 0x5555555555555555;                                       \
-    x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);           \
+#   define COUNT_PACKEDBITS(sum, x)                                            \
+{                                                                              \
+    x -= (x >> 1) & 0x5555555555555555;                                        \
+    x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);            \
     sum += (((x + (x >> 4)) & 0x0F0F0F0F0F0F0F0F) * 0x0101010101010101) >> 56;\
 }
 #else

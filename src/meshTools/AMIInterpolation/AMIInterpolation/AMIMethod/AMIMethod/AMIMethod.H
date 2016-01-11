@@ -247,24 +247,24 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeAMIMethod(AMIType)                                                \
-                                                                              \
-    typedef AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>      \
-        AMIMethod##AMIType;                                                   \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(AMIMethod##AMIType, 0);               \
+#define makeAMIMethod(AMIType)                                                 \
+                                                                               \
+    typedef AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>       \
+        AMIMethod##AMIType;                                                    \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(AMIMethod##AMIType, 0);                \
     defineTemplateRunTimeSelectionTable(AMIMethod##AMIType, components);
 
 
-#define makeAMIMethodType(AMIType, Method)                                    \
-                                                                              \
-    typedef Method<AMIType::sourcePatchType,AMIType::targetPatchType>         \
-        Method##AMIType;                                                      \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(Method##AMIType, 0);                  \
-                                                                              \
-    AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>::            \
-        addcomponentsConstructorToTable<Method##AMIType>                      \
+#define makeAMIMethodType(AMIType, Method)                                     \
+                                                                               \
+    typedef Method<AMIType::sourcePatchType,AMIType::targetPatchType>          \
+        Method##AMIType;                                                       \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(Method##AMIType, 0);                   \
+                                                                               \
+    AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>::             \
+        addcomponentsConstructorToTable<Method##AMIType>                       \
         add##Method##AMIType##ConstructorToTable_;
 
 

@@ -141,13 +141,13 @@ typedef PhiScheme<TYPE, WEIGHT> Phischeme##WEIGHT_;                            \
 defineTemplateTypeNameAndDebugWithName(Phischeme##WEIGHT_, #SS, 0);            \
                                                                                \
 surfaceInterpolationScheme<TYPE>::addMeshConstructorToTable                    \
-<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshConstructorToTable_;             \
+<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshConstructorToTable_;              \
                                                                                \
 surfaceInterpolationScheme<TYPE>::addMeshFluxConstructorToTable                \
-<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshFluxConstructorToTable_;         \
+<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshFluxConstructorToTable_;          \
                                                                                \
 limitedSurfaceInterpolationScheme<TYPE>::addMeshConstructorToTable             \
-<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshConstructorToLimitedTable_;      \
+<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshConstructorToLimitedTable_;       \
                                                                                \
 limitedSurfaceInterpolationScheme<TYPE>::addMeshFluxConstructorToTable         \
 <PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshFluxConstructorToLimitedTable_;

@@ -1162,38 +1162,38 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator==
 }
 
 
-#define COMPUTED_ASSIGNMENT(TYPE, op)                                         \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void Foam::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const GeometricField<TYPE, PatchField, GeoMesh>& gf                       \
-)                                                                             \
-{                                                                             \
-    checkField(*this, gf, #op);                                               \
-                                                                              \
-    dimensionedInternalField() op gf.dimensionedInternalField();              \
-    boundaryField() op gf.boundaryField();                                    \
-}                                                                             \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void Foam::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const tmp<GeometricField<TYPE, PatchField, GeoMesh>>& tgf                \
-)                                                                             \
-{                                                                             \
-    operator op(tgf());                                                       \
-    tgf.clear();                                                              \
-}                                                                             \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void Foam::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const dimensioned<TYPE>& dt                                               \
-)                                                                             \
-{                                                                             \
-    dimensionedInternalField() op dt;                                         \
-    boundaryField() op dt.value();                                            \
+#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void Foam::GeometricField<Type, PatchField, GeoMesh>::operator op              \
+(                                                                              \
+    const GeometricField<TYPE, PatchField, GeoMesh>& gf                        \
+)                                                                              \
+{                                                                              \
+    checkField(*this, gf, #op);                                                \
+                                                                               \
+    dimensionedInternalField() op gf.dimensionedInternalField();               \
+    boundaryField() op gf.boundaryField();                                     \
+}                                                                              \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void Foam::GeometricField<Type, PatchField, GeoMesh>::operator op              \
+(                                                                              \
+    const tmp<GeometricField<TYPE, PatchField, GeoMesh>>& tgf                  \
+)                                                                              \
+{                                                                              \
+    operator op(tgf());                                                        \
+    tgf.clear();                                                               \
+}                                                                              \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void Foam::GeometricField<Type, PatchField, GeoMesh>::operator op              \
+(                                                                              \
+    const dimensioned<TYPE>& dt                                                \
+)                                                                              \
+{                                                                              \
+    dimensionedInternalField() op dt;                                          \
+    boundaryField() op dt.value();                                             \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)

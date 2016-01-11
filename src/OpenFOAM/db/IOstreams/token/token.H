@@ -440,11 +440,11 @@ ostream& operator<<(ostream&, const InfoProxy<token>&);
 template<>
 Ostream& operator<<(Ostream& os, const InfoProxy<token>& ip);
 
-#define defineCompoundTypeName(Type, Name)                                    \
+#define defineCompoundTypeName(Type, Name)                                     \
     defineTemplateTypeNameAndDebugWithName(token::Compound<Type>, #Type, 0);
 
-#define addCompoundToRunTimeSelectionTable(Type, Name)                        \
-    token::compound::addIstreamConstructorToTable<token::Compound<Type>>     \
+#define addCompoundToRunTimeSelectionTable(Type, Name)                         \
+    token::compound::addIstreamConstructorToTable<token::Compound<Type>>       \
         add##Name##IstreamConstructorToTable_;
 
 

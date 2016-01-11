@@ -33,10 +33,10 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeReactingParcelCompositionModels(CloudType)                        \
-                                                                              \
-    makeCompositionModel(CloudType);                                          \
-    makeCompositionModelType(NoComposition, CloudType);                       \
+#define makeReactingParcelCompositionModels(CloudType)                         \
+                                                                               \
+    makeCompositionModel(CloudType);                                           \
+    makeCompositionModelType(NoComposition, CloudType);                        \
     makeCompositionModelType(SinglePhaseMixture, CloudType);
 
 

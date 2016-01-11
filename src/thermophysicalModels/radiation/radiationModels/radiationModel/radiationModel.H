@@ -244,20 +244,20 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define addToRadiationRunTimeSelectionTables(model)                           \
-                                                                              \
-    addToRunTimeSelectionTable                                                \
-    (                                                                         \
-        radiationModel,                                                       \
-        model,                                                                \
-        dictionary                                                            \
-    );                                                                        \
-                                                                              \
-    addToRunTimeSelectionTable                                                \
-    (                                                                         \
-        radiationModel,                                                       \
-        model,                                                                \
-        T                                                                     \
+#define addToRadiationRunTimeSelectionTables(model)                            \
+                                                                               \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        radiationModel,                                                        \
+        model,                                                                 \
+        dictionary                                                             \
+    );                                                                         \
+                                                                               \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        radiationModel,                                                        \
+        model,                                                                 \
+        T                                                                      \
     );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

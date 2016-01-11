@@ -33,11 +33,11 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeParcelHeatTransferModels(CloudType)                               \
-                                                                              \
-    makeHeatTransferModel(CloudType);                                         \
-                                                                              \
-    makeHeatTransferModelType(NoHeatTransfer, CloudType);                     \
+#define makeParcelHeatTransferModels(CloudType)                                \
+                                                                               \
+    makeHeatTransferModel(CloudType);                                          \
+                                                                               \
+    makeHeatTransferModelType(NoHeatTransfer, CloudType);                      \
     makeHeatTransferModelType(RanzMarshall, CloudType);
 
 

@@ -135,51 +135,51 @@ UNARY_FUNCTION(scalar, scalar, y0)
 UNARY_FUNCTION(scalar, scalar, y1)
 
 
-#define BesselFunc(func)                                                      \
-                                                                              \
-template<template<class> class Field>                                         \
-void func                                                                     \
-(                                                                             \
-    FieldField<Field, scalar>& res,                                           \
-    const int n,                                                              \
-    const FieldField<Field, scalar>& sf                                       \
-)                                                                             \
-{                                                                             \
-    forAll(res, i)                                                            \
-    {                                                                         \
-        func(res[i], n, sf[i]);                                               \
-    }                                                                         \
-}                                                                             \
-                                                                              \
-template<template<class> class Field>                                         \
-tmp<FieldField<Field, scalar>> func                                          \
-(                                                                             \
-    const int n,                                                              \
-    const FieldField<Field, scalar>& sf                                       \
-)                                                                             \
-{                                                                             \
-    tmp<FieldField<Field, scalar>> tRes                                      \
-    (                                                                         \
-        FieldField<Field, scalar>::NewCalculatedType(sf)                      \
-    );                                                                        \
-    func(tRes(), n, sf);                                                      \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template<template<class> class Field>                                         \
-tmp<FieldField<Field, scalar>> func                                          \
-(                                                                             \
-    const int n,                                                              \
-    const tmp<FieldField<Field, scalar>>& tsf                                \
-)                                                                             \
-{                                                                             \
-    tmp<FieldField<Field, scalar>> tRes                                      \
-    (                                                                         \
-        reuseTmpFieldField<Field, scalar, scalar>::New(tsf)                   \
-    );                                                                        \
-    func(tRes(), n, tsf());                                                   \
-    reuseTmpFieldField<Field, scalar, scalar>::clear(tsf);                    \
-    return tRes;                                                              \
+#define BesselFunc(func)                                                       \
+                                                                               \
+template<template<class> class Field>                                          \
+void func                                                                      \
+(                                                                              \
+    FieldField<Field, scalar>& res,                                            \
+    const int n,                                                               \
+    const FieldField<Field, scalar>& sf                                        \
+)                                                                              \
+{                                                                              \
+    forAll(res, i)                                                             \
+    {                                                                          \
+        func(res[i], n, sf[i]);                                                \
+    }                                                                          \
+}                                                                              \
+                                                                               \
+template<template<class> class Field>                                          \
+tmp<FieldField<Field, scalar>> func                                            \
+(                                                                              \
+    const int n,                                                               \
+    const FieldField<Field, scalar>& sf                                        \
+)                                                                              \
+{                                                                              \
+    tmp<FieldField<Field, scalar>> tRes                                        \
+    (                                                                          \
+        FieldField<Field, scalar>::NewCalculatedType(sf)                       \
+    );                                                                         \
+    func(tRes(), n, sf);                                                       \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template<template<class> class Field>                                          \
+tmp<FieldField<Field, scalar>> func                                            \
+(                                                                              \
+    const int n,                                                               \
+    const tmp<FieldField<Field, scalar>>& tsf                                  \
+)                                                                              \
+{                                                                              \
+    tmp<FieldField<Field, scalar>> tRes                                        \
+    (                                                                          \
+        reuseTmpFieldField<Field, scalar, scalar>::New(tsf)                    \
+    );                                                                         \
+    func(tRes(), n, tsf());                                                    \
+    reuseTmpFieldField<Field, scalar, scalar>::clear(tsf);                     \
+    return tRes;                                                               \
 }
 
 BesselFunc(jn)

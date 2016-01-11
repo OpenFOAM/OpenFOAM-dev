@@ -213,10 +213,10 @@ public:
                                                                                \
 defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
                                                                                \
-surfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type>>         \
+surfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type>>          \
     add##SS##Type##MeshConstructorToTable_;                                    \
                                                                                \
-surfaceInterpolationScheme<Type>::addMeshFluxConstructorToTable<SS<Type>>     \
+surfaceInterpolationScheme<Type>::addMeshFluxConstructorToTable<SS<Type>>      \
     add##SS##Type##MeshFluxConstructorToTable_;
 
 #define makeSurfaceInterpolationScheme(SS)                                     \

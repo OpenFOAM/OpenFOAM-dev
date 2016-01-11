@@ -140,17 +140,17 @@ void func                                                                      \
 );                                                                             \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh>> func                         \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
 (                                                                              \
     const int n,                                                               \
     const GeometricField<scalar, PatchField, GeoMesh>&                         \
 );                                                                             \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh>> func                         \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
 (                                                                              \
     const int n,                                                               \
-    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&                   \
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&                    \
 );
 
 BesselFunc(jn)

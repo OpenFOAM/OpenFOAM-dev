@@ -253,7 +253,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);      \
                                                                                \
     Foam::SurfaceFilmModel<kinematicCloudType>::                               \
-        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>         \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>          \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

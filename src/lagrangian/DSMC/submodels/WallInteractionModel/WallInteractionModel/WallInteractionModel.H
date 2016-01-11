@@ -141,23 +141,23 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeWallInteractionModel(CloudType)                                   \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(WallInteractionModel<CloudType>, 0);  \
-                                                                              \
-    defineTemplateRunTimeSelectionTable                                       \
-    (                                                                         \
-        WallInteractionModel<CloudType>,                                      \
-        dictionary                                                            \
+#define makeWallInteractionModel(CloudType)                                    \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(WallInteractionModel<CloudType>, 0);   \
+                                                                               \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        WallInteractionModel<CloudType>,                                       \
+        dictionary                                                             \
     );
 
 
-#define makeWallInteractionModelType(SS, CloudType)                           \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                    \
-                                                                              \
-    WallInteractionModel<CloudType>::                                         \
-        adddictionaryConstructorToTable<SS<CloudType>>                       \
+#define makeWallInteractionModelType(SS, CloudType)                            \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                     \
+                                                                               \
+    WallInteractionModel<CloudType>::                                          \
+        adddictionaryConstructorToTable<SS<CloudType>>                         \
             add##SS##CloudType##ConstructorToTable_;
 
 

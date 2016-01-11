@@ -124,17 +124,17 @@ UNARY_FUNCTION(scalar, scalar, y1, trans)
 #define BesselFunc(func)                                                       \
                                                                                \
 template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh>> func                                   \
+tmp<DimensionedField<scalar, GeoMesh>> func                                    \
 (                                                                              \
     const int n,                                                               \
     const DimensionedField<scalar, GeoMesh>&                                   \
 );                                                                             \
                                                                                \
 template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh>> func                                   \
+tmp<DimensionedField<scalar, GeoMesh>> func                                    \
 (                                                                              \
     const int n,                                                               \
-    const tmp<DimensionedField<scalar, GeoMesh>>&                             \
+    const tmp<DimensionedField<scalar, GeoMesh>>&                              \
 );
 
 BesselFunc(jn)

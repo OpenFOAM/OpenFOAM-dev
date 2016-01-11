@@ -101,24 +101,24 @@ inline void cmptMag
 {}
 
 
-#define BINARY_FUNCTION(func)                                                 \
-                                                                              \
-template<class Type>                                                          \
-inline void func                                                              \
-(                                                                             \
-    pointPatchField<Type>& f,                                                 \
-    const pointPatchField<Type>& f1,                                          \
-    const pointPatchField<Type>& f2                                           \
-)                                                                             \
-{}                                                                            \
-                                                                              \
-template<class Type>                                                          \
-inline void func                                                              \
-(                                                                             \
-    pointPatchField<Type>& f,                                                 \
-    const pointPatchField<Type>& f1,                                          \
-    const Type& s                                                             \
-)                                                                             \
+#define BINARY_FUNCTION(func)                                                  \
+                                                                               \
+template<class Type>                                                           \
+inline void func                                                               \
+(                                                                              \
+    pointPatchField<Type>& f,                                                  \
+    const pointPatchField<Type>& f1,                                           \
+    const pointPatchField<Type>& f2                                            \
+)                                                                              \
+{}                                                                             \
+                                                                               \
+template<class Type>                                                           \
+inline void func                                                               \
+(                                                                              \
+    pointPatchField<Type>& f,                                                  \
+    const pointPatchField<Type>& f1,                                           \
+    const Type& s                                                              \
+)                                                                              \
 {}
 
 BINARY_FUNCTION(max)
@@ -129,54 +129,54 @@ BINARY_FUNCTION(cmptDivide)
 
 /* * * * * * * * * * * * * * * * Global operators  * * * * * * * * * * * * * */
 
-#define UNARY_OPERATOR(op, opFunc)                                            \
-                                                                              \
-template<class Type>                                                          \
-inline void opFunc                                                            \
-(                                                                             \
-    pointPatchField<Type>& f,                                                 \
-    const pointPatchField<Type>& f1                                           \
-)                                                                             \
+#define UNARY_OPERATOR(op, opFunc)                                             \
+                                                                               \
+template<class Type>                                                           \
+inline void opFunc                                                             \
+(                                                                              \
+    pointPatchField<Type>& f,                                                  \
+    const pointPatchField<Type>& f1                                            \
+)                                                                              \
 {}
 
 UNARY_OPERATOR(-, negate)
 
-#define BINARY_OPERATOR(Type1, Type2, op, opFunc)                             \
-                                                                              \
-template<class Type>                                                          \
-inline void opFunc                                                            \
-(                                                                             \
-    pointPatchField<Type>& f,                                                 \
-    const pointPatchField<Type1>& f1,                                         \
-    const pointPatchField<Type2>& f2                                          \
-)                                                                             \
+#define BINARY_OPERATOR(Type1, Type2, op, opFunc)                              \
+                                                                               \
+template<class Type>                                                           \
+inline void opFunc                                                             \
+(                                                                              \
+    pointPatchField<Type>& f,                                                  \
+    const pointPatchField<Type1>& f1,                                          \
+    const pointPatchField<Type2>& f2                                           \
+)                                                                              \
 {}
 
 BINARY_OPERATOR(scalar, Type, *, multiply)
 BINARY_OPERATOR(Type, scalar, *, multiply)
 BINARY_OPERATOR(Type, scalar, /, divide)
 
-#define BINARY_TYPE_OPERATOR_SF(TYPE, op, opFunc)                             \
-                                                                              \
-template<class Type>                                                          \
-inline void opFunc                                                            \
-(                                                                             \
-    pointPatchField<Type>& f,                                                 \
-    const TYPE& s,                                                            \
-    const pointPatchField<Type>& f1                                           \
-)                                                                             \
+#define BINARY_TYPE_OPERATOR_SF(TYPE, op, opFunc)                              \
+                                                                               \
+template<class Type>                                                           \
+inline void opFunc                                                             \
+(                                                                              \
+    pointPatchField<Type>& f,                                                  \
+    const TYPE& s,                                                             \
+    const pointPatchField<Type>& f1                                            \
+)                                                                              \
 {}
 
 
-#define BINARY_TYPE_OPERATOR_FS(TYPE, op, opFunc)                             \
-                                                                              \
-template<class Type>                                                          \
-inline void opFunc                                                            \
-(                                                                             \
-    pointPatchField<Type>& f,                                                 \
-    const pointPatchField<Type>& f1,                                          \
-    const TYPE& s                                                             \
-)                                                                             \
+#define BINARY_TYPE_OPERATOR_FS(TYPE, op, opFunc)                              \
+                                                                               \
+template<class Type>                                                           \
+inline void opFunc                                                             \
+(                                                                              \
+    pointPatchField<Type>& f,                                                  \
+    const pointPatchField<Type>& f1,                                           \
+    const TYPE& s                                                              \
+)                                                                              \
 {}
 
 
@@ -185,52 +185,52 @@ BINARY_TYPE_OPERATOR_FS(scalar, *, multiply)
 BINARY_TYPE_OPERATOR_FS(scalar, /, divide)
 
 
-#define PRODUCT_OPERATOR(product, op, opFunc)                                 \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Type1,                                                              \
-    class Type2                                                               \
->                                                                             \
-inline void opFunc                                                            \
-(                                                                             \
-    pointPatchField                                                           \
-    <typename product<Type1, Type2>::type>& f,                                \
-    const pointPatchField<Type1>& f1,                                         \
-    const pointPatchField<Type2>& f2                                          \
-)                                                                             \
-{}                                                                            \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Type,                                                               \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    int nCmpt                                                                 \
->                                                                             \
-inline void opFunc                                                            \
-(                                                                             \
-    pointPatchField                                                           \
-    <typename product<Type, Form>::type>& f,                                  \
-    const pointPatchField<Type>& f1,                                          \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
-)                                                                             \
-{}                                                                            \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    int nCmpt,                                                                \
-    class Type                                                                \
->                                                                             \
-inline void opFunc                                                            \
-(                                                                             \
-    pointPatchField                                                           \
-    <typename product<Form, Type>::type>& f,                                  \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
-    const pointPatchField<Type>& f1                                           \
-)                                                                             \
+#define PRODUCT_OPERATOR(product, op, opFunc)                                  \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Type1,                                                               \
+    class Type2                                                                \
+>                                                                              \
+inline void opFunc                                                             \
+(                                                                              \
+    pointPatchField                                                            \
+    <typename product<Type1, Type2>::type>& f,                                 \
+    const pointPatchField<Type1>& f1,                                          \
+    const pointPatchField<Type2>& f2                                           \
+)                                                                              \
+{}                                                                             \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Type,                                                                \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    int nCmpt                                                                  \
+>                                                                              \
+inline void opFunc                                                             \
+(                                                                              \
+    pointPatchField                                                            \
+    <typename product<Type, Form>::type>& f,                                   \
+    const pointPatchField<Type>& f1,                                           \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
+)                                                                              \
+{}                                                                             \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    int nCmpt,                                                                 \
+    class Type                                                                 \
+>                                                                              \
+inline void opFunc                                                             \
+(                                                                              \
+    pointPatchField                                                            \
+    <typename product<Form, Type>::type>& f,                                   \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
+    const pointPatchField<Type>& f1                                            \
+)                                                                              \
 {}
 
 PRODUCT_OPERATOR(typeOfSum, +, add)

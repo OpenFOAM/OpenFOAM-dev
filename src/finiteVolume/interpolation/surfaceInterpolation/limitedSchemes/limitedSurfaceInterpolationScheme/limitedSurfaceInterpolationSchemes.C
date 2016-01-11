@@ -32,24 +32,24 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeBaseLimitedSurfaceInterpolationScheme(Type)                       \
-                                                                              \
-defineNamedTemplateTypeNameAndDebug                                           \
-(                                                                             \
-    limitedSurfaceInterpolationScheme<Type>,                                  \
-    0                                                                         \
-);                                                                            \
-                                                                              \
-defineTemplateRunTimeSelectionTable                                           \
-(                                                                             \
-    limitedSurfaceInterpolationScheme<Type>,                                  \
-    Mesh                                                                      \
-);                                                                            \
-                                                                              \
-defineTemplateRunTimeSelectionTable                                           \
-(                                                                             \
-    limitedSurfaceInterpolationScheme<Type>,                                  \
-    MeshFlux                                                                  \
+#define makeBaseLimitedSurfaceInterpolationScheme(Type)                        \
+                                                                               \
+defineNamedTemplateTypeNameAndDebug                                            \
+(                                                                              \
+    limitedSurfaceInterpolationScheme<Type>,                                   \
+    0                                                                          \
+);                                                                             \
+                                                                               \
+defineTemplateRunTimeSelectionTable                                            \
+(                                                                              \
+    limitedSurfaceInterpolationScheme<Type>,                                   \
+    Mesh                                                                       \
+);                                                                             \
+                                                                               \
+defineTemplateRunTimeSelectionTable                                            \
+(                                                                              \
+    limitedSurfaceInterpolationScheme<Type>,                                   \
+    MeshFlux                                                                   \
 );
 
 makeBaseLimitedSurfaceInterpolationScheme(scalar)

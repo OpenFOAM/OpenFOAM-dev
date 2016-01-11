@@ -32,8 +32,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-#define defineSetWriterType(dataType)                                         \
-    defineNamedTemplateTypeNameAndDebug(writer<dataType >, 0);                \
+#define defineSetWriterType(dataType)                                          \
+    defineNamedTemplateTypeNameAndDebug(writer<dataType >, 0);                 \
     defineTemplatedRunTimeSelectionTable(writer, word, dataType);
 
 defineSetWriterType(scalar);

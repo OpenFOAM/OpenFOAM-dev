@@ -34,11 +34,11 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeSprayParcelStochasticCollisionModels(CloudType)                   \
-                                                                              \
-    makeStochasticCollisionModel(CloudType);                                  \
-    makeStochasticCollisionModelType(NoStochasticCollision, CloudType);       \
-    makeStochasticCollisionModelType(ORourkeCollision, CloudType);            \
+#define makeSprayParcelStochasticCollisionModels(CloudType)                    \
+                                                                               \
+    makeStochasticCollisionModel(CloudType);                                   \
+    makeStochasticCollisionModelType(NoStochasticCollision, CloudType);        \
+    makeStochasticCollisionModelType(ORourkeCollision, CloudType);             \
     makeStochasticCollisionModelType(TrajectoryCollision, CloudType);
 
 

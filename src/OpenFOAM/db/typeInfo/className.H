@@ -39,24 +39,24 @@ Description
 
 //- Add typeName information from argument \a TypeNameString to a class.
 //  Without debug information
-#define ClassNameNoDebug(TypeNameString)                                      \
-    static const char* typeName_() { return TypeNameString; }                 \
+#define ClassNameNoDebug(TypeNameString)                                       \
+    static const char* typeName_() { return TypeNameString; }                  \
     static const ::Foam::word typeName
 
 //- Add typeName information from argument \a TypeNameString to a namespace.
 //  Without debug information.
-#define NamespaceNameNoDebug(TypeNameString)                                  \
-    inline const char* typeName_() { return TypeNameString; }                 \
+#define NamespaceNameNoDebug(TypeNameString)                                   \
+    inline const char* typeName_() { return TypeNameString; }                  \
     extern const ::Foam::word typeName
 
 //- Add typeName information from argument \a TemplateNameString to a
 //  template class.  Without debug information.
-#define TemplateNameNoDebug(TemplateNameString)                               \
-class TemplateNameString##Name                                                \
-{                                                                             \
-public:                                                                       \
-    TemplateNameString##Name() {}                                             \
-    ClassNameNoDebug(#TemplateNameString);                                    \
+#define TemplateNameNoDebug(TemplateNameString)                                \
+class TemplateNameString##Name                                                 \
+{                                                                              \
+public:                                                                        \
+    TemplateNameString##Name() {}                                              \
+    ClassNameNoDebug(#TemplateNameString);                                     \
 }
 
 
@@ -66,24 +66,24 @@ public:                                                                       \
 
 //- Add typeName information from argument \a TypeNameString to a class.
 //  Also declares debug information.
-#define ClassName(TypeNameString)                                             \
-    ClassNameNoDebug(TypeNameString);                                         \
+#define ClassName(TypeNameString)                                              \
+    ClassNameNoDebug(TypeNameString);                                          \
     static int debug
 
 //- Add typeName information from argument \a TypeNameString to a namespace.
 //  Also declares debug information.
-#define NamespaceName(TypeNameString)                                         \
-    NamespaceNameNoDebug(TypeNameString);                                     \
+#define NamespaceName(TypeNameString)                                          \
+    NamespaceNameNoDebug(TypeNameString);                                      \
     extern int debug
 
 //- Add typeName information from argument \a TypeNameString to a
 //  template class.  Also declares debug information.
-#define TemplateName(TemplateNameString)                                      \
-class TemplateNameString##Name                                                \
-{                                                                             \
-public:                                                                       \
-    TemplateNameString##Name() {}                                             \
-    ClassName(#TemplateNameString);                                           \
+#define TemplateName(TemplateNameString)                                       \
+class TemplateNameString##Name                                                 \
+{                                                                              \
+public:                                                                        \
+    TemplateNameString##Name() {}                                              \
+    ClassName(#TemplateNameString);                                            \
 }
 
 
@@ -92,28 +92,28 @@ public:                                                                       \
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //- Define the typeName, with alternative lookup as \a Name
-#define defineTypeNameWithName(Type, Name)                                    \
+#define defineTypeNameWithName(Type, Name)                                     \
     const ::Foam::word Type::typeName(Name)
 
 //- Define the typeName
-#define defineTypeName(Type)                                                  \
+#define defineTypeName(Type)                                                   \
     defineTypeNameWithName(Type, Type::typeName_())
 
 //- Define the typeName as \a Name for template classes
-# define defineTemplateTypeNameWithName(Type, Name)                           \
-    template<>                                                                \
+# define defineTemplateTypeNameWithName(Type, Name)                            \
+    template<>                                                                 \
     defineTypeNameWithName(Type, Name)
 //- Define the typeName as \a Name for template sub-classes
-# define defineTemplate2TypeNameWithName(Type, Name)                          \
-    template<>                                                                \
+# define defineTemplate2TypeNameWithName(Type, Name)                           \
+    template<>                                                                 \
     defineTypeNameWithName(Type, Name)
 
 //- Define the typeName for template classes, useful with typedefs
-#define defineTemplateTypeName(Type)                                          \
+#define defineTemplateTypeName(Type)                                           \
     defineTemplateTypeNameWithName(Type, #Type)
 
 //- Define the typeName directly for template classes
-#define defineNamedTemplateTypeName(Type)                                     \
+#define defineNamedTemplateTypeName(Type)                                      \
     defineTemplateTypeNameWithName(Type, Type::typeName_())
 
 
@@ -122,35 +122,35 @@ public:                                                                       \
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //- Define the typeName and debug information
-#define defineTypeNameAndDebug(Type, DebugSwitch)                             \
-    defineTypeName(Type);                                                     \
+#define defineTypeNameAndDebug(Type, DebugSwitch)                              \
+    defineTypeName(Type);                                                      \
     defineDebugSwitch(Type, DebugSwitch)
 
 //- Define the typeName and debug information, lookup as \a Name
-#define defineTemplateTypeNameAndDebugWithName(Type, Name, DebugSwitch)       \
-    defineTemplateTypeNameWithName(Type, Name);                               \
+#define defineTemplateTypeNameAndDebugWithName(Type, Name, DebugSwitch)        \
+    defineTemplateTypeNameWithName(Type, Name);                                \
     defineTemplateDebugSwitchWithName(Type, Name, DebugSwitch)
 
 //- Define the typeName and debug information for templates, useful
 //  with typedefs
-#define defineTemplateTypeNameAndDebug(Type, DebugSwitch)                     \
+#define defineTemplateTypeNameAndDebug(Type, DebugSwitch)                      \
     defineTemplateTypeNameAndDebugWithName(Type, #Type, DebugSwitch)
 
 //- Define the typeName and debug information for templates
-#define defineNamedTemplateTypeNameAndDebug(Type, DebugSwitch)                \
-    defineNamedTemplateTypeName(Type);                                        \
+#define defineNamedTemplateTypeNameAndDebug(Type, DebugSwitch)                 \
+    defineNamedTemplateTypeName(Type);                                         \
     defineNamedTemplateDebugSwitch(Type, DebugSwitch)
 
 // for templated sub-classes
 
 //- Define the typeName and debug information, lookup as \a Name
-#define defineTemplate2TypeNameAndDebugWithName(Type, Name, DebugSwitch)      \
-    defineTemplate2TypeNameWithName(Type, Name);                              \
+#define defineTemplate2TypeNameAndDebugWithName(Type, Name, DebugSwitch)       \
+    defineTemplate2TypeNameWithName(Type, Name);                               \
     defineTemplate2DebugSwitchWithName(Type, Name, DebugSwitch)
 
 //- Define the typeName and debug information for templates, useful
 //  with typedefs
-#define defineTemplate2TypeNameAndDebug(Type, DebugSwitch)                    \
+#define defineTemplate2TypeNameAndDebug(Type, DebugSwitch)                     \
     defineTemplate2TypeNameAndDebugWithName(Type, #Type, DebugSwitch)
 
 

@@ -74,10 +74,10 @@ class StaticAssertionTest {};
 // ~~~~~~~~~~~~~
 
 //- Assert that some test is true at compile-time
-#define StaticAssert(Test)                                                   \
-    typedef ::Foam::StaticAssertionTest                                      \
-    <                                                                        \
-        sizeof( ::Foam::StaticAssertionFailed<((Test) ? true : false)>)      \
+#define StaticAssert(Test)                                                     \
+    typedef ::Foam::StaticAssertionTest                                        \
+    <                                                                          \
+        sizeof( ::Foam::StaticAssertionFailed<((Test) ? true : false)>)        \
     > StaticAssertMacro(StaticAssertionTest, __LINE__)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -162,7 +162,7 @@ public:
                                                                                \
     Foam::DampingModel<MPPICCloudType>::                                       \
         adddictionaryConstructorToTable                                        \
-        <Foam::DampingModels::SS<MPPICCloudType>>                             \
+        <Foam::DampingModels::SS<MPPICCloudType>>                              \
             add##SS##CloudType##MPPICCloudType##ConstructorToTable_;
 
 

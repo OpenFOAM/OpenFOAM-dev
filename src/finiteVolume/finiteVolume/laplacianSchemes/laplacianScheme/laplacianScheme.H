@@ -224,7 +224,7 @@ public:
             typedef SS<Type, GType> SS##Type##GType;                           \
                                                                                \
             laplacianScheme<Type, GType>::                                     \
-                addIstreamConstructorToTable<SS<Type, GType>>                 \
+                addIstreamConstructorToTable<SS<Type, GType>>                  \
                 add##SS##Type##GType##IstreamConstructorToTable_;              \
         }                                                                      \
     }

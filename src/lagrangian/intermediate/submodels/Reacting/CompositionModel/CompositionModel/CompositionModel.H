@@ -265,31 +265,31 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeCompositionModel(CloudType)                                       \
-                                                                              \
-    typedef Foam::CloudType::reactingCloudType reactingCloudType;             \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        Foam::CompositionModel<reactingCloudType>,                            \
-        0                                                                     \
-    );                                                                        \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            CompositionModel<reactingCloudType>,                              \
-            dictionary                                                        \
-        );                                                                    \
+#define makeCompositionModel(CloudType)                                        \
+                                                                               \
+    typedef Foam::CloudType::reactingCloudType reactingCloudType;              \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::CompositionModel<reactingCloudType>,                             \
+        0                                                                      \
+    );                                                                         \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            CompositionModel<reactingCloudType>,                               \
+            dictionary                                                         \
+        );                                                                     \
     }
 
 
-#define makeCompositionModelType(SS, CloudType)                               \
-                                                                              \
-    typedef Foam::CloudType::reactingCloudType reactingCloudType;             \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<reactingCloudType>, 0);      \
-                                                                              \
-    Foam::CompositionModel<reactingCloudType>::                               \
-        adddictionaryConstructorToTable<Foam::SS<reactingCloudType>>         \
+#define makeCompositionModelType(SS, CloudType)                                \
+                                                                               \
+    typedef Foam::CloudType::reactingCloudType reactingCloudType;              \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<reactingCloudType>, 0);       \
+                                                                               \
+    Foam::CompositionModel<reactingCloudType>::                                \
+        adddictionaryConstructorToTable<Foam::SS<reactingCloudType>>           \
             add##SS##CloudType##reactingCloudType##ConstructorToTable_;
 
 

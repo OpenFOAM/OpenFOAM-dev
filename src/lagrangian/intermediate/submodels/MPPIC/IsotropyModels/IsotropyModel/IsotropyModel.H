@@ -156,7 +156,7 @@ public:
                                                                                \
     Foam::IsotropyModel<MPPICCloudType>::                                      \
         adddictionaryConstructorToTable                                        \
-        <Foam::IsotropyModels::SS<MPPICCloudType>>                            \
+        <Foam::IsotropyModels::SS<MPPICCloudType>>                             \
             add##SS##CloudType##MPPICCloudType##ConstructorToTable_;
 
 

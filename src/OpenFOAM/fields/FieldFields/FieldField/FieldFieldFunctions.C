@@ -397,14 +397,14 @@ tmp<FieldField<Field, Type>> cmptMag
 }
 
 
-#define TMP_UNARY_FUNCTION(returnType, func)                                  \
-                                                                              \
-template<template<class> class Field, class Type>                             \
-returnType func(const tmp<FieldField<Field, Type>>& tf1)                     \
-{                                                                             \
-    returnType res = func(tf1());                                             \
-    tf1.clear();                                                              \
-    return res;                                                               \
+#define TMP_UNARY_FUNCTION(returnType, func)                                   \
+                                                                               \
+template<template<class> class Field, class Type>                              \
+returnType func(const tmp<FieldField<Field, Type>>& tf1)                       \
+{                                                                              \
+    returnType res = func(tf1());                                              \
+    tf1.clear();                                                               \
+    return res;                                                                \
 }
 
 template<template<class> class Field, class Type>
@@ -548,15 +548,15 @@ TMP_UNARY_FUNCTION(Type, average)
 
 #include "PstreamReduceOps.H"
 
-#define G_UNARY_FUNCTION(returnType, gFunc, func, rFunc)                      \
-                                                                              \
-template<template<class> class Field, class Type>                             \
-returnType gFunc(const FieldField<Field, Type>& f)                            \
-{                                                                             \
-    returnType res = func(f);                                                 \
-    reduce(res, rFunc##Op<Type>());                                           \
-    return res;                                                               \
-}                                                                             \
+#define G_UNARY_FUNCTION(returnType, gFunc, func, rFunc)                       \
+                                                                               \
+template<template<class> class Field, class Type>                              \
+returnType gFunc(const FieldField<Field, Type>& f)                             \
+{                                                                              \
+    returnType res = func(f);                                                  \
+    reduce(res, rFunc##Op<Type>());                                            \
+    return res;                                                                \
+}                                                                              \
 TMP_UNARY_FUNCTION(returnType, gFunc)
 
 G_UNARY_FUNCTION(Type, gMax, max, max)
@@ -655,7 +655,7 @@ template                                                                       \
     class Type1,                                                               \
     class Type2                                                                \
 >                                                                              \
-tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                 \
+tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                  \
 operator op                                                                    \
 (                                                                              \
     const FieldField<Field1, Type1>& f1,                                       \
@@ -663,7 +663,7 @@ operator op                                                                    \
 )                                                                              \
 {                                                                              \
     typedef typename product<Type1, Type2>::type productType;                  \
-    tmp<FieldField<Field1, productType>> tRes                                 \
+    tmp<FieldField<Field1, productType>> tRes                                  \
     (                                                                          \
         FieldField<Field1, productType>::NewCalculatedType(f1)                 \
     );                                                                         \
@@ -672,15 +672,15 @@ operator op                                                                    \
 }                                                                              \
                                                                                \
 template<template<class> class Field, class Type1, class Type2>                \
-tmp<FieldField<Field, typename product<Type1, Type2>::type>>                  \
+tmp<FieldField<Field, typename product<Type1, Type2>::type>>                   \
 operator op                                                                    \
 (                                                                              \
     const FieldField<Field, Type1>& f1,                                        \
-    const tmp<FieldField<Field, Type2>>& tf2                                  \
+    const tmp<FieldField<Field, Type2>>& tf2                                   \
 )                                                                              \
 {                                                                              \
     typedef typename product<Type1, Type2>::type productType;                  \
-    tmp<FieldField<Field, productType>> tRes                                  \
+    tmp<FieldField<Field, productType>> tRes                                   \
     (                                                                          \
         reuseTmpFieldField<Field, productType, Type2>::New(tf2)                \
     );                                                                         \
@@ -696,15 +696,15 @@ template                                                                       \
     class Type1,                                                               \
     class Type2                                                                \
 >                                                                              \
-tmp<FieldField<Field, typename product<Type1, Type2>::type>>                  \
+tmp<FieldField<Field, typename product<Type1, Type2>::type>>                   \
 operator op                                                                    \
 (                                                                              \
     const FieldField<Field1, Type1>& f1,                                       \
-    const tmp<FieldField<Field2, Type2>>& tf2                                 \
+    const tmp<FieldField<Field2, Type2>>& tf2                                  \
 )                                                                              \
 {                                                                              \
     typedef typename product<Type1, Type2>::type productType;                  \
-    tmp<FieldField<Field1, productType>> tRes                                 \
+    tmp<FieldField<Field1, productType>> tRes                                  \
     (                                                                          \
         FieldField<Field1, productType>::NewCalculatedType(f1)                 \
     );                                                                         \
@@ -720,15 +720,15 @@ template                                                                       \
     class Type1,                                                               \
     class Type2                                                                \
 >                                                                              \
-tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                 \
+tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                  \
 operator op                                                                    \
 (                                                                              \
-    const tmp<FieldField<Field1, Type1>>& tf1,                                \
+    const tmp<FieldField<Field1, Type1>>& tf1,                                 \
     const FieldField<Field2, Type2>& f2                                        \
 )                                                                              \
 {                                                                              \
     typedef typename product<Type1, Type2>::type productType;                  \
-    tmp<FieldField<Field1, productType>> tRes                                 \
+    tmp<FieldField<Field1, productType>> tRes                                  \
     (                                                                          \
         reuseTmpFieldField<Field1, productType, Type1>::New(tf1)               \
     );                                                                         \
@@ -744,15 +744,15 @@ template                                                                       \
     class Type1,                                                               \
     class Type2                                                                \
 >                                                                              \
-tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                 \
+tmp<FieldField<Field1, typename product<Type1, Type2>::type>>                  \
 operator op                                                                    \
 (                                                                              \
-    const tmp<FieldField<Field1, Type1>>& tf1,                                \
-    const tmp<FieldField<Field2, Type2>>& tf2                                 \
+    const tmp<FieldField<Field1, Type1>>& tf1,                                 \
+    const tmp<FieldField<Field2, Type2>>& tf2                                  \
 )                                                                              \
 {                                                                              \
     typedef typename product<Type1, Type2>::type productType;                  \
-    tmp<FieldField<Field1, productType>> tRes                                 \
+    tmp<FieldField<Field1, productType>> tRes                                  \
     (                                                                          \
         reuseTmpTmpFieldField<Field1, productType, Type1, Type1, Type2>::New   \
         (tf1, tf2)                                                             \
@@ -780,7 +780,7 @@ void opFunc                                                                    \
                                                                                \
 template                                                                       \
 <template<class> class Field, class Type, class Form, class Cmpt, int nCmpt>   \
-tmp<FieldField<Field, typename product<Type, Form>::type>>                    \
+tmp<FieldField<Field, typename product<Type, Form>::type>>                     \
 operator op                                                                    \
 (                                                                              \
     const FieldField<Field, Type>& f1,                                         \
@@ -788,7 +788,7 @@ operator op                                                                    \
 )                                                                              \
 {                                                                              \
     typedef typename product<Type, Form>::type productType;                    \
-    tmp<FieldField<Field, productType>> tRes                                  \
+    tmp<FieldField<Field, productType>> tRes                                   \
     (                                                                          \
         FieldField<Field, productType>::NewCalculatedType(f1)                  \
     );                                                                         \
@@ -798,15 +798,15 @@ operator op                                                                    \
                                                                                \
 template                                                                       \
 <template<class> class Field, class Type, class Form, class Cmpt, int nCmpt>   \
-tmp<FieldField<Field, typename product<Type, Form>::type>>                    \
+tmp<FieldField<Field, typename product<Type, Form>::type>>                     \
 operator op                                                                    \
 (                                                                              \
-    const tmp<FieldField<Field, Type>>& tf1,                                  \
+    const tmp<FieldField<Field, Type>>& tf1,                                   \
     const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
 )                                                                              \
 {                                                                              \
     typedef typename product<Type, Form>::type productType;                    \
-    tmp<FieldField<Field, productType>> tRes                                  \
+    tmp<FieldField<Field, productType>> tRes                                   \
     (                                                                          \
         reuseTmpFieldField<Field, productType, Type>::New(tf1)                 \
     );                                                                         \
@@ -832,7 +832,7 @@ void opFunc                                                                    \
                                                                                \
 template                                                                       \
 <template<class> class Field, class Form, class Cmpt, int nCmpt, class Type>   \
-tmp<FieldField<Field, typename product<Form, Type>::type>>                    \
+tmp<FieldField<Field, typename product<Form, Type>::type>>                     \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
@@ -840,7 +840,7 @@ operator op                                                                    \
 )                                                                              \
 {                                                                              \
     typedef typename product<Form, Type>::type productType;                    \
-    tmp<FieldField<Field, productType>> tRes                                  \
+    tmp<FieldField<Field, productType>> tRes                                   \
     (                                                                          \
         FieldField<Field, productType>::NewCalculatedType(f1)                  \
     );                                                                         \
@@ -850,15 +850,15 @@ operator op                                                                    \
                                                                                \
 template                                                                       \
 <template<class> class Field, class Form, class Cmpt, int nCmpt, class Type>   \
-tmp<FieldField<Field, typename product<Form, Type>::type>>                    \
+tmp<FieldField<Field, typename product<Form, Type>::type>>                     \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
-    const tmp<FieldField<Field, Type>>& tf1                                   \
+    const tmp<FieldField<Field, Type>>& tf1                                    \
 )                                                                              \
 {                                                                              \
     typedef typename product<Form, Type>::type productType;                    \
-    tmp<FieldField<Field, productType>> tRes                                  \
+    tmp<FieldField<Field, productType>> tRes                                   \
     (                                                                          \
         reuseTmpFieldField<Field, productType, Type>::New(tf1)                 \
     );                                                                         \

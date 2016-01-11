@@ -33,10 +33,10 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeReactingMultiphaseParcelStochasticCollisionModels(CloudType)      \
-                                                                              \
-    makeStochasticCollisionModel(CloudType);                                  \
-    makeStochasticCollisionModelType(NoStochasticCollision, CloudType);       \
+#define makeReactingMultiphaseParcelStochasticCollisionModels(CloudType)       \
+                                                                               \
+    makeStochasticCollisionModel(CloudType);                                   \
+    makeStochasticCollisionModelType(NoStochasticCollision, CloudType);        \
     makeStochasticCollisionModelType(SuppressionCollision, CloudType);
 
 

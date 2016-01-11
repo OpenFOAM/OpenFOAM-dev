@@ -171,7 +171,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            divScheme<Type>::addIstreamConstructorToTable<SS<Type>>           \
+            divScheme<Type>::addIstreamConstructorToTable<SS<Type>>            \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }

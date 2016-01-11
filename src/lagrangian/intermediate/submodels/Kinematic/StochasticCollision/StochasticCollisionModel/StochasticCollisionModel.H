@@ -143,13 +143,13 @@ public:
     }
 
 
-#define makeStochasticCollisionModelType(SS, CloudType)                       \
-                                                                              \
-    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);     \
-                                                                              \
-    Foam::StochasticCollisionModel<kinematicCloudType>::                      \
-        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>        \
+#define makeStochasticCollisionModelType(SS, CloudType)                        \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);      \
+                                                                               \
+    Foam::StochasticCollisionModel<kinematicCloudType>::                       \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>          \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

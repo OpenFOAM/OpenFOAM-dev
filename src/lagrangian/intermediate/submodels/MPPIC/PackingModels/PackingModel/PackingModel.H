@@ -167,7 +167,7 @@ public:
                                                                                \
     Foam::PackingModel<MPPICCloudType>::                                       \
         adddictionaryConstructorToTable                                        \
-        <Foam::PackingModels::SS<MPPICCloudType>>                             \
+        <Foam::PackingModels::SS<MPPICCloudType>>                              \
             add##SS##CloudType##MPPICCloudType##ConstructorToTable_;
 
 

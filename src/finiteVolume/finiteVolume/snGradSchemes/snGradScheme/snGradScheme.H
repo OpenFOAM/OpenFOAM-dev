@@ -195,7 +195,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            snGradScheme<Type>::addMeshConstructorToTable<SS<Type>>           \
+            snGradScheme<Type>::addMeshConstructorToTable<SS<Type>>            \
                 add##SS##Type##MeshConstructorToTable_;                        \
         }                                                                      \
     }

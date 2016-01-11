@@ -40,17 +40,17 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeReactingParcelInjectionModels(CloudType)                          \
-                                                                              \
-    makeInjectionModel(CloudType);                                            \
-    makeInjectionModelType(CellZoneInjection, CloudType);                     \
-    makeInjectionModelType(ConeInjection, CloudType);                         \
-    makeInjectionModelType(ConeNozzleInjection, CloudType);                   \
-    makeInjectionModelType(FieldActivatedInjection, CloudType);               \
-    makeInjectionModelType(ManualInjection, CloudType);                       \
-    makeInjectionModelType(NoInjection, CloudType);                           \
-    makeInjectionModelType(PatchInjection, CloudType);                        \
-    makeInjectionModelType(PatchFlowRateInjection, CloudType);                \
+#define makeReactingParcelInjectionModels(CloudType)                           \
+                                                                               \
+    makeInjectionModel(CloudType);                                             \
+    makeInjectionModelType(CellZoneInjection, CloudType);                      \
+    makeInjectionModelType(ConeInjection, CloudType);                          \
+    makeInjectionModelType(ConeNozzleInjection, CloudType);                    \
+    makeInjectionModelType(FieldActivatedInjection, CloudType);                \
+    makeInjectionModelType(ManualInjection, CloudType);                        \
+    makeInjectionModelType(NoInjection, CloudType);                            \
+    makeInjectionModelType(PatchInjection, CloudType);                         \
+    makeInjectionModelType(PatchFlowRateInjection, CloudType);                 \
     makeInjectionModelType(ReactingLookupTableInjection, CloudType);
 
 

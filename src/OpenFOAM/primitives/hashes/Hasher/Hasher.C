@@ -113,14 +113,14 @@ Description
 // rotates.
 // ----------------------------------------------------------------------------
 
-#define bitMixer(a, b, c)                                                     \
-    {                                                                         \
-        a -= c; a ^= bitRotateLeft(c, 4); c += b;                             \
-        b -= a; b ^= bitRotateLeft(a, 6); a += c;                             \
-        c -= b; c ^= bitRotateLeft(b, 8); b += a;                             \
-        a -= c; a ^= bitRotateLeft(c,16); c += b;                             \
-        b -= a; b ^= bitRotateLeft(a,19); a += c;                             \
-        c -= b; c ^= bitRotateLeft(b, 4); b += a;                             \
+#define bitMixer(a, b, c)                                                      \
+    {                                                                          \
+        a -= c; a ^= bitRotateLeft(c, 4); c += b;                              \
+        b -= a; b ^= bitRotateLeft(a, 6); a += c;                              \
+        c -= b; c ^= bitRotateLeft(b, 8); b += a;                              \
+        a -= c; a ^= bitRotateLeft(c,16); c += b;                              \
+        b -= a; b ^= bitRotateLeft(a,19); a += c;                              \
+        c -= b; c ^= bitRotateLeft(b, 4); b += a;                              \
     }
 
 
@@ -148,15 +148,15 @@ Description
 //  11  8 15 26 3 22 24
 // ----------------------------------------------------------------------------
 
-#define bitMixerFinal(a, b, c)                                                \
-    {                                                                         \
-        c ^= b; c -= bitRotateLeft(b, 14);                                    \
-        a ^= c; a -= bitRotateLeft(c, 11);                                    \
-        b ^= a; b -= bitRotateLeft(a, 25);                                    \
-        c ^= b; c -= bitRotateLeft(b, 16);                                    \
-        a ^= c; a -= bitRotateLeft(c, 4);                                     \
-        b ^= a; b -= bitRotateLeft(a, 14);                                    \
-        c ^= b; c -= bitRotateLeft(b, 24);                                    \
+#define bitMixerFinal(a, b, c)                                                 \
+    {                                                                          \
+        c ^= b; c -= bitRotateLeft(b, 14);                                     \
+        a ^= c; a -= bitRotateLeft(c, 11);                                     \
+        b ^= a; b -= bitRotateLeft(a, 25);                                     \
+        c ^= b; c -= bitRotateLeft(b, 16);                                     \
+        a ^= c; a -= bitRotateLeft(c, 4);                                      \
+        b ^= a; b -= bitRotateLeft(a, 14);                                     \
+        c ^= b; c -= bitRotateLeft(b, 24);                                     \
     }
 
 

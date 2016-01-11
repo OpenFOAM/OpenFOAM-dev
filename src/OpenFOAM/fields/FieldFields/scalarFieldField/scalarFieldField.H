@@ -128,14 +128,14 @@ UNARY_FUNCTION(scalar, scalar, y0)
 UNARY_FUNCTION(scalar, scalar, y1)
 
 
-#define BesselFunc(func)                                                      \
-void func                                                                     \
-(                                                                             \
-    FieldField<Field, scalar>& Res,                                           \
-    const int n,                                                              \
-    const FieldField<Field, scalar>& sf                                       \
-);                                                                            \
-tmp<scalarField> func(const int n, const FieldField<Field, scalar>&);         \
+#define BesselFunc(func)                                                       \
+void func                                                                      \
+(                                                                              \
+    FieldField<Field, scalar>& Res,                                            \
+    const int n,                                                               \
+    const FieldField<Field, scalar>& sf                                        \
+);                                                                             \
+tmp<scalarField> func(const int n, const FieldField<Field, scalar>&);          \
 tmp<scalarField> func(const int n, const tmp<FieldField<Field, scalar>>&);
 
 BesselFunc(jn)

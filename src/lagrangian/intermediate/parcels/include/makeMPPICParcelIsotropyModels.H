@@ -33,11 +33,11 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeMPPICParcelIsotropyModels(CloudType)                              \
-                                                                              \
-    makeIsotropyModel(CloudType);                                             \
-                                                                              \
-    makeIsotropyModelType(NoIsotropy, CloudType);                             \
+#define makeMPPICParcelIsotropyModels(CloudType)                               \
+                                                                               \
+    makeIsotropyModel(CloudType);                                              \
+                                                                               \
+    makeIsotropyModelType(NoIsotropy, CloudType);                              \
     makeIsotropyModelType(Stochastic, CloudType);
 
 

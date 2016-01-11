@@ -158,35 +158,35 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeSurfaceReactionModel(CloudType)                                   \
-                                                                              \
-    typedef Foam::CloudType::reactingMultiphaseCloudType                      \
-        reactingMultiphaseCloudType;                                          \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        Foam::SurfaceReactionModel<reactingMultiphaseCloudType>,              \
-        0                                                                     \
-    );                                                                        \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            SurfaceReactionModel<reactingMultiphaseCloudType>,                \
-            dictionary                                                        \
-        );                                                                    \
+#define makeSurfaceReactionModel(CloudType)                                    \
+                                                                               \
+    typedef Foam::CloudType::reactingMultiphaseCloudType                       \
+        reactingMultiphaseCloudType;                                           \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::SurfaceReactionModel<reactingMultiphaseCloudType>,               \
+        0                                                                      \
+    );                                                                         \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            SurfaceReactionModel<reactingMultiphaseCloudType>,                 \
+            dictionary                                                         \
+        );                                                                     \
     }
 
 
-#define makeSurfaceReactionModelType(SS, CloudType)                           \
-                                                                              \
-    typedef Foam::CloudType::reactingMultiphaseCloudType                      \
-        reactingMultiphaseCloudType;                                          \
-    defineNamedTemplateTypeNameAndDebug                                       \
-        (Foam::SS<reactingMultiphaseCloudType>, 0);                           \
-                                                                              \
-    Foam::SurfaceReactionModel<reactingMultiphaseCloudType>::                 \
-        adddictionaryConstructorToTable                                       \
-        <Foam::SS<reactingMultiphaseCloudType>>                              \
+#define makeSurfaceReactionModelType(SS, CloudType)                            \
+                                                                               \
+    typedef Foam::CloudType::reactingMultiphaseCloudType                       \
+        reactingMultiphaseCloudType;                                           \
+    defineNamedTemplateTypeNameAndDebug                                        \
+        (Foam::SS<reactingMultiphaseCloudType>, 0);                            \
+                                                                               \
+    Foam::SurfaceReactionModel<reactingMultiphaseCloudType>::                  \
+        adddictionaryConstructorToTable                                        \
+        <Foam::SS<reactingMultiphaseCloudType>>                                \
         add##SS##CloudType##reactingMultiphaseCloudType##ConstructorToTable_;
 
 

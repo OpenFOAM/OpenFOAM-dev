@@ -201,31 +201,31 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makePhaseChangeModel(CloudType)                                       \
-                                                                              \
-    typedef Foam::CloudType::reactingCloudType reactingCloudType;             \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        Foam::PhaseChangeModel<reactingCloudType>,                            \
-        0                                                                     \
-    );                                                                        \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            PhaseChangeModel<reactingCloudType>,                              \
-            dictionary                                                        \
-        );                                                                    \
+#define makePhaseChangeModel(CloudType)                                        \
+                                                                               \
+    typedef Foam::CloudType::reactingCloudType reactingCloudType;              \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::PhaseChangeModel<reactingCloudType>,                             \
+        0                                                                      \
+    );                                                                         \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            PhaseChangeModel<reactingCloudType>,                               \
+            dictionary                                                         \
+        );                                                                     \
     }
 
 
-#define makePhaseChangeModelType(SS, CloudType)                               \
-                                                                              \
-    typedef Foam::CloudType::reactingCloudType reactingCloudType;             \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<reactingCloudType>, 0);      \
-                                                                              \
-    Foam::PhaseChangeModel<reactingCloudType>::                               \
-        adddictionaryConstructorToTable<Foam::SS<reactingCloudType>>         \
+#define makePhaseChangeModelType(SS, CloudType)                                \
+                                                                               \
+    typedef Foam::CloudType::reactingCloudType reactingCloudType;              \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<reactingCloudType>, 0);       \
+                                                                               \
+    Foam::PhaseChangeModel<reactingCloudType>::                                \
+        adddictionaryConstructorToTable<Foam::SS<reactingCloudType>>           \
             add##SS##CloudType##reactingCloudType##ConstructorToTable_;
 
 

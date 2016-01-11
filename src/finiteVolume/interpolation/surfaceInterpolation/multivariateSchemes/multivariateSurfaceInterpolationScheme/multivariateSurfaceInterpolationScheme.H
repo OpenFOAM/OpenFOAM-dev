@@ -212,7 +212,7 @@ public:
 defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
                                                                                \
 multivariateSurfaceInterpolationScheme<Type>::                                 \
-addIstreamConstructorToTable<SS<Type>>                                        \
+addIstreamConstructorToTable<SS<Type>>                                         \
     add##SS##Type##ConstructorToTable_;
 
 

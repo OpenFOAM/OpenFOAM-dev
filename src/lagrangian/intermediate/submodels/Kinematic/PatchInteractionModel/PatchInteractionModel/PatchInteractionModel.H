@@ -172,32 +172,32 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makePatchInteractionModel(CloudType)                                  \
-                                                                              \
-    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        Foam::PatchInteractionModel<kinematicCloudType>,                      \
-        0                                                                     \
-    );                                                                        \
-                                                                              \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            PatchInteractionModel<kinematicCloudType>,                        \
-            dictionary                                                        \
-        );                                                                    \
+#define makePatchInteractionModel(CloudType)                                   \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::PatchInteractionModel<kinematicCloudType>,                       \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            PatchInteractionModel<kinematicCloudType>,                         \
+            dictionary                                                         \
+        );                                                                     \
     }
 
 
-#define makePatchInteractionModelType(SS, CloudType)                          \
-                                                                              \
-    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;           \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);     \
-                                                                              \
-    Foam::PatchInteractionModel<kinematicCloudType>::                         \
-        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>        \
+#define makePatchInteractionModelType(SS, CloudType)                           \
+                                                                               \
+    typedef Foam::CloudType::kinematicCloudType kinematicCloudType;            \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<kinematicCloudType>, 0);      \
+                                                                               \
+    Foam::PatchInteractionModel<kinematicCloudType>::                          \
+        adddictionaryConstructorToTable<Foam::SS<kinematicCloudType>>          \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

@@ -206,15 +206,15 @@ void Foam::SHA1::processBlock(const void *data, size_t len)
     // rotate left uint32_t by n bits
     #define rol_uint32(x, nbits)  (((x) << (nbits)) | ((x) >> (32 - (nbits))))
 
-    #define M(I) ( tm = x[I & 0x0F] ^ x[(I-14) & 0x0F]                        \
-               ^ x[(I-8) & 0x0F] ^ x[(I-3) & 0x0F]                            \
+    #define M(I) ( tm = x[I & 0x0F] ^ x[(I-14) & 0x0F]                         \
+               ^ x[(I-8) & 0x0F] ^ x[(I-3) & 0x0F]                             \
                , (x[I & 0x0F] = rol_uint32(tm, 1)) )
 
-    #define R(A,B,C,D,E,F,K,M)                                                \
-        do                                                                    \
-        {                                                                     \
-            E += rol_uint32(A, 5) + F(B, C, D) + K + M;                       \
-            B = rol_uint32(B, 30);                                            \
+    #define R(A,B,C,D,E,F,K,M)                                                 \
+        do                                                                     \
+        {                                                                      \
+            E += rol_uint32(A, 5) + F(B, C, D) + K + M;                        \
+            B = rol_uint32(B, 30);                                             \
         } while (0)
 
     while (words < endp)

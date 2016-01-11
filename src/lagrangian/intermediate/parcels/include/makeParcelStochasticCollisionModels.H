@@ -32,9 +32,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeParcelStochasticCollisionModels(CloudType)                        \
-                                                                              \
-    makeStochasticCollisionModel(CloudType);                                  \
+#define makeParcelStochasticCollisionModels(CloudType)                         \
+                                                                               \
+    makeStochasticCollisionModel(CloudType);                                   \
     makeStochasticCollisionModelType(NoStochasticCollision, CloudType);
 
 

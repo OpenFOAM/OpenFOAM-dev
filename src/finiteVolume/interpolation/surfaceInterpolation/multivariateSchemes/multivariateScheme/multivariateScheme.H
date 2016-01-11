@@ -181,7 +181,7 @@ multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
 typedef multivariateScheme                                                     \
 <                                                                              \
     scalar,                                                                    \
-    LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD>>, limitFuncs::LIMFUNC>     \
+    LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD>>, limitFuncs::LIMFUNC>      \
 >                                                                              \
     multivariateScheme##LLIMITER##LIMITER##NVDTVD##LIMFUNC##_;                 \
 defineTemplateTypeNameAndDebugWithName                                         \

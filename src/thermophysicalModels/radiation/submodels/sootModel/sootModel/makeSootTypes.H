@@ -31,30 +31,30 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeSootTypesThermo(sootModelType, Thermo)                            \
-    typedef Foam::radiation::sootModelType<Foam::Thermo>                      \
-        sootModelType##Thermo;                                                \
-                                                                              \
-    defineTemplateTypeNameAndDebugWithName                                    \
-    (                                                                         \
-        sootModelType##Thermo,                                                \
-        #sootModelType"<"#Thermo">",                                          \
-        0                                                                     \
-    );                                                                        \
-                                                                              \
-    namespace Foam                                                            \
-    {                                                                         \
-        namespace radiation                                                   \
-        {                                                                     \
-            typedef sootModelType<Thermo> sootModelType##Thermo;              \
-                                                                              \
-            addToRunTimeSelectionTable                                        \
-            (                                                                 \
-                sootModel,                                                    \
-                sootModelType##Thermo,                                        \
-                dictionary                                                    \
-            );                                                                \
-        }                                                                     \
+#define makeSootTypesThermo(sootModelType, Thermo)                             \
+    typedef Foam::radiation::sootModelType<Foam::Thermo>                       \
+        sootModelType##Thermo;                                                 \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        sootModelType##Thermo,                                                 \
+        #sootModelType"<"#Thermo">",                                           \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace radiation                                                    \
+        {                                                                      \
+            typedef sootModelType<Thermo> sootModelType##Thermo;               \
+                                                                               \
+            addToRunTimeSelectionTable                                         \
+            (                                                                  \
+                sootModel,                                                     \
+                sootModelType##Thermo,                                         \
+                dictionary                                                     \
+            );                                                                 \
+        }                                                                      \
     }
 
 

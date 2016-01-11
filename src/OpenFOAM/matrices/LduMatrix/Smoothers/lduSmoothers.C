@@ -26,10 +26,10 @@ License
 #include "TGaussSeidelSmoother.H"
 #include "fieldTypes.H"
 
-#define makeLduSmoothers(Type, DType, LUType)                                 \
-                                                                              \
-    makeLduSmoother(TGaussSeidelSmoother, Type, DType, LUType);               \
-    makeLduSymSmoother(TGaussSeidelSmoother, Type, DType, LUType);            \
+#define makeLduSmoothers(Type, DType, LUType)                                  \
+                                                                               \
+    makeLduSmoother(TGaussSeidelSmoother, Type, DType, LUType);                \
+    makeLduSymSmoother(TGaussSeidelSmoother, Type, DType, LUType);             \
     makeLduAsymSmoother(TGaussSeidelSmoother, Type, DType, LUType);
 
 namespace Foam

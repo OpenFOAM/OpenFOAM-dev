@@ -476,38 +476,38 @@ void DimensionedField<Type, GeoMesh>::operator=
 }
 
 
-#define COMPUTED_ASSIGNMENT(TYPE, op)                                         \
-                                                                              \
-template<class Type, class GeoMesh>                                           \
-void DimensionedField<Type, GeoMesh>::operator op                             \
-(                                                                             \
-    const DimensionedField<TYPE, GeoMesh>& df                                 \
-)                                                                             \
-{                                                                             \
-    checkField(*this, df, #op);                                               \
-                                                                              \
-    dimensions_ op df.dimensions();                                           \
-    Field<Type>::operator op(df);                                             \
-}                                                                             \
-                                                                              \
-template<class Type, class GeoMesh>                                           \
-void DimensionedField<Type, GeoMesh>::operator op                             \
-(                                                                             \
-    const tmp<DimensionedField<TYPE, GeoMesh>>& tdf                          \
-)                                                                             \
-{                                                                             \
-    operator op(tdf());                                                       \
-    tdf.clear();                                                              \
-}                                                                             \
-                                                                              \
-template<class Type, class GeoMesh>                                           \
-void DimensionedField<Type, GeoMesh>::operator op                             \
-(                                                                             \
-    const dimensioned<TYPE>& dt                                               \
-)                                                                             \
-{                                                                             \
-    dimensions_ op dt.dimensions();                                           \
-    Field<Type>::operator op(dt.value());                                     \
+#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+                                                                               \
+template<class Type, class GeoMesh>                                            \
+void DimensionedField<Type, GeoMesh>::operator op                              \
+(                                                                              \
+    const DimensionedField<TYPE, GeoMesh>& df                                  \
+)                                                                              \
+{                                                                              \
+    checkField(*this, df, #op);                                                \
+                                                                               \
+    dimensions_ op df.dimensions();                                            \
+    Field<Type>::operator op(df);                                              \
+}                                                                              \
+                                                                               \
+template<class Type, class GeoMesh>                                            \
+void DimensionedField<Type, GeoMesh>::operator op                              \
+(                                                                              \
+    const tmp<DimensionedField<TYPE, GeoMesh>>& tdf                            \
+)                                                                              \
+{                                                                              \
+    operator op(tdf());                                                        \
+    tdf.clear();                                                               \
+}                                                                              \
+                                                                               \
+template<class Type, class GeoMesh>                                            \
+void DimensionedField<Type, GeoMesh>::operator op                              \
+(                                                                              \
+    const dimensioned<TYPE>& dt                                                \
+)                                                                              \
+{                                                                              \
+    dimensions_ op dt.dimensions();                                            \
+    Field<Type>::operator op(dt.value());                                      \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)

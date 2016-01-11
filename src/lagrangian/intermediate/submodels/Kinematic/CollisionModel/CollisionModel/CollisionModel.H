@@ -133,31 +133,31 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeCollisionModel(CloudType)                                         \
-                                                                              \
-    typedef Foam::CloudType::collidingCloudType collidingCloudType;           \
-    defineNamedTemplateTypeNameAndDebug                                       \
-    (                                                                         \
-        Foam::CollisionModel<collidingCloudType>,                             \
-        0                                                                     \
-    );                                                                        \
-    namespace Foam                                                            \
-    {                                                                         \
-        defineTemplateRunTimeSelectionTable                                   \
-        (                                                                     \
-            CollisionModel<collidingCloudType>,                               \
-            dictionary                                                        \
-        );                                                                    \
+#define makeCollisionModel(CloudType)                                          \
+                                                                               \
+    typedef Foam::CloudType::collidingCloudType collidingCloudType;            \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::CollisionModel<collidingCloudType>,                              \
+        0                                                                      \
+    );                                                                         \
+    namespace Foam                                                             \
+    {                                                                          \
+        defineTemplateRunTimeSelectionTable                                    \
+        (                                                                      \
+            CollisionModel<collidingCloudType>,                                \
+            dictionary                                                         \
+        );                                                                     \
     }
 
 
-#define makeCollisionModelType(SS, CloudType)                                 \
-                                                                              \
-    typedef Foam::CloudType::collidingCloudType collidingCloudType;           \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<collidingCloudType>, 0);     \
-                                                                              \
-    Foam::CollisionModel<collidingCloudType>::                                \
-        adddictionaryConstructorToTable<Foam::SS<collidingCloudType>>        \
+#define makeCollisionModelType(SS, CloudType)                                  \
+                                                                               \
+    typedef Foam::CloudType::collidingCloudType collidingCloudType;            \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<collidingCloudType>, 0);      \
+                                                                               \
+    Foam::CollisionModel<collidingCloudType>::                                 \
+        adddictionaryConstructorToTable<Foam::SS<collidingCloudType>>          \
             add##SS##CloudType##collidingCloudType##ConstructorToTable_;
 
 

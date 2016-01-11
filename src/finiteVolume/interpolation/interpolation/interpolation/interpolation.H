@@ -161,7 +161,7 @@ public:
                                                                                \
 defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
                                                                                \
-interpolation<Type>::adddictionaryConstructorToTable<SS<Type>>                \
+interpolation<Type>::adddictionaryConstructorToTable<SS<Type>>                 \
     add##SS##Type##ConstructorToTable_;
 
 

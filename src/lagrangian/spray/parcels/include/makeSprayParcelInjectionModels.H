@@ -40,18 +40,18 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeSprayParcelInjectionModels(CloudType)                             \
-                                                                              \
-    makeInjectionModel(CloudType);                                            \
-                                                                              \
-    makeInjectionModelType(CellZoneInjection, CloudType);                     \
-    makeInjectionModelType(ConeInjection, CloudType);                         \
-    makeInjectionModelType(ConeNozzleInjection, CloudType);                   \
-    makeInjectionModelType(FieldActivatedInjection, CloudType);               \
-    makeInjectionModelType(InflationInjection, CloudType);                    \
-    makeInjectionModelType(ManualInjection, CloudType);                       \
-    makeInjectionModelType(NoInjection, CloudType);                           \
-    makeInjectionModelType(PatchFlowRateInjection, CloudType);                \
+#define makeSprayParcelInjectionModels(CloudType)                              \
+                                                                               \
+    makeInjectionModel(CloudType);                                             \
+                                                                               \
+    makeInjectionModelType(CellZoneInjection, CloudType);                      \
+    makeInjectionModelType(ConeInjection, CloudType);                          \
+    makeInjectionModelType(ConeNozzleInjection, CloudType);                    \
+    makeInjectionModelType(FieldActivatedInjection, CloudType);                \
+    makeInjectionModelType(InflationInjection, CloudType);                     \
+    makeInjectionModelType(ManualInjection, CloudType);                        \
+    makeInjectionModelType(NoInjection, CloudType);                            \
+    makeInjectionModelType(PatchFlowRateInjection, CloudType);                 \
     makeInjectionModelType(PatchInjection, CloudType);
 
 

@@ -195,7 +195,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            gradScheme<Type>::addIstreamConstructorToTable<SS<Type>>          \
+            gradScheme<Type>::addIstreamConstructorToTable<SS<Type>>           \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }
