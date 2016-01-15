@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,9 +77,6 @@ class scalarTransport
 
         //- Reference to the mesh database
         const fvMesh& mesh_;
-
-        //- On/off switch
-        bool active_;
 
         //- Name of flux field (optional)
         word phiName_;
