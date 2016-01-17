@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,20 @@ public:
         inline static bool valid(char);
 
         //- Cleanup file name
-        //  eg, remove repeated slashes, etc.
+        //
+        // * Removes repeated slashes
+        //       /abc////def        -->   /abc/def
+        //
+        // * Removes '/./'
+        //       /abc/def/./ghi/.   -->   /abc/def/./ghi
+        //       abc/def/./         -->   abc/def
+        //
+        // * Removes '/../'
+        //       /abc/def/../ghi/jkl/nmo/..   -->   /abc/ghi/jkl
+        //       abc/../def/ghi/../jkl        -->   abc/../def/jkl
+        //
+        // * Removes trailing '/'
+        //
         bool clean();
 
         //- Cleanup file name
@@ -154,6 +167,16 @@ public:
         // Decomposition
 
             //- Return file name (part beyond last /)
+            //
+            //  Behaviour compared to /usr/bin/basename:
+            //    Input           name()          basename
+            //    -----           ------          --------
+            //    "foo"           "foo"           "foo"
+            //    "/foo"          "foo"           "foo"
+            //    "foo/bar"       "bar"           "bar"
+            //    "/foo/bar"      "bar"           "bar"
+            //    "/foo/bar/"     ""              "bar"
+            //
             word name() const;
 
             //- Return file name (part beyond last /), subsitute for FOAM_CASE
@@ -163,6 +186,16 @@ public:
             word name(const bool noExt) const;
 
             //- Return directory path name (part before last /)
+            //
+            //  Behaviour compared to /usr/bin/dirname:
+            //    input           path()          dirname
+            //    -----           ------          -------
+            //    "foo"           "."             "."
+            //    "/foo"          "/"             "foo"
+            //    "foo/bar"       "foo"           "foo"
+            //    "/foo/bar"      "/foo"          "/foo"
+            //    "/foo/bar/"     "/foo/bar/"     "/foo"
+            //
             fileName path() const;
 
             //- Return file name without extension (part before last .)
@@ -172,6 +205,15 @@ public:
             word ext() const;
 
             //- Return path components as wordList
+            //
+            //  Behaviour:
+            //    Input           components()
+            //    -----           ------
+            //    "foo"           1("foo")
+            //    "/foo"          1("foo")
+            //    "foo/bar"       2("foo", "bar")
+            //    "/foo/bar"      2("foo", "bar")
+            //    "/foo/bar/"     2("foo", "bar")
             wordList components(const char delimiter='/') const;
 
             //- Return a single component of the path
@@ -182,11 +224,11 @@ public:
 
         // Assignment
 
-            const fileName& operator=(const fileName&);
-            const fileName& operator=(const word&);
-            const fileName& operator=(const string&);
-            const fileName& operator=(const std::string&);
-            const fileName& operator=(const char*);
+            void operator=(const fileName&);
+            void operator=(const word&);
+            void operator=(const string&);
+            void operator=(const std::string&);
+            void operator=(const char*);
 
 
     // IOstream operators

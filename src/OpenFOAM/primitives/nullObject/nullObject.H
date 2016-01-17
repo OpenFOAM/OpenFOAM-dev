@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,11 @@ class NullObject
     NullObject()
     {}
 
-    //- Prevent copy-construction
+    //- Disallow default bitwise copy construct
     NullObject(const NullObject&);
 
-    //- Prevent assignment
-    NullObject& operator=(const NullObject&);
+    //- Disallow default bitwise assignment
+    void operator=(const NullObject&);
 
 public:
 

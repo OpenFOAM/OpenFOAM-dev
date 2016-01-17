@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ class SmagorinskyZhang
 
         // Disallow default bitwise copy construct and assignment
         SmagorinskyZhang(const SmagorinskyZhang&);
-        SmagorinskyZhang& operator=(const SmagorinskyZhang&);
+        void operator=(const SmagorinskyZhang&);
 
 
 protected:

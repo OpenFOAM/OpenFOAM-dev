@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -236,7 +236,7 @@ inline void Foam::wordRe::set(const char* str, const compOption opt)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline const Foam::wordRe& Foam::wordRe::operator=(const wordRe& str)
+inline void Foam::wordRe::operator=(const wordRe& str)
 {
     string::operator=(str);
 
@@ -248,50 +248,44 @@ inline const Foam::wordRe& Foam::wordRe::operator=(const wordRe& str)
     {
         re_.clear();
     }
-    return *this;
 }
 
 
-inline const Foam::wordRe& Foam::wordRe::operator=(const word& str)
+inline void Foam::wordRe::operator=(const word& str)
 {
     word::operator=(str);
     re_.clear();
-    return *this;
 }
 
 
-inline const Foam::wordRe& Foam::wordRe::operator=(const keyType& str)
+inline void Foam::wordRe::operator=(const keyType& str)
 {
     string::operator=(str);
     if (str.isPattern())
     {
         compile();
     }
-    return *this;
 }
 
 
-inline const Foam::wordRe& Foam::wordRe::operator=(const string& str)
+inline void Foam::wordRe::operator=(const string& str)
 {
     string::operator=(str);
     compile(DETECT);  // auto-detect regex
-    return *this;
 }
 
 
-inline const Foam::wordRe& Foam::wordRe::operator=(const std::string& str)
+inline void Foam::wordRe::operator=(const std::string& str)
 {
     string::operator=(str);
     compile(DETECT);  // auto-detect regex
-    return *this;
 }
 
 
-inline const Foam::wordRe& Foam::wordRe::operator=(const char* str)
+inline void Foam::wordRe::operator=(const char* str)
 {
     string::operator=(str);
     compile(DETECT);  // auto-detect regex
-    return *this;
 }
 
 

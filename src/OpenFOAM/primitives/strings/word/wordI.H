@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,34 +131,30 @@ inline bool Foam::word::valid(char c)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline const Foam::word& Foam::word::operator=(const word& q)
+inline void Foam::word::operator=(const word& q)
 {
     string::operator=(q);
-    return *this;
 }
 
 
-inline const Foam::word& Foam::word::operator=(const string& q)
+inline void Foam::word::operator=(const string& q)
 {
     string::operator=(q);
     stripInvalid();
-    return *this;
 }
 
 
-inline const Foam::word& Foam::word::operator=(const std::string& q)
+inline void Foam::word::operator=(const std::string& q)
 {
     string::operator=(q);
     stripInvalid();
-    return *this;
 }
 
 
-inline const Foam::word& Foam::word::operator=(const char* q)
+inline void Foam::word::operator=(const char* q)
 {
     string::operator=(q);
     stripInvalid();
-    return *this;
 }
 
 

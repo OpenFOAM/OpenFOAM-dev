@@ -157,8 +157,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::cpMcv
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>
-inline Foam::icoPolynomial<Specie, PolySize>&
-Foam::icoPolynomial<Specie, PolySize>::operator=
+inline void Foam::icoPolynomial<Specie, PolySize>::operator=
 (
     const icoPolynomial<Specie, PolySize>& ip
 )
@@ -166,8 +165,6 @@ Foam::icoPolynomial<Specie, PolySize>::operator=
     Specie::operator=(ip);
 
     rhoCoeffs_ = ip.rhoCoeffs_;
-
-    return *this;
 }
 
 

@@ -176,7 +176,7 @@ public:
 
     // Member operators
 
-        inline icoPolynomial& operator=(const icoPolynomial&);
+        inline void operator=(const icoPolynomial&);
         inline void operator+=(const icoPolynomial&);
         inline void operator-=(const icoPolynomial&);
 

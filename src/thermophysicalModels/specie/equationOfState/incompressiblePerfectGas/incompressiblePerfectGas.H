@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,10 +179,7 @@ public:
 
     // Member operators
 
-        inline incompressiblePerfectGas& operator=
-        (
-            const incompressiblePerfectGas&
-        );
+        inline void operator=(const incompressiblePerfectGas&);
         inline void operator+=(const incompressiblePerfectGas&);
         inline void operator-=(const incompressiblePerfectGas&);
 

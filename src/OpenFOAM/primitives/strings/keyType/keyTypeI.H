@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,38 +81,34 @@ inline bool Foam::keyType::isPattern() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline const Foam::keyType& Foam::keyType::operator=(const keyType& s)
+inline void Foam::keyType::operator=(const keyType& s)
 {
     // Bypass checking
     string::operator=(s);
     isPattern_ = s.isPattern_;
-    return *this;
 }
 
 
-inline const Foam::keyType& Foam::keyType::operator=(const word& s)
+inline void Foam::keyType::operator=(const word& s)
 {
     word::operator=(s);
     isPattern_ = false;
-    return *this;
 }
 
 
-inline const Foam::keyType& Foam::keyType::operator=(const string& s)
+inline void Foam::keyType::operator=(const string& s)
 {
     // Bypass checking
     string::operator=(s);
     isPattern_ = true;
-    return *this;
 }
 
 
-inline const Foam::keyType& Foam::keyType::operator=(const char* s)
+inline void Foam::keyType::operator=(const char* s)
 {
     // Bypass checking
     string::operator=(s);
     isPattern_ = false;
-    return *this;
 }
 
 

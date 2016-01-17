@@ -136,8 +136,7 @@ inline Foam::scalar Foam::polynomialTransport<Thermo, PolySize>::alphah
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Thermo, int PolySize>
-inline Foam::polynomialTransport<Thermo, PolySize>&
-Foam::polynomialTransport<Thermo, PolySize>::operator=
+inline void Foam::polynomialTransport<Thermo, PolySize>::operator=
 (
     const polynomialTransport<Thermo, PolySize>& pt
 )
@@ -146,8 +145,6 @@ Foam::polynomialTransport<Thermo, PolySize>::operator=
 
     muCoeffs_ = pt.muCoeffs_;
     kappaCoeffs_ = pt.kappaCoeffs_;
-
-    return *this;
 }
 
 

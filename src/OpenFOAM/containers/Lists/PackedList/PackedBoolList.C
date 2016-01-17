@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -286,8 +286,7 @@ Foam::Xfer<Foam::labelList> Foam::PackedBoolList::used() const
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 
-Foam::PackedBoolList&
-Foam::PackedBoolList::operator=(const Foam::UList<bool>& lst)
+void Foam::PackedBoolList::operator=(const Foam::UList<bool>& lst)
 {
     this->setSize(lst.size());
 
@@ -296,8 +295,6 @@ Foam::PackedBoolList::operator=(const Foam::UList<bool>& lst)
     {
         set(elemI, lst[elemI]);
     }
-
-    return *this;
 }
 
 

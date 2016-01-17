@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,26 +207,26 @@ public:
 
             //- Assign copy
             //  Always case sensitive
-            inline const wordRe& operator=(const wordRe&);
+            inline void operator=(const wordRe&);
 
             //- Copy word, never a regular expression
-            inline const wordRe& operator=(const word&);
+            inline void operator=(const word&);
 
             //- Copy keyType, auto-test for regular expression
             //  Always case sensitive
-            inline const wordRe& operator=(const keyType&);
+            inline void operator=(const keyType&);
 
             //- Copy string, auto-test for regular expression
             //  Always case sensitive
-            inline const wordRe& operator=(const string&);
+            inline void operator=(const string&);
 
             //- Copy string, auto-test for regular expression
             //  Always case sensitive
-            inline const wordRe& operator=(const std::string&);
+            inline void operator=(const std::string&);
 
             //- Copy string, auto-test for regular expression
             //  Always case sensitive
-            inline const wordRe& operator=(const char*);
+            inline void operator=(const char*);
 
 
     // IOstream operators

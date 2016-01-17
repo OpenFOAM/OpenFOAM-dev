@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "fileName.H"
 #include "wordList.H"
 #include "DynamicList.H"
-#include "debug.H"
 #include "OSspecific.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,6 +33,7 @@ License
 const char* const Foam::fileName::typeName = "fileName";
 int Foam::fileName::debug(debug::debugSwitch(fileName::typeName, 0));
 const Foam::fileName Foam::fileName::null;
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -74,32 +74,18 @@ Foam::fileName& Foam::fileName::toAbsolute()
 }
 
 
-//
-// * remove repeated slashes
-//       /abc////def        -->   /abc/def
-//
-// * remove '/./'
-//       /abc/def/./ghi/.   -->   /abc/def/./ghi
-//       abc/def/./         -->   abc/def
-//
-// * remove '/../'
-//       /abc/def/../ghi/jkl/nmo/..   -->   /abc/ghi/jkl
-//       abc/../def/ghi/../jkl        -->   abc/../def/jkl
-//
-// * remove trailing '/'
-//
 bool Foam::fileName::clean()
 {
-    // the top slash - we are never allowed to go above it
+    // The top slash - we are never allowed to go above it
     string::size_type top = this->find('/');
 
-    // no slashes - nothing to do
+    // No slashes - nothing to do
     if (top == string::npos)
     {
         return false;
     }
 
-    // start with the '/' found:
+    // Start with the '/' found:
     char prev = '/';
     string::size_type nChar  = top+1;
     string::size_type maxLen = this->size();
@@ -108,47 +94,46 @@ bool Foam::fileName::clean()
     (
         string::size_type src = nChar;
         src < maxLen;
-        /*nil*/
     )
     {
         char c = operator[](src++);
 
         if (prev == '/')
         {
-            // repeated '/' - skip it
+            // Repeated '/' - skip it
             if (c == '/')
             {
                 continue;
             }
 
-            // could be '/./' or '/../'
+            // Could be '/./' or '/../'
             if (c == '.')
             {
-                // found trailing '/.' - skip it
+                // Found trailing '/.' - skip it
                 if (src >= maxLen)
                 {
                     continue;
                 }
 
 
-                // peek at the next character
+                // Peek at the next character
                 char c1 = operator[](src);
 
-                // found '/./' - skip it
+                // Found '/./' - skip it
                 if (c1 == '/')
                 {
                     src++;
                     continue;
                 }
 
-                // it is '/..' or '/../'
+                // It is '/..' or '/../'
                 if (c1 == '.' && (src+1 >= maxLen || operator[](src+1) == '/'))
                 {
                     string::size_type parent;
 
-                    // backtrack to find the parent directory
-                    // minimum of 3 characters:  '/x/../'
-                    // strip it, provided it is above the top point
+                    // Backtrack to find the parent directory
+                    // Minimum of 3 characters:  '/x/../'
+                    // Strip it, provided it is above the top point
                     if
                     (
                         nChar > 2
@@ -156,13 +141,13 @@ bool Foam::fileName::clean()
                      && parent >= top
                     )
                     {
-                        nChar = parent + 1;   // retain '/' from the parent
+                        nChar = parent + 1;   // Retain '/' from the parent
                         src += 2;
                         continue;
                     }
 
-                    // bad resolution, eg 'abc/../../'
-                    // retain the sequence, but move the top to avoid it being
+                    // Bad resolution, eg 'abc/../../'
+                    // Retain the sequence, but move the top to avoid it being
                     // considered a valid parent later
                     top = nChar + 2;
                 }
@@ -171,7 +156,7 @@ bool Foam::fileName::clean()
         operator[](nChar++) = prev = c;
     }
 
-    // remove trailing slash
+    // Remove trailing slash
     if (nChar > 1 && operator[](nChar-1) == '/')
     {
         nChar--;
@@ -191,18 +176,6 @@ Foam::fileName Foam::fileName::clean() const
 }
 
 
-
-//  Return file name (part beyond last /)
-//
-//  behaviour compared to /usr/bin/basename:
-//    input           name()          basename
-//    -----           ------          --------
-//    "foo"           "foo"           "foo"
-//    "/foo"          "foo"           "foo"
-//    "foo/bar"       "bar"           "bar"
-//    "/foo/bar"      "bar"           "bar"
-//    "/foo/bar/"     ""              "bar"
-//
 Foam::word Foam::fileName::name() const
 {
     size_type i = rfind('/');
@@ -273,17 +246,6 @@ Foam::word Foam::fileName::name(const bool noExt) const
 }
 
 
-//  Return directory path name (part before last /)
-//
-//  behaviour compared to /usr/bin/dirname:
-//    input           path()          dirname
-//    -----           ------          -------
-//    "foo"           "."             "."
-//    "/foo"          "/"             "foo"
-//    "foo/bar"       "foo"           "foo"
-//    "/foo/bar"      "/foo"          "/foo"
-//    "/foo/bar/"     "/foo/bar/"     "/foo"
-//
 Foam::fileName Foam::fileName::path() const
 {
     size_type i = rfind('/');
@@ -303,7 +265,6 @@ Foam::fileName Foam::fileName::path() const
 }
 
 
-//  Return file name without extension (part before last .)
 Foam::fileName Foam::fileName::lessExt() const
 {
     size_type i = find_last_of("./");
@@ -319,7 +280,6 @@ Foam::fileName Foam::fileName::lessExt() const
 }
 
 
-//  Return file name extension (part after last .)
 Foam::word Foam::fileName::ext() const
 {
     size_type i = find_last_of("./");
@@ -335,19 +295,6 @@ Foam::word Foam::fileName::ext() const
 }
 
 
-// Return the components of the file name as a wordList
-// note that concatenating the components will not necessarily retrieve
-// the original input fileName
-//
-//  behaviour
-//    input           components()
-//    -----           ------
-//    "foo"           1("foo")
-//    "/foo"          1("foo")
-//    "foo/bar"       2("foo", "bar")
-//    "/foo/bar"      2("foo", "bar")
-//    "/foo/bar/"     2("foo", "bar")
-//
 Foam::wordList Foam::fileName::components(const char delimiter) const
 {
     DynamicList<word> wrdList(20);
@@ -356,7 +303,7 @@ Foam::wordList Foam::fileName::components(const char delimiter) const
 
     while ((end = find(delimiter, beg)) != npos)
     {
-        // avoid empty element (caused by doubled slashes)
+        // Avoid empty element (caused by doubled slashes)
         if (beg < end)
         {
             wrdList.append(substr(beg, end-beg));
@@ -364,18 +311,17 @@ Foam::wordList Foam::fileName::components(const char delimiter) const
         beg = end + 1;
     }
 
-    // avoid empty trailing element
+    // Avoid empty trailing element
     if (beg < size())
     {
         wrdList.append(substr(beg, npos));
     }
 
-    // transfer to wordList
+    // Transfer to wordList
     return wordList(wrdList.xfer());
 }
 
 
-// Return a component of the file name
 Foam::word Foam::fileName::component
 (
     const size_type cmpt,
@@ -388,41 +334,36 @@ Foam::word Foam::fileName::component
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-const Foam::fileName& Foam::fileName::operator=(const fileName& str)
+void Foam::fileName::operator=(const fileName& str)
 {
     string::operator=(str);
-    return *this;
 }
 
 
-const Foam::fileName& Foam::fileName::operator=(const word& str)
+void Foam::fileName::operator=(const word& str)
 {
     string::operator=(str);
-    return *this;
 }
 
 
-const Foam::fileName& Foam::fileName::operator=(const string& str)
+void Foam::fileName::operator=(const string& str)
 {
     string::operator=(str);
     stripInvalid();
-    return *this;
 }
 
 
-const Foam::fileName& Foam::fileName::operator=(const std::string& str)
+void Foam::fileName::operator=(const std::string& str)
 {
     string::operator=(str);
     stripInvalid();
-    return *this;
 }
 
 
-const Foam::fileName& Foam::fileName::operator=(const char* str)
+void Foam::fileName::operator=(const char* str)
 {
     string::operator=(str);
     stripInvalid();
-    return *this;
 }
 
 

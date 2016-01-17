@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class LamBremhorstKE
 
         // Disallow default bitwise copy construct and assignment
         LamBremhorstKE(const LamBremhorstKE&);
-        LamBremhorstKE& operator=(const LamBremhorstKE&);
+        void operator=(const LamBremhorstKE&);
 
         tmp<volScalarField> Rt() const;
         tmp<volScalarField> fMu(const volScalarField& Rt) const;

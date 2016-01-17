@@ -258,7 +258,7 @@ public:
         //- Fix the vertex so that it can't be moved
         inline bool& fixed();
 
-        inline indexedVertex& operator=(const indexedVertex& rhs)
+        inline void operator=(const indexedVertex& rhs)
         {
             Vb::operator=(rhs);
 
@@ -268,8 +268,6 @@ public:
             this->alignment_ = rhs.alignment();
             this->targetCellSize_ = rhs.targetCellSize();
             this->vertexFixed_ = rhs.fixed();
-
-            return *this;
         }
 
         inline bool operator==(const indexedVertex& rhs) const

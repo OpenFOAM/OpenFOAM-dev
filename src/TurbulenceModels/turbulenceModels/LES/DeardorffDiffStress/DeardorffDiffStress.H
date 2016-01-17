@@ -88,7 +88,7 @@ class DeardorffDiffStress
 
         // Disallow default bitwise copy construct and assignment
         DeardorffDiffStress(const DeardorffDiffStress&);
-        DeardorffDiffStress& operator=(const DeardorffDiffStress&);
+        void operator=(const DeardorffDiffStress&);
 
 
 protected:

@@ -398,16 +398,16 @@ public:
             inline iteratorBase operator[](const label);
 
             //- Assignment of all entries to the given value. Takes linear time.
-            inline PackedList<nBits>& operator=(const unsigned int val);
+            inline void operator=(const unsigned int val);
 
             //- Assignment operator.
-            PackedList<nBits>& operator=(const PackedList<nBits>&);
+            void operator=(const PackedList<nBits>&);
 
             //- Assignment operator.
-            PackedList<nBits>& operator=(const labelUList&);
+            void operator=(const labelUList&);
 
             //- Assignment operator.
-            PackedList<nBits>& operator=(const UIndirectList<label>&);
+            void operator=(const UIndirectList<label>&);
 
 
     // Iterators and helpers
@@ -468,11 +468,11 @@ public:
 
                 //- Assign value, not position.
                 //  This allows packed[0] = packed[3] for assigning values
-                inline unsigned int operator=(const iteratorBase&);
+                inline void operator=(const iteratorBase&);
 
                 //- Assign value.
                 //  A non-existent entry will be auto-vivified.
-                inline unsigned int operator=(const unsigned int val);
+                inline void operator=(const unsigned int val);
 
                 //- Conversion operator
                 //  Never auto-vivify entries.
@@ -522,7 +522,7 @@ public:
 
                 //- Assign from iteratorBase, eg iter = packedlist[i]
                 //  An out-of-range iterator is assigned end()
-                inline iterator& operator=(const iteratorBase&);
+                inline void operator=(const iteratorBase&);
 
                 //- Return value
                 inline unsigned int operator*() const;
@@ -583,7 +583,7 @@ public:
 
                 //- Assign from iteratorBase or derived
                 //  eg, iter = packedlist[i] or even iter = list.begin()
-                inline const_iterator& operator=(const iteratorBase&);
+                inline void operator=(const iteratorBase&);
 
                 //- Return referenced value directly
                 inline unsigned int operator*() const;

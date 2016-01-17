@@ -101,7 +101,7 @@ class SSG
 
         // Disallow default bitwise copy construct and assignment
         SSG(const SSG&);
-        SSG& operator=(const SSG&);
+        void operator=(const SSG&);
 
 
 protected:

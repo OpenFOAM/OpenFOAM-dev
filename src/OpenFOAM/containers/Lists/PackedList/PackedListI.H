@@ -356,18 +356,21 @@ inline bool Foam::PackedList<nBits>::iteratorBase::operator!=
 
 
 template<unsigned nBits>
-inline unsigned int
-Foam::PackedList<nBits>::iteratorBase::operator=(const iteratorBase& iter)
+inline void Foam::PackedList<nBits>::iteratorBase::operator=
+(
+    const iteratorBase& iter
+)
 {
     const unsigned int val = iter.get();
     this->set(val);
-    return val;
 }
 
 
 template<unsigned nBits>
-inline unsigned int
-Foam::PackedList<nBits>::iteratorBase::operator=(const unsigned int val)
+inline void Foam::PackedList<nBits>::iteratorBase::operator=
+(
+    const unsigned int val
+)
 {
     // lazy evaluation - increase size on assigment
     if (index_ >= list_->size_)
@@ -376,7 +379,6 @@ Foam::PackedList<nBits>::iteratorBase::operator=(const unsigned int val)
     }
 
     this->set(val);
-    return val;
 }
 
 
@@ -517,8 +519,10 @@ inline bool Foam::PackedList<nBits>::const_iterator::operator!=
 
 
 template<unsigned nBits>
-inline typename Foam::PackedList<nBits>::iterator&
-Foam::PackedList<nBits>::iterator::operator=(const iteratorBase& iter)
+inline void Foam::PackedList<nBits>::iterator::operator=
+(
+    const iteratorBase& iter
+)
 {
     this->list_  = iter.list_;
     this->index_ = iter.index_;
@@ -529,14 +533,14 @@ Foam::PackedList<nBits>::iterator::operator=(const iteratorBase& iter)
     {
         this->index_ = this->list_->size_;
     }
-
-    return *this;
 }
 
 
 template<unsigned nBits>
-inline typename Foam::PackedList<nBits>::const_iterator&
-Foam::PackedList<nBits>::const_iterator::operator=(const iteratorBase& iter)
+inline void Foam::PackedList<nBits>::const_iterator::operator=
+(
+    const iteratorBase& iter
+)
 {
     this->list_  = iter.list_;
     this->index_ = iter.index_;
@@ -1066,8 +1070,7 @@ Foam::PackedList<nBits>::operator[](const label i)
 
 
 template<unsigned nBits>
-inline Foam::PackedList<nBits>&
-Foam::PackedList<nBits>::operator=(const unsigned int val)
+inline void Foam::PackedList<nBits>::operator=(const unsigned int val)
 {
     const label packLen = packedLength();
 
@@ -1111,8 +1114,6 @@ Foam::PackedList<nBits>::operator=(const unsigned int val)
             StorageList::operator[](i) = 0u;
         }
     }
-
-    return *this;
 }
 
 

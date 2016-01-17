@@ -126,7 +126,7 @@ class kOmegaSST
 
         // Disallow default bitwise copy construct and assignment
         kOmegaSST(const kOmegaSST&);
-        kOmegaSST& operator=(const kOmegaSST&);
+        void operator=(const kOmegaSST&);
 
 
 protected:

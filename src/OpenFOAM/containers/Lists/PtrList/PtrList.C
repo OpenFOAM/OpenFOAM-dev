@@ -258,7 +258,7 @@ void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T>
-Foam::PtrList<T>& Foam::PtrList<T>::operator=(const PtrList<T>& a)
+void Foam::PtrList<T>::operator=(const PtrList<T>& a)
 {
     if (this == &a)
     {
@@ -290,9 +290,6 @@ Foam::PtrList<T>& Foam::PtrList<T>::operator=(const PtrList<T>& a)
             << " for type " << typeid(T).name()
             << abort(FatalError);
     }
-
-
-    return *this;
 }
 
 

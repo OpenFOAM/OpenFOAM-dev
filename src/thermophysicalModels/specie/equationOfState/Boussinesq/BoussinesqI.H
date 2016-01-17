@@ -167,8 +167,7 @@ inline Foam::scalar Foam::Boussinesq<Specie>::cpMcv
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Specie>
-inline Foam::Boussinesq<Specie>&
-Foam::Boussinesq<Specie>::operator=
+inline void Foam::Boussinesq<Specie>::operator=
 (
     const Boussinesq<Specie>& b
 )
@@ -178,9 +177,8 @@ Foam::Boussinesq<Specie>::operator=
     rho0_ = b.rho0_;
     T0_ = b.T0_;
     beta_ = b.beta_;
-
-    return *this;
 }
+
 
 template<class Specie>
 inline void Foam::Boussinesq<Specie>::operator+=

@@ -106,7 +106,7 @@ class LRR
 
         // Disallow default bitwise copy construct and assignment
         LRR(const LRR&);
-        LRR& operator=(const LRR&);
+        void operator=(const LRR&);
 
 
 protected:

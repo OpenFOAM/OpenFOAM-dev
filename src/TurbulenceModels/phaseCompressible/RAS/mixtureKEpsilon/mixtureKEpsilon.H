@@ -94,7 +94,7 @@ class mixtureKEpsilon
 
         // Disallow default bitwise copy construct and assignment
         mixtureKEpsilon(const mixtureKEpsilon&);
-        mixtureKEpsilon& operator=(const mixtureKEpsilon&);
+        void operator=(const mixtureKEpsilon&);
 
         //- Return the turbulence model for the other phase
         mixtureKEpsilon<BasicTurbulenceModel>& liquidTurbulence() const;

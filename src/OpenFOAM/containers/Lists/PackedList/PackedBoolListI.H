@@ -126,47 +126,35 @@ inline Foam::Xfer<Foam::PackedBoolList> Foam::PackedBoolList::xfer()
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline Foam::PackedBoolList&
-Foam::PackedBoolList::operator=(const bool val)
+inline void Foam::PackedBoolList::operator=(const bool val)
 {
     PackedList<1>::operator=(val);
-    return *this;
 }
 
 
-inline Foam::PackedBoolList&
-Foam::PackedBoolList::operator=(const PackedBoolList& lst)
+inline void Foam::PackedBoolList::operator=(const PackedBoolList& lst)
 {
     PackedList<1>::operator=(lst);
-    return *this;
 }
 
 
-inline Foam::PackedBoolList&
-Foam::PackedBoolList::operator=(const PackedList<1>& lst)
+inline void Foam::PackedBoolList::operator=(const PackedList<1>& lst)
 {
     PackedList<1>::operator=(lst);
-    return *this;
 }
 
 
-inline Foam::PackedBoolList&
-Foam::PackedBoolList::operator=(const labelUList& indices)
+inline void Foam::PackedBoolList::operator=(const labelUList& indices)
 {
     clear();
     set(indices);
-
-    return *this;
 }
 
 
-inline Foam::PackedBoolList&
-Foam::PackedBoolList::operator=(const UIndirectList<label>& indices)
+inline void Foam::PackedBoolList::operator=(const UIndirectList<label>& indices)
 {
     clear();
     set(indices);
-
-    return *this;
 }
 
 

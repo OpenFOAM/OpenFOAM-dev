@@ -90,7 +90,7 @@ class LaunderSharmaKE
 
         // Disallow default bitwise copy construct and assignment
         LaunderSharmaKE(const LaunderSharmaKE&);
-        LaunderSharmaKE& operator=(const LaunderSharmaKE&);
+        void operator=(const LaunderSharmaKE&);
 
 
 protected:

@@ -92,7 +92,7 @@ class kEpsilon
 
         // Disallow default bitwise copy construct and assignment
         kEpsilon(const kEpsilon&);
-        kEpsilon& operator=(const kEpsilon&);
+        void operator=(const kEpsilon&);
 
 
 protected:

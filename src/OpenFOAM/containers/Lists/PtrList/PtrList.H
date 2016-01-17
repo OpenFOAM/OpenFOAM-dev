@@ -252,9 +252,8 @@ public:
         //- Return element const pointer.
         inline const T* operator()(const label) const;
 
-
         //- Assignment.
-        PtrList<T>& operator=(const PtrList<T>&);
+        void operator=(const PtrList<T>&);
 
 
     // STL type definitions

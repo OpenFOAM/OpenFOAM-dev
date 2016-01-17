@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,16 +116,16 @@ public:
         // Assignment
 
             //- Assignment operator
-            inline const keyType& operator=(const keyType&);
+            inline void operator=(const keyType&);
 
             //- Assign as word, not as non regular expression
-            inline const keyType& operator=(const word&);
+            inline void operator=(const word&);
 
             //- Assign as regular expression
-            inline const keyType& operator=(const string&);
+            inline void operator=(const string&);
 
             //- Assign as word, not as non regular expression
-            inline const keyType& operator=(const char*);
+            inline void operator=(const char*);
 
 
     // IOstream operators

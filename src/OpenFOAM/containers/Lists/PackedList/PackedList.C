@@ -513,18 +513,15 @@ void Foam::PackedList<nBits>::writeEntry
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<unsigned nBits>
-Foam::PackedList<nBits>&
-Foam::PackedList<nBits>::operator=(const PackedList<nBits>& lst)
+void Foam::PackedList<nBits>::operator=(const PackedList<nBits>& lst)
 {
     StorageList::operator=(lst);
     size_ = lst.size();
-    return *this;
 }
 
 
 template<unsigned nBits>
-Foam::PackedList<nBits>&
-Foam::PackedList<nBits>::operator=(const labelUList& lst)
+void Foam::PackedList<nBits>::operator=(const labelUList& lst)
 {
     setCapacity(lst.size());
     size_ = lst.size();
@@ -533,13 +530,11 @@ Foam::PackedList<nBits>::operator=(const labelUList& lst)
     {
         set(i, lst[i]);
     }
-    return *this;
 }
 
 
 template<unsigned nBits>
-Foam::PackedList<nBits>&
-Foam::PackedList<nBits>::operator=(const UIndirectList<label>& lst)
+void Foam::PackedList<nBits>::operator=(const UIndirectList<label>& lst)
 {
     setCapacity(lst.size());
     size_ = lst.size();
@@ -548,7 +543,6 @@ Foam::PackedList<nBits>::operator=(const UIndirectList<label>& lst)
     {
         set(i, lst[i]);
     }
-    return *this;
 }
 
 

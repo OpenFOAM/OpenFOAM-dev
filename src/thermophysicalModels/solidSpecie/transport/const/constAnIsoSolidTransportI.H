@@ -98,15 +98,12 @@ alphah(const scalar p, const scalar T) const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Thermo>
-inline Foam::constAnIsoSolidTransport<Thermo>&
-Foam::constAnIsoSolidTransport<Thermo>::operator=
+inline void Foam::constAnIsoSolidTransport<Thermo>::operator=
 (
     const constAnIsoSolidTransport<Thermo>& ct
 )
 {
     kappa_ = ct.kappa_;
-
-    return *this;
 }
 
 

@@ -129,7 +129,7 @@ inline Foam::scalar Foam::constTransport<Thermo>::alphah
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Thermo>
-inline Foam::constTransport<Thermo>& Foam::constTransport<Thermo>::operator=
+inline void Foam::constTransport<Thermo>::operator=
 (
     const constTransport<Thermo>& ct
 )
@@ -138,8 +138,6 @@ inline Foam::constTransport<Thermo>& Foam::constTransport<Thermo>::operator=
 
     mu_ = ct.mu_;
     rPr_ = ct.rPr_;
-
-    return *this;
 }
 
 

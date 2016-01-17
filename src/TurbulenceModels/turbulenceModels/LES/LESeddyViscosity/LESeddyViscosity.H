@@ -61,7 +61,7 @@ class LESeddyViscosity
 
         // Disallow default bitwise copy construct and assignment
         LESeddyViscosity(const LESeddyViscosity&);
-        LESeddyViscosity& operator=(const LESeddyViscosity&);
+        void operator=(const LESeddyViscosity&);
 
 
 protected:

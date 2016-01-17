@@ -111,8 +111,7 @@ alphah(const scalar p, const scalar T) const
 
 
 template<class Thermo>
-inline Foam::exponentialSolidTransport<Thermo>&
-Foam::exponentialSolidTransport<Thermo>::operator=
+inline void Foam::exponentialSolidTransport<Thermo>::operator=
 (
     const exponentialSolidTransport<Thermo>& ct
 )
@@ -120,7 +119,6 @@ Foam::exponentialSolidTransport<Thermo>::operator=
     kappa0_ = ct.kappa0_;
     n0_ = ct.n0_;
     Tref_ = ct.Tref_;
-    return *this;
 }
 
 

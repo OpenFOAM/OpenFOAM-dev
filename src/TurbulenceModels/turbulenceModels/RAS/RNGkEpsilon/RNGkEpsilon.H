@@ -91,7 +91,7 @@ class RNGkEpsilon
 
         // Disallow default bitwise copy construct and assignment
         RNGkEpsilon(const RNGkEpsilon&);
-        RNGkEpsilon& operator=(const RNGkEpsilon&);
+        void operator=(const RNGkEpsilon&);
 
 
 protected:

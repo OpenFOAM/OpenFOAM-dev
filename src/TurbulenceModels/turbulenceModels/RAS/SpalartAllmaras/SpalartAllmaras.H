@@ -94,7 +94,7 @@ class SpalartAllmaras
 
         // Disallow default bitwise copy construct and assignment
         SpalartAllmaras(const SpalartAllmaras&);
-        SpalartAllmaras& operator=(const SpalartAllmaras&);
+        void operator=(const SpalartAllmaras&);
 
 
 protected:
