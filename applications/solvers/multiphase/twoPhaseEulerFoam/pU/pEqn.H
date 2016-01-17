@@ -252,10 +252,13 @@ while (pimple.correct())
                 contErr1
               - fvc::Sp(fvc::ddt(alpha1) + fvc::div(alphaPhi1), rho1)
             )/rho1
-          + (alpha1/rho1)*correction
+          + correction
             (
-                psi1*fvm::ddt(p_rgh)
-              + fvm::div(phid1, p_rgh) - fvm::Sp(fvc::div(phid1), p_rgh)
+                (alpha1/rho1)*
+                (
+                    psi1*fvm::ddt(p_rgh)
+                  + fvm::div(phid1, p_rgh) - fvm::Sp(fvc::div(phid1), p_rgh)
+                )
             );
         deleteDemandDrivenData(pEqnComp1().faceFluxCorrectionPtr());
         pEqnComp1().relax();
@@ -265,10 +268,13 @@ while (pimple.correct())
                 contErr2
               - fvc::Sp(fvc::ddt(alpha2) + fvc::div(alphaPhi2), rho2)
             )/rho2
-          + (alpha2/rho2)*correction
+          + correction
             (
-                psi2*fvm::ddt(p_rgh)
-              + fvm::div(phid2, p_rgh) - fvm::Sp(fvc::div(phid2), p_rgh)
+                (alpha2/rho2)*
+                (
+                    psi2*fvm::ddt(p_rgh)
+                  + fvm::div(phid2, p_rgh) - fvm::Sp(fvc::div(phid2), p_rgh)
+                )
             );
         deleteDemandDrivenData(pEqnComp2().faceFluxCorrectionPtr());
         pEqnComp2().relax();

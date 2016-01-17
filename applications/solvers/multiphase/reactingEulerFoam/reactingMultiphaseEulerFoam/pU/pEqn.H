@@ -318,11 +318,14 @@ while (pimple.correct())
                                 rho
                             )
                         )/rho
-                      + (alpha/rho)*correction
+                      + correction
                         (
-                            phase.thermo().psi()*fvm::ddt(p_rgh)
-                          + fvm::div(phid, p_rgh)
-                          - fvm::Sp(fvc::div(phid), p_rgh)
+                            (alpha/rho)*
+                            (
+                                phase.thermo().psi()*fvm::ddt(p_rgh)
+                              + fvm::div(phid, p_rgh)
+                              - fvm::Sp(fvc::div(phid), p_rgh)
+                            )
                         )
                     ).ptr()
                 );
