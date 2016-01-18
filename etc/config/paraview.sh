@@ -107,9 +107,9 @@ then
     fi
 
     ParaView_LIB_DIR=$ParaView_DIR/lib/paraview-$ParaView_MAJOR
-    if [ ! -d $ParaView_LIB_DIR -a -d $ParaView_DIR/lib/paraview ]
+    if [ ! -d $ParaView_LIB_DIR -a -d $ParaView_DIR/lib/paraview-3.0 ]
     then
-        ParaView_LIB_DIR=$ParaView_DIR/lib/paraview
+        ParaView_LIB_DIR=$ParaView_DIR/lib/paraview-3.0
     fi
 
     export PATH=$ParaView_DIR/bin:$PATH
