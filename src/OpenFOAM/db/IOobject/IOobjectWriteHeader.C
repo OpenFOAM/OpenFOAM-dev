@@ -36,8 +36,8 @@ bool Foam::IOobject::writeHeader(Ostream& os, const word& type) const
 {
     if (!os.good())
     {
-        Info<< "IOobject::writeHeader(Ostream&) : "
-            << "no stream open for write" << nl
+        InfoInFunction
+            << "No stream open for write" << nl
             << os.info() << endl;
 
         return false;

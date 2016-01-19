@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,9 +89,8 @@ void Foam::starMesh::createPolyBoundary()
                                   > nInternalFaces_
                                 )
                                 {
-                                    Info
-                                        << "void starMesh::createPolyBoundary()"
-                                        << ": Problem with face: " << curFace
+                                    InfoInFunction
+                                        << "Problem with face: " << curFace
                                         << "\nProbably multiple definitions "
                                         << "of a single boundary face. " << endl
                                         << "Other boundary face: "
@@ -110,8 +109,7 @@ void Foam::starMesh::createPolyBoundary()
                                                 < starPointID_.size()
                                         )
                                         {
-                                            Info
-                                                << ","
+                                            Info<< ","
                                                 << starPointID_
                                                  [curCellFaces[cellFaceI][spI]];
                                         }
@@ -124,9 +122,8 @@ void Foam::starMesh::createPolyBoundary()
                                 }
                                 else
                                 {
-                                    Info
-                                        << "void starMesh::createPolyBoundary()"
-                                        << ": Problem with face: " << curFace
+                                    InfoInFunction
+                                        << "Problem with face: " << curFace
                                         << "\nProbably trying to define a "
                                         << "boundary face on a previously "
                                         << "matched internal face. " << endl
@@ -146,8 +143,7 @@ void Foam::starMesh::createPolyBoundary()
                                                 < starPointID_.size()
                                         )
                                         {
-                                            Info
-                                                << ","
+                                            Info<< ","
                                                 << starPointID_
                                                  [curCellFaces[cellFaceI][spI]];
                                         }
@@ -190,8 +186,8 @@ void Foam::starMesh::createPolyBoundary()
             {
                 const face& missingFace = cellFaces_[cellI][faceI];
 
-                Info<< "starMesh::createPolyBoundary() : "
-                    << "missing face found in cell " << cellI
+                InfoInFunction
+                    << "Missing face found in cell " << cellI
                     << ".\nType: " << cellShapes_[cellI].model().name()
                     << ". STAR cell number: " << starCellID_[cellI]
                     << ". Face: " << missingFace << endl;
@@ -255,8 +251,8 @@ void Foam::starMesh::createPolyBoundary()
         {
             const face& problemFace = meshFaces_[faceI];
 
-            Info<< "starMesh::createPolyBoundary() : "
-                << "problem with face " << faceI << ": addressed "
+            InfoInFunction
+                << "Problem with face " << faceI << ": addressed "
                 << markupFaces[faceI] << " times (should be 2!). Face: "
                 << problemFace << endl;
 

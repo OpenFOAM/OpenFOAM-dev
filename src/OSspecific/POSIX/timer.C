@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,7 @@ void Foam::timer::signalHandler(int)
 {
     if (debug)
     {
-        Info<< "Foam::timer::signalHandler(int sig) : "
-            << " timed out. Jumping."
+        InfoInFunction<< "Timed out. Jumping."
             << endl;
     }
     longjmp(envAlarm, 1);
@@ -91,8 +90,8 @@ Foam::timer::timer(const unsigned int newTimeOut)
 
         if (debug)
         {
-            Info<< "Foam::timer::timer(const unsigned int) : "
-                << " installing timeout " << int(newTimeOut_)
+            InfoInFunction
+                << "Installing timeout " << int(newTimeOut_)
                 << " seconds"
                 << " (overriding old timeout " << int(oldTimeOut_)
                 << ")." << endl;
@@ -109,8 +108,8 @@ Foam::timer::~timer()
     {
         if (debug)
         {
-            Info<< "Foam::timer::~timer(const unsigned int) : timeOut="
-                << int(newTimeOut_)
+            InfoInFunction
+                << "timeOut=" << int(newTimeOut_)
                 << " : resetting timeOut to " << int(oldTimeOut_) << endl;
         }
 
@@ -127,5 +126,6 @@ Foam::timer::~timer()
         }
     }
 }
+
 
 // ************************************************************************* //

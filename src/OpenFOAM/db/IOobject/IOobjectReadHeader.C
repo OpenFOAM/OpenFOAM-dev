@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,7 @@ bool Foam::IOobject::readHeader(Istream& is)
 {
     if (IOobject::debug)
     {
-        Info<< "IOobject::readHeader(Istream&) : reading header for file "
-            << is.name() << endl;
+        InfoInFunction << "Reading header for file " << is.name() << endl;
     }
 
     // Check Istream not already bad
@@ -114,8 +113,8 @@ bool Foam::IOobject::readHeader(Istream& is)
 
         if (IOobject::debug)
         {
-            Info<< "IOobject::readHeader(Istream&) :"
-                << " stream failure while reading header"
+            InfoInFunction
+                << "Stream failure while reading header"
                 << " on line " << is.lineNumber()
                 << " of file " << is.name() << endl;
         }
