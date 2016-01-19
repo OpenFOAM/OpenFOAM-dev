@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Application
     scalarTransportFoam
 
 Description
-    Solves a transport equation for a passive scalar
+    Solves the steady or transient transport equation for a passive scalar.
 
 \*---------------------------------------------------------------------------*/
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
         while (simple.correctNonOrthogonal())
         {
-            solve
+            fvScalarMatrix TEqn
             (
                 fvm::ddt(T)
               + fvm::div(phi, T)
@@ -66,6 +66,11 @@ int main(int argc, char *argv[])
              ==
                 fvOptions(T)
             );
+
+            TEqn.relax();
+            fvOptions.constrain(TEqn);
+            TEqn.solve();
+            fvOptions.correct(T);
         }
 
         runTime.write();
