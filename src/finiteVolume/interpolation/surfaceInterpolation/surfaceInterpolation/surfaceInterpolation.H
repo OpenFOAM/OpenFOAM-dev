@@ -77,6 +77,9 @@ class surfaceInterpolation
         //- Construct central-differencing weighting factors
         void makeWeights() const;
 
+        //- Construct central-differencing weighting factors for Niranjan Interpolation Scheme
+        void makeNiranjanWeights() const;
+
         //- Construct face-gradient difference factors
         void makeDeltaCoeffs() const;
 
