@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,12 @@ protected:
 
         //- Phase pair
         const phasePair& pair_;
+
+
+    // Protected member functions
+
+        //- Zero-gradient wall-lubrication force at walls
+        tmp<volVectorField> zeroGradWalls(tmp<volVectorField>) const;
 
 
 public:
