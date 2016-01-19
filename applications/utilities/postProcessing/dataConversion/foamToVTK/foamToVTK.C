@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -324,18 +324,19 @@ int main(int argc, char *argv[])
     const bool doWriteInternal = !args.optionFound("noInternal");
     const bool doFaceZones     = !args.optionFound("noFaceZones");
     const bool doLinks         = !args.optionFound("noLinks");
-    const bool binary          = !args.optionFound("ascii");
+    bool binary                = !args.optionFound("ascii");
     const bool useTimeName     = args.optionFound("useTimeName");
 
-    // decomposition of polyhedral cells into tets/pyramids cells
+    // Decomposition of polyhedral cells into tets/pyramids cells
     vtkTopo::decomposePoly     = !args.optionFound("poly");
 
     if (binary && (sizeof(floatScalar) != 4 || sizeof(label) != 4))
     {
-        FatalErrorInFunction
-            << "floatScalar and/or label are not 4 bytes in size" << nl
-            << "Hence cannot use binary VTK format. Please use -ascii"
-            << exit(FatalError);
+        WarningInFunction
+            << "Using ASCII rather than binary VTK format because "
+               "floatScalar and/or label are not 4 bytes in size."
+            << nl << endl;
+        binary = false;
     }
 
     const bool nearCellValue = args.optionFound("nearCellValue");
@@ -429,7 +430,7 @@ int main(int argc, char *argv[])
     mkDir(fvPath);
 
 
-    // mesh wrapper; does subsetting and decomposition
+    // Mesh wrapper; does subsetting and decomposition
     vtkMesh vMesh(mesh, cellSetName);
 
 
@@ -680,9 +681,7 @@ int main(int argc, char *argv[])
 
         if (doWriteInternal)
         {
-            //
             // Create file and write header
-            //
             fileName vtkFileName
             (
                 fvPath/vtkName
