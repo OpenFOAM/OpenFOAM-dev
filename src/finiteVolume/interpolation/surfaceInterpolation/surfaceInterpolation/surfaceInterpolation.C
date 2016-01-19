@@ -86,6 +86,16 @@ Foam::surfaceInterpolation::weights() const
     return (*weights_);
 }
 
+const Foam::surfaceScalarField&
+Foam::surfaceInterpolation::nweights() const
+{
+    if (!nweights_)
+    {
+        makeNiranjanWeights();
+    }
+
+    return (*nweights_);
+}
 
 const Foam::surfaceScalarField&
 Foam::surfaceInterpolation::deltaCoeffs() const
@@ -211,11 +221,11 @@ void Foam::surfaceInterpolation::makeNiranjanWeights() const
         << endl;
     }
 
-    weights_ = new surfaceScalarField
+    nweights_ = new surfaceScalarField
         (
             IOobject
                 (
-                    "weights",
+                    "nweights",
                     mesh_.pointsInstance(),
                     mesh_,
                     IOobject::NO_READ,

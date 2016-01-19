@@ -62,6 +62,9 @@ class surfaceInterpolation
             //- Linear difference weighting factors
             mutable surfaceScalarField* weights_;
 
+            //- Niranjan weighting factors
+            mutable surfaceScalarField* nweights_;
+
             //- Cell-centre difference coefficients
             mutable surfaceScalarField* deltaCoeffs_;
 
@@ -120,6 +123,9 @@ public:
 
         //- Return reference to linear difference weighting factors
         const surfaceScalarField& weights() const;
+
+        //- Return reference to niranjan weighting factors
+        const surfaceScalarField& nweights() const;
 
         //- Return reference to cell-centre difference coefficients
         const surfaceScalarField& deltaCoeffs() const;
