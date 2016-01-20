@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ void Foam::fv::interRegionExplicitPorositySource::initialise()
             new cellZone
             (
                 zoneName,
-                nbrMesh.faceNeighbour(), // neighbour internal cells
+                nbrMesh.faceNeighbour(), // Neighbour internal cells
                 zoneID,
                 cellZones
             )
@@ -117,7 +117,7 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 :
     interRegionOption(name, modelType, dict, mesh),
     porosityPtr_(NULL),
-    firstIter_(-1),
+    firstIter_(false),
     UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
     muName_(coeffs_.lookupOrDefault<word>("muName", "thermo:mu"))
 {
@@ -157,7 +157,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
         dimensionedVector("zero", U.dimensions(), vector::zero)
     );
 
-    // map local velocity onto neighbour region
+    // Map local velocity onto neighbour region
     meshInterp().mapSrcToTgt
     (
         U.internalField(),
@@ -169,7 +169,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 
     porosityPtr_->addResistance(nbrEqn);
 
-    // convert source from neighbour to local region
+    // Convert source from neighbour to local region
     fvMatrix<vector> porosityEqn(U, eqn.dimensions());
     scalarField& Udiag = porosityEqn.diag();
     vectorField& Usource = porosityEqn.source();
@@ -211,7 +211,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
         dimensionedVector("zero", U.dimensions(), vector::zero)
     );
 
-    // map local velocity onto neighbour region
+    // Map local velocity onto neighbour region
     meshInterp().mapSrcToTgt
     (
         U.internalField(),
@@ -252,7 +252,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
     const volScalarField& mu =
         mesh_.lookupObject<volScalarField>(muName_);
 
-    // map local rho onto neighbour region
+    // Map local rho onto neighbour region
     meshInterp().mapSrcToTgt
     (
         rho.internalField(),
@@ -260,7 +260,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
         rhoNbr.internalField()
     );
 
-    // map local mu onto neighbour region
+    // Map local mu onto neighbour region
     meshInterp().mapSrcToTgt
     (
         mu.internalField(),
@@ -270,7 +270,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 
     porosityPtr_->addResistance(nbrEqn, rhoNbr, muNbr);
 
-    // convert source from neighbour to local region
+    // Convert source from neighbour to local region
     fvMatrix<vector> porosityEqn(U, eqn.dimensions());
     scalarField& Udiag = porosityEqn.diag();
     vectorField& Usource = porosityEqn.source();
@@ -292,7 +292,7 @@ bool Foam::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
         coeffs_.readIfPresent("UName", UName_);
         coeffs_.readIfPresent("muName", muName_);
 
-        // reset the porosity model?
+        // Reset the porosity model?
 
         return true;
     }
