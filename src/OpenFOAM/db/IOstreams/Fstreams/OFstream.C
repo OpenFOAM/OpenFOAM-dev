@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(OFstream, 0);
+    defineTypeNameAndDebug(OFstream, 0);
 }
 
 
@@ -103,9 +103,8 @@ Foam::OFstream::OFstream
     {
         if (debug)
         {
-            Info<< "OFstream::OFstream(const fileName&,"
-                   "streamFormat, versionNumber, compressionType) : "
-                   "could not open file " << pathname
+            InfoInFunction
+                << "Could not open file " << pathname
                 << "for input\n"
                    "in stream " << info() << Foam::endl;
         }

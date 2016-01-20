@@ -38,10 +38,7 @@ Foam::tmp<Foam::fv::gradScheme<Type>> Foam::fv::gradScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "gradScheme<Type>::New"
-               "(const fvMesh& mesh, Istream& schemeData) : "
-               "constructing gradScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing gradScheme<Type>" << endl;
     }
 
     if (schemeData.eof())

@@ -50,9 +50,7 @@ tmp<snGradScheme<Type>> snGradScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "snGradScheme<Type>::New(const fvMesh&, Istream&)"
-               " : constructing snGradScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing snGradScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
@@ -171,8 +169,6 @@ snGradScheme<Type>::sndGrad
 }
 
 
-//- Return the face-snGrad of the given cell field
-//  with explicit correction
 template<class Type>
 tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 snGradScheme<Type>::snGrad
@@ -194,8 +190,6 @@ snGradScheme<Type>::snGrad
 }
 
 
-//- Return the face-snGrad of the given cell field
-//  with explicit correction
 template<class Type>
 tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 snGradScheme<Type>::snGrad

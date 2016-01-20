@@ -23,15 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
+Foam::tmp<Foam::fvsPatchField<Type>> Foam::fvsPatchField<Type>::New
 (
     const word& patchFieldType,
     const word& actualPatchType,
@@ -41,10 +36,7 @@ tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "fvsPatchField<Type>::New(const word&, const word&"
-               ", const fvPatch&, const Field<Type>&) : "
-               "constructing fvsPatchField<Type>"
-            << endl;
+        InfoInFunction << "Constructing fvsPatchField<Type>" << endl;
     }
 
     typename patchConstructorTable::iterator cstrIter =
@@ -86,7 +78,7 @@ tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 
 
 template<class Type>
-tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
+Foam::tmp<Foam::fvsPatchField<Type>> Foam::fvsPatchField<Type>::New
 (
     const word& patchFieldType,
     const fvPatch& p,
@@ -98,7 +90,7 @@ tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 
 
 template<class Type>
-tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
+Foam::tmp<Foam::fvsPatchField<Type>> Foam::fvsPatchField<Type>::New
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -107,10 +99,7 @@ tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "fvsPatchField<Type>::New(const fvPatch&, const Field<Type>&, "
-               "const dictionary&) : "
-               "constructing fvsPatchField<Type>"
-            << endl;
+        InfoInFunction << "Constructing fvsPatchField<Type>" << endl;
     }
 
     const word patchFieldType(dict.lookup("type"));
@@ -167,10 +156,8 @@ tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 }
 
 
-// Return a pointer to a new patch created on freestore from
-// a given fvsPatchField<Type> mapped onto a new patch
 template<class Type>
-tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
+Foam::tmp<Foam::fvsPatchField<Type>> Foam::fvsPatchField<Type>::New
 (
     const fvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -180,11 +167,7 @@ tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "fvsPatchField<Type>::New(const fvsPatchField<Type>&,"
-               " const fvPatch&, const Field<Type>&, "
-               "const fvPatchFieldMapper&) : "
-               "constructing fvsPatchField<Type>"
-            << endl;
+        InfoInFunction << "Constructing fvsPatchField<Type>" << endl;
     }
 
     typename patchMapperConstructorTable::iterator cstrIter =
@@ -212,9 +195,5 @@ tmp<fvsPatchField<Type>> fvsPatchField<Type>::New
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

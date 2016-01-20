@@ -107,10 +107,7 @@ void Foam::UnsortedMeshedSurface<Face>::write
 {
     if (debug)
     {
-        Info<< "UnsortedMeshedSurface::write"
-            "(const fileName&, const UnsortedMeshedSurface&) : "
-            "writing to " << name
-            << endl;
+        InfoInFunction << "Writing to " << name << endl;
     }
 
     const word ext = name.ext();

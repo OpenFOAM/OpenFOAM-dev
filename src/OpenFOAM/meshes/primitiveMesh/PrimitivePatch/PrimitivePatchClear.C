@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,7 @@ clearGeom()
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "clearGeom() : clearing geometric data"
-            << endl;
+        InfoInFunction << "Clearing geometric data" << endl;
     }
 
     deleteDemandDrivenData(localPointsPtr_);
@@ -67,9 +65,7 @@ clearTopology()
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "clearTopology() : clearing patch addressing"
-            << endl;
+        InfoInFunction << "Clearing patch addressing" << endl;
     }
 
     // group created and destroyed together
@@ -109,10 +105,7 @@ clearPatchMeshAddr()
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "clearPatchMeshAddr() : "
-            << "clearing patch-mesh addressing"
-            << endl;
+        InfoInFunction << "Clearing patch-mesh addressing" << endl;
     }
 
     deleteDemandDrivenData(meshPointsPtr_);

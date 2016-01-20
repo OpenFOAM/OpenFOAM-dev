@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,10 +91,7 @@ void Foam::edgeMesh::write
 {
     if (debug)
     {
-        Info<< "edgeMesh::write"
-            "(const fileName&, const edgeMesh&) : "
-            "writing to " << name
-            << endl;
+        InfoInFunction << "Writing to " << name << endl;
     }
 
     const word ext = name.ext();

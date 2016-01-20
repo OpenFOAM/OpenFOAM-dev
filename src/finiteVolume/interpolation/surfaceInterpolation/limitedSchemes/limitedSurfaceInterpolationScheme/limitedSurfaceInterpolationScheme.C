@@ -40,10 +40,8 @@ Foam::limitedSurfaceInterpolationScheme<Type>::New
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "limitedSurfaceInterpolationScheme<Type>::"
-               "New(const fvMesh&, Istream&)"
-               " : constructing limitedSurfaceInterpolationScheme<Type>"
-            << endl;
+        InfoInFunction
+            << "Constructing limitedSurfaceInterpolationScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
@@ -90,9 +88,8 @@ Foam::limitedSurfaceInterpolationScheme<Type>::New
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "limitedSurfaceInterpolationScheme<Type>::New"
-               "(const fvMesh&, const surfaceScalarField&, Istream&) : "
-               "constructing limitedSurfaceInterpolationScheme<Type>"
+        InfoInFunction
+            << "Constructing limitedSurfaceInterpolationScheme<Type>"
             << endl;
     }
 

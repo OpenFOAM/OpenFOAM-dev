@@ -43,13 +43,7 @@ readField
 
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::readField"
-               "("
-                   "const DimensionedField<Type, GeoMesh>&, "
-                   "const dictionary&"
-                ")"
-            << endl;
+        InfoInFunction << endl;
     }
 
 
@@ -230,11 +224,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const DimensionedField<Type>&, const word&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -268,16 +258,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField"
-               "("
-                    "const BoundaryMesh&, "
-                    "const DimensionedField<Type>&, "
-                    "const wordList&, "
-                    "const wordList&"
-                ")"
-            << endl;
+        InfoInFunction << endl;
     }
 
     if
@@ -344,15 +325,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField"
-               "("
-                    "const BoundaryMesh&, "
-                    "const DimensionedField<Type, GeoMesh>&, "
-                    "const PtrLIst<PatchField<Type>>&"
-               ")"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -376,15 +349,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField"
-               "("
-                   "const DimensionedField<Type, GeoMesh>&, "
-                   "const typename GeometricField<Type, PatchField, GeoMesh>::"
-                   "GeometricBoundaryField&"
-               ")"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -412,14 +377,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField"
-               "("
-                   "const GeometricField<Type, PatchField, GeoMesh>::"
-                   "GeometricBoundaryField&"
-               ")"
-            << endl;
+        InfoInFunction << endl;
     }
 }
 
@@ -448,9 +406,7 @@ updateCoeffs()
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "updateCoeffs()" << endl;
+        InfoInFunction << endl;
     }
 
     forAll(*this, patchi)
@@ -466,9 +422,7 @@ evaluate()
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "evaluate()" << endl;
+        InfoInFunction << endl;
     }
 
     if

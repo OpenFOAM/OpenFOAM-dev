@@ -63,10 +63,7 @@ tmp<convectionScheme<Type>> convectionScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "convectionScheme<Type>::New"
-               "(const fvMesh&, const surfaceScalarField&, Istream&) : "
-               "constructing convectionScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing convectionScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
@@ -112,12 +109,7 @@ tmp<convectionScheme<Type>> convectionScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "convectionScheme<Type>::New"
-               "(const fvMesh&, "
-               "const typename multivariateSurfaceInterpolationScheme<Type>"
-               "::fieldTable&, const surfaceScalarField&, Istream&) : "
-               "constructing convectionScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing convectionScheme<Type>" << endl;
     }
 
     if (schemeData.eof())

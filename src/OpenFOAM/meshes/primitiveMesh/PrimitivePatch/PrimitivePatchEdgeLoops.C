@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,10 +45,7 @@ calcEdgeLoops() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcEdgeLoops() : "
-            << "calculating boundary edge loops"
-            << endl;
+        InfoInFunction << "Calculating boundary edge loops" << endl;
     }
 
     if (edgeLoopsPtr_)
@@ -153,10 +150,7 @@ calcEdgeLoops() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcEdgeLoops() : "
-            << "finished calculating boundary edge loops"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 }
 

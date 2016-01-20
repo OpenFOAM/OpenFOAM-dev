@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,7 @@ Foam::autoPtr<Foam::facePointPatch> Foam::facePointPatch::New
 {
     if (debug)
     {
-        Info<< "facePointPatch::New(const polyPatch&, "
-            << " const pointBoundaryMesh&) : "
-            << "constructing facePointPatch"
-            << endl;
+        InfoInFunction << "Constructing facePointPatch" << endl;
     }
 
     polyPatchConstructorTable::iterator cstrIter =

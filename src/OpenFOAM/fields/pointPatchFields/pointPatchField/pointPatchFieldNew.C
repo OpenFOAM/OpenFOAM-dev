@@ -36,11 +36,7 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "PointPatchField<Type>::"
-               "New(const word&, const word&"
-                ", const pointPatch&, const Field<Type>&) : "
-               "constructing pointPatchField<Type>"
-            << endl;
+        InfoInFunction << "Constructing pointPatchField<Type>" << endl;
     }
 
     typename pointPatchConstructorTable::iterator cstrIter =
@@ -116,10 +112,7 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "PointPatchField<Type>::"
-               "New(const pointPatch&, const Field<Type>&, const dictionary&)"
-               " : constructing pointPatchField<Type>"
-            << endl;
+        InfoInFunction << "Constructing pointPatchField<Type>" << endl;
     }
 
     word patchFieldType(dict.lookup("type"));
@@ -186,8 +179,6 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
 }
 
 
-// Return a pointer to a new patch created on freestore from
-// a given pointPatchField<Type> mapped onto a new patch
 template<class Type>
 Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
 (
@@ -199,12 +190,7 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "PointPatchField<Type>::"
-               "New(const pointPatchField<Type>&,"
-               " const pointPatch&, const Field<Type>&, "
-               "const pointPatchFieldMapper&) : "
-               "constructing pointPatchField<Type>"
-            << endl;
+        InfoInFunction << "Constructing pointPatchField<Type>" << endl;
     }
 
     typename patchMapperConstructorTable::iterator cstrIter =

@@ -41,9 +41,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
 {
     if (debug)
     {
-        Info<< "bool polyMesh::checkFaceOrthogonality("
-            << "const bool, labelHashSet*) const: "
-            << "checking mesh non-orthogonality" << endl;
+        InfoInFunction << "Checking mesh non-orthogonality" << endl;
     }
 
     const labelList& own = faceOwner();
@@ -182,9 +180,7 @@ bool Foam::polyMesh::checkFaceSkewness
 {
     if (debug)
     {
-        Info<< "bool polyMesh::checkFaceSkewnesss("
-            << "const bool, labelHashSet*) const: "
-            << "checking face skewness" << endl;
+        InfoInFunction << "Checking face skewness" << endl;
     }
 
     const labelList& own = faceOwner();
@@ -289,9 +285,7 @@ bool Foam::polyMesh::checkEdgeAlignment
 {
     if (debug)
     {
-        Info<< "bool polyMesh::checkEdgeAlignment("
-            << "const bool, const Vector<label>&, labelHashSet*) const: "
-            << "checking edge alignment" << endl;
+        InfoInFunction << "Checking edge alignment" << endl;
     }
 
     label nDirs = 0;
@@ -422,9 +416,7 @@ bool Foam::polyMesh::checkCellDeterminant
 
     if (debug)
     {
-        Info<< "bool polyMesh::checkCellDeterminant(const bool"
-            << ", labelHashSet*) const: "
-            << "checking for under-determined cells" << endl;
+        InfoInFunction << "Checking for under-determined cells" << endl;
     }
 
     tmp<scalarField> tcellDeterminant = primitiveMeshTools::cellDeterminant
@@ -506,9 +498,7 @@ bool Foam::polyMesh::checkFaceWeight
 {
     if (debug)
     {
-        Info<< "bool polyMesh::checkFaceWeight(const bool"
-            << ", labelHashSet*) const: "
-            << "checking for low face interpolation weights" << endl;
+        InfoInFunction << "Checking for low face interpolation weights" << endl;
     }
 
     tmp<scalarField> tfaceWght = polyMeshTools::faceWeights
@@ -601,9 +591,7 @@ bool Foam::polyMesh::checkVolRatio
 {
     if (debug)
     {
-        Info<< "bool polyMesh::checkVolRatio(const bool"
-            << ", labelHashSet*) const: "
-            << "checking for volume ratio < " << minRatio << endl;
+        InfoInFunction << "Checking for volume ratio < " << minRatio << endl;
     }
 
     tmp<scalarField> tvolRatio = polyMeshTools::volRatio(*this, cellVols);
@@ -678,19 +666,6 @@ bool Foam::polyMesh::checkVolRatio
 
     return false;
 }
-
-
-//- Could override checkClosedBoundary to not look at (collocated!) coupled
-//  faces
-//bool Foam::polyMesh::checkClosedBoundary(const bool report) const
-//{
-//    return primitiveMesh::checkClosedBoundary
-//    (
-//        faceAreas(),
-//        report,
-//        syncTools::getInternalOrCollocatedCoupledFaces(*this)
-//    );
-//}
 
 
 bool Foam::polyMesh::checkFaceOrthogonality

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,7 +243,7 @@ void reactingOneDim::solveContinuity()
 {
     if (debug)
     {
-        Info<< "reactingOneDim::solveContinuity()" << endl;
+        InfoInFunction << endl;
     }
 
     const scalarField mass0 = rho_*regionMesh().V();
@@ -275,7 +275,7 @@ void reactingOneDim::solveSpeciesMass()
 {
     if (debug)
     {
-        Info<< "reactingOneDim::solveSpeciesMass()" << endl;
+        InfoInFunction << endl;
     }
 
     volScalarField Yt(0.0*Ys_[0]);
@@ -316,7 +316,7 @@ void reactingOneDim::solveEnergy()
 {
     if (debug)
     {
-        Info<< "reactingOneDim::solveEnergy()" << endl;
+        InfoInFunction << endl;
     }
 
     tmp<volScalarField> alpha(solidThermo_.alpha());

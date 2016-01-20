@@ -33,7 +33,6 @@ Description
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-//- Construct from face-flux field and coefficient
 template<class Type>
 Foam::multivariateSurfaceInterpolationScheme<Type>::
 multivariateSurfaceInterpolationScheme
@@ -63,11 +62,8 @@ Foam::multivariateSurfaceInterpolationScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "multivariateSurfaceInterpolationScheme<Type>::New"
-               "(const fvMesh& mesh, const fieldTable&, "
-               "const surfaceScalarField&, Istream&) : "
-               "constructing surfaceInterpolationScheme<Type>"
-            << endl;
+        InfoInFunction
+            << "Constructing surfaceInterpolationScheme<Type>" << endl;
     }
 
     const word schemeName(schemeData);

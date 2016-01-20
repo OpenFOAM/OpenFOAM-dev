@@ -402,15 +402,14 @@ void Foam::Cloud<ParticleType>::autoMap
 {
     if (cloud::debug)
     {
-        Info<< "Cloud<ParticleType>::autoMap(TrackData&, const mapPolyMesh&) "
-            << "for lagrangian cloud " << cloud::name() << endl;
+        InfoInFunction << "for lagrangian cloud " << cloud::name() << endl;
     }
 
     const labelList& reverseCellMap = mapper.reverseCellMap();
     const labelList& reverseFaceMap = mapper.reverseFaceMap();
 
     // Reset stored data that relies on the mesh
-//    polyMesh_.clearCellTree();
+    //    polyMesh_.clearCellTree();
     cellWallFacesPtr_.clear();
 
     // Ask for the tetBasePtIs to trigger all processors to build

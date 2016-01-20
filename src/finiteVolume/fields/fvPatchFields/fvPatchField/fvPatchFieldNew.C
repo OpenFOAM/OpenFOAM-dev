@@ -36,10 +36,8 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "fvPatchField<Type>::New(const word&, const word&, "
-               "const fvPatch&, const DimensionedField<Type, volMesh>&) :"
-               " patchFieldType="
-            << patchFieldType
+        InfoInFunction
+            << "patchFieldType = " << patchFieldType
             << " : " << p.type()
             << endl;
     }
@@ -113,9 +111,8 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
 
     if (debug)
     {
-        Info<< "fvPatchField<Type>::New(const fvPatch&, "
-               "const DimensionedField<Type, volMesh>&, "
-               "const dictionary&) : patchFieldType="  << patchFieldType
+        InfoInFunction
+            << "patchFieldType = " << patchFieldType
             << endl;
     }
 
@@ -182,11 +179,7 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "fvPatchField<Type>::New(const fvPatchField<Type>&, "
-               "const fvPatch&, const DimensionedField<Type, volMesh>&, "
-               "const fvPatchFieldMapper&) : "
-               "constructing fvPatchField<Type>"
-            << endl;
+        InfoInFunction << "Constructing fvPatchField<Type>" << endl;
     }
 
     typename patchMapperConstructorTable::iterator cstrIter =

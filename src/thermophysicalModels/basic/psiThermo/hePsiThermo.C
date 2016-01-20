@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,8 +131,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::correct()
 {
     if (debug)
     {
-        Info<< "entering hePsiThermo<BasicPsiThermo, MixtureType>::correct()"
-            << endl;
+        InfoInFunction << endl;
     }
 
     // force the saving of the old-time values
@@ -142,8 +141,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::correct()
 
     if (debug)
     {
-        Info<< "exiting hePsiThermo<BasicPsiThermo, MixtureType>::correct()"
-            << endl;
+        Info<< "    Finished" << endl;
     }
 }
 

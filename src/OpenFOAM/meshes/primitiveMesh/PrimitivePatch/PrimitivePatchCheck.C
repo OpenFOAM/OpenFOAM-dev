@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,10 +121,7 @@ surfaceType() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "surfaceType() : "
-               "calculating patch topology"
-            << endl;
+        InfoInFunction << "Calculating patch topology" << endl;
     }
 
     const labelListList& edgeFcs = edgeFaces();
@@ -151,10 +148,7 @@ surfaceType() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "surfaceType() : "
-               "finished calculating patch topology"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 
     return pType;
@@ -178,10 +172,7 @@ checkTopology
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "checkTopology(const bool, labelHashSet&) : "
-               "checking patch topology"
-            << endl;
+        InfoInFunction << "Checking patch topology" << endl;
     }
 
     // Check edgeFaces
@@ -217,10 +208,7 @@ checkTopology
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "checkTopology(const bool, labelHashSet&) : "
-               "finished checking patch topology"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 
     return illegalTopo;

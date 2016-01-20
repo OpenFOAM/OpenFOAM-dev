@@ -54,11 +54,7 @@ Foam::surfaceInterpolationScheme<Type>::New
 
     if (surfaceInterpolation::debug || surfaceInterpolationScheme<Type>::debug)
     {
-        Info<< "surfaceInterpolationScheme<Type>::New"
-               "(const fvMesh&, Istream&)"
-               " : discretisation scheme === "
-            << schemeName
-            << endl;
+        InfoInFunction << "Discretisation scheme = " << schemeName << endl;
     }
 
     typename MeshConstructorTable::iterator constructorIter =
@@ -105,11 +101,8 @@ Foam::surfaceInterpolationScheme<Type>::New
 
     if (surfaceInterpolation::debug || surfaceInterpolationScheme<Type>::debug)
     {
-        Info<< "surfaceInterpolationScheme<Type>::New"
-               "(const fvMesh&, const surfaceScalarField&, Istream&)"
-               " : discretisation scheme = "
-            << schemeName
-            << endl;
+        InfoInFunction
+            << "Discretisation scheme = " << schemeName << endl;
     }
 
     typename MeshFluxConstructorTable::iterator constructorIter =
@@ -151,11 +144,8 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "surfaceInterpolationScheme<Type>::uncorrectedInterpolate"
-               "(const GeometricField<Type, fvPatchField, volMesh>&, "
-               "const tmp<surfaceScalarField>&, "
-               "const tmp<surfaceScalarField>&) : "
-               "interpolating "
+        InfoInFunction
+            << "Interpolating "
             << vf.type() << " "
             << vf.name()
             << " from cells to faces "
@@ -234,10 +224,8 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "surfaceInterpolationScheme<Type>::interpolate"
-               "(const GeometricField<Type, fvPatchField, volMesh>&, "
-               "const tmp<surfaceScalarField>&) : "
-               "interpolating "
+        InfoInFunction
+            << "Interpolating "
             << vf.type() << " "
             << vf.name()
             << " from cells to faces "
@@ -310,9 +298,8 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "surfaceInterpolationScheme<Type>::interpolate"
-               "(const GeometricField<Type, fvPatchField, volMesh>&) : "
-               "interpolating "
+        InfoInFunction
+            << "Interpolating "
             << vf.type() << " "
             << vf.name()
             << " from cells to faces"

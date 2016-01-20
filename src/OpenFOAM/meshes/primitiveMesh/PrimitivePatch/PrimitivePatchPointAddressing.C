@@ -46,9 +46,7 @@ calcPointEdges() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcPointEdges() : calculating pointEdges"
-            << endl;
+        InfoInFunction << "Calculating pointEdges" << endl;
     }
 
     if (pointEdgesPtr_)
@@ -68,9 +66,7 @@ calcPointEdges() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcPointEdges() finished calculating pointEdges"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 }
 
@@ -88,9 +84,7 @@ calcPointFaces() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcPointFaces() : calculating pointFaces"
-            << endl;
+        InfoInFunction << "Calculating pointFaces" << endl;
     }
 
     if (pointFacesPtr_)
@@ -135,9 +129,7 @@ calcPointFaces() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcPointFaces() finished calculating pointFaces"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 }
 

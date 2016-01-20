@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,9 +38,7 @@ Foam::autoPtr<Foam::pointZone> Foam::pointZone::New
 {
     if (debug)
     {
-        Info<< "pointZone::New(const word&, const dictionary&, const label, "
-               "const pointZoneMesh&) : constructing pointZone " << name
-            << endl;
+        InfoInFunction << "Constructing pointZone " << name << endl;
     }
 
     const word zoneType(dict.lookup("type"));

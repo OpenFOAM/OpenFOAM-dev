@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "PrimitivePatch.H"
 #include "HashSet.H"
 
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template
@@ -42,10 +41,7 @@ calcBdryPoints() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcBdryPoints() : "
-            << "calculating boundary points"
-            << endl;
+        InfoInFunction << "Calculating boundary points" << endl;
     }
 
     if (boundaryPointsPtr_)
@@ -74,10 +70,7 @@ calcBdryPoints() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcBdryPoints() : "
-            << "finished calculating boundary points"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 }
 

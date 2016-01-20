@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,9 +139,8 @@ Foam::coordinateSystem::coordinateSystem
 
         if (debug)
         {
-            Info<< "coordinateSystem::coordinateSystem"
-                "(const objectRegistry&, const dictionary&):"
-                << nl << "using global coordinate system: "
+            InfoInFunction
+                << "Using global coordinate system: "
                 << key << "=" << index << endl;
         }
 

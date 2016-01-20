@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,14 +168,14 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::correct()
 {
     if (debug)
     {
-        Info<< "entering heSolidThermo<MixtureType>::correct()" << endl;
+        InfoInFunction << endl;
     }
 
     calculate();
 
     if (debug)
     {
-        Info<< "exiting heSolidThermo<MixtureType>::correct()" << endl;
+        Info<< "    Finished" << endl;
     }
 }
 
