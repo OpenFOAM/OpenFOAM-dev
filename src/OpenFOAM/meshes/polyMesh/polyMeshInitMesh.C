@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,7 @@ void Foam::polyMesh::initMesh()
 {
     if (debug)
     {
-        Info<< "void polyMesh::initMesh() : "
-            << "initialising primitiveMesh" << endl;
+        InfoInFunction << "initialising primitiveMesh" << endl;
     }
 
     // For backward compatibility check if the neighbour array is the same
@@ -109,8 +108,7 @@ void Foam::polyMesh::initMesh(cellList& c)
 {
     if (debug)
     {
-        Info<< "void polyMesh::initMesh(cellList& c) : "
-            << "calculating owner-neighbour arrays" << endl;
+        InfoInFunction << "Calculating owner-neighbour arrays" << endl;
     }
 
     owner_.setSize(faces_.size(), -1);
@@ -174,5 +172,6 @@ void Foam::polyMesh::initMesh(cellList& c)
     owner_.note() = meshInfo;
     neighbour_.note() = meshInfo;
 }
+
 
 // ************************************************************************* //

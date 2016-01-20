@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(zone, 0);
+    defineTypeNameAndDebug(zone, 0);
 }
 
 
@@ -53,9 +53,7 @@ void Foam::zone::calcLookupMap() const
 {
     if (debug)
     {
-        Info<< "void zone::calcLookupMap() const: "
-            << "Calculating lookup map"
-            << endl;
+        InfoInFunction << "Calculating lookup map" << endl;
     }
 
     if (lookupMapPtr_)
@@ -77,9 +75,7 @@ void Foam::zone::calcLookupMap() const
 
     if (debug)
     {
-        Info<< "void zone::calcLookupMap() const: "
-            << "Finished calculating lookup map"
-            << endl;
+        InfoInFunction << "Finished calculating lookup map" << endl;
     }
 }
 

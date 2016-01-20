@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ Foam::scalar Foam::sampledSet::calcSign
 
     if (magVec < VSMALL)
     {
-        // sample on face centre. Regard as inside
+        // Sample on face centre. Regard as inside
         return -1;
     }
 
@@ -133,7 +133,6 @@ Foam::scalar Foam::sampledSet::calcSign
 }
 
 
-// Return face (or -1) of face which is within smallDist of sample
 Foam::label Foam::sampledSet::findNearFace
 (
     const label cellI,
@@ -169,8 +168,6 @@ Foam::label Foam::sampledSet::findNearFace
 }
 
 
-// 'Pushes' point facePt (which is almost on face) in direction of cell centre
-// so it is clearly inside.
 Foam::point Foam::sampledSet::pushIn
 (
     const point& facePt,
@@ -224,16 +221,10 @@ Foam::point Foam::sampledSet::pushIn
             << abort(FatalError);
     }
 
-    //Info<< "pushIn : moved " << facePt << " to " << newPosition
-    //    << endl;
-
     return newPosition;
 }
 
 
-// Calculates start of tracking given samplePt and first boundary intersection
-// (bPoint, bFaceI). bFaceI == -1 if no boundary intersection.
-// Returns true if trackPt is sampling point
 bool Foam::sampledSet::getTrackingPoint
 (
     const vector& offset,
@@ -268,9 +259,6 @@ bool Foam::sampledSet::getTrackingPoint
         {
             // Line samplePt - end_ does not intersect domain at all.
             // (or is along edge)
-            //Info<< "getTrackingPoint : samplePt outside domain : "
-            //    << "  samplePt:" << samplePt
-            //    << endl;
 
             trackCellI = -1;
             trackFaceI = -1;
@@ -279,11 +267,7 @@ bool Foam::sampledSet::getTrackingPoint
         }
         else
         {
-            // start is inside. Use it as tracking point
-            //Info<< "getTrackingPoint : samplePt inside :"
-            //    << "  samplePt:" << samplePt
-            //    << "  trackCellI:" << trackCellI
-            //    << endl;
+            // Start is inside. Use it as tracking point
 
             trackPt = samplePt;
             trackFaceI = -1;
@@ -293,10 +277,6 @@ bool Foam::sampledSet::getTrackingPoint
     }
     else if (mag(samplePt - bPoint) < smallDist)
     {
-        //Info<< "getTrackingPoint : samplePt:" << samplePt
-        //    << " close to bPoint:"
-        //    << bPoint << endl;
-
         // samplePt close to bPoint. Snap to it
         trackPt = pushIn(bPoint, bFaceI);
         trackFaceI = bFaceI;
@@ -330,7 +310,7 @@ bool Foam::sampledSet::getTrackingPoint
 
     if (debug)
     {
-        Info<< "sampledSet::getTrackingPoint :"
+        InfoInFunction
             << " offset:" << offset
             << " samplePt:" << samplePt
             << " bPoint:" << bPoint

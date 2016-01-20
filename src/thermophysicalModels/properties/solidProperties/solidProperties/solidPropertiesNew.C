@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,7 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New(Istream& is)
 {
     if (debug)
     {
-        Info<< "solidProperties::New(Istream&): constructing solid"
-            << endl;
+        InfoInFunction << "Constructing solid" << endl;
     }
 
     const word solidType(is);
@@ -79,8 +78,7 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
 {
     if (debug)
     {
-        Info<< "solidProperties::New(const dictionary&): constructing solid"
-            << endl;
+        InfoInFunction << "Constructing solid" << endl;
     }
 
     const word solidType(dict.dictName());
@@ -115,4 +113,4 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

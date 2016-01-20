@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ void Foam::movingConeTopoFvMesh::addZonesAndModifiers()
      || topoChanger_.size()
     )
     {
-        Info<< "void movingConeTopoFvMesh::addZonesAndModifiers() : "
+        InfoInFunction
             << "Zones and modifiers already present.  Skipping."
             << endl;
 
@@ -337,48 +337,6 @@ bool Foam::movingConeTopoFvMesh::update()
         if (topoChangeMap().hasMotionPoints())
         {
             Info<< "Topology change. Has premotion points" << endl;
-            //Info<< "preMotionPoints:" << topoChangeMap().preMotionPoints()
-            //    << endl;
-
-            //mkDir(time().timePath());
-            //{
-            //    OFstream str(time().timePath()/"meshPoints.obj");
-            //    Pout<< "Writing mesh with meshPoints to " << str.name()
-            //        << endl;
-            //
-            //    const pointField& currentPoints = points();
-            //    label vertI = 0;
-            //    forAll(currentPoints, pointI)
-            //    {
-            //        meshTools::writeOBJ(str, currentPoints[pointI]);
-            //        vertI++;
-            //    }
-            //    forAll(edges(), edgeI)
-            //    {
-            //        const edge& e = edges()[edgeI];
-            //        str << "l " << e[0]+1 << ' ' << e[1]+1 << nl;
-            //    }
-            //}
-            //{
-            //    OFstream str(time().timePath()/"preMotionPoints.obj");
-            //    Pout<< "Writing mesh with preMotionPoints to " << str.name()
-            //        << endl;
-            //
-            //    const pointField& newPoints =
-            //        topoChangeMap().preMotionPoints();
-            //    label vertI = 0;
-            //    forAll(newPoints, pointI)
-            //    {
-            //        meshTools::writeOBJ(str, newPoints[pointI]);
-            //        vertI++;
-            //    }
-            //    forAll(edges(), edgeI)
-            //    {
-            //        const edge& e = edges()[edgeI];
-            //        str << "l " << e[0]+1 << ' ' << e[1]+1 << nl;
-            //    }
-            //}
-
 
             motionMask_ =
                 vertexMarkup

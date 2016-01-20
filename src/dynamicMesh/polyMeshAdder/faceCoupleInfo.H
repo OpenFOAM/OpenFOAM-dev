@@ -278,9 +278,9 @@ class faceCoupleInfo
 
         // Face matching
 
-            //- Matches two faces.Determines rotation for f1 to match up
-            // with f0, i.e. the index in f0 of
-            // the first point of f1.
+            //- Matches two faces.
+            //  Determines rotation for f1 to match up with f0,
+            //  i.e. the index in f0 of the first point of f1.
             static label matchFaces
             (
                 const scalar absTol,

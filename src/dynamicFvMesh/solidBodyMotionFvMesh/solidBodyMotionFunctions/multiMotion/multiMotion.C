@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,8 +77,7 @@ Foam::solidBodyMotionFunctions::multiMotion::transformation() const
         TR *= SBMFs_[i].transformation();
     }
 
-    Info<< "solidBodyMotionFunctions::multiMotion::transformation(): "
-        << "Time = " << t << " transformation: " << TR << endl;
+    InfoInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
 }
@@ -115,5 +114,6 @@ bool Foam::solidBodyMotionFunctions::multiMotion::read
 
     return true;
 }
+
 
 // ************************************************************************* //

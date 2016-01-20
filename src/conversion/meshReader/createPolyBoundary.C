@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ void Foam::meshReader::addPolyBoundaryFace
     // Debugging
     if (cellPolys_[cellId][cellFaceId] > nInternalFaces_)
     {
-        Info<< "meshReader::createPolyBoundary(): "
+        InfoInFunction
             << "Problem with face: " << thisFace << endl
             << "Probably multiple definitions "
             << "of a single boundary face." << endl
@@ -70,7 +70,7 @@ void Foam::meshReader::addPolyBoundaryFace
     }
     else if (cellPolys_[cellId][cellFaceId] >= 0)
     {
-        Info<< "meshReader::createPolyBoundary(): "
+        InfoInFunction
             << "Problem with face: " << thisFace << endl
             << "Probably trying to define a boundary face "
             << "on a previously matched internal face." << endl
@@ -340,8 +340,8 @@ void Foam::meshReader::createPolyBoundary()
         {
             const face& problemFace = meshFaces_[faceI];
 
-            Info<< "meshReader::createPolyBoundary() : "
-                << "problem with face " << faceI << ": addressed "
+            InfoInFunction
+                << "Problem with face " << faceI << ": addressed "
                 << markupFaces[faceI] << " times (should be 2!). Face: "
                 << problemFace << endl;
 

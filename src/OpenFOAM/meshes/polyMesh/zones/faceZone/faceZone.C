@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,9 +49,7 @@ void Foam::faceZone::calcFaceZonePatch() const
 {
     if (debug)
     {
-        Info<< "void faceZone::calcFaceZonePatch() const : "
-            << "Calculating primitive patch"
-            << endl;
+        InfoInFunction << "Calculating primitive patch" << endl;
     }
 
     if (patchPtr_)
@@ -89,9 +87,7 @@ void Foam::faceZone::calcFaceZonePatch() const
 
     if (debug)
     {
-        Info<< "void faceZone::calcFaceZonePatch() const : "
-            << "Finished calculating primitive patch"
-            << endl;
+        InfoInFunction << "Finished calculating primitive patch" << endl;
     }
 }
 
@@ -100,9 +96,7 @@ void Foam::faceZone::calcCellLayers() const
 {
     if (debug)
     {
-        Info<< "void Foam::faceZone::calcCellLayers() const : "
-            << "calculating master cells"
-            << endl;
+        InfoInFunction << "Calculating master cells" << endl;
     }
 
     // It is an error to attempt to recalculate edgeCells
@@ -153,8 +147,6 @@ void Foam::faceZone::calcCellLayers() const
                 sc[faceI] = neiCellI;
             }
         }
-        //Info<< "masterCells: " << mc << endl;
-        //Info<< "slaveCells: " << sc << endl;
     }
 }
 
@@ -190,7 +182,6 @@ void Foam::faceZone::checkAddressing() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::faceZone::faceZone
 (
     const word& name,
@@ -354,28 +345,6 @@ const Foam::labelList& Foam::faceZone::meshEdges() const
 {
     if (!mePtr_)
     {
-        //labelList faceCells(size());
-        //
-        //const labelList& own = zoneMesh().mesh().faceOwner();
-        //
-        //const labelList& faceLabels = *this;
-        //
-        //forAll(faceCells, faceI)
-        //{
-        //    faceCells[faceI] = own[faceLabels[faceI]];
-        //}
-        //
-        //mePtr_ =
-        //    new labelList
-        //    (
-        //        operator()().meshEdges
-        //        (
-        //            zoneMesh().mesh().edges(),
-        //            zoneMesh().mesh().cellEdges(),
-        //            faceCells
-        //        )
-        //    );
-
         mePtr_ =
             new labelList
             (

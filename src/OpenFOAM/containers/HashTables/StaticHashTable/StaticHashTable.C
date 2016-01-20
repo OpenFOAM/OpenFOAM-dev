@@ -39,12 +39,12 @@ Foam::label Foam::StaticHashTableCore::canonicalSize(const label size)
         return 0;
     }
 
-    // enforce power of two
+    // Enforce power of two
     unsigned int goodSize = size;
 
     if (goodSize & (goodSize - 1))
     {
-        // brute-force is fast enough
+        // Brute-force is fast enough
         goodSize = 1;
         while (goodSize < unsigned(size))
         {
@@ -58,7 +58,6 @@ Foam::label Foam::StaticHashTableCore::canonicalSize(const label size)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct given initial table size
 template<class T, class Key, class Hash>
 Foam::StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)
 :
@@ -78,7 +77,6 @@ Foam::StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)
 }
 
 
-// Construct as copy
 template<class T, class Key, class Hash>
 Foam::StaticHashTable<T, Key, Hash>::StaticHashTable
 (
@@ -137,13 +135,12 @@ bool Foam::StaticHashTable<T, Key, Hash>::found(const Key& key) const
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "StaticHashTable<T, Key, Hash>::found(const Key&) : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return false;
 }
@@ -170,13 +167,12 @@ Foam::StaticHashTable<T, Key, Hash>::find
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "StaticHashTable<T, Key, Hash>::find(const Key&) : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return end();
 }
@@ -203,19 +199,17 @@ Foam::StaticHashTable<T, Key, Hash>::find
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "StaticHashTable<T, Key, Hash>::find(const Key&) const : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return cend();
 }
 
 
-// Return the table of contents
 template<class T, class Key, class Hash>
 Foam::List<Key> Foam::StaticHashTable<T, Key, Hash>::toc() const
 {
@@ -254,7 +248,7 @@ bool Foam::StaticHashTable<T, Key, Hash>::set
 
     if (existing == localKeys.size())
     {
-        // not found, append
+        // Not found, append
         List<T>& localObjects = objects_[hashIdx];
 
         localKeys.setSize(existing+1);
@@ -267,21 +261,20 @@ bool Foam::StaticHashTable<T, Key, Hash>::set
     }
     else if (protect)
     {
-        // found - but protected from overwriting
+        // Found - but protected from overwriting
         // this corresponds to the STL 'insert' convention
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "StaticHashTable<T, Key, Hash>::set"
-                "(const Key& key, T newEntry, true) : "
-                "Cannot insert " << key << " already in hash table\n";
+            InfoInFunction
+                << "Cannot insert " << key << " already in hash table\n";
         }
-#       endif
+        #endif
         return false;
     }
     else
     {
-        // found - overwrite existing entry
+        // Found - overwrite existing entry
         // this corresponds to the Perl convention
         objects_[hashIdx][existing] = newEntry;
     }
@@ -307,7 +300,7 @@ bool Foam::StaticHashTable<T, Key, Hash>::erase(const iterator& cit)
         localKeys.setSize(localKeys.size()-1);
         localObjects.setSize(localObjects.size()-1);
 
-        // adjust iterator after erase
+        // Adjust iterator after erase
         iterator& it = const_cast<iterator&>(cit);
 
         it.elemIndex_--;
@@ -321,25 +314,24 @@ bool Foam::StaticHashTable<T, Key, Hash>::erase(const iterator& cit)
 
         nElmts_--;
 
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "StaticHashTable<T, Key, Hash>::erase(iterator&) : "
-                << "hashedEntry removed.\n";
+            InfoInFunction << "hashedEntry removed.\n";
         }
-#       endif
+        #endif
 
         return true;
     }
     else
     {
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "StaticHashTable<T, Key, Hash>::erase(iterator&) : "
-                << "cannot remove hashedEntry from hash table\n";
+            InfoInFunction
+                << "Cannot remove hashedEntry from hash table\n";
         }
-#       endif
+        #endif
 
         return false;
     }
@@ -391,13 +383,12 @@ void Foam::StaticHashTable<T, Key, Hash>::resize(const label sz)
 
     if (newSize == keys_.size())
     {
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "StaticHashTable<T, Key, Hash>::resize(const label) : "
-                << "new table size == old table size\n";
+            InfoInFunction << "New table size == old table size\n";
         }
-#       endif
+        #endif
 
         return;
     }
@@ -517,7 +508,7 @@ bool Foam::StaticHashTable<T, Key, Hash>::operator==
     const StaticHashTable<T, Key, Hash>& rhs
 ) const
 {
-    // sizes (number of keys) must match
+    // Sizes (number of keys) must match
 
     for (const_iterator iter = rhs.cbegin(); iter != rhs.cend(); ++iter)
     {

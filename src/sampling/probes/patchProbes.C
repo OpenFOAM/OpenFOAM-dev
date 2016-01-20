@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "patchProbes.H"
 #include "volFields.H"
 #include "IOmanip.H"
-// For 'nearInfo' helper class only
 #include "mappedPatchBase.H"
 #include "treeBoundBox.H"
 #include "treeDataFace.H"
@@ -152,7 +151,7 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
 
     if (debug)
     {
-        Info<< "patchProbes::findElements" << " : " << endl;
+        InfoInFunction << endl;
         forAll(nearest, sampleI)
         {
             label procI = nearest[sampleI].second().second();

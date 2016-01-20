@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,8 +22,6 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-
-#include "error.H"
 
 #include "thermophysicalFunction.H"
 #include "HashTable.H"
@@ -47,8 +45,8 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 {
     if (debug)
     {
-        Info<< "thermophysicalFunction::New(Istream&) : "
-            << "constructing thermophysicalFunction"
+        InfoInFunction
+            << "Constructing thermophysicalFunction"
             << endl;
     }
 
@@ -79,8 +77,8 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 {
     if (debug)
     {
-        Info<< "thermophysicalFunction::New(const dictionary&) : "
-            << "constructing thermophysicalFunction"
+        InfoInFunction
+            << "Constructing thermophysicalFunction"
             << endl;
     }
 

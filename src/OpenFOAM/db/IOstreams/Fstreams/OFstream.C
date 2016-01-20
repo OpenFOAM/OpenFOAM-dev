@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,7 @@ Foam::OFstreamAllocator::OFstreamAllocator
     {
         if (OFstream::debug)
         {
-            Info<< "OFstreamAllocator::OFstreamAllocator(const fileName&) : "
-                   "cannot open null file " << endl;
+            InfoInFunction << "Cannot open null file " << endl;
         }
     }
 

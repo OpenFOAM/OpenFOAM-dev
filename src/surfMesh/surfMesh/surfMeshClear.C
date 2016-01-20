@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,7 @@ void Foam::surfMesh::removeZones()
 {
     if (debug)
     {
-        Info<< "void surfMesh::removeZones(): "
-            << "Removing surface zones."
-            << endl;
+        InfoInFunction << "Removing surface zones." << endl;
     }
 
     // Remove the surface zones
@@ -51,9 +49,7 @@ void Foam::surfMesh::clearGeom()
 {
     if (debug)
     {
-        Info<< "void surfMesh::clearGeom() : "
-            << "clearing geometric data"
-            << endl;
+        InfoInFunction << "Clearing geometric data" << endl;
     }
 
     MeshReference::clearGeom();
@@ -64,9 +60,7 @@ void Foam::surfMesh::clearAddressing()
 {
     if (debug)
     {
-        Info<< "void surfMesh::clearAddressing() : "
-            << "clearing topology"
-            << endl;
+        InfoInFunction << "clearing topology" << endl;
     }
 
     MeshReference::clearPatchMeshAddr();

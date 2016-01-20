@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,15 +36,13 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(faceCoupleInfo, 0);
-
-const scalar faceCoupleInfo::angleTol_ = 1e-3;
+    defineTypeNameAndDebug(faceCoupleInfo, 0);
+    const scalar faceCoupleInfo::angleTol_ = 1e-3;
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-//- Write edges
 void Foam::faceCoupleInfo::writeOBJ
 (
     const fileName& fName,
@@ -97,7 +95,6 @@ void Foam::faceCoupleInfo::writeOBJ
 }
 
 
-//- Writes edges.
 void Foam::faceCoupleInfo::writeOBJ
 (
     const fileName& fName,
@@ -122,7 +119,6 @@ void Foam::faceCoupleInfo::writeOBJ
 }
 
 
-//- Writes face and point connectivity as .obj files.
 void Foam::faceCoupleInfo::writePointsFaces() const
 {
     const indirectPrimitivePatch& m = masterPatch();
@@ -303,8 +299,6 @@ void Foam::faceCoupleInfo::writeEdges
 }
 
 
-// Given an edgelist and a map for the points on the edges it tries to find
-// the corresponding patch edges.
 Foam::labelList Foam::faceCoupleInfo::findMappedEdges
 (
     const edgeList& edges,
@@ -334,8 +328,6 @@ Foam::labelList Foam::faceCoupleInfo::findMappedEdges
 }
 
 
-// Detect a cut edge which originates from two boundary faces having different
-// polyPatches.
 bool Foam::faceCoupleInfo::regionEdge
 (
     const polyMesh& slaveMesh,
@@ -377,9 +369,6 @@ bool Foam::faceCoupleInfo::regionEdge
 }
 
 
-// Find edge using pointI that is most aligned with vector between
-// master points. Patchdivision tells us whether or not to use
-// patch information to match edges.
 Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
 (
     const bool report,
@@ -392,6 +381,10 @@ Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
     const label edgeEnd
 ) const
 {
+    // Find edge using pointI that is most aligned with vector between master
+    // points. Patchdivision tells us whether or not to use patch information to
+    // match edges.
+
     const pointField& localPoints = cutFaces().localPoints();
 
     const labelList& pEdges = cutFaces().pointEdges()[pointI];
@@ -499,7 +492,6 @@ Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
 }
 
 
-// Construct points to split points map (in cut addressing)
 void Foam::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
 {
     labelListList masterToCutEdges
@@ -632,8 +624,6 @@ void Foam::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
 }
 
 
-// Determines rotation for f1 to match up with f0, i.e. the index in f0 of
-// the first point of f1.
 Foam::label Foam::faceCoupleInfo::matchFaces
 (
     const scalar absTol,
@@ -713,11 +703,6 @@ Foam::label Foam::faceCoupleInfo::matchFaces
 }
 
 
-// Find correspondence from patch points to cut points. This might
-// detect shared points so the output is a patch-to-cut point list
-// and a compaction list for the cut points (which will always be equal or more
-// connected than the patch).
-// Returns true if there are any duplicates.
 bool Foam::faceCoupleInfo::matchPointsThroughFaces
 (
     const scalar absTol,
@@ -732,6 +717,10 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
     labelList& compactToCut         // inverse ,,
 )
 {
+    // Find correspondence from patch points to cut points. This might detect
+    // shared points so the output is a patch-to-cut point list and a compaction
+    // list for the cut points (which will always be equal or more connected
+    // than the patch).  Returns true if there are any duplicates.
 
     // From slave to cut point
     patchToCutPoints.setSize(patchPoints.size());
@@ -865,7 +854,6 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
 }
 
 
-// Return max distance from any point on cutF to masterF
 Foam::scalar Foam::faceCoupleInfo::maxDistance
 (
     const face& cutF,
@@ -943,8 +931,7 @@ void Foam::faceCoupleInfo::findPerfectMatchingFaces
 
     if (matchedAllFaces)
     {
-        Warning
-            << "faceCoupleInfo::faceCoupleInfo : "
+        WarningInFunction
             << "Matched ALL " << fc1.size()
             << " boundary faces of mesh0 to boundary faces of mesh1." << endl
             << "This is only valid if the mesh to add is fully"
@@ -1073,7 +1060,6 @@ void Foam::faceCoupleInfo::findSlavesCoveringMaster
 }
 
 
-// Grow cutToMasterFace across 'internal' edges.
 Foam::label Foam::faceCoupleInfo::growCutFaces
 (
     const labelList& cutToMasterEdges,
@@ -1243,15 +1229,16 @@ void Foam::faceCoupleInfo::checkMatch(const labelList& cutToMasterEdges) const
 }
 
 
-// Extends matching information by elimination across cutFaces using more
-// than one region edge. Updates cutToMasterFaces_ and sets candidates
-// which is for every cutface on a region edge the possible master faces.
 Foam::label Foam::faceCoupleInfo::matchEdgeFaces
 (
     const labelList& cutToMasterEdges,
     Map<labelList>& candidates
 )
 {
+    // Extends matching information by elimination across cutFaces using more
+    // than one region edge. Updates cutToMasterFaces_ and sets candidates which
+    // is for every cutface on a region edge the possible master faces.
+
     // For every unassigned cutFaceI the possible list of master faces.
     candidates.clear();
     candidates.resize(cutFaces().size());
@@ -1348,9 +1335,6 @@ Foam::label Foam::faceCoupleInfo::matchEdgeFaces
 }
 
 
-// Gets a list of cutFaces (that use a master edge) and the candidate
-// master faces.
-// Finds most aligned master face.
 Foam::label Foam::faceCoupleInfo::geometricMatchEdgeFaces
 (
     Map<labelList>& candidates
@@ -1438,14 +1422,15 @@ Foam::label Foam::faceCoupleInfo::geometricMatchEdgeFaces
 }
 
 
-// Calculate the set of cut faces inbetween master and slave patch
-// assuming perfect match (and optional face ordering on slave)
 void Foam::faceCoupleInfo::perfectPointMatch
 (
     const scalar absTol,
     const bool slaveFacesOrdered
 )
 {
+    // Calculate the set of cut faces inbetween master and slave patch assuming
+    // perfect match (and optional face ordering on slave)
+
     if (debug)
     {
         Pout<< "perfectPointMatch :"
@@ -1568,8 +1553,6 @@ void Foam::faceCoupleInfo::perfectPointMatch
 }
 
 
-// Calculate the set of cut faces inbetween master and slave patch
-// assuming that slave patch is subdivision of masterPatch.
 void Foam::faceCoupleInfo::subDivisionMatch
 (
     const polyMesh& slaveMesh,
@@ -1881,7 +1864,6 @@ void Foam::faceCoupleInfo::subDivisionMatch
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from mesh data
 Foam::faceCoupleInfo::faceCoupleInfo
 (
     const polyMesh& masterMesh,
@@ -1970,8 +1952,6 @@ Foam::faceCoupleInfo::faceCoupleInfo
 }
 
 
-// Slave is subdivision of master patch.
-// (so -both cover the same area -all of master points are present in slave)
 Foam::faceCoupleInfo::faceCoupleInfo
 (
     const polyMesh& masterMesh,

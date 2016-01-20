@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::linearValveFvMesh::addZonesAndModifiers()
      || topoChanger_.size()
     )
     {
-        Info<< "void linearValveFvMesh::addZonesAndModifiers() : "
+        InfoInFunction
             << "Zones and modifiers already present.  Skipping."
             << endl;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1041,8 +1041,6 @@ void Foam::meshReaders::STARCD::cullPoints()
 
 bool Foam::meshReaders::STARCD::readGeometry(const scalar scaleFactor)
 {
-    // Info<< "called meshReaders::STARCD::readGeometry" << endl;
-
     readPoints(geometryFile_ + ".vrt", scaleFactor);
     readCells(geometryFile_ + ".cel");
     cullPoints();

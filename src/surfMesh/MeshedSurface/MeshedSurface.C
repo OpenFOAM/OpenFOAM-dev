@@ -119,10 +119,7 @@ void Foam::MeshedSurface<Face>::write
 {
     if (debug)
     {
-        Info<< "MeshedSurface::write"
-            "(const fileName&, const MeshedSurface&) : "
-            "writing to " << name
-            << endl;
+        InfoInFunction << "Writing to " << name << endl;
     }
 
     const word ext = name.ext();

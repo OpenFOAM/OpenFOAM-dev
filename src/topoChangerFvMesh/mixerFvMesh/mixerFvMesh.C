@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::mixerFvMesh::addZonesAndModifiers()
      || topoChanger_.size()
     )
     {
-        Info<< "void mixerFvMesh::addZonesAndModifiers() : "
+        InfoInFunction
             << "Zones and modifiers already present.  Skipping."
             << endl;
 
@@ -196,7 +196,7 @@ void Foam::mixerFvMesh::calcMovingMasks() const
 {
     if (debug)
     {
-        Info<< "void mixerFvMesh::calcMovingMasks() const : "
+        InfoInFunction
             << "Calculating point and cell masks"
             << endl;
     }
@@ -356,7 +356,7 @@ bool Foam::mixerFvMesh::update()
     {
         if (debug)
         {
-            Info<< "Mesh topology is changing" << endl;
+            InfoInFunction << "Mesh topology is changing" << endl;
         }
 
         deleteDemandDrivenData(movingPointsMaskPtr_);

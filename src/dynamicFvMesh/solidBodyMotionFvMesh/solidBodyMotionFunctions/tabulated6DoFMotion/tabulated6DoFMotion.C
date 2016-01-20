@@ -107,8 +107,7 @@ Foam::solidBodyMotionFunctions::tabulated6DoFMotion::transformation() const
     quaternion R(TRV[1].x(), TRV[1].y(), TRV[1].z());
     septernion TR(septernion(CofG_ + TRV[0])*R*septernion(-CofG_));
 
-    Info<< "solidBodyMotionFunctions::tabulated6DoFMotion::transformation(): "
-        << "Time = " << t << " transformation: " << TR << endl;
+    InfoInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
 }

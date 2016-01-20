@@ -28,16 +28,13 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-
 template<class Face>
 Foam::autoPtr<Foam::MeshedSurface<Face>>
 Foam::MeshedSurface<Face>::New(const fileName& name, const word& ext)
 {
     if (debug)
     {
-        Info<< "MeshedSurface::New(const fileName&, const word&) : "
-            "constructing MeshedSurface"
-            << endl;
+        InfoInFunction << "Constructing MeshedSurface" << endl;
     }
 
     typename fileExtensionConstructorTable::iterator cstrIter =
@@ -81,5 +78,6 @@ Foam::MeshedSurface<Face>::New(const fileName& name)
     }
     return New(name, ext);
 }
+
 
 // ************************************************************************* //

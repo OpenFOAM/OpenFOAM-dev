@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,8 +122,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New(Istream& is)
 {
     if (debug)
     {
-        Info<< "liquidProperties::New(Istream&): "
-            << "constructing liquidProperties" << endl;
+        InfoInFunction << "Constructing liquidProperties" << endl;
     }
 
     const word liquidPropertiesType(is);
@@ -170,8 +169,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 {
     if (debug)
     {
-        Info<< "liquidProperties::New(const dictionary&):"
-            << "constructing liquidProperties" << endl;
+        InfoInFunction << "Constructing liquidProperties" << endl;
     }
 
     const word& liquidPropertiesTypeName = dict.dictName();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1051,8 +1051,8 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 {
     if (debug)
     {
-        Info<< "tmp<scalarField> polyMesh::movePoints(const pointField&) : "
-            << " Moving points for time " << time().value()
+        InfoInFunction
+            << "Moving points for time " << time().value()
             << " index " << time().timeIndex() << endl;
     }
 
@@ -1077,8 +1077,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
         {
             moveError = true;
 
-            Info<< "tmp<scalarField> polyMesh::movePoints"
-                << "(const pointField&) : "
+            InfoInFunction
                 << "Moving the mesh with given points will "
                 << "invalidate the mesh." << nl
                 << "Mesh motion should not be executed." << endl;

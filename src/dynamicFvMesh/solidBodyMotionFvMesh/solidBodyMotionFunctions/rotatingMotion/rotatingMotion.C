@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,7 @@ Foam::solidBodyMotionFunctions::rotatingMotion::transformation() const
     quaternion R(axis_, angle);
     septernion TR(septernion(origin_)*R*septernion(-origin_));
 
-    Info<< "solidBodyMotionFunctions::rotatingMotion::transformation(): "
-        << "Time = " << t << " transformation: " << TR << endl;
+    InfoInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
 }
@@ -101,5 +100,6 @@ bool Foam::solidBodyMotionFunctions::rotatingMotion::read
 
     return true;
 }
+
 
 // ************************************************************************* //

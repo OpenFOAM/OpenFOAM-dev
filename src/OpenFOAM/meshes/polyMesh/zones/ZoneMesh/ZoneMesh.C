@@ -362,7 +362,7 @@ Foam::label Foam::ZoneMesh<ZoneType, MeshType>::findZoneID
     // Zone not found
     if (debug)
     {
-        Info<< "label ZoneMesh<ZoneType>::findZoneID(const word&) const : "
+        InfoInFunction
             << "Zone named " << zoneName << " not found.  "
             << "List of available zone names: " << names() << endl;
     }

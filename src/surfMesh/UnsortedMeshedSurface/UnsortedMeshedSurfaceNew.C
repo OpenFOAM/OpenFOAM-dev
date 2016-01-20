@@ -33,9 +33,7 @@ Foam::UnsortedMeshedSurface<Face>::New(const fileName& name, const word& ext)
 {
     if (debug)
     {
-        Info<< "UnsortedMeshedSurface::New(const fileName&, const word&) : "
-            "constructing UnsortedMeshedSurface"
-            << endl;
+        InfoInFunction << "Constructing UnsortedMeshedSurface" << endl;
     }
 
     typename fileExtensionConstructorTable::iterator cstrIter =

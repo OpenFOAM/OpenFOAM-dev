@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,15 +28,14 @@ License
 #include "Time.H"
 #include "Pstream.H"
 
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::Istream& Foam::regIOobject::readStream()
 {
     if (IFstream::debug)
     {
-        Info<< "regIOobject::readStream() : "
-            << "reading object " << name()
+        InfoInFunction
+            << "Reading object " << name()
             << " from file " << objectPath()
             << endl;
     }
@@ -112,8 +111,8 @@ Foam::Istream& Foam::regIOobject::readStream(const word& expectName)
 {
     if (IFstream::debug)
     {
-        Info<< "regIOobject::readStream(const word&) : "
-            << "reading object " << name()
+        InfoInFunction
+            << "Reading object " << name()
             << " from file " << objectPath()
             << endl;
     }
@@ -149,8 +148,8 @@ void Foam::regIOobject::close()
 {
     if (IFstream::debug)
     {
-        Info<< "regIOobject::close() : "
-            << "finished reading " << filePath()
+        InfoInFunction
+            << "Finished reading " << filePath()
             << endl;
     }
 
@@ -288,7 +287,8 @@ bool Foam::regIOobject::readIfModified()
         if (modified())
         {
             const fileName& fName = time().getFile(watchIndex_);
-            Info<< "regIOobject::readIfModified() : " << nl
+            InfoInFunction
+                << nl
                 << "    Re-reading object " << name()
                 << " from file " << fName << endl;
             return read();

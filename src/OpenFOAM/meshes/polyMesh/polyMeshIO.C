@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,8 +33,7 @@ void Foam::polyMesh::setInstance(const fileName& inst)
 {
     if (debug)
     {
-        Info<< "void polyMesh::setInstance(const fileName& inst) : "
-            << "Resetting file instance to " << inst << endl;
+        InfoInFunction << "Resetting file instance to " << inst << endl;
     }
 
     points_.writeOpt() = IOobject::AUTO_WRITE;
@@ -67,8 +66,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 {
     if (debug)
     {
-        Info<< "polyMesh::readUpdateState polyMesh::readUpdate() : "
-            << "Updating mesh based on saved data." << endl;
+        InfoInFunction << "Updating mesh based on saved data." << endl;
     }
 
     // Find the point and cell instance
@@ -80,8 +78,6 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
     {
         Info<< "Faces instance: old = " << facesInstance()
             << " new = " << facesInst << nl
-            //<< "Boundary instance: old = " << boundary_.instance()
-            //<< " new = " << boundaryInst << nl
             << "Points instance: old = " << pointsInstance()
             << " new = " << pointsInst << endl;
     }
@@ -448,50 +444,6 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         // Rotation can cause direction vector to change
         geometricD_ = Vector<label>::zero;
         solutionD_ = Vector<label>::zero;
-
-
-        //if (boundaryInst != boundary_.instance())
-        //{
-        //    // Boundary file but no topology change
-        //    if (debug)
-        //    {
-        //        Info<< "Boundary state change" << endl;
-        //    }
-        //
-        //    // Reset the boundary patches
-        //    polyBoundaryMesh newBoundary
-        //    (
-        //        IOobject
-        //        (
-        //            "boundary",
-        //            facesInst,
-        //            meshSubDir,
-        //            *this,
-        //            IOobject::MUST_READ,
-        //            IOobject::NO_WRITE,
-        //            false
-        //        ),
-        //        *this
-        //    );
-        //
-        //
-        //
-        //
-        //    boundary_.clear();
-        //    boundary_.setSize(newBoundary.size());
-        //
-        //    forAll(newBoundary, patchI)
-        //    {
-        //        boundary_.set(patchI, newBoundary[patchI].clone(boundary_));
-        //    }
-        //    // Calculate topology for the patches (processor-processor comms
-        //    // etc.)
-        //    boundary_.updateMesh();
-        //
-        //    // Calculate the geometry for the patches (transformation tensors
-        //    // etc.)
-        //    boundary_.calcGeometry();
-        //}
 
         return polyMesh::POINTS_MOVED;
     }

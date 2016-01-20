@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,7 @@ Foam::instantList Foam::Time::findTimes
 {
     if (debug)
     {
-        Info<< "Time::findTimes(const fileName&): finding times in directory "
-            << directory << endl;
+        InfoInFunction << "Finding times in directory " << directory << endl;
     }
 
     // Read directory entries into a list

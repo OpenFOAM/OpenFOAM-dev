@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,9 +37,7 @@ void Foam::polyMesh::removeBoundary()
 {
     if (debug)
     {
-        Info<< "void polyMesh::removeBoundary(): "
-            << "Removing boundary patches."
-            << endl;
+        InfoInFunction << "Removing boundary patches." << endl;
     }
 
     // Remove the point zones
@@ -56,9 +54,7 @@ void Foam::polyMesh::clearGeom()
 {
     if (debug)
     {
-        Info<< "void polyMesh::clearGeom() : "
-            << "clearing geometric data"
-            << endl;
+        InfoInFunction << "Clearing geometric data" << endl;
     }
 
     // Clear all geometric mesh objects
@@ -84,9 +80,7 @@ void Foam::polyMesh::clearAdditionalGeom()
 {
     if (debug)
     {
-        Info<< "void polyMesh::clearAdditionalGeom() : "
-            << "clearing additional geometric data"
-            << endl;
+        InfoInFunction << "Clearing additional geometric data" << endl;
     }
 
     // Remove the stored tet base points
@@ -100,9 +94,8 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
 {
     if (debug)
     {
-        Info<< "void polyMesh::clearAddressing() : "
-            << "clearing topology  isMeshUpdate:" << isMeshUpdate
-            << endl;
+        InfoInFunction
+            << "Clearing topology  isMeshUpdate:" << isMeshUpdate << endl;
     }
 
     if (isMeshUpdate)
@@ -181,9 +174,7 @@ void Foam::polyMesh::clearCellTree()
 {
     if (debug)
     {
-        Info<< "void polyMesh::clearCellTree() : "
-            << "clearing cell tree"
-            << endl;
+        InfoInFunction << "Clearing cell tree" << endl;
     }
 
     cellTreePtr_.clear();

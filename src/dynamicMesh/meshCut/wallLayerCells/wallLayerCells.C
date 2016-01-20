@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,14 +29,11 @@ License
 #include "wallNormalInfo.H"
 #include "OFstream.H"
 
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(wallLayerCells, 0);
-
+    defineTypeNameAndDebug(wallLayerCells, 0);
 }
 
 
@@ -64,7 +61,6 @@ bool Foam::wallLayerCells::usesCoupledPatch(const label cellI) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::wallLayerCells::wallLayerCells
 (
     const polyMesh& mesh,
@@ -160,8 +156,7 @@ Foam::wallLayerCells::wallLayerCells
 
     if (debug)
     {
-        Info<< "wallLayerCells::getRefinement : dumping selected faces to "
-            << "selectedFaces.obj" << endl;
+        InfoInFunction << "Dumping selected faces to selectedFaces.obj" << endl;
 
         OFstream fcStream("selectedFaces.obj");
 

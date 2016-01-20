@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,8 +40,8 @@ void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
 {
     if (debug)
     {
-        Info<< "void polyMesh::updateMesh(const mapPolyMesh&) : "
-            << "updating addressing and (optional) pointMesh/pointFields"
+        InfoInFunction
+            << "Updating addressing and (optional) pointMesh/pointFields"
             << endl;
     }
 
