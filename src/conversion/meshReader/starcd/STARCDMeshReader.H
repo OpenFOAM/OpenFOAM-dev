@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,10 +42,10 @@ SourceFiles
 #ifndef STARCDMeshReader_H
 #define STARCDMeshReader_H
 
-# include "meshReader.H"
-# include "boundaryRegion.H"
-# include "cellShape.H"
-# include "IFstream.H"
+#include "meshReader.H"
+#include "boundaryRegion.H"
+#include "cellShape.H"
+#include "IFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -89,12 +89,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construct
-        STARCD(const STARCD&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCD&);
-
         //- Read the mesh from the file(s)
         virtual bool readGeometry(const scalar scaleFactor = 1.0);
 
@@ -118,6 +112,17 @@ protected:
 
         //- Read header
         static bool readHeader(IFstream&, word fileSignature);
+
+
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        STARCD(const STARCD&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCD&);
 
 
 protected:

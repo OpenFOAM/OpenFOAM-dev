@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,11 @@ protected:
         //- Return true if all convergence checks are satisfied
         bool criteriaSatisfied();
 
+
+private:
+
+    // Private member functions
+
         //- Disallow default bitwise copy construct
         simpleControl(const simpleControl&);
 
@@ -73,7 +78,6 @@ protected:
 
 
 public:
-
 
     // Static Data Members
 

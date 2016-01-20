@@ -116,17 +116,22 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construct
-        surfaceInterpolateFields(const surfaceInterpolateFields&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceInterpolateFields&);
-
         template<class Type>
         void interpolateFields
         (
             PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
+
+
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        surfaceInterpolateFields(const surfaceInterpolateFields&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceInterpolateFields&);
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,12 +87,6 @@ protected:
 
     // Protected member functions
 
-        //- Disallow default bitwise copy construct
-        singleStepReactingMixture(const singleStepReactingMixture&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const singleStepReactingMixture&);
-
         //- Calculate qFuel
         void calculateqFuel();
 
@@ -101,6 +95,17 @@ protected:
 
         //- Calculate maximum products at stoichiometric mixture
         void calculateMaxProducts();
+
+
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        singleStepReactingMixture(const singleStepReactingMixture&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleStepReactingMixture&);
 
 
 public:
