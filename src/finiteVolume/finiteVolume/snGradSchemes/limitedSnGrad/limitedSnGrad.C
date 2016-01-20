@@ -76,7 +76,8 @@ limitedSnGrad<Type>::correction
 
     if (fv::debug)
     {
-        Info<< "limitedSnGrad :: limiter min: " << min(limiter.internalField())
+        InfoInFunction
+            << "limiter min: " << min(limiter.internalField())
             << " max: "<< max(limiter.internalField())
             << " avg: " << average(limiter.internalField()) << endl;
     }

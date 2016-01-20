@@ -49,9 +49,7 @@ tmp<laplacianScheme<Type, GType>> laplacianScheme<Type, GType>::New
 {
     if (fv::debug)
     {
-        Info<< "laplacianScheme<Type, GType>::New(const fvMesh&, Istream&) : "
-               "constructing laplacianScheme<Type, GType>"
-            << endl;
+        InfoInFunction << "Constructing laplacianScheme<Type, GType>" << endl;
     }
 
     if (schemeData.eof())

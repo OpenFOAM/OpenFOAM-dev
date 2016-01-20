@@ -98,7 +98,6 @@ addToRunTimeSelectionTable(searchableSurface, triSurfaceMesh, dict);
 //}
 
 
-//- Check file existence
 const Foam::fileName& Foam::triSurfaceMesh::checkFile
 (
     const fileName& fName,
@@ -690,10 +689,10 @@ void Foam::triSurfaceMesh::getNormal
             if (info[i].hit())
             {
                 label faceI = info[i].index();
-                //- Cached:
+                // Cached:
                 //normal[i] = faceNormals()[faceI];
 
-                //- Uncached
+                // Uncached
                 normal[i] = s[faceI].normal(pts);
                 normal[i] /= mag(normal[i]) + VSMALL;
             }
@@ -784,16 +783,12 @@ void Foam::triSurfaceMesh::getVolumeType
             // - use cached volume type per each tree node
             volType[pointI] = tree().getVolumeType(pt);
         }
-
-//        Info<< "octree : " << pt << " = "
-//            << volumeType::names[volType[pointI]] << endl;
     }
 
     indexedOctree<treeDataTriSurface>::perturbTol() = oldTol;
 }
 
 
-//- Write using given format, version and compression
 bool Foam::triSurfaceMesh::writeObject
 (
     IOstream::streamFormat fmt,
@@ -815,7 +810,6 @@ bool Foam::triSurfaceMesh::writeObject
         return false;
     }
 
-    //return objectRegistry::writeObject(fmt, ver, cmp);
     return true;
 }
 

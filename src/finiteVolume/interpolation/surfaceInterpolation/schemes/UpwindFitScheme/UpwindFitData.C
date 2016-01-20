@@ -55,16 +55,14 @@ Foam::UpwindFitData<Polynomial>::UpwindFitData
 {
     if (debug)
     {
-        Info<< "Contructing UpwindFitData<Polynomial>" << endl;
+        InfoInFunction << "Contructing UpwindFitData<Polynomial>" << endl;
     }
 
     calcFit();
 
     if (debug)
     {
-        Info<< "UpwindFitData<Polynomial>::UpwindFitData() :"
-            << "Finished constructing polynomialFit data"
-            << endl;
+        Info<< "    Finished constructing polynomialFit data" << endl;
     }
 }
 

@@ -280,10 +280,8 @@ Foam::fvMatrix<Type>::fvMatrix
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>(GeometricField<Type, fvPatchField, volMesh>&,"
-               " const dimensionSet&) : "
-               "constructing fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Constructing fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     // Initialise coupling coefficients
@@ -334,9 +332,8 @@ Foam::fvMatrix<Type>::fvMatrix(const fvMatrix<Type>& fvm)
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>::fvMatrix(const fvMatrix<Type>&) : "
-            << "copying fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Copying fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     if (fvm.faceFluxCorrectionPtr_)
@@ -381,9 +378,8 @@ Foam::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>& tfvm)
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>&) : "
-            << "copying fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Copying fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     if (tfvm().faceFluxCorrectionPtr_)
@@ -425,10 +421,8 @@ Foam::fvMatrix<Type>::fvMatrix
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>"
-               "(GeometricField<Type, fvPatchField, volMesh>&, Istream&) : "
-               "constructing fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Constructing fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     // Initialise coupling coefficients
@@ -463,9 +457,8 @@ Foam::fvMatrix<Type>::~fvMatrix()
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>::~fvMatrix<Type>() : "
-            << "destroying fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Destroying fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     if (faceFluxCorrectionPtr_)
@@ -526,8 +519,7 @@ void Foam::fvMatrix<Type>::relax(const scalar alpha)
     if (debug)
     {
         InfoInFunction
-            << "Relaxing " << psi_.name() << " by " << alpha
-            << endl;
+            << "Relaxing " << psi_.name() << " by " << alpha << endl;
     }
 
     Field<Type>& S = source();

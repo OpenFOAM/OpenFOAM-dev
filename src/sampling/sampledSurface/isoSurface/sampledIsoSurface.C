@@ -289,11 +289,13 @@ void Foam::sampledIsoSurface::getIsoFields() const
 
         if (debug)
         {
-            Info<< "sampledIsoSurface::getIsoFields() : volSubField "
+            InfoInFunction
+                << "volSubField "
                 << volSubFieldPtr_->name()
                 << " min:" << min(*volSubFieldPtr_).value()
                 << " max:" << max(*volSubFieldPtr_).value() << endl;
-            Info<< "sampledIsoSurface::getIsoFields() : pointSubField "
+            InfoInFunction
+                << "pointSubField "
                 << pointSubFieldPtr_->name()
                 << " min:" << gMin(pointSubFieldPtr_->internalField())
                 << " max:" << gMax(pointSubFieldPtr_->internalField()) << endl;

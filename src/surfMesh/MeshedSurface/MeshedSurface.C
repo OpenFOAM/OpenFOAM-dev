@@ -600,8 +600,7 @@ bool Foam::MeshedSurface<Face>::stitchFaces
 
     if (verbose)
     {
-        Info<< "MeshedSurface::stitchFaces : Renumbering all faces"
-            << endl;
+        InfoInFunction<< "Renumbering all faces" << endl;
     }
 
     // Set the coordinates to the merged ones

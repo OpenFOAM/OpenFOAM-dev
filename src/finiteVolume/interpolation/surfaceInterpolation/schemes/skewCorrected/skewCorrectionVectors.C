@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,9 +67,7 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
 {
     if (debug)
     {
-        Info<< "surfaceInterpolation::calcSkewCorrectionVectors() : "
-            << "Calculating skew correction vectors"
-            << endl;
+        InfoInFunction << "Calculating skew correction vectors" << endl;
     }
 
     // Set local references to mesh data
@@ -135,8 +133,7 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
 
     if (debug)
     {
-        Info<< "surfaceInterpolation::calcSkewCorrectionVectors() : "
-            << "skew coefficient = " << skewCoeff << endl;
+        InfoInFunction << "skew coefficient = " << skewCoeff << endl;
     }
 
     if (skewCoeff < 1e-5)
@@ -150,9 +147,7 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
 
     if (debug)
     {
-        Info<< "surfaceInterpolation::calcSkewCorrectionVectors() : "
-            << "Finished constructing skew correction vectors"
-            << endl;
+        Info<< "    Finished constructing skew correction vectors" << endl;
     }
 }
 

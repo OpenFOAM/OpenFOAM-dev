@@ -89,7 +89,7 @@ Foam::tabulated6DoFAcceleration::acceleration() const
         values_
     );
 
-    Info<< "tabulated6DoFAcceleration::acceleration(): "
+    InfoInFunction
         << "Time = " << t << " accelerations: " << avs << endl;
 
     return avs;

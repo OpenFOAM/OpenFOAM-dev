@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledThresholdCellFaces.H"
-
 #include "dictionary.H"
 #include "volFields.H"
 #include "volPointInterpolation.H"
@@ -70,8 +69,7 @@ bool Foam::sampledThresholdCellFaces::updateGeometry() const
     {
         if (debug)
         {
-            Info<< "sampledThresholdCellFaces::updateGeometry() : lookup "
-                << fieldName_ << endl;
+            InfoInFunction<< "Lookup " << fieldName_ << endl;
         }
 
         cellFldPtr = &fvm.lookupObject<volScalarField>(fieldName_);
@@ -82,8 +80,9 @@ bool Foam::sampledThresholdCellFaces::updateGeometry() const
 
         if (debug)
         {
-            Info<< "sampledThresholdCellFaces::updateGeometry() : reading "
-                << fieldName_ << " from time " << fvm.time().timeName()
+            InfoInFunction
+                << "Reading " << fieldName_
+                << " from time " << fvm.time().timeName()
                 << endl;
         }
 
@@ -167,14 +166,6 @@ Foam::sampledThresholdCellFaces::sampledThresholdCellFaces
             << "require at least one of 'lowerLimit' or 'upperLimit'" << endl
             << abort(FatalError);
     }
-
-//    dict.readIfPresent("zone", zoneKey_);
-//
-//    if (debug && zoneKey_.size() && mesh.cellZones().findZoneID(zoneKey_) < 0)
-//    {
-//        Info<< "cellZone " << zoneKey_
-//            << " not found - using entire mesh" << endl;
-//    }
 }
 
 

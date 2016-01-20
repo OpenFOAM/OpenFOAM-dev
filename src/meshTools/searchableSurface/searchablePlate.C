@@ -31,10 +31,8 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(searchablePlate, 0);
-addToRunTimeSelectionTable(searchableSurface, searchablePlate, dict);
-
+    defineTypeNameAndDebug(searchablePlate, 0);
+    addToRunTimeSelectionTable(searchableSurface, searchablePlate, dict);
 }
 
 
@@ -220,7 +218,7 @@ Foam::searchablePlate::searchablePlate
 {
     if (debug)
     {
-        Info<< "searchablePlate::searchablePlate :"
+        InfoInFunction
             << " origin:" << origin_
             << " origin+span:" << origin_+span_
             << " normal:" << vector::componentNames[normalDir_]
@@ -244,7 +242,7 @@ Foam::searchablePlate::searchablePlate
 {
     if (debug)
     {
-        Info<< "searchablePlate::searchablePlate :"
+        InfoInFunction
             << " origin:" << origin_
             << " origin+span:" << origin_+span_
             << " normal:" << vector::componentNames[normalDir_]

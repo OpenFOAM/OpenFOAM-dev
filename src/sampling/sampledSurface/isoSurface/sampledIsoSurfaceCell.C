@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,8 +75,7 @@ bool Foam::sampledIsoSurfaceCell::updateGeometry() const
     {
         if (debug)
         {
-            Info<< "sampledIsoSurfaceCell::updateGeometry() : lookup "
-                << isoField_ << endl;
+            InfoInFunction << "Lookup " << isoField_ << endl;
         }
 
         cellFldPtr = &fvm.lookupObject<volScalarField>(isoField_);
@@ -87,8 +86,9 @@ bool Foam::sampledIsoSurfaceCell::updateGeometry() const
 
         if (debug)
         {
-            Info<< "sampledIsoSurfaceCell::updateGeometry() : reading "
-                << isoField_ << " from time " <<fvm.time().timeName()
+            InfoInFunction
+                << "Reading " << isoField_
+                << " from time " <<fvm.time().timeName()
                 << endl;
         }
 
@@ -212,15 +212,7 @@ Foam::sampledIsoSurfaceCell::sampledIsoSurfaceCell
     facesPtr_(NULL),
     prevTimeIndex_(-1),
     meshCells_(0)
-{
-//    dict.readIfPresent("zone", zoneKey_);
-//
-//    if (debug && zoneKey_.size() && mesh.cellZones().findZoneID(zoneKey_) < 0)
-//    {
-//        Info<< "cellZone " << zoneKey_
-//            << " not found - using entire mesh" << endl;
-//    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

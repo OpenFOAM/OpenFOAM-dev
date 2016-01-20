@@ -51,9 +51,7 @@ tmp<divScheme<Type>> divScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "divScheme<Type>::New(const fvMesh&, Istream&) : "
-               "constructing divScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing divScheme<Type>" << endl;
     }
 
     if (schemeData.eof())

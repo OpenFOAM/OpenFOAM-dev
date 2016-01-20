@@ -50,9 +50,7 @@ tmp<ddtScheme<Type>> ddtScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "ddtScheme<Type>::New(const fvMesh&, Istream&) : "
-               "constructing ddtScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing ddtScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
@@ -166,7 +164,8 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 
     if (debug > 1)
     {
-        Info<< "ddtCouplingCoeff mean max min = "
+        InfoInFunction
+            << "ddtCouplingCoeff mean max min = "
             << gAverage(ddtCouplingCoeff.internalField())
             << " " << gMax(ddtCouplingCoeff.internalField())
             << " " << gMin(ddtCouplingCoeff.internalField())

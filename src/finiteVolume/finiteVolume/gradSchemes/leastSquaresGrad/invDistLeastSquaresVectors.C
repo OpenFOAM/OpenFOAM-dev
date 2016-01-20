@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,9 +84,7 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
 {
     if (debug)
     {
-        Info<< "leastSquaresVectors::calcLeastSquaresVectors() :"
-            << "Calculating least square gradient vectors"
-            << endl;
+        InfoInFunction << "Calculating least square gradient vectors" << endl;
     }
 
     const fvMesh& mesh = mesh_;
@@ -170,9 +168,8 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
 
     if (debug)
     {
-        Info<< "leastSquaresVectors::calcLeastSquaresVectors() :"
-            << "Finished calculating least square gradient vectors"
-            << endl;
+        InfoInFunction
+            <<"Finished calculating least square gradient vectors" << endl;
     }
 }
 

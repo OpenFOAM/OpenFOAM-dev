@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,9 +81,7 @@ void fvMesh::makeMagSf() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeMagSf() : "
-            << "assembling mag face areas"
-            << endl;
+        InfoInFunction << "Assembling mag face areas" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -119,9 +117,7 @@ void fvMesh::makeC() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeC() : "
-            << "assembling cell centres"
-            << endl;
+        InfoInFunction << "Assembling cell centres" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -161,9 +157,7 @@ void fvMesh::makeCf() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeCf() : "
-            << "assembling face centres"
-            << endl;
+        InfoInFunction << "Assembling face centres" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -202,9 +196,8 @@ const volScalarField::DimensionedInternalField& fvMesh::V() const
     {
         if (debug)
         {
-            Info<< "fvMesh::V() const: "
-                << "constructing from primitiveMesh::cellVolumes()"
-                << endl;
+            InfoInFunction
+                << "Constructing from primitiveMesh::cellVolumes()" << endl;
         }
 
         VPtr_ = new slicedVolScalarField::DimensionedInternalField
@@ -260,9 +253,7 @@ const volScalarField::DimensionedInternalField& fvMesh::V00() const
     {
         if (debug)
         {
-            Info<< "fvMesh::V00() const: "
-                << "constructing from V0"
-                << endl;
+            InfoInFunction << "Constructing from V0" << endl;
         }
 
         V00Ptr_ = new DimensionedField<scalar, volMesh>
@@ -392,9 +383,7 @@ tmp<surfaceVectorField> fvMesh::delta() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::delta() : "
-            << "calculating face deltas"
-            << endl;
+        InfoInFunction << "Calculating face deltas" << endl;
     }
 
     tmp<surfaceVectorField> tdelta

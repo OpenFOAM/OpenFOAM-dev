@@ -456,9 +456,6 @@ SLTSDdtScheme<Type>::fvmDdt
 
     scalarField rDeltaT(SLrDeltaT()().internalField());
 
-    Info<< "SLTSDdtScheme<Type>::fvmDdt: max/min rDeltaT "
-        << gMax(rDeltaT) << " " << gMin(rDeltaT) << endl;
-
     fvm.diag() = rDeltaT*mesh().V();
 
     if (mesh().moving())

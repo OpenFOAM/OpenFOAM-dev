@@ -54,16 +54,14 @@ Foam::CentredFitData<Polynomial>::CentredFitData
 {
     if (debug)
     {
-        Info<< "Contructing CentredFitData<Polynomial>" << endl;
+        InfoInFunction << "Contructing CentredFitData<Polynomial>" << endl;
     }
 
     calcFit();
 
     if (debug)
     {
-        Info<< "CentredFitData<Polynomial>::CentredFitData() :"
-            << "Finished constructing polynomialFit data"
-            << endl;
+        Info<<     "Finished constructing polynomialFit data" << endl;
     }
 }
 

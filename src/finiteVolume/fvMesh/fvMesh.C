@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,8 +125,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
 {
     if (debug)
     {
-        Info<< "fvMesh::clearAddressing(const bool) :"
-            << " isMeshUpdate:" << isMeshUpdate << endl;
+        InfoInFunction << "isMeshUpdate: " << isMeshUpdate << endl;
     }
 
     if (isMeshUpdate)
@@ -167,7 +166,7 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
     {
         if (debug)
         {
-            Info<< "fvMesh::storeOldVol(const scalarField&) :"
+            InfoInFunction
                 << " Storing old time volumes since from time " << curTimeIndex_
                 << " and time now " << time().timeIndex()
                 << " V:" << V.size()
@@ -214,12 +213,12 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
 
         if (debug)
         {
-            Info<< "fvMesh::storeOldVol() :"
+            InfoInFunction
                 << " Stored old time volumes V0:" << V0Ptr_->size()
                 << endl;
             if (V00Ptr_)
             {
-                Info<< "fvMesh::storeOldVol() :"
+                InfoInFunction
                     << " Stored oldold time volumes V00:" << V00Ptr_->size()
                     << endl;
             }
@@ -265,8 +264,7 @@ Foam::fvMesh::fvMesh(const IOobject& io)
 {
     if (debug)
     {
-        Info<< "Constructing fvMesh from IOobject"
-            << endl;
+        InfoInFunction << "Constructing fvMesh from IOobject" << endl;
     }
 
     // Check the existance of the cell volumes and read if present
@@ -376,7 +374,7 @@ Foam::fvMesh::fvMesh
 {
     if (debug)
     {
-        Info<< "Constructing fvMesh from cellShapes" << endl;
+        InfoInFunction << "Constructing fvMesh from cellShapes" << endl;
     }
 }
 
@@ -410,7 +408,7 @@ Foam::fvMesh::fvMesh
 {
     if (debug)
     {
-        Info<< "Constructing fvMesh from components" << endl;
+        InfoInFunction << "Constructing fvMesh from components" << endl;
     }
 }
 
@@ -443,7 +441,7 @@ Foam::fvMesh::fvMesh
 {
     if (debug)
     {
-        Info<< "Constructing fvMesh from components" << endl;
+        InfoInFunction << "Constructing fvMesh from components" << endl;
     }
 }
 
@@ -481,9 +479,7 @@ void Foam::fvMesh::removeFvBoundary()
 {
     if (debug)
     {
-        Info<< "void fvMesh::removeFvBoundary(): "
-            << "Removing boundary patches."
-            << endl;
+        InfoInFunction << "Removing boundary patches." << endl;
     }
 
     // Remove fvBoundaryMesh data first.
@@ -499,8 +495,7 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
 {
     if (debug)
     {
-        Info<< "polyMesh::readUpdateState fvMesh::readUpdate() : "
-            << "Updating fvMesh.  ";
+        InfoInFunction << "Updating fvMesh.  ";
     }
 
     polyMesh::readUpdateState state = polyMesh::readUpdate();
@@ -568,7 +563,7 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
 {
     if (debug)
     {
-        Info<< "fvMesh::mapFields :"
+        InfoInFunction
             << " nOldCells:" << meshMap.nOldCells()
             << " nCells:" << nCells()
             << " nOldFaces:" << meshMap.nOldFaces()

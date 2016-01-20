@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,8 @@ void Foam::meshToMesh0::calculateInverseDistanceWeights() const
 {
     if (debug)
     {
-        Info<< "meshToMesh0::calculateInverseDistanceWeights() : "
-            << "calculating inverse distance weighting factors" << endl;
+        InfoInFunction
+            << "Calculating inverse distance weighting factors" << endl;
     }
 
     if (inverseDistanceWeightsPtr_)
@@ -134,8 +134,8 @@ void Foam::meshToMesh0::calculateInverseVolumeWeights() const
 {
     if (debug)
     {
-        Info<< "meshToMesh0::calculateInverseVolumeWeights() : "
-            << "calculating inverse volume weighting factors" << endl;
+        InfoInFunction
+            << "Calculating inverse volume weighting factors" << endl;
     }
 
     if (inverseVolumeWeightsPtr_)
@@ -197,8 +197,8 @@ void Foam::meshToMesh0::calculateCellToCellAddressing() const
 {
     if (debug)
     {
-        Info<< "meshToMesh0::calculateCellToCellAddressing() : "
-            << "calculating cell to cell addressing" << endl;
+        InfoInFunction
+            << "Calculating cell to cell addressing" << endl;
     }
 
     if (cellToCellAddressingPtr_)
@@ -223,9 +223,6 @@ void Foam::meshToMesh0::calculateCellToCellAddressing() const
             overlapEngine.overlappingCells(fromMesh_, toMesh_, iTo);
         if (overLapCells.size() > 0)
         {
-            //Info << "To " << iTo << endl;
-            //Info << "cellToCell " << overLapCells << endl;
-
             cellToCell[iTo].setSize(overLapCells.size());
             forAll(overLapCells, j)
             {

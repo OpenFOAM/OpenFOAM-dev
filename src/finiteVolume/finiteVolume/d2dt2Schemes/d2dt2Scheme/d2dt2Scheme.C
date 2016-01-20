@@ -50,9 +50,7 @@ tmp<d2dt2Scheme<Type>> d2dt2Scheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "d2dt2Scheme<Type>::New(const fvMesh&, Istream&) : "
-               "constructing d2dt2Scheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing d2dt2Scheme<Type>" << endl;
     }
 
     if (schemeData.eof())

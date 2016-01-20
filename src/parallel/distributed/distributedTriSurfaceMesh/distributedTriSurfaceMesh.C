@@ -922,7 +922,7 @@ bool Foam::distributedTriSurfaceMesh::overlaps
         triBb.max() = max(triBb.max(), p1);
         triBb.max() = max(triBb.max(), p2);
 
-        //- Exact test of triangle intersecting bb
+        // Exact test of triangle intersecting bb
 
         // Quick rejection. If whole bounding box of tri is outside cubeBb then
         // there will be no intersection.
@@ -1313,7 +1313,7 @@ Foam::distributedTriSurfaceMesh::distributedTriSurfaceMesh
 
     if (debug)
     {
-        Info<< "Constructed from triSurface:" << endl;
+        InfoInFunction << "Constructed from triSurface:" << endl;
         writeStats(Info);
 
         labelList nTris(Pstream::nProcs());
@@ -1390,7 +1390,7 @@ Foam::distributedTriSurfaceMesh::distributedTriSurfaceMesh(const IOobject& io)
 
     if (debug)
     {
-        Info<< "Read distributedTriSurface from " << io.objectPath()
+        InfoInFunction << "Read distributedTriSurface from " << io.objectPath()
             << ':' << endl;
         writeStats(Info);
 
@@ -1473,7 +1473,7 @@ Foam::distributedTriSurfaceMesh::distributedTriSurfaceMesh
 
     if (debug)
     {
-        Info<< "Read distributedTriSurface from " << io.objectPath()
+        InfoInFunction << "Read distributedTriSurface from " << io.objectPath()
             << " and dictionary:" << endl;
         writeStats(Info);
 
@@ -2084,13 +2084,6 @@ void Foam::distributedTriSurfaceMesh::distribute
             break;
         }
 
-        //if (debug)
-        //{
-        //    Info<< "old bb:" << procBb_ << endl << endl;
-        //    Info<< "new bb:" << newProcBb << endl << endl;
-        //    Info<< "Same:" << (newProcBb == procBb_) << endl;
-        //}
-
         if (newProcBb == procBb_)
         {
             return;
@@ -2111,9 +2104,8 @@ void Foam::distributedTriSurfaceMesh::distribute
         Pstream::gatherList(nTris);
         Pstream::scatterList(nTris);
 
-        Info<< "distributedTriSurfaceMesh::distribute : before distribution:"
-            << endl
-            << "\tproc\ttris" << endl;
+        InfoInFunction
+            << "before distribution:" << endl << "\tproc\ttris" << endl;
 
         forAll(nTris, procI)
         {
@@ -2368,9 +2360,8 @@ void Foam::distributedTriSurfaceMesh::distribute
         Pstream::gatherList(nTris);
         Pstream::scatterList(nTris);
 
-        Info<< "distributedTriSurfaceMesh::distribute : after distribution:"
-            << endl
-            << "\tproc\ttris" << endl;
+        InfoInFunction
+            << "after distribution:" << endl << "\tproc\ttris" << endl;
 
         forAll(nTris, procI)
         {
@@ -2381,7 +2372,6 @@ void Foam::distributedTriSurfaceMesh::distribute
 }
 
 
-//- Write using given format, version and compression
 bool Foam::distributedTriSurfaceMesh::writeObject
 (
     IOstream::streamFormat fmt,

@@ -54,9 +54,7 @@ void Foam::fv::LeastSquaresVectors<Stencil>::calcLeastSquaresVectors()
 {
     if (debug)
     {
-        Info<< "LeastSquaresVectors::calcLeastSquaresVectors() :"
-            << "Calculating least square gradient vectors"
-            << endl;
+        InfoInFunction << "Calculating least square gradient vectors" << endl;
     }
 
     const fvMesh& mesh = this->mesh_;
@@ -100,9 +98,8 @@ void Foam::fv::LeastSquaresVectors<Stencil>::calcLeastSquaresVectors()
 
     if (debug)
     {
-        Info<< "LeastSquaresVectors::calcLeastSquaresVectors() :"
-            << "Finished calculating least square gradient vectors"
-            << endl;
+        InfoInFunction
+            << "Finished calculating least square gradient vectors" << endl;
     }
 }
 
