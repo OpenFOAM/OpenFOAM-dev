@@ -68,7 +68,7 @@ case "$WM_ARCH" in
 Linux)
     WM_ARCH=linux
 
-    # compiler specifics
+    # Compiler specifics
     case `uname -m` in
         i686)
             export WM_ARCH_OPTION=32
@@ -81,7 +81,7 @@ Linux)
             export WM_CC='gcc'
             export WM_CXX='g++'
             export WM_CFLAGS='-m32 -fPIC'
-            export WM_CXXFLAGS='-m32 -fPIC'
+            export WM_CXXFLAGS='-m32 -fPIC -std=c++0x'
             export WM_LDFLAGS='-m32'
             ;;
         64)
@@ -90,7 +90,7 @@ Linux)
             export WM_CC='gcc'
             export WM_CXX='g++'
             export WM_CFLAGS='-m64 -fPIC'
-            export WM_CXXFLAGS='-m64 -fPIC'
+            export WM_CXXFLAGS='-m64 -fPIC -std=c++0x'
             export WM_LDFLAGS='-m64'
             ;;
         *)
@@ -111,7 +111,7 @@ Linux)
         export WM_CC='gcc'
         export WM_CXX='g++'
         export WM_CFLAGS='-fPIC'
-        export WM_CXXFLAGS='-fPIC'
+        export WM_CXXFLAGS='-fPIC -std=c++0x'
         export WM_LDFLAGS=
         ;;
 
@@ -121,7 +121,7 @@ Linux)
         export WM_CC='gcc'
         export WM_CXX='g++'
         export WM_CFLAGS='-m64 -fPIC'
-        export WM_CXXFLAGS='-m64 -fPIC'
+        export WM_CXXFLAGS='-m64 -fPIC -std=c++0x'
         export WM_LDFLAGS='-m64'
         ;;
 
@@ -131,7 +131,7 @@ Linux)
         export WM_CC='gcc'
         export WM_CXX='g++'
         export WM_CFLAGS='-m64 -fPIC'
-        export WM_CXXFLAGS='-m64 -fPIC'
+        export WM_CXXFLAGS='-m64 -fPIC -std=c++0x'
         export WM_LDFLAGS='-m64'
         ;;
 
@@ -148,11 +148,11 @@ SunOS)
     export WM_CC='gcc'
     export WM_CXX='g++'
     export WM_CFLAGS='-mabi=64 -fPIC'
-    export WM_CXXFLAGS='-mabi=64 -fPIC'
+    export WM_CXXFLAGS='-mabi=64 -fPIC -std=c++0x'
     export WM_LDFLAGS='-mabi=64 -G0'
     ;;
 
-*)    # an unsupported operating system
+*)    # An unsupported operating system
     /bin/cat <<USAGE 1>&2
 
     Your "$WM_ARCH" operating system is not supported by this release
@@ -211,12 +211,12 @@ export FOAM_RUN=$WM_PROJECT_USER_DIR/run
 # Add OpenFOAM scripts to the path
 export PATH=$WM_PROJECT_DIR/bin:$PATH
 
-# add site-specific scripts to path - only if they exist
-if [ -d "$siteDir/bin" ]                        # generic
+# Add site-specific scripts to path - only if they exist
+if [ -d "$siteDir/bin" ]                        # Generic
 then
     _foamAddPath "$siteDir/bin"
 fi
-if [ -d "$siteDir/$WM_PROJECT_VERSION/bin" ]    # version-specific
+if [ -d "$siteDir/$WM_PROJECT_VERSION/bin" ]    # Version-specific
 then
     _foamAddPath "$siteDir/$WM_PROJECT_VERSION/bin"
 fi
@@ -242,60 +242,40 @@ fi
 
 case "${foamCompiler}" in
 OpenFOAM | ThirdParty)
+    # Default versions of GMP, MPFR and MPC, overide as necessary
+    gmp_version=gmp-5.1.2
+    mpfr_version=mpfr-3.1.2
+    mpc_version=mpc-1.0.1
     case "$WM_COMPILER" in
     Gcc | Gcc48)
         gcc_version=gcc-4.8.5
-        gmp_version=gmp-5.1.2
-        mpfr_version=mpfr-3.1.2
-        mpc_version=mpc-1.0.1
         ;;
     Gcc45)
         gcc_version=gcc-4.5.4
-        gmp_version=gmp-5.1.2
-        mpfr_version=mpfr-3.1.2
-        mpc_version=mpc-1.0.1
         ;;
     Gcc46)
         gcc_version=gcc-4.6.4
-        gmp_version=gmp-5.1.2
-        mpfr_version=mpfr-3.1.2
-        mpc_version=mpc-1.0.1
         ;;
     Gcc47)
         gcc_version=gcc-4.7.4
-        gmp_version=gmp-5.1.2
-        mpfr_version=mpfr-3.1.2
-        mpc_version=mpc-1.0.1
         ;;
     Gcc49)
         gcc_version=gcc-4.9.3
-        gmp_version=gmp-5.1.2
-        mpfr_version=mpfr-3.1.2
-        mpc_version=mpc-1.0.1
         ;;
     Gcc51)
         gcc_version=gcc-5.1.0
-        gmp_version=gmp-5.1.2
-        mpfr_version=mpfr-3.1.2
-        mpc_version=mpc-1.0.1
         ;;
     Gcc52)
         gcc_version=gcc-5.2.0
-        gmp_version=gmp-5.1.2
-        mpfr_version=mpfr-3.1.2
-        mpc_version=mpc-1.0.1
         ;;
     Gcc53)
         gcc_version=gcc-5.3.0
-        gmp_version=gmp-5.1.2
-        mpfr_version=mpfr-3.1.2
-        mpc_version=mpc-1.0.1
         ;;
     Clang)
-        # using clang - not gcc
+        # Using clang - not gcc
         export WM_CC='clang'
         export WM_CXX='clang++'
-        clang_version=llvm-3.6.0
+        clang_version=llvm-3.7.0
         ;;
     *)
         echo 1>&2
@@ -378,20 +358,6 @@ system)
     echo "   treating as 'system' instead" 1>&2
     ;;
 esac
-
-
-#
-# Add c++0x flags for external programs
-#
-if [ -n "$WM_CXXFLAGS" ]
-then
-    case "$WM_COMPILER" in
-    Gcc*++0x)
-        WM_CXXFLAGS="$WM_CXXFLAGS -std=c++0x"
-        ;;
-    esac
-fi
-
 
 
 # Communications library

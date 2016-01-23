@@ -60,7 +60,7 @@ case Linux:
             setenv WM_CC 'gcc'
             setenv WM_CXX 'g++'
             setenv WM_CFLAGS '-m32 -fPIC'
-            setenv WM_CXXFLAGS '-m32 -fPIC'
+            setenv WM_CXXFLAGS '-m32 -fPIC -std=c++0x'
             setenv WM_LDFLAGS '-m32'
             breaksw
 
@@ -70,7 +70,7 @@ case Linux:
             setenv WM_CC 'gcc'
             setenv WM_CXX 'g++'
             setenv WM_CFLAGS '-m64 -fPIC'
-            setenv WM_CXXFLAGS '-m64 -fPIC'
+            setenv WM_CXXFLAGS '-m64 -fPIC -std=c++0x'
             setenv WM_LDFLAGS '-m64'
             breaksw
 
@@ -92,7 +92,7 @@ case Linux:
         setenv WM_CC 'gcc'
         setenv WM_CXX 'g++'
         setenv WM_CFLAGS '-m64 -fPIC'
-        setenv WM_CXXFLAGS '-m64 -fPIC'
+        setenv WM_CXXFLAGS '-m64 -fPIC -std=c++0x'
         setenv WM_LDFLAGS '-m64'
         breaksw
 
@@ -102,7 +102,7 @@ case Linux:
         setenv WM_CC 'gcc'
         setenv WM_CXX 'g++'
         setenv WM_CFLAGS '-m64 -fPIC'
-        setenv WM_CXXFLAGS '-m64 -fPIC'
+        setenv WM_CXXFLAGS '-m64 -fPIC -std=c++0x'
         setenv WM_LDFLAGS '-m64'
         breaksw
 
@@ -120,7 +120,7 @@ case SunOS:
     setenv WM_CC 'gcc'
     setenv WM_CXX 'g++'
     setenv WM_CFLAGS '-mabi=64 -fPIC'
-    setenv WM_CXXFLAGS '-mabi=64 -fPIC'
+    setenv WM_CXXFLAGS '-mabi=64 -fPIC -std=c++0x'
     setenv WM_LDFLAGS '-mabi=64 -G0'
     breaksw
 
@@ -187,10 +187,10 @@ if ( -d "${WM_DIR}" ) setenv PATH ${WM_DIR}:${PATH}
 setenv PATH ${WM_PROJECT_DIR}/bin:${PATH}
 
 # Add site-specific scripts to path - only if they exist
-if ( -d "$siteDir/bin" ) then                       # generic
+if ( -d "$siteDir/bin" ) then                       # Generic
     _foamAddPath "$siteDir/bin"
 endif
-if ( -d "$siteDir/$WM_PROJECT_VERSION/bin" ) then   # version-specific
+if ( -d "$siteDir/$WM_PROJECT_VERSION/bin" ) then   # Version-specific
     _foamAddPath "$siteDir/$WM_PROJECT_VERSION/bin"
 endif
 unset siteDir
@@ -216,61 +216,41 @@ endif
 switch ("$foamCompiler")
 case OpenFOAM:
 case ThirdParty:
+    # Default versions of GMP, MPFR and MPC, overide as necessary
+    set gmp_version=gmp-5.1.2
+    set mpfr_version=mpfr-3.1.2
+    set mpc_version=mpc-1.0.1
     switch ("$WM_COMPILER")
     case Gcc:
     case Gcc48:
         set gcc_version=gcc-4.8.5
-        set gmp_version=gmp-5.1.2
-        set mpfr_version=mpfr-3.1.2
-        set mpc_version=mpc-1.0.1
         breaksw
     case Gcc45:
         set gcc_version=gcc-4.5.4
-        set gmp_version=gmp-5.1.2
-        set mpfr_version=mpfr-3.1.2
-        set mpc_version=mpc-1.0.1
         breaksw
     case Gcc46:
         set gcc_version=gcc-4.6.4
-        set gmp_version=gmp-5.1.2
-        set mpfr_version=mpfr-3.1.2
-        set mpc_version=mpc-1.0.1
         breaksw
     case Gcc47:
         set gcc_version=gcc-4.7.4
-        set gmp_version=gmp-5.1.2
-        set mpfr_version=mpfr-3.1.2
-        set mpc_version=mpc-1.0.1
         breaksw
     case Gcc49:
         set gcc_version=gcc-4.9.3
-        set gmp_version=gmp-5.1.2
-        set mpfr_version=mpfr-3.1.2
-        set mpc_version=mpc-1.0.1
         breaksw
     case Gcc51:
         set gcc_version=gcc-5.1.0
-        set gmp_version=gmp-5.1.2
-        set mpfr_version=mpfr-3.1.2
-        set mpc_version=mpc-1.0.1
         breaksw
     case Gcc52:
         set gcc_version=gcc-5.2.0
-        set gmp_version=gmp-5.1.2
-        set mpfr_version=mpfr-3.1.2
-        set mpc_version=mpc-1.0.1
         breaksw
     case Gcc53:
         set gcc_version=gcc-5.3.0
-        set gmp_version=gmp-5.1.2
-        set mpfr_version=mpfr-3.1.2
-        set mpc_version=mpc-1.0.1
         breaksw
     case Clang:
         # Using clang - not gcc
         setenv WM_CC 'clang'
         setenv WM_CXX 'clang++'
-        set clang_version=llvm-3.6.0
+        set clang_version=llvm-3.7.0
         breaksw
     default:
         echo
@@ -355,19 +335,6 @@ default:
     echo "   treating as 'system' instead"
     breaksw
 endsw
-
-
-#
-# Add c++0x flags for external programs
-#
-if ( $?WM_CXXFLAGS ) then
-    switch ("$WM_COMPILER")
-    case Gcc*++0x:
-        setenv WM_CXXFLAGS "$WM_CXXFLAGS -std=c++0x"
-        breaksw
-    endsw
-endif
-
 
 
 # Communications library
