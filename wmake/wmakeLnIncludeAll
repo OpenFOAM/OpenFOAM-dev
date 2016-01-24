@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -58,7 +58,7 @@ findName=lnInclude
 while [ "$#" -gt 0 ]
 do
     case "$1" in
-    -h | -help)   # provide immediate help
+    -h | -help)   # Provide immediate help
         usage
         ;;
     -*)

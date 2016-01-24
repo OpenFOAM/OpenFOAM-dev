@@ -34,7 +34,7 @@ include $(GENERAL_RULES)/general
 
 
 #------------------------------------------------------------------------------
-# declare names of make system control files derived from file 'files'
+# Declare names of make system control files derived from file 'files'
 #------------------------------------------------------------------------------
 
 OBJECTS_DIR     = $(MAKE_DIR)/$(WM_OPTIONS)

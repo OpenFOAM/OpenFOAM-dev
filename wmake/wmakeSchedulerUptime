@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -64,7 +64,7 @@ then
         for slotGroup in $WM_HOSTS
         do
             n=${slotGroup##*:}
-            [ "$n" = "${slotGroup%%:*}" ] && n=1  # missing ':'
+            [ "$n" = "${slotGroup%%:*}" ] && n=1  # Missing ':'
             echo "+ ${n:-1}"
         done
     )
@@ -76,7 +76,7 @@ fi
 # !! Assumes remote computer running same shell and startup files
 # in same location
 
-sourceFoam=false    # fallback command
+sourceFoam=false    # Fallback command
 case $SHELL in
 */csh | */tcsh )    # [t]csh vs bash|ksh|sh
     shellRc=cshrc
@@ -107,8 +107,8 @@ fi
 
 # Construct test string for remote execution.
 # Source WM_PROJECT settings if WM_PROJECT environment not set.
-# attempt to preserve the installation directory 'FOAM_INST_DIR'
-# use FOAM_SETTINGS to pass command-line settings
+# Attempt to preserve the installation directory 'FOAM_INST_DIR'
+# Use FOAM_SETTINGS to pass command-line settings
 case $sourceFoam in
 */bashrc)
     if [ "$FOAM_INST_DIR" ]
@@ -125,9 +125,9 @@ case $sourceFoam in
     ;;
 esac
 
-# quote double-quotes for remote command line
+# Quote double-quotes for remote command line
 rcmd=$(echo $* | sed -e s/\"/\'\"\'/g)
-## the same, without forking (not ksh, maybe not /bin/sh either)
+# The same, without forking (not ksh, maybe not /bin/sh either)
 # rcmd=$(while [ "$#" -gt 0 ]; do echo "${1//\"/'\"'}"; shift; done)
 
 
@@ -147,7 +147,7 @@ set -o pipefail
 
 
 #
-# colour output by argument 1
+# Colour output by argument 1
 #
 colourPipe()
 {
@@ -168,7 +168,7 @@ colourPipe()
 
 
 
-# parse options
+# Parse options
 nprocs=1
 while [ "$#" -gt 0 ]
 do
@@ -194,10 +194,10 @@ while :
 do
     for slotGroup in $WM_HOSTS
     do
-        # split 'host:N', but catch 'host:' and 'host' too
+        # Split 'host:N', but catch 'host:' and 'host' too
         host=${slotGroup%%:*}
         n=${slotGroup##*:}
-        [ "$n" = "$host" ] && n=1  # missing ':'
+        [ "$n" = "$host" ] && n=1  # Missing ':'
         : ${n:=1}
 
 
@@ -249,7 +249,6 @@ do
     done
 
     # Did not find any free machines. Rest a bit.
-    #echo "$Script: Too much load. Waiting"
     sleep 1
 done
 

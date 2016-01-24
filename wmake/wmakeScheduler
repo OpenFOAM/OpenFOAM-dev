@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -108,8 +108,8 @@ fi
 
 # Construct test string for remote execution.
 # Source WM_PROJECT settings if WM_PROJECT environment not set.
-# attempt to preserve the installation directory 'FOAM_INST_DIR'
-# use FOAM_SETTINGS to pass command-line settings
+# Attempt to preserve the installation directory 'FOAM_INST_DIR'
+# Use FOAM_SETTINGS to pass command-line settings
 case $sourceFoam in
 */bashrc)
     if [ "$FOAM_INST_DIR" ]
