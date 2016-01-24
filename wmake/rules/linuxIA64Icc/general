@@ -4,6 +4,6 @@ GLIBS      =
 
 include $(GENERAL_RULES)/standard
 
-include $(RULES)/X
-include $(RULES)/c
-include $(RULES)/c++
+include $(DEFAULT_RULES)/X
+include $(DEFAULT_RULES)/c
+include $(DEFAULT_RULES)/c++

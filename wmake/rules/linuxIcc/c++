@@ -8,7 +8,7 @@ c++LESSWARN = -diag-disable 1224,2026,2305
 
 CC          = icpc -std=c++0x -fp-trap=common -fp-model precise
 
-include $(RULES)/c++$(WM_COMPILE_OPTION)
+include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 
 ptFLAGS     = -DNoRepository
 

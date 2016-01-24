@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -33,7 +33,7 @@
 # The Makefile uses a POSIX shell
 #------------------------------------------------------------------------------
 
-SHELL      = /bin/sh
+SHELL           = /bin/sh
 
 
 #------------------------------------------------------------------------------
@@ -47,29 +47,29 @@ SHELL      = /bin/sh
 # Set the directory containing the wmake scripts
 #------------------------------------------------------------------------------
 
-WM_SCRIPTS   = $(WM_DIR)/scripts
+WM_SCRIPTS      = $(WM_DIR)/scripts
 
 
 #------------------------------------------------------------------------------
 # Declare default paths
 #------------------------------------------------------------------------------
 
-LIB_SRC            = $(WM_PROJECT_DIR)/src
-LIB_PLATFORMS      = $(WM_PROJECT_DIR)/platforms/$(WM_OPTIONS)/lib
-OBJECTS_DIR        = $(MAKE_DIR)/$(WM_OPTIONS)
+LIB_SRC         = $(WM_PROJECT_DIR)/src
+LIB_PLATFORMS   = $(WM_PROJECT_DIR)/platforms/$(WM_OPTIONS)/lib
+OBJECTS_DIR     = $(MAKE_DIR)/$(WM_OPTIONS)
 
-SYS_INC            =
-SYS_LIBS           =
+SYS_INC         =
+SYS_LIBS        =
 
-PROJECT_INC        = -I$(LIB_SRC)/$(WM_PROJECT)/lnInclude \
+PROJECT_INC     = -I$(LIB_SRC)/$(WM_PROJECT)/lnInclude \
 		     -I$(LIB_SRC)/OSspecific/$(WM_OSTYPE)/lnInclude
 
-PROJECT_LIBS       = -l$(WM_PROJECT)
+PROJECT_LIBS    = -l$(WM_PROJECT)
 
-EXE_INC            =
-EXE_LIBS           =
+EXE_INC         =
+EXE_LIBS        =
 
-LIB_LIBS           =
+LIB_LIBS        =
 
 
 #------------------------------------------------------------------------------
@@ -94,13 +94,7 @@ SEXE            = a.out
 #------------------------------------------------------------------------------
 
 GENERAL_RULES = $(WM_DIR)/rules/General
-RULES         = $(WM_DIR)/rules/$(WM_ARCH)$(WM_COMPILER)
-WMAKE_BIN     = $(WM_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)
-
 include $(GENERAL_RULES)/general
-include $(RULES)/general
-include $(RULES)/$(WM_LINK_LANGUAGE)
-include $(GENERAL_RULES)/transform
 
 
 #------------------------------------------------------------------------------

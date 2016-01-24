@@ -7,7 +7,7 @@ c++LESSWARN = -Wno-old-style-cast -Wno-unused-local-typedef -Wno-tautological-un
 
 CC          = clang++ -std=c++0x -m32
 
-include $(RULES)/c++$(WM_COMPILE_OPTION)
+include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 
 ptFLAGS     = -DNoRepository -ftemplate-depth-100
 

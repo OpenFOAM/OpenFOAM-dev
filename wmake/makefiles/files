@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -29,23 +29,22 @@
 #
 #------------------------------------------------------------------------------
 
-GENERAL_RULES = $(WM_DIR)/rules/General
-RULES         = $(WM_DIR)/rules/$(WM_ARCH)$(WM_COMPILER)
-OBJECTS_DIR   = $(MAKE_DIR)/$(WM_OPTIONS)
-
+GENERAL_RULES   = $(WM_DIR)/rules/General
 include $(GENERAL_RULES)/general
-include $(RULES)/general
+
 
 #------------------------------------------------------------------------------
 # declare names of make system control files derived from file 'files'
 #------------------------------------------------------------------------------
 
-OPTIONS = $(OBJECTS_DIR)/options
-FILES   = $(OBJECTS_DIR)/files
-VARS    = $(OBJECTS_DIR)/variables
-SFILES  = $(OBJECTS_DIR)/sourceFiles
+OBJECTS_DIR     = $(MAKE_DIR)/$(WM_OPTIONS)
+OPTIONS         = $(OBJECTS_DIR)/options
+FILES           = $(OBJECTS_DIR)/files
+VARS            = $(OBJECTS_DIR)/variables
+SFILES          = $(OBJECTS_DIR)/sourceFiles
 
 -include $(OPTIONS)
+
 
 #------------------------------------------------------------------------------
 # Declare dependecy of all make system files on FILES
@@ -73,5 +72,6 @@ $(SFILES): $(MAKE_DIR)/files
 	@sed -i -e 's,$$, \\,' -e '$$s,\\,,' $(SFILES)
 
 $(VARS): $(SFILES)
+
 
 #------------------------------------------------------------------------------

@@ -12,4 +12,17 @@ GINC       =
 GLIBS      = -lm
 GLIB_LIBS  =
 
+
+COMPILER_TYPE   = $(shell echo $(WM_COMPILER) | tr -d [:digit:])
+DEFAULT_RULES   = $(WM_DIR)/rules/$(WM_ARCH)$(COMPILER_TYPE)
+RULES           = $(WM_DIR)/rules/$(WM_ARCH)$(WM_COMPILER)
+WMAKE_BIN       = $(WM_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)
+
+include $(DEFAULT_RULES)/general
+include $(DEFAULT_RULES)/$(WM_LINK_LANGUAGE)
+-include $(RULES)/general
+-include $(RULES)/$(WM_LINK_LANGUAGE)
+include $(GENERAL_RULES)/transform
+
+
 #------------------------------------------------------------------------------

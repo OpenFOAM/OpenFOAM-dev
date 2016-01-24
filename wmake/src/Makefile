@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -43,19 +43,15 @@ SHELL      = /bin/sh
 
 
 #------------------------------------------------------------------------------
-# set compilation and dependency building rules
+# Set compilation and dependency building rules
 #------------------------------------------------------------------------------
 
-GENERAL_RULES = $(WM_DIR)/rules/General
-RULES         = $(WM_DIR)/rules/$(WM_ARCH)$(WM_COMPILER)
-WMAKE_BIN     = $(WM_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)
-
-include $(RULES)/general
-include $(RULES)/$(WM_LINK_LANGUAGE)
+GENERAL_RULES   = $(WM_DIR)/rules/General
+include $(GENERAL_RULES)/general
 
 
 #------------------------------------------------------------------------------
-# targets
+# Targets
 #------------------------------------------------------------------------------
 
 all:  $(WMAKE_BIN)/dirToString $(WMAKE_BIN)/wmkdep
