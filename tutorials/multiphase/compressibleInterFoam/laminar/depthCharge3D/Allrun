@@ -8,7 +8,7 @@ runApplication blockMesh
 cp -r 0.org 0
 runApplication setFields
 runApplication decomposePar
-runParallel $(getApplication) 4
+runParallel $(getApplication)
 runApplication reconstructPar
 
 # ----------------------------------------------------------------- end-of-file

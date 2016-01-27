@@ -14,7 +14,7 @@ cp -r 0.org 0
 
 #runApplication $application
 runApplication decomposePar -cellDist
-runParallel $application 5
+runParallel $application
 
 runApplication reconstructPar
 

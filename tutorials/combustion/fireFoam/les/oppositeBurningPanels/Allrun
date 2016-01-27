@@ -30,7 +30,7 @@ decomposePar -region panelRegion > log.decomposeParPanelRegion 2>&1
 
 decomposePar -fields > log.decomposePar 2>&1
 
-runParallel `getApplication` 6
+runParallel `getApplication`
 
 paraFoam -touch
 paraFoam -touch -region panelRegion

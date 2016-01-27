@@ -13,7 +13,7 @@ mv log.decomposePar log.decomposePar.wallFilmRegion
 runApplication decomposePar
 mv log.decomposePar log.decomposePar.primaryRegion
 
-runParallel $application 4
+runParallel $application
 
 runApplication reconstructPar -region wallFilmRegion
 mv log.reconstructPar log.reconstructPar.wallFilmRegion

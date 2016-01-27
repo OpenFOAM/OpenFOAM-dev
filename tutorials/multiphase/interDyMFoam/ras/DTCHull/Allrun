@@ -39,9 +39,9 @@ runApplication setFields
 
 runApplication decomposePar
 
-runParallel renumberMesh 8 -overwrite
+runParallel renumberMesh -overwrite
 
-runParallel $(getApplication) 8
+runParallel $(getApplication)
 
 runApplication reconstructPar
 

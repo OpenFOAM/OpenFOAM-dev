@@ -15,16 +15,16 @@ cp system/decomposeParDict.hierarchical system/decomposeParDict
 runApplication decomposePar
 
 cp system/decomposeParDict.ptscotch system/decomposeParDict
-runParallel snappyHexMesh 8 -overwrite -parallel
+runParallel snappyHexMesh -overwrite -parallel
 
 find . -type f -iname "*level*" -exec rm {} \;
 
 ls -d processor* | xargs -I {} cp -r 0.org ./{}/0 $1
 
-runParallel renumberMesh 8 -overwrite
+runParallel renumberMesh -overwrite
 
-runParallel potentialFoam 8 -initialiseUBCs
+runParallel potentialFoam -initialiseUBCs
 
-runParallel `getApplication` 8
+runParallel `getApplication`
 
 # ----------------------------------------------------------------- end-of-file

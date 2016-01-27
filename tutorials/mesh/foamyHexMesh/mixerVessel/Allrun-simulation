@@ -9,9 +9,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Set application name
 application=$(getApplication)
 
-# Get number of processors to run on
-nProcs=$(getNumberOfProcessors)
-
 \rm -rf 0
 
 runApplication createBaffles -overwrite
@@ -31,7 +28,7 @@ runApplication setFields
 runApplication decomposePar -force
 
 # Run
-runParallel $application $nProcs
+runParallel $application
 
 # Reconstruct
 runApplication reconstructPar -noFunctionObjects

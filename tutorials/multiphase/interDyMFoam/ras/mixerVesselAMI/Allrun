@@ -13,7 +13,7 @@ application=`getApplication`
 runApplication decomposePar -force
 
 # Run
-runParallel $application 6
+runParallel $application
 
 # Reconstruct
 runApplication reconstructPar -noFunctionObjects

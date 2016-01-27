@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -81,6 +81,7 @@ runParallel()
     APP_RUN=
     LOG_IGNORE=false
     LOG_APPEND=false
+    nProcs=$(getNumberOfProcessors)
 
     # Parse options and executable
     while [ $# -gt 0 ] && [ -z "$APP_RUN" ]; do
@@ -93,12 +94,13 @@ runParallel()
             -overwrite)
                 LOG_IGNORE=true
                 ;;
+            -np)
+                nProcs="$2"
+                shift
+                ;;
             *)
                 APP_RUN="$key"
                 APP_NAME="${key##*/}"
-                # also read number of processors
-                nProcs="$2"
-                shift
                 ;;
         esac
     shift

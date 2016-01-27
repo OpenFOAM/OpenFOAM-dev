@@ -11,7 +11,7 @@ ls -d processor* | xargs -I {} rm -rf ./{}/0 $1
 ls -d processor* | xargs -I {} mv ./{}/500 ./{}/0 $1
 ls -d processor* | xargs -I {} rm -rf ./{}/0/uniform $1
 
-runParallel pisoFoam 8
+runParallel pisoFoam
 
 runApplication reconstructParMesh -constant -mergeTol 1e-6
 

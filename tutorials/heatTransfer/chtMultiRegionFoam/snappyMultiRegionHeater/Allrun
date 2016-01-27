@@ -34,7 +34,7 @@ runApplication `getApplication`
 #runApplication decomposePar -allRegions
 #
 ## Run
-#runParallel `getApplication` 4
+#runParallel `getApplication`
 #
 ## Reconstruct
 #runApplication reconstructPar -allRegions

@@ -6,8 +6,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 runApplication decomposePar
-runParallel dsmcInitialise 4
-runParallel `getApplication` 4
+runParallel dsmcInitialise
+runParallel `getApplication`
 runApplication reconstructPar -noLagrangian
 
 

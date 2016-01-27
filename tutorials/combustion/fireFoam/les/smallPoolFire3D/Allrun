@@ -12,6 +12,6 @@ runApplication createPatch -overwrite
 runApplication decomposePar -force
 
 # Run
-runParallel $application 4
+runParallel $application
 
 # -----------------------------------------------------------------------------

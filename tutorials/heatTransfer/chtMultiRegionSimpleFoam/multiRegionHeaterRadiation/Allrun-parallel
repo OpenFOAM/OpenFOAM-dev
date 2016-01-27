@@ -28,7 +28,7 @@ do
 done
 
 # Run
-runParallel `getApplication` 4
+runParallel `getApplication`
 
 # Reconstruct
 runApplication reconstructPar -allRegions

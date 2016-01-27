@@ -12,7 +12,7 @@ cp -r 0.org 0
 runApplication blockMesh
 runApplication setFields
 runApplication decomposePar
-runParallel $application 4
+runParallel $application
 runApplication reconstructPar
 
 # ----------------------------------------------------------------- end-of-file

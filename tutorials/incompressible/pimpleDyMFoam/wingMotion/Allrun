@@ -24,7 +24,7 @@ cp -r 0.org 0
 runApplication mapFields ../wingMotion2D_simpleFoam -sourceTime latestTime -consistent
 mv 0/pointDisplacement.unmapped 0/pointDisplacement
 runApplication decomposePar
-runParallel `getApplication` 4
+runParallel `getApplication`
 runApplication reconstructPar
 
 # ----------------------------------------------------------------- end-of-file

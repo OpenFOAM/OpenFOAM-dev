@@ -13,7 +13,7 @@ mv log.decomposePar log.decomposePar.air
 runApplication decomposePar -region porous
 mv log.decomposePar log.decomposePar.porous
 
-runParallel $(getApplication) 4
+runParallel $(getApplication)
 
 runApplication reconstructPar -latestTime -region air
 mv log.reconstructPar log.reconstructPar.air

@@ -24,9 +24,6 @@ intersectSurfaces()
 # Set application name
 application=$(getApplication)
 
-# Get number of processors to run on
-nProcs=$(getNumberOfProcessors)
-
 \rm -rf 0
 
 
@@ -88,16 +85,16 @@ runApplication decomposePar -region backgroundMeshDecomposition
 
 runApplication surfaceFeatureExtract
 
-runParallel foamyHexMesh $nProcs
+runParallel foamyHexMesh
 
-runParallel collapseEdges $nProcs -collapseFaces -latestTime
+runParallel collapseEdges -collapseFaces -latestTime
 mv log.collapseEdges log.collapseFaces
 
 #\cp system/collapseDict.indirectPatchFaces system/collapseDict
-#runParallel collapseEdges $nProcs -collapseFaceSet indirectPatchFaces -latestTime
+#runParallel collapseEdges -collapseFaceSet indirectPatchFaces -latestTime
 #mv log.collapseEdges log.collapseFaceSet
 
-runParallel checkMesh $nProcs -allTopology -allGeometry -latestTime
+runParallel checkMesh -allTopology -allGeometry -latestTime
 
 runApplication reconstructParMesh -latestTime
 

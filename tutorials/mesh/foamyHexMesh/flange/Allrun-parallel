@@ -4,9 +4,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Get the number of processors to run on from system/decomposeParDict
-nProc=$(getNumberOfProcessors)
-
 # copy flange surface from resources directory
 cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz constant/triSurface/
 
@@ -14,15 +11,15 @@ cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz constant/triSurface/
 runApplication blockMesh -region backgroundMeshDecomposition
 runApplication decomposePar -region backgroundMeshDecomposition
 
-runParallel foamyHexMesh $nProc
+runParallel foamyHexMesh
 
-runParallel collapseEdges $nProc -latestTime -collapseFaces
+runParallel collapseEdges -latestTime -collapseFaces
 mv log.collapseEdges log.collapseFaces
 
-runParallel collapseEdges $nProc -latestTime -collapseFaceSet indirectPatchFaces
+runParallel collapseEdges -latestTime -collapseFaceSet indirectPatchFaces
 mv log.collapseEdges log.collapseFaceSet
 
-runParallel checkMesh $nProc -latestTime -allTopology -allGeometry
+runParallel checkMesh -latestTime -allTopology -allGeometry
 
 runApplication reconstructParMesh -latestTime
 

@@ -34,7 +34,7 @@ refineMeshByCellSet 1 2 3
 #runApplication mapFields ../throttle -sourceTime latestTime
 
 runApplication decomposePar
-runParallel $application 4
+runParallel $application
 runApplication reconstructPar
 
 # ----------------------------------------------------------------- end-of-file
