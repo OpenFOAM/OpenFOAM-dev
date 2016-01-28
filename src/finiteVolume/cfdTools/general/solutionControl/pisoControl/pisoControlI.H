@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,30 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "pisoControl.H"
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
+inline bool Foam::pisoControl::finalInnerIter() const
 {
-    defineTypeNameAndDebug(pisoControl, 0);
+    return
+       corrPISO_ == nCorrPISO_
+    && corrNonOrtho_ == nNonOrthCorr_ + 1;
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::pisoControl::pisoControl(fvMesh& mesh, const word& dictName)
-:
-    pimpleControl(mesh, dictName)
-{
-    // mesh_.data::add("finalIteration", true);
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::pisoControl::~pisoControl()
-{}
 
 
 // ************************************************************************* //
