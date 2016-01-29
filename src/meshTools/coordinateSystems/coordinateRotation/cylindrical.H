@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,21 +154,21 @@ public:
              return tensor::zero;
         }
 
-        //- Return local Cartesian x-axis
+        //- Return local Cartesian x-axis in global coordinates
         virtual const vector e1() const
         {
             NotImplemented;
             return vector::zero;
         }
 
-        //- Return local Cartesian y-axis
+        //- Return local Cartesian y-axis in global coordinates
         virtual const vector e2() const
         {
             NotImplemented;
             return vector::zero;
         }
 
-        //- Return local Cartesian z-axis
+        //- Return local Cartesian z-axis in global coordinates
         virtual const vector e3() const
         {
             return e3_;
