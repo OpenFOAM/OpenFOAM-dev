@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,6 +104,21 @@ void Foam::fieldAverage::initialize()
 }
 
 
+void Foam::fieldAverage::restart()
+{
+    Info<< "    Restarting averaging at time " << obr_.time().timeName()
+        << nl << endl;
+
+    totalIter_.clear();
+    totalIter_.setSize(faItems_.size(), 1);
+
+    totalTime_.clear();
+    totalTime_.setSize(faItems_.size(), obr_.time().deltaTValue());
+
+    initialize();
+}
+
+
 void Foam::fieldAverage::calcAverages()
 {
     if (!initialised_)
@@ -111,8 +126,8 @@ void Foam::fieldAverage::calcAverages()
         initialize();
     }
 
-    const label currentTimeIndex =
-        static_cast<const fvMesh&>(obr_).time().timeIndex();
+    const label currentTimeIndex = obr_.time().timeIndex();
+    const scalar currentTime = obr_.time().value();
 
     if (prevTimeIndex_ == currentTimeIndex)
     {
@@ -121,6 +136,12 @@ void Foam::fieldAverage::calcAverages()
     else
     {
         prevTimeIndex_ = currentTimeIndex;
+    }
+
+    if (periodicRestart_ && currentTime > restartPeriod_*periodIndex_)
+    {
+        restart();
+        periodIndex_++;
     }
 
     Info<< type() << " " << name_ << " output:" << nl;
@@ -195,7 +216,7 @@ void Foam::fieldAverage::readAveragingProperties()
     totalTime_.clear();
     totalTime_.setSize(faItems_.size(), obr_.time().deltaTValue());
 
-    if (resetOnRestart_ || resetOnOutput_)
+    if (restartOnRestart_ || restartOnOutput_)
     {
         Info<< "    Starting averaging at time " << obr_.time().timeName()
             << nl;
@@ -255,12 +276,15 @@ Foam::fieldAverage::fieldAverage
     obr_(obr),
     active_(true),
     prevTimeIndex_(-1),
-    resetOnRestart_(false),
-    resetOnOutput_(false),
+    restartOnRestart_(false),
+    restartOnOutput_(false),
+    periodicRestart_(false),
+    restartPeriod_(GREAT),
     initialised_(false),
     faItems_(),
     totalIter_(),
-    totalTime_()
+    totalTime_(),
+    periodIndex_(1)
 {
     // Only active if a fvMesh is available
     if (isA<fvMesh>(obr_))
@@ -293,9 +317,15 @@ void Foam::fieldAverage::read(const dictionary& dict)
 
         Info<< type() << " " << name_ << ":" << nl;
 
-        dict.readIfPresent("resetOnRestart", resetOnRestart_);
-        dict.readIfPresent("resetOnOutput", resetOnOutput_);
+        dict.readIfPresent("restartOnRestart", restartOnRestart_);
+        dict.readIfPresent("restartOnOutput", restartOnOutput_);
+        dict.readIfPresent("periodicRestart", periodicRestart_);
         dict.lookup("fields") >> faItems_;
+
+        if (periodicRestart_)
+        {
+            dict.lookup("restartPeriod") >> restartPeriod_;
+        }
 
         readAveragingProperties();
 
@@ -335,18 +365,9 @@ void Foam::fieldAverage::write()
         writeAverages();
         writeAveragingProperties();
 
-        if (resetOnOutput_)
+        if (restartOnOutput_)
         {
-            Info<< "    Restarting averaging at time " << obr_.time().timeName()
-                << nl << endl;
-
-            totalIter_.clear();
-            totalIter_.setSize(faItems_.size(), 1);
-
-            totalTime_.clear();
-            totalTime_.setSize(faItems_.size(), obr_.time().deltaTValue());
-
-            initialize();
+            restart();
         }
 
         Info<< endl;

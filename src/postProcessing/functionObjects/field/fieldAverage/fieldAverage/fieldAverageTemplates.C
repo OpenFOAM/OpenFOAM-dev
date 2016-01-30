@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ void Foam::fieldAverage::addMeanFieldType(const label fieldI)
                     meanFieldName,
                     obr_.time().timeName(obr_.time().startTime().value()),
                     obr_,
-                    resetOnOutput_
+                    restartOnOutput_
                   ? IOobject::NO_READ
                   : IOobject::READ_IF_PRESENT,
                     IOobject::NO_WRITE
@@ -136,7 +136,7 @@ void Foam::fieldAverage::addPrime2MeanFieldType(const label fieldI)
                     prime2MeanFieldName,
                     obr_.time().timeName(obr_.time().startTime().value()),
                     obr_,
-                    resetOnOutput_
+                    restartOnOutput_
                   ? IOobject::NO_READ
                   : IOobject::READ_IF_PRESENT,
                     IOobject::NO_WRITE

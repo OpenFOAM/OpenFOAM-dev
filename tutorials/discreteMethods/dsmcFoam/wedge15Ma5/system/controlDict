@@ -54,7 +54,6 @@ functions
         type            fieldAverage;
         functionObjectLibs ( "libfieldFunctionObjects.so" );
         outputControl   outputTime;
-        resetOnOutput   off;
 
         fields
         (
