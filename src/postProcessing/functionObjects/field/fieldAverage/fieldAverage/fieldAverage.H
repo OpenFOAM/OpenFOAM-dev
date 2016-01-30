@@ -69,10 +69,10 @@ Description
         type fieldAverage;
         functionObjectLibs ("libfieldFunctionObjects.so");
         ...
-        restartOnRestart  true;
-        restartOnOutput   false;
-        periodicRestart false;
-        restartPeriod   0.002;
+        restartOnRestart    false;
+        restartOnOutput     false;
+        periodicRestart     false;
+        restartPeriod       0.002;
         fields
         (
             U
