@@ -44,6 +44,10 @@ formatOptions
     {
         format  ascii;
     }
+    raw
+    {
+         compression  uncompressed; // 'uncompressed' or 'compressed'
+    }
 }
 
 // interpolationScheme. choice of
