@@ -183,6 +183,12 @@ public:
             inline scalar averageParcelMass() const;
 
 
+        // Check
+
+            //- Penetration for fraction [0-1] of the current total mass
+            inline scalar penetration(const scalar fraction) const;
+
+
             // Sub-models
 
                 //- Return const-access to the atomization model

@@ -400,7 +400,6 @@ public:
 
 
             //- Optional particle forces
-//            inline const typename parcelType::forceType& forces() const;
             inline const forceType& forces() const;
 
             //- Return the optional particle forces
@@ -498,9 +497,6 @@ public:
 
             //- Total rotational kinetic energy in the system
             inline scalar rotationalKineticEnergyOfSystem() const;
-
-            //- Penetration for fraction [0-1] of the current total mass
-            inline scalar penetration(const scalar fraction) const;
 
             //- Mean diameter Dij
             inline scalar Dij(const label i, const label j) const;
