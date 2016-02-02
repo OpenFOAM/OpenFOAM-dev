@@ -45,7 +45,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(fvMeshDistribute, 0);
+    defineTypeNameAndDebug(fvMeshDistribute, 0);
 }
 
 
@@ -929,16 +929,8 @@ void Foam::fvMeshDistribute::addProcPatches
                 if (referPatchID[bFaceI] == -1)
                 {
                     // Ordinary processor boundary
-
-                    const word patchName =
-                        "procBoundary"
-                      + name(Pstream::myProcNo())
-                      + "to"
-                      + name(procI);
-
                     processorPolyPatch pp
                     (
-                        patchName,
                         0,              // size
                         mesh_.nFaces(),
                         mesh_.boundaryMesh().size(),
@@ -968,27 +960,15 @@ void Foam::fvMeshDistribute::addProcPatches
                               mesh_.boundaryMesh()[referPatchID[bFaceI]]
                           );
 
-                    // Processor boundary originating from cyclic
-                    const word& cycName = pcPatch.name();
-
-                    const word patchName =
-                        "procBoundary"
-                      + name(Pstream::myProcNo())
-                      + "to"
-                      + name(procI)
-                      + "through"
-                      + cycName;
-
                     processorCyclicPolyPatch pp
                     (
-                        patchName,
                         0,              // size
                         mesh_.nFaces(),
                         mesh_.boundaryMesh().size(),
                         mesh_.boundaryMesh(),
                         Pstream::myProcNo(),
                         nbrProc[bFaceI],
-                        cycName,
+                        pcPatch.name(),
                         pcPatch.transform()
                     );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,36 @@ Foam::processorPolyPatch::processorPolyPatch
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
+    myProcNo_(myProcNo),
+    neighbProcNo_(neighbProcNo),
+    neighbFaceCentres_(),
+    neighbFaceAreas_(),
+    neighbFaceCellCentres_()
+{}
+
+
+Foam::processorPolyPatch::processorPolyPatch
+(
+    const label size,
+    const label start,
+    const label index,
+    const polyBoundaryMesh& bm,
+    const int myProcNo,
+    const int neighbProcNo,
+    const transformType transform,
+    const word& patchType
+)
+:
+    coupledPolyPatch
+    (
+        newName(myProcNo, neighbProcNo),
+        size,
+        start,
+        index,
+        bm,
+        patchType,
+        transform
+    ),
     myProcNo_(myProcNo),
     neighbProcNo_(neighbProcNo),
     neighbFaceCentres_(),
@@ -148,6 +178,20 @@ Foam::processorPolyPatch::~processorPolyPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::word Foam::processorPolyPatch::newName
+(
+    const label myProcNo,
+    const label neighbProcNo
+)
+{
+    return
+        "procBoundary"
+      + Foam::name(myProcNo)
+      + "to"
+      + Foam::name(neighbProcNo);
+}
+
 
 void Foam::processorPolyPatch::initGeometry(PstreamBuffers& pBufs)
 {

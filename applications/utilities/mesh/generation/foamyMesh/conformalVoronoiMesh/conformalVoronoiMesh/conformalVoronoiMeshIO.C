@@ -432,7 +432,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::conformalVoronoiMesh::createDummyMesh
         {
             patches[patchI] = new processorPolyPatch
             (
-                patchNames[patchI],
                 0,          //patchSizes[p],
                 0,          //patchStarts[p],
                 patchI,

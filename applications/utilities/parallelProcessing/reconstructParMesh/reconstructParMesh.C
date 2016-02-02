@@ -161,12 +161,9 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
 
                 for (label mergedProcI = 0; mergedProcI < procI; mergedProcI++)
                 {
-                    const string fromProcString
+                    const word fromProcString
                     (
-                        "procBoundary"
-                      + name(procI)
-                      + "to"
-                      + name(mergedProcI)
+                        processorPolyPatch::newName(procI, mergedProcI)
                     );
 
                     if (pp.name() == fromProcString)

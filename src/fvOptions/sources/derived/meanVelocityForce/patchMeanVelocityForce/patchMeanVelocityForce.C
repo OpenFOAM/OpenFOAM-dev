@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "patchMeanVelocityForce.H"
+#include "processorCyclicPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -92,14 +93,9 @@ Foam::scalar Foam::fv::patchMeanVelocityForce::magUbarAve
 
     if (Pstream::parRun() && isA<cyclicPolyPatch>(patches[patchi_]))
     {
-        const keyType processorCyclicPatchNames
-        (
-            string("procBoundary.*to.*through" + patch_)
-        );
-
         labelList processorCyclicPatches
         (
-            patches.findIndices(processorCyclicPatchNames)
+            processorCyclicPolyPatch::patchIDs(patch_, patches)
         );
 
         forAll(processorCyclicPatches, pcpi)

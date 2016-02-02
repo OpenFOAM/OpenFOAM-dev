@@ -1018,11 +1018,10 @@ void Foam::autoLayerDriver::determineSidePatches
         for (label patchI = nOldPatches; patchI < nPatches; patchI++)
         {
             label nbrProcI = patchToNbrProc[patchI];
-            word name =
-                    "procBoundary"
-                  + Foam::name(Pstream::myProcNo())
-                  + "to"
-                  + Foam::name(nbrProcI);
+            word name
+            (
+                processorPolyPatch::newName(Pstream::myProcNo(), nbrProcI)
+            );
 
             dictionary patchDict;
             patchDict.add("type", processorPolyPatch::typeName);
@@ -1030,11 +1029,6 @@ void Foam::autoLayerDriver::determineSidePatches
             patchDict.add("neighbProcNo", nbrProcI);
             patchDict.add("nFaces", 0);
             patchDict.add("startFace", mesh.nFaces());
-
-            //Pout<< "Adding patch " << patchI
-            //    << " name:" << name
-            //    << " between " << Pstream::myProcNo()
-            //    << " and " << nbrProcI << endl;
 
             label procPatchI = meshRefiner_.appendPatch
             (

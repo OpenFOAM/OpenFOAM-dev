@@ -955,13 +955,11 @@ void addCoupledPatches
             }
             else
             {
-                // Rrocessor patch
-
-                word name =
-                    "procBoundary"
-                  + Foam::name(Pstream::myProcNo())
-                  + "to"
-                  + Foam::name(nbrProcI);
+                // Processor patch
+                word name
+                (
+                    processorPolyPatch::newName(Pstream::myProcNo(), nbrProcI)
+                );
 
                 sidePatchID[edgeI] = findPatchID(newPatches, name);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,6 @@ public:
         //- Construct from components
         processorCyclicPolyPatch
         (
-            const word& name,
             const label size,
             const label start,
             const label index,
@@ -261,10 +260,28 @@ public:
 
     // Member functions
 
+        //- Return name of originating cyclicPolyPatch patch
         const word& referPatchName() const
         {
             return referPatchName_;
         }
+
+        //- Return the name of a processorCyclicPolyPatch
+        //  constructed from cyclicPolyPatch name and the processor IDs
+        static word newName
+        (
+            const word& cyclicPolyPatchName,
+            const label myProcNo,
+            const label neighbProcNo
+        );
+
+        //- Return the indices of a processorCyclicPolyPatchs
+        //  constructed from the given cyclicPolyPatch
+        static labelList patchIDs
+        (
+            const word& cyclicPolyPatchName,
+            const polyBoundaryMesh& bm
+        );
 
         //- Referring patchID.
         label referPatchID() const

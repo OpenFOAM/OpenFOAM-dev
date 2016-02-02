@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,6 @@ namespace Foam
 
 Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
 (
-    const word& name,
     const label size,
     const label start,
     const label index,
@@ -55,7 +54,7 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
 :
     processorPolyPatch
     (
-        name,
+        newName(referPatchName, myProcNo, neighbProcNo),
         size,
         start,
         index,
@@ -156,6 +155,33 @@ Foam::processorCyclicPolyPatch::~processorCyclicPolyPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::word Foam::processorCyclicPolyPatch::newName
+(
+    const word& cyclicPolyPatchName,
+    const label myProcNo,
+    const label neighbProcNo
+)
+{
+    return
+        processorPolyPatch::newName(myProcNo, neighbProcNo)
+      + "through"
+      + cyclicPolyPatchName;
+}
+
+
+Foam::labelList Foam::processorCyclicPolyPatch::patchIDs
+(
+    const word& cyclicPolyPatchName,
+    const polyBoundaryMesh& bm
+)
+{
+    return bm.findIndices
+    (
+        string("procBoundary.*to.*through" + cyclicPolyPatchName)
+    );
+}
+
 
 int Foam::processorCyclicPolyPatch::tag() const
 {

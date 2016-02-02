@@ -1631,10 +1631,7 @@ Foam::label Foam::conformalVoronoiMesh::createPatchInfo
             if (procUsed[pUI])
             {
                 patchNames[nNonProcPatches + procAddI] =
-                    "procBoundary"
-                   + name(Pstream::myProcNo())
-                   + "to"
-                   + name(pUI);
+                    processorPolyPatch::newName(Pstream::myProcNo(), pUI);
 
                 patchDicts[nNonProcPatches + procAddI].set
                 (
