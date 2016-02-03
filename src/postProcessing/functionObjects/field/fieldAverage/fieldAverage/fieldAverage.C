@@ -186,7 +186,7 @@ void Foam::fieldAverage::writeAveragingProperties() const
     (
         IOobject
         (
-            "fieldAveragingProperties",
+            name() + "Properties",
             obr_.time().timeName(),
             "uniform",
             obr_,
@@ -225,7 +225,7 @@ void Foam::fieldAverage::readAveragingProperties()
     {
         IOobject propsDictHeader
         (
-            "fieldAveragingProperties",
+            name() + "Properties",
             obr_.time().timeName(obr_.time().startTime().value()),
             "uniform",
             obr_,
