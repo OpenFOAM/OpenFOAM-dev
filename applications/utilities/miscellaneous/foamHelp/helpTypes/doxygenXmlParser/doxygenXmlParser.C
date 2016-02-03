@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "doxygenXmlParser.H"
 #include "wordRe.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::doxygenXmlParser::doxygenXmlParser
@@ -39,20 +38,32 @@ Foam::doxygenXmlParser::doxygenXmlParser
 :
     dictionary(dictionary::null)
 {
+    // Pre-construct and compile regular expressions
+    const wordRe nameRe(".*.H", wordRe::DETECT);
+    const wordRe searchStrRe(searchStr, wordRe::DETECT);
+
+    // Pre-construct constant strings and names to speed-up comparisons
+    const string slashStartTag('/' + startTag);
+    const string kindFileStr("kind=\"file\"");
+    const word compoundWord("compound");
+    const word nameWord("name");
+    const word pathWord("path");
+    const word filenameWord("filename");
+
     IFstream is(fName);
 
-    char c;
-
-    // skip forward to entry name
+    // Skip forward to entry name
     skipForward(is, startTag);
+
+    char c;
 
     while (is.get(c))
     {
         if (c == '<')
         {
-            // if in block, read block name
-            string blockName = "";
-            string params = "";
+            // If in block, read block name
+            string blockName;
+            string params;
             bool readingParam = false;
             while (is.get(c)  && c != '>')
             {
@@ -73,17 +84,17 @@ Foam::doxygenXmlParser::doxygenXmlParser
                 }
             }
 
-            if (blockName == '/' + startTag)
+            if (blockName == slashStartTag)
             {
                 break;
             }
 
-            if ((blockName == "compound") && (params == "kind=\"file\""))
+            if ((blockName == compoundWord) && (params == kindFileStr))
             {
-                // keep entry
-                word name = "";
-                fileName path = "";
-                word fName = "";
+                // Keep entry
+                word name;
+                fileName path;
+                word fName;
                 bool foundName = false;
                 bool foundPath = false;
                 bool foundFName = false;
@@ -92,35 +103,35 @@ Foam::doxygenXmlParser::doxygenXmlParser
                 {
                     word entryName;
                     getEntry<word>(is, entryName);
-                    if (entryName == "name")
+                    if (entryName == nameWord)
                     {
                         getValue<word>(is, name);
-                        if (wordRe(".*.H", wordRe::DETECT).match(name))
+                        if (nameRe.match(name))
                         {
                             foundName = true;
                         }
                         else
                         {
-                            // not interested in this compound
+                            // Not interested in this compound
                             break;
                         }
                     }
-                    else if (entryName == "path")
+                    else if (entryName == pathWord)
                     {
                         getValue<fileName>(is, path);
 
-                        // filter path on regExp
-                        if (wordRe(searchStr, wordRe::DETECT).match(path))
+                        // Filter path on regExp
+                        if (searchStrRe.match(path))
                         {
                             foundPath = true;
                         }
                         else
                         {
-                            // not interested in this compound
+                            // Not interested in this compound
                             break;
                         }
                     }
-                    else if (entryName == "filename")
+                    else if (entryName == filenameWord)
                     {
                         getValue<word>(is, fName);
                         foundFName = true;
@@ -135,7 +146,7 @@ Foam::doxygenXmlParser::doxygenXmlParser
                 {
                     word tName(path.components().last());
 
-                    // only insert if type is not already known
+                    // Only insert if type is not already known
                     // NOTE: not ideal for cases where there are multiple types
                     //    but contained within different namespaces
                     //    preferentially take exact match if it exists
@@ -162,7 +173,7 @@ Foam::doxygenXmlParser::doxygenXmlParser
                     }
                 }
 
-                // skip remanining entries
+                // Skip remanining entries
                 skipBlock(is, blockName);
             }
             else
@@ -182,17 +193,17 @@ void Foam::doxygenXmlParser::skipBlock
     const word& blockName
 ) const
 {
-    // recurse to move forward in 'is' until come across </blockName>
-    string closeName = "";
+    // Recurse to move forward in 'is' until come across </blockName>
+    string closeName;
 
     char c;
     while (is.good() && (closeName != blockName))
     {
-        // fast-forward until we reach a '<'
+        // Fast-forward until we reach a '<'
         while (is.get(c) && c  != '<')
         {}
 
-        // check to see if this is a closing block
+        // Check to see if this is a closing block
         if (is.get(c) && c  == '/')
         {
             closeName = "";
@@ -212,7 +223,7 @@ void Foam::doxygenXmlParser::skipForward
     const word& blockName
 ) const
 {
-    // recurse to move forward in 'is' until come across <blockName>
+    // Recurse to move forward in 'is' until come across <blockName>
     string entryName = "";
     char c;
 
@@ -220,7 +231,7 @@ void Foam::doxygenXmlParser::skipForward
     {
         entryName = "";
 
-        // fast-forward until we reach a '<'
+        // Fast-forward until we reach a '<'
         while (is.get(c) && c != '<')
         {}
 
@@ -233,4 +244,3 @@ void Foam::doxygenXmlParser::skipForward
 
 
 // ************************************************************************* //
-
