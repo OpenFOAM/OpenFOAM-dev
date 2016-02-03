@@ -52,7 +52,7 @@ Description
 
     Information regarding the number of averaging steps, and total averaging
     time are written on a per-field basis to the
-    \c fieldAveragingProperties dictionary, located in \<time\>/uniform
+    \c "<functionObject name>Properties" dictionary, located in \<time\>/uniform
 
     When restarting form a previous calculation, the averaging is continuous or
     may be restarted using the \c restartOnRestart option.
