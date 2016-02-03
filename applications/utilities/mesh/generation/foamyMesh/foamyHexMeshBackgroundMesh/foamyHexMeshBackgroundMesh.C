@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2012-2015 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2012-2016 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -467,7 +467,7 @@ int main(int argc, char *argv[])
 
         // Determine the number of cells in each direction.
         const vector span = bb.span();
-        vector nScalarCells = span/cellShapeControls().defaultCellSize();
+        vector nScalarCells = span/cellShapeControls.defaultCellSize();
 
         // Calculate initial cell size to be a little bit smaller than the
         // defaultCellSize to avoid initial refinement triggering.
@@ -576,15 +576,9 @@ int main(int argc, char *argv[])
 
     backgroundMeshDecomposition backgroundMesh
     (
-        1.0,    //spanScale,ratio of poly cell size v.s. hex cell size
-        0.0,    //minCellSizeLimit
-        0,      //minLevels
-        4,      //volRes, check multiple points per cell
-        20.0,   //maxCellWeightCoeff
         runTime,
-        geometryToConformTo,
-        cellShapeControls(),
         rndGen,
+        geometryToConformTo,
         foamyHexMeshDict
     );
 
