@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,10 +43,13 @@ namespace Foam
     makeDataEntry(label);
     makeDataEntryType(CompatibilityConstant, label);
     makeDataEntryType(Constant, label);
-    //makeDataEntryType(PolynomialEntry, label);
-    makeDataEntryType(CSV, label);
-    makeDataEntryType(Table, label);
-    makeDataEntryType(TableFile, label);
+
+    // Polynomial functions and interpolation do evaluate to label
+    // Instead evaluate a scalar and convert to label as appropriate
+    // makeDataEntryType(PolynomialEntry, label);
+    // makeDataEntryType(CSV, label);
+    // makeDataEntryType(Table, label);
+    // makeDataEntryType(TableFile, label);
 
     makeDataEntry(scalar);
     makeDataEntryType(CompatibilityConstant, scalar);

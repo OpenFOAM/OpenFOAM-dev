@@ -112,7 +112,6 @@ protected:
 
     // Protected Member Functions
 
-
         //- Return (demand driven) interpolator
         const interpolationWeights& interpolator() const;
 
