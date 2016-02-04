@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,43 +238,43 @@ Foam::ReynoldsStress<BasicTurbulenceModel>::divDevRhoReff
     {
         return
         (
-            fvc::div
+            fvc::laplacian
+            (
+                (1.0 - couplingFactor_)*this->alpha_*this->rho_*this->nut(),
+                U,
+                "laplacian(nuEff,U)"
+            )
+          + fvc::div
             (
                 this->alpha_*this->rho_*R_
               + couplingFactor_
                *this->alpha_*this->rho_*this->nut()*fvc::grad(U),
                 "div(devRhoReff)"
             )
-          + fvc::laplacian
-            (
-                (1.0 - couplingFactor_)*this->alpha_*this->rho_*this->nut(),
-                U,
-                "laplacian(nuEff,U)"
-            )
-          - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
           - fvc::div(this->alpha_*this->rho_*this->nu()*dev2(T(fvc::grad(U))))
+          - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
         );
     }
     else
     {
         return
         (
-            fvc::div(this->alpha_*this->rho_*R_)
-          + fvc::laplacian
+            fvc::laplacian
             (
                 this->alpha_*this->rho_*this->nut(),
                 U,
                 "laplacian(nuEff,U)"
             )
-          - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
+          + fvc::div(this->alpha_*this->rho_*R_)
           - fvc::div(this->alpha_*this->rho_*this->nu()*dev2(T(fvc::grad(U))))
+          - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
         );
     }
 
     return
     (
-      - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
       - fvc::div((this->alpha_*this->rho_*this->nuEff())*dev2(T(fvc::grad(U))))
+      - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
     );
 }
 
@@ -289,8 +289,8 @@ Foam::ReynoldsStress<BasicTurbulenceModel>::divDevRhoReff
 {
     return
     (
-      - fvm::laplacian(this->alpha_*rho*this->nuEff(), U)
       - fvc::div((this->alpha_*rho*this->nuEff())*dev2(T(fvc::grad(U))))
+      - fvm::laplacian(this->alpha_*rho*this->nuEff(), U)
     );
 }
 
