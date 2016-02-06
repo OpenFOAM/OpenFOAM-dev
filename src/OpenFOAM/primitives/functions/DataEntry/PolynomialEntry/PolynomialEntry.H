@@ -30,7 +30,7 @@ Description
     e.g. for an entry \<entryName\> that describes y = x^2 + 2x^3
 
     \verbatim
-        <entryName>  polynomial  [0 0 1 0 0] // optional dimensions
+        <entryName>  polynomial
         (
             (1    2)
             (2    3)
@@ -47,7 +47,6 @@ SourceFiles
 
 #include "DataEntry.H"
 #include "Tuple2.H"
-#include "dimensionSet.H"
 #include "DataEntryFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -55,12 +54,8 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of classes
-
-template<class Type>
-class PolynomialEntry;
-
-// Forward declaration of friend functions
+// Forward declaration of friend functions and operators
+template<class Type> class PolynomialEntry;
 template<class Type>
 Ostream& operator<<(Ostream&, const PolynomialEntry<Type>&);
 
@@ -80,9 +75,6 @@ class PolynomialEntry
 
         //- Flag to indicate whether poly can be integrated
         bool canIntegrate_;
-
-        //- The dimension set
-        dimensionSet dimensions_;
 
 
     // Private Member Functions
@@ -137,16 +129,6 @@ public:
 
             //- Integrate between two (scalar) values
             Type integrate(const scalar x1, const scalar x2) const;
-
-            //- Return dimensioned constant value
-            dimensioned<Type> dimValue(const scalar) const;
-
-            //- Integrate between two values and return dimensioned type
-            dimensioned<Type> dimIntegrate
-            (
-                const scalar x1,
-                const scalar x2
-            ) const;
 
 
     // I/O

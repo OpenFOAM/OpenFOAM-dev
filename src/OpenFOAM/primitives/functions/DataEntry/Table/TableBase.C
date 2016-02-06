@@ -70,8 +70,7 @@ Foam::TableBase<Type>::TableBase(const word& name, const dictionary& dict)
     (
         dict.lookupOrDefault<word>("interpolationScheme", "linear")
     ),
-    table_(),
-    dimensions_(dimless)
+    table_()
 {}
 
 
@@ -83,7 +82,6 @@ Foam::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
     boundsHandling_(tbl.boundsHandling_),
     interpolationScheme_(tbl.interpolationScheme_),
     table_(tbl.table_),
-    dimensions_(tbl.dimensions_),
     tableSamplesPtr_(tbl.tableSamplesPtr_),
     interpolatorPtr_(tbl.interpolatorPtr_)
 {}
@@ -366,29 +364,6 @@ Type Foam::TableBase<Type>::integrate(const scalar x1, const scalar x2) const
     }
 
     return sum;
-}
-
-
-template<class Type>
-Foam::dimensioned<Type> Foam::TableBase<Type>::
-dimValue(const scalar x) const
-{
-    return dimensioned<Type>("dimensionedValue", dimensions_, this->value(x));
-}
-
-
-template<class Type>
-Foam::dimensioned<Type> Foam::TableBase<Type>::dimIntegrate
-(
-    const scalar x1, const scalar x2
-) const
-{
-    return dimensioned<Type>
-    (
-        "dimensionedValue",
-        dimensions_,
-        this->integrate(x2, x1)
-    );
 }
 
 

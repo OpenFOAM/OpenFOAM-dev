@@ -41,18 +41,15 @@ SourceFiles
 #define Constant_H
 
 #include "DataEntry.H"
-#include "dimensionSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template<class Type>
-class Constant;
-
-template<class Type>
-Ostream& operator<<(Ostream&, const Constant<Type>&);
+// Forward declaration of friend functions and operators
+template<class Type> class Constant;
+template<class Type> Ostream& operator<<(Ostream&, const Constant<Type>&);
 
 /*---------------------------------------------------------------------------*\
                            Class Constant Declaration
@@ -67,9 +64,6 @@ class Constant
 
         //- Constant value
         Type value_;
-
-        //- The dimension set
-        dimensionSet dimensions_;
 
 
     // Private Member Functions
@@ -86,8 +80,13 @@ public:
 
     // Constructors
 
-        //- Construct from entry name and Istream
+        //- Construct from entry name and dictionary
         Constant(const word& entryName, const dictionary& dict);
+
+        //- Construct from entry name and Istream
+        //  Reads the constant value without the DataEntry type
+        //  for backward compatibility
+        Constant(const word& entryName, Istream& is);
 
         //- Copy constructor
         Constant(const Constant<Type>& cnst);
@@ -110,16 +109,6 @@ public:
 
         //- Integrate between two values
         Type integrate(const scalar x1, const scalar x2) const;
-
-        //- Return dimensioned constant value
-        dimensioned<Type> dimValue(const scalar) const;
-
-        //- Integrate between two values and return dimensioned type
-        dimensioned<Type> dimIntegrate
-        (
-            const scalar x1,
-            const scalar x2
-        ) const;
 
 
     // I/O
@@ -144,6 +133,7 @@ public:
 
 #ifdef NoRepository
 #   include "Constant.C"
+#   include "DataEntryNew.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

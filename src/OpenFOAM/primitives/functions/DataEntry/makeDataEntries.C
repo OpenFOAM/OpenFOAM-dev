@@ -23,11 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CompatibilityConstant.H"
 #include "Constant.H"
 #include "PolynomialEntry.H"
 #include "CSV.H"
-#include "DataEntry.H"
 #include "Table.H"
 #include "TableFile.H"
 
@@ -41,7 +39,6 @@ License
 namespace Foam
 {
     makeDataEntry(label);
-    makeDataEntryType(CompatibilityConstant, label);
     makeDataEntryType(Constant, label);
 
     // Polynomial functions and interpolation do evaluate to label
@@ -52,7 +49,6 @@ namespace Foam
     // makeDataEntryType(TableFile, label);
 
     makeDataEntry(scalar);
-    makeDataEntryType(CompatibilityConstant, scalar);
     makeDataEntryType(Constant, scalar);
     makeDataEntryType(PolynomialEntry, scalar);
     makeDataEntryType(CSV, scalar);
@@ -60,7 +56,6 @@ namespace Foam
     makeDataEntryType(TableFile, scalar);
 
     makeDataEntry(vector);
-    makeDataEntryType(CompatibilityConstant, vector);
     makeDataEntryType(Constant, vector);
     makeDataEntryType(PolynomialEntry, vector);
     makeDataEntryType(CSV, vector);
@@ -68,7 +63,6 @@ namespace Foam
     makeDataEntryType(TableFile, vector);
 
     makeDataEntry(sphericalTensor);
-    makeDataEntryType(CompatibilityConstant, sphericalTensor);
     makeDataEntryType(Constant, sphericalTensor);
     makeDataEntryType(PolynomialEntry, sphericalTensor);
     makeDataEntryType(CSV, sphericalTensor);
@@ -76,7 +70,6 @@ namespace Foam
     makeDataEntryType(TableFile, sphericalTensor);
 
     makeDataEntry(symmTensor);
-    makeDataEntryType(CompatibilityConstant, symmTensor);
     makeDataEntryType(Constant, symmTensor);
     makeDataEntryType(PolynomialEntry, symmTensor);
     makeDataEntryType(CSV, symmTensor);
@@ -84,7 +77,6 @@ namespace Foam
     makeDataEntryType(TableFile, symmTensor);
 
     makeDataEntry(tensor);
-    makeDataEntryType(CompatibilityConstant, tensor);
     makeDataEntryType(Constant, tensor);
     makeDataEntryType(PolynomialEntry, tensor);
     makeDataEntryType(CSV, tensor);

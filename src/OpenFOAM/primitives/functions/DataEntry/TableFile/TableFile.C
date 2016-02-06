@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,11 +35,6 @@ Foam::TableFile<Type>::TableFile(const word& entryName, const dictionary& dict)
 {
     const dictionary coeffs(dict.subDict(entryName + "Coeffs"));
     coeffs.lookup("fileName") >> fName_;
-
-    if (coeffs.found("dimensions"))
-    {
-        coeffs.lookup("dimensions") >> this->dimensions_;
-    }
 
     fileName expandedFile(fName_);
     IFstream is(expandedFile.expand());
@@ -76,6 +71,5 @@ Foam::TableFile<Type>::~TableFile()
 // * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
 
 #include "TableFileIO.C"
-
 
 // ************************************************************************* //

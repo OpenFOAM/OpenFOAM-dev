@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "DataEntry.H"
+#include "Constant.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -37,24 +37,16 @@ Foam::autoPtr<Foam::DataEntry<Type>> Foam::DataEntry<Type>::New
     Istream& is(dict.lookup(entryName, false));
 
     token firstToken(is);
-
     word DataEntryType;
-    if (firstToken.isWord())
+
+    if (!firstToken.isWord())
     {
-        // Dimensioned type default compatibility
-        if (firstToken.wordToken() == entryName)
-        {
-            DataEntryType = "CompatibilityConstant";
-        }
-        else
-        {
-            DataEntryType = firstToken.wordToken();
-        }
+        is.putBack(firstToken);
+        return autoPtr<DataEntry<Type>>(new Constant<Type>(entryName, is));
     }
     else
     {
-        // DataEntryType = CompatibilityConstant<Type>::typeName;
-        DataEntryType = "CompatibilityConstant";
+        DataEntryType = firstToken.wordToken();
     }
 
     typename dictionaryConstructorTable::iterator cstrIter =
@@ -71,7 +63,7 @@ Foam::autoPtr<Foam::DataEntry<Type>> Foam::DataEntry<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<DataEntry<Type>>(cstrIter()(entryName, dict));
+    return cstrIter()(entryName, dict);
 }
 
 

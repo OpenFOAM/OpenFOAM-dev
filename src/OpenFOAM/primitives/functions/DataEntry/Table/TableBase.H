@@ -37,7 +37,6 @@ SourceFiles
 
 #include "DataEntry.H"
 #include "Tuple2.H"
-#include "dimensionSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -94,9 +93,6 @@ protected:
 
         //- Table data
         List<Tuple2<scalar, Type>> table_;
-
-        //- The dimension set
-        dimensionSet dimensions_;
 
         //- Extracted values
         mutable autoPtr<scalarField> tableSamplesPtr_;
@@ -162,16 +158,6 @@ public:
 
         //- Integrate between two (scalar) values
         virtual Type integrate(const scalar x1, const scalar x2) const;
-
-        //- Return dimensioned constant value
-        virtual dimensioned<Type> dimValue(const scalar x) const;
-
-        //- Integrate between two values and return dimensioned type
-        virtual dimensioned<Type> dimIntegrate
-        (
-            const scalar x1,
-            const scalar x2
-        ) const;
 
         //- Return the reference values
         virtual tmp<scalarField> x() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,20 +34,13 @@ Foam::Ostream& Foam::operator<<
     const CSV<Type>& tbl
 )
 {
-    if (os.format() == IOstream::ASCII)
-    {
-        os  << static_cast<const DataEntry<Type>& >(tbl)
-            << token::SPACE << tbl.nHeaderLine_
-            << token::SPACE << tbl.timeColumn_
-            << token::SPACE << tbl.componentColumns_
-            << token::SPACE << tbl.separator_
-            << token::SPACE << tbl.mergeSeparators_
-            << token::SPACE << tbl.fileName_;
-    }
-    else
-    {
-        os  << static_cast<const DataEntry<Type>& >(tbl);
-    }
+    os  << static_cast<const DataEntry<Type>& >(tbl)
+        << token::SPACE << tbl.nHeaderLine_
+        << token::SPACE << tbl.timeColumn_
+        << token::SPACE << tbl.componentColumns_
+        << token::SPACE << tbl.separator_
+        << token::SPACE << tbl.mergeSeparators_
+        << token::SPACE << tbl.fileName_;
 
     // Check state of Ostream
     os.check("Ostream& operator<<(Ostream&, const CSV<Type>&)");

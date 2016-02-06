@@ -36,18 +36,10 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
 :
     DataEntry<Type>(entryName),
     coeffs_(),
-    canIntegrate_(true),
-    dimensions_(dimless)
+    canIntegrate_(true)
 {
     Istream& is(dict.lookup(entryName));
     word entryType(is);
-
-    token firstToken(is);
-    is.putBack(firstToken);
-    if (firstToken == token::BEGIN_SQR)
-    {
-        is  >> this->dimensions_;
-    }
 
     is  >> coeffs_;
 
@@ -88,8 +80,7 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
 :
     DataEntry<Type>(entryName),
     coeffs_(coeffs),
-    canIntegrate_(true),
-    dimensions_(dimless)
+    canIntegrate_(true)
 {
     if (!coeffs_.size())
     {
@@ -124,8 +115,7 @@ Foam::PolynomialEntry<Type>::PolynomialEntry(const PolynomialEntry& poly)
 :
     DataEntry<Type>(poly),
     coeffs_(poly.coeffs_),
-    canIntegrate_(poly.canIntegrate_),
-    dimensions_(poly.dimensions_)
+    canIntegrate_(poly.canIntegrate_)
 {}
 
 
@@ -208,35 +198,8 @@ Type Foam::PolynomialEntry<Type>::integrate
 }
 
 
-template<class Type>
-Foam::dimensioned<Type> Foam::PolynomialEntry<Type>::dimValue
-(
-    const scalar x
-) const
-{
-    return dimensioned<Type>("dimensionedValue", dimensions_, value(x));
-}
-
-
-template<class Type>
-Foam::dimensioned<Type> Foam::PolynomialEntry<Type>::dimIntegrate
-(
-    const scalar x1,
-    const scalar x2
-) const
-{
-    return dimensioned<Type>
-    (
-        "dimensionedValue",
-        dimensions_,
-        integrate(x1, x2)
-    );
-}
-
-
 // * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
 
 #include "PolynomialEntryIO.C"
-
 
 // ************************************************************************* //

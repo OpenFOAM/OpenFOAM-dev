@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,20 +34,8 @@ Foam::Ostream& Foam::operator<<
     const PolynomialEntry<Type>& poly
 )
 {
-    if (os.format() == IOstream::ASCII)
-    {
-        os  << static_cast<const DataEntry<Type>& >(poly)
-            << token::SPACE << poly.coeffs_;
-    }
-    else
-    {
-        os  << static_cast<const DataEntry<Type>& >(poly);
-        os.write
-        (
-            reinterpret_cast<const char*>(&poly.coeffs_),
-            sizeof(poly.coeffs_)
-        );
-    }
+    os  << static_cast<const DataEntry<Type>& >(poly)
+        << token::SPACE << poly.coeffs_;
 
     // Check state of Ostream
     os.check

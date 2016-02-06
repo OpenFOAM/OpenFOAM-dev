@@ -41,23 +41,18 @@ SourceFiles
 
 #include "dictionary.H"
 #include "Field.H"
-#include "dimensionedType.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declarations
 class Time;
 
-template<class Type>
-class DataEntry;
-
-template<class Type>
-Ostream& operator<<
-(
-    Ostream&,
-    const DataEntry<Type>&
-);
+// Forward declaration of friend functions and operators
+template<class Type> class DataEntry;
+template<class Type> Ostream& operator<<(Ostream&, const DataEntry<Type>&);
 
 /*---------------------------------------------------------------------------*\
                          Class DataEntry Declaration
@@ -160,30 +155,6 @@ public:
                 const scalarField& x2
             ) const;
 
-            //- Return dimensioned type
-            virtual dimensioned<Type> dimValue(const scalar x) const;
-
-            //- Return dimensioned type as a function of (scalar)
-            virtual tmp<Field<dimensioned<Type>>> dimValue
-            (
-                const scalarField& x
-            ) const;
-
-            //- Integrate between two scalars and return a dimensioned type
-            virtual dimensioned<Type> dimIntegrate
-            (
-                const scalar x1,
-                const scalar x2
-            ) const;
-
-            //- Integrate between two scalar fields and return a field of
-            //  dimensioned type
-            virtual tmp<Field<dimensioned<Type>>> dimIntegrate
-            (
-                const scalarField& x1,
-                const scalarField& x2
-            ) const;
-
 
         // I/O
 
@@ -228,7 +199,7 @@ public:
 
 #ifdef NoRepository
 #   include "DataEntry.C"
-#   include "DataEntryNew.C"
+#   include "Constant.H"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,20 +34,8 @@ Foam::Ostream& Foam::operator<<
     const Constant<Type>& cnst
 )
 {
-    if (os.format() == IOstream::ASCII)
-    {
-        os  << static_cast<const DataEntry<Type>& >(cnst)
-            << token::SPACE << cnst.value_;
-    }
-    else
-    {
-        os  << static_cast<const DataEntry<Type>& >(cnst);
-        os.write
-        (
-            reinterpret_cast<const char*>(&cnst.value_),
-            sizeof(cnst.value_)
-        );
-    }
+    os  << static_cast<const DataEntry<Type>& >(cnst)
+        << token::SPACE << cnst.value_;
 
     // Check state of Ostream
     os.check
