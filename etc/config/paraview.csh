@@ -25,7 +25,7 @@
 #     config/paraview.csh
 #
 # Description
-#     Setup file for paraview-[3-4].x
+#     Setup file for paraview-[3-5].x
 #     Sourced from OpenFOAM-<VERSION>/etc/cshrc or from foamPV alias
 #
 # Note
@@ -54,6 +54,7 @@ end
 #setenv ParaView_VERSION 4.1.0
 #setenv ParaView_VERSION 4.3.1
 setenv ParaView_VERSION 4.4.0
+#setenv ParaView_VERSION 5.0.0
 setenv ParaView_MAJOR detect
 
 

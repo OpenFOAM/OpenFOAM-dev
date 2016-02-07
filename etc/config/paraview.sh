@@ -25,7 +25,7 @@
 #     config/paraview.sh
 #
 # Description
-#     Setup file for paraview-[3-4].x
+#     Setup file for paraview-[3-5].x
 #     Sourced from OpenFOAM-<VERSION>/etc/bashrc or from foamPV alias
 #
 # Note
@@ -56,6 +56,7 @@ done
 #export ParaView_VERSION=4.1.0
 #export ParaView_VERSION=4.3.1
 export ParaView_VERSION=4.4.0
+#export ParaView_VERSION=5.0.0
 export ParaView_MAJOR=detect
 
 
