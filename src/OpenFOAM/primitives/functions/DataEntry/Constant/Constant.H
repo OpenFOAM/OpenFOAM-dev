@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Constant
+    Foam::DataEntryTypes::Constant
 
 Description
     Templated basic entry that holds a constant value.

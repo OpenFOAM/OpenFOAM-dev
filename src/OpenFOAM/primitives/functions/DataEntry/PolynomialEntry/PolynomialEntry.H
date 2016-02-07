@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::PolynomialEntry
+    Foam::DataEntryTypes::PolynomialEntry
 
 Description
     PolynomialEntry container data entry for scalars. Items are stored in a

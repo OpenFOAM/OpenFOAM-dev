@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Table
+    Foam::DataEntryTypes::Table
 
 Description
     Templated table container data entry. Items are stored in a list of

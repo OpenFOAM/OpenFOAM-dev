@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::CSV
+    Foam::DataEntryTypes::CSV
 
 Description
     Templated CSV container data entry.  Reference column is always a scalar,

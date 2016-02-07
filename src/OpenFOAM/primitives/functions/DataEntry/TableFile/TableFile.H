@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::TableFile
+    Foam::DataEntryTypes::TableFile
 
 Description
     Templated table container data entry where data is read from file.
