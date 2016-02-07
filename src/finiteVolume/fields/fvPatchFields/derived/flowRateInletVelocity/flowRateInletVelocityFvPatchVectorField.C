@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
 #include "surfaceFields.H"
+#include "one.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -42,7 +43,8 @@ flowRateInletVelocityFvPatchVectorField
     flowRate_(),
     volumetric_(false),
     rhoName_("rho"),
-    rhoInlet_(0.0)
+    rhoInlet_(0.0),
+    extrapolateProfile_(false)
 {}
 
 
@@ -59,7 +61,8 @@ flowRateInletVelocityFvPatchVectorField
     flowRate_(ptf.flowRate_, false),
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
-    rhoInlet_(ptf.rhoInlet_)
+    rhoInlet_(ptf.rhoInlet_),
+    extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
 
@@ -72,7 +75,11 @@ flowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF),
-    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -VGREAT))
+    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -VGREAT)),
+    extrapolateProfile_
+    (
+        dict.lookupOrDefault<Switch>("extrapolateProfile", false)
+    )
 {
     if (dict.found("volumetricFlowRate"))
     {
@@ -120,7 +127,8 @@ flowRateInletVelocityFvPatchVectorField
     flowRate_(ptf.flowRate_, false),
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
-    rhoInlet_(ptf.rhoInlet_)
+    rhoInlet_(ptf.rhoInlet_),
+    extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
 
@@ -135,11 +143,49 @@ flowRateInletVelocityFvPatchVectorField
     flowRate_(ptf.flowRate_, false),
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
-    rhoInlet_(ptf.rhoInlet_)
+    rhoInlet_(ptf.rhoInlet_),
+    extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class RhoType>
+void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
+(
+    const RhoType& rho
+)
+{
+    const scalar t = db().time().timeOutputValue();
+
+    tmp<vectorField> n = patch().nf();
+
+    if (extrapolateProfile_)
+    {
+        vectorField newValues(this->patchInternalField());
+
+        scalar flowRate = flowRate_->value(t);
+        scalar estimatedFlowRate = -gSum(rho*(this->patch().Sf() & newValues));
+
+        if (estimatedFlowRate/flowRate > 0.5)
+        {
+            newValues *= (mag(flowRate)/mag(estimatedFlowRate));
+        }
+        else
+        {
+            newValues -=
+                ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()))*n;
+        }
+
+        this->operator==(newValues);
+    }
+    else
+    {
+        const scalar avgU = -flowRate_->value(t)/gSum(rho*patch().magSf());
+        operator==(n*avgU);
+    }
+}
+
 
 void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
 {
@@ -148,27 +194,19 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = db().time().timeOutputValue();
-
-    // a simpler way of doing this would be nice
-    const scalar avgU = -flowRate_->value(t)/gSum(patch().magSf());
-
-    tmp<vectorField> n = patch().nf();
-
     if (volumetric_ || rhoName_ == "none")
     {
-        // volumetric flow-rate or density not given
-        operator==(n*avgU);
+        updateValues(one());
     }
     else
     {
-        // mass flow-rate
+        // Mass flow-rate
         if (db().foundObject<volScalarField>(rhoName_))
         {
             const fvPatchField<scalar>& rhop =
                 patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
-            operator==(n*avgU/rhop);
+            updateValues(rhop);
         }
         else
         {
@@ -180,7 +218,8 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
                     << " and no constant density 'rhoInlet' specified"
                     << exit(FatalError);
             }
-            operator==(n*avgU/rhoInlet_);
+
+            updateValues(rhoInlet_);
         }
     }
 
