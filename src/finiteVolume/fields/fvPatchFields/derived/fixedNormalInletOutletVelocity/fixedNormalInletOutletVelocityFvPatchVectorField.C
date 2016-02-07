@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,25 +55,6 @@ fixedNormalInletOutletVelocityFvPatchVectorField
 Foam::fixedNormalInletOutletVelocityFvPatchVectorField::
 fixedNormalInletOutletVelocityFvPatchVectorField
 (
-    const fixedNormalInletOutletVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    directionMixedFvPatchVectorField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_),
-    fixTangentialInflow_(ptf.fixTangentialInflow_),
-    normalVelocity_
-    (
-        fvPatchVectorField::New(ptf.normalVelocity(), p, iF, mapper)
-    )
-{}
-
-
-Foam::fixedNormalInletOutletVelocityFvPatchVectorField::
-fixedNormalInletOutletVelocityFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -92,6 +73,25 @@ fixedNormalInletOutletVelocityFvPatchVectorField
     refGrad() = vector::zero;
     valueFraction() = symmTensor::zero;
 }
+
+
+Foam::fixedNormalInletOutletVelocityFvPatchVectorField::
+fixedNormalInletOutletVelocityFvPatchVectorField
+(
+    const fixedNormalInletOutletVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    directionMixedFvPatchVectorField(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_),
+    fixTangentialInflow_(ptf.fixTangentialInflow_),
+    normalVelocity_
+    (
+        fvPatchVectorField::New(ptf.normalVelocity(), p, iF, mapper)
+    )
+{}
 
 
 Foam::fixedNormalInletOutletVelocityFvPatchVectorField::
