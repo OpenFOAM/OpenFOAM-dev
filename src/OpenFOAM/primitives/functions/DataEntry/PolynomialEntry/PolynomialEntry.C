@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::PolynomialEntry<Type>::PolynomialEntry
+Foam::DataEntryTypes::Polynomial<Type>::Polynomial
 (
     const word& entryName,
     const dictionary& dict
@@ -46,7 +46,7 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
     if (!coeffs_.size())
     {
         FatalErrorInFunction
-            << "PolynomialEntry coefficients for entry " << this->name_
+            << "Polynomial coefficients for entry " << this->name_
             << " are invalid (empty)" << nl << exit(FatalError);
     }
 
@@ -64,7 +64,7 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
         if (!canIntegrate_)
         {
             WarningInFunction
-                << "PolynomialEntry " << this->name_ << " cannot be integrated"
+                << "Polynomial " << this->name_ << " cannot be integrated"
                 << endl;
         }
     }
@@ -72,7 +72,7 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
 
 
 template<class Type>
-Foam::PolynomialEntry<Type>::PolynomialEntry
+Foam::DataEntryTypes::Polynomial<Type>::Polynomial
 (
     const word& entryName,
     const List<Tuple2<Type, Type>>& coeffs
@@ -85,7 +85,7 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
     if (!coeffs_.size())
     {
         FatalErrorInFunction
-            << "PolynomialEntry coefficients for entry " << this->name_
+            << "Polynomial coefficients for entry " << this->name_
             << " are invalid (empty)" << nl << exit(FatalError);
     }
 
@@ -103,7 +103,7 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
         if (!canIntegrate_)
         {
             WarningInFunction
-                << "PolynomialEntry " << this->name_ << " cannot be integrated"
+                << "Polynomial " << this->name_ << " cannot be integrated"
                 << endl;
         }
     }
@@ -111,7 +111,7 @@ Foam::PolynomialEntry<Type>::PolynomialEntry
 
 
 template<class Type>
-Foam::PolynomialEntry<Type>::PolynomialEntry(const PolynomialEntry& poly)
+Foam::DataEntryTypes::Polynomial<Type>::Polynomial(const Polynomial& poly)
 :
     DataEntry<Type>(poly),
     coeffs_(poly.coeffs_),
@@ -122,14 +122,14 @@ Foam::PolynomialEntry<Type>::PolynomialEntry(const PolynomialEntry& poly)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::PolynomialEntry<Type>::~PolynomialEntry()
+Foam::DataEntryTypes::Polynomial<Type>::~Polynomial()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::PolynomialEntry<Type>::convertTimeBase(const Time& t)
+void Foam::DataEntryTypes::Polynomial<Type>::convertTimeBase(const Time& t)
 {
     forAll(coeffs_, i)
     {
@@ -144,7 +144,7 @@ void Foam::PolynomialEntry<Type>::convertTimeBase(const Time& t)
 
 
 template<class Type>
-Type Foam::PolynomialEntry<Type>::value(const scalar x) const
+Type Foam::DataEntryTypes::Polynomial<Type>::value(const scalar x) const
 {
     Type y(pTraits<Type>::zero);
     forAll(coeffs_, i)
@@ -161,7 +161,7 @@ Type Foam::PolynomialEntry<Type>::value(const scalar x) const
 
 
 template<class Type>
-Type Foam::PolynomialEntry<Type>::integrate
+Type Foam::DataEntryTypes::Polynomial<Type>::integrate
 (
     const scalar x1,
     const scalar x2

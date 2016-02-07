@@ -53,15 +53,17 @@ SourceFiles
 namespace Foam
 {
 
-template<class Type>
-class Table;
+// Forward declaration of friend functions and operators
+namespace DataEntryTypes
+{
+    template<class Type> class Table;
+};
 
 template<class Type>
-Ostream& operator<<
-(
-    Ostream&,
-    const Table<Type>&
-);
+Ostream& operator<<(Ostream&, const DataEntryTypes::Table<Type>&);
+
+namespace DataEntryTypes
+{
 
 /*---------------------------------------------------------------------------*\
                            Class Table Declaration
@@ -106,6 +108,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DataEntryTypes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

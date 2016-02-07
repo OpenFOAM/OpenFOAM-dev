@@ -31,7 +31,7 @@ template<class Type>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const Constant<Type>& cnst
+    const DataEntryTypes::Constant<Type>& cnst
 )
 {
     os  << static_cast<const DataEntry<Type>& >(cnst)
@@ -48,7 +48,7 @@ Foam::Ostream& Foam::operator<<
 
 
 template<class Type>
-void Foam::Constant<Type>::writeData(Ostream& os) const
+void Foam::DataEntryTypes::Constant<Type>::writeData(Ostream& os) const
 {
     DataEntry<Type>::writeData(os);
 

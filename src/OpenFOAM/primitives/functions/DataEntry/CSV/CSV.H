@@ -62,15 +62,17 @@ SourceFiles
 namespace Foam
 {
 
-template<class Type>
-class CSV;
+// Forward declaration of friend functions and operators
+namespace DataEntryTypes
+{
+    template<class Type> class CSV;
+};
 
 template<class Type>
-Ostream& operator<<
-(
-    Ostream&,
-    const CSV<Type>&
-);
+Ostream& operator<<(Ostream&, const DataEntryTypes::CSV<Type>&);
+
+namespace DataEntryTypes
+{
 
 /*---------------------------------------------------------------------------*\
                            Class CSV Declaration
@@ -169,8 +171,16 @@ public:
 };
 
 
+template<>
+label CSV<label>::readValue(const List<string>& splitted);
+
+template<>
+Foam::scalar CSV<scalar>::readValue(const List<string>& splitted);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DataEntryTypes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

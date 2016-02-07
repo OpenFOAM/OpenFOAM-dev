@@ -31,7 +31,7 @@ template<class Type>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const CSV<Type>& tbl
+    const DataEntryTypes::CSV<Type>& tbl
 )
 {
     os  << static_cast<const DataEntry<Type>& >(tbl)
@@ -50,7 +50,7 @@ Foam::Ostream& Foam::operator<<
 
 
 template<class Type>
-void Foam::CSV<Type>::writeData(Ostream& os) const
+void Foam::DataEntryTypes::CSV<Type>::writeData(Ostream& os) const
 {
     DataEntry<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;

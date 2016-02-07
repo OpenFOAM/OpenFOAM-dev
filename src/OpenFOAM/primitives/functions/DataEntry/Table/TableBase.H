@@ -43,17 +43,19 @@ SourceFiles
 namespace Foam
 {
 
-template<class Type>
-class TableBase;
-
-template<class Type>
-Ostream& operator<<
-(
-    Ostream&,
-    const TableBase<Type>&
-);
-
 class interpolationWeights;
+
+// Forward declaration of friend functions and operators
+namespace DataEntryTypes
+{
+    template<class Type> class TableBase;
+};
+
+template<class Type>
+Ostream& operator<<(Ostream&, const DataEntryTypes::TableBase<Type>&);
+
+namespace DataEntryTypes
+{
 
 /*---------------------------------------------------------------------------*\
                         Class TableBase Declaration
@@ -186,6 +188,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DataEntryTypes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -31,7 +31,7 @@ template<class Type>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const PolynomialEntry<Type>& poly
+    const DataEntryTypes::Polynomial<Type>& poly
 )
 {
     os  << static_cast<const DataEntry<Type>& >(poly)
@@ -40,7 +40,7 @@ Foam::Ostream& Foam::operator<<
     // Check state of Ostream
     os.check
     (
-        "Ostream& operator<<(Ostream&, const PolynomialEntry&)"
+        "Ostream& operator<<(Ostream&, const Polynomial&)"
     );
 
     return os;
@@ -48,7 +48,7 @@ Foam::Ostream& Foam::operator<<
 
 
 template<class Type>
-void Foam::PolynomialEntry<Type>::writeData(Ostream& os) const
+void Foam::DataEntryTypes::Polynomial<Type>::writeData(Ostream& os) const
 {
     DataEntry<Type>::writeData(os);
 

@@ -48,8 +48,16 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-template<class Type> class Constant;
-template<class Type> Ostream& operator<<(Ostream&, const Constant<Type>&);
+namespace DataEntryTypes
+{
+    template<class Type> class Constant;
+};
+
+template<class Type>
+Ostream& operator<<(Ostream&, const DataEntryTypes::Constant<Type>&);
+
+namespace DataEntryTypes
+{
 
 /*---------------------------------------------------------------------------*\
                            Class Constant Declaration
@@ -127,6 +135,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DataEntryTypes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

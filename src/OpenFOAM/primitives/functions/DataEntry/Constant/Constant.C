@@ -28,7 +28,11 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Constant<Type>::Constant(const word& entryName, const dictionary& dict)
+Foam::DataEntryTypes::Constant<Type>::Constant
+(
+    const word& entryName,
+    const dictionary& dict
+)
 :
     DataEntry<Type>(entryName),
     value_(pTraits<Type>::zero)
@@ -40,7 +44,11 @@ Foam::Constant<Type>::Constant(const word& entryName, const dictionary& dict)
 
 
 template<class Type>
-Foam::Constant<Type>::Constant(const word& entryName, Istream& is)
+Foam::DataEntryTypes::Constant<Type>::Constant
+(
+    const word& entryName,
+    Istream& is
+)
 :
     DataEntry<Type>(entryName),
     value_(pTraits<Type>(is))
@@ -48,7 +56,7 @@ Foam::Constant<Type>::Constant(const word& entryName, Istream& is)
 
 
 template<class Type>
-Foam::Constant<Type>::Constant(const Constant<Type>& cnst)
+Foam::DataEntryTypes::Constant<Type>::Constant(const Constant<Type>& cnst)
 :
     DataEntry<Type>(cnst),
     value_(cnst.value_)
@@ -58,21 +66,25 @@ Foam::Constant<Type>::Constant(const Constant<Type>& cnst)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Constant<Type>::~Constant()
+Foam::DataEntryTypes::Constant<Type>::~Constant()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::Constant<Type>::value(const scalar x) const
+Type Foam::DataEntryTypes::Constant<Type>::value(const scalar x) const
 {
     return value_;
 }
 
 
 template<class Type>
-Type Foam::Constant<Type>::integrate(const scalar x1, const scalar x2) const
+Type Foam::DataEntryTypes::Constant<Type>::integrate
+(
+    const scalar x1,
+    const scalar x2
+) const
 {
     return (x2 - x1)*value_;
 }

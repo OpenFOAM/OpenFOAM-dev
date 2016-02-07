@@ -55,22 +55,29 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-template<class Type> class PolynomialEntry;
+namespace DataEntryTypes
+{
+    template<class Type> class Polynomial;
+};
+
 template<class Type>
-Ostream& operator<<(Ostream&, const PolynomialEntry<Type>&);
+Ostream& operator<<(Ostream&, const DataEntryTypes::Polynomial<Type>&);
+
+namespace DataEntryTypes
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class PolynomialEntry Declaration
+                        Class Polynomial Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class PolynomialEntry
+class Polynomial
 :
     public DataEntry<Type>
 {
     // Private data
 
-        //- PolynomialEntry coefficients - list of prefactor, exponent
+        //- Polynomial coefficients - list of prefactor, exponent
         List<Tuple2<Type, Type>> coeffs_;
 
         //- Flag to indicate whether poly can be integrated
@@ -80,7 +87,7 @@ class PolynomialEntry
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const PolynomialEntry<Type>&);
+        void operator=(const Polynomial<Type>&);
 
 
 public:
@@ -91,27 +98,27 @@ public:
 
     // Constructors
 
-        PolynomialEntry(const word& entryName, const dictionary& dict);
+        Polynomial(const word& entryName, const dictionary& dict);
 
         //- Construct from components
-        PolynomialEntry
+        Polynomial
         (
             const word& entryName,
             const List<Tuple2<Type, Type>>&
         );
 
         //- Copy constructor
-        PolynomialEntry(const PolynomialEntry& poly);
+        Polynomial(const Polynomial& poly);
 
         //- Construct and return a clone
         virtual tmp<DataEntry<Type>> clone() const
         {
-            return tmp<DataEntry<Type>>(new PolynomialEntry(*this));
+            return tmp<DataEntry<Type>>(new Polynomial(*this));
         }
 
 
     //- Destructor
-    virtual ~PolynomialEntry();
+    virtual ~Polynomial();
 
 
     // Member Functions
@@ -124,7 +131,7 @@ public:
 
         // Evaluation
 
-            //- Return PolynomialEntry value
+            //- Return Polynomial value
             Type value(const scalar x) const;
 
             //- Integrate between two (scalar) values
@@ -137,7 +144,7 @@ public:
         friend Ostream& operator<< <Type>
         (
             Ostream& os,
-            const PolynomialEntry<Type>& cnst
+            const Polynomial<Type>& cnst
         );
 
         //- Write in dictionary format
@@ -147,6 +154,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DataEntryTypes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -30,7 +30,8 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-const Foam::interpolationWeights& Foam::TableBase<Type>::interpolator() const
+const Foam::interpolationWeights&
+Foam::DataEntryTypes::TableBase<Type>::interpolator() const
 {
     if (interpolatorPtr_.empty())
     {
@@ -55,7 +56,11 @@ const Foam::interpolationWeights& Foam::TableBase<Type>::interpolator() const
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableBase<Type>::TableBase(const word& name, const dictionary& dict)
+Foam::DataEntryTypes::TableBase<Type>::TableBase
+(
+    const word& name,
+    const dictionary& dict
+)
 :
     DataEntry<Type>(name),
     name_(name),
@@ -75,7 +80,7 @@ Foam::TableBase<Type>::TableBase(const word& name, const dictionary& dict)
 
 
 template<class Type>
-Foam::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
+Foam::DataEntryTypes::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
 :
     DataEntry<Type>(tbl),
     name_(tbl.name_),
@@ -90,14 +95,14 @@ Foam::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableBase<Type>::~TableBase()
+Foam::DataEntryTypes::TableBase<Type>::~TableBase()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::word Foam::TableBase<Type>::boundsHandlingToWord
+Foam::word Foam::DataEntryTypes::TableBase<Type>::boundsHandlingToWord
 (
      const boundsHandling& bound
 ) const
@@ -133,8 +138,8 @@ Foam::word Foam::TableBase<Type>::boundsHandlingToWord
 
 
 template<class Type>
-typename Foam::TableBase<Type>::boundsHandling
-Foam::TableBase<Type>::wordToBoundsHandling
+typename Foam::DataEntryTypes::TableBase<Type>::boundsHandling
+Foam::DataEntryTypes::TableBase<Type>::wordToBoundsHandling
 (
     const word& bound
 ) const
@@ -167,8 +172,8 @@ Foam::TableBase<Type>::wordToBoundsHandling
 
 
 template<class Type>
-typename Foam::TableBase<Type>::boundsHandling
-Foam::TableBase<Type>::outOfBounds
+typename Foam::DataEntryTypes::TableBase<Type>::boundsHandling
+Foam::DataEntryTypes::TableBase<Type>::outOfBounds
 (
     const boundsHandling& bound
 )
@@ -181,7 +186,7 @@ Foam::TableBase<Type>::outOfBounds
 
 
 template<class Type>
-void Foam::TableBase<Type>::check() const
+void Foam::DataEntryTypes::TableBase<Type>::check() const
 {
     if (!table_.size())
     {
@@ -210,7 +215,7 @@ void Foam::TableBase<Type>::check() const
 
 
 template<class Type>
-bool Foam::TableBase<Type>::checkMinBounds
+bool Foam::DataEntryTypes::TableBase<Type>::checkMinBounds
 (
     const scalar x,
     scalar& xDash
@@ -260,7 +265,7 @@ bool Foam::TableBase<Type>::checkMinBounds
 
 
 template<class Type>
-bool Foam::TableBase<Type>::checkMaxBounds
+bool Foam::DataEntryTypes::TableBase<Type>::checkMaxBounds
 (
     const scalar x,
     scalar& xDash
@@ -310,7 +315,7 @@ bool Foam::TableBase<Type>::checkMaxBounds
 
 
 template<class Type>
-void Foam::TableBase<Type>::convertTimeBase(const Time& t)
+void Foam::DataEntryTypes::TableBase<Type>::convertTimeBase(const Time& t)
 {
     forAll(table_, i)
     {
@@ -324,7 +329,7 @@ void Foam::TableBase<Type>::convertTimeBase(const Time& t)
 
 
 template<class Type>
-Type Foam::TableBase<Type>::value(const scalar x) const
+Type Foam::DataEntryTypes::TableBase<Type>::value(const scalar x) const
 {
     scalar xDash = x;
 
@@ -352,7 +357,11 @@ Type Foam::TableBase<Type>::value(const scalar x) const
 
 
 template<class Type>
-Type Foam::TableBase<Type>::integrate(const scalar x1, const scalar x2) const
+Type Foam::DataEntryTypes::TableBase<Type>::integrate
+(
+    const scalar x1,
+    const scalar x2
+) const
 {
     // Use interpolator
     interpolator().integrationWeights(x1, x2, currentIndices_, currentWeights_);
@@ -368,7 +377,7 @@ Type Foam::TableBase<Type>::integrate(const scalar x1, const scalar x2) const
 
 
 template<class Type>
-Foam::tmp<Foam::scalarField> Foam::TableBase<Type>::x() const
+Foam::tmp<Foam::scalarField> Foam::DataEntryTypes::TableBase<Type>::x() const
 {
     tmp<scalarField> tfld(new scalarField(table_.size(), 0.0));
     scalarField& fld = tfld();
@@ -383,7 +392,7 @@ Foam::tmp<Foam::scalarField> Foam::TableBase<Type>::x() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::TableBase<Type>::y() const
+Foam::tmp<Foam::Field<Type>> Foam::DataEntryTypes::TableBase<Type>::y() const
 {
     tmp<Field<Type>> tfld(new Field<Type>(table_.size(), pTraits<Type>::zero));
     Field<Type>& fld = tfld();

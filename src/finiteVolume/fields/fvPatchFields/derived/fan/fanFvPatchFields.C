@@ -98,7 +98,7 @@ Foam::fanFvPatchField<Foam::scalar>::fanFvPatchField
 
             this->jumpTable_.reset
             (
-                new PolynomialEntry<scalar>("jumpTable", coeffs)
+                new DataEntryTypes::Polynomial<scalar>("jumpTable", coeffs)
             );
         }
         else

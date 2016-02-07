@@ -43,42 +43,42 @@ namespace Foam
 
     // Polynomial functions and interpolation do evaluate to label
     // Instead evaluate a scalar and convert to label as appropriate
-    // makeDataEntryType(PolynomialEntry, label);
+    // makeDataEntryType(Polynomial, label);
     // makeDataEntryType(CSV, label);
     // makeDataEntryType(Table, label);
     // makeDataEntryType(TableFile, label);
 
     makeDataEntry(scalar);
     makeDataEntryType(Constant, scalar);
-    makeDataEntryType(PolynomialEntry, scalar);
+    makeDataEntryType(Polynomial, scalar);
     makeDataEntryType(CSV, scalar);
     makeDataEntryType(Table, scalar);
     makeDataEntryType(TableFile, scalar);
 
     makeDataEntry(vector);
     makeDataEntryType(Constant, vector);
-    makeDataEntryType(PolynomialEntry, vector);
+    makeDataEntryType(Polynomial, vector);
     makeDataEntryType(CSV, vector);
     makeDataEntryType(Table, vector);
     makeDataEntryType(TableFile, vector);
 
     makeDataEntry(sphericalTensor);
     makeDataEntryType(Constant, sphericalTensor);
-    makeDataEntryType(PolynomialEntry, sphericalTensor);
+    makeDataEntryType(Polynomial, sphericalTensor);
     makeDataEntryType(CSV, sphericalTensor);
     makeDataEntryType(Table, sphericalTensor);
     makeDataEntryType(TableFile, sphericalTensor);
 
     makeDataEntry(symmTensor);
     makeDataEntryType(Constant, symmTensor);
-    makeDataEntryType(PolynomialEntry, symmTensor);
+    makeDataEntryType(Polynomial, symmTensor);
     makeDataEntryType(CSV, symmTensor);
     makeDataEntryType(Table, symmTensor);
     makeDataEntryType(TableFile, symmTensor);
 
     makeDataEntry(tensor);
     makeDataEntryType(Constant, tensor);
-    makeDataEntryType(PolynomialEntry, tensor);
+    makeDataEntryType(Polynomial, tensor);
     makeDataEntryType(CSV, tensor);
     makeDataEntryType(Table, tensor);
     makeDataEntryType(TableFile, tensor);

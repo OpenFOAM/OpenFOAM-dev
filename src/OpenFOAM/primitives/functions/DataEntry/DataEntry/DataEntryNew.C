@@ -42,7 +42,10 @@ Foam::autoPtr<Foam::DataEntry<Type>> Foam::DataEntry<Type>::New
     if (!firstToken.isWord())
     {
         is.putBack(firstToken);
-        return autoPtr<DataEntry<Type>>(new Constant<Type>(entryName, is));
+        return autoPtr<DataEntry<Type>>
+        (
+            new DataEntryTypes::Constant<Type>(entryName, is)
+        );
     }
     else
     {

@@ -189,9 +189,9 @@ public:
 
 #define makeDataEntryType(SS, Type)                                            \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
+    defineNamedTemplateTypeNameAndDebug(DataEntryTypes::SS<Type>, 0);          \
                                                                                \
-    DataEntry<Type>::adddictionaryConstructorToTable<SS<Type>>                 \
+    DataEntry<Type>::adddictionaryConstructorToTable<DataEntryTypes::SS<Type>> \
         add##SS##Type##ConstructorToTable_;
 
 

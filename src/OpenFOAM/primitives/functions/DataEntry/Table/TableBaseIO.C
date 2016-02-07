@@ -31,7 +31,7 @@ template<class Type>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const TableBase<Type>& tbl
+    const DataEntryTypes::TableBase<Type>& tbl
 )
 {
     os  << static_cast<const DataEntry<Type>&>(tbl);
@@ -48,7 +48,7 @@ Foam::Ostream& Foam::operator<<
 
 
 template<class Type>
-void Foam::TableBase<Type>::writeData(Ostream& os) const
+void Foam::DataEntryTypes::TableBase<Type>::writeData(Ostream& os) const
 {
     DataEntry<Type>::writeData(os);
     os  << nl << indent << table_ << token::END_STATEMENT << nl;
@@ -57,7 +57,7 @@ void Foam::TableBase<Type>::writeData(Ostream& os) const
 
 
 template<class Type>
-void Foam::TableBase<Type>::writeEntries(Ostream& os) const
+void Foam::DataEntryTypes::TableBase<Type>::writeEntries(Ostream& os) const
 {
     if (boundsHandling_ != CLAMP)
     {

@@ -29,63 +29,67 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-namespace Foam
+template<>
+Foam::label Foam::DataEntryTypes::CSV<Foam::label>::readValue
+(
+    const List<string>& splitted
+)
 {
-    template<>
-    label CSV<label>::readValue(const List<string>& splitted)
+    if (componentColumns_[0] >= splitted.size())
     {
-        if (componentColumns_[0] >= splitted.size())
-        {
-            FatalErrorInFunction
-                << "No column " << componentColumns_[0] << " in "
-                << splitted << endl
-                << exit(FatalError);
-        }
-
-        return readLabel(IStringStream(splitted[componentColumns_[0]])());
+        FatalErrorInFunction
+            << "No column " << componentColumns_[0] << " in "
+            << splitted << endl
+            << exit(FatalError);
     }
 
-    template<>
-    scalar CSV<scalar>::readValue(const List<string>& splitted)
-    {
-        if (componentColumns_[0] >= splitted.size())
-        {
-            FatalErrorInFunction
-                << "No column " << componentColumns_[0] << " in "
-                << splitted << endl
-                << exit(FatalError);
-        }
+    return readLabel(IStringStream(splitted[componentColumns_[0]])());
+}
 
-        return readScalar(IStringStream(splitted[componentColumns_[0]])());
+
+template<>
+Foam::scalar Foam::DataEntryTypes::CSV<Foam::scalar>::readValue
+(
+    const List<string>& splitted
+)
+{
+    if (componentColumns_[0] >= splitted.size())
+    {
+        FatalErrorInFunction
+            << "No column " << componentColumns_[0] << " in "
+            << splitted << endl
+            << exit(FatalError);
     }
 
-
-    template<class Type>
-    Type CSV<Type>::readValue(const List<string>& splitted)
-    {
-        Type result;
-
-        for (label i = 0; i < pTraits<Type>::nComponents; i++)
-        {
-            if (componentColumns_[i] >= splitted.size())
-            {
-                FatalErrorInFunction
-                    << "No column " << componentColumns_[i] << " in "
-                    << splitted << endl
-                    << exit(FatalError);
-            }
-
-            result[i] =
-                readScalar(IStringStream(splitted[componentColumns_[i]])());
-        }
-
-        return result;
-    }
+    return readScalar(IStringStream(splitted[componentColumns_[0]])());
 }
 
 
 template<class Type>
-void Foam::CSV<Type>::read()
+Type Foam::DataEntryTypes::CSV<Type>::readValue(const List<string>& splitted)
+{
+    Type result;
+
+    for (label i = 0; i < pTraits<Type>::nComponents; i++)
+    {
+        if (componentColumns_[i] >= splitted.size())
+        {
+            FatalErrorInFunction
+            << "No column " << componentColumns_[i] << " in "
+                << splitted << endl
+                << exit(FatalError);
+        }
+
+        result[i] =
+        readScalar(IStringStream(splitted[componentColumns_[i]])());
+    }
+
+    return result;
+}
+
+
+template<class Type>
+void Foam::DataEntryTypes::CSV<Type>::read()
 {
     fileName expandedFile(fName_);
     IFstream is(expandedFile.expand());
@@ -196,7 +200,7 @@ void Foam::CSV<Type>::read()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::CSV<Type>::CSV
+Foam::DataEntryTypes::CSV<Type>::CSV
 (
     const word& entryName,
     const dictionary& dict,
@@ -227,7 +231,7 @@ Foam::CSV<Type>::CSV
 
 
 template<class Type>
-Foam::CSV<Type>::CSV(const CSV<Type>& tbl)
+Foam::DataEntryTypes::CSV<Type>::CSV(const CSV<Type>& tbl)
 :
     TableBase<Type>(tbl),
     nHeaderLine_(tbl.nHeaderLine_),
@@ -242,14 +246,14 @@ Foam::CSV<Type>::CSV(const CSV<Type>& tbl)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::CSV<Type>::~CSV()
+Foam::DataEntryTypes::CSV<Type>::~CSV()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-const Foam::fileName& Foam::CSV<Type>::fName() const
+const Foam::fileName& Foam::DataEntryTypes::CSV<Type>::fName() const
 {
     return fName_;
 }

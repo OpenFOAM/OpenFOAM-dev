@@ -28,7 +28,11 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Table<Type>::Table(const word& entryName, const dictionary& dict)
+Foam::DataEntryTypes::Table<Type>::Table
+(
+    const word& entryName,
+    const dictionary& dict
+)
 :
     TableBase<Type>(entryName, dict)
 {
@@ -40,7 +44,7 @@ Foam::Table<Type>::Table(const word& entryName, const dictionary& dict)
 
 
 template<class Type>
-Foam::Table<Type>::Table(const Table<Type>& tbl)
+Foam::DataEntryTypes::Table<Type>::Table(const Table<Type>& tbl)
 :
     TableBase<Type>(tbl)
 {}
@@ -49,7 +53,7 @@ Foam::Table<Type>::Table(const Table<Type>& tbl)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Table<Type>::~Table()
+Foam::DataEntryTypes::Table<Type>::~Table()
 {}
 
 

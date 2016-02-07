@@ -28,7 +28,11 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableFile<Type>::TableFile(const word& entryName, const dictionary& dict)
+Foam::DataEntryTypes::TableFile<Type>::TableFile
+(
+    const word& entryName,
+    const dictionary& dict
+)
 :
     TableBase<Type>(entryName, dict.subDict(entryName + "Coeffs")),
     fName_("none")
@@ -54,7 +58,7 @@ Foam::TableFile<Type>::TableFile(const word& entryName, const dictionary& dict)
 
 
 template<class Type>
-Foam::TableFile<Type>::TableFile(const TableFile<Type>& tbl)
+Foam::DataEntryTypes::TableFile<Type>::TableFile(const TableFile<Type>& tbl)
 :
     TableBase<Type>(tbl),
     fName_(tbl.fName_)
@@ -64,7 +68,7 @@ Foam::TableFile<Type>::TableFile(const TableFile<Type>& tbl)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableFile<Type>::~TableFile()
+Foam::DataEntryTypes::TableFile<Type>::~TableFile()
 {}
 
 
