@@ -25,6 +25,7 @@ License
 
 #include "Constant.H"
 #include "PolynomialEntry.H"
+#include "Sine.H"
 #include "CSV.H"
 #include "Table.H"
 #include "TableFile.H"
@@ -40,17 +41,13 @@ namespace Foam
 {
     makeDataEntry(label);
     makeDataEntryType(Constant, label);
-
     // Polynomial functions and interpolation do evaluate to label
     // Instead evaluate a scalar and convert to label as appropriate
-    // makeDataEntryType(Polynomial, label);
-    // makeDataEntryType(CSV, label);
-    // makeDataEntryType(Table, label);
-    // makeDataEntryType(TableFile, label);
 
     makeDataEntry(scalar);
     makeDataEntryType(Constant, scalar);
     makeDataEntryType(Polynomial, scalar);
+    makeDataEntryType(Sine, scalar);
     makeDataEntryType(CSV, scalar);
     makeDataEntryType(Table, scalar);
     makeDataEntryType(TableFile, scalar);
@@ -58,6 +55,7 @@ namespace Foam
     makeDataEntry(vector);
     makeDataEntryType(Constant, vector);
     makeDataEntryType(Polynomial, vector);
+    makeDataEntryType(Sine, vector);
     makeDataEntryType(CSV, vector);
     makeDataEntryType(Table, vector);
     makeDataEntryType(TableFile, vector);
@@ -65,6 +63,7 @@ namespace Foam
     makeDataEntry(sphericalTensor);
     makeDataEntryType(Constant, sphericalTensor);
     makeDataEntryType(Polynomial, sphericalTensor);
+    makeDataEntryType(Sine, sphericalTensor);
     makeDataEntryType(CSV, sphericalTensor);
     makeDataEntryType(Table, sphericalTensor);
     makeDataEntryType(TableFile, sphericalTensor);
@@ -72,6 +71,7 @@ namespace Foam
     makeDataEntry(symmTensor);
     makeDataEntryType(Constant, symmTensor);
     makeDataEntryType(Polynomial, symmTensor);
+    makeDataEntryType(Sine, symmTensor);
     makeDataEntryType(CSV, symmTensor);
     makeDataEntryType(Table, symmTensor);
     makeDataEntryType(TableFile, symmTensor);
@@ -79,6 +79,7 @@ namespace Foam
     makeDataEntry(tensor);
     makeDataEntryType(Constant, tensor);
     makeDataEntryType(Polynomial, tensor);
+    makeDataEntryType(Sine, tensor);
     makeDataEntryType(CSV, tensor);
     makeDataEntryType(Table, tensor);
     makeDataEntryType(TableFile, tensor);
