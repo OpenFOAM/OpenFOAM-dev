@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,11 +72,15 @@ int main(int argc, char *argv[])
     list1.printInfo(Info, true);
 
     Info<< "\ntest assign between references, with chaining\n";
-    list1[0] = list1[4] = 1;
+    list1[0] = 1;
+    list1[4] = 1;
     list1.printInfo(Info, true);
 
     Info<< "\ntest assign between references, with chaining and auto-vivify\n";
-    list1[1] = list1[8] = list1[10] = list1[14] = 2;
+    list1[1] = 2;
+    list1[8] = 2;
+    list1[10] = 2;
+    list1[14] = 2;
     list1.printInfo(Info, true);
 
 
