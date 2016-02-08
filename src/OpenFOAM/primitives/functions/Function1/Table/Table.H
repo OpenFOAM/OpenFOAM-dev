@@ -52,16 +52,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of friend functions and operators
-namespace Function1Types
-{
-    template<class Type> class Table;
-};
-
-template<class Type>
-Ostream& operator<<(Ostream&, const Function1Types::Table<Type>&);
-
 namespace Function1Types
 {
 

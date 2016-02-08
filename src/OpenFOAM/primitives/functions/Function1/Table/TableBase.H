@@ -45,15 +45,6 @@ namespace Foam
 
 class interpolationWeights;
 
-// Forward declaration of friend functions and operators
-namespace Function1Types
-{
-    template<class Type> class TableBase;
-};
-
-template<class Type>
-Ostream& operator<<(Ostream&, const Function1Types::TableBase<Type>&);
-
 namespace Function1Types
 {
 
@@ -166,16 +157,6 @@ public:
 
         //- Return the dependent values
         virtual tmp<Field<Type>> y() const;
-
-
-    // I/O
-
-        //- Ostream Operator
-        friend Ostream& operator<< <Type>
-        (
-            Ostream& os,
-            const TableBase<Type>& tbl
-        );
 
         //- Write all table data in dictionary format
         virtual void writeData(Ostream& os) const;

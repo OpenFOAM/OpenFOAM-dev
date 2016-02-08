@@ -28,26 +28,6 @@ License
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const Function1Types::Polynomial<Type>& poly
-)
-{
-    os  << static_cast<const Function1<Type>& >(poly)
-        << token::SPACE << poly.coeffs_;
-
-    // Check state of Ostream
-    os.check
-    (
-        "Ostream& operator<<(Ostream&, const Polynomial&)"
-    );
-
-    return os;
-}
-
-
-template<class Type>
 void Foam::Function1Types::Polynomial<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);

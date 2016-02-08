@@ -53,16 +53,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of friend functions and operators
-namespace Function1Types
-{
-    template<class Type> class Polynomial;
-};
-
-template<class Type>
-Ostream& operator<<(Ostream&, const Function1Types::Polynomial<Type>&);
-
 namespace Function1Types
 {
 
@@ -137,15 +127,6 @@ public:
             //- Integrate between two (scalar) values
             Type integrate(const scalar x1, const scalar x2) const;
 
-
-    // I/O
-
-        //- Ostream Operator
-        friend Ostream& operator<< <Type>
-        (
-            Ostream& os,
-            const Polynomial<Type>& cnst
-        );
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;

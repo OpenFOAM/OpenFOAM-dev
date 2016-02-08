@@ -31,7 +31,7 @@ template<class Type>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const Function1<Type>& de
+    const Function1<Type>& f1
 )
 {
     // Check state of Ostream
@@ -40,7 +40,8 @@ Foam::Ostream& Foam::operator<<
         "Ostream& operator<<(Ostream&, const Function1<Type>&)"
     );
 
-    os  << de.name_;
+    os  << f1.name_;
+    f1.writeData(os);
 
     return os;
 }

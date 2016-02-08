@@ -61,16 +61,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of friend functions and operators
-namespace Function1Types
-{
-    template<class Type> class CSV;
-};
-
-template<class Type>
-Ostream& operator<<(Ostream&, const Function1Types::CSV<Type>&);
-
 namespace Function1Types
 {
 
@@ -151,20 +141,8 @@ public:
 
     // Member Functions
 
-        // Access
-
-            //- Return const access to the file name
-            virtual const fileName& fName() const;
-
-
-    // I/O
-
-        //- Ostream Operator
-        friend Ostream& operator<< <Type>
-        (
-            Ostream& os,
-            const CSV<Type>& cnst
-        );
+        //- Return const access to the file name
+        virtual const fileName& fName() const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;

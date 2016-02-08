@@ -28,28 +28,6 @@ License
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const Function1Types::CSV<Type>& tbl
-)
-{
-    os  << static_cast<const Function1<Type>& >(tbl)
-        << token::SPACE << tbl.nHeaderLine_
-        << token::SPACE << tbl.timeColumn_
-        << token::SPACE << tbl.componentColumns_
-        << token::SPACE << tbl.separator_
-        << token::SPACE << tbl.mergeSeparators_
-        << token::SPACE << tbl.fileName_;
-
-    // Check state of Ostream
-    os.check("Ostream& operator<<(Ostream&, const CSV<Type>&)");
-
-    return os;
-}
-
-
-template<class Type>
 void Foam::Function1Types::CSV<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
