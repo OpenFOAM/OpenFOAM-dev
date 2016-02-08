@@ -126,7 +126,7 @@ class Sine
         void read(const dictionary& coeffs);
 
         //- Disallow default bitwise assignment
-        void operator===(const Sine<Type>&);
+        void operator=(const Sine<Type>&);
 
 
 public:
