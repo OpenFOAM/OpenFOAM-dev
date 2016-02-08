@@ -57,7 +57,7 @@ SourceFiles
 #define temperatureDependentAlphaContactAngleFvPatchScalarField_H
 
 #include "alphaContactAngleFvPatchScalarField.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,7 +78,7 @@ class temperatureDependentAlphaContactAngleFvPatchScalarField
         word TName_;
 
         //- Equilibrium contact angle table
-        autoPtr<DataEntry<scalar>> theta0_;
+        autoPtr<Function1<scalar>> theta0_;
 
 
 public:

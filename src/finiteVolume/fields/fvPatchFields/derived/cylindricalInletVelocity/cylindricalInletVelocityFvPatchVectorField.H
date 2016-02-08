@@ -57,13 +57,13 @@ Description
     \endverbatim
 
 Note
-    The \c axialVelocity, \c radialVelocity and \c rpm entries are DataEntry
+    The \c axialVelocity, \c radialVelocity and \c rpm entries are Function1
     types, able to describe time varying functions.  The example above gives
     the usage for supplying constant values.
 
 SeeAlso
     Foam::fixedValueFvPatchField
-    Foam::DataEntry
+    Foam::Function1
 
 SourceFiles
     cylindricalInletVelocityFvPatchVectorField.C
@@ -74,7 +74,7 @@ SourceFiles
 #define cylindricalInletVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,13 +97,13 @@ class cylindricalInletVelocityFvPatchVectorField
         const vector axis_;
 
         //- Axial velocity
-        autoPtr<DataEntry<scalar>> axialVelocity_;
+        autoPtr<Function1<scalar>> axialVelocity_;
 
         //- Radial velocity
-        autoPtr<DataEntry<scalar>> radialVelocity_;
+        autoPtr<Function1<scalar>> radialVelocity_;
 
         //- RPM
-        autoPtr<DataEntry<scalar>> rpm_;
+        autoPtr<Function1<scalar>> rpm_;
 
 
 public:

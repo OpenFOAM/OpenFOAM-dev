@@ -72,7 +72,7 @@ primitives/septernion/septernion.C
 primitives/triad/triad.C
 
 /* functions, data entries */
-primitives/functions/DataEntry/makeDataEntries.C
+primitives/functions/Function1/makeDataEntries.C
 primitives/functions/Polynomial/polynomialFunction.C
 
 primitives/subModelBase/subModelBase.C

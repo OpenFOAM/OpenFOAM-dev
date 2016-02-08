@@ -59,7 +59,7 @@ Description
     }
     \endverbatim
 
-    The \c omega entry is a DataEntry type, able to describe time varying
+    The \c omega entry is a Function1 type, able to describe time varying
     functions.
 
 SeeAlso
@@ -74,7 +74,7 @@ SourceFiles
 #define rotatingTotalPressureFvPatchScalarField_H
 
 #include "totalPressureFvPatchScalarField.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -92,7 +92,7 @@ class rotatingTotalPressureFvPatchScalarField
     // Private data
 
         //- Angular velocity of the frame
-        autoPtr<DataEntry<vector>> omega_;
+        autoPtr<Function1<vector>> omega_;
 
 
 public:

@@ -69,12 +69,12 @@ Description
     \endverbatim
 
 Note
-    The amplitude and frequency entries are DataEntry types, able to describe
+    The amplitude and frequency entries are Function1 types, able to describe
     time varying functions.  The example above gives the usage for supplying
     constant values.
 
 SeeAlso
-    Foam::DataEntry
+    Foam::Function1
 
 SourceFiles
     oscillatingFixedValueFvPatchField.C
@@ -86,7 +86,7 @@ SourceFiles
 
 #include "Random.H"
 #include "fixedValueFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -111,10 +111,10 @@ class oscillatingFixedValueFvPatchField
         Type offset_;
 
         //- Amplitude
-        autoPtr<DataEntry<scalar>> amplitude_;
+        autoPtr<Function1<scalar>> amplitude_;
 
         //- Frequency
-        autoPtr<DataEntry<scalar>> frequency_;
+        autoPtr<Function1<scalar>> frequency_;
 
         //- Current time index
         label curTimeIndex_;

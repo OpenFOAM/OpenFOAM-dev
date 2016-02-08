@@ -84,10 +84,10 @@ class InflationInjection
         scalar duration_;
 
         //- Flow rate profile relative to SOI [m3/s]
-        TimeDataEntry<scalar> flowRateProfile_;
+        TimeFunction1<scalar> flowRateProfile_;
 
         //- Growth rate of particle diameters towards target [m/s]
-        TimeDataEntry<scalar> growthRate_;
+        TimeFunction1<scalar> growthRate_;
 
         //- Positions, velocities, diameters and target diameters of
         //  new particles after splitting

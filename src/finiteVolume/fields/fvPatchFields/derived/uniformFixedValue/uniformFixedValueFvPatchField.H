@@ -47,12 +47,12 @@ Description
     \endverbatim
 
 Note
-    The uniformValue entry is a DataEntry type, able to describe time
+    The uniformValue entry is a Function1 type, able to describe time
     varying functions.  The example above gives the usage for supplying a
     constant value.
 
 SeeAlso
-    Foam::DataEntry
+    Foam::Function1
     Foam::fixedValueFvPatchField
 
 SourceFiles
@@ -64,7 +64,7 @@ SourceFiles
 #define uniformFixedValueFvPatchField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,7 +82,7 @@ class uniformFixedValueFvPatchField
 {
     // Private data
 
-        autoPtr<DataEntry<Type>> uniformValue_;
+        autoPtr<Function1<Type>> uniformValue_;
 
 
 public:

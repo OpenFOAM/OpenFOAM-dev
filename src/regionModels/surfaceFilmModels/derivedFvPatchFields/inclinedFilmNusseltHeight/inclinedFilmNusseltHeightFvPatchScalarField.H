@@ -39,7 +39,7 @@ SourceFiles
 
 #include "fvPatchFields.H"
 #include "fixedValueFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,13 +57,13 @@ class inclinedFilmNusseltHeightFvPatchScalarField
     // Private data
 
         //- Mean mass flow rate per unit length [kg/s/m]
-        autoPtr<DataEntry<scalar>> GammaMean_;
+        autoPtr<Function1<scalar>> GammaMean_;
 
         //- Perturbation amplitude [m]
-        autoPtr<DataEntry<scalar>> a_;
+        autoPtr<Function1<scalar>> a_;
 
         //- Perturbation frequency [rad/s/m]
-        autoPtr<DataEntry<scalar>> omega_;
+        autoPtr<Function1<scalar>> omega_;
 
 
 public:

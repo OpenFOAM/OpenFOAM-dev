@@ -63,7 +63,7 @@ namespace Foam
 // Forward declaration of classes
 
 template<class Type>
-class TimeDataEntry;
+class TimeFunction1;
 
 class distributionModel;
 
@@ -132,13 +132,13 @@ private:
         const label parcelsPerSecond_;
 
         //- Flow rate profile relative to SOI []
-        const TimeDataEntry<scalar> flowRateProfile_;
+        const TimeFunction1<scalar> flowRateProfile_;
 
         //- Inner half-cone angle relative to SOI [deg]
-        const TimeDataEntry<scalar> thetaInner_;
+        const TimeFunction1<scalar> thetaInner_;
 
         //- Outer half-cone angle relative to SOI [deg]
-        const TimeDataEntry<scalar> thetaOuter_;
+        const TimeFunction1<scalar> thetaOuter_;
 
         //- Parcel size PDF model
         const autoPtr<distributionModels::distributionModel> sizeDistribution_;
@@ -162,10 +162,10 @@ private:
             scalar UMag_;
 
             //- Discharge coefficient, relative to SOI [m/s]
-            TimeDataEntry<scalar> Cd_;
+            TimeFunction1<scalar> Cd_;
 
             //- Injection pressure [Pa]
-            TimeDataEntry<scalar> Pinj_;
+            TimeFunction1<scalar> Pinj_;
 
 
     // Private Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ temperatureDependentAlphaContactAngleFvPatchScalarField
 :
     alphaContactAngleFvPatchScalarField(p, iF, dict),
     TName_(dict.lookupOrDefault<word>("T", "T")),
-    theta0_(DataEntry<scalar>::New("theta0", dict))
+    theta0_(Function1<scalar>::New("theta0", dict))
 {
     evaluate();
 }

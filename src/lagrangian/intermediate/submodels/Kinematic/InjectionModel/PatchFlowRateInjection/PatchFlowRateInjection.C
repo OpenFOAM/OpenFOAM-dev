@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PatchFlowRateInjection.H"
-#include "TimeDataEntry.H"
+#include "TimeFunction1.H"
 #include "distributionModel.H"
 #include "mathematicalConstants.H"
 #include "surfaceFields.H"
@@ -46,7 +46,7 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     duration_(readScalar(this->coeffDict().lookup("duration"))),
     concentration_
     (
-        TimeDataEntry<scalar>
+        TimeFunction1<scalar>
         (
             owner.db().time(),
             "concentration",

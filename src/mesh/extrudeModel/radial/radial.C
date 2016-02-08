@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ addToRunTimeSelectionTable(extrudeModel, radial, dictionary);
 radial::radial(const dictionary& dict)
 :
     extrudeModel(typeName, dict),
-    R_(DataEntry<scalar>::New("R", coeffDict_))
+    R_(Function1<scalar>::New("R", coeffDict_))
 {}
 
 

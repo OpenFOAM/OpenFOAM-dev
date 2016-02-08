@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,9 +69,9 @@ inclinedFilmNusseltHeightFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    GammaMean_(DataEntry<scalar>::New("GammaMean", dict)),
-    a_(DataEntry<scalar>::New("a", dict)),
-    omega_(DataEntry<scalar>::New("omega", dict))
+    GammaMean_(Function1<scalar>::New("GammaMean", dict)),
+    a_(Function1<scalar>::New("a", dict)),
+    omega_(Function1<scalar>::New("omega", dict))
 {
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
 }

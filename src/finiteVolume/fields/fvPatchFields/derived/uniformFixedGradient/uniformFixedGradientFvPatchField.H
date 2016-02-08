@@ -47,12 +47,12 @@ Description
     \endverbatim
 
 Note
-    The uniformGradient entry is a DataEntry type, able to describe time
+    The uniformGradient entry is a Function1 type, able to describe time
     varying functions.  The example above gives the usage for supplying a
     constant value.
 
 SeeAlso
-    Foam::DataEntry
+    Foam::Function1
     Foam::fixedGradientFvPatchField
 
 SourceFiles
@@ -64,7 +64,7 @@ SourceFiles
 #define uniformFixedGradientFvPatchField_H
 
 #include "fixedGradientFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -83,7 +83,7 @@ class uniformFixedGradientFvPatchField
     // Private data
 
         //- Gradient
-        autoPtr<DataEntry<Type>> uniformGradient_;
+        autoPtr<Function1<Type>> uniformGradient_;
 
 
 public:

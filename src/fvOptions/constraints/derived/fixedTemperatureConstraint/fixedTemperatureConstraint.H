@@ -42,7 +42,7 @@ Description
 
 Note:
     The 'uniform' option allows the use of a time-varying uniform temperature
-    by means of the DataEntry type.
+    by means of the Function1 type.
 
 SourceFiles
     fvOption.C
@@ -54,7 +54,7 @@ SourceFiles
 
 #include "cellSetOption.H"
 #include "NamedEnum.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -94,7 +94,7 @@ protected:
         temperatureMode mode_;
 
         //- Uniform temperature [K]
-        autoPtr<DataEntry<scalar>> Tuniform_;
+        autoPtr<Function1<scalar>> Tuniform_;
 
         //- Temperature field name
         word TName_;

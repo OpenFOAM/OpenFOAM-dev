@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ rotatingWallVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(p, iF),
     origin_(dict.lookup("origin")),
     axis_(dict.lookup("axis")),
-    omega_(DataEntry<scalar>::New("omega", dict))
+    omega_(Function1<scalar>::New("omega", dict))
 {
     if (dict.found("value"))
     {

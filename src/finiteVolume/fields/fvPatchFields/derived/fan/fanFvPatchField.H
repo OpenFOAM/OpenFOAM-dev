@@ -31,7 +31,7 @@ Description
     This boundary condition provides a jump condition, using the \c cyclic
     condition as a base.
 
-    The jump is specified as a \c DataEntry type, to enable the use of, e.g.
+    The jump is specified as a \c Function1 type, to enable the use of, e.g.
     contant, polynomial, table values.
 
     \heading Patch usage
@@ -70,7 +70,7 @@ Note
      The underlying \c patchType should be set to \c cyclic
 
 SeeAlso
-    Foam::DataEntry
+    Foam::Function1
 
 SourceFiles
     fanFvPatchField.C
@@ -84,7 +84,7 @@ SourceFiles
 #define fanFvPatchField_H
 
 #include "uniformJumpFvPatchField.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -68,8 +68,8 @@ Foam::oscillatingFixedValueFvPatchField<Type>::oscillatingFixedValueFvPatchField
     fixedValueFvPatchField<Type>(p, iF),
     refValue_("refValue", dict, p.size()),
     offset_(dict.lookupOrDefault<Type>("offset", pTraits<Type>::zero)),
-    amplitude_(DataEntry<scalar>::New("amplitude", dict)),
-    frequency_(DataEntry<scalar>::New("frequency", dict)),
+    amplitude_(Function1<scalar>::New("amplitude", dict)),
+    frequency_(Function1<scalar>::New("frequency", dict)),
     curTimeIndex_(-1)
 {
     if (dict.found("value"))

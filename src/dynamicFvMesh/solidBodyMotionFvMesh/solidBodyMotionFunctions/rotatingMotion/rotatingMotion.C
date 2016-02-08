@@ -57,7 +57,7 @@ Foam::solidBodyMotionFunctions::rotatingMotion::rotatingMotion
     solidBodyMotionFunction(SBMFCoeffs, runTime),
     origin_(SBMFCoeffs_.lookup("origin")),
     axis_(SBMFCoeffs_.lookup("axis")),
-    omega_(DataEntry<scalar>::New("omega", SBMFCoeffs_))
+    omega_(Function1<scalar>::New("omega", SBMFCoeffs_))
 {}
 
 
@@ -95,7 +95,7 @@ bool Foam::solidBodyMotionFunctions::rotatingMotion::read
 
     omega_.reset
     (
-        DataEntry<scalar>::New("omega", SBMFCoeffs_).ptr()
+        Function1<scalar>::New("omega", SBMFCoeffs_).ptr()
     );
 
     return true;

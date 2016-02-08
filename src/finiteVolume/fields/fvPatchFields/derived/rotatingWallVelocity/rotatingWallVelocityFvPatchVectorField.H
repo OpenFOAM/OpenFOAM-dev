@@ -50,11 +50,11 @@ Description
     }
     \endverbatim
 
-    The \c omega entry is a DataEntry type, able to describe time varying
+    The \c omega entry is a Function1 type, able to describe time varying
     functions.
 
 SeeAlso
-    Foam::DataEntry
+    Foam::Function1
     Foam::fixedValueFvPatchField
 
 SourceFiles
@@ -66,7 +66,7 @@ SourceFiles
 #define rotatingWallVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -90,7 +90,7 @@ class rotatingWallVelocityFvPatchVectorField
         vector axis_;
 
         //- Rotational speed
-        autoPtr<DataEntry<scalar>> omega_;
+        autoPtr<Function1<scalar>> omega_;
 
 
 public:

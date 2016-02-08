@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::uniformJumpFvPatchField<Type>::uniformJumpFvPatchField
 )
 :
     fixedJumpFvPatchField<Type>(p, iF),
-    jumpTable_(new DataEntry<Type>("jumpTable"))
+    jumpTable_(new Function1<Type>("jumpTable"))
 {}
 
 
@@ -62,11 +62,11 @@ Foam::uniformJumpFvPatchField<Type>::uniformJumpFvPatchField
 )
 :
     fixedJumpFvPatchField<Type>(p, iF),
-    jumpTable_(new DataEntry<Type>("jumpTable"))
+    jumpTable_(new Function1<Type>("jumpTable"))
 {
     if (this->cyclicPatch().owner())
     {
-        jumpTable_ = DataEntry<Type>::New("jumpTable", dict);
+        jumpTable_ = Function1<Type>::New("jumpTable", dict);
     }
 
     if (dict.found("value"))

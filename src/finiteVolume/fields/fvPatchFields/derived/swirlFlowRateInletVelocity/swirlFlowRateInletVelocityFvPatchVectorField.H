@@ -58,7 +58,7 @@ Description
     \endverbatim
 
 Note
-    - the \c flowRate and \c rpm entries are DataEntry types, able to describe
+    - the \c flowRate and \c rpm entries are Function1 types, able to describe
       time varying functions.  The example above gives the usage for supplying
       constant values.
     - the value is positive into the domain
@@ -75,7 +75,7 @@ SourceFiles
 #define swirlFlowRateInletVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -98,10 +98,10 @@ class swirlFlowRateInletVelocityFvPatchVectorField
         const word rhoName_;
 
         //- Inlet integral flow rate
-        autoPtr<DataEntry<scalar>> flowRate_;
+        autoPtr<Function1<scalar>> flowRate_;
 
         //- Angular speed in revolutions per minute (RPM)
-        autoPtr<DataEntry<scalar>> rpm_;
+        autoPtr<Function1<scalar>> rpm_;
 
 
 public:

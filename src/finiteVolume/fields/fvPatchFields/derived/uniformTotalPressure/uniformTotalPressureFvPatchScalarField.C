@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ uniformTotalPressureFvPatchScalarField
     rhoName_(dict.lookupOrDefault<word>("rho", "none")),
     psiName_(dict.lookupOrDefault<word>("psi", "none")),
     gamma_(readScalar(dict.lookup("gamma"))),
-    pressure_(DataEntry<scalar>::New("pressure", dict))
+    pressure_(Function1<scalar>::New("pressure", dict))
 {
     if (dict.found("value"))
     {

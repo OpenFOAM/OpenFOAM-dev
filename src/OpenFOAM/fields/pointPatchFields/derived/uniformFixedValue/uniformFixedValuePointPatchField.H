@@ -36,7 +36,7 @@ Description
     }
     \endverbatim
 
-    The uniformValue entry is a DataEntry type, able to describe time
+    The uniformValue entry is a Function1 type, able to describe time
     varying functions.  The example above gives the usage for supplying a
     constant value.
 
@@ -49,7 +49,7 @@ SourceFiles
 #define uniformFixedValuePointPatchField_H
 
 #include "fixedValuePointPatchField.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,7 +67,7 @@ class uniformFixedValuePointPatchField
 {
     // Private data
 
-        autoPtr<DataEntry<Type>> uniformValue_;
+        autoPtr<Function1<Type>> uniformValue_;
 
 
 public:
@@ -150,7 +150,7 @@ public:
         // Access
 
             //- Return the fluctuation scale
-            const DataEntry<Type>& uniformValue() const
+            const Function1<Type>& uniformValue() const
             {
                 return uniformValue_;
             }

@@ -121,7 +121,7 @@ timeVaryingMappedFixedValuePointPatchField
 {
     if (dict.found("offset"))
     {
-        offset_ = DataEntry<Type>::New("offset", dict);
+        offset_ = Function1<Type>::New("offset", dict);
     }
 
     dict.readIfPresent("fieldTableName", fieldTableName_);

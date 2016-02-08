@@ -48,7 +48,7 @@ SourceFiles
 #include "surfaceFields.H"
 #include "fvMatricesFwd.H"
 #include "mapPolyMesh.H"
-#include "DataEntry.H"
+#include "Function1.H"
 #include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -105,7 +105,7 @@ class MRFZone
         vector axis_;
 
         //- Angular velocty (rad/sec)
-        autoPtr<DataEntry<scalar>> omega_;
+        autoPtr<Function1<scalar>> omega_;
 
 
     // Private Member Functions

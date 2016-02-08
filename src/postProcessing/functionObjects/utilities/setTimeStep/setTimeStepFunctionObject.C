@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ bool Foam::setTimeStepFunctionObject::read(const dictionary& dict)
 
     if (enabled_)
     {
-        timeStepPtr_ = DataEntry<scalar>::New("deltaT", dict);
+        timeStepPtr_ = Function1<scalar>::New("deltaT", dict);
 
         // Check that time has adjustTimeStep
         const dictionary& controlDict = time_.controlDict();

@@ -44,7 +44,7 @@ SourceFiles
 
 #include "functionObject.H"
 #include "dictionary.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,7 +71,7 @@ class setTimeStepFunctionObject
             bool enabled_;
 
             //- Time step
-            autoPtr<DataEntry<scalar>> timeStepPtr_;
+            autoPtr<Function1<scalar>> timeStepPtr_;
 
 
         //- Disallow default bitwise copy construct

@@ -34,7 +34,7 @@ Description
 
     \table
         Property     | Description              | Required | Default value
-        profile      | Profile DataEntry        | yes |
+        profile      | Profile Function1        | yes |
         direction    | Profile direction        | yes |
         origin       | Profile origin           | yes |
     \endtable
@@ -79,12 +79,12 @@ Description
     \endverbatim
 
 Note
-    The profile entry is a DataEntry type.  The example above gives the
+    The profile entry is a Function1 type.  The example above gives the
     usage for supplying csv file.
 
 SeeAlso
     Foam::fixedValueFvPatchField
-    Foam::DataEntry
+    Foam::Function1
     Foam::timeVaryingMappedFixedValueFvPatchField
 
 SourceFiles
@@ -96,7 +96,7 @@ SourceFiles
 #define fixedProfileFvPatchField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -115,7 +115,7 @@ class fixedProfileFvPatchField
     // Private data
 
         //- Profile data
-        autoPtr<DataEntry<Type>> profile_;
+        autoPtr<Function1<Type>> profile_;
 
         //- Profile direction
         vector dir_;

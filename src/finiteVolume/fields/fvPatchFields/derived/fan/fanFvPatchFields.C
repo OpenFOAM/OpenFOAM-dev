@@ -98,13 +98,13 @@ Foam::fanFvPatchField<Foam::scalar>::fanFvPatchField
 
             this->jumpTable_.reset
             (
-                new DataEntryTypes::Polynomial<scalar>("jumpTable", coeffs)
+                new Function1Types::Polynomial<scalar>("jumpTable", coeffs)
             );
         }
         else
         {
             // Generic input constructed from dictionary
-            this->jumpTable_ = DataEntry<scalar>::New("jumpTable", dict);
+            this->jumpTable_ = Function1<scalar>::New("jumpTable", dict);
         }
     }
 

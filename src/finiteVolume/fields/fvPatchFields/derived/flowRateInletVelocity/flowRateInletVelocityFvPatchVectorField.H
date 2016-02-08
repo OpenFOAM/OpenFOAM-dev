@@ -76,7 +76,7 @@ Description
     }
     \endverbatim
 
-    The \c flowRate entry is a \c DataEntry type, meaning that it can be
+    The \c flowRate entry is a \c Function1 type, meaning that it can be
     specified as constant, a polynomial fuction of time, and ...
 
 Note
@@ -87,7 +87,7 @@ Note
     - Strange behaviour with potentialFoam since the U equation is not solved
 
 SeeAlso
-    Foam::DataEntry
+    Foam::Function1
     Foam::fixedValueFvPatchField
 
 SourceFiles
@@ -99,7 +99,7 @@ SourceFiles
 #define flowRateInletVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -117,7 +117,7 @@ class flowRateInletVelocityFvPatchVectorField
     // Private data
 
         //- Inlet integral flow rate
-        autoPtr<DataEntry<scalar>> flowRate_;
+        autoPtr<Function1<scalar>> flowRate_;
 
         //- Is volumetric?
         bool volumetric_;

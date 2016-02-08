@@ -49,7 +49,7 @@ Foam::InflationInjection<CloudType>::InflationInjection
     duration_(readScalar(this->coeffDict().lookup("duration"))),
     flowRateProfile_
     (
-        TimeDataEntry<scalar>
+        TimeFunction1<scalar>
         (
             owner.db().time(),
             "flowRateProfile",
@@ -58,7 +58,7 @@ Foam::InflationInjection<CloudType>::InflationInjection
     ),
     growthRate_
     (
-        TimeDataEntry<scalar>
+        TimeFunction1<scalar>
         (
             owner.db().time(),
             "growthRate",

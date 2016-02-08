@@ -53,7 +53,7 @@ Description
     The above example shows the use of a fixed jump of '10'.
 
 Note
-    The uniformValue entry is a DataEntry type, able to describe time
+    The uniformValue entry is a Function1 type, able to describe time
     varying functions.  The example above gives the usage for supplying a
     constant value.
 
@@ -71,7 +71,7 @@ SourceFiles
 #define uniformJumpFvPatchField_H
 
 #include "fixedJumpFvPatchField.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -93,7 +93,7 @@ protected:
     // Protected data
 
         //- "jump" table
-        autoPtr<DataEntry<Type>> jumpTable_;
+        autoPtr<Function1<Type>> jumpTable_;
 
 
 public:

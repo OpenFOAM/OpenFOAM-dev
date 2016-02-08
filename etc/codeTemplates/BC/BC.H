@@ -80,7 +80,7 @@ SourceFiles
 #define CONSTRUCT_H
 
 #include "BASEFvPatchFields.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -110,7 +110,7 @@ class CONSTRUCT
         FIELD fieldData_;
 
         //- Type specified as a function of time for time-varying BCs
-        autoPtr<DataEntry<TYPE>> timeVsData_;
+        autoPtr<Function1<TYPE>> timeVsData_;
 
         //- Word entry, e.g. pName_ for name of the pressure field on database
         word wordData_;

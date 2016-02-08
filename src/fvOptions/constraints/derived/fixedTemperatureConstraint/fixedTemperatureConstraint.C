@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::fv::fixedTemperatureConstraint::fixedTemperatureConstraint
         {
             Tuniform_.reset
             (
-                DataEntry<scalar>::New("temperature", coeffs_).ptr()
+                Function1<scalar>::New("temperature", coeffs_).ptr()
             );
             break;
         }
@@ -153,7 +153,7 @@ bool Foam::fv::fixedTemperatureConstraint::read(const dictionary& dict)
         {
             Tuniform_.reset
             (
-                DataEntry<scalar>::New(Tuniform_->name(), dict).ptr()
+                Function1<scalar>::New(Tuniform_->name(), dict).ptr()
             );
         }
 

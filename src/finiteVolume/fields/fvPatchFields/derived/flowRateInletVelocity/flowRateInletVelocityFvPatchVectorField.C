@@ -84,13 +84,13 @@ flowRateInletVelocityFvPatchVectorField
     if (dict.found("volumetricFlowRate"))
     {
         volumetric_ = true;
-        flowRate_ = DataEntry<scalar>::New("volumetricFlowRate", dict);
+        flowRate_ = Function1<scalar>::New("volumetricFlowRate", dict);
         rhoName_ = "rho";
     }
     else if (dict.found("massFlowRate"))
     {
         volumetric_ = false;
-        flowRate_ = DataEntry<scalar>::New("massFlowRate", dict);
+        flowRate_ = Function1<scalar>::New("massFlowRate", dict);
         rhoName_ = word(dict.lookupOrDefault<word>("rho", "rho"));
     }
     else

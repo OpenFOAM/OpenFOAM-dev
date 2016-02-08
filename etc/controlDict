@@ -123,7 +123,7 @@ DebugSwitches
     DICGaussSeidel      0;
     DILU                0;
     DILUGaussSeidel     0;
-    DataEntry           0;
+    Function1           0;
     DeardorffDiffStress 0;
     DispersionModel     0;
     DispersionRASModel  0;

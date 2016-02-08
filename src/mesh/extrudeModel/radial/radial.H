@@ -32,7 +32,7 @@ Description
 #define radial_H
 
 #include "extrudeModel.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +51,7 @@ class radial
 {
     // Private data
 
-        autoPtr<DataEntry<scalar>> R_;
+        autoPtr<Function1<scalar>> R_;
 
 
 public:

@@ -44,7 +44,7 @@ SourceFiles
 #define energyJumpFvPatchScalarField_H
 
 #include "fixedJumpFvPatchField.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

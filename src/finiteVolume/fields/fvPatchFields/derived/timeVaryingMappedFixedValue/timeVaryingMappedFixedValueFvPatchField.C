@@ -82,7 +82,7 @@ timeVaryingMappedFixedValueFvPatchField
     endSampleTime_(-1),
     endSampledValues_(0),
     endAverage_(pTraits<Type>::zero),
-    offset_(DataEntry<Type>::New("offset", dict))
+    offset_(Function1<Type>::New("offset", dict))
 {
     if
     (

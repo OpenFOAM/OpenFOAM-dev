@@ -69,7 +69,7 @@ SourceFiles
 #define uniformInletOutletFvPatchField_H
 
 #include "mixedFvPatchField.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -94,7 +94,7 @@ protected:
         word phiName_;
 
         //- Value
-        autoPtr<DataEntry<Type>> uniformInletValue_;
+        autoPtr<Function1<Type>> uniformInletValue_;
 
 
 public:
