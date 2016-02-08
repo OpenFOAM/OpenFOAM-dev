@@ -3,7 +3,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 #set -x
 
 case "$ParaView_VERSION" in
-4*)
+4* | 5*)
     if [ -d "$ParaView_DIR" -a -r "$ParaView_DIR" ]
     then
         [ -n "$PV_PLUGIN_PATH" ] || {

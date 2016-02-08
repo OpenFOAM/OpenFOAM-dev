@@ -7,6 +7,7 @@ EXE_INC = \
     -I../../vtkPV4Readers/lnInclude \
     -I../PV4FoamReader \
     -I$(ParaView_INCLUDE_DIR) \
+    -I$(ParaView_INCLUDE_DIR)/vtkkwiml \
     $(shell \
         test -f $(ParaView_INCLUDE_DIR)/vtkPolyhedron.h && \
         echo "-DHAS_VTK_POLYHEDRON" || echo "-UHAS_VTK_POLYHEDRON" \

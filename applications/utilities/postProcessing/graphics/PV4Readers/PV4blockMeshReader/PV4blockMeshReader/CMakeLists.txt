@@ -52,8 +52,8 @@ ADD_PARAVIEW_OBJECT_PANEL(IFACES IFACE_SRCS
 
 IF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
         ADD_PARAVIEW_PLUGIN(
-            PV4blockMeshReader_SM "1.0"
-        SERVER_MANAGER_XML PV4blockMeshReader_SM.xml
+            PVblockMeshReader_SM "1.0"
+        SERVER_MANAGER_XML PVblockMeshReader_SM.xml
         SERVER_MANAGER_SOURCES  vtkPV4blockMeshReader.cxx
         GUI_INTERFACES ${IFACES}
         GUI_SOURCES pqPV4blockMeshReaderPanel.cxx
@@ -62,8 +62,8 @@ IF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
     )
 ELSE("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
         ADD_PARAVIEW_PLUGIN(
-            PV4blockMeshReader_SM "1.0"
-        SERVER_MANAGER_XML PV4blockMeshReader_SM.xml
+            PVblockMeshReader_SM "1.0"
+        SERVER_MANAGER_XML PVblockMeshReader_SM.xml
         SERVER_MANAGER_SOURCES  vtkPV4blockMeshReader.cxx
         GUI_INTERFACES ${IFACES}
         GUI_SOURCES pqPV4blockMeshReaderPanel.cxx
@@ -74,7 +74,7 @@ ENDIF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
 # Build the client-side plugin
 
 TARGET_LINK_LIBRARIES(
-    PV4blockMeshReader_SM
+    PVblockMeshReader_SM
     LINK_PUBLIC
     OpenFOAM
     blockMesh

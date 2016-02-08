@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -125,7 +125,7 @@ done
 version=`echo $ParaView_VERSION | sed -e 's/^\([0-9][0-9]*\).*$/\1/'`
 
 # Check that reader module has been built
-if [ $requirePV -eq 1 -a ! -f $PV_PLUGIN_PATH/libPV${version}FoamReader_SM.so ]
+if [ $requirePV -eq 1 -a ! -f $PV_PLUGIN_PATH/libPVFoamReader_SM.so ]
 then
     cat<< BUILDREADER
 

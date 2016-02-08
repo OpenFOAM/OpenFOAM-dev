@@ -53,8 +53,8 @@ ADD_PARAVIEW_OBJECT_PANEL(IFACES IFACE_SRCS
 
 IF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
     ADD_PARAVIEW_PLUGIN(
-        PV4FoamReader_SM "1.0"
-        SERVER_MANAGER_XML PV4FoamReader_SM.xml
+        PVFoamReader_SM "1.0"
+        SERVER_MANAGER_XML PVFoamReader_SM.xml
         SERVER_MANAGER_SOURCES vtkPV4FoamReader.cxx
         GUI_INTERFACES ${IFACES}
         GUI_SOURCES pqPV4FoamReaderPanel.cxx
@@ -63,8 +63,8 @@ IF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
     )
 ELSE("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
     ADD_PARAVIEW_PLUGIN(
-        PV4FoamReader_SM "1.0"
-        SERVER_MANAGER_XML PV4FoamReader_SM.xml
+        PVFoamReader_SM "1.0"
+        SERVER_MANAGER_XML PVFoamReader_SM.xml
         SERVER_MANAGER_SOURCES vtkPV4FoamReader.cxx
         GUI_INTERFACES ${IFACES}
         GUI_SOURCES pqPV4FoamReaderPanel.cxx
@@ -73,7 +73,7 @@ ELSE("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
 ENDIF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
 
 TARGET_LINK_LIBRARIES(
-    PV4FoamReader_SM
+    PVFoamReader_SM
     LINK_PUBLIC
     OpenFOAM
     finiteVolume
