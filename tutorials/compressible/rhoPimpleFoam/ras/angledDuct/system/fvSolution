@@ -57,7 +57,7 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
     consistent          yes;
 
-    rhoMin          0.5;
+    rhoMin          0.4;
     rhoMax          2.0;
 
     residualControl
