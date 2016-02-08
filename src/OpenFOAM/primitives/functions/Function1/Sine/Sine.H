@@ -34,12 +34,13 @@ Description
     where
 
     \vartable
-        a       | Amplitude
-        f       | Frequency [1/s]
-        s       | Type scale factor
-        l       | Type offset level
-        t_0     | Start time [s]
-        t       | Time [s]
+        symbol  | Description       | Data type
+        a       | Amplitude         | Function1<scalar>
+        f       | Frequency [1/s]   | Function1<scalar>
+        s       | Type scale factor | Function1<Type>
+        l       | Type offset level | Function1<Type>
+        t_0     | Start time [s]    | scalar
+        t       | Time [s]          | scalar
     \endvartable
 
     Example for a scalar:
@@ -80,16 +81,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of friend functions and operators
-namespace Function1Types
-{
-    template<class Type> class Sine;
-};
-
-template<class Type>
-Ostream& operator<<(Ostream&, const Function1Types::Sine<Type>&);
-
 namespace Function1Types
 {
 
@@ -108,16 +99,16 @@ class Sine
         scalar t0_;
 
         //- Scalar amplitude of the sin function
-        scalar amplitude_;
+        autoPtr<Function1<scalar>> amplitude_;
 
         //- Frequency of the sin function
-        scalar frequency_;
+        autoPtr<Function1<scalar>> frequency_;
 
         //- Scaling factor of the sin function
-        Type scale_;
+        autoPtr<Function1<Type>> scale_;
 
         //- Level to which the sin function is added
-        Type level_;
+        autoPtr<Function1<Type>> level_;
 
 
     // Private Member Functions
@@ -166,16 +157,6 @@ public:
 
         //- Integrate between the two time values t1 and t2
         Type integrate(const scalar t1, const scalar t2) const;
-
-
-    // I/O
-
-        //- Ostream Operator
-        friend Ostream& operator<< <Type>
-        (
-            Ostream& os,
-            const Sine<Type>& cnst
-        );
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;

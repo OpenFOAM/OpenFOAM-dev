@@ -28,30 +28,6 @@ License
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const Function1Types::Sine<Type>& se
-)
-{
-    os  << static_cast<const Function1<Type>& >(se)
-        << token::SPACE << se.t0_
-        << token::SPACE << se.amplitude_
-        << token::SPACE << se.frequency_
-        << token::SPACE << se.scale_
-        << token::SPACE << se.level_;
-
-    // Check state of Ostream
-    os.check
-    (
-        "Ostream& operator<<(Ostream&, const Sine<Type>&)"
-    );
-
-    return os;
-}
-
-
-template<class Type>
 void Foam::Function1Types::Sine<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
@@ -59,10 +35,10 @@ void Foam::Function1Types::Sine<Type>::writeData(Ostream& os) const
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
     os.writeKeyword("t0") << t0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("amplitude") << amplitude_ << token::END_STATEMENT << nl;
-    os.writeKeyword("frequency") << frequency_ << token::END_STATEMENT << nl;
-    os.writeKeyword("scale") << scale_ << token::END_STATEMENT << nl;
-    os.writeKeyword("level") << level_ << token::END_STATEMENT << nl;
+    amplitude_->writeData(os);
+    frequency_->writeData(os);
+    scale_->writeData(os);
+    level_->writeData(os);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

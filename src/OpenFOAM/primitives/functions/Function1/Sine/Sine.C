@@ -32,10 +32,10 @@ template<class Type>
 void Foam::Function1Types::Sine<Type>::read(const dictionary& coeffs)
 {
     t0_ = coeffs.lookupOrDefault<scalar>("t0", 0);
-    amplitude_ = coeffs.lookupOrDefault<scalar>("amplitude", 1);
-    frequency_ = readScalar(coeffs.lookup("frequency"));
-    scale_ = pTraits<Type>(coeffs.lookup("scale"));
-    level_ = pTraits<Type>(coeffs.lookup("level"));
+    amplitude_ = Function1<scalar>::New("amplitude", coeffs);
+    frequency_ = Function1<scalar>::New("frequency", coeffs);
+    scale_ = Function1<Type>::New("scale", coeffs);
+    level_ = Function1<Type>::New("level", coeffs);
 }
 
 
@@ -58,9 +58,10 @@ Foam::Function1Types::Sine<Type>::Sine(const Sine<Type>& se)
 :
     Function1<Type>(se),
     t0_(se.t0_),
-    amplitude_(se.amplitude_),
-    frequency_(se.frequency_),
-    level_(se.level_)
+    amplitude_(se.amplitude_, false),
+    frequency_(se.frequency_, false),
+    scale_(se.scale_, false),
+    level_(se.level_, false)
 {}
 
 
@@ -77,9 +78,10 @@ template<class Type>
 Type Foam::Function1Types::Sine<Type>::value(const scalar t) const
 {
     return
-        amplitude_*sin(constant::mathematical::twoPi*frequency_*(t - t0_))
-       *scale_
-      + level_;
+        amplitude_->value(t)
+       *sin(constant::mathematical::twoPi*frequency_->value(t)*(t - t0_))
+       *scale_->value(t)
+      + level_->value(t);
 }
 
 
@@ -91,7 +93,7 @@ Type Foam::Function1Types::Sine<Type>::integrate
 ) const
 {
     NotImplemented;
-    return level_;
+    return level_->value(t1);
 }
 
 
