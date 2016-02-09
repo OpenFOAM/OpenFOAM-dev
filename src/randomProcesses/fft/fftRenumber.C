@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,16 +32,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// recursively evaluate the indexing necessary to do the folding of
-// the fft data. We recurse until we have the indexing ncessary for
-// the folding in all directions.
-
-void fftRenumberRecurse
+void Foam::fftRenumberRecurse
 (
     List<complex>& data,
     List<complex>& renumData,
@@ -101,12 +92,7 @@ void fftRenumberRecurse
 }
 
 
-// fftRenumber : fold the n-d data array to get the fft components in
-// the right places.
-
-#include "fftRenumber.H"
-
-void fftRenumber
+void Foam::fftRenumber
 (
     List<complex>& data,
     const labelList& nn
@@ -134,9 +120,5 @@ void fftRenumber
     );
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //
