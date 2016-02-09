@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,21 @@ surfaceNormalFixedValueFvPatchVectorField
 Foam::surfaceNormalFixedValueFvPatchVectorField::
 surfaceNormalFixedValueFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF),
+    refValue_("refValue", dict, p.size())
+{
+    fvPatchVectorField::operator=(refValue_*patch().nf());
+}
+
+
+Foam::surfaceNormalFixedValueFvPatchVectorField::
+surfaceNormalFixedValueFvPatchVectorField
+(
     const surfaceNormalFixedValueFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -56,7 +71,7 @@ surfaceNormalFixedValueFvPatchVectorField
 {
     // Note: calculate product only on ptf to avoid multiplication on
     // unset values in reconstructPar.
-    fixedValueFvPatchVectorField::operator=
+    fvPatchVectorField::operator=
     (
         vectorField
         (
@@ -64,21 +79,6 @@ surfaceNormalFixedValueFvPatchVectorField
             mapper
         )
     );
-}
-
-
-Foam::surfaceNormalFixedValueFvPatchVectorField::
-surfaceNormalFixedValueFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchVectorField(p, iF),
-    refValue_("refValue", dict, p.size())
-{
-    fvPatchVectorField::operator=(refValue_*patch().nf());
 }
 
 
