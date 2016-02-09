@@ -26,11 +26,13 @@ boundaryField
         type            pressureInletOutletParSlipVelocity;
         value           uniform (0 0 0);
     }
+
     walls
     {
         type            fixedValue;
         value           uniform (0 0 0);
     }
+
     floatingObject
     {
         type            fixedNormalInletOutletVelocity;
@@ -39,21 +41,25 @@ boundaryField
 
         normalVelocity
         {
-            type            oscillatingFixedValue;
-            refValue        uniform (0 1 0);
-            offset          (0 -1 0);
-            amplitude       table
-            (
-                (   0     0)
-                (  10 0.025)
-                (1000 0.025)
-            );
-            frequency       constant 1;
-            value           uniform (0 0 0);
+            type            uniformFixedValue;
+            uniformValue    sine;
+            uniformValueCoeffs
+            {
+                frequency 1;
+                amplitude table
+                (
+                    (   0     0)
+                    (  10 0.025)
+                    (1000 0.025)
+                );
+                scale     (0 1 0);
+                level     (0 0 0);
+            }
         }
 
         value           uniform (0 0 0);
     }
+
     frontAndBack
     {
         type            empty;
