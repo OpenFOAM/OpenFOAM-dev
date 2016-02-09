@@ -25,7 +25,7 @@ Class
     Foam::fixedMeanFvPatchField
 
 Group
-    grpGenericBoundaryConditions
+    grpInletBoundaryConditions
 
 Description
     This boundary condition extrapolates field to the patch using the near-cell

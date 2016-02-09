@@ -61,6 +61,7 @@ Note
 
 SeeAlso
     Foam::fixedJumpFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     uniformJumpFvPatchField.C

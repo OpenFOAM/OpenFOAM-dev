@@ -64,6 +64,7 @@ Description
 
 SeeAlso
     Foam::totalPressureFvPatchScalarField
+    Foam::Function1Types
 
 SourceFiles
     rotatingTotalPressureFvPatchScalarField.C

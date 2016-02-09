@@ -84,7 +84,7 @@ Note
 
 SeeAlso
     Foam::fixedValueFvPatchField
-    Foam::Function1
+    Foam::Function1Types
     Foam::timeVaryingMappedFixedValueFvPatchField
 
 SourceFiles

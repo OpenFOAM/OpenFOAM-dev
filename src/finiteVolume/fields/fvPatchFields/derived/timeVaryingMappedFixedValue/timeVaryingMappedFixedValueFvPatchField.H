@@ -67,6 +67,7 @@ Description
 
 SeeAlso
     Foam::fixedValueFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     timeVaryingMappedFixedValueFvPatchField.C

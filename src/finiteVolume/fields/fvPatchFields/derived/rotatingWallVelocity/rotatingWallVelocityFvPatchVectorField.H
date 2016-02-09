@@ -54,7 +54,7 @@ Description
     functions.
 
 SeeAlso
-    Foam::Function1
+    Foam::Function1Types
     Foam::fixedValueFvPatchField
 
 SourceFiles

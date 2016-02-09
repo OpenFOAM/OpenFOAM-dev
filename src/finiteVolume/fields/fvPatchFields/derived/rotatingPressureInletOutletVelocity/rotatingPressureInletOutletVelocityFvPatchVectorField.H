@@ -64,6 +64,7 @@ Note
 
 SeeAlso
     Foam::pressureInletOutletVelocityFvPatchVectorField
+    Foam::Function1Types
 
 SourceFiles
     rotatingPressureInletOutletVelocityFvPatchVectorField.C

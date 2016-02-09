@@ -65,7 +65,7 @@ Note
 
 
 SeeAlso
-    Foam::Function1
+    Foam::Function1Types
     Foam::uniformFixedValueFvPatchField
     Foam::totalPressureFvPatchField
 

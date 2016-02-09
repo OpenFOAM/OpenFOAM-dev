@@ -63,7 +63,7 @@ Note
 
 SeeAlso
     Foam::fixedValueFvPatchField
-    Foam::Function1
+    Foam::Function1Types
 
 SourceFiles
     cylindricalInletVelocityFvPatchVectorField.C

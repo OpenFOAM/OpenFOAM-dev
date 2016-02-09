@@ -70,7 +70,7 @@ Note
      The underlying \c patchType should be set to \c cyclic
 
 SeeAlso
-    Foam::Function1
+    Foam::Function1Types
 
 SourceFiles
     fanFvPatchField.C

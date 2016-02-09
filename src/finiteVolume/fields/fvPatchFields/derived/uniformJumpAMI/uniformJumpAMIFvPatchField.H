@@ -61,6 +61,7 @@ Note
 
 SeeAlso
     Foam::jumpCyclicAMIFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     uniformJumpAMIFvPatchField.C

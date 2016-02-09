@@ -65,6 +65,7 @@ Note
 
 SeeAlso
     Foam::fixedValueFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     swirlFlowRateInletVelocityFvPatchVectorField.C
