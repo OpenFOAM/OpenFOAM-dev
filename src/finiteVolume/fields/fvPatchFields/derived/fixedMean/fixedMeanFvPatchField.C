@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,20 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF),
-    meanValue_(pTraits<Type>::zero)
+    meanValue_()
+{}
+
+
+template<class Type>
+Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<Type>(p, iF, dict),
+    meanValue_(Function1<Type>::New(dict.lookup("meanValue"), dict))
 {}
 
 
@@ -50,20 +63,7 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    meanValue_(ptf.meanValue_)
-{}
-
-
-template<class Type>
-Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<Type>(p, iF, dict),
-    meanValue_(pTraits<Type>(dict.lookup("meanValue")))
+    meanValue_(ptf.meanValue_, false)
 {}
 
 
@@ -74,7 +74,7 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf),
-    meanValue_(ptf.meanValue_)
+    meanValue_(ptf.meanValue_, false)
 {}
 
 
@@ -86,7 +86,7 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, iF),
-    meanValue_(ptf.meanValue_)
+    meanValue_(ptf.meanValue_, false)
 {}
 
 
@@ -100,19 +100,22 @@ void Foam::fixedMeanFvPatchField<Type>::updateCoeffs()
         return;
     }
 
+    const scalar t = this->db().time().timeOutputValue();
+    Type meanValue = meanValue_->value(t);
+
     Field<Type> newValues(this->patchInternalField());
 
     Type meanValuePsi =
         gSum(this->patch().magSf()*newValues)
        /gSum(this->patch().magSf());
 
-    if (mag(meanValue_) > SMALL && mag(meanValuePsi)/mag(meanValue_) > 0.5)
+    if (mag(meanValue) > SMALL && mag(meanValuePsi)/mag(meanValue) > 0.5)
     {
-        newValues *= mag(meanValue_)/mag(meanValuePsi);
+        newValues *= mag(meanValue)/mag(meanValuePsi);
     }
     else
     {
-        newValues += (meanValue_ - meanValuePsi);
+        newValues += (meanValue - meanValuePsi);
     }
 
     this->operator==(newValues);
@@ -125,7 +128,7 @@ template<class Type>
 void Foam::fixedMeanFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("meanValue") << meanValue_ << token::END_STATEMENT << nl;
+    meanValue_->writeData(os);
     this->writeEntry("value", os);
 }
 

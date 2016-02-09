@@ -29,13 +29,14 @@ Group
 
 Description
     This boundary condition extrapolates field to the patch using the near-cell
-    values and adjusts the distribution to match the specified mean value.
+    values and adjusts the distribution to match the specified, optionally
+    time-varying, mean value.
 
     \heading Patch usage
 
     \table
         Property     | Description             | Required    | Default value
-        meanValue    | mean value              | yes         |
+        meanValue    | mean value Function1    | yes         |
     \endtable
 
     Example of the boundary condition specification:
@@ -49,6 +50,7 @@ Description
 
 SeeAlso
     Foam::fixedValueFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     fixedMeanFvPatchField.C
@@ -59,6 +61,7 @@ SourceFiles
 #define fixedMeanFvPatchField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,13 +77,10 @@ class fixedMeanFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-
-protected:
-
-    // Protected data
+    // Private data
 
         //- MeanValue value the field is adjusted to maintain
-        Type meanValue_;
+        autoPtr<Function1<Type>> meanValue_;
 
 
 public:
@@ -153,10 +153,8 @@ public:
 
     // Member functions
 
-        // Evaluation functions
-
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
+        //- Update the coefficients associated with the patch field
+        virtual void updateCoeffs();
 
         //- Write
         virtual void write(Ostream&) const;
