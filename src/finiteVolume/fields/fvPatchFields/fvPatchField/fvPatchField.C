@@ -52,6 +52,23 @@ Foam::fvPatchField<Type>::fvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
+    const Type& value
+)
+:
+    Field<Type>(p.size(), value),
+    patch_(p),
+    internalField_(iF),
+    updated_(false),
+    manipulatedMatrix_(false),
+    patchType_(word::null)
+{}
+
+
+template<class Type>
+Foam::fvPatchField<Type>::fvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
     const word& patchType
 )
 :
@@ -79,31 +96,6 @@ Foam::fvPatchField<Type>::fvPatchField
     manipulatedMatrix_(false),
     patchType_(word::null)
 {}
-
-
-template<class Type>
-Foam::fvPatchField<Type>::fvPatchField
-(
-    const fvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    Field<Type>(p.size()),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(ptf.patchType_)
-{
-    // For unmapped faces set to internal field value (zero-gradient)
-    if (notNull(iF) && iF.size())
-    {
-        fvPatchField<Type>::operator=(this->patchInternalField());
-    }
-    this->map(ptf, mapper);
-}
 
 
 template<class Type>
@@ -141,6 +133,31 @@ Foam::fvPatchField<Type>::fvPatchField
         )   << "Essential entry 'value' missing"
             << exit(FatalIOError);
     }
+}
+
+
+template<class Type>
+Foam::fvPatchField<Type>::fvPatchField
+(
+    const fvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    Field<Type>(p.size()),
+    patch_(p),
+    internalField_(iF),
+    updated_(false),
+    manipulatedMatrix_(false),
+    patchType_(ptf.patchType_)
+{
+    // For unmapped faces set to internal field value (zero-gradient)
+    if (notNull(iF) && iF.size())
+    {
+        fvPatchField<Type>::operator=(this->patchInternalField());
+    }
+    this->map(ptf, mapper);
 }
 
 

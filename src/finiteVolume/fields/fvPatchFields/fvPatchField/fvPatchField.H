@@ -166,6 +166,14 @@ public:
             const DimensionedField<Type, volMesh>&
         );
 
+        //- Construct from patch, internal field and value
+        fvPatchField
+        (
+            const fvPatch&,
+            const DimensionedField<Type, volMesh>&,
+            const Type& value
+        );
+
         //- Construct from patch and internal field and patch type
         fvPatchField
         (
