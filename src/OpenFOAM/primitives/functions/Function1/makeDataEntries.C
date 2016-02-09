@@ -37,6 +37,17 @@ License
 #include "symmTensor.H"
 #include "tensor.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define makeFunction1s(Type)                                                   \
+    makeFunction1(Type);                                                       \
+    makeFunction1Type(Constant, Type);                                         \
+    makeFunction1Type(Polynomial, Type);                                       \
+    makeFunction1Type(Sine, Type);                                             \
+    makeFunction1Type(CSV, Type);                                              \
+    makeFunction1Type(Table, Type);                                            \
+    makeFunction1Type(TableFile, Type);
+
 namespace Foam
 {
     makeFunction1(label);
@@ -44,45 +55,11 @@ namespace Foam
     // Polynomial functions and interpolation do evaluate to label
     // Instead evaluate a scalar and convert to label as appropriate
 
-    makeFunction1(scalar);
-    makeFunction1Type(Constant, scalar);
-    makeFunction1Type(Polynomial, scalar);
-    makeFunction1Type(Sine, scalar);
-    makeFunction1Type(CSV, scalar);
-    makeFunction1Type(Table, scalar);
-    makeFunction1Type(TableFile, scalar);
-
-    makeFunction1(vector);
-    makeFunction1Type(Constant, vector);
-    makeFunction1Type(Polynomial, vector);
-    makeFunction1Type(Sine, vector);
-    makeFunction1Type(CSV, vector);
-    makeFunction1Type(Table, vector);
-    makeFunction1Type(TableFile, vector);
-
-    makeFunction1(sphericalTensor);
-    makeFunction1Type(Constant, sphericalTensor);
-    makeFunction1Type(Polynomial, sphericalTensor);
-    makeFunction1Type(Sine, sphericalTensor);
-    makeFunction1Type(CSV, sphericalTensor);
-    makeFunction1Type(Table, sphericalTensor);
-    makeFunction1Type(TableFile, sphericalTensor);
-
-    makeFunction1(symmTensor);
-    makeFunction1Type(Constant, symmTensor);
-    makeFunction1Type(Polynomial, symmTensor);
-    makeFunction1Type(Sine, symmTensor);
-    makeFunction1Type(CSV, symmTensor);
-    makeFunction1Type(Table, symmTensor);
-    makeFunction1Type(TableFile, symmTensor);
-
-    makeFunction1(tensor);
-    makeFunction1Type(Constant, tensor);
-    makeFunction1Type(Polynomial, tensor);
-    makeFunction1Type(Sine, tensor);
-    makeFunction1Type(CSV, tensor);
-    makeFunction1Type(Table, tensor);
-    makeFunction1Type(TableFile, tensor);
+    makeFunction1s(scalar);
+    makeFunction1s(vector);
+    makeFunction1s(sphericalTensor);
+    makeFunction1s(symmTensor);
+    makeFunction1s(tensor);
 }
 
 
