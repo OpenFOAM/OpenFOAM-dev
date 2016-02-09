@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "movingWallVelocityFvPatchVectorField.H"
-#include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fvcMeshPhi.H"
-
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,22 +38,7 @@ movingWallVelocityFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
-    UName_("U")
-{}
-
-
-Foam::movingWallVelocityFvPatchVectorField::
-movingWallVelocityFvPatchVectorField
-(
-    const movingWallVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchVectorField(ptf, p, iF, mapper),
-    UName_(ptf.UName_)
+    fixedValueFvPatchVectorField(p, iF)
 {}
 
 
@@ -66,8 +50,7 @@ movingWallVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
-    UName_(dict.lookupOrDefault<word>("U", "U"))
+    fixedValueFvPatchVectorField(p, iF)
 {
     fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
 }
@@ -76,11 +59,23 @@ movingWallVelocityFvPatchVectorField
 Foam::movingWallVelocityFvPatchVectorField::
 movingWallVelocityFvPatchVectorField
 (
+    const movingWallVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchVectorField(ptf, p, iF, mapper)
+{}
+
+
+Foam::movingWallVelocityFvPatchVectorField::
+movingWallVelocityFvPatchVectorField
+(
     const movingWallVelocityFvPatchVectorField& mwvpvf
 )
 :
-    fixedValueFvPatchVectorField(mwvpvf),
-    UName_(mwvpvf.UName_)
+    fixedValueFvPatchVectorField(mwvpvf)
 {}
 
 
@@ -91,8 +86,7 @@ movingWallVelocityFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchVectorField(mwvpvf, iF),
-    UName_(mwvpvf.UName_)
+    fixedValueFvPatchVectorField(mwvpvf, iF)
 {}
 
 
@@ -124,7 +118,9 @@ void Foam::movingWallVelocityFvPatchVectorField::updateCoeffs()
 
         const vectorField Up((pp.faceCentres() - oldFc)/deltaT);
 
-        const volVectorField& U = db().lookupObject<volVectorField>(UName_);
+        const volVectorField& U =
+            static_cast<const volVectorField&>(dimensionedInternalField());
+
         scalarField phip
         (
             p.patchField<surfaceScalarField, scalar>(fvc::meshPhi(U))
@@ -145,7 +141,6 @@ void Foam::movingWallVelocityFvPatchVectorField::updateCoeffs()
 void Foam::movingWallVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntry("value", os);
 }
 

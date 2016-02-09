@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,21 +32,14 @@ Description
     moving walls.  In addition, it should also be applied to 'moving' walls
     for moving reference frame (MRF) calculations.
 
-
     \heading Patch usage
-
-    \table
-        Property     | Description             | Required    | Default value
-        U            | velociy field name      | no          | U
-    \endtable
 
     Example of the boundary condition specification:
     \verbatim
     myPatch
     {
         type            movingWallVelocity;
-        U               U;
-        value           uniform 0; // initial value
+        value           uniform (0 0 0);    // Initial value
     }
     \endverbatim
 
@@ -62,7 +55,6 @@ SourceFiles
 #ifndef movingWallVelocityFvPatchVectorField_H
 #define movingWallVelocityFvPatchVectorField_H
 
-#include "fvPatchFields.H"
 #include "fixedValueFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -78,11 +70,6 @@ class movingWallVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
-
-       //- Name of velocity field
-       word UName_;
-
 
 public:
 
