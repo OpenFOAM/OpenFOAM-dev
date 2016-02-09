@@ -1,0 +1,56 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+porosity1
+{
+    type            explicitPorositySource;
+    active          yes;
+
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        porousBlockage;
+
+        type            DarcyForchheimer;
+
+        // D 100;  // Very little blockage
+        // D 200;  // Some blockage but steady flow
+        // D 500;  // Slight waviness in the far wake
+        D 1000; // Fully shedding behavior
+
+        DarcyForchheimerCoeffs
+        {
+            d   ($D $D $D);
+            f   (0 0 0);
+
+            coordinateSystem
+            {
+                type    cartesian;
+                origin  (0 0 0);
+                coordinateRotation
+                {
+                    type    axesRotation;
+                    e1  (1 0 0);
+                    e2  (0 1 0);
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //
