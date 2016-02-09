@@ -87,8 +87,8 @@ Note
     - Strange behaviour with potentialFoam since the U equation is not solved
 
 SeeAlso
-    Foam::Function1
     Foam::fixedValueFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     flowRateInletVelocityFvPatchVectorField.C

@@ -25,10 +25,8 @@ License
 
 #include "flowRateInletVelocityFvPatchVectorField.H"
 #include "volFields.H"
-#include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
-#include "surfaceFields.H"
 #include "one.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -45,24 +43,6 @@ flowRateInletVelocityFvPatchVectorField
     rhoName_("rho"),
     rhoInlet_(0.0),
     extrapolateProfile_(false)
-{}
-
-
-Foam::flowRateInletVelocityFvPatchVectorField::
-flowRateInletVelocityFvPatchVectorField
-(
-    const flowRateInletVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
-    flowRate_(ptf.flowRate_, false),
-    volumetric_(ptf.volumetric_),
-    rhoName_(ptf.rhoName_),
-    rhoInlet_(ptf.rhoInlet_),
-    extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
 
@@ -115,6 +95,24 @@ flowRateInletVelocityFvPatchVectorField
         evaluate(Pstream::blocking);
     }
 }
+
+
+Foam::flowRateInletVelocityFvPatchVectorField::
+flowRateInletVelocityFvPatchVectorField
+(
+    const flowRateInletVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
+    flowRate_(ptf.flowRate_, false),
+    volumetric_(ptf.volumetric_),
+    rhoName_(ptf.rhoName_),
+    rhoInlet_(ptf.rhoInlet_),
+    extrapolateProfile_(ptf.extrapolateProfile_)
+{}
 
 
 Foam::flowRateInletVelocityFvPatchVectorField::
