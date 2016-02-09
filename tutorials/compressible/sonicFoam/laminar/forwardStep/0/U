@@ -43,8 +43,7 @@ boundaryField
 
     obstacle
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     defaultFaces

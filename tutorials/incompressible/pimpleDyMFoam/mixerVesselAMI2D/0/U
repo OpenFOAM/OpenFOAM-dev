@@ -22,13 +22,13 @@ boundaryField
 {
     rotor
     {
-        type            movingWallVelocity; // fixedValue;
+        type            movingWallVelocity;
         value           uniform (0 0 0);
     }
 
     stator
     {
-        type            movingWallVelocity; // fixedValue;
+        type            movingWallVelocity;
         value           uniform (0 0 0);
     }
 

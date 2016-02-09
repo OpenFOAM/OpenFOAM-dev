@@ -40,8 +40,7 @@ boundaryField
 
     freestreamInlet
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     wedge1 {type wedge;}

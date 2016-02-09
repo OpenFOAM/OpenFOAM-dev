@@ -22,8 +22,7 @@ boundaryField
 {
     wall-4
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     velocity-inlet-5
@@ -45,8 +44,7 @@ boundaryField
 
     wall-8
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     frontAndBackPlanes

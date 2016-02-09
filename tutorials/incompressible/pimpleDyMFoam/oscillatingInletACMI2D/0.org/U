@@ -43,8 +43,7 @@ boundaryField
     }
     ACMI1_blockage
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     ACMI1_couple
     {
@@ -53,8 +52,7 @@ boundaryField
     }
     ACMI2_blockage
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     ACMI2_couple
     {

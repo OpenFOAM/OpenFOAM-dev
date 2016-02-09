@@ -28,8 +28,7 @@ boundaryField
 
     region0_to_filmRegion_coupledWall // Patch to pyrolysis
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     outlet
@@ -39,8 +38,7 @@ boundaryField
 
     "side.*"
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     inlet

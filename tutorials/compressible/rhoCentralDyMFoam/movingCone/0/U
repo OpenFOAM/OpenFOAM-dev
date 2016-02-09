@@ -28,14 +28,12 @@ boundaryField
 
     farFieldMoving
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     fixedWall
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     left
@@ -46,8 +44,7 @@ boundaryField
 
     farField
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     back

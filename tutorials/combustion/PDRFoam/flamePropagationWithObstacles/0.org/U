@@ -29,13 +29,11 @@ boundaryField
     }
     ground
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     blockedFaces
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     baffleWall
     {

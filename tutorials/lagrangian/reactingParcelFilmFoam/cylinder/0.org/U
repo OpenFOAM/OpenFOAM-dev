@@ -23,13 +23,11 @@ boundaryField
 {
     "(sides|frontAndBack)"
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     region0_to_wallFilmRegion_wallFilmFaces
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 }
 

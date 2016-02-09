@@ -12262,14 +12262,12 @@ boundaryField
 
     upperWall
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     lowerWall
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     frontAndBack

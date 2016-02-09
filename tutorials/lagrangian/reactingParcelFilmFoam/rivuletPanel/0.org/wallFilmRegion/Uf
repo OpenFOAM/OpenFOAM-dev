@@ -28,8 +28,7 @@ boundaryField
 
     region0_to_wallFilmRegion_wallFilmFaces
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     inlet
@@ -45,8 +44,7 @@ boundaryField
 
     sides
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 }
 

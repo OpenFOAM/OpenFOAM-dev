@@ -22,33 +22,27 @@ boundaryField
 {
     sectionAEnd
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     sectionCEnd
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     front
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     back
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     top
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     bottom
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 }
 

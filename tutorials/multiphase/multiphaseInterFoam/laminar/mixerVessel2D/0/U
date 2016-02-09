@@ -23,13 +23,11 @@ boundaryField
 {
     rotor
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     stator
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     front
     {

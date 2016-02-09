@@ -34,33 +34,27 @@ boundaryField
     }
     minY
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     minZ
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     maxZ
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     bottomWater_to_rightSolid
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     bottomWater_to_leftSolid
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     bottomWater_to_heater
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 }
 

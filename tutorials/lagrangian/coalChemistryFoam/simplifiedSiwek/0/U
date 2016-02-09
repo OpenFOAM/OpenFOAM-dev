@@ -23,18 +23,15 @@ boundaryField
 {
     top
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     bottom
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     walls
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     symmetry
     {

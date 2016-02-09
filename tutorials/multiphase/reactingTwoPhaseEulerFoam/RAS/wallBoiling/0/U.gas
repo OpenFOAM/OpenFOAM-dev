@@ -1971,13 +1971,11 @@ boundaryField
     }
     wall1
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     wall2
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
     defaultFaces
     {
