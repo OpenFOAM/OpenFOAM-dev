@@ -1,0 +1,3 @@
+vtkPVReaders.C
+
+LIB = $(FOAM_LIBBIN)/libvtkPVReaders

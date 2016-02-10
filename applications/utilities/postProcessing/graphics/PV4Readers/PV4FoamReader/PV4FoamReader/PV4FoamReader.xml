@@ -1,6 +1,0 @@
-<ParaViewReaders>
-  <Reader name="PV4FoamReader"
-          extensions="OpenFOAM"
-          file_description="OpenFOAM Reader">
-  </Reader>
-</ParaViewReaders>

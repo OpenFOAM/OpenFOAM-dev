@@ -1,0 +1,6 @@
+<ParaViewReaders>
+  <Reader name="PVblockMeshReader"
+      extensions="blockMesh"
+      file_description="OpenFOAM blockMesh reader">
+  </Reader>
+</ParaViewReaders>

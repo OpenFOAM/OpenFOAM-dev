@@ -1,9 +1,0 @@
-#!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
-set -x
-
-wclean libso vtkPV4Readers
-PV4blockMeshReader/Allwclean
-PV4FoamReader/Allwclean
-
-# ----------------------------------------------------------------- end-of-file
