@@ -22,7 +22,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config.sh/CGAL
+#     etc/config.sh/CGAL
 #
 # Description
 #     Setup file for CGAL (& boost) include/libraries.

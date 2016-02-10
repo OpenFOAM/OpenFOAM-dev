@@ -22,7 +22,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config.sh/gperftools
+#     etc/config.sh/gperftools
 #
 # Description
 #     Setup file for gperftools binaries libraries.

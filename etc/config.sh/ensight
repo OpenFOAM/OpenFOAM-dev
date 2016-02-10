@@ -22,7 +22,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config.sh/ensight
+#     etc/config.sh/ensight
 #
 # Description
 #     Setup file for Ensight

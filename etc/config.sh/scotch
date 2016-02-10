@@ -22,7 +22,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config.sh/scotch
+#     etc/config.sh/scotch
 #
 # Description
 #     Setup file for scotch include/libraries.

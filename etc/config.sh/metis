@@ -22,7 +22,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config.sh/metis
+#     etc/config.sh/metis
 #
 # Description
 #     Setup file for metis include/libraries.
