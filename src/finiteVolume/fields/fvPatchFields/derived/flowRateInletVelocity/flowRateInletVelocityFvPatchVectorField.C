@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "flowRateInletVelocityFvPatchVectorField.H"
+#include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 #include "one.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

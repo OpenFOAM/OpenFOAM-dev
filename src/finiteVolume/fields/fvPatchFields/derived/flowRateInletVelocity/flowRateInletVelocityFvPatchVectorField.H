@@ -76,8 +76,7 @@ Description
     }
     \endverbatim
 
-    The \c flowRate entry is a \c Function1 type, meaning that it can be
-    specified as constant, a polynomial fuction of time, and ...
+    The \c flowRate entry is a \c Function1 of time, see Foam::Function1Types.
 
 Note
     - \c rhoInlet is required for the case of a mass flow rate, where the
