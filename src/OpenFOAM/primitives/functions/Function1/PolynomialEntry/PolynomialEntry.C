@@ -198,8 +198,13 @@ Type Foam::Function1Types::Polynomial<Type>::integrate
 }
 
 
-// * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
+template<class Type>
+void Foam::Function1Types::Polynomial<Type>::writeData(Ostream& os) const
+{
+    Function1<Type>::writeData(os);
 
-#include "PolynomialEntryIO.C"
+    os  << nl << indent << coeffs_ << token::END_STATEMENT << nl;
+}
+
 
 // ************************************************************************* //

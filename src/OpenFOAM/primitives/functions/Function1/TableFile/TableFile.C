@@ -72,8 +72,24 @@ Foam::Function1Types::TableFile<Type>::~TableFile()
 {}
 
 
-// * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-#include "TableFileIO.C"
+template<class Type>
+void Foam::Function1Types::TableFile<Type>::writeData(Ostream& os) const
+{
+    Function1<Type>::writeData(os);
+
+    os  << token::END_STATEMENT << nl
+        << indent << word(this->name() + "Coeffs") << nl
+        << indent << token::BEGIN_BLOCK << nl << incrIndent;
+
+    // Note: for TableBase write the dictionary entries it needs but not
+    // the values themselves
+    TableBase<Type>::writeEntries(os);
+
+    os.writeKeyword("fileName")<< fName_ << token::END_STATEMENT << nl;
+    os  << decrIndent << indent << token::END_BLOCK << endl;
+}
+
 
 // ************************************************************************* //

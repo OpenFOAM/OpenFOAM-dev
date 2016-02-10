@@ -406,8 +406,29 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1Types::TableBase<Type>::y() const
 }
 
 
-// * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
+template<class Type>
+void Foam::Function1Types::TableBase<Type>::writeEntries(Ostream& os) const
+{
+    if (boundsHandling_ != CLAMP)
+    {
+        os.writeKeyword("outOfBounds") << boundsHandlingToWord(boundsHandling_)
+            << token::END_STATEMENT << nl;
+    }
+    if (interpolationScheme_ != "linear")
+    {
+        os.writeKeyword("interpolationScheme") << interpolationScheme_
+            << token::END_STATEMENT << nl;
+    }
+}
 
-#include "TableBaseIO.C"
+
+template<class Type>
+void Foam::Function1Types::TableBase<Type>::writeData(Ostream& os) const
+{
+    Function1<Type>::writeData(os);
+    os  << nl << indent << table_ << token::END_STATEMENT << nl;
+    writeEntries(os);
+}
+
 
 // ************************************************************************* //

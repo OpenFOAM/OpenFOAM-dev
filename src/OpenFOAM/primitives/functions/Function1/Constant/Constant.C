@@ -90,8 +90,13 @@ Type Foam::Function1Types::Constant<Type>::integrate
 }
 
 
-// * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
+template<class Type>
+void Foam::Function1Types::Constant<Type>::writeData(Ostream& os) const
+{
+    Function1<Type>::writeData(os);
 
-#include "ConstantIO.C"
+    os  << token::SPACE << value_ << token::END_STATEMENT << nl;
+}
+
 
 // ************************************************************************* //

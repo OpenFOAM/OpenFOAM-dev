@@ -120,8 +120,33 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1<Type>::integrate
 }
 
 
+template<class Type>
+void Foam::Function1<Type>::writeData(Ostream& os) const
+{
+    os.writeKeyword(name_) << type();
+}
+
+
 // * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
 
-#include "Function1IO.C"
+template<class Type>
+Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const Function1<Type>& f1
+)
+{
+    // Check state of Ostream
+    os.check
+    (
+        "Ostream& operator<<(Ostream&, const Function1<Type>&)"
+    );
+
+    os  << f1.name_;
+    f1.writeData(os);
+
+    return os;
+}
+
 
 // ************************************************************************* //
