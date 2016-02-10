@@ -217,6 +217,7 @@ _foamSource $WM_PROJECT_DIR/etc/config.sh/aliases
 
 # Source user setup files for optional packages
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/mpi`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/paraview`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/ensight`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/gperftools`
