@@ -47,22 +47,6 @@ rotatingWallVelocityFvPatchVectorField
 Foam::rotatingWallVelocityFvPatchVectorField::
 rotatingWallVelocityFvPatchVectorField
 (
-    const rotatingWallVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
-    origin_(ptf.origin_),
-    axis_(ptf.axis_),
-    omega_(ptf.omega_, false)
-{}
-
-
-Foam::rotatingWallVelocityFvPatchVectorField::
-rotatingWallVelocityFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -86,6 +70,22 @@ rotatingWallVelocityFvPatchVectorField
         updateCoeffs();
     }
 }
+
+
+Foam::rotatingWallVelocityFvPatchVectorField::
+rotatingWallVelocityFvPatchVectorField
+(
+    const rotatingWallVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
+    origin_(ptf.origin_),
+    axis_(ptf.axis_),
+    omega_(ptf.omega_, false)
+{}
 
 
 Foam::rotatingWallVelocityFvPatchVectorField::

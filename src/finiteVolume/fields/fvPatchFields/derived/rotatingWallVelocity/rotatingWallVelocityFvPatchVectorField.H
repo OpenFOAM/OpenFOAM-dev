@@ -50,12 +50,11 @@ Description
     }
     \endverbatim
 
-    The \c omega entry is a Function1 type, able to describe time varying
-    functions.
+    The \c omega entry is a Function1 of time, see Foam::Function1Types.
 
 SeeAlso
-    Foam::Function1Types
     Foam::fixedValueFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     rotatingWallVelocityFvPatchVectorField.C
