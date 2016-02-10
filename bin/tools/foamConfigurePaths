@@ -146,7 +146,7 @@ do
         paraviewInstall="$2"
         # replace ParaView_DIR=...
         _inlineSed \
-            etc/config/paraview.sh \
+            etc/config.sh/paraview \
             'ParaView_DIR=.*' \
             'ParaView_DIR='"$paraviewInstall" \
             "Replacing ParaView_DIR setting by '$paraviewInstall'"
@@ -157,7 +157,7 @@ do
         paraviewVersion="$2"
         # replace ParaView_VERSION=...
         _inlineSed \
-            etc/config/paraview.sh \
+            etc/config.sh/paraview \
             'ParaView_VERSION=.*' \
             'ParaView_VERSION='"$paraviewVersion" \
             "Replacing ParaView_VERSION setting by '$paraviewVersion'"
@@ -167,7 +167,7 @@ do
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
         scotchVersion="$2"
         _inlineSed \
-            etc/config/scotch.sh \
+            etc/config.sh/scotch \
             'SCOTCH_VERSION=.*' \
             'SCOTCH_VERSION='"$scotchVersion" \
             "Replacing SCOTCH_VERSION setting by '$scotchVersion'"
@@ -177,7 +177,7 @@ do
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
         scotchArchPath="$2"
         _inlineSed \
-            etc/config/scotch.sh \
+            etc/config.sh/scotch \
             'SCOTCH_ARCH_PATH=.*' \
             'SCOTCH_ARCH_PATH='"$scotchArchPath" \
             "Replacing SCOTCH_ARCH_PATH setting by '$scotchArchPath'"

@@ -6,7 +6,7 @@ targetType=libso
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 # get METIS_VERSION, METIS_ARCH_PATH
-if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/metis.sh`
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/metis`
 then
     . $settings
     echo "using METIS_ARCH_PATH=$METIS_ARCH_PATH"
@@ -16,7 +16,7 @@ then
     fi
 else
     echo
-    echo "Error: no config/metis.sh settings"
+    echo "Error: no config.sh/metis settings"
     echo
 fi
 

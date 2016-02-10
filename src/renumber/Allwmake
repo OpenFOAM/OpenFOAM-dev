@@ -6,13 +6,13 @@ targetType=libso
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 ## get ZOLTAN_ARCH_PATH
-#if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/zoltan.sh`
+#if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/zoltan`
 #then
 #    . $settings
 #    echo "using ZOLTAN_ARCH_PATH=$ZOLTAN_ARCH_PATH"
 #else
 #    echo
-#    echo "Error: no config/zoltan.sh settings"
+#    echo "Error: no config.sh/zoltan settings"
 #    echo
 #fi
 
