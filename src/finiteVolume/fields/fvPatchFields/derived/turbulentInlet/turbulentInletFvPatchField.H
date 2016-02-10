@@ -99,7 +99,7 @@ class turbulentInletFvPatchField
         //- Random number generator
         Random ranGen_;
 
-        //- Fluctuation scake
+        //- Fluctuation scale
         Type fluctuationScale_;
 
         //- Reference field
