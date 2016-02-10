@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -313,7 +313,11 @@ public:
         TypeName("particle");
 
         //- String representation of properties
-        DefinePropertyList("(Px Py Pz) cellI tetFaceI tetPtI origProc origId");
+        DefinePropertyList
+        (
+            "(Px Py Pz) cellI faceI stepFraction "
+            "tetFaceI tetPtI origProc origId"
+        );
 
         //- Cumulative particle counter - used to provode unique ID
         static label particleCount_;
