@@ -22,30 +22,34 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Sine
+    Foam::Function1Types::Square
 
 Description
-    Templated sine function with support for an offset level.
+    Templated square-wave function with support for an offset level.
 
         \f[
-            a sin(2 \pi f (t - t_0)) s + l
+            a square(f (t - t_0)) s + l
         \f]
 
     where
 
+    \f$ square(t) \f$ is the square-wave function in range \f$ [-1, 1] \f$
+    with a mark/space ratio of \f$ r \f$
+
     \vartable
-        symbol  | Description       | Data type
-        a       | Amplitude         | Function1<scalar>
-        f       | Frequency [1/s]   | Function1<scalar>
-        s       | Type scale factor | Function1<Type>
-        l       | Type offset level | Function1<Type>
-        t_0     | Start time [s]    | scalar
+        symbol  | Description       | Data type         | Default
+        a       | Amplitude         | Function1<scalar> |
+        f       | Frequency [1/s]   | Function1<scalar> |
+        s       | Type scale factor | Function1<Type>   |
+        l       | Type offset level | Function1<Type>   |
+        t_0     | Start time [s]    | scalar            | 0
+        r       | mark/space ratio  | scalar            | 1
         t       | Time [s]          | scalar
     \endvartable
 
     Example for a scalar:
     \verbatim
-        <entryName> sine;
+        <entryName> square;
         <entryName>Coeffs
         {
             frequency 10;
@@ -57,7 +61,7 @@ Description
 
     Example for a vector:
     \verbatim
-        <entryName> sine;
+        <entryName> square;
         <entryName>Coeffs
         {
             frequency 10;
@@ -68,12 +72,12 @@ Description
     \endverbatim
 
 SourceFiles
-    Sine.C
+    Square.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Sine_H
-#define Sine_H
+#ifndef Square_H
+#define Square_H
 
 #include "Function1.H"
 
@@ -85,29 +89,32 @@ namespace Function1Types
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Sine Declaration
+                           Class Square Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class Sine
+class Square
 :
     public Function1<Type>
 {
     // Private data
 
-        //- Start-time for the sin function
+        //- Start-time for the square function
         scalar t0_;
 
-        //- Scalar amplitude of the sin function
+        //- Mark/space ratio of the square function
+        scalar markSpace_;
+
+        //- Scalar amplitude of the square function
         autoPtr<Function1<scalar>> amplitude_;
 
-        //- Frequency of the sin function
+        //- Frequency of the square function
         autoPtr<Function1<scalar>> frequency_;
 
-        //- Scaling factor of the sin function
+        //- Scaling factor of the square function
         autoPtr<Function1<Type>> scale_;
 
-        //- Level to which the sin function is added
+        //- Level to which the square function is added
         autoPtr<Function1<Type>> level_;
 
 
@@ -117,19 +124,19 @@ class Sine
         void read(const dictionary& coeffs);
 
         //- Disallow default bitwise assignment
-        void operator=(const Sine<Type>&);
+        void operator=(const Square<Type>&);
 
 
 public:
 
     // Runtime type information
-    TypeName("sine");
+    TypeName("square");
 
 
     // Constructors
 
         //- Construct from entry name and dictionary
-        Sine
+        Square
         (
             const word& entryName,
             const dictionary& dict,
@@ -137,17 +144,17 @@ public:
         );
 
         //- Copy constructor
-        Sine(const Sine<Type>& se);
+        Square(const Square<Type>& se);
 
         //- Construct and return a clone
         virtual tmp<Function1<Type>> clone() const
         {
-            return tmp<Function1<Type>>(new Sine<Type>(*this));
+            return tmp<Function1<Type>>(new Square<Type>(*this));
         }
 
 
     //- Destructor
-    virtual ~Sine();
+    virtual ~Square();
 
 
     // Member Functions
@@ -168,7 +175,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "Sine.C"
+#   include "Square.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

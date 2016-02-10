@@ -23,15 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Sine.H"
-#include "mathematicalConstants.H"
+#include "Square.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Sine<Type>::read(const dictionary& coeffs)
+void Foam::Function1Types::Square<Type>::read(const dictionary& coeffs)
 {
     t0_ = coeffs.lookupOrDefault<scalar>("t0", 0);
+    markSpace_ = coeffs.lookupOrDefault<scalar>("markSpace", 1);
     amplitude_ = Function1<scalar>::New("amplitude", coeffs);
     frequency_ = Function1<scalar>::New("frequency", coeffs);
     scale_ = Function1<Type>::New("scale", coeffs);
@@ -40,7 +40,7 @@ void Foam::Function1Types::Sine<Type>::read(const dictionary& coeffs)
 
 
 template<class Type>
-Foam::Function1Types::Sine<Type>::Sine
+Foam::Function1Types::Square<Type>::Square
 (
     const word& entryName,
     const dictionary& dict,
@@ -54,10 +54,11 @@ Foam::Function1Types::Sine<Type>::Sine
 
 
 template<class Type>
-Foam::Function1Types::Sine<Type>::Sine(const Sine<Type>& se)
+Foam::Function1Types::Square<Type>::Square(const Square<Type>& se)
 :
     Function1<Type>(se),
     t0_(se.t0_),
+    markSpace_(se.markSpace_),
     amplitude_(se.amplitude_, false),
     frequency_(se.frequency_, false),
     scale_(se.scale_, false),
@@ -68,31 +69,44 @@ Foam::Function1Types::Sine<Type>::Sine(const Sine<Type>& se)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Sine<Type>::~Sine()
+Foam::Function1Types::Square<Type>::~Square()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::Function1Types::Sine<Type>::value(const scalar t) const
+Type Foam::Function1Types::Square<Type>::value(const scalar t) const
 {
+    // Number of waves including fractions
+    scalar waves = frequency_->value(t)*(t - t0_);
+
+    // Number of complete waves
+    scalar nWaves;
+
+    // Fraction of last incomplete wave
+    scalar waveFrac = std::modf(waves, &nWaves);
+
+    // Mark fraction of a wave
+    scalar markFrac = markSpace_/(1.0 + markSpace_);
+
     return
         amplitude_->value(t)
-       *sin(constant::mathematical::twoPi*frequency_->value(t)*(t - t0_))
+       *(waveFrac < markFrac ? 1 : -1)
        *scale_->value(t)
       + level_->value(t);
 }
 
 
 template<class Type>
-void Foam::Function1Types::Sine<Type>::writeData(Ostream& os) const
+void Foam::Function1Types::Square<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
     os.writeKeyword("t0") << t0_ << token::END_STATEMENT << nl;
+    os.writeKeyword("markSpace") << markSpace_ << token::END_STATEMENT << nl;
     amplitude_->writeData(os);
     frequency_->writeData(os);
     scale_->writeData(os);

@@ -26,16 +26,12 @@ License
 #include "Constant.H"
 #include "PolynomialEntry.H"
 #include "Sine.H"
+#include "Square.H"
 #include "CSV.H"
 #include "Table.H"
 #include "TableFile.H"
 
-#include "label.H"
-#include "scalar.H"
-#include "vector.H"
-#include "sphericalTensor.H"
-#include "symmTensor.H"
-#include "tensor.H"
+#include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,6 +40,7 @@ License
     makeFunction1Type(Constant, Type);                                         \
     makeFunction1Type(Polynomial, Type);                                       \
     makeFunction1Type(Sine, Type);                                             \
+    makeFunction1Type(Square, Type);                                           \
     makeFunction1Type(CSV, Type);                                              \
     makeFunction1Type(Table, Type);                                            \
     makeFunction1Type(TableFile, Type);
