@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,8 @@ Description
     }
     \endverbatim
 
+    The \c flowRate entry is a \c Function1 of time, see Foam::Function1Types.
+
 Note
     - the value is positive into the domain
     - may not work correctly for transonic inlets
@@ -61,6 +63,7 @@ Note
 
 SeeAlso
     Foam::fixedValueFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     variableHeightFlowRateInletVelocityFvPatchVectorField.C
@@ -71,6 +74,7 @@ SourceFiles
 #define variableHeightFlowRateInletVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,7 +91,7 @@ class variableHeightFlowRateInletVelocityFvPatchVectorField
     // Private data
 
         //- Inlet integral flow rate
-        scalar flowRate_;
+        autoPtr<Function1<scalar>> flowRate_;
 
         //- Name of the phase-fraction field
         word alphaName_;
@@ -167,21 +171,6 @@ public:
 
 
     // Member functions
-
-        // Access
-
-            //- Return the flux
-            scalar flowRate() const
-            {
-                return flowRate_;
-            }
-
-            //- Return reference to the flux to allow adjustment
-            scalar& flowRate()
-            {
-                return flowRate_;
-            }
-
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

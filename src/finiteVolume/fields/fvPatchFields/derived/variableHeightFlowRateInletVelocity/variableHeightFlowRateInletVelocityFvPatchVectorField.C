@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "variableHeightFlowRateInletVelocityFvPatchVectorField.H"
-#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
-#include "surfaceFields.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,8 +37,22 @@ Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF),
-    flowRate_(0),
+    flowRate_(),
     alphaName_("none")
+{}
+
+
+Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
+::variableHeightFlowRateInletVelocityFvPatchVectorField
+(
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<vector>(p, iF, dict),
+    flowRate_(Function1<scalar>::New("flowRate", dict)),
+    alphaName_(dict.lookup("alpha"))
 {}
 
 
@@ -54,22 +66,8 @@ Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
-    flowRate_(ptf.flowRate_),
+    flowRate_(ptf.flowRate_, false),
     alphaName_(ptf.alphaName_)
-{}
-
-
-Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
-::variableHeightFlowRateInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<vector>(p, iF, dict),
-    flowRate_(readScalar(dict.lookup("flowRate"))),
-    alphaName_(dict.lookup("alpha"))
 {}
 
 
@@ -80,7 +78,7 @@ Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(ptf),
-    flowRate_(ptf.flowRate_),
+    flowRate_(ptf.flowRate_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -93,7 +91,7 @@ Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(ptf, iF),
-    flowRate_(ptf.flowRate_),
+    flowRate_(ptf.flowRate_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -114,8 +112,11 @@ void Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
     alphap = max(alphap, scalar(0));
     alphap = min(alphap, scalar(1));
 
+    const scalar t = db().time().timeOutputValue();
+    scalar flowRate = flowRate_->value(t);
+
     // a simpler way of doing this would be nice
-    scalar avgU = -flowRate_/gSum(patch().magSf()*alphap);
+    scalar avgU = -flowRate/gSum(patch().magSf()*alphap);
 
     vectorField n(patch().nf());
 
@@ -131,11 +132,8 @@ void Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchField<vector>::write(os);
-
-    os.writeKeyword("flowRate") << flowRate_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("alpha") << alphaName_
-        << token::END_STATEMENT << nl;
+    flowRate_->writeData(os);
+    os.writeKeyword("alpha") << alphaName_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
 }
 
