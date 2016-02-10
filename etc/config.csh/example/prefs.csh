@@ -2,9 +2,9 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # License
 #     This file is part of OpenFOAM.
 #
@@ -22,33 +22,31 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config/ensight.csh
+#     config.csh/example/prefs.csh
 #
 # Description
-#     Setup file for Ensight
-#     Sourced from OpenFOAM-*/etc/cshrc
+#     Preset variables for the OpenFOAM configuration - C-Shell shell syntax.
+#
+#     The prefs.csh file will be sourced by the OpenFOAM etc/cshrc when it is
+#     found by foamEtcFile.
+#
+# See Also
+#     'foamEtcFile -help' or 'foamEtcFile -list' for information about the
+#     paths searched
 #
 #------------------------------------------------------------------------------
 
-# fallback value
-if (! $?CEI_HOME) then
-    setenv CEI_HOME /usr/local/ensight/CEI
-endif
+## Specify OpenFOAM ThirdParty compiler
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# set foamCompiler=ThirdParty
 
-if ( -r $CEI_HOME ) then
+## Specify compiler type
+## ~~~~~~~~~~~~~~~~~~~~~
+#setenv WM_COMPILER Clang
 
-    # special treatment for 32bit OpenFOAM and 64bit Ensight
-    if ($WM_ARCH == linux && `uname -m` == x86_64) then
-        setenv CEI_ARCH linux_2.6_32
-    endif
+## Specify system openmpi
+## ~~~~~~~~~~~~~~~~~~~~~~
+# setenv WM_MPLIB SYSTEMOPENMPI
 
-    # add to path
-    setenv PATH ${CEI_HOME}/bin:${PATH}
 
-    setenv ENSIGHT9_INPUT dummy
-    setenv ENSIGHT9_READER $FOAM_LIBBIN
-else
-    unsetenv CEI_HOME
-endif
-
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------- end-of-file

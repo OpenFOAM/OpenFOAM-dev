@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -211,16 +211,16 @@ export PATH LD_LIBRARY_PATH MANPATH
 
 # Source project setup files
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
-_foamSource $WM_PROJECT_DIR/etc/config/settings.sh
-_foamSource $WM_PROJECT_DIR/etc/config/aliases.sh
+_foamSource $WM_PROJECT_DIR/etc/config.sh/settings
+_foamSource $WM_PROJECT_DIR/etc/config.sh/aliases
 
 
 # Source user setup files for optional packages
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/paraview.sh`
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/ensight.sh`
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/gperftools.sh`
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/CGAL.sh`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/paraview`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/ensight`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/gperftools`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/CGAL`
 
 
 # Clean environment paths again. Only remove duplicates

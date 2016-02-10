@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -22,39 +22,30 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config/ensight.sh
+#     config.csh/example/compiler
 #
 # Description
-#     Setup file for Ensight
-#     Sourced from OpenFOAM-*/etc/bashrc
+#     Example of fine tuning ThirdParty compiler settings for OpenFOAM
+#     Sourced from OpenFOAM-<VERSION>/etc/config.csh/settings
 #
 #------------------------------------------------------------------------------
 
-# fallback value
-if [ ! -d "$CEI_HOME" ]
-then
-    export CEI_HOME=/usr/local/ensight/CEI
-fi
+# Modified compiler settings
+switch ("$WM_COMPILER")
+case Gcc46:
+case Gcc46++0x:
+    set gcc_version=gcc-4.6.0
+    set gmp_version=gmp-5.0.1
+    set mpfr_version=mpfr-2.4.2
+    set mpc_version=mpc-0.8.1
+    breaksw
+case Gcc45:
+case Gcc45++0x:
+    set gcc_version=gcc-4.5.2
+    set gmp_version=gmp-5.0.1
+    set mpfr_version=mpfr-2.4.2
+    set mpc_version=mpc-0.8.1
+    breaksw
+endsw
 
-if [ -r $CEI_HOME ]
-then
-
-    # special treatment for 32bit OpenFOAM and 64bit Ensight
-    if [ "$WM_ARCH" = linux -a `uname -m` = x86_64 ]
-    then
-        export CEI_ARCH=linux_2.6_32
-    fi
-
-    # add to path if required
-    if [ "$CEI_HOME/bin/ensight" != "`which ensight 2>/dev/null`" ]
-    then
-        export PATH=$CEI_HOME/bin:$PATH
-    fi
-
-    export ENSIGHT9_INPUT=dummy
-    export ENSIGHT9_READER=$FOAM_LIBBIN
-else
-    unset CEI_HOME
-fi
-
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------- end-of-file

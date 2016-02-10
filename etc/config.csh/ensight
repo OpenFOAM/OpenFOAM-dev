@@ -2,9 +2,9 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # License
 #     This file is part of OpenFOAM.
 #
@@ -22,36 +22,33 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config/CGAL.sh
+#     config.csh/ensight
 #
 # Description
-#     Setup file for CGAL (& boost) include/libraries.
-#     Sourced from OpenFOAM-<VERSION>/etc/bashrc
+#     Setup file for Ensight
+#     Sourced from OpenFOAM-*/etc/cshrc
+#
 #------------------------------------------------------------------------------
 
-boost_version=boost-system
-cgal_version=CGAL-4.7
+# fallback value
+if (! $?CEI_HOME) then
+    setenv CEI_HOME /usr/local/ensight/CEI
+endif
 
-export BOOST_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$boost_version
-export CGAL_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cgal_version
+if ( -r $CEI_HOME ) then
 
-if [ "$FOAM_VERBOSE" -a "$PS1" ]
-then
-    echo "Using CGAL and boost" 1>&2
-    echo "    $cgal_version at $CGAL_ARCH_PATH" 1>&2
-    echo "    $boost_version at $BOOST_ARCH_PATH" 1>&2
-fi
+    # special treatment for 32bit OpenFOAM and 64bit Ensight
+    if ($WM_ARCH == linux && `uname -m` == x86_64) then
+        setenv CEI_ARCH linux_2.6_32
+    endif
 
-if [ -d "$CGAL_ARCH_PATH" ]
-then
-    _foamAddLib $CGAL_ARCH_PATH/lib
-fi
+    # add to path
+    setenv PATH ${CEI_HOME}/bin:${PATH}
 
-if [ -d "$BOOST_ARCH_PATH" ]
-then
-    _foamAddLib $BOOST_ARCH_PATH/lib
-fi
-
-unset boost_version cgal_version
+    setenv ENSIGHT9_INPUT dummy
+    setenv ENSIGHT9_READER $FOAM_LIBBIN
+else
+    unsetenv CEI_HOME
+endif
 
 # -----------------------------------------------------------------------------

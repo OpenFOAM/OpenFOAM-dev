@@ -22,7 +22,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     etc/config/settings.csh
+#     etc/config.csh/settings
 #
 # Description
 #     Startup file for OpenFOAM
@@ -209,7 +209,7 @@ unsetenv MPFR_ARCH_PATH GMP_ARCH_PATH
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if ( ! $?foamCompiler ) then
     set foamCompiler=system
-    echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+    echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
     echo "    foamCompiler not set, using '$foamCompiler'"
 endif
 
@@ -254,7 +254,7 @@ case ThirdParty:
         breaksw
     default:
         echo
-        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+        echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
         echo "    Unknown OpenFOAM compiler type '$WM_COMPILER'"
         echo "    Please check your settings"
         echo
@@ -262,7 +262,7 @@ case ThirdParty:
     endsw
 
     # Optional configuration tweaks:
-    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/compiler.csh`
+    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/compiler`
 
     if ( $?gcc_version ) then
         set gccDir=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH/$gcc_version
@@ -275,7 +275,7 @@ case ThirdParty:
         # Check that the compiler directory can be found
         if ( ! -d "$gccDir" ) then
             echo
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+            echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
             echo "    Cannot find $gccDir installation."
             echo "    Please install this compiler version or if you wish to" \
                  " use the system compiler,"
@@ -311,7 +311,7 @@ case ThirdParty:
         # Check that the compiler directory can be found
         if ( ! -d "$clangDir" ) then
             echo
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+            echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
             echo "    Cannot find $clangDir installation."
             echo "    Please install this compiler version or if you wish to" \
                  " use the system compiler,"
@@ -360,7 +360,7 @@ case SYSTEMOPENMPI:
 case OPENMPI:
     setenv FOAM_MPI openmpi-1.10.0
     # Optional configuration tweaks:
-    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/openmpi.csh`
+    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/openmpi`
 
     setenv MPI_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
 
@@ -381,7 +381,7 @@ case SYSTEMMPI:
 
     if ( ! ($?MPI_ROOT) ) then
         echo
-        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+        echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
         echo "    Please set the environment variable MPI_ROOT to point to" \
              " the base folder for the system MPI in use."
         echo "    Example:"
@@ -393,7 +393,7 @@ case SYSTEMMPI:
 
         if ( ! ($?MPI_ARCH_FLAGS) ) then
             echo
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+            echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
             echo "    MPI_ARCH_FLAGS is not set. Example:"
             echo
             echo '        setenv MPI_ARCH_FLAGS "-DOMPI_SKIP_MPICXX"'
@@ -402,7 +402,7 @@ case SYSTEMMPI:
 
         if ( ! ($?MPI_ARCH_INC) ) then
             echo
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+            echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
             echo "    MPI_ARCH_INC is not set. Example:"
             echo
             echo '        setenv MPI_ARCH_INC "-isystem $MPI_ROOT/include"'
@@ -411,7 +411,7 @@ case SYSTEMMPI:
 
         if ( ! ($?MPI_ARCH_LIBS) ) then
             echo
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+            echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
             echo "    MPI_ARCH_LIBS is not set. Example:"
             echo
             echo '        setenv MPI_ARCH_LIBS "-L$MPI_ROOT/lib -lmpi"'
@@ -499,7 +499,7 @@ case SGIMPI:
     if ( ! $?MPI_ROOT) setenv MPI_ROOT /dummy
 
     if ( ! -d "$MPI_ROOT" ) then
-        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+        echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
         echo "    MPI_ROOT not a valid mpt installation directory."
         echo "    Please set MPI_ROOT to the mpt installation directory."
         echo "    (usually done by loading the mpt module)"
@@ -529,7 +529,7 @@ case INTELMPI:
     if ( ! $?MPI_ROOT) setenv MPI_ROOT /dummy
 
     if ( ! -d "$MPI_ROOT" ) then
-        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.csh:"
+        echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
         echo "    MPI_ROOT not a valid mpt installation directory."
         echo "    Please set MPI_ROOT to the mpt installation directory."
         echo "    (usually done by loading the mpt module)"

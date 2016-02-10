@@ -1,0 +1,20 @@
+* OpenFOAM Configuration
+  The main OpenFOAM settings are located in the parent etc/ directory.  The bash
+  and csh shells are supported and to configure OpenFOAM source etc/bashrc or
+  etc/cshrc respectively which source the following files in the config.sh or
+  config.csh respectively:
+  + =settings=: core settings
+  + =aliases=: aliases for interactive shells
+  + =unset=: sourced to clear as many OpenFOAM environment settings as possible
+  + =ensight=: application settings for EnSight
+  + =paraview=: application settings for ParaView
+  + =scotch=: application settings for compiling against scotch
+  + =metis=: application settings for compiling against metis 5
+
+  The config.*/example directories contains various example configuration files
+  for the corresponding shell:
+  + =compiler=: an example of fine tuning ThirdParty compiler settings
+  + =openmpi=: an example of fine tuning openmpi settings for OpenFOAM
+  + =paraview=: an example of chaining to the standard config/paraview with a
+    different ParaView_VERSION
+  + =prefs=: an example of supplying alternative site-defined settings

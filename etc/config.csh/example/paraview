@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -22,10 +22,10 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config/example/paraview.sh
+#     config.csh/example/paraview
 #
 # Description
-#     Example of chaining to the standard config/paraview.sh with a
+#     Example of chaining to the standard config.csh/paraview with a
 #     different ParaView_VERSION
 #
 # Note
@@ -35,11 +35,11 @@
 #------------------------------------------------------------------------------
 
 #
-# Use other (shipped) paraview.sh with a different ParaView_VERSION
+# Use other (shipped) paraview.csh with a different ParaView_VERSION
 #
 
-foamFile=$($WM_PROJECT_DIR/bin/foamEtcFile -mode o config/paraview.sh 2>/dev/null)
-[ $? -eq 0 ] && . $foamFile ParaView_VERSION=3.12.0
+set foamFile=`$WM_PROJECT_DIR/bin/foamEtcFile -mode o config.csh/paraview`
+if ( $status == 0 ) source $foamFile ParaView_VERSION=3.12.0
 
 unset foamFile
 

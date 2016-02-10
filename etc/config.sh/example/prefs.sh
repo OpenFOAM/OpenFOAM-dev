@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -22,33 +22,31 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config/CGAL.csh
+#     config.sh/example/prefs.sh
 #
 # Description
-#     Setup file for CGAL (& boost) include/libraries.
-#     Sourced from OpenFOAM-<VERSION>/etc/cshrc
-##------------------------------------------------------------------------------
+#     Preset variables for the OpenFOAM configuration - POSIX shell syntax.
+#
+#     The prefs.sh file will be sourced by the OpenFOAM etc/bashrc when it is
+#     found by foamEtcFile.
+#
+# See Also
+#     'foamEtcFile -help' or 'foamEtcFile -list' for information about the
+#     paths searched
+#
+#------------------------------------------------------------------------------
 
-set boost_version=boost-system
-set cgal_version=CGAL-4.7
+## Specify OpenFOAM ThirdParty compiler
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# foamCompiler=ThirdParty
 
-setenv BOOST_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$boost_version
-setenv CGAL_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cgal_version
+## Specify compiler type
+## ~~~~~~~~~~~~~~~~~~~~~
+#export WM_COMPILER=Clang
 
-if ($?FOAM_VERBOSE && $?prompt) then
-    echo "Using CGAL and boost"
-    echo "    $cgal_version at $CGAL_ARCH_PATH"
-    echo "    $boost_version at $BOOST_ARCH_PATH"
-endif
+## Specify system openmpi
+## ~~~~~~~~~~~~~~~~~~~~~~
+# export WM_MPLIB=SYSTEMOPENMPI
 
-if ( -d "$CGAL_ARCH_PATH" ) then
-    _foamAddLib $CGAL_ARCH_PATH/lib
-endif
 
-if ( -d "$BOOST_ARCH_PATH" ) then
-    _foamAddLib $BOOST_ARCH_PATH/lib
-endif
-
-unset boost_version cgal_version
-
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------- end-of-file

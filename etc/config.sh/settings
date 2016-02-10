@@ -22,7 +22,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     etc/config/settings.sh
+#     etc/config.sh/settings
 #
 # Description
 #     Startup file for OpenFOAM
@@ -236,7 +236,7 @@ unset MPFR_ARCH_PATH GMP_ARCH_PATH
 if [ -z "$foamCompiler" ]
 then
     foamCompiler=system
-    echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+    echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
     echo "    foamCompiler not set, using '$foamCompiler'" 1>&2
 fi
 
@@ -279,7 +279,7 @@ OpenFOAM | ThirdParty)
         ;;
     *)
         echo 1>&2
-        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
         echo "    Unknown OpenFOAM compiler type '$WM_COMPILER'" 1>&2
         echo "    Please check your settings" 1>&2
         echo 1>&2
@@ -287,7 +287,7 @@ OpenFOAM | ThirdParty)
     esac
 
     # Optional configuration tweaks:
-    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/compiler.sh`
+    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/compiler`
 
     if [ -n "$gcc_version" ]
     then
@@ -299,7 +299,7 @@ OpenFOAM | ThirdParty)
         # Check that the compiler directory can be found
         [ -d "$gccDir" ] || {
             echo 1>&2
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+            echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
             echo "    Cannot find $gccDir installation." 1>&2
             echo "    Please install this compiler version or if you wish to" \
                  " use the system compiler," 1>&2
@@ -337,7 +337,7 @@ OpenFOAM | ThirdParty)
         # Check that the compiler directory can be found
         [ -d "$clangDir" ] || {
             echo 1>&2
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+            echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
             echo "    Cannot find $clangDir installation." 1>&2
             echo "    Please install this compiler version or if you wish to" \
                  " use the system compiler," 1>&2
@@ -383,7 +383,7 @@ SYSTEMOPENMPI)
 OPENMPI)
     export FOAM_MPI=openmpi-1.10.0
     # Optional configuration tweaks:
-    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/openmpi.sh`
+    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/openmpi`
 
     export MPI_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
 
@@ -405,7 +405,7 @@ SYSTEMMPI)
     if [ -z "$MPI_ROOT" ]
     then
         echo 1>&2
-        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
         echo "    Please set the environment variable MPI_ROOT to point to" \
              " the base folder for the system MPI in use." 1>&2
         echo "    Example:" 1>&2
@@ -418,7 +418,7 @@ SYSTEMMPI)
         if [ -z "$MPI_ARCH_FLAGS" ]
         then
             echo 1>&2
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+            echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
             echo "    MPI_ARCH_FLAGS is not set. Example:" 1>&2
             echo 1>&2
             echo "        export MPI_ARCH_FLAGS=\"-DOMPI_SKIP_MPICXX\"" 1>&2
@@ -428,7 +428,7 @@ SYSTEMMPI)
         if [ -z "$MPI_ARCH_INC" ]
         then
             echo 1>&2
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+            echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
             echo "    MPI_ARCH_INC is not set. Example:" 1>&2
             echo 1>&2
             echo "        export MPI_ARCH_INC=\"-isystem \$MPI_ROOT/include\"" 1>&2
@@ -438,7 +438,7 @@ SYSTEMMPI)
         if [ -z "$MPI_ARCH_LIBS" ]
         then
             echo 1>&2
-            echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+            echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
             echo "    MPI_ARCH_LIBS is not set. Example:" 1>&2
             echo 1>&2
             echo "        export MPI_ARCH_LIBS=\"-L\$MPI_ROOT/lib -lmpi\"" 1>&2
@@ -532,7 +532,7 @@ SGIMPI)
 
     if [ ! -d "$MPI_ROOT" -o -z "$MPI_ARCH_PATH" ]
     then
-        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
         echo "    MPI_ROOT not a valid mpt installation directory or ending" \
              " in a '/'." 1>&2
         echo "    Please set MPI_ROOT to the mpt installation directory." 1>&2
@@ -559,7 +559,7 @@ INTELMPI)
 
     if [ ! -d "$MPI_ROOT" -o -z "$MPI_ARCH_PATH" ]
     then
-        echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:" 1>&2
+        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
         echo "    MPI_ROOT not a valid mpt installation directory or ending" \
              " in a '/'." 1>&2
         echo "    Please set MPI_ROOT to the mpt installation directory." 1>&2

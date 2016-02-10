@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -202,14 +202,14 @@ if ( $status == 0 ) setenv MANPATH $cleaned
 
 # Source project setup files
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
-_foamSource $WM_PROJECT_DIR/etc/config/settings.csh
-_foamSource $WM_PROJECT_DIR/etc/config/aliases.csh
+_foamSource $WM_PROJECT_DIR/etc/config.csh/settings
+_foamSource $WM_PROJECT_DIR/etc/config.csh/aliases
 
 # Source user setup files for optional packages
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/paraview.csh`
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/ensight.csh`
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/CGAL.csh`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/paraview`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/ensight`
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/CGAL`
 
 
 # Clean environment paths again. Only remove duplicates
