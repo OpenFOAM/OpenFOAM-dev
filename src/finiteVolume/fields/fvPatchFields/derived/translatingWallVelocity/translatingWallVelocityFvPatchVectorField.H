@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        U            | translational velocity  | yes|
+        U            | translational velocity  | yes         |
     \endtable
 
     Example of the boundary condition specification:
@@ -47,9 +47,12 @@ Description
     }
     \endverbatim
 
+    The \c U entry is a Function1 of time, see Foam::Function1Types.
+
 
 SeeAlso
     Foam::fixedValueFvPatchField
+    Foam::Function1Types
 
 SourceFiles
     translatingWallVelocityFvPatchVectorField.C
@@ -60,6 +63,7 @@ SourceFiles
 #define translatingWallVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,7 +81,7 @@ class translatingWallVelocityFvPatchVectorField
     // Private data
 
         //- Translational velocity
-        vector U_;
+        autoPtr<Function1<vector>> U_;
 
 
 public:
@@ -150,19 +154,11 @@ public:
 
     // Member functions
 
-        // Access functions
+        //- Update the coefficients associated with the patch field
+        virtual void updateCoeffs();
 
-            //- Return the velocity
-            const vector& U() const
-            {
-                return U_;
-            }
-
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
-
-            //- Write
-            virtual void write(Ostream&) const;
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 
