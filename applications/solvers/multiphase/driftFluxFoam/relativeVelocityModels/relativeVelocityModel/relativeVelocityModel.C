@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,7 @@ Foam::relativeVelocityModel::relativeVelocityModel
             IOobject::AUTO_WRITE
         ),
         alphac_.mesh(),
-        dimensionedVector("Udm", dimVelocity, vector::zero),
-        mixture.U().boundaryField().types()
+        dimensionedVector("Udm", dimVelocity, vector::zero)
     )
 {}
 
