@@ -166,23 +166,32 @@ public:
         }
 
 
-    // Mapping functions
-
-        //- Map (and resize as needed) from self given a mapping object
-        virtual void autoMap
-        (
-            const fvPatchFieldMapper&
-        );
-
-        //- Reverse map the given fvPatchField onto this fvPatchField
-        virtual void rmap
-        (
-            const fvPatchField<Type>&,
-            const labelList&
-        );
-
-
     // Member functions
+
+        // Attributes
+
+            //- Return true: this patch field is altered by assignment
+            virtual bool assignable() const
+            {
+                return true;
+            }
+
+
+        // Mapping functions
+
+            //- Map (and resize as needed) from self given a mapping object
+            virtual void autoMap
+            (
+                const fvPatchFieldMapper&
+            );
+
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            virtual void rmap
+            (
+                const fvPatchField<Type>&,
+                const labelList&
+            );
+
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

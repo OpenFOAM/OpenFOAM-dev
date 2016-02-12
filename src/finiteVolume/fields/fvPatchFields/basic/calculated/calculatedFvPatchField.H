@@ -138,7 +138,7 @@ public:
 
     // Member functions
 
-        // Access
+        // Attributes
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving

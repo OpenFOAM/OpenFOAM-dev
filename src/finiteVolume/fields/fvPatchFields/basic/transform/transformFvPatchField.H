@@ -113,6 +113,16 @@ public:
 
     // Member functions
 
+        // Attributes
+
+            //- Return true if the value of the patch field
+            //  is altered by assignment
+            virtual bool assignable() const
+            {
+                return true;
+            }
+
+
         // Evaluation functions
 
             //- Return gradient at boundary

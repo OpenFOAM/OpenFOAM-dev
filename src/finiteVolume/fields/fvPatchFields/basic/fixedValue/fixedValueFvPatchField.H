@@ -150,7 +150,7 @@ public:
 
     // Member functions
 
-        // Access
+        // Attributes
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
@@ -158,6 +158,12 @@ public:
             virtual bool fixesValue() const
             {
                 return true;
+            }
+
+            //- Return false: this patch field is not altered by assignment
+            virtual bool assignable() const
+            {
+                return false;
             }
 
 
