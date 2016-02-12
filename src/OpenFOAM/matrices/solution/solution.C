@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,12 +39,10 @@ namespace Foam
 }
 
 // List of sub-dictionaries to rewrite
-//! \cond localScope
 static const Foam::List<Foam::word> subDictNames
 (
     Foam::IStringStream("(preconditioner smoother)")()
 );
-//! \endcond
 
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
@@ -108,7 +106,7 @@ void Foam::solution::read(const dictionary& dict)
 
         if (debug)
         {
-            Info<< "relaxation factors:" << nl
+            Info<< "Relaxation factors:" << nl
                 << "fields: " << fieldRelaxDict_ << nl
                 << "equations: " << eqnRelaxDict_ << endl;
         }
@@ -364,8 +362,7 @@ const Foam::dictionary& Foam::solution::solverDict(const word& name) const
 {
     if (debug)
     {
-        InfoInFunction
-            << "Lookup solver for " << name << endl;
+        Info<< "Lookup solver for " << name << endl;
     }
 
     return solvers_.subDict(name);
@@ -376,8 +373,7 @@ const Foam::dictionary& Foam::solution::solver(const word& name) const
 {
     if (debug)
     {
-        InfoInFunction
-            << "Lookup solver for " << name << endl;
+        Info<< "Lookup solver for " << name << endl;
     }
 
     return solvers_.subDict(name);
