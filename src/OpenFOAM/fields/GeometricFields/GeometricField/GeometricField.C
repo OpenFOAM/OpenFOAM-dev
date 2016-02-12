@@ -422,7 +422,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     if (debug)
     {
         InfoInFunction
-            << "Constructing as copy" << endl << this->info() << endl;
+            << "Constructing from tmp" << endl << this->info() << endl;
     }
 
     this->writeOpt() = IOobject::NO_WRITE;
@@ -632,6 +632,47 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         );
     }
 }
+
+
+#ifndef NoConstructFromTmp
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
+(
+    const IOobject& io,
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
+    const wordList& patchFieldTypes,
+    const wordList& actualPatchTypes
+)
+:
+    DimensionedField<Type, GeoMesh>
+    (
+        io,
+        const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
+        tgf.isTmp()
+    ),
+    timeIndex_(tgf().timeIndex()),
+    field0Ptr_(NULL),
+    fieldPrevIterPtr_(NULL),
+    boundaryField_
+    (
+        this->mesh().boundary(),
+        *this,
+        patchFieldTypes,
+        actualPatchTypes
+    )
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing from tmp resetting IO params and patch types"
+            << endl << this->info() << endl;
+    }
+
+    boundaryField_ == tgf().boundaryField_;
+
+    tgf.clear();
+}
+#endif
 
 
 // * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * * //

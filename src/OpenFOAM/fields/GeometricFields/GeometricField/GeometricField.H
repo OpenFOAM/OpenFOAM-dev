@@ -411,6 +411,17 @@ public:
             const wordList& actualPatchTypes = wordList()
         );
 
+        //- Construct as copy resetting IO parameters and boundary types
+        #ifndef NoConstructFromTmp
+        GeometricField
+        (
+            const IOobject&,
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList()
+        );
+        #endif
+
 
     //- Destructor
     virtual ~GeometricField();
