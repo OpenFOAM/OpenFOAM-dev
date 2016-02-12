@@ -79,11 +79,6 @@ do
     cavityClipped)
         cp -r $caseName/0 $caseName/0.5
         runMapFields cavity $caseName
-        if [ ".`grep nonuniform $caseName/0.5/U`" != "." ]
-        then
-            sed -f resetFixedWallsScr $caseName/0.5/U > $caseName/0.5/U.temp
-            mv $caseName/0.5/U.temp $caseName/0.5/U
-        fi
         ;;
     esac
 
