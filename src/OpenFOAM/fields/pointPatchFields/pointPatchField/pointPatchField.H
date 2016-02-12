@@ -432,35 +432,11 @@ public:
 
     // Member operators
 
-        virtual void operator=
-        (
-            const pointPatchField<Type>&
-        )
-        {}
-
-        virtual void operator+=
-        (
-            const pointPatchField<Type>&
-        )
-        {}
-
-        virtual void operator-=
-        (
-            const pointPatchField<Type>&
-        )
-        {}
-
-        virtual void operator*=
-        (
-            const pointPatchField<scalar>&
-        )
-        {}
-
-        virtual void operator/=
-        (
-            const pointPatchField<scalar>&
-        )
-        {}
+        virtual void operator=(const pointPatchField<Type>&){}
+        virtual void operator+=(const pointPatchField<Type>&){}
+        virtual void operator-=(const pointPatchField<Type>&){}
+        virtual void operator*=(const pointPatchField<scalar>&){}
+        virtual void operator/=(const pointPatchField<scalar>&){}
 
         virtual void operator=(const Field<Type>&){}
         virtual void operator+=(const Field<Type>&){}
@@ -480,12 +456,7 @@ public:
         // By generic these do nothing unless the patch actually has boundary
         // values
 
-            virtual void operator==
-            (
-                const pointPatchField<Type>&
-            )
-            {}
-
+            virtual void operator==(const pointPatchField<Type>&){}
             virtual void operator==(const Field<Type>&){}
             virtual void operator==(const Type&){}
 
@@ -527,7 +498,7 @@ const pointPatchField<Type>& operator+
 #endif
 
 
-#define addToPointPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField)      \
+#define addToPointPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField) \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
         PatchTypeField,                                                        \

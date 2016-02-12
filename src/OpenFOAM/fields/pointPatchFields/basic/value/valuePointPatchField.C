@@ -201,7 +201,7 @@ void Foam::valuePointPatchField<Type>::operator=
     const pointPatchField<Type>& ptf
 )
 {
-    Field<Type>::operator=(ptf.patchInternalField());
+    Field<Type>::operator=(this->patchInternalField());
 }
 
 
@@ -242,7 +242,7 @@ void Foam::valuePointPatchField<Type>::operator==
     const pointPatchField<Type>& ptf
 )
 {
-    Field<Type>::operator=(ptf.patchInternalField());
+    Field<Type>::operator=(this->patchInternalField());
 }
 
 

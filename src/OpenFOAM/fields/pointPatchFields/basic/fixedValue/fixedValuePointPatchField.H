@@ -136,11 +136,8 @@ public:
 
         // Disable assignment operators
 
-            virtual void operator=(const Field<Type>&)
-            {}
-
-            virtual void operator=(const Type&)
-            {}
+            virtual void operator=(const Field<Type>&){}
+            virtual void operator=(const Type&){}
 };
 
 
