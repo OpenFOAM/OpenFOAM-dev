@@ -22,6 +22,12 @@ solvers
         solver          PCG;
         preconditioner  DIC;
         tolerance       1e-06;
+        relTol          0.05;
+    }
+
+    pFinal
+    {
+        $p;
         relTol          0;
     }
 
@@ -29,6 +35,12 @@ solvers
     {
         $p;
         tolerance       1e-05;
+        relTol          0;
+    }
+
+    pBFinal
+    {
+        $pB;
         relTol          0;
     }
 
