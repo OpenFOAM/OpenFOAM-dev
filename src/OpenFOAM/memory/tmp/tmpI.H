@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -267,6 +267,37 @@ inline const T* Foam::tmp<T>::operator->() const
 
 
 template<class T>
+inline void Foam::tmp<T>::operator=(T* tPtr)
+{
+    if (isTmp_ && ptr_)
+    {
+        if (ptr_->okToDelete())
+        {
+            delete ptr_;
+            ptr_ = 0;
+        }
+        else
+        {
+            ptr_->operator--();
+        }
+    }
+
+    isTmp_ = true;
+
+    if (!tPtr)
+    {
+        FatalErrorInFunction
+            << "attempted copy of a deallocated temporary"
+            << " of type " << typeid(T).name()
+            << abort(FatalError);
+    }
+
+    ptr_ = tPtr;
+    ptr_->resetRefCount();
+}
+
+
+template<class T>
 inline void Foam::tmp<T>::operator=(const tmp<T>& t)
 {
     if (isTmp_ && ptr_)
@@ -285,24 +316,23 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
     if (t.isTmp_)
     {
         isTmp_ = true;
-        ptr_ = t.ptr_;
 
-        if (ptr_)
-        {
-            ptr_->operator++();
-        }
-        else
+        if (!t.ptr_)
         {
             FatalErrorInFunction
-                << "attempted copy of a deallocated temporary"
+                << "attempted assignment to a deallocated temporary"
                 << " of type " << typeid(T).name()
                 << abort(FatalError);
         }
+
+        ptr_ = t.ptr_;
+        t.ptr_ = 0;
+        ptr_->resetRefCount();
     }
     else
     {
         FatalErrorInFunction
-            << "attempted to assign to a const reference to constant object"
+            << "attempted assignment to a const reference to constant object"
             << " of type " << typeid(T).name()
             << abort(FatalError);
     }
