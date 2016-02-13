@@ -1,0 +1,73 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "constrainHbyA.H"
+#include "volFields.H"
+#include "fixedFluxExtrapolatedPressureFvPatchScalarField.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
+(
+    const tmp<volVectorField>& tHbyA,
+    const volVectorField& U,
+    const volScalarField& p
+)
+{
+    tmp<volVectorField> tHbyANew;
+
+    if (tHbyA.isTmp())
+    {
+        volVectorField* HbyAPtr = tHbyA.ptr();
+        HbyAPtr->rename("HbyA");
+        tHbyANew = HbyAPtr;
+    }
+    else
+    {
+        tHbyANew = new volVectorField("HbyA", tHbyA);
+    }
+
+    volVectorField& HbyA = tHbyANew();
+
+    forAll(U.boundaryField(), patchi)
+    {
+        if
+        (
+           !U.boundaryField()[patchi].assignable()
+        && !isA<fixedFluxExtrapolatedPressureFvPatchScalarField>
+            (
+                p.boundaryField()[patchi]
+            )
+        )
+        {
+            HbyA.boundaryField()[patchi] = U.boundaryField()[patchi];
+        }
+    }
+
+    return tHbyANew;
+}
+
+
+// ************************************************************************* //

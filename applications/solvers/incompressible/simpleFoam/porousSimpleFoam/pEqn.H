@@ -1,12 +1,13 @@
-volVectorField HbyA("HbyA", U);
+tmp<volVectorField> tHbyA;
 if (pressureImplicitPorosity)
 {
-    HbyA = trTU()&UEqn().H();
+    tHbyA = constrainHbyA(trTU()&UEqn().H(), U, p);
 }
 else
 {
-    HbyA = trAU()*UEqn().H();
+    tHbyA = constrainHbyA(trAU()*UEqn().H(), U, p);
 }
+volVectorField& HbyA = tHbyA();
 
 UEqn.clear();
 surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(HbyA) & mesh.Sf());

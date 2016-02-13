@@ -1,8 +1,7 @@
 {
     volScalarField rAU(1.0/UEqn().A());
-    volVectorField HbyA("HbyA", U);
-    HbyA = rAU*UEqn().H();
-
+    surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
+    volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
     UEqn.clear();
 
     bool closedVolume = false;
@@ -23,7 +22,7 @@
             fvScalarMatrix pEqn
             (
                 fvm::div(phid, p)
-              - fvm::laplacian(rho*rAU, p)
+              - fvm::laplacian(rhorAUf, p)
               ==
                 fvOptions(psi, p, rho.name())
             );
@@ -53,12 +52,15 @@
 
         closedVolume = adjustPhi(phiHbyA, U, p);
 
+        // Update the pressure BCs to ensure flux consistency
+        constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
+
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix pEqn
             (
                 fvc::div(phiHbyA)
-              - fvm::laplacian(rho*rAU, p)
+              - fvm::laplacian(rhorAUf, p)
               ==
                 fvOptions(psi, p, rho.name())
             );

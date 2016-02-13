@@ -7,9 +7,7 @@
 
     volScalarField rAU(1.0/UEqn().A());
     surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-
-    volVectorField HbyA("HbyA", U);
-    HbyA = rAU*UEqn().H();
+    volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
 
     if (pimple.transonic())
     {
@@ -64,6 +62,9 @@
         );
 
         MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
+
+        // Update the pressure BCs to ensure flux consistency
+        constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
 
         fvScalarMatrix pDDtEqn
         (

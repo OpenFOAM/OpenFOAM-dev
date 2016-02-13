@@ -130,6 +130,15 @@ public:
 
     // Member functions
 
+        // Access
+
+            //- Return false: this patch field is not altered by assignment
+            virtual bool assignable() const
+            {
+                return false;
+            }
+
+
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object

@@ -1,10 +1,7 @@
 {
     volScalarField rAU("rAU", 1.0/UEqn.A());
     surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU));
-
-    volVectorField HbyA("HbyA", U);
-    HbyA = rAU*UEqn.H();
-
+    volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_rgh));
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
@@ -22,15 +19,8 @@
 
     phiHbyA += phig;
 
-    // Update the fixedFluxPressure BCs to ensure flux consistency
-    setSnGrad<fixedFluxPressureFvPatchScalarField>
-    (
-        p_rgh.boundaryField(),
-        (
-            phiHbyA.boundaryField()
-          - (mesh.Sf().boundaryField() & U.boundaryField())
-        )/(mesh.magSf().boundaryField()*rAUf.boundaryField())
-    );
+    // Update the pressure BCs to ensure flux consistency
+    constrainPressure(p_rgh, U, phiHbyA, rAUf);
 
     PtrList<fvScalarMatrix> p_rghEqnComps(mixture.phases().size());
 

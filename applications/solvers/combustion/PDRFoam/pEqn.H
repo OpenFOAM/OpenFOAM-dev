@@ -1,9 +1,7 @@
 rho = thermo.rho();
 
 volScalarField rAU(1.0/UEqn.A());
-
-volVectorField HbyA("HbyA", U);
-HbyA = invA & UEqn.H();
+volVectorField HbyA(constrainHbyA(invA & UEqn.H(), U, p));
 
 if (pimple.transonic())
 {

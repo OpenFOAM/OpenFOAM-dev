@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,6 @@ Description
 #include "CompressibleTurbulenceModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
-#include "fixedFluxPressureFvPatchScalarField.H"
 #include "gaussLaplacianScheme.H"
 #include "uncorrectedSnGrad.H"
 

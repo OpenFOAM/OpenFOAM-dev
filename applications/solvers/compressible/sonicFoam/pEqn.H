@@ -2,10 +2,7 @@ rho = thermo.rho();
 
 volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-
-volVectorField HbyA("HbyA", U);
-HbyA = rAU*UEqn.H();
-
+volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 surfaceScalarField phid
 (
     "phid",

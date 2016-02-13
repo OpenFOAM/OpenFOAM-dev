@@ -18,6 +18,9 @@
 
     UrelEqn.clear();
 
+    // Update the pressure BCs to ensure flux consistency
+    constrainPressure(p, Urel, phiHbyA, rAtUrel());
+
     // Non-orthogonal pressure corrector loop
     while (simple.correctNonOrthogonal())
     {

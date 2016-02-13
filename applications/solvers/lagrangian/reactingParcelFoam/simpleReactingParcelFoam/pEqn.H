@@ -4,11 +4,9 @@
     thermo.rho() -= psi*p;
 
     volScalarField rAU(1.0/UEqn().A());
-    volVectorField HbyA("HbyA", U);
-    HbyA = rAU*UEqn().H();
-
+    surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
+    volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
     UEqn.clear();
-
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
@@ -17,12 +15,15 @@
 
     MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
+    // Update the pressure BCs to ensure flux consistency
+    constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
+
     while (simple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
             fvc::div(phiHbyA)
-          - fvm::laplacian(rho*rAU, p)
+          - fvm::laplacian(rhorAUf, p)
          ==
             parcels.Srho()
           + fvOptions(psi, p, rho.name())

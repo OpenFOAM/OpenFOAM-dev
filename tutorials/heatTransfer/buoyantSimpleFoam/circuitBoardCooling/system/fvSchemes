@@ -38,13 +38,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default         none;
-    laplacian((rho*nuEff),U) Gauss linear uncorrected;
-    laplacian(rhorAUf,p_rgh) Gauss linear uncorrected;
-    laplacian(alphaEff,h) Gauss linear uncorrected;
-    laplacian((rho*DkEff),k) Gauss linear uncorrected;
-    laplacian((rho*DepsilonEff),epsilon) Gauss linear uncorrected;
-    laplacian((rho*DomegaEff),omega) Gauss linear uncorrected;
+    default         Gauss linear uncorrected;
 }
 
 interpolationSchemes
