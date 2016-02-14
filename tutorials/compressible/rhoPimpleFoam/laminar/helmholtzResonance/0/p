@@ -29,7 +29,7 @@ boundaryField
     outlet
     {
         type            fixedMean;
-        meanValue       1e5;
+        meanValue       constant 1e5;
         value           uniform 1e5;
     }
 
