@@ -86,8 +86,4 @@ do
     ( cd $caseName && runApplication `getApplication` )
 done
 
-
-# elbow case for testing Fluent-FOAM conversion tools
-(cd elbow && ./Allrun)
-
 # ----------------------------------------------------------------- end-of-file
