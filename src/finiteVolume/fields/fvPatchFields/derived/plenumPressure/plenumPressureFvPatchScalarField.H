@@ -5,8 +5,6 @@
     \\  /    A nd           | Copyright (C) 2016 William Bainbridge
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
-2016-02-14 William Bainbridge: Added plenum pressure boundary condition
--------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
 
