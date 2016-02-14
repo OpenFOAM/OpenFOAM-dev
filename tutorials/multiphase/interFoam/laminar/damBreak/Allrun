@@ -43,13 +43,4 @@ cloneCase damBreak damBreakFine
     runApplication reconstructPar
 )
 
-# Do damBreakPorousBaffle
-(cd damBreakPorousBaffle && foamRunTutorials)
-
-# Do weirOverflow
-(cd weirOverflow && foamRunTutorials)
-
-# Do waterChannel
-(cd waterChannel && foamRunTutorials)
-
 # ----------------------------------------------------------------- end-of-file

@@ -49,7 +49,7 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict),
-    meanValue_(Function1<Type>::New(dict.lookup("meanValue"), dict))
+    meanValue_(Function1<Type>::New("meanValue", dict))
 {}
 
 
