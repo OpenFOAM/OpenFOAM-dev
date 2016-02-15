@@ -48,6 +48,7 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
     ),
     phiCorrect_(NULL),
     uCorrect_(NULL),
+    applyLimiting_(this->coeffDict().lookup("applyLimiting")),
     applyGravity_(this->coeffDict().lookup("applyGravity")),
     alphaMin_(readScalar(this->coeffDict().lookup("alphaMin"))),
     rhoMin_(readScalar(this->coeffDict().lookup("rhoMin")))
@@ -66,6 +67,7 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
     alpha_(cm.alpha_),
     phiCorrect_(cm.phiCorrect_()),
     uCorrect_(cm.uCorrect_()),
+    applyLimiting_(cm.applyLimiting_),
     applyGravity_(cm.applyGravity_),
     alphaMin_(cm.alphaMin_),
     rhoMin_(cm.rhoMin_)
@@ -102,6 +104,11 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             (
                 cloudName + ":rhoAverage"
             );
+        const AveragingMethod<vector>& uAverage =
+            mesh.lookupObject<AveragingMethod<vector> >
+            (
+                cloudName + ":uAverage"
+            );
         const AveragingMethod<scalar>& uSqrAverage =
             mesh.lookupObject<AveragingMethod<scalar>>
             (
@@ -135,13 +142,6 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         rho.internalField() = max(rhoAverage.internalField(), rhoMin_);
         rho.correctBoundaryConditions();
 
-        //Info << "       x: " << mesh.C().internalField().component(2) << endl;
-        //Info << "   alpha: " << alpha_.internalField() << endl;
-        //Info << "alphaOld: " << alpha_.oldTime().internalField() << endl;
-        //Info << "     rho: " << rho.internalField() << endl;
-        //Info << endl;
-
-
         // Stress field
         // ~~~~~~~~~~~~
 
@@ -172,6 +172,24 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         tauPrime.correctBoundaryConditions();
 
 
+        // Gravity flux
+        // ~~~~~~~~~~~~
+
+        tmp<surfaceScalarField> phiGByA;
+
+        if (applyGravity_)
+        (
+            phiGByA = tmp<surfaceScalarField>
+            (
+                new surfaceScalarField
+                (
+                    "phiGByA",
+                    deltaT*(g & mesh.Sf())*fvc::interpolate(1.0 - rhoc/rho)
+                )
+            )
+        );
+
+
         // Implicit solution for the volume fraction
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -191,14 +209,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
 
         if (applyGravity_)
         {
-            surfaceScalarField
-                phiGByA
-                (
-                    "phiGByA",
-                    deltaT*(g & mesh.Sf())*fvc::interpolate(1.0 - rhoc/rho)
-                );
-
-            alphaEqn += fvm::div(phiGByA, alpha_);
+            alphaEqn += fvm::div(phiGByA(), alpha_);
         }
 
         alphaEqn.solve();
@@ -216,6 +227,67 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                 alphaEqn.flux()/fvc::interpolate(alpha_)
             )
         );
+
+        // limit the correction flux
+        if (applyLimiting_)
+        {
+            volVectorField U
+            (
+                IOobject
+                (
+                    cloudName + ":U",
+                    this->owner().db().time().timeName(),
+                    mesh,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE
+                ),
+                mesh,
+                dimensionedVector("zero", dimVelocity, vector::zero),
+                fixedValueFvPatchField<vector>::typeName
+            );
+            U.internalField() = uAverage.internalField();
+            U.correctBoundaryConditions();
+
+            surfaceScalarField phi
+            (
+                cloudName + ":phi",
+                linearInterpolate(U) & mesh.Sf()
+            );
+
+            if (applyGravity_)
+            {
+                phiCorrect_() -= phiGByA();
+            }
+
+            forAll(phiCorrect_(), faceI)
+            {
+                // Current and correction fluxes
+                const scalar phiCurr = phi[faceI];
+                scalar& phiCorr = phiCorrect_()[faceI];
+
+                // Don't limit if the correction is in the opposite direction to
+                // the flux. We need all the help we can get in this state.
+                if (phiCurr*phiCorr < 0)
+                {}
+
+                // If the correction and the flux are in the same direction then
+                // don't apply any more correction than is already present in
+                // the flux.
+                else if (phiCorr > 0)
+                {
+                    phiCorr = max(phiCorr - phiCurr, 0);
+                }
+                else
+                {
+                    phiCorr = min(phiCorr - phiCurr, 0);
+                }
+            }
+
+            if (applyGravity_)
+            {
+                phiCorrect_() += phiGByA();
+            }
+        }
 
         // correction velocity
         uCorrect_ = tmp<volVectorField>
