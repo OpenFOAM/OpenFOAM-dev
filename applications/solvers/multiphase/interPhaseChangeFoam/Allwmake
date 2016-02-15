@@ -6,4 +6,4 @@ wmake libso phaseChangeTwoPhaseMixtures
 wmake
 wmake interPhaseChangeDyMFoam
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

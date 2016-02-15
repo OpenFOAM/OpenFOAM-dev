@@ -24,4 +24,4 @@ runParallel checkMesh -latestTime -allTopology -allGeometry
 runApplication reconstructParMesh -latestTime
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

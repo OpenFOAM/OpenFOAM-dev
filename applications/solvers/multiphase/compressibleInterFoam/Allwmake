@@ -6,4 +6,4 @@ wmake libso twoPhaseMixtureThermo
 wmake
 wmake compressibleInterDyMFoam
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

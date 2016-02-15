@@ -11,4 +11,4 @@ rm -rf constant/pyrolysisRegion/polyMesh
 
 rm -rf system/pyrolysisRegion/filmRegion
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

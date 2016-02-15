@@ -32,4 +32,4 @@ rm -f constant/topAir/finalAgglom
 rm -f constant/topAir/globalFaceFaces
 rm -f constant/topAir/subMap
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

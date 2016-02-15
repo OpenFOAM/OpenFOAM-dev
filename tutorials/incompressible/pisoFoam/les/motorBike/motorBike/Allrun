@@ -27,4 +27,4 @@ runParallel potentialFoam -initialiseUBCs
 
 runParallel `getApplication`
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

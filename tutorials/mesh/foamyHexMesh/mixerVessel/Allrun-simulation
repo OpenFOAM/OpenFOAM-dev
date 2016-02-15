@@ -34,4 +34,4 @@ runParallel $application
 runApplication reconstructPar -noFunctionObjects
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

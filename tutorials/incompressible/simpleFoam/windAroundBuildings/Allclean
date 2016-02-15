@@ -10,4 +10,4 @@ rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
 rm -f constant/triSurface/buildings.eMesh > /dev/null 2>&1
 rm -f constant/polyMesh/boundary > /dev/null 2>&1
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

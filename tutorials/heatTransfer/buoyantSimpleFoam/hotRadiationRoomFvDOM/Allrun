@@ -9,4 +9,4 @@ application=`getApplication`
 runApplication blockMesh
 runApplication $application
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

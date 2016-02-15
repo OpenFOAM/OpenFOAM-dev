@@ -10,4 +10,4 @@ wmake $targetType potential
 wmake $targetType molecularMeasurements
 wmake $targetType molecule
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

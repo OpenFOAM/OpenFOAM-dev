@@ -18,4 +18,4 @@ mv log.collapseEdges log.collapseFaceSet
 runApplication checkMesh -latestTime -allGeometry -allTopology
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

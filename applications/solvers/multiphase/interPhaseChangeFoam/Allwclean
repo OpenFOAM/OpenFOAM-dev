@@ -6,4 +6,4 @@ wclean libso phaseChangeTwoPhaseMixtures
 wclean
 wclean interPhaseChangeDyMFoam
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

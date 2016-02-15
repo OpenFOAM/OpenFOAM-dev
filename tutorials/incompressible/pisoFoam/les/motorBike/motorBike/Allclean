@@ -14,4 +14,4 @@ cleanCase
 # Reset decomposeParDict
 cp system/decomposeParDict.hierarchical system/decomposeParDict
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

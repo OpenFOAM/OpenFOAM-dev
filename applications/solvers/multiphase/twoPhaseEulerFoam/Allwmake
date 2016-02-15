@@ -8,4 +8,4 @@ wmake libso interfacialModels
 wmake libso phaseCompressibleTurbulenceModels
 wmake
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

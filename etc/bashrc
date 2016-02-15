@@ -250,4 +250,4 @@ fi
 unset cleaned foamClean foamInstall foamOldDirs
 unset _foamSource _foamEval
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

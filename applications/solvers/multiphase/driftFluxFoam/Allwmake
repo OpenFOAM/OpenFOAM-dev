@@ -6,4 +6,4 @@ wmake libso mixtureViscosityModels
 wmake libso relativeVelocityModels
 wmake
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

@@ -12,4 +12,4 @@ runApplication $application
 runApplication foamCalc mag U
 runApplication sample
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

@@ -13,4 +13,4 @@ wmake $targetType incompressible
 wmake $targetType compressible
 wmake $targetType immiscibleIncompressibleTwoPhaseMixture
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

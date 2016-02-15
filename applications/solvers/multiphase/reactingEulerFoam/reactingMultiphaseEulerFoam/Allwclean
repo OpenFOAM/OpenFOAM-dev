@@ -6,4 +6,4 @@ wclean libso multiphaseSystem
 wclean libso multiphaseCompressibleTurbulenceModels
 wclean
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

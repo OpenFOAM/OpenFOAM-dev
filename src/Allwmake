@@ -81,4 +81,4 @@ postProcessing/Allwmake $targetType $*
 wmake $targetType sixDoFRigidBodyMotion
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

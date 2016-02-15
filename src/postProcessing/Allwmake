@@ -11,4 +11,4 @@ wmake $targetType foamCalcFunctions
 
 functionObjects/Allwmake $targetType $*
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

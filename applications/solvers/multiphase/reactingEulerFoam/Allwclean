@@ -8,4 +8,4 @@ wclean libso interfacialCompositionModels
 reactingTwoPhaseEulerFoam/Allwclean
 reactingMultiphaseEulerFoam/Allwclean
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

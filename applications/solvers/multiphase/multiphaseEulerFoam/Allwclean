@@ -6,4 +6,4 @@ wclean libso multiphaseSystem
 wclean libso interfacialModels
 wclean
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

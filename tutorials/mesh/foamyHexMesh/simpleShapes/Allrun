@@ -28,4 +28,4 @@ mv log.collapseEdges log.collapseFaceSet
 runApplication collapseEdges -latestTime -collapseFaces
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

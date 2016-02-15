@@ -13,4 +13,4 @@ rm -rf constant/polyMesh/points
 rm -rf constant/polyMesh/owner
 rm -rf constant/polyMesh/neighbour
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

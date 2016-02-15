@@ -10,4 +10,4 @@ wmake libso interfacialCompositionModels
 reactingTwoPhaseEulerFoam/Allwmake
 reactingMultiphaseEulerFoam/Allwmake
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

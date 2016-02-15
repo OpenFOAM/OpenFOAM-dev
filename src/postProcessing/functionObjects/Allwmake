@@ -15,4 +15,4 @@ wmake $targetType jobControl
 wmake $targetType systemCall
 wmake $targetType utilities
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

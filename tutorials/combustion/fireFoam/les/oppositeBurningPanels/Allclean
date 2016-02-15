@@ -10,4 +10,4 @@ rm -rf constant/panelRegion/polyMesh
 rm  -f 0/polyMesh/cellMap
 rm  -f constant/polyMesh/boundary
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

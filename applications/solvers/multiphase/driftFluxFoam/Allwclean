@@ -6,4 +6,4 @@ wclean libso mixtureViscosityModels
 wclean libso relativeVelocityModels
 wclean
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

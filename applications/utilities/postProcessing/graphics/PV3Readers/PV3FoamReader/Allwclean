@@ -8,4 +8,4 @@ rm -f $FOAM_LIBBIN/libPV3FoamReader* 2>/dev/null
 rm -rf PV3FoamReader/Make
 wclean libso vtkPV3Foam
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

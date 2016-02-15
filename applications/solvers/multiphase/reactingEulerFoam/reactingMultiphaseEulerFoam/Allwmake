@@ -6,4 +6,4 @@ wmake libso multiphaseSystem
 wmake libso multiphaseCompressibleTurbulenceModels
 wmake
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

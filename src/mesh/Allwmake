@@ -10,4 +10,4 @@ wmake $targetType autoMesh
 wmake $targetType blockMesh
 wmake $targetType extrudeModel
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

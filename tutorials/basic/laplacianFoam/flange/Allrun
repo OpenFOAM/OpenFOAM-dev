@@ -24,4 +24,4 @@ runApplication foamToEnsight
 runApplication foamToEnsightParts
 runApplication foamToVTK
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------
