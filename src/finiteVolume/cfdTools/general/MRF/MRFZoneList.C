@@ -247,6 +247,24 @@ Foam::MRFZoneList::relative
 }
 
 
+Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::MRFZoneList::relative
+(
+    const tmp<Field<scalar>>& phi,
+    const label patchi
+) const
+{
+    tmp<Field<scalar>> rphi(phi.ptr());
+
+    forAll(*this, i)
+    {
+        operator[](i).makeRelative(rphi(), patchi);
+    }
+
+    return rphi;
+}
+
+
 void Foam::MRFZoneList::makeRelative
 (
     const surfaceScalarField& rho,

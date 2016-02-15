@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,6 +93,40 @@ void Foam::MRFZone::makeRelativeRhoFlux
               * (Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
               & Sf.boundaryField()[patchi][patchFacei];
         }
+    }
+}
+
+
+template<class RhoFieldType>
+void Foam::MRFZone::makeRelativeRhoFlux
+(
+    const RhoFieldType& rho,
+    Field<scalar>& phi,
+    const label patchi
+) const
+{
+    const surfaceVectorField& Cf = mesh_.Cf();
+    const surfaceVectorField& Sf = mesh_.Sf();
+
+    const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
+
+    // Included patches
+    forAll(includedFaces_[patchi], i)
+    {
+        label patchFacei = includedFaces_[patchi][i];
+
+        phi[patchFacei] = 0.0;
+    }
+
+    // Excluded patches
+    forAll(excludedFaces_[patchi], i)
+    {
+        label patchFacei = excludedFaces_[patchi][i];
+
+        phi[patchFacei] -=
+            rho[patchFacei]
+          * (Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
+          & Sf.boundaryField()[patchi][patchFacei];
     }
 }
 

@@ -453,6 +453,12 @@ void Foam::MRFZone::makeRelative(FieldField<fvsPatchField, scalar>& phi) const
 }
 
 
+void Foam::MRFZone::makeRelative(Field<scalar>& phi, const label patchi) const
+{
+    makeRelativeRhoFlux(oneField(), phi, patchi);
+}
+
+
 void Foam::MRFZone::makeRelative
 (
     const surfaceScalarField& rho,
