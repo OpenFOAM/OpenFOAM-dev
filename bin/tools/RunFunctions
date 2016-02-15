@@ -28,6 +28,17 @@
 #     Miscellaneous functions for running tutorial cases
 #------------------------------------------------------------------------------
 
+isTest()
+{
+    for i in "$@"; do
+        if [ "$i" = "-test" ]
+        then
+            return 0
+        fi
+    done
+    return 1
+}
+
 getNumberOfProcessors()
 {
     expandDictionary system/decomposeParDict \
