@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014  OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,22 +111,58 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::rho
     scalar T
 ) const
 {
-    scalar z = Z(p, T);
-    return p/(z*this->R()*T);
+    scalar Z = this->Z(p, T);
+    return p/(Z*this->R()*T);
 }
 
 
 template<class Specie>
 inline Foam::scalar Foam::PengRobinsonGas<Specie>::h(scalar p, scalar T) const
 {
-    return 0;
+    scalar Pr = p/Pc_;
+    scalar Tr = T/Tc_;
+    scalar B = 0.07780*Pr/Tr;
+    scalar kappa = 0.37464 + 1.54226*omega_ - 0.26992*sqr(omega_);
+    scalar alpha = sqr(1 + kappa*(1 - sqrt(Tr)));
+
+    scalar Z = this->Z(p, T);
+
+    return
+        RR*Tc_
+       *(
+           Tr*(Z - 1)
+         - 2.078*(1 + kappa)*sqrt(alpha)
+          *log((Z + 2.414*B)/(Z - 0.414*B))
+        );
 }
 
 
 template<class Specie>
 inline Foam::scalar Foam::PengRobinsonGas<Specie>::cp(scalar p, scalar T) const
 {
-    return 0;
+    scalar Tr = T/Tc_;
+    scalar a = 0.45724*sqr(RR*Tc_)/Pc_;
+    scalar b = 0.07780*RR*Tc_/Pc_;
+    scalar kappa = 0.37464 + 1.54226*omega_ - 0.26992*sqr(omega_);
+    scalar alpha = sqr(1 + kappa*(1 - sqrt(Tr)));
+
+    scalar A = a*alpha*p/sqr(RR*T);
+    scalar B = b*p/(RR*T);
+
+    scalar Z = this->Z(p, T);
+
+    scalar ap = kappa*a*(kappa/Tc_ - (1 + kappa)/sqrt(T*Tc_));
+    scalar app = kappa*a*(1 + kappa)/(2*sqrt(pow3(T)*Tc_));
+
+    scalar M = (sqr(Z) + 2*B*Z - sqr(B))/(Z - B);
+    scalar N = ap*B/(b*RR);
+
+    const scalar root2 = sqrt(2.0);
+
+    return
+        app*(T/(2*root2*b))*log((Z + (root2 + 1)*B)/(Z - (root2 - 1)*B))
+      + RR*sqr(M - N)/(sqr(M) - 2*A*(Z + B))
+      - RR;
 }
 
 
@@ -137,9 +173,21 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::s
     scalar T
 ) const
 {
-    //***HGW This is the expression for a perfect gas
-    // Need to add the entropy defect for Peng-Robinson
-    return -RR*log(p/Pstd);
+    scalar Pr = p/Pc_;
+    scalar Tr = T/Tc_;
+    scalar B = 0.07780*Pr/Tr;
+    scalar kappa = 0.37464 + 1.54226*omega_ - 0.26992*sqr(omega_);
+
+    scalar Z = this->Z(p, T);
+
+    return
+      - RR*log(p/Pstd)
+      + RR
+       *(
+           log(Z - B)
+         - 2.078*kappa*((1 + kappa)/sqrt(Tr) - kappa)
+          *log((Z + 2.414*B)/(Z - 0.414*B))
+        );
 }
 
 
@@ -150,8 +198,9 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::psi
     scalar T
 ) const
 {
-    scalar z = Z(p, T);
-    return 1.0/(z*this->R()*T);
+    scalar Z = this->Z(p, T);
+
+    return 1.0/(Z*this->R()*T);
 }
 
 
@@ -162,46 +211,40 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::Z
     scalar T
 ) const
 {
-    scalar a = 0.45724*sqr(this->R())*sqr(Tc_)/Pc_;
-    scalar b = 0.07780*this->R()*Tc_/Pc_;
     scalar Tr = T/Tc_;
+    scalar a = 0.45724*sqr(RR*Tc_)/Pc_;
+    scalar b = 0.07780*RR*Tc_/Pc_;
+    scalar kappa = 0.37464 + 1.54226*omega_ - 0.26992*sqr(omega_);
+    scalar alpha = sqr(1 + kappa*(1 - sqrt(Tr)));
 
-    scalar alpha =
-        sqr
-        (
-            1.0
-          + (0.37464 + 1.54226*omega_- 0.26992*sqr(omega_))
-          * (1.0 - sqrt(Tr))
-        );
+    scalar A = a*alpha*p/sqr(RR*T);
+    scalar B = b*p/(RR*T);
 
-    scalar B = b*p/(this->R()*T);
-    scalar A = a*alpha*p/sqr(this->R()*T);
-
-    scalar a2 = B - 1.0;
-    scalar a1 = A - 2.0*B - 3.0*sqr(B);
+    scalar a2 = B - 1;
+    scalar a1 = A - 2*B - 3*sqr(B);
     scalar a0 = -A*B + sqr(B) + pow3(B);
 
-    scalar Q = (3.0*a1 - a2*a2)/9.0;
-    scalar Rl = (9.0*a2*a1 - 27.0*a0 - 2.0*a2*a2*a2)/54;
+    scalar Q = (3*a1 - a2*a2)/9.0;
+    scalar Rl = (9*a2*a1 - 27*a0 - 2*a2*a2*a2)/54.0;
 
     scalar Q3 = Q*Q*Q;
     scalar D = Q3 + Rl*Rl;
 
-    scalar root = -1.0;
+    scalar root = -1;
 
-    if (D <= 0.0)
+    if (D <= 0)
     {
         scalar th = ::acos(Rl/sqrt(-Q3));
-        scalar qm = 2.0*sqrt(-Q);
+        scalar qm = 2*sqrt(-Q);
         scalar r1 = qm*cos(th/3.0) - a2/3.0;
-        scalar r2 = qm*cos((th + 2.0*constant::mathematical::pi)/3.0) - a2/3.0;
-        scalar r3 = qm*cos((th + 4.0*constant::mathematical::pi)/3.0) - a2/3.0;
+        scalar r2 = qm*cos((th + 2*constant::mathematical::pi)/3.0) - a2/3.0;
+        scalar r3 = qm*cos((th + 4*constant::mathematical::pi)/3.0) - a2/3.0;
 
         root = max(r1, max(r2, r3));
     }
     else
     {
-        // one root is real
+        // One root is real
         scalar D05 = sqrt(D);
         scalar S = pow(Rl + D05, 1.0/3.0);
         scalar Tl = 0;
@@ -228,7 +271,22 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::cpMcv
     scalar T
 ) const
 {
-    return RR*Z(p, T);
+    scalar Tr = T/Tc_;
+    scalar a = 0.45724*sqr(RR*Tc_)/Pc_;
+    scalar b = 0.07780*RR*Tc_/Pc_;
+    scalar kappa = 0.37464 + 1.54226*omega_ - 0.26992*sqr(omega_);
+    scalar alpha = sqr(1 + kappa*(1 - sqrt(Tr)));
+
+    scalar A = alpha*a*p/sqr(RR*T);
+    scalar B = b*p/(RR*T);
+
+    scalar Z = this->Z(p, T);
+
+    scalar ap = kappa*a*(kappa/Tc_ - (1 + kappa)/sqrt(T*Tc_));
+    scalar M = (sqr(Z) + 2*B*Z - sqr(B))/(Z - B);
+    scalar N = ap*B/(b*RR);
+
+    return RR*sqr(M - N)/(sqr(M) - 2*A*(Z + B));
 }
 
 
