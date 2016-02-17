@@ -111,6 +111,28 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::rho
 
 
 template<class Specie, int PolySize>
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::h
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class Specie, int PolySize>
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::cp
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class Specie, int PolySize>
 inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::s
 (
     scalar p,

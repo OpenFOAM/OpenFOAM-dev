@@ -121,6 +121,20 @@ inline Foam::scalar Foam::Boussinesq<Specie>::rho
 
 
 template<class Specie>
+inline Foam::scalar Foam::Boussinesq<Specie>::h(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::Boussinesq<Specie>::cp(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::Boussinesq<Specie>::s
 (
     scalar p,

@@ -93,6 +93,20 @@ inline Foam::scalar Foam::linear<Specie>::rho(scalar p, scalar T) const
 
 
 template<class Specie>
+inline Foam::scalar Foam::linear<Specie>::h(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::linear<Specie>::cp(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::linear<Specie>::s(scalar p, scalar T) const
 {
     return -log((rho0_ + psi_*p)/(rho0_ + psi_*Pstd))/(T*psi_);

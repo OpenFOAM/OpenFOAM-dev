@@ -117,6 +117,20 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::rho
 
 
 template<class Specie>
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::h(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::cp(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::PengRobinsonGas<Specie>::s
 (
     scalar p,

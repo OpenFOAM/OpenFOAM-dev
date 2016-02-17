@@ -115,6 +115,28 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::rho
 
 
 template<class Specie>
+inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::h
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::cp
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::s
 (
     scalar p,
