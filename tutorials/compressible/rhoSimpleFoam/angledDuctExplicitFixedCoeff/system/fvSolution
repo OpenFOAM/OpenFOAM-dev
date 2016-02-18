@@ -57,7 +57,7 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-    rhoMin          0.5;
+    rhoMin          0.4;
     rhoMax          1.5;
 
     residualControl
@@ -66,7 +66,7 @@ SIMPLE
         U               1e-4;
         e               1e-3;
 
-        // possibly check turbulence fields
+        // Possibly check turbulence fields
         "(k|epsilon|omega)" 1e-3;
     }
 }
