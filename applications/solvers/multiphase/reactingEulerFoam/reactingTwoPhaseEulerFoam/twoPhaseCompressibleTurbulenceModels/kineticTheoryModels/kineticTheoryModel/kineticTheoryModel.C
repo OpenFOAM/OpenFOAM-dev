@@ -434,7 +434,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
             )
           - fvm::laplacian(kappa_, Theta_, "laplacian(kappa,Theta)")
          ==
-            fvm::SuSp(-((PsCoeff*I) && gradU), Theta_)
+          - fvm::SuSp((PsCoeff*I) && gradU, Theta_)
           + (tau && gradU)
           + fvm::Sp(-gammaCoeff, Theta_)
           + fvm::Sp(-J1, Theta_)
