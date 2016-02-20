@@ -221,47 +221,93 @@ void Foam::MRFZoneList::makeRelative(surfaceScalarField& phi) const
 
 Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::relative
 (
-    const tmp<surfaceScalarField>& phi
+    const tmp<surfaceScalarField>& tphi
 ) const
 {
-    tmp<surfaceScalarField> rphi(phi.ptr());
-    makeRelative(rphi());
-    return rphi;
+    if (size())
+    {
+        tmp<surfaceScalarField> rphi
+        (
+            reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
+            ::New
+            (
+                tphi,
+                "relative(" + tphi().name() + ')',
+                tphi().dimensions(),
+                true
+            )
+        );
+
+        makeRelative(rphi());
+
+        reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
+        ::clear(tphi);
+
+        return rphi;
+    }
+    else
+    {
+        return tmp<surfaceScalarField>(tphi, true);
+    }
 }
 
 
 Foam::tmp<Foam::FieldField<Foam::fvsPatchField, Foam::scalar>>
 Foam::MRFZoneList::relative
 (
-    const tmp<FieldField<fvsPatchField, scalar>>& phi
+    const tmp<FieldField<fvsPatchField, scalar>>& tphi
 ) const
 {
-    tmp<FieldField<fvsPatchField, scalar>> rphi(phi.ptr());
-
-    forAll(*this, i)
+    if (size())
     {
-        operator[](i).makeRelative(rphi());
-    }
+        tmp<FieldField<fvsPatchField, scalar>> rphi
+        (
+            reuseTmpFieldField<fvsPatchField, scalar, scalar>::New(tphi, true)
+        );
 
-    return rphi;
+        forAll(*this, i)
+        {
+            operator[](i).makeRelative(rphi());
+        }
+
+        reuseTmpFieldField<fvsPatchField, scalar, scalar>::clear(tphi);
+
+        return rphi;
+    }
+    else
+    {
+        return tmp<FieldField<fvsPatchField, scalar>>(tphi, true);
+    }
 }
 
 
 Foam::tmp<Foam::Field<Foam::scalar>>
 Foam::MRFZoneList::relative
 (
-    const tmp<Field<scalar>>& phi,
+    const tmp<Field<scalar>>& tphi,
     const label patchi
 ) const
 {
-    tmp<Field<scalar>> rphi(phi.ptr());
-
-    forAll(*this, i)
+    if (size())
     {
-        operator[](i).makeRelative(rphi(), patchi);
-    }
+        tmp<Field<scalar>> rphi
+        (
+            reuseTmp<scalar, scalar>::New(tphi, true)
+        );
 
-    return rphi;
+        forAll(*this, i)
+        {
+            operator[](i).makeRelative(rphi(), patchi);
+        }
+
+        reuseTmp<scalar, scalar>::clear(tphi);
+
+        return rphi;
+    }
+    else
+    {
+        return tmp<Field<scalar>>(tphi, true);
+    }
 }
 
 
@@ -298,12 +344,34 @@ void Foam::MRFZoneList::makeAbsolute(surfaceScalarField& phi) const
 
 Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::absolute
 (
-    const tmp<surfaceScalarField>& phi
+    const tmp<surfaceScalarField>& tphi
 ) const
 {
-    tmp<surfaceScalarField> rphi(phi.ptr());
-    makeAbsolute(rphi());
-    return rphi;
+    if (size())
+    {
+        tmp<surfaceScalarField> rphi
+        (
+            reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
+            ::New
+            (
+                tphi,
+                "absolute(" + tphi().name() + ')',
+                tphi().dimensions(),
+                true
+            )
+        );
+
+        makeAbsolute(rphi());
+
+        reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
+        ::clear(tphi);
+
+        return rphi;
+    }
+    else
+    {
+        return tmp<surfaceScalarField>(tphi, true);
+    }
 }
 
 

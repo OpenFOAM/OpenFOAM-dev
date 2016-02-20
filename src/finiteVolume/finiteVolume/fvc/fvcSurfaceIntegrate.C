@@ -25,7 +25,7 @@ License
 
 #include "fvcSurfaceIntegrate.H"
 #include "fvMesh.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -104,7 +104,7 @@ surfaceIntegrate
                 ssf.dimensions()/dimVol,
                 pTraits<Type>::zero
             ),
-            zeroGradientFvPatchField<Type>::typeName
+            extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
     GeometricField<Type, fvPatchField, volMesh>& vf = tvf();
@@ -155,7 +155,7 @@ surfaceSum
             ),
             mesh,
             dimensioned<Type>("0", ssf.dimensions(), pTraits<Type>::zero),
-            zeroGradientFvPatchField<Type>::typeName
+            extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
     GeometricField<Type, fvPatchField, volMesh>& vf = tvf();

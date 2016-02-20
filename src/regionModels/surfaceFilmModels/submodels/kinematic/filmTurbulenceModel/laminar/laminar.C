@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 #include "volFields.H"
 #include "fvmSup.H"
 #include "kinematicSingleLayer.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,7 +84,7 @@ tmp<volVectorField> laminar::Us() const
             ),
             owner_.regionMesh(),
             dimensionedVector("zero", dimVelocity, vector::zero),
-            zeroGradientFvPatchVectorField::typeName
+            extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
 

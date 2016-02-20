@@ -44,6 +44,7 @@ SourceFiles
 #include "skewCorrectionVectors.H"
 #include "linear.H"
 #include "gaussGrad.H"
+#include "zeroGradientFvPatchField.H"
 #include "mixedFvPatchField.H"
 #include "directionMixedFvPatchField.H"
 

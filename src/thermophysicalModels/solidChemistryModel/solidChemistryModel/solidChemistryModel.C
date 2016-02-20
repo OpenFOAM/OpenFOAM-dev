@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "solidChemistryModel.H"
 #include "reactingMixture.H"
-#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -131,8 +130,7 @@ Foam::solidChemistryModel<CompType, SolidThermo>::Sh() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0)
         )
     );
 
@@ -172,8 +170,7 @@ Foam::solidChemistryModel<CompType, SolidThermo>::dQ() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
         )
     );
 

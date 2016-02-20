@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------*\
+/*--------------------------------------------------------------------r-------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -171,7 +171,7 @@ inline T* Foam::tmp<T>::ptr() const
 template<class T>
 inline void Foam::tmp<T>::clear() const
 {
-    if (isTmp_ && ptr_)  // skip this bit:  && ptr_->okToDelete())
+    if (isTmp_ && ptr_)  // Skip this bit:  && ptr_->okToDelete())
     {
         delete ptr_;
         ptr_ = 0;
@@ -326,7 +326,7 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
         }
 
         ptr_ = t.ptr_;
-        t.ptr_ = 0;
+        const_cast<tmp<T>&>(t).ptr_ = 0;
         ptr_->resetRefCount();
     }
     else

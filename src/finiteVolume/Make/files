@@ -99,6 +99,7 @@ $(fvPatchFields)/fvPatchField/fvPatchFields.C
 basicFvPatchFields = $(fvPatchFields)/basic
 $(basicFvPatchFields)/basicSymmetry/basicSymmetryFvPatchScalarField.C
 $(basicFvPatchFields)/calculated/calculatedFvPatchFields.C
+$(basicFvPatchFields)/extrapolatedCalculated/extrapolatedCalculatedFvPatchFields.C
 $(basicFvPatchFields)/coupled/coupledFvPatchFields.C
 $(basicFvPatchFields)/directionMixed/directionMixedFvPatchFields.C
 $(basicFvPatchFields)/fixedGradient/fixedGradientFvPatchFields.C

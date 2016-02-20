@@ -26,7 +26,7 @@ License
 #include "greyMeanAbsorptionEmission.H"
 #include "addToRunTimeSelectionTable.H"
 #include "unitConversion.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 #include "basicSpecieMixture.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -209,7 +209,7 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
             ),
             mesh(),
             dimensionedScalar("a", dimless/dimLength, 0.0),
-            zeroGradientFvPatchVectorField::typeName
+            extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
 

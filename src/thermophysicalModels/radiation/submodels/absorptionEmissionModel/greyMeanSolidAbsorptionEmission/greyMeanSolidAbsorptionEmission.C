@@ -26,7 +26,7 @@ License
 #include "greyMeanSolidAbsorptionEmission.H"
 #include "addToRunTimeSelectionTable.H"
 #include "unitConversion.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -158,7 +158,7 @@ calc(const label propertyId) const
             ),
             mesh(),
             dimensionedScalar("a", dimless/dimLength, 0.0),
-            zeroGradientFvPatchVectorField::typeName
+            extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
 

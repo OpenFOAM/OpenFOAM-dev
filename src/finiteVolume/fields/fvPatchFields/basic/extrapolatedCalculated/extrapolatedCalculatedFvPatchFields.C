@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,81 +23,22 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "noRadiation.H"
-#include "volFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
+#include "fvPatchFields.H"
+#include "volMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace surfaceFilmModels
-{
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(noRadiation, 0);
-
-addToRunTimeSelectionTable
-(
-    filmRadiationModel,
-    noRadiation,
-    dictionary
-);
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-noRadiation::noRadiation
-(
-    surfaceFilmModel& owner,
-    const dictionary& dict
-)
-:
-    filmRadiationModel(owner)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-noRadiation::~noRadiation()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-void noRadiation::correct()
-{
-    // do nothing
-}
-
-
-tmp<volScalarField> noRadiation::Shs()
-{
-    return tmp<volScalarField>
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                typeName + ":Shs",
-                owner().time().timeName(),
-                owner().regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            owner().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
-        )
-    );
-}
-
+makePatchFields(extrapolatedCalculated);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
-} // End namespace regionModels
 } // End namespace Foam
 
 // ************************************************************************* //

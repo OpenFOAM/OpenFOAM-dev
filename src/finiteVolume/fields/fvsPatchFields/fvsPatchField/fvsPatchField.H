@@ -66,6 +66,9 @@ template<class Type>
 class fvsPatchField;
 
 template<class Type>
+class calculatedFvsPatchField;
+
+template<class Type>
 Ostream& operator<<(Ostream&, const fvsPatchField<Type>&);
 
 
@@ -90,6 +93,7 @@ class fvsPatchField
 public:
 
     typedef fvPatch Patch;
+    typedef calculatedFvsPatchField<Type> Calculated;
 
 
     //- Runtime type information

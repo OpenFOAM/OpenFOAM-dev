@@ -31,7 +31,6 @@ License
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-// Construct from Istream
 template<class T>
 Foam::List<T>::List(Istream& is)
 :
@@ -173,12 +172,12 @@ Foam::List<T> Foam::readList(Istream& is)
                 << exit(FatalIOError);
         }
 
-        // read via a singly-linked list
+        // Read via a singly-linked list
         L = SLList<T>(is);
     }
     else
     {
-        // create list with a single item
+        // Create list with a single item
         L.setSize(1);
 
         is >> L[0];

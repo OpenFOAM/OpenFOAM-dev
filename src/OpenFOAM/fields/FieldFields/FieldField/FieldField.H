@@ -102,7 +102,7 @@ public:
         FieldField(const FieldField<Field, Type>&);
 
         //- Construct as copy or re-use as specified.
-        FieldField(FieldField<Field, Type>&, bool reUse);
+        FieldField(FieldField<Field, Type>&, bool reuse);
 
         //- Construct as copy of a PtrList<Field, Type>
         FieldField(const PtrList<Field<Type>>&);

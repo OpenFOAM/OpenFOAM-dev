@@ -107,7 +107,7 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
             ),
             mesh(),
             dimensionedScalar("rDeltaT", dimless/dimTime, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 

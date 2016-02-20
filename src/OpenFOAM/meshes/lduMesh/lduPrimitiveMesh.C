@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,12 +206,12 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
     labelList& l,
     labelList& u,
     const label comm,
-    bool reUse
+    bool reuse
 )
 :
     lduAddressing(nCells),
-    lowerAddr_(l, reUse),
-    upperAddr_(u, reUse),
+    lowerAddr_(l, reuse),
+    upperAddr_(u, reuse),
     comm_(comm)
 {}
 

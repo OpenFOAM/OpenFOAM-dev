@@ -77,20 +77,11 @@ Foam::PtrList<T>::PtrList(const Xfer<PtrList<T>>& lst)
 
 
 template<class T>
-Foam::PtrList<T>::PtrList(PtrList<T>& a, bool reUse)
+Foam::PtrList<T>::PtrList(PtrList<T>& a, bool reuse)
 :
-    ptrs_(a.size())
+    ptrs_(a.ptrs_, reuse)
 {
-    if (reUse)
-    {
-        forAll(*this, i)
-        {
-            ptrs_[i] = a.ptrs_[i];
-            a.ptrs_[i] = NULL;
-        }
-        a.setSize(0);
-    }
-    else
+    if (!reuse)
     {
         forAll(*this, i)
         {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,8 +78,7 @@ Foam::InertPhaseModel<BasePhaseModel>::Sh() const
                 this->mesh()
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0)
         )
     );
 }

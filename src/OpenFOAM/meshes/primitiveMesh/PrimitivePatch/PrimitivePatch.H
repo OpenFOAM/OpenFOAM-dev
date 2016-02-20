@@ -255,7 +255,7 @@ public:
         (
             FaceList<Face>& faces,
             Field<PointType>& points,
-            const bool reUse
+            const bool reuse
         );
 
         //- Construct as copy

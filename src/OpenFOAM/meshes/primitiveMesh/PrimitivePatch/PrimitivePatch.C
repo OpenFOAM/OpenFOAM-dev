@@ -111,11 +111,11 @@ PrimitivePatch
 (
     FaceList<Face>& faces,
     Field<PointType>& points,
-    const bool reUse
+    const bool reuse
 )
 :
-    FaceList<Face>(faces, reUse),
-    points_(points, reUse),
+    FaceList<Face>(faces, reuse),
+    points_(points, reuse),
     edgesPtr_(NULL),
     nInternalEdges_(-1),
     boundaryPointsPtr_(NULL),

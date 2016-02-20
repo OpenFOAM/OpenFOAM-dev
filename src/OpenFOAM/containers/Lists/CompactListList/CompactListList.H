@@ -123,7 +123,7 @@ public:
         explicit CompactListList(const Xfer<CompactListList<T, Container>>&);
 
         //- Construct as copy or re-use as specified.
-        CompactListList(CompactListList<T, Container>&, bool reUse);
+        CompactListList(CompactListList<T, Container>&, bool reuse);
 
         //- Construct from Istream.
         CompactListList(Istream&);

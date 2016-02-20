@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "basicXiSubG.H"
-#include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -74,29 +73,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiGModels::basicSubGrid::G() const
     volScalarField& Gtot = tGtot();
 
     const scalarField Cw = pow(Su_.mesh().V(), 2.0/3.0);
-
-    tmp<volScalarField> tN
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "tN",
-                Su_.mesh().time().timeName(),
-                Su_.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            Su_.mesh(),
-            dimensionedScalar("zero", Nv.dimensions(), 0.0),
-            zeroGradientFvPatchVectorField::typeName
-        )
-    );
-
-    volScalarField& N = tN();
-
-    N.internalField() = Nv.internalField()*Cw;
+    scalarField N(Nv.internalField()*Cw);
 
     forAll(N, celli)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,8 +73,7 @@ inline tmp<volScalarField> thermoSingleLayer::hs
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            Cp_*(T - (dimensionedScalar("Tstd", dimTemperature, 298.15))),
-            zeroGradientFvPatchScalarField::typeName
+            Cp_*(T - (dimensionedScalar("Tstd", dimTemperature, 298.15)))
         )
     );
 }
@@ -97,8 +96,7 @@ inline tmp<volScalarField> thermoSingleLayer::T
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            hs/Cp_ + dimensionedScalar("Tstd", dimTemperature, 298.15),
-            zeroGradientFvPatchScalarField::typeName
+            hs/Cp_ + dimensionedScalar("Tstd", dimTemperature, 298.15)
         )
     );
 

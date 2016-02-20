@@ -25,7 +25,6 @@ License
 
 #include "reactingOneDim.H"
 #include "addToRunTimeSelectionTable.H"
-#include "zeroGradientFvPatchFields.H"
 #include "surfaceInterpolate.H"
 #include "fvm.H"
 #include "fvcDiv.H"
@@ -464,8 +463,6 @@ reactingOneDim::reactingOneDim
             IOobject::AUTO_WRITE
         ),
         regionMesh()
-        //dimensionedScalar("zero", dimEnergy/dimArea/dimTime, 0.0),
-        //zeroGradientFvPatchVectorField::typeName
     ),
 
     lostSolidMass_(dimensionedScalar("zero", dimMass, 0.0)),

@@ -26,6 +26,7 @@ License
 #include "chemistryModel.H"
 #include "reactingMixture.H"
 #include "UniformField.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -495,7 +496,7 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
             ),
             this->mesh(),
             dimensionedScalar("zero", dimTime, SMALL),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
@@ -563,11 +564,9 @@ Foam::chemistryModel<CompType, ThermoType>::Sh() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0)
         )
     );
-
 
     if (this->chemistry_)
     {
@@ -605,8 +604,7 @@ Foam::chemistryModel<CompType, ThermoType>::dQ() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
         )
     );
 

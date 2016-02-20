@@ -470,7 +470,7 @@ public:
         LduMatrix(const LduMatrix<Type, DType, LUType>&);
 
         //- Construct as copy or re-use as specified.
-        LduMatrix(LduMatrix<Type, DType, LUType>&, bool reUse);
+        LduMatrix(LduMatrix<Type, DType, LUType>&, bool reuse);
 
         //- Construct given an LDU addressed mesh and an Istream
         //  from which the coefficients are read

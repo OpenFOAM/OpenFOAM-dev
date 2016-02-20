@@ -64,6 +64,9 @@ template<class Type>
 class pointPatchField;
 
 template<class Type>
+class calculatedPointPatchField;
+
+template<class Type>
 Ostream& operator<<
 (
     Ostream&,
@@ -99,6 +102,7 @@ class pointPatchField
 public:
 
     typedef pointPatch Patch;
+    typedef calculatedPointPatchField<Type> Calculated;
 
 
     //- Runtime type information
@@ -239,8 +243,7 @@ public:
             const dictionary&
         );
 
-
-        //- Return a pointer to a new CalculatedpointPatchField created on
+        //- Return a pointer to a new calculatedPointPatchField created on
         //  freestore without setting patchField values
         template<class Type2>
         static autoPtr<pointPatchField<Type>>

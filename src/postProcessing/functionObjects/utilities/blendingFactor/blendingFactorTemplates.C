@@ -26,6 +26,7 @@ License
 #include "gaussConvectionScheme.H"
 #include "blendedSchemeBase.H"
 #include "fvcCellReduce.H"
+#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

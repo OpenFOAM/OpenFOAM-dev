@@ -100,7 +100,8 @@ public:
 
         // Edit
 
-            //- Return tmp pointer for reuse
+            //- Return tmp pointer for reuse.
+            //  Returns a clone if the object is not a temporary
             inline T* ptr() const;
 
             //- If object pointer points to valid object:

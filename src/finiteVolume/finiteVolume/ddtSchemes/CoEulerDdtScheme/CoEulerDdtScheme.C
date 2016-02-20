@@ -57,7 +57,7 @@ tmp<volScalarField> CoEulerDdtScheme<Type>::CorDeltaT() const
             ),
             mesh(),
             dimensionedScalar("CorDeltaT", cofrDeltaT.dimensions(), 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 

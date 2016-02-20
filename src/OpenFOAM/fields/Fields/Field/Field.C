@@ -202,9 +202,9 @@ Foam::Field<Type>::Field(const Field<Type>& f)
 
 
 template<class Type>
-Foam::Field<Type>::Field(Field<Type>& f, bool reUse)
+Foam::Field<Type>::Field(Field<Type>& f, bool reuse)
 :
-    List<Type>(f, reUse)
+    List<Type>(f, reuse)
 {}
 
 
@@ -236,7 +236,7 @@ Foam::Field<Type>::Field(const tmp<Field<Type>>& tf)
 :
     List<Type>(const_cast<Field<Type>&>(tf()), tf.isTmp())
 {
-    const_cast<Field<Type>&>(tf()).resetRefCount();
+    tf.clear();
 }
 #endif
 

@@ -55,7 +55,11 @@ class reuseTmp<TypeR, TypeR>
 {
 public:
 
-    static tmp<Field<TypeR>> New(const tmp<Field<TypeR>>& tf1)
+    static tmp<Field<TypeR>> New
+    (
+        const tmp<Field<TypeR>>& tf1,
+        const bool initRet = false
+    )
     {
         if (tf1.isTmp())
         {
@@ -63,7 +67,14 @@ public:
         }
         else
         {
-            return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
+            tmp<Field<TypeR>> rtf(new Field<TypeR>(tf1().size()));
+
+            if (initRet)
+            {
+                rtf() = tf1();
+            }
+
+            return rtf;
         }
     }
 

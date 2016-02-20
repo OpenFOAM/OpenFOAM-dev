@@ -205,7 +205,7 @@ public:
         Field(const Field<Type>&);
 
         //- Construct as copy or re-use as specified.
-        Field(Field<Type>&, bool reUse);
+        Field(Field<Type>&, bool reuse);
 
         //- Construct by transferring the Field contents
         Field(const Xfer<Field<Type>>&);

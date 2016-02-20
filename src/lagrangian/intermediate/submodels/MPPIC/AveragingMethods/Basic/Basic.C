@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Basic.H"
+#include "zeroGradientFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

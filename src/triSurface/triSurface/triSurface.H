@@ -259,7 +259,7 @@ public:
             List<labelledTri>&,
             const geometricSurfacePatchList&,
             pointField&,
-            const bool reUse
+            const bool reuse
         );
 
         //- Construct from triangles, patches, points.

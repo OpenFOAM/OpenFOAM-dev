@@ -521,7 +521,7 @@ public:
         lduMatrix(const lduMatrix&);
 
         //- Construct as copy or re-use as specified.
-        lduMatrix(lduMatrix&, bool reUse);
+        lduMatrix(lduMatrix&, bool reuse);
 
         //- Construct given an LDU addressed mesh and an Istream
         //  from which the coefficients are read

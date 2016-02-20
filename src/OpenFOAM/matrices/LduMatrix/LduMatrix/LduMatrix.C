@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::LduMatrix<Type, DType, LUType>::LduMatrix(const LduMatrix& A)
 
 
 template<class Type, class DType, class LUType>
-Foam::LduMatrix<Type, DType, LUType>::LduMatrix(LduMatrix& A, bool reUse)
+Foam::LduMatrix<Type, DType, LUType>::LduMatrix(LduMatrix& A, bool reuse)
 :
     lduMesh_(A.lduMesh_),
     diagPtr_(NULL),
@@ -88,7 +88,7 @@ Foam::LduMatrix<Type, DType, LUType>::LduMatrix(LduMatrix& A, bool reUse)
     interfacesUpper_(0),
     interfacesLower_(0)
 {
-    if (reUse)
+    if (reuse)
     {
         if (A.diagPtr_)
         {

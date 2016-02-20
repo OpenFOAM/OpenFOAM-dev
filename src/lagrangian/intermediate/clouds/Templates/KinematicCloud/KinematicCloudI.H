@@ -470,7 +470,7 @@ Foam::KinematicCloud<CloudType>::vDotSweep() const
             ),
             mesh_,
             dimensionedScalar("zero", dimless/dimTime, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
@@ -509,7 +509,7 @@ Foam::KinematicCloud<CloudType>::theta() const
             ),
             mesh_,
             dimensionedScalar("zero", dimless, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 

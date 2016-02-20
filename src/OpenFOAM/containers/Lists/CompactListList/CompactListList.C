@@ -113,12 +113,12 @@ template<class T, class Container>
 Foam::CompactListList<T, Container>::CompactListList
 (
     CompactListList<T, Container>& lst,
-    bool reUse
+    bool reuse
 )
 :
     size_(lst.size()),
-    offsets_(lst.offsets_, reUse),
-    m_(lst.m_, reUse)
+    offsets_(lst.offsets_, reuse),
+    m_(lst.m_, reuse)
 {}
 
 

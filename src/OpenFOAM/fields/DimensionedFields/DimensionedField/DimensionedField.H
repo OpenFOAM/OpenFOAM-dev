@@ -159,7 +159,7 @@ public:
         DimensionedField
         (
             DimensionedField<Type, GeoMesh>&,
-            bool reUse
+            bool reuse
         );
 
         //- Construct by transferring the DimensionedField
@@ -188,7 +188,7 @@ public:
         (
             const IOobject&,
             DimensionedField<Type, GeoMesh>&,
-            bool reUse
+            bool reuse
         );
 
         //- Construct as copy resetting name
@@ -203,7 +203,7 @@ public:
         (
             const word& newName,
             DimensionedField<Type, GeoMesh>&,
-            bool reUse
+            bool reuse
         );
 
         //- Construct by transferring the DimensionedField with a new name

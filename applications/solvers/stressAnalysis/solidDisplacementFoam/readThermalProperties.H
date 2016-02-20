@@ -75,8 +75,7 @@ if (thermalStress)
                     "C",
                     dimensionSet(0, 2, -2 , -1, 0),
                     CValue
-                ),
-                zeroGradientFvPatchField<scalar>::typeName
+                )
             )
         );
 
@@ -131,8 +130,7 @@ if (thermalStress)
                     "rhoK",
                     dimensionSet(1, 1, -3 , -1, 0),
                     rhoKValue
-                ),
-                zeroGradientFvPatchField<scalar>::typeName
+                )
             )
         );
 
@@ -188,8 +186,7 @@ if (thermalStress)
                     "alpha",
                     inv(dimTemperature),
                     alphaValue
-                ),
-                zeroGradientFvPatchField<scalar>::typeName
+                )
             )
         );
     }

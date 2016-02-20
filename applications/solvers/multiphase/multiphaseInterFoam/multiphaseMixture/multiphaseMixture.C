@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,6 @@ void Foam::multiphaseMixture::calcAlphas()
         alphas_ += level*iter();
         level += 1.0;
     }
-
-    alphas_.correctBoundaryConditions();
 }
 
 
@@ -108,8 +106,7 @@ Foam::multiphaseMixture::multiphaseMixture
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("alphas", dimless, 0.0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar("alphas", dimless, 0.0)
     ),
 
     nu_

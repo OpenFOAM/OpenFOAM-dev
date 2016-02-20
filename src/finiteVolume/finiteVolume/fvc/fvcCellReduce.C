@@ -27,7 +27,7 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +66,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
             ),
             mesh,
             dimensioned<Type>("0", ssf.dimensions(), pTraits<Type>::zero),
-            zeroGradientFvPatchField<Type>::typeName
+            extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
 

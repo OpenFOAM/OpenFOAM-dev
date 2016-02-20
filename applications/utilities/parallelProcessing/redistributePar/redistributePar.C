@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -236,20 +236,18 @@ void writeDecomposition
             false                   // do not register
         ),
         mesh,
-        dimensionedScalar(name, dimless, -1),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar(name, dimless, -1)
     );
 
     forAll(procCells, cI)
     {
         procCells[cI] = decomp[cI];
     }
+
     procCells.write();
 }
 
 
-// Read vol or surface fields
-//template<class T, class Mesh>
 template<class GeoField>
 void readFields
 (
@@ -260,12 +258,12 @@ void readFields
     PtrList<GeoField>& fields
 )
 {
-    //typedef GeometricField<T, fvPatchField, Mesh> fldType;
-
     // Get my objects of type
     IOobjectList objects(allObjects.lookupClass(GeoField::typeName));
+
     // Check that we all have all objects
     wordList objectNames = objects.toc();
+
     // Get master names
     wordList masterNames(objectNames);
     Pstream::scatter(masterNames);

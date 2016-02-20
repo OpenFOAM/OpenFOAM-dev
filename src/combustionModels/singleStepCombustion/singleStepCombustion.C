@@ -154,8 +154,7 @@ singleStepCombustion<CombThermoType, ThermoType>::dQ() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
         )
     );
 

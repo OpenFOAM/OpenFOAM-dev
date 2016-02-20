@@ -30,6 +30,7 @@ License
 #include "fvmLaplacian.H"
 #include "fvcReconstruct.H"
 #include "volPointInterpolation.H"
+#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -43,8 +44,17 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
     PackingModel<CloudType>(dict, owner, typeName),
     alpha_
     (
-        this->owner().name() + ":alpha",
-        this->owner().theta()
+        IOobject
+        (
+            this->owner().name() + ":alpha",
+            this->owner().db().time().timeName(),
+            this->owner().mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        this->owner().mesh(),
+        dimensionedScalar("zero", dimless, 0.0),
+        zeroGradientFvPatchScalarField::typeName
     ),
     phiCorrect_(NULL),
     uCorrect_(NULL),
@@ -53,6 +63,7 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
     alphaMin_(readScalar(this->coeffDict().lookup("alphaMin"))),
     rhoMin_(readScalar(this->coeffDict().lookup("rhoMin")))
 {
+    alpha_ = this->owner().theta();
     alpha_.oldTime();
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvScalarMatrix.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -224,7 +224,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H() const
             ),
             psi_.mesh(),
             dimensions_/dimVol,
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
     volScalarField& Hphi = tHphi();
@@ -256,7 +256,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H1() const
             ),
             psi_.mesh(),
             dimensions_/(dimVol*psi_.dimensions()),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
     volScalarField& H1_ = tH1();

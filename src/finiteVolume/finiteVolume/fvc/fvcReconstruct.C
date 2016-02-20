@@ -28,7 +28,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fvcSurfaceIntegrate.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,7 +74,7 @@ reconstruct
                 IOobject::NO_WRITE
             ),
             inv(surfaceSum(SfHat*mesh.Sf()))&surfaceSum(SfHat*ssf),
-            zeroGradientFvPatchField<GradType>::typeName
+            extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
 

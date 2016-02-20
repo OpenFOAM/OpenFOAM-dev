@@ -26,7 +26,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "calculatedFvPatchFields.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 #include "coupledFvPatchFields.H"
 #include "UIndirectList.H"
 
@@ -739,7 +739,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::A() const
             ),
             psi_.mesh(),
             dimensions_/psi_.dimensions()/dimVol,
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
@@ -768,7 +768,7 @@ Foam::fvMatrix<Type>::H() const
             ),
             psi_.mesh(),
             dimensions_/dimVol,
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
     GeometricField<Type, fvPatchField, volMesh>& Hphi = tHphi();
@@ -830,7 +830,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::H1() const
             ),
             psi_.mesh(),
             dimensions_/(dimVol*psi_.dimensions()),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
     volScalarField& H1_ = tH1();
@@ -2274,7 +2274,7 @@ Foam::operator&
             ),
             psi.mesh(),
             M.dimensions()/dimVol,
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
     GeometricField<Type, fvPatchField, volMesh>& Mphi = tMphi();

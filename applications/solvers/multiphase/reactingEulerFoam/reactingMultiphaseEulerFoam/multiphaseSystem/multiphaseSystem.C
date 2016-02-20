@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,8 +64,6 @@ void Foam::multiphaseSystem::calcAlphas()
         alphas_ += level*phases()[i];
         level += 1.0;
     }
-
-    alphas_.correctBoundaryConditions();
 }
 
 
@@ -506,8 +504,7 @@ Foam::multiphaseSystem::multiphaseSystem
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("alphas", dimless, 0.0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar("alphas", dimless, 0.0)
     ),
 
     cAlphas_(lookup("interfaceCompression")),

@@ -28,7 +28,7 @@ License
 #include "gaussGrad.H"
 #include "fvMesh.H"
 #include "volMesh.H"
-#include "zeroGradientFvPatchField.H"
+#include "extrapolatedCalculatedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,7 +77,7 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
                 vtf.dimensions()/dimLength,
                 pTraits<GradType>::zero
             ),
-            zeroGradientFvPatchField<GradType>::typeName
+            extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
     GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad();

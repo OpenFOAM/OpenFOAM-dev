@@ -112,7 +112,7 @@ public:
         List(const Xfer<List<T>>&);
 
         //- Construct as copy or re-use as specified.
-        List(List<T>&, bool reUse);
+        List(List<T>&, bool reuse);
 
         //- Construct as subset.
         List(const UList<T>&, const labelUList& mapAddressing);
