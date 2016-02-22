@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,12 @@ const Foam::NamedEnum<Foam::directions::directionType, 3>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// For debugging
 void Foam::directions::writeOBJ(Ostream& os, const point& pt)
 {
     os << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << endl;
 }
 
-// For debugging
+
 void Foam::directions::writeOBJ
 (
     Ostream& os,
@@ -81,7 +80,6 @@ void Foam::directions::writeOBJ
 }
 
 
-// Dump to file.
 void Foam::directions::writeOBJ
 (
     const fileName& fName,
@@ -137,7 +135,6 @@ void Foam::directions::check2D
 }
 
 
-// Get direction on all cells
 Foam::vectorField Foam::directions::propagateDirection
 (
     const polyMesh& mesh,
@@ -283,33 +280,34 @@ Foam::directions::directions
     List<vectorField>(wordList(dict.lookup("directions")).size())
 {
     const wordList wantedDirs(dict.lookup("directions"));
+    const word coordSystem(dict.lookup("coordinateSystem"));
 
     bool wantNormal = false;
     bool wantTan1 = false;
     bool wantTan2 = false;
+    label nDirs = 0;
 
-    forAll(wantedDirs, i)
+    if (coordSystem != "fieldBased")
     {
-        directionType wantedDir = directionTypeNames_[wantedDirs[i]];
+        forAll(wantedDirs, i)
+        {
+            directionType wantedDir = directionTypeNames_[wantedDirs[i]];
 
-        if (wantedDir == NORMAL)
-        {
-            wantNormal = true;
-        }
-        else if (wantedDir == TAN1)
-        {
-            wantTan1 = true;
-        }
-        else if (wantedDir == TAN2)
-        {
-            wantTan2 = true;
+            if (wantedDir == NORMAL)
+            {
+                wantNormal = true;
+            }
+            else if (wantedDir == TAN1)
+            {
+                wantTan1 = true;
+            }
+            else if (wantedDir == TAN2)
+            {
+                wantTan2 = true;
+            }
         }
     }
 
-
-    label nDirs = 0;
-
-    const word coordSystem(dict.lookup("coordinateSystem"));
 
     if (coordSystem == "global")
     {
@@ -424,12 +422,29 @@ Foam::directions::directions
             this->operator[](nDirs++) = tan2Dirs;
         }
     }
+    else if (coordSystem == "fieldBased")
+    {
+        forAll(wantedDirs, i)
+        {
+            operator[](nDirs++) =
+                vectorIOField
+                (
+                    IOobject
+                    (
+                        mesh.instance()/wantedDirs[i],
+                        mesh,
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE
+                    )
+                );
+        }
+    }
     else
     {
         FatalErrorInFunction
             << "Unknown coordinate system "
             << coordSystem << endl
-            << "Known types are global and patchLocal"
+            << "Known types are global, patchLocal and fieldBased"
             << exit(FatalError);
     }
 }

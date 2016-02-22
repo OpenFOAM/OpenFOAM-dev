@@ -38,7 +38,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(cellCuts, 0);
+    defineTypeNameAndDebug(cellCuts, 0);
 }
 
 
@@ -120,7 +120,7 @@ void Foam::cellCuts::writeUncutOBJ
     const label cellI
 ) const
 {
-    //- Cell edges
+    // Cell edges
     OFstream cutsStream(dir / "cell_" + name(cellI) + ".obj");
 
     Pout<< "Writing cell for time " <<  mesh().time().timeName()
@@ -135,7 +135,7 @@ void Foam::cellCuts::writeUncutOBJ
         labelList(1, cellI)
     );
 
-    //- Loop cutting cell in two
+    // Loop cutting cell in two
     OFstream cutStream(dir / "cellCuts_" + name(cellI) + ".obj");
 
     Pout<< "Writing raw cuts on cell for time " <<  mesh().time().timeName()
@@ -180,7 +180,7 @@ void Foam::cellCuts::writeOBJ
     const labelList& anchors
 ) const
 {
-    //- Cell edges
+    // Cell edges
     OFstream cutsStream(dir / "cell_" + name(cellI) + ".obj");
 
     Pout<< "Writing cell for time " <<  mesh().time().timeName()
@@ -196,7 +196,7 @@ void Foam::cellCuts::writeOBJ
     );
 
 
-    //- Loop cutting cell in two
+    // Loop cutting cell in two
     OFstream loopStream(dir / "cellLoop_" + name(cellI) + ".obj");
 
     Pout<< "Writing loop for time " <<  mesh().time().timeName()
@@ -207,7 +207,7 @@ void Foam::cellCuts::writeOBJ
     writeOBJ(loopStream, loopPoints, vertI);
 
 
-    //- Anchors for cell
+    // Anchors for cell
     OFstream anchorStream(dir / "anchors_" + name(cellI) + ".obj");
 
     Pout<< "Writing anchors for time " <<  mesh().time().timeName()
@@ -2240,7 +2240,7 @@ void Foam::cellCuts::setFromCellCutter
 
                 WarningInFunction
                     << "Found loop on cell " << cellI
-                    << " that resulted in an unexpected bad cut."
+                    << " that resulted in an unexpected bad cut." << nl
                     << "    Suggestions:" << nl
                     << "      - Turn on the debug switch for 'cellCuts' to get"
                     << " geometry files that identify this cell." << nl

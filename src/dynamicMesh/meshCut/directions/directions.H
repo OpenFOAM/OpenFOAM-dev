@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,8 @@ Description
 
     Used in splitting cells.
     Either all cells have similar refinement direction ('global') or
-    direction is dependent on local cell geometry. Controlled by dictionary.
+    direction is dependent on local cell geometry, or loads selected fields
+    by name ('fieldBased'). Controlled by dictionary.
 
 SourceFiles
     directions.C
@@ -65,7 +66,9 @@ class directions
 :
     public List<vectorField>
 {
+
 public:
+
     // Data types
 
         //- Enumeration listing the possible coordinate directions.
@@ -76,13 +79,13 @@ public:
             NORMAL
         };
 
+
 private:
 
         static const NamedEnum<directionType, 3> directionTypeNames_;
 
 
     // Private Member Functions
-
 
         //- For debugging. Write point coordinate.
         static void writeOBJ(Ostream& os, const point& pt);
@@ -141,7 +144,6 @@ public:
             const dictionary& dict,
             const twoDPointCorrector* correct2DPtr = NULL
         );
-
 };
 
 

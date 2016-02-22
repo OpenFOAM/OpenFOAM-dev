@@ -1,0 +1,98 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant/polyMesh";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+/*
+
+ A ------------------------------- B
+  /  H                          /
+ C\                            /
+     \                        /
+        \                    /
+           \                /     G
+              \            /
+                 \        /
+                    \    /
+                       \/
+                         D
+*/
+
+Ax  0.438912;    Ay  0.000000;
+Bx  18.28800;    By  0.000000;
+Cx  0.310358;    Cy  -0.310358;
+Dx  12.931569;   Dy  -12.931569;
+
+Hx  0.405502;    Hy  -0.167964;
+Gx  16.895909;   Gy  -6.998515;
+
+Z_DB_low  -0.88706;
+Z_AC_low  -1.07;
+Z_high  4.39208;
+
+vertices
+(
+   ($Cx  $Cy  $Z_AC_low)  //0
+   ($Dx  $Dy  $Z_DB_low)  //1
+   ($Bx  $By  $Z_DB_low)  //2
+   ($Ax  $Ay  $Z_AC_low)  //3
+   ($Cx  $Cy  $Z_high)    //4
+   ($Dx  $Dy  $Z_high)    //5
+   ($Bx  $By  $Z_high)    //6
+   ($Ax  $Ay  $Z_high)    //7
+);
+
+blocks
+(
+   hex (0 1 2 3 4 5 6 7)    (47 10 4) simpleGrading (41.6669 1 1)
+);
+
+edges
+(
+  arc 0 3 ($Hx $Hy $Z_AC_low)
+  arc 4 7 ($Hx $Hy $Z_high)
+
+  arc 1 2 ($Gx $Gy $Z_DB_low)
+  arc 5 6 ($Gx $Gy $Z_high)
+);
+
+patches
+(
+   patch maxX
+   (
+       (1 2 6 5)
+   )
+   patch minX
+   (
+       (0 4 7 3)
+   )
+   patch maxY
+   (
+       (3 7 6 2)
+   )
+   patch minY
+   (
+       (1 5 4 0)
+   )
+   patch maxZ
+   (
+       (4 5 6 7)
+   )
+   patch minZ
+   (
+       (0 3 2 1)
+   )
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

@@ -1,0 +1,54 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+wmake calcRadiusField
+wclean calcRadiusField
+
+runApplication blockMesh
+
+##### Procedure for special refinement over Z
+
+# We need the 0 folder to exist for these steps
+mkdir 0
+
+# Refine over Z, in 6 passes
+for index in 1 2 3 4 5 6; do
+
+  runApplication calcRadiusField
+  mv log.calcRadiusField log.calcRadiusField.tier$index
+
+  runApplication topoSet -dict system/topoSetDict.tier$index
+  mv log.topoSet log.topoSet.tier$index
+
+  ## foamToVTK -cellSet tier$index
+
+  runApplication refineMesh -dict system/refineMeshDict.tier$index -overwrite
+  mv log.refineMesh log.refineMesh.tier$index
+
+  rm -r 0/*
+
+done
+
+# Refine over cylindrical coordinates, in 3 passes
+for index in 1 2 3; do
+
+  runApplication calcRadiusField -calcDirections
+  mv log.calcRadiusField log.calcRadiusField.range$index
+
+  runApplication topoSet -dict system/topoSetDict.range$index
+  mv log.topoSet log.topoSet.range$index
+
+  ## foamToVTK -cellSet tier$index
+
+  runApplication refineMesh -dict system/refineMeshDict.range$index \
+      -overwrite
+  mv log.refineMesh log.refineMesh.range$index
+
+  rm -r 0/*
+
+done
+
+#------------------------------------------------------------------------------

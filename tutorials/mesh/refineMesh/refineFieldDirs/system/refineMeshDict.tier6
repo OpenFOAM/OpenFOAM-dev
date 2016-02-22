@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  dev                                   |
+|  \\    /   O peration     | Version:  2.3.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -15,19 +15,15 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Cells to refine; name of cell set
-set c0;
+set tier6;
 
 // Type of coordinate system:
 // - global : coordinate system same for every cell. Usually aligned with
 //   x,y,z axis. Specify in globalCoeffs section below.
 // - patchLocal : coordinate system different for every cell. Specify in
 //   patchLocalCoeffs section below.
-// - fieldBased : uses the list of field names from the directions list for
-//   selecting the directions to cut. Meant to be used with geometricCut, but
-//   can also be used with useHexTopology.
 coordinateSystem global;
 //coordinateSystem patchLocal;
-//coordinateSystem fieldBased;
 
 // .. and its coefficients. x,y in this case. (normal direction is calculated
 // as tan1^tan2)
@@ -43,31 +39,20 @@ patchLocalCoeffs
     tan1 (1 0 0);
 }
 
-// List of directions to refine, if global or patchLocal
+// List of directions to refine
 directions
 (
-    tan1
-    tan2
     normal
 );
-
-// List of directions to refine, if "fieldBased". Keep in mind that these
-// fields must be of type "vectorField", not "volVectorField".
-//directions
-//(
-//    radialDirectionFieldName
-//    angularDirectionFieldName
-//    heightDirectionFieldName
-//);
 
 // Whether to use hex topology. This will
 // - if patchLocal: all cells on selected patch should be hex
 // - split all hexes in 2x2x2 through the middle of edges.
-useHexTopology  true;
+useHexTopology  false;
 
 // Cut purely geometric (will cut hexes through vertices) or take topology
 // into account. Incompatible with useHexTopology
-geometricCut    false;
+geometricCut    true;
 
 // Write meshes from intermediate steps
 writeMesh       false;
