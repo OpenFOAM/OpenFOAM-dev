@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Foam::tmp<Foam::vectorField>
 Foam::face::calcEdges(const pointField& points) const
 {
     tmp<vectorField> tedges(new vectorField(size()));
-    vectorField& edges = tedges();
+    vectorField& edges = tedges.ref();
 
     forAll(*this, i)
     {

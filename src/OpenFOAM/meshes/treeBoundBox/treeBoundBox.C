@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,8 +163,7 @@ Foam::treeBoundBox::treeBoundBox
 Foam::tmp<Foam::pointField> Foam::treeBoundBox::points() const
 {
     tmp<pointField> tPts = tmp<pointField>(new pointField(8));
-
-    pointField& points = tPts();
+    pointField& points = tPts.ref();
 
     forAll(points, octant)
     {

@@ -55,7 +55,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
         fAreas,
         cellCtrs
     );
-    const scalarField& ortho = tortho();
+    const scalarField& ortho = tortho.ref();
 
     // Severe nonorthogonality threshold
     const scalar severeNonorthogonalityThreshold =
@@ -197,7 +197,7 @@ bool Foam::polyMesh::checkFaceSkewness
         fAreas,
         cellCtrs
     );
-    const scalarField& skew = tskew();
+    const scalarField& skew = tskew.ref();
 
     scalar maxSkew = max(skew);
     label nWarnSkew = 0;
@@ -426,7 +426,7 @@ bool Foam::polyMesh::checkCellDeterminant
         faceAreas,
         syncTools::getInternalOrCoupledFaces(*this)
     );
-    scalarField& cellDeterminant = tcellDeterminant();
+    scalarField& cellDeterminant = tcellDeterminant.ref();
 
 
     label nErrorCells = 0;
@@ -508,7 +508,7 @@ bool Foam::polyMesh::checkFaceWeight
         fAreas,
         cellCtrs
     );
-    scalarField& faceWght = tfaceWght();
+    scalarField& faceWght = tfaceWght.ref();
 
 
     label nErrorFaces = 0;
@@ -595,7 +595,7 @@ bool Foam::polyMesh::checkVolRatio
     }
 
     tmp<scalarField> tvolRatio = polyMeshTools::volRatio(*this, cellVols);
-    scalarField& volRatio = tvolRatio();
+    scalarField& volRatio = tvolRatio.ref();
 
 
     label nErrorFaces = 0;

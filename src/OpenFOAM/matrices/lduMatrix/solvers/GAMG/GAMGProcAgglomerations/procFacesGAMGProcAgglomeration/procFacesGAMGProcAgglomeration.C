@@ -166,7 +166,7 @@ Foam::procFacesGAMGProcAgglomeration::processorAgglomeration
     );
 
     tmp<labelField> tfineToCoarse(new labelField(0));
-    labelField& fineToCoarse = tfineToCoarse();
+    labelField& fineToCoarse = tfineToCoarse.ref();
 
     if (singleCellMeshPtr.valid())
     {

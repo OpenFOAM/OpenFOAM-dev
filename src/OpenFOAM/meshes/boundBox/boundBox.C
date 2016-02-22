@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,7 +149,7 @@ Foam::boundBox::boundBox
 Foam::tmp<Foam::pointField> Foam::boundBox::points() const
 {
     tmp<pointField> tPts = tmp<pointField>(new pointField(8));
-    pointField& pt = tPts();
+    pointField& pt = tPts.ref();
 
     pt[0] = min_;                                   // min-x, min-y, min-z
     pt[1] = point(max_.x(), min_.y(), min_.z());    // max-x, min-y, min-z

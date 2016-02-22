@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceOrthogonality
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     tmp<scalarField> tortho(new scalarField(mesh.nFaces(), 1.0));
-    scalarField& ortho = tortho();
+    scalarField& ortho = tortho.ref();
 
     // Internal faces
     forAll(nei, faceI)
@@ -100,7 +100,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceSkewness
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     tmp<scalarField> tskew(new scalarField(mesh.nFaces()));
-    scalarField& skew = tskew();
+    scalarField& skew = tskew.ref();
 
     forAll(nei, faceI)
     {
@@ -184,7 +184,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceWeights
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     tmp<scalarField> tweight(new scalarField(mesh.nFaces(), 1.0));
-    scalarField& weight = tweight();
+    scalarField& weight = tweight.ref();
 
     // Internal faces
     forAll(nei, faceI)
@@ -240,7 +240,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::volRatio
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     tmp<scalarField> tratio(new scalarField(mesh.nFaces(), 1.0));
-    scalarField& ratio = tratio();
+    scalarField& ratio = tratio.ref();
 
     // Internal faces
     forAll(nei, faceI)

@@ -182,7 +182,7 @@ Foam::tmp<Foam::labelField> Foam::cyclicGAMGInterface::internalFieldTransfer
     const labelUList& nbrFaceCells = nbr.faceCells();
 
     tmp<labelField> tpnf(new labelField(size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     forAll(pnf, facei)
     {

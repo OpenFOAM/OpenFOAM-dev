@@ -52,14 +52,19 @@ class tmp
 {
     // Private data
 
-        //- Flag for whether object is a temporary or a constant object
-        bool isTmp_;
+        //- Object types
+        enum type
+        {
+            TMP,
+            REF,
+            CONST_REF
+        };
 
-        //- Pointer to temporary object
+        //- Type of object
+        type type_;
+
+        //- Pointer to object
         mutable T* ptr_;
-
-        //- Const reference to constant object
-        const T& ref_;
 
 
 public:
@@ -69,8 +74,14 @@ public:
         //- Store object pointer
         inline explicit tmp(T* = 0);
 
+        //- Store object rvalue reference
+        inline tmp(T&&);
+
         //- Store object const reference
         inline tmp(const T&);
+
+        //- Construct copy and increment reference count
+        inline tmp(tmp<T>&&);
 
         //- Construct copy and increment reference count
         inline tmp(const tmp<T>&);
@@ -100,6 +111,10 @@ public:
 
         // Edit
 
+            //- Return non-const reference or generate a fatal error
+            //  if the object is const.
+            inline T& ref();
+
             //- Return tmp pointer for reuse.
             //  Returns a clone if the object is not a temporary
             inline T* ptr() const;
@@ -111,8 +126,11 @@ public:
 
     // Member operators
 
-        //- Dereference operator
+        #ifndef CONST_TMP
+        //- Deprecated non-const dereference operator.
+        //  Use ref() where non-const access is required
         inline T& operator()();
+        #endif
 
         //- Const dereference operator
         inline const T& operator()() const;

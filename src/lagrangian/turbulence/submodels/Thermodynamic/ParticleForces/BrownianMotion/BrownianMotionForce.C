@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ void Foam::BrownianMotionForce<CloudType>::cacheFields(const bool store)
             }
             else
             {
-                kPtr_ = tk.operator->();
+                kPtr_ = &tk();
                 ownK_ = false;
             }
         }

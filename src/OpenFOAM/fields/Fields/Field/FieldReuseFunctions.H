@@ -71,7 +71,7 @@ public:
 
             if (initRet)
             {
-                rtf() = tf1();
+                rtf.ref() = tf1();
             }
 
             return rtf;

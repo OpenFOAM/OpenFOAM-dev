@@ -564,7 +564,7 @@ Foam::Field<Type>::component
 ) const
 {
     tmp<Field<cmptType>> Component(new Field<cmptType>(this->size()));
-    ::Foam::component(Component(), *this, d);
+    ::Foam::component(Component.ref(), *this, d);
     return Component;
 }
 

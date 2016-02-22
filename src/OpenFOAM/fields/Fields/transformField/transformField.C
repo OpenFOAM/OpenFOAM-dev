@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf(new vectorField(tf.size()));
-    transform(tranf(), q, tf);
+    transform(tranf.ref(), q, tf);
     return tranf;
 }
 
@@ -60,7 +60,7 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf = reuseTmp<vector, vector>::New(ttf);
-    transform(tranf(), q, ttf());
+    transform(tranf.ref(), q, ttf());
     reuseTmp<vector, vector>::clear(ttf);
     return tranf;
 }
@@ -106,7 +106,7 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf(new vectorField(tf.size()));
-    transform(tranf(), tr, tf);
+    transform(tranf.ref(), tr, tf);
     return tranf;
 }
 
@@ -118,7 +118,7 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf = reuseTmp<vector, vector>::New(ttf);
-    transform(tranf(), tr, ttf());
+    transform(tranf.ref(), tr, ttf());
     reuseTmp<vector, vector>::clear(ttf);
     return tranf;
 }
