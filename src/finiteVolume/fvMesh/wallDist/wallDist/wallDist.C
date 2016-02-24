@@ -59,7 +59,7 @@ void Foam::wallDist::constructn() const
     forAllConstIter(labelHashSet, patchIDs_, iter)
     {
         label patchi = iter.key();
-        n_().boundaryField()[patchi] == patches[patchi].nf();
+        n_.ref().boundaryField()[patchi] == patches[patchi].nf();
     }
 }
 
