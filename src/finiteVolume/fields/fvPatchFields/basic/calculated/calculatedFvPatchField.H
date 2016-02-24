@@ -39,7 +39,7 @@ Description
     myPatch
     {
         type            calculated;
-        value           uniform (0 0 0);    // optional value entry
+        value           uniform (0 0 0);    // Required value entry
     }
     \endverbatim
 
@@ -89,7 +89,7 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&,
-            const bool valueRequired=false
+            const bool valueRequired=true
         );
 
         //- Construct by mapping given patchField<Type> onto a new patch
