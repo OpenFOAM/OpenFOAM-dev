@@ -180,7 +180,7 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
 
     // Result of obtaining remote values
     tmp<Field<Type>> tnewValues(new Field<Type>(0));
-    Field<Type>& newValues = tnewValues();
+    Field<Type>& newValues = tnewValues.ref();
 
     switch (mapper_.mode())
     {

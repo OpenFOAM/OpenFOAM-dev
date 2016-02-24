@@ -226,7 +226,7 @@ Foam::tmp<Foam::volVectorField> Foam::SRF::SRFModel::Uabs() const
     );
 
     // Add SRF contribution to internal field
-    tUabs().internalField() += Urel_.internalField();
+    tUabs.ref().internalField() += Urel_.internalField();
 
     // Add Urel boundary contributions
     const volVectorField::GeometricBoundaryField& bvf = Urel_.boundaryField();
@@ -241,12 +241,12 @@ Foam::tmp<Foam::volVectorField> Foam::SRF::SRFModel::Uabs() const
                 refCast<const SRFVelocityFvPatchVectorField>(bvf[i]);
             if (UrelPatch.relative())
             {
-                tUabs().boundaryField()[i] += Urel_.boundaryField()[i];
+                tUabs.ref().boundaryField()[i] += Urel_.boundaryField()[i];
             }
         }
         else
         {
-            tUabs().boundaryField()[i] += Urel_.boundaryField()[i];
+            tUabs.ref().boundaryField()[i] += Urel_.boundaryField()[i];
         }
     }
 

@@ -62,7 +62,7 @@ Foam::linearUpwindV<Type>::correction
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
     const surfaceScalarField& w = mesh.weights();

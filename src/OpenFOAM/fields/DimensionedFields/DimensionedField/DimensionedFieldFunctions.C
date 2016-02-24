@@ -390,7 +390,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), df2.field());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -415,7 +415,7 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), df2.field());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
                                                                                \
     reuseTmpDimensionedField<productType, Type2, GeoMesh>::clear(tdf2);        \
                                                                                \
@@ -442,7 +442,7 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), df2.field());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
                                                                                \
     reuseTmpDimensionedField<productType, Type1, GeoMesh>::clear(tdf1);        \
                                                                                \
@@ -472,7 +472,7 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), df2.field());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
                                                                                \
     reuseTmpTmpDimensionedField                                                \
         <productType, Type1, Type1, Type2, GeoMesh>::clear(tdf1, tdf2);        \
@@ -505,7 +505,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), dvs.value());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), dvs.value());                \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -542,7 +542,7 @@ operator op                                                                    \
             df1.dimensions() op dvs.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), dvs.value());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), dvs.value());                \
                                                                                \
     reuseTmpDimensionedField<productType, Type, GeoMesh>::clear(tdf1);         \
                                                                                \
@@ -585,7 +585,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes().field(), dvs.value(), df1.field());                    \
+    Foam::opFunc(tRes.ref().field(), dvs.value(), df1.field());                \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -621,7 +621,7 @@ operator op                                                                    \
             dvs.dimensions() op df1.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), dvs.value(), df1.field());                    \
+    Foam::opFunc(tRes.ref().field(), dvs.value(), df1.field());                \
                                                                                \
     reuseTmpDimensionedField<productType, Type, GeoMesh>::clear(tdf1);         \
                                                                                \

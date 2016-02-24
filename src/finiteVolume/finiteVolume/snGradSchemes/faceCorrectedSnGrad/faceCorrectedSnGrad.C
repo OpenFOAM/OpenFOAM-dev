@@ -68,7 +68,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
         )
     );
 
-    Field<Type>& sfCorr = tsfCorr().internalField();
+    Field<Type>& sfCorr = tsfCorr.ref().internalField();
 
     const pointField& points = mesh.points();
     const faceList& faces = mesh.faces();
@@ -116,7 +116,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
         sfCorr[facei] = dCorr&fgrad;
     }
 
-    tsfCorr().boundaryField() = pTraits<Type>::zero;
+    tsfCorr.ref().boundaryField() = pTraits<Type>::zero;
 
     return tsfCorr;
 }
@@ -148,7 +148,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::correction
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {

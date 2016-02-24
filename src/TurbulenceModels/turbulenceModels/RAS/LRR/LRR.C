@@ -307,9 +307,9 @@ void LRR<BasicTurbulenceModel>::correct()
       + fvOptions(alpha, rho, epsilon_)
     );
 
-    epsEqn().relax();
-    fvOptions.constrain(epsEqn());
-    epsEqn().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().relax();
+    fvOptions.constrain(epsEqn.ref());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
     fvOptions.correct(epsilon_);
     bound(epsilon_, this->epsilonMin_);
@@ -362,13 +362,13 @@ void LRR<BasicTurbulenceModel>::correct()
             Cref1_*R - ((Cref2_*C2_)*(k_/epsilon_))*dev(P)
         );
 
-        REqn() +=
+        REqn.ref() +=
             ((3*pow(Cmu_, 0.75)/kappa_)*(alpha*rho*sqrt(k_)/y_))
            *dev(symm((n_ & reflect)*n_));
     }
 
-    REqn().relax();
-    fvOptions.constrain(REqn());
+    REqn.ref().relax();
+    fvOptions.constrain(REqn.ref());
     solve(REqn);
     fvOptions.correct(R);
 

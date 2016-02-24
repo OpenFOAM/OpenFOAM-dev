@@ -49,8 +49,7 @@ slicedBoundaryField
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );
-
-    FieldField<PatchField, Type>& bf = tbf();
+    FieldField<PatchField, Type>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {
@@ -126,8 +125,7 @@ slicedBoundaryField
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );
-
-    FieldField<PatchField, Type>& bf = tbf();
+    FieldField<PatchField, Type>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {

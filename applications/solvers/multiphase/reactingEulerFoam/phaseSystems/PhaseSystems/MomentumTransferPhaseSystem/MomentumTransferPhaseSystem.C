@@ -201,7 +201,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kd
         {
             if (phase1 == &phase)
             {
-                tKd() += K;
+                tKd.ref() += K;
             }
 
             Swap(phase1, phase2);

@@ -232,7 +232,7 @@ FieldField<Field, Type>::component
             NewCalculatedType(*this)
     );
 
-    ::Foam::component(Component(), *this, d);
+    ::Foam::component(Component.ref(), *this, d);
 
     return Component;
 }
@@ -274,7 +274,7 @@ tmp<FieldField<Field, Type>> FieldField<Field, Type>::T() const
         FieldField<Field, Type>::NewCalculatedType(*this)
     );
 
-    ::Foam::T(transpose(), *this);
+    ::Foam::T(transpose.ref(), *this);
     return transpose;
 }
 

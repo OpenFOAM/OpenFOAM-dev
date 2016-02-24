@@ -201,7 +201,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMatrix<Foam::scalar>::residual() const
         )
     );
 
-    addBoundarySource(tres());
+    addBoundarySource(tres.ref());
 
     return tres;
 }
@@ -227,7 +227,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField& Hphi = tHphi();
+    volScalarField& Hphi = tHphi.ref();
 
     Hphi.internalField() = (lduMatrix::H(psi_.internalField()) + source_);
     addBoundarySource(Hphi.internalField());
@@ -259,7 +259,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H1() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField& H1_ = tH1();
+    volScalarField& H1_ = tH1.ref();
 
     H1_.internalField() = lduMatrix::H1();
     //addBoundarySource(Hphi.internalField());

@@ -136,7 +136,7 @@ public:
                     vf.dimensions()
                 )
             );
-            GeometricField<Type, fvsPatchField, surfaceMesh>& vff = tvff();
+            GeometricField<Type, fvsPatchField, surfaceMesh>& vff = tvff.ref();
 
             forAll(vff.boundaryField(), patchi)
             {

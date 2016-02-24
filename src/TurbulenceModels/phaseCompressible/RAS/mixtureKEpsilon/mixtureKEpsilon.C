@@ -615,7 +615,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
         kl.boundaryField().updateCoeffs();
         epsilonl.boundaryField().updateCoeffs();
 
-        Gc().checkOut();
+        Gc.ref().checkOut();
     }
 
     tmp<volScalarField> Gd;
@@ -635,7 +635,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
         kg.boundaryField().updateCoeffs();
         epsilong.boundaryField().updateCoeffs();
 
-        Gd().checkOut();
+        Gd.ref().checkOut();
     }
 
     // Mixture turbulence generation
@@ -665,9 +665,9 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
       + fvOptions(epsilonm)
     );
 
-    epsEqn().relax();
-    fvOptions.constrain(epsEqn());
-    epsEqn().boundaryManipulate(epsilonm.boundaryField());
+    epsEqn.ref().relax();
+    fvOptions.constrain(epsEqn.ref());
+    epsEqn.ref().boundaryManipulate(epsilonm.boundaryField());
     solve(epsEqn);
     fvOptions.correct(epsilonm);
     bound(epsilonm, this->epsilonMin_);
@@ -688,8 +688,8 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
       + fvOptions(km)
     );
 
-    kmEqn().relax();
-    fvOptions.constrain(kmEqn());
+    kmEqn.ref().relax();
+    fvOptions.constrain(kmEqn.ref());
     solve(kmEqn);
     fvOptions.correct(km);
     bound(km, this->kMin_);

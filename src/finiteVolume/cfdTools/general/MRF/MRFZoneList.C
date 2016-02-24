@@ -180,7 +180,7 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
             dimensionedVector("0", U.dimensions()/dimTime, vector::zero)
         )
     );
-    volVectorField& acceleration = tacceleration();
+    volVectorField& acceleration = tacceleration.ref();
 
     forAll(*this, i)
     {
@@ -238,7 +238,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::relative
             )
         );
 
-        makeRelative(rphi());
+        makeRelative(rphi.ref());
 
         reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
         ::clear(tphi);
@@ -267,7 +267,7 @@ Foam::MRFZoneList::relative
 
         forAll(*this, i)
         {
-            operator[](i).makeRelative(rphi());
+            operator[](i).makeRelative(rphi.ref());
         }
 
         reuseTmpFieldField<fvsPatchField, scalar, scalar>::clear(tphi);
@@ -297,7 +297,7 @@ Foam::MRFZoneList::relative
 
         forAll(*this, i)
         {
-            operator[](i).makeRelative(rphi(), patchi);
+            operator[](i).makeRelative(rphi.ref(), patchi);
         }
 
         reuseTmp<scalar, scalar>::clear(tphi);
@@ -361,7 +361,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::absolute
             )
         );
 
-        makeAbsolute(rphi());
+        makeAbsolute(rphi.ref());
 
         reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
         ::clear(tphi);

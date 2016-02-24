@@ -75,8 +75,7 @@ tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-
-    scalarField& rf = treconField();
+    scalarField& rf = treconField.ref();
 
     forAll(owner, facei)
     {
@@ -109,7 +108,7 @@ tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
 
     rf /= mesh.V();
 
-    treconField().correctBoundaryConditions();
+    treconField.ref().correctBoundaryConditions();
 
     return treconField;
 }

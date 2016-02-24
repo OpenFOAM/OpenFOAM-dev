@@ -133,7 +133,7 @@ public:
         ) const
         {
             tmp<surfaceScalarField> tw = tScheme_().weights(vf);
-            surfaceScalarField& w = tw();
+            surfaceScalarField& w = tw.ref();
 
             const fvMesh& mesh_ = this->mesh();
             const cellList& cells = mesh_.cells();
@@ -193,7 +193,7 @@ public:
                     tScheme_().correction(vf);
 
                 GeometricField<Type, fvsPatchField, surfaceMesh>& corr =
-                    tcorr();
+                    tcorr.ref();
 
                 const fvMesh& mesh_ = this->mesh();
                 const cellList& cells = mesh_.cells();

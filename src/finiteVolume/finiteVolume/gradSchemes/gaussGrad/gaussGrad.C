@@ -70,7 +70,7 @@ Foam::fv::gaussGrad<Type>::gradf
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -132,7 +132,7 @@ Foam::fv::gaussGrad<Type>::calcGrad
     (
         gradf(tinterpScheme_().interpolate(vsf), name)
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     correctBoundaryConditions(vsf, gGrad);
 

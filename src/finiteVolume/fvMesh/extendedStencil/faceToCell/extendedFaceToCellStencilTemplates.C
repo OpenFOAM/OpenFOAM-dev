@@ -112,7 +112,7 @@ Foam::extendedFaceToCellStencil::weightedSum
             )
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& sf = tsfCorr();
+    GeometricField<Type, fvPatchField, volMesh>& sf = tsfCorr.ref();
 
     // cells
     forAll(sf, cellI)

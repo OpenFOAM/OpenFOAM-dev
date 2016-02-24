@@ -690,10 +690,7 @@ void Foam::Field<Type>::operator=(const tmp<Field>& rhs)
             << abort(FatalError);
     }
 
-    // This is dodgy stuff, don't try it at home.
-    Field* fieldPtr = rhs.ptr();
-    List<Type>::transfer(*fieldPtr);
-    delete fieldPtr;
+    List<Type>::operator=(rhs());
 }
 
 

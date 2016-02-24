@@ -399,7 +399,7 @@ Foam::tmp<Foam::surfaceVectorField> Foam::fvMesh::delta() const
             dimLength
         )
     );
-    surfaceVectorField& delta = tdelta();
+    surfaceVectorField& delta = tdelta.ref();
 
     const volVectorField& C = this->C();
     const labelUList& owner = this->owner();

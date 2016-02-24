@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -235,8 +235,8 @@ void LamBremhorstKE::correct()
       - fvm::Sp(Ceps2_*f2(Rt)*epsilon_/k_, epsilon_)
     );
 
-    epsEqn().relax();
-    epsEqn().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().relax();
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
 
@@ -250,7 +250,7 @@ void LamBremhorstKE::correct()
         G - fvm::Sp(epsilon_/k_, k_)
     );
 
-    kEqn().relax();
+    kEqn.ref().relax();
     solve(kEqn);
     bound(k_, kMin_);
 

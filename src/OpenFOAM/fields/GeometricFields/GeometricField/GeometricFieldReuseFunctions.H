@@ -162,7 +162,7 @@ public:
 
             if (initRet)
             {
-                rtgf() == tgf1();
+                rtgf.ref() == tgf1();
             }
 
             return rtgf;
@@ -174,10 +174,7 @@ public:
         const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1
     )
     {
-        if (reusable(tgf1))
-        {
-            tgf1.ptr();
-        }
+        tgf1.clear();
     }
 };
 
@@ -290,10 +287,7 @@ public:
     )
     {
         tgf1.clear();
-        if (reusable(tgf2))
-        {
-            tgf2.ptr();
-        }
+        tgf2.clear();
     }
 };
 
@@ -351,10 +345,7 @@ public:
         const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2
     )
     {
-        if (reusable(tgf1))
-        {
-            tgf1.ptr();
-        }
+        tgf1.clear();
         tgf2.clear();
     }
 };
@@ -415,16 +406,8 @@ public:
         const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf2
     )
     {
-        if (reusable(tgf1))
-        {
-            tgf1.ptr();
-            tgf2.clear();
-        }
-        else if (reusable(tgf2))
-        {
-            tgf1.clear();
-            tgf2.ptr();
-        }
+        tgf1.clear();
+        tgf2.clear();
     }
 };
 

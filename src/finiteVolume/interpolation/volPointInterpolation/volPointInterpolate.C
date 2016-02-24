@@ -167,7 +167,7 @@ Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
     (
         new Field<Type>(mesh.nFaces()-mesh.nInternalFaces())
     );
-    Field<Type>& boundaryVals = tboundaryVals();
+    Field<Type>& boundaryVals = tboundaryVals.ref();
 
     forAll(vf.boundaryField(), patchI)
     {
@@ -395,7 +395,7 @@ Foam::volPointInterpolation::interpolate
             )
         );
 
-        interpolate(vf, tpf());
+        interpolate(vf, tpf.ref());
 
         return tpf;
     }

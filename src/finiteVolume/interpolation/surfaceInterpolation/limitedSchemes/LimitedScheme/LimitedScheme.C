@@ -198,7 +198,7 @@ Foam::LimitedScheme<Type, Limiter, LimitFunc>::limiter
             )
         );
 
-        calcLimiter(phi, tlimiterField());
+        calcLimiter(phi, tlimiterField.ref());
 
         return tlimiterField;
     }

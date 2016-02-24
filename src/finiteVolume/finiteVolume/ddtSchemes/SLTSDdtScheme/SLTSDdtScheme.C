@@ -111,7 +111,7 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
         )
     );
 
-    volScalarField& rDeltaT = trDeltaT();
+    volScalarField& rDeltaT = trDeltaT.ref();
 
     relaxedDiag(rDeltaT, phi);
 
@@ -183,7 +183,7 @@ SLTSDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt().internalField() =
+        tdtdt.ref().internalField() =
             rDeltaT.internalField()*dt.value()*(1.0 - mesh().V0()/mesh().V());
 
         return tdtdt;
@@ -452,7 +452,7 @@ SLTSDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(SLrDeltaT()().internalField());
 
@@ -487,7 +487,7 @@ SLTSDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(SLrDeltaT()().internalField());
 
@@ -524,7 +524,7 @@ SLTSDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(SLrDeltaT()().internalField());
 
@@ -564,7 +564,7 @@ SLTSDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(SLrDeltaT()().internalField());
 

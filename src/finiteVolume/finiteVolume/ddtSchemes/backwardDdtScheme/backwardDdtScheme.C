@@ -111,7 +111,7 @@ backwardDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt().internalField() = rDeltaT.value()*dt.value()*
+        tdtdt.ref().internalField() = rDeltaT.value()*dt.value()*
         (
             coefft - (coefft0*mesh().V0() - coefft00*mesh().V00())/mesh().V()
         );
@@ -467,7 +467,7 @@ backwardDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -518,7 +518,7 @@ backwardDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -569,7 +569,7 @@ backwardDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -624,7 +624,7 @@ backwardDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 

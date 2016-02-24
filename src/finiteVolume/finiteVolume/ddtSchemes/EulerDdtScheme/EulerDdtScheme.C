@@ -73,7 +73,7 @@ EulerDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt().internalField() =
+        tdtdt.ref().internalField() =
             rDeltaT.value()*dt.value()*(1.0 - mesh().Vsc0()/mesh().Vsc());
 
         return tdtdt;
@@ -342,7 +342,7 @@ EulerDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/mesh().time().deltaTValue();
 
@@ -377,7 +377,7 @@ EulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/mesh().time().deltaTValue();
 
@@ -414,7 +414,7 @@ EulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/mesh().time().deltaTValue();
 
@@ -454,7 +454,7 @@ EulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/mesh().time().deltaTValue();
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::calcUPlus
 ) const
 {
     tmp<scalarField> tuPlus(new scalarField(patch().size(), 0.0));
-    scalarField& uPlus = tuPlus();
+    scalarField& uPlus = tuPlus.ref();
 
     forAll(uPlus, faceI)
     {

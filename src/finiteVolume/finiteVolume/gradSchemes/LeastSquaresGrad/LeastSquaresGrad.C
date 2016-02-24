@@ -80,7 +80,7 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad.ref();
     Field<GradType>& lsGradIf = lsGrad;
 
     const extendedCentredCellToCellStencil& stencil = lsv.stencil();

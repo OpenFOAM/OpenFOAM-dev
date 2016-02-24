@@ -61,7 +61,7 @@ tmp<volScalarField> CoEulerDdtScheme<Type>::CorDeltaT() const
         )
     );
 
-    volScalarField& corDeltaT = tcorDeltaT();
+    volScalarField& corDeltaT = tcorDeltaT.ref();
 
     const labelUList& owner = mesh().owner();
     const labelUList& neighbour = mesh().neighbour();
@@ -183,7 +183,7 @@ CoEulerDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt().internalField() =
+        tdtdt.ref().internalField() =
             rDeltaT.internalField()*dt.value()
            *(1.0 - mesh().Vsc0()/mesh().Vsc());
 
@@ -453,7 +453,7 @@ CoEulerDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(CorDeltaT()().internalField());
 
@@ -488,7 +488,7 @@ CoEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(CorDeltaT()().internalField());
 
@@ -525,7 +525,7 @@ CoEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(CorDeltaT()().internalField());
 
@@ -565,7 +565,7 @@ CoEulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(CorDeltaT()().internalField());
 

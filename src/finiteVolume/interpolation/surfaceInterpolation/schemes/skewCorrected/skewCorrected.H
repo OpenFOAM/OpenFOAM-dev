@@ -159,7 +159,7 @@ public:
 
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
             {
-                tsfCorr().replace
+                tsfCorr.ref().replace
                 (
                     cmpt,
                     scv() & linear

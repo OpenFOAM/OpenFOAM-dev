@@ -56,7 +56,6 @@ class tmp
         enum type
         {
             TMP,
-            REF,
             CONST_REF
         };
 
@@ -74,14 +73,8 @@ public:
         //- Store object pointer
         inline explicit tmp(T* = 0);
 
-        //- Store object rvalue reference
-        inline tmp(T&&);
-
         //- Store object const reference
         inline tmp(const T&);
-
-        //- Construct copy and increment reference count
-        inline tmp(tmp<T>&&);
 
         //- Construct copy and increment reference count
         inline tmp(const tmp<T>&);
@@ -90,7 +83,7 @@ public:
         inline tmp(const tmp<T>&, bool allowTransfer);
 
 
-    //- Destructor, delete object when reference count == 0
+    //- Destructor: deletes temporary object when the reference count is 0
     inline ~tmp();
 
 

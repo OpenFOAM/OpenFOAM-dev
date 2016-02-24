@@ -68,7 +68,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), gf1);                                                   \
+    Foam::Func(tRes.ref(), gf1);                                               \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -91,7 +91,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), gf1);                                                   \
+    Foam::Func(tRes.ref(), gf1);                                               \
                                                                                \
     reuseTmpGeometricField                                                     \
         <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
@@ -138,7 +138,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), gf1);                                                 \
+    Foam::OpFunc(tRes.ref(), gf1);                                             \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -161,7 +161,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), gf1);                                                 \
+    Foam::OpFunc(tRes.ref(), gf1);                                             \
                                                                                \
     reuseTmpGeometricField                                                     \
         <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
@@ -210,7 +210,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), gf1, gf2);                                              \
+    Foam::Func(tRes.ref(), gf1, gf2);                                          \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -234,7 +234,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), gf1, gf2);                                              \
+    Foam::Func(tRes.ref(), gf1, gf2);                                          \
                                                                                \
     reuseTmpGeometricField                                                     \
         <ReturnType, Type2, PatchField, GeoMesh>::clear(tgf2);                 \
@@ -261,7 +261,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), gf1, gf2);                                              \
+    Foam::Func(tRes.ref(), gf1, gf2);                                          \
                                                                                \
     reuseTmpGeometricField                                                     \
         <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
@@ -292,7 +292,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), gf1, gf2);                                              \
+    Foam::Func(tRes.ref(), gf1, gf2);                                          \
                                                                                \
     reuseTmpTmpGeometricField                                                  \
         <ReturnType, Type1, Type1, Type2, PatchField, GeoMesh>                 \
@@ -341,7 +341,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), dt1, gf2);                                              \
+    Foam::Func(tRes.ref(), dt1, gf2);                                          \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -376,7 +376,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), dt1, gf2);                                              \
+    Foam::Func(tRes.ref(), dt1, gf2);                                          \
                                                                                \
     reuseTmpGeometricField                                                     \
         <ReturnType, Type2, PatchField, GeoMesh>::clear(tgf2);                 \
@@ -433,7 +433,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), gf1, dt2);                                              \
+    Foam::Func(tRes.ref(), gf1, dt2);                                          \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -468,7 +468,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::Func(tRes(), gf1, dt2);                                              \
+    Foam::Func(tRes.ref(), gf1, dt2);                                          \
                                                                                \
     reuseTmpGeometricField                                                     \
         <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
@@ -534,7 +534,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), gf1, gf2);                                            \
+    Foam::OpFunc(tRes.ref(), gf1, gf2);                                        \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -558,7 +558,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), gf1, gf2);                                            \
+    Foam::OpFunc(tRes.ref(), gf1, gf2);                                        \
                                                                                \
     reuseTmpGeometricField                                                     \
         <ReturnType, Type2, PatchField, GeoMesh>::clear(tgf2);                 \
@@ -585,7 +585,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), gf1, gf2);                                            \
+    Foam::OpFunc(tRes.ref(), gf1, gf2);                                        \
                                                                                \
     reuseTmpGeometricField                                                     \
         <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
@@ -615,7 +615,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), gf1, gf2);                                            \
+    Foam::OpFunc(tRes.ref(), gf1, gf2);                                        \
                                                                                \
     reuseTmpTmpGeometricField                                                  \
         <ReturnType, Type1, Type1, Type2, PatchField, GeoMesh>                 \
@@ -627,7 +627,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define BINARY_TYPE_OPERATOR_SF(ReturnType, Type1, Type2, Op, OpName, OpFunc) \
+#define BINARY_TYPE_OPERATOR_SF(ReturnType, Type1, Type2, Op, OpName, OpFunc)  \
                                                                                \
 TEMPLATE                                                                       \
 void OpFunc                                                                    \
@@ -665,7 +665,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), dt1, gf2);                                            \
+    Foam::OpFunc(tRes.ref(), dt1, gf2);                                        \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -700,7 +700,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), dt1, gf2);                                            \
+    Foam::OpFunc(tRes.ref(), dt1, gf2);                                        \
                                                                                \
     reuseTmpGeometricField<ReturnType, Type2, PatchField, GeoMesh>             \
         ::clear(tgf2);                                                         \
@@ -719,7 +719,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 }
 
 
-#define BINARY_TYPE_OPERATOR_FS(ReturnType, Type1, Type2, Op, OpName, OpFunc) \
+#define BINARY_TYPE_OPERATOR_FS(ReturnType, Type1, Type2, Op, OpName, OpFunc)  \
                                                                                \
 TEMPLATE                                                                       \
 void OpFunc                                                                    \
@@ -757,7 +757,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), gf1, dt2);                                            \
+    Foam::OpFunc(tRes.ref(), gf1, dt2);                                        \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -792,7 +792,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes(), gf1, dt2);                                            \
+    Foam::OpFunc(tRes.ref(), gf1, dt2);                                        \
                                                                                \
     reuseTmpGeometricField<ReturnType, Type1, PatchField, GeoMesh>             \
         ::clear(tgf1);                                                         \

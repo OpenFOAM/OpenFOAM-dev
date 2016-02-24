@@ -98,7 +98,7 @@ Foam::jumpCyclicFvPatchField<Type>::patchNeighbourField() const
         this->cyclicPatch().neighbFvPatch().faceCells();
 
     tmp<Field<Type>> tpnf(new Field<Type>(this->size()));
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
     Field<Type> jf(this->jump());
     if (!this->cyclicPatch().owner())

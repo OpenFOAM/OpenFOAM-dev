@@ -85,7 +85,7 @@ Foam::fv::fourthGrad<Type>::calcGrad
             secondfGrad
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& fGrad = tfGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& fGrad = tfGrad.ref();
 
     const vectorField& C = mesh.C();
 

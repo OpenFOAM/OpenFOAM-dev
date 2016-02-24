@@ -123,7 +123,7 @@ snGradScheme<Type>::snGrad
             vf.dimensions()*tdeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tsf.ref();
 
     // set reference to difference factors array
     const scalarField& deltaCoeffs = tdeltaCoeffs().internalField();
@@ -183,7 +183,7 @@ snGradScheme<Type>::snGrad
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;

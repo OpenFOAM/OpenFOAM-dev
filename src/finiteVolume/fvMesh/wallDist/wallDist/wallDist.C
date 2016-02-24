@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,7 +176,7 @@ const Foam::volVectorField& Foam::wallDist::n() const
 
         nRequired_ = true;
         constructn();
-        pdm_->correct(y_, n_());
+        pdm_->correct(y_, n_.ref());
     }
 
     return n_();
@@ -189,7 +189,7 @@ bool Foam::wallDist::movePoints()
     {
         if (nRequired_)
         {
-            return pdm_->correct(y_, n_());
+            return pdm_->correct(y_, n_.ref());
         }
         else
         {

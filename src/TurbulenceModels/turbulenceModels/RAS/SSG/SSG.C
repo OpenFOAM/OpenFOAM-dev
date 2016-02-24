@@ -317,9 +317,9 @@ void SSG<BasicTurbulenceModel>::correct()
       + fvOptions(alpha, rho, epsilon_)
     );
 
-    epsEqn().relax();
-    fvOptions.constrain(epsEqn());
-    epsEqn().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().relax();
+    fvOptions.constrain(epsEqn.ref());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
     fvOptions.correct(epsilon_);
     bound(epsilon_, this->epsilonMin_);
@@ -371,8 +371,8 @@ void SSG<BasicTurbulenceModel>::correct()
       + fvOptions(alpha, rho, R)
     );
 
-    REqn().relax();
-    fvOptions.constrain(REqn());
+    REqn.ref().relax();
+    fvOptions.constrain(REqn.ref());
     solve(REqn);
     fvOptions.correct(R);
 

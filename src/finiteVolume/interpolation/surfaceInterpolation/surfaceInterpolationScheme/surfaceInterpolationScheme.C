@@ -178,7 +178,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
     Field<Type>& sfi = sf.internalField();
 
@@ -256,7 +256,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
     Field<Type>& sfi = sf.internalField();
 
@@ -273,7 +273,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 
         if (vf.boundaryField()[pi].coupled())
         {
-            tsf().boundaryField()[pi] =
+            tsf.ref().boundaryField()[pi] =
                 pLambda*vf.boundaryField()[pi].patchInternalField()
              + (1.0 - pLambda)*vf.boundaryField()[pi].patchNeighbourField();
         }
@@ -311,7 +311,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,8 +196,8 @@ void kEqn<BasicTurbulenceModel>::correct()
       + fvOptions(alpha, rho, k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
     fvOptions.correct(k_);
     bound(k_, this->kMin_);
