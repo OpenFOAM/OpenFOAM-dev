@@ -30,13 +30,17 @@ Description
 SourceFiles
     tmpI.H
 
+SeeAlso
+    Foam::refCount
+    Foam::autoPtr
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef tmp_H
 #define tmp_H
 
 #include "refCount.H"
-#include <cstddef>
+#include "word.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -101,6 +105,11 @@ public:
             //- Is this temporary object valid,
             //  ie, it is a reference or a temporary that has been allocated
             inline bool valid() const;
+
+            //- Return the type name of the tmp
+            //  constructed from the type name of T
+            inline word typeName() const;
+
 
         // Edit
 
