@@ -624,7 +624,7 @@ template                                                                       \
 <class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
 tmp                                                                            \
 <                                                                              \
-    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh> \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
 >                                                                              \
 operator op                                                                    \
 (                                                                              \
@@ -646,8 +646,7 @@ operator op                                                                    \
                                                                                \
     Foam::opFunc(tRes.ref(), gf1, gf2);                                        \
                                                                                \
-    reuseTmpGeometricField<productType, Type2, PatchField, GeoMesh>            \
-    ::clear(tgf2);                                                             \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -656,7 +655,7 @@ template                                                                       \
 <class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
 tmp                                                                            \
 <                                                                              \
-    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh> \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
 >                                                                              \
 operator op                                                                    \
 (                                                                              \
@@ -678,8 +677,7 @@ operator op                                                                    \
                                                                                \
     Foam::opFunc(tRes.ref(), gf1, gf2);                                        \
                                                                                \
-    reuseTmpGeometricField<productType, Type1, PatchField, GeoMesh>            \
-    ::clear(tgf1);                                                             \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -688,7 +686,7 @@ template                                                                       \
 <class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
 tmp                                                                            \
 <                                                                              \
-    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh> \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
 >                                                                              \
 operator op                                                                    \
 (                                                                              \
@@ -713,9 +711,8 @@ operator op                                                                    \
                                                                                \
     Foam::opFunc(tRes.ref(), gf1, gf2);                                        \
                                                                                \
-    reuseTmpTmpGeometricField                                                  \
-        <productType, Type1, Type1, Type2, PatchField, GeoMesh>                \
-    ::clear(tgf1, tgf2);                                                       \
+    tgf1.clear();                                                              \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -736,7 +733,7 @@ void opFunc                                                                    \
                                                                                \
 template                                                                       \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>      \
-tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>> \
+tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
@@ -775,7 +772,7 @@ template                                                                       \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
@@ -788,7 +785,7 @@ operator op                                                                    \
                                                                                \
 template                                                                       \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>      \
-tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>> \
+tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,                \
@@ -809,8 +806,7 @@ operator op                                                                    \
                                                                                \
     Foam::opFunc(tRes.ref(), gf1, dvs);                                        \
                                                                                \
-    reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>             \
-    ::clear(tgf1);                                                             \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -823,7 +819,7 @@ template                                                                       \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,                \
@@ -850,7 +846,7 @@ void opFunc                                                                    \
                                                                                \
 template                                                                       \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>      \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const dimensioned<Form>& dvs,                                              \
@@ -888,7 +884,7 @@ template                                                                       \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
@@ -900,7 +896,7 @@ operator op                                                                    \
                                                                                \
 template                                                                       \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>      \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const dimensioned<Form>& dvs,                                              \
@@ -921,8 +917,7 @@ operator op                                                                    \
                                                                                \
     Foam::opFunc(tRes.ref(), dvs, gf1);                                        \
                                                                                \
-    reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>             \
-    ::clear(tgf1);                                                             \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -935,7 +930,7 @@ template                                                                       \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>> \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \

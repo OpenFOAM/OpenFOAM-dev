@@ -228,8 +228,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::relative
     {
         tmp<surfaceScalarField> rphi
         (
-            reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-            ::New
+            New
             (
                 tphi,
                 "relative(" + tphi().name() + ')',
@@ -240,8 +239,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::relative
 
         makeRelative(rphi.ref());
 
-        reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-        ::clear(tphi);
+        tphi.clear();
 
         return rphi;
     }
@@ -260,17 +258,14 @@ Foam::MRFZoneList::relative
 {
     if (size())
     {
-        tmp<FieldField<fvsPatchField, scalar>> rphi
-        (
-            reuseTmpFieldField<fvsPatchField, scalar, scalar>::New(tphi, true)
-        );
+        tmp<FieldField<fvsPatchField, scalar>> rphi(New(tphi, true));
 
         forAll(*this, i)
         {
             operator[](i).makeRelative(rphi.ref());
         }
 
-        reuseTmpFieldField<fvsPatchField, scalar, scalar>::clear(tphi);
+        tphi.clear();
 
         return rphi;
     }
@@ -348,8 +343,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::absolute
     {
         tmp<surfaceScalarField> rphi
         (
-            reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-            ::New
+            New
             (
                 tphi,
                 "absolute(" + tphi().name() + ')',
@@ -360,8 +354,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::absolute
 
         makeAbsolute(rphi.ref());
 
-        reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-        ::clear(tphi);
+        tphi.clear();
 
         return rphi;
     }

@@ -173,12 +173,9 @@ tmp<FieldField<Field, scalar>> func                                            \
     const tmp<FieldField<Field, scalar>>& tsf                                  \
 )                                                                              \
 {                                                                              \
-    tmp<FieldField<Field, scalar>> tRes                                        \
-    (                                                                          \
-        reuseTmpFieldField<Field, scalar, scalar>::New(tsf)                    \
-    );                                                                         \
+    tmp<FieldField<Field, scalar>> tRes(New(tsf));                             \
     func(tRes(), n, tsf());                                                    \
-    reuseTmpFieldField<Field, scalar, scalar>::clear(tsf);                     \
+    tsf.clear();                                                               \
     return tRes;                                                               \
 }
 

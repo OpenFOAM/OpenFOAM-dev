@@ -33,6 +33,43 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<class TypeR, class GeoMesh>
+tmp<DimensionedField<TypeR, GeoMesh>> New
+(
+    const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1,
+    const word& name,
+    const dimensionSet& dimensions
+)
+{
+    DimensionedField<TypeR, GeoMesh>& df1 =
+        const_cast<DimensionedField<TypeR, GeoMesh>& >(tdf1());
+
+    if (tdf1.isTmp())
+    {
+        df1.rename(name);
+        df1.dimensions().reset(dimensions);
+        return tdf1;
+    }
+    else
+    {
+        return tmp<DimensionedField<TypeR, GeoMesh>>
+        (
+            new DimensionedField<TypeR, GeoMesh>
+            (
+                IOobject
+                (
+                    name,
+                    df1.instance(),
+                    df1.db()
+                ),
+                df1.mesh(),
+                dimensions
+            )
+        );
+    }
+}
+
+
 template<class TypeR, class Type1, class GeoMesh>
 class reuseTmpDimensionedField
 {
@@ -61,11 +98,6 @@ public:
                 dimensions
             )
         );
-    }
-
-    static void clear(const tmp<DimensionedField<Type1, GeoMesh>>& tdf1)
-    {
-        tdf1.clear();
     }
 };
 
@@ -109,11 +141,6 @@ public:
             );
         }
     }
-
-    static void clear(const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1)
-    {
-        tdf1.clear();
-    }
 };
 
 
@@ -146,16 +173,6 @@ public:
                 dimensions
             )
         );
-    }
-
-    static void clear
-    (
-        const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,
-        const tmp<DimensionedField<Type2, GeoMesh>>& tdf2
-    )
-    {
-        tdf1.clear();
-        tdf2.clear();
     }
 };
 
@@ -201,16 +218,6 @@ public:
             );
         }
     }
-
-    static void clear
-    (
-        const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf2
-    )
-    {
-        tdf1.clear();
-        tdf2.clear();
-    }
 };
 
 
@@ -253,16 +260,6 @@ public:
                 )
             );
         }
-    }
-
-    static void clear
-    (
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1,
-        const tmp<DimensionedField<Type2, GeoMesh>>& tdf2
-    )
-    {
-        tdf1.clear();
-        tdf2.clear();
     }
 };
 
@@ -314,16 +311,6 @@ public:
                 )
             );
         }
-    }
-
-    static void clear
-    (
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1,
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf2
-    )
-    {
-        tdf1.clear();
-        tdf2.clear();
     }
 };
 

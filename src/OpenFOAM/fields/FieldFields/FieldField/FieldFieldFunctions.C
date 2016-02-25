@@ -103,7 +103,7 @@ pow
         reuseTmpFieldField<Field, powProductType, Type>::New(tf)
     );
     pow<Type, r>(tRes.ref(), tf());
-    reuseTmpFieldField<Field, powProductType, Type>::clear(tf);
+    tf.clear();
     return tRes;
 }
 
@@ -144,7 +144,7 @@ sqr(const tmp<FieldField<Field, Type>>& tf)
         reuseTmpFieldField<Field, outerProductType, Type>::New(tf)
     );
     sqr(tRes.ref(), tf());
-    reuseTmpFieldField<Field, outerProductType, Type>::clear(tf);
+    tf.clear();
     return tRes;
 }
 
@@ -179,7 +179,7 @@ tmp<FieldField<Field, scalar>> magSqr(const tmp<FieldField<Field, Type>>& tf)
     );
 
     magSqr(tRes.ref(), tf());
-    reuseTmpFieldField<Field, scalar, Type>::clear(tf);
+    tf.clear();
     return tRes;
 }
 
@@ -214,7 +214,7 @@ tmp<FieldField<Field, scalar>> mag(const tmp<FieldField<Field, Type>>& tf)
     );
 
     mag(tRes.ref(), tf());
-    reuseTmpFieldField<Field, scalar, Type>::clear(tf);
+    tf.clear();
     return tRes;
 }
 
@@ -259,7 +259,7 @@ tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptMax
         reuseTmpFieldField<Field, cmptType, Type>::New(tf)
     );
     cmptMax(tRes.ref(), tf());
-    reuseTmpFieldField<Field, cmptType, Type>::clear(tf);
+    tf.clear();
     return tRes;
 }
 
@@ -304,7 +304,7 @@ tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptMin
         reuseTmpFieldField<Field, cmptType, Type>::New(tf)
     );
     cmptMin(tRes.ref(), tf());
-    reuseTmpFieldField<Field, cmptType, Type>::clear(tf);
+    tf.clear();
     return tRes;
 }
 
@@ -349,7 +349,7 @@ tmp<FieldField<Field, typename FieldField<Field, Type>::cmptType>> cmptAv
         reuseTmpFieldField<Field, cmptType, Type>::New(tf)
     );
     cmptAv(tRes.ref(), tf());
-    reuseTmpFieldField<Field, cmptType, Type>::clear(tf);
+    tf.clear();
     return tRes;
 }
 
@@ -387,12 +387,9 @@ tmp<FieldField<Field, Type>> cmptMag
     const tmp<FieldField<Field, Type>>& tf
 )
 {
-    tmp<FieldField<Field, Type>> tRes
-    (
-        reuseTmpFieldField<Field, Type, Type>::New(tf)
-    );
+    tmp<FieldField<Field, Type>> tRes(New(tf));
     cmptMag(tRes.ref(), tf());
-    reuseTmpFieldField<Field, Type, Type>::clear(tf);
+    tf.clear();
     return tRes;
 }
 
@@ -685,7 +682,7 @@ operator op                                                                    \
         reuseTmpFieldField<Field, productType, Type2>::New(tf2)                \
     );                                                                         \
     opFunc(tRes.ref(), f1, tf2());                                             \
-    reuseTmpFieldField<Field, productType, Type2>::clear(tf2);                 \
+    tf2.clear();                                                               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
@@ -733,7 +730,7 @@ operator op                                                                    \
         reuseTmpFieldField<Field1, productType, Type1>::New(tf1)               \
     );                                                                         \
     opFunc(tRes.ref(), tf1(), f2);                                             \
-    reuseTmpFieldField<Field1, productType, Type1>::clear(tf1);                \
+    tf1.clear();                                                               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
@@ -758,8 +755,8 @@ operator op                                                                    \
         (tf1, tf2)                                                             \
     );                                                                         \
     opFunc(tRes.ref(), tf1(), tf2());                                          \
-    reuseTmpTmpFieldField<Field1, productType, Type1, Type1, Type2>::clear     \
-    (tf1, tf2);                                                                \
+    tf1.clear();                                                               \
+    tf2.clear();                                                               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
@@ -811,7 +808,7 @@ operator op                                                                    \
         reuseTmpFieldField<Field, productType, Type>::New(tf1)                 \
     );                                                                         \
     opFunc(tRes.ref(), tf1(), static_cast<const Form&>(vs));                   \
-    reuseTmpFieldField<Field, productType, Type>::clear(tf1);                  \
+    tf1.clear();                                                               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
@@ -863,7 +860,7 @@ operator op                                                                    \
         reuseTmpFieldField<Field, productType, Type>::New(tf1)                 \
     );                                                                         \
     opFunc(tRes.ref(), static_cast<const Form&>(vs), tf1());                   \
-    reuseTmpFieldField<Field, productType, Type>::clear(tf1);                  \
+    tf1.clear();                                                               \
     return tRes;                                                               \
 }
 
