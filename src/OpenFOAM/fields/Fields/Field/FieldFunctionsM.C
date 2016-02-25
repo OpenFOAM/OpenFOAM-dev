@@ -49,7 +49,7 @@ tmp<Field<ReturnType>> Func(const tmp<Field<Type>>& tf)                        \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type>::New(tf);         \
     Func(tRes.ref(), tf());                                                    \
-    reuseTmp<ReturnType, Type>::clear(tf);                                     \
+    tf.clear();                                                                \
     return tRes;                                                               \
 }
 
@@ -77,7 +77,7 @@ tmp<Field<ReturnType>> operator Op(const tmp<Field<Type>>& tf)                 \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type>::New(tf);         \
     OpFunc(tRes.ref(), tf());                                                  \
-    reuseTmp<ReturnType, Type>::clear(tf);                                     \
+    tf.clear();                                                                \
     return tRes;                                                               \
 }
 
@@ -121,7 +121,7 @@ tmp<Field<ReturnType>> Func                                                    \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type2>::New(tf2);       \
     Func(tRes.ref(), f1, tf2());                                               \
-    reuseTmp<ReturnType, Type2>::clear(tf2);                                   \
+    tf2.clear();                                                               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
@@ -134,7 +134,7 @@ tmp<Field<ReturnType>> Func                                                    \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type1>::New(tf1);       \
     Func(tRes.ref(), tf1(), f2);                                               \
-    reuseTmp<ReturnType, Type1>::clear(tf1);                                   \
+    tf1.clear();                                                               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
@@ -148,7 +148,8 @@ tmp<Field<ReturnType>> Func                                                    \
     tmp<Field<ReturnType>> tRes =                                              \
         reuseTmpTmp<ReturnType, Type1, Type1, Type2>::New(tf1, tf2);           \
     Func(tRes.ref(), tf1(), tf2());                                            \
-    reuseTmpTmp<ReturnType, Type1, Type1, Type2>::clear(tf1, tf2);             \
+    tf1.clear();                                                               \
+    tf2.clear();                                                               \
     return tRes;                                                               \
 }
 
@@ -192,7 +193,7 @@ tmp<Field<ReturnType>> Func                                                    \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type2>::New(tf2);       \
     Func(tRes.ref(), s1, tf2());                                               \
-    reuseTmp<ReturnType, Type2>::clear(tf2);                                   \
+    tf2.clear();                                                               \
     return tRes;                                                               \
 }
 
@@ -234,7 +235,7 @@ tmp<Field<ReturnType>> Func                                                    \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type1>::New(tf1);       \
     Func(tRes.ref(), tf1(), s2);                                               \
-    reuseTmp<ReturnType, Type1>::clear(tf1);                                   \
+    tf1.clear();                                                               \
     return tRes;                                                               \
 }
 
@@ -280,7 +281,7 @@ tmp<Field<ReturnType>> operator Op                                             \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type2>::New(tf2);       \
     OpFunc(tRes.ref(), f1, tf2());                                             \
-    reuseTmp<ReturnType, Type2>::clear(tf2);                                   \
+    tf2.clear();                                                               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
@@ -293,7 +294,7 @@ tmp<Field<ReturnType>> operator Op                                             \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type1>::New(tf1);       \
     OpFunc(tRes.ref(), tf1(), f2);                                             \
-    reuseTmp<ReturnType, Type1>::clear(tf1);                                   \
+    tf1.clear();                                                               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
@@ -307,7 +308,8 @@ tmp<Field<ReturnType>> operator Op                                             \
     tmp<Field<ReturnType>> tRes =                                              \
         reuseTmpTmp<ReturnType, Type1, Type1, Type2>::New(tf1, tf2);           \
     OpFunc(tRes.ref(), tf1(), tf2());                                          \
-    reuseTmpTmp<ReturnType, Type1, Type1, Type2>::clear(tf1, tf2);             \
+    tf1.clear();                                                               \
+    tf2.clear();                                                               \
     return tRes;                                                               \
 }
 
@@ -348,7 +350,7 @@ tmp<Field<ReturnType>> operator Op                                             \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type2>::New(tf2);       \
     OpFunc(tRes.ref(), s1, tf2());                                             \
-    reuseTmp<ReturnType, Type2>::clear(tf2);                                   \
+    tf2.clear();                                                               \
     return tRes;                                                               \
 }
 
@@ -387,7 +389,7 @@ tmp<Field<ReturnType>> operator Op                                             \
 {                                                                              \
     tmp<Field<ReturnType>> tRes = reuseTmp<ReturnType, Type1>::New(tf1);       \
     OpFunc(tRes.ref(), tf1(), s2);                                             \
-    reuseTmp<ReturnType, Type1>::clear(tf1);                                   \
+    tf1.clear();                                                               \
     return tRes;                                                               \
 }
 

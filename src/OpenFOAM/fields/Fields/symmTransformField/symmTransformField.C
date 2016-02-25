@@ -75,9 +75,9 @@ tmp<Field<Type>> transform
     const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
+    tmp<Field<Type>> tranf = New(ttf);
     transform(tranf.ref(), trf, ttf());
-    reuseTmp<Type, Type>::clear(ttf);
+    ttf.clear();
     return tranf;
 }
 
@@ -103,9 +103,9 @@ tmp<Field<Type>> transform
     const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
+    tmp<Field<Type>> tranf = New(ttf);
     transform(tranf.ref(), ttrf(), ttf());
-    reuseTmp<Type, Type>::clear(ttf);
+    ttf.clear();
     ttrf.clear();
     return tranf;
 }
@@ -143,9 +143,9 @@ tmp<Field<Type>> transform
     const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
+    tmp<Field<Type>> tranf = New(ttf);
     transform(tranf.ref(), t, ttf());
-    reuseTmp<Type, Type>::clear(ttf);
+    ttf.clear();
     return tranf;
 }
 

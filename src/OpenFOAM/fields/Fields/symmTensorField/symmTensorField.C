@@ -114,9 +114,9 @@ tmp<symmTensorField> inv(const UList<symmTensor>& tf)
 
 tmp<symmTensorField> inv(const tmp<symmTensorField>& tf)
 {
-    tmp<symmTensorField> tRes = reuseTmp<symmTensor, symmTensor>::New(tf);
+    tmp<symmTensorField> tRes = New(tf);
     inv(tRes.ref(), tf());
-    reuseTmp<symmTensor, symmTensor>::clear(tf);
+    tf.clear();
     return tRes;
 }
 

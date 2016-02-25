@@ -112,9 +112,9 @@ tmp<tensorField> inv(const UList<tensor>& tf)
 
 tmp<tensorField> inv(const tmp<tensorField>& tf)
 {
-    tmp<tensorField> tRes = reuseTmp<tensor, tensor>::New(tf);
+    tmp<tensorField> tRes = New(tf);
     inv(tRes.ref(), tf());
-    reuseTmp<tensor, tensor>::clear(tf);
+    tf.clear();
     return tRes;
 }
 

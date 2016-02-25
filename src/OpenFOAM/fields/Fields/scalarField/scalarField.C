@@ -80,9 +80,9 @@ tmp<scalarField> stabilise(const UList<scalar>& sf, const scalar s)
 
 tmp<scalarField> stabilise(const tmp<scalarField>& tsf, const scalar s)
 {
-    tmp<scalarField> tRes = reuseTmp<scalar, scalar>::New(tsf);
+    tmp<scalarField> tRes = New(tsf);
     stabilise(tRes.ref(), tsf(), s);
-    reuseTmp<scalar, scalar>::clear(tsf);
+    tsf.clear();
     return tRes;
 }
 
@@ -179,9 +179,9 @@ tmp<scalarField> func(const int n, const UList<scalar>& sf)                    \
                                                                                \
 tmp<scalarField> func(const int n, const tmp<scalarField>& tsf)                \
 {                                                                              \
-    tmp<scalarField> tRes = reuseTmp<scalar, scalar>::New(tsf);                \
+    tmp<scalarField> tRes = New(tsf);                                          \
     func(tRes.ref(), n, tsf());                                                \
-    reuseTmp<scalar, scalar>::clear(tsf);                                      \
+    tsf.clear();                                                               \
     return tRes;                                                               \
 }
 

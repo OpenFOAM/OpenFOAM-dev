@@ -290,17 +290,14 @@ Foam::MRFZoneList::relative
 {
     if (size())
     {
-        tmp<Field<scalar>> rphi
-        (
-            reuseTmp<scalar, scalar>::New(tphi, true)
-        );
+        tmp<Field<scalar>> rphi(New(tphi, true));
 
         forAll(*this, i)
         {
             operator[](i).makeRelative(rphi.ref(), patchi);
         }
 
-        reuseTmp<scalar, scalar>::clear(tphi);
+        tphi.clear();
 
         return rphi;
     }
