@@ -1,4 +1,4 @@
-EXE_INC = \
+EXE_INC = -DCONST_TMP \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/surfMesh/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude

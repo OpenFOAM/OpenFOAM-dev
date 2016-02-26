@@ -637,7 +637,7 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
         )
     );
 
-    volScalarField::InternalField& gasHs = tHs().internalField();
+    volScalarField::InternalField& gasHs = tHs.ref().internalField();
 
     const GasThermo& mixture = gasThermo_[index];
 

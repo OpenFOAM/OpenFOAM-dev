@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,7 +184,7 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<BasicThermo, MixtureType>::he
         )
     );
 
-    volScalarField& he = the();
+    volScalarField& he = the.ref();
     scalarField& heCells = he.internalField();
     const scalarField& pCells = p.internalField();
     const scalarField& TCells = T.internalField();
@@ -221,7 +221,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::he
 ) const
 {
     tmp<scalarField> the(new scalarField(T.size()));
-    scalarField& he = the();
+    scalarField& he = the.ref();
 
     forAll(T, celli)
     {
@@ -241,7 +241,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::he
 ) const
 {
     tmp<scalarField> the(new scalarField(T.size()));
-    scalarField& he = the();
+    scalarField& he = the.ref();
 
     forAll(T, facei)
     {
@@ -277,7 +277,7 @@ Foam::heThermo<BasicThermo, MixtureType>::hc() const
         )
     );
 
-    volScalarField& hcf = thc();
+    volScalarField& hcf = thc.ref();
     scalarField& hcCells = hcf.internalField();
 
     forAll(hcCells, celli)
@@ -308,7 +308,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::Cp
 ) const
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, facei)
     {
@@ -344,7 +344,7 @@ Foam::heThermo<BasicThermo, MixtureType>::Cp() const
         )
     );
 
-    volScalarField& cp = tCp();
+    volScalarField& cp = tCp.ref();
 
     forAll(this->T_, celli)
     {
@@ -379,7 +379,7 @@ Foam::heThermo<BasicThermo, MixtureType>::Cv
 ) const
 {
     tmp<scalarField> tCv(new scalarField(T.size()));
-    scalarField& cv = tCv();
+    scalarField& cv = tCv.ref();
 
     forAll(T, facei)
     {
@@ -415,7 +415,7 @@ Foam::heThermo<BasicThermo, MixtureType>::Cv() const
         )
     );
 
-    volScalarField& cv = tCv();
+    volScalarField& cv = tCv.ref();
 
     forAll(this->T_, celli)
     {
@@ -446,7 +446,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::gamma
 ) const
 {
     tmp<scalarField> tgamma(new scalarField(T.size()));
-    scalarField& cpv = tgamma();
+    scalarField& cpv = tgamma.ref();
 
     forAll(T, facei)
     {
@@ -482,7 +482,7 @@ Foam::heThermo<BasicThermo, MixtureType>::gamma() const
         )
     );
 
-    volScalarField& cpv = tgamma();
+    volScalarField& cpv = tgamma.ref();
 
     forAll(this->T_, celli)
     {
@@ -519,7 +519,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::Cpv
 ) const
 {
     tmp<scalarField> tCpv(new scalarField(T.size()));
-    scalarField& cpv = tCpv();
+    scalarField& cpv = tCpv.ref();
 
     forAll(T, facei)
     {
@@ -555,7 +555,7 @@ Foam::heThermo<BasicThermo, MixtureType>::Cpv() const
         )
     );
 
-    volScalarField& cpv = tCpv();
+    volScalarField& cpv = tCpv.ref();
 
     forAll(this->T_, celli)
     {
@@ -589,7 +589,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::CpByCpv
 ) const
 {
     tmp<scalarField> tCpByCpv(new scalarField(T.size()));
-    scalarField& cpByCpv = tCpByCpv();
+    scalarField& cpByCpv = tCpByCpv.ref();
 
     forAll(T, facei)
     {
@@ -625,7 +625,7 @@ Foam::heThermo<BasicThermo, MixtureType>::CpByCpv() const
         )
     );
 
-    volScalarField& cpByCpv = tCpByCpv();
+    volScalarField& cpByCpv = tCpByCpv.ref();
 
     forAll(this->T_, celli)
     {
@@ -666,7 +666,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::THE
 ) const
 {
     tmp<scalarField> tT(new scalarField(h.size()));
-    scalarField& T = tT();
+    scalarField& T = tT.ref();
 
     forAll(h, celli)
     {
@@ -689,7 +689,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::THE
 {
 
     tmp<scalarField> tT(new scalarField(h.size()));
-    scalarField& T = tT();
+    scalarField& T = tT.ref();
     forAll(h, facei)
     {
         T[facei] = this->patchFaceMixture
@@ -708,7 +708,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::heThermo<BasicThermo, MixtureType>::kappa() const
 {
     tmp<Foam::volScalarField> kappa(Cp()*this->alpha_);
-    kappa().rename("kappa");
+    kappa.ref().rename("kappa");
     return kappa;
 }
 
@@ -737,7 +737,7 @@ Foam::heThermo<BasicThermo, MixtureType>::kappaEff
 ) const
 {
     tmp<Foam::volScalarField> kappaEff(Cp()*(this->alpha_ + alphat));
-    kappaEff().rename("kappaEff");
+    kappaEff.ref().rename("kappaEff");
     return kappaEff;
 }
 
@@ -772,7 +772,7 @@ Foam::heThermo<BasicThermo, MixtureType>::alphaEff
 ) const
 {
     tmp<Foam::volScalarField> alphaEff(this->CpByCpv()*(this->alpha_ + alphat));
-    alphaEff().rename("alphaEff");
+    alphaEff.ref().rename("alphaEff");
     return alphaEff;
 }
 

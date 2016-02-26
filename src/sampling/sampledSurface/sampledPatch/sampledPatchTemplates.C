@@ -36,7 +36,7 @@ Foam::sampledPatch::sampleField
 {
     // One value per face
     tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
     forAll(patchFaceLabels_, i)
     {
         label patchI = patchIDs_[patchIndex_[i]];
@@ -57,7 +57,7 @@ Foam::sampledPatch::sampleField
 {
     // One value per face
     tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(patchFaceLabels_, i)
     {
@@ -78,7 +78,7 @@ Foam::sampledPatch::interpolateField
 {
     // One value per vertex
     tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     const labelList& own = mesh().faceOwner();
 

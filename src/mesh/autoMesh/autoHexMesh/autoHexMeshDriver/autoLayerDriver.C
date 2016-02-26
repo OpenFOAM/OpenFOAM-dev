@@ -112,7 +112,7 @@ Foam::tmp<Foam::scalarField> Foam::autoLayerDriver::avgPointData
 )
 {
     tmp<scalarField> tfaceFld(new scalarField(pp.size(), 0.0));
-    scalarField& faceFld = tfaceFld();
+    scalarField& faceFld = tfaceFld.ref();
 
     forAll(pp.localFaces(), faceI)
     {

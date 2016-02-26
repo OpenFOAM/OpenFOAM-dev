@@ -78,7 +78,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
     );
 
 
-    scalarField& invR1 = tinvR1().internalField();
+    scalarField& invR1 = tinvR1.ref().internalField();
 
     // apply defined patch radii
     const scalar rMin = 1e-6;

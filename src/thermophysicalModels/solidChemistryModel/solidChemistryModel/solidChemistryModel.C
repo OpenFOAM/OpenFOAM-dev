@@ -136,7 +136,7 @@ Foam::solidChemistryModel<CompType, SolidThermo>::Sh() const
 
     if (this->chemistry_)
     {
-        scalarField& Sh = tSh();
+        scalarField& Sh = tSh.ref();
 
         forAll(Ys_, i)
         {
@@ -176,7 +176,7 @@ Foam::solidChemistryModel<CompType, SolidThermo>::dQ() const
 
     if (this->chemistry_)
     {
-        volScalarField& dQ = tdQ();
+        volScalarField& dQ = tdQ.ref();
         dQ.dimensionedInternalField() = this->mesh_.V()*Sh()();
     }
 

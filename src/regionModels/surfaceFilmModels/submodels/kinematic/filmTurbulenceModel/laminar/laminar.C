@@ -89,8 +89,8 @@ tmp<volVectorField> laminar::Us() const
     );
 
     // apply quadratic profile
-    tUs() = Foam::sqrt(2.0)*owner_.U();
-    tUs().correctBoundaryConditions();
+    tUs.ref() = Foam::sqrt(2.0)*owner_.U();
+    tUs.ref().correctBoundaryConditions();
 
     return tUs;
 }

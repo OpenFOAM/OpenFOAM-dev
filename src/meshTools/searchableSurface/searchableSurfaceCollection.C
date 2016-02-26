@@ -325,7 +325,7 @@ Foam::tmp<Foam::pointField>
 Foam::searchableSurfaceCollection::coordinates() const
 {
     tmp<pointField> tCtrs = tmp<pointField>(new pointField(size()));
-    pointField& ctrs = tCtrs();
+    pointField& ctrs = tCtrs.ref();
 
     // Append individual coordinates
     label coordI = 0;
@@ -400,7 +400,7 @@ Foam::searchableSurfaceCollection::points() const
     }
 
     tmp<pointField> tPts(new pointField(nPoints));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     // Append individual coordinates
     nPoints = 0;

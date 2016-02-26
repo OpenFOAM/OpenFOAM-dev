@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ Foam::radiation::cloudScatter::sigmaEff() const
             mesh_.objectRegistry::lookupObject<thermoCloud>(cloudNames_[i])
         );
 
-        tsigma() += tc.sigmap();
+        tsigma.ref() += tc.sigmap();
     }
 
     return 3.0*tsigma;

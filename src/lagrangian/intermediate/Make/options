@@ -1,4 +1,4 @@
-EXE_INC = \
+EXE_INC = -DCONST_TMP \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/lagrangian/distributionModels/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \

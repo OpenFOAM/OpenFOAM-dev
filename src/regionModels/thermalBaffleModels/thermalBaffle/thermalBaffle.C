@@ -91,7 +91,7 @@ void thermalBaffle::solveEnergy()
         )
     );
 
-    volScalarField& Q = tQ();
+    volScalarField& Q = tQ.ref();
 
     volScalarField rho("rho", thermo_->rho());
     volScalarField alpha("alpha", thermo_->alpha());

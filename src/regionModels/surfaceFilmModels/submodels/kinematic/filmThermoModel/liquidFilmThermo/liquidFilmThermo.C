@@ -255,7 +255,7 @@ tmp<volScalarField> liquidFilmThermo::rho() const
         )
     );
 
-    scalarField& rho = trho().internalField();
+    scalarField& rho = trho.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -277,7 +277,7 @@ tmp<volScalarField> liquidFilmThermo::rho() const
         }
     }
 
-    trho().correctBoundaryConditions();
+    trho.ref().correctBoundaryConditions();
 
     return trho;
 }
@@ -303,7 +303,7 @@ tmp<volScalarField> liquidFilmThermo::mu() const
         )
     );
 
-    scalarField& mu = tmu().internalField();
+    scalarField& mu = tmu.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -325,7 +325,7 @@ tmp<volScalarField> liquidFilmThermo::mu() const
         }
     }
 
-    tmu().correctBoundaryConditions();
+    tmu.ref().correctBoundaryConditions();
 
     return tmu;
 }
@@ -351,7 +351,7 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
         )
     );
 
-    scalarField& sigma = tsigma().internalField();
+    scalarField& sigma = tsigma.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -373,7 +373,7 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
         }
     }
 
-    tsigma().correctBoundaryConditions();
+    tsigma.ref().correctBoundaryConditions();
 
     return tsigma;
 }
@@ -399,7 +399,7 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
         )
     );
 
-    scalarField& Cp = tCp().internalField();
+    scalarField& Cp = tCp.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -421,7 +421,7 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
         }
     }
 
-    tCp().correctBoundaryConditions();
+    tCp.ref().correctBoundaryConditions();
 
     return tCp;
 }
@@ -447,7 +447,7 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
         )
     );
 
-    scalarField& kappa = tkappa().internalField();
+    scalarField& kappa = tkappa.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -469,7 +469,7 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
         }
     }
 
-    tkappa().correctBoundaryConditions();
+    tkappa.ref().correctBoundaryConditions();
 
     return tkappa;
 }

@@ -751,7 +751,7 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho() const
         )
     );
 
-    scalarField& Srho = tSrho();
+    scalarField& Srho = tSrho.ref();
     const scalarField& V = primaryMesh().V();
     const scalar dt = time_.deltaTValue();
 
@@ -805,7 +805,7 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho
 
     if (vapId == i)
     {
-        scalarField& Srho = tSrho();
+        scalarField& Srho = tSrho.ref();
         const scalarField& V = primaryMesh().V();
         const scalar dt = time().deltaTValue();
 
@@ -855,7 +855,7 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Sh() const
 /*
     phase change energy fed back into the film...
 
-    scalarField& Sh = tSh();
+    scalarField& Sh = tSh.ref();
     const scalarField& V = primaryMesh().V();
     const scalar dt = time_.deltaTValue();
 

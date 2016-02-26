@@ -196,7 +196,6 @@ void reactingOneDim::updatePhiGas()
                 }
             }
         }
-        tHsiGas().clear();
     }
 }
 

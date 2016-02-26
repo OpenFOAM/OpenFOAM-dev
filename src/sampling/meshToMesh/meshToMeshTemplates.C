@@ -161,7 +161,7 @@ Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapSrcToTgt
         )
     );
 
-    mapSrcToTgt(srcField, cop, tresult());
+    mapSrcToTgt(srcField, cop, tresult.ref());
 
     return tresult;
 }
@@ -280,7 +280,7 @@ Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapTgtToSrc
         )
     );
 
-    mapTgtToSrc(tgtField, cop, tresult());
+    mapTgtToSrc(tgtField, cop, tresult.ref());
 
     return tresult;
 }
@@ -466,7 +466,7 @@ Foam::meshToMesh::mapSrcToTgt
         )
     );
 
-    mapSrcToTgt(field, cop, tresult());
+    mapSrcToTgt(field, cop, tresult.ref());
 
     return tresult;
 }
@@ -655,7 +655,7 @@ Foam::meshToMesh::mapTgtToSrc
         )
     );
 
-    mapTgtToSrc(field, cop, tresult());
+    mapTgtToSrc(field, cop, tresult.ref());
 
     return tresult;
 }

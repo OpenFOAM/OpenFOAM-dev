@@ -1,4 +1,4 @@
-EXE_INC = \
+EXE_INC = -DCONST_TMP \
     -I$(LIB_SRC)/fileFormats/lnInclude
 
 LIB_LIBS = \

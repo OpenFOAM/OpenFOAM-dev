@@ -100,8 +100,8 @@ inline tmp<volScalarField> thermoSingleLayer::T
         )
     );
 
-    tT().min(Tmax_);
-    tT().max(Tmin_);
+    tT.ref().min(Tmax_);
+    tT.ref().max(Tmin_);
 
     return tT;
 }

@@ -56,7 +56,7 @@ curl
     tmp<GeometricField<Type, fvPatchField, volMesh>> tcurlVf =
         2.0*(*skew(fvc::grad(vf, nameCurlVf)));
 
-    tcurlVf().rename(nameCurlVf);
+    tcurlVf.ref().rename(nameCurlVf);
 
     return tcurlVf;
 }

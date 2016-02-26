@@ -160,7 +160,7 @@ singleStepCombustion<CombThermoType, ThermoType>::dQ() const
 
     if (this->active())
     {
-        volScalarField& dQ = tdQ();
+        volScalarField& dQ = tdQ.ref();
         dQ.dimensionedInternalField() = this->mesh().V()*Sh()();
     }
     return tdQ;

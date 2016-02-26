@@ -47,7 +47,7 @@ Foam::coalCloudList::UTrans() const
         )
     );
 
-    DimensionedField<vector, volMesh>& fld = tfld();
+    DimensionedField<vector, volMesh>& fld = tfld.ref();
 
     forAll(*this, i)
     {
@@ -64,7 +64,7 @@ Foam::tmp<Foam::fvVectorMatrix> Foam::coalCloudList::SU
 ) const
 {
     tmp<fvVectorMatrix> tfvm(new fvVectorMatrix(U, dimForce));
-    fvVectorMatrix& fvm = tfvm();
+    fvVectorMatrix& fvm = tfvm.ref();
 
     forAll(*this, i)
     {
@@ -95,7 +95,7 @@ Foam::coalCloudList::hsTrans() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& fld = tfld();
+    DimensionedField<scalar, volMesh>& fld = tfld.ref();
 
     forAll(*this, i)
     {
@@ -112,7 +112,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::coalCloudList::Sh
 ) const
 {
     tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(hs, dimEnergy/dimTime));
-    fvScalarMatrix& fvm = tfvm();
+    fvScalarMatrix& fvm = tfvm.ref();
 
     forAll(*this, i)
     {
@@ -130,7 +130,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::coalCloudList::SYi
 ) const
 {
     tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(Yi, dimMass/dimTime));
-    fvScalarMatrix& fvm = tfvm();
+    fvScalarMatrix& fvm = tfvm.ref();
 
     forAll(*this, i)
     {
@@ -161,7 +161,7 @@ Foam::coalCloudList::rhoTrans() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& fld = tfld();
+    DimensionedField<scalar, volMesh>& fld = tfld.ref();
 
     forAll(*this, i)
     {
@@ -197,7 +197,7 @@ Foam::coalCloudList::Srho() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& fld = tfld();
+    DimensionedField<scalar, volMesh>& fld = tfld.ref();
 
     forAll(*this, i)
     {
@@ -231,7 +231,7 @@ Foam::coalCloudList::Srho
         )
     );
 
-    DimensionedField<scalar, volMesh>& fld = tfld();
+    DimensionedField<scalar, volMesh>& fld = tfld.ref();
 
     forAll(*this, j)
     {
@@ -248,7 +248,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::coalCloudList::Srho
 ) const
 {
     tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(rho, dimMass/dimTime));
-    fvScalarMatrix& fvm = tfvm();
+    fvScalarMatrix& fvm = tfvm.ref();
 
     forAll(*this, i)
     {

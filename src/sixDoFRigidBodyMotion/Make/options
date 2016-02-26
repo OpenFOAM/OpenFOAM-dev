@@ -1,4 +1,4 @@
-EXE_INC = \
+EXE_INC = -DCONST_TMP \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/postProcessing/functionObjects/forces/lnInclude \

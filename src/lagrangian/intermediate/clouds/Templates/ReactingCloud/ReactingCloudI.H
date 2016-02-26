@@ -127,7 +127,7 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
                 )
             );
 
-            volScalarField& sourceField = trhoTrans();
+            volScalarField& sourceField = trhoTrans.ref();
 
             sourceField.internalField() =
                 rhoTrans_[i]/(this->db().time().deltaTValue()*this->mesh().V());
@@ -141,7 +141,7 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
         else
         {
             tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(Yi, dimMass/dimTime));
-            fvScalarMatrix& fvm = tfvm();
+            fvScalarMatrix& fvm = tfvm.ref();
 
             fvm.source() = -rhoTrans_[i]/this->db().time().deltaTValue();
 
@@ -182,7 +182,7 @@ Foam::ReactingCloud<CloudType>::Srho(const label i) const
 
     if (this->solution().coupled())
     {
-        scalarField& rhoi = tRhoi();
+        scalarField& rhoi = tRhoi.ref();
         rhoi = rhoTrans_[i]/(this->db().time().deltaTValue()*this->mesh().V());
     }
 
@@ -219,7 +219,7 @@ Foam::ReactingCloud<CloudType>::Srho() const
 
     if (this->solution().coupled())
     {
-        scalarField& sourceField = trhoTrans();
+        scalarField& sourceField = trhoTrans.ref();
         forAll(rhoTrans_, i)
         {
             sourceField += rhoTrans_[i];
@@ -256,7 +256,7 @@ Foam::ReactingCloud<CloudType>::Srho(volScalarField& rho) const
             )
         );
 
-        scalarField& sourceField = trhoTrans();
+        scalarField& sourceField = trhoTrans.ref();
 
         if (this->solution().semiImplicit("rho"))
         {
@@ -272,7 +272,7 @@ Foam::ReactingCloud<CloudType>::Srho(volScalarField& rho) const
         else
         {
             tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(rho, dimMass/dimTime));
-            fvScalarMatrix& fvm = tfvm();
+            fvScalarMatrix& fvm = tfvm.ref();
 
             forAll(rhoTrans_, i)
             {

@@ -70,7 +70,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
         )
     );
 
-    volFieldType& result = tresult();
+    volFieldType& result = tresult.ref();
 
     const labelUList& own = mesh.owner();
     const labelUList& nbr = mesh.neighbour();
@@ -102,7 +102,8 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
     tmp<GeometricField<Type, fvPatchField, volMesh>>
         tvf(cellReduce(cop, tssf));
 
-   tssf.clear();
+    tssf.clear();
+
     return tvf;
 }
 

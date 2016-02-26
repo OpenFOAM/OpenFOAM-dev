@@ -267,14 +267,14 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
 
             if (applyGravity_)
             {
-                phiCorrect_() -= phiGByA();
+                phiCorrect_.ref() -= phiGByA();
             }
 
             forAll(phiCorrect_(), faceI)
             {
                 // Current and correction fluxes
                 const scalar phiCurr = phi[faceI];
-                scalar& phiCorr = phiCorrect_()[faceI];
+                scalar& phiCorr = phiCorrect_.ref()[faceI];
 
                 // Don't limit if the correction is in the opposite direction to
                 // the flux. We need all the help we can get in this state.
@@ -296,7 +296,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
 
             if (applyGravity_)
             {
-                phiCorrect_() += phiGByA();
+                phiCorrect_.ref() += phiGByA();
             }
         }
 

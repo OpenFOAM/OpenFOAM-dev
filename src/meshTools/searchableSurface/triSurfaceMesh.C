@@ -382,7 +382,7 @@ void Foam::triSurfaceMesh::clearOut()
 Foam::tmp<Foam::pointField> Foam::triSurfaceMesh::coordinates() const
 {
     tmp<pointField> tPts(new pointField(8));
-    pointField& pt = tPts();
+    pointField& pt = tPts.ref();
 
     // Use copy to calculate face centres so they don't get stored
     pt = PrimitivePatch<triSurface::FaceType, SubList, const pointField&>

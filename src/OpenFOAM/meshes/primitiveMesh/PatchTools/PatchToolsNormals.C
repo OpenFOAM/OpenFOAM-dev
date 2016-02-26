@@ -159,7 +159,7 @@ Foam::PatchTools::pointNormals
     //    to avoid them being stored)
 
     tmp<pointField> textrudeN(new pointField(p.nPoints(), vector::zero));
-    pointField& extrudeN = textrudeN();
+    pointField& extrudeN = textrudeN.ref();
     {
         const faceList& localFaces = p.localFaces();
         const vectorField& faceNormals = p.faceNormals();
@@ -213,7 +213,7 @@ Foam::PatchTools::edgeNormals
     // 1. Start off with local normals
 
     tmp<pointField> tedgeNormals(new pointField(p.nEdges(), vector::zero));
-    pointField& edgeNormals = tedgeNormals();
+    pointField& edgeNormals = tedgeNormals.ref();
     {
         const labelListList& edgeFaces = p.edgeFaces();
         const vectorField& faceNormals = p.faceNormals();

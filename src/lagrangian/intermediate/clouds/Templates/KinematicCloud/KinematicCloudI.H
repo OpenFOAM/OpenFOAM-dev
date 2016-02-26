@@ -439,7 +439,7 @@ Foam::KinematicCloud<CloudType>::SU(volVectorField& U) const
         else
         {
             tmp<fvVectorMatrix> tfvm(new fvVectorMatrix(U, dimForce));
-            fvVectorMatrix& fvm = tfvm();
+            fvVectorMatrix& fvm = tfvm.ref();
 
             fvm.source() = -UTrans()/(this->db().time().deltaT());
 
@@ -474,7 +474,7 @@ Foam::KinematicCloud<CloudType>::vDotSweep() const
         )
     );
 
-    volScalarField& vDotSweep = tvDotSweep();
+    volScalarField& vDotSweep = tvDotSweep.ref();
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
@@ -513,7 +513,7 @@ Foam::KinematicCloud<CloudType>::theta() const
         )
     );
 
-    volScalarField& theta = ttheta();
+    volScalarField& theta = ttheta.ref();
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
@@ -551,7 +551,7 @@ Foam::KinematicCloud<CloudType>::alpha() const
         )
     );
 
-    scalarField& alpha = talpha().internalField();
+    scalarField& alpha = talpha.ref().internalField();
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
@@ -588,7 +588,7 @@ Foam::KinematicCloud<CloudType>::rhoEff() const
         )
     );
 
-    scalarField& rhoEff = trhoEff().internalField();
+    scalarField& rhoEff = trhoEff.ref().internalField();
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();

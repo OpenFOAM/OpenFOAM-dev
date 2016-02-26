@@ -1,4 +1,4 @@
-EXE_INC = \
+EXE_INC = -DCONST_TMP \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/properties/liquidProperties/lnInclude \
@@ -8,4 +8,3 @@ EXE_INC = \
 LIB_LIBS = \
     -lliquidProperties \
     -lthermophysicalFunctions
-

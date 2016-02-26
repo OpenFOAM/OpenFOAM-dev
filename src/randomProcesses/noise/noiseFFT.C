@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,7 +140,7 @@ Foam::tmp<Foam::scalarField> Foam::noiseFFT::window
     }
 
     tmp<scalarField> tpw(new scalarField(N));
-    scalarField& pw = tpw();
+    scalarField& pw = tpw.ref();
 
     label offset = ni*windowOffset;
 
@@ -193,7 +193,7 @@ Foam::tmp<Foam::scalarField> Foam::noiseFFT::Pf
             scalarField::subField(tPn2(), tPn2().size()/2)
         )
     );
-    scalarField& Pn = tPn();
+    scalarField& Pn = tPn.ref();
 
     Pn *= 2.0/sqrt(scalar(tPn2().size()));
     Pn[0] /= 2.0;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -260,7 +260,7 @@ Foam::tmp<Foam::scalarField> Foam::targetCoeffTrim::thetag() const
     const List<vector>& x = rotor_.x();
 
     tmp<scalarField> ttheta(new scalarField(x.size()));
-    scalarField& t = ttheta();
+    scalarField& t = ttheta.ref();
 
     forAll(t, i)
     {

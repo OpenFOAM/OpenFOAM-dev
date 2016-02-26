@@ -440,7 +440,7 @@ Foam::tmp<Foam::labelField> Foam::pairPatchAgglomeration::agglomerateOneLevel
     const label nFineFaces = patch.size();
 
     tmp<labelField> tcoarseCellMap(new labelField(nFineFaces, -1));
-    labelField& coarseCellMap = tcoarseCellMap();
+    labelField& coarseCellMap = tcoarseCellMap.ref();
 
     const labelListList& faceFaces = patch.faceFaces();
 

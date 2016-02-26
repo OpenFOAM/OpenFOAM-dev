@@ -192,7 +192,7 @@ tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     const labelListList& pointFaces = patch_.pointFaces();
     const scalarListList& weights = faceToPointWeights();
@@ -249,7 +249,7 @@ tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     const List<typename Patch::FaceType>& localFaces = patch_.localFaces();
 
@@ -303,7 +303,7 @@ tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::faceToEdgeInterpolate
         new Field<Type>(patch_.nEdges(), pTraits<Type>::zero)
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     const edgeList& edges = patch_.edges();
     const labelListList& edgeFaces = patch_.edgeFaces();

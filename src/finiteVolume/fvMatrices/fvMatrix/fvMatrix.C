@@ -693,7 +693,7 @@ template<class Type>
 Foam::tmp<Foam::scalarField> Foam::fvMatrix<Type>::D() const
 {
     tmp<scalarField> tdiag(new scalarField(diag()));
-    addCmptAvBoundaryDiag(tdiag());
+    addCmptAvBoundaryDiag(tdiag.ref());
     return tdiag;
 }
 
@@ -713,7 +713,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fvMatrix<Type>::DD() const
             (
                 lduAddr().patchAddr(patchI),
                 internalCoeffs_[patchI],
-                tdiag()
+                tdiag.ref()
             );
         }
     }

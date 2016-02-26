@@ -177,7 +177,7 @@ Foam::sampledSurface::pointAverage
             dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg();
+    GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg.ref();
 
     labelField nPointCells(mesh.nCells(), 0);
     {

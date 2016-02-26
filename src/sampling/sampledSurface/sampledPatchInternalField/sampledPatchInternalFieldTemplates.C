@@ -38,7 +38,7 @@ Foam::sampledPatchInternalField::sampleField
 {
     // One value per face
     tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels().size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(patchStart(), i)
     {

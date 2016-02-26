@@ -227,18 +227,15 @@ Foam::radiation::blackBodyEmission::EbDeltaLambdaT
     }
     else
     {
+        scalarField& Ebif = Eb.ref();
+
         forAll(T, i)
         {
             scalar T1 = fLambdaT(band[1]*T[i]);
             scalar T2 = fLambdaT(band[0]*T[i]);
-            dimensionedScalar fLambdaDelta
-            (
-                "fLambdaDelta",
-                dimless,
-                T1 - T2
-            );
-            Eb()[i] = Eb()[i]*fLambdaDelta.value();
+            Ebif[i] *= T1 - T2;
         }
+
         return Eb;
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindricalCS::globalToLocal
     );
 
     tmp<vectorField> tresult(new vectorField(lc.size()));
-    vectorField& result = tresult();
+    vectorField& result = tresult.ref();
 
     result.replace
     (

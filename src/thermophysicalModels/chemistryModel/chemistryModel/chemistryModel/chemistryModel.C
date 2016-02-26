@@ -104,7 +104,7 @@ Foam::chemistryModel<CompType, ThermoType>::omega
     label lRef, rRef;
 
     tmp<scalarField> tom(new scalarField(nEqns(), 0.0));
-    scalarField& om = tom();
+    scalarField& om = tom.ref();
 
     forAll(reactions_, i)
     {
@@ -500,7 +500,7 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
         )
     );
 
-    scalarField& tc = ttc();
+    scalarField& tc = ttc.ref();
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
 
@@ -540,7 +540,7 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
     }
 
 
-    ttc().correctBoundaryConditions();
+    ttc.ref().correctBoundaryConditions();
 
     return ttc;
 }
@@ -570,7 +570,7 @@ Foam::chemistryModel<CompType, ThermoType>::Sh() const
 
     if (this->chemistry_)
     {
-        scalarField& Sh = tSh();
+        scalarField& Sh = tSh.ref();
 
         forAll(Y_, i)
         {
@@ -610,7 +610,7 @@ Foam::chemistryModel<CompType, ThermoType>::dQ() const
 
     if (this->chemistry_)
     {
-        volScalarField& dQ = tdQ();
+        volScalarField& dQ = tdQ.ref();
         dQ.dimensionedInternalField() = this->mesh_.V()*Sh()();
     }
 
@@ -668,7 +668,7 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
         )
     );
 
-    DimensionedField<scalar, volMesh>& RR = tRR();
+    DimensionedField<scalar, volMesh>& RR = tRR.ref();
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();

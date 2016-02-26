@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,7 +223,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
 ) const
 {
     tmp<vectorField> tfld(new vectorField(meshPoints.size()));
-    vectorField& fld = tfld();
+    vectorField& fld = tfld.ref();
 
     const word type(dict.lookup("type"));
 

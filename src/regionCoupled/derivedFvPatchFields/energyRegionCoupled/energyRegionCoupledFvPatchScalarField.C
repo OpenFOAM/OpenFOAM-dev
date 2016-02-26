@@ -190,7 +190,7 @@ weights() const
     const scalarField nbrAlphaDelta(nbrAlpha/nbrDeltas);
 
     tmp<scalarField> tw(new scalarField(deltas.size()));
-    scalarField& w = tw();
+    scalarField& w = tw.ref();
 
     forAll(alphaDelta, faceI)
     {

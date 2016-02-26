@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ Foam::radiation::wideBandAbsorptionEmission::aCont(const label bandI) const
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().internalField();
 
     forAll(a, i)
     {
@@ -255,7 +255,7 @@ Foam::radiation::wideBandAbsorptionEmission::ECont(const label bandI) const
 
         if (dQ.dimensions() == dimEnergy/dimTime)
         {
-            E().internalField() =
+            E.ref().internalField() =
                 iEhrrCoeffs_[bandI]
                *dQ.internalField()
                *(iBands_[bandI][1] - iBands_[bandI][0])
@@ -264,7 +264,7 @@ Foam::radiation::wideBandAbsorptionEmission::ECont(const label bandI) const
         }
         else if (dQ.dimensions() == dimEnergy/dimTime/dimVolume)
         {
-            E().internalField() =
+            E.ref().internalField() =
                 iEhrrCoeffs_[bandI]
                *dQ.internalField()
                *(iBands_[bandI][1] - iBands_[bandI][0])

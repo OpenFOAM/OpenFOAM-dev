@@ -92,7 +92,7 @@ Foam::tmp<GeoField> Foam::uniformInterpolate
 
     // Interpolate
     tmp<GeoField> tfld(new GeoField(fieldIO, weights[0]*field0));
-    GeoField& fld = tfld();
+    GeoField& fld = tfld.ref();
 
     for (label i = 1; i < times.size(); ++i)
     {

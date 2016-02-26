@@ -100,7 +100,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> fvMeshSubset::interpolate
             patchFields
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& resF = tresF();
+    GeometricField<Type, fvPatchField, volMesh>& resF = tresF.ref();
 
 
     // 2. Change the fvPatchFields to the correct type using a mapper
@@ -243,7 +243,7 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
             patchFields
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& resF = tresF();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& resF = tresF.ref();
 
 
     // 2. Change the fvsPatchFields to the correct type using a mapper

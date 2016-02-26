@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -304,7 +304,7 @@ Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
     const tensorField& R = Rptr_();
     const tensorField Rtr(R.T());
     tmp<tensorField> tt(new tensorField(cellMap.size()));
-    tensorField& t = tt();
+    tensorField& t = tt.ref();
     forAll(cellMap, i)
     {
         const label cellI = cellMap[i];
@@ -328,7 +328,7 @@ Foam::tmp<Foam::symmTensorField> Foam::cylindrical::transformVector
     }
 
     tmp<symmTensorField> tfld(new symmTensorField(Rptr_->size()));
-    symmTensorField& fld = tfld();
+    symmTensorField& fld = tfld.ref();
 
     const tensorField& R = Rptr_();
     forAll(fld, i)

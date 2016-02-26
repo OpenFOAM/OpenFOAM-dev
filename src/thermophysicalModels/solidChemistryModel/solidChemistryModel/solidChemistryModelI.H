@@ -85,7 +85,7 @@ Foam::solidChemistryModel<CompType, SolidThermo>::RRs() const
 
     if (this->chemistry_)
     {
-        DimensionedField<scalar, volMesh>& RRs = tRRs();
+        DimensionedField<scalar, volMesh>& RRs = tRRs.ref();
         for (label i=0; i < nSolids_; i++)
         {
             RRs += RRs_[i];

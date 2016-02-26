@@ -119,7 +119,7 @@ Foam::combustionModels::laminar<Type>::R(volScalarField& Y) const
 {
     tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
 
-    fvScalarMatrix& Su = tSu();
+    fvScalarMatrix& Su = tSu.ref();
 
     if (this->active())
     {
@@ -157,7 +157,7 @@ Foam::combustionModels::laminar<Type>::dQ() const
 
     if (this->active())
     {
-        tdQ() = this->chemistryPtr_->dQ();
+        tdQ.ref() = this->chemistryPtr_->dQ();
     }
 
     return tdQ;
@@ -188,7 +188,7 @@ Foam::combustionModels::laminar<Type>::Sh() const
 
     if (this->active())
     {
-        tSh() = this->chemistryPtr_->Sh();
+        tSh.ref() = this->chemistryPtr_->Sh();
     }
 
     return tSh;

@@ -299,13 +299,13 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
       + fvm::div(phi_, U_)
      ==
       - USp_
-//      - fvm::SuSp(rhoSp_, U_)
+   // - fvm::SuSp(rhoSp_, U_)
       - rhoSp_*U_
       + forces_.correct(U_)
       + turbulence_->Su(U_)
     );
 
-    fvVectorMatrix& UEqn = tUEqn();
+    fvVectorMatrix& UEqn = tUEqn.ref();
 
     UEqn.relax();
 

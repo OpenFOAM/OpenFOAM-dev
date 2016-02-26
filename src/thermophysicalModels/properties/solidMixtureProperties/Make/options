@@ -1,3 +1,3 @@
-EXE_INC = \
+EXE_INC = -DCONST_TMP \
     -I${LIB_SRC}/thermophysicalModels/properties/solidProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude

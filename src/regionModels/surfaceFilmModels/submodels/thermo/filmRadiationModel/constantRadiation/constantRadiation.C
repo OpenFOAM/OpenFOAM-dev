@@ -124,7 +124,7 @@ tmp<volScalarField> constantRadiation::Shs()
 
     if ((time >= timeStart_) && (time <= timeStart_ + duration_))
     {
-        scalarField& Shs = tShs();
+        scalarField& Shs = tShs.ref();
         const scalarField& Qr = QrConst_.internalField();
         const scalarField& alpha = owner_.alpha().internalField();
 
