@@ -113,7 +113,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::PDRDragModels::basic::Dcu() const
         )
     );
 
-    volSymmTensorField& DragDcu = tDragDcu();
+    volSymmTensorField& DragDcu = tDragDcu.ref();
 
     if (on_)
     {
@@ -147,7 +147,7 @@ Foam::tmp<Foam::volScalarField> Foam::PDRDragModels::basic::Gk() const
         )
     );
 
-    volScalarField& Gk = tGk();
+    volScalarField& Gk = tGk.ref();
 
     if (on_)
     {

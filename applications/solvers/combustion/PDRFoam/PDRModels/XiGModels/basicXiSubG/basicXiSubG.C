@@ -70,7 +70,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiGModels::basicSubGrid::G() const
     const volScalarField& Lobs = db.lookupObject<volScalarField>("Lobs");
 
     tmp<volScalarField> tGtot = XiGModel_->G();
-    volScalarField& Gtot = tGtot();
+    volScalarField& Gtot = tGtot.ref();
 
     const scalarField Cw = pow(Su_.mesh().V(), 2.0/3.0);
     scalarField N(Nv.internalField()*Cw);

@@ -2,7 +2,7 @@
 
     MRF.correctBoundaryVelocity(U);
 
-    tmp<fvVectorMatrix> UEqn
+    tmp<fvVectorMatrix> tUEqn
     (
         fvm::div(phi, U)
       + MRF.DDt(U)
@@ -10,8 +10,9 @@
       ==
         fvOptions(U)
     );
+    fvVectorMatrix& UEqn = tUEqn.ref();
 
-    UEqn().relax();
+    UEqn.relax();
 
     // Include the porous media resistance and solve the momentum equation
     // either implicit in the tensorial resistance or transport using by
@@ -22,18 +23,18 @@
 
     if (pressureImplicitPorosity)
     {
-        tmp<volTensorField> tTU = tensor(I)*UEqn().A();
-        pZones.addResistance(UEqn(), tTU());
+        tmp<volTensorField> tTU = tensor(I)*UEqn.A();
+        pZones.addResistance(UEqn, tTU.ref());
         trTU = inv(tTU());
-        trTU().rename("rAU");
+        trTU.ref().rename("rAU");
 
-        fvOptions.constrain(UEqn());
+        fvOptions.constrain(UEqn);
 
         volVectorField gradp(fvc::grad(p));
 
         for (int UCorr=0; UCorr<nUCorr; UCorr++)
         {
-            U = trTU() & (UEqn().H() - gradp);
+            U = trTU() & (UEqn.H() - gradp);
         }
         U.correctBoundaryConditions();
 
@@ -41,14 +42,14 @@
     }
     else
     {
-        pZones.addResistance(UEqn());
+        pZones.addResistance(UEqn);
 
-        fvOptions.constrain(UEqn());
+        fvOptions.constrain(UEqn);
 
-        solve(UEqn() == -fvc::grad(p));
+        solve(UEqn == -fvc::grad(p));
 
         fvOptions.correct(U);
 
-        trAU = 1.0/UEqn().A();
-        trAU().rename("rAU");
+        trAU = 1.0/UEqn.A();
+        trAU.ref().rename("rAU");
     }

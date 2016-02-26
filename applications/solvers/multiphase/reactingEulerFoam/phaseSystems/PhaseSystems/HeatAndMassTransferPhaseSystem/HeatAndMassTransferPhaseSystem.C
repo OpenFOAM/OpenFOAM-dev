@@ -218,7 +218,7 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::dmdt
         {
             if (phase1 == &phase)
             {
-                tdmdt() += this->dmdt(pair);
+                tdmdt.ref() += this->dmdt(pair);
             }
 
             Swap(phase1, phase2);

@@ -406,7 +406,7 @@ fvMeshSubset::interpolate
             patchFields
         )
     );
-    GeometricField<Type, pointPatchField, pointMesh>& resF = tresF();
+    GeometricField<Type, pointPatchField, pointMesh>& resF = tresF.ref();
 
 
     // 2. Change the pointPatchFields to the correct type using a mapper

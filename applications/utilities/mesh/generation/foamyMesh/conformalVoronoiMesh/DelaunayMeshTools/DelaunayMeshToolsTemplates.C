@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -280,7 +280,7 @@ Foam::tmp<Foam::pointField> Foam::DelaunayMeshTools::allPoints
 )
 {
     tmp<pointField> tpts(new pointField(t.vertexCount(), point::max));
-    pointField& pts = tpts();
+    pointField& pts = tpts.ref();
 
     for
     (

@@ -6,7 +6,7 @@ if (finalIter)
 {
     for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
     {
-        tmp<fvScalarMatrix> hEqn
+        fvScalarMatrix hEqn
         (
             fvm::ddt(betav*rho, h)
           - (
@@ -18,11 +18,11 @@ if (finalIter)
             fvOptions(rho, h)
         );
 
-        hEqn().relax();
+        hEqn.relax();
 
-        fvOptions.constrain(hEqn());
+        fvOptions.constrain(hEqn);
 
-        hEqn().solve(mesh.solver(h.select(finalIter)));
+        hEqn.solve(mesh.solver(h.select(finalIter)));
 
         fvOptions.correct(h);
     }

@@ -457,7 +457,7 @@ while (pimple.correct())
     forAll(phases, phasei)
     {
         phaseModel& phase = phases[phasei];
-        phase.rho()() += phase.thermo().psi()*(p_rgh - p_rgh_0);
+        phase.thermo().rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
     }
 
     // Correct p_rgh for consistency with p and the updated densities

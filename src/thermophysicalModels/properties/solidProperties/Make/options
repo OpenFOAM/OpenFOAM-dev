@@ -1,2 +1,2 @@
-EXE_INC = -DCONST_TMP \
+EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude

@@ -1,4 +1,4 @@
-EXE_INC = -DCONST_TMP \
+EXE_INC = \
     -I.. \
     -I../incompressible/lnInclude \
     -I../interfaceProperties/lnInclude \

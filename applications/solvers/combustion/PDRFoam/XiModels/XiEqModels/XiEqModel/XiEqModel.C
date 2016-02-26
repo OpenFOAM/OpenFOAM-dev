@@ -113,7 +113,7 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
             dimensionedScalar("zero", Nv.dimensions(), 0.0)
         )
     );
-    volScalarField& N = tN();
+    volScalarField& N = tN.ref();
     N.internalField() = Nv.internalField()*pow(mesh.V(), 2.0/3.0);
 
     volSymmTensorField ns

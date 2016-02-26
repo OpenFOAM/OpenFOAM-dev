@@ -1,7 +1,7 @@
-volScalarField rAU(1.0/UEqn().A());
-volScalarField rAtU(1.0/(1.0/rAU - UEqn().H1()));
-volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
-UEqn.clear();
+volScalarField rAU(1.0/UEqn.A());
+volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
+volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+tUEqn.clear();
 
 bool closedVolume = false;
 

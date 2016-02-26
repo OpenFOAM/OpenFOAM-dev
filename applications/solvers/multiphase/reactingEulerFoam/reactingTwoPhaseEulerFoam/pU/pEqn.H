@@ -261,8 +261,8 @@ while (pimple.correct())
                     )
                 );
 
-            deleteDemandDrivenData(pEqnComp1().faceFluxCorrectionPtr());
-            pEqnComp1().relax();
+            deleteDemandDrivenData(pEqnComp1.ref().faceFluxCorrectionPtr());
+            pEqnComp1.ref().relax();
         }
 
         if (phase2.compressible())
@@ -286,8 +286,8 @@ while (pimple.correct())
                       + fvm::div(phid2, p_rgh) - fvm::Sp(fvc::div(phid2), p_rgh)
                     )
                 );
-            deleteDemandDrivenData(pEqnComp2().faceFluxCorrectionPtr());
-            pEqnComp2().relax();
+            deleteDemandDrivenData(pEqnComp2.ref().faceFluxCorrectionPtr());
+            pEqnComp2.ref().relax();
         }
     }
     else
@@ -317,7 +317,7 @@ while (pimple.correct())
     {
         if (pEqnComp1.valid())
         {
-            pEqnComp1() -= fluid.dmdt()/rho1;
+            pEqnComp1.ref() -= fluid.dmdt()/rho1;
         }
         else
         {
@@ -326,7 +326,7 @@ while (pimple.correct())
 
         if (pEqnComp2.valid())
         {
-            pEqnComp2() += fluid.dmdt()/rho2;
+            pEqnComp2.ref() += fluid.dmdt()/rho2;
         }
         else
         {

@@ -1,4 +1,4 @@
-EXE_INC = -DCONST_TMP \
+EXE_INC = \
     -I../twoPhaseSystem/lnInclude \
     -I../interfacialModels/lnInclude\
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \

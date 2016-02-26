@@ -3,10 +3,10 @@
     // pressure solution - done in 2 parts. Part 1:
     thermo.rho() -= psi*p;
 
-    volScalarField rAU(1.0/UEqn().A());
+    volScalarField rAU(1.0/UEqn.A());
     surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-    volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
-    UEqn.clear();
+    volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+    tUEqn.clear();
     surfaceScalarField phiHbyA
     (
         "phiHbyA",

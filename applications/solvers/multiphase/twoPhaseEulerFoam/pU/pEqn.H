@@ -260,8 +260,8 @@ while (pimple.correct())
                   + fvm::div(phid1, p_rgh) - fvm::Sp(fvc::div(phid1), p_rgh)
                 )
             );
-        deleteDemandDrivenData(pEqnComp1().faceFluxCorrectionPtr());
-        pEqnComp1().relax();
+        deleteDemandDrivenData(pEqnComp1.ref().faceFluxCorrectionPtr());
+        pEqnComp1.ref().relax();
 
         pEqnComp2 =
             (
@@ -276,8 +276,8 @@ while (pimple.correct())
                   + fvm::div(phid2, p_rgh) - fvm::Sp(fvc::div(phid2), p_rgh)
                 )
             );
-        deleteDemandDrivenData(pEqnComp2().faceFluxCorrectionPtr());
-        pEqnComp2().relax();
+        deleteDemandDrivenData(pEqnComp2.ref().faceFluxCorrectionPtr());
+        pEqnComp2.ref().relax();
     }
     else
     {

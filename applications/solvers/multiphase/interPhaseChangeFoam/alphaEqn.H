@@ -62,7 +62,7 @@
 
         if (MULESCorr)
         {
-            talphaPhiCorr() -= talphaPhi();
+            talphaPhiCorr.ref() -= talphaPhi();
 
             volScalarField alpha100("alpha100", alpha10);
             alpha10 = alpha1;
@@ -72,7 +72,7 @@
                 geometricOneField(),
                 alpha1,
                 talphaPhi(),
-                talphaPhiCorr(),
+                talphaPhiCorr.ref(),
                 vDotvmcAlphal,
                 (
                     divU*(alpha10 - alpha100)
@@ -85,12 +85,12 @@
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)
             {
-                talphaPhi() += talphaPhiCorr();
+                talphaPhi.ref() += talphaPhiCorr();
             }
             else
             {
                 alpha1 = 0.5*alpha1 + 0.5*alpha10;
-                talphaPhi() += 0.5*talphaPhiCorr();
+                talphaPhi.ref() += 0.5*talphaPhiCorr();
             }
         }
         else
@@ -100,7 +100,7 @@
                 geometricOneField(),
                 alpha1,
                 phi,
-                talphaPhiCorr(),
+                talphaPhiCorr.ref(),
                 vDotvmcAlphal,
                 (divU*alpha1 + vDotcAlphal)(),
                 1,

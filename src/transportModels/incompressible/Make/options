@@ -1,4 +1,4 @@
-EXE_INC = -DCONST_TMP \
+EXE_INC = \
     -I.. \
     -I../twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \

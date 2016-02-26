@@ -3,13 +3,13 @@ rho = max(rho, rhoMin);
 rho = min(rho, rhoMax);
 rho.relax();
 
-volScalarField rAU(1.0/UEqn().A());
+volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
+volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 
 if (pimple.nCorrPISO() <= 1)
 {
-    UEqn.clear();
+    tUEqn.clear();
 }
 
 if (pimple.transonic())

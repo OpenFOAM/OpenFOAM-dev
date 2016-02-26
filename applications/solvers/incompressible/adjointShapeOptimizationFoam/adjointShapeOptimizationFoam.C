@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
         {
             // Momentum predictor
 
-            tmp<fvVectorMatrix> UEqn
+            tmp<fvVectorMatrix> tUEqn
             (
                 fvm::div(phi, U)
               + turbulence->divDevReff(U)
@@ -115,18 +115,19 @@ int main(int argc, char *argv[])
              ==
                 fvOptions(U)
             );
+            fvVectorMatrix& UEqn = tUEqn.ref();
 
-            UEqn().relax();
+            UEqn.relax();
 
-            fvOptions.constrain(UEqn());
+            fvOptions.constrain(UEqn);
 
-            solve(UEqn() == -fvc::grad(p));
+            solve(UEqn == -fvc::grad(p));
 
             fvOptions.correct(U);
 
-            volScalarField rAU(1.0/UEqn().A());
-            volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
-            UEqn.clear();
+            volScalarField rAU(1.0/UEqn.A());
+            volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+            tUEqn.clear();
             surfaceScalarField phiHbyA
             (
                 "phiHbyA",
@@ -180,7 +181,7 @@ int main(int argc, char *argv[])
 
             zeroCells(adjointTransposeConvection, inletCells);
 
-            tmp<fvVectorMatrix> UaEqn
+            tmp<fvVectorMatrix> tUaEqn
             (
                 fvm::div(-phi, Ua)
               - adjointTransposeConvection
@@ -189,19 +190,20 @@ int main(int argc, char *argv[])
              ==
                 fvOptions(Ua)
             );
+            fvVectorMatrix& UaEqn = tUaEqn.ref();
 
-            UaEqn().relax();
+            UaEqn.relax();
 
-            fvOptions.constrain(UaEqn());
+            fvOptions.constrain(UaEqn);
 
-            solve(UaEqn() == -fvc::grad(pa));
+            solve(UaEqn == -fvc::grad(pa));
 
             fvOptions.correct(Ua);
 
-            volScalarField rAUa(1.0/UaEqn().A());
+            volScalarField rAUa(1.0/UaEqn.A());
             volVectorField HbyAa("HbyAa", Ua);
-            HbyAa = rAUa*UaEqn().H();
-            UaEqn.clear();
+            HbyAa = rAUa*UaEqn.H();
+            tUaEqn.clear();
             surfaceScalarField phiHbyAa
             (
                 "phiHbyAa",

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ tmp<volScalarField> createScalarField
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& fld = tfld();
+    volScalarField& fld = tfld.ref();
 
     forAll(fld, cellI)
     {

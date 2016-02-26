@@ -60,7 +60,7 @@ pow
         )
     );
 
-    pow<Type, r, GeoMesh>(tPow().field(), df.field());
+    pow<Type, r, GeoMesh>(tPow.ref().field(), df.field());
 
     return tPow;
 }
@@ -86,7 +86,7 @@ pow
             pow(df.dimensions(), r)
         );
 
-    pow<Type, r, GeoMesh>(tPow().field(), df.field());
+    pow<Type, r, GeoMesh>(tPow.ref().field(), df.field());
 
     tdf.clear();
 
@@ -114,7 +114,7 @@ sqr(const DimensionedField<Type, GeoMesh>& df)
         )
     );
 
-    sqr(tSqr().field(), df.field());
+    sqr(tSqr.ref().field(), df.field());
 
     return tSqr;
 }
@@ -135,7 +135,7 @@ sqr(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
             sqr(df.dimensions())
         );
 
-    sqr(tSqr().field(), df.field());
+    sqr(tSqr.ref().field(), df.field());
 
     tdf.clear();
 
@@ -164,7 +164,7 @@ tmp<DimensionedField<scalar, GeoMesh>> magSqr
         )
     );
 
-    magSqr(tMagSqr().field(), df.field());
+    magSqr(tMagSqr.ref().field(), df.field());
 
     return tMagSqr;
 }
@@ -185,7 +185,7 @@ tmp<DimensionedField<scalar, GeoMesh>> magSqr
             sqr(df.dimensions())
         );
 
-    magSqr(tMagSqr().field(), df.field());
+    magSqr(tMagSqr.ref().field(), df.field());
 
     tdf.clear();
 
@@ -214,7 +214,7 @@ tmp<DimensionedField<scalar, GeoMesh>> mag
         )
     );
 
-    mag(tMag().field(), df.field());
+    mag(tMag.ref().field(), df.field());
 
     return tMag;
 }
@@ -235,7 +235,7 @@ tmp<DimensionedField<scalar, GeoMesh>> mag
             df.dimensions()
         );
 
-    mag(tMag().field(), df.field());
+    mag(tMag.ref().field(), df.field());
 
     tdf.clear();
 
@@ -268,7 +268,7 @@ cmptAv(const DimensionedField<Type, GeoMesh>& df)
         )
     );
 
-    cmptAv(CmptAv().field(), df.field());
+    cmptAv(CmptAv.ref().field(), df.field());
 
     return CmptAv;
 }
@@ -294,7 +294,7 @@ cmptAv(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
             df.dimensions()
         );
 
-    cmptAv(CmptAv().field(), df.field());
+    cmptAv(CmptAv.ref().field(), df.field());
 
     tdf.clear();
 

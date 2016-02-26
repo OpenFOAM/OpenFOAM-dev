@@ -80,7 +80,7 @@
             }
             else
             {
-                p_rghEqnComp() += hmm;
+                p_rghEqnComp.ref() += hmm;
             }
 
             phasei++;

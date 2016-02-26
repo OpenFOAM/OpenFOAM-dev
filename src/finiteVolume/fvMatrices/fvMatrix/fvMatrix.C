@@ -1401,7 +1401,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::correction
      && A.psi().mesh().fluxRequired(A.psi().name())
     )
     {
-        tAcorr().faceFluxCorrectionPtr() = (-A.flux()).ptr();
+        tAcorr.ref().faceFluxCorrectionPtr() = (-A.flux()).ptr();
     }
 
     return tAcorr;

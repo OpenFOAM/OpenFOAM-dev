@@ -477,7 +477,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(phase1, phase2);
 
-    correctContactAngle(phase1, phase2, tnHatfv().boundaryField());
+    correctContactAngle(phase1, phase2, tnHatfv.ref().boundaryField());
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());
@@ -568,7 +568,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
 
             if (cAlpha != cAlphas_.end())
             {
-                tSurfaceTension() +=
+                tSurfaceTension.ref() +=
                     fvc::interpolate(sigma(key12)*K(phase1, phase2))
                    *(
                         fvc::interpolate(phase2)*fvc::snGrad(phase1)
@@ -602,7 +602,7 @@ Foam::multiphaseSystem::nearInterface() const
 
     forAll(phases(), phasei)
     {
-        tnearInt() = max
+        tnearInt.ref() = max
         (
             tnearInt(),
             pos(phases()[phasei] - 0.01)*pos(0.99 - phases()[phasei])

@@ -128,7 +128,7 @@ public:
 
     // Member operators
 
-        #ifndef CONST_TMP
+        #ifdef NON_CONST_TMP
         //- Deprecated non-const dereference operator.
         //  Use ref() where non-const access is required
         inline T& operator()();

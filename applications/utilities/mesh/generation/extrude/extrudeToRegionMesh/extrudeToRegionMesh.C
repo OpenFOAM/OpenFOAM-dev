@@ -1150,7 +1150,7 @@ tmp<pointField> calcOffset
     vectorField::subField fc = pp.faceCentres();
 
     tmp<pointField> toffsets(new pointField(fc.size()));
-    pointField& offsets = toffsets();
+    pointField& offsets = toffsets.ref();
 
     forAll(fc, i)
     {

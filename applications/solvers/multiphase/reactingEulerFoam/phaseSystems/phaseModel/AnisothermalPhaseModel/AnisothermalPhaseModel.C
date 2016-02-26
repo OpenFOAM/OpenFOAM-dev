@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,13 +112,13 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
     // Add the appropriate pressure-work term
     if (he.name() == this->thermo_->phasePropertyName("e"))
     {
-        tEEqn() +=
+        tEEqn.ref() +=
             fvc::ddt(alpha)*this->thermo().p()
           + fvc::div(alphaPhi, this->thermo().p());
     }
     else if (this->thermo_->dpdt())
     {
-        tEEqn() -= alpha*this->fluid().dpdt();
+        tEEqn.ref() -= alpha*this->fluid().dpdt();
     }
 
     return tEEqn;

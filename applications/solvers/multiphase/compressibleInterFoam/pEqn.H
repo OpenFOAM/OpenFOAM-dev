@@ -37,8 +37,8 @@
                 psi1*fvm::ddt(p_rgh)
               + fvm::div(phid1, p_rgh) - fvm::Sp(fvc::div(phid1), p_rgh)
             );
-        deleteDemandDrivenData(p_rghEqnComp1().faceFluxCorrectionPtr());
-        p_rghEqnComp1().relax();
+        deleteDemandDrivenData(p_rghEqnComp1.ref().faceFluxCorrectionPtr());
+        p_rghEqnComp1.ref().relax();
 
         p_rghEqnComp2 =
             fvc::ddt(rho2) + fvc::div(phi, rho2) - fvc::Sp(fvc::div(phi), rho2)
@@ -47,8 +47,8 @@
                 psi2*fvm::ddt(p_rgh)
               + fvm::div(phid2, p_rgh) - fvm::Sp(fvc::div(phid2), p_rgh)
             );
-        deleteDemandDrivenData(p_rghEqnComp2().faceFluxCorrectionPtr());
-        p_rghEqnComp2().relax();
+        deleteDemandDrivenData(p_rghEqnComp2.ref().faceFluxCorrectionPtr());
+        p_rghEqnComp2.ref().relax();
     }
     else
     {

@@ -1,6 +1,6 @@
     MRF.correctBoundaryVelocity(U);
 
-    tmp<fvVectorMatrix> UEqn
+    tmp<fvVectorMatrix> tUEqn
     (
         fvm::div(phi, U)
       + MRF.DDt(rho, U)
@@ -10,11 +10,12 @@
       + parcels.SU(U)
       + fvOptions(rho, U)
     );
+    fvVectorMatrix& UEqn = tUEqn.ref();
 
-    UEqn().relax();
+    UEqn.relax();
 
-    fvOptions.constrain(UEqn());
+    fvOptions.constrain(UEqn);
 
-    solve(UEqn() == -fvc::grad(p));
+    solve(UEqn == -fvc::grad(p));
 
     fvOptions.correct(U);

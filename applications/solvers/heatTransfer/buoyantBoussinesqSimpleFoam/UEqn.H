@@ -2,7 +2,7 @@
 
     MRF.correctBoundaryVelocity(U);
 
-    tmp<fvVectorMatrix> UEqn
+    tmp<fvVectorMatrix> tUEqn
     (
         fvm::div(phi, U)
       + MRF.DDt(U)
@@ -10,16 +10,17 @@
      ==
         fvOptions(U)
     );
+    fvVectorMatrix& UEqn = tUEqn.ref();
 
-    UEqn().relax();
+    UEqn.relax();
 
-    fvOptions.constrain(UEqn());
+    fvOptions.constrain(UEqn);
 
     if (simple.momentumPredictor())
     {
         solve
         (
-            UEqn()
+            UEqn
           ==
             fvc::reconstruct
             (

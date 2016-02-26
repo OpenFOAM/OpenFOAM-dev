@@ -23,7 +23,7 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
             );
 
             E1Eqn->relax();
-            fvOptions.constrain(E1Eqn());
+            fvOptions.constrain(E1Eqn.ref());
             E1Eqn->solve();
         }
     }
@@ -43,7 +43,7 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
             );
 
             E2eqn->relax();
-            fvOptions.constrain(E2eqn());
+            fvOptions.constrain(E2eqn.ref());
             E2eqn->solve();
         }
     }

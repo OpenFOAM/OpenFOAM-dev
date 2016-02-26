@@ -1,1 +1,1 @@
-EXE_INC = -DCONST_TMP
+EXE_INC =

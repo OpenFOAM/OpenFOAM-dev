@@ -1,7 +1,7 @@
 {
-    volScalarField rAUrel(1.0/UrelEqn().A());
+    volScalarField rAUrel(1.0/UrelEqn.A());
     volVectorField HbyA("HbyA", Urel);
-    HbyA = rAUrel*UrelEqn().H();
+    HbyA = rAUrel*UrelEqn.H();
 
     surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(HbyA) & mesh.Sf());
     adjustPhi(phiHbyA, Urel, p);
@@ -10,13 +10,13 @@
 
     if (simple.consistent())
     {
-        rAtUrel = 1.0/(1.0/rAUrel - UrelEqn().H1());
+        rAtUrel = 1.0/(1.0/rAUrel - UrelEqn.H1());
         phiHbyA +=
             fvc::interpolate(rAtUrel() - rAUrel)*fvc::snGrad(p)*mesh.magSf();
         HbyA -= (rAUrel - rAtUrel())*fvc::grad(p);
     }
 
-    UrelEqn.clear();
+    tUrelEqn.clear();
 
     // Update the pressure BCs to ensure flux consistency
     constrainPressure(p, Urel, phiHbyA, rAtUrel());

@@ -1,5 +1,5 @@
-volScalarField rAU(1.0/UEqn().A());
-volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
+volScalarField rAU(1.0/UEqn.A());
+volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 surfaceScalarField phiHbyA
 (
     "phiHbyA",
@@ -15,7 +15,7 @@ tmp<volScalarField> rAtU(rAU);
 
 if (pimple.consistent())
 {
-    rAtU = 1.0/max(1.0/rAU - UEqn().H1(), 0.1/rAU);
+    rAtU = 1.0/max(1.0/rAU - UEqn.H1(), 0.1/rAU);
     phiHbyA +=
         fvc::interpolate(rAtU() - rAU)*fvc::snGrad(p)*mesh.magSf();
     HbyA -= (rAU - rAtU())*fvc::grad(p);
@@ -23,7 +23,7 @@ if (pimple.consistent())
 
 if (pimple.nCorrPISO() <= 1)
 {
-    UEqn.clear();
+    tUEqn.clear();
 }
 
 // Update the pressure BCs to ensure flux consistency

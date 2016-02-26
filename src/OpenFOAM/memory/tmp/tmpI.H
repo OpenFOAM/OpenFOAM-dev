@@ -217,7 +217,7 @@ inline void Foam::tmp<T>::clear() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-#ifndef CONST_TMP
+#ifdef NON_CONST_TMP
 template<class T>
 inline T& Foam::tmp<T>::operator()()
 {
