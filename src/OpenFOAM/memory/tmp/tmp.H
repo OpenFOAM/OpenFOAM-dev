@@ -70,6 +70,11 @@ class tmp
         mutable T* ptr_;
 
 
+    // Private member operators
+
+        inline void operator++();
+
+
 public:
 
     // Constructors

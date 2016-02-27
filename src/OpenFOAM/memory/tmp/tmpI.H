@@ -26,6 +26,23 @@ License
 #include "error.H"
 #include <typeinfo>
 
+// * * * * * * * * * * * * * Private Member Operators  * * * * * * * * * * * //
+
+template<class T>
+inline void Foam::tmp<T>::operator++()
+{
+    ptr_->operator++();
+
+    if (ptr_->count() > 1)
+    {
+        FatalErrorInFunction
+            << "Attempt to create more than 2 tmp's referring to"
+               " the same object of type " << typeName()
+            << abort(FatalError);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class T>
@@ -62,7 +79,7 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t)
     {
         if (ptr_)
         {
-            ptr_->operator++();
+            operator++();
         }
         else
         {
@@ -90,7 +107,7 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
             }
             else
             {
-                ptr_->operator++();
+                operator++();
             }
         }
         else
@@ -342,8 +359,7 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
         }
 
         ptr_ = t.ptr_;
-
-        ptr_->operator++();
+        t.ptr_ = 0;
     }
     else
     {
