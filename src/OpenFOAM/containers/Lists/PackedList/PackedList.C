@@ -31,7 +31,7 @@ License
 
 #if (UINT_MAX == 0xFFFFFFFF)
 // 32-bit counting, Hamming weight method
-#   define COUNT_PACKEDBITS(sum, x)                                            \
+    #define COUNT_PACKEDBITS(sum, x)                                            \
 {                                                                              \
     x -= (x >> 1) & 0x55555555;                                                \
     x = (x & 0x33333333) + ((x >> 2) & 0x33333333);                            \
@@ -39,7 +39,7 @@ License
 }
 #elif (UINT_MAX == 0xFFFFFFFFFFFFFFFF)
 // 64-bit counting, Hamming weight method
-#   define COUNT_PACKEDBITS(sum, x)                                            \
+    #define COUNT_PACKEDBITS(sum, x)                                            \
 {                                                                              \
     x -= (x >> 1) & 0x5555555555555555;                                        \
     x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);            \
@@ -47,7 +47,7 @@ License
 }
 #else
 // Arbitrary number of bits, Brian Kernighan's method
-#   define COUNT_PACKEDBITS(sum, x)    for (; x; ++sum) { x &= x - 1; }
+    #define COUNT_PACKEDBITS(sum, x)    for (; x; ++sum) { x &= x - 1; }
 #endif
 
 

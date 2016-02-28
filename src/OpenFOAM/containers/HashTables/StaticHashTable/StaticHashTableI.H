@@ -345,12 +345,12 @@ Foam::StaticHashTable<T, Key, Hash>::begin()
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
         Info<< "StaticHashTable is empty\n";
     }
-#   endif
+    #endif
 
     return StaticHashTable<T, Key, Hash>::endIter_;
 }
@@ -377,12 +377,12 @@ Foam::StaticHashTable<T, Key, Hash>::cbegin() const
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
         Info<< "StaticHashTable is empty\n";
     }
-#   endif
+    #endif
 
     return StaticHashTable<T, Key, Hash>::endConstIter_;
 }

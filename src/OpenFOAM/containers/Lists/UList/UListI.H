@@ -68,7 +68,6 @@ inline Foam::label Foam::UList<T>::rcIndex(const label i) const
 }
 
 
-// Check start is within valid range (0 ... size-1).
 template<class T>
 inline void Foam::UList<T>::checkStart(const label start) const
 {
@@ -81,7 +80,6 @@ inline void Foam::UList<T>::checkStart(const label start) const
 }
 
 
-// Check size is within valid range (0 ... size).
 template<class T>
 inline void Foam::UList<T>::checkSize(const label size) const
 {
@@ -94,7 +92,6 @@ inline void Foam::UList<T>::checkSize(const label size) const
 }
 
 
-// Check index i is within valid range (0 ... size-1).
 template<class T>
 inline void Foam::UList<T>::checkIndex(const label i) const
 {
@@ -158,20 +155,18 @@ inline T* Foam::UList<T>::data()
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 
-// element access
 template<class T>
 inline T& Foam::UList<T>::operator[](const label i)
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     checkIndex(i);
-#   endif
+    #endif
     return v_[i];
 }
 
 
 namespace Foam
 {
-
     // Template specialization for bool
     template<>
     inline const bool& Foam::UList<bool>::operator[](const label i) const
@@ -186,22 +181,19 @@ namespace Foam
             return Foam::pTraits<bool>::zero;
         }
     }
+}
 
-} // end of namespace Foam
 
-
-// const element access
 template<class T>
 inline const T& Foam::UList<T>::operator[](const label i) const
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     checkIndex(i);
-#   endif
+    #endif
     return v_[i];
 }
 
 
-// Allow cast to a const List<T>&
 template<class T>
 inline Foam::UList<T>::operator const Foam::List<T>&() const
 {

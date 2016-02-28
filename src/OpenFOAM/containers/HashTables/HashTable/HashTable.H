@@ -546,13 +546,13 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "HashTableI.H"
+    #include "HashTableI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifndef NoHashTableC
 #ifdef NoRepository
-#   include "HashTable.C"
+    #include "HashTable.C"
 #endif
 #endif
 

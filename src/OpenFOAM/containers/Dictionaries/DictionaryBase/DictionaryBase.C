@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,6 @@ Foam::DictionaryBase<IDLListType, T>::DictionaryBase(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Find and return T
 template<class IDLListType, class T>
 bool Foam::DictionaryBase<IDLListType, T>::found(const word& keyword) const
 {
@@ -96,7 +95,6 @@ bool Foam::DictionaryBase<IDLListType, T>::found(const word& keyword) const
 }
 
 
-// Find and return T*, return NULL if not found
 template<class IDLListType, class T>
 const T* Foam::DictionaryBase<IDLListType, T>::lookupPtr
 (
@@ -116,7 +114,6 @@ const T* Foam::DictionaryBase<IDLListType, T>::lookupPtr
 }
 
 
-// Find and return T*, return NULL if not found
 template<class IDLListType, class T>
 T* Foam::DictionaryBase<IDLListType, T>::lookupPtr(const word& keyword)
 {
@@ -133,7 +130,6 @@ T* Foam::DictionaryBase<IDLListType, T>::lookupPtr(const word& keyword)
 }
 
 
-// Find and return T*, FatalError if keyword not found
 template<class IDLListType, class T>
 const T* Foam::DictionaryBase<IDLListType, T>::lookup(const word& keyword) const
 {
@@ -150,7 +146,6 @@ const T* Foam::DictionaryBase<IDLListType, T>::lookup(const word& keyword) const
 }
 
 
-// Find and return T*, FatalError if keyword not found
 template<class IDLListType, class T>
 T* Foam::DictionaryBase<IDLListType, T>::lookup(const word& keyword)
 {
@@ -167,7 +162,6 @@ T* Foam::DictionaryBase<IDLListType, T>::lookup(const word& keyword)
 }
 
 
-// Return the table of contents
 template<class IDLListType, class T>
 Foam::wordList Foam::DictionaryBase<IDLListType, T>::toc() const
 {
@@ -188,7 +182,6 @@ Foam::wordList Foam::DictionaryBase<IDLListType, T>::toc() const
 }
 
 
-// Add at head of dictionary
 template<class IDLListType, class T>
 void Foam::DictionaryBase<IDLListType, T>::insert(const word& keyword, T* tPtr)
 {
@@ -198,7 +191,6 @@ void Foam::DictionaryBase<IDLListType, T>::insert(const word& keyword, T* tPtr)
 }
 
 
-// Add at tail of dictionary
 template<class IDLListType, class T>
 void Foam::DictionaryBase<IDLListType, T>::append(const word& keyword, T* tPtr)
 {

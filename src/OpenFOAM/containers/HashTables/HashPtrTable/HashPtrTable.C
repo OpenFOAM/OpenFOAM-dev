@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,6 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct given initial table size
 template<class T, class Key, class Hash>
 Foam::HashPtrTable<T, Key, Hash>::HashPtrTable(const label size)
 :
@@ -36,7 +35,6 @@ Foam::HashPtrTable<T, Key, Hash>::HashPtrTable(const label size)
 {}
 
 
-// Construct as copy
 template<class T, class Key, class Hash>
 Foam::HashPtrTable<T, Key, Hash>::HashPtrTable
 (

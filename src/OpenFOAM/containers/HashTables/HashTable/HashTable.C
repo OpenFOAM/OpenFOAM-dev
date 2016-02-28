@@ -363,15 +363,13 @@ bool Foam::HashTable<T, Key, Hash>::iteratorBase::erase()
 }
 
 
-
-// NOTE:
-// We use (const iterator&) here, but manipulate its contents anyhow.
-// The parameter should be (iterator&), but then the compiler doesn't find
-// it correctly and tries to call as (iterator) instead.
-//
 template<class T, class Key, class Hash>
 bool Foam::HashTable<T, Key, Hash>::erase(const iterator& iter)
 {
+    // NOTE: We use (const iterator&) here, but manipulate its contents anyhow.
+    // The parameter should be (iterator&), but then the compiler doesn't find
+    // it correctly and tries to call as (iterator) instead.
+    //
     // Adjust iterator after erase
     return const_cast<iterator&>(iter).erase();
 }
