@@ -223,7 +223,7 @@ Foam::ConeNozzleInjection<CloudType>::ConeNozzleInjection
     thetaOuter_(im.thetaOuter_),
     sizeDistribution_(im.sizeDistribution_().clone().ptr()),
     tanVec1_(im.tanVec1_),
-    tanVec2_(im.tanVec1_),
+    tanVec2_(im.tanVec2_),
     normal_(im.normal_),
     UMag_(im.UMag_),
     Cd_(im.Cd_),
