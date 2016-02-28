@@ -157,8 +157,6 @@ class polyMesh;
 \*---------------------------------------------------------------------------*/
 
 class mapPolyMesh
-:
-    public refCount
 {
     // Private data
 

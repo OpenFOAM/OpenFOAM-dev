@@ -55,7 +55,7 @@ class fvMesh;
 template<class Type>
 class surfaceInterpolationScheme
 :
-    public refCount
+    public tmp<surfaceInterpolationScheme<Type>>::refCount
 {
     // Private data
 

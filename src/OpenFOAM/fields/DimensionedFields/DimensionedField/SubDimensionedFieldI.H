@@ -63,7 +63,7 @@ inline Foam::SubDimensionedField<Type, GeoMesh>::SubDimensionedField
     const SubDimensionedField<Type, GeoMesh>& sfield
 )
 :
-    refCount(),
+    tmp<SubDimensionedField<Type, GeoMesh>>::refCount(),
     SubField<Type>(sfield)
 {}
 

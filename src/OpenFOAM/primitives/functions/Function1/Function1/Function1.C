@@ -31,7 +31,6 @@ License
 template<class Type>
 Foam::Function1<Type>::Function1(const word& entryName)
 :
-    refCount(),
     name_(entryName)
 {}
 
@@ -39,7 +38,7 @@ Foam::Function1<Type>::Function1(const word& entryName)
 template<class Type>
 Foam::Function1<Type>::Function1(const Function1<Type>& de)
 :
-    refCount(),
+    tmp<Function1<Type>>::refCount(),
     name_(de.name_)
 {}
 
@@ -62,9 +61,7 @@ const Foam::word& Foam::Function1<Type>::name() const
 
 template<class Type>
 void Foam::Function1<Type>::convertTimeBase(const Time&)
-{
-    // do nothing
-}
+{}
 
 
 template<class Type>

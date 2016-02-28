@@ -61,7 +61,7 @@ template<class Type> Ostream& operator<<(Ostream&, const Function1<Type>&);
 template<class Type>
 class Function1
 :
-    public refCount
+    public tmp<Function1<Type>>::refCount
 {
     // Private Member Functions
 

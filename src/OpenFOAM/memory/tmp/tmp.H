@@ -77,6 +77,9 @@ class tmp
 
 public:
 
+    typedef Foam::refCount refCount;
+
+
     // Constructors
 
         //- Store object pointer

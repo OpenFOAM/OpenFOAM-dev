@@ -77,7 +77,7 @@ class dictionary;
 template<class Type>
 class Field
 :
-    public refCount,
+    public tmp<Field<Type>>::refCount,
     public List<Type>
 {
 

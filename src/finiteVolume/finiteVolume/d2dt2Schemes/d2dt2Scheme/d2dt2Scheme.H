@@ -64,7 +64,7 @@ namespace fv
 template<class Type>
 class d2dt2Scheme
 :
-    public refCount
+    public tmp<d2dt2Scheme<Type>>::refCount
 {
 
 protected:

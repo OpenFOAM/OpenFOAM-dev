@@ -60,7 +60,7 @@ namespace fv
 template<class Type>
 class snGradScheme
 :
-    public refCount
+    public tmp<snGradScheme<Type>>::refCount
 {
     // Private data
 
@@ -69,6 +69,9 @@ class snGradScheme
 
 
     // Private Member Functions
+
+        //- Disallow copy construct
+        snGradScheme(const snGradScheme&);
 
         //- Disallow default bitwise assignment
         void operator=(const snGradScheme&);

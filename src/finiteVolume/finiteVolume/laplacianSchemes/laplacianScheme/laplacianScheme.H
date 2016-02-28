@@ -65,7 +65,7 @@ namespace fv
 template<class Type, class GType>
 class laplacianScheme
 :
-    public refCount
+    public tmp<laplacianScheme<Type, GType>>::refCount
 {
 
 protected:

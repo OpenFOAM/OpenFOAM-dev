@@ -196,7 +196,7 @@ Foam::Field<Type>::Field
 template<class Type>
 Foam::Field<Type>::Field(const Field<Type>& f)
 :
-    refCount(),
+    tmp<Field<Type>>::refCount(),
     List<Type>(f)
 {}
 

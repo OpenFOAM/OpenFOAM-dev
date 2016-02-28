@@ -34,7 +34,6 @@ SourceFiles
 #ifndef mapSubsetMesh_H
 #define mapSubsetMesh_H
 
-#include "refCount.H"
 #include "labelList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,8 +46,6 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class mapSubsetMesh
-:
-    public refCount
 {
     // Private data
 

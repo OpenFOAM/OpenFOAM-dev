@@ -50,7 +50,7 @@ namespace Foam
 template<class Type>
 class multivariateSurfaceInterpolationScheme
 :
-    public refCount
+    public tmp<multivariateSurfaceInterpolationScheme<Type>>::refCount
 {
 
 public:
