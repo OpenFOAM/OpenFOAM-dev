@@ -34,8 +34,6 @@ License
 
 namespace Foam
 {
-    const scalar sampledSet::tol = 1e-3;
-
     defineTypeNameAndDebug(sampledSet, 0);
     defineRunTimeSelectionTable(sampledSet, word);
 }
@@ -227,18 +225,16 @@ Foam::point Foam::sampledSet::pushIn
 
 bool Foam::sampledSet::getTrackingPoint
 (
-    const vector& offset,
     const point& samplePt,
     const point& bPoint,
     const label bFaceI,
+    const scalar smallDist,
 
     point& trackPt,
     label& trackCellI,
     label& trackFaceI
 ) const
 {
-    const scalar smallDist = mag(tol*offset);
-
     bool isGoodSample = false;
 
     if (bFaceI == -1)
@@ -311,7 +307,6 @@ bool Foam::sampledSet::getTrackingPoint
     if (debug)
     {
         InfoInFunction
-            << " offset:" << offset
             << " samplePt:" << samplePt
             << " bPoint:" << bPoint
             << " bFaceI:" << bFaceI

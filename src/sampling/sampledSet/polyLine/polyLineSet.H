@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,6 +93,13 @@ public:
 
     //- Runtime type information
     TypeName("polyLine");
+
+
+    // Static data
+
+        //- Tolerance when comparing points relative to difference between
+        //  start_ and end_
+        static const scalar tol;
 
 
     // Constructors

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,8 @@ namespace Foam
 {
     defineTypeNameAndDebug(faceOnlySet, 0);
     addToRunTimeSelectionTable(sampledSet, faceOnlySet, word);
+
+    const scalar faceOnlySet::tol = 1e-6;
 }
 
 
@@ -146,10 +148,10 @@ void Foam::faceOnlySet::calcSamples
 
     getTrackingPoint
     (
-        offset,
         start_,
         bPoint,
         bFaceI,
+        smallDist,
 
         trackPt,
         trackCellI,
