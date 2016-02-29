@@ -1743,7 +1743,6 @@ Foam::labelList Foam::meshRefinement::intersectedPoints() const
 }
 
 
-//- Create patch from set of patches
 Foam::autoPtr<Foam::indirectPrimitivePatch> Foam::meshRefinement::makePatch
 (
     const polyMesh& mesh,
@@ -2757,7 +2756,6 @@ const
 }
 
 
-//- Return either time().constant() or oldInstance
 Foam::word Foam::meshRefinement::timeName() const
 {
     if (overwrite_ && mesh_.time().timeIndex() == 0)

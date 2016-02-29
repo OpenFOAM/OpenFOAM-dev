@@ -146,8 +146,6 @@ Foam::pointField Foam::treeDataPrimitivePatch<PatchType>::shapePoints() const
 }
 
 
-//- Get type (inside,outside,mixed,unknown) of point w.r.t. surface.
-//  Only makes sense for closed surfaces.
 template<class PatchType>
 Foam::volumeType Foam::treeDataPrimitivePatch<PatchType>::getVolumeType
 (

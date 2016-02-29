@@ -293,7 +293,6 @@ const Foam::vectorField::subField Foam::polyPatch::faceAreas() const
 }
 
 
-// Return the patch face neighbour cell centres
 Foam::tmp<Foam::vectorField> Foam::polyPatch::faceCellCentres() const
 {
     tmp<vectorField> tcc(new vectorField(size()));

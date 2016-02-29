@@ -624,8 +624,6 @@ Foam::scalar Foam::triSurfaceTools::edgeCosAngle
 }
 
 
-//- Calculate minimum (cos of) edge angle using addressing from collapsing
-//  edge to v1 at pt.
 Foam::scalar Foam::triSurfaceTools::collapseMinCosAngle
 (
     const triSurface& surf,

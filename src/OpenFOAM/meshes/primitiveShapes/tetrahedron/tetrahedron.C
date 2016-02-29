@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,18 +119,19 @@ void Foam::tetrahedron<Point, PointRef>::tetOverlap
 }
 
 
-// (Probably very inefficient) minimum containment sphere calculation.
-// From http://www.imr.sandia.gov/papers/imr11/shewchuk2.pdf:
-// Sphere ctr is smallest one of
-// - tet circumcentre
-// - triangle circumcentre
-// - edge mids
 template<class Point, class PointRef>
 Foam::pointHit Foam::tetrahedron<Point, PointRef>::containmentSphere
 (
     const scalar tol
 ) const
 {
+    // (Probably very inefficient) minimum containment sphere calculation.
+    // From http://www.imr.sandia.gov/papers/imr11/shewchuk2.pdf:
+    // Sphere ctr is smallest one of
+    // - tet circumcentre
+    // - triangle circumcentre
+    // - edge mids
+
     const scalar fac = 1 + tol;
 
     // Halve order of tolerance for comparisons of sqr.

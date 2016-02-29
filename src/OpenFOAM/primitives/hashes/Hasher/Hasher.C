@@ -187,7 +187,7 @@ Description
 // acceptable.  Do NOT use for cryptographic purposes.
 // ----------------------------------------------------------------------------
 
-//- Specialized little-endian code
+// Specialized little-endian code
 #if !defined (__BYTE_ORDER) || (__BYTE_ORDER == __LITTLE_ENDIAN)
 static unsigned jenkins_hashlittle
 (

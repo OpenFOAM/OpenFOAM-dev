@@ -636,7 +636,6 @@ void Foam::mapDistribute::exchangeAddressing
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-//- Construct null
 Foam::mapDistribute::mapDistribute()
 :
     constructSize_(0),
@@ -644,7 +643,6 @@ Foam::mapDistribute::mapDistribute()
 {}
 
 
-//- Construct from components
 Foam::mapDistribute::mapDistribute
 (
     const label constructSize,
@@ -659,7 +657,6 @@ Foam::mapDistribute::mapDistribute
 {}
 
 
-//- Construct from components
 Foam::mapDistribute::mapDistribute
 (
     const label constructSize,

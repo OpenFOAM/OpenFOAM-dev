@@ -127,7 +127,6 @@ Foam::labelList Foam::polyMesh::facePatchFaceCells
 }
 
 
-//- Set faces_, calculate cells and patchStarts.
 void Foam::polyMesh::setTopology
 (
     const cellShapeList& cellsAsShapes,

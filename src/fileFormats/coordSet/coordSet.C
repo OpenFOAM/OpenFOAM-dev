@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,6 @@ const Foam::NamedEnum<Foam::coordSet::coordFormat, 5>
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-//- Construct from components
 Foam::coordSet::coordSet
 (
     const word& name,
@@ -65,7 +64,6 @@ Foam::coordSet::coordSet
 {}
 
 
-//- Construct from components
 Foam::coordSet::coordSet
 (
     const word& name,

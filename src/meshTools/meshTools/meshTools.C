@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Check if n is in same direction as normals of all faceLabels
 bool Foam::meshTools::visNormal
 (
     const vector& n,
@@ -668,7 +667,6 @@ void Foam::meshTools::constrainToMeshCentre
 }
 
 
-//- Set the constrained components of directions/velocity to zero
 void Foam::meshTools::constrainDirection
 (
     const polyMesh& mesh,

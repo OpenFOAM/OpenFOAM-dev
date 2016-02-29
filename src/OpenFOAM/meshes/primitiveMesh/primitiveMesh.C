@@ -73,8 +73,6 @@ Foam::primitiveMesh::primitiveMesh()
 {}
 
 
-// Construct from components
-// WARNING: ASSUMES CORRECT ORDERING OF DATA.
 Foam::primitiveMesh::primitiveMesh
 (
     const label nPoints,

@@ -611,10 +611,6 @@ void Foam::processorPolyPatch::initOrder
 }
 
 
-// Returns rotation.
-// + -1 : no match
-// +  0 : match
-// + >0 : match if rotated clockwise by this amount
 Foam::label Foam::processorPolyPatch::matchFace
 (
     const face& a,
@@ -721,10 +717,6 @@ Foam::label Foam::processorPolyPatch::matchFace
 }
 
 
-// Return new ordering. Ordering is -faceMap: for every face index
-// the new face -rotation:for every new face the clockwise shift
-// of the original face. Return false if nothing changes (faceMap
-// is identity, rotation is 0)
 bool Foam::processorPolyPatch::order
 (
     PstreamBuffers& pBufs,

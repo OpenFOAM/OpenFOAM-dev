@@ -664,10 +664,6 @@ bool Foam::primitiveMesh::checkFaceSkewness
 }
 
 
-// Check convexity of angles in a face. Allow a slight non-convexity.
-// E.g. maxDeg = 10 allows for angles < 190 (or 10 degrees concavity)
-// (if truly concave and points not visible from face centre the face-pyramid
-//  check in checkMesh will fail)
 bool Foam::primitiveMesh::checkFaceAngles
 (
     const pointField& points,
@@ -966,8 +962,6 @@ bool Foam::primitiveMesh::checkConcaveCells
 }
 
 
-// Topological tests
-
 bool Foam::primitiveMesh::checkUpperTriangular
 (
     const bool report,
@@ -1229,7 +1223,6 @@ bool Foam::primitiveMesh::checkCellsZipUp
 }
 
 
-// Vertices of face within point range and unique.
 bool Foam::primitiveMesh::checkFaceVertices
 (
     const bool report,
@@ -1375,7 +1368,6 @@ bool Foam::primitiveMesh::checkPoints
 }
 
 
-// Check if all points on face are shared between faces.
 bool Foam::primitiveMesh::checkDuplicateFaces
 (
     const label faceI,
@@ -1417,7 +1409,6 @@ bool Foam::primitiveMesh::checkDuplicateFaces
 }
 
 
-// Check that shared points are in consecutive order.
 bool Foam::primitiveMesh::checkCommonOrder
 (
     const label faceI,
@@ -1579,8 +1570,6 @@ bool Foam::primitiveMesh::checkCommonOrder
 }
 
 
-// Checks common vertices between faces. If more than 2 they should be
-// consecutive on both faces.
 bool Foam::primitiveMesh::checkFaceFaces
 (
     const bool report,

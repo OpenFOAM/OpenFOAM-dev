@@ -31,7 +31,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Returns edgeI between two points.
 Foam::label Foam::primitiveMesh::getEdge
 (
     List<DynamicList<label>>& pe,
@@ -669,7 +668,5 @@ const Foam::labelList& Foam::primitiveMesh::cellEdges(const label cellI) const
     return cellEdges(cellI, labels_);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,6 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// NB: values chosen such that bitwise '&' 0x1 yields the bool value
-// INVALID is also evaluates to false, but don't rely on that
 const char* Foam::Switch::names[Foam::Switch::INVALID+1] =
 {
     "false", "true",
@@ -38,7 +36,7 @@ const char* Foam::Switch::names[Foam::Switch::INVALID+1] =
     "no",    "yes",
     "n",     "y",
     "f",     "t",
-    "none",  "true",  // is there a reasonable counterpart to "none"?
+    "none",  "true",  // Is there a reasonable counterpart to "none"?
     "invalid"
 };
 

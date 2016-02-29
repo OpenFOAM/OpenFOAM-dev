@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,13 +30,12 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(walkPatch, 0);
+    defineTypeNameAndDebug(walkPatch, 0);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Get other face using v0, v1 (in localFaces numbering). Or -1.
 Foam::label Foam::walkPatch::getNeighbour
 (
     const label faceI,
@@ -124,8 +123,6 @@ Foam::label Foam::walkPatch::getNeighbour
 }
 
 
-// Gets labels of changed faces and enterVertices on faces.
-// Returns labels of faces changed and enterVertices on them.
 void Foam::walkPatch::faceToFace
 (
     const labelList& changedFaces,
@@ -186,7 +183,6 @@ void Foam::walkPatch::faceToFace
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::walkPatch::walkPatch
 (
     const primitivePatch& pp,

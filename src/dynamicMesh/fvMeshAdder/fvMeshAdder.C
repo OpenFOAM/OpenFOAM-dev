@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-//- Calculate map from new patch faces to old patch faces. -1 where
-//  could not map.
 Foam::labelList Foam::fvMeshAdder::calcPatchMap
 (
     const label oldStart,
@@ -61,7 +59,6 @@ Foam::labelList Foam::fvMeshAdder::calcPatchMap
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Inplace add mesh1 to mesh0
 Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::fvMeshAdder::add
 (
     fvMesh& mesh0,

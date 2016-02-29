@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,16 +35,16 @@ namespace Foam
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
-//- Since dimensionSystems() can be reread we actually store a copy of
-//  the controlDict subDict (v.s. a reference to the subDict for e.g.
-//  dimensionedConstants)
+// Since dimensionSystems() can be reread we actually store a copy of
+// the controlDict subDict (v.s. a reference to the subDict for e.g.
+// dimensionedConstants)
 dictionary* dimensionSystemsPtr_(NULL);
 HashTable<dimensionedScalar>* unitSetPtr_(NULL);
 dimensionSets* writeUnitSetPtr_(NULL);
 
-//- Helper class to
-//  - register re-reader
-//  - deallocate demand-driven data
+// Helper class to
+//   register re-reader
+//   deallocate demand-driven data
 class addDimensionSetsToDebug
 :
     public ::Foam::simpleRegIOobject

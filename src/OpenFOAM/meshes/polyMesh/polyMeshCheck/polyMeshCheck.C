@@ -269,12 +269,6 @@ bool Foam::polyMesh::checkFaceSkewness
 }
 
 
-// Check 1D/2Dness of edges. Gets passed the non-empty directions and
-// checks all edges in the mesh whether they:
-// - have no component in a non-empty direction or
-// - are only in a singe non-empty direction.
-// Empty direction info is passed in as a vector of labels (synchronised)
-// which are 1 if the direction is non-empty, 0 if it is.
 bool Foam::polyMesh::checkEdgeAlignment
 (
     const pointField& p,
@@ -283,6 +277,13 @@ bool Foam::polyMesh::checkEdgeAlignment
     labelHashSet* setPtr
 ) const
 {
+    // Check 1D/2Dness of edges. Gets passed the non-empty directions and
+    // checks all edges in the mesh whether they:
+    // - have no component in a non-empty direction or
+    // - are only in a singe non-empty direction.
+    // Empty direction info is passed in as a vector of labels (synchronised)
+    // which are 1 if the direction is non-empty, 0 if it is.
+
     if (debug)
     {
         InfoInFunction << "Checking edge alignment" << endl;

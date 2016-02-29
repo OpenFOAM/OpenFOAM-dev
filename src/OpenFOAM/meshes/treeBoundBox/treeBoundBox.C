@@ -180,7 +180,6 @@ Foam::treeBoundBox Foam::treeBoundBox::subBbox(const direction octant) const
 }
 
 
-// Octant to bounding box using permutation only.
 Foam::treeBoundBox Foam::treeBoundBox::subBbox
 (
     const point& mid,
@@ -230,24 +229,6 @@ Foam::treeBoundBox Foam::treeBoundBox::subBbox
 }
 
 
-// line intersection. Returns true if line (start to end) inside
-// bb or intersects bb. Sets pt to intersection.
-//
-// Sutherlands algorithm:
-//   loop
-//     - start = intersection of line with one of the planes bounding
-//       the bounding box
-//     - stop if start inside bb (return true)
-//     - stop if start and end in same 'half' (e.g. both above bb)
-//       (return false)
-//
-// Uses posBits to efficiently determine 'half' in which start and end
-// point are.
-//
-// Note:
-//   - sets coordinate to exact position: e.g. pt.x() = min().x()
-//     since plane intersect routine might have truncation error.
-//     This makes sure that posBits tests 'inside'
 bool Foam::treeBoundBox::intersects
 (
     const point& overallStart,
@@ -258,6 +239,22 @@ bool Foam::treeBoundBox::intersects
     direction& ptOnFaces
 ) const
 {
+    // Sutherlands algorithm:
+    //   loop
+    //     - start = intersection of line with one of the planes bounding
+    //       the bounding box
+    //     - stop if start inside bb (return true)
+    //     - stop if start and end in same 'half' (e.g. both above bb)
+    //       (return false)
+    //
+    // Uses posBits to efficiently determine 'half' in which start and end
+    // point are.
+    //
+    // Note:
+    //   - sets coordinate to exact position: e.g. pt.x() = min().x()
+    //     since plane intersect routine might have truncation error.
+    //     This makes sure that posBits tests 'inside'
+
     const direction endBits = posBits(end);
     pt = start;
 
@@ -393,9 +390,8 @@ bool Foam::treeBoundBox::intersects
 
 bool Foam::treeBoundBox::contains(const vector& dir, const point& pt) const
 {
-    //
     // Compare all components against min and max of bb
-    //
+
     for (direction cmpt=0; cmpt<3; cmpt++)
     {
         if (pt[cmpt] < min()[cmpt])
@@ -430,7 +426,6 @@ bool Foam::treeBoundBox::contains(const vector& dir, const point& pt) const
 }
 
 
-// Code position of pt on bounding box faces
 Foam::direction Foam::treeBoundBox::faceBits(const point& pt) const
 {
     direction faceBits = 0;
@@ -464,7 +459,6 @@ Foam::direction Foam::treeBoundBox::faceBits(const point& pt) const
 }
 
 
-// Code position of point relative to box
 Foam::direction Foam::treeBoundBox::posBits(const point& pt) const
 {
     direction posBits = 0;
@@ -499,8 +493,6 @@ Foam::direction Foam::treeBoundBox::posBits(const point& pt) const
 }
 
 
-// nearest and furthest corner coordinate.
-// !names of treeBoundBox::min() and treeBoundBox::max() are confusing!
 void Foam::treeBoundBox::calcExtremities
 (
     const point& pt,
@@ -558,9 +550,6 @@ Foam::scalar Foam::treeBoundBox::maxDist(const point& pt) const
 }
 
 
-// Distance comparator
-// Compare all vertices of bounding box against all of other bounding
-// box to see if all vertices of one are nearer
 Foam::label Foam::treeBoundBox::distanceCmp
 (
     const point& pt,

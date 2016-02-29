@@ -33,7 +33,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//- Interpolate point field
 template<class FromPatch, class ToPatch>
 template<class Type>
 tmp<Field<Type>>
@@ -102,7 +101,6 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
 }
 
 
-//- Interpolate face field
 template<class FromPatch, class ToPatch>
 template<class Type>
 tmp<Field<Type>>

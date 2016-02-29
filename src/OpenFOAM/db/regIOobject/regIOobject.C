@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -405,14 +405,12 @@ bool Foam::regIOobject::upToDate
 }
 
 
-//- Flag me as up to date
 void Foam::regIOobject::setUpToDate()
 {
     eventNo_ = db().getEvent();
 }
 
 
-// Rename object and re-register with objectRegistry under new name
 void Foam::regIOobject::rename(const word& newName)
 {
     // Check out of objectRegistry
@@ -428,7 +426,6 @@ void Foam::regIOobject::rename(const word& newName)
 }
 
 
-// Assign to IOobject
 void Foam::regIOobject::operator=(const IOobject& io)
 {
     if (isPtr_)

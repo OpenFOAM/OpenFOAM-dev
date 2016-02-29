@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -230,7 +230,6 @@ Foam::primitiveMeshGeometry::primitiveMeshGeometry
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//- Take over properties from mesh
 void Foam::primitiveMeshGeometry::correct()
 {
     faceAreas_ = mesh_.faceAreas();
@@ -240,7 +239,6 @@ void Foam::primitiveMeshGeometry::correct()
 }
 
 
-//- Recalculate on selected faces
 void Foam::primitiveMeshGeometry::correct
 (
     const pointField& p,

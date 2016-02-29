@@ -34,7 +34,6 @@ License
 namespace Foam
 {
 
-//- Comparison operator for probes class
 template<class T>
 class isNotEqOp
 {

@@ -360,6 +360,10 @@ protected:
             ) const;
 
             //- Check face angles
+            //  Allows a slight non-convexity.  E.g. maxDeg = 10 allows for
+            //  angles < 190 (or 10 degrees concavity) (if truly concave and
+            //  points not visible from face centre the face-pyramid check in
+            //  checkMesh will fail)
             bool checkFaceAngles
             (
                 const pointField& points,

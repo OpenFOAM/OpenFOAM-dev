@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,15 +39,14 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(surfaceFeatures, 0);
+    defineTypeNameAndDebug(surfaceFeatures, 0);
 
-const scalar surfaceFeatures::parallelTolerance = sin(degToRad(1.0));
+    const scalar surfaceFeatures::parallelTolerance = sin(degToRad(1.0));
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-//- Get nearest point on edge and classify position on edge.
 Foam::pointIndexHit Foam::surfaceFeatures::edgeNearest
 (
     const point& start,
@@ -498,7 +497,6 @@ Foam::surfaceFeatures::surfaceFeatures
 }
 
 
-//- Construct from dictionary
 Foam::surfaceFeatures::surfaceFeatures
 (
     const triSurface& surf,
@@ -513,7 +511,6 @@ Foam::surfaceFeatures::surfaceFeatures
 {}
 
 
-//- Construct from file
 Foam::surfaceFeatures::surfaceFeatures
 (
     const triSurface& surf,
@@ -618,7 +615,6 @@ Foam::surfaceFeatures::surfaceFeatures
 }
 
 
-//- Construct as copy
 Foam::surfaceFeatures::surfaceFeatures(const surfaceFeatures& sf)
 :
     surf_(sf.surface()),

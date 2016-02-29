@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,11 +33,7 @@ License
 
 namespace Foam
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-defineTypeNameAndDebug(polyMeshGeometry, 0);
-
+    defineTypeNameAndDebug(polyMeshGeometry, 0);
 }
 
 
@@ -349,7 +345,6 @@ Foam::polyMeshGeometry::polyMeshGeometry(const polyMesh& mesh)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//- Take over properties from mesh
 void Foam::polyMeshGeometry::correct()
 {
     faceAreas_ = mesh_.faceAreas();
@@ -359,7 +354,6 @@ void Foam::polyMeshGeometry::correct()
 }
 
 
-//- Recalculate on selected faces
 void Foam::polyMeshGeometry::correct
 (
     const pointField& p,

@@ -188,7 +188,6 @@ bool Foam::isAdministrator()
 }
 
 
-// use $HOME environment variable or passwd info
 Foam::fileName Foam::home()
 {
     char* env = ::getenv("HOME");
@@ -588,14 +587,12 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
 }
 
 
-// Set the file mode
 bool Foam::chMod(const fileName& name, const mode_t m)
 {
     return ::chmod(name.c_str(), m) == 0;
 }
 
 
-// Return the file mode
 mode_t Foam::mode(const fileName& name)
 {
     fileStat fileStatus(name);
@@ -610,7 +607,6 @@ mode_t Foam::mode(const fileName& name)
 }
 
 
-// Return the file type: FILE or DIRECTORY
 Foam::fileName::Type Foam::type(const fileName& name)
 {
     mode_t m = mode(name);
@@ -630,28 +626,24 @@ Foam::fileName::Type Foam::type(const fileName& name)
 }
 
 
-// Does the name exist in the filing system?
 bool Foam::exists(const fileName& name, const bool checkGzip)
 {
     return mode(name) || isFile(name, checkGzip);
 }
 
 
-// Does the directory exist?
 bool Foam::isDir(const fileName& name)
 {
     return S_ISDIR(mode(name));
 }
 
 
-// Does the file exist?
 bool Foam::isFile(const fileName& name, const bool checkGzip)
 {
     return S_ISREG(mode(name)) || (checkGzip && S_ISREG(mode(name + ".gz")));
 }
 
 
-// Return size of file
 off_t Foam::fileSize(const fileName& name)
 {
     fileStat fileStatus(name);
@@ -666,7 +658,6 @@ off_t Foam::fileSize(const fileName& name)
 }
 
 
-// Return time of last file modification
 time_t Foam::lastModified(const fileName& name)
 {
     fileStat fileStatus(name);
@@ -681,7 +672,6 @@ time_t Foam::lastModified(const fileName& name)
 }
 
 
-// Read a directory and return the entries as a string list
 Foam::fileNameList Foam::readDir
 (
     const fileName& directory,
@@ -776,7 +766,6 @@ Foam::fileNameList Foam::readDir
 }
 
 
-// Copy, recursively if necessary, the source to the destination
 bool Foam::cp(const fileName& src, const fileName& dest)
 {
     // Make sure source exists.
@@ -877,7 +866,6 @@ bool Foam::cp(const fileName& src, const fileName& dest)
 }
 
 
-// Create a softlink. dst should not exist. Returns true if successful.
 bool Foam::ln(const fileName& src, const fileName& dst)
 {
     if (POSIX::debug)
@@ -915,7 +903,6 @@ bool Foam::ln(const fileName& src, const fileName& dst)
 }
 
 
-// Rename srcFile dstFile
 bool Foam::mv(const fileName& src, const fileName& dst)
 {
     if (POSIX::debug)
@@ -941,8 +928,6 @@ bool Foam::mv(const fileName& src, const fileName& dst)
 }
 
 
-//- Rename to a corresponding backup file
-//  If the backup file already exists, attempt with "01" .. "99" index
 bool Foam::mvBak(const fileName& src, const std::string& ext)
 {
     if (POSIX::debug)
@@ -980,7 +965,6 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
 }
 
 
-// Remove a file, returning true if successful otherwise false
 bool Foam::rm(const fileName& file)
 {
     if (POSIX::debug)
@@ -1001,7 +985,6 @@ bool Foam::rm(const fileName& file)
 }
 
 
-// Remove a dirctory and its contents
 bool Foam::rmDir(const fileName& directory)
 {
     if (POSIX::debug)
@@ -1314,31 +1297,31 @@ Foam::fileNameList Foam::dlLoaded()
 
 void Foam::osRandomSeed(const label seed)
 {
-#ifdef USE_RANDOM
+    #ifdef USE_RANDOM
     srandom((unsigned int)seed);
-#else
+    #else
     srand48(seed);
-#endif
+    #endif
 }
 
 
 Foam::label Foam::osRandomInteger()
 {
-#ifdef USE_RANDOM
+    #ifdef USE_RANDOM
     return random();
-#else
+    #else
     return lrand48();
-#endif
+    #endif
 }
 
 
 Foam::scalar Foam::osRandomDouble()
 {
-#ifdef USE_RANDOM
+    #ifdef USE_RANDOM
     return (scalar)random()/INT_MAX;
-#else
+    #else
     return drand48();
-#endif
+    #endif
 }
 
 

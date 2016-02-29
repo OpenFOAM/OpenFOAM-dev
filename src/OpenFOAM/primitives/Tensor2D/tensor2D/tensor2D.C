@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,53 +25,48 @@ License
 
 #include "tensor2D.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const tensor2D::typeName = "tensor2D";
+const char* const Foam::tensor2D::typeName = "tensor2D";
 
 template<>
-const char* tensor2D::componentNames[] =
+const char* Foam::tensor2D::componentNames[] =
 {
     "xx", "xy",
     "yx", "yy"
 };
 
 template<>
-const tensor2D tensor2D::zero
+const Foam::tensor2D Foam::tensor2D::zero
 (
     0, 0,
     0, 0
 );
 
 template<>
-const tensor2D tensor2D::one
+const Foam::tensor2D Foam::tensor2D::one
 (
     1, 1,
     1, 1
 );
 
 template<>
-const tensor2D tensor2D::max
+const Foam::tensor2D Foam::tensor2D::max
 (
     VGREAT, VGREAT,
     VGREAT, VGREAT
 );
 
 template<>
-const tensor2D tensor2D::min
+const Foam::tensor2D Foam::tensor2D::min
 (
     -VGREAT, -VGREAT,
     -VGREAT, -VGREAT
 );
 
 template<>
-const tensor2D tensor2D::I
+const Foam::tensor2D Foam::tensor2D::I
 (
     1, 0,
     0, 1
@@ -80,8 +75,7 @@ const tensor2D tensor2D::I
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Return eigenvalues in ascending order of absolute values
-vector2D eigenValues(const tensor2D& t)
+Foam::vector2D Foam::eigenValues(const tensor2D& t)
 {
     scalar i = 0;
     scalar ii = 0;
@@ -132,7 +126,7 @@ vector2D eigenValues(const tensor2D& t)
 }
 
 
-vector2D eigenVector(const tensor2D& t, const scalar lambda)
+Foam::vector2D Foam::eigenVector(const tensor2D& t, const scalar lambda)
 {
     if (lambda < SMALL)
     {
@@ -161,7 +155,7 @@ vector2D eigenVector(const tensor2D& t, const scalar lambda)
 }
 
 
-tensor2D eigenVectors(const tensor2D& t)
+Foam::tensor2D Foam::eigenVectors(const tensor2D& t)
 {
     vector2D evals(eigenValues(t));
 
@@ -174,9 +168,5 @@ tensor2D eigenVectors(const tensor2D& t)
     return evs;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -133,7 +133,6 @@ void Foam::motionSmootherAlgo::checkConstraints
 }
 
 
-// Average of connected points.
 template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::motionSmootherAlgo::avg
@@ -232,7 +231,6 @@ Foam::motionSmootherAlgo::avg
 }
 
 
-// smooth field (point-jacobi)
 template<class Type>
 void Foam::motionSmootherAlgo::smooth
 (
@@ -257,7 +255,6 @@ void Foam::motionSmootherAlgo::smooth
 }
 
 
-//- Test synchronisation of generic field (not positions!) on points
 template<class Type, class CombineOp>
 void Foam::motionSmootherAlgo::testSyncField
 (

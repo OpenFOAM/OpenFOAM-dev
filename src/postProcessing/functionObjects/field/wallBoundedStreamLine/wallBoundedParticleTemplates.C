@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,12 +126,6 @@ void Foam::wallBoundedParticle::patchInteraction
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//- Track particle to a given position and returns 1.0 if the
-//  trajectory is completed without hitting a face otherwise
-//  stops at the face and returns the fraction of the trajectory
-//  completed.
-//  on entry 'stepFraction()' should be set to the fraction of the
-//  time-step at which the tracking starts.
 template<class TrackData>
 Foam::scalar Foam::wallBoundedParticle::trackToEdge
 (
@@ -139,6 +133,13 @@ Foam::scalar Foam::wallBoundedParticle::trackToEdge
     const vector& endPosition
 )
 {
+    // Track particle to a given position and returns 1.0 if the
+    // trajectory is completed without hitting a face otherwise
+    // stops at the face and returns the fraction of the trajectory
+    // completed.
+    // on entry 'stepFraction()' should be set to the fraction of the
+    // time-step at which the tracking starts.
+
     // Are we on a track face? If not we do a topological walk.
 
     // Particle:

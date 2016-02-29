@@ -864,7 +864,6 @@ bool Foam::fvMesh::writeObjects
 }
 
 
-//- Write mesh using IO settings from the time
 bool Foam::fvMesh::write() const
 {
     bool ok = true;
