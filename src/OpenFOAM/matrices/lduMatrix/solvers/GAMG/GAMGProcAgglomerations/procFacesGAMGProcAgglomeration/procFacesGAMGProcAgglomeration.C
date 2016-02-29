@@ -49,7 +49,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Create single cell mesh
 Foam::autoPtr<Foam::lduPrimitiveMesh>
 Foam::procFacesGAMGProcAgglomeration::singleCellMesh
 (

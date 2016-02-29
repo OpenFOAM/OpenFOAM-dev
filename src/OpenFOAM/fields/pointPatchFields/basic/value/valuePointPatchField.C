@@ -225,7 +225,6 @@ void Foam::valuePointPatchField<Type>::operator=
 }
 
 
-// Force an assignment
 template<class Type>
 void Foam::valuePointPatchField<Type>::operator==
 (

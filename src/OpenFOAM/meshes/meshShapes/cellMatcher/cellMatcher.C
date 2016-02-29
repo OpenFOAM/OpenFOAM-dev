@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,6 @@ Foam::cellMatcher::cellMatcher
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Create localFaces_ , pointMap_ , faceMap_
 Foam::label Foam::cellMatcher::calcLocalFaces
 (
     const faceList& faces,
@@ -136,7 +135,6 @@ Foam::label Foam::cellMatcher::calcLocalFaces
 }
 
 
-// Create edgeFaces_ : map from edge to two localFaces for single cell.
 void Foam::cellMatcher::calcEdgeAddressing(const label numVert)
 {
     edgeFaces_ = -1;
@@ -186,7 +184,6 @@ void Foam::cellMatcher::calcEdgeAddressing(const label numVert)
 }
 
 
-// Create pointFaceIndex_ : map from vertI, faceI to index of vertI on faceI.
 void Foam::cellMatcher::calcPointFaceIndex()
 {
     // Fill pointFaceIndex_ with -1
@@ -215,7 +212,6 @@ void Foam::cellMatcher::calcPointFaceIndex()
 }
 
 
-// Given edge(v0,v1) and (local)faceI return the other face
 Foam::label Foam::cellMatcher::otherFace
 (
     const label numVert,

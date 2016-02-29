@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,15 +29,16 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Calculate area in contact given displacement of vertices relative to
-// the face plane. Positive displacement is above the face (no contact);
-// negative is in contact
 Foam::scalar Foam::face::areaInContact
 (
     const pointField& meshPoints,
     const scalarField& v
 ) const
 {
+    // Calculate area in contact given displacement of vertices relative to
+    // the face plane. Positive displacement is above the face (no contact);
+    // negative is in contact
+
     // Assemble the vertex values
     const labelList& labels = *this;
 

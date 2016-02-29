@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,8 +83,6 @@ bool Foam::Istream::peekBack(token& t)
 }
 
 
-// Functions for reading object delimiters ( ... )
-
 Foam::Istream& Foam::Istream::readBegin(const char* funcName)
 {
     token delimiter(*this);
@@ -125,8 +123,6 @@ Foam::Istream& Foam::Istream::readEndBegin(const char* funcName)
     return readBegin(funcName);
 }
 
-
-// Functions for reading List delimiters ( ... ) or { ... }
 
 char Foam::Istream::readBeginList(const char* funcName)
 {

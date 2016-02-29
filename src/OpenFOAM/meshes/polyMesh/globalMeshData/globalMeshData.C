@@ -45,7 +45,6 @@ namespace Foam
 {
 defineTypeNameAndDebug(globalMeshData, 0);
 
-// Geometric matching tolerance. Factor of mesh bounding box.
 const scalar globalMeshData::matchTol_ = 1e-8;
 
 template<>
@@ -63,7 +62,6 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Collect processor patch addressing.
 void Foam::globalMeshData::initProcAddr()
 {
     processorPatchIndices_.setSize(mesh_.boundaryMesh().size());
@@ -251,7 +249,6 @@ void Foam::globalMeshData::calcSharedPoints() const
 }
 
 
-// Given information about locally used edges allocate global shared edges.
 void Foam::globalMeshData::countSharedEdges
 (
     const EdgeMap<labelList>& procSharedEdges,
@@ -294,12 +291,13 @@ void Foam::globalMeshData::countSharedEdges
 }
 
 
-// Shared edges are shared between multiple processors. By their nature both
-// of their endpoints are shared points. (but not all edges using two shared
-// points are shared edges! There might e.g. be an edge between two unrelated
-// clusters of shared points)
 void Foam::globalMeshData::calcSharedEdges() const
 {
+    // Shared edges are shared between multiple processors. By their nature both
+    // of their endpoints are shared points. (but not all edges using two shared
+    // points are shared edges! There might e.g. be an edge between two
+    // unrelated clusters of shared points)
+
     if
     (
         nGlobalEdges_ != -1
@@ -806,8 +804,6 @@ void Foam::globalMeshData::calcGlobalPointEdges
 }
 
 
-// Find transformation to take remotePoint to localPoint. Use info to find
-// the transforms.
 Foam::label Foam::globalMeshData::findTransform
 (
     const labelPairList& info,
@@ -1199,8 +1195,6 @@ void Foam::globalMeshData::calcGlobalEdgeOrientation() const
 }
 
 
-// Calculate uncoupled boundary faces (without calculating
-// primitiveMesh::pointFaces())
 void Foam::globalMeshData::calcPointBoundaryFaces
 (
     labelListList& pointBoundaryFaces
@@ -1737,7 +1731,6 @@ void Foam::globalMeshData::calcGlobalCoPointSlaves() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from polyMesh
 Foam::globalMeshData::globalMeshData(const polyMesh& mesh)
 :
     processorTopology(mesh.boundaryMesh(), UPstream::worldComm),
@@ -1820,7 +1813,6 @@ void Foam::globalMeshData::clearOut()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Return shared point global labels.
 const Foam::labelList& Foam::globalMeshData::sharedPointGlobalLabels() const
 {
     if (!sharedPointGlobalLabelsPtr_.valid())
@@ -1871,7 +1863,6 @@ const Foam::labelList& Foam::globalMeshData::sharedPointGlobalLabels() const
 }
 
 
-// Collect coordinates of shared points. (does parallel communication!)
 Foam::pointField Foam::globalMeshData::sharedPoints() const
 {
     // Get all processors to send their shared points to master.
@@ -1954,7 +1945,6 @@ Foam::pointField Foam::globalMeshData::sharedPoints() const
 }
 
 
-// Collect coordinates of shared points. (does parallel communication!)
 Foam::pointField Foam::globalMeshData::geometricSharedPoints() const
 {
     // Get coords of my shared points
@@ -2728,7 +2718,6 @@ void Foam::globalMeshData::movePoints(const pointField& newPoints)
 }
 
 
-// Update all data after morph
 void Foam::globalMeshData::updateMesh()
 {
     // Clear out old data

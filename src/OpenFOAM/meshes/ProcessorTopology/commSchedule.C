@@ -35,7 +35,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(commSchedule, 0);
+    defineTypeNameAndDebug(commSchedule, 0);
 }
 
 
@@ -62,7 +62,6 @@ Foam::label Foam::commSchedule::outstandingComms
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from separate addressing
 Foam::commSchedule::commSchedule
 (
     const label nProcs,

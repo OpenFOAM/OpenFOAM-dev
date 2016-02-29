@@ -206,17 +206,6 @@ private:
                 label& nLevels
             );
 
-//            static label compactContents
-//            (
-//                DynamicList<node>& nodes,
-//                DynamicList<labelList>& contents,
-//                const label compactLevel,
-//                const label nodeI,
-//                const label level,
-//                List<labelList>& compactedContents,
-//                label& compactI
-//            );
-
             //- Determine inside/outside per node (mixed if cannot be
             //  determined). Only valid for closed shapes.
             volumeType calcVolumeType(const label nodeI) const;
@@ -266,7 +255,7 @@ private:
             );
 
             //- Helper: take point on face(s) of bb and push it away from
-            //  edges of face.
+            //  edges of face.  If pt is not on a face does nothing.
             static point pushPointIntoFace
             (
                 const treeBoundBox& bb,
@@ -274,16 +263,8 @@ private:
                 const point& pt
             );
 
-            ////- Push point on multiple faces away from any corner/edge.
-            //static void checkMultipleFaces
-            //(
-            //    const treeBoundBox& bb,
-            //    const vector& dir,          // end-start
-            //    pointIndexHit& faceHitInfo,
-            //    direction& faceID
-            //);
-
             //- Walk to parent of node+octant.
+            //  Return false if top of tree reached.
             bool walkToParent
             (
                 const label nodeI,

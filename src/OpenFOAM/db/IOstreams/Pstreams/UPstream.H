@@ -181,17 +181,30 @@ private:
 
     // Private data
 
+        //- By default this is not a parallel run
         static bool parRun_;
+
+        //- Standard transfer message type
         static int msgType_;
 
         // Communicator specific data
 
+        //- Free communicators
         static LIFOStack<label> freeComms_;
+
+        //- My processor number
         static DynamicList<int> myProcNo_;
+
+        //- List of process IDs
         static DynamicList<List<int>> procIDs_;
+
+        //- Parent communicator
         static DynamicList<label> parentCommunicator_;
 
+        //- Linear communication schedule
         static DynamicList<List<commsStruct>> linearCommunication_;
+
+        //- Multi level communication schedule
         static DynamicList<List<commsStruct>> treeCommunication_;
 
 

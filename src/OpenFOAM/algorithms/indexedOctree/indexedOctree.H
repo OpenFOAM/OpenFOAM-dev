@@ -181,6 +181,8 @@ private:
                 DynamicList<labelList>& contents
             ) const;
 
+            //- Reorder contents to be in same order as nodes.
+            //  Returns number of nodes on the compactLevel.
             static label compactContents
             (
                 DynamicList<node>& nodes,
@@ -245,21 +247,15 @@ private:
 
             //- Helper: take point on face(s) of bb and push it away from
             //  edges of face.
+            //  Guarantees that if pt is on a face it gets perturbed
+            //  so it is away from the face edges.
+            //  If pt is not on a face does nothing.
             static point pushPointIntoFace
             (
                 const treeBoundBox& bb,
                 const vector& dir,          // end-start
                 const point& pt
             );
-
-            ////- Push point on multiple faces away from any corner/edge.
-            //static void checkMultipleFaces
-            //(
-            //    const treeBoundBox& bb,
-            //    const vector& dir,          // end-start
-            //    pointIndexHit& faceHitInfo,
-            //    direction& faceID
-            //);
 
             //- Walk to parent of node+octant.
             bool walkToParent

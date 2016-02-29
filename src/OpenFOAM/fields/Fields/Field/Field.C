@@ -229,7 +229,6 @@ Foam::Field<Type>::Field(const UList<Type>& list)
 {}
 
 
-// Construct as copy of tmp<Field>
 #ifndef NoConstructFromTmp
 template<class Type>
 Foam::Field<Type>::Field(const tmp<Field<Type>>& tf)

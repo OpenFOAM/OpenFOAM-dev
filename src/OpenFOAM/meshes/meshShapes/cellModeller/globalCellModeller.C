@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,30 +32,23 @@ Description
 
 // * * * * * * * * * * * * * * * Static data * * * * * * * * * * * * * * * * //
 
-
-// PtrList of models
 Foam::PtrList<Foam::cellModel> Foam::cellModeller::models_
 (
     IFstream(findEtcFile("cellModels", true))()
 );
 
-// List of model pointers
 Foam::List<Foam::cellModel*> Foam::cellModeller::modelPtrs_;
 
-// HashTable of model pointers
 Foam::HashTable<const Foam::cellModel*> Foam::cellModeller::modelDictionary_;
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Construct a dummy cellModeller which reads the models and fills
-// the above tables
-cellModeller globalCellModeller_;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+    // Construct a dummy cellModeller which reads the models and fills
+    // the above tables
+    cellModeller globalCellModeller_;
+}
 
 // ************************************************************************* //

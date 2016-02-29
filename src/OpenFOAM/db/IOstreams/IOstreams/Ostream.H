@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,6 +109,8 @@ public:
             virtual Ostream& write(const word&) = 0;
 
             //- Write keyType
+            //  write regular expression as quoted string
+            //  write plain word as word (unquoted)
             virtual Ostream& write(const keyType&);
 
             //- Write string

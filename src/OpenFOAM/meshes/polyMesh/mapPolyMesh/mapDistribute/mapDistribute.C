@@ -358,9 +358,6 @@ void Foam::mapDistribute::printLayout(Ostream& os) const
 }
 
 
-// Construct per processor compact addressing of the global elements
-// needed. The ones from the local processor are not included since
-// these are always all needed.
 void Foam::mapDistribute::calcCompactAddressing
 (
     const globalIndex& globalNumbering,

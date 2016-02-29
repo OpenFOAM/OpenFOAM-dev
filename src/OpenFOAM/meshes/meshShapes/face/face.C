@@ -819,7 +819,6 @@ int Foam::face::edgeDirection(const edge& e) const
 }
 
 
-// Number of triangles directly known from number of vertices
 Foam::label Foam::face::nTriangles(const pointField&) const
 {
     return nTriangles();

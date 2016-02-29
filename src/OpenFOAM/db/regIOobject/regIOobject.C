@@ -63,7 +63,6 @@ registerOptSwitch
 const Foam::NamedEnum<Foam::regIOobject::fileCheckTypes, 4>
     Foam::regIOobject::fileCheckTypesNames;
 
-// Default fileCheck type
 Foam::regIOobject::fileCheckTypes Foam::regIOobject::fileModificationChecking
 (
     fileCheckTypesNames.read
@@ -117,7 +116,6 @@ bool Foam::regIOobject::masterOnlyReading = false;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from IOobject
 Foam::regIOobject::regIOobject(const IOobject& io, const bool isTime)
 :
     IOobject(io),
@@ -140,7 +138,6 @@ Foam::regIOobject::regIOobject(const IOobject& io, const bool isTime)
 }
 
 
-// Construct as copy
 Foam::regIOobject::regIOobject(const regIOobject& rio)
 :
     IOobject(rio),
@@ -154,8 +151,6 @@ Foam::regIOobject::regIOobject(const regIOobject& rio)
 }
 
 
-// Construct as copy, and transfering objectRegistry registration to copy
-// if registerCopy is true
 Foam::regIOobject::regIOobject(const regIOobject& rio, bool registerCopy)
 :
     IOobject(rio),
@@ -216,7 +211,6 @@ Foam::regIOobject::regIOobject
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-// Delete read stream, checkout from objectRegistry and destroy
 Foam::regIOobject::~regIOobject()
 {
     if (objectRegistry::debug)

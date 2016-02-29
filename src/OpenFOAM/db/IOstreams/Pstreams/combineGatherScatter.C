@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,15 +38,10 @@ Description
 #include "IOstreams.H"
 #include "contiguous.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T, class CombineOp>
-void Pstream::combineGather
+void Foam::Pstream::combineGather
 (
     const List<UPstream::commsStruct>& comms,
     T& Value,
@@ -140,7 +135,7 @@ void Pstream::combineGather
 
 
 template <class T, class CombineOp>
-void Pstream::combineGather
+void Foam::Pstream::combineGather
 (
     T& Value,
     const CombineOp& cop,
@@ -174,7 +169,7 @@ void Pstream::combineGather
 
 
 template<class T>
-void Pstream::combineScatter
+void Foam::Pstream::combineScatter
 (
     const List<UPstream::commsStruct>& comms,
     T& Value,
@@ -255,7 +250,7 @@ void Pstream::combineScatter
 
 
 template <class T>
-void Pstream::combineScatter
+void Foam::Pstream::combineScatter
 (
     T& Value,
     const int tag,
@@ -273,12 +268,8 @@ void Pstream::combineScatter
 }
 
 
-// Same thing but for whole list at a time
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 template<class T, class CombineOp>
-void Pstream::listCombineGather
+void Foam::Pstream::listCombineGather
 (
     const List<UPstream::commsStruct>& comms,
     List<T>& Values,
@@ -379,7 +370,7 @@ void Pstream::listCombineGather
 
 
 template<class T, class CombineOp>
-void Pstream::listCombineGather
+void Foam::Pstream::listCombineGather
 (
     List<T>& Values,
     const CombineOp& cop,
@@ -413,7 +404,7 @@ void Pstream::listCombineGather
 
 
 template<class T>
-void Pstream::listCombineScatter
+void Foam::Pstream::listCombineScatter
 (
     const List<UPstream::commsStruct>& comms,
     List<T>& Values,
@@ -494,7 +485,7 @@ void Pstream::listCombineScatter
 
 
 template <class T>
-void Pstream::listCombineScatter
+void Foam::Pstream::listCombineScatter
 (
     List<T>& Values,
     const int tag,
@@ -524,14 +515,8 @@ void Pstream::listCombineScatter
 }
 
 
-
-
-// Same thing but for sparse list (map)
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 template<class Container, class CombineOp>
-void Pstream::mapCombineGather
+void Foam::Pstream::mapCombineGather
 (
     const List<UPstream::commsStruct>& comms,
     Container& Values,
@@ -598,7 +583,7 @@ void Pstream::mapCombineGather
 
 
 template<class Container, class CombineOp>
-void Pstream::mapCombineGather
+void Foam::Pstream::mapCombineGather
 (
     Container& Values,
     const CombineOp& cop,
@@ -632,7 +617,7 @@ void Pstream::mapCombineGather
 
 
 template<class Container>
-void Pstream::mapCombineScatter
+void Foam::Pstream::mapCombineScatter
 (
     const List<UPstream::commsStruct>& comms,
     Container& Values,
@@ -683,7 +668,7 @@ void Pstream::mapCombineScatter
 
 
 template <class Container>
-void Pstream::mapCombineScatter
+void Foam::Pstream::mapCombineScatter
 (
     Container& Values,
     const int tag,
@@ -712,9 +697,5 @@ void Pstream::mapCombineScatter
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

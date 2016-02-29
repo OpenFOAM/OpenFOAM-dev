@@ -105,7 +105,6 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::clearOut()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 template<class FromPatch, class ToPatch>
 PatchToPatchInterpolation<FromPatch, ToPatch>::PatchToPatchInterpolation
 (

@@ -46,6 +46,8 @@ namespace Foam
 class IOobjectList;
 
 //- Helper routine to read fields
+//  Reads all fields of type. Returns names of fields read. Guarantees all
+//  processors to read fields in same order.
 template<class GeoField, class Mesh>
 wordList ReadFields
 (

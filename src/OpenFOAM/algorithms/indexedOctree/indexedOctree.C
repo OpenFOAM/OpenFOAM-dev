@@ -37,8 +37,6 @@ Foam::scalar Foam::indexedOctree<Type>::perturbTol_ = 10*SMALL;
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Does bb intersect a sphere around sample? Or is any corner point of bb
-// closer than nearestDistSqr to sample.
 template<class Type>
 bool Foam::indexedOctree<Type>::overlaps
 (
@@ -54,8 +52,6 @@ bool Foam::indexedOctree<Type>::overlaps
 }
 
 
-// Does bb intersect a sphere around sample? Or is any corner point of bb
-// closer than nearestDistSqr to sample.
 template<class Type>
 bool Foam::indexedOctree<Type>::overlaps
 (
@@ -113,12 +109,6 @@ bool Foam::indexedOctree<Type>::overlaps
 }
 
 
-//
-// Construction helper routines
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//
-
-// Split list of indices into 8 bins
 template<class Type>
 void Foam::indexedOctree<Type>::divide
 (
@@ -161,7 +151,6 @@ void Foam::indexedOctree<Type>::divide
 }
 
 
-// Subdivide the (content) node.
 template<class Type>
 typename Foam::indexedOctree<Type>::node
 Foam::indexedOctree<Type>::divide
@@ -231,7 +220,6 @@ Foam::indexedOctree<Type>::divide
 }
 
 
-// Split any contents node with more than minSize elements.
 template<class Type>
 void Foam::indexedOctree<Type>::splitNodes
 (
@@ -284,8 +272,6 @@ void Foam::indexedOctree<Type>::splitNodes
 }
 
 
-// Reorder contents to be in same order as nodes. Returns number of nodes on
-// the compactLevel.
 template<class Type>
 Foam::label Foam::indexedOctree<Type>::compactContents
 (
@@ -353,15 +339,16 @@ Foam::label Foam::indexedOctree<Type>::compactContents
 }
 
 
-// Pre-calculates wherever possible the volume status per node/subnode.
-// Recurses to determine status of lowest level boxes. Level above is
-// combination of octants below.
 template<class Type>
 Foam::volumeType Foam::indexedOctree<Type>::calcVolumeType
 (
     const label nodeI
 ) const
 {
+    // Pre-calculates wherever possible the volume status per node/subnode.
+    // Recurses to determine status of lowest level boxes. Level above is
+    // combination of octants below.
+
     const node& nod = nodes_[nodeI];
 
     volumeType myType = volumeType::UNKNOWN;
@@ -497,13 +484,6 @@ Foam::volumeType Foam::indexedOctree<Type>::getSide
 }
 
 
-//
-// Query routines
-// ~~~~~~~~~~~~~~
-//
-
-
-// Find nearest point starting from nodeI
 template<class Type>
 template<class FindNearestOp>
 void Foam::indexedOctree<Type>::findNearest
@@ -580,7 +560,6 @@ void Foam::indexedOctree<Type>::findNearest
 }
 
 
-// Find nearest point to line.
 template<class Type>
 template<class FindNearestOp>
 void Foam::indexedOctree<Type>::findNearest
@@ -676,8 +655,6 @@ Foam::treeBoundBox Foam::indexedOctree<Type>::subBbox
 }
 
 
-// Takes a bb and a point on/close to the edge of the bb and pushes the point
-// inside by a small fraction.
 template<class Type>
 Foam::point Foam::indexedOctree<Type>::pushPoint
 (
@@ -747,8 +724,6 @@ Foam::point Foam::indexedOctree<Type>::pushPoint
 }
 
 
-// Takes a bb and a point on the edge of the bb and pushes the point
-// outside by a small fraction.
 template<class Type>
 Foam::point Foam::indexedOctree<Type>::pushPoint
 (
@@ -859,9 +834,6 @@ Foam::point Foam::indexedOctree<Type>::pushPoint
 }
 
 
-// Guarantees that if pt is on a face it gets perturbed so it is away
-// from the face edges.
-// If pt is not on a face does nothing.
 template<class Type>
 Foam::point Foam::indexedOctree<Type>::pushPointIntoFace
 (
@@ -1019,205 +991,6 @@ Foam::point Foam::indexedOctree<Type>::pushPointIntoFace
 }
 
 
-//// Takes a bb and a point on the outside of the bb. Checks if on multiple
-// faces
-//// and if so perturbs point so it is only on one face.
-//template<class Type>
-//void Foam::indexedOctree<Type>::checkMultipleFaces
-//(
-//    const treeBoundBox& bb,
-//    const vector& dir,          // end-start
-//    pointIndexHit& faceHitInfo,
-//    direction& faceID
-//)
-//{
-//    // Do the quick elimination of no or one face.
-//    if
-//    (
-//        (faceID == 0)
-//     || (faceID == treeBoundBox::LEFTBIT)
-//     || (faceID == treeBoundBox::RIGHTBIT)
-//     || (faceID == treeBoundBox::BOTTOMBIT)
-//     || (faceID == treeBoundBox::TOPBIT)
-//     || (faceID == treeBoundBox::BACKBIT)
-//     || (faceID == treeBoundBox::FRONTBIT)
-//    )
-//    {
-//        return;
-//    }
-//
-//
-//    // Check the direction of vector w.r.t. faces being intersected.
-//    FixedList<scalar, 6> inproducts(-GREAT);
-//
-//    direction nFaces = 0;
-//
-//    if (faceID & treeBoundBox::LEFTBIT)
-//    {
-//        inproducts[treeBoundBox::LEFT] = mag
-//        (
-//            treeBoundBox::faceNormals[treeBoundBox::LEFT]
-//          & dir
-//        );
-//        nFaces++;
-//    }
-//    if (faceID & treeBoundBox::RIGHTBIT)
-//    {
-//        inproducts[treeBoundBox::RIGHT] = mag
-//        (
-//            treeBoundBox::faceNormals[treeBoundBox::RIGHT]
-//          & dir
-//        );
-//        nFaces++;
-//    }
-//
-//    if (faceID & treeBoundBox::BOTTOMBIT)
-//    {
-//        inproducts[treeBoundBox::BOTTOM] = mag
-//        (
-//            treeBoundBox::faceNormals[treeBoundBox::BOTTOM]
-//          & dir
-//        );
-//        nFaces++;
-//    }
-//    if (faceID & treeBoundBox::TOPBIT)
-//    {
-//        inproducts[treeBoundBox::TOP] = mag
-//        (
-//            treeBoundBox::faceNormals[treeBoundBox::TOP]
-//          & dir
-//        );
-//        nFaces++;
-//    }
-//
-//    if (faceID & treeBoundBox::BACKBIT)
-//    {
-//        inproducts[treeBoundBox::BACK] = mag
-//        (
-//            treeBoundBox::faceNormals[treeBoundBox::BACK]
-//          & dir
-//        );
-//        nFaces++;
-//    }
-//    if (faceID & treeBoundBox::FRONTBIT)
-//    {
-//        inproducts[treeBoundBox::FRONT] = mag
-//        (
-//            treeBoundBox::faceNormals[treeBoundBox::FRONT]
-//          & dir
-//        );
-//        nFaces++;
-//    }
-//
-//    if (nFaces == 0 || nFaces == 1 || nFaces > 3)
-//    {
-//        FatalErrorInFunction
-//            << "Problem : nFaces:" << nFaces << abort(FatalError);
-//    }
-//
-//    // Keep point on most perpendicular face; shift it away from the aligned
-//    // ones.
-//    // E.g. line hits top and left face:
-//    //     a
-//    // ----+----+
-//    //     |    |
-//    //     |    |
-//    //     +----+
-//    // Shift point down (away from top):
-//    //
-//    //    a+----+
-//    // ----|    |
-//    //     |    |
-//    //     +----+
-//
-//    label maxIndex = -1;
-//    scalar maxInproduct = -GREAT;
-//
-//    for (direction i = 0; i < 6; i++)
-//    {
-//        if (inproducts[i] > maxInproduct)
-//        {
-//            maxInproduct = inproducts[i];
-//            maxIndex = i;
-//        }
-//    }
-//
-//    if (maxIndex == -1)
-//    {
-//        FatalErrorInFunction
-//            << "Problem maxIndex:" << maxIndex << " inproducts:" << inproducts
-//            << abort(FatalError);
-//    }
-//
-//    const point oldPoint(faceHitInfo.rawPoint());
-//    const direction oldFaceID = faceID;
-//
-//    // 1. Push point into bb, away from all corners
-//
-//    faceHitInfo.rawPoint() = pushPoint(bb, oldFaceID, oldPoint, true);
-//
-//    // 2. Snap it back onto the preferred face
-//
-//    if (maxIndex == treeBoundBox::LEFT)
-//    {
-//        faceHitInfo.rawPoint().x() = bb.min().x();
-//        faceID = treeBoundBox::LEFTBIT;
-//    }
-//    else if (maxIndex == treeBoundBox::RIGHT)
-//    {
-//        faceHitInfo.rawPoint().x() = bb.max().x();
-//        faceID = treeBoundBox::RIGHTBIT;
-//    }
-//    else if (maxIndex == treeBoundBox::BOTTOM)
-//    {
-//        faceHitInfo.rawPoint().y() = bb.min().y();
-//        faceID = treeBoundBox::BOTTOMBIT;
-//    }
-//    else if (maxIndex == treeBoundBox::TOP)
-//    {
-//        faceHitInfo.rawPoint().y() = bb.max().y();
-//        faceID = treeBoundBox::TOPBIT;
-//    }
-//    else if (maxIndex == treeBoundBox::BACK)
-//    {
-//        faceHitInfo.rawPoint().z() = bb.min().z();
-//        faceID = treeBoundBox::BACKBIT;
-//    }
-//    else if (maxIndex == treeBoundBox::FRONT)
-//    {
-//        faceHitInfo.rawPoint().z() = bb.max().z();
-//        faceID = treeBoundBox::FRONTBIT;
-//    }
-//
-//    Pout<< "From ray:" << dir
-//        << " from point:" << oldPoint
-//        << " on faces:" << faceString(oldFaceID)
-//        << " of bb:" << bb
-//        << " with inprods:" << inproducts
-//        << " maxIndex:" << maxIndex << endl
-//        << "perturbed to point:" << faceHitInfo.rawPoint()
-//        << " on face:" << faceString(faceID)
-//        << endl;
-//
-//
-//    if (debug)
-//    {
-//        if (faceID != bb.faceBits(faceHitInfo.rawPoint()))
-//        {
-//            FatalErrorInFunction
-//                << "Pushed point from " << oldPoint
-//                << " on face:" << oldFaceID << " of bb:" << bb << endl
-//                << "onto " << faceHitInfo.rawPoint()
-//                << " on face:" << faceID
-//                << " which is not consistent with geometric face "
-//                <<  bb.faceBits(faceHitInfo.rawPoint())
-//                << abort(FatalError);
-//        }
-//    }
-//}
-
-
-// Get parent node and octant. Return false if top of tree reached.
 template<class Type>
 bool Foam::indexedOctree<Type>::walkToParent
 (
@@ -1264,10 +1037,6 @@ bool Foam::indexedOctree<Type>::walkToParent
 }
 
 
-// Walk tree to neighbouring node. Gets current position as
-// node and octant in this node and walks in the direction given by
-// the facePointBits (combination of treeBoundBox::LEFTBIT, TOPBIT etc.)
-// Returns false if edge of tree hit.
 template<class Type>
 bool Foam::indexedOctree<Type>::walkToNeighbour
 (
@@ -1277,6 +1046,10 @@ bool Foam::indexedOctree<Type>::walkToNeighbour
     direction& octant
 ) const
 {
+    // Gets current position as node and octant in this node and walks in the
+    // direction given by the facePointBits (combination of
+    // treeBoundBox::LEFTBIT, TOPBIT etc.)  Returns false if edge of tree hit.
+
     label oldNodeI = nodeI;
     direction oldOctant = octant;
 
@@ -1552,12 +1325,6 @@ Foam::word Foam::indexedOctree<Type>::faceString
 }
 
 
-// Traverse a node. If intersects a triangle return first intersection point:
-//  hitInfo.index = index of shape
-//  hitInfo.point = point on shape
-// Else return a miss and the bounding box face hit:
-//  hitInfo.point = coordinate of intersection of ray with bounding box
-//  hitBits  = posbits of point on bounding box
 template<class Type>
 template<class FindIntersectOp>
 void Foam::indexedOctree<Type>::traverseNode
@@ -1577,6 +1344,14 @@ void Foam::indexedOctree<Type>::traverseNode
     const FindIntersectOp& fiOp
 ) const
 {
+    // Traverse a node. If intersects a triangle return first intersection
+    // point:
+    //  hitInfo.index = index of shape
+    //  hitInfo.point = point on shape
+    // Else return a miss and the bounding box face hit:
+    //  hitInfo.point = coordinate of intersection of ray with bounding box
+    //  hitBits  = posbits of point on bounding box
+
     if (debug)
     {
         const treeBoundBox octantBb(subBbox(nodeI, octant));
@@ -1718,7 +1493,6 @@ void Foam::indexedOctree<Type>::traverseNode
 }
 
 
-// Find first intersection
 template<class Type>
 template<class FindIntersectOp>
 Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
@@ -1911,7 +1685,6 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
 }
 
 
-// Find first intersection
 template<class Type>
 template<class FindIntersectOp>
 Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
@@ -2255,7 +2028,6 @@ void Foam::indexedOctree<Type>::findNear
 }
 
 
-// Number of elements in node.
 template<class Type>
 Foam::label Foam::indexedOctree<Type>::countElements
 (
@@ -2550,27 +2322,6 @@ Foam::scalar& Foam::indexedOctree<Type>::perturbTol()
 }
 
 
-//template<class Type>
-//bool Foam::indexedOctree<Type>::findAnyOverlap
-//(
-//    const point& sample,
-//    const scalar startDistSqr
-//) const
-//{
-//    if (nodes_.size())
-//    {
-//        return findAnyOverlap
-//        (
-//            0,
-//            sample,
-//            startDistSqr
-//        );
-//    }
-//
-//    return false;
-//}
-
-
 template<class Type>
 Foam::pointIndexHit Foam::indexedOctree<Type>::findNearest
 (
@@ -2672,7 +2423,6 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findNearest
 }
 
 
-// Find nearest intersection
 template<class Type>
 Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
 (
@@ -2690,7 +2440,6 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
 }
 
 
-// Find nearest intersection
 template<class Type>
 Foam::pointIndexHit Foam::indexedOctree<Type>::findLineAny
 (
@@ -2708,7 +2457,6 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findLineAny
 }
 
 
-// Find nearest intersection
 template<class Type>
 template<class FindIntersectOp>
 Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
@@ -2722,7 +2470,6 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
 }
 
 
-// Find nearest intersection
 template<class Type>
 template<class FindIntersectOp>
 Foam::pointIndexHit Foam::indexedOctree<Type>::findLineAny
@@ -2773,7 +2520,6 @@ Foam::labelList Foam::indexedOctree<Type>::findSphere
 }
 
 
-// Find node (as parent+octant) containing point
 template<class Type>
 Foam::labelBits Foam::indexedOctree<Type>::findNode
 (
@@ -2874,7 +2620,6 @@ const Foam::labelList& Foam::indexedOctree<Type>::findIndices
 }
 
 
-// Determine type (inside/outside/mixed) per node.
 template<class Type>
 Foam::volumeType Foam::indexedOctree<Type>::getVolumeType
 (
@@ -2885,13 +2630,6 @@ Foam::volumeType Foam::indexedOctree<Type>::getVolumeType
     {
         return volumeType::UNKNOWN;
     }
-
-//    // If the sample is not within the octree, then have to query shapes
-//    // directly
-//    if (!nodes_[0].bb_.contains(sample))
-//    {
-//        return volumeType(shapes_.getVolumeType(*this, sample));
-//    }
 
     if (nodeTypes_.size() != 8*nodes_.size())
     {
@@ -2975,7 +2713,6 @@ void Foam::indexedOctree<Type>::findNear
 }
 
 
-// Print contents of nodeI
 template<class Type>
 void Foam::indexedOctree<Type>::print
 (
@@ -3049,7 +2786,6 @@ void Foam::indexedOctree<Type>::print
 }
 
 
-// Print contents of nodeI
 template<class Type>
 bool Foam::indexedOctree<Type>::write(Ostream& os) const
 {

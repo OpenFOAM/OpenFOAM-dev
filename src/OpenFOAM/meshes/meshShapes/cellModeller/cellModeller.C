@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,9 +85,6 @@ Foam::cellModeller::~cellModeller()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-// Returns a pointer to a model which matches the string symbol
-// supplied. A null pointer is returned if there is no suitable match.
-
 const Foam::cellModel* Foam::cellModeller::lookup(const word& name)
 {
     HashTable<const cellModel*>::iterator iter = modelDictionary_.find(name);
@@ -101,8 +98,6 @@ const Foam::cellModel* Foam::cellModeller::lookup(const word& name)
         return NULL;
     }
 }
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

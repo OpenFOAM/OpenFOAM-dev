@@ -65,7 +65,6 @@ Foam::volumeType Foam::dynamicTreeDataPoint::getVolumeType
 }
 
 
-// Check if any point on shape is inside cubeBb.
 bool Foam::dynamicTreeDataPoint::overlaps
 (
     const label index,
@@ -76,7 +75,6 @@ bool Foam::dynamicTreeDataPoint::overlaps
 }
 
 
-// Check if any point on shape is inside sphere.
 bool Foam::dynamicTreeDataPoint::overlaps
 (
     const label index,
@@ -97,8 +95,6 @@ bool Foam::dynamicTreeDataPoint::overlaps
 }
 
 
-// Calculate nearest point to sample. Updates (if any) nearestDistSqr, minIndex,
-// nearestPoint.
 void Foam::dynamicTreeDataPoint::findNearest
 (
     const labelUList& indices,

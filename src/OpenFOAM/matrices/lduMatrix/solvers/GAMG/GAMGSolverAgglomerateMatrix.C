@@ -193,7 +193,6 @@ void Foam::GAMGSolver::agglomerateMatrix
 }
 
 
-// Agglomerate only the interface coefficients.
 void Foam::GAMGSolver::agglomerateInterfaceCoefficients
 (
     const label fineLevelIndex,
@@ -279,8 +278,6 @@ void Foam::GAMGSolver::agglomerateInterfaceCoefficients
 }
 
 
-// Gather matrices.
-// Note: matrices get constructed with dummy mesh
 void Foam::GAMGSolver::gatherMatrices
 (
     const labelList& procIDs,

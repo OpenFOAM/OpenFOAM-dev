@@ -359,11 +359,6 @@ GeometricBoundaryField
 }
 
 
-// Construct as copy
-// Dangerous because Field may be set to a field which gets deleted.
-// Need new type of GeometricBoundaryField, one which IS part of a geometric
-// field for which snGrad etc. may be called and a free standing
-// GeometricBoundaryField for which such operations are unavailable.
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
 GeometricBoundaryField
@@ -631,7 +626,6 @@ operator=
 }
 
 
-// Forced assignments
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
 operator==
