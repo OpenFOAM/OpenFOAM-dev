@@ -67,7 +67,6 @@ Foam::processorFvPatchField<Type>::processorFvPatchField
 {}
 
 
-// Construct by mapping given processorFvPatchField<Type>
 template<class Type>
 Foam::processorFvPatchField<Type>::processorFvPatchField
 (

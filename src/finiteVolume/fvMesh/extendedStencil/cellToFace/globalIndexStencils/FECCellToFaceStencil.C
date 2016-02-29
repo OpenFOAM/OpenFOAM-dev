@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Calculates per edge the neighbour data (= edgeCells)
 void Foam::FECCellToFaceStencil::calcEdgeBoundaryData
 (
     const boolList& isValidBFace,
@@ -62,8 +61,6 @@ void Foam::FECCellToFaceStencil::calcEdgeBoundaryData
 }
 
 
-// Calculates per face the edge connected data (= cell or boundary in global
-// numbering).
 void Foam::FECCellToFaceStencil::calcFaceStencil
 (
     labelListList& faceStencil

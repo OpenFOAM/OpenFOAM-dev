@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Calculates per face the neighbour data (= faces of cell). Leaves out the
-// face itself since this is already in stencil.
 void Foam::CFCFaceToCellStencil::calcFaceBoundaryData
 (
     labelListList& neiGlobal
@@ -81,7 +79,7 @@ void Foam::CFCFaceToCellStencil::calcFaceBoundaryData
             // Do nothing since face itself already in stencil
         }
     }
-    //syncTools::swapBoundaryFaceList(mesh(), neiGlobal);
+
     syncTools::syncBoundaryFaceList
     (
         mesh(),
@@ -92,10 +90,10 @@ void Foam::CFCFaceToCellStencil::calcFaceBoundaryData
 }
 
 
-// Calculates per cell the neighbour data (= cell or boundary in global
-// numbering). First element is always cell itself!
-void Foam::CFCFaceToCellStencil::calcCellStencil(labelListList& globalCellFaces)
- const
+void Foam::CFCFaceToCellStencil::calcCellStencil
+(
+    labelListList& globalCellFaces
+) const
 {
     const label nBnd = mesh().nFaces()-mesh().nInternalFaces();
     const labelList& own = mesh().faceOwner();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Merge two list and guarantee global0,global1 are first.
 void Foam::cellToFaceStencil::merge
 (
     const label global0,
@@ -132,7 +131,6 @@ void Foam::cellToFaceStencil::merge
 }
 
 
-// Merge two list and guarantee globalI is first.
 void Foam::cellToFaceStencil::merge
 (
     const label globalI,
@@ -338,13 +336,14 @@ Foam::labelList Foam::cellToFaceStencil::calcFaceCells
 }
 
 
-// Calculates per face a list of global cell/face indices.
 void Foam::cellToFaceStencil::calcFaceStencil
 (
     const labelListList& globalCellCells,
     labelListList& faceStencil
 ) const
 {
+    // Calculates per face a list of global cell/face indices.
+
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
     const label nBnd = mesh_.nFaces()-mesh_.nInternalFaces();
     const labelList& own = mesh_.faceOwner();

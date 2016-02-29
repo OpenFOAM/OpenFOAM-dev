@@ -53,9 +53,10 @@ Foam::extendedCentredCellToFaceStencil::extendedCentredCellToFaceStencil
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Per face which elements of the stencil to keep.
 void Foam::extendedCentredCellToFaceStencil::compact()
 {
+    // Per face which elements of the stencil to keep.
+
     boolList isInStencil(map().constructSize(), false);
 
     forAll(stencil_, faceI)

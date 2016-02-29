@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,16 +67,22 @@ class cellToFaceStencil
 protected:
 
         //- Merge two lists.
+        //  Guarantee global0, global1 are first.
         static void merge
         (
-            const label,
-            const label,
-            const labelList&,
-            labelList&
+            const label global0,
+            const label global1,
+            const labelList& listA,
+            labelList& listB
         );
 
-        //- Merge two lists.
-        static void merge(const label, const labelList&, labelList&);
+        //- Merge two lists and guarantee globalI is first.
+        static void merge
+        (
+            const label globalI,
+            const labelList& pGlobals,
+            labelList& cCells
+        );
 
         //- Valid boundary faces (not empty and not coupled)
         void validBoundaryFaces(boolList& isValidBFace) const;
