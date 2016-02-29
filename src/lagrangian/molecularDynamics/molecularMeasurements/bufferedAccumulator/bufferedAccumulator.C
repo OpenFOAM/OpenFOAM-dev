@@ -227,6 +227,6 @@ void Foam::bufferedAccumulator<Type>::operator=
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "bufferedAccumulatorIO.C"
+    #include "bufferedAccumulatorIO.C"
 
 // ************************************************************************* //

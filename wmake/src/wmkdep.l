@@ -3,7 +3,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2011-2014 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2011-2016 OpenFOAM Foundation
     \\/      M anipulation   |
 ------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ void nextFile(const char* fileName);
 void importFile(const char* fileName);
 void importDir(const char* dirName);
 
-#   undef yywrap        /* sometimes a macro by default */
+#undef yywrap        /* sometimes a macro by default */
 
 %}
 

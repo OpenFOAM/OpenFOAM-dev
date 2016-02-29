@@ -234,7 +234,7 @@ public:
 #include "perfectFluidI.H"
 
 #ifdef NoRepository
-#   include "perfectFluid.C"
+    #include "perfectFluid.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

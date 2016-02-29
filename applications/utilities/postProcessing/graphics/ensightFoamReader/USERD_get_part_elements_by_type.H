@@ -5,7 +5,7 @@ int USERD_get_part_elements_by_type
     int **conn_array
 )
 {
-#   ifdef ENSIGHTDEBUG
+    #ifdef ENSIGHTDEBUG
     Info<< "Entering: USERD_get_part_elements_by_type" << nl
         << "part_number = " << part_number << nl
         << "element_type = " << element_type;
@@ -46,7 +46,7 @@ int USERD_get_part_elements_by_type
         Info<< " unknown";
     }
     Info<< endl << flush;
-#   endif
+    #endif
 
     if (part_number == 1)
     {
@@ -244,9 +244,9 @@ int USERD_get_part_elements_by_type
         return Z_ERR;
     }
 
-#   ifdef ENSIGHTDEBUG
+    #ifdef ENSIGHTDEBUG
     Info<< "Leaving: USERD_get_part_elements_by_type" << endl;
-#   endif
+    #endif
 
     return Z_OK;
 }

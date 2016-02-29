@@ -198,8 +198,8 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "Function1.C"
-#   include "Constant.H"
+    #include "Function1.C"
+    #include "Constant.H"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

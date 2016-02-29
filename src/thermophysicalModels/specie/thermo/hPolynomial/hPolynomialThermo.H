@@ -239,7 +239,7 @@ public:
 #include "hPolynomialThermoI.H"
 
 #ifdef NoRepository
-#   include "hPolynomialThermo.C"
+    #include "hPolynomialThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

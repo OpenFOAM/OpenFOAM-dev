@@ -251,7 +251,7 @@ makeFvLaplacianTypeScheme(SS, tensor, tensor)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "laplacianScheme.C"
+    #include "laplacianScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

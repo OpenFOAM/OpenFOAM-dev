@@ -1055,7 +1055,7 @@ tmp<fvMatrix<Type>> operator*
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "fvMatrix.C"
+    #include "fvMatrix.C"
 #endif
 
 // Specialisation for scalars

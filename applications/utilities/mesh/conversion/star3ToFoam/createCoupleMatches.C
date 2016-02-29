@@ -75,14 +75,14 @@ void Foam::starMesh::createCoupleMatches()
         const face& masterFace = cellFaces_[fp.masterCell()][fp.masterFace()];
         const face& slaveFace = cellFaces_[fp.slaveCell()][fp.slaveFace()];
 
-#       ifdef DEBUG_COUPLE
+        #ifdef DEBUG_COUPLE
         Info<< "coupleI: " << coupleI << endl
             << "masterFace: " << masterFace << endl
             << "master points: " << masterFace.points(points_) << endl
             << "slaveFace: " << slaveFace << endl
             << "slave points: " << slaveFace.points(points_)
             << endl << endl;
-#       endif
+        #endif
 
         // check the angle of face area vectors
          scalar faceAreaAngle =
@@ -177,10 +177,10 @@ void Foam::starMesh::createCoupleMatches()
                 vector d = curMasterEdge.vec(points_);
                 d -= n*(n & d);
 
-#               ifdef DEBUG_COUPLE_INTERSECTION
+                #ifdef DEBUG_COUPLE_INTERSECTION
                 Info<< "curMasterEdge: " << curMasterEdge << endl
                     << "P: " << P << endl << "d: " << d << endl;
-#               endif
+                #endif
 
                 // go through all slave edges and try to get an intersection.
                 // The point is created along the original master edge rather
@@ -196,20 +196,20 @@ void Foam::starMesh::createCoupleMatches()
                     e -= n*(n & e);
                     scalar det = -(e & (n ^ d));
 
-#                   ifdef DEBUG_COUPLE_INTERSECTION
+                    #ifdef DEBUG_COUPLE_INTERSECTION
                     Info<< "curSlaveEdge: " << curSlaveEdge << endl
                         << "S: " << S << endl
                         << "e: " << e << endl;
-#                   endif
+                    #endif
 
                     if (mag(det) > SMALL)
                     {
                         // non-singular matrix. Look for intersection
                         scalar beta = ((S - P) & (n ^ d))/det;
 
-#                       ifdef DEBUG_COUPLE_INTERSECTION
+                        #ifdef DEBUG_COUPLE_INTERSECTION
                         Info<< " beta: " << beta << endl;
-#                       endif
+                        #endif
 
                         if (beta > -smallMergeTol_ && beta < 1 + smallMergeTol_)
                         {
@@ -217,9 +217,9 @@ void Foam::starMesh::createCoupleMatches()
                             scalar alpha =
                                 (((S - P) & d) + beta*(d & e))/magSqr(d);
 
-#                           ifdef DEBUG_COUPLE_INTERSECTION
+                            #ifdef DEBUG_COUPLE_INTERSECTION
                             Info<< " alpha: " << alpha << endl;
-#                           endif
+                            #endif
 
                             if
                             (
@@ -228,10 +228,10 @@ void Foam::starMesh::createCoupleMatches()
                             )
                             {
                                 // intersection of non-parallel edges
-#                               ifdef DEBUG_COUPLE_INTERSECTION
+                                #ifdef DEBUG_COUPLE_INTERSECTION
                                 Info<< "intersection of non-parallel edges"
                                     << endl;
-#                               endif
+                                #endif
 
 
                                 // check for insertion of start-end
@@ -309,14 +309,14 @@ void Foam::starMesh::createCoupleMatches()
                                         nLivePoints + coupleFacePoints.size()
                                     );
 
-#                                   ifdef DEBUG_COUPLE_INTERSECTION
+                                    #ifdef DEBUG_COUPLE_INTERSECTION
                                     Info<< "regular intersection. "
                                         << "Adding point: "
                                         << coupleFacePoints.size()
                                         << " which is "
                                         << P + alpha*curMasterEdge.vec(points_)
                                         << endl;
-#                                   endif
+                                    #endif
 
                                     // A new point is created. Warning:
                                     // using original edge for accuracy.
@@ -369,12 +369,12 @@ void Foam::starMesh::createCoupleMatches()
                              && alpha1 < 1 + smallMergeTol_
                             )
                             {
-#                               ifdef DEBUG_COUPLE_INTERSECTION
+                                #ifdef DEBUG_COUPLE_INTERSECTION
                                 Info<< "adding irregular master "
                                     << "intersection1: "
                                     << points_[slaveEdges[slaveEdgeI].start()]
                                     << endl;
-#                               endif
+                                #endif
 
                                 masterEdgePoints[masterEdgeI].append
                                 (
@@ -390,12 +390,12 @@ void Foam::starMesh::createCoupleMatches()
                              && alpha2 < 1 + smallMergeTol_
                             )
                             {
-#                               ifdef DEBUG_COUPLE_INTERSECTION
+                                #ifdef DEBUG_COUPLE_INTERSECTION
                                 Info<< "adding irregular master "
                                     << "intersection2: "
                                     << points_[slaveEdges[slaveEdgeI].end()]
                                     << endl;
-#                               endif
+                                #endif
 
                                 masterEdgePoints[masterEdgeI].append
                                 (
@@ -411,11 +411,11 @@ void Foam::starMesh::createCoupleMatches()
 
                             scalar beta1 = (sp & e)/magSqr(e);
 
-#                           ifdef DEBUG_COUPLE_INTERSECTION
+                            #ifdef DEBUG_COUPLE_INTERSECTION
                             Info<< "P: " << P << " S: " << S << " d: " << d
                                 << " e: " << e << " sp: " << sp
                                 << " beta1: " << beta1 << endl;
-#                           endif
+                            #endif
 
                             if
                             (
@@ -423,12 +423,12 @@ void Foam::starMesh::createCoupleMatches()
                              && beta1 < 1 + smallMergeTol_
                             )
                             {
-#                               ifdef DEBUG_COUPLE_INTERSECTION
+                                #ifdef DEBUG_COUPLE_INTERSECTION
                                 Info<< "adding irregular slave "
                                     << "intersection1: "
                                     << points_[masterEdges[masterEdgeI].start()]
                                     << endl;
-#                               endif
+                                #endif
 
                                 slaveEdgePoints[slaveEdgeI].append
                                 (
@@ -444,12 +444,12 @@ void Foam::starMesh::createCoupleMatches()
                              && beta2 < 1 + smallMergeTol_
                             )
                             {
-#                               ifdef DEBUG_COUPLE_INTERSECTION
+                                #ifdef DEBUG_COUPLE_INTERSECTION
                                 Info<< "adding irregular slave "
                                     << "intersection2: "
                                     << points_[masterEdges[masterEdgeI].end()]
                                     << endl;
-#                               endif
+                                #endif
 
                                 slaveEdgePoints[slaveEdgeI].append
                                 (
@@ -461,14 +461,14 @@ void Foam::starMesh::createCoupleMatches()
                 } // end of slave edges
             } // end of master edges
 
-#           ifdef DEBUG_COUPLE_INTERSECTION
+            #ifdef DEBUG_COUPLE_INTERSECTION
             Info<< "additional slave edge points: " << endl;
             forAll(slaveEdgePoints, edgeI)
             {
                 Info<< "edge: " << edgeI << ": " << slaveEdgePoints[edgeI]
                     << endl;
             }
-#           endif
+            #endif
 
             // Add new points
             if (nLivePoints + coupleFacePoints.size() >= points_.size())
@@ -509,11 +509,11 @@ void Foam::starMesh::createCoupleMatches()
             );
             label nTmpMasterLabels = 0;
 
-#           ifdef DEBUG_COUPLE_INTERSECTION
+            #ifdef DEBUG_COUPLE_INTERSECTION
             Info<< "masterFace: " << masterFace << endl
                 << "nAdditionalMasterPoints: " << nAdditionalMasterPoints
                 << endl;
-#           endif
+            #endif
 
             forAll(masterEdges, masterEdgeI)
             {
@@ -531,11 +531,11 @@ void Foam::starMesh::createCoupleMatches()
 
                 vector edgeVector = masterEdges[masterEdgeI].vec(points_);
 
-#               ifdef DEBUG_FACE_ORDERING
+                #ifdef DEBUG_FACE_ORDERING
                 Info<< "edgeVector: " << edgeVector << endl
                     << "curMEdgePoints.size(): " << curMEdgePoints.size()
                     << endl;
-#               endif
+                #endif
 
                 // renormalise
                 edgeVector /= magSqr(edgeVector);
@@ -569,14 +569,14 @@ void Foam::starMesh::createCoupleMatches()
                                   - edgeStartPoint
                                 );
 
-#                           ifdef DEBUG_FACE_ORDERING
+                            #ifdef DEBUG_FACE_ORDERING
                             Info<< " edgeStartPoint: " << edgeStartPoint
                                 << " edgeEndPoint: "
                                 << points_[masterEdges[masterEdgeI].end()]
                                 << " other point: "
                                 << points_[curMEdgePointsIter()]
                                 << " alpha: " << alpha << endl;
-#                           endif
+                            #endif
 
                             if (alpha < minAlpha)
                             {
@@ -586,20 +586,20 @@ void Foam::starMesh::createCoupleMatches()
                             }
                         }
 
-#                       ifdef DEBUG_FACE_ORDERING
+                        #ifdef DEBUG_FACE_ORDERING
                         Info<< "nextPointLabel: " << nextPointLabel << endl;
-#                       endif
+                        #endif
 
                         i++;
                     }
 
                     if (nextPointLabel > -1)
                     {
-#                       ifdef DEBUG_FACE_ORDERING
+                        #ifdef DEBUG_FACE_ORDERING
                         Info<< "added nextPointLabel: " << nextPointLabel
                             << " nTmpMasterLabels: " << nTmpMasterLabels
                             << " to place " << nTmpMasterLabels << endl;
-#                       endif
+                        #endif
 
                         usedMasterPoint[usedI] = true;
                         // add the next point
@@ -617,9 +617,9 @@ void Foam::starMesh::createCoupleMatches()
             // reset the size of master
             tmpMasterFace.setSize(nTmpMasterLabels);
 
-#           ifdef DEBUG_FACE_ORDERING
+            #ifdef DEBUG_FACE_ORDERING
             Info<< "tmpMasterFace: " << tmpMasterFace << endl;
-#           endif
+            #endif
 
             // Eliminate all zero-length edges
             face newMasterFace(labelList(tmpMasterFace.size(), labelMax));
@@ -638,12 +638,12 @@ void Foam::starMesh::createCoupleMatches()
 
             forAll(mstEdgesToCollapse, edgeI)
             {
-#               ifdef DEBUG_FACE_ORDERING
+                #ifdef DEBUG_FACE_ORDERING
                 Info<< "edgeI: " << edgeI << " curEdge: "
                     << mstEdgesToCollapse[edgeI] << endl
                     << "master edge " << edgeI << ", "
                     << mstEdgesToCollapse[edgeI].mag(points_) << endl;
-#               endif
+                #endif
 
                 // Edge merge tolerance = masterTol
                 if (mstEdgesToCollapse[edgeI].mag(points_) < masterTol)
@@ -655,10 +655,10 @@ void Foam::starMesh::createCoupleMatches()
                             mstEdgesToCollapse[edgeI].end()
                         );
 
-#                   ifdef DEBUG_FACE_ORDERING
+                    #ifdef DEBUG_FACE_ORDERING
                     Info<< "Collapsed: nMaster: " << nMaster
                         << " label: " << newMasterFace[nMaster] << endl;
-#                   endif
+                    #endif
 
                 }
                 else
@@ -668,11 +668,11 @@ void Foam::starMesh::createCoupleMatches()
                     if (edgeI < mstEdgesToCollapse.size() - 1)
                     {
                         // last edge does not add the point
-#                   ifdef DEBUG_FACE_ORDERING
+                    #ifdef DEBUG_FACE_ORDERING
                         Info<< "Added: nMaster: " << nMaster
                             << " label: " << mstEdgesToCollapse[edgeI].end()
                             << endl;
-#                   endif
+                    #endif
 
                         newMasterFace[nMaster] =
                             mstEdgesToCollapse[edgeI].end();
@@ -682,10 +682,10 @@ void Foam::starMesh::createCoupleMatches()
 
             newMasterFace.setSize(nMaster);
 
-#           ifdef DEBUG_COUPLE
+            #ifdef DEBUG_COUPLE
             Info<< "newMasterFace: " << newMasterFace << endl
                 << "points: " << newMasterFace.points(points_) << endl;
-#           endif
+            #endif
 
             // Creating new slave side
 
@@ -704,10 +704,10 @@ void Foam::starMesh::createCoupleMatches()
             );
             label nTmpSlaveLabels = 0;
 
-#           ifdef DEBUG_COUPLE_INTERSECTION
+            #ifdef DEBUG_COUPLE_INTERSECTION
             Info<< "slaveFace: " << slaveFace << endl
                 << "nAdditionalSlavePoints: " << nAdditionalSlavePoints << endl;
-#           endif
+            #endif
 
             forAll(slaveEdges, slaveEdgeI)
             {
@@ -725,11 +725,11 @@ void Foam::starMesh::createCoupleMatches()
 
                 vector edgeVector = slaveEdges[slaveEdgeI].vec(points_);
 
-#               ifdef DEBUG_FACE_ORDERING
+                #ifdef DEBUG_FACE_ORDERING
                 Info<< "curSEdgePoints.size(): "
                     << curSEdgePoints.size() << endl
                     << "edgeVector: " << edgeVector << endl;
-#               endif
+                #endif
 
                 // renormalise
                 edgeVector /= magSqr(edgeVector);
@@ -763,14 +763,14 @@ void Foam::starMesh::createCoupleMatches()
                                   - edgeStartPoint
                                 );
 
-#                           ifdef DEBUG_FACE_ORDERING
+                            #ifdef DEBUG_FACE_ORDERING
                             Info<< " edgeStartPoint: " << edgeStartPoint
                                 << " edgeEndPoint: "
                                 << points_[slaveEdges[slaveEdgeI].end()]
                                 << " other point: "
                                 << points_[curSEdgePointsIter()]
                                 << " alpha: " << alpha << endl;
-#                           endif
+                            #endif
 
                             if (alpha < minAlpha)
                             {
@@ -780,20 +780,20 @@ void Foam::starMesh::createCoupleMatches()
                             }
                         }
 
-#                       ifdef DEBUG_FACE_ORDERING
+                        #ifdef DEBUG_FACE_ORDERING
                         Info<< "nextPointLabel: " << nextPointLabel << endl;
-#                       endif
+                        #endif
 
                         i++;
                     }
 
                     if (nextPointLabel > -1)
                     {
-#                       ifdef DEBUG_FACE_ORDERING
+                        #ifdef DEBUG_FACE_ORDERING
                         Info<< "added nextPointLabel: " << nextPointLabel
                             << " nTmpSlaveLabels: " << nTmpSlaveLabels
                             << " to place " << nTmpSlaveLabels << endl;
-#                       endif
+                        #endif
 
                         usedSlavePoint[usedI] = true;
                         // add the next point
@@ -811,9 +811,9 @@ void Foam::starMesh::createCoupleMatches()
             // reset the size of slave
             tmpSlaveFace.setSize(nTmpSlaveLabels);
 
-#           ifdef DEBUG_FACE_ORDERING
+            #ifdef DEBUG_FACE_ORDERING
             Info<< "tmpSlaveFace: " << tmpSlaveFace << endl;
-#           endif
+            #endif
 
             // Eliminate all zero-length edges
             face newSlaveFace(labelList(tmpSlaveFace.size(), labelMax));
@@ -832,10 +832,10 @@ void Foam::starMesh::createCoupleMatches()
 
             forAll(slvEdgesToCollapse, edgeI)
             {
-#               ifdef DEBUG_FACE_ORDERING
+                #ifdef DEBUG_FACE_ORDERING
                 Info<< "slave edge length: " << edgeI << ", "
                     << slvEdgesToCollapse[edgeI].mag(points_)<< endl;
-#               endif
+                #endif
 
                  // edge merge tolerance = slaveTol
                 if (slvEdgesToCollapse[edgeI].mag(points_) < slaveTol)
@@ -860,10 +860,10 @@ void Foam::starMesh::createCoupleMatches()
 
             newSlaveFace.setSize(nSlave);
 
-#           ifdef DEBUG_COUPLE
+            #ifdef DEBUG_COUPLE
             Info<< "newSlaveFace: " << newSlaveFace << endl
                 << "points: " << newSlaveFace.points(points_) << endl << endl;
-#           endif
+            #endif
 
             // Create the intersection face
 
@@ -878,10 +878,10 @@ void Foam::starMesh::createCoupleMatches()
             edgeList newMasterEdges = newMasterFace.edges();
             edgeList newSlaveEdges = newSlaveFace.edges();
 
-#           ifdef DEBUG_RIGHT_HAND_WALK
+            #ifdef DEBUG_RIGHT_HAND_WALK
             Info<< "newMasterEdges: " << newMasterEdges << endl
                 << "newSlaveEdges: " << newSlaveEdges << endl;
-#           endif
+            #endif
 
             edge startEdge(-1, -1);
 
@@ -924,9 +924,9 @@ void Foam::starMesh::createCoupleMatches()
                     startEdge = newSlaveEdges[edgeI];
                     startEdgeFound = 2;
 
-#                   ifdef DEBUG_RIGHT_HAND_WALK
+                    #ifdef DEBUG_RIGHT_HAND_WALK
                     Info<< "slave edge found" << endl;
-#                   endif
+                    #endif
 
                     break;
                 }
@@ -967,9 +967,9 @@ void Foam::starMesh::createCoupleMatches()
                         startEdge = newMasterEdges[edgeI];
                         startEdgeFound = 1;
 
-#                       ifdef DEBUG_RIGHT_HAND_WALK
+                        #ifdef DEBUG_RIGHT_HAND_WALK
                         Info<< "master edge found" << endl;
-#                       endif
+                        #endif
 
                         break;
                     }
@@ -984,9 +984,9 @@ void Foam::starMesh::createCoupleMatches()
 
             if (startEdgeFound > 0)
             {
-#               ifdef DEBUG_RIGHT_HAND_WALK
+                #ifdef DEBUG_RIGHT_HAND_WALK
                 Info<< "start edge: " << startEdge << endl;
-#               endif
+                #endif
 
                 // Loop through both faces and add all edges
                 // containing the current point and add them to the
@@ -1002,9 +1002,9 @@ void Foam::starMesh::createCoupleMatches()
                 vector planeNormal = newMasterFace.normal(points_);
                 planeNormal /= mag(planeNormal) + VSMALL;
 
-#               ifdef DEBUG_RIGHT_HAND_WALK
+                #ifdef DEBUG_RIGHT_HAND_WALK
                 Info<< "planeNormal: " << planeNormal << endl;
-#               endif
+                #endif
 
                 // Do a check to control the right-hand turn.  This is
                 // based on the triple product of the edge start
@@ -1032,9 +1032,9 @@ void Foam::starMesh::createCoupleMatches()
 
                 if (tripleProduct < 0)
                 {
-#                   ifdef DEBUG_RIGHT_HAND_WALK
+                    #ifdef DEBUG_RIGHT_HAND_WALK
                     Info<< "Turning edge for right-hand turn rule" << endl;
-#                   endif
+                    #endif
                     startEdge.flip();
                 }
 
@@ -1089,11 +1089,11 @@ void Foam::starMesh::createCoupleMatches()
                         }
                     }
 
-#                   ifdef DEBUG_RIGHT_HAND_WALK
+                    #ifdef DEBUG_RIGHT_HAND_WALK
                     Info<< "number of edges to consider: "
                         << edgesToConsider.size() << endl
                         << "edges to consider: " << edgesToConsider << endl;
-#                   endif
+                    #endif
 
                     if (edgesToConsider.empty())
                     {
@@ -1132,10 +1132,10 @@ void Foam::starMesh::createCoupleMatches()
                     scalar rightTurn = nextEdgeVec & right;
                     scalar goStraight = nextEdgeVec & ahead;
 
-#                   ifdef DEBUG_RIGHT_HAND_WALK
+                    #ifdef DEBUG_RIGHT_HAND_WALK
                     Info<< "rightTurn: " << rightTurn
                         << " goStraight: " << goStraight << endl;
-#                   endif
+                    #endif
 
                     for
                     (
@@ -1153,10 +1153,10 @@ void Foam::starMesh::createCoupleMatches()
                         scalar curRightTurn = newDir & right;
                         scalar curGoStraight = newDir & ahead;
 
-#                       ifdef DEBUG_RIGHT_HAND_WALK
+                        #ifdef DEBUG_RIGHT_HAND_WALK
                         Info<< "curRightTurn: " << curRightTurn
                             << " curGoStraight: " << curGoStraight << endl;
-#                       endif
+                        #endif
 
                         if (rightTurn < 0) // old edge turning left
                         {
@@ -1165,9 +1165,9 @@ void Foam::starMesh::createCoupleMatches()
                                 // both go left. Grab one with greater ahead
                                 if (curGoStraight > goStraight)
                                 {
-#                                   ifdef DEBUG_RIGHT_HAND_WALK
+                                    #ifdef DEBUG_RIGHT_HAND_WALK
                                     Info<< "a" << endl;
-#                                   endif
+                                    #endif
 
                                     // Good edge, turning left less than before
                                     nextEdge = etcIter();
@@ -1177,9 +1177,9 @@ void Foam::starMesh::createCoupleMatches()
                             }
                             else // new edge turning right
                             {
-#                               ifdef DEBUG_RIGHT_HAND_WALK
+                                #ifdef DEBUG_RIGHT_HAND_WALK
                                 Info<< "b" << endl;
-#                               endif
+                                #endif
 
                                 // good edge, turning right
                                 nextEdge = etcIter();
@@ -1195,9 +1195,9 @@ void Foam::starMesh::createCoupleMatches()
                                 // grab one with smaller ahead
                                 if (curGoStraight < goStraight)
                                 {
-#                                   ifdef DEBUG_RIGHT_HAND_WALK
+                                    #ifdef DEBUG_RIGHT_HAND_WALK
                                     Info<< "c" << endl;
-#                                   endif
+                                    #endif
 
                                     // good edge, turning right more than before
                                     nextEdge = etcIter();
@@ -1243,10 +1243,10 @@ void Foam::starMesh::createCoupleMatches()
                         // grab the current point and the current edge
                         curEdge = nextEdge;
 
-#                       ifdef DEBUG_RIGHT_HAND_WALK
+                        #ifdef DEBUG_RIGHT_HAND_WALK
                         Info<< "inserted point " << nextEdge.end() << endl
                             << "curEdge: " << curEdge << endl;
-#                       endif
+                        #endif
                     }
                 }
                 while (!completedFace);
@@ -1254,9 +1254,9 @@ void Foam::starMesh::createCoupleMatches()
                 // resize the face
                 intersectedFace.setSize(nIntFacePoints);
 
-#               ifdef DEBUG_COUPLE
+                #ifdef DEBUG_COUPLE
                 Info<< "intersectedFace: " << intersectedFace << endl;
-#               endif
+                #endif
 
                 // check the intersection face for duplicate points
                 forAll(intersectedFace, checkI)
@@ -1313,10 +1313,10 @@ void Foam::starMesh::createCoupleMatches()
 
             forAll(intersectedFace, intPointI)
             {
-#               ifdef DEBUG_COUPLE_PROJECTION
+                #ifdef DEBUG_COUPLE_PROJECTION
                 Info<< "Proj: old point: "
                     << points_[intersectedFace[intPointI]] << endl;
-#               endif
+                #endif
 
                 pointHit projHit =
                     masterFace.ray
@@ -1332,10 +1332,10 @@ void Foam::starMesh::createCoupleMatches()
                     points_[intersectedFace[intPointI]] =
                         projHit.hitPoint();
 
-#                   ifdef DEBUG_COUPLE_PROJECTION
+                    #ifdef DEBUG_COUPLE_PROJECTION
                     Info<< "      new point: "
                         << points_[intersectedFace[intPointI]] << endl;
-#                   endif
+                    #endif
                 }
             }
 

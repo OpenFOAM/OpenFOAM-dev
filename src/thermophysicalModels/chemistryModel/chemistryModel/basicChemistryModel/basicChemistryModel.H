@@ -187,7 +187,7 @@ public:
 #include "basicChemistryModelI.H"
 
 #ifdef NoRepository
-#   include "basicChemistryModelTemplates.C"
+    #include "basicChemistryModelTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

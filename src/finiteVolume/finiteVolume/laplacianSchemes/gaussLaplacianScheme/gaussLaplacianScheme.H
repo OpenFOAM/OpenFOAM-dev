@@ -175,7 +175,7 @@ defineFvmLaplacianScalarGamma(tensor);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "gaussLaplacianScheme.C"
+    #include "gaussLaplacianScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

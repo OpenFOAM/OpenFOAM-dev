@@ -218,6 +218,6 @@ Foam::scalar Foam::correlationFunction<Type>::integral() const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "correlationFunctionIO.C"
+    #include "correlationFunctionIO.C"
 
 // ************************************************************************* //

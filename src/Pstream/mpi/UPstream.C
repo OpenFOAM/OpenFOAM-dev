@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,9 +37,9 @@ License
 #include <csignal>
 
 #if defined(WM_SP)
-#   define MPI_SCALAR MPI_FLOAT
+    #define MPI_SCALAR MPI_FLOAT
 #elif defined(WM_DP)
-#   define MPI_SCALAR MPI_DOUBLE
+    #define MPI_SCALAR MPI_DOUBLE
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -86,7 +86,7 @@ bool Foam::UPstream::init(int& argc, char**& argv)
     // Initialise parallel structure
     setParRun(numprocs);
 
-#   ifndef SGIMPI
+    #ifndef SGIMPI
     string bufferSizeName = getEnv("MPI_BUFFER_SIZE");
 
     if (bufferSizeName.size())
@@ -105,7 +105,7 @@ bool Foam::UPstream::init(int& argc, char**& argv)
             << "environment variable MPI_BUFFER_SIZE not defined"
             << Foam::abort(FatalError);
     }
-#   endif
+    #endif
 
     //int processorNameLen;
     //char processorName[MPI_MAX_PROCESSOR_NAME];
@@ -125,12 +125,12 @@ void Foam::UPstream::exit(int errnum)
         Pout<< "UPstream::exit." << endl;
     }
 
-#   ifndef SGIMPI
+    #ifndef SGIMPI
     int size;
     char* buff;
     MPI_Buffer_detach(&buff, &size);
     delete[] buff;
-#   endif
+    #endif
 
     if (PstreamGlobals::outstandingRequests_.size())
     {

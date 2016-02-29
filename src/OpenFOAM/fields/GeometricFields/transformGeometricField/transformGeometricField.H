@@ -112,7 +112,7 @@ tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "transformGeometricField.C"
+    #include "transformGeometricField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

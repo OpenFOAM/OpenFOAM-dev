@@ -496,8 +496,8 @@ const pointPatchField<Type>& operator+
 #include "pointPatchFieldFunctions.H"
 
 #ifdef NoRepository
-#   include "pointPatchField.C"
-#   include "calculatedPointPatchField.H"
+    #include "pointPatchField.C"
+    #include "calculatedPointPatchField.H"
 #endif
 
 

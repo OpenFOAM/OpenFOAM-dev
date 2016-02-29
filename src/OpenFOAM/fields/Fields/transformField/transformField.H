@@ -134,7 +134,7 @@ tmp<vectorField> transform(const septernion&, const tmp<vectorField>&);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "transformFieldTemplates.C"
+    #include "transformFieldTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

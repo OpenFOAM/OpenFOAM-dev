@@ -147,7 +147,7 @@ tmp<surfaceVectorField> correctedSnGrad<vector>::correction
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "correctedSnGrad.C"
+    #include "correctedSnGrad.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

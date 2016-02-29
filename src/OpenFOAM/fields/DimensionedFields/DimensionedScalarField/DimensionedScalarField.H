@@ -152,7 +152,7 @@ BesselFunc(yn)
 #include "undefFieldFunctionsM.H"
 
 #ifdef NoRepository
-#   include "DimensionedScalarField.C"
+    #include "DimensionedScalarField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

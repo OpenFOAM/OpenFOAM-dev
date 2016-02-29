@@ -588,8 +588,8 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "fvPatchField.C"
-#   include "calculatedFvPatchField.H"
+    #include "fvPatchField.C"
+    #include "calculatedFvPatchField.H"
 #endif
 
 

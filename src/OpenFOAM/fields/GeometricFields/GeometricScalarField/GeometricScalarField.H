@@ -168,7 +168,7 @@ BesselFunc(yn)
 #include "undefFieldFunctionsM.H"
 
 #ifdef NoRepository
-#   include "GeometricScalarField.C"
+    #include "GeometricScalarField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

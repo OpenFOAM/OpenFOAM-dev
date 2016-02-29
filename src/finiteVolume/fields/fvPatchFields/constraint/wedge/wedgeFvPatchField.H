@@ -174,7 +174,7 @@ void wedgeFvPatchField<scalar>::evaluate
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "wedgeFvPatchField.C"
+    #include "wedgeFvPatchField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

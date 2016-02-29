@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,9 +126,9 @@ void Foam::starMesh::mergeCoupleFacePoints()
                     if (edge (a, b).mag(points_) < pointMergeTol)
                     {
                         // found a pair of points to merge
-#                       ifdef DEBUG_MERGE
+                        #ifdef DEBUG_MERGE
                         Info<< "Merging points " << a << " and " << b << endl;
-#                       endif
+                        #endif
 
                         // are the two points in a merge group?
                         label mergeSetA = -1;
@@ -147,10 +147,10 @@ void Foam::starMesh::mergeCoupleFacePoints()
                         if (mergeSetA == -1 && mergeSetB == -1)
                         {
                             // add new merge group
-#                           ifdef DEBUG_MERGE
+                            #ifdef DEBUG_MERGE
                             Info<< "adding new merge group " << nMergeSets
                                 << endl;
-#                           endif
+                            #endif
 
                             // mark points as belonging to a new merge set
                             renumberPoints[a] = nMergeSets;
@@ -169,10 +169,10 @@ void Foam::starMesh::mergeCoupleFacePoints()
                         }
                         else if (mergeSetA == -1 && mergeSetB != -1)
                         {
-#                           ifdef DEBUG_MERGE
+                            #ifdef DEBUG_MERGE
                             Info<< "adding point a into the merge set of b. "
                                 << "a: " << a << endl;
-#                           endif
+                            #endif
 
                             // add point a into the merge set of b
                             renumberPoints[a] = mergeSetB;
@@ -183,10 +183,10 @@ void Foam::starMesh::mergeCoupleFacePoints()
                         }
                         else if  (mergeSetA != -1 && mergeSetB == -1)
                         {
-#                           ifdef DEBUG_MERGE
+                            #ifdef DEBUG_MERGE
                             Info<< "adding point b into the merge set of a. "
                                 << "b: " << b << endl;
-#                           endif
+                            #endif
 
                             // add point b into the merge set of a
                             renumberPoints[b] = mergeSetA;
@@ -202,12 +202,12 @@ void Foam::starMesh::mergeCoupleFacePoints()
                             label minMerge = min(mergeSetA, mergeSetB);
                             label maxMerge = max(mergeSetA, mergeSetB);
 
-#                           ifdef DEBUG_MERGE
+                            #ifdef DEBUG_MERGE
                             Info<< "Points already belong to two "
                                 << "different merge sets. "
                                 << "Eliminate the higher merge set. Sets: "
                                 << minMerge << " and " << maxMerge << endl;
-#                           endif
+                            #endif
 
                             forAll(renumberPoints, elimI)
                             {

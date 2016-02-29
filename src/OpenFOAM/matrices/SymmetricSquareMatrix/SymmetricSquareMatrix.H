@@ -111,12 +111,12 @@ scalar det(const SymmetricSquareMatrix<Type>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "SymmetricSquareMatrixI.H"
+    #include "SymmetricSquareMatrixI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "SymmetricSquareMatrix.C"
+    #include "SymmetricSquareMatrix.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

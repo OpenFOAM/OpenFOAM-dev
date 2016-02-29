@@ -107,7 +107,7 @@ void reconstructLagrangianFieldFields
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "reconstructLagrangianFields.C"
+    #include "reconstructLagrangianFields.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

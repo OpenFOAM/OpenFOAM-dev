@@ -208,7 +208,7 @@ inline bool contiguous<wallPointData<tensor>>()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "wallPointData.C"
+    #include "wallPointData.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

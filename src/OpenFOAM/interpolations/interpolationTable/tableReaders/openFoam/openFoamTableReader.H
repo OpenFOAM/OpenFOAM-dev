@@ -101,7 +101,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "openFoamTableReader.C"
+    #include "openFoamTableReader.C"
 #endif
 
 

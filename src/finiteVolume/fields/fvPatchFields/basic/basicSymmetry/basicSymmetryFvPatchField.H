@@ -157,7 +157,7 @@ void basicSymmetryFvPatchField<scalar>::evaluate
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "basicSymmetryFvPatchField.C"
+    #include "basicSymmetryFvPatchField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

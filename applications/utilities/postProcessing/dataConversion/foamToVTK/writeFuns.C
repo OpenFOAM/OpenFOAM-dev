@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,28 +27,28 @@ License
 #include "vtkTopo.H"
 
 #if defined(__mips)
-#include <standards.h>
-#include <sys/endian.h>
+    #include <standards.h>
+    #include <sys/endian.h>
 #endif
 
 // MacOSX
 #ifdef __DARWIN_BYTE_ORDER
-#if __DARWIN_BYTE_ORDER==__DARWIN_BIG_ENDIAN
-#undef LITTLE_ENDIAN
-#else
-#undef BIG_ENDIAN
-#endif
+    #if __DARWIN_BYTE_ORDER==__DARWIN_BIG_ENDIAN
+        #undef LITTLE_ENDIAN
+    #else
+        #undef BIG_ENDIAN
+    #endif
 #endif
 
 #if defined(LITTLE_ENDIAN) \
  || defined(_LITTLE_ENDIAN) \
  || defined(__LITTLE_ENDIAN)
-#   define LITTLEENDIAN 1
+    #define LITTLEENDIAN 1
 #elif defined(BIG_ENDIAN) || defined(_BIG_ENDIAN) || defined(__BIG_ENDIAN)
-#   undef LITTLEENDIAN
+    #undef LITTLEENDIAN
 #else
-#   error "Cannot find LITTLE_ENDIAN or BIG_ENDIAN symbol defined."
-#   error "Please add to compilation options"
+    #error "Cannot find LITTLE_ENDIAN or BIG_ENDIAN symbol defined."
+    #error "Please add to compilation options"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -85,9 +85,9 @@ void Foam::writeFuns::write
 {
     if (binary)
     {
-#       ifdef LITTLEENDIAN
+        #ifdef LITTLEENDIAN
         swapWords(fField.size(), reinterpret_cast<label*>(fField.begin()));
-#       endif
+        #endif
         os.write
         (
             reinterpret_cast<char*>(fField.begin()),
@@ -138,9 +138,9 @@ void Foam::writeFuns::write
 {
     if (binary)
     {
-#       ifdef LITTLEENDIAN
+        #ifdef LITTLEENDIAN
         swapWords(elems.size(), reinterpret_cast<label*>(elems.begin()));
-#       endif
+        #endif
         os.write
         (
             reinterpret_cast<char*>(elems.begin()),

@@ -29,7 +29,7 @@ Description
 #include "HasherInt.H"
 
 #if defined (__GLIBC__)
-#  include <endian.h>
+    #include <endian.h>
 #endif
 
 // Left-rotate a 32-bit value and carry by nBits
@@ -480,11 +480,11 @@ unsigned Foam::Hasher
 )
 {
 #ifdef __BYTE_ORDER
-# if (__BYTE_ORDER == __BIG_ENDIAN)
-    return jenkins_hashbig(key, length, initval);
-# else
-    return jenkins_hashlittle(key, length, initval);
-# endif
+    #if (__BYTE_ORDER == __BIG_ENDIAN)
+        return jenkins_hashbig(key, length, initval);
+    #else
+        return jenkins_hashlittle(key, length, initval);
+    #endif
 #else
     // endian-ness not known at compile-time: runtime endian test
     const short endianTest = 0x0100;

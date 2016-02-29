@@ -386,7 +386,7 @@ public:
 #include "FieldFunctions.H"
 
 #ifdef NoRepository
-#   include "Field.C"
+    #include "Field.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

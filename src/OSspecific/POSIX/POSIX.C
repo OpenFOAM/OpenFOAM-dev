@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifdef solarisGcc
-# define _SYS_VNODE_H
+    #define _SYS_VNODE_H
 #endif
 
 #include "OSspecific.H"
@@ -58,11 +58,11 @@ Description
 #include <netinet/in.h>
 
 #ifdef USE_RANDOM
-#   include <climits>
-#   if INT_MAX    != 2147483647
-#       error "INT_MAX    != 2147483647"
-#       error "The random number generator may not work!"
-#   endif
+    #include <climits>
+    #if INT_MAX    != 2147483647
+        #error "INT_MAX    != 2147483647"
+        #error "The random number generator may not work!"
+    #endif
 #endif
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

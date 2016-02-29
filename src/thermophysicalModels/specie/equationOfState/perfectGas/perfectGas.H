@@ -218,7 +218,7 @@ public:
 #include "perfectGasI.H"
 
 #ifdef NoRepository
-#   include "perfectGas.C"
+    #include "perfectGas.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

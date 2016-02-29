@@ -157,7 +157,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "timeVaryingUniformFixedValuePointPatchField.C"
+    #include "timeVaryingUniformFixedValuePointPatchField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

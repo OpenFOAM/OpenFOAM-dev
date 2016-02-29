@@ -246,7 +246,7 @@ public:
 #include "adiabaticPerfectFluidI.H"
 
 #ifdef NoRepository
-#   include "adiabaticPerfectFluid.C"
+    #include "adiabaticPerfectFluid.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

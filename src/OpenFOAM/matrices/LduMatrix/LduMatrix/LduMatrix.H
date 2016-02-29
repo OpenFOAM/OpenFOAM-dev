@@ -794,8 +794,8 @@ LduMatrix<Type, DType, LUType>::solver::                                       \
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "LduMatrixI.H"
-#   include "LduMatrix.C"
+    #include "LduMatrixI.H"
+    #include "LduMatrix.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

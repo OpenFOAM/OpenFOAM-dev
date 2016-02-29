@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,14 +70,14 @@ inline Foam::triFace Foam::tetCell::face(const label faceI) const
     static const label b[] = {2, 3, 1, 2};
     static const label c[] = {3, 2, 3, 1};
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (faceI >= 4)
     {
         FatalErrorInFunction
             << "index out of range 0 -> 3. faceI = " << faceI
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return triFace
     (
@@ -95,14 +95,14 @@ inline Foam::label Foam::tetCell::edgeFace(const label edgeI) const
     //static const label edgeFaces[6] = {2, 1, 1, 0, 0, 0};
     static const label edgeFaces[6] = {2, 3, 1, 0, 0, 1};
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (edgeI >= 6)
     {
         FatalErrorInFunction
             << "edge index out of range 0 -> 5. edgeI = " << edgeI
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return edgeFaces[edgeI];
 }
@@ -126,7 +126,7 @@ inline Foam::label Foam::tetCell::edgeAdjacentFace
         {1, 0, -1, -1}
     };
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (faceI >= 4)
     {
         FatalErrorInFunction
@@ -140,7 +140,7 @@ inline Foam::label Foam::tetCell::edgeAdjacentFace
             << "edge index out of range 0 -> 5. edgeI = " << edgeI
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return adjacentFace[edgeI][faceI];
 }
@@ -154,14 +154,14 @@ inline Foam::edge Foam::tetCell::tetEdge(const label edgeI) const
     static const label start[] = {0, 0, 0, 3, 1, 3};
     static const label end[] = {1, 2, 3, 1, 2, 2};
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (edgeI >= 6)
     {
         FatalErrorInFunction
             << "index out of range 0 -> 5. edgeI = " << edgeI
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return edge(operator[](start[edgeI]), operator[](end[edgeI]));
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,19 +26,19 @@ License
 #include "writeFuns.H"
 
 #if defined(__mips)
-#include <standards.h>
-#include <sys/endian.h>
+    #include <standards.h>
+    #include <sys/endian.h>
 #endif
 
 #if defined(LITTLE_ENDIAN) \
  || defined(_LITTLE_ENDIAN) \
  || defined(__LITTLE_ENDIAN)
-#   define LITTLEENDIAN 1
+    #define LITTLEENDIAN 1
 #elif defined(BIG_ENDIAN) || defined(_BIG_ENDIAN) || defined(__BIG_ENDIAN)
-#   undef LITTLEENDIAN
+    #undef LITTLEENDIAN
 #else
-#   error "Cannot find LITTLE_ENDIAN or BIG_ENDIAN symbol defined."
-#   error "Please add to compilation options"
+    #error "Cannot find LITTLE_ENDIAN or BIG_ENDIAN symbol defined."
+    #error "Please add to compilation options"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

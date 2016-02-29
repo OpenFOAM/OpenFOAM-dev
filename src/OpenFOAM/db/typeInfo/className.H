@@ -100,11 +100,11 @@ public:                                                                        \
     defineTypeNameWithName(Type, Type::typeName_())
 
 //- Define the typeName as \a Name for template classes
-# define defineTemplateTypeNameWithName(Type, Name)                            \
+#define defineTemplateTypeNameWithName(Type, Name)                             \
     template<>                                                                 \
     defineTypeNameWithName(Type, Name)
 //- Define the typeName as \a Name for template sub-classes
-# define defineTemplate2TypeNameWithName(Type, Name)                           \
+#define defineTemplate2TypeNameWithName(Type, Name)                            \
     template<>                                                                 \
     defineTypeNameWithName(Type, Name)
 

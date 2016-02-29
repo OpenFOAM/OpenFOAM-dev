@@ -124,7 +124,7 @@ public:
 
 
 #ifdef NoRepository
-#   include "OFFsurfaceFormat.C"
+    #include "OFFsurfaceFormat.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

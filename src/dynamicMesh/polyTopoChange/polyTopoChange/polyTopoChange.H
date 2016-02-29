@@ -610,7 +610,7 @@ public:
 #include "polyTopoChangeI.H"
 
 #ifdef NoRepository
-#   include "polyTopoChangeTemplates.C"
+    #include "polyTopoChangeTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

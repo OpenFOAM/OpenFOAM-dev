@@ -102,12 +102,12 @@ scalar det(SquareMatrix<Type>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "SquareMatrixI.H"
+    #include "SquareMatrixI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "SquareMatrix.C"
+    #include "SquareMatrix.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

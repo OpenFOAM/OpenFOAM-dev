@@ -771,7 +771,7 @@ void mapDistribute::transform::operator()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "mapDistributeTemplates.C"
+    #include "mapDistributeTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -253,7 +253,7 @@ public:
 #include "BoussinesqI.H"
 
 #ifdef NoRepository
-#   include "Boussinesq.C"
+    #include "Boussinesq.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

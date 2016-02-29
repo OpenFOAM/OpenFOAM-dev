@@ -228,7 +228,7 @@ public:
 #include "logPolynomialTransportI.H"
 
 #ifdef NoRepository
-#   include "logPolynomialTransport.C"
+    #include "logPolynomialTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -233,7 +233,7 @@ limitedSurfaceInterpolationScheme<TYPE>::addMeshFluxConstructorToTable         \
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "LimitedScheme.C"
+    #include "LimitedScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

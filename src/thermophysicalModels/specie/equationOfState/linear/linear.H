@@ -235,7 +235,7 @@ public:
 #include "linearI.H"
 
 #ifdef NoRepository
-#   include "linear.C"
+    #include "linear.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

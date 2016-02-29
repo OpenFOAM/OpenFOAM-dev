@@ -563,8 +563,8 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "AMIInterpolation.C"
-#   include "AMIInterpolationParallelOps.C"
+    #include "AMIInterpolation.C"
+    #include "AMIInterpolationParallelOps.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

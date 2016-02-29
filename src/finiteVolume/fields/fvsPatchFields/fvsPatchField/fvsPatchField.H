@@ -385,8 +385,8 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "fvsPatchField.C"
-#   include "calculatedFvsPatchField.H"
+    #include "fvsPatchField.C"
+    #include "calculatedFvsPatchField.H"
 #endif
 
 

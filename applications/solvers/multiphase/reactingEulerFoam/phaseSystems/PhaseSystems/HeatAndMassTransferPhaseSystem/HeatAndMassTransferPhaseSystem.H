@@ -156,7 +156,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "HeatAndMassTransferPhaseSystem.C"
+    #include "HeatAndMassTransferPhaseSystem.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

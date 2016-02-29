@@ -228,7 +228,7 @@ makeMultivariateSurfaceInterpolationTypeScheme(SS, tensor)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "multivariateSurfaceInterpolationScheme.C"
+    #include "multivariateSurfaceInterpolationScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

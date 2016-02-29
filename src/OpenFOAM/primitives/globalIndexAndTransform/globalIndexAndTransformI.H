@@ -157,7 +157,7 @@ Foam::globalIndexAndTransform::decodeTransformIndex
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     t /= 3;
     if (t != 0)
     {
@@ -166,7 +166,7 @@ Foam::globalIndexAndTransform::decodeTransformIndex
             << " has more than 3 fields."
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return permutation;
 }

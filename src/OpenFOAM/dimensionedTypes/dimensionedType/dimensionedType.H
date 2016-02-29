@@ -340,7 +340,7 @@ PRODUCT_OPERATOR(scalarProduct, &&, dotdot)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "dimensionedType.C"
+    #include "dimensionedType.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

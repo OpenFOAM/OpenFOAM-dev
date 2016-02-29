@@ -238,7 +238,7 @@ public:
 #include "incompressiblePerfectGasI.H"
 
 #ifdef NoRepository
-#   include "incompressiblePerfectGas.C"
+    #include "incompressiblePerfectGas.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

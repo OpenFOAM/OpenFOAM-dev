@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,7 +182,7 @@ bool PatchToPatchInterpolation<FromPatch, ToPatch>::movePoints()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "CalcPatchToPatchWeights.C"
-#   include "PatchToPatchInterpolate.C"
+    #include "CalcPatchToPatchWeights.C"
+    #include "PatchToPatchInterpolate.C"
 
 // ************************************************************************* //

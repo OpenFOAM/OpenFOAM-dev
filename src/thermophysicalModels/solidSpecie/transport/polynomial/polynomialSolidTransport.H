@@ -224,7 +224,7 @@ public:
 #include "polynomialSolidTransportI.H"
 
 #ifdef NoRepository
-#   include "polynomialSolidTransport.C"
+    #include "polynomialSolidTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

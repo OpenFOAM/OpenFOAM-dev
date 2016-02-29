@@ -248,7 +248,7 @@ inline vectorTensorTransform operator&
 #include "vectorTensorTransformI.H"
 
 #ifdef NoRepository
-#   include "vectorTensorTransformTemplates.C"
+    #include "vectorTensorTransformTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

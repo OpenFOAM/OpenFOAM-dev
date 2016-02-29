@@ -114,9 +114,9 @@ inline void Foam::Matrix<Form, Type>::checkj(const label j) const
 template<class Form, class Type>
 inline Type* Foam::Matrix<Form, Type>::operator[](const label i)
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     checki(i);
-#   endif
+    #endif
     return v_[i];
 }
 
@@ -124,9 +124,9 @@ inline Type* Foam::Matrix<Form, Type>::operator[](const label i)
 template<class Form, class Type>
 inline const Type* Foam::Matrix<Form, Type>::operator[](const label i) const
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     checki(i);
-#   endif
+    #endif
     return v_[i];
 }
 

@@ -147,7 +147,7 @@ tmp<surfaceVectorField> faceCorrectedSnGrad<vector>::correction
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "faceCorrectedSnGrad.C"
+    #include "faceCorrectedSnGrad.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

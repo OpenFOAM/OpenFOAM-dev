@@ -220,7 +220,7 @@ public:
 #include "rhoConstI.H"
 
 #ifdef NoRepository
-#   include "rhoConst.C"
+    #include "rhoConst.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,14 +76,14 @@ inline const Cmpt& VectorSpace<Form, Cmpt, nCmpt>::component
     const direction d
 ) const
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (d >= nCmpt)
     {
         FatalErrorInFunction
             << "index out of range"
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return v_[d];
 }
@@ -95,14 +95,14 @@ inline Cmpt& VectorSpace<Form, Cmpt, nCmpt>::component
     const direction d
 )
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (d >= nCmpt)
     {
         FatalErrorInFunction
             << "index out of range"
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return v_[d];
 }
@@ -115,14 +115,14 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::component
     const direction d
 ) const
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (d >= nCmpt)
     {
         FatalErrorInFunction
             << "index out of range"
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     c = v_[d];
 }
@@ -135,14 +135,14 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::replace
     const Cmpt& c
 )
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (d >= nCmpt)
     {
         FatalErrorInFunction
             << "index out of range"
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     v_[d] = c;
 }
@@ -156,14 +156,14 @@ inline const Cmpt& VectorSpace<Form, Cmpt, nCmpt>::operator[]
     const direction d
 ) const
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (d >= nCmpt)
     {
         FatalErrorInFunction
             << "index out of range"
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return v_[d];
 }
@@ -175,14 +175,14 @@ inline Cmpt& VectorSpace<Form, Cmpt, nCmpt>::operator[]
     const direction d
 )
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (d >= nCmpt)
     {
         FatalErrorInFunction
             << "index out of range"
             << abort(FatalError);
     }
-#   endif
+    #endif
 
     return v_[d];
 }

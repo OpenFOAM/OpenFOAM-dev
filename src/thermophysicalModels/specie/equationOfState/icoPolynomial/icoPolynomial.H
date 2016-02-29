@@ -248,7 +248,7 @@ defineTemplateTypeNameAndDebugWithName                                         \
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "icoPolynomial.C"
+    #include "icoPolynomial.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

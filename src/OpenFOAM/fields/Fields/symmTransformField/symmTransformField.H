@@ -122,7 +122,7 @@ tmp<Field<tensor>> transformFieldMask<tensor>
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "symmTransformField.C"
+    #include "symmTransformField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
