@@ -5118,13 +5118,6 @@ const Foam::cellShapeList& Foam::hexRef8::cellShapes() const
 }
 
 
-
-//
-// Unrefinement
-// ~~~~~~~~~~~~
-//
-
-
 Foam::labelList Foam::hexRef8::getSplitPoints() const
 {
     if (debug)

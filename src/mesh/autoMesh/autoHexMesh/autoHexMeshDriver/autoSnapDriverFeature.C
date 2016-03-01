@@ -436,11 +436,6 @@ void Foam::autoSnapDriver::calcNearestFace
 }
 
 
-// Collect (possibly remote) per point data of all surrounding faces
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// - faceSurfaceNormal
-// - faceDisp
-// - faceCentres&faceNormal
 void Foam::autoSnapDriver::calcNearestFacePointProperties
 (
     const label iter,
@@ -639,9 +634,6 @@ void Foam::autoSnapDriver::calcNearestFacePointProperties
 }
 
 
-// Gets passed in offset to nearest point on feature edge. Calculates
-// if the point has a different number of faces on either side of the feature
-// and if so attracts the point to that non-dominant plane.
 void Foam::autoSnapDriver::correctAttraction
 (
     const DynamicList<point>& surfacePoints,
@@ -731,12 +723,6 @@ Foam::label Foam::autoSnapDriver::findNormal
 }
 
 
-// Detect multiple patches. Returns pointIndexHit:
-// - false, index=-1 : single patch
-// - true , index=0  : multiple patches but on different normals planes
-//                     (so geometric feature edge is also a region edge)
-// - true , index=1  : multiple patches on same normals plane i.e. flat region
-//                     edge
 Foam::pointIndexHit Foam::autoSnapDriver::findMultiPatchPoint
 (
     const point& pt,
@@ -1009,7 +995,6 @@ void Foam::autoSnapDriver::featureAttractionUsingReconstruction
 }
 
 
-// Special version that calculates attraction in one go
 void Foam::autoSnapDriver::featureAttractionUsingReconstruction
 (
     const label iter,
@@ -1437,7 +1422,6 @@ void Foam::autoSnapDriver::releasePointsNextToMultiPatch
 }
 
 
-// If only two attractions and across face return the face indices
 Foam::labelPair Foam::autoSnapDriver::findDiagonalAttraction
 (
     const indirectPrimitivePatch& pp,
@@ -1447,6 +1431,7 @@ Foam::labelPair Foam::autoSnapDriver::findDiagonalAttraction
 ) const
 {
     const face& f = pp.localFaces()[faceI];
+
     // For now just detect any attraction. Improve this to look at
     // actual attraction position and orientation
 
@@ -1771,8 +1756,6 @@ Foam::autoSnapDriver::findNearFeaturePoint
 }
 
 
-// Determines for every pp point - that is on multiple faces that form
-// a feature - the nearest feature edge/point.
 void Foam::autoSnapDriver::determineFeatures
 (
     const label iter,
@@ -2184,17 +2167,6 @@ void Foam::autoSnapDriver::determineFeatures
 }
 
 
-// Baffle handling
-// ~~~~~~~~~~~~~~~
-// Override pointAttractor, edgeAttractor, patchAttration etc. to
-// implement 'baffle' handling.
-// Baffle: the mesh pp point originates from a loose standing
-// baffle.
-// Sampling the surface with the surrounding face-centres only picks up
-// a single triangle normal so above determineFeatures will not have
-// detected anything. So explicitly pick up feature edges on the pp
-// (after duplicating points & smoothing so will already have been
-// expanded) and match these to the features.
 void Foam::autoSnapDriver::determineBaffleFeatures
 (
     const label iter,
@@ -2214,6 +2186,16 @@ void Foam::autoSnapDriver::determineBaffleFeatures
     List<pointConstraint>& patchConstraints
 ) const
 {
+    // Override pointAttractor, edgeAttractor, patchAttration etc. to
+    // implement 'baffle' handling.
+    // Baffle: the mesh pp point originates from a loose standing
+    // baffle.
+    // Sampling the surface with the surrounding face-centres only picks up
+    // a single triangle normal so above determineFeatures will not have
+    // detected anything. So explicitly pick up feature edges on the pp
+    // (after duplicating points & smoothing so will already have been
+    // expanded) and match these to the features.
+
     const fvMesh& mesh = meshRefiner_.mesh();
     const refinementFeatures& features = meshRefiner_.features();
 
@@ -2966,7 +2948,6 @@ void Foam::autoSnapDriver::featureAttractionUsingFeatureEdges
 }
 
 
-// Correct for squeezing of face
 void Foam::autoSnapDriver::preventFaceSqueeze
 (
     const label iter,

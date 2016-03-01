@@ -32,10 +32,7 @@ Description
 #include "defineDebugSwitch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// declarations (without debug information)
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Declarations (without debug information)
 
 //- Add typeName information from argument \a TypeNameString to a class.
 //  Without debug information
@@ -60,9 +57,8 @@ public:                                                                        \
 }
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// declarations (with debug information)
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Declarations (with debug information)
 
 //- Add typeName information from argument \a TypeNameString to a class.
 //  Also declares debug information.
@@ -87,9 +83,8 @@ public:                                                                        \
 }
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// definitions (without debug information)
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Definitions (without debug information)
 
 //- Define the typeName, with alternative lookup as \a Name
 #define defineTypeNameWithName(Type, Name)                                     \
@@ -117,9 +112,8 @@ public:                                                                        \
     defineTemplateTypeNameWithName(Type, Type::typeName_())
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// definitions (with debug information)
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Definitions (with debug information)
 
 //- Define the typeName and debug information
 #define defineTypeNameAndDebug(Type, DebugSwitch)                              \
@@ -141,7 +135,9 @@ public:                                                                        \
     defineNamedTemplateTypeName(Type);                                         \
     defineNamedTemplateDebugSwitch(Type, DebugSwitch)
 
-// for templated sub-classes
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// For templated sub-classes
 
 //- Define the typeName and debug information, lookup as \a Name
 #define defineTemplate2TypeNameAndDebugWithName(Type, Name, DebugSwitch)       \

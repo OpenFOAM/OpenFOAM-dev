@@ -35,10 +35,6 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// definitions (debug information only)
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 namespace Foam
 {
 
@@ -73,6 +69,8 @@ public:
 };
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define registerTemplateDebugSwitchWithName(Type,Name)                         \
     template<>                                                                 \
@@ -119,6 +117,7 @@ public:
     template<>                                                                 \
     defineDebugSwitchWithName(Type, Name, DebugSwitch);                        \
     registerTemplateDebugSwitchWithName(Type, Name)
+
 //- Define the debug information for templates sub-classes, lookup as \a Name
 #define defineTemplate2DebugSwitchWithName(Type, Name, DebugSwitch)            \
     template<>                                                                 \
@@ -134,8 +133,6 @@ public:
 #define defineNamedTemplateDebugSwitch(Type, DebugSwitch)                      \
     defineTemplateDebugSwitchWithName(Type, Type::typeName_(), DebugSwitch)
 
-
-// For templated sub-classes
 
 //- Define the debug information for templates
 //  Useful with typedefs

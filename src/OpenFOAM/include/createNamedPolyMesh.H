@@ -1,30 +1,26 @@
-//
-// createNamedPolyMesh.H
-// ~~~~~~~~~~~~~~~~~~~~~
+Foam::word regionName;
 
-    Foam::word regionName;
+if (args.optionReadIfPresent("region", regionName))
+{
+    Foam::Info
+        << "Create polyMesh " << regionName << " for time = "
+        << runTime.timeName() << Foam::nl << Foam::endl;
+}
+else
+{
+    regionName = Foam::polyMesh::defaultRegion;
+    Foam::Info
+        << "Create polyMesh for time = "
+        << runTime.timeName() << Foam::nl << Foam::endl;
+}
 
-    if (args.optionReadIfPresent("region", regionName))
-    {
-        Foam::Info
-            << "Create polyMesh " << regionName << " for time = "
-            << runTime.timeName() << Foam::nl << Foam::endl;
-    }
-    else
-    {
-        regionName = Foam::polyMesh::defaultRegion;
-        Foam::Info
-            << "Create polyMesh for time = "
-            << runTime.timeName() << Foam::nl << Foam::endl;
-    }
-
-    Foam::polyMesh mesh
+Foam::polyMesh mesh
+(
+    Foam::IOobject
     (
-        Foam::IOobject
-        (
-            regionName,
-            runTime.timeName(),
-            runTime,
-            Foam::IOobject::MUST_READ
-        )
-    );
+        regionName,
+        runTime.timeName(),
+        runTime,
+        Foam::IOobject::MUST_READ
+    )
+);
