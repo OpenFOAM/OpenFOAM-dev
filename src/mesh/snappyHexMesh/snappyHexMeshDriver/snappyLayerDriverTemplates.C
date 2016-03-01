@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "autoLayerDriver.H"
+#include "snappyLayerDriver.H"
 #include "syncTools.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::autoLayerDriver::averageNeighbours
+void Foam::snappyLayerDriver::averageNeighbours
 (
     const polyMesh& mesh,
     const PackedBoolList& isMasterEdge,

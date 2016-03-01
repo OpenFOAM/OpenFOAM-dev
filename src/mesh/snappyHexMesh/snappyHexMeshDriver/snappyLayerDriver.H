@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::autoLayerDriver
+    Foam::snappyLayerDriver
 
 Description
     All to do with adding layers
 
 SourceFiles
-    autoLayerDriver.C
+    snappyLayerDriver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef autoLayerDriver_H
-#define autoLayerDriver_H
+#ifndef snappyLayerDriver_H
+#define snappyLayerDriver_H
 
 #include "meshRefinement.H"
 
@@ -52,10 +52,10 @@ class faceSet;
 class layerParameters;
 
 /*---------------------------------------------------------------------------*\
-                           Class autoLayerDriver Declaration
+                           Class snappyLayerDriver Declaration
 \*---------------------------------------------------------------------------*/
 
-class autoLayerDriver
+class snappyLayerDriver
 {
 public:
 
@@ -547,21 +547,21 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        autoLayerDriver(const autoLayerDriver&);
+        snappyLayerDriver(const snappyLayerDriver&);
 
         //- Disallow default bitwise assignment
-        void operator=(const autoLayerDriver&);
+        void operator=(const snappyLayerDriver&);
 
 
 public:
 
     //- Runtime type information
-    ClassName("autoLayerDriver");
+    ClassName("snappyLayerDriver");
 
     // Constructors
 
         //- Construct from components
-        autoLayerDriver
+        snappyLayerDriver
         (
             meshRefinement& meshRefiner,
             const labelList& globalToMasterPatch,
@@ -610,7 +610,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "autoLayerDriverTemplates.C"
+    #include "snappyLayerDriverTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

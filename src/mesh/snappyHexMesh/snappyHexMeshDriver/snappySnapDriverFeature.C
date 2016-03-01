@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "autoSnapDriver.H"
+#include "snappySnapDriver.H"
 #include "polyTopoChange.H"
 #include "syncTools.H"
 #include "fvMesh.H"
@@ -63,7 +63,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::autoSnapDriver::isFeaturePoint
+bool Foam::snappySnapDriver::isFeaturePoint
 (
     const scalar featureCos,
     const indirectPrimitivePatch& pp,
@@ -124,7 +124,7 @@ bool Foam::autoSnapDriver::isFeaturePoint
 }
 
 
-void Foam::autoSnapDriver::smoothAndConstrain
+void Foam::snappySnapDriver::smoothAndConstrain
 (
     const PackedBoolList& isPatchMasterEdge,
     const indirectPrimitivePatch& pp,
@@ -215,7 +215,7 @@ void Foam::autoSnapDriver::smoothAndConstrain
 }
 
 
-void Foam::autoSnapDriver::calcNearestFace
+void Foam::snappySnapDriver::calcNearestFace
 (
     const label iter,
     const indirectPrimitivePatch& pp,
@@ -436,7 +436,7 @@ void Foam::autoSnapDriver::calcNearestFace
 }
 
 
-void Foam::autoSnapDriver::calcNearestFacePointProperties
+void Foam::snappySnapDriver::calcNearestFacePointProperties
 (
     const label iter,
     const indirectPrimitivePatch& pp,
@@ -634,7 +634,7 @@ void Foam::autoSnapDriver::calcNearestFacePointProperties
 }
 
 
-void Foam::autoSnapDriver::correctAttraction
+void Foam::snappySnapDriver::correctAttraction
 (
     const DynamicList<point>& surfacePoints,
     const DynamicList<label>& surfaceCounts,
@@ -672,7 +672,7 @@ void Foam::autoSnapDriver::correctAttraction
 }
 
 
-Foam::pointIndexHit Foam::autoSnapDriver::findMultiPatchPoint
+Foam::pointIndexHit Foam::snappySnapDriver::findMultiPatchPoint
 (
     const point& pt,
     const labelList& patchIDs,
@@ -696,7 +696,7 @@ Foam::pointIndexHit Foam::autoSnapDriver::findMultiPatchPoint
 }
 
 
-Foam::label Foam::autoSnapDriver::findNormal
+Foam::label Foam::snappySnapDriver::findNormal
 (
     const scalar featureCos,
     const vector& n,
@@ -723,7 +723,7 @@ Foam::label Foam::autoSnapDriver::findNormal
 }
 
 
-Foam::pointIndexHit Foam::autoSnapDriver::findMultiPatchPoint
+Foam::pointIndexHit Foam::snappySnapDriver::findMultiPatchPoint
 (
     const point& pt,
     const labelList& patchIDs,
@@ -803,7 +803,7 @@ Foam::pointIndexHit Foam::autoSnapDriver::findMultiPatchPoint
 }
 
 
-void Foam::autoSnapDriver::featureAttractionUsingReconstruction
+void Foam::snappySnapDriver::featureAttractionUsingReconstruction
 (
     const label iter,
     const scalar featureCos,
@@ -995,7 +995,7 @@ void Foam::autoSnapDriver::featureAttractionUsingReconstruction
 }
 
 
-void Foam::autoSnapDriver::featureAttractionUsingReconstruction
+void Foam::snappySnapDriver::featureAttractionUsingReconstruction
 (
     const label iter,
     const bool avoidSnapProblems,
@@ -1102,7 +1102,7 @@ void Foam::autoSnapDriver::featureAttractionUsingReconstruction
 }
 
 
-void Foam::autoSnapDriver::stringFeatureEdges
+void Foam::snappySnapDriver::stringFeatureEdges
 (
     const label iter,
     const scalar featureCos,
@@ -1291,7 +1291,7 @@ void Foam::autoSnapDriver::stringFeatureEdges
 }
 
 
-void Foam::autoSnapDriver::releasePointsNextToMultiPatch
+void Foam::snappySnapDriver::releasePointsNextToMultiPatch
 (
     const label iter,
     const scalar featureCos,
@@ -1422,7 +1422,7 @@ void Foam::autoSnapDriver::releasePointsNextToMultiPatch
 }
 
 
-Foam::labelPair Foam::autoSnapDriver::findDiagonalAttraction
+Foam::labelPair Foam::snappySnapDriver::findDiagonalAttraction
 (
     const indirectPrimitivePatch& pp,
     const vectorField& patchAttraction,
@@ -1486,7 +1486,7 @@ Foam::labelPair Foam::autoSnapDriver::findDiagonalAttraction
 }
 
 
-void Foam::autoSnapDriver::avoidDiagonalAttraction
+void Foam::snappySnapDriver::avoidDiagonalAttraction
 (
     const label iter,
     const scalar featureCos,
@@ -1585,7 +1585,7 @@ void Foam::autoSnapDriver::avoidDiagonalAttraction
 
 
 Foam::Tuple2<Foam::label, Foam::pointIndexHit>
-Foam::autoSnapDriver::findNearFeatureEdge
+Foam::snappySnapDriver::findNearFeatureEdge
 (
     const bool isRegionEdge,
 
@@ -1653,7 +1653,7 @@ Foam::autoSnapDriver::findNearFeatureEdge
 
 
 Foam::Tuple2<Foam::label, Foam::pointIndexHit>
-Foam::autoSnapDriver::findNearFeaturePoint
+Foam::snappySnapDriver::findNearFeaturePoint
 (
     const bool isRegionPoint,
 
@@ -1756,7 +1756,7 @@ Foam::autoSnapDriver::findNearFeaturePoint
 }
 
 
-void Foam::autoSnapDriver::determineFeatures
+void Foam::snappySnapDriver::determineFeatures
 (
     const label iter,
     const scalar featureCos,
@@ -2167,7 +2167,7 @@ void Foam::autoSnapDriver::determineFeatures
 }
 
 
-void Foam::autoSnapDriver::determineBaffleFeatures
+void Foam::snappySnapDriver::determineBaffleFeatures
 (
     const label iter,
     const scalar featureCos,
@@ -2435,7 +2435,7 @@ void Foam::autoSnapDriver::determineBaffleFeatures
 }
 
 
-void Foam::autoSnapDriver::reverseAttractMeshPoints
+void Foam::snappySnapDriver::reverseAttractMeshPoints
 (
     const label iter,
 
@@ -2694,7 +2694,7 @@ void Foam::autoSnapDriver::reverseAttractMeshPoints
 }
 
 
-void Foam::autoSnapDriver::featureAttractionUsingFeatureEdges
+void Foam::snappySnapDriver::featureAttractionUsingFeatureEdges
 (
     const label iter,
     const bool avoidSnapProblems,
@@ -2948,7 +2948,7 @@ void Foam::autoSnapDriver::featureAttractionUsingFeatureEdges
 }
 
 
-void Foam::autoSnapDriver::preventFaceSqueeze
+void Foam::snappySnapDriver::preventFaceSqueeze
 (
     const label iter,
     const scalar featureCos,
@@ -3022,7 +3022,7 @@ void Foam::autoSnapDriver::preventFaceSqueeze
 }
 
 
-Foam::vectorField Foam::autoSnapDriver::calcNearestSurfaceFeature
+Foam::vectorField Foam::snappySnapDriver::calcNearestSurfaceFeature
 (
     const snapParameters& snapParams,
     const bool avoidSnapProblems,

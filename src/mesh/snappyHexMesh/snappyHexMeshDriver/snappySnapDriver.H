@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::autoSnapDriver
+    Foam::snappySnapDriver
 
 Description
     All to do with snapping to surface
 
 SourceFiles
-    autoSnapDriver.C
-    autoSnapDriverFeature.C
+    snappySnapDriver.C
+    snappySnapDriverFeature.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef autoSnapDriver_H
-#define autoSnapDriver_H
+#ifndef snappySnapDriver_H
+#define snappySnapDriver_H
 
 #include "meshRefinement.H"
 
@@ -49,10 +49,10 @@ class snapParameters;
 class pointConstraint;
 
 /*---------------------------------------------------------------------------*\
-                           Class autoSnapDriver Declaration
+                           Class snappySnapDriver Declaration
 \*---------------------------------------------------------------------------*/
 
-class autoSnapDriver
+class snappySnapDriver
 {
     // Private data
 
@@ -496,22 +496,22 @@ class autoSnapDriver
 
 
         //- Disallow default bitwise copy construct
-        autoSnapDriver(const autoSnapDriver&);
+        snappySnapDriver(const snappySnapDriver&);
 
         //- Disallow default bitwise assignment
-        void operator=(const autoSnapDriver&);
+        void operator=(const snappySnapDriver&);
 
 
 public:
 
     //- Runtime type information
-    ClassName("autoSnapDriver");
+    ClassName("snappySnapDriver");
 
 
     // Constructors
 
         //- Construct from components
-        autoSnapDriver
+        snappySnapDriver
         (
             meshRefinement& meshRefiner,
             const labelList& globalToMasterPatch,

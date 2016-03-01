@@ -313,10 +313,10 @@ DebugSwitches
     atomizationModel    0;
     attachDetach        0;
     autoDensity         0;
-    autoHexMeshDriver   0;
-    autoLayerDriver     0;
-    autoRefineDriver    0;
-    autoSnapDriver      0;
+    snappyHexMeshDriver 0;
+    snappyLayerDriver     0;
+    snappyRefineDriver    0;
+    snappySnapDriver      0;
     bC11H10             0;
     backgroundMeshDecomposition 0;
     backward            0;

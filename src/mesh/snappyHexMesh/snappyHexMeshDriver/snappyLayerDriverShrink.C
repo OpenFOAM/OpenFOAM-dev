@@ -26,7 +26,7 @@ Description
 
 \*----------------------------------------------------------------------------*/
 
-#include "autoLayerDriver.H"
+#include "snappyLayerDriver.H"
 #include "fvMesh.H"
 #include "Time.H"
 #include "pointFields.H"
@@ -41,7 +41,7 @@ Description
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 // Calculate inverse sum of edge weights (currently always 1.0)
-void Foam::autoLayerDriver::sumWeights
+void Foam::snappyLayerDriver::sumWeights
 (
     const PackedBoolList& isMasterEdge,
     const labelList& meshEdges,
@@ -100,7 +100,7 @@ void Foam::autoLayerDriver::sumWeights
 
 
 // Smooth field on moving patch
-void Foam::autoLayerDriver::smoothField
+void Foam::snappyLayerDriver::smoothField
 (
     const motionSmoother& meshMover,
     const PackedBoolList& isMasterPoint,
@@ -175,7 +175,7 @@ void Foam::autoLayerDriver::smoothField
     }
 }
 //XXXXXXXXX
-//void Foam::autoLayerDriver::smoothField
+//void Foam::snappyLayerDriver::smoothField
 //(
 //    const motionSmoother& meshMover,
 //    const PackedBoolList& isMasterEdge,
@@ -267,7 +267,7 @@ void Foam::autoLayerDriver::smoothField
 //XXXXXXXXX
 
 // Smooth normals on moving patch.
-void Foam::autoLayerDriver::smoothPatchNormals
+void Foam::snappyLayerDriver::smoothPatchNormals
 (
     const motionSmoother& meshMover,
     const PackedBoolList& isMasterPoint,
@@ -337,7 +337,7 @@ void Foam::autoLayerDriver::smoothPatchNormals
 
 
 // Smooth normals in interior.
-void Foam::autoLayerDriver::smoothNormals
+void Foam::snappyLayerDriver::smoothNormals
 (
     const label nSmoothDisp,
     const PackedBoolList& isMasterPoint,
@@ -428,7 +428,7 @@ void Foam::autoLayerDriver::smoothNormals
 
 // Tries and find a medial axis point. Done by comparing vectors to nearest
 // wall point for both vertices of edge.
-bool Foam::autoLayerDriver::isMaxEdge
+bool Foam::snappyLayerDriver::isMaxEdge
 (
     const List<pointData>& pointWallDist,
     const label edgeI,
@@ -489,7 +489,7 @@ bool Foam::autoLayerDriver::isMaxEdge
 
 // Stop layer growth where mesh wraps around edge with a
 // large feature angle
-void Foam::autoLayerDriver::handleFeatureAngleLayerTerminations
+void Foam::snappyLayerDriver::handleFeatureAngleLayerTerminations
 (
     const scalar minCos,
     const PackedBoolList& isMasterPoint,
@@ -641,7 +641,7 @@ void Foam::autoLayerDriver::handleFeatureAngleLayerTerminations
 
 // Find isolated islands (points, edges and faces and layer terminations)
 // in the layer mesh and stop any layer growth at these points.
-void Foam::autoLayerDriver::findIsolatedRegions
+void Foam::snappyLayerDriver::findIsolatedRegions
 (
     const scalar minCosLayerTermination,
     const PackedBoolList& isMasterPoint,
@@ -859,7 +859,7 @@ void Foam::autoLayerDriver::findIsolatedRegions
 // medialDist  : distance to medial axis
 // medialRatio : ratio of medial distance to wall distance.
 //               (1 at wall, 0 at medial axis)
-void Foam::autoLayerDriver::medialAxisSmoothingInfo
+void Foam::snappyLayerDriver::medialAxisSmoothingInfo
 (
     const motionSmoother& meshMover,
     const label nSmoothNormals,
@@ -1346,7 +1346,7 @@ void Foam::autoLayerDriver::medialAxisSmoothingInfo
 }
 
 
-void Foam::autoLayerDriver::shrinkMeshMedialDistance
+void Foam::snappyLayerDriver::shrinkMeshMedialDistance
 (
     motionSmoother& meshMover,
     const dictionary& meshQualityDict,
@@ -1764,7 +1764,7 @@ void Foam::autoLayerDriver::shrinkMeshMedialDistance
         // Above move will have changed the instance only on the points (which
         // is correct).
         // However the previous mesh written will be the mesh with layers
-        // (see autoLayerDriver.C) so we now have to force writing all files
+        // (see snappyLayerDriver.C) so we now have to force writing all files
         // so we can easily step through time steps. Note that if you
         // don't write the mesh with layers this is not necessary.
         meshRefiner_.mesh().setInstance(meshRefiner_.timeName());

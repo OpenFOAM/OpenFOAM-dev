@@ -22,17 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::autoRefineDriver
+    Foam::snappyRefineDriver
 
 Description
 
 SourceFiles
-    autoRefineDriver.C
+    snappyRefineDriver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef autoRefineDriver_H
-#define autoRefineDriver_H
+#ifndef snappyRefineDriver_H
+#define snappyRefineDriver_H
 
 #include "treeBoundBox.H"
 
@@ -50,10 +50,10 @@ class decompositionMethod;
 class fvMeshDistribute;
 
 /*---------------------------------------------------------------------------*\
-                           Class autoRefineDriver Declaration
+                           Class snappyRefineDriver Declaration
 \*---------------------------------------------------------------------------*/
 
-class autoRefineDriver
+class snappyRefineDriver
 {
     // Private data
 
@@ -148,22 +148,22 @@ class autoRefineDriver
 
 
         //- Disallow default bitwise copy construct
-        autoRefineDriver(const autoRefineDriver&);
+        snappyRefineDriver(const snappyRefineDriver&);
 
         //- Disallow default bitwise assignment
-        void operator=(const autoRefineDriver&);
+        void operator=(const snappyRefineDriver&);
 
 
 public:
 
     //- Runtime type information
-    ClassName("autoRefineDriver");
+    ClassName("snappyRefineDriver");
 
 
     // Constructors
 
         //- Construct from components
-        autoRefineDriver
+        snappyRefineDriver
         (
             meshRefinement& meshRefiner,
             decompositionMethod& decomposer,

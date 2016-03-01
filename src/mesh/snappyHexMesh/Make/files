@@ -1,13 +1,13 @@
-autoHexMeshDriver/autoLayerDriver.C
-/* autoHexMeshDriver/autoLayerDriverShrink.C */
-autoHexMeshDriver/autoSnapDriver.C
-autoHexMeshDriver/autoSnapDriverFeature.C
-autoHexMeshDriver/autoRefineDriver.C
+snappyHexMeshDriver/snappyLayerDriver.C
+/* snappyHexMeshDriver/snappyLayerDriverShrink.C */
+snappyHexMeshDriver/snappySnapDriver.C
+snappyHexMeshDriver/snappySnapDriverFeature.C
+snappyHexMeshDriver/snappyRefineDriver.C
 
-autoHexMeshDriver/layerParameters/layerParameters.C
-autoHexMeshDriver/refinementParameters/refinementParameters.C
-autoHexMeshDriver/snapParameters/snapParameters.C
-autoHexMeshDriver/pointData/pointData.C
+snappyHexMeshDriver/layerParameters/layerParameters.C
+snappyHexMeshDriver/refinementParameters/refinementParameters.C
+snappyHexMeshDriver/snapParameters/snapParameters.C
+snappyHexMeshDriver/pointData/pointData.C
 
 meshRefinement/meshRefinementBaffles.C
 meshRefinement/meshRefinement.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    autoRefineMesh
+    snappyRefineMesh
 
 Description
     Utility to refine cells near to a surface.
@@ -670,7 +670,7 @@ int main(int argc, char *argv[])
     (
         IOobject
         (
-            "autoRefineMeshDict",
+            "snappyRefineMeshDict",
             runTime.system(),
             mesh,
             IOobject::MUST_READ_IF_MODIFIED,
