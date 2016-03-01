@@ -1,5 +1,5 @@
 EXE_LIBS = \
-    -lautoMesh \
+    -lsnappyHexMesh \
     -lbarotropicCompressibilityModel \
     -lsolidThermo \
     -lcompressibleTransportModels \

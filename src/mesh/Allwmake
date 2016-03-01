@@ -6,7 +6,7 @@ targetType=libso
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake $targetType autoMesh
+wmake $targetType snappyHexMesh
 wmake $targetType blockMesh
 wmake $targetType extrudeModel
 

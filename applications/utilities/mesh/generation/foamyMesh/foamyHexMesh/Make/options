@@ -22,7 +22,7 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
-    -I$(LIB_SRC)/mesh/autoMesh/lnInclude \
+    -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \
     -IvectorTools
 
 EXE_LIBS = \

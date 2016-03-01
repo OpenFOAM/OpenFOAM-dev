@@ -1,9 +1,9 @@
 EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude \
-    -I$(LIB_SRC)/mesh/autoMesh/lnInclude \
+    -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude
 
 EXE_LIBS = \
     -lmeshTools \
-    -lautoMesh \
+    -lsnappyHexMesh \
     -ltriSurface
