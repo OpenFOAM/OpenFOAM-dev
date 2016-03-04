@@ -299,7 +299,6 @@ energyRegionCoupledFvPatchScalarField
 Foam::tmp<Foam::scalarField> Foam::energyRegionCoupledFvPatchScalarField::
 snGrad() const
 {
-    Debug("snGrad");
     return
         regionCoupledPatch_.patch().deltaCoeffs()
        *(*this - patchInternalField());
@@ -309,7 +308,6 @@ snGrad() const
 Foam::tmp<Foam::scalarField> Foam::energyRegionCoupledFvPatchScalarField::
 snGrad(const scalarField&) const
 {
-    Debug("snGrad");
     return snGrad();
 }
 

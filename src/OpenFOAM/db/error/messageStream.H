@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -272,12 +272,12 @@ extern messageStream Info;
 #define IOWarningInFunction(ios) IOWarningIn(FUNCTION_NAME, ios)
 
 
-//- Report a information message using Foam::Info
+//- Report an information message using Foam::Info
 //  for functionName in file __FILE__ at line __LINE__
 #define InfoIn(functionName)                                                   \
     ::Foam::Info((functionName), __FILE__, __LINE__)
 
-//- Report a information message using Foam::Info
+//- Report an information message using Foam::Info
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__
 #define InfoInFunction InfoIn(FUNCTION_NAME)
 
@@ -294,9 +294,21 @@ extern messageStream Info;
 #define IOInfoInFunction(ios) IOInfoIn(FUNCTION_NAME, ios)
 
 
+//- Report an information message using Foam::Info
+//  if the local debug switch is true
+#define DebugInfo                                                              \
+    if (debug) Info
+
+//- Report an information message using Foam::Info
+//  for FUNCTION_NAME in file __FILE__ at line __LINE__
+//  if the local debug switch is true
+#define DebugInFunction                                                        \
+    if (debug) InfoInFunction
+
+
 //- Report a variable name and value
 //  using Foam::Pout in file __FILE__ at line __LINE__
-#define Debug(var)                                                             \
+#define DebugVar(var)                                                          \
     ::Foam::Pout<< "["<< __FILE__ << ":" << __LINE__ << "] "                   \
     << #var " " << var << ::Foam::endl
 
