@@ -67,12 +67,18 @@ class StaticAssertionTest {};
 #define StaticAssertMacro1(X,Y) StaticAssertMacro2(X,Y)
 #define StaticAssertMacro2(X,Y) X##Y
 
+#ifdef __GNUC__
+    #define StaticAssertUnusedTypedef __attribute__((unused))
+#else
+    #define StaticAssertUnusedTypedef
+#endif
+
 //- Assert that some test is true at compile-time
 #define StaticAssert(Test)                                                     \
     typedef ::Foam::StaticAssertionTest                                        \
     <                                                                          \
         sizeof( ::Foam::StaticAssertionFailed<((Test) ? true : false)>)        \
-    > StaticAssertMacro(StaticAssertionTest, __LINE__)
+    > StaticAssertMacro(StaticAssertionTest, __LINE__) StaticAssertUnusedTypedef
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
