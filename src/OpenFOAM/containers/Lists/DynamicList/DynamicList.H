@@ -104,6 +104,9 @@ public:
         //- Construct given size.
         explicit inline DynamicList(const label);
 
+        //- Construct with given size and value for all elements.
+        inline DynamicList(const label, const T&);
+
         //- Construct copy.
         inline DynamicList(const DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
 
@@ -223,6 +226,12 @@ public:
             //- Assignment from UIndirectList
             inline void operator=(const UIndirectList<T>&);
 
+
+        // STL member functions
+
+            //- Erase an element, move the remaining elements to fill the gap
+            //  and resize the List
+            typename UList<T>::iterator erase(typename UList<T>::iterator);
 
 
         // IOstream operators

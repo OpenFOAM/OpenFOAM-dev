@@ -52,6 +52,18 @@ inline Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 (
+    const label nElem,
+    const T& a
+)
+:
+    List<T>(nElem, a),
+    capacity_(nElem)
+{}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
+(
     const DynamicList<T, SizeInc, SizeMult, SizeDiv>& lst
 )
 :
@@ -480,6 +492,34 @@ inline void Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
         List<T>::operator=(lst);
         capacity_ = List<T>::size();
     }
+}
+
+
+// * * * * * * * * * * * * * * STL Member Functions  * * * * * * * * * * * * //
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+typename Foam::UList<T>::iterator
+Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::erase
+(
+    typename UList<T>::iterator curIter
+)
+{
+    typename Foam::UList<T>::iterator iter = curIter;
+    typename Foam::UList<T>::iterator nextIter = curIter;
+
+    if (iter != this->end())
+    {
+        ++iter;
+
+        while (iter != this->end())
+        {
+            *nextIter++ = *iter++;
+        }
+
+        this->setSize(this->size() - 1);
+    }
+
+    return curIter;
 }
 
 
