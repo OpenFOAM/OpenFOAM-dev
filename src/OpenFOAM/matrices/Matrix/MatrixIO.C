@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,8 +34,8 @@ License
 template<class Form, class Type>
 Foam::Matrix<Form, Type>::Matrix(Istream& is)
 :
-    n_(0),
-    m_(0),
+    nRows_(0),
+    nCols_(0),
     v_(NULL)
 {
     operator>>(is, *this);
@@ -59,10 +59,10 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
 
     if (firstToken.isLabel())
     {
-        M.n_ = firstToken.labelToken();
-        M.m_ = readLabel(is);
+        M.nRows_ = firstToken.labelToken();
+        M.nCols_ = readLabel(is);
 
-        label nm = M.n_*M.m_;
+        label nm = M.nRows_*M.nCols_;
 
         // Read list contents depending on data format
         if (is.format() == IOstream::ASCII || !contiguous<Type>())
@@ -151,7 +151,7 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
 template<class Form, class Type>
 Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
 {
-    label nm = M.n_*M.m_;
+    label nm = M.nRows_*M.nCols_;
 
     os  << M.n() << token::SPACE << M.m();
 

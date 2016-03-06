@@ -28,8 +28,8 @@ License
 template<class Form, class Type>
 inline Foam::Matrix<Form, Type>::Matrix()
 :
-    n_(0),
-    m_(0),
+    nRows_(0),
+    nCols_(0),
     v_(NULL)
 {}
 
@@ -55,37 +55,37 @@ inline const Foam::Matrix<Form, Type>& Foam::Matrix<Form, Type>::null()
 template<class Form, class Type>
 inline Foam::label Foam::Matrix<Form, Type>::n() const
 {
-    return n_;
+    return nRows_;
 }
 
 
 template<class Form, class Type>
 inline Foam::label Foam::Matrix<Form, Type>::m() const
 {
-    return m_;
+    return nCols_;
 }
 
 
 template<class Form, class Type>
 inline Foam::label Foam::Matrix<Form, Type>::size() const
 {
-    return n_*m_;
+    return nRows_*nCols_;
 }
 
 
 template<class Form, class Type>
 inline void Foam::Matrix<Form, Type>::checki(const label i) const
 {
-    if (!n_)
+    if (!nRows_)
     {
         FatalErrorInFunction
             << "attempt to access element from zero sized row"
             << abort(FatalError);
     }
-    else if (i<0 || i>=n_)
+    else if (i<0 || i>=nRows_)
     {
         FatalErrorInFunction
-            << "index " << i << " out of range 0 ... " << n_-1
+            << "index " << i << " out of range 0 ... " << nRows_-1
             << abort(FatalError);
     }
 }
@@ -94,16 +94,16 @@ inline void Foam::Matrix<Form, Type>::checki(const label i) const
 template<class Form, class Type>
 inline void Foam::Matrix<Form, Type>::checkj(const label j) const
 {
-    if (!m_)
+    if (!nCols_)
     {
         FatalErrorInFunction
             << "attempt to access element from zero sized column"
             << abort(FatalError);
     }
-    else if (j<0 || j>=m_)
+    else if (j<0 || j>=nCols_)
     {
         FatalErrorInFunction
-            << "index " << j << " out of range 0 ... " << m_-1
+            << "index " << j << " out of range 0 ... " << nCols_-1
             << abort(FatalError);
     }
 }

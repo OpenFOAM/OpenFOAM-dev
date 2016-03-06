@@ -30,14 +30,14 @@ License
 template<class Form, class Type>
 void Foam::Matrix<Form, Type>::allocate()
 {
-    if (n_ && m_)
+    if (nRows_ && nCols_)
     {
-        v_ = new Type*[n_];
-        v_[0] = new Type[n_*m_];
+        v_ = new Type*[nRows_];
+        v_[0] = new Type[nRows_*nCols_];
 
-        for (label i=1; i<n_; i++)
+        for (label i=1; i<nRows_; i++)
         {
-            v_[i] = v_[i-1] + m_;
+            v_[i] = v_[i-1] + nCols_;
         }
     }
 }
@@ -61,14 +61,14 @@ Foam::Matrix<Form, Type>::~Matrix()
 template<class Form, class Type>
 Foam::Matrix<Form, Type>::Matrix(const label n, const label m)
 :
-    n_(n),
-    m_(m),
+    nRows_(n),
+    nCols_(m),
     v_(NULL)
 {
-    if (n_ < 0 || m_ < 0)
+    if (nRows_ < 0 || nCols_ < 0)
     {
         FatalErrorInFunction
-            << "bad n, m " << n_ << ", " << m_
+            << "bad n, m " << nRows_ << ", " << nCols_
             << abort(FatalError);
     }
 
@@ -79,14 +79,14 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m)
 template<class Form, class Type>
 Foam::Matrix<Form, Type>::Matrix(const label n, const label m, const Type& a)
 :
-    n_(n),
-    m_(m),
+    nRows_(n),
+    nCols_(m),
     v_(NULL)
 {
-    if (n_ < 0 || m_ < 0)
+    if (nRows_ < 0 || nCols_ < 0)
     {
         FatalErrorInFunction
-            << "bad n, m " << n_ << ", " << m_
+            << "bad n, m " << nRows_ << ", " << nCols_
             << abort(FatalError);
     }
 
@@ -96,7 +96,7 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m, const Type& a)
     {
         Type* v = v_[0];
 
-        label nm = n_*m_;
+        label nm = nRows_*nCols_;
 
         for (label i=0; i<nm; i++)
         {
@@ -109,8 +109,8 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m, const Type& a)
 template<class Form, class Type>
 Foam::Matrix<Form, Type>::Matrix(const Matrix<Form, Type>& a)
 :
-    n_(a.n_),
-    m_(a.m_),
+    nRows_(a.nRows_),
+    nCols_(a.nCols_),
     v_(NULL)
 {
     if (a.v_)
@@ -119,7 +119,7 @@ Foam::Matrix<Form, Type>::Matrix(const Matrix<Form, Type>& a)
         Type* v = v_[0];
         const Type* av = a.v_[0];
 
-        label nm = n_*m_;
+        label nm = nRows_*nCols_;
         for (label i=0; i<nm; i++)
         {
             v[i] = av[i];
@@ -136,8 +136,8 @@ void Foam::Matrix<Form, Type>::clear()
         delete[] (v_[0]);
         delete[] v_;
     }
-    n_ = 0;
-    m_ = 0;
+    nRows_ = 0;
+    nCols_ = 0;
     v_ = NULL;
 }
 
@@ -147,11 +147,11 @@ void Foam::Matrix<Form, Type>::transfer(Matrix<Form, Type>& a)
 {
     clear();
 
-    n_ = a.n_;
-    a.n_ = 0;
+    nRows_ = a.nRows_;
+    a.nRows_ = 0;
 
-    m_ = a.m_;
-    a.m_ = 0;
+    nCols_ = a.nCols_;
+    a.nCols_ = 0;
 
     v_ = a.v_;
     a.v_ = NULL;
@@ -185,7 +185,7 @@ void Foam::Matrix<Form, Type>::operator=(const Type& t)
     {
         Type* v = v_[0];
 
-        label nm = n_*m_;
+        label nm = nRows_*nCols_;
         for (label i=0; i<nm; i++)
         {
             v[i] = t;
@@ -204,11 +204,11 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
             << abort(FatalError);
     }
 
-    if (n_ != a.n_ || m_ != a.m_)
+    if (nRows_ != a.nRows_ || nCols_ != a.nCols_)
     {
         clear();
-        n_ = a.n_;
-        m_ = a.m_;
+        nRows_ = a.nRows_;
+        nCols_ = a.nCols_;
         allocate();
     }
 
@@ -217,7 +217,7 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
         Type* v = v_[0];
         const Type* av = a.v_[0];
 
-        label nm = n_*m_;
+        label nm = nRows_*nCols_;
         for (label i=0; i<nm; i++)
         {
             v[i] = av[i];

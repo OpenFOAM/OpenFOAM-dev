@@ -76,7 +76,7 @@ class Matrix
     // Private data
 
         //- Number of rows and columns in Matrix.
-        label n_, m_;
+        label nRows_, nCols_;
 
         //- Row pointers
         Type** __restrict__ v_;
