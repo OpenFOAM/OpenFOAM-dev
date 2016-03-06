@@ -297,6 +297,29 @@ inline Tensor<Cmpt> Tensor<Cmpt>::T() const
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
+inline void Tensor<Cmpt>::operator&=(const Tensor<Cmpt>& t)
+{
+    *this =
+    (
+        Tensor<Cmpt>
+        (
+            this->xx()*t.xx() + this->xy()*t.yx() + this->xz()*t.zx(),
+            this->xx()*t.xy() + this->xy()*t.yy() + this->xz()*t.zy(),
+            this->xx()*t.xz() + this->xy()*t.yz() + this->xz()*t.zz(),
+
+            this->yx()*t.xx() + this->yy()*t.yx() + this->yz()*t.zx(),
+            this->yx()*t.xy() + this->yy()*t.yy() + this->yz()*t.zy(),
+            this->yx()*t.xz() + this->yy()*t.yz() + this->yz()*t.zz(),
+
+            this->zx()*t.xx() + this->zy()*t.yx() + this->zz()*t.zx(),
+            this->zx()*t.xy() + this->zy()*t.yy() + this->zz()*t.zy(),
+            this->zx()*t.xz() + this->zy()*t.yz() + this->zz()*t.zz()
+        )
+    );
+}
+
+
+template<class Cmpt>
 inline void Tensor<Cmpt>::operator=(const SphericalTensor<Cmpt>& st)
 {
     this->v_[XX] = st.ii(); this->v_[XY] = 0; this->v_[XZ] = 0;

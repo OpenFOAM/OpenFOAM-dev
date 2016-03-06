@@ -164,6 +164,9 @@ public:
 
     // Member Operators
 
+        //- Inner-product with a Tensor
+        inline void operator&=(const Tensor<Cmpt>&);
+
         //- Assign to a SphericalTensor
         inline void operator=(const SphericalTensor<Cmpt>&);
 
