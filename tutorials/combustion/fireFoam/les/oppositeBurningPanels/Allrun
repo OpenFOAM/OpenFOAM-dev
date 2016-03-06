@@ -9,26 +9,31 @@ application=`getApplication`
 
 runApplication blockMesh
 
-runApplication topoSet -dict system/cRefine.topoSetDict
+runApplication -s cRefine \
+    topoSet -dict system/cRefine.topoSetDict
+
 runApplication refineMesh -overwrite -dict system/refineMeshDict
 
-rm log.topoSet
-runApplication topoSet -dict system/f.topoSetDict
+runApplication -s f \
+    topoSet -dict system/f.topoSetDict
 
 # create the pyrolysis region.
 runApplication extrudeToRegionMesh -overwrite
 
 
-rm log.topoSet
-runApplication topoSet -dict system/fBurner.topoSetDict
+runApplication -s fBurner \
+    topoSet -dict system/fBurner.topoSetDict
 
 runApplication createPatch -overwrite
 
-decomposePar -force > log.decomposePar 2>&1
+runApplication -s master \
+    decomposePar -force
 
-decomposePar -region panelRegion > log.decomposeParPanelRegion 2>&1
+runApplication -s panelRegion \
+    decomposePar -region panelRegion
 
-decomposePar -fields > log.decomposePar 2>&1
+runApplication -s fields \
+    decomposePar -fields
 
 runParallel `getApplication`
 

@@ -18,13 +18,15 @@ runApplication decomposePar -allRegions
 # Agglomerate patch faces
 for i in bottomAir topAir
 do
-    mpirun -np 4 faceAgglomerate -region $i -dict constant/viewFactorsDict -parallel>   log.faceAgglomerate.$i 2>&1
+    runParallel -s $i -np 4 \
+        faceAgglomerate -region $i -dict constant/viewFactorsDict
 done
 
 # Generate view factors
 for i in bottomAir topAir
 do
-    mpirun -np 4 viewFactorsGen -region $i -parallel > log.viewFactorsGen.$i 2>&1
+    runParallel -s $i -np 4 \
+        viewFactorsGen -region $i
 done
 
 # Run

@@ -207,6 +207,14 @@ public:
         //- Construct from fvMesh and a label list of point priorities
         polyMeshFilter(const fvMesh& mesh, const labelList& pointPriority);
 
+        //- Construct from fvMesh and a label list of point priorities
+        polyMeshFilter
+        (
+            const fvMesh& mesh,
+            const labelList& pointPriority,
+            const dictionary& dict
+        );
+
 
     //- Destructor
     ~polyMeshFilter();
@@ -257,7 +265,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "polyMeshFilterTemplates.C"
+#   include "polyMeshFilterTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

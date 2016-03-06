@@ -6,19 +6,14 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 intersectSurfaces()
 {
-    runApplication              \
-        surfaceBooleanFeatures  \
-        intersection            \
-        "$@"
-
     outputName1=$(basename $1)
     outputName1=${outputName1%.*}
 
     outputName2=$(basename $2)
     outputName2=${outputName2%.*}
 
-    mv log.surfaceBooleanFeatures \
-       log.surfaceBooleanFeatures.$outputName1:$outputName2
+    runApplication -s $outputName1:$outputName2 \
+        surfaceBooleanFeatures intersection "$@"
 }
 
 # Set application name
@@ -77,30 +72,33 @@ done
 
 # Meshing
 \cp system/controlDict.mesh system/controlDict
-\cp system/collapseDict.collapseFaces system/collapseDict
 
 runApplication blockMesh -region backgroundMeshDecomposition
 
-runApplication decomposePar -region backgroundMeshDecomposition
+runApplication -s backgroundMeshDecomposition \
+    decomposePar -region backgroundMeshDecomposition
 
 runApplication surfaceFeatureExtract
 
 runParallel foamyHexMesh
 
-runParallel collapseEdges -collapseFaces -latestTime
-mv log.collapseEdges log.collapseFaces
+runParallel -s faces \
+    collapseEdges -collapseFaces -latestTime \
+                  -dict system/collapseDict.collapseFaces
 
-#\cp system/collapseDict.indirectPatchFaces system/collapseDict
-#runParallel collapseEdges -collapseFaceSet indirectPatchFaces -latestTime
-#mv log.collapseEdges log.collapseFaceSet
+#runParallel -s faceSet  \
+#    collapseEdges -collapseFaceSet indirectPatchFaces -latestTime \
+#                  -dict system/collapseDict.indirectPatchFaces
 
 runParallel checkMesh -allTopology -allGeometry -latestTime
 
 runApplication reconstructParMesh -latestTime
 
-# Copy the mesh into polyMesh and delete the 102 directory
-\cp -r 101/polyMesh constant
-\rm -rf 101
+# Copy the mesh from the latest time folder into polyMesh and delete that
+# latest time folder
+latestTime=$(foamListTimes -latestTime)
+\cp -r $latestTime/polyMesh constant
+\rm -rf $latestTime
 
 
 #------------------------------------------------------------------------------

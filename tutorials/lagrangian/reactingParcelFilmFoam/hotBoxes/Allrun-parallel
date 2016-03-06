@@ -8,15 +8,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 application=`getApplication`
 
-runApplication decomposePar -region wallFilmRegion
-mv log.decomposePar log.decomposePar.wallFilmRegion
-runApplication decomposePar
-mv log.decomposePar log.decomposePar.primaryRegion
+runApplication -s wallFilmRegion decomposePar -region wallFilmRegion
+runApplication -s primaryRegion  decomposePar
 
 runParallel $application
 
-runApplication reconstructPar -region wallFilmRegion
-mv log.reconstructPar log.reconstructPar.wallFilmRegion
-runApplication reconstructPar
-mv log.reconstructPar log.reconstructPar.primaryRegion
+runApplication -s wallFilmRegion reconstructPar -region wallFilmRegion
+runApplication -s primaryRegion  reconstructPar
 

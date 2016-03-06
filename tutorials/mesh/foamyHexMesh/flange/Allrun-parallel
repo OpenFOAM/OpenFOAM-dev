@@ -13,11 +13,11 @@ runApplication decomposePar -region backgroundMeshDecomposition
 
 runParallel foamyHexMesh
 
-runParallel collapseEdges -latestTime -collapseFaces
-mv log.collapseEdges log.collapseFaces
+runParallel -s collapseFaces \
+    collapseEdges -latestTime -collapseFaces
 
-runParallel collapseEdges -latestTime -collapseFaceSet indirectPatchFaces
-mv log.collapseEdges log.collapseFaceSet
+runParallel -s collapseFaceSet \
+    collapseEdges -latestTime -collapseFaceSet indirectPatchFaces
 
 runParallel checkMesh -latestTime -allTopology -allGeometry
 

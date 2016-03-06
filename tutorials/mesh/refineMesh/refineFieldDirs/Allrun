@@ -17,16 +17,15 @@ mkdir 0
 # Refine over Z, in 6 passes
 for index in 1 2 3 4 5 6; do
 
-  runApplication calcRadiusField
-  mv log.calcRadiusField log.calcRadiusField.tier$index
+  runApplication -s tier$index  calcRadiusField
 
-  runApplication topoSet -dict system/topoSetDict.tier$index
-  mv log.topoSet log.topoSet.tier$index
+  runApplication -s tier$index \
+      topoSet -dict system/topoSetDict.tier$index
 
   ## foamToVTK -cellSet tier$index
 
-  runApplication refineMesh -dict system/refineMeshDict.tier$index -overwrite
-  mv log.refineMesh log.refineMesh.tier$index
+  runApplication -s tier$index \
+      refineMesh -dict system/refineMeshDict.tier$index -overwrite
 
   rm -r 0/*
 
@@ -35,17 +34,15 @@ done
 # Refine over cylindrical coordinates, in 3 passes
 for index in 1 2 3; do
 
-  runApplication calcRadiusField -calcDirections
-  mv log.calcRadiusField log.calcRadiusField.range$index
+  runApplication -s range$index  calcRadiusField -calcDirections
 
-  runApplication topoSet -dict system/topoSetDict.range$index
-  mv log.topoSet log.topoSet.range$index
+  runApplication -s range$index \
+      topoSet -dict system/topoSetDict.range$index
 
   ## foamToVTK -cellSet tier$index
 
-  runApplication refineMesh -dict system/refineMeshDict.range$index \
-      -overwrite
-  mv log.refineMesh log.refineMesh.range$index
+  runApplication -s range$index \
+      refineMesh -dict system/refineMeshDict.range$index -overwrite
 
   rm -r 0/*
 

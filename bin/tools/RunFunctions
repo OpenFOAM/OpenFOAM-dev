@@ -55,35 +55,43 @@ runApplication()
     APP_RUN=
     LOG_IGNORE=false
     LOG_APPEND=false
+    LOG_SUFFIX=
 
     # Parse options and executable
     while [ $# -gt 0 ] && [ -z "$APP_RUN" ]; do
         key="$1"
         case "$key" in
-            -append)
+            -append|-a)
                 LOG_IGNORE=true
                 LOG_APPEND=true
                 ;;
-            -overwrite)
+            -overwrite|-o)
                 LOG_IGNORE=true
+                ;;
+            -suffix|-s)
+                LOG_SUFFIX=".$2"
+                shift
                 ;;
             *)
                 APP_RUN="$key"
                 APP_NAME="${key##*/}"
+                LOG_SUFFIX="${APP_NAME}${LOG_SUFFIX}"
                 ;;
         esac
-    shift
+
+        shift
     done
 
-    if [ -f log.$APP_NAME ] && [ "$LOG_IGNORE" = "false" ]
+    if [ -f log.$LOG_SUFFIX ] && [ "$LOG_IGNORE" = "false" ]
     then
-        echo "$APP_NAME already run on $PWD: remove log file to re-run"
+        echo "$APP_NAME already run on $PWD:" \
+             "remove log file 'log.$LOG_SUFFIX' to re-run"
     else
         echo "Running $APP_RUN on $PWD"
         if [ "$LOG_APPEND" = "true" ]; then
-            $APP_RUN "$@" >> log.$APP_NAME 2>&1
+            $APP_RUN "$@" >> log.$LOG_SUFFIX 2>&1
         else
-            $APP_RUN "$@" > log.$APP_NAME 2>&1
+            $APP_RUN "$@" > log.$LOG_SUFFIX 2>&1
         fi
     fi
 }
@@ -93,40 +101,48 @@ runParallel()
     APP_RUN=
     LOG_IGNORE=false
     LOG_APPEND=false
+    LOG_SUFFIX=
     nProcs=$(getNumberOfProcessors)
 
     # Parse options and executable
     while [ $# -gt 0 ] && [ -z "$APP_RUN" ]; do
         key="$1"
         case "$key" in
-            -append)
+            -append|-a)
                 LOG_IGNORE=true
                 LOG_APPEND=true
                 ;;
-            -overwrite)
+            -overwrite|-o)
                 LOG_IGNORE=true
                 ;;
-            -np)
+            -suffix|-s)
+                LOG_SUFFIX=".$2"
+                shift
+                ;;
+            -np|-n)
                 nProcs="$2"
                 shift
                 ;;
             *)
                 APP_RUN="$key"
                 APP_NAME="${key##*/}"
+                LOG_SUFFIX="${APP_NAME}${LOG_SUFFIX}"
                 ;;
         esac
-    shift
+
+        shift
     done
 
-    if [ -f log.$APP_NAME ] && [ "$LOG_IGNORE" = "false" ]
+    if [ -f log.$SUFFIX ] && [ "$LOG_IGNORE" = "false" ]
     then
-        echo "$APP_NAME already run on $PWD: remove log file to re-run"
+        echo "$APP_NAME already run on $PWD:" \
+             "remove log file 'log.$LOG_SUFFIX' to re-run"
     else
         echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
         if [ "$LOG_APPEND" = "true" ]; then
-            ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null >> log.$APP_NAME 2>&1 )
+            ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null >> log.$LOG_SUFFIX 2>&1 )
         else
-            ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null > log.$APP_NAME 2>&1 )
+            ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null > log.$LOG_SUFFIX 2>&1 )
         fi
     fi
 }
