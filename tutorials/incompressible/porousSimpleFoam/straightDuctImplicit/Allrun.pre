@@ -10,13 +10,11 @@ runApplication foamyHexMesh
 
 # Collapse only patch faces from incomplete conformation
 runApplication -s indirectPatchFaces \
-    collapseEdges -collapseFaceSet indirectPatchFaces -latestTime -overwrite \
-                  -dict system/collapseDict.indirectPatchFaces
+    collapseEdges -collapseFaceSet indirectPatchFaces -latestTime -overwrite
 
 # Collapse small edges and sliver faces
 runApplication -s collapseFaces \
-    collapseEdges -collapseFaces -latestTime -overwrite \
-                  -dict system/collapseDict.collapseFaces
+    collapseEdges -collapseFaces -latestTime -overwrite
 
 runApplication checkMesh -allTopology -allGeometry -latestTime
 
