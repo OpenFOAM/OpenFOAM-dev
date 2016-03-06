@@ -123,6 +123,11 @@ public:
         (
             const Foam::List<Vector<Cmpt>>&
         ) const;
+
+
+    // Member Operators
+
+        inline void operator=(const scalar);
 };
 
 

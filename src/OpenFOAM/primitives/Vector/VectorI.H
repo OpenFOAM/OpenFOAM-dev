@@ -111,6 +111,18 @@ inline const Vector<Cmpt>& Vector<Cmpt>::centre
 }
 
 
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Cmpt>
+inline void Vector<Cmpt>::operator=
+(
+    const scalar s
+)
+{
+    VectorSpace<Vector<Cmpt>, Cmpt, 3>::operator=(s);
+}
+
+
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>

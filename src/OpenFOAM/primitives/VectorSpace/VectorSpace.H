@@ -133,6 +133,7 @@ public:
         inline void operator+=(const VectorSpace<Form, Cmpt, nCmpt>&);
         inline void operator-=(const VectorSpace<Form, Cmpt, nCmpt>&);
 
+        inline void operator=(const scalar);
         inline void operator*=(const scalar);
         inline void operator/=(const scalar);
 

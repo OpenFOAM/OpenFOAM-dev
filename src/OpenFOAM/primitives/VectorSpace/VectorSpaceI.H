@@ -219,6 +219,16 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::operator-=
 
 
 template<class Form, class Cmpt, int nCmpt>
+inline void VectorSpace<Form, Cmpt, nCmpt>::operator=
+(
+    const scalar s
+)
+{
+    VectorSpaceOps<nCmpt,0>::eqOpS(*this, s, eqOp<Cmpt>());
+}
+
+
+template<class Form, class Cmpt, int nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::operator*=
 (
     const scalar s
