@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -196,11 +196,11 @@ updateMode)
         || usage "Not in the project top-level directory"
 
     echo "Purging all dep files that relate to files that no longer exist..."
-    fileNameList=$(find -L src applications -name '*.[CHL]' -type l \
-                        -exec basename {} \;)
+    fileNameList=$(find -L src applications -name '*.[CHL]' -type l)
 
-    for fileName in $fileNameList
+    for filePathAndName in $fileNameList
     do
+        fileName=$(basename $filePathAndName)
         echo "Purging from 'src': $fileName"
         cd src
         $Script -a $fileName
@@ -210,6 +210,9 @@ updateMode)
         $Script -a $fileName
 
         cd ..
+
+        # Just in case, remove the symbolic link as the last step
+        unlink $filePathAndName
     done
 
     ;;
