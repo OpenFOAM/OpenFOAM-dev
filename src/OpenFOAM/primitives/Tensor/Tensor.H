@@ -158,8 +158,11 @@ public:
             inline Vector<Cmpt> z() const;
             inline Vector<Cmpt> vectorComponent(const direction) const;
 
-        //- Transpose
+        //- Return transpose
         inline Tensor<Cmpt> T() const;
+
+        //- Return inverse
+        inline Tensor<Cmpt> inv() const;
 
 
     // Member Operators

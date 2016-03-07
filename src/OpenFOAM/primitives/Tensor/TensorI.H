@@ -587,6 +587,13 @@ inline Tensor<Cmpt> inv(const Tensor<Cmpt>& t)
 }
 
 
+template<class Cmpt>
+inline Tensor<Cmpt> Tensor<Cmpt>::inv() const
+{
+    return Foam::inv(*this);
+}
+
+
 //- Return the 1st invariant of a tensor
 template<class Cmpt>
 inline Cmpt invariantI(const Tensor<Cmpt>& t)
