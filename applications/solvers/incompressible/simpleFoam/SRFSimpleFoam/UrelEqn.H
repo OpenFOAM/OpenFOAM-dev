@@ -14,6 +14,9 @@
 
     fvOptions.constrain(UrelEqn);
 
-    solve(UrelEqn == -fvc::grad(p));
+    if (simple.momentumPredictor())
+    {
+        solve(UrelEqn == -fvc::grad(p));
 
-    fvOptions.correct(Urel);
+        fvOptions.correct(Urel);
+    }
