@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,34 +28,52 @@ Description
 
 #include "diagTensor.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const diagTensor::typeName = "diagTensor";
+const char* const Foam::diagTensor::vsType::typeName = "diagTensor";
 
 template<>
-const char* diagTensor::componentNames[] = {"xx", "yy", "zz"};
+const char* const Foam::diagTensor::vsType::componentNames[] =
+{
+    "xx", "yy", "zz"
+};
 
 template<>
-const diagTensor diagTensor::zero(0, 0, 0);
+const Foam::diagTensor Foam::diagTensor::vsType::vsType::zero
+(
+    diagTensor::uniform(0)
+);
 
 template<>
-const diagTensor diagTensor::one(1, 1, 1);
+const Foam::diagTensor Foam::diagTensor::vsType::one
+(
+    diagTensor::uniform(1)
+);
 
 template<>
-const diagTensor diagTensor::max(VGREAT, VGREAT, VGREAT);
+const Foam::diagTensor Foam::diagTensor::vsType::max
+(
+    diagTensor::uniform(VGREAT)
+);
 
 template<>
-const diagTensor diagTensor::min(-VGREAT, -VGREAT, -VGREAT);
+const Foam::diagTensor Foam::diagTensor::vsType::min
+(
+    diagTensor::uniform(-VGREAT)
+);
 
+template<>
+const Foam::diagTensor Foam::diagTensor::vsType::rootMax
+(
+    diagTensor::uniform(ROOTVGREAT)
+);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<>
+const Foam::diagTensor Foam::diagTensor::vsType::rootMin
+(
+    diagTensor::uniform(-ROOTVGREAT)
+);
 
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -23,28 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline Vector<Cmpt>::Vector()
+inline Foam::Vector<Cmpt>::Vector()
 {}
 
 
 template<class Cmpt>
 template<class Cmpt2>
-inline Vector<Cmpt>::Vector(const VectorSpace<Vector<Cmpt2>, Cmpt2, 3>& vs)
+inline Foam::Vector<Cmpt>::Vector
+(
+    const VectorSpace<Vector<Cmpt2>, Cmpt2, 3>& vs
+)
 :
     VectorSpace<Vector<Cmpt>, Cmpt, 3>(vs)
 {}
 
 
 template<class Cmpt>
-inline Vector<Cmpt>::Vector(const Cmpt& vx, const Cmpt& vy, const Cmpt& vz)
+inline Foam::Vector<Cmpt>::Vector
+(
+    const Cmpt& vx,
+    const Cmpt& vy,
+    const Cmpt& vz
+)
 {
     this->v_[X] = vx;
     this->v_[Y] = vy;
@@ -53,7 +56,7 @@ inline Vector<Cmpt>::Vector(const Cmpt& vx, const Cmpt& vy, const Cmpt& vz)
 
 
 template<class Cmpt>
-inline Vector<Cmpt>::Vector(Istream& is)
+inline Foam::Vector<Cmpt>::Vector(Istream& is)
 :
     VectorSpace<Vector<Cmpt>, Cmpt, 3>(is)
 {}
@@ -62,38 +65,38 @@ inline Vector<Cmpt>::Vector(Istream& is)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline const Cmpt&  Vector<Cmpt>::x() const
+inline const Cmpt& Foam::Vector<Cmpt>::x() const
 {
     return this->v_[X];
 }
 
 template<class Cmpt>
-inline const Cmpt&  Vector<Cmpt>::y() const
+inline const Cmpt& Foam::Vector<Cmpt>::y() const
 {
     return this->v_[Y];
 }
 
 template<class Cmpt>
-inline const Cmpt&  Vector<Cmpt>::z() const
+inline const Cmpt& Foam::Vector<Cmpt>::z() const
 {
     return this->v_[Z];
 }
 
 
 template<class Cmpt>
-inline Cmpt& Vector<Cmpt>::x()
+inline Cmpt& Foam::Vector<Cmpt>::x()
 {
     return this->v_[X];
 }
 
 template<class Cmpt>
-inline Cmpt& Vector<Cmpt>::y()
+inline Cmpt& Foam::Vector<Cmpt>::y()
 {
     return this->v_[Y];
 }
 
 template<class Cmpt>
-inline Cmpt& Vector<Cmpt>::z()
+inline Cmpt& Foam::Vector<Cmpt>::z()
 {
     return this->v_[Z];
 }
@@ -102,7 +105,7 @@ inline Cmpt& Vector<Cmpt>::z()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline const Vector<Cmpt>& Vector<Cmpt>::centre
+inline const Foam::Vector<Cmpt>& Foam::Vector<Cmpt>::centre
 (
     const Foam::List<Vector<Cmpt>>&
 )const
@@ -114,16 +117,18 @@ inline const Vector<Cmpt>& Vector<Cmpt>::centre
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void Vector<Cmpt>::operator=
-(
-    const scalar s
-)
+inline void Foam::Vector<Cmpt>::operator=(const Foam::zero z)
 {
-    VectorSpace<Vector<Cmpt>, Cmpt, 3>::operator=(s);
+    VectorSpace<Vector<Cmpt>, Cmpt, 3>::operator=(z);
 }
 
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Cmpt>
 inline typename innerProduct<Vector<Cmpt>, Vector<Cmpt>>::type

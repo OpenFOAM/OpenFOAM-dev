@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,13 +72,6 @@ public:
 
     // Static data members
 
-        static const char* const typeName;
-        static const char* componentNames[];
-
-        static const SymmTensor zero;
-        static const SymmTensor one;
-        static const SymmTensor max;
-        static const SymmTensor min;
         static const SymmTensor I;
 
 

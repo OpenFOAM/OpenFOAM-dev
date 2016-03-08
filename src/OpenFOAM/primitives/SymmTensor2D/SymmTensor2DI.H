@@ -26,20 +26,15 @@ License
 #include "Vector2D.H"
 #include "Tensor2D.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline SymmTensor2D<Cmpt>::SymmTensor2D()
+inline Foam::SymmTensor2D<Cmpt>::SymmTensor2D()
 {}
 
 
 template<class Cmpt>
-inline SymmTensor2D<Cmpt>::SymmTensor2D
+inline Foam::SymmTensor2D<Cmpt>::SymmTensor2D
 (
     const VectorSpace<SymmTensor2D<Cmpt>, Cmpt, 3>& vs
 )
@@ -49,7 +44,7 @@ inline SymmTensor2D<Cmpt>::SymmTensor2D
 
 
 template<class Cmpt>
-inline SymmTensor2D<Cmpt>::SymmTensor2D(const SphericalTensor2D<Cmpt>& st)
+inline Foam::SymmTensor2D<Cmpt>::SymmTensor2D(const SphericalTensor2D<Cmpt>& st)
 {
     this->v_[XX] = st.ii(); this->v_[XY] = 0;
                             this->v_[YY] = st.ii();
@@ -57,7 +52,7 @@ inline SymmTensor2D<Cmpt>::SymmTensor2D(const SphericalTensor2D<Cmpt>& st)
 
 
 template<class Cmpt>
-inline SymmTensor2D<Cmpt>::SymmTensor2D
+inline Foam::SymmTensor2D<Cmpt>::SymmTensor2D
 (
     const Cmpt txx, const Cmpt txy,
                     const Cmpt tyy
@@ -69,7 +64,7 @@ inline SymmTensor2D<Cmpt>::SymmTensor2D
 
 
 template<class Cmpt>
-inline SymmTensor2D<Cmpt>::SymmTensor2D(Istream& is)
+inline Foam::SymmTensor2D<Cmpt>::SymmTensor2D(Istream& is)
 :
     VectorSpace<SymmTensor2D<Cmpt>, Cmpt, 3>(is)
 {}
@@ -78,45 +73,45 @@ inline SymmTensor2D<Cmpt>::SymmTensor2D(Istream& is)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline const Cmpt& SymmTensor2D<Cmpt>::xx() const
+inline const Cmpt& Foam::SymmTensor2D<Cmpt>::xx() const
 {
     return this->v_[XX];
 }
 
 template<class Cmpt>
-inline const Cmpt& SymmTensor2D<Cmpt>::xy() const
+inline const Cmpt& Foam::SymmTensor2D<Cmpt>::xy() const
 {
     return this->v_[XY];
 }
 
 template<class Cmpt>
-inline const Cmpt& SymmTensor2D<Cmpt>::yy() const
+inline const Cmpt& Foam::SymmTensor2D<Cmpt>::yy() const
 {
     return this->v_[YY];
 }
 
 
 template<class Cmpt>
-inline Cmpt& SymmTensor2D<Cmpt>::xx()
+inline Cmpt& Foam::SymmTensor2D<Cmpt>::xx()
 {
     return this->v_[XX];
 }
 
 template<class Cmpt>
-inline Cmpt& SymmTensor2D<Cmpt>::xy()
+inline Cmpt& Foam::SymmTensor2D<Cmpt>::xy()
 {
     return this->v_[XY];
 }
 
 template<class Cmpt>
-inline Cmpt& SymmTensor2D<Cmpt>::yy()
+inline Cmpt& Foam::SymmTensor2D<Cmpt>::yy()
 {
     return this->v_[YY];
 }
 
 
 template<class Cmpt>
-inline const SymmTensor2D<Cmpt>& SymmTensor2D<Cmpt>::T() const
+inline const Foam::SymmTensor2D<Cmpt>& Foam::SymmTensor2D<Cmpt>::T() const
 {
     return *this;
 }
@@ -125,12 +120,20 @@ inline const SymmTensor2D<Cmpt>& SymmTensor2D<Cmpt>::T() const
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void SymmTensor2D<Cmpt>::operator=(const SphericalTensor2D<Cmpt>& st)
+inline void Foam::SymmTensor2D<Cmpt>::operator=
+(
+    const SphericalTensor2D<Cmpt>& st
+)
 {
     this->v_[XX] = st.ii(); this->v_[XY] = 0;
                             this->v_[YY] = st.ii();
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 

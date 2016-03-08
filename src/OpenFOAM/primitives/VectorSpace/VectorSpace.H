@@ -42,6 +42,7 @@ SourceFiles
 #include "direction.H"
 #include "scalar.H"
 #include "word.H"
+#include "zero.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,6 +78,13 @@ class VectorSpace
 
 public:
 
+    //- The components of this vector space
+    Cmpt v_[nCmpt];
+
+
+    //- VectorSpace type
+    typedef VectorSpace<Form, Cmpt, nCmpt> vsType;
+
     //- Component type
     typedef Cmpt cmptType;
 
@@ -92,8 +100,14 @@ public:
 
     // Static data members
 
-        //- The components of this vector space
-        Cmpt v_[nCmpt];
+        static const char* const typeName;
+        static const char* const componentNames[];
+        static const Form zero;
+        static const Form one;
+        static const Form max;
+        static const Form min;
+        static const Form rootMax;
+        static const Form rootMin;
 
 
     // Constructors
@@ -123,6 +137,9 @@ public:
         inline void component(Cmpt&, const direction) const;
         inline void replace(const direction, const Cmpt&);
 
+        //- Return a VectorSpace with all elements = s
+        inline static Form uniform(const Cmpt& s);
+
 
     // Member Operators
 
@@ -133,7 +150,7 @@ public:
         inline void operator+=(const VectorSpace<Form, Cmpt, nCmpt>&);
         inline void operator-=(const VectorSpace<Form, Cmpt, nCmpt>&);
 
-        inline void operator=(const scalar);
+        inline void operator=(const Foam::zero);
         inline void operator*=(const scalar);
         inline void operator/=(const scalar);
 

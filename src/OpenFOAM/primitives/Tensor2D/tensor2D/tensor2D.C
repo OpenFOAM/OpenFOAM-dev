@@ -28,41 +28,49 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const Foam::tensor2D::typeName = "tensor2D";
+const char* const Foam::tensor2D::vsType::typeName = "tensor2D";
 
 template<>
-const char* Foam::tensor2D::componentNames[] =
+const char* const Foam::tensor2D::vsType::componentNames[] =
 {
     "xx", "xy",
     "yx", "yy"
 };
 
 template<>
-const Foam::tensor2D Foam::tensor2D::zero
+const Foam::tensor2D Foam::tensor2D::vsType::vsType::zero
 (
-    0, 0,
-    0, 0
+    tensor2D::uniform(0)
 );
 
 template<>
-const Foam::tensor2D Foam::tensor2D::one
+const Foam::tensor2D Foam::tensor2D::vsType::one
 (
-    1, 1,
-    1, 1
+    tensor2D::uniform(1)
 );
 
 template<>
-const Foam::tensor2D Foam::tensor2D::max
+const Foam::tensor2D Foam::tensor2D::vsType::max
 (
-    VGREAT, VGREAT,
-    VGREAT, VGREAT
+    tensor2D::uniform(VGREAT)
 );
 
 template<>
-const Foam::tensor2D Foam::tensor2D::min
+const Foam::tensor2D Foam::tensor2D::vsType::min
 (
-    -VGREAT, -VGREAT,
-    -VGREAT, -VGREAT
+    tensor2D::uniform(-VGREAT)
+);
+
+template<>
+const Foam::tensor2D Foam::tensor2D::vsType::rootMax
+(
+    tensor2D::uniform(ROOTVGREAT)
+);
+
+template<>
+const Foam::tensor2D Foam::tensor2D::vsType::rootMin
+(
+    tensor2D::uniform(-ROOTVGREAT)
 );
 
 template<>

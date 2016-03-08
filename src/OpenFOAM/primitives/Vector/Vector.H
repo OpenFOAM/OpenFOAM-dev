@@ -74,18 +74,6 @@ public:
         };
 
 
-    // Static data members
-
-        static const char* const typeName;
-        static const char* componentNames[];
-        static const Vector zero;
-        static const Vector one;
-        static const Vector max;
-        static const Vector min;
-        static const Vector rootMax;
-        static const Vector rootMin;
-
-
     //- Component labeling enumeration
     enum components { X, Y, Z };
 
@@ -127,7 +115,7 @@ public:
 
     // Member Operators
 
-        inline void operator=(const scalar);
+        inline void operator=(const Foam::zero);
 };
 
 

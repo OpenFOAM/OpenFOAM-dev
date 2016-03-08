@@ -23,39 +23,33 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct null
 template<class Cmpt>
-inline Vector2D<Cmpt>::Vector2D()
+inline Foam::Vector2D<Cmpt>::Vector2D()
 {}
 
 
-// Construct given VectorSpace
 template<class Cmpt>
-inline Vector2D<Cmpt>::Vector2D(const VectorSpace<Vector2D<Cmpt>, Cmpt, 2>& vs)
+inline Foam::Vector2D<Cmpt>::Vector2D
+(
+    const VectorSpace<Vector2D<Cmpt>, Cmpt, 2>& vs
+)
 :
     VectorSpace<Vector2D<Cmpt>, Cmpt, 2>(vs)
 {}
 
 
-// Construct given three Cmpts
 template<class Cmpt>
-inline Vector2D<Cmpt>::Vector2D(const Cmpt& vx, const Cmpt& vy)
+inline Foam::Vector2D<Cmpt>::Vector2D(const Cmpt& vx, const Cmpt& vy)
 {
     this->v_[X] = vx;
     this->v_[Y] = vy;
 }
 
 
-// Construct from Istream
 template<class Cmpt>
-inline Vector2D<Cmpt>::Vector2D(Istream& is)
+inline Foam::Vector2D<Cmpt>::Vector2D(Istream& is)
 :
     VectorSpace<Vector2D<Cmpt>, Cmpt, 2>(is)
 {}
@@ -64,30 +58,35 @@ inline Vector2D<Cmpt>::Vector2D(Istream& is)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline const Cmpt&  Vector2D<Cmpt>::x() const
+inline const Cmpt& Foam::Vector2D<Cmpt>::x() const
 {
     return this->v_[X];
 }
 
 template<class Cmpt>
-inline const Cmpt&  Vector2D<Cmpt>::y() const
+inline const Cmpt& Foam::Vector2D<Cmpt>::y() const
 {
     return this->v_[Y];
 }
 
 
 template<class Cmpt>
-inline Cmpt& Vector2D<Cmpt>::x()
+inline Cmpt& Foam::Vector2D<Cmpt>::x()
 {
     return this->v_[X];
 }
 
 template<class Cmpt>
-inline Cmpt& Vector2D<Cmpt>::y()
+inline Cmpt& Foam::Vector2D<Cmpt>::y()
 {
     return this->v_[Y];
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 

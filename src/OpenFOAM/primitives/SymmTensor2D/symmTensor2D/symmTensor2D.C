@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,61 +25,60 @@ License
 
 #include "symmTensor2D.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const symmTensor2D::typeName = "symmTensor2D";
+const char* const Foam::symmTensor2D::vsType::typeName = "symmTensor2D";
 
 template<>
-const char* symmTensor2D::componentNames[] =
+const char* const Foam::symmTensor2D::vsType::componentNames[] =
 {
     "xx", "xy",
           "yy"
 };
 
 template<>
-const symmTensor2D symmTensor2D::zero
+const Foam::symmTensor2D Foam::symmTensor2D::vsType::vsType::zero
 (
-    0, 0,
-       0
+    symmTensor2D::uniform(0)
 );
 
 template<>
-const symmTensor2D symmTensor2D::one
+const Foam::symmTensor2D Foam::symmTensor2D::vsType::one
 (
-    1, 1,
-       1
+    symmTensor2D::uniform(1)
 );
 
 template<>
-const symmTensor2D symmTensor2D::max
+const Foam::symmTensor2D Foam::symmTensor2D::vsType::max
 (
-    VGREAT, VGREAT,
-            VGREAT
+    symmTensor2D::uniform(VGREAT)
 );
 
 template<>
-const symmTensor2D symmTensor2D::min
+const Foam::symmTensor2D Foam::symmTensor2D::vsType::min
 (
-    -VGREAT, -VGREAT,
-             -VGREAT
+    symmTensor2D::uniform(-VGREAT)
 );
 
 template<>
-const symmTensor2D symmTensor2D::I
+const Foam::symmTensor2D Foam::symmTensor2D::vsType::rootMax
+(
+    symmTensor2D::uniform(ROOTVGREAT)
+);
+
+template<>
+const Foam::symmTensor2D Foam::symmTensor2D::vsType::rootMin
+(
+    symmTensor2D::uniform(-ROOTVGREAT)
+);
+
+template<>
+const Foam::symmTensor2D Foam::symmTensor2D::I
 (
     1, 0,
        1
 );
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

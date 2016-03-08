@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,12 +66,6 @@ public:
 
     // Static data members
 
-        static const char* const typeName;
-        static const char* componentNames[];
-        static const SphericalTensor2D zero;
-        static const SphericalTensor2D one;
-        static const SphericalTensor2D max;
-        static const SphericalTensor2D min;
         static const SphericalTensor2D I;
         static const SphericalTensor2D oneThirdI;
         static const SphericalTensor2D twoThirdsI;

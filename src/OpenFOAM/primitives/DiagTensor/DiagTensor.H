@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,22 +58,16 @@ class DiagTensor
 
 public:
 
+    //- Equivalent type of labels used for valid component indexing
+    typedef DiagTensor<label> labelType;
+
+
     // Member constants
 
         enum
         {
             rank = 2 // Rank of DiagTensor is 2
         };
-
-
-    // Static data members
-
-        static const char* const typeName;
-        static const char* componentNames[];
-        static const DiagTensor zero;
-        static const DiagTensor one;
-        static const DiagTensor max;
-        static const DiagTensor min;
 
 
     //- Component labeling enumeration

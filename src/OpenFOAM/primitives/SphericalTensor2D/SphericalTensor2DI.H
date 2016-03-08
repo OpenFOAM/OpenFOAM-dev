@@ -25,22 +25,15 @@ License
 
 #include "Vector2D.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct null
 template<class Cmpt>
-inline SphericalTensor2D<Cmpt>::SphericalTensor2D()
+inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D()
 {}
 
 
-// Construct given VectorSpace
 template<class Cmpt>
-inline SphericalTensor2D<Cmpt>::SphericalTensor2D
+inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D
 (
     const VectorSpace<SphericalTensor2D<Cmpt>, Cmpt, 1>& vs
 )
@@ -49,17 +42,15 @@ inline SphericalTensor2D<Cmpt>::SphericalTensor2D
 {}
 
 
-// Construct given three Cmpts
 template<class Cmpt>
-inline SphericalTensor2D<Cmpt>::SphericalTensor2D(const Cmpt& stii)
+inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D(const Cmpt& stii)
 {
     this->v_[II] = stii;
 }
 
 
-// Construct from Istream
 template<class Cmpt>
-inline SphericalTensor2D<Cmpt>::SphericalTensor2D(Istream& is)
+inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D(Istream& is)
 :
     VectorSpace<SphericalTensor2D<Cmpt>, Cmpt, 1>(is)
 {}
@@ -68,18 +59,23 @@ inline SphericalTensor2D<Cmpt>::SphericalTensor2D(Istream& is)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline const Cmpt&  SphericalTensor2D<Cmpt>::ii() const
+inline const Cmpt& Foam::SphericalTensor2D<Cmpt>::ii() const
 {
     return this->v_[II];
 }
 
 
 template<class Cmpt>
-inline Cmpt& SphericalTensor2D<Cmpt>::ii()
+inline Cmpt& Foam::SphericalTensor2D<Cmpt>::ii()
 {
     return this->v_[II];
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 

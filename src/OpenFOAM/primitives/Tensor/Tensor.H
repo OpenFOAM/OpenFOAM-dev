@@ -75,13 +75,6 @@ public:
 
     // Static data members
 
-        static const char* const typeName;
-        static const char* componentNames[];
-
-        static const Tensor zero;
-        static const Tensor one;
-        static const Tensor max;
-        static const Tensor min;
         static const Tensor I;
 
 

@@ -25,21 +25,16 @@ License
 
 #include "Vector.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline SphericalTensor<Cmpt>::SphericalTensor()
+inline Foam::SphericalTensor<Cmpt>::SphericalTensor()
 {}
 
 
 template<class Cmpt>
 template<class Cmpt2>
-inline SphericalTensor<Cmpt>::SphericalTensor
+inline Foam::SphericalTensor<Cmpt>::SphericalTensor
 (
     const VectorSpace<SphericalTensor<Cmpt2>, Cmpt2, 1>& vs
 )
@@ -49,14 +44,14 @@ inline SphericalTensor<Cmpt>::SphericalTensor
 
 
 template<class Cmpt>
-inline SphericalTensor<Cmpt>::SphericalTensor(const Cmpt& stii)
+inline Foam::SphericalTensor<Cmpt>::SphericalTensor(const Cmpt& stii)
 {
     this->v_[II] = stii;
 }
 
 
 template<class Cmpt>
-inline SphericalTensor<Cmpt>::SphericalTensor(Istream& is)
+inline Foam::SphericalTensor<Cmpt>::SphericalTensor(Istream& is)
 :
     VectorSpace<SphericalTensor<Cmpt>, Cmpt, 1>(is)
 {}
@@ -65,25 +60,31 @@ inline SphericalTensor<Cmpt>::SphericalTensor(Istream& is)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline const Cmpt&  SphericalTensor<Cmpt>::ii() const
+inline const Cmpt& Foam::SphericalTensor<Cmpt>::ii() const
 {
     return this->v_[II];
 }
 
 
 template<class Cmpt>
-inline Cmpt& SphericalTensor<Cmpt>::ii()
+inline Cmpt& Foam::SphericalTensor<Cmpt>::ii()
 {
     return this->v_[II];
 }
 
 
 template<class Cmpt>
-inline const SphericalTensor<Cmpt>& SphericalTensor<Cmpt>::T() const
+inline const Foam::SphericalTensor<Cmpt>&
+Foam::SphericalTensor<Cmpt>::T() const
 {
     return *this;
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 

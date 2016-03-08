@@ -148,6 +148,15 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::replace
 }
 
 
+template<class Form, class Cmpt, int nCmpt>
+inline Form VectorSpace<Form, Cmpt, nCmpt>::uniform(const Cmpt& s)
+{
+    Form v;
+    VectorSpaceOps<nCmpt,0>::eqOpS(v, s, eqOp<Cmpt>());
+    return v;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Form, class Cmpt, int nCmpt>
@@ -219,12 +228,9 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::operator-=
 
 
 template<class Form, class Cmpt, int nCmpt>
-inline void VectorSpace<Form, Cmpt, nCmpt>::operator=
-(
-    const scalar s
-)
+inline void VectorSpace<Form, Cmpt, nCmpt>::operator=(const Foam::zero)
 {
-    VectorSpaceOps<nCmpt,0>::eqOpS(*this, s, eqOp<Cmpt>());
+    VectorSpaceOps<nCmpt,0>::eqOpS(*this, 0, eqOp<Cmpt>());
 }
 
 
