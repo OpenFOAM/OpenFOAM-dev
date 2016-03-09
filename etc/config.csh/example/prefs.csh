@@ -38,7 +38,7 @@
 
 ## Specify OpenFOAM ThirdParty compiler
 ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# set foamCompiler=ThirdParty
+# set WM_COMPILER_TYPE=ThirdParty
 
 ## Specify compiler type
 ## ~~~~~~~~~~~~~~~~~~~~~

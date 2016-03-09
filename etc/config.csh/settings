@@ -207,13 +207,13 @@ unsetenv MPFR_ARCH_PATH GMP_ARCH_PATH
 
 # Location of compiler installation
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ( ! $?foamCompiler ) then
-    set foamCompiler=system
+if ( ! $?WM_COMPILER_TYPE ) then
+    set WM_COMPILER_TYPE=system
     echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
-    echo "    foamCompiler not set, using '$foamCompiler'"
+    echo "    WM_COMPILER_TYPE not set, using '$WM_COMPILER_TYPE'"
 endif
 
-switch ("$foamCompiler")
+switch ("$WM_COMPILER_TYPE")
 case OpenFOAM:
 case ThirdParty:
     # Default versions of GMP, MPFR and MPC, overide as necessary
@@ -279,7 +279,7 @@ case ThirdParty:
             echo "    Cannot find $gccDir installation."
             echo "    Please install this compiler version or if you wish to" \
                  " use the system compiler,"
-            echo "    change the 'foamCompiler' setting to 'system'"
+            echo "    change the 'WM_COMPILER_TYPE' setting to 'system'"
             echo
         endif
 
@@ -315,7 +315,7 @@ case ThirdParty:
             echo "    Cannot find $clangDir installation."
             echo "    Please install this compiler version or if you wish to" \
                  " use the system compiler,"
-            echo "    change the 'foamCompiler' setting to 'system'"
+            echo "    change the 'WM_COMPILER_TYPE' setting to 'system'"
             echo
         endif
 
@@ -331,7 +331,7 @@ case system:
     breaksw
 
 default:
-    echo "Warn: foamCompiler='$foamCompiler' is unsupported"
+    echo "Warn: WM_COMPILER_TYPE='$WM_COMPILER_TYPE' is unsupported"
     echo "   treating as 'system' instead"
     breaksw
 endsw
@@ -341,6 +341,6 @@ endsw
 # ~~~~~~~~~~~~~~~~~~~~
 #- keep _foamAddPath _foamAddLib _foamAddMan
 unset minBufferSize
-unsetenv foamCompiler
+unsetenv WM_COMPILER_TYPE
 
 #------------------------------------------------------------------------------
