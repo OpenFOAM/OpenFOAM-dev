@@ -58,8 +58,8 @@ foamInstall=$HOME/$WM_PROJECT
 : ${FOAM_INST_DIR:=$foamInstall}; export FOAM_INST_DIR
 
 #- Compiler location:
-#    foamCompiler= system | ThirdParty (OpenFOAM)
-foamCompiler=system
+#    WM_COMPILER_TYPE= system | ThirdParty (OpenFOAM)
+export WM_COMPILER_TYPE=system
 
 #- Compiler:
 #    WM_COMPILER = Gcc | Gcc45 | Gcc46 | Gcc47 | Gcc48 | Gcc49| Clang | Icc
@@ -137,52 +137,9 @@ fi
 # ~~~~~~~~~~~~~~~~~~~~~~
 export WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
 
-
-# Source files, possibly with some verbosity
-_foamSource()
-{
-    while [ $# -ge 1 ]
-    do
-        [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "Sourcing: $1" 1>&2
-        . $1
-       shift
-    done
-}
-
-# Evaluate command-line parameters
-_foamEval()
-{
-    while [ $# -gt 0 ]
-    do
-        case "$1" in
-        -*)
-            # stray option (not meant for us here) -> get out
-            break
-            ;;
-        *=)
-            # name=       -> unset name
-            [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "unset ${1%=}" 1>&2
-            eval "unset ${1%=}"
-            ;;
-        *=*)
-            # name=value  -> export name=value
-            [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "export $1" 1>&2
-            eval "export $1"
-            ;;
-        *)
-            # filename: source it
-            if [ -f "$1" ]
-            then
-                _foamSource "$1"
-            else
-                _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile -silent "$1"`
-            fi
-            ;;
-        esac
-        shift
-    done
-}
-
+# Source initialization functions
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+. $WM_PROJECT_DIR/etc/config.sh/functions
 
 # Add in preset user or site preferences:
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile prefs.sh`
@@ -245,9 +202,13 @@ then
 fi
 
 
-# cleanup environment:
+# Cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
 unset cleaned foamClean foamInstall foamOldDirs
-unset _foamSource _foamEval
+
+
+# Unload initialization functions:
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+. $WM_PROJECT_DIR/etc/config.sh/functions
 
 #------------------------------------------------------------------------------

@@ -22,46 +22,61 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config.sh/example/compiler
+#     etc/config.sh/compiler
 #
 # Description
-#     Example of fine tuning compiler versions and settings for OpenFOAM
+#     Startup file for custom compiler versions for OpenFOAM
 #     Sourced from OpenFOAM-<VERSION>/etc/config.sh/settings
 #
 #------------------------------------------------------------------------------
 
-# First load the standard versions, if necessary
-foamFile=$($WM_PROJECT_DIR/bin/foamEtcFile -mode o config.sh/compiler \
-               2>/dev/null)
-[ $? -eq 0 ] && _foamSource $foamFile
-unset foamFile
+case "$WM_COMPILER_TYPE" in
+OpenFOAM | ThirdParty)
 
+    # Default versions of GMP, MPFR and MPC, override as necessary
+    gmp_version=gmp-5.1.2
+    mpfr_version=mpfr-3.1.2
+    mpc_version=mpc-1.0.1
 
-# Override compiler settings
-case "$WM_COMPILER" in
-Gcc46 | Gcc46++0x)
-    gcc_version=gcc-4.6.0
-    gmp_version=gmp-5.0.1
-    mpfr_version=mpfr-2.4.2
-    mpc_version=mpc-0.8.1
+    case "$WM_COMPILER" in
+    Gcc | Gcc48)
+        gcc_version=gcc-4.8.5
+        ;;
+    Gcc45)
+        gcc_version=gcc-4.5.4
+        ;;
+    Gcc46)
+        gcc_version=gcc-4.6.4
+        ;;
+    Gcc47)
+        gcc_version=gcc-4.7.4
+        ;;
+    Gcc49)
+        gcc_version=gcc-4.9.3
+        ;;
+    Gcc51)
+        gcc_version=gcc-5.1.0
+        ;;
+    Gcc52)
+        gcc_version=gcc-5.2.0
+        ;;
+    Gcc53)
+        gcc_version=gcc-5.3.0
+        ;;
+    Clang)
+        # Using clang - not gcc
+        export WM_CC='clang'
+        export WM_CXX='clang++'
+        clang_version=llvm-3.7.0
+        ;;
+    *)
+        echo 1>&2
+        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/compiler:" 1>&2
+        echo "    Unknown OpenFOAM compiler type '$WM_COMPILER'" 1>&2
+        echo "    Please check your settings" 1>&2
+        echo 1>&2
+        ;;
+    esac
     ;;
-Gcc45 | Gcc45++0x)
-    gcc_version=gcc-4.5.2
-    gmp_version=gmp-5.0.1
-    mpfr_version=mpfr-2.4.2
-    mpc_version=mpc-0.8.1
-    ;;
-Gcc48u)
-    # Example of using the system GCC 4.8 in Ubuntu 15.10. Keep in mind you
-    # will also need to create respective directory in "wmake/rules"
-    export WM_CC='gcc-4.8'
-    export WM_CXX='g++-4.8'
-    ;;
-Icc)
-    # Example for ensuring that 3rd software uses the Icc compilers
-    export WM_CC='icc'
-    export WM_CXX='icpc'
-    ;;
+
 esac
-
-#------------------------------------------------------------------------------

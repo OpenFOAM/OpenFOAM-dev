@@ -38,7 +38,7 @@
 
 ## Specify OpenFOAM ThirdParty compiler
 ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# foamCompiler=ThirdParty
+#WM_COMPILER_TYPE=ThirdParty
 
 ## Specify compiler type
 ## ~~~~~~~~~~~~~~~~~~~~~
@@ -46,7 +46,7 @@
 
 ## Specify system openmpi
 ## ~~~~~~~~~~~~~~~~~~~~~~
-# export WM_MPLIB=SYSTEMOPENMPI
+#export WM_MPLIB=SYSTEMOPENMPI
 
 
 #------------------------------------------------------------------------------

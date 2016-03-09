@@ -267,4 +267,9 @@ then
 fi
 export MPI_BUFFER_SIZE
 
+
+# Cleanup environment:
+# ~~~~~~~~~~~~~~~~~~~~
+unset minBufferSize
+
 #------------------------------------------------------------------------------

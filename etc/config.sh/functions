@@ -1,0 +1,122 @@
+#----------------------------------*-sh-*--------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File
+#     etc/config.sh/functions
+#
+# Description
+#     Initialization script functions for the bashrc environment
+#     Sourced from OpenFOAM-<VERSION>/etc/config.sh/bashrc
+#
+#------------------------------------------------------------------------------
+
+if [ -z "$WM_BASH_FUNCTIONS" ]
+then
+
+    # Temporary environment variable for automatically (un)loading functions
+    WM_BASH_FUNCTIONS=loaded
+
+    # Source files, possibly with some verbosity
+    _foamSource()
+    {
+        while [ $# -ge 1 ]
+        do
+            [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "Sourcing: $1" 1>&2
+            . $1
+          shift
+        done
+    }
+
+    # Evaluate command-line parameters
+    _foamEval()
+    {
+        while [ $# -gt 0 ]
+        do
+            case "$1" in
+            -*)
+                # stray option (not meant for us here) -> get out
+                break
+                ;;
+            *=)
+                # name=       -> unset name
+                [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "unset ${1%=}" 1>&2
+                eval "unset ${1%=}"
+                ;;
+            *=*)
+                # name=value  -> export name=value
+                [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "export $1" 1>&2
+                eval "export $1"
+                ;;
+            *)
+                # filename: source it
+                if [ -f "$1" ]
+                then
+                    _foamSource "$1"
+                else
+                    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile -silent "$1"`
+                fi
+                ;;
+            esac
+            shift
+        done
+    }
+
+    # Prefix to PATH
+    _foamAddPath()
+    {
+        while [ $# -ge 1 ]
+        do
+            export PATH=$1:$PATH
+            shift
+        done
+    }
+
+    # Prefix to LD_LIBRARY_PATH
+    _foamAddLib()
+    {
+        while [ $# -ge 1 ]
+        do
+            export LD_LIBRARY_PATH=$1:$LD_LIBRARY_PATH
+            shift
+        done
+    }
+
+    # Prefix to MANPATH
+    _foamAddMan()
+    {
+        while [ $# -ge 1 ]
+        do
+            export MANPATH=$1:$MANPATH
+            shift
+        done
+    }
+
+else
+
+    # Cleanup environment:
+    # ~~~~~~~~~~~~~~~~~~~~
+    unset WM_BASH_FUNCTIONS
+    unset _foamAddPath _foamAddLib _foamAddMan
+    unset _foamSource _foamEval
+
+fi

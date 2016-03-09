@@ -49,6 +49,7 @@ do
     if [ -r $cmake ]
     then
         export CMAKE_HOME=$cmake
+        export CMAKE_ROOT=$cmake
         export PATH=$CMAKE_HOME/bin:$PATH
         break
     fi

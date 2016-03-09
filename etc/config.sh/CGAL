@@ -32,8 +32,13 @@
 boost_version=boost-system
 cgal_version=CGAL-4.7
 
-export BOOST_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$boost_version
-export CGAL_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cgal_version
+if [ -z "$SOURCE_CGAL_VERSIONS_ONLY" ]
+then
+
+common_path=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER
+
+export BOOST_ARCH_PATH=$common_path/$boost_version
+export CGAL_ARCH_PATH=$common_path/$cgal_version
 
 if [ "$FOAM_VERBOSE" -a "$PS1" ]
 then
@@ -52,6 +57,8 @@ then
     _foamAddLib $BOOST_ARCH_PATH/lib
 fi
 
-unset boost_version cgal_version
+unset boost_version cgal_version common_path
+
+fi
 
 #------------------------------------------------------------------------------

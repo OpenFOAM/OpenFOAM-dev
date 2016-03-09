@@ -30,37 +30,6 @@
 #
 #------------------------------------------------------------------------------
 
-# Prefix to PATH
-_foamAddPath()
-{
-    while [ $# -ge 1 ]
-    do
-        export PATH=$1:$PATH
-        shift
-    done
-}
-
-# Prefix to LD_LIBRARY_PATH
-_foamAddLib()
-{
-    while [ $# -ge 1 ]
-    do
-        export LD_LIBRARY_PATH=$1:$LD_LIBRARY_PATH
-        shift
-    done
-}
-
-# Prefix to MANPATH
-_foamAddMan()
-{
-    while [ $# -ge 1 ]
-    do
-        export MANPATH=$1:$MANPATH
-        shift
-    done
-}
-
-#------------------------------------------------------------------------------
 # Set environment variables according to system type
 export WM_ARCH=`uname -s`
 
@@ -233,61 +202,19 @@ unset MPFR_ARCH_PATH GMP_ARCH_PATH
 
 # Location of compiler installation
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if [ -z "$foamCompiler" ]
+if [ -z "$WM_COMPILER_TYPE" ]
 then
-    foamCompiler=system
+    WM_COMPILER_TYPE=system
     echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
-    echo "    foamCompiler not set, using '$foamCompiler'" 1>&2
+    echo "    WM_COMPILER_TYPE not set, using '$WM_COMPILER_TYPE'" 1>&2
 fi
 
-case "${foamCompiler}" in
-OpenFOAM | ThirdParty)
-    # Default versions of GMP, MPFR and MPC, overide as necessary
-    gmp_version=gmp-5.1.2
-    mpfr_version=mpfr-3.1.2
-    mpc_version=mpc-1.0.1
-    case "$WM_COMPILER" in
-    Gcc | Gcc48)
-        gcc_version=gcc-4.8.5
-        ;;
-    Gcc45)
-        gcc_version=gcc-4.5.4
-        ;;
-    Gcc46)
-        gcc_version=gcc-4.6.4
-        ;;
-    Gcc47)
-        gcc_version=gcc-4.7.4
-        ;;
-    Gcc49)
-        gcc_version=gcc-4.9.3
-        ;;
-    Gcc51)
-        gcc_version=gcc-5.1.0
-        ;;
-    Gcc52)
-        gcc_version=gcc-5.2.0
-        ;;
-    Gcc53)
-        gcc_version=gcc-5.3.0
-        ;;
-    Clang)
-        # Using clang - not gcc
-        export WM_CC='clang'
-        export WM_CXX='clang++'
-        clang_version=llvm-3.7.0
-        ;;
-    *)
-        echo 1>&2
-        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
-        echo "    Unknown OpenFOAM compiler type '$WM_COMPILER'" 1>&2
-        echo "    Please check your settings" 1>&2
-        echo 1>&2
-        ;;
-    esac
+# Load configured compiler versions, regardless of the compiler type
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/compiler`
 
-    # Optional configuration tweaks:
-    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.sh/compiler`
+case "$WM_COMPILER_TYPE" in
+OpenFOAM | ThirdParty)
 
     if [ -n "$gcc_version" ]
     then
@@ -303,7 +230,7 @@ OpenFOAM | ThirdParty)
             echo "    Cannot find $gccDir installation." 1>&2
             echo "    Please install this compiler version or if you wish to" \
                  " use the system compiler," 1>&2
-            echo "    change the 'foamCompiler' setting to 'system'" 1>&2
+            echo "    change the 'WM_COMPILER_TYPE' setting to 'system'" 1>&2
             echo
         }
 
@@ -341,7 +268,7 @@ OpenFOAM | ThirdParty)
             echo "    Cannot find $clangDir installation." 1>&2
             echo "    Please install this compiler version or if you wish to" \
                  " use the system compiler," 1>&2
-            echo "    change the 'foamCompiler' setting to 'system'" 1>&2
+            echo "    change the 'WM_COMPILER_TYPE' setting to 'system'" 1>&2
             echo 1>&2
         }
 
@@ -354,15 +281,9 @@ system)
     # Use system compiler
     ;;
 *)
-    echo "Warn: foamCompiler='$foamCompiler' is unsupported" 1>&2
+    echo "Warn: WM_COMPILER_TYPE='$WM_COMPILER_TYPE' is unsupported" 1>&2
     echo "   treating as 'system' instead" 1>&2
     ;;
 esac
-
-
-# Cleanup environment:
-# ~~~~~~~~~~~~~~~~~~~~
-#keep _foamAddPath _foamAddLib _foamAddMan
-unset foamCompiler minBufferSize
 
 #------------------------------------------------------------------------------
