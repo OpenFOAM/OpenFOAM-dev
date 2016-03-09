@@ -35,7 +35,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh, int r>
+template<class Type, class GeoMesh, direction r>
 tmp<DimensionedField<typename powProduct<Type, r>::type, GeoMesh>>
 pow
 (
@@ -66,7 +66,7 @@ pow
 }
 
 
-template<class Type, class GeoMesh, int r>
+template<class Type, class GeoMesh, direction r>
 tmp<DimensionedField<typename powProduct<Type, r>::type, GeoMesh>>
 pow
 (
@@ -510,7 +510,7 @@ operator op                                                                    \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type, class GeoMesh>         \
+template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
 tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
 operator op                                                                    \
 (                                                                              \
@@ -549,7 +549,7 @@ operator op                                                                    \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type, class GeoMesh>         \
+template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
 tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
 operator op                                                                    \
 (                                                                              \
@@ -590,7 +590,7 @@ operator op                                                                    \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type, class GeoMesh>         \
+template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
 tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
 operator op                                                                    \
 (                                                                              \
@@ -628,7 +628,7 @@ operator op                                                                    \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type, class GeoMesh>         \
+template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
 tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
 operator op                                                                    \
 (                                                                              \

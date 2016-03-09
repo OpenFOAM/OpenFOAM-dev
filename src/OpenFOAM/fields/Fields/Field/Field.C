@@ -701,7 +701,7 @@ void Foam::Field<Type>::operator=(const Type& t)
 
 
 template<class Type>
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, Foam::direction nCmpt>
 void Foam::Field<Type>::operator=(const VectorSpace<Form,Cmpt,nCmpt>& vs)
 {
     TFOR_ALL_F_OP_S(Type, *this, =, VSType, vs)

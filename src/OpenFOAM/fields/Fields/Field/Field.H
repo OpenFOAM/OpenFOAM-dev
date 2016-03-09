@@ -345,7 +345,7 @@ public:
         void operator=(const tmp<Field<Type>>&);
         void operator=(const Type&);
 
-        template<class Form, class Cmpt, int nCmpt>
+        template<class Form, class Cmpt, direction nCmpt>
         void operator=(const VectorSpace<Form,Cmpt,nCmpt>&);
 
         void operator+=(const UList<Type>&);

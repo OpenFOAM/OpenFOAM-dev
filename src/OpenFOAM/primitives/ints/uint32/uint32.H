@@ -80,14 +80,17 @@ public:
     //- Component type
     typedef uint32_t cmptType;
 
+
     // Member constants
 
-        enum
-        {
-            dim = 3,         //!< Dimensionality of space
-            rank = 0,        //!< Rank of uint32_t is 0
-            nComponents = 1  //!< Number of components in uint32_t is 1
-        };
+        //- Dimensionality of space
+        static const direction dim = 3;
+
+        //- Rank of uint32_t is 0
+        static const direction rank = 0;
+
+        //- Number of components in uint32_t is 1
+        static const direction nComponents = 1;
 
 
     // Static data members

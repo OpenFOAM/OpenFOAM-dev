@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,12 +78,11 @@ public:
     //- Component type
     typedef scalar cmptType;
 
+
     // Member constants
 
-        enum
-        {
-            rank = 1 // Rank of quaternion is 1
-        };
+        //- Rank of quaternion is 1
+        static const direction rank = 1;
 
 
     // Static data members

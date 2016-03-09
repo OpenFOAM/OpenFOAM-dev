@@ -231,7 +231,7 @@ public:
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
-template<class Type, int r>
+template<class Type, direction r>
 dimensioned<typename powProduct<Type, r>::type>
 pow
 (
@@ -306,7 +306,7 @@ template<class Type1, class Type2>                                             \
 dimensioned<typename product<Type1, Type2>::type>                              \
 operator op(const dimensioned<Type1>&, const dimensioned<Type2>&);             \
                                                                                \
-template<class Type, class Form, class Cmpt, int nCmpt>                        \
+template<class Type, class Form, class Cmpt, direction nCmpt>                  \
 dimensioned<typename product<Type, Form>::type>                                \
 operator op                                                                    \
 (                                                                              \
@@ -314,7 +314,7 @@ operator op                                                                    \
     const VectorSpace<Form,Cmpt,nCmpt>&                                        \
 );                                                                             \
                                                                                \
-template<class Type, class Form, class Cmpt, int nCmpt>                        \
+template<class Type, class Form, class Cmpt, direction nCmpt>                  \
 dimensioned<typename product<Form, Type>::type>                                \
 operator op                                                                    \
 (                                                                              \

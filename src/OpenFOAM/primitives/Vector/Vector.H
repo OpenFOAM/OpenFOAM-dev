@@ -68,10 +68,8 @@ public:
 
     // Member constants
 
-        enum
-        {
-            rank = 1 // Rank of Vector is 1
-        };
+        //- Rank of Vector is 1
+        static const direction rank = 1;
 
 
     //- Component labeling enumeration

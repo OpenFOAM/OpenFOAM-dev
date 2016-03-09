@@ -35,12 +35,19 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline VectorSpace<Form, Cmpt, nCmpt>::VectorSpace()
 {}
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
+inline VectorSpace<Form, Cmpt, nCmpt>::VectorSpace(const Foam::zero z)
+{
+    VectorSpaceOps<nCmpt,0>::eqOpS(*this, 0, eqOp<Cmpt>());
+}
+
+
+template<class Form, class Cmpt, direction nCmpt>
 inline VectorSpace<Form, Cmpt, nCmpt>::VectorSpace
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -50,7 +57,7 @@ inline VectorSpace<Form, Cmpt, nCmpt>::VectorSpace
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 template<class Form2, class Cmpt2>
 inline VectorSpace<Form, Cmpt, nCmpt>::VectorSpace
 (
@@ -63,14 +70,14 @@ inline VectorSpace<Form, Cmpt, nCmpt>::VectorSpace
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline label VectorSpace<Form, Cmpt, nCmpt>::size() const
 {
     return nCmpt;
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline const Cmpt& VectorSpace<Form, Cmpt, nCmpt>::component
 (
     const direction d
@@ -89,7 +96,7 @@ inline const Cmpt& VectorSpace<Form, Cmpt, nCmpt>::component
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt& VectorSpace<Form, Cmpt, nCmpt>::component
 (
     const direction d
@@ -108,7 +115,7 @@ inline Cmpt& VectorSpace<Form, Cmpt, nCmpt>::component
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::component
 (
     Cmpt& c,
@@ -128,7 +135,7 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::component
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::replace
 (
     const direction d,
@@ -148,7 +155,7 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::replace
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form VectorSpace<Form, Cmpt, nCmpt>::uniform(const Cmpt& s)
 {
     Form v;
@@ -159,7 +166,7 @@ inline Form VectorSpace<Form, Cmpt, nCmpt>::uniform(const Cmpt& s)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline const Cmpt& VectorSpace<Form, Cmpt, nCmpt>::operator[]
 (
     const direction d
@@ -178,7 +185,7 @@ inline const Cmpt& VectorSpace<Form, Cmpt, nCmpt>::operator[]
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt& VectorSpace<Form, Cmpt, nCmpt>::operator[]
 (
     const direction d
@@ -197,7 +204,7 @@ inline Cmpt& VectorSpace<Form, Cmpt, nCmpt>::operator[]
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::operator=
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -207,7 +214,7 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::operator=
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::operator+=
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -217,7 +224,7 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::operator+=
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::operator-=
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -227,14 +234,14 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::operator-=
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::operator=(const Foam::zero)
 {
     VectorSpaceOps<nCmpt,0>::eqOpS(*this, 0, eqOp<Cmpt>());
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::operator*=
 (
     const scalar s
@@ -244,7 +251,7 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::operator*=
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline void VectorSpace<Form, Cmpt, nCmpt>::operator/=
 (
     const scalar s
@@ -256,7 +263,7 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::operator/=
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt& setComponent
 (
     VectorSpace<Form, Cmpt, nCmpt>& vs,
@@ -267,7 +274,7 @@ inline Cmpt& setComponent
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline const Cmpt& component
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs,
@@ -281,7 +288,7 @@ inline const Cmpt& component
 // Powers of a Form
 // Equivalent to outer-products between the Form and itself
 // Form^0 = 1.0
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline typename powProduct<Form, 0>::type pow
 (
     const VectorSpace<Form, Cmpt, nCmpt>&,
@@ -293,7 +300,7 @@ inline typename powProduct<Form, 0>::type pow
 }
 
 // Form^1 = Form
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline typename powProduct<Form, 1>::type pow
 (
     const VectorSpace<Form, Cmpt, nCmpt>& v,
@@ -306,7 +313,7 @@ inline typename powProduct<Form, 1>::type pow
 
 
 // Form^2 = sqr(Form)
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline typename powProduct<Form, 2>::type pow
 (
     const VectorSpace<Form, Cmpt, nCmpt>& v,
@@ -318,7 +325,7 @@ inline typename powProduct<Form, 2>::type pow
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline scalar magSqr
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -330,7 +337,7 @@ inline scalar magSqr
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline scalar mag
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -340,7 +347,7 @@ inline scalar mag
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline VectorSpace<Form, Cmpt, nCmpt> cmptMultiply
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -353,7 +360,7 @@ inline VectorSpace<Form, Cmpt, nCmpt> cmptMultiply
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline VectorSpace<Form, Cmpt, nCmpt> cmptPow
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -366,7 +373,7 @@ inline VectorSpace<Form, Cmpt, nCmpt> cmptPow
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline VectorSpace<Form, Cmpt, nCmpt> cmptDivide
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -379,7 +386,7 @@ inline VectorSpace<Form, Cmpt, nCmpt> cmptDivide
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline VectorSpace<Form, Cmpt, nCmpt> stabilise
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs,
@@ -392,7 +399,7 @@ inline VectorSpace<Form, Cmpt, nCmpt> stabilise
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt cmptMax
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -404,7 +411,7 @@ inline Cmpt cmptMax
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt cmptMin
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -416,7 +423,7 @@ inline Cmpt cmptMin
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt cmptSum
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -428,7 +435,7 @@ inline Cmpt cmptSum
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt cmptAv
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -437,7 +444,7 @@ inline Cmpt cmptAv
     return cmptSum(vs)/nCmpt;
 }
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt cmptProduct
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -449,7 +456,7 @@ inline Cmpt cmptProduct
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form cmptMag
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -461,7 +468,7 @@ inline Form cmptMag
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form max
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -474,7 +481,7 @@ inline Form max
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form min
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -487,7 +494,7 @@ inline Form min
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form minMod
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -516,8 +523,8 @@ inline Type dot(const Type& t, const scalar s)
 
 template
 <
-    class Form1, class Cmpt1, int nCmpt1,
-    class Form2, class Cmpt2, int nCmpt2
+    class Form1, class Cmpt1, direction nCmpt1,
+    class Form2, class Cmpt2, direction nCmpt2
 >
 inline typename innerProduct<Form1, Form2>::type dot
 (
@@ -531,7 +538,7 @@ inline typename innerProduct<Form1, Form2>::type dot
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form operator-
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
@@ -543,7 +550,7 @@ inline Form operator-
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form operator+
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -555,7 +562,7 @@ inline Form operator+
     return v;
 }
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form operator-
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -568,7 +575,7 @@ inline Form operator-
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form operator*
 (
     scalar s,
@@ -581,7 +588,7 @@ inline Form operator*
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form operator*
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs,
@@ -594,7 +601,7 @@ inline Form operator*
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form operator/
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs,
@@ -607,7 +614,7 @@ inline Form operator/
 }
 
 /*
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form operator/
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -620,7 +627,7 @@ inline Form operator/
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Form operator/
 (
     scalar s,
@@ -634,7 +641,7 @@ inline Form operator/
 */
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline Cmpt operator&&
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -642,7 +649,7 @@ inline Cmpt operator&&
 )
 {
     Cmpt ddProd = vs1.v_[0]*vs2.v_[0];
-    for (int i=1; i<nCmpt; ++i)
+    for (direction i=1; i<nCmpt; ++i)
     {
         ddProd += vs1.v_[i]*vs2.v_[i];
     }
@@ -650,7 +657,7 @@ inline Cmpt operator&&
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline bool operator==
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -658,7 +665,7 @@ inline bool operator==
 )
 {
     bool eq = true;
-    for (int i=0; i<nCmpt; ++i)
+    for (direction i=0; i<nCmpt; ++i)
     {
         if (!(eq &= (equal(vs1.v_[i], vs2.v_[i])))) break;
     }
@@ -666,7 +673,7 @@ inline bool operator==
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline bool operator!=
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -677,7 +684,7 @@ inline bool operator!=
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline bool operator>
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -685,7 +692,7 @@ inline bool operator>
 )
 {
     bool gt = true;
-    for (int i=0; i<nCmpt; ++i)
+    for (direction i=0; i<nCmpt; ++i)
     {
         if (!(gt &= vs1.v_[i] > vs2.v_[i])) break;
     }
@@ -693,7 +700,7 @@ inline bool operator>
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline bool operator<
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -701,7 +708,7 @@ inline bool operator<
 )
 {
     bool lt = true;
-    for (int i=0; i<nCmpt; ++i)
+    for (direction i=0; i<nCmpt; ++i)
     {
         if (!(lt &= vs1.v_[i] < vs2.v_[i])) break;
     }
@@ -709,7 +716,7 @@ inline bool operator<
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline bool operator>=
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,
@@ -720,7 +727,7 @@ inline bool operator>=
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 inline bool operator<=
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs1,

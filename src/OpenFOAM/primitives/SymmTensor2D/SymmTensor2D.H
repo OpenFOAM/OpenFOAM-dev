@@ -64,10 +64,8 @@ public:
 
     // Member constants
 
-        enum
-        {
-            rank = 2 // Rank of SymmTensor2D is 2
-        };
+        //- Rank of SymmTensor2D is 2
+        static const direction rank = 2;
 
 
     // Static data members

@@ -51,16 +51,16 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-template<class Form, class Cmpt, int nCmpt> class VectorSpace;
+template<class Form, class Cmpt, direction nCmpt> class VectorSpace;
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 Istream& operator>>
 (
     Istream&,
     VectorSpace<Form, Cmpt, nCmpt>&
 );
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 Ostream& operator<<
 (
     Ostream&,
@@ -72,7 +72,7 @@ Ostream& operator<<
                            Class VectorSpace Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 class VectorSpace
 {
 
@@ -114,6 +114,9 @@ public:
 
         //- Construct null
         inline VectorSpace();
+
+        //- Construct initialized to zero
+        inline VectorSpace(const Foam::zero);
 
         //- Construct from Istream
         VectorSpace(Istream&);
@@ -174,7 +177,7 @@ public:
 // * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * * //
 
 //- Return a string representation of a VectorSpace
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, direction nCmpt>
 word name(const VectorSpace<Form, Cmpt, nCmpt>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

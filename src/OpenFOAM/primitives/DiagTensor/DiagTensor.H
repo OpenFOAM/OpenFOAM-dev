@@ -64,10 +64,8 @@ public:
 
     // Member constants
 
-        enum
-        {
-            rank = 2 // Rank of DiagTensor is 2
-        };
+        //- Rank of DiagTensor is 2
+        static const direction rank = 2;
 
 
     //- Component labeling enumeration

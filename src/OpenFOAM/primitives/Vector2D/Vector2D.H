@@ -62,10 +62,8 @@ public:
 
     // Member constants
 
-        enum
-        {
-            rank = 1 // Rank of Vector2D is 1
-        };
+        //- Rank of Vector2D is 1
+        static const direction rank = 1;
 
 
     //- Component labeling enumeration

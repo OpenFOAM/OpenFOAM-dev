@@ -53,14 +53,18 @@ public:
     //- Equivalent type of labels used for valid component indexing
     typedef label labelType;
 
+
     // Member constants
 
-        enum
-        {
-            dim = 3,         //!< Dimensionality of space
-            rank = 0,        //!< Rank of Scalar is 0
-            nComponents = 1  //!< Number of components in Scalar is 1
-        };
+        //- Dimensionality of space
+        static const direction dim = 3;
+
+        //- Rank of Scalar is 0
+        static const direction rank = 0;
+
+        //- Number of components in Scalar is 1
+        static const direction nComponents = 1;
+
 
     // Static data members
 
@@ -72,6 +76,7 @@ public:
         static const Scalar min;
         static const Scalar rootMax;
         static const Scalar rootMin;
+
 
     // Constructors
 

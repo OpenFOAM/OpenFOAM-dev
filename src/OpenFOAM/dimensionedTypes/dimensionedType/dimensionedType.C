@@ -447,7 +447,7 @@ void Foam::dimensioned<Type>::operator/=
 
 // * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
 
-template<class Type, int r>
+template<class Type, Foam::direction r>
 Foam::dimensioned<typename Foam::powProduct<Type, r>::type>
 Foam::pow(const dimensioned<Type>& dt, typename powProduct<Type, r>::type)
 {
@@ -747,7 +747,7 @@ Foam::operator op                                                              \
     );                                                                         \
 }                                                                              \
                                                                                \
-template<class Type, class Form, class Cmpt, int nCmpt>                        \
+template<class Type, class Form, class Cmpt, Foam::direction nCmpt>            \
 Foam::dimensioned<typename Foam::product<Type, Form>::type>                    \
 Foam::operator op                                                              \
 (                                                                              \
@@ -763,7 +763,7 @@ Foam::operator op                                                              \
     );                                                                         \
 }                                                                              \
                                                                                \
-template<class Type, class Form, class Cmpt, int nCmpt>                        \
+template<class Type, class Form, class Cmpt, Foam::direction nCmpt>            \
 Foam::dimensioned<typename Foam::product<Form, Type>::type>                    \
 Foam::operator op                                                              \
 (                                                                              \

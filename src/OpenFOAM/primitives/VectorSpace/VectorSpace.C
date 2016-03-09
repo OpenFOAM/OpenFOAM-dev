@@ -30,7 +30,7 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, Foam::direction nCmpt>
 Foam::VectorSpace<Form, Cmpt, nCmpt>::VectorSpace
 (
     Istream& is
@@ -39,7 +39,7 @@ Foam::VectorSpace<Form, Cmpt, nCmpt>::VectorSpace
     // Read beginning of VectorSpace<Cmpt>
     is.readBegin("VectorSpace<Form, Cmpt, nCmpt>");
 
-    for (int i=0; i<nCmpt; i++)
+    for (direction i=0; i<nCmpt; i++)
     {
         is >> v_[i];
     }
@@ -52,9 +52,8 @@ Foam::VectorSpace<Form, Cmpt, nCmpt>::VectorSpace
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
-Foam::word
-Foam::name
+template<class Form, class Cmpt, Foam::direction nCmpt>
+Foam::word Foam::name
 (
     const VectorSpace<Form, Cmpt, nCmpt>& vs
 )
@@ -63,7 +62,7 @@ Foam::name
 
     buf << '(';
 
-    for (int i=0; i<nCmpt-1; i++)
+    for (direction i=0; i<nCmpt-1; i++)
     {
         buf << vs.v_[i] << ',';
     }
@@ -76,7 +75,7 @@ Foam::name
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, Foam::direction nCmpt>
 Foam::Istream& Foam::operator>>
 (
     Istream& is,
@@ -86,7 +85,7 @@ Foam::Istream& Foam::operator>>
     // Read beginning of VectorSpace<Cmpt, nCmpt>
     is.readBegin("VectorSpace<Form, Cmpt, nCmpt>");
 
-    for (int i=0; i<nCmpt; i++)
+    for (direction i=0; i<nCmpt; i++)
     {
         is >> vs.v_[i];
     }
@@ -101,21 +100,21 @@ Foam::Istream& Foam::operator>>
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, Foam::direction nCmpt>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
     const VectorSpace<Form, Cmpt, nCmpt>& vs
 )
 {
-    os << token::BEGIN_LIST;
+    os << token::BEGIN_LIST << vs.v_[0];
 
-    for (int i=0; i<nCmpt-1; i++)
+    for (direction i=1; i<nCmpt; i++)
     {
-        os << vs.v_[i] << token::SPACE;
+        os << token::SPACE << vs.v_[i];
     }
 
-    os << vs.v_[nCmpt-1] << token::END_LIST;
+    os << token::END_LIST;
 
     // Check state of Ostream
     os.check("operator<<(Ostream&, const VectorSpace<Form, Cmpt, nCmpt>&)");
