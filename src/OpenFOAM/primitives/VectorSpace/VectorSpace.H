@@ -51,20 +51,20 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-template<class Form, class Cmpt, direction nCmpt> class VectorSpace;
+template<class Form, class Cmpt, direction Ncmpts> class VectorSpace;
 
-template<class Form, class Cmpt, direction nCmpt>
+template<class Form, class Cmpt, direction Ncmpts>
 Istream& operator>>
 (
     Istream&,
-    VectorSpace<Form, Cmpt, nCmpt>&
+    VectorSpace<Form, Cmpt, Ncmpts>&
 );
 
-template<class Form, class Cmpt, direction nCmpt>
+template<class Form, class Cmpt, direction Ncmpts>
 Ostream& operator<<
 (
     Ostream&,
-    const VectorSpace<Form, Cmpt, nCmpt>&
+    const VectorSpace<Form, Cmpt, Ncmpts>&
 );
 
 
@@ -72,18 +72,17 @@ Ostream& operator<<
                            Class VectorSpace Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Form, class Cmpt, direction nCmpt>
+template<class Form, class Cmpt, direction Ncmpts>
 class VectorSpace
 {
 
 public:
 
     //- The components of this vector space
-    Cmpt v_[nCmpt];
-
+    Cmpt v_[Ncmpts];
 
     //- VectorSpace type
-    typedef VectorSpace<Form, Cmpt, nCmpt> vsType;
+    typedef VectorSpace<Form, Cmpt, Ncmpts> vsType;
 
     //- Component type
     typedef Cmpt cmptType;
@@ -91,11 +90,11 @@ public:
 
     // Member constants
 
-        enum
-        {
-            dim = 3,            //!< Dimensionality of space
-            nComponents = nCmpt //!< Number of components in this vector space
-        };
+        //- Dimensionality of space
+        static const direction dim = 3;
+
+        //- Number of components in this vector space
+        static const direction nComponents = Ncmpts;
 
 
     // Static data members
@@ -116,23 +115,23 @@ public:
         inline VectorSpace();
 
         //- Construct initialized to zero
-        inline VectorSpace(const Foam::zero);
+        inline explicit VectorSpace(const Foam::zero);
 
         //- Construct from Istream
         VectorSpace(Istream&);
 
         //- Construct as copy
-        inline VectorSpace(const VectorSpace<Form, Cmpt, nCmpt>&);
+        inline VectorSpace(const VectorSpace<Form, Cmpt, Ncmpts>&);
 
         //- Construct as copy of another VectorSpace type of the same rank
         template<class Form2, class Cmpt2>
-        inline VectorSpace(const VectorSpace<Form2, Cmpt2, nCmpt>&);
+        inline VectorSpace(const VectorSpace<Form2, Cmpt2, Ncmpts>&);
 
 
     // Member Functions
 
-        //- Return the number of elements in the VectorSpace = nCmpt.
-        inline label size() const;
+        //- Return the number of elements in the VectorSpace = Ncmpts.
+        inline static direction size();
 
         inline const Cmpt& component(const direction) const;
         inline Cmpt& component(const direction);
@@ -149,9 +148,9 @@ public:
         inline const Cmpt& operator[](const direction) const;
         inline Cmpt& operator[](const direction);
 
-        inline void operator=(const VectorSpace<Form, Cmpt, nCmpt>&);
-        inline void operator+=(const VectorSpace<Form, Cmpt, nCmpt>&);
-        inline void operator-=(const VectorSpace<Form, Cmpt, nCmpt>&);
+        inline void operator=(const VectorSpace<Form, Cmpt, Ncmpts>&);
+        inline void operator+=(const VectorSpace<Form, Cmpt, Ncmpts>&);
+        inline void operator-=(const VectorSpace<Form, Cmpt, Ncmpts>&);
 
         inline void operator=(const Foam::zero);
         inline void operator*=(const scalar);
@@ -160,16 +159,16 @@ public:
 
     // IOstream Operators
 
-        friend Istream& operator>> <Form, Cmpt, nCmpt>
+        friend Istream& operator>> <Form, Cmpt, Ncmpts>
         (
             Istream&,
-            VectorSpace<Form, Cmpt, nCmpt>&
+            VectorSpace<Form, Cmpt, Ncmpts>&
         );
 
-        friend Ostream& operator<< <Form, Cmpt, nCmpt>
+        friend Ostream& operator<< <Form, Cmpt, Ncmpts>
         (
             Ostream&,
-            const VectorSpace<Form, Cmpt, nCmpt>&
+            const VectorSpace<Form, Cmpt, Ncmpts>&
         );
 };
 
@@ -177,8 +176,8 @@ public:
 // * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * * //
 
 //- Return a string representation of a VectorSpace
-template<class Form, class Cmpt, direction nCmpt>
-word name(const VectorSpace<Form, Cmpt, nCmpt>&);
+template<class Form, class Cmpt, direction Ncmpts>
+word name(const VectorSpace<Form, Cmpt, Ncmpts>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
