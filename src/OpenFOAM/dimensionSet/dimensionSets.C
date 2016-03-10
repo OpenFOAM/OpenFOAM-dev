@@ -234,17 +234,17 @@ Foam::dimensionSets::dimensionSets
         valid_ = true;
 
         // Determine conversion from basic units to write units
-        for (label rowI = 0; rowI < conversion_.n(); rowI++)
+        for (label rowI = 0; rowI < conversion_.m(); rowI++)
         {
             scalar* row = conversion_[rowI];
 
-            for (label columnI = 0; columnI < conversion_.m(); columnI++)
+            for (label columnI = 0; columnI < conversion_.n(); columnI++)
             {
                 const dimensionedScalar& dSet = units_[columnI];
                 row[columnI] = dSet.dimensions()[rowI];
             }
         }
-        conversionPivots_.setSize(conversion_.n());
+        conversionPivots_.setSize(conversion_.m());
         LUDecompose(conversion_, conversionPivots_);
     }
 }

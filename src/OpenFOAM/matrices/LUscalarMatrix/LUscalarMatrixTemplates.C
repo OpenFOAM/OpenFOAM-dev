@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
 {
     if (Pstream::parRun())
     {
-        Field<Type> completeSourceSol(n());
+        Field<Type> completeSourceSol(m());
 
         if (Pstream::master(comm_))
         {

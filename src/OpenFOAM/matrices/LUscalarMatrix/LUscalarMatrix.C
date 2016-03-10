@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::LUscalarMatrix::LUscalarMatrix(const scalarSquareMatrix& matrix)
 :
     scalarSquareMatrix(matrix),
     comm_(Pstream::worldComm),
-    pivotIndices_(n())
+    pivotIndices_(m())
 {
     LUDecompose(*this, pivotIndices_);
 }
@@ -144,8 +144,8 @@ Foam::LUscalarMatrix::LUscalarMatrix
 
     if (Pstream::master(comm_))
     {
-        label nRows = n();
-        label nColumns = m();
+        label nRows = m();
+        label nColumns = n();
 
         if (debug)
         {
@@ -180,7 +180,7 @@ Foam::LUscalarMatrix::LUscalarMatrix
             Pout<< endl;
         }
 
-        pivotIndices_.setSize(n());
+        pivotIndices_.setSize(m());
         LUDecompose(*this, pivotIndices_);
     }
 }
@@ -387,10 +387,10 @@ void Foam::LUscalarMatrix::convert
 
 void Foam::LUscalarMatrix::printDiagonalDominance() const
 {
-    for (label i=0; i<n(); i++)
+    for (label i=0; i<m(); i++)
     {
         scalar sum = 0.0;
-        for (label j=0; j<n(); j++)
+        for (label j=0; j<m(); j++)
         {
             if (i != j)
             {

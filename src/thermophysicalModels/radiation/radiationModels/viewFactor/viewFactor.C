@@ -232,7 +232,7 @@ void Foam::radiation::viewFactor::initialise()
                 )
             );
 
-            pivotIndices_.setSize(CLU_().n());
+            pivotIndices_.setSize(CLU_().m());
         }
     }
 }

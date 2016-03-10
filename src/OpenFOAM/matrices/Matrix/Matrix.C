@@ -96,9 +96,9 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m, const Type& a)
     {
         Type* v = v_[0];
 
-        label nm = nRows_*nCols_;
+        label mn = nRows_*nCols_;
 
-        for (label i=0; i<nm; i++)
+        for (label i=0; i<mn; i++)
         {
             v[i] = a;
         }
@@ -119,8 +119,8 @@ Foam::Matrix<Form, Type>::Matrix(const Matrix<Form, Type>& a)
         Type* v = v_[0];
         const Type* av = a.v_[0];
 
-        label nm = nRows_*nCols_;
-        for (label i=0; i<nm; i++)
+        label mn = nRows_*nCols_;
+        for (label i=0; i<mn; i++)
         {
             v[i] = av[i];
         }
@@ -162,11 +162,11 @@ template<class Form, class Type>
 Form Foam::Matrix<Form, Type>::T() const
 {
     const Matrix<Form, Type>& A = *this;
-    Form At(m(), n());
+    Form At(n(), m());
 
-    for (label i=0; i<n(); i++)
+    for (label i=0; i<m(); i++)
     {
-        for (label j=0; j<m(); j++)
+        for (label j=0; j<n(); j++)
         {
             At[j][i] = A[i][j];
         }
@@ -185,8 +185,8 @@ void Foam::Matrix<Form, Type>::operator=(const Type& t)
     {
         Type* v = v_[0];
 
-        label nm = nRows_*nCols_;
-        for (label i=0; i<nm; i++)
+        label mn = nRows_*nCols_;
+        for (label i=0; i<mn; i++)
         {
             v[i] = t;
         }
@@ -200,7 +200,7 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
     if (this == &a)
     {
         FatalErrorInFunction
-            << "attempted assignment to self"
+            << "attempted assigmnent to self"
             << abort(FatalError);
     }
 
@@ -217,8 +217,8 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
         Type* v = v_[0];
         const Type* av = a.v_[0];
 
-        label nm = nRows_*nCols_;
-        for (label i=0; i<nm; i++)
+        label mn = nRows_*nCols_;
+        for (label i=0; i<mn; i++)
         {
             v[i] = av[i];
         }
@@ -231,14 +231,14 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
 template<class Form, class Type>
 const Type& Foam::max(const Matrix<Form, Type>& a)
 {
-    label nm = a.n()*a.m();
+    label mn = a.m()*a.n();
 
-    if (nm)
+    if (mn)
     {
         label curMaxI = 0;
         const Type* v = a[0];
 
-        for (label i=1; i<nm; i++)
+        for (label i=1; i<mn; i++)
         {
             if (v[i] > v[curMaxI])
             {
@@ -263,14 +263,14 @@ const Type& Foam::max(const Matrix<Form, Type>& a)
 template<class Form, class Type>
 const Type& Foam::min(const Matrix<Form, Type>& a)
 {
-    label nm = a.n()*a.m();
+    label mn = a.m()*a.n();
 
-    if (nm)
+    if (mn)
     {
         label curMinI = 0;
         const Type* v = a[0];
 
-        for (label i=1; i<nm; i++)
+        for (label i=1; i<mn; i++)
         {
             if (v[i] < v[curMinI])
             {
@@ -297,15 +297,15 @@ const Type& Foam::min(const Matrix<Form, Type>& a)
 template<class Form, class Type>
 Form Foam::operator-(const Matrix<Form, Type>& a)
 {
-    Form na(a.n(), a.m());
+    Form na(a.m(), a.n());
 
-    if (a.n() && a.m())
+    if (a.m() && a.n())
     {
         Type* nav = na[0];
         const Type* av = a[0];
 
-        label nm = a.n()*a.m();
-        for (label i=0; i<nm; i++)
+        label mn = a.m()*a.n();
+        for (label i=0; i<mn; i++)
         {
             nav[i] = -av[i];
         }
@@ -318,30 +318,30 @@ Form Foam::operator-(const Matrix<Form, Type>& a)
 template<class Form, class Type>
 Form Foam::operator+(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 {
-    if (a.n() != b.n())
-    {
-        FatalErrorInFunction
-            << "attempted add matrices with different number of rows: "
-            << a.n() << ", " << b.n()
-            << abort(FatalError);
-    }
-
     if (a.m() != b.m())
     {
         FatalErrorInFunction
-            << "attempted add matrices with different number of columns: "
+            << "attempted add matrices with different number of rows: "
             << a.m() << ", " << b.m()
             << abort(FatalError);
     }
 
-    Form ab(a.n(), a.m());
+    if (a.n() != b.n())
+    {
+        FatalErrorInFunction
+            << "attempted add matrices with different number of columns: "
+            << a.n() << ", " << b.n()
+            << abort(FatalError);
+    }
+
+    Form ab(a.m(), a.n());
 
     Type* abv = ab[0];
     const Type* av = a[0];
     const Type* bv = b[0];
 
-    label nm = a.n()*a.m();
-    for (label i=0; i<nm; i++)
+    label mn = a.m()*a.n();
+    for (label i=0; i<mn; i++)
     {
         abv[i] = av[i] + bv[i];
     }
@@ -353,30 +353,30 @@ Form Foam::operator+(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 template<class Form, class Type>
 Form Foam::operator-(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 {
-    if (a.n() != b.n())
-    {
-        FatalErrorInFunction
-            << "attempted add matrices with different number of rows: "
-            << a.n() << ", " << b.n()
-            << abort(FatalError);
-    }
-
     if (a.m() != b.m())
     {
         FatalErrorInFunction
-            << "attempted add matrices with different number of columns: "
+            << "attempted add matrices with different number of rows: "
             << a.m() << ", " << b.m()
             << abort(FatalError);
     }
 
-    Form ab(a.n(), a.m());
+    if (a.n() != b.n())
+    {
+        FatalErrorInFunction
+            << "attempted add matrices with different number of columns: "
+            << a.n() << ", " << b.n()
+            << abort(FatalError);
+    }
+
+    Form ab(a.m(), a.n());
 
     Type* abv = ab[0];
     const Type* av = a[0];
     const Type* bv = b[0];
 
-    label nm = a.n()*a.m();
-    for (label i=0; i<nm; i++)
+    label mn = a.m()*a.n();
+    for (label i=0; i<mn; i++)
     {
         abv[i] = av[i] - bv[i];
     }
@@ -388,15 +388,15 @@ Form Foam::operator-(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 template<class Form, class Type>
 Form Foam::operator*(const scalar s, const Matrix<Form, Type>& a)
 {
-    Form sa(a.n(), a.m());
+    Form sa(a.m(), a.n());
 
-    if (a.n() && a.m())
+    if (a.m() && a.n())
     {
         Type* sav = sa[0];
         const Type* av = a[0];
 
-        label nm = a.n()*a.m();
-        for (label i=0; i<nm; i++)
+        label mn = a.m()*a.n();
+        for (label i=0; i<mn; i++)
         {
             sav[i] = s*av[i];
         }
@@ -409,24 +409,24 @@ Form Foam::operator*(const scalar s, const Matrix<Form, Type>& a)
 template<class Form, class Type>
 Form Foam::operator*(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 {
-    if (a.m() != b.n())
+    if (a.n() != b.m())
     {
         FatalErrorInFunction
             << "attempted to multiply incompatible matrices:" << nl
-            << "Matrix A : " << a.n() << " rows, " << a.m() << " columns" << nl
-            << "Matrix B : " << b.n() << " rows, " << b.m() << " columns" << nl
+            << "Matrix A : " << a.m() << " rows, " << a.n() << " columns" << nl
+            << "Matrix B : " << b.m() << " rows, " << b.n() << " columns" << nl
             << "In order to multiply matrices, columns of A must equal "
             << "rows of B"
             << abort(FatalError);
     }
 
-    Form ab(a.n(), b.m(), scalar(0));
+    Form ab(a.m(), b.n(), scalar(0));
 
-    for (label i = 0; i < ab.n(); i++)
+    for (label i = 0; i < ab.m(); i++)
     {
-        for (label j = 0; j < ab.m(); j++)
+        for (label j = 0; j < ab.n(); j++)
         {
-            for (label l = 0; l < b.n(); l++)
+            for (label l = 0; l < b.m(); l++)
             {
                 ab[i][j] += a[i][l]*b[l][j];
             }

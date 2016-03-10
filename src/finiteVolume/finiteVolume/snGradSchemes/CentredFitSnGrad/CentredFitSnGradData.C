@@ -120,7 +120,7 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit
     }
 
     // Additional weighting for constant and linear terms
-    for (label i = 0; i < B.n(); i++)
+    for (label i = 0; i < B.m(); i++)
     {
         B[i][0] *= wts[0];
         B[i][1] *= wts[0];
@@ -172,13 +172,13 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit
             wts[0] *= 10;
             wts[1] *= 10;
 
-            for (label j = 0; j < B.m(); j++)
+            for (label j = 0; j < B.n(); j++)
             {
                 B[0][j] *= 10;
                 B[1][j] *= 10;
             }
 
-            for (label i = 0; i < B.n(); i++)
+            for (label i = 0; i < B.m(); i++)
             {
                 B[i][0] *= 10;
                 B[i][1] *= 10;

@@ -53,14 +53,14 @@ inline const Foam::Matrix<Form, Type>& Foam::Matrix<Form, Type>::null()
 
 //- Return the number of rows
 template<class Form, class Type>
-inline Foam::label Foam::Matrix<Form, Type>::n() const
+inline Foam::label Foam::Matrix<Form, Type>::m() const
 {
     return nRows_;
 }
 
 
 template<class Form, class Type>
-inline Foam::label Foam::Matrix<Form, Type>::m() const
+inline Foam::label Foam::Matrix<Form, Type>::n() const
 {
     return nCols_;
 }

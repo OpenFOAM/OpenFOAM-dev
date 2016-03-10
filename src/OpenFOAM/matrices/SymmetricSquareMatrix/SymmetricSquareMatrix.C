@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,9 @@ Foam::SymmetricSquareMatrix<Type> Foam::invDecomposed
     const SymmetricSquareMatrix<Type>& matrix
 )
 {
-    SymmetricSquareMatrix<Type> inv(matrix.n(), matrix.n(), 0.0);
+    SymmetricSquareMatrix<Type> inv(matrix.m(), matrix.m(), 0.0);
 
-    for (label i = 0; i < matrix.n(); ++i)
+    for (label i = 0; i < matrix.m(); ++i)
     {
         inv[i][i] = 1.0/matrix[i][i];
 
@@ -75,7 +75,7 @@ Foam::scalar Foam::detDecomposed(const SymmetricSquareMatrix<Type>& matrix)
 {
     scalar diagProduct = 1.0;
 
-    for (label i = 0; i < matrix.n(); ++i)
+    for (label i = 0; i < matrix.m(); ++i)
     {
         diagProduct *= matrix[i][i];
     }

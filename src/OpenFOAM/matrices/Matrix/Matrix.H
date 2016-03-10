@@ -125,10 +125,10 @@ public:
         // Access
 
             //- Return the number of rows
-            inline label n() const;
+            inline label m() const;
 
             //- Return the number of columns
-            inline label m() const;
+            inline label n() const;
 
             //- Return the number of elements in matrix (n*m)
             inline label size() const;
