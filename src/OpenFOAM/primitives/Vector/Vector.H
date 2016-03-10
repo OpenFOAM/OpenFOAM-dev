@@ -81,6 +81,9 @@ public:
         //- Construct null
         inline Vector();
 
+        //- Construct initialized to zero
+        inline explicit Vector(const Foam::zero);
+
         //- Construct given VectorSpace of the same rank
         template<class Cmpt2>
         inline Vector(const VectorSpace<Vector<Cmpt2>, Cmpt2, 3>&);

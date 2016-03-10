@@ -31,6 +31,13 @@ inline Foam::Vector<Cmpt>::Vector()
 
 
 template<class Cmpt>
+inline Foam::Vector<Cmpt>::Vector(const Foam::zero z)
+:
+    Vector::vsType(z)
+{}
+
+
+template<class Cmpt>
 template<class Cmpt2>
 inline Foam::Vector<Cmpt>::Vector
 (
