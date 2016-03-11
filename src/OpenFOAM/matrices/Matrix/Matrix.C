@@ -200,7 +200,7 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
     if (this == &a)
     {
         FatalErrorInFunction
-            << "attempted assigmnent to self"
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 
