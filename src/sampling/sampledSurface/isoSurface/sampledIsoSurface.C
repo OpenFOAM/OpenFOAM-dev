@@ -124,18 +124,52 @@ void Foam::sampledIsoSurface::getIsoFields() const
     // Get pointField
     // ~~~~~~~~~~~~~~
 
+    // In case of multiple iso values we don't want to calculate multiple e.g.
+    // "volPointInterpolate(p)" so register it and re-use it. This is the
+    // same as the 'cache' functionality from volPointInterpolate but
+    // unfortunately that one does not guarantee that the field pointer
+    // remain: e.g. some other functionObject might delete the cached version.
+    // (volPointInterpolation::interpolate with cache=false deletes any
+    //  registered one or if mesh.changing())
+
     if (!subMeshPtr_.valid())
     {
-        word pointFldName = "volPointInterpolate(" + isoField_ + ')';
+        const word pointFldName =
+            "volPointInterpolate_"
+          + type()
+          + "("
+          + isoField_
+          + ')';
 
         if (fvm.foundObject<pointScalarField>(pointFldName))
         {
             if (debug)
             {
                 InfoInFunction
-                    << "Lookup pointField " << pointFldName << endl;
+                    << "lookup pointField " << pointFldName << endl;
             }
-            pointFieldPtr_ = &fvm.lookupObject<pointScalarField>(pointFldName);
+            const pointScalarField& pfld = fvm.lookupObject<pointScalarField>
+            (
+                pointFldName
+            );
+
+            if (!pfld.upToDate(*volFieldPtr_))
+            {
+                if (debug)
+                {
+                    InfoInFunction
+                        << "updating pointField "
+                        << pointFldName << endl;
+                }
+                // Update the interpolated value
+                volPointInterpolation::New(fvm).interpolate
+                (
+                    *volFieldPtr_,
+                    const_cast<pointScalarField&>(pfld)
+                );
+            }
+
+            pointFieldPtr_ = &pfld;
         }
         else
         {
@@ -149,27 +183,20 @@ void Foam::sampledIsoSurface::getIsoFields() const
                     << endl;
             }
 
-            if
+            // Interpolate without cache. Note that we're registering it
+            // below so next time round it goes into the condition
+            // above.
+            tmp<pointScalarField> tpfld
             (
-                storedPointFieldPtr_.empty()
-             || (fvm.time().timeName() != storedPointFieldPtr_().instance())
-            )
-            {
-                if (debug)
-                {
-                    InfoInFunction
-                        << "Interpolating volField " << volFieldPtr_->name()
-                        << " to get pointField " << pointFldName << endl;
-                }
-
-                storedPointFieldPtr_.reset
+                volPointInterpolation::New(fvm).interpolate
                 (
-                    volPointInterpolation::New(fvm)
-                    .interpolate(*volFieldPtr_).ptr()
-                );
-                storedPointFieldPtr_->checkOut();
-                pointFieldPtr_ = storedPointFieldPtr_.operator->();
-            }
+                    *volFieldPtr_,
+                    pointFldName,
+                    false
+                )
+            );
+            pointFieldPtr_ = tpfld.ptr();
+            const_cast<pointScalarField*>(pointFieldPtr_)->store();
         }
 
 
@@ -427,7 +454,6 @@ Foam::sampledIsoSurface::sampledIsoSurface
     prevTimeIndex_(-1),
     storedVolFieldPtr_(NULL),
     volFieldPtr_(NULL),
-    storedPointFieldPtr_(NULL),
     pointFieldPtr_(NULL)
 {
     if (!sampledSurface::interpolate())

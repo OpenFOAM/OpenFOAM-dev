@@ -173,6 +173,7 @@ class isoSurface
             const bool neiLower
         ) const;
 
+        //- Get neighbour value and position.
         void getNeighbour
         (
             const labelList& boundaryRegion,
@@ -184,7 +185,8 @@ class isoSurface
             point& nbrPoint
         ) const;
 
-        //- Set faceCutType,cellCutType.
+        //- Determine for every face/cell whether it (possibly) generates
+        //  triangles.
         void calcCutTypes
         (
             const labelList& boundaryRegion,
@@ -193,19 +195,7 @@ class isoSurface
             const scalarField& pVals
         );
 
-        static labelPair findCommonPoints
-        (
-            const labelledTri&,
-            const labelledTri&
-        );
-
         static point calcCentre(const triSurface&);
-
-        static pointIndexHit collapseSurface
-        (
-            pointField& localPoints,
-            DynamicList<labelledTri, 64>& localTris
-        );
 
         //- Determine per cc whether all near cuts can be snapped to single
         //  point.
@@ -257,6 +247,9 @@ class isoSurface
             const Type& snapP1
         ) const;
 
+
+        //- Note: cannot use simpler isoSurfaceCell::generateTriPoints since
+        //  the need here to sometimes pass in remote 'snappedPoints'
         template<class Type>
         void generateTriPoints
         (
@@ -323,6 +316,14 @@ class isoSurface
             DynamicList<label>& triMeshCells
         ) const;
 
+        template<class Type>
+        static tmp<Field<Type>> interpolate
+        (
+            const label nPoints,
+            const labelList& triPointMergeMap,
+            const DynamicList<Type>& unmergedValues
+        );
+
         triSurface stitchTriPoints
         (
             const bool checkDuplicates,
@@ -334,54 +335,6 @@ class isoSurface
         //- Check single triangle for (topological) validity
         static bool validTri(const triSurface&, const label);
 
-        //- Determine edge-face addressing
-        void calcAddressing
-        (
-            const triSurface& surf,
-            List<FixedList<label, 3>>& faceEdges,
-            labelList& edgeFace0,
-            labelList& edgeFace1,
-            Map<labelList>& edgeFacesRest
-        ) const;
-
-        //- Determine orientation
-        static void walkOrientation
-        (
-            const triSurface& surf,
-            const List<FixedList<label, 3>>& faceEdges,
-            const labelList& edgeFace0,
-            const labelList& edgeFace1,
-            const label seedTriI,
-            labelList& flipState
-        );
-
-        //- Orient surface
-        static void orientSurface
-        (
-            triSurface&,
-            const List<FixedList<label, 3>>& faceEdges,
-            const labelList& edgeFace0,
-            const labelList& edgeFace1,
-            const Map<labelList>& edgeFacesRest
-        );
-
-        //- Is triangle (given by 3 edges) not fully connected?
-        static bool danglingTriangle
-        (
-            const FixedList<label, 3>& fEdges,
-            const labelList& edgeFace1
-        );
-
-        //- Mark all non-fully connected triangles
-        static label markDanglingTriangles
-        (
-            const List<FixedList<label, 3>>& faceEdges,
-            const labelList& edgeFace0,
-            const labelList& edgeFace1,
-            const Map<labelList>& edgeFacesRest,
-            boolList& keepTriangles
-        );
-
         static triSurface subsetMesh
         (
             const triSurface& s,
@@ -391,6 +344,10 @@ class isoSurface
         );
 
 public:
+
+    //- Declare friendship with isoSurfaceCell to share some functionality
+    friend class isoSurfaceCell;
+
 
     //- Runtime type information
     TypeName("isoSurface");
@@ -413,16 +370,10 @@ public:
 
     // Member Functions
 
-        //- For every face original cell in mesh
+        //- For every triangle the original cell in mesh
         const labelList& meshCells() const
         {
             return meshCells_;
-        }
-
-        //- For every unmerged triangle point the point in the triSurface
-        const labelList& triPointMergeMap() const
-        {
-            return triPointMergeMap_;
         }
 
         //- Interpolates cCoords,pCoords. Uses the references to the original
