@@ -41,6 +41,24 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+//- Abstract template class to provide the form resulting from
+//  the inner-product of two forms
+template<class Cmpt, class Form1, class Form2>
+class typeOfInnerProduct
+{};
+
+//- Abstract template class to provide the form resulting from
+//  the outer-product of two forms
+template<class Cmpt, class Form1, class Form2>
+class typeOfOuterProduct
+{};
+
+//- Abstract template class to provide the transpose form of a form
+template<class Cmpt, class Form>
+class typeOfTranspose
+{};
+
+
 template<class Cmpt, direction rank>
 class typeOfRank
 {};

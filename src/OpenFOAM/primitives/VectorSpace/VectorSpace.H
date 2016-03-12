@@ -88,13 +88,20 @@ public:
     typedef Cmpt cmptType;
 
 
-    // Member constants
+    // Static constants
 
         //- Dimensionality of space
         static const direction dim = 3;
 
         //- Number of components in this vector space
         static const direction nComponents = Ncmpts;
+
+
+        // VectorSpace currently defaults to a column-vector
+        // This will be removed when column-vector is introduced
+        // as a specialization
+        static const direction nRows = Ncmpts;
+        static const direction nCols = 1;
 
 
     // Static data members
@@ -107,6 +114,38 @@ public:
         static const Form min;
         static const Form rootMax;
         static const Form rootMin;
+
+
+    // Sub-Block Classes
+
+        //- Const sub-block type
+        template
+        <
+            class SubVector,
+            direction BStart
+        >
+        class ConstBlock
+        {
+            const vsType& vs_;
+
+        public:
+
+            //- Number of components in this vector space
+            static const direction nComponents = SubVector::nComponents;
+
+            //- Construct for a given vector
+            inline ConstBlock(const vsType& vs);
+
+            //- [i] const element access operator
+            inline const Cmpt& operator[](const direction i) const;
+
+            //- (i, 0) const element access operator
+            inline const Cmpt& operator()
+            (
+                const direction i,
+                const direction
+            ) const;
+        };
 
 
     // Constructors
@@ -123,9 +162,9 @@ public:
         //- Construct as copy
         inline VectorSpace(const VectorSpace<Form, Cmpt, Ncmpts>&);
 
-        //- Construct as copy of another VectorSpace type of the same rank
+        //- Construct as copy of a VectorSpace with the same size
         template<class Form2, class Cmpt2>
-        inline VectorSpace(const VectorSpace<Form2, Cmpt2, Ncmpts>&);
+        inline explicit VectorSpace(const VectorSpace<Form2, Cmpt2, Ncmpts>&);
 
 
     // Member Functions
@@ -141,6 +180,9 @@ public:
 
         //- Return a VectorSpace with all elements = s
         inline static Form uniform(const Cmpt& s);
+
+        template<class SubVector, direction BStart>
+        inline const ConstBlock<SubVector, BStart> block() const;
 
 
     // Member Operators

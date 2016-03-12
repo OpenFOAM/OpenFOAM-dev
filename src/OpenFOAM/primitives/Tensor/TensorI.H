@@ -33,13 +33,31 @@ inline Foam::Tensor<Cmpt>::Tensor()
 
 
 template<class Cmpt>
+inline Foam::Tensor<Cmpt>::Tensor(const Foam::zero z)
+:
+    Tensor::msType(z)
+{}
+
+
+template<class Cmpt>
+template<class Cmpt2>
+inline Foam::Tensor<Cmpt>::Tensor
+(
+    const MatrixSpace<Tensor<Cmpt2>, Cmpt2, 3, 3>& vs
+)
+:
+    Tensor::msType(vs)
+{}
+
+
+template<class Cmpt>
 template<class Cmpt2>
 inline Foam::Tensor<Cmpt>::Tensor
 (
     const VectorSpace<Tensor<Cmpt2>, Cmpt2, 9>& vs
 )
 :
-    VectorSpace<Tensor<Cmpt>, Cmpt, 9>(vs)
+    Tensor::msType(vs)
 {}
 
 
@@ -107,55 +125,29 @@ inline Foam::Tensor<Cmpt>::Tensor
 
 
 template<class Cmpt>
+template
+<
+    template<class, Foam::direction, Foam::direction> class Block2,
+    Foam::direction BRowStart,
+    Foam::direction BColStart
+>
+inline Foam::Tensor<Cmpt>::Tensor
+(
+    const Block2<Tensor<Cmpt>, BRowStart, BColStart>& block
+)
+:
+    Tensor::msType(block)
+{}
+
+
+template<class Cmpt>
 inline Foam::Tensor<Cmpt>::Tensor(Istream& is)
 :
-    VectorSpace<Tensor<Cmpt>, Cmpt, 9>(is)
+    Tensor::msType(is)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::x() const
-{
-    return Vector<Cmpt>(this->v_[XX], this->v_[XY], this->v_[XZ]);
-}
-
-
-template<class Cmpt>
-inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::y() const
-{
-    return Vector<Cmpt>(this->v_[YX], this->v_[YY], this->v_[YZ]);
-}
-
-
-template<class Cmpt>
-inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::z() const
-{
-    return Vector<Cmpt>(this->v_[ZX], this->v_[ZY], this->v_[ZZ]);
-}
-
-
-template<class Cmpt>
-inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::vectorComponent
-(
-    const direction cmpt
-) const
-{
-    switch (cmpt)
-    {
-        case 0:
-            return x();
-        break;
-        case 1:
-            return y();
-        break;
-        case 2:
-            return z();
-        break;
-    }
-}
-
 
 template<class Cmpt>
 inline const Cmpt& Foam::Tensor<Cmpt>::xx() const
@@ -284,6 +276,48 @@ inline Cmpt& Foam::Tensor<Cmpt>::zz()
 
 
 template<class Cmpt>
+inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::x() const
+{
+    return Vector<Cmpt>(this->v_[XX], this->v_[XY], this->v_[XZ]);
+}
+
+
+template<class Cmpt>
+inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::y() const
+{
+    return Vector<Cmpt>(this->v_[YX], this->v_[YY], this->v_[YZ]);
+}
+
+
+template<class Cmpt>
+inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::z() const
+{
+    return Vector<Cmpt>(this->v_[ZX], this->v_[ZY], this->v_[ZZ]);
+}
+
+
+template<class Cmpt>
+inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::vectorComponent
+(
+    const direction cmpt
+) const
+{
+    switch (cmpt)
+    {
+        case 0:
+            return x();
+            break;
+        case 1:
+            return y();
+            break;
+        case 2:
+            return z();
+            break;
+    }
+}
+
+
+template<class Cmpt>
 inline Foam::Tensor<Cmpt> Foam::Tensor<Cmpt>::T() const
 {
     return Tensor<Cmpt>
@@ -317,6 +351,17 @@ inline void Foam::Tensor<Cmpt>::operator&=(const Tensor<Cmpt>& t)
             this->zx()*t.xz() + this->zy()*t.yz() + this->zz()*t.zz()
         )
     );
+}
+
+
+template<class Cmpt>
+template<class Cmpt2>
+inline void Foam::Tensor<Cmpt>::operator=
+(
+    const VectorSpace<Tensor<Cmpt2>, Cmpt2, 9>& vs
+)
+{
+    VectorSpace<Tensor<Cmpt>, Cmpt, 9>::operator=(vs);
 }
 
 

@@ -27,6 +27,7 @@ License
 #include "products.H"
 #include "VectorSpaceOps.H"
 #include "ops.H"
+#include "StaticAssert.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,6 +66,20 @@ inline VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace
 )
 {
     VectorSpaceOps<Ncmpts,0>::eqOp(*this, vs, eqOp<Cmpt>());
+}
+
+
+template<class Form, class Cmpt, direction Ncmpts>
+template<class SubVector, direction BStart>
+inline
+VectorSpace<Form, Cmpt, Ncmpts>::ConstBlock<SubVector, BStart>::ConstBlock
+(
+    const vsType& vs
+)
+:
+    vs_(vs)
+{
+    StaticAssert(vsType::nComponents >= BStart + nComponents);
 }
 
 
@@ -164,6 +179,16 @@ inline Form VectorSpace<Form, Cmpt, Ncmpts>::uniform(const Cmpt& s)
 }
 
 
+template<class Form, class Cmpt, direction Ncmpts>
+template<class SubVector, direction BStart>
+inline const typename VectorSpace<Form, Cmpt, Ncmpts>::template
+    ConstBlock<SubVector, BStart>
+VectorSpace<Form, Cmpt, Ncmpts>::block() const
+{
+    return *this;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Form, class Cmpt, direction Ncmpts>
@@ -201,6 +226,58 @@ inline Cmpt& VectorSpace<Form, Cmpt, Ncmpts>::operator[]
     #endif
 
     return v_[d];
+}
+
+
+template<class Form, class Cmpt, direction Ncmpts>
+template<class SubVector, direction BStart>
+inline const Cmpt&
+VectorSpace<Form, Cmpt, Ncmpts>::
+ConstBlock<SubVector, BStart>::operator[]
+(
+    const direction i
+) const
+{
+    #ifdef FULLDEBUG
+    if (i >= Ncmpts)
+    {
+        FatalErrorInFunction
+            << "index out of range"
+            << abort(FatalError);
+    }
+    #endif
+
+    return vs_[BStart + i];
+}
+
+
+template<class Form, class Cmpt, direction Ncmpts>
+template<class SubVector, direction BStart>
+inline const Cmpt&
+VectorSpace<Form, Cmpt, Ncmpts>::
+ConstBlock<SubVector, BStart>::operator()
+(
+    const direction i,
+    const direction j
+) const
+{
+    #ifdef FULLDEBUG
+    if (i >= Ncmpts)
+    {
+        FatalErrorInFunction
+            << "index out of range"
+            << abort(FatalError);
+    }
+
+    if (j != 0)
+    {
+        FatalErrorInFunction
+            << "j != 0"
+            << abort(FatalError);
+    }
+    #endif
+
+    return vs_[BStart + i];
 }
 
 
