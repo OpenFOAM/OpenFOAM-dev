@@ -72,11 +72,37 @@ class quaternion
         //- Multiply vector v by quaternion as if v is a pure quaternion
         inline quaternion mulq0v(const vector& v) const;
 
+        //- Conversion of two-axis rotation components into Euler-angles
+        inline static vector twoAxes
+        (
+            const scalar t11,
+            const scalar t12,
+            const scalar c2,
+            const scalar t31,
+            const scalar t32
+        );
+
+        //- Conversion of three-axis rotation components into Euler-angles
+        inline static vector threeAxes
+        (
+            const scalar t11,
+            const scalar t12,
+            const scalar s2,
+            const scalar t31,
+            const scalar t32
+        );
+
 
 public:
 
     //- Component type
     typedef scalar cmptType;
+
+    //- Euler-angle rotation sequence
+    enum rotationSequence
+    {
+        ZYX, ZYZ, ZXY, ZXZ, YXZ, YXY, YZX, YZY, XYZ, XYX, XZY, XZX
+    };
 
 
     // Member constants
@@ -123,9 +149,8 @@ public:
         //- Construct a quaternion given the three Euler angles
         inline quaternion
         (
-            const scalar angleX,
-            const scalar angleY,
-            const scalar angleZ
+            const rotationSequence rs,
+            const vector& angles
         );
 
         //- Construct a quaternion from a rotation tensor
@@ -148,9 +173,9 @@ public:
                //- The rotation tensor corresponding the quaternion
                inline tensor R() const;
 
-               //- Return a vector of euler angles (rotations in radians about
-               //  the x, y and z axes.
-               inline vector eulerAngles(const quaternion& q) const;
+               //- Return a vector of euler angles corresponding to the
+               //  specified rotation sequence
+               inline vector eulerAngles(const rotationSequence rs) const;
 
                inline quaternion normalized() const;
 

@@ -81,7 +81,7 @@ transformation() const
     // Convert the rotational motion from deg to rad
     eulerAngles *= pi/180.0;
 
-    quaternion R(eulerAngles.x(), eulerAngles.y(), eulerAngles.z());
+    quaternion R(quaternion::XYZ, eulerAngles);
     septernion TR(septernion(origin_)*R*septernion(-origin_));
 
     InfoInFunction << "Time = " << t << " transformation: " << TR << endl;

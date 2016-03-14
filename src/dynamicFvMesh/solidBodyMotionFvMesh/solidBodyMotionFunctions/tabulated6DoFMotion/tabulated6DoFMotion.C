@@ -104,7 +104,7 @@ Foam::solidBodyMotionFunctions::tabulated6DoFMotion::transformation() const
     // Convert the rotational motion from deg to rad
     TRV[1] *= pi/180.0;
 
-    quaternion R(TRV[1].x(), TRV[1].y(), TRV[1].z());
+    quaternion R(quaternion::XYZ, TRV[1]);
     septernion TR(septernion(CofG_ + TRV[0])*R*septernion(-CofG_));
 
     InfoInFunction << "Time = " << t << " transformation: " << TR << endl;
