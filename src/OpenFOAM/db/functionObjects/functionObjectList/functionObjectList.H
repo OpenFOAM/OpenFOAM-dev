@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,12 +110,15 @@ public:
 
         //- Construct from Time, a dictionary with "functions" entry
         //  and the execution setting.
+        //  \param[in]  t - the other Time instance to construct from
         //  \param[in]  parentDict - the parent dictionary containing
         //    a "functions" entry, which can either be a list or a dictionary
         //    of functionObject specifications.
+        //  \param[in]  execution - whether the function objects should execute
+        //    or not. Default: true.
         functionObjectList
         (
-            const Time&,
+            const Time& t,
             const dictionary& parentDict,
             const bool execution=true
         );

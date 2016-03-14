@@ -29,6 +29,7 @@ Description
     centres and processors they're on.
 
     If constructed from dictionary:
+    \verbatim
         // Region to sample (default is region0)
         sampleRegion region0;
 
@@ -63,8 +64,9 @@ Description
         // According to offsetMode (see above) supply one of
         // offset, offsets or distance
         offset  (1 0 0);
+    \endverbatim
 
-    Note: if offsetMode is 'normal' it uses outwards pointing normals. So
+    Note: if offsetMode is \c normal it uses outwards pointing normals. So
     supply a negative distance if sampling inside the domain.
 
 
@@ -218,9 +220,10 @@ protected:
         // Derived information
 
             //- Communication schedule:
-            //  - Cells/faces to sample per processor
-            //  - Patch faces to receive per processor
-            //  - schedule
+            //
+            //    - Cells/faces to sample per processor
+            //    - Patch faces to receive per processor
+            //    - schedule
             mutable autoPtr<mapDistribute> mapPtr_;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,30 +30,29 @@ Description
     All systems are defined by an origin point and a co-ordinate rotation.
 
     \verbatim
-        coordinateSystem
+    coordinateSystem
+    {
+        type    cartesian;
+        origin  (0 0 0);
+        coordinateRotation
         {
-            type    cartesian;
-            origin  (0 0 0);
-            coordinateRotation
-            {
-                type        cylindrical;
-                e3          (0 0 1);
-            }
+            type        cylindrical;
+            e3          (0 0 1);
         }
+    }
     \endverbatim
 
     Types of coordinateRotation:
-    1) axesRotation
-    2) STARCDRotation
-    3) cylindrical
-    4) EulerCoordinateRotation
+
+    \li 1. axesRotation
+    \li 2. STARCDRotation
+    \li 3. cylindrical
+    \li 4. EulerCoordinateRotation
 
     Type of co-ordinates:
-    1) cartesian
 
+    \li 1. cartesian
 
-See Also
-    coordinateSystem and coordinateSystem::New
 
 SourceFiles
     coordinateSystem.C

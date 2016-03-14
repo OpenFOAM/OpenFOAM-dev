@@ -25,7 +25,7 @@ Class
     Foam::Pstream
 
 Description
-    Inter-processor communications stream
+    Inter-processor communications stream.
 
 SourceFiles
     Pstream.C

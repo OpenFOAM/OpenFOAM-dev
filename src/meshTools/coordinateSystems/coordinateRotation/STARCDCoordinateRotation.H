@@ -34,13 +34,16 @@ Description
     - the rotation angles are in degrees, unless otherwise explictly specified:
 
     \verbatim
-        coordinateRotation
-        {
-            type        STARCDRotation;
-            degrees     false;
-            rotation    (0 0 3.141592654);
-        }
+    coordinateRotation
+    {
+        type        STARCDRotation;
+        degrees     false;
+        rotation    (0 0 3.141592654);
+    }
     \endverbatim
+
+SourceFiles
+    STARCDCoordinateRotation.C
 
 \*---------------------------------------------------------------------------*/
 

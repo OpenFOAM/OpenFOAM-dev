@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,51 +22,56 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::compressible::
-        filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
+    Foam::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
 
 Description
     Mixed boundary condition for temperature, to be used in the flow and
     pyrolysis regions when a film region model is used.
 
-
     Example usage:
-        myInterfacePatchName
-        {
-            type            filmPyrolysisRadiativeCoupledMixed;
-            Tnbr            T;
-            kappa           fluidThermo;
-            Qr              Qr;
-            kappaName       none;
-            filmDeltaDry    0.0;
-            filmDeltaWet    3e-4;
-            value           $internalField;
-        }
+    \verbatim
+    myInterfacePatchName
+    {
+        type            filmPyrolysisRadiativeCoupledMixed;
+        Tnbr            T;
+        kappa           fluidThermo;
+        Qr              Qr;
+        kappaName       none;
+        filmDeltaDry    0.0;
+        filmDeltaWet    3e-4;
+        value           $internalField;
+    }
+    \endverbatim
 
     Needs to be on underlying mapped(Wall)FvPatch.
-    It calculates local field as
-         ratio = (filmDelta - filmDeltaDry)/(filmDeltaWet - filmDeltaDry),
+    It calculates local field as:
 
-    when ratio = 1 is considered wet and the film temperarture is fixed at
+    \verbatim
+        ratio = (filmDelta - filmDeltaDry)/(filmDeltaWet - filmDeltaDry)
+    \endverbatim
+
+    when ratio = 1 is considered wet and the film temperature is fixed at
     the wall. If ratio = 0 (dry) it emulates the normal radiative solid BC.
 
     In between ratio 0 and 1 the gradient and value contributions are
-    weighted using the ratio field in the followig way:
+    weighted using the ratio field in the following way:
 
-    qConv = ratio*htcwfilm*(Tfilm - *this);
-    qRad = (1.0 - ratio)*Qr;
+    \verbatim
+        qConv = ratio*htcwfilm*(Tfilm - *this);
+        qRad = (1.0 - ratio)*Qr;
+    \endverbatim
 
     Then the solid can gain or loose energy through radiation or conduction
     towards the film.
 
-    Note: kappa : heat conduction at patch.
-        Gets supplied how to lookup/calculate kappa:
-    - 'lookup' : lookup volScalarField (or volSymmTensorField) with name
-    - 'basicThermo' : use basicThermo and compressible::RASmodel to calculate K
-    - 'solidThermo' : use basicSolidThermo K()
+    Notes:
 
-    Qr is the radiative flux defined in the radiation model.
+    \li \c kappa and \c kappaName are inherited from temperatureCoupledBase.
+    \li \c Qr is the radiative flux defined in the radiation model.
 
+
+SeeAlso
+    Foam::temperatureCoupledBase
 
 SourceFiles
     filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.C

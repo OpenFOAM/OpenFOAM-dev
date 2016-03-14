@@ -25,17 +25,17 @@ Class
     Foam::PatchFlowRateInjection
 
 Description
-    Patch injection
-    - uses patch flow rate to determine concentration and velociy
+    Patch injection, by using patch flow rate to determine concentration and
+    velocity.
 
-    - User specifies
-      - Total mass to inject
-      - Name of patch
-      - Injection duration
-      - Injection target concentration/carrier volume flow rate
-    - Initial parcel velocity given by local flow velocity
-    - Parcel diameters obtained by distribution model
-    - Parcels injected randomly across the patch
+    \li User specifies
+        - Total mass to inject
+        - Name of patch
+        - Injection duration
+        - Injection target concentration/carrier volume flow rate
+    \li Initial parcel velocity given by local flow velocity
+    \li Parcel diameters obtained by distribution model
+    \li Parcels injected randomly across the patch
 
 SourceFiles
     PatchFlowRateInjection.C

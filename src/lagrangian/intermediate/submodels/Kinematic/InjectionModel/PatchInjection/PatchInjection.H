@@ -25,15 +25,16 @@ Class
     Foam::PatchInjection
 
 Description
-    Patch injection
-    - User specifies
-      - Total mass to inject
-      - Name of patch
-      - Injection duration
-      - Initial parcel velocity
-      - Injection volume flow rate
-    - Parcel diameters obtained by distribution model
-    - Parcels injected randomly across the patch
+    Patch injection.
+
+    \li User specifies:
+        - Total mass to inject
+        - Name of patch
+        - Injection duration
+        - Initial parcel velocity
+        - Injection volume flow rate
+    \li Parcel diameters obtained by distribution model
+    \li Parcels injected randomly across the patch
 
 SourceFiles
     PatchInjection.C

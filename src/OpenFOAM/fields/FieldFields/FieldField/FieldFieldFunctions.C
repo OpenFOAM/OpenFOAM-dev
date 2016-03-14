@@ -543,8 +543,6 @@ Type average(const FieldField<Field, Type>& f)
 TMP_UNARY_FUNCTION(Type, average)
 
 
-#include "PstreamReduceOps.H"
-
 #define G_UNARY_FUNCTION(returnType, gFunc, func, rFunc)                       \
                                                                                \
 template<template<class> class Field, class Type>                              \

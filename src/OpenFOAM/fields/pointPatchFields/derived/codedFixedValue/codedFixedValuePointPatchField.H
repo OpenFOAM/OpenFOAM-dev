@@ -30,34 +30,34 @@ Description
 
     Example:
     \verbatim
-        movingWall
-        {
-            type            codedFixedValue;
-            value           uniform 0;
-            redirectType    rampedFixedValue;   // name of generated bc
+    movingWall
+    {
+        type            codedFixedValue;
+        value           uniform 0;
+        redirectType    rampedFixedValue;   // name of generated bc
 
-            code
-            #{
-                operator==
-                (
-                    vector(0,0,1)
-                   *min(10, 0.1*this->db().time().value())
-                );
-            #};
+        code
+        #{
+            operator==
+            (
+                vector(0,0,1)
+                *min(10, 0.1*this->db().time().value())
+            );
+        #};
 
-            //codeInclude
-            //#{
-            //    #include "fvCFD.H"
-            //#};
+        //codeInclude
+        //#{
+        //    #include "fvCFD.H"
+        //#};
 
-            //codeOptions
-            //#{
-            //    -I$(LIB_SRC)/finiteVolume/lnInclude
-            //#};
-        }
+        //codeOptions
+        //#{
+        //    -I$(LIB_SRC)/finiteVolume/lnInclude
+        //#};
+    }
     \endverbatim
 
-    A special form is if the 'code' section is not supplied. In this case
+    A special form is if the \c code section is not supplied. In this case
     the code gets read from a (runTimeModifiable!) dictionary system/codeDict
     which would have a corresponding entry
 

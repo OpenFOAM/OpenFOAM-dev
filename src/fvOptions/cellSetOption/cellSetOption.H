@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,8 @@ Class
 
 Description
     Cell-set options abtract base class.  Provides a base set of controls,
-    e.g.
-
+    e.g.:
+    \verbatim
         type            scalarExplicitSource    // Source type
         active          on;                     // on/off switch
 
@@ -40,8 +40,9 @@ Description
             .
             .
         }
+    \endverbatim
 
-Note:
+Note
     Source/sink options are to be added to the equation R.H.S.
 
 SourceFiles

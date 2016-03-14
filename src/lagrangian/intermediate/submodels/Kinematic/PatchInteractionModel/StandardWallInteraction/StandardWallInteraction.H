@@ -26,18 +26,20 @@ Class
 
 Description
     Wall interaction model. Three choices:
-    - rebound - optionally specify elasticity and resitution coefficients
-    - stick   - particles assigined zero velocity
-    - escape  - remove particle from the domain
+
+    \li \c rebound - optionally specify elasticity and restitution coefficients
+    \li \c stick   - particles assigned zero velocity
+    \li \c escape  - remove particle from the domain
 
     Example usage:
-
-        StandardWallInteractionCoeffs
-        {
-            type        rebound; // stick, escape
-            e           1;       // optional - elasticity coeff
-            mu          0;       // optional - restitution coeff
-        }
+    \verbatim
+    StandardWallInteractionCoeffs
+    {
+        type        rebound; // stick, escape
+        e           1;       // optional - elasticity coeff
+        mu          0;       // optional - restitution coeff
+    }
+    \endverbatim
 
 \*---------------------------------------------------------------------------*/
 

@@ -140,12 +140,13 @@ public:
             //- Highest distance of all features
             scalar maxDistance() const;
 
-            //- Find nearest point on nearest feature edge. Sets
-            //  - nearFeature: index of feature mesh
-            //  - nearInfo   : location on feature edge and edge index
-            //                 (note: not feature edge index but index into
-            //                  edges() directly)
-            //  - nearNormal : local feature edge normal
+            //- Find nearest point on nearest feature edge. Sets:
+            //
+            //    - nearFeature: index of feature mesh
+            //    - nearInfo   : location on feature edge and edge index
+            //        (note: not feature edge index but index into edges()
+            //        directly)
+            //    - nearNormal : local feature edge normal
             void findNearestEdge
             (
                 const pointField& samples,
@@ -155,12 +156,13 @@ public:
                 vectorField& nearNormal
             ) const;
 
-            //- Find nearest point on nearest region edge. Sets
-            //  - nearFeature: index of feature mesh
-            //  - nearInfo   : location on feature edge and edge index
-            //                 (note: not feature edge index but index into
-            //                  edges() directly)
-            //  - nearNormal : local feature edge normal
+            //- Find nearest point on nearest region edge. Sets:
+            //
+            //    - nearFeature: index of feature mesh
+            //    - nearInfo   : location on feature edge and edge index
+            //        (note: not feature edge index but index into edges()
+            //        directly)
+            //    - nearNormal : local feature edge normal
             void findNearestRegionEdge
             (
                 const pointField& samples,
@@ -170,11 +172,12 @@ public:
                 vectorField& nearNormal
             ) const;
 
-            //- Find nearest feature point. Sets
-            //  - nearFeature: index of feature mesh
-            //  - nearInfo   : location on feature point and point index.
-            //                 (note: not index into shapes().pointLabels() but
-            //                  index into points() directly)
+            //- Find nearest feature point. Sets:
+            //
+            //    - nearFeature: index of feature mesh
+            //    - nearInfo   : location on feature point and point index.
+            //        (note: not index into shapes().pointLabels() but index
+            //        into points() directly)
             void findNearestPoint
             (
                 const pointField& samples,

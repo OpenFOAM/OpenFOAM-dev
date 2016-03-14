@@ -60,11 +60,12 @@ public:
     // Public data types
 
         //- Enumeration defining the layer specification:
-        //  - first and total thickness specified
-        //  - first and expansion ratio specified
-        //  - final and total thickness specified
-        //  - final and expansion ratio specified
-        //  - total thickness and expansion ratio specified
+        //
+        //    - first and total thickness specified
+        //    - first and expansion ratio specified
+        //    - final and total thickness specified
+        //    - final and expansion ratio specified
+        //    - total thickness and expansion ratio specified
         enum layerSpecification
         {
             ILLEGAL,
@@ -166,11 +167,12 @@ public:
 
         // Per patch information
 
-            //- How many layers to add.
-            //  -1 : no specification. Assume 0 layers but allow sliding
-            //       to make layers
-            //   0 : specified to have 0 layers. No sliding allowed.
-            //  >0 : number of layers
+            //- How many layers to add:
+            //
+            //    - -1 : no specification. Assume 0 layers but allow sliding
+            //        to make layers
+            //    - 0 : specified to have 0 layers. No sliding allowed.
+            //    - >0 : number of layers
             const labelList& numLayers() const
             {
                 return numLayers_;

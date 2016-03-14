@@ -25,25 +25,32 @@ Class
     Foam::ConeNozzleInjection
 
 Description
-    Cone injection
+    Cone injection.
 
-    - User specifies
-      - time of start of injection
-      - injector position
-      - direction (along injection axis)
-      - parcel flow rate
-      - inner and outer half-cone angles
+    \li User specifies:
+        - time of start of injection
+        - injector position
+        - direction (along injection axis)
+        - parcel flow rate
+        - inner and outer half-cone angles
 
-    - Parcel diameters obtained by size distribution model
+    \li Parcel diameters obtained by size distribution model
 
-    - Parcel velocity is calculated as:
+    \li Parcel velocity is calculated as:
+        - Constant velocity:
+        \verbatim
+        U = \<specified by user\>
+        \endverbatim
 
-        - Constant velocity
-            U = \<specified by user\>
-        - Pressure driven velocity
-            U = sqrt(2*(Pinj - Pamb)/rho)
-        - Flow rate and discharge
-            U = V_dot/(A*Cd)
+        - Pressure driven velocity:
+        \verbatim
+        U = sqrt(2*(Pinj - Pamb)/rho)
+        \endverbatim
+
+        - Flow rate and discharge:
+        \verbatim
+        U = V_dot/(A*Cd)
+        \endverbatim
 
 SourceFiles
     ConeNozzleInjection.C
