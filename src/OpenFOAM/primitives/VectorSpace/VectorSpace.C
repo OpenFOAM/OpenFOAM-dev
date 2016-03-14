@@ -60,14 +60,14 @@ Foam::word Foam::name
 {
     std::ostringstream buf;
 
-    buf << '(';
+    buf << '(' << vs.v_[0];
 
-    for (direction i=0; i<Ncmpts-1; i++)
+    for (direction i=1; i<Ncmpts; i++)
     {
-        buf << vs.v_[i] << ',';
+        buf << ',' << vs.v_[i];
     }
 
-    buf << vs.v_[Ncmpts-1] << ')';
+    buf << ')';
 
     return buf.str();
 }
