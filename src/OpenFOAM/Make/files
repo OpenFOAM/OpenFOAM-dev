@@ -107,6 +107,11 @@ $(ranges)/labelRange/labelRanges.C
 $(ranges)/scalarRange/scalarRange.C
 $(ranges)/scalarRange/scalarRanges.C
 
+spatialVectorAlgebra = primitives/spatialVectorAlgebra
+$(spatialVectorAlgebra)/SpatialVector/spatialVector/spatialVector.C
+$(spatialVectorAlgebra)/SpatialTensor/spatialTensor/spatialTensor.C
+$(spatialVectorAlgebra)/CompactSpatialTensor/compactSpatialTensor/compactSpatialTensor.C
+
 containers/HashTables/HashTable/HashTableCore.C
 containers/HashTables/StaticHashTable/StaticHashTableCore.C
 containers/Lists/SortableList/ParSortableListName.C
