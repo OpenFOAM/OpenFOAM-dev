@@ -361,12 +361,34 @@ inline Cmpt& Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::operator()
 
 template<class Form, class Cmpt, Foam::direction Nrows, Foam::direction Ncols>
 template<class SubTensor, Foam::direction BRowStart, Foam::direction BColStart>
+inline SubTensor
+Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::
+ConstBlock<SubTensor, BRowStart, BColStart>::
+operator()() const
+{
+    return *this;
+}
+
+
+template<class Form, class Cmpt, Foam::direction Nrows, Foam::direction Ncols>
+template<class SubTensor, Foam::direction BRowStart, Foam::direction BColStart>
 inline const Cmpt&
 Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::
 ConstBlock<SubTensor, BRowStart, BColStart>::
 operator()(const direction i, const direction j) const
 {
     return matrix_(BRowStart + i, BColStart + j);
+}
+
+
+template<class Form, class Cmpt, Foam::direction Nrows, Foam::direction Ncols>
+template<class SubTensor, Foam::direction BRowStart, Foam::direction BColStart>
+inline SubTensor
+Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::
+Block<SubTensor, BRowStart, BColStart>::
+operator()() const
+{
+    return *this;
 }
 
 

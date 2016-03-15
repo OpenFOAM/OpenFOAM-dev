@@ -117,6 +117,9 @@ public:
             //- Construct for the given matrix
             inline ConstBlock(const msType& matrix);
 
+            //- Construct and return the sub-ensor corresponding to this block
+            inline SubTensor operator()() const;
+
             //- (i, j) const element access operator
             inline const Cmpt& operator()
             (
@@ -177,6 +180,9 @@ public:
             (
                 const VectorSpace<VSForm, Cmpt, SubTensor::nRows>& v
             );
+
+            //- Construct and return the sub-ensor corresponding to this block
+            inline SubTensor operator()() const;
 
             //- (i, j) const element access operator
             inline const Cmpt& operator()
