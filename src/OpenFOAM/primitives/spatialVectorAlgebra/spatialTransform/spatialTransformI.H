@@ -148,8 +148,8 @@ inline Foam::spatialVector Foam::spatialTransform::operator&
 {
     return spatialVector
     (
-        E_ & v.angular(),
-        E_ & (v.linear() - (r_ ^ v.angular()))
+        E_ & v.w(),
+        E_ & (v.l() - (r_ ^ v.w()))
     );
 }
 
@@ -169,11 +169,11 @@ inline Foam::spatialVector Foam::spatialTransform::transpose::operator&
     const spatialVector& f
 ) const
 {
-    vector ETfl(X_.E().T() & f.linear());
+    vector ETfl(X_.E().T() & f.l());
 
     return spatialVector
     (
-        (X_.E().T() & f.angular()) + (X_.r() ^ ETfl),
+        (X_.E().T() & f.w()) + (X_.r() ^ ETfl),
         ETfl
     );
 }
@@ -196,8 +196,8 @@ inline Foam::spatialVector Foam::spatialTransform::dual::operator&
 {
     return spatialVector
     (
-        X_.E() & (f.angular() - (X_.r() ^ f.linear())),
-        X_.E() & f.linear()
+        X_.E() & (f.w() - (X_.r() ^ f.l())),
+        X_.E() & f.l()
     );
 }
 

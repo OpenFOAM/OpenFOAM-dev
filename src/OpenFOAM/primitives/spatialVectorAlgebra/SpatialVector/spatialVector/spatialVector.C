@@ -36,7 +36,7 @@ const char* const Foam::spatialVector::vsType::typeName = "spatialVector";
 template<>
 const char* const Foam::spatialVector::vsType::componentNames[] =
 {
-    "x", "y", "z"
+    "wx", "wy", "wz", "lx", "ly", "lz"
 };
 
 template<>
