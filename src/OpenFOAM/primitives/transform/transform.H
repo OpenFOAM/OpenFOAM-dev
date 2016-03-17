@@ -119,6 +119,29 @@ inline tensor Rz(const scalar& omega)
 }
 
 
+//- Rotational transformation tensor about axis a by omega radians
+inline tensor Ra(const vector& a, const scalar omega)
+{
+    const scalar s = sin(omega);
+    const scalar c = cos(omega);
+
+    return tensor
+    (
+        sqr(a.x())*(1 - c)  + c,
+        a.y()*a.x()*(1 - c) + a.z()*s,
+        a.x()*a.z()*(1 - c) - a.y()*s,
+
+        a.x()*a.y()*(1 - c) - a.z()*s,
+        sqr(a.y())*(1 - c)  + c,
+        a.y()*a.z()*(1 - c) + a.x()*s,
+
+        a.x()*a.z()*(1 - c) + a.y()*s,
+        a.y()*a.z()*(1 - c) - a.x()*s,
+        sqr(a.z())*(1 - c)  + c
+    );
+}
+
+
 inline label transform(const tensor&, const bool i)
 {
     return i;
