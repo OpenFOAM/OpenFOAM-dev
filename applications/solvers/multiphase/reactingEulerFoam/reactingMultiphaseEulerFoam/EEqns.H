@@ -33,9 +33,10 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
             EEqn->solve();
         }
     }
+
+    fluid.correctThermo();
 }
 
-fluid.correctThermo();
 
 forAll(phases, phasei)
 {

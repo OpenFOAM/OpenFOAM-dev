@@ -47,9 +47,9 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
             E2eqn->solve();
         }
     }
-}
 
-fluid.correctThermo();
+    fluid.correctThermo();
+}
 
 Info<< phase1.name() << " min/max T "
     << min(phase1.thermo().T()).value()
