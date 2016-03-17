@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+//- Rotational transformation tensor from vector n1 to n2
 inline tensor rotationTensor
 (
     const vector& n1,
@@ -73,6 +74,48 @@ inline tensor rotationTensor
         // Return null transformation tensor
         return I;
     }
+}
+
+
+//- Rotational transformation tensor about the x-axis by omega radians
+inline tensor Rx(const scalar& omega)
+{
+    const scalar s = sin(omega);
+    const scalar c = cos(omega);
+    return tensor
+    (
+        1,  0,  0,
+        0,  c,  s,
+        0, -s,  c
+    );
+}
+
+
+//- Rotational transformation tensor about the y-axis by omega radians
+inline tensor Ry(const scalar& omega)
+{
+    const scalar s = sin(omega);
+    const scalar c = cos(omega);
+    return tensor
+    (
+        c,  0, -s,
+        0,  1,  0,
+        s,  0,  c
+    );
+}
+
+
+//- Rotational transformation tensor about the z-axis by omega radians
+inline tensor Rz(const scalar& omega)
+{
+    const scalar s = sin(omega);
+    const scalar c = cos(omega);
+    return tensor
+    (
+        c,  s,  0,
+       -s,  c,  0,
+        0,  0,  1
+    );
 }
 
 
