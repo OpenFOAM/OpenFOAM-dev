@@ -92,6 +92,13 @@ public:
         //- Construct given MatrixSpace of the same rank
         inline SpatialTensor(const typename SpatialTensor::msType&);
 
+        //- Construct given 4 tensor blocks
+        inline SpatialTensor
+        (
+            const Tensor<Cmpt>& t00, const Tensor<Cmpt>& t01,
+            const Tensor<Cmpt>& t10, const Tensor<Cmpt>& t11
+        );
+
         //- Construct given 36 components
         inline SpatialTensor
         (

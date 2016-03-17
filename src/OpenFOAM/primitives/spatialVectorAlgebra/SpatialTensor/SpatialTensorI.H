@@ -50,6 +50,35 @@ inline Foam::SpatialTensor<Cmpt>::SpatialTensor
 template<class Cmpt>
 inline Foam::SpatialTensor<Cmpt>::SpatialTensor
 (
+    const Tensor<Cmpt>& t00, const Tensor<Cmpt>& t01,
+    const Tensor<Cmpt>& t10, const Tensor<Cmpt>& t11
+)
+{
+    // Block (0, 0)
+    this->v_[0] = t00.xx();   this->v_[1] = t00.xy();   this->v_[2] = t00.xz();
+    this->v_[6] = t00.yx();   this->v_[7] = t00.yy();   this->v_[8] = t00.yz();
+    this->v_[12] = t00.zx();  this->v_[13] = t00.zy();  this->v_[14] = t00.zz();
+
+    // Block (0, 1)
+    this->v_[3] = t01.xx();   this->v_[4] = t01.xy();   this->v_[5] = t01.xz();
+    this->v_[9] = t01.yx();   this->v_[10] = t01.yy();  this->v_[11] = t01.yz();
+    this->v_[15] = t01.zx();  this->v_[16] = t01.zy();  this->v_[17] = t01.zz();
+
+    // Block (1, 0)
+    this->v_[18] = t10.xx();  this->v_[19] = t10.xy();  this->v_[20] = t10.xz();
+    this->v_[24] = t10.yx();  this->v_[25] = t10.yy();  this->v_[26] = t10.yz();
+    this->v_[30] = t10.zx();  this->v_[31] = t10.zy();  this->v_[32] = t10.zz();
+
+    // Block (1, 1)
+    this->v_[21] = t11.xx();  this->v_[22] = t11.xy();  this->v_[23] = t11.xz();
+    this->v_[27] = t11.yx();  this->v_[28] = t11.yy();  this->v_[29] = t11.yz();
+    this->v_[33] = t11.zx();  this->v_[34] = t11.zy();  this->v_[35] = t11.zz();
+}
+
+
+template<class Cmpt>
+inline Foam::SpatialTensor<Cmpt>::SpatialTensor
+(
     const Cmpt& t00, const Cmpt& t01, const Cmpt& t02,
     const Cmpt& t03, const Cmpt& t04, const Cmpt& t05,
 
@@ -69,47 +98,29 @@ inline Foam::SpatialTensor<Cmpt>::SpatialTensor
     const Cmpt& t53, const Cmpt& t54, const Cmpt& t55
 )
 {
-    this->v_[0] = t00;
-    this->v_[1] = t01;
-    this->v_[2] = t02;
-    this->v_[3] = t03;
-    this->v_[4] = t04;
-    this->v_[5] = t05;
+    // Row 0
+    this->v_[0] = t00;    this->v_[1] = t01;    this->v_[2] = t02;
+    this->v_[3] = t03;    this->v_[4] = t04;    this->v_[5] = t05;
 
-    this->v_[6] = t10;
-    this->v_[7] = t11;
-    this->v_[8] = t12;
-    this->v_[9] = t13;
-    this->v_[10] = t14;
-    this->v_[11] = t15;
+    // Row 1
+    this->v_[6] = t10;    this->v_[7] = t11;    this->v_[8] = t12;
+    this->v_[9] = t13;    this->v_[10] = t14;   this->v_[11] = t15;
 
-    this->v_[12] = t20;
-    this->v_[13] = t21;
-    this->v_[14] = t22;
-    this->v_[15] = t23;
-    this->v_[16] = t24;
-    this->v_[17] = t25;
+    // Row 2
+    this->v_[12] = t20;   this->v_[13] = t21;   this->v_[14] = t22;
+    this->v_[15] = t23;   this->v_[16] = t24;   this->v_[17] = t25;
 
-    this->v_[18] = t30;
-    this->v_[19] = t31;
-    this->v_[20] = t32;
-    this->v_[21] = t33;
-    this->v_[22] = t34;
-    this->v_[23] = t35;
+    // Row 3
+    this->v_[18] = t30;   this->v_[19] = t31;   this->v_[20] = t32;
+    this->v_[21] = t33;   this->v_[22] = t34;   this->v_[23] = t35;
 
-    this->v_[24] = t40;
-    this->v_[25] = t41;
-    this->v_[26] = t42;
-    this->v_[27] = t43;
-    this->v_[28] = t44;
-    this->v_[29] = t45;
+    // Row 4
+    this->v_[24] = t40;   this->v_[25] = t41;   this->v_[26] = t42;
+    this->v_[27] = t43;   this->v_[28] = t44;   this->v_[29] = t45;
 
-    this->v_[30] = t50;
-    this->v_[31] = t51;
-    this->v_[32] = t52;
-    this->v_[33] = t53;
-    this->v_[34] = t54;
-    this->v_[35] = t55;
+    // Row 5
+    this->v_[30] = t50;   this->v_[31] = t51;   this->v_[32] = t52;
+    this->v_[33] = t53;   this->v_[34] = t54;   this->v_[35] = t55;
 }
 
 
