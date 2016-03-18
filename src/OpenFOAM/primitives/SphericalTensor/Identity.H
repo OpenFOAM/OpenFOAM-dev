@@ -25,7 +25,8 @@ Class
     Foam::Identity
 
 Description
-    Templated Identity tensor derived from SphericalTensor.
+    Templated identity and dual space identity tensors
+    derived from SphericalTensor.
 
 \*---------------------------------------------------------------------------*/
 
@@ -51,13 +52,29 @@ class Identity
 
 public:
 
-    // Constructors
+    //- Construct initializing the SphericalTensor to 1
+    Identity()
+    :
+        SphericalTensor<Cmpt>(1)
+    {}
 
+    //- The identity type in the dual space
+    class dual
+    :
+        public SphericalTensor<Cmpt>
+    {
         //- Construct initializing the SphericalTensor to 1
-        Identity()
+        dual()
         :
             SphericalTensor<Cmpt>(1)
         {}
+    };
+
+    //- Return the identity in the dual space
+    inline dual operator*()
+    {
+        return dual();
+    }
 };
 
 
