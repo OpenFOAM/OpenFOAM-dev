@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,43 +21,44 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::sphericalTensor
+Class
+    Foam::Identity
 
 Description
-    SphericalTensor of scalars.
-
-SourceFiles
-    sphericalTensor.C
+    Templated Identity tensor derived from SphericalTensor.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sphericalTensor_H
-#define sphericalTensor_H
+#ifndef Identity_H
+#define Identity_H
 
 #include "SphericalTensor.H"
-#include "Identity.H"
-#include "contiguous.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                           Class Identity Declaration
+\*---------------------------------------------------------------------------*/
 
-typedef SphericalTensor<scalar> sphericalTensor;
+template<class Cmpt>
+class Identity
+:
+    public SphericalTensor<Cmpt>
+{
 
-// Identity tensor
-static const Identity<scalar> I;
+public:
 
-static const sphericalTensor oneThirdI(1.0/3.0);
-static const sphericalTensor twoThirdsI(2.0/3.0);
+    // Constructors
 
-
-//- Specify data associated with sphericalTensor type are contiguous
-template<>
-inline bool contiguous<sphericalTensor>() {return true;}
+        //- Construct initializing the SphericalTensor to 1
+        Identity()
+        :
+            SphericalTensor<Cmpt>(1)
+        {}
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
