@@ -71,6 +71,21 @@ public:
     enum components { WX, WY, WZ, LX, LY, LZ };
 
 
+    //- Class to represent the dual spatial vector
+    class dual
+    {
+        const SpatialVector& v_;
+
+    public:
+
+        //- Construct the dual of the given SpatialVector
+        inline dual(const SpatialVector& v);
+
+        //- Return the parent SpatialVector
+        inline const SpatialVector& v() const;
+    };
+
+
     // Constructors
 
         //- Construct null
@@ -137,6 +152,9 @@ public:
     // Member Operators
 
         inline void operator=(const Foam::zero);
+
+        //- Return the dual spatial vector
+        inline dual operator*() const;
 };
 
 

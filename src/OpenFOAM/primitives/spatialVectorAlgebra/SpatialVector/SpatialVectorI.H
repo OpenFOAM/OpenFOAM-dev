@@ -90,6 +90,13 @@ inline Foam::SpatialVector<Cmpt>::SpatialVector(Istream& is)
 {}
 
 
+template<class Cmpt>
+inline Foam::SpatialVector<Cmpt>::dual::dual(const SpatialVector& v)
+:
+    v_(v)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
@@ -189,6 +196,13 @@ inline Foam::Vector<Cmpt> Foam::SpatialVector<Cmpt>::l() const
 }
 
 
+template<class Cmpt>
+const Foam::SpatialVector<Cmpt>& Foam::SpatialVector<Cmpt>::dual::v() const
+{
+    return v_;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
@@ -197,5 +211,66 @@ inline void Foam::SpatialVector<Cmpt>::operator=(const Foam::zero z)
     SpatialVector::vsType::operator=(z);
 }
 
+
+template<class Cmpt>
+inline typename Foam::SpatialVector<Cmpt>::dual
+Foam::SpatialVector<Cmpt>::operator*() const
+{
+    return dual(*this);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
+
+//- Return the cross-product between two spatial vectors
+template<class Cmpt>
+inline SpatialVector<Cmpt> operator^
+(
+    const SpatialVector<Cmpt>& u,
+    const SpatialVector<Cmpt>& v
+)
+{
+    return SpatialVector<Cmpt>
+    (
+       -u.wz()*v.wy() + u.wy()*v.wz(),
+        u.wz()*v.wx() - u.wx()*v.wz(),
+       -u.wy()*v.wx() + u.wx()*v.wy(),
+       -u.lz()*v.wy() + u.ly()*v.wz() - u.wz()*v.ly() + u.wy()*v.lz(),
+        u.lz()*v.wx() - u.lx()*v.wz() + u.wz()*v.lx() - u.wx()*v.lz(),
+       -u.ly()*v.wx() + u.lx()*v.wy() - u.wy()*v.lx() + u.wx()*v.ly()
+    );
+}
+
+
+//- Return the dual cross-product between two spatial vectors
+template<class Cmpt>
+inline SpatialVector<Cmpt> operator^
+(
+    const SpatialVector<Cmpt>& v,
+    const typename SpatialVector<Cmpt>::dual& df
+)
+{
+    const SpatialVector<Cmpt>& f = df.v();
+
+    return SpatialVector<Cmpt>
+    (
+       -v.wz()*f.wy() + v.wy()*f.wz() - v.lz()*f.ly() + v.ly()*f.lz(),
+        v.wz()*f.wx() - v.wx()*f.wz() + v.lz()*f.lx() - v.lx()*f.lz(),
+       -v.wy()*f.wx() + v.wx()*f.wy() - v.ly()*f.lx() + v.lx()*f.ly(),
+       -v.wz()*f.ly() + v.wy()*f.lz(),
+        v.wz()*f.lx() - v.wx()*f.lz(),
+       -v.wy()*f.lx() + v.wx()*f.ly()
+    );
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // ************************************************************************* //

@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "Identity.H"
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Cmpt>
@@ -131,7 +133,7 @@ inline Foam::SpatialTensor<Cmpt>::SpatialTensor(Istream& is)
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
 inline void Foam::SpatialTensor<Cmpt>::operator=(const Foam::zero z)
@@ -139,5 +141,56 @@ inline void Foam::SpatialTensor<Cmpt>::operator=(const Foam::zero z)
     SpatialTensor::msType::operator=(z);
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
+
+//- Return the cross-product tensor
+template<class Cmpt>
+inline Foam::SpatialTensor<Cmpt> operator^
+(
+    const SpatialVector<Cmpt>& v,
+    const Identity<Cmpt>&
+)
+{
+    return SpatialTensor<Cmpt>
+    (
+        0,       -v.wz(),   v.wy(),   0,        0,        0,
+        v.wz(),   0,       -v.wx(),   0,        0,        0,
+       -v.wy(),   v.wx(),   0,        0,        0,        0,
+        0,       -v.lz(),   v.ly(),   0,       -v.wz(),   v.wy(),
+        v.lz(),   0,       -v.lx(),   v.wz(),   0,       -v.wx(),
+       -v.ly(),   v.lx(),   0,       -v.wy(),   v.wx(),   0
+    );
+}
+
+
+//- Return the dual cross-product tensor
+template<class Cmpt>
+inline Foam::SpatialTensor<Cmpt> operator^
+(
+    const SpatialVector<Cmpt>& f,
+    const typename Identity<Cmpt>::dual&
+)
+{
+    return SpatialTensor<Cmpt>
+    (
+        0,       -f.wz(),   f.wy(),   0,       -f.lz(),   f.ly(),
+        f.wz(),   0,       -f.wx(),   f.lz(),   0,       -f.lx(),
+       -f.wy(),   f.wx(),   0,       -f.ly(),   f.lx(),   0,
+        0,        0,        0,        0,       -f.wz(),   f.wy(),
+        0,        0,        0,        f.wz(),   0,       -f.wx(),
+        0,        0,        0,       -f.wy(),   f.wx(),   0
+    );
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // ************************************************************************* //
