@@ -92,12 +92,9 @@ protected:
         //- Returns cell next to boundary face
         label getBoundaryCell(const label) const;
 
-        //- Returns cell using face and containing sample
-        label getCell
-        (
-            const label faceI,
-            const point& sample
-        ) const;
+        //- Return the cell in which the point on the sample line
+        //  resides if found otherwise return -1
+        label pointInCell(const point& p, const label samplei) const;
 
         //- Calculates inproduct of face normal and vector sample-face centre
         //  <0 if sample inside.

@@ -47,61 +47,57 @@ Foam::label Foam::sampledSet::getBoundaryCell(const label faceI) const
 }
 
 
-Foam::label Foam::sampledSet::getCell
+Foam::label Foam::sampledSet::pointInCell
 (
-    const label faceI,
-    const point& sample
+    const point& p,
+    const label samplei
 ) const
 {
-    if (faceI == -1)
+    const label cellio = mesh().faceOwner()[faces_[samplei]];
+    const label cellin = mesh().faceNeighbour()[faces_[samplei]];
+    const label celljo = mesh().faceOwner()[faces_[samplei+1]];
+    const label celljn = mesh().faceNeighbour()[faces_[samplei+1]];
+
+    // If mid-point is in the cell including the sampled faces
+    // include in list otherwise ignore
+
+    label cellm =
+        (cellio == celljo || cellio == celljn) ? cellio
+      : (cellin == celljo || cellin == celljn) ? cellin
+      : -1;
+
+    if (cellm != -1)
     {
-        FatalErrorInFunction
-            << "Illegal face label " << faceI
-            << abort(FatalError);
-    }
-
-    if (faceI >= mesh().nInternalFaces())
-    {
-        label cellI = getBoundaryCell(faceI);
-
-        if (!mesh().pointInCell(sample, cellI, searchEngine_.decompMode()))
+        // Check the mid-point is in the cell otherwise ignore
+        if (!mesh().pointInCell(p, cellm, searchEngine_.decompMode()))
         {
-            FatalErrorInFunction
-                << "Found cell " << cellI << " using face " << faceI
-                << ". But cell does not contain point " << sample
-                << abort(FatalError);
-        }
-        return cellI;
-    }
-    else
-    {
-        // Try owner and neighbour to see which one contains sample
+            cellm = -1;
 
-        label cellI = mesh().faceOwner()[faceI];
-
-        if (mesh().pointInCell(sample, cellI, searchEngine_.decompMode()))
-        {
-            return cellI;
-        }
-        else
-        {
-            cellI = mesh().faceNeighbour()[faceI];
-
-            if (mesh().pointInCell(sample, cellI, searchEngine_.decompMode()))
+            if (debug)
             {
-                return cellI;
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "None of the neighbours of face "
-                    << faceI << " contains point " << sample
-                    << abort(FatalError);
-
-                return -1;
+                WarningInFunction
+                    << "Could not find mid-point " << p
+                    << " cell " << cellm << endl;
             }
         }
     }
+    else if (debug)
+    {
+        WarningInFunction
+            << "Could not find cell for mid-point" << nl
+            << "  samplei: " << samplei
+            << "  pts[samplei]: " << operator[](samplei)
+            << "  face[samplei]: " << faces_[samplei]
+            << "  pts[samplei+1]: " << operator[](samplei+1)
+            << "  face[samplei+1]: " << faces_[samplei+1]
+            << "  cellio: " << cellio
+            << "  cellin: " << cellin
+            << "  celljo: " << celljo
+            << "  celljn: " << celljn
+            << endl;
+    }
+
+    return cellm;
 }
 
 
