@@ -58,6 +58,13 @@ Foam::Field<Type>::Field(const label size, const Type& t)
 
 
 template<class Type>
+Foam::Field<Type>::Field(const label size, const zero)
+:
+    List<Type>(size, pTraits<Type>::zero)
+{}
+
+
+template<class Type>
 Foam::Field<Type>::Field
 (
     const UList<Type>& mapF,

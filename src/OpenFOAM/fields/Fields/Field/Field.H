@@ -117,6 +117,9 @@ public:
         //- Construct given size and initial value
         Field(const label, const Type&);
 
+        //- Construct given size and initialed to zero
+        Field(const label, const zero);
+
         //- Construct as copy of a UList\<Type\>
         explicit Field(const UList<Type>&);
 
