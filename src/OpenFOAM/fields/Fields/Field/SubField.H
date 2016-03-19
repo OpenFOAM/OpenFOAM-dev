@@ -41,6 +41,7 @@ SourceFiles
 
 #include "SubList.H"
 #include "Field.H"
+#include "VectorSpace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -111,6 +112,13 @@ public:
 
         //- Assignment via UList operator. Takes linear time.
         inline void operator=(const SubField<Type>&);
+
+        //- Assignment via UList operator. Takes linear time.
+        inline void operator=(const Field<Type>&);
+
+        //- Assignment via UList operator. Takes linear time.
+        template<class Form, direction Ncmpts>
+        inline void operator=(const VectorSpace<Form, Type, Ncmpts>&);
 
         //- Allow cast to a const Field\<Type\>&
         inline operator const Field<Type>&() const;

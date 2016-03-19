@@ -87,6 +87,9 @@ public:
         //- Allow cast to a const List<T>&
         inline operator const Foam::List<T>&() const;
 
+        //- Assignment of all entries to the given list
+        inline void operator=(const UList<T>&);
+
         //- Assignment of all entries to the given value
         inline void operator=(const T&);
 };
