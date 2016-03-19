@@ -47,17 +47,13 @@ bool Foam::faceOnlySet::trackToBoundary
 (
     passiveParticleCloud& particleCloud,
     passiveParticle& singleParticle,
+    const scalar smallDist,
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
     DynamicList<label>& samplingFaces,
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
-    // distance vector between sampling points
-    const vector offset = end_ - start_;
-    const vector smallVec = tol*offset;
-    const scalar smallDist = mag(smallVec);
-
     particle::TrackingData<passiveParticleCloud> trackData(particleCloud);
 
     // Alias
@@ -101,7 +97,7 @@ void Foam::faceOnlySet::calcSamples
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
-    // distance vector between sampling points
+    // Distance vector between sampling points
     if (mag(end_ - start_) < SMALL)
     {
         FatalErrorInFunction
@@ -138,13 +134,12 @@ void Foam::faceOnlySet::calcSamples
     }
 
     // Get first tracking point. Use bPoint, bFaceI if provided.
-
     point trackPt;
     label trackCellI = -1;
     label trackFaceI = -1;
 
-    //Info<< "before getTrackingPoint : bPoint:" << bPoint
-    //    << " bFaceI:" << bFaceI << endl;
+    // Pout<< "before getTrackingPoint : bPoint:" << bPoint
+    //     << " bFaceI:" << bFaceI << endl;
 
     getTrackingPoint
     (
@@ -152,25 +147,25 @@ void Foam::faceOnlySet::calcSamples
         bPoint,
         bFaceI,
         smallDist,
-
         trackPt,
         trackCellI,
         trackFaceI
     );
 
-    //Info<< "after getTrackingPoint : "
-    //    << " trackPt:" << trackPt
-    //    << " trackCellI:" << trackCellI
-    //    << " trackFaceI:" << trackFaceI
-    //    << endl;
+    // Pout<< "after getTrackingPoint : "
+    //     << " trackPt:" << trackPt
+    //     << " trackCellI:" << trackCellI
+    //     << " trackFaceI:" << trackFaceI
+    //     << endl;
 
     if (trackCellI == -1)
     {
         // Line start_ - end_ does not intersect domain at all.
         // (or is along edge)
         // Set points and cell/face labels to empty lists
-        //Info<< "calcSamples : Both start_ and end_ outside domain"
-        //    << endl;
+
+        // Pout<< "calcSamples : Both start_ and end_ outside domain"
+        //     << endl;
 
         return;
     }
@@ -181,11 +176,11 @@ void Foam::faceOnlySet::calcSamples
         trackFaceI = findNearFace(trackCellI, trackPt, smallDist);
     }
 
-    //Info<< "calcSamples : got first point to track from :"
-    //    << "  trackPt:" << trackPt
-    //    << "  trackCell:" << trackCellI
-    //    << "  trackFace:" << trackFaceI
-    //    << endl;
+    // Pout<< "calcSamples : got first point to track from :"
+    //     << "  trackPt:" << trackPt
+    //     << "  trackCell:" << trackCellI
+    //     << "  trackFace:" << trackFaceI
+    //     << endl;
 
     //
     // Track until hit end of all boundary intersections
@@ -200,11 +195,11 @@ void Foam::faceOnlySet::calcSamples
     // index in bHits; current boundary intersection
     label bHitI = 1;
 
-    while(true)
+    while (true)
     {
         if (trackFaceI != -1)
         {
-            //Info<< "trackPt:" << trackPt << " on face so use." << endl;
+            // Pout<< "trackPt:" << trackPt << " on face so use." << endl;
             samplingPts.append(trackPt);
             samplingCells.append(trackCellI);
             samplingFaces.append(trackFaceI);
@@ -223,31 +218,26 @@ void Foam::faceOnlySet::calcSamples
         (
             particleCloud,
             singleParticle,
+            smallDist,
             samplingPts,
             samplingCells,
             samplingFaces,
             samplingCurveDist
         );
 
-        // fill sampleSegments
+        // Fill sampleSegments
         for (label i = samplingPts.size() - 1; i >= startSegmentI; --i)
         {
             samplingSegments.append(segmentI);
         }
 
-
         if (!reachedBoundary)
         {
-            //Info<< "calcSamples : Reached end of samples: "
-            //    << "  samplePt now:" << singleParticle.position()
-            //    << endl;
+            // Pout<< "calcSamples : Reached end of samples: "
+            //     << "  samplePt now:" << singleParticle.position()
+            //     << endl;
             break;
         }
-
-
-        // Go past boundary intersection where tracking stopped
-        // Use coordinate comparison instead of face comparison for
-        // accuracy reasons
 
         bool foundValidB = false;
 
@@ -257,15 +247,15 @@ void Foam::faceOnlySet::calcSamples
                 (bHits[bHitI].hitPoint() - singleParticle.position())
               & normOffset;
 
-            //Info<< "Finding next boundary : "
-            //    << "bPoint:" << bHits[bHitI].hitPoint()
-            //    << "  tracking:" << singleParticle.position()
-            //    << "  dist:" << dist
-            //    << endl;
+            // Pout<< "Finding next boundary : "
+            //     << "bPoint:" << bHits[bHitI].hitPoint()
+            //     << "  tracking:" << singleParticle.position()
+            //     << "  dist:" << dist
+            //     << endl;
 
             if (dist > smallDist)
             {
-                // hitpoint is past tracking position
+                // Hit-point is past tracking position
                 foundValidB = true;
                 break;
             }
@@ -275,7 +265,7 @@ void Foam::faceOnlySet::calcSamples
             }
         }
 
-        if (!foundValidB)
+        if (!foundValidB || bHitI == bHits.size() - 1)
         {
             // No valid boundary intersection found beyond tracking position
             break;
