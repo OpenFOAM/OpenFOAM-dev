@@ -122,8 +122,8 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit
     // Additional weighting for constant and linear terms
     for (label i = 0; i < B.m(); i++)
     {
-        B[i][0] *= wts[0];
-        B[i][1] *= wts[0];
+        B(i, 0) *= wts[0];
+        B(i, 1) *= wts[0];
     }
 
     // Set the fit
@@ -137,14 +137,14 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit
 
         for (label i=0; i<stencilSize; i++)
         {
-            coeffsi[i] = wts[1]*wts[i]*svd.VSinvUt()[1][i]/scale;
+            coeffsi[i] = wts[1]*wts[i]*svd.VSinvUt()(1, i)/scale;
         }
 
         goodFit =
         (
-            mag(wts[0]*wts[0]*svd.VSinvUt()[0][0] - wLin)
+            mag(wts[0]*wts[0]*svd.VSinvUt()(0, 0) - wLin)
           < this->linearLimitFactor()*wLin)
-         && (mag(wts[0]*wts[1]*svd.VSinvUt()[0][1] - (1 - wLin)
+         && (mag(wts[0]*wts[1]*svd.VSinvUt()(0, 1) - (1 - wLin)
         ) < this->linearLimitFactor()*(1 - wLin))
          && coeffsi[0] < 0 && coeffsi[1] > 0
          && mag(coeffsi[0] + deltaCoeff) < 0.5*deltaCoeff
@@ -163,10 +163,10 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit
                 << "    deltaCoeff " << deltaCoeff << nl
                 << "    sing vals " << svd.S() << nl
                 << "Components of goodFit:\n"
-                << "    wts[0]*wts[0]*svd.VSinvUt()[0][0] = "
-                << wts[0]*wts[0]*svd.VSinvUt()[0][0] << nl
-                << "    wts[0]*wts[1]*svd.VSinvUt()[0][1] = "
-                << wts[0]*wts[1]*svd.VSinvUt()[0][1]
+                << "    wts[0]*wts[0]*svd.VSinvUt()(0, 0) = "
+                << wts[0]*wts[0]*svd.VSinvUt()(0, 0) << nl
+                << "    wts[0]*wts[1]*svd.VSinvUt()(0, 1) = "
+                << wts[0]*wts[1]*svd.VSinvUt()(0, 1)
                 << " dim = " << this->dim() << endl;
 
             wts[0] *= 10;
@@ -174,14 +174,14 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit
 
             for (label j = 0; j < B.n(); j++)
             {
-                B[0][j] *= 10;
-                B[1][j] *= 10;
+                B(0, j) *= 10;
+                B(1, j) *= 10;
             }
 
             for (label i = 0; i < B.m(); i++)
             {
-                B[i][0] *= 10;
-                B[i][1] *= 10;
+                B(i, 0) *= 10;
+                B(i, 1) *= 10;
             }
         }
     }

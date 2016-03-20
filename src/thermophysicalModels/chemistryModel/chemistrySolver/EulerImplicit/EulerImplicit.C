@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ void Foam::EulerImplicit<ChemistryModel>::solve
         scalar d = 0;
         for (label j=0; j<nSpecie; j++)
         {
-            d -= RR[i][j]*c[j];
+            d -= RR(i, j)*c[j];
         }
 
         if (d < -SMALL)
@@ -172,7 +172,7 @@ void Foam::EulerImplicit<ChemistryModel>::solve
     // Add the diagonal and source contributions from the time-derivative
     for (label i=0; i<nSpecie; i++)
     {
-        RR[i][i] += 1.0/deltaT;
+        RR(i, i) += 1.0/deltaT;
         RR.source()[i] = c[i]/deltaT;
     }
 

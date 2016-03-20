@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ Foam::seulex::seulex(const ODESystem& ode, const dictionary& dict)
         for (int l=0; l<k; l++)
         {
             scalar ratio = scalar(nSeq_[k])/nSeq_[l];
-            coeff_[k][l] = 1.0/(ratio - 1.0);
+            coeff_(k, l) = 1.0/(ratio - 1.0);
         }
     }
 }
@@ -117,10 +117,10 @@ bool Foam::seulex::seul
     {
         for (label j=0; j<n_; j++)
         {
-            a_[i][j] = -dfdy_[i][j];
+            a_(i, j) = -dfdy_(i, j);
         }
 
-        a_[i][i] += 1.0/dx;
+        a_(i, i) += 1.0/dx;
     }
 
     LUDecompose(a_, pivotIndices_);
@@ -192,13 +192,13 @@ void Foam::seulex::extrapolate
         for (label i=0; i<n_; i++)
         {
             table[j-1][i] =
-                table[j][i] + coeff_[k][j]*(table[j][i] - table[j-1][i]);
+                table(j, i) + coeff_(k, j)*(table(j, i) - table[j-1][i]);
         }
     }
 
     for (int i=0; i<n_; i++)
     {
-        y[i] = table[0][i] + coeff_[k][0]*(table[0][i] - y[i]);
+        y[i] = table(0, i) + coeff_(k, 0)*(table(0, i) - y[i]);
     }
 }
 
@@ -288,7 +288,7 @@ void Foam::seulex::solve
                 forAll(scale_, i)
                 {
                     scale_[i] = absTol_[i] + relTol_[i]*mag(y0_[i]);
-                    err += sqr((y[i] - table_[0][i])/scale_[i]);
+                    err += sqr((y[i] - table_(0, i))/scale_[i]);
                 }
                 err = sqrt(err/n_);
                 if (err > 1.0/SMALL || (k > 1 && err >= errOld))

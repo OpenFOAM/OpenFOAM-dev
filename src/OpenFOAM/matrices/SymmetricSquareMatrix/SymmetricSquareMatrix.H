@@ -76,13 +76,6 @@ public:
 
         //- Clone
         inline autoPtr<SymmetricSquareMatrix<Type>> clone() const;
-
-
-        //- Return subscript-checked row of Matrix.
-        inline Type& operator()(const label r, const label c);
-
-        //- Return subscript-checked row of constant Matrix.
-        inline const Type& operator()(const label r, const label c) const;
 };
 
 

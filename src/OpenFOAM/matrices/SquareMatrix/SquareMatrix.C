@@ -39,7 +39,7 @@ Foam::scalar Foam::detDecomposed
 
     for (label i = 0; i < matrix.m(); ++i)
     {
-        diagProduct *= matrix[i][i];
+        diagProduct *= matrix(i, i);
     }
 
     return sign*diagProduct;

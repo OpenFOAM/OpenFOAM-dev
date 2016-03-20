@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,9 +46,9 @@ void Foam::SIBS::SIMPR
     {
         for (label j=0; j<n_; j++)
         {
-            a[i][j] = -h*dfdy[i][j];
+            a(i, j) = -h*dfdy(i, j);
         }
-        ++a[i][i];
+        ++a(i, i);
     }
 
     labelList pivotIndices(n_);

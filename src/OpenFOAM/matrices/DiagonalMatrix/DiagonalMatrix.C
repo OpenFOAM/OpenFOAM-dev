@@ -42,7 +42,7 @@ Foam::DiagonalMatrix<Type>::DiagonalMatrix(const Matrix<Form, Type>& a)
 {
     forAll(*this, i)
     {
-        this->operator[](i) = a[i][i];
+        this->operator[](i) = a(i, i);
     }
 }
 

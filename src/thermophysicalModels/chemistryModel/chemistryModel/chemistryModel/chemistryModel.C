@@ -341,7 +341,7 @@ void Foam::chemistryModel<CompType, ThermoType>::jacobian
     {
         for (label j=0; j<nEqns(); j++)
         {
-            dfdc[i][j] = 0.0;
+            dfdc(i, j) = 0.0;
         }
     }
 

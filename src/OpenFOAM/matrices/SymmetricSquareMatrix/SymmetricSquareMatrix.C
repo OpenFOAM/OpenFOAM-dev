@@ -37,7 +37,7 @@ Foam::SymmetricSquareMatrix<Type> Foam::invDecomposed
 
     for (label i = 0; i < matrix.m(); ++i)
     {
-        inv[i][i] = 1.0/matrix[i][i];
+        inv(i, i) = 1.0/matrix(i, i);
 
         for (label j = 0; j < i; ++j)
         {
@@ -45,10 +45,10 @@ Foam::SymmetricSquareMatrix<Type> Foam::invDecomposed
 
             for (label k = j; k < i; k++)
             {
-                sum -= matrix[i][k]*inv[k][j];
+                sum -= matrix(i, k)*inv(k, j);
             }
 
-            inv[i][j] = sum/matrix[i][i];
+            inv(i, j) = sum/matrix(i, i);
         }
     }
 
@@ -77,7 +77,7 @@ Foam::scalar Foam::detDecomposed(const SymmetricSquareMatrix<Type>& matrix)
 
     for (label i = 0; i < matrix.m(); ++i)
     {
-        diagProduct *= matrix[i][i];
+        diagProduct *= matrix(i, i);
     }
 
     return sqr(diagProduct);

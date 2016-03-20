@@ -94,40 +94,4 @@ Foam::SymmetricSquareMatrix<Type>::clone() const
 }
 
 
-template<class Type>
-inline Type& Foam::SymmetricSquareMatrix<Type>::operator()
-(
-    const label r,
-    const label c
-)
-{
-    if (r > c)
-    {
-        return this->operator[](r)[c];
-    }
-    else
-    {
-        return this->operator[](c)[r];
-    }
-}
-
-
-template<class Type>
-inline const Type& Foam::SymmetricSquareMatrix<Type>::operator()
-(
-    const label r,
-    const label c
-) const
-{
-    if (r > c)
-    {
-        return this->operator[](r)[c];
-    }
-    else
-    {
-        return this->operator[](c)[r];
-    }
-}
-
-
 // ************************************************************************* //

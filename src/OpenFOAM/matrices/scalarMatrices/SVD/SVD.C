@@ -60,40 +60,40 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         {
             for (label k = i; k < Um; k++)
             {
-                scale += mag(U_[k][i]);
+                scale += mag(U_(k, i));
             }
 
             if (scale != 0)
             {
                 for (label k = i; k < Um; k++)
                 {
-                    U_[k][i] /= scale;
-                    s += U_[k][i]*U_[k][i];
+                    U_(k, i) /= scale;
+                    s += U_(k, i)*U_(k, i);
                 }
 
-                scalar f = U_[i][i];
+                scalar f = U_(i, i);
                 g = -sign(Foam::sqrt(s), f);
                 scalar h = f*g - s;
-                U_[i][i] = f - g;
+                U_(i, i) = f - g;
 
                 for (label j = l-1; j < Un; j++)
                 {
                     s = 0;
                     for (label k = i; k < Um; k++)
                     {
-                        s += U_[k][i]*U_[k][j];
+                        s += U_(k, i)*U_(k, j);
                     }
 
                     f = s/h;
                     for (label k = i; k < A.m(); k++)
                     {
-                        U_[k][j] += f*U_[k][i];
+                        U_(k, j) += f*U_(k, i);
                     }
                 }
 
                 for (label k = i; k < Um; k++)
                 {
-                    U_[k][i] *= scale;
+                    U_(k, i) *= scale;
                 }
             }
         }
@@ -106,15 +106,15 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         {
             for (label k = l-1; k < Un; k++)
             {
-                scale += mag(U_[i][k]);
+                scale += mag(U_(i, k));
             }
 
             if (scale != 0)
             {
                 for (label k=l-1; k < Un; k++)
                 {
-                    U_[i][k] /= scale;
-                    s += U_[i][k]*U_[i][k];
+                    U_(i, k) /= scale;
+                    s += U_(i, k)*U_(i, k);
                 }
 
                 scalar f = U_[i][l-1];
@@ -124,7 +124,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
                 for (label k = l-1; k < Un; k++)
                 {
-                    rv1[k] = U_[i][k]/h;
+                    rv1[k] = U_(i, k)/h;
                 }
 
                 for (label j = l-1; j < Um; j++)
@@ -132,17 +132,17 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                     s = 0;
                     for (label k = l-1; k < Un; k++)
                     {
-                        s += U_[j][k]*U_[i][k];
+                        s += U_(j, k)*U_(i, k);
                     }
 
                     for (label k = l-1; k < Un; k++)
                     {
-                        U_[j][k] += s*rv1[k];
+                        U_(j, k) += s*rv1[k];
                     }
                 }
                 for (label k = l-1; k < Un; k++)
                 {
-                    U_[i][k] *= scale;
+                    U_(i, k) *= scale;
                 }
             }
         }
@@ -158,7 +158,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
             {
                 for (label j = l; j < Un; j++)
                 {
-                    V_[j][i] = (U_[i][j]/U_[i][l])/g;
+                    V_(j, i) = (U_(i, j)/U_(i, l))/g;
                 }
 
                 for (label j=l; j < Un; j++)
@@ -166,23 +166,23 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                     s = 0;
                     for (label k = l; k < Un; k++)
                     {
-                        s += U_[i][k]*V_[k][j];
+                        s += U_(i, k)*V_(k, j);
                     }
 
                     for (label k = l; k < Un; k++)
                     {
-                        V_[k][j] += s*V_[k][i];
+                        V_(k, j) += s*V_(k, i);
                     }
                 }
             }
 
             for (label j = l; j < Un;j++)
             {
-                V_[i][j] = V_[j][i] = 0.0;
+                V_(i, j) = V_(j, i) = 0.0;
             }
         }
 
-        V_[i][i] = 1;
+        V_(i, i) = 1;
         g = rv1[i];
         l = i;
     }
@@ -194,7 +194,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
         for (label j = l; j < Un; j++)
         {
-            U_[i][j] = 0.0;
+            U_(i, j) = 0.0;
         }
 
         if (g != 0)
@@ -206,31 +206,31 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                 s = 0;
                 for (label k = l; k < Um; k++)
                 {
-                    s += U_[k][i]*U_[k][j];
+                    s += U_(k, i)*U_(k, j);
                 }
 
-                scalar f = (s/U_[i][i])*g;
+                scalar f = (s/U_(i, i))*g;
 
                 for (label k = i; k < Um; k++)
                 {
-                    U_[k][j] += f*U_[k][i];
+                    U_(k, j) += f*U_(k, i);
                 }
             }
 
             for (label j = i; j < Um; j++)
             {
-                U_[j][i] *= g;
+                U_(j, i) *= g;
             }
         }
         else
         {
             for (label j = i; j < Um; j++)
             {
-                U_[j][i] = 0.0;
+                U_(j, i) = 0.0;
             }
         }
 
-        ++U_[i][i];
+        ++U_(i, i);
     }
 
     for (label k = Un-1; k >= 0; k--)
@@ -272,9 +272,9 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                     for (label j = 0; j < Um; j++)
                     {
                         scalar y = U_[j][mn];
-                        scalar z = U_[j][i];
+                        scalar z = U_(j, i);
                         U_[j][mn] = y*c + z*s;
-                        U_[j][i] = z*c - y*s;
+                        U_(j, i) = z*c - y*s;
                     }
                 }
             }
@@ -287,7 +287,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                 {
                     S_[k] = -z;
 
-                    for (label j = 0; j < Un; j++) V_[j][k] = -V_[j][k];
+                    for (label j = 0; j < Un; j++) V_(j, k) = -V_(j, k);
                 }
                 break;
             }
@@ -383,7 +383,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
     {
         for (label j = 0; j < A.n(); j++)
         {
-            diff = mag(A[i][j] - SVDA[i][j]);
+            diff = mag(A(i, j) - SVDA(i, j));
             if (diff > maxDiff) maxDiff = diff;
         }
     }

@@ -196,8 +196,8 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::calcFit
     // Additional weighting for constant and linear terms
     for (label i = 0; i < B.m(); i++)
     {
-        B[i][0] *= wts[0];
-        B[i][1] *= wts[0];
+        B(i, 0) *= wts[0];
+        B(i, 1) *= wts[0];
     }
 
     // Set the fit
@@ -214,7 +214,7 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::calcFit
 
         for (label i=0; i<stencilSize; i++)
         {
-            coeffsi[i] = wts[0]*wts[i]*svd.VSinvUt()[0][i];
+            coeffsi[i] = wts[0]*wts[i]*svd.VSinvUt()(0, i);
             if (mag(coeffsi[i]) > maxCoeff)
             {
                 maxCoeff = mag(coeffsi[i]);
@@ -269,14 +269,14 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::calcFit
 
             for (label j = 0; j < B.n(); j++)
             {
-                B[0][j] *= 10;
-                B[1][j] *= 10;
+                B(0, j) *= 10;
+                B(1, j) *= 10;
             }
 
             for (label i = 0; i < B.m(); i++)
             {
-                B[i][0] *= 10;
-                B[i][1] *= 10;
+                B(i, 0) *= 10;
+                B(i, 1) *= 10;
             }
         }
     }

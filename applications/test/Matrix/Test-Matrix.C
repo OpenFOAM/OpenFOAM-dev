@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,15 +36,15 @@ int main(int argc, char *argv[])
 {
     SquareMatrix<scalar> hmm(3);
 
-    hmm[0][0] = -3.0;
-    hmm[0][1] = 10.0;
-    hmm[0][2] = -4.0;
-    hmm[1][0] = 2.0;
-    hmm[1][1] = 3.0;
-    hmm[1][2] = 10.0;
-    hmm[2][0] = 2.0;
-    hmm[2][1] = 6.0;
-    hmm[2][2] = 1.0;
+    hmm(0, 0) = -3.0;
+    hmm(0, 1) = 10.0;
+    hmm(0, 2) = -4.0;
+    hmm(1, 0) = 2.0;
+    hmm(1, 1) = 3.0;
+    hmm(1, 2) = 10.0;
+    hmm(2, 0) = 2.0;
+    hmm(2, 1) = 6.0;
+    hmm(2, 2) = 1.0;
 
     //Info<< hmm << endl << hmm - 2.0*(-hmm) << endl;
     Info<< max(hmm) << endl;
@@ -106,15 +106,15 @@ int main(int argc, char *argv[])
     {
         scalarSquareMatrix squareMatrix(3, 3, 0);
 
-        squareMatrix[0][0] = 4;
-        squareMatrix[0][1] = 12;
-        squareMatrix[0][2] = -16;
-        squareMatrix[1][0] = 12;
-        squareMatrix[1][1] = 37;
-        squareMatrix[1][2] = -43;
-        squareMatrix[2][0] = -16;
-        squareMatrix[2][1] = -43;
-        squareMatrix[2][2] = 98;
+        squareMatrix(0, 0) = 4;
+        squareMatrix(0, 1) = 12;
+        squareMatrix(0, 2) = -16;
+        squareMatrix(1, 0) = 12;
+        squareMatrix(1, 1) = 37;
+        squareMatrix(1, 2) = -43;
+        squareMatrix(2, 0) = -16;
+        squareMatrix(2, 1) = -43;
+        squareMatrix(2, 2) = 98;
 
         const scalarSquareMatrix squareMatrixCopy = squareMatrix;
         Info<< nl << "Square Matrix = " << squareMatrix << endl;
@@ -129,6 +129,22 @@ int main(int argc, char *argv[])
         Info<< "Pivots = " << rhs << endl;
         Info<< "Sign = " << sign << endl;
         Info<< "det = " << detDecomposed(squareMatrix, sign) << endl;
+    }
+
+    {
+        scalarSquareMatrix squareMatrix(3000, 3000, 1);
+
+        for(label i=0; i<squareMatrix.n(); i++)
+        {
+            squareMatrix(i, i) = 10;
+        }
+
+        scalarField rhs(squareMatrix.n(), 0);
+        rhs[0] = 1;
+        rhs[1] = 2;
+        rhs[2] = 3;
+
+        LUsolve(squareMatrix, rhs);
     }
 
     Info<< "\nEnd\n" << endl;

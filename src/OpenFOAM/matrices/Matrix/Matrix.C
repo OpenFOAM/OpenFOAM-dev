@@ -156,7 +156,7 @@ Form Foam::Matrix<Form, Type>::T() const
     {
         for (label j=0; j<n(); j++)
         {
-            At[j][i] = A[i][j];
+            At(j, i) = A(i, j);
         }
     }
 
@@ -238,7 +238,7 @@ const Type& Foam::max(const Matrix<Form, Type>& a)
             << abort(FatalError);
 
         // Return in error to keep compiler happy
-        return a[0][0];
+        return a(0, 0);
     }
 }
 
@@ -270,7 +270,7 @@ const Type& Foam::min(const Matrix<Form, Type>& a)
             << abort(FatalError);
 
         // Return in error to keep compiler happy
-        return a[0][0];
+        return a(0, 0);
     }
 }
 
@@ -411,7 +411,7 @@ Form Foam::operator*(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
         {
             for (label l = 0; l < b.m(); l++)
             {
-                ab[i][j] += a[i][l]*b[l][j];
+                ab(i, j) += a(i, l)*b(l, j);
             }
         }
     }

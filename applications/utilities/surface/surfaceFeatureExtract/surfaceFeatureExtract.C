@@ -312,11 +312,11 @@ triSurfacePointScalarField calcCurvature
             scalar x = edgeVectors[i] & faceCoordSys[0];
             scalar y = edgeVectors[i] & faceCoordSys[1];
 
-            T[0][0] += sqr(x);
-            T[1][0] += x*y;
-            T[1][1] += sqr(x) + sqr(y);
-            T[2][1] += x*y;
-            T[2][2] += sqr(y);
+            T(0, 0) += sqr(x);
+            T(1, 0) += x*y;
+            T(1, 1) += sqr(x) + sqr(y);
+            T(2, 1) += x*y;
+            T(2, 2) += sqr(y);
 
             scalar dndx = normalDifferences[i] & faceCoordSys[0];
             scalar dndy = normalDifferences[i] & faceCoordSys[1];

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,15 +35,15 @@ int main(int argc, char *argv[])
 {
     simpleMatrix<vector> hmm(3);
 
-    hmm[0][0] = -3.0;
-    hmm[0][1] = 10.0;
-    hmm[0][2] = -4.0;
-    hmm[1][0] = 2.0;
-    hmm[1][1] = 3.0;
-    hmm[1][2] = 10.0;
-    hmm[2][0] = 2.0;
-    hmm[2][1] = 6.0;
-    hmm[2][2] = 1.0;
+    hmm(0, 0) = -3.0;
+    hmm(0, 1) = 10.0;
+    hmm(0, 2) = -4.0;
+    hmm(1, 0) = 2.0;
+    hmm(1, 1) = 3.0;
+    hmm(1, 2) = 10.0;
+    hmm(2, 0) = 2.0;
+    hmm(2, 1) = 6.0;
+    hmm(2, 2) = 1.0;
 
     hmm.source()[0] = vector(2.0, 1.0, 3.0);
     hmm.source()[1] = vector(1.0, 4.0, 3.0);

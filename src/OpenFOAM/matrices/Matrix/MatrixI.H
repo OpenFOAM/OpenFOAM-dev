@@ -136,7 +136,7 @@ inline const Type& Foam::Matrix<Form, Type>::operator()
 ) const
 {
     checki(i);
-    checki(j);
+    checkj(j);
     return v_[i*nCols_ + j];
 }
 
@@ -149,7 +149,7 @@ inline Type& Foam::Matrix<Form, Type>::operator()
 )
 {
     checki(i);
-    checki(j);
+    checkj(j);
     return v_[i*nCols_ + j];
 }
 

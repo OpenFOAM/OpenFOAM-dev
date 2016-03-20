@@ -84,7 +84,7 @@ void Foam::LUDecompose
             scalar sum = matrixi[j];
             for (label k=0; k<i; k++)
             {
-                sum -= matrixi[k]*matrix[k][j];
+                sum -= matrixi[k]*matrix(k, j);
             }
             matrixi[j] = sum;
         }
@@ -99,7 +99,7 @@ void Foam::LUDecompose
 
             for (label k=0; k<j; k++)
             {
-                sum -= matrixi[k]*matrix[k][j];
+                sum -= matrixi[k]*matrix(k, j);
             }
 
             matrixi[j] = sum;
@@ -138,7 +138,7 @@ void Foam::LUDecompose
 
             for (label i=j+1; i<m; i++)
             {
-                matrix[i][j] *= rDiag;
+                matrix(i, j) *= rDiag;
             }
         }
     }
@@ -155,7 +155,7 @@ void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
     {
         for (label k = j + 1; k < size; k++)
         {
-            matrix[j][k] = 0.0;
+            matrix(j, k) = 0.0;
         }
     }
 
@@ -169,18 +169,18 @@ void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
 
             for (label i = 0; i < k; i++)
             {
-                s += matrix[i][k]*matrix[i][j];
+                s += matrix(i, k)*matrix(i, j);
             }
 
-            s = (matrix[j][k] - s)/matrix[k][k];
+            s = (matrix(j, k) - s)/matrix(k, k);
 
-            matrix[k][j] = s;
-            matrix[j][k] = s;
+            matrix(k, j) = s;
+            matrix(j, k) = s;
 
             d += sqr(s);
         }
 
-        d = matrix[j][j] - d;
+        d = matrix(j, j) - d;
 
         if (d < 0.0)
         {
@@ -190,7 +190,7 @@ void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
                 << abort(FatalError);
         }
 
-        matrix[j][j] = sqrt(d);
+        matrix(j, j) = sqrt(d);
     }
 }
 
@@ -232,9 +232,9 @@ void Foam::multiply
                 scalar ab = 0;
                 for (label j = 0; j < A.n(); j++)
                 {
-                    ab += A[i][j]*B[j][l];
+                    ab += A(i, j)*B(j, l);
                 }
-                ans[i][g] += C[l][g] * ab;
+                ans(i, g) += C(l, g) * ab;
             }
         }
     }
@@ -273,7 +273,7 @@ void Foam::multiply
         {
             for (label l = 0; l < C.m(); l++)
             {
-                ans[i][g] += C[l][g] * A[i][l]*B[l];
+                ans(i, g) += C(l, g) * A(i, l)*B[l];
             }
         }
     }
