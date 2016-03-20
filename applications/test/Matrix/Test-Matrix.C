@@ -131,22 +131,6 @@ int main(int argc, char *argv[])
         Info<< "det = " << detDecomposed(squareMatrix, sign) << endl;
     }
 
-    {
-        scalarSquareMatrix squareMatrix(3000, 3000, 1);
-
-        for(label i=0; i<squareMatrix.n(); i++)
-        {
-            squareMatrix(i, i) = 10;
-        }
-
-        scalarField rhs(squareMatrix.n(), 0);
-        rhs[0] = 1;
-        rhs[1] = 2;
-        rhs[2] = 3;
-
-        LUsolve(squareMatrix, rhs);
-    }
-
     Info<< "\nEnd\n" << endl;
 
     return 0;
