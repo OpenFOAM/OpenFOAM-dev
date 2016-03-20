@@ -322,12 +322,12 @@ Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::block()
 template<class Form, class Cmpt, Foam::direction Nrows, Foam::direction Ncols>
 inline const Cmpt& Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::operator()
 (
-    const direction& row,
-    const direction& col
+    const direction& i,
+    const direction& j
 ) const
 {
     #ifdef FULLDEBUG
-    if (row < 0 || row > Nrows-1 || col < 0 || col > Ncols-1)
+    if (i < 0 || i > Nrows-1 || j < 0 || j > Ncols-1)
     {
         FatalErrorInFunction
             << "indices out of range"
@@ -335,19 +335,19 @@ inline const Cmpt& Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::operator()
     }
     #endif
 
-    return this->v_[row*Ncols + col];
+    return this->v_[i*Ncols + j];
 }
 
 
 template<class Form, class Cmpt, Foam::direction Nrows, Foam::direction Ncols>
 inline Cmpt& Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::operator()
 (
-    const direction& row,
-    const direction& col
+    const direction& i,
+    const direction& j
 )
 {
     #ifdef FULLDEBUG
-    if (row < 0 || row > Nrows-1 || col < 0 || col > Ncols-1)
+    if (i < 0 || i > Nrows-1 || j < 0 || j > Ncols-1)
     {
         FatalErrorInFunction
             << "indices out of range"
@@ -355,7 +355,7 @@ inline Cmpt& Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::operator()
     }
     #endif
 
-    return this->v_[row*Ncols + col];
+    return this->v_[i*Ncols + j];
 }
 
 

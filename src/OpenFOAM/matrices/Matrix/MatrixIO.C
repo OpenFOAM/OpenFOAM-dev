@@ -73,7 +73,7 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
             if (mn)
             {
                 M.allocate();
-                Type* v = M.v_[0];
+                Type* v = M.v_;
 
                 if (listDelimiter == token::BEGIN_LIST)
                 {
@@ -124,7 +124,7 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
             if (mn)
             {
                 M.allocate();
-                Type* v = M.v_[0];
+                Type* v = M.v_;
 
                 is.read(reinterpret_cast<char*>(v), mn*sizeof(Type));
 
@@ -162,7 +162,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
         {
             bool uniform = false;
 
-            const Type* v = M.v_[0];
+            const Type* v = M.v_;
 
             if (mn > 1 && contiguous<Type>())
             {
@@ -248,7 +248,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
     {
         if (mn)
         {
-            os.write(reinterpret_cast<const char*>(M.v_[0]), mn*sizeof(Type));
+            os.write(reinterpret_cast<const char*>(M.v_), mn*sizeof(Type));
         }
     }
 

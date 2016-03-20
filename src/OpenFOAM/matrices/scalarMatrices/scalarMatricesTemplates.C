@@ -56,8 +56,6 @@ void Foam::solve
 
         if (i != iMax)
         {
-            //Info<< "Pivoted on " << i << " " << iMax << endl;
-
             for (label k=i; k<m; k++)
             {
                 Swap(tmpMatrix[i][k], tmpMatrix[iMax][k]);

@@ -79,10 +79,9 @@ class Matrix
         label nRows_, nCols_;
 
         //- Row pointers
-        Type** __restrict__ v_;
+        Type* __restrict__ v_;
 
-        //- Allocate the storage for the row-pointers and the data
-        //  and set the row pointers
+        //- Allocate the storage for the element vector
         void allocate();
 
 
@@ -100,11 +99,11 @@ public:
         inline Matrix();
 
         //- Construct given number of rows and columns.
-        Matrix(const label n, const label m);
+        Matrix(const label m, const label n);
 
         //- Construct with given number of rows and columns
         //  and value for all elements.
-        Matrix(const label n, const label m, const Type&);
+        Matrix(const label m, const label n, const Type&);
 
         //- Copy constructor.
         Matrix(const Matrix<Form, Type>&);
@@ -130,16 +129,16 @@ public:
             //- Return the number of columns
             inline label n() const;
 
-            //- Return the number of elements in matrix (n*m)
+            //- Return the number of elements in matrix (m*n)
             inline label size() const;
 
 
         // Check
 
-            //- Check index i is within valid range (0 ... n-1).
+            //- Check index i is within valid range (0 ... m-1).
             inline void checki(const label i) const;
 
-            //- Check index j is within valid range (0 ... m-1).
+            //- Check index j is within valid range (0 ... n-1).
             inline void checkj(const label j) const;
 
 
@@ -159,11 +158,23 @@ public:
 
     // Member operators
 
+        //- Return element vector of the constant Matrix
+        inline const Type* v() const;
+
+        //- Return element vector of the Matrix
+        inline Type* v();
+
         //- Return subscript-checked row of Matrix.
         inline Type* operator[](const label);
 
         //- Return subscript-checked row of constant Matrix.
         inline const Type* operator[](const label) const;
+
+        //- (i, j) const element access operator
+        inline const Type& operator()(const label i, const label j) const;
+
+        //- (i, j) element access operator
+        inline Type& operator()(const label i, const label j);
 
         //- Assignment operator. Takes linear time.
         void operator=(const Matrix<Form, Type>&);
@@ -221,13 +232,14 @@ template<class Form, class Type> Form operator*
     const Matrix<Form, Type>&
 );
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "MatrixI.H"
+#include "MatrixI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

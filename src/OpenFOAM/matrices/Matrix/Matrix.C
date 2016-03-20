@@ -32,13 +32,7 @@ void Foam::Matrix<Form, Type>::allocate()
 {
     if (nRows_ && nCols_)
     {
-        v_ = new Type*[nRows_];
-        v_[0] = new Type[nRows_*nCols_];
-
-        for (label i=1; i<nRows_; i++)
-        {
-            v_[i] = v_[i-1] + nCols_;
-        }
+        v_ = new Type[size()];
     }
 }
 
@@ -50,7 +44,6 @@ Foam::Matrix<Form, Type>::~Matrix()
 {
     if (v_)
     {
-        delete[] (v_[0]);
         delete[] v_;
     }
 }
@@ -59,16 +52,16 @@ Foam::Matrix<Form, Type>::~Matrix()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Form, class Type>
-Foam::Matrix<Form, Type>::Matrix(const label n, const label m)
+Foam::Matrix<Form, Type>::Matrix(const label m, const label n)
 :
-    nRows_(n),
-    nCols_(m),
+    nRows_(m),
+    nCols_(n),
     v_(NULL)
 {
     if (nRows_ < 0 || nCols_ < 0)
     {
         FatalErrorInFunction
-            << "bad n, m " << nRows_ << ", " << nCols_
+            << "Bad m, n " << nRows_ << ", " << nCols_
             << abort(FatalError);
     }
 
@@ -77,16 +70,16 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m)
 
 
 template<class Form, class Type>
-Foam::Matrix<Form, Type>::Matrix(const label n, const label m, const Type& a)
+Foam::Matrix<Form, Type>::Matrix(const label m, const label n, const Type& a)
 :
-    nRows_(n),
-    nCols_(m),
+    nRows_(m),
+    nCols_(n),
     v_(NULL)
 {
     if (nRows_ < 0 || nCols_ < 0)
     {
         FatalErrorInFunction
-            << "bad n, m " << nRows_ << ", " << nCols_
+            << "bad m, n " << nRows_ << ", " << nCols_
             << abort(FatalError);
     }
 
@@ -94,13 +87,10 @@ Foam::Matrix<Form, Type>::Matrix(const label n, const label m, const Type& a)
 
     if (v_)
     {
-        Type* v = v_[0];
-
-        label mn = nRows_*nCols_;
-
+        const label mn = size();
         for (label i=0; i<mn; i++)
         {
-            v[i] = a;
+            v_[i] = a;
         }
     }
 }
@@ -116,13 +106,11 @@ Foam::Matrix<Form, Type>::Matrix(const Matrix<Form, Type>& a)
     if (a.v_)
     {
         allocate();
-        Type* v = v_[0];
-        const Type* av = a.v_[0];
 
-        label mn = nRows_*nCols_;
+        const label mn = size();
         for (label i=0; i<mn; i++)
         {
-            v[i] = av[i];
+            v_[i] = a.v_[i];
         }
     }
 }
@@ -133,12 +121,12 @@ void Foam::Matrix<Form, Type>::clear()
 {
     if (v_)
     {
-        delete[] (v_[0]);
         delete[] v_;
+        v_ = NULL;
     }
+
     nRows_ = 0;
     nCols_ = 0;
-    v_ = NULL;
 }
 
 
@@ -183,12 +171,10 @@ void Foam::Matrix<Form, Type>::operator=(const Type& t)
 {
     if (v_)
     {
-        Type* v = v_[0];
-
-        label mn = nRows_*nCols_;
+        const label mn = size();
         for (label i=0; i<mn; i++)
         {
-            v[i] = t;
+            v_[i] = t;
         }
     }
 }
@@ -214,13 +200,10 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
 
     if (v_)
     {
-        Type* v = v_[0];
-        const Type* av = a.v_[0];
-
-        label mn = nRows_*nCols_;
+        const label mn = size();
         for (label i=0; i<mn; i++)
         {
-            v[i] = av[i];
+            v_[i] = a.v_[i];
         }
     }
 }
@@ -231,12 +214,12 @@ void Foam::Matrix<Form, Type>::operator=(const Matrix<Form, Type>& a)
 template<class Form, class Type>
 const Type& Foam::max(const Matrix<Form, Type>& a)
 {
-    label mn = a.m()*a.n();
+    const label mn = a.size();
 
     if (mn)
     {
         label curMaxI = 0;
-        const Type* v = a[0];
+        const Type* v = a.v();
 
         for (label i=1; i<mn; i++)
         {
@@ -263,12 +246,12 @@ const Type& Foam::max(const Matrix<Form, Type>& a)
 template<class Form, class Type>
 const Type& Foam::min(const Matrix<Form, Type>& a)
 {
-    label mn = a.m()*a.n();
+    const label mn = a.size();
 
     if (mn)
     {
         label curMinI = 0;
-        const Type* v = a[0];
+        const Type* v = a.v();
 
         for (label i=1; i<mn; i++)
         {
@@ -301,10 +284,10 @@ Form Foam::operator-(const Matrix<Form, Type>& a)
 
     if (a.m() && a.n())
     {
-        Type* nav = na[0];
-        const Type* av = a[0];
+        Type* nav = na.v();
+        const Type* av = a.v();
 
-        label mn = a.m()*a.n();
+        const label mn = a.size();
         for (label i=0; i<mn; i++)
         {
             nav[i] = -av[i];
@@ -336,11 +319,11 @@ Form Foam::operator+(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 
     Form ab(a.m(), a.n());
 
-    Type* abv = ab[0];
-    const Type* av = a[0];
-    const Type* bv = b[0];
+    Type* abv = ab.v();
+    const Type* av = a.v();
+    const Type* bv = b.v();
 
-    label mn = a.m()*a.n();
+    const label mn = a.size();
     for (label i=0; i<mn; i++)
     {
         abv[i] = av[i] + bv[i];
@@ -371,11 +354,11 @@ Form Foam::operator-(const Matrix<Form, Type>& a, const Matrix<Form, Type>& b)
 
     Form ab(a.m(), a.n());
 
-    Type* abv = ab[0];
-    const Type* av = a[0];
-    const Type* bv = b[0];
+    Type* abv = ab.v();
+    const Type* av = a.v();
+    const Type* bv = b.v();
 
-    label mn = a.m()*a.n();
+    const label mn = a.size();
     for (label i=0; i<mn; i++)
     {
         abv[i] = av[i] - bv[i];
@@ -392,10 +375,10 @@ Form Foam::operator*(const scalar s, const Matrix<Form, Type>& a)
 
     if (a.m() && a.n())
     {
-        Type* sav = sa[0];
-        const Type* av = a[0];
+        Type* sav = sa.v();
+        const Type* av = a.v();
 
-        label mn = a.m()*a.n();
+        const label mn = a.size();
         for (label i=0; i<mn; i++)
         {
             sav[i] = s*av[i];

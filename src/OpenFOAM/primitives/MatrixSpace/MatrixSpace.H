@@ -279,12 +279,12 @@ public:
         //- (i, j) const element access operator
         inline const Cmpt& operator()
         (
-            const direction& row,
-            const direction& col
+            const direction& i,
+            const direction& j
         ) const;
 
         //- (i, j) element access operator
-        inline Cmpt& operator()(const direction& row, const direction& col);
+        inline Cmpt& operator()(const direction& i, const direction& j);
 
 
     // Member Operators

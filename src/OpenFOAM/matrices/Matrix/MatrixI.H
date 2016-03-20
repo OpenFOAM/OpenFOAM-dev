@@ -51,7 +51,6 @@ inline const Foam::Matrix<Form, Type>& Foam::Matrix<Form, Type>::null()
 }
 
 
-//- Return the number of rows
 template<class Form, class Type>
 inline Foam::label Foam::Matrix<Form, Type>::m() const
 {
@@ -76,6 +75,7 @@ inline Foam::label Foam::Matrix<Form, Type>::size() const
 template<class Form, class Type>
 inline void Foam::Matrix<Form, Type>::checki(const label i) const
 {
+    #ifdef FULLDEBUG
     if (!nRows_)
     {
         FatalErrorInFunction
@@ -88,12 +88,14 @@ inline void Foam::Matrix<Form, Type>::checki(const label i) const
             << "index " << i << " out of range 0 ... " << nRows_-1
             << abort(FatalError);
     }
+    #endif
 }
 
 
 template<class Form, class Type>
 inline void Foam::Matrix<Form, Type>::checkj(const label j) const
 {
+    #ifdef FULLDEBUG
     if (!nCols_)
     {
         FatalErrorInFunction
@@ -106,28 +108,65 @@ inline void Foam::Matrix<Form, Type>::checkj(const label j) const
             << "index " << j << " out of range 0 ... " << nCols_-1
             << abort(FatalError);
     }
+    #endif
 }
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Form, class Type>
-inline Type* Foam::Matrix<Form, Type>::operator[](const label i)
+inline const Type* Foam::Matrix<Form, Type>::v() const
 {
-    #ifdef FULLDEBUG
+    return v_;
+}
+
+
+template<class Form, class Type>
+inline Type* Foam::Matrix<Form, Type>::v()
+{
+    return v_;
+}
+
+
+template<class Form, class Type>
+inline const Type& Foam::Matrix<Form, Type>::operator()
+(
+    const label i,
+    const label j
+) const
+{
     checki(i);
-    #endif
-    return v_[i];
+    checki(j);
+    return v_[i*nCols_ + j];
+}
+
+
+template<class Form, class Type>
+inline Type& Foam::Matrix<Form, Type>::operator()
+(
+    const label i,
+    const label j
+)
+{
+    checki(i);
+    checki(j);
+    return v_[i*nCols_ + j];
 }
 
 
 template<class Form, class Type>
 inline const Type* Foam::Matrix<Form, Type>::operator[](const label i) const
 {
-    #ifdef FULLDEBUG
     checki(i);
-    #endif
-    return v_[i];
+    return v_ + i*nCols_;
+}
+
+
+template<class Form, class Type>
+inline Type* Foam::Matrix<Form, Type>::operator[](const label i)
+{
+    checki(i);
+    return v_ + i*nCols_;
 }
 
 
