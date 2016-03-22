@@ -70,7 +70,7 @@ public:
         inline RowVector();
 
         //- Construct initialized to zero
-        inline explicit RowVector(const Foam::zero);
+        inline RowVector(const Foam::zero);
 
         //- Construct given VectorSpace of the same rank
         template<class Cmpt2>

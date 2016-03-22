@@ -79,7 +79,7 @@ public:
         inline SphericalTensor2D();
 
         //- Construct initialized to zero
-        inline explicit SphericalTensor2D(const Foam::zero);
+        inline SphericalTensor2D(const Foam::zero);
 
         //- Construct given VectorSpace
         inline SphericalTensor2D

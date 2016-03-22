@@ -86,7 +86,7 @@ public:
         inline Tensor2D();
 
         //- Construct initialized to zero
-        inline explicit Tensor2D(const Foam::zero);
+        inline Tensor2D(const Foam::zero);
 
         //- Construct given VectorSpace
         inline Tensor2D(const VectorSpace<Tensor2D<Cmpt>, Cmpt, 4>&);

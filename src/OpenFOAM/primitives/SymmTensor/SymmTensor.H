@@ -83,7 +83,7 @@ public:
         inline SymmTensor();
 
         //- Construct initialized to zero
-        inline explicit SymmTensor(const Foam::zero);
+        inline SymmTensor(const Foam::zero);
 
         //- Construct given VectorSpace of the same rank
         template<class Cmpt2>

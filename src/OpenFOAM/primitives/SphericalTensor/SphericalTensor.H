@@ -83,7 +83,7 @@ public:
         inline SphericalTensor();
 
         //- Construct initialized to zero
-        inline explicit SphericalTensor(const Foam::zero);
+        inline SphericalTensor(const Foam::zero);
 
         //- Construct given VectorSpace
         template<class Cmpt2>

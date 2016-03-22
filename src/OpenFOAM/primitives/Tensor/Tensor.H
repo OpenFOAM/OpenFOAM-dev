@@ -91,7 +91,7 @@ public:
         inline Tensor();
 
         //- Construct initialized to zero
-        inline explicit Tensor(const Foam::zero);
+        inline Tensor(const Foam::zero);
 
         //- Construct given MatrixSpace of the same rank
         template<class Cmpt2>

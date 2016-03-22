@@ -76,7 +76,7 @@ public:
         inline Vector2D();
 
         //- Construct initialized to zero
-        inline explicit Vector2D(const Foam::zero);
+        inline Vector2D(const Foam::zero);
 
         //- Construct given VectorSpace
         inline Vector2D(const VectorSpace<Vector2D<Cmpt>, Cmpt, 2>&);

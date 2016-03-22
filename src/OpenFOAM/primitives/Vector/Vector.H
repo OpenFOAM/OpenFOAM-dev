@@ -82,7 +82,7 @@ public:
         inline Vector();
 
         //- Construct initialized to zero
-        inline explicit Vector(const Foam::zero);
+        inline Vector(const Foam::zero);
 
         //- Construct given VectorSpace of the same rank
         template<class Cmpt2>

@@ -83,7 +83,7 @@ public:
         inline SymmTensor2D();
 
         //- Construct initialized to zero
-        inline explicit SymmTensor2D(const Foam::zero);
+        inline SymmTensor2D(const Foam::zero);
 
         //- Construct given VectorSpace
         inline SymmTensor2D(const VectorSpace<SymmTensor2D<Cmpt>, Cmpt, 3>&);

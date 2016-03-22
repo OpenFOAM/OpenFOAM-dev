@@ -154,7 +154,7 @@ public:
         inline VectorSpace();
 
         //- Construct initialized to zero
-        inline explicit VectorSpace(const Foam::zero);
+        inline VectorSpace(const Foam::zero);
 
         //- Construct from Istream
         VectorSpace(Istream&);

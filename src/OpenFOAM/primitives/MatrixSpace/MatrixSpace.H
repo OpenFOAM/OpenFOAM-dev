@@ -202,7 +202,7 @@ public:
         inline MatrixSpace();
 
         //- Construct initialized to zero
-        inline explicit MatrixSpace(const Foam::zero);
+        inline MatrixSpace(const Foam::zero);
 
         //- Construct as copy of a VectorSpace with the same size
         template<class Form2, class Cmpt2>
