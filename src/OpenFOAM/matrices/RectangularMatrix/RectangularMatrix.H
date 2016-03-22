@@ -39,6 +39,7 @@ SourceFiles
 #define RectangularMatrix_H
 
 #include "Matrix.H"
+#include "Identity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,6 +66,17 @@ public:
         //- Construct given number of rows and columns,
         inline RectangularMatrix(const label m, const label n);
 
+        //- Construct from a block of another matrix
+        inline RectangularMatrix(const typename RectangularMatrix::Block&);
+
+        //- Construct with given number of rows and columns
+        //  initializing all elements to zero
+        inline RectangularMatrix(const label m, const label n, const zero);
+
+        //- Construct given number of rows/columns
+        //  Initializing to the identity matrix
+        inline RectangularMatrix(const label n, const Identity<Type>);
+
         //- Construct with given number of rows and columns
         //  and value for all elements.
         inline RectangularMatrix(const label m, const label n, const Type&);
@@ -74,7 +86,19 @@ public:
 
         //- Clone
         inline autoPtr<RectangularMatrix<Type>> clone() const;
+
+
+    // Member operators
+
+        //- Assignment of all entries to zero
+        void operator=(const zero);
 };
+
+
+// Global functions and operators
+
+template<class Type>
+RectangularMatrix<Type> outer(const Field<Type>& f1, const Field<Type>& f2);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
