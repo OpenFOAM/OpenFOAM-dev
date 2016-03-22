@@ -54,6 +54,12 @@ public:
     zero()
     {}
 
+    //- Return 0 for bool
+    inline operator bool() const
+    {
+        return 0;
+    }
+
     //- Return 0 for label
     inline operator label() const
     {
