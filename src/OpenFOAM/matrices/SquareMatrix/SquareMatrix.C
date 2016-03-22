@@ -35,7 +35,7 @@ Foam::scalar Foam::detDecomposed
     const label sign
 )
 {
-    scalar diagProduct = 1.0;
+    Type diagProduct = pTraits<Type>::one;
 
     for (label i = 0; i < matrix.m(); ++i)
     {

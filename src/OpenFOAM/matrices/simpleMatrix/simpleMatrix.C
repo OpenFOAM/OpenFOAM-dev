@@ -43,7 +43,7 @@ Foam::simpleMatrix<Type>::simpleMatrix
     const Type& sourceVal
 )
 :
-    scalarSquareMatrix(mSize, mSize, coeffVal),
+    scalarSquareMatrix(mSize, coeffVal),
     source_(mSize, sourceVal)
 {}
 

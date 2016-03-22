@@ -303,7 +303,7 @@ triSurfacePointScalarField calcCurvature
         faceCoordSys.normalize();
 
         // Construct the matrix to solve
-        scalarSymmetricSquareMatrix T(3, 3, 0);
+        scalarSymmetricSquareMatrix T(3, 0);
         scalarDiagonalMatrix Z(3, 0);
 
         // Least Squares

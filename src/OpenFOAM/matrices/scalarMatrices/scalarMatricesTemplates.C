@@ -87,7 +87,7 @@ void Foam::solve
     // Back-substitution
     for (label j=m-1; j>=0; j--)
     {
-        Type ntempvec = pTraits<Type>::zero;
+        Type ntempvec = Zero;
 
         for (label k=j+1; k<m; k++)
         {

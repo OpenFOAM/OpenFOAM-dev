@@ -25,6 +25,7 @@ License
 
 #include "scalarMatrices.H"
 #include "vector.H"
+#include "tensor.H"
 #include "IFstream.H"
 
 using namespace Foam;
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
     Info<< max(hmm) << endl;
     Info<< min(hmm) << endl;
 
-    SquareMatrix<scalar> hmm2(3, 3, 1.0);
+    SquareMatrix<scalar> hmm2(3, I);
 
     hmm = hmm2;
 
@@ -72,7 +73,14 @@ int main(int argc, char *argv[])
     Info<< hmm5 << endl;
 
     {
-        scalarSymmetricSquareMatrix symmMatrix(3, 3, 0);
+        RectangularMatrix<scalar> rm1(5, 6, 3.1);
+        rm1(0, 1) = 4.5;
+        RectangularMatrix<scalar> rm1b(rm1.block(2, 2, 0, 0));
+        Info<< "rm1b = " << rm1b << endl;
+    }
+
+    {
+        scalarSymmetricSquareMatrix symmMatrix(3, Zero);
 
         symmMatrix(0, 0) = 4;
         symmMatrix(1, 0) = 12;
@@ -104,7 +112,7 @@ int main(int argc, char *argv[])
     }
 
     {
-        scalarSquareMatrix squareMatrix(3, 3, 0);
+        scalarSquareMatrix squareMatrix(3, Zero);
 
         squareMatrix(0, 0) = 4;
         squareMatrix(0, 1) = 12;

@@ -31,46 +31,58 @@ inline Foam::SquareMatrix<Type>::SquareMatrix()
     Matrix<SquareMatrix<Type>, Type>()
 {}
 
+
 template<class Type>
 inline Foam::SquareMatrix<Type>::SquareMatrix(const label n)
 :
     Matrix<SquareMatrix<Type>, Type>(n, n)
 {}
 
-template<class Type>
-inline Foam::SquareMatrix<Type>::SquareMatrix(const label m, const label n)
-:
-    Matrix<SquareMatrix<Type>, Type>(m, n)
-{
-    if (m != n)
-    {
-        FatalErrorInFunction
-          << "m != n for constructing a square matrix" << exit(FatalError);
-    }
-}
 
 template<class Type>
 inline Foam::SquareMatrix<Type>::SquareMatrix
 (
-    const label m,
+    const label n,
+    const zero
+)
+:
+    Matrix<SquareMatrix<Type>, Type>(n, n, Zero)
+{}
+
+
+template<class Type>
+inline Foam::SquareMatrix<Type>::SquareMatrix
+(
+    const label n,
+    const Identity<Type>
+)
+:
+    Matrix<SquareMatrix<Type>, Type>(n, n, Zero)
+{
+    for (label i = 0; i < n; ++i)
+    {
+        this->operator()(i, i) = I;
+    }
+}
+
+
+template<class Type>
+inline Foam::SquareMatrix<Type>::SquareMatrix
+(
     const label n,
     const Type& t
 )
 :
-    Matrix<SquareMatrix<Type>, Type>(m, n, t)
-{
-    if (m != n)
-    {
-        FatalErrorInFunction
-          << "m != n for constructing a square matrix" << exit(FatalError);
-    }
-}
+    Matrix<SquareMatrix<Type>, Type>(n, n, t)
+{}
+
 
 template<class Type>
 inline Foam::SquareMatrix<Type>::SquareMatrix(Istream& is)
 :
     Matrix<SquareMatrix<Type>, Type>(is)
 {}
+
 
 template<class Type>
 inline Foam::autoPtr<Foam::SquareMatrix<Type>>

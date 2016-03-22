@@ -33,15 +33,17 @@ Foam::SymmetricSquareMatrix<Type> Foam::invDecomposed
     const SymmetricSquareMatrix<Type>& matrix
 )
 {
-    SymmetricSquareMatrix<Type> inv(matrix.m(), matrix.m(), 0.0);
+    const label n = matrix.n();
 
-    for (label i = 0; i < matrix.m(); ++i)
+    SymmetricSquareMatrix<Type> inv(n, Zero);
+
+    for (label i = 0; i < n; ++i)
     {
         inv(i, i) = 1.0/matrix(i, i);
 
         for (label j = 0; j < i; ++j)
         {
-            scalar sum = 0.0;
+            Type sum = Zero;
 
             for (label k = j; k < i; k++)
             {
@@ -52,7 +54,20 @@ Foam::SymmetricSquareMatrix<Type> Foam::invDecomposed
         }
     }
 
-    return inv.T()*inv;
+    SymmetricSquareMatrix<Type> result(n, Zero);
+
+    for (label k = 0; k < n; k++)
+    {
+        for (label i = 0; i <= k; i++)
+        {
+            for (label j = 0; j <= k; j++)
+            {
+                result(i, j) += inv(k, i)*inv(k, j);
+            }
+        }
+    }
+
+    return result;
 }
 
 
@@ -63,7 +78,6 @@ Foam::SymmetricSquareMatrix<Type> Foam::inv
 )
 {
     SymmetricSquareMatrix<Type> matrixTmp(matrix);
-
     LUDecompose(matrixTmp);
 
     return invDecomposed(matrixTmp);
@@ -71,9 +85,9 @@ Foam::SymmetricSquareMatrix<Type> Foam::inv
 
 
 template<class Type>
-Foam::scalar Foam::detDecomposed(const SymmetricSquareMatrix<Type>& matrix)
+Type Foam::detDecomposed(const SymmetricSquareMatrix<Type>& matrix)
 {
-    scalar diagProduct = 1.0;
+    Type diagProduct = pTraits<Type>::one;
 
     for (label i = 0; i < matrix.m(); ++i)
     {
@@ -85,10 +99,9 @@ Foam::scalar Foam::detDecomposed(const SymmetricSquareMatrix<Type>& matrix)
 
 
 template<class Type>
-Foam::scalar Foam::det(const SymmetricSquareMatrix<Type>& matrix)
+Type Foam::det(const SymmetricSquareMatrix<Type>& matrix)
 {
-    SymmetricSquareMatrix<Type> matrixTmp = matrix;
-
+    SymmetricSquareMatrix<Type> matrixTmp(matrix);
     LUDecompose(matrixTmp);
 
     return detDecomposed(matrixTmp);

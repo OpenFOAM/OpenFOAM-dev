@@ -38,6 +38,7 @@ SourceFiles
 #define SquareMatrix_H
 
 #include "Matrix.H"
+#include "Identity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,14 +65,17 @@ public:
         //- Construct given number of rows/columns.
         inline SquareMatrix(const label n);
 
-        //- Construct given number of rows and columns,
-        //  It checks that m == n.
-        inline SquareMatrix(const label m, const label n);
+        //- Construct given number of rows/columns
+        //  initializing all elements to zero
+        inline SquareMatrix(const label n, const zero);
+
+        //- Construct given number of rows/columns
+        //  Initializing to the identity matrix
+        inline SquareMatrix(const label n, const Identity<Type>);
 
         //- Construct with given number of rows and rows
-        //  and value for all elements.
-        //  It checks that m == n.
-        inline SquareMatrix(const label m, const label n, const Type&);
+        //  initializing all elements to the given value
+        inline SquareMatrix(const label n, const Type&);
 
         //- Construct from Istream.
         inline SquareMatrix(Istream&);

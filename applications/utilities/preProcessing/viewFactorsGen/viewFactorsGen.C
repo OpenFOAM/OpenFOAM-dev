@@ -676,7 +676,6 @@ int main(int argc, char *argv[])
     scalarSquareMatrix sumViewFactorPatch
     (
         totalPatches,
-        totalPatches,
         0.0
     );
 
@@ -888,7 +887,7 @@ int main(int argc, char *argv[])
 
     if (Pstream::master())
     {
-        scalarSquareMatrix Fmatrix(totalNCoarseFaces, totalNCoarseFaces, 0.0);
+        scalarSquareMatrix Fmatrix(totalNCoarseFaces, 0.0);
 
         labelListList globalFaceFaces(visibleFaceFaces.size());
 
