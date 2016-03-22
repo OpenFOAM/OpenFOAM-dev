@@ -80,6 +80,30 @@ Foam::List<T>::List(const label s, const T& a)
 
 
 template<class T>
+Foam::List<T>::List(const label s, const zero)
+:
+    UList<T>(NULL, s)
+{
+    if (this->size_ < 0)
+    {
+        FatalErrorInFunction
+            << "bad size " << this->size_
+            << abort(FatalError);
+    }
+
+    if (this->size_)
+    {
+        this->v_ = new T[this->size_];
+
+        List_ACCESS(T, (*this), vp);
+        List_FOR_ALL((*this), i)
+            List_ELEM((*this), vp, i) = Zero;
+        List_END_FOR_ALL
+    }
+}
+
+
+template<class T>
 Foam::List<T>::List(const List<T>& a)
 :
     UList<T>(NULL, a.size_)

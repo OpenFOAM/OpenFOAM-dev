@@ -76,6 +76,16 @@ void Foam::UList<T>::operator=(const T& t)
 }
 
 
+template<class T>
+void Foam::UList<T>::operator=(const zero)
+{
+    List_ACCESS(T, (*this), vp);
+    List_FOR_ALL((*this), i)
+        List_ELEM((*this), vp, i) = Zero;
+    List_END_FOR_ALL
+}
+
+
 // * * * * * * * * * * * * * * STL Member Functions  * * * * * * * * * * * * //
 
 template<class T>

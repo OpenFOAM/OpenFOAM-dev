@@ -46,6 +46,7 @@ SourceFiles
 #include "label.H"
 #include "uLabel.H"
 #include "nullObject.H"
+#include "zero.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -222,6 +223,9 @@ public:
 
         //- Assignment of all entries to the given value
         void operator=(const T&);
+
+        //- Assignment of all entries to zero
+        void operator=(const zero);
 
 
     // STL type definitions

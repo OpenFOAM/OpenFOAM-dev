@@ -105,6 +105,9 @@ public:
         //- Construct with given size and value for all elements.
         List(const label, const T&);
 
+        //- Construct with given size initializing all elements to zero.
+        List(const label, const zero);
+
         //- Copy constructor.
         List(const List<T>&);
 
@@ -224,6 +227,9 @@ public:
 
         //- Assignment of all entries to the given value
         inline void operator=(const T&);
+
+        //- Assignment of all entries to zero
+        inline void operator=(const zero);
 
 
     // Istream operator

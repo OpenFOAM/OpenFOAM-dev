@@ -141,4 +141,11 @@ inline void Foam::List<T>::operator=(const T& t)
 }
 
 
+template<class T>
+inline void Foam::List<T>::operator=(const zero)
+{
+    UList<T>::operator=(Zero);
+}
+
+
 // ************************************************************************* //
