@@ -27,6 +27,12 @@
 # Description
 #     Setup file for CGAL (& boost) include/libraries.
 #     Sourced from OpenFOAM-<VERSION>/etc/bashrc
+#
+#     If using system-wide installations for either one, use the following
+#     version settings:
+#
+#         boost_version=boost-system
+#         cgal_version=cgal-system
 #------------------------------------------------------------------------------
 
 boost_version=boost-system
@@ -35,29 +41,29 @@ cgal_version=CGAL-4.7
 if [ -z "$SOURCE_CGAL_VERSIONS_ONLY" ]
 then
 
-common_path=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER
+    common_path=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER
 
-export BOOST_ARCH_PATH=$common_path/$boost_version
-export CGAL_ARCH_PATH=$common_path/$cgal_version
+    export BOOST_ARCH_PATH=$common_path/$boost_version
+    export CGAL_ARCH_PATH=$common_path/$cgal_version
 
-if [ "$FOAM_VERBOSE" -a "$PS1" ]
-then
-    echo "Using CGAL and boost" 1>&2
-    echo "    $cgal_version at $CGAL_ARCH_PATH" 1>&2
-    echo "    $boost_version at $BOOST_ARCH_PATH" 1>&2
-fi
+    if [ "$FOAM_VERBOSE" -a "$PS1" ]
+    then
+        echo "Using CGAL and boost" 1>&2
+        echo "    $cgal_version at $CGAL_ARCH_PATH" 1>&2
+        echo "    $boost_version at $BOOST_ARCH_PATH" 1>&2
+    fi
 
-if [ -d "$CGAL_ARCH_PATH" ]
-then
-    _foamAddLib $CGAL_ARCH_PATH/lib
-fi
+    if [ -d "$CGAL_ARCH_PATH" -a "$cgal_version" != "cgal-system" ]
+    then
+        _foamAddLib $CGAL_ARCH_PATH/lib
+    fi
 
-if [ -d "$BOOST_ARCH_PATH" ]
-then
-    _foamAddLib $BOOST_ARCH_PATH/lib
-fi
+    if [ -d "$BOOST_ARCH_PATH" -a "$boost_version" != "boost-system" ]
+    then
+        _foamAddLib $BOOST_ARCH_PATH/lib
+    fi
 
-unset boost_version cgal_version common_path
+    unset boost_version cgal_version common_path
 
 fi
 
