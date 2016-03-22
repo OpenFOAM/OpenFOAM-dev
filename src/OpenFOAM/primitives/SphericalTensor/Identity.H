@@ -25,8 +25,8 @@ Class
     Foam::Identity
 
 Description
-    Templated identity and dual space identity tensors
-    derived from SphericalTensor.
+    Templated identity and dual space identity tensors derived from
+    SphericalTensor.
 
 \*---------------------------------------------------------------------------*/
 
@@ -75,7 +75,17 @@ public:
     {
         return dual();
     }
+
+    //- Return 1 for scalar
+    inline operator scalar() const
+    {
+        return 1;
+    }
 };
+
+
+// Global Identity tensor
+static const Identity<scalar> I;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
