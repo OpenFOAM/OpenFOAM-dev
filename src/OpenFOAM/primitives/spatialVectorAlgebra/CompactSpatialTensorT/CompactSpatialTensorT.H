@@ -71,7 +71,7 @@ public:
         //- Construct null
         inline CompactSpatialTensorT();
 
-        inline explicit CompactSpatialTensorT(const Foam::zero);
+        inline CompactSpatialTensorT(const Foam::zero);
 
         //- Construct given MatrixSpace of the same rank
         inline CompactSpatialTensorT

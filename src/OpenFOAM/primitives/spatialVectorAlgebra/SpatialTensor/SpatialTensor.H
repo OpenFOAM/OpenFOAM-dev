@@ -87,7 +87,7 @@ public:
         inline SpatialTensor();
 
         //- Construct initialized to zero
-        inline explicit SpatialTensor(const Foam::zero);
+        inline SpatialTensor(const Foam::zero);
 
         //- Construct given MatrixSpace of the same rank
         inline SpatialTensor(const typename SpatialTensor::msType&);

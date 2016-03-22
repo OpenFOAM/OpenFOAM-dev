@@ -92,7 +92,7 @@ public:
         inline SpatialVector();
 
         //- Construct initialized to zero
-        inline explicit SpatialVector(const Foam::zero);
+        inline SpatialVector(const Foam::zero);
 
         //- Construct given VectorSpace of the same rank
         inline SpatialVector(const typename SpatialVector::vsType&);
