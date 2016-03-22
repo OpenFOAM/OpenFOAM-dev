@@ -123,7 +123,7 @@ public:
             );
 
             //- Like above but switches between linear/tree communication
-            template <class T>
+            template<class T>
             static void scatter
             (
                 T& Value,

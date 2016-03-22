@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-template<typename CellType>
+template<class CellType>
 Foam::label CGAL::indexedCellOps::dualVertexMasterProc(const CellType& c)
 {
     if (!c->parallelDualVertex())
@@ -56,7 +56,7 @@ Foam::label CGAL::indexedCellOps::dualVertexMasterProc(const CellType& c)
 }
 
 
-template<typename CellType>
+template<class CellType>
 Foam::FixedList<Foam::label, 4>
 CGAL::indexedCellOps::processorsAttached(const CellType& c)
 {

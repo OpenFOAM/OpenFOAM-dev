@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-template<typename VertexType>
+template<class VertexType>
 Foam::scalar CGAL::indexedVertexOps::averageCellSize
 (
     const VertexType& vA,
@@ -47,7 +47,7 @@ Foam::scalar CGAL::indexedVertexOps::averageCellSize
 }
 
 
-template<typename VertexType>
+template<class VertexType>
 inline bool CGAL::indexedVertexOps::uninitialised(const VertexType& v)
 {
     return v->type() == Foam::indexedVertexEnum::vtUnassigned;

@@ -45,8 +45,8 @@ namespace Foam
 
 class phaseModel;
 class phasePair;
-template <class ThermoType> class pureMixture;
-template <class ThermoType> class multiComponentMixture;
+template<class ThermoType> class pureMixture;
+template<class ThermoType> class multiComponentMixture;
 
 /*---------------------------------------------------------------------------*\
                          Class InterfaceCompositionModel Declaration

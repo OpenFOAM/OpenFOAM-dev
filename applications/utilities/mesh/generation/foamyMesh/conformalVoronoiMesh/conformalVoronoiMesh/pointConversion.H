@@ -54,7 +54,7 @@ namespace Foam
 
 #ifdef CGAL_INEXACT
 
-    template<typename Point>
+    template<class Point>
     inline pointFromPoint topoint(const Point& P)
     {
         return reinterpret_cast<pointFromPoint>(P);
@@ -67,7 +67,7 @@ namespace Foam
 
 #else
 
-    template<typename Point>
+    template<class Point>
     inline pointFromPoint topoint(const Point& P)
     {
         return Foam::point

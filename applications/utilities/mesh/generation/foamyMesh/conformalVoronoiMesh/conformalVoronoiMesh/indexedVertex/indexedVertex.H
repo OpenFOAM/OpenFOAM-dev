@@ -134,7 +134,7 @@ public:
     typedef typename Tds::Vertex_handle                 Vertex_handle;
     typedef typename Tds::Cell_handle                   Cell_handle;
 
-    template<typename TDS2>
+    template<class TDS2>
     struct Rebind_TDS
     {
         typedef typename Vb::template Rebind_TDS<TDS2>::Other   Vb2;

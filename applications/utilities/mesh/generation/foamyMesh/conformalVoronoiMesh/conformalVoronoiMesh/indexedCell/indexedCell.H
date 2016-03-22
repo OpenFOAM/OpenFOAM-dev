@@ -119,7 +119,7 @@ public:
     typedef typename Cb::Vertex_handle                   Vertex_handle;
     typedef typename Cb::Cell_handle                     Cell_handle;
 
-    template<typename TDS2>
+    template<class TDS2>
     struct Rebind_TDS
     {
         typedef typename Cb::template Rebind_TDS<TDS2>::Other Cb2;

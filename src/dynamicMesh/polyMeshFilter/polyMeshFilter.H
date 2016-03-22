@@ -89,10 +89,10 @@ class polyMeshFilter
 
     // Private Member Functions
 
-        template<typename T>
+        template<class T>
         static void updateSets(const mapPolyMesh& map);
 
-        template<typename T>
+        template<class T>
         static void copySets(const polyMesh& oldMesh, const polyMesh& newMesh);
 
         label filterFacesLoop(const label nOriginalBadFaces);

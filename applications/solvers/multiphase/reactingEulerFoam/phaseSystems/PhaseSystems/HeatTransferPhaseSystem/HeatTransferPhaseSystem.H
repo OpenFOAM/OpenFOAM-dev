@@ -43,7 +43,7 @@ namespace Foam
 {
 
 class blendingMethod;
-template <class modelType> class BlendedInterfacialModel;
+template<class modelType> class BlendedInterfacialModel;
 class heatTransferModel;
 
 /*---------------------------------------------------------------------------*\

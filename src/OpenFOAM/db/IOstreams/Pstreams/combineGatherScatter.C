@@ -134,7 +134,7 @@ void Foam::Pstream::combineGather
 }
 
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Foam::Pstream::combineGather
 (
     T& Value,
@@ -249,7 +249,7 @@ void Foam::Pstream::combineScatter
 }
 
 
-template <class T>
+template<class T>
 void Foam::Pstream::combineScatter
 (
     T& Value,
@@ -484,7 +484,7 @@ void Foam::Pstream::listCombineScatter
 }
 
 
-template <class T>
+template<class T>
 void Foam::Pstream::listCombineScatter
 (
     List<T>& Values,
@@ -667,7 +667,7 @@ void Foam::Pstream::mapCombineScatter
 }
 
 
-template <class Container>
+template<class Container>
 void Foam::Pstream::mapCombineScatter
 (
     Container& Values,

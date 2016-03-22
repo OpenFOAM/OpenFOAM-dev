@@ -57,7 +57,7 @@ namespace Foam
 {
 
 class blendingMethod;
-template <class modelType> class BlendedInterfacialModel;
+template<class modelType> class BlendedInterfacialModel;
 class surfaceTensionModel;
 class aspectRatioModel;
 
@@ -320,11 +320,11 @@ public:
         inline fv::options& fvOptions() const;
 
         //- Access a sub model between a phase pair
-        template <class modelType>
+        template<class modelType>
         const modelType& lookupSubModel(const phasePair& key) const;
 
         //- Access a sub model between two phases
-        template <class modelType>
+        template<class modelType>
         const modelType& lookupSubModel
         (
             const phaseModel& dispersed,

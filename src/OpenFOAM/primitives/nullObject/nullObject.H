@@ -69,29 +69,29 @@ extern const NullObject* nullObjectPtr;
 
 
 //- Return reference to the nullObject of type T
-template <class T>
+template<class T>
 inline const T& NullObjectRef();
 
 //- Return pointer to the nullObject of type T
-template <class T>
+template<class T>
 inline const T* NullObjectPtr();
 
 
 //- Return true if t is a reference to the nullObject of type T
-template <class T>
+template<class T>
 inline bool isNull(const T& t);
 
 //- Return true if t is not a reference to the nullObject of type T
-template <class T>
+template<class T>
 inline bool notNull(const T& t);
 
 
 //- Return true if t is a pointer to the nullObject of type T
-template <class T>
+template<class T>
 inline bool isNull(const T* t);
 
 //- Return true if t is not a pointer to the nullObject of type T
-template <class T>
+template<class T>
 inline bool notNull(const T* t);
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,21 +34,21 @@ namespace Foam
 namespace foamyHexMeshChecks
 {
 
-    template<typename Cell>
+    template<class Cell>
     scalar coplanarTet
     (
         Cell& c,
         const scalar tol = 1e-12
     );
 
-    template<typename Cell>
+    template<class Cell>
     bool closePoints
     (
         Cell& c,
         const scalar tol = 1e-12
     );
 
-    template<typename Cell>
+    template<class Cell>
     bool smallVolume
     (
         Cell& c,

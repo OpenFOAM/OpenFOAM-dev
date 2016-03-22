@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "CGALTriangulation3DKernel.H"
 
 
-template<typename Cell>
+template<class Cell>
 Foam::scalar Foam::foamyHexMeshChecks::coplanarTet
 (
     Cell& c,
@@ -74,7 +74,7 @@ Foam::scalar Foam::foamyHexMeshChecks::coplanarTet
 }
 
 
-template<typename Cell>
+template<class Cell>
 bool Foam::foamyHexMeshChecks::closePoints
 (
     Cell& c,
@@ -104,7 +104,7 @@ bool Foam::foamyHexMeshChecks::closePoints
 }
 
 
-template<typename Cell>
+template<class Cell>
 bool Foam::foamyHexMeshChecks::smallVolume
 (
     Cell& c,

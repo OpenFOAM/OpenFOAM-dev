@@ -43,7 +43,7 @@ SourceFiles
 namespace Foam
 {
 
-template <class modelType>
+template<class modelType>
 class BlendedInterfacialModel;
 
 class blendingMethod;

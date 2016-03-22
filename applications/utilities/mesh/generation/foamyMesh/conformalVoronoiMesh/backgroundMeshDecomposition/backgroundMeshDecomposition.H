@@ -225,7 +225,7 @@ public:
         );
 
         //- Distribute supplied the points to the appropriate processor
-        template<typename PointType>
+        template<class PointType>
         autoPtr<mapDistribute> distributePoints(List<PointType>& points) const;
 
         //- Is the given position inside the domain of this decomposition
@@ -263,7 +263,7 @@ public:
         ) const;
 
         //- What processor is the given position on?
-        template<typename PointType>
+        template<class PointType>
         labelList processorPosition(const List<PointType>& pts) const;
 
         //- What is the nearest processor to the given position?
