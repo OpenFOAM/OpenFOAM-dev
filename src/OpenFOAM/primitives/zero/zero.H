@@ -36,6 +36,8 @@ SourceFiles
 #ifndef zero_H
 #define zero_H
 
+#include "label.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -51,7 +53,30 @@ public:
 
     zero()
     {}
+
+    //- Return 0 for label
+    inline operator label() const
+    {
+        return 0;
+    }
+
+    //- Return 0 for float
+    inline operator float() const
+    {
+        return 0;
+    }
+
+    //- Return 0 for double
+    inline operator double() const
+    {
+        return 0;
+    }
 };
+
+
+// Global zero
+static const zero Zero;
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,7 +84,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "zeroI.H"
+#include "zeroI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
