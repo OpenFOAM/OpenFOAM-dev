@@ -125,7 +125,7 @@ Foam::zeroGradientFvPatchField<Type>::valueBoundaryCoeffs
 {
     return tmp<Field<Type>>
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 
@@ -136,7 +136,7 @@ Foam::zeroGradientFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return tmp<Field<Type>>
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 
@@ -147,7 +147,7 @@ Foam::zeroGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return tmp<Field<Type>>
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 

@@ -45,10 +45,10 @@ timeVaryingMappedFixedValueFvPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_()
 {}
 
@@ -78,10 +78,10 @@ timeVaryingMappedFixedValueFvPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_(Function1<Type>::New("offset", dict))
 {
     if
@@ -134,10 +134,10 @@ timeVaryingMappedFixedValueFvPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_(ptf.offset_, false)
 {}
 

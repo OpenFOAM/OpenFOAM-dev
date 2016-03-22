@@ -143,7 +143,7 @@ public:
             {
                 return tmp<Field<Type>>
                 (
-                    new Field<Type>(this->size(), pTraits<Type>::zero)
+                    new Field<Type>(this->size(), Zero)
                 );
             }
 

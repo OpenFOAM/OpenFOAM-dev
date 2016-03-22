@@ -94,7 +94,7 @@ mappedPatchFieldBase<Type>::mappedPatchFieldBase
     patchField_(patchField),
     fieldName_(patchField_.dimensionedInternalField().name()),
     setAverage_(false),
-    average_(pTraits<Type>::zero),
+    average_(Zero),
     interpolationScheme_(interpolationCell<Type>::typeName)
 {}
 
@@ -259,7 +259,7 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
         }
         case mappedPatchBase::NEARESTFACE:
         {
-            Field<Type> allValues(nbrMesh.nFaces(), pTraits<Type>::zero);
+            Field<Type> allValues(nbrMesh.nFaces(), Zero);
 
             const fieldType& nbrField = sampleField();
 

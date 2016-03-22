@@ -37,8 +37,8 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
     mixedFvPatchField<Type>(p, iF),
     phiName_("phi")
 {
-    this->refValue() = pTraits<Type>::zero;
-    this->refGrad() = pTraits<Type>::zero;
+    this->refValue() = Zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 
@@ -82,7 +82,7 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
         fvPatchField<Type>::operator=(this->refValue());
     }
 
-    this->refGrad() = pTraits<Type>::zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 
