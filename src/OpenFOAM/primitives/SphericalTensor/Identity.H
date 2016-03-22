@@ -76,6 +76,12 @@ public:
         return dual();
     }
 
+    //- Return 1 for label
+    inline operator label() const
+    {
+        return 1;
+    }
+
     //- Return 1 for scalar
     inline operator scalar() const
     {
