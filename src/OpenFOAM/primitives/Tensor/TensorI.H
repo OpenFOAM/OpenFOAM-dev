@@ -33,9 +33,9 @@ inline Foam::Tensor<Cmpt>::Tensor()
 
 
 template<class Cmpt>
-inline Foam::Tensor<Cmpt>::Tensor(const Foam::zero z)
+inline Foam::Tensor<Cmpt>::Tensor(const Foam::zero)
 :
-    Tensor::msType(z)
+    Tensor::msType(Zero)
 {}
 
 
@@ -329,7 +329,7 @@ inline Foam::Tensor<Cmpt> Foam::Tensor<Cmpt>::T() const
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
 inline void Foam::Tensor<Cmpt>::operator&=(const Tensor<Cmpt>& t)
@@ -397,6 +397,13 @@ inline void Foam::Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt>>& tr)
     this->v_[ZX] = tr.z().x();
     this->v_[ZY] = tr.z().y();
     this->v_[ZZ] = tr.z().z();
+}
+
+
+template<class Cmpt>
+inline void Foam::Tensor<Cmpt>::operator=(const Foam::zero)
+{
+    Tensor::msType::operator=(Zero);
 }
 
 

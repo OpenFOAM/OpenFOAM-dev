@@ -33,9 +33,9 @@ inline Foam::SpatialTensor<Cmpt>::SpatialTensor()
 
 
 template<class Cmpt>
-inline Foam::SpatialTensor<Cmpt>::SpatialTensor(const Foam::zero z)
+inline Foam::SpatialTensor<Cmpt>::SpatialTensor(const Foam::zero)
 :
-    SpatialTensor::msType(z)
+    SpatialTensor::msType(Zero)
 {}
 
 
@@ -136,9 +136,9 @@ inline Foam::SpatialTensor<Cmpt>::SpatialTensor(Istream& is)
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void Foam::SpatialTensor<Cmpt>::operator=(const Foam::zero z)
+inline void Foam::SpatialTensor<Cmpt>::operator=(const Foam::zero)
 {
-    SpatialTensor::msType::operator=(z);
+    SpatialTensor::msType::operator=(Zero);
 }
 
 

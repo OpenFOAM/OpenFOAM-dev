@@ -42,9 +42,9 @@ inline VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace()
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace(const Foam::zero z)
+inline VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace(const Foam::zero)
 {
-    VectorSpaceOps<Ncmpts,0>::eqOpS(*this, 0, eqOp<Cmpt>());
+    VectorSpaceOps<Ncmpts,0>::eqOpS(*this, Zero, eqOp<Cmpt>());
 }
 
 

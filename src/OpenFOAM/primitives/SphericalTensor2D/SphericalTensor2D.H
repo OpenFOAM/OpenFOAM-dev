@@ -78,6 +78,9 @@ public:
         //- Construct null
         inline SphericalTensor2D();
 
+        //- Construct initialized to zero
+        inline explicit SphericalTensor2D(const Foam::zero);
+
         //- Construct given VectorSpace
         inline SphericalTensor2D
         (
@@ -97,6 +100,12 @@ public:
 
             inline const Cmpt& ii() const;
             inline Cmpt& ii();
+
+
+    // Member Operators
+
+        //- Assignment to zero
+        inline void operator=(const Foam::zero);
 };
 
 

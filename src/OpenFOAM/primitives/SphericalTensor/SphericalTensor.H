@@ -82,6 +82,9 @@ public:
         //- Construct null
         inline SphericalTensor();
 
+        //- Construct initialized to zero
+        inline explicit SphericalTensor(const Foam::zero);
+
         //- Construct given VectorSpace
         template<class Cmpt2>
         inline SphericalTensor
@@ -106,6 +109,12 @@ public:
 
         //- Transpose
         inline const SphericalTensor<Cmpt>& T() const;
+
+
+    // Member Operators
+
+        //- Assignment to zero
+        inline void operator=(const Foam::zero);
 };
 
 

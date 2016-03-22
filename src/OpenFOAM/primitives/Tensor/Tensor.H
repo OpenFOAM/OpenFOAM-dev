@@ -197,6 +197,9 @@ public:
 
         //- Assign to a triad
         inline void operator=(const Vector<Vector<Cmpt>>&);
+
+        //- Assignment to zero
+        inline void operator=(const Foam::zero);
 };
 
 

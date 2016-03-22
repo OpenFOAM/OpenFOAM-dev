@@ -85,6 +85,9 @@ public:
         //- Construct null
         inline Tensor2D();
 
+        //- Construct initialized to zero
+        inline explicit Tensor2D(const Foam::zero);
+
         //- Construct given VectorSpace
         inline Tensor2D(const VectorSpace<Tensor2D<Cmpt>, Cmpt, 4>&);
 
@@ -142,6 +145,9 @@ public:
 
         //- Copy SphericalTensor2D
         inline void operator=(const SphericalTensor2D<Cmpt>&);
+
+        //- Assignment to zero
+        inline void operator=(const Foam::zero);
 };
 
 

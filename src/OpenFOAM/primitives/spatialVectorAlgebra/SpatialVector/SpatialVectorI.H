@@ -31,9 +31,9 @@ inline Foam::SpatialVector<Cmpt>::SpatialVector()
 
 
 template<class Cmpt>
-inline Foam::SpatialVector<Cmpt>::SpatialVector(const Foam::zero z)
+inline Foam::SpatialVector<Cmpt>::SpatialVector(const Foam::zero)
 :
-    SpatialVector::vsType(z)
+    SpatialVector::vsType(Zero)
 {}
 
 
@@ -206,9 +206,9 @@ const Foam::SpatialVector<Cmpt>& Foam::SpatialVector<Cmpt>::dual::v() const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void Foam::SpatialVector<Cmpt>::operator=(const Foam::zero z)
+inline void Foam::SpatialVector<Cmpt>::operator=(const Foam::zero)
 {
-    SpatialVector::vsType::operator=(z);
+    SpatialVector::vsType::operator=(Zero);
 }
 
 

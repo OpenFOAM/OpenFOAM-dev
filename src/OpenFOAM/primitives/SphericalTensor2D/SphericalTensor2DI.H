@@ -33,12 +33,19 @@ inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D()
 
 
 template<class Cmpt>
+inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D(const Foam::zero)
+:
+    SphericalTensor2D::vsType(Zero)
+{}
+
+
+template<class Cmpt>
 inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D
 (
     const VectorSpace<SphericalTensor2D<Cmpt>, Cmpt, 1>& vs
 )
 :
-    VectorSpace<SphericalTensor2D<Cmpt>, Cmpt, 1>(vs)
+    SphericalTensor2D::vsType(vs)
 {}
 
 
@@ -52,7 +59,7 @@ inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D(const Cmpt& stii)
 template<class Cmpt>
 inline Foam::SphericalTensor2D<Cmpt>::SphericalTensor2D(Istream& is)
 :
-    VectorSpace<SphericalTensor2D<Cmpt>, Cmpt, 1>(is)
+    SphericalTensor2D::vsType(is)
 {}
 
 
@@ -69,6 +76,15 @@ template<class Cmpt>
 inline Cmpt& Foam::SphericalTensor2D<Cmpt>::ii()
 {
     return this->v_[II];
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Cmpt>
+inline void Foam::SphericalTensor2D<Cmpt>::operator=(const Foam::zero)
+{
+    SphericalTensor2D::vsType::operator=(Zero);
 }
 
 

@@ -34,13 +34,20 @@ inline Foam::SymmTensor<Cmpt>::SymmTensor()
 
 
 template<class Cmpt>
+inline Foam::SymmTensor<Cmpt>::SymmTensor(const Foam::zero)
+:
+    SymmTensor::vsType(Zero)
+{}
+
+
+template<class Cmpt>
 template<class Cmpt2>
 inline Foam::SymmTensor<Cmpt>::SymmTensor
 (
     const VectorSpace<SymmTensor<Cmpt2>, Cmpt2, 6>& vs
 )
 :
-    VectorSpace<SymmTensor<Cmpt>, Cmpt, 6>(vs)
+    SymmTensor::vsType(vs)
 {}
 
 
@@ -70,7 +77,7 @@ inline Foam::SymmTensor<Cmpt>::SymmTensor
 template<class Cmpt>
 inline Foam::SymmTensor<Cmpt>::SymmTensor(Istream& is)
 :
-    VectorSpace<SymmTensor<Cmpt>, Cmpt, 6>(is)
+    SymmTensor::vsType(is)
 {}
 
 
@@ -157,7 +164,7 @@ inline const Foam::SymmTensor<Cmpt>& Foam::SymmTensor<Cmpt>::T() const
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
 inline void Foam::SymmTensor<Cmpt>::operator=(const SphericalTensor<Cmpt>& st)
@@ -165,6 +172,13 @@ inline void Foam::SymmTensor<Cmpt>::operator=(const SphericalTensor<Cmpt>& st)
     this->v_[XX] = st.ii(); this->v_[XY] = 0;       this->v_[XZ] = 0;
                             this->v_[YY] = st.ii(); this->v_[YZ] = 0;
                                                     this->v_[ZZ] = st.ii();
+}
+
+
+template<class Cmpt>
+inline void Foam::SymmTensor<Cmpt>::operator=(const Foam::zero)
+{
+    SymmTensor::vsType::operator=(Zero);
 }
 
 

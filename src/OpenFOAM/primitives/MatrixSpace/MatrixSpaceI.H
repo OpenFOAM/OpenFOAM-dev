@@ -35,10 +35,10 @@ inline Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::MatrixSpace()
 template<class Form, class Cmpt, Foam::direction Nrows, Foam::direction Ncols>
 inline Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::MatrixSpace
 (
-    const Foam::zero z
+    const Foam::zero
 )
 :
-    MatrixSpace::vsType(z)
+    MatrixSpace::vsType(Zero)
 {}
 
 
@@ -257,7 +257,7 @@ inline Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>
 Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::identity()
 {
     StaticAssert(Nrows == Ncols);
-    msType result((Foam::zero()));
+    msType result(Zero);
 
     for (direction i=0; i<Ncols; ++i)
     {
@@ -327,7 +327,7 @@ inline const Cmpt& Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::operator()
 ) const
 {
     #ifdef FULLDEBUG
-    if (i < 0 || i > Nrows-1 || j < 0 || j > Ncols-1)
+    if (i > Nrows-1 || j > Ncols-1)
     {
         FatalErrorInFunction
             << "indices out of range"
@@ -347,7 +347,7 @@ inline Cmpt& Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::operator()
 )
 {
     #ifdef FULLDEBUG
-    if (i < 0 || i > Nrows-1 || j < 0 || j > Ncols-1)
+    if (i > Nrows-1 || j > Ncols-1)
     {
         FatalErrorInFunction
             << "indices out of range"
@@ -417,10 +417,10 @@ operator()(const direction i, const direction j)
 template<class Form, class Cmpt, Foam::direction Nrows, Foam::direction Ncols>
 inline void Foam::MatrixSpace<Form, Cmpt, Nrows, Ncols>::operator=
 (
-    const Foam::zero z
+    const Foam::zero
 )
 {
-    MatrixSpace::vsType::operator=(z);
+    MatrixSpace::vsType::operator=(Zero);
 }
 
 
@@ -552,10 +552,7 @@ inline typename typeOfInnerProduct<Cmpt, Form1, Form2>::type operator&
 {
     StaticAssert(Ncols1 == Nrows2);
 
-    typename typeOfInnerProduct<Cmpt, Form1, Form2>::type result
-    (
-        (Foam::zero())
-    );
+    typename typeOfInnerProduct<Cmpt, Form1, Form2>::type result(Zero);
 
     for (direction i=0; i<Nrows1; ++i)
     {
@@ -579,10 +576,7 @@ inline typename typeOfInnerProduct<Cmpt, Form, VSForm>::type operator&
     const VectorSpace<VSForm, Cmpt, Ncols>& v
 )
 {
-    typename typeOfInnerProduct<Cmpt, Form, VSForm>::type result
-    (
-        (Foam::zero())
-    );
+    typename typeOfInnerProduct<Cmpt, Form, VSForm>::type result(Zero);
 
     for (direction i=0; i<Nrows; ++i)
     {

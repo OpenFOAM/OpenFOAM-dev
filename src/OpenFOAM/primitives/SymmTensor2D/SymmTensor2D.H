@@ -82,6 +82,9 @@ public:
         //- Construct null
         inline SymmTensor2D();
 
+        //- Construct initialized to zero
+        inline explicit SymmTensor2D(const Foam::zero);
+
         //- Construct given VectorSpace
         inline SymmTensor2D(const VectorSpace<SymmTensor2D<Cmpt>, Cmpt, 3>&);
 
@@ -116,6 +119,9 @@ public:
 
 
     // Member Operators
+
+        //- Assignment to zero
+        inline void operator=(const Foam::zero);
 
         //- Construct given SphericalTensor2D
         inline void operator=(const SphericalTensor2D<Cmpt>&);

@@ -33,10 +33,10 @@ inline Foam::CompactSpatialTensor<Cmpt>::CompactSpatialTensor()
 template<class Cmpt>
 inline Foam::CompactSpatialTensor<Cmpt>::CompactSpatialTensor
 (
-    const Foam::zero z
+    const Foam::zero
 )
 :
-    CompactSpatialTensor::msType(z)
+    CompactSpatialTensor::msType(Zero)
 {}
 
 
@@ -97,9 +97,9 @@ inline Foam::CompactSpatialTensor<Cmpt>::CompactSpatialTensor(Istream& is)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void Foam::CompactSpatialTensor<Cmpt>::operator=(const Foam::zero z)
+inline void Foam::CompactSpatialTensor<Cmpt>::operator=(const Foam::zero)
 {
-    CompactSpatialTensor::msType::operator=(z);
+    CompactSpatialTensor::msType::operator=(Zero);
 }
 
 

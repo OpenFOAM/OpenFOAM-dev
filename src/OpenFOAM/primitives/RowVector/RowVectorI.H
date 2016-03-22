@@ -31,9 +31,9 @@ inline Foam::RowVector<Cmpt>::RowVector()
 
 
 template<class Cmpt>
-inline Foam::RowVector<Cmpt>::RowVector(const Foam::zero z)
+inline Foam::RowVector<Cmpt>::RowVector(const Foam::zero)
 :
-    RowVector::msType(z)
+    RowVector::msType(Zero)
 {}
 
 
@@ -44,7 +44,7 @@ inline Foam::RowVector<Cmpt>::RowVector
     const MatrixSpace<RowVector<Cmpt2>, Cmpt2, 1, 3>& ms
 )
 :
-    MatrixSpace<RowVector<Cmpt>, Cmpt, 1, 3>(ms)
+    RowVector::msType(ms)
 {}
 
 
@@ -65,7 +65,7 @@ inline Foam::RowVector<Cmpt>::RowVector
 template<class Cmpt>
 inline Foam::RowVector<Cmpt>::RowVector(Istream& is)
 :
-    MatrixSpace<RowVector<Cmpt>, Cmpt, 1, 3>(is)
+    RowVector::msType(is)
 {}
 
 
@@ -112,9 +112,9 @@ inline Cmpt& Foam::RowVector<Cmpt>::z()
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void Foam::RowVector<Cmpt>::operator=(const Foam::zero z)
+inline void Foam::RowVector<Cmpt>::operator=(const Foam::zero)
 {
-    RowVector::msType::operator=(z);
+    RowVector::msType::operator=(Zero);
 }
 
 

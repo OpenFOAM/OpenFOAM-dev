@@ -31,12 +31,19 @@ inline Foam::Vector2D<Cmpt>::Vector2D()
 
 
 template<class Cmpt>
+inline Foam::Vector2D<Cmpt>::Vector2D(const Foam::zero)
+:
+    Vector2D::vsType(Zero)
+{}
+
+
+template<class Cmpt>
 inline Foam::Vector2D<Cmpt>::Vector2D
 (
     const VectorSpace<Vector2D<Cmpt>, Cmpt, 2>& vs
 )
 :
-    VectorSpace<Vector2D<Cmpt>, Cmpt, 2>(vs)
+    Vector2D::vsType(vs)
 {}
 
 
@@ -51,7 +58,7 @@ inline Foam::Vector2D<Cmpt>::Vector2D(const Cmpt& vx, const Cmpt& vy)
 template<class Cmpt>
 inline Foam::Vector2D<Cmpt>::Vector2D(Istream& is)
 :
-    VectorSpace<Vector2D<Cmpt>, Cmpt, 2>(is)
+    Vector2D::vsType(is)
 {}
 
 
@@ -80,6 +87,15 @@ template<class Cmpt>
 inline Cmpt& Foam::Vector2D<Cmpt>::y()
 {
     return this->v_[Y];
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Cmpt>
+inline void Foam::Vector2D<Cmpt>::operator=(const Foam::zero)
+{
+    Vector2D::vsType::operator=(Zero);
 }
 
 

@@ -31,9 +31,9 @@ inline Foam::Vector<Cmpt>::Vector()
 
 
 template<class Cmpt>
-inline Foam::Vector<Cmpt>::Vector(const Foam::zero z)
+inline Foam::Vector<Cmpt>::Vector(const Foam::zero)
 :
-    Vector::vsType(z)
+    Vector::vsType(Zero)
 {}
 
 
@@ -44,7 +44,7 @@ inline Foam::Vector<Cmpt>::Vector
     const VectorSpace<Vector<Cmpt2>, Cmpt2, 3>& vs
 )
 :
-    VectorSpace<Vector<Cmpt>, Cmpt, 3>(vs)
+    Vector::vsType(vs)
 {}
 
 
@@ -65,7 +65,7 @@ inline Foam::Vector<Cmpt>::Vector
 template<class Cmpt>
 inline Foam::Vector<Cmpt>::Vector(Istream& is)
 :
-    VectorSpace<Vector<Cmpt>, Cmpt, 3>(is)
+    Vector::vsType(is)
 {}
 
 
@@ -124,9 +124,9 @@ inline const Foam::Vector<Cmpt>& Foam::Vector<Cmpt>::centre
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void Foam::Vector<Cmpt>::operator=(const Foam::zero z)
+inline void Foam::Vector<Cmpt>::operator=(const Foam::zero)
 {
-    VectorSpace<Vector<Cmpt>, Cmpt, 3>::operator=(z);
+    Vector::vsType::operator=(Zero);
 }
 
 
