@@ -175,7 +175,7 @@ public:
             {
                 if (!sfCorr.boundaryField()[pi].coupled())
                 {
-                    sfCorr.boundaryField()[pi] = pTraits<Type>::zero;
+                    sfCorr.boundaryField()[pi] = Zero;
                 }
             }
 

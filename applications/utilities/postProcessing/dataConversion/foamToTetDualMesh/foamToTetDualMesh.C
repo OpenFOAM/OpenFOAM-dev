@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ void ReadAndMapFields
                 (
                     "zero",
                     readField.dimensions(),
-                    pTraits<Type>::zero
+                    Zero
                 )
             )
         );
@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
         objects,
         tetDualMesh,
         pointDualAddressing,
-        pTraits<scalar>::zero,  // nullValue
+        Zero,  // nullValue
         psFlds
     );
 
@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
         objects,
         tetDualMesh,
         pointDualAddressing,
-        pTraits<vector>::zero,  // nullValue
+        Zero,  // nullValue
         pvFlds
     );
 
@@ -274,7 +274,7 @@ int main(int argc, char *argv[])
         objects,
         tetDualMesh,
         pointDualAddressing,
-        pTraits<sphericalTensor>::zero,  // nullValue
+        Zero,  // nullValue
         pstFlds
     );
 
@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
         objects,
         tetDualMesh,
         pointDualAddressing,
-        pTraits<symmTensor>::zero,  // nullValue
+        Zero,  // nullValue
         psymmtFlds
     );
 
@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
         objects,
         tetDualMesh,
         pointDualAddressing,
-        pTraits<tensor>::zero,  // nullValue
+        Zero,  // nullValue
         ptFlds
     );
 

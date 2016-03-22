@@ -57,7 +57,7 @@ Foam::linearUpwindV<Type>::correction
             (
                 vf.name(),
                 vf.dimensions(),
-                pTraits<Type>::zero
+                Zero
             )
         )
     );

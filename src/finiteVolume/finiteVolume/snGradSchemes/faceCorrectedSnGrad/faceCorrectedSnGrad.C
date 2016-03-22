@@ -116,7 +116,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
         sfCorr[facei] = dCorr&fgrad;
     }
 
-    tsfCorr.ref().boundaryField() = pTraits<Type>::zero;
+    tsfCorr.ref().boundaryField() = Zero;
 
     return tsfCorr;
 }

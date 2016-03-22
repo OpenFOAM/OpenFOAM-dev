@@ -166,7 +166,7 @@ correction
         }
         else
         {
-            pSfCorr = pTraits<Type>::zero;
+            pSfCorr = Zero;
         }
     }
 

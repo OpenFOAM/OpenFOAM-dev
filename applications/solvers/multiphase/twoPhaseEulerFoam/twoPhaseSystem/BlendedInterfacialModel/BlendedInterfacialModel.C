@@ -47,7 +47,7 @@ void Foam::BlendedInterfacialModel<modelType>::correctFixedFluxBCs
         )
         {
             field.boundaryField()[patchI]
-              = pTraits<typename GeometricField::value_type>::zero;
+              = Zero;
         }
     }
 }
@@ -280,7 +280,7 @@ Foam::BlendedInterfacialModel<modelType>::F() const
                 false
             ),
             pair_.phase1().mesh(),
-            dimensioned<Type>("zero", modelType::dimF, pTraits<Type>::zero)
+            dimensioned<Type>("zero", modelType::dimF, Zero)
         )
     );
 

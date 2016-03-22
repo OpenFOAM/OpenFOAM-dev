@@ -68,7 +68,7 @@ void Foam::correlationFunction<Type>::setTimesAndSizes
             Field<Type>
             (
                 tZeroBufferSize,
-                pTraits<Type>::zero
+                Zero
             )
         );
 }

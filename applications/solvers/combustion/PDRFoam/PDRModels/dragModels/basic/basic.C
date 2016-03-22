@@ -108,7 +108,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::PDRDragModels::basic::Dcu() const
             (
                 "zero",
                 dimMass/dimTime/pow(dimLength, 3),
-                pTraits<symmTensor>::zero
+                Zero
             )
         )
     );

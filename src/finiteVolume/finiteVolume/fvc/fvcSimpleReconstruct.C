@@ -79,7 +79,7 @@ reconstruct
             (
                 "0",
                 ssf.dimensions()/dimArea,
-                pTraits<GradType>::zero
+                Zero
             ),
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )

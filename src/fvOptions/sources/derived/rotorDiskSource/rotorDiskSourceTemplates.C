@@ -182,7 +182,7 @@ void Foam::fv::rotorDiskSource::writeField
                     IOobject::NO_WRITE
                 ),
                 mesh_,
-                dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+                dimensioned<Type>("zero", dimless, Zero)
             )
         );
 

@@ -106,7 +106,7 @@ backwardDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 )
             )
         );
@@ -130,7 +130,7 @@ backwardDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 ),
                 calculatedFvPatchField<Type>::typeName
             )

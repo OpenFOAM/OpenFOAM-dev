@@ -111,7 +111,7 @@ void Foam::meshToMesh::mapSrcToTgt
 
             if (srcAddress.size())
             {
-//                result[cellI] = pTraits<Type>::zero;
+//                result[cellI] = Zero;
                 result[cellI] *= (1.0 - sum(srcWeight));
                 forAll(srcAddress, i)
                 {
@@ -131,7 +131,7 @@ void Foam::meshToMesh::mapSrcToTgt
 
             if (srcAddress.size())
             {
-//                result[cellI] = pTraits<Type>::zero;
+//                result[cellI] = Zero;
                 result[cellI] *= (1.0 - sum(srcWeight));
                 forAll(srcAddress, i)
                 {
@@ -157,7 +157,7 @@ Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapSrcToTgt
         new Field<Type>
         (
             tgtToSrcCellAddr_.size(),
-            pTraits<Type>::zero
+            Zero
         )
     );
 
@@ -276,7 +276,7 @@ Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapTgtToSrc
         new Field<Type>
         (
             srcToTgtCellAddr_.size(),
-            pTraits<Type>::zero
+            Zero
         )
     );
 
@@ -362,7 +362,7 @@ void Foam::meshToMesh::mapSrcToTgt
             tgtField.rmap(tnewTgt(), identity(tgtField.size()));
         }
 
-        tgtField == pTraits<Type>::zero;
+        tgtField == Type(Zero);
 
         AMIList[i].interpolateToTarget
         (
@@ -461,7 +461,7 @@ Foam::meshToMesh::mapSrcToTgt
             ),
             tgtMesh,
             field.dimensions(),
-            Field<Type>(tgtMesh.nCells(), pTraits<Type>::zero),
+            Field<Type>(tgtMesh.nCells(), Zero),
             tgtPatchFields
         )
     );
@@ -551,7 +551,7 @@ void Foam::meshToMesh::mapTgtToSrc
             srcField.rmap(tnewSrc(), identity(srcField.size()));
         }
 
-        srcField == pTraits<Type>::zero;
+        srcField == Type(Zero);
 
         AMIList[i].interpolateToSource
         (
@@ -650,7 +650,7 @@ Foam::meshToMesh::mapTgtToSrc
             ),
             srcMesh,
             field.dimensions(),
-            Field<Type>(srcMesh.nCells(), pTraits<Type>::zero),
+            Field<Type>(srcMesh.nCells(), Zero),
             srcPatchFields
         )
     );

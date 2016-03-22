@@ -162,7 +162,7 @@ CrankNicolsonDdtScheme<Type>::ddt0_
                     (
                         "0",
                         dims/dimTime,
-                        pTraits<typename GeoField::value_type>::zero
+                        Zero
                     )
                 )
             );
@@ -310,7 +310,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             (
                 "0",
                 dt.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );

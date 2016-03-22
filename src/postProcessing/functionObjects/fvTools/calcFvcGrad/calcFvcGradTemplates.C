@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::calcFvcGrad::gradField(const word& gradName, const dimensionSet& dims)
                 (
                     "zero",
                     dims/dimLength,
-                    pTraits<gradType>::zero
+                    Zero
                 )
             )
         );

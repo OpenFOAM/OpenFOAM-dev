@@ -75,7 +75,7 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
             (
                 "zero",
                 vtf.dimensions()/dimLength,
-                pTraits<GradType>::zero
+                Zero
             ),
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
@@ -89,7 +89,7 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
 
     // Construct flat version of vtf
     // including all values referred to by the stencil
-    List<Type> flatVtf(stencil.map().constructSize(), pTraits<Type>::zero);
+    List<Type> flatVtf(stencil.map().constructSize(), Zero);
 
     // Insert internal values
     forAll(vtf, celli)

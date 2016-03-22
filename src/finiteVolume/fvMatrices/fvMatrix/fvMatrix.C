@@ -249,10 +249,10 @@ void Foam::fvMatrix<Type>::setValuesFromList
                             mesh.boundaryMesh()[patchi].whichFace(facei);
 
                         internalCoeffs_[patchi][patchFacei] =
-                            pTraits<Type>::zero;
+                            Zero;
 
                         boundaryCoeffs_[patchi][patchFacei] =
-                            pTraits<Type>::zero;
+                            Zero;
                     }
                 }
             }
@@ -273,7 +273,7 @@ Foam::fvMatrix<Type>::fvMatrix
     lduMatrix(psi.mesh()),
     psi_(psi),
     dimensions_(ds),
-    source_(psi.size(), pTraits<Type>::zero),
+    source_(psi.size(), Zero),
     internalCoeffs_(psi.mesh().boundary().size()),
     boundaryCoeffs_(psi.mesh().boundary().size()),
     faceFluxCorrectionPtr_(NULL)
@@ -293,7 +293,7 @@ Foam::fvMatrix<Type>::fvMatrix
             new Field<Type>
             (
                 psi.mesh().boundary()[patchI].size(),
-                pTraits<Type>::zero
+                Zero
             )
         );
 
@@ -303,7 +303,7 @@ Foam::fvMatrix<Type>::fvMatrix
             new Field<Type>
             (
                 psi.mesh().boundary()[patchI].size(),
-                pTraits<Type>::zero
+                Zero
             )
         );
     }
@@ -433,7 +433,7 @@ Foam::fvMatrix<Type>::fvMatrix
             new Field<Type>
             (
                 psi.mesh().boundary()[patchI].size(),
-                pTraits<Type>::zero
+                Zero
             )
         );
 
@@ -443,7 +443,7 @@ Foam::fvMatrix<Type>::fvMatrix
             new Field<Type>
             (
                 psi.mesh().boundary()[patchI].size(),
-                pTraits<Type>::zero
+                Zero
             )
         );
     }
@@ -2292,7 +2292,7 @@ Foam::operator&
     }
     else
     {
-        Mphi.internalField() = pTraits<Type>::zero;
+        Mphi.internalField() = Zero;
     }
 
     Mphi.internalField() += M.lduMatrix::H(psi.field()) + M.source();

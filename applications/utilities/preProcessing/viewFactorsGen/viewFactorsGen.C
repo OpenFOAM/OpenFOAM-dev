@@ -584,8 +584,8 @@ int main(int argc, char *argv[])
     // I need coarse Sf (Ai), fine Sf (dAi) and fine Cf(r) to calculate Fij
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    pointField compactCoarseCf(map.constructSize(), pTraits<vector>::zero);
-    pointField compactCoarseSf(map.constructSize(), pTraits<vector>::zero);
+    pointField compactCoarseCf(map.constructSize(), Zero);
+    pointField compactCoarseSf(map.constructSize(), Zero);
     List<List<point>> compactFineSf(map.constructSize());
     List<List<point>> compactFineCf(map.constructSize());
 

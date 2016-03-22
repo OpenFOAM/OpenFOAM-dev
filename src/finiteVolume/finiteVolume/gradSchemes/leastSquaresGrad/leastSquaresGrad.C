@@ -71,7 +71,7 @@ Foam::fv::leastSquaresGrad<Type>::calcGrad
             (
                 "zero",
                 vsf.dimensions()/dimLength,
-                pTraits<GradType>::zero
+                Zero
             ),
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )

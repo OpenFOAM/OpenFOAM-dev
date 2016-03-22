@@ -56,7 +56,7 @@ Foam::sampledTriSurfaceMesh::sampleField
 
         // Create flat boundary field
 
-        Field<Type> bVals(nBnd, pTraits<Type>::zero);
+        Field<Type> bVals(nBnd, Zero);
 
         forAll(vField.boundaryField(), patchI)
         {

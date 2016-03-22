@@ -37,7 +37,7 @@ void Foam::extendedFaceToCellStencil::collectData
 )
 {
     // 1. Construct face data in compact addressing
-    List<Type> flatFld(map.constructSize(), pTraits<Type>::zero);
+    List<Type> flatFld(map.constructSize(), Zero);
 
     // Insert my internal values
     forAll(fld, cellI)
@@ -108,7 +108,7 @@ Foam::extendedFaceToCellStencil::weightedSum
             (
                 fld.name(),
                 fld.dimensions(),
-                pTraits<Type>::zero
+                Zero
             )
         )
     );

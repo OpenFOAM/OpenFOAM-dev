@@ -143,7 +143,7 @@ void Foam::volPointInterpolation::interpolateInternalField
             const scalarList& pw = pointWeights_[pointi];
             const labelList& ppc = pointCells[pointi];
 
-            pf[pointi] = pTraits<Type>::zero;
+            pf[pointi] = Zero;
 
             forAll(ppc, pointCelli)
             {
@@ -192,7 +192,7 @@ Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
 
             forAll(pp, i)
             {
-                boundaryVals[bFaceI++] = pTraits<Type>::zero;
+                boundaryVals[bFaceI++] = Zero;
             }
         }
     }
@@ -231,7 +231,7 @@ void Foam::volPointInterpolation::interpolateBoundaryField
 
             Type& val = pfi[pointI];
 
-            val = pTraits<Type>::zero;
+            val = Zero;
             forAll(pFaces, j)
             {
                 if (boundaryIsPatchFace_[pFaces[j]])

@@ -781,7 +781,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<scalar>::zero,
+        scalar(Zero),
         volScalarField::typeName,
         scalarFlds
     );
@@ -793,7 +793,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<vector>::zero,
+        vector(Zero),
         volVectorField::typeName,
         vectorFlds
     );
@@ -811,7 +811,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<sphericalTensor>::zero,
+        sphericalTensor(Zero),
         volSphericalTensorField::typeName,
         sphericalTensorFlds
     );
@@ -823,7 +823,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<symmTensor>::zero,
+        symmTensor(Zero),
         volSymmTensorField::typeName,
         symmTensorFlds
     );
@@ -835,7 +835,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<tensor>::zero,
+        tensor(Zero),
         volTensorField::typeName,
         tensorFlds
     );
@@ -849,7 +849,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<scalar>::zero,
+        scalar(Zero),
         surfaceScalarField::typeName,
         surfScalarFlds
     );
@@ -861,7 +861,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<vector>::zero,
+        vector(Zero),
         surfaceVectorField::typeName,
         surfVectorFlds
     );
@@ -879,7 +879,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<sphericalTensor>::zero,
+        sphericalTensor(Zero),
         surfaceSphericalTensorField::typeName,
         surfSphericalTensorFlds
     );
@@ -899,7 +899,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<symmTensor>::zero,
+        symmTensor(Zero),
         surfaceSymmTensorField::typeName,
         surfSymmTensorFlds
     );
@@ -911,7 +911,7 @@ int main(int argc, char *argv[])
         subsetter,
         objects,
         defaultPatchI,
-        pTraits<tensor>::zero,
+        tensor(Zero),
         surfaceTensorField::typeName,
         surfTensorFlds
     );

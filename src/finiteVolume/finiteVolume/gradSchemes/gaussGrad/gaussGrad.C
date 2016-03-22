@@ -65,7 +65,7 @@ Foam::fv::gaussGrad<Type>::gradf
             (
                 "0",
                 ssf.dimensions()/dimLength,
-                pTraits<GradType>::zero
+                Zero
             ),
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )

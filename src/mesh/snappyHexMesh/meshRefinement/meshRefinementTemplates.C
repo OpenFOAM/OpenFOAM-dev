@@ -70,7 +70,7 @@ T Foam::meshRefinement::gAverage
             << exit(FatalError);
     }
 
-    T sum = pTraits<T>::zero;
+    T sum = Zero;
     label n = 0;
 
     forAll(values, i)
@@ -305,7 +305,7 @@ void Foam::meshRefinement::weightedSum
     }
 
     sum.setSize(meshPoints.size());
-    sum = pTraits<Type>::zero;
+    sum = Zero;
 
     forAll(edges, edgeI)
     {
@@ -329,7 +329,7 @@ void Foam::meshRefinement::weightedSum
         meshPoints,
         sum,
         plusEqOp<Type>(),
-        pTraits<Type>::zero     // null value
+        Type(Zero)     // null value
     );
 }
 

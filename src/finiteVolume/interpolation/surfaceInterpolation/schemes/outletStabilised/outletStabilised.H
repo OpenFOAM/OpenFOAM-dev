@@ -222,7 +222,7 @@ public:
                                 if (mesh_.isInternalFace(facei))
                                 {
                                     // Remove correction
-                                    corr[facei] = pTraits<Type>::zero;
+                                    corr[facei] = Zero;
                                 }
                             }
                         }

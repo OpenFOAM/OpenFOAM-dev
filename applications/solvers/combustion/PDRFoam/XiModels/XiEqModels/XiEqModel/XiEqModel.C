@@ -131,7 +131,7 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
         (
             "zero",
             nsv.dimensions(),
-            pTraits<symmTensor>::zero
+            Zero
         )
     );
     ns.internalField() = nsv.internalField()*pow(mesh.V(), 2.0/3.0);

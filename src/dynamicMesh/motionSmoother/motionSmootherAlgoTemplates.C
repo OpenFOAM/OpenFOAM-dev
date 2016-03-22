@@ -155,7 +155,7 @@ Foam::motionSmootherAlgo::avg
                 false
             ),
             fld.mesh(),
-            dimensioned<Type>("zero", fld.dimensions(), pTraits<Type>::zero)
+            dimensioned<Type>("zero", fld.dimensions(), Zero)
         )
     );
     GeometricField<Type, pointPatchField, pointMesh>& res = tres.ref();
@@ -197,7 +197,7 @@ Foam::motionSmootherAlgo::avg
         mesh,
         res,
         plusEqOp<Type>(),
-        pTraits<Type>::zero     // null value
+        Type(Zero)     // null value
     );
     syncTools::syncPointList
     (

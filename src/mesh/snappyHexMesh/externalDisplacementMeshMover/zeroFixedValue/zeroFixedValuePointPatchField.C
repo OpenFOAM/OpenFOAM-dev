@@ -50,7 +50,7 @@ zeroFixedValuePointPatchField
 :
     fixedValuePointPatchField<Type>(p, iF, dict, false)
 {
-    fixedValuePointPatchField<Type>::operator=(pTraits<Type>::zero);
+    fixedValuePointPatchField<Type>::operator=(Zero);
 }
 
 
@@ -67,7 +67,7 @@ zeroFixedValuePointPatchField
     fixedValuePointPatchField<Type>(ptf, p, iF, mapper)
 {
     // For safety re-evaluate
-    fixedValuePointPatchField<Type>::operator=(pTraits<Type>::zero);
+    fixedValuePointPatchField<Type>::operator=(Zero);
 }
 
 
@@ -93,7 +93,7 @@ zeroFixedValuePointPatchField
     fixedValuePointPatchField<Type>(ptf, iF)
 {
     // For safety re-evaluate
-    fixedValuePointPatchField<Type>::operator=(pTraits<Type>::zero);
+    fixedValuePointPatchField<Type>::operator=(Zero);
 }
 
 

@@ -43,7 +43,7 @@ void Foam::snappyLayerDriver::averageNeighbours
 {
     const pointField& pts = mesh.points();
 
-    average = pTraits<Type>::zero;
+    average = Zero;
 
     forAll(edges, edgeI)
     {
@@ -77,7 +77,7 @@ void Foam::snappyLayerDriver::averageNeighbours
         meshPoints,
         average,
         plusEqOp<Type>(),
-        pTraits<Type>::zero     // null value
+        Zero     // null value
     );
 
     average *= invSumWeight;

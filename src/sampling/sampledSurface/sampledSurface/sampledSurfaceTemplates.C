@@ -49,7 +49,7 @@ bool Foam::sampledSurface::checkFieldSize(const Field<Type>& field) const
 template<class Type>
 Type Foam::sampledSurface::integrate(const Field<Type>& field) const
 {
-    Type value = pTraits<Type>::zero;
+    Type value = Zero;
 
     if (checkFieldSize(field))
     {
@@ -73,7 +73,7 @@ Type Foam::sampledSurface::integrate(const tmp<Field<Type>>& field) const
 template<class Type>
 Type Foam::sampledSurface::average(const Field<Type>& field) const
 {
-    Type value = pTraits<Type>::zero;
+    Type value = Zero;
 
     if (checkFieldSize(field))
     {
@@ -89,7 +89,7 @@ Type Foam::sampledSurface::average(const Field<Type>& field) const
     }
     else
     {
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 
@@ -174,7 +174,7 @@ Foam::sampledSurface::pointAverage
                 false
             ),
             mesh,
-            dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+            dimensioned<Type>("zero", dimless, Zero)
         )
     );
     GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg.ref();

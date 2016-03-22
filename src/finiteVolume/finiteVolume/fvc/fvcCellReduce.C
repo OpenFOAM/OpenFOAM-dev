@@ -65,7 +65,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensioned<Type>("0", ssf.dimensions(), pTraits<Type>::zero),
+            dimensioned<Type>("0", ssf.dimensions(), Zero),
             extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );

@@ -63,7 +63,7 @@ Foam::extendedUpwindCellToFaceStencil::weightedSum
             (
                 fld.name(),
                 fld.dimensions(),
-                pTraits<Type>::zero
+                Zero
             )
         )
     );

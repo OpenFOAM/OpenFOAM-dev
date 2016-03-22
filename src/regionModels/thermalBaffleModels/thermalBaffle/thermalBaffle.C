@@ -182,7 +182,7 @@ thermalBaffle::thermalBaffle
         (
             "zero",
             dimEnergy/dimArea/dimTime,
-            pTraits<scalar>::zero
+            Zero
         )
     ),
     Q_
@@ -200,7 +200,7 @@ thermalBaffle::thermalBaffle
         (
             "zero",
             dimEnergy/dimVolume/dimTime,
-            pTraits<scalar>::zero
+            Zero
         )
     ),
     radiation_
@@ -242,7 +242,7 @@ thermalBaffle::thermalBaffle
         (
             "zero",
             dimEnergy/dimArea/dimTime,
-            pTraits<scalar>::zero
+            Zero
         )
     ),
     Q_
@@ -260,7 +260,7 @@ thermalBaffle::thermalBaffle
         (
             "zero",
             dimEnergy/dimVolume/dimTime,
-            pTraits<scalar>::zero
+            Zero
         )
     ),
     radiation_

@@ -2215,11 +2215,11 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     // from nothing so explicitly reset.
     initPatchFields<volScalarField, processorFvPatchField<scalar>>
     (
-        pTraits<scalar>::zero
+        Zero
     );
     initPatchFields<volVectorField, processorFvPatchField<vector>>
     (
-        pTraits<vector>::zero
+        Zero
     );
     initPatchFields
     <
@@ -2227,24 +2227,24 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
         processorFvPatchField<sphericalTensor>
     >
     (
-        pTraits<sphericalTensor>::zero
+        Zero
     );
     initPatchFields<volSymmTensorField, processorFvPatchField<symmTensor>>
     (
-        pTraits<symmTensor>::zero
+        Zero
     );
     initPatchFields<volTensorField, processorFvPatchField<tensor>>
     (
-        pTraits<tensor>::zero
+        Zero
     );
 
     initPatchFields<surfaceScalarField, processorFvsPatchField<scalar>>
     (
-        pTraits<scalar>::zero
+        Zero
     );
     initPatchFields<surfaceVectorField, processorFvsPatchField<vector>>
     (
-        pTraits<vector>::zero
+        Zero
     );
     initPatchFields
     <
@@ -2252,7 +2252,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
         processorFvsPatchField<sphericalTensor>
     >
     (
-        pTraits<sphericalTensor>::zero
+        Zero
     );
     initPatchFields
     <
@@ -2260,11 +2260,11 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
         processorFvsPatchField<symmTensor>
     >
     (
-        pTraits<symmTensor>::zero
+        Zero
     );
     initPatchFields<surfaceTensorField, processorFvsPatchField<tensor>>
     (
-        pTraits<tensor>::zero
+        Zero
     );
 
 

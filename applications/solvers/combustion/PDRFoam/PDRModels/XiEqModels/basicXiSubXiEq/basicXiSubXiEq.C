@@ -122,7 +122,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::basicSubGrid::XiEq() const
         (
             "zero",
             nsv.dimensions(),
-            pTraits<symmTensor>::zero
+            Zero
         )
     );
     ns.internalField() = nsv.internalField()*Cw;

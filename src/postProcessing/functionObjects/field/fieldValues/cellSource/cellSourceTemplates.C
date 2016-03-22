@@ -75,7 +75,7 @@ Type Foam::fieldValues::cellSource::processValues
     const scalarField& weightField
 ) const
 {
-    Type result = pTraits<Type>::zero;
+    Type result = Zero;
     switch (operation_)
     {
         case opSum:

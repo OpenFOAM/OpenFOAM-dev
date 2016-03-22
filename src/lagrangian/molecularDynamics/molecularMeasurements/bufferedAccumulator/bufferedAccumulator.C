@@ -41,7 +41,7 @@ void Foam::bufferedAccumulator<Type>::accumulateAndResetBuffer(const label b)
 
     averagesTaken_++;
 
-    (*this)[b] = Field<Type>(bufferLength(), pTraits<Type>::zero);
+    (*this)[b] = Field<Type>(bufferLength(), Zero);
 
     bufferOffsets_[b] = 0;
 }
@@ -112,7 +112,7 @@ void Foam::bufferedAccumulator<Type>::setSizes
 
     forAll((*this), b)
     {
-        (*this)[b] = Field<Type>(bufferLength, pTraits<Type>::zero);
+        (*this)[b] = Field<Type>(bufferLength, Zero);
     }
 
     averagesTaken_ = 0;
@@ -187,7 +187,7 @@ Foam::Field<Type> Foam::bufferedAccumulator<Type>::averaged() const
             << ". Returning empty field."
             << endl;
 
-        return Field<Type>(bufferLength(), pTraits<Type>::zero);
+        return Field<Type>(bufferLength(), Zero);
     }
 }
 
@@ -195,7 +195,7 @@ Foam::Field<Type> Foam::bufferedAccumulator<Type>::averaged() const
 template<class Type>
 void Foam::bufferedAccumulator<Type>::resetAveraging()
 {
-    accumulationBuffer() = Field<Type>(bufferLength(), pTraits<Type>::zero);
+    accumulationBuffer() = Field<Type>(bufferLength(), Zero);
 
     averagesTaken_ = 0;
 }

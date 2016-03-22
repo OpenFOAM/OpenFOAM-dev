@@ -93,7 +93,7 @@ Foam::regionModels::regionModel::mapRegionPatchField
                 new Field<Type>
                 (
                     p.size(),
-                    pTraits<Type>::zero
+                    Zero
                 )
             );
     }
@@ -149,7 +149,7 @@ Foam::regionModels::regionModel::mapRegionPatchInternalField
                 new Field<Type>
                 (
                     p.size(),
-                    pTraits<Type>::zero
+                    Zero
                 )
             );
     }

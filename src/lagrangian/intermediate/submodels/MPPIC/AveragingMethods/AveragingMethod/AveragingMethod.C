@@ -47,7 +47,7 @@ Foam::AveragingMethod<Type>::AveragingMethod
     {
         FieldField<Field, Type>::append
         (
-            new Field<Type>(size[i], pTraits<Type>::zero)
+            new Field<Type>(size[i], Zero)
         );
     }
 }
@@ -161,7 +161,7 @@ bool Foam::AveragingMethod<Type>::write() const
             mesh_
         ),
         mesh_,
-        dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+        dimensioned<Type>("zero", dimless, Zero)
     );
     GeometricField<TypeGrad, fvPatchField, volMesh> cellGrad
     (
@@ -172,7 +172,7 @@ bool Foam::AveragingMethod<Type>::write() const
             mesh_
         ),
         mesh_,
-        dimensioned<TypeGrad>("zero", dimless, pTraits<TypeGrad>::zero)
+        dimensioned<TypeGrad>("zero", dimless, Zero)
     );
     GeometricField<Type, pointPatchField, pointMesh> pointValue
     (
@@ -183,7 +183,7 @@ bool Foam::AveragingMethod<Type>::write() const
             mesh_
         ),
         pointMesh_,
-        dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+        dimensioned<Type>("zero", dimless, Zero)
     );
     GeometricField<TypeGrad, pointPatchField, pointMesh> pointGrad
     (
@@ -194,7 +194,7 @@ bool Foam::AveragingMethod<Type>::write() const
             mesh_
         ),
         pointMesh_,
-        dimensioned<TypeGrad>("zero", dimless, pTraits<TypeGrad>::zero)
+        dimensioned<TypeGrad>("zero", dimless, Zero)
     );
 
     // tet-volume weighted sums

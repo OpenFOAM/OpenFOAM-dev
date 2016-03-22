@@ -182,7 +182,7 @@ void subsetVolFields
             if (addedPatches.found(patchI))
             {
                 tSubFld.ref().boundaryField()[patchI] ==
-                    pTraits<typename GeoField::value_type>::zero;
+                    typename GeoField::value_type(Zero);
             }
         }
 
@@ -234,7 +234,7 @@ void subsetSurfaceFields
             if (addedPatches.found(patchI))
             {
                 tSubFld.ref().boundaryField()[patchI] ==
-                    pTraits<typename GeoField::value_type>::zero;
+                    typename GeoField::value_type(Zero);
             }
         }
 

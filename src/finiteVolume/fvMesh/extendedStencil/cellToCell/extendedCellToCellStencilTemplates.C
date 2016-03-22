@@ -70,7 +70,7 @@ Foam::tmp
             (
                 fld.name(),
                 fld.dimensions(),
-                pTraits<WeightedType>::zero
+                Zero
             )
         )
     );

@@ -209,9 +209,9 @@ nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
 )
 :
     nutWallFunctionFvPatchScalarField(p, iF),
-    roughnessHeight_(pTraits<scalar>::zero),
-    roughnessConstant_(pTraits<scalar>::zero),
-    roughnessFactor_(pTraits<scalar>::zero)
+    roughnessHeight_(Zero),
+    roughnessConstant_(Zero),
+    roughnessFactor_(Zero)
 {}
 
 

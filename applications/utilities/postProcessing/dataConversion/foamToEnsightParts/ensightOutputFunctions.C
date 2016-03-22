@@ -182,7 +182,7 @@ void Foam::ensightLagrangianField
 
         if (mag(val) < 1.0e-90)
         {
-            val = pTraits<Type>::zero;
+            val = Zero;
         }
 
         for (direction cmpt=0; cmpt < pTraits<Type>::nComponents; cmpt++)
