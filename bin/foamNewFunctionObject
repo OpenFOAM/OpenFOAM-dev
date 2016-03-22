@@ -1,0 +1,83 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamNewFunctionObject
+#
+# Description
+#     Create directory with source and compilation files for a new function
+#     object
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+DIR="$FOAM_ETC/codeTemplates/functionObject"
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: $Script [-h | -help] <functionObjectName>
+
+* Create directory with source and compilation files for a new function object
+  <functionObjectName> (dir)
+  - <functionObjectName>.H
+  - <functionObjectName>.C
+  - <functionObjectName>FunctionObject.H
+  - <functionObjectName>FunctionObject.C
+  - IO<functionObjectName>.H
+  - Make (dir)
+    - files
+    - options
+  Compiles a library named lib<functionObjectName>FunctionObject.so in
+  \$FOAM_USER_LIBBIN:
+  $FOAM_USER_LIBBIN
+USAGE
+    exit 1
+}
+
+case "$1" in
+(-h | -help)
+    usage
+    ;;
+-*)
+    usage "$1 is not a valid option/filename"
+    ;;
+esac
+
+[ "$#" -eq 1 ] || usage "Wrong number of arguments"
+[ -d "$1" ] && usage "$1 directory already exists, aborting..."
+
+NAME=$1
+
+echo "Creating function object code directory $NAME" && mkdir $NAME
+for F in $(ls ${DIR}/*.*)
+do
+    FILE=$(basename $F | sed "s#FUNCTIONOBJECT#${NAME}#g")
+    sed "s#FUNCTIONOBJECT#${NAME}#g" ${F} > ${NAME}/${FILE}
+done
+
+echo "Creating Make subdirectory" && mkdir $NAME/Make
+sed "s#FUNCTIONOBJECT#${NAME}#g" ${DIR}/Make/files > $NAME/Make/files
+cp ${DIR}/Make/options $NAME/Make
+
+#------------------------------------------------------------------------------
