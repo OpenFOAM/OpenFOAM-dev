@@ -406,7 +406,7 @@ void Foam::Field<Type>::map
         const labelList&  localAddrs   = mapAddressing[i];
         const scalarList& localWeights = mapWeights[i];
 
-        f[i] = pTraits<Type>::zero;
+        f[i] = Zero;
 
         forAll(localAddrs, j)
         {
@@ -533,7 +533,7 @@ void Foam::Field<Type>::rmap
 {
     Field<Type>& f = *this;
 
-    f = pTraits<Type>::zero;
+    f = Zero;
 
     forAll(mapF, i)
     {

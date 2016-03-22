@@ -346,13 +346,13 @@ Type sum(const UList<Type>& f)
 {
     if (f.size())
     {
-        Type Sum = pTraits<Type>::zero;
+        Type Sum = Zero;
         TFOR_ALL_S_OP_F(Type, Sum, +=, Type, f)
         return Sum;
     }
     else
     {
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 
@@ -379,7 +379,7 @@ Type maxMagSqr(const UList<Type>& f)
     }
     else
     {
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 
@@ -417,13 +417,13 @@ scalar sumProd(const UList<Type>& f1, const UList<Type>& f2)
 {
     if (f1.size() && (f1.size() == f2.size()))
     {
-        scalar SumProd = 0.0;
+        scalar SumProd = 0;
         TFOR_ALL_S_OP_F_OP_F(scalar, SumProd, +=, Type, f1, &&, Type, f2)
         return SumProd;
     }
     else
     {
-        return 0.0;
+        return 0;
     }
 }
 
@@ -433,7 +433,7 @@ Type sumCmptProd(const UList<Type>& f1, const UList<Type>& f2)
 {
     if (f1.size() && (f1.size() == f2.size()))
     {
-        Type SumProd = pTraits<Type>::zero;
+        Type SumProd = Zero;
         TFOR_ALL_S_OP_FUNC_F_F
         (
             Type,
@@ -449,7 +449,7 @@ Type sumCmptProd(const UList<Type>& f1, const UList<Type>& f2)
     }
     else
     {
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 
@@ -459,13 +459,13 @@ scalar sumSqr(const UList<Type>& f)
 {
     if (f.size())
     {
-        scalar SumSqr = 0.0;
+        scalar SumSqr = 0;
         TFOR_ALL_S_OP_FUNC_F(scalar, SumSqr, +=, sqr, Type, f)
         return SumSqr;
     }
     else
     {
-        return 0.0;
+        return 0;
     }
 }
 
@@ -476,13 +476,13 @@ scalar sumMag(const UList<Type>& f)
 {
     if (f.size())
     {
-        scalar SumMag = 0.0;
+        scalar SumMag = 0;
         TFOR_ALL_S_OP_FUNC_F(scalar, SumMag, +=, mag, Type, f)
         return SumMag;
     }
     else
     {
-        return 0.0;
+        return 0;
     }
 }
 
@@ -494,13 +494,13 @@ Type sumCmptMag(const UList<Type>& f)
 {
     if (f.size())
     {
-        Type SumMag = pTraits<Type>::zero;
+        Type SumMag = Zero;
         TFOR_ALL_S_OP_FUNC_F(scalar, SumMag, +=, cmptMag, Type, f)
         return SumMag;
     }
     else
     {
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 
@@ -520,7 +520,7 @@ Type average(const UList<Type>& f)
         WarningInFunction
             << "empty field, returning zero" << endl;
 
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 
@@ -597,7 +597,7 @@ Type gAverage
         WarningInFunction
             << "empty field, returning zero." << endl;
 
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 

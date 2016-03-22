@@ -468,7 +468,7 @@ Type sum(const FieldField<Field, Type>& f)
 {
     if (f.size())
     {
-        Type Sum = pTraits<Type>::zero;
+        Type Sum = Zero;
 
         forAll(f, i)
         {
@@ -479,7 +479,7 @@ Type sum(const FieldField<Field, Type>& f)
     }
     else
     {
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 
@@ -524,7 +524,7 @@ Type average(const FieldField<Field, Type>& f)
             WarningInFunction
                 << "empty fieldField, returning zero" << endl;
 
-            return pTraits<Type>::zero;
+            return Zero;
         }
 
         Type avrg = sum(f)/n;
@@ -536,7 +536,7 @@ Type average(const FieldField<Field, Type>& f)
         WarningInFunction
             << "empty fieldField, returning zero" << endl;
 
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 
@@ -585,7 +585,7 @@ Type gAverage(const FieldField<Field, Type>& f)
         WarningInFunction
             << "empty fieldField, returning zero" << endl;
 
-        return pTraits<Type>::zero;
+        return Zero;
     }
 }
 

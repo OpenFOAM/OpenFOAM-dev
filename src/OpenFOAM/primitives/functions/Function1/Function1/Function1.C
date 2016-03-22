@@ -69,7 +69,7 @@ Type Foam::Function1<Type>::value(const scalar x) const
 {
     NotImplemented;
 
-    return pTraits<Type>::zero;
+    return Zero;
 }
 
 
@@ -78,7 +78,7 @@ Type Foam::Function1<Type>::integrate(const scalar x1, const scalar x2) const
 {
     NotImplemented;
 
-    return pTraits<Type>::zero;
+    return Zero;
 }
 
 

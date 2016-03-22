@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::demandDrivenEntry<Type>::demandDrivenEntry
 :
     dict_(dict),
     keyword_(keyword),
-    value_(pTraits<Type>::zero),
+    value_(Zero),
     stored_(false)
 {}
 

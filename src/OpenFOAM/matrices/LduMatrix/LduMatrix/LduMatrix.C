@@ -191,7 +191,7 @@ Foam::Field<DType>& Foam::LduMatrix<Type, DType, LUType>::diag()
 {
     if (!diagPtr_)
     {
-        diagPtr_ = new Field<DType>(lduAddr().size(), pTraits<DType>::zero);
+        diagPtr_ = new Field<DType>(lduAddr().size(), Zero);
     }
 
     return *diagPtr_;
@@ -212,7 +212,7 @@ Foam::Field<LUType>& Foam::LduMatrix<Type, DType, LUType>::upper()
             upperPtr_ = new Field<LUType>
             (
                 lduAddr().lowerAddr().size(),
-                pTraits<LUType>::zero
+                Zero
             );
         }
     }
@@ -235,7 +235,7 @@ Foam::Field<LUType>& Foam::LduMatrix<Type, DType, LUType>::lower()
             lowerPtr_ = new Field<LUType>
             (
                 lduAddr().lowerAddr().size(),
-                pTraits<LUType>::zero
+                Zero
             );
         }
     }
@@ -249,7 +249,7 @@ Foam::Field<Type>& Foam::LduMatrix<Type, DType, LUType>::source()
 {
     if (!sourcePtr_)
     {
-        sourcePtr_ = new Field<Type>(lduAddr().size(), pTraits<Type>::zero);
+        sourcePtr_ = new Field<Type>(lduAddr().size(), Zero);
     }
 
     return *sourcePtr_;

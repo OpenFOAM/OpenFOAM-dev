@@ -77,7 +77,7 @@ Foam::valuePointPatchField<Type>::valuePointPatchField
     }
     else if (!valueRequired)
     {
-        Field<Type>::operator=(pTraits<Type>::zero);
+        Field<Type>::operator=(Zero);
     }
     else
     {

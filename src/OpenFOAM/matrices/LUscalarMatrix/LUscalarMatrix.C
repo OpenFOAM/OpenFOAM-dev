@@ -129,7 +129,7 @@ Foam::LUscalarMatrix::LUscalarMatrix
                 nCells += lduMatrices[i].size();
             }
 
-            scalarSquareMatrix m(nCells, nCells, 0.0);
+            scalarSquareMatrix m(nCells, 0.0);
             transfer(m);
             convert(lduMatrices);
         }
@@ -137,7 +137,7 @@ Foam::LUscalarMatrix::LUscalarMatrix
     else
     {
         label nCells = ldum.lduAddr().size();
-        scalarSquareMatrix m(nCells, nCells, 0.0);
+        scalarSquareMatrix m(nCells, 0.0);
         transfer(m);
         convert(ldum, interfaceCoeffs, interfaces);
     }
