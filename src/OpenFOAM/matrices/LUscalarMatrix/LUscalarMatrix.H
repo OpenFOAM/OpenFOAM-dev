@@ -67,6 +67,9 @@ class LUscalarMatrix
         //- The pivot indices used in the LU decomposition
         labelList pivotIndices_;
 
+
+    // Private member functions
+
         //- Convert the given lduMatrix into this LUscalarMatrix
         void convert
         (
