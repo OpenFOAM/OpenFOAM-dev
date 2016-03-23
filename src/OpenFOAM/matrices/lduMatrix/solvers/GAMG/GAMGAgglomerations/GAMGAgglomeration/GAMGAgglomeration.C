@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -656,7 +656,7 @@ bool Foam::GAMGAgglomeration::checkRestriction
             labelList& newCoarse = coarseToNewCoarse[coarseI];
             newCoarse.setSize(masters.size());
             newCoarse[0] = coarseI;
-            for (label i = 1; i < newCoarse.size(); i++)
+            for (label i=1; i<newCoarse.size(); i++)
             {
                 newCoarse[i] = nNewCoarse++;
             }

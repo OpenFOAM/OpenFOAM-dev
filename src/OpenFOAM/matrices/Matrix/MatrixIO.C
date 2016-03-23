@@ -168,7 +168,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
             {
                 uniform = true;
 
-                for (label i=0; i< mn; i++)
+                for (label i=0; i<mn; i++)
                 {
                     if (v[i] != v[0])
                     {
@@ -197,7 +197,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
                 label k = 0;
 
                 // loop over rows
-                for (label i=0; i< M.m(); i++)
+                for (label i=0; i<M.m(); i++)
                 {
                     os  << token::BEGIN_LIST;
 
@@ -222,7 +222,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
                 label k = 0;
 
                 // loop over rows
-                for (label i=0; i< M.m(); i++)
+                for (label i=0; i<M.m(); i++)
                 {
                     os  << nl << token::BEGIN_LIST;
 

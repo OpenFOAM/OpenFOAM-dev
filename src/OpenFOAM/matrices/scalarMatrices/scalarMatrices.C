@@ -151,23 +151,23 @@ void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
     label size = matrix.m();
 
     // Set upper triangular parts to zero.
-    for (label j = 0; j < size; j++)
+    for (label j=0; j<size; j++)
     {
-        for (label k = j + 1; k < size; k++)
+        for (label k=j + 1; k<size; k++)
         {
             matrix(j, k) = 0.0;
         }
     }
 
-    for (label j = 0; j < size; j++)
+    for (label j=0; j<size; j++)
     {
         scalar d = 0.0;
 
-        for (label k = 0; k < j; k++)
+        for (label k=0; k<j; k++)
         {
             scalar s = 0.0;
 
-            for (label i = 0; i < k; i++)
+            for (label i=0; i<k; i++)
             {
                 s += matrix(i, k)*matrix(i, j);
             }
@@ -223,14 +223,14 @@ void Foam::multiply
 
     ans = scalarRectangularMatrix(A.m(), C.n(), scalar(0));
 
-    for (label i = 0; i < A.m(); i++)
+    for (label i=0; i<A.m(); i++)
     {
         for (label g = 0; g < C.n(); g++)
         {
-            for (label l = 0; l < C.m(); l++)
+            for (label l=0; l<C.m(); l++)
             {
                 scalar ab = 0;
-                for (label j = 0; j < A.n(); j++)
+                for (label j=0; j<A.n(); j++)
                 {
                     ab += A(i, j)*B(j, l);
                 }
@@ -267,11 +267,11 @@ void Foam::multiply
 
     ans = scalarRectangularMatrix(A.m(), C.n(), scalar(0));
 
-    for (label i = 0; i < A.m(); i++)
+    for (label i=0; i<A.m(); i++)
     {
         for (label g = 0; g < C.n(); g++)
         {
-            for (label l = 0; l < C.m(); l++)
+            for (label l=0; l<C.m(); l++)
             {
                 ans(i, g) += C(l, g) * A(i, l)*B[l];
             }

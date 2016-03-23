@@ -44,7 +44,7 @@ void Foam::GAMGAgglomeration::gatherList
         allVals.setSize(procIDs.size());
 
         allVals[0] = myVal;
-        for (label i = 1; i < procIDs.size(); i++)
+        for (label i=1; i<procIDs.size(); i++)
         {
             IPstream fromSlave
             (

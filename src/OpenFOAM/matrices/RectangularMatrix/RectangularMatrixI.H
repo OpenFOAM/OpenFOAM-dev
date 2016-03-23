@@ -86,7 +86,7 @@ inline Foam::RectangularMatrix<Type>::RectangularMatrix
 :
     Matrix<RectangularMatrix<Type>, Type>(n, n, Zero)
 {
-    for (label i = 0; i < n; i++)
+    for (label i=0; i<n; i++)
     {
         this->operator()(i, i) = I;
     }

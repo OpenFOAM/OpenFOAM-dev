@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ void Foam::lduMatrix::updateMatrixInterfaces
         // Try and consume interfaces as they become available
         bool allUpdated = false;
 
-        for (label i = 0; i < UPstream::nPollProcInterfaces; i++)
+        for (label i=0; i<UPstream::nPollProcInterfaces; i++)
         {
             allUpdated = true;
 

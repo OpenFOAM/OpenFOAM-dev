@@ -48,9 +48,9 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
     scalar scale = 0;
     scalar s = 0;
     scalar anorm = 0;
-    label l = 0;
+    label l=0;
 
-    for (label i = 0; i < Un; i++)
+    for (label i=0; i<Un; i++)
     {
         l = i+2;
         rv1[i] = scale*g;
@@ -58,14 +58,14 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
         if (i < Um)
         {
-            for (label k = i; k < Um; k++)
+            for (label k=i; k<Um; k++)
             {
                 scale += mag(U_(k, i));
             }
 
             if (scale != 0)
             {
-                for (label k = i; k < Um; k++)
+                for (label k=i; k<Um; k++)
                 {
                     U_(k, i) /= scale;
                     s += U_(k, i)*U_(k, i);
@@ -76,22 +76,22 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                 scalar h = f*g - s;
                 U_(i, i) = f - g;
 
-                for (label j = l-1; j < Un; j++)
+                for (label j=l-1; j<Un; j++)
                 {
                     s = 0;
-                    for (label k = i; k < Um; k++)
+                    for (label k=i; k<Um; k++)
                     {
                         s += U_(k, i)*U_(k, j);
                     }
 
                     f = s/h;
-                    for (label k = i; k < A.m(); k++)
+                    for (label k=i; k<A.m(); k++)
                     {
                         U_(k, j) += f*U_(k, i);
                     }
                 }
 
-                for (label k = i; k < Um; k++)
+                for (label k=i; k<Um; k++)
                 {
                     U_(k, i) *= scale;
                 }
@@ -104,14 +104,14 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
         if (i+1 <= Um && i != Un)
         {
-            for (label k = l-1; k < Un; k++)
+            for (label k=l-1; k<Un; k++)
             {
                 scale += mag(U_(i, k));
             }
 
             if (scale != 0)
             {
-                for (label k=l-1; k < Un; k++)
+                for (label k=l-1; k<Un; k++)
                 {
                     U_(i, k) /= scale;
                     s += U_(i, k)*U_(i, k);
@@ -122,25 +122,25 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                 scalar h = f*g - s;
                 U_[i][l-1] = f - g;
 
-                for (label k = l-1; k < Un; k++)
+                for (label k=l-1; k<Un; k++)
                 {
                     rv1[k] = U_(i, k)/h;
                 }
 
-                for (label j = l-1; j < Um; j++)
+                for (label j=l-1; j<Um; j++)
                 {
                     s = 0;
-                    for (label k = l-1; k < Un; k++)
+                    for (label k=l-1; k<Un; k++)
                     {
                         s += U_(j, k)*U_(i, k);
                     }
 
-                    for (label k = l-1; k < Un; k++)
+                    for (label k=l-1; k<Un; k++)
                     {
                         U_(j, k) += s*rv1[k];
                     }
                 }
-                for (label k = l-1; k < Un; k++)
+                for (label k=l-1; k<Un; k++)
                 {
                     U_(i, k) *= scale;
                 }
@@ -150,33 +150,33 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         anorm = max(anorm, mag(S_[i]) + mag(rv1[i]));
     }
 
-    for (label i = Un-1; i >= 0; i--)
+    for (label i=Un-1; i >= 0; i--)
     {
         if (i < Un-1)
         {
             if (g != 0)
             {
-                for (label j = l; j < Un; j++)
+                for (label j=l; j<Un; j++)
                 {
                     V_(j, i) = (U_(i, j)/U_(i, l))/g;
                 }
 
-                for (label j=l; j < Un; j++)
+                for (label j=l; j<Un; j++)
                 {
                     s = 0;
-                    for (label k = l; k < Un; k++)
+                    for (label k=l; k<Un; k++)
                     {
                         s += U_(i, k)*V_(k, j);
                     }
 
-                    for (label k = l; k < Un; k++)
+                    for (label k=l; k<Un; k++)
                     {
                         V_(k, j) += s*V_(k, i);
                     }
                 }
             }
 
-            for (label j = l; j < Un;j++)
+            for (label j=l; j<Un;j++)
             {
                 V_(i, j) = V_(j, i) = 0.0;
             }
@@ -187,12 +187,12 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         l = i;
     }
 
-    for (label i = min(Un, Um) - 1; i >= 0; i--)
+    for (label i=min(Un, Um) - 1; i>=0; i--)
     {
         l = i+1;
         g = S_[i];
 
-        for (label j = l; j < Un; j++)
+        for (label j=l; j<Un; j++)
         {
             U_(i, j) = 0.0;
         }
@@ -201,30 +201,30 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         {
             g = 1.0/g;
 
-            for (label j = l; j < Un; j++)
+            for (label j=l; j<Un; j++)
             {
                 s = 0;
-                for (label k = l; k < Um; k++)
+                for (label k=l; k<Um; k++)
                 {
                     s += U_(k, i)*U_(k, j);
                 }
 
                 scalar f = (s/U_(i, i))*g;
 
-                for (label k = i; k < Um; k++)
+                for (label k=i; k<Um; k++)
                 {
                     U_(k, j) += f*U_(k, i);
                 }
             }
 
-            for (label j = i; j < Um; j++)
+            for (label j=i; j<Um; j++)
             {
                 U_(j, i) *= g;
             }
         }
         else
         {
-            for (label j = i; j < Um; j++)
+            for (label j=i; j<Um; j++)
             {
                 U_(j, i) = 0.0;
             }
@@ -233,7 +233,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         ++U_(i, i);
     }
 
-    for (label k = Un-1; k >= 0; k--)
+    for (label k=Un-1; k >= 0; k--)
     {
         for (label its = 0; its < 35; its++)
         {
@@ -255,7 +255,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
             {
                 scalar c = 0.0;
                 s = 1.0;
-                for (label i = l; i < k+1; i++)
+                for (label i=l; i<k+1; i++)
                 {
                     scalar f = s*rv1[i];
                     rv1[i] = c*rv1[i];
@@ -269,7 +269,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                     c = g*h;
                     s = -f*h;
 
-                    for (label j = 0; j < Um; j++)
+                    for (label j=0; j<Um; j++)
                     {
                         scalar y = U_[j][mn];
                         scalar z = U_(j, i);
@@ -287,7 +287,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                 {
                     S_[k] = -z;
 
-                    for (label j = 0; j < Un; j++) V_(j, k) = -V_(j, k);
+                    for (label j=0; j<Un; j++) V_(j, k) = -V_(j, k);
                 }
                 break;
             }
@@ -309,9 +309,9 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
             scalar c = 1.0;
             s = 1.0;
 
-            for (label j = l; j <= mn; j++)
+            for (label j=l; j <= mn; j++)
             {
-                label i = j + 1;
+                label i=j + 1;
                 g = rv1[i];
                 y = S_[i];
                 h = s*g;
@@ -379,9 +379,9 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
     multiply(SVDA, U_, S_, transpose(V_));
     scalar maxDiff = 0;
     scalar diff = 0;
-    for (label i = 0; i < A.m(); i++)
+    for (label i=0; i<A.m(); i++)
     {
-        for (label j = 0; j < A.n(); j++)
+        for (label j=0; j<A.n(); j++)
         {
             diff = mag(A(i, j) - SVDA(i, j));
             if (diff > maxDiff) maxDiff = diff;

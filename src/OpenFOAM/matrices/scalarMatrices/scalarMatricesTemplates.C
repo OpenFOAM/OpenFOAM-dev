@@ -251,11 +251,11 @@ void Foam::multiply
 
     ans = Matrix<Form, Type>(A.m(), B.n(), scalar(0));
 
-    for (label i = 0; i < A.m(); i++)
+    for (label i=0; i<A.m(); i++)
     {
-        for (label j = 0; j < B.n(); j++)
+        for (label j=0; j<B.n(); j++)
         {
-            for (label l = 0; l < B.m(); l++)
+            for (label l=0; l<B.m(); l++)
             {
                 ans(i, j) += A(i, l)*B(l, j);
             }

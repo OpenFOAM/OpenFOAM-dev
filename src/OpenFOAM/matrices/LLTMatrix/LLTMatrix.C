@@ -33,9 +33,9 @@ void Foam::LLTMatrix<Type>::decompose()
     SquareMatrix<Type>& LLT = *this;
     const label m = LLT.m();
 
-    for (label i = 0; i < m; i++)
+    for (label i=0; i<m; i++)
     {
-        for (label j = 0; j < m; j++)
+        for (label j=0; j<m; j++)
         {
             if (j > i)
             {
@@ -45,7 +45,7 @@ void Foam::LLTMatrix<Type>::decompose()
 
             Type sum = LLT(i, j);
 
-            for (label k = 0; k < j; k++)
+            for (label k=0; k<j; k++)
             {
                 sum -= LLT(i, k)*LLT(j, k);
             }
@@ -93,11 +93,11 @@ void Foam::LLTMatrix<Type>::solve
     const SquareMatrix<Type>& LLT = *this;
     const label m = LLT.m();
 
-    for (label i = 0; i < m; i++)
+    for (label i=0; i<m; i++)
     {
         Type sum = source[i];
 
-        for (label j = 0; j < i; j++)
+        for (label j=0; j<i; j++)
         {
             sum = sum - LLT(i, j)*x[j];
         }
@@ -105,11 +105,11 @@ void Foam::LLTMatrix<Type>::solve
         x[i] = sum/LLT(i, i);
     }
 
-    for (int i = m - 1; i >= 0; i--)
+    for (int i=m - 1; i >= 0; i--)
     {
         Type sum = x[i];
 
-        for (label j = i + 1; j < m; j++)
+        for (label j=i + 1; j<m; j++)
         {
             sum = sum - LLT(j, i)*x[j];
         }

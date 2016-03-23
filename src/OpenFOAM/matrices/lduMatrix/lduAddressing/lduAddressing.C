@@ -227,7 +227,7 @@ Foam::label Foam::lduAddressing::triIndex(const label a, const label b) const
 
     const labelUList& neighbour = upperAddr();
 
-    for (label i = startLabel; i < endLabel; i++)
+    for (label i=startLabel; i<endLabel; i++)
     {
         if (neighbour[i] == nbr)
         {

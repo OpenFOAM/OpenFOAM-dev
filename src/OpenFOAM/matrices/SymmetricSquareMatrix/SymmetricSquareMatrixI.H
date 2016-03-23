@@ -59,7 +59,7 @@ inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix
 :
     Matrix<SymmetricSquareMatrix<Type>, Type>(n, n, Zero)
 {
-    for (label i = 0; i < n; i++)
+    for (label i=0; i<n; i++)
     {
         this->operator()(i, i) = pTraits<Type>::one;
     }
