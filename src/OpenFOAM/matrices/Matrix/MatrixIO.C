@@ -34,7 +34,7 @@ License
 template<class Form, class Type>
 Foam::Matrix<Form, Type>::Matrix(Istream& is)
 :
-    nRows_(0),
+    mRows_(0),
     nCols_(0),
     v_(NULL)
 {
@@ -59,10 +59,10 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
 
     if (firstToken.isLabel())
     {
-        M.nRows_ = firstToken.labelToken();
+        M.mRows_ = firstToken.labelToken();
         M.nCols_ = readLabel(is);
 
-        label mn = M.nRows_*M.nCols_;
+        label mn = M.mRows_*M.nCols_;
 
         // Read list contents depending on data format
         if (is.format() == IOstream::ASCII || !contiguous<Type>())
@@ -151,7 +151,7 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
 template<class Form, class Type>
 Foam::Ostream& Foam::operator<<(Ostream& os, const Matrix<Form, Type>& M)
 {
-    label mn = M.nRows_*M.nCols_;
+    label mn = M.mRows_*M.nCols_;
 
     os  << M.m() << token::SPACE << M.n();
 

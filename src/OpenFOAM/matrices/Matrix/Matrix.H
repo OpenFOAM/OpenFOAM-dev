@@ -25,8 +25,7 @@ Class
     Foam::Matrix
 
 Description
-    A templated 2D matrix of objects of \<T\>, where the n x m matrix
-    dimensions are known and used for subscript bounds checking, etc.
+    A templated (m x n) matrix of objects of \<T\>.
 
 SourceFiles
     Matrix.C
@@ -42,7 +41,6 @@ SourceFiles
 #include "label.H"
 #include "uLabel.H"
 #include "Field.H"
-#include "MatrixSpace.H"
 #include "zero.H"
 #include "autoPtr.H"
 
@@ -67,6 +65,12 @@ template<class Form, class Type> Ostream& operator<<
     const Matrix<Form, Type>&
 );
 
+template<class MatrixType>
+class ConstMatrixBlock;
+
+template<class MatrixType>
+class MatrixBlock;
+
 
 /*---------------------------------------------------------------------------*\
                            Class Matrix Declaration
@@ -78,7 +82,7 @@ class Matrix
     // Private data
 
         //- Number of rows and columns in Matrix.
-        label nRows_, nCols_;
+        label mRows_, nCols_;
 
         //- Row pointers
         Type* __restrict__ v_;
@@ -102,157 +106,6 @@ public:
         inline static const mType& null();
 
 
-    // Sub-Block Classes
-
-        class ConstBlock
-        {
-            // Private data
-
-                //- Const reference to the parent matrix
-                const mType& matrix_;
-
-                // Block size
-                const label nRows_;
-                const label nCols_;
-
-                // Block location in parent matrix
-                const label rowStart_;
-                const label colStart_;
-
-        public:
-
-            typedef typename mType::cmptType cmptType;
-
-            // Constructors
-
-                //- Construct block for matrix, size and location
-                inline ConstBlock
-                (
-                    const mType& matrix,
-                    const label m,
-                    const label n,
-                    const label mStart,
-                    const label nStart
-                );
-
-
-            // Member Functions
-
-                //- Return the number of rows in the block
-                inline label m() const;
-
-                //- Return the number of columns in the block
-                inline label n() const;
-
-                //- (i, j) const element access operator
-                inline const Type& operator()
-                (
-                    const label i,
-                    const label j
-                ) const;
-
-                //- Convert a column of a matrix to a Field
-                operator Field<Type>() const;
-        };
-
-
-        class Block
-        {
-            // Private data
-
-                //- Reference to the parent matrix
-                mType& matrix_;
-
-                // Block size
-                const label nRows_;
-                const label nCols_;
-
-                // Block location in parent matrix
-                const label rowStart_;
-                const label colStart_;
-
-        public:
-
-            typedef typename mType::cmptType cmptType;
-
-            // Constructors
-
-                //- Construct block for matrix, size and location
-                inline Block
-                (
-                    mType& matrix,
-                    const label m,
-                    const label n,
-                    const label mStart,
-                    const label nStart
-                );
-
-
-            // Member Functions
-
-                //- Return the number of rows in the block
-                inline label m() const;
-
-                //- Return the number of columns in the block
-                inline label n() const;
-
-                //- (i, j) const element access operator
-                inline const Type& operator()
-                (
-                    const label i,
-                    const label j
-                ) const;
-
-                //- (i, j) element access operator
-                inline Type& operator()(const label i, const label j);
-
-                //- Convert a column of a matrix to a Field
-                operator Field<Type>() const;
-
-
-            // Member operators
-
-                //- Assignment to a compatible matrix
-                void operator=(const mType&);
-
-                //- Assignment to a compatible block
-                void operator=(const Block&);
-
-                //- Assignment to a compatible const block
-                void operator=(const ConstBlock&);
-
-                //- Assignment to a compatible MatrixSpace
-                template<class MSForm, direction Nrows, direction Ncols>
-                void operator=(const MatrixSpace<MSForm, Type, Nrows, Ncols>&);
-
-                //- Assignment to a compatible MatrixSpace block
-                template
-                <
-                    template<class, direction, direction> class Block,
-                    class SubTensor,
-                    direction BRowStart,
-                    direction BColStart
-                >
-                void operator=(const Block<SubTensor, BRowStart, BColStart>&);
-
-                //- Assignment to a compatible VectorSpace (column-vector)
-                template<class VSForm, direction Ncmpts>
-                void operator=(const VectorSpace<VSForm, Type, Ncmpts>&);
-
-                //- Assignment to a compatible VectorSpace (column-vector) block
-                template
-                <
-                    template<class, direction> class Block,
-                    class SubVector,
-                    direction BStart
-                >
-                void operator=(const Block<SubVector, BStart>&);
-
-                //- Assignment to a Field (column-vector)
-                void operator=(const Field<Type>&);
-        };
-
-
     // Constructors
 
         //- Null constructor.
@@ -272,8 +125,17 @@ public:
         //- Copy constructor.
         Matrix(const mType&);
 
+        //- Copy constructor from matrix of a different form
+        template<class Form2>
+        explicit Matrix(const Matrix<Form2, Type>&);
+
         //- Construct from a block of another matrix
-        Matrix(const mType::Block&);
+        template<class MatrixType>
+        Matrix(const ConstMatrixBlock<MatrixType>&);
+
+        //- Construct from a block of another matrix
+        template<class MatrixType>
+        Matrix(const MatrixBlock<MatrixType>&);
 
         //- Construct from Istream.
         Matrix(Istream&);
@@ -308,7 +170,7 @@ public:
 
         // Block access
 
-            inline ConstBlock block
+            inline ConstMatrixBlock<mType> block
             (
                 const label m,
                 const label n,
@@ -317,19 +179,19 @@ public:
             ) const;
 
             template<class VectorSpace>
-            inline ConstBlock block
+            inline ConstMatrixBlock<mType> block
             (
                 const label mStart,
                 const label nStart
             ) const;
 
-            inline ConstBlock col
+            inline ConstMatrixBlock<mType> col
             (
                 const label m,
                 const label rowStart
             ) const;
 
-            inline ConstBlock col
+            inline ConstMatrixBlock<mType> col
             (
                 const label m,
                 const label mStart,
@@ -337,7 +199,7 @@ public:
             ) const;
 
 
-            inline Block block
+            inline MatrixBlock<mType> block
             (
                 const label m,
                 const label n,
@@ -346,11 +208,19 @@ public:
             );
 
             template<class VectorSpace>
-            inline Block block(const label mStart, const label nStart);
+            inline MatrixBlock<mType> block
+            (
+                const label mStart,
+                const label nStart
+            );
 
-            inline Block col(const label m, const label rowStart);
+            inline MatrixBlock<mType> col
+            (
+                const label m,
+                const label rowStart
+            );
 
-            inline Block col
+            inline MatrixBlock<mType> col
             (
                 const label m,
                 const label mStart,
@@ -402,7 +272,12 @@ public:
         void operator=(const mType&);
 
         //- Assignment to a block of another matrix
-        void operator=(const mType::Block&);
+        template<class MatrixType>
+        void operator=(const ConstMatrixBlock<MatrixType>&);
+
+        //- Assignment to a block of another matrix
+        template<class MatrixType>
+        void operator=(const MatrixBlock<MatrixType>&);
 
         //- Assignment of all entries to zero
         void operator=(const zero);
@@ -475,11 +350,12 @@ Form operator/
     const scalar
 );
 
-template<class Form, class Type>
-Form operator*
+template<class Form1, class Form2, class Type>
+typename typeOfInnerProduct<Type, Form1, Form2>::type
+operator*
 (
-    const Matrix<Form, Type>&,
-    const Matrix<Form, Type>&
+    const Matrix<Form1, Type>& a,
+    const Matrix<Form2, Type>& b
 );
 
 template<class Form, class Type>

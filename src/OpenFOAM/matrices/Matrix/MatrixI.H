@@ -23,12 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "MatrixBlock.H"
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Form, class Type>
 inline Foam::Matrix<Form, Type>::Matrix()
 :
-    nRows_(0),
+    mRows_(0),
     nCols_(0),
     v_(NULL)
 {}
@@ -39,68 +41,6 @@ inline Foam::autoPtr<Foam::Matrix<Form, Type>> Foam::Matrix<Form, Type>::
 clone() const
 {
     return autoPtr<Matrix<Form, Type>>(new Matrix<Form, Type>(*this));
-}
-
-
-template<class Form, class Type>
-Foam::Matrix<Form, Type>::ConstBlock::ConstBlock
-(
-    const mType& matrix,
-    const label m,
-    const label n,
-    const label mStart,
-    const label nStart
-)
-:
-    matrix_(matrix),
-    nRows_(m),
-    nCols_(n),
-    rowStart_(mStart),
-    colStart_(nStart)
-{
-    #ifdef FULLDEBUG
-    if
-    (
-        rowStart_ + nRows_ > matrix.m()
-     || colStart_ + nCols_ > matrix.n()
-    )
-    {
-        FatalErrorInFunction
-            << "Block addresses outside matrix"
-            << abort(FatalError);
-    }
-    #endif
-}
-
-
-template<class Form, class Type>
-Foam::Matrix<Form, Type>::Block::Block
-(
-    mType& matrix,
-    const label m,
-    const label n,
-    const label mStart,
-    const label nStart
-)
-:
-    matrix_(matrix),
-    nRows_(m),
-    nCols_(n),
-    rowStart_(mStart),
-    colStart_(nStart)
-{
-    #ifdef FULLDEBUG
-    if
-    (
-        rowStart_ + nRows_ > matrix.m()
-     || colStart_ + nCols_ > matrix.n()
-    )
-    {
-        FatalErrorInFunction
-            << "Block addresses outside matrix"
-            << abort(FatalError);
-    }
-    #endif
 }
 
 
@@ -116,7 +56,7 @@ inline const Foam::Matrix<Form, Type>& Foam::Matrix<Form, Type>::null()
 template<class Form, class Type>
 inline Foam::label Foam::Matrix<Form, Type>::m() const
 {
-    return nRows_;
+    return mRows_;
 }
 
 
@@ -130,7 +70,7 @@ inline Foam::label Foam::Matrix<Form, Type>::n() const
 template<class Form, class Type>
 inline Foam::label Foam::Matrix<Form, Type>::size() const
 {
-    return nRows_*nCols_;
+    return mRows_*nCols_;
 }
 
 
@@ -138,16 +78,16 @@ template<class Form, class Type>
 inline void Foam::Matrix<Form, Type>::checki(const label i) const
 {
     #ifdef FULLDEBUG
-    if (!nRows_ || !nCols_)
+    if (!mRows_ || !nCols_)
     {
         FatalErrorInFunction
             << "Attempt to access element from empty matrix"
             << abort(FatalError);
     }
-    else if (i<0 || i>=nRows_)
+    else if (i<0 || i>=mRows_)
     {
         FatalErrorInFunction
-            << "Index " << i << " out of range 0 ... " << nRows_-1
+            << "Index " << i << " out of range 0 ... " << mRows_-1
             << abort(FatalError);
     }
     #endif
@@ -158,7 +98,7 @@ template<class Form, class Type>
 inline void Foam::Matrix<Form, Type>::checkj(const label j) const
 {
     #ifdef FULLDEBUG
-    if (!nRows_ || !nCols_)
+    if (!mRows_ || !nCols_)
     {
         FatalErrorInFunction
             << "Attempt to access element from empty matrix"
@@ -171,34 +111,6 @@ inline void Foam::Matrix<Form, Type>::checkj(const label j) const
             << abort(FatalError);
     }
     #endif
-}
-
-
-template<class Form, class Type>
-inline Foam::label Foam::Matrix<Form, Type>::ConstBlock::m() const
-{
-    return nRows_;
-}
-
-
-template<class Form, class Type>
-inline Foam::label Foam::Matrix<Form, Type>::ConstBlock::n() const
-{
-    return nCols_;
-}
-
-
-template<class Form, class Type>
-inline Foam::label Foam::Matrix<Form, Type>::Block::m() const
-{
-    return nRows_;
-}
-
-
-template<class Form, class Type>
-inline Foam::label Foam::Matrix<Form, Type>::Block::n() const
-{
-    return nCols_;
 }
 
 
@@ -217,7 +129,7 @@ inline Type* Foam::Matrix<Form, Type>::v()
 
 
 template<class Form, class Type>
-inline typename Foam::Matrix<Form, Type>::ConstBlock
+inline Foam::ConstMatrixBlock<Foam::Matrix<Form, Type>>
 Foam::Matrix<Form, Type>::block
 (
     const label m,
@@ -226,7 +138,7 @@ Foam::Matrix<Form, Type>::block
     const label nStart
 ) const
 {
-    return ConstBlock
+    return ConstMatrixBlock<mType>
     (
         *this,
         m,
@@ -239,17 +151,17 @@ Foam::Matrix<Form, Type>::block
 
 template<class Form, class Type>
 template<class VectorSpace>
-inline typename Foam::Matrix<Form, Type>::ConstBlock
+inline Foam::ConstMatrixBlock<Foam::Matrix<Form, Type>>
 Foam::Matrix<Form, Type>::block
 (
     const label mStart,
     const label nStart
 ) const
 {
-    return ConstBlock
+    return ConstMatrixBlock<mType>
     (
         *this,
-        VectorSpace::nRows,
+        VectorSpace::mRows,
         VectorSpace::nCols,
         mStart,
         nStart
@@ -258,14 +170,14 @@ Foam::Matrix<Form, Type>::block
 
 
 template<class Form, class Type>
-inline typename Foam::Matrix<Form, Type>::ConstBlock
+inline Foam::ConstMatrixBlock<Foam::Matrix<Form, Type>>
 Foam::Matrix<Form, Type>::col
 (
     const label m,
     const label mStart
 ) const
 {
-    return ConstBlock
+    return ConstMatrixBlock<mType>
     (
         *this,
         m,
@@ -277,7 +189,7 @@ Foam::Matrix<Form, Type>::col
 
 
 template<class Form, class Type>
-inline typename Foam::Matrix<Form, Type>::ConstBlock
+inline Foam::ConstMatrixBlock<Foam::Matrix<Form, Type>>
 Foam::Matrix<Form, Type>::col
 (
     const label m,
@@ -285,7 +197,7 @@ Foam::Matrix<Form, Type>::col
     const label nStart
 ) const
 {
-    return ConstBlock
+    return ConstMatrixBlock<mType>
     (
         *this,
         m,
@@ -297,7 +209,7 @@ Foam::Matrix<Form, Type>::col
 
 
 template<class Form, class Type>
-inline typename Foam::Matrix<Form, Type>::Block
+inline Foam::MatrixBlock<Foam::Matrix<Form, Type>>
 Foam::Matrix<Form, Type>::block
 (
     const label m,
@@ -306,7 +218,7 @@ Foam::Matrix<Form, Type>::block
     const label nStart
 )
 {
-    return Block
+    return MatrixBlock<mType>
     (
         *this,
         m,
@@ -319,13 +231,13 @@ Foam::Matrix<Form, Type>::block
 
 template<class Form, class Type>
 template<class VectorSpace>
-inline typename Foam::Matrix<Form, Type>::Block
+inline Foam::MatrixBlock<Foam::Matrix<Form, Type>>
 Foam::Matrix<Form, Type>::block(const label mStart, const label nStart)
 {
-    return Block
+    return MatrixBlock<mType>
     (
         *this,
-        VectorSpace::nRows,
+        VectorSpace::mRows,
         VectorSpace::nCols,
         mStart,
         nStart
@@ -334,10 +246,10 @@ Foam::Matrix<Form, Type>::block(const label mStart, const label nStart)
 
 
 template<class Form, class Type>
-inline typename Foam::Matrix<Form, Type>::Block
+inline Foam::MatrixBlock<Foam::Matrix<Form, Type>>
 Foam::Matrix<Form, Type>::col(const label m, const label mStart)
 {
-    return Block
+    return MatrixBlock<mType>
     (
         *this,
         m,
@@ -349,7 +261,7 @@ Foam::Matrix<Form, Type>::col(const label m, const label mStart)
 
 
 template<class Form, class Type>
-inline typename Foam::Matrix<Form, Type>::Block
+inline Foam::MatrixBlock<Foam::Matrix<Form, Type>>
 Foam::Matrix<Form, Type>::col
 (
     const label m,
@@ -357,7 +269,7 @@ Foam::Matrix<Form, Type>::col
     const label nStart
 )
 {
-    return Block
+    return MatrixBlock<mType>
     (
         *this,
         m,
@@ -369,84 +281,6 @@ Foam::Matrix<Form, Type>::col
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Form, class Type>
-inline const Type& Foam::Matrix<Form, Type>::ConstBlock::operator()
-(
-    const label i,
-    const label j
-) const
-{
-    #ifdef FULLDEBUG
-    if (i<0 || i>=nRows_)
-    {
-        FatalErrorInFunction
-            << "Index " << i << " out of range 0 ... " << nRows_-1
-            << abort(FatalError);
-    }
-    if (j<0 || j>=nCols_)
-    {
-        FatalErrorInFunction
-            << "Index " << j << " out of range 0 ... " << nCols_-1
-            << abort(FatalError);
-    }
-    #endif
-
-    return matrix_(i + rowStart_, j + colStart_);
-}
-
-
-template<class Form, class Type>
-inline const Type& Foam::Matrix<Form, Type>::Block::operator()
-(
-    const label i,
-    const label j
-) const
-{
-    #ifdef FULLDEBUG
-    if (i<0 || i>=nRows_)
-    {
-        FatalErrorInFunction
-            << "Index " << i << " out of range 0 ... " << nRows_-1
-            << abort(FatalError);
-    }
-    if (j<0 || j>=nCols_)
-    {
-        FatalErrorInFunction
-            << "Index " << j << " out of range 0 ... " << nCols_-1
-            << abort(FatalError);
-    }
-    #endif
-
-    return matrix_(i + rowStart_, j + colStart_);
-}
-
-
-template<class Form, class Type>
-inline Type& Foam::Matrix<Form, Type>::Block::operator()
-(
-    const label i,
-    const label j
-)
-{
-    #ifdef FULLDEBUG
-    if (i<0 || i>=nRows_)
-    {
-        FatalErrorInFunction
-            << "Index " << i << " out of range 0 ... " << nRows_-1
-            << abort(FatalError);
-    }
-    if (j<0 || j>=nCols_)
-    {
-        FatalErrorInFunction
-            << "Index " << j << " out of range 0 ... " << nCols_-1
-            << abort(FatalError);
-    }
-    #endif
-
-    return matrix_(i + rowStart_, j + colStart_);
-}
-
 
 template<class Form, class Type>
 inline const Type& Foam::Matrix<Form, Type>::operator()
