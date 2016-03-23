@@ -144,13 +144,13 @@ Foam::LUscalarMatrix::LUscalarMatrix
 
     if (Pstream::master(comm_))
     {
-        label nRows = m();
+        label mRows = m();
         label nColumns = n();
 
         if (debug)
         {
-            Pout<< "LUscalarMatrix : size:" << nRows << endl;
-            for (label rowI = 0; rowI < nRows; rowI++)
+            Pout<< "LUscalarMatrix : size:" << mRows << endl;
+            for (label rowI = 0; rowI < mRows; rowI++)
             {
                 const scalar* row = operator[](rowI);
 

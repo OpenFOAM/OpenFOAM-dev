@@ -244,14 +244,14 @@ label findLower
 
 //- To construct a List from a C array. Has extra Container type
 //  to initialise e.g. wordList from arrays of char*.
-template<class Container, class T, int nRows>
-List<Container> initList(const T[nRows]);
+template<class Container, class T, int mRows>
+List<Container> initList(const T[mRows]);
 
 
 //- To construct a (square) ListList from a C array. Has extra Container type
 //  to initialise e.g. faceList from arrays of labels.
-template<class Container, class T, int nRows, int nColumns>
-List<Container> initListList(const T[nRows][nColumns]);
+template<class Container, class T, int mRows, int nColumns>
+List<Container> initListList(const T[mRows][nColumns]);
 
 
 //- Helper class for list to append y onto the end of x

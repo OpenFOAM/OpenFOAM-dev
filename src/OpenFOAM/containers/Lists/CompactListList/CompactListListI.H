@@ -38,12 +38,12 @@ inline Foam::CompactListList<T, Container>::CompactListList()
 template<class T, class Container>
 inline Foam::CompactListList<T, Container>::CompactListList
 (
-    const label nRows,
+    const label mRows,
     const label nData
 )
 :
-    size_(nRows),
-    offsets_(nRows+1, 0),
+    size_(mRows),
+    offsets_(mRows+1, 0),
     m_(nData)
 {}
 
@@ -51,13 +51,13 @@ inline Foam::CompactListList<T, Container>::CompactListList
 template<class T, class Container>
 inline Foam::CompactListList<T, Container>::CompactListList
 (
-    const label nRows,
+    const label mRows,
     const label nData,
     const T& t
 )
 :
-    size_(nRows),
-    offsets_(nRows+1, 0),
+    size_(mRows),
+    offsets_(mRows+1, 0),
     m_(nData, t)
 {}
 
@@ -173,32 +173,32 @@ Foam::CompactListList<T, Container>::xfer()
 
 
 template<class T, class Container>
-inline void Foam::CompactListList<T, Container>::resize(const label nRows)
+inline void Foam::CompactListList<T, Container>::resize(const label mRows)
 {
-    this->setSize(nRows);
+    this->setSize(mRows);
 }
 
 
 template<class T, class Container>
 inline void Foam::CompactListList<T, Container>::resize
 (
-    const label nRows,
+    const label mRows,
     const label nData
 )
 {
-    this->setSize(nRows, nData);
+    this->setSize(mRows, nData);
 }
 
 
 template<class T, class Container>
 inline void Foam::CompactListList<T, Container>::resize
 (
-    const label nRows,
+    const label mRows,
     const label nData,
     const T& t
 )
 {
-    this->setSize(nRows, nData, t);
+    this->setSize(mRows, nData, t);
 }
 
 

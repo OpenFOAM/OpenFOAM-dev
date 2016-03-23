@@ -107,11 +107,11 @@ public:
 
         //- Construct given size of offset table (number of rows)
         //  and number of data.
-        inline CompactListList(const label nRows, const label nData);
+        inline CompactListList(const label mRows, const label nData);
 
         //- Construct given size of offset table (number of rows),
         //  the number of data and a value for all elements.
-        inline CompactListList(const label nRows, const label nData, const T&);
+        inline CompactListList(const label mRows, const label nData, const T&);
 
         //- Construct given list of row-sizes.
         explicit CompactListList(const labelUList& rowSizes);
@@ -159,26 +159,26 @@ public:
 
             //- Reset size of CompactListList.
             //  This form only allows contraction of the CompactListList.
-            void setSize(const label nRows);
+            void setSize(const label mRows);
 
             //- Reset size of CompactListList.
-            void setSize(const label nRows, const label nData);
+            void setSize(const label mRows, const label nData);
 
             //- Reset sizes of CompactListList and value for new elements.
-            void setSize(const label nRows, const label nData, const T&);
+            void setSize(const label mRows, const label nData, const T&);
 
             //- Reset size of CompactListList.
             void setSize(const labelUList& rowSizes);
 
             //- Reset size of CompactListList.
             //  This form only allows contraction of the CompactListList.
-            inline void resize(const label nRows);
+            inline void resize(const label mRows);
 
             //- Reset size of CompactListList.
-            inline void resize(const label nRows, const label nData);
+            inline void resize(const label mRows, const label nData);
 
             //- Reset sizes of CompactListList and value for new elements.
-            inline void resize(const label nRows, const label nData, const T&);
+            inline void resize(const label mRows, const label nData, const T&);
 
             //- Reset size of CompactListList.
             inline void resize(const labelUList& rowSizes);

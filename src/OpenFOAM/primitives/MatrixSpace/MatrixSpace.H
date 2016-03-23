@@ -52,21 +52,21 @@ namespace Foam
                          Class MatrixSpace Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Form, class Cmpt, direction Nrows, direction Ncols>
+template<class Form, class Cmpt, direction Mrows, direction Ncols>
 class MatrixSpace
 :
-    public VectorSpace<Form, Cmpt, Nrows*Ncols>
+    public VectorSpace<Form, Cmpt, Mrows*Ncols>
 {
 
 public:
 
     //- MatrixSpace type
-    typedef MatrixSpace<Form, Cmpt, Nrows, Ncols> msType;
+    typedef MatrixSpace<Form, Cmpt, Mrows, Ncols> msType;
 
 
     // Member constants
 
-        static const direction nRows = Nrows;
+        static const direction mRows = Mrows;
         static const direction nCols = Ncols;
 
 
@@ -75,7 +75,7 @@ public:
         //- Return the number of rows
         static direction m()
         {
-            return Nrows;
+            return Mrows;
         }
 
         //- Return the number of columns
@@ -99,13 +99,13 @@ public:
 
         public:
 
-            static const direction nRows = SubTensor::nRows;
+            static const direction mRows = SubTensor::mRows;
             static const direction nCols = SubTensor::nCols;
 
             //- Return the number of rows in the block
             static direction m()
             {
-                return nRows;
+                return mRows;
             }
 
             //- Return the number of columns in the block
@@ -143,13 +143,13 @@ public:
 
         public:
 
-            static const direction nRows = SubTensor::nRows;
+            static const direction mRows = SubTensor::mRows;
             static const direction nCols = SubTensor::nCols;
 
             //- Return the number of rows in the block
             static direction m()
             {
-                return nRows;
+                return mRows;
             }
 
             //- Return the number of columns in the block
@@ -169,7 +169,7 @@ public:
                 <
                     Form2,
                     Cmpt,
-                    SubTensor::nRows,
+                    SubTensor::mRows,
                     SubTensor::nCols
                 >& matrix
             );
@@ -178,7 +178,7 @@ public:
             template<class VSForm>
             inline void operator=
             (
-                const VectorSpace<VSForm, Cmpt, SubTensor::nRows>& v
+                const VectorSpace<VSForm, Cmpt, SubTensor::mRows>& v
             );
 
             //- Construct and return the sub-ensor corresponding to this block
@@ -208,7 +208,7 @@ public:
         template<class Form2, class Cmpt2>
         inline explicit MatrixSpace
         (
-            const VectorSpace<Form2, Cmpt2, Nrows*Ncols>&
+            const VectorSpace<Form2, Cmpt2, Mrows*Ncols>&
         );
 
         //- Construct from a block of another matrix space

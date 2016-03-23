@@ -687,10 +687,10 @@ Foam::label Foam::findLower
 }
 
 
-template<class Container, class T, int nRows>
-Foam::List<Container> Foam::initList(const T elems[nRows])
+template<class Container, class T, int mRows>
+Foam::List<Container> Foam::initList(const T elems[mRows])
 {
-    List<Container> lst(nRows);
+    List<Container> lst(mRows);
 
     forAll(lst, rowI)
     {
@@ -700,10 +700,10 @@ Foam::List<Container> Foam::initList(const T elems[nRows])
 }
 
 
-template<class Container, class T, int nRows, int nColumns>
-Foam::List<Container> Foam::initListList(const T elems[nRows][nColumns])
+template<class Container, class T, int mRows, int nColumns>
+Foam::List<Container> Foam::initListList(const T elems[mRows][nColumns])
 {
-    List<Container> lst(nRows);
+    List<Container> lst(mRows);
 
     Container cols(nColumns);
     forAll(lst, rowI)

@@ -100,7 +100,7 @@ public:
         // VectorSpace currently defaults to a column-vector
         // This will be removed when column-vector is introduced
         // as a specialization
-        static const direction nRows = Ncmpts;
+        static const direction mRows = Ncmpts;
         static const direction nCols = 1;
 
 

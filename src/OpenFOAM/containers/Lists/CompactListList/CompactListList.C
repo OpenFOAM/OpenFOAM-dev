@@ -125,23 +125,23 @@ Foam::CompactListList<T, Container>::CompactListList
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T, class Container>
-void Foam::CompactListList<T, Container>::setSize(const label nRows)
+void Foam::CompactListList<T, Container>::setSize(const label mRows)
 {
-    if (nRows == 0)
+    if (mRows == 0)
     {
         clear();
     }
-    if (nRows < size())
+    if (mRows < size())
     {
-        size_ = nRows;
-        offsets_.setSize(nRows+1);
-        m_.setSize(offsets_[nRows]);
+        size_ = mRows;
+        offsets_.setSize(mRows+1);
+        m_.setSize(offsets_[mRows]);
     }
-    else if (nRows > size())
+    else if (mRows > size())
     {
         FatalErrorInFunction
             << "Cannot be used to extend the list from " << offsets_.size()
-            << " to " << nRows << nl
+            << " to " << mRows << nl
             << "    Please use one of the other setSize member functions"
             << abort(FatalError);
     }
@@ -151,12 +151,12 @@ void Foam::CompactListList<T, Container>::setSize(const label nRows)
 template<class T, class Container>
 void Foam::CompactListList<T, Container>::setSize
 (
-    const label nRows,
+    const label mRows,
     const label nData
 )
 {
-    size_ = nRows;
-    offsets_.setSize(nRows+1);
+    size_ = mRows;
+    offsets_.setSize(mRows+1);
     m_.setSize(nData);
 }
 
@@ -164,13 +164,13 @@ void Foam::CompactListList<T, Container>::setSize
 template<class T, class Container>
 void Foam::CompactListList<T, Container>::setSize
 (
-    const label nRows,
+    const label mRows,
     const label nData,
     const T& t
 )
 {
-    size_ = nRows;
-    offsets_.setSize(nRows+1);
+    size_ = mRows;
+    offsets_.setSize(mRows+1);
     m_.setSize(nData, t);
 }
 
