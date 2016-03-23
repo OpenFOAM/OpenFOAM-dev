@@ -37,7 +37,7 @@ Foam::scalar Foam::detDecomposed
 {
     Type diagProduct = pTraits<Type>::one;
 
-    for (label i = 0; i < matrix.m(); ++i)
+    for (label i = 0; i < matrix.m(); i++)
     {
         diagProduct *= matrix(i, i);
     }

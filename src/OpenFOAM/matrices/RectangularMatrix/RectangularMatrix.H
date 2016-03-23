@@ -39,6 +39,7 @@ SourceFiles
 #define RectangularMatrix_H
 
 #include "Matrix.H"
+#include "SquareMatrix.H"
 #include "Identity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -67,7 +68,12 @@ public:
         inline RectangularMatrix(const label m, const label n);
 
         //- Construct from a block of another matrix
-        inline RectangularMatrix(const typename RectangularMatrix::Block&);
+        template<class MatrixType>
+        inline RectangularMatrix(const ConstMatrixBlock<MatrixType>&);
+
+        //- Construct from a block of another matrix
+        template<class MatrixType>
+        inline RectangularMatrix(const MatrixBlock<MatrixType>&);
 
         //- Construct with given number of rows and columns
         //  initializing all elements to zero
@@ -80,6 +86,9 @@ public:
         //- Construct with given number of rows and columns
         //  and value for all elements.
         inline RectangularMatrix(const label m, const label n, const Type&);
+
+        //- Construct as copy of a square matrix
+        inline RectangularMatrix(const SquareMatrix<Type>&);
 
         //- Construct from Istream.
         inline RectangularMatrix(Istream&);
@@ -96,6 +105,31 @@ public:
 
 
 // Global functions and operators
+
+template<class Type>
+class typeOfInnerProduct<Type, RectangularMatrix<Type>, RectangularMatrix<Type>>
+{
+public:
+
+    typedef RectangularMatrix<Type> type;
+};
+
+template<class Type>
+class typeOfInnerProduct<Type, RectangularMatrix<Type>, SquareMatrix<Type>>
+{
+public:
+
+    typedef RectangularMatrix<Type> type;
+};
+
+template<class Type>
+class typeOfInnerProduct<Type, SquareMatrix<Type>, RectangularMatrix<Type>>
+{
+public:
+
+    typedef RectangularMatrix<Type> type;
+};
+
 
 template<class Type>
 RectangularMatrix<Type> outer(const Field<Type>& f1, const Field<Type>& f2);

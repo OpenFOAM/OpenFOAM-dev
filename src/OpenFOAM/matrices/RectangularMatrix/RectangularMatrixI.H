@@ -44,9 +44,21 @@ inline Foam::RectangularMatrix<Type>::RectangularMatrix
 
 
 template<class Type>
+template<class MatrixType>
 inline Foam::RectangularMatrix<Type>::RectangularMatrix
 (
-    const typename RectangularMatrix::Block& block
+    const ConstMatrixBlock<MatrixType>& block
+)
+:
+    Matrix<RectangularMatrix<Type>, Type>(block)
+{}
+
+
+template<class Type>
+template<class MatrixType>
+inline Foam::RectangularMatrix<Type>::RectangularMatrix
+(
+    const MatrixBlock<MatrixType>& block
 )
 :
     Matrix<RectangularMatrix<Type>, Type>(block)
@@ -74,7 +86,7 @@ inline Foam::RectangularMatrix<Type>::RectangularMatrix
 :
     Matrix<RectangularMatrix<Type>, Type>(n, n, Zero)
 {
-    for (label i = 0; i < n; ++i)
+    for (label i = 0; i < n; i++)
     {
         this->operator()(i, i) = I;
     }
@@ -90,6 +102,16 @@ inline Foam::RectangularMatrix<Type>::RectangularMatrix
 )
 :
     Matrix<RectangularMatrix<Type>, Type>(m, n, t)
+{}
+
+
+template<class Type>
+inline Foam::RectangularMatrix<Type>::RectangularMatrix
+(
+    const SquareMatrix<Type>& SM
+)
+:
+    Matrix<RectangularMatrix<Type>, Type>(SM)
 {}
 
 
@@ -136,9 +158,9 @@ inline Foam::RectangularMatrix<Type> outer
 {
     RectangularMatrix<Type> f1f2T(f1.size(), f2.size());
 
-    for (label i=0; i<f1f2T.m(); ++i)
+    for (label i=0; i<f1f2T.m(); i++)
     {
-        for (label j=0; j<f1f2T.n(); ++j)
+        for (label j=0; j<f1f2T.n(); j++)
         {
             f1f2T(i, j) = f1[i]*f2[j];
         }

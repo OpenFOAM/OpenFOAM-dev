@@ -37,11 +37,11 @@ Foam::SymmetricSquareMatrix<Type> Foam::invDecomposed
 
     SymmetricSquareMatrix<Type> inv(n, Zero);
 
-    for (label i = 0; i < n; ++i)
+    for (label i = 0; i < n; i++)
     {
         inv(i, i) = 1.0/matrix(i, i);
 
-        for (label j = 0; j < i; ++j)
+        for (label j = 0; j < i; j++)
         {
             Type sum = Zero;
 
@@ -89,7 +89,7 @@ Type Foam::detDecomposed(const SymmetricSquareMatrix<Type>& matrix)
 {
     Type diagProduct = pTraits<Type>::one;
 
-    for (label i = 0; i < matrix.m(); ++i)
+    for (label i = 0; i < matrix.m(); i++)
     {
         diagProduct *= matrix(i, i);
     }
