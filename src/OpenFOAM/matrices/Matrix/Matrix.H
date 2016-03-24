@@ -247,7 +247,7 @@ public:
             void transfer(mType&);
 
             //- Resize the matrix preserving the elements
-            void setSize(const label m, const label nCols);
+            void setSize(const label m, const label n);
 
 
         //- Return the transpose of the matrix
@@ -279,10 +279,10 @@ public:
         template<class MatrixType>
         void operator=(const MatrixBlock<MatrixType>&);
 
-        //- Assignment of all entries to zero
+        //- Assignment of all elements to zero
         void operator=(const zero);
 
-        //- Assignment of all entries to the given value
+        //- Assignment of all elements to the given value
         void operator=(const Type&);
 
 
