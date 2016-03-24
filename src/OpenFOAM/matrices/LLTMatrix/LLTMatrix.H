@@ -61,6 +61,9 @@ public:
 
     // Constructors
 
+        //- Construct null
+        LLTMatrix();
+
         //- Construct from a square matrix and perform the decomposition
         LLTMatrix(const SquareMatrix<Type>& M);
 

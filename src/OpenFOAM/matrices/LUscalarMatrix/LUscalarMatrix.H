@@ -25,7 +25,7 @@ Class
     Foam::LUscalarMatrix
 
 Description
-    Foam::LUscalarMatrix
+    Class to perform the LU decomposition on a symmetric matrix.
 
 SourceFiles
     LUscalarMatrix.C
@@ -93,10 +93,14 @@ public:
     // Declare name of the class and its debug switch
     ClassName("LUscalarMatrix");
 
+
     // Constructors
 
-        //- Construct from scalarSquareMatrix and perform LU decomposition
-        LUscalarMatrix(const scalarSquareMatrix&);
+        //- Construct null
+        LUscalarMatrix();
+
+        //- Construct from and perform LU decomposition of the matrix M
+        LUscalarMatrix(const scalarSquareMatrix& M);
 
         //- Construct from lduMatrix and perform LU decomposition
         LUscalarMatrix
@@ -108,6 +112,9 @@ public:
 
 
     // Member Functions
+
+        //- Perform the LU decomposition of the matrix M
+        void decompose(const scalarSquareMatrix& M);
 
         //- Solve the matrix using the LU decomposition with pivoting
         //  returning the solution in the source

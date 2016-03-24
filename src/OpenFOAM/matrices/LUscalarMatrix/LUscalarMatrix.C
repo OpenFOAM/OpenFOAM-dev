@@ -39,6 +39,12 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
+Foam::LUscalarMatrix::LUscalarMatrix()
+:
+    comm_(Pstream::worldComm)
+{}
+
+
 Foam::LUscalarMatrix::LUscalarMatrix(const scalarSquareMatrix& matrix)
 :
     scalarSquareMatrix(matrix),
@@ -249,8 +255,6 @@ void Foam::LUscalarMatrix::convert
             }
         }
     }
-
-    //printDiagonalDominance();
 }
 
 
@@ -380,8 +384,6 @@ void Foam::LUscalarMatrix::convert
             }
         }
     }
-
-    //printDiagonalDominance();
 }
 
 
@@ -399,6 +401,14 @@ void Foam::LUscalarMatrix::printDiagonalDominance() const
         }
         Info<< mag(sum)/mag(operator[](i)[i]) << endl;
     }
+}
+
+
+void Foam::LUscalarMatrix::decompose(const scalarSquareMatrix& M)
+{
+    scalarSquareMatrix::operator=(M);
+    pivotIndices_.setSize(m());
+    LUDecompose(*this, pivotIndices_);
 }
 
 

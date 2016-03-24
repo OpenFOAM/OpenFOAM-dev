@@ -28,6 +28,11 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::LLTMatrix<Type>::LLTMatrix()
+{}
+
+
+template<class Type>
 Foam::LLTMatrix<Type>::LLTMatrix(const SquareMatrix<Type>& M)
 {
     decompose(M);
