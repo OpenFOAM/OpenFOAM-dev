@@ -44,7 +44,7 @@ void Foam::solve
         label iMax = i;
         scalar largestCoeff = mag(tmpMatrix[iMax][i]);
 
-        // Swap entries around to find a good pivot
+        // Swap elements around to find a good pivot
         for (label j=i+1; j<m; j++)
         {
             if (mag(tmpMatrix(j, i)) > largestCoeff)

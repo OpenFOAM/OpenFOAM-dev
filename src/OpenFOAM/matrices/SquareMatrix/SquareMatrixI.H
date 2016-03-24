@@ -152,12 +152,32 @@ Foam::SquareMatrix<Type>::clone() const
 }
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+inline void Foam::SquareMatrix<Type>::setSize(const label m)
+{
+    Matrix<SquareMatrix<Type>, Type>::setSize(m, m);
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
 void Foam::SquareMatrix<Type>::operator=(const zero)
 {
     Matrix<SquareMatrix<Type>, Type>::operator=(Zero);
+}
+
+
+template<class Type>
+void Foam::SquareMatrix<Type>::operator=(const Identity<Type>)
+{
+    Matrix<SquareMatrix<Type>, Type>::operator=(Zero);
+    for (label i=0; i<this->n(); i++)
+    {
+        this->operator()(i, i) = I;
+    }
 }
 
 

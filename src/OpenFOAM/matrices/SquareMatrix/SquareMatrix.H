@@ -106,10 +106,21 @@ public:
         inline autoPtr<SquareMatrix<Type>> clone() const;
 
 
+    // Member Functions
+
+        // Edit
+
+            //- Resize the matrix preserving the elements
+            inline void setSize(const label m);
+
+
     // Member operators
 
-        //- Assignment of all entries to zero
+        //- Assignment of all elements to zero
         void operator=(const zero);
+
+        //- Assignment elements to the
+        void operator=(const Identity<Type>);
 };
 
 

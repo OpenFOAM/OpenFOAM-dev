@@ -99,7 +99,7 @@ public:
 
     // Member operators
 
-        //- Assignment of all entries to zero
+        //- Assignment of all elements to zero
         void operator=(const zero);
 };
 
