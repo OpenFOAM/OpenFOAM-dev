@@ -25,12 +25,25 @@ License
 
 #include "LLTMatrix.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::LLTMatrix<Type>::decompose()
+Foam::LLTMatrix<Type>::LLTMatrix(const SquareMatrix<Type>& M)
+{
+    decompose(M);
+}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::LLTMatrix<Type>::decompose(const SquareMatrix<Type>& M)
 {
     SquareMatrix<Type>& LLT = *this;
+
+    // Initialize the LLT decomposition matrix to M
+    LLT = M;
+
     const label m = LLT.m();
 
     for (label i=0; i<m; i++)
@@ -69,19 +82,6 @@ void Foam::LLTMatrix<Type>::decompose()
     }
 }
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::LLTMatrix<Type>::LLTMatrix(const SquareMatrix<Type>& M)
-:
-    SquareMatrix<Type>(M)
-{
-    decompose();
-}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
 void Foam::LLTMatrix<Type>::solve

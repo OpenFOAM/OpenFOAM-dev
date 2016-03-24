@@ -56,10 +56,6 @@ class LLTMatrix
 :
     public SquareMatrix<Type>
 {
-    // Private Member Functions
-
-        //- Perform the Cholesky decomposition of the matrix
-        void decompose();
 
 public:
 
@@ -70,6 +66,9 @@ public:
 
 
     // Member Functions
+
+        //- Perform the Cholesky decomposition of the matrix
+        void decompose(const SquareMatrix<Type>& M);
 
         //- Solve the linear system with the given source
         //  and returning the solution in the Field argument x
