@@ -47,31 +47,49 @@ Foam::label Foam::sampledSet::getBoundaryCell(const label faceI) const
 }
 
 
+Foam::label Foam::sampledSet::getNeighbourCell(const label faceI) const
+{
+    if (faceI >= mesh().nInternalFaces())
+    {
+        return mesh().faceOwner()[faceI];
+    }
+    else
+    {
+        return mesh().faceNeighbour()[faceI];
+    }
+}
+
+
 Foam::label Foam::sampledSet::pointInCell
 (
     const point& p,
     const label samplei
 ) const
 {
-    const label cellio = mesh().faceOwner()[faces_[samplei]];
-    const label cellin = mesh().faceNeighbour()[faces_[samplei]];
-    const label celljo = mesh().faceOwner()[faces_[samplei+1]];
-    const label celljn = mesh().faceNeighbour()[faces_[samplei+1]];
+    // Collect the face owner and neighbour cells of the sample into an array
+    // for convenience
+    label cells[4] =
+    {
+        mesh().faceOwner()[faces_[samplei]],
+        getNeighbourCell(faces_[samplei]),
+        mesh().faceOwner()[faces_[samplei+1]],
+        getNeighbourCell(faces_[samplei+1])
+    };
 
-    // If mid-point is in the cell including the sampled faces
-    // include in list otherwise ignore
-
+    // Find the sampled cell by checking the owners and neighbours of the
+    // sampled faces
     label cellm =
-        (cellio == celljo || cellio == celljn) ? cellio
-      : (cellin == celljo || cellin == celljn) ? cellin
+        (cells[0] == cells[2] || cells[0] == cells[3]) ? cells[0]
+      : (cells[1] == cells[2] || cells[1] == cells[3]) ? cells[1]
       : -1;
 
     if (cellm != -1)
     {
-        // Check the mid-point is in the cell otherwise ignore
+        // If found the sampled cell check the point is in the cell
+        // otherwise ignore
         if (!mesh().pointInCell(p, cellm, searchEngine_.decompMode()))
         {
-            cellm = -1;
+           cellm = -1;
 
             if (debug)
             {
@@ -81,20 +99,33 @@ Foam::label Foam::sampledSet::pointInCell
             }
         }
     }
-    else if (debug)
+    else
     {
-        WarningInFunction
-            << "Could not find cell for mid-point" << nl
-            << "  samplei: " << samplei
-            << "  pts[samplei]: " << operator[](samplei)
-            << "  face[samplei]: " << faces_[samplei]
-            << "  pts[samplei+1]: " << operator[](samplei+1)
-            << "  face[samplei+1]: " << faces_[samplei+1]
-            << "  cellio: " << cellio
-            << "  cellin: " << cellin
-            << "  celljo: " << celljo
-            << "  celljn: " << celljn
-            << endl;
+        // If the sample does not pass through a single cell check if the point
+        // is in any of the owners or neighbours otherwise ignore
+        for (label i=0; i<4; i++)
+        {
+            if (mesh().pointInCell(p, cells[i], searchEngine_.decompMode()))
+            {
+                return cells[i];
+            }
+        }
+
+        if (debug)
+        {
+            WarningInFunction
+                << "Could not find cell for mid-point" << nl
+                << "  samplei: " << samplei
+                << "  pts[samplei]: " << operator[](samplei)
+                << "  face[samplei]: " << faces_[samplei]
+                << "  pts[samplei+1]: " << operator[](samplei+1)
+                << "  face[samplei+1]: " << faces_[samplei+1]
+                << "  cellio: " << cells[0]
+                << "  cellin: " << cells[1]
+                << "  celljo: " << cells[2]
+                << "  celljn: " << cells[3]
+                << endl;
+        }
     }
 
     return cellm;

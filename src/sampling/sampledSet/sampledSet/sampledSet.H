@@ -92,6 +92,9 @@ protected:
         //- Returns cell next to boundary face
         label getBoundaryCell(const label) const;
 
+        //- Returns the neigbour cell or the owner if face in on the boundary
+        label getNeighbourCell(const label) const;
+
         //- Return the cell in which the point on the sample line
         //  resides if found otherwise return -1
         label pointInCell(const point& p, const label samplei) const;
