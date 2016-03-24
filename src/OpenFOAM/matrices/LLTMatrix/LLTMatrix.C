@@ -95,6 +95,12 @@ void Foam::LLTMatrix<Type>::solve
     const Field<Type>& source
 ) const
 {
+    // If x and source are different initialize x = source
+    if (&x != &source)
+    {
+        x = source;
+    }
+
     const SquareMatrix<Type>& LLT = *this;
     const label m = LLT.m();
 

@@ -225,7 +225,7 @@ Foam::QRMatrix<MatrixType>::solve
 
 template<class MatrixType>
 typename Foam::QRMatrix<MatrixType>::QMatrixType
-Foam::QRMatrix<MatrixType>::inverse() const
+Foam::QRMatrix<MatrixType>::inv() const
 {
     const label m = Q_.m();
 

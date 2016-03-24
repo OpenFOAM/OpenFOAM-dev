@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "scalarMatrices.H"
+#include "LUscalarMatrix.H"
 #include "LLTMatrix.H"
 #include "QRMatrix.H"
 #include "vector.H"
@@ -113,70 +114,53 @@ int main(int argc, char *argv[])
         Info<< "Solution = " << rhs << endl;
     }
 
+
+    scalarSquareMatrix squareMatrix(3, Zero);
+
+    squareMatrix(0, 0) = 4;
+    squareMatrix(0, 1) = 12;
+    squareMatrix(0, 2) = -16;
+    squareMatrix(1, 0) = 12;
+    squareMatrix(1, 1) = 37;
+    squareMatrix(1, 2) = -43;
+    squareMatrix(2, 0) = -16;
+    squareMatrix(2, 1) = -43;
+    squareMatrix(2, 2) = 98;
+
+    Info<< nl << "Square Matrix = " << squareMatrix << endl;
+
+    const scalarField source(3, 1);
+
     {
-        scalarSquareMatrix squareMatrix(3, Zero);
+        {
+            scalarSquareMatrix sm(squareMatrix);
+            Info<< "det = " << det(sm) << endl;
+        }
 
-        squareMatrix(0, 0) = 4;
-        squareMatrix(0, 1) = 12;
-        squareMatrix(0, 2) = -16;
-        squareMatrix(1, 0) = 12;
-        squareMatrix(1, 1) = 37;
-        squareMatrix(1, 2) = -43;
-        squareMatrix(2, 0) = -16;
-        squareMatrix(2, 1) = -43;
-        squareMatrix(2, 2) = 98;
-
-        const scalarSquareMatrix squareMatrixCopy = squareMatrix;
-        Info<< nl << "Square Matrix = " << squareMatrix << endl;
-
-        Info<< "det = " << det(squareMatrixCopy) << endl;
-
+        scalarSquareMatrix sm(squareMatrix);
         labelList rhs(3, 0);
         label sign;
-        LUDecompose(squareMatrix, rhs, sign);
+        LUDecompose(sm, rhs, sign);
 
-        Info<< "Decomposition = " << squareMatrix << endl;
+        Info<< "Decomposition = " << sm << endl;
         Info<< "Pivots = " << rhs << endl;
         Info<< "Sign = " << sign << endl;
-        Info<< "det = " << detDecomposed(squareMatrix, sign) << endl;
+        Info<< "det = " << detDecomposed(sm, sign) << endl;
     }
 
     {
-        scalarSquareMatrix squareMatrix(3, Zero);
+        LUscalarMatrix LU(squareMatrix);
+        scalarField x((LU.solve(source));
+        Info<< "LU solve residual " << (squareMatrix*x - source) << endl;
+    }
 
-        squareMatrix(0, 0) = 4;
-        squareMatrix(0, 1) = 12;
-        squareMatrix(0, 2) = -16;
-        squareMatrix(1, 0) = 12;
-        squareMatrix(1, 1) = 37;
-        squareMatrix(1, 2) = -43;
-        squareMatrix(2, 0) = -16;
-        squareMatrix(2, 1) = -43;
-        squareMatrix(2, 2) = 98;
-
-        scalarField source(3, 1);
-
+    {
         LLTMatrix<scalar> LLT(squareMatrix);
         scalarField x(LLT.solve(source));
-
         Info<< "LLT solve residual " << (squareMatrix*x - source) << endl;
     }
 
     {
-        scalarSquareMatrix squareMatrix(3, Zero);
-
-        squareMatrix(0, 0) = 4;
-        squareMatrix(0, 1) = 12;
-        squareMatrix(0, 2) = -16;
-        squareMatrix(1, 0) = 12;
-        squareMatrix(1, 1) = 37;
-        squareMatrix(1, 2) = -43;
-        squareMatrix(2, 0) = -16;
-        squareMatrix(2, 1) = -43;
-        squareMatrix(2, 2) = 98;
-
-        scalarField source(3, 1);
-
         QRMatrix<scalarSquareMatrix> QR(squareMatrix);
         scalarField x(QR.solve(source));
 
@@ -184,8 +168,7 @@ int main(int argc, char *argv[])
             << (squareMatrix*x - source) << endl;
 
         Info<< "QR inverse solve residual "
-            << (x - QR.inverse()*source) << endl;
-
+            << (x - QR.inv()*source) << endl;
     }
 
     Info<< "\nEnd\n" << endl;

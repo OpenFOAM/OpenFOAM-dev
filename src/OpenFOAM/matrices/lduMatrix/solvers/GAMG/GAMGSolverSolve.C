@@ -533,8 +533,7 @@ void Foam::GAMGSolver::solveCoarsestLevel
 
     if (directSolveCoarsest_)
     {
-        coarsestCorrField = coarsestSource;
-        coarsestLUMatrixPtr_->solve(coarsestCorrField);
+        coarsestLUMatrixPtr_->solve(coarsestCorrField, coarsestSource);
     }
     //else if
     //(

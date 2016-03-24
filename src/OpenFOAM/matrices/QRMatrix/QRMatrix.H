@@ -108,7 +108,7 @@ public:
         tmp<Field<cmptType>> solve(const Field<cmptType>& source) const;
 
         //- Return the inverse of a square matrix
-        QMatrixType inverse() const;
+        QMatrixType inv() const;
 };
 
 

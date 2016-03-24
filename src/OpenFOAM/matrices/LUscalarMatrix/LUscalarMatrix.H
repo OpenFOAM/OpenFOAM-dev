@@ -116,10 +116,16 @@ public:
         //- Perform the LU decomposition of the matrix M
         void decompose(const scalarSquareMatrix& M);
 
-        //- Solve the matrix using the LU decomposition with pivoting
-        //  returning the solution in the source
-        template<class T>
-        void solve(Field<T>& source) const;
+        //- Solve the linear system with the given source
+        //  and returning the solution in the Field argument x.
+        //  This function may be called with the same field for x and source.
+        template<class Type>
+        void solve(Field<Type>& x, const Field<Type>& source) const;
+
+        //- Solve the linear system with the given source
+        //  returning the solution
+        template<class Type>
+        tmp<Field<Type>> solve(const Field<Type>& source) const;
 };
 
 
