@@ -74,7 +74,8 @@ public:
         void decompose(const SquareMatrix<Type>& M);
 
         //- Solve the linear system with the given source
-        //  and returning the solution in the Field argument x
+        //  and returning the solution in the Field argument x.
+        //  This function may be called with the same field for x and source.
         void solve(Field<Type>& x, const Field<Type>& source) const;
 
         //- Solve the linear system with the given source
