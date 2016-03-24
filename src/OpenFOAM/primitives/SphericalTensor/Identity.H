@@ -77,13 +77,13 @@ public:
     }
 
     //- Return 1 for label
-    inline operator label() const
+    inline explicit operator label() const
     {
         return 1;
     }
 
     //- Return 1 for scalar
-    inline operator scalar() const
+    inline explicit operator scalar() const
     {
         return 1;
     }
