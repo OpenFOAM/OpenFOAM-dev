@@ -25,6 +25,7 @@ License
 
 #include "scalarMatrices.H"
 #include "LLTMatrix.H"
+#include "QRMatrix.H"
 #include "vector.H"
 #include "tensor.H"
 #include "IFstream.H"
@@ -159,6 +160,32 @@ int main(int argc, char *argv[])
         scalarField x(LLT.solve(source));
 
         Info<< "LLT solve residual " << (squareMatrix*x - source) << endl;
+    }
+
+    {
+        scalarSquareMatrix squareMatrix(3, Zero);
+
+        squareMatrix(0, 0) = 4;
+        squareMatrix(0, 1) = 12;
+        squareMatrix(0, 2) = -16;
+        squareMatrix(1, 0) = 12;
+        squareMatrix(1, 1) = 37;
+        squareMatrix(1, 2) = -43;
+        squareMatrix(2, 0) = -16;
+        squareMatrix(2, 1) = -43;
+        squareMatrix(2, 2) = 98;
+
+        scalarField source(3, 1);
+
+        QRMatrix<scalarSquareMatrix> QR(squareMatrix);
+        scalarField x(QR.solve(source));
+
+        Info<< "QR solve residual "
+            << (squareMatrix*x - source) << endl;
+
+        Info<< "QR inverse solve residual "
+            << (x - QR.inverse()*source) << endl;
+
     }
 
     Info<< "\nEnd\n" << endl;
