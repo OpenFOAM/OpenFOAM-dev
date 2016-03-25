@@ -119,7 +119,6 @@ template<class Type>
 inline void Foam::SubField<Type>::operator=(const Field<Type>& rhs)
 {
     SubList<Type>::operator=(rhs);
-    InfoInFunction << *this << endl;
 }
 
 
