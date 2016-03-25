@@ -80,22 +80,6 @@ inline Foam::RectangularMatrix<Type>::RectangularMatrix
 template<class Type>
 inline Foam::RectangularMatrix<Type>::RectangularMatrix
 (
-    const label n,
-    const Identity<Type>
-)
-:
-    Matrix<RectangularMatrix<Type>, Type>(n, n, Zero)
-{
-    for (label i=0; i<n; i++)
-    {
-        this->operator()(i, i) = I;
-    }
-}
-
-
-template<class Type>
-inline Foam::RectangularMatrix<Type>::RectangularMatrix
-(
     const label m,
     const label n,
     const Type& t

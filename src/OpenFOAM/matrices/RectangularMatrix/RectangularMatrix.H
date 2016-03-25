@@ -40,7 +40,6 @@ SourceFiles
 
 #include "Matrix.H"
 #include "SquareMatrix.H"
-#include "Identity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,10 +77,6 @@ public:
         //- Construct with given number of rows and columns
         //  initializing all elements to zero
         inline RectangularMatrix(const label m, const label n, const zero);
-
-        //- Construct given number of rows/columns
-        //  Initializing to the identity matrix
-        inline RectangularMatrix(const label n, const Identity<Type>);
 
         //- Construct with given number of rows and columns
         //  and value for all elements.

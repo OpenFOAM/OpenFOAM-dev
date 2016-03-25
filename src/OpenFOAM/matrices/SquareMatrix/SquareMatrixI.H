@@ -103,7 +103,7 @@ inline Foam::SquareMatrix<Type>::SquareMatrix
 {
     for (label i=0; i<n; i++)
     {
-        this->operator()(i, i) = I;
+        this->operator()(i, i) = Type(I);
     }
 }
 
@@ -176,7 +176,7 @@ void Foam::SquareMatrix<Type>::operator=(const Identity<Type>)
     Matrix<SquareMatrix<Type>, Type>::operator=(Zero);
     for (label i=0; i<this->n(); i++)
     {
-        this->operator()(i, i) = I;
+        this->operator()(i, i) = Type(I);
     }
 }
 
