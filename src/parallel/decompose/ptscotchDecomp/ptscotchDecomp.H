@@ -25,7 +25,24 @@ Class
     Foam::ptscotchDecomp
 
 Description
-    PTScotch domain decomposition
+    PTScotch domain decomposition.
+    For the main details about how to define the strategies, see scotchDecomp.
+
+    Nonetheless, when decomposing in parallel, using <tt>writeGraph=true</tt>
+    will write out \c .dgr files for debugging. For example, use these files
+    with \c dgpart as follows:
+
+    \verbatim
+    mpirun -np 4 dgpart 2 'region0_%r.dgr'
+    \endverbatim
+
+    where:
+
+    \li \c %r gets replaced by current processor rank
+    \li it will decompose into 2 domains
+
+SeeAlso
+    Foam::scotchDecomp
 
 SourceFiles
     ptscotchDecomp.C

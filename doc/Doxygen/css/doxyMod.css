@@ -12,6 +12,10 @@
     list-style-type: square;
 }
 
+.contents ol {
+    margin-left: 20px;
+}
+
 /* colour and underline to match OpenFOAM style */
 div.title
 {
