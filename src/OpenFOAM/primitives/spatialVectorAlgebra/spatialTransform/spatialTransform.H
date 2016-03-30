@@ -45,6 +45,7 @@ SourceFiles
 
 #include "tensor.H"
 #include "spatialVector.H"
+#include "spatialTensor.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
