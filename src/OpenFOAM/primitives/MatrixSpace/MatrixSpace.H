@@ -181,7 +181,7 @@ public:
                 const VectorSpace<VSForm, Cmpt, SubTensor::mRows>& v
             );
 
-            //- Construct and return the sub-ensor corresponding to this block
+            //- Construct and return the sub-tensor corresponding to this block
             inline SubTensor operator()() const;
 
             //- (i, j) const element access operator
