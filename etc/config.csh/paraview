@@ -98,9 +98,6 @@ if ( -r $ParaView_DIR || -r $paraviewInstDir ) then
     endif
 
     set ParaView_LIB_DIR=${ParaView_DIR}/lib/paraview-${ParaView_MAJOR}
-    if (! -r $ParaView_LIB_DIR && -r ${ParaView_DIR}/lib/paraview-3.0) then
-        set ParaView_LIB_DIR=${ParaView_DIR}/lib/paraview-3.0
-    endif
 
     setenv PATH ${ParaView_DIR}/bin:${PATH}
     setenv LD_LIBRARY_PATH "${ParaView_LIB_DIR}:${LD_LIBRARY_PATH}"
