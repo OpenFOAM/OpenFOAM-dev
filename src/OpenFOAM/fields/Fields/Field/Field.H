@@ -333,6 +333,9 @@ public:
         //- Replace a component field of the field
         void replace(const direction, const cmptType&);
 
+        template<class VSForm>
+        VSForm block(const label start) const;
+
         //- Return the field transpose (only defined for second rank tensors)
         tmp<Field<Type>> T() const;
 

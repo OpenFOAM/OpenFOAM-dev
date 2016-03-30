@@ -612,6 +612,19 @@ void Foam::Field<Type>::replace
 
 
 template<class Type>
+template<class VSForm>
+VSForm Foam::Field<Type>::block(const label start) const
+{
+    VSForm vs;
+    for (direction i=0; i<VSForm::nComponents; i++)
+    {
+        vs[i] = this->operator[](start + i);
+    }
+    return vs;
+}
+
+
+template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::Field<Type>::T() const
 {
     tmp<Field<Type>> transpose(new Field<Type>(this->size()));
