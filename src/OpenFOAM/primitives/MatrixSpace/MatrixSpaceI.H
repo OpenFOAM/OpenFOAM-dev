@@ -388,7 +388,17 @@ Foam::MatrixSpace<Form, Cmpt, Mrows, Ncols>::
 Block<SubTensor, BRowStart, BColStart>::
 operator()() const
 {
-    return *this;
+    SubTensor st;
+
+    for (direction i=0; i<SubTensor::mRows; ++i)
+    {
+        for (direction j=0; j<SubTensor::nCols; ++j)
+        {
+            st[i*SubTensor::nCols + j] = operator()(i, j);
+        }
+    }
+
+    return st;
 }
 
 
