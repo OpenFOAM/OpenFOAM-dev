@@ -253,7 +253,7 @@ inline spatialTransform Xr(const vector& a, const scalar omega)
     return spatialTransform(Ra(a, omega), vector::zero);
 }
 
-//- Translational spatial transformation tensor about axis a by omega radians
+//- Translational spatial transformation tensor for translation r
 inline spatialTransform Xt(const vector& r)
 {
     return spatialTransform(tensor::I, r);
