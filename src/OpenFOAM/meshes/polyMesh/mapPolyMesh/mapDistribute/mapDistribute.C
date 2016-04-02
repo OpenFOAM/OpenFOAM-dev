@@ -528,12 +528,10 @@ void Foam::mapDistribute::exchangeAddressing
     }
 
     subMap_.setSize(Pstream::nProcs());
-    labelListList sendSizes;
     Pstream::exchange<labelList, label>
     (
         wantedRemoteElements,
         subMap_,
-        sendSizes,
         tag,
         Pstream::worldComm  //TBD
     );
@@ -608,12 +606,10 @@ void Foam::mapDistribute::exchangeAddressing
     }
 
     subMap_.setSize(Pstream::nProcs());
-    labelListList sendSizes;
     Pstream::exchange<labelList, label>
     (
         wantedRemoteElements,
         subMap_,
-        sendSizes,
         tag,
         Pstream::worldComm      //TBD
     );

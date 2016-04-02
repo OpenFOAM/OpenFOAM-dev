@@ -844,15 +844,6 @@ void Foam::InteractionLists<ParticleType>::buildMap
         nSend[procI]++;
     }
 
-    // Send over how many I need to receive
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    labelListList sendSizes(Pstream::nProcs());
-
-    sendSizes[Pstream::myProcNo()] = nSend;
-
-    combineReduce(sendSizes, UPstream::listEq());
-
     // 2. Size sendMap
     labelListList sendMap(Pstream::nProcs());
 
@@ -871,6 +862,11 @@ void Foam::InteractionLists<ParticleType>::buildMap
         sendMap[procI][nSend[procI]++] = i;
     }
 
+    // 4. Send over how many I need to receive
+    labelList recvSizes;
+    Pstream::exchangeSizes(sendMap, recvSizes);
+
+
     // Determine receive map
     // ~~~~~~~~~~~~~~~~~~~~~
 
@@ -888,7 +884,7 @@ void Foam::InteractionLists<ParticleType>::buildMap
     {
         if (procI != Pstream::myProcNo())
         {
-            label nRecv = sendSizes[procI][Pstream::myProcNo()];
+            label nRecv = recvSizes[procI];
 
             constructMap[procI].setSize(nRecv);
 

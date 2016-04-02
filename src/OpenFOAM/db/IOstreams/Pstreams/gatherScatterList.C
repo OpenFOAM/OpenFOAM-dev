@@ -274,7 +274,7 @@ void Pstream::scatterList
         }
 
         // Send to my downstairs neighbours
-        forAll(myComm.below(), belowI)
+        forAllReverse(myComm.below(), belowI)
         {
             label belowID = myComm.below()[belowI];
             const labelList& notBelowLeaves = comms[belowID].allNotBelow();

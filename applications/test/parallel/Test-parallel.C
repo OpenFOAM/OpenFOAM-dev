@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     // Test mapDistribute
     // ~~~~~~~~~~~~~~~~~~
 
-    if (false)
+    if (true)
     {
         Random rndGen(43544*Pstream::myProcNo());
 
@@ -80,11 +80,6 @@ int main(int argc, char *argv[])
             nSend[procI]++;
         }
 
-        // Sync how many to send
-        labelListList allNTrans(Pstream::nProcs());
-        allNTrans[Pstream::myProcNo()] = nSend;
-        combineReduce(allNTrans, UPstream::listEq());
-
         // Collect items to be sent
         labelListList sendMap(Pstream::nProcs());
         forAll(sendMap, procI)
@@ -98,11 +93,15 @@ int main(int argc, char *argv[])
             sendMap[procI][nSend[procI]++] = i;
         }
 
+        // Sync how many to send
+        labelList nRecv;
+        Pstream::exchangeSizes(sendMap, nRecv);
+
         // Collect items to be received
         labelListList recvMap(Pstream::nProcs());
         forAll(recvMap, procI)
         {
-            recvMap[procI].setSize(allNTrans[procI][Pstream::myProcNo()]);
+            recvMap[procI].setSize(nRecv[procI]);
         }
 
         label constructSize = 0;

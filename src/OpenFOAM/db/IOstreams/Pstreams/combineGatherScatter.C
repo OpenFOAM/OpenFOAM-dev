@@ -218,7 +218,7 @@ void Foam::Pstream::combineScatter
         }
 
         // Send to my downstairs neighbours
-        forAll(myComm.below(), belowI)
+        forAllReverse(myComm.below(), belowI)
         {
             label belowID = myComm.below()[belowI];
 
@@ -453,7 +453,7 @@ void Foam::Pstream::listCombineScatter
         }
 
         // Send to my downstairs neighbours
-        forAll(myComm.below(), belowI)
+        forAllReverse(myComm.below(), belowI)
         {
             label belowID = myComm.below()[belowI];
 
@@ -651,7 +651,7 @@ void Foam::Pstream::mapCombineScatter
         }
 
         // Send to my downstairs neighbours
-        forAll(myComm.below(), belowI)
+        forAllReverse(myComm.below(), belowI)
         {
             label belowID = myComm.below()[belowI];
 

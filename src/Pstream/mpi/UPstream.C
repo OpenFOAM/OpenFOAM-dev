@@ -295,6 +295,54 @@ void Foam::reduce
 }
 
 
+void Foam::UPstream::allToAll
+(
+    const labelUList& sendData,
+    labelUList& recvData,
+    const label communicator
+)
+{
+    label np = nProcs(communicator);
+
+    if (sendData.size() != np || recvData.size() != np)
+    {
+        FatalErrorInFunction
+            << "Size of sendData " << sendData.size()
+            << " or size of recvData " << recvData.size()
+            << " is not equal to the number of processors in the domain "
+            << np
+            << Foam::abort(FatalError);
+    }
+
+    if (!UPstream::parRun())
+    {
+        recvData.assign(sendData);
+    }
+    else
+    {
+        if
+        (
+            MPI_Alltoall
+            (
+                sendData.begin(),
+                sizeof(label),
+                MPI_BYTE,
+                recvData.begin(),
+                sizeof(label),
+                MPI_BYTE,
+                PstreamGlobals::MPICommunicators_[communicator]
+            )
+        )
+        {
+            FatalErrorInFunction
+                << "MPI_Alltoall failed for " << sendData
+                << " on communicator " << communicator
+                << Foam::abort(FatalError);
+        }
+    }
+}
+
+
 void Foam::UPstream::allocatePstreamCommunicator
 (
     const label parentIndex,

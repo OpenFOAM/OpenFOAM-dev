@@ -248,8 +248,9 @@ bool Foam::regIOobject::read()
             ok = readData(fromAbove);
         }
 
-        // Send to my downstairs neighbours
-        forAll(myComm.below(), belowI)
+        // Send to my downstairs neighbours. Note reverse order not
+        // nessecary here - just for consistency reasons.
+        forAllReverse(myComm.below(), belowI)
         {
             OPstream toBelow
             (

@@ -322,7 +322,7 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
 
 
         // Start sending. Sets number of bytes transferred
-        labelListList allNTrans(Pstream::nProcs());
+        labelList allNTrans(Pstream::nProcs());
         pBufs.finishedSends(allNTrans);
 
 
@@ -330,15 +330,13 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
 
         forAll(allNTrans, i)
         {
-            forAll(allNTrans[i], j)
+            if (allNTrans[i])
             {
-                if (allNTrans[i][j])
-                {
-                    transfered = true;
-                    break;
-                }
+                transfered = true;
+                break;
             }
         }
+        reduce(transfered, orOp<bool>());
 
         if (!transfered)
         {
@@ -350,7 +348,7 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
         {
             label neighbProci = neighbourProcs[i];
 
-            label nRec = allNTrans[neighbProci][Pstream::myProcNo()];
+            label nRec = allNTrans[neighbProci];
 
             if (nRec)
             {

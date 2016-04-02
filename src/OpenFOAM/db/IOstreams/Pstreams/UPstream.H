@@ -489,7 +489,15 @@ public:
         //- Abort program
         static void abort();
 
-
+        //- Exchange label with all processors (in the communicator).
+        //  sendData[procI] is the label to send to procI.
+        //  After return recvData contains the data from the other processors.
+        static void allToAll
+        (
+            const labelUList& sendData,
+            labelUList& recvData,
+            const label communicator = 0
+        );
 };
 
 
