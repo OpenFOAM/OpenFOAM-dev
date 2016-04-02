@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 
     {
         LUscalarMatrix LU(squareMatrix);
-        scalarField x((LU.solve(source));
+        scalarField x(LU.solve(source));
         Info<< "LU solve residual " << (squareMatrix*x - source) << endl;
     }
 
