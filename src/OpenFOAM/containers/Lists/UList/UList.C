@@ -34,7 +34,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
-void Foam::UList<T>::assign(const UList<T>& a)
+void Foam::UList<T>::deepCopy(const UList<T>& a)
 {
     if (a.size_ != this->size_)
     {

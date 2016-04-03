@@ -88,7 +88,7 @@ void Foam::UPstream::allToAll
     const label communicator
 )
 {
-    recvData.assign(sendData);
+    recvData.deepCopy(sendData);
 }
 
 

@@ -109,7 +109,7 @@ Foam::sampledPatchInternalField::interpolateField
 
         // Now patchVals holds the interpolated data in patch face order.
         // Collect.
-        SubList<Type>(allPatchVals, patchVals.size(), sz).assign(patchVals);
+        SubList<Type>(allPatchVals, patchVals.size(), sz) = patchVals;
         sz += patchVals.size();
     }
 

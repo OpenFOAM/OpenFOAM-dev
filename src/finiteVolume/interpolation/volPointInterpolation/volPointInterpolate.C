@@ -184,7 +184,7 @@ Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
                 boundaryVals,
                 vf.boundaryField()[patchI].size(),
                 bFaceI
-            ).assign(vf.boundaryField()[patchI]);
+            ) = vf.boundaryField()[patchI];
         }
         else
         {

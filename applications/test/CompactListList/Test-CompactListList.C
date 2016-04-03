@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
         rowSizes[1] = row1.size();
         cll1.resize(rowSizes);
 
-        cll1[0].assign(row0);   //note: operator= will not work since UList
-        cll1[1].assign(row1);
+        cll1[0].deepCopy(row0);
+        cll1[1].deepCopy(row1);
         Info<< "cll1:" << cll1 << endl;
 
         forAll(cll1.m(), i)

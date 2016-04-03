@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ Foam::labelList Foam::SloanRenumber::renumber
                 nbr,
                 pbm[patchI].size(),
                 pbm[patchI].start()-mesh.nInternalFaces()
-            ).assign(pbm[patchI].faceCells());
+            ) = pbm[patchI].faceCells();
         }
     }
     syncTools::swapBoundaryFaceList(mesh, nbr);

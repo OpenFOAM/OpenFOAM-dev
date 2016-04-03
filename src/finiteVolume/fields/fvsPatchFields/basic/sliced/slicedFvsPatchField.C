@@ -38,7 +38,7 @@ Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
     fvsPatchField<Type>(p, iF, Field<Type>())
 {
     // Set the fvsPatchField to a slice of the given complete field
-    UList<Type>::operator=(p.patchSlice(completeField));
+    UList<Type>::shallowCopy(p.patchSlice(completeField));
 }
 
 
@@ -92,7 +92,7 @@ Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
     fvsPatchField<Type>(ptf.patch(), iF, Field<Type>())
 {
     // Transfer the slice from the argument
-    UList<Type>::operator=(ptf);
+    UList<Type>::shallowCopy(ptf);
 }
 
 
@@ -121,7 +121,7 @@ Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
     )
 {
     // Transfer the slice from the argument
-    UList<Type>::operator=(ptf);
+    UList<Type>::shallowCopy(ptf);
 }
 
 
@@ -144,7 +144,7 @@ Foam::slicedFvsPatchField<Type>::~slicedFvsPatchField()
 {
     // Set the fvsPatchField storage pointer to NULL before its destruction
     // to protect the field it a slice of.
-    UList<Type>::operator=(UList<Type>(NULL, 0));
+    UList<Type>::shallowCopy(UList<Type>(NULL, 0));
 }
 
 

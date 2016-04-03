@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -325,7 +325,7 @@ Foam::labelList Foam::simpleGeomDecomp::decompose
 
             label nTotalPoints = 0;
             // Master first
-            SubField<point>(allPoints, points.size()).assign(points);
+            SubField<point>(allPoints, points.size()) = points;
             nTotalPoints += points.size();
 
             // Add slaves
@@ -338,7 +338,7 @@ Foam::labelList Foam::simpleGeomDecomp::decompose
                     allPoints,
                     nbrPoints.size(),
                     nTotalPoints
-                ).assign(nbrPoints);
+                ) = nbrPoints;
                 nTotalPoints += nbrPoints.size();
             }
 
@@ -401,8 +401,8 @@ Foam::labelList Foam::simpleGeomDecomp::decompose
 
             label nTotalPoints = 0;
             // Master first
-            SubField<point>(allPoints, points.size()).assign(points);
-            SubField<scalar>(allWeights, points.size()).assign(weights);
+            SubField<point>(allPoints, points.size()) = points;
+            SubField<scalar>(allWeights, points.size()) = weights;
             nTotalPoints += points.size();
 
             // Add slaves
@@ -416,13 +416,13 @@ Foam::labelList Foam::simpleGeomDecomp::decompose
                     allPoints,
                     nbrPoints.size(),
                     nTotalPoints
-                ).assign(nbrPoints);
+                ) = nbrPoints;
                 SubField<scalar>
                 (
                     allWeights,
                     nbrWeights.size(),
                     nTotalPoints
-                ).assign(nbrWeights);
+                ) = nbrWeights;
                 nTotalPoints += nbrPoints.size();
             }
 

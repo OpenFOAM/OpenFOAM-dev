@@ -152,6 +152,14 @@ inline T* Foam::UList<T>::data()
 }
 
 
+template<class T>
+inline void Foam::UList<T>::shallowCopy(const UList<T>& a)
+{
+    size_ = a.size_;
+    v_ = a.v_;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 

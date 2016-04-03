@@ -497,14 +497,13 @@ void Foam::GAMGSolver::procAgglomerateMatrix
         if (coarsestMatrix.hasDiag())
         {
             scalarField& allDiag = allMatrix.diag();
+
             SubList<scalar>
             (
                 allDiag,
                 coarsestMatrix.diag().size()
-            ).assign
-            (
-                coarsestMatrix.diag()
-            );
+            ) = coarsestMatrix.diag();
+
             forAll(otherMats, i)
             {
                 SubList<scalar>
@@ -512,10 +511,7 @@ void Foam::GAMGSolver::procAgglomerateMatrix
                     allDiag,
                     otherMats[i].diag().size(),
                     cellOffsets[i+1]
-                ).assign
-                (
-                    otherMats[i].diag()
-                );
+                ) = otherMats[i].diag();
             }
         }
         if (coarsestMatrix.hasLower())

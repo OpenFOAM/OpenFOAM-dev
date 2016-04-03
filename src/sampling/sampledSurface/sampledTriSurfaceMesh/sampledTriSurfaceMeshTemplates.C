@@ -67,7 +67,7 @@ Foam::sampledTriSurfaceMesh::sampleField
                 bVals,
                 vField.boundaryField()[patchI].size(),
                 bFaceI
-            ).assign(vField.boundaryField()[patchI]);
+            ) = vField.boundaryField()[patchI];
         }
 
         // Sample in flat boundary field

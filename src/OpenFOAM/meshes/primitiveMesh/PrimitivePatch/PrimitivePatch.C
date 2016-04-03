@@ -582,7 +582,7 @@ operator=
 {
     clearOut();
 
-    FaceList<Face>::operator=(pp);
+    FaceList<Face>::shallowCopy(pp);
 }
 
 

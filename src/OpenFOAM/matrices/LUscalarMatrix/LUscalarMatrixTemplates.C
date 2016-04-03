@@ -51,7 +51,7 @@ void Foam::LUscalarMatrix::solve
             (
                 X,
                 x.size()
-            ).assign(x);
+            ) = x;
 
             for
             (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ void Foam::globalIndex::gather
         allFld.setSize(off.last());
 
         // Assign my local data
-        SubList<Type>(allFld, fld.size(), 0).assign(fld);
+        SubList<Type>(allFld, fld.size(), 0) = fld;
 
         if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
         {
@@ -207,7 +207,7 @@ void Foam::globalIndex::scatter
 {
     if (Pstream::myProcNo(comm) == procIDs[0])
     {
-        fld.assign(SubList<Type>(allFld, off[1]-off[0]));
+        fld.deepCopy(SubList<Type>(allFld, off[1]-off[0]));
 
         if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
         {

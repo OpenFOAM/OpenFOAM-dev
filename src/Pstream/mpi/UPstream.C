@@ -316,7 +316,7 @@ void Foam::UPstream::allToAll
 
     if (!UPstream::parRun())
     {
-        recvData.assign(sendData);
+        recvData.deepCopy(sendData);
     }
     else
     {

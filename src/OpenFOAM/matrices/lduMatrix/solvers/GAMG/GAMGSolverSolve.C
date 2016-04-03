@@ -295,7 +295,7 @@ void Foam::GAMGSolver::Vcycle
             // used
             if (nPreSweeps_)
             {
-                preSmoothedCoarseCorrField.assign(coarseCorrFields[leveli]);
+                preSmoothedCoarseCorrField = coarseCorrFields[leveli];
             }
 
             agglomeration_.prolongField

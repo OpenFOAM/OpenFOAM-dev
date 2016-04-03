@@ -424,14 +424,14 @@ int main(int argc, char *argv[])
             (
                 availablePoints,
                 upp.faceCentres().size()
-            ).assign(upp.faceCentres());
+            ) = upp.faceCentres();
 
             SubList<point>
             (
                 availablePoints,
                 upp.localPoints().size(),
                 upp.faceCentres().size()
-            ).assign(upp.localPoints());
+            ) = upp.localPoints();
 
             point cfo = cf;
             scalar dist = GREAT;
@@ -592,8 +592,8 @@ int main(int argc, char *argv[])
     DynamicList<label> compactPatchId(map.constructSize());
 
     // Insert my coarse local values
-    SubList<point>(compactCoarseSf, nCoarseFaces).assign(localCoarseSf);
-    SubList<point>(compactCoarseCf, nCoarseFaces).assign(localCoarseCf);
+    SubList<point>(compactCoarseSf, nCoarseFaces) = localCoarseSf;
+    SubList<point>(compactCoarseCf, nCoarseFaces) = localCoarseCf;
 
     // Insert my fine local values
     label compactI = 0;
