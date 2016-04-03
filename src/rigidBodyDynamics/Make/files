@@ -1,0 +1,25 @@
+bodies/rigidBody/rigidBody.C
+bodies/masslessBody/masslessBody.C
+
+joints/joint/joint.C
+joints/nullJoint/nullJoint.C
+
+joints/Rx/Rx.C
+joints/Ry/Ry.C
+joints/Rz/Rz.C
+joints/Ra/Ra.C
+joints/Rs/Rs.C
+joints/Rzyx/Rzyx.C
+joints/Rxyz/Rxyz.C
+joints/Ryxz/Ryxz.C
+
+joints/Px/Px.C
+joints/Py/Py.C
+joints/Pz/Pz.C
+joints/Pa/Pa.C
+joints/Pxyz/Pxyz.C
+
+rigidBodyModel/rigidBodyModel.C
+rigidBodyModel/forwardDynamics.C
+
+LIB = $(FOAM_LIBBIN)/librigidBodyDynamics
