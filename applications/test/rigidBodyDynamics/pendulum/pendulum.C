@@ -31,6 +31,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "rigidBodyModel.H"
+#include "masslessBody.H"
 #include "joints.H"
 
 using namespace Foam;
@@ -40,18 +41,40 @@ using namespace RBD;
 
 int main(int argc, char *argv[])
 {
+    bool testMerge = false;
+
     // Create a model for the pendulum
     rigidBodyModel pendulum;
 
     // Join a weight to the origin with a centre of mass -1m below the origin
     // by a hinge which rotates about the z-axis
-    pendulum.join
-    (
-        0,
-        Xt(vector(0, 0, 0)),
-        joint::New(new joints::Rz(pendulum)),
-        rigidBody::New("hinge", 1, vector(0, -1, 0), 0.02*I)
-    );
+    if (testMerge)
+    {
+        label hingeID = pendulum.join
+        (
+            0,
+            Xt(Zero),
+            joint::New(new joints::Rz(pendulum)),
+            autoPtr<rigidBody>(new masslessBody("hinge"))
+        );
+
+        pendulum.merge
+        (
+            hingeID,
+            Xt(vector(0, -1, 0)),
+            rigidBody::New("weight", 1, Zero, 0.02*I)
+        );
+    }
+    else
+    {
+        pendulum.join
+        (
+            0,
+            Xt(Zero),
+            joint::New(new joints::Rz(pendulum)),
+            rigidBody::New("pendulum", 1, vector(0, -1, 0), 0.02*I)
+        );
+    }
 
     // Create the joint-space state fields
     scalarField q(pendulum.nDoF(), Zero);
