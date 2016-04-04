@@ -44,6 +44,7 @@ void Foam::RBD::rigidBodyModel::initializeRootBody()
 {
     bodies_.append(new masslessBody);
     lambda_.append(0);
+    bodyIDs_.insert("root", 0);
     joints_.append(new joints::null(*this));
     XT_.append(spatialTransform());
 
@@ -96,7 +97,10 @@ Foam::label Foam::RBD::rigidBodyModel::join
 )
 {
     // Append the body
+    const rigidBody& body = bodyPtr();
     bodies_.append(bodyPtr);
+    const label bodyID = nBodies()-1;
+    bodyIDs_.insert(body.name(), bodyID);
 
     // If the parentID refers to a merged body find the parent into which it has
     // been merged and set lambda and XT accordingly
@@ -126,7 +130,7 @@ Foam::label Foam::RBD::rigidBodyModel::join
 
     resizeState();
 
-    return nBodies()-1;
+    return bodyID;
 }
 
 
@@ -200,7 +204,10 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     // Merge the sub-body with the parent
     bodies_[sBody.parentID()].merge(sBody);
 
-    return mergedBodyID(mergedBodies_.size() - 1);
+    const label sBodyID = mergedBodyID(mergedBodies_.size() - 1);
+    bodyIDs_.insert(sBody.name(), sBodyID);
+
+    return sBodyID;
 }
 
 

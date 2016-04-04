@@ -53,6 +53,7 @@ SourceFiles
 #include "subBody.H"
 #include "joint.H"
 #include "PtrList.H"
+#include "HashTable.H"
 
 namespace Foam
 {
@@ -88,6 +89,9 @@ protected:
         //  attaching them with fixed joints.  These 'merged' bodies are held on
         //  this list.
         PtrList<subBody> mergedBodies_;
+
+        //- Lookup-table of the IDs of the bodies
+        HashTable<label, word> bodyIDs_;
 
         //- List of indices of the parent of each body
         DynamicList<label> lambda_;
@@ -266,6 +270,9 @@ public:
 
         //- Return the merged body for the given body ID
         inline const subBody& mergedBody(label mergedBodyID) const;
+
+        //- Return the ID of the body with the given name
+        inline label bodyID(const word& name) const;
 
         //- Return the current transform to the global frame for the given body
         spatialTransform X0(const label bodyId) const;
