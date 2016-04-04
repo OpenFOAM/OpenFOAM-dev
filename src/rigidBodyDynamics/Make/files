@@ -1,5 +1,6 @@
 bodies/rigidBody/rigidBody.C
 bodies/masslessBody/masslessBody.C
+bodies/sphere/sphere.C
 
 joints/joint/joint.C
 joints/nullJoint/nullJoint.C
