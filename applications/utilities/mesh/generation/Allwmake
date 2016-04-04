@@ -1,6 +1,9 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 
+# Parse arguments for compilation (at least for error catching)
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
+
 # Get CGAL and boost versions
 . $WM_PROJECT_DIR/etc/config.sh/functions
 _foamEval SOURCE_CGAL_VERSIONS_ONLY=yes \
@@ -15,7 +18,7 @@ wmake -all snappyHexMesh
 
 if [ -n "$CGAL_ARCH_PATH" -o "$cgal_version" = "cgal-system" ]
 then
-    foamyMesh/Allwmake
+    foamyMesh/Allwmake $*
 fi
 
 
