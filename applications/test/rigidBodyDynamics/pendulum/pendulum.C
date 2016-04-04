@@ -32,6 +32,7 @@ Description
 
 #include "rigidBodyModel.H"
 #include "masslessBody.H"
+#include "sphere.H"
 #include "joints.H"
 
 using namespace Foam;
@@ -50,9 +51,9 @@ int main(int argc, char *argv[])
     // by a hinge which rotates about the z-axis
     if (testMerge)
     {
-        label hingeID = pendulum.join
+        pendulum.join
         (
-            0,
+            pendulum.bodyID("root"),
             Xt(Zero),
             joint::New(new joints::Rz(pendulum)),
             autoPtr<rigidBody>(new masslessBody("hinge"))
@@ -60,19 +61,19 @@ int main(int argc, char *argv[])
 
         pendulum.merge
         (
-            hingeID,
+            pendulum.bodyID("hinge"),
             Xt(vector(0, -1, 0)),
-            rigidBody::New("weight", 1, Zero, 0.02*I)
+            autoPtr<rigidBody>(new sphere("weight", 1, 0.05))
         );
     }
     else
     {
         pendulum.join
         (
-            0,
+            pendulum.bodyID("root"),
             Xt(Zero),
             joint::New(new joints::Rz(pendulum)),
-            rigidBody::New("pendulum", 1, vector(0, -1, 0), 0.02*I)
+            rigidBody::New("pendulum", 1, vector(0, -1, 0), 1e-3*I)
         );
     }
 
