@@ -43,18 +43,8 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of Foam classes
-class Istream;
-class Ostream;
-
 namespace RBD
 {
-
-// Forward declaration of friend functions and operators
-class subBody;
-Ostream& operator<<(Ostream&, const subBody&);
-
 
 /*---------------------------------------------------------------------------*\
                          Class subBody Declaration
@@ -68,6 +58,9 @@ class subBody
 
         //- Original body from which this sub-body was constructed
         autoPtr<rigidBody> body_;
+
+        //- Parent body name
+        word parentName_;
 
         //- Parent body ID
         label parentID_;
@@ -86,9 +79,14 @@ public:
         inline subBody
         (
             autoPtr<rigidBody> bodyPtr,
+            const word& parentName,
             const label parentID,
             const spatialTransform& parentXT
         );
+
+
+    //- Destructor
+    virtual ~subBody();
 
 
     // Member Functions
@@ -96,16 +94,17 @@ public:
         //- Return the original body from which this sub-body was constructed
         inline const rigidBody& body() const;
 
+        //- Return the parent body name
+        inline const word& parentName() const;
+
         //- Return the parent body Id
         inline label parentID() const;
 
         //- Return the transform with respect to the parent body
         inline const spatialTransform& parentXT() const;
 
-
-    // IOstream Operators
-
-        //friend Ostream& operator<<(Ostream&, const subBody&);
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

@@ -23,23 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sphere.H"
+#include "subBody.H"
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::RBD::sphere::~sphere()
+Foam::RBD::subBody::~subBody()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::RBD::sphere::write(Ostream& os) const
+void Foam::RBD::subBody::write(Ostream& os) const
 {
-    os.writeKeyword("mass")
-        << m() << token::END_STATEMENT << nl;
+    os.writeKeyword("parentBody")
+        << parentName_ << token::END_STATEMENT << nl;
 
-    os.writeKeyword("radius")
-        << r() << token::END_STATEMENT << nl;
+    os.writeKeyword("transform")
+        << parentXT_ << token::END_STATEMENT << nl;
 }
 
 

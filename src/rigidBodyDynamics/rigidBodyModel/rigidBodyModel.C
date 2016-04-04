@@ -188,6 +188,7 @@ Foam::label Foam::RBD::rigidBodyModel::merge
             new subBody
             (
                 bodyPtr,
+                bodies_[sBody.parentID()].name(),
                 sBody.parentID(),
                 XT & sBody.parentXT()
             )
@@ -195,7 +196,16 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     }
     else
     {
-        sBodyPtr.set(new subBody(bodyPtr, parentID, XT));
+        sBodyPtr.set
+        (
+            new subBody
+            (
+                bodyPtr,
+                bodies_[parentID].name(),
+                parentID,
+                XT
+            )
+        );
     }
 
     const subBody& sBody = sBodyPtr();

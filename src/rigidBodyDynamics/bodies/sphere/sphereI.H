@@ -32,8 +32,17 @@ inline Foam::RBD::sphere::sphere
     const scalar r
 )
 :
-    rigidBody(name, m, Zero, (2.0/5.0)*m*sqr(r)*I)
+    rigidBody(name, m, Zero, (2.0/5.0)*m*sqr(r)*I),
+    r_(r)
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+inline Foam::scalar Foam::RBD::sphere::r() const
+{
+    return r_;
+}
 
 
 // ************************************************************************* //

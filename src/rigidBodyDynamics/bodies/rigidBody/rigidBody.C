@@ -64,4 +64,17 @@ void Foam::RBD::rigidBody::merge(const subBody& subBody)
 }
 
 
+void Foam::RBD::rigidBody::write(Ostream& os) const
+{
+    os.writeKeyword("mass")
+        << m() << token::END_STATEMENT << nl;
+
+    os.writeKeyword("centreOfMass")
+        << c() << token::END_STATEMENT << nl;
+
+    os.writeKeyword("Inertia")
+        << Ic() << token::END_STATEMENT << nl;
+}
+
+
 // ************************************************************************* //

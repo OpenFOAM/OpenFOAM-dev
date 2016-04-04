@@ -41,18 +41,8 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of Foam classes
-class Istream;
-class Ostream;
-
 namespace RBD
 {
-
-// Forward declaration of friend functions and operators
-class masslessBody;
-Ostream& operator<<(Ostream&, const masslessBody&);
-
 
 /*---------------------------------------------------------------------------*\
                          Class masslessBody Declaration
@@ -83,10 +73,8 @@ public:
         //- Return true if this body is a massless component of a composite body
         virtual bool massless() const;
 
-
-    // IOstream Operators
-
-        //friend Ostream& operator<<(Ostream&, const masslessBody&);
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

@@ -39,4 +39,8 @@ bool Foam::RBD::masslessBody::massless() const
 }
 
 
+void Foam::RBD::masslessBody::write(Ostream& os) const
+{}
+
+
 // ************************************************************************* //

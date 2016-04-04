@@ -40,21 +40,11 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of Foam classes
-class Istream;
-class Ostream;
-
 namespace RBD
 {
 
 // Forward declaration of classes
 class subBody;
-
-// Forward declaration of friend functions and operators
-class rigidBody;
-Ostream& operator<<(Ostream&, const rigidBody&);
-
 
 /*---------------------------------------------------------------------------*\
                          Class rigidBody Declaration
@@ -122,10 +112,8 @@ public:
         //- Merge a body into this parent body
         void merge(const subBody&);
 
-
-    // IOstream Operators
-
-        //friend Ostream& operator<<(Ostream&, const rigidBody&);
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

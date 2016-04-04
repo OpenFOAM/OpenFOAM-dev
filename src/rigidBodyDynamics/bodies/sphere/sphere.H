@@ -25,6 +25,7 @@ Class
     Foam::sphere
 
 Description
+    Specialization of rigidBody to construct a sphere given the mass and radius.
 
 SourceFiles
     sphereI.H
@@ -41,18 +42,8 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of Foam classes
-class Istream;
-class Ostream;
-
 namespace RBD
 {
-
-// Forward declaration of friend functions and operators
-class sphere;
-Ostream& operator<<(Ostream&, const sphere&);
-
 
 /*---------------------------------------------------------------------------*\
                          Class sphere Declaration
@@ -62,6 +53,11 @@ class sphere
 :
     public rigidBody
 {
+    // Private member data
+
+        //- Radius
+        scalar r_;
+
 
 public:
 
@@ -77,9 +73,11 @@ public:
 
     // Member Functions
 
-    // IOstream Operators
+        //- Return the radius of the sphere
+        inline scalar r() const;
 
-        //friend Ostream& operator<<(Ostream&, const sphere&);
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 
