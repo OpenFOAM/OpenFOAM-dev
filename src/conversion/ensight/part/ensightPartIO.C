@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ void Foam::ensightPart::writeFieldList
     {
         forAll(idList, i)
         {
-            if (idList[i] >= field.size() || isnan(field[idList[i]]))
+            if (idList[i] >= field.size() || std::isnan(field[idList[i]]))
             {
                 os.writeUndef();
             }
@@ -80,7 +80,7 @@ void Foam::ensightPart::writeFieldList
         // no idList => perNode
         forAll(field, i)
         {
-            if (isnan(field[i]))
+            if (std::isnan(field[i]))
             {
                 os.writeUndef();
             }
