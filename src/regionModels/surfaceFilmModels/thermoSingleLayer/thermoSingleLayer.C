@@ -26,6 +26,7 @@ License
 #include "thermoSingleLayer.H"
 #include "fvcDiv.H"
 #include "fvcLaplacian.H"
+#include "fvcFlux.H"
 #include "fvm.H"
 #include "addToRunTimeSelectionTable.H"
 #include "zeroGradientFvPatchFields.H"
@@ -556,7 +557,7 @@ thermoSingleLayer::thermoSingleLayer
                 IOobject::AUTO_WRITE,
                 false
             ),
-            fvc::interpolate(deltaRho_*U_) & regionMesh().Sf()
+            fvc::flux(deltaRho_*U_)
         );
 
         phi_ == phi0;

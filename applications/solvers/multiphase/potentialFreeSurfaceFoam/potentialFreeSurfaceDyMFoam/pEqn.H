@@ -11,7 +11,7 @@
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
-        (fvc::interpolate(HbyA) & mesh.Sf())
+        fvc::flux(HbyA)
       + rAUf*fvc::ddtCorr(U, Uf)
     );
 

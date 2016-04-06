@@ -10,7 +10,7 @@ if (pimple.nCorrPISO() <= 1)
 surfaceScalarField phiHbyA
 (
     "phiHbyA",
-    (fvc::interpolate(HbyA) & mesh.Sf())
+    fvc::flux(HbyA)
   + rAUf*fvc::ddtCorr(U, phi)
 );
 

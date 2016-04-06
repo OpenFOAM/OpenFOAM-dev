@@ -11,10 +11,7 @@
         dimensionedScalar("0", phi.dimensions(), 0)
     );
 
-    surfaceScalarField phir
-    (
-        mesh.Sf() & fvc::interpolate(UdmModel.Udm())
-    );
+    surfaceScalarField phir(fvc::flux(UdmModel.Udm()));
 
     if (nAlphaSubCycles > 1)
     {

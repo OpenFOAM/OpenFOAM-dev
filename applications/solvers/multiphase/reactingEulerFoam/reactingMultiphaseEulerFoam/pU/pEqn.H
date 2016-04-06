@@ -51,7 +51,7 @@ PtrList<surfaceScalarField> phiFs(phases.size());
                 new surfaceScalarField
                 (
                     IOobject::groupName("phiF", phase.name()),
-                    (fvc::interpolate(rAUs[phasei]*Fs()[phasei]) & mesh.Sf())
+                    fvc::flux(rAUs[phasei]*Fs()[phasei])
                 )
             );
         }
@@ -201,7 +201,7 @@ while (pimple.correct())
             new surfaceScalarField
             (
                 IOobject::groupName("phiHbyA", phase.name()),
-                (fvc::interpolate(HbyAs[phasei]) & mesh.Sf())
+                fvc::flux(HbyAs[phasei])
               + phiCorrCoeff
                *fvc::interpolate
                 (
@@ -209,7 +209,7 @@ while (pimple.correct())
                 )
                *(
                    MRF.absolute(phase.phi().oldTime())
-                 - (fvc::interpolate(phase.U().oldTime()) & mesh.Sf())
+                 - fvc::flux(phase.U().oldTime())
                 )/runTime.deltaT()
               - phigFs[phasei]
             )

@@ -12,7 +12,7 @@
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
-        (fvc::interpolate(rho*HbyA) & mesh.Sf())
+        fvc::flux(rho*HbyA)
     );
 
     MRF.makeRelative(fvc::interpolate(rho), phiHbyA);

@@ -26,6 +26,7 @@ License
 #include "fvcMeshPhi.H"
 #include "fvMesh.H"
 #include "ddtScheme.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

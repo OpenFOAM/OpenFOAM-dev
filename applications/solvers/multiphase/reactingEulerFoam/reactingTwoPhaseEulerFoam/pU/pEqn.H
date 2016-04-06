@@ -65,18 +65,10 @@ tmp<surfaceScalarField> phiF2;
     surfaceScalarField snGradAlpha1(fvc::snGrad(alpha1)*mesh.magSf());
 
     // Phase-1 dispersion, lift and wall-lubrication flux
-    phiF1 =
-    (
-        DbyA1()*snGradAlpha1
-      + (fvc::interpolate(rAU1*F) & mesh.Sf())
-    );
+    phiF1 = DbyA1()*snGradAlpha1 + fvc::flux(rAU1*F);
 
     // Phase-2 dispersion, lift and wall-lubrication flux
-    phiF2 =
-    (
-      - DbyA2()*snGradAlpha1
-      - (fvc::interpolate(rAU2*F) & mesh.Sf())
-    );
+    phiF2 = - DbyA2()*snGradAlpha1 - fvc::flux(rAU2*F);
 
     // Cache the phase diffusivities for implicit treatment in the
     // phase-fraction equation
@@ -175,11 +167,11 @@ while (pimple.correct())
     surfaceScalarField phiHbyA1
     (
         IOobject::groupName("phiHbyA", phase1.name()),
-        (fvc::interpolate(HbyA1) & mesh.Sf())
+        fvc::flux(HbyA1)
       + phiCorrCoeff1*fvc::interpolate(alpha1.oldTime()*rho1.oldTime()*rAU1)
        *(
             MRF.absolute(phi1.oldTime())
-          - (fvc::interpolate(U1.oldTime()) & mesh.Sf())
+          - fvc::flux(U1.oldTime())
         )/runTime.deltaT()
       - phiF1()
       - phig1
@@ -189,11 +181,11 @@ while (pimple.correct())
     surfaceScalarField phiHbyA2
     (
         IOobject::groupName("phiHbyA", phase2.name()),
-        (fvc::interpolate(HbyA2) & mesh.Sf())
+        fvc::flux(HbyA2)
       + phiCorrCoeff2*fvc::interpolate(alpha2.oldTime()*rho2.oldTime()*rAU2)
        *(
             MRF.absolute(phi2.oldTime())
-          - (fvc::interpolate(U2.oldTime()) & mesh.Sf())
+          - fvc::flux(U2.oldTime())
         )/runTime.deltaT()
       - phiF2()
       - phig2

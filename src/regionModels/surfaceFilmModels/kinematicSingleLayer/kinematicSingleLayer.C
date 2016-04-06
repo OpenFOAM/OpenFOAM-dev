@@ -30,6 +30,7 @@ License
 #include "fvcSnGrad.H"
 #include "fvcReconstruct.H"
 #include "fvcVolumeIntegrate.H"
+#include "fvcFlux.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mappedWallPolyPatch.H"
 #include "mapDistribute.H"
@@ -325,7 +326,7 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
                       + fvc::snGrad(pp, "snGrad(p)")*fvc::interpolate(delta_)
                       + fvc::snGrad(delta_)*fvc::interpolate(pp)
                     )
-                  - (fvc::interpolate(rho_*gTan()) & regionMesh().Sf())
+                  - fvc::flux(rho_*gTan())
                 )
             )
         );
@@ -365,15 +366,14 @@ void kinematicSingleLayer::solveThickness
             fvc::snGrad(pu, "snGrad(p)")
           + fvc::snGrad(pp, "snGrad(p)")*fvc::interpolate(delta_)
         )
-      - (fvc::interpolate(rho_*gTan()) & regionMesh().Sf())
+      - fvc::flux(rho_*gTan())
     );
     constrainFilmField(phiAdd, 0.0);
 
     surfaceScalarField phid
     (
         "phid",
-        (fvc::interpolate(U_*rho_) & regionMesh().Sf())
-      - deltarUAf*phiAdd*rhof
+        fvc::flux(U_*rho_) - deltarUAf*phiAdd*rhof
     );
     constrainFilmField(phid, 0.0);
 
@@ -807,7 +807,7 @@ kinematicSingleLayer::kinematicSingleLayer
                 IOobject::AUTO_WRITE,
                 false
             ),
-            fvc::interpolate(deltaRho_*U_) & regionMesh().Sf()
+            fvc::flux(deltaRho_*U_)
         );
 
         phi_ == phi0;

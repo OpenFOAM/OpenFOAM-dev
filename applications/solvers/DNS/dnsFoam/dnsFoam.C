@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
             surfaceScalarField phiHbyA
             (
                 "phiHbyA",
-                (fvc::interpolate(HbyA) & mesh.Sf())
+                fvc::flux(HbyA)
               + rAUf*fvc::ddtCorr(U, phi)
             );
 

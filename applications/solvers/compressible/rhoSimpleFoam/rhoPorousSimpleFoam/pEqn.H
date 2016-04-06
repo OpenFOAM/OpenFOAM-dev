@@ -16,12 +16,7 @@
 
     bool closedVolume = false;
 
-    surfaceScalarField phiHbyA
-    (
-        "phiHbyA",
-        fvc::interpolate(rho*HbyA) & mesh.Sf()
-    );
-
+    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
     MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
     closedVolume = adjustPhi(phiHbyA, U, p);

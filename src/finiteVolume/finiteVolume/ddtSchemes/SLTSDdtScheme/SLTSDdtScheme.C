@@ -599,9 +599,10 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(SLrDeltaT()));
 
+    fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
     fluxFieldType phiCorr
     (
-        mesh().Sf() & (Uf.oldTime() - fvc::interpolate(U.oldTime()))
+        phiUf0 - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
     );
 
     return tmp<fluxFieldType>
@@ -614,12 +615,7 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
                 mesh().time().timeName(),
                 mesh()
             ),
-            this->fvcDdtPhiCoeff
-            (
-                U.oldTime(),
-                (mesh().Sf() & Uf.oldTime()),
-                phiCorr
-            )
+            this->fvcDdtPhiCoeff(U.oldTime(), phiUf0, phiCorr)
            *rDeltaT*phiCorr
         )
     );
@@ -638,7 +634,7 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
 
     fluxFieldType phiCorr
     (
-        phi.oldTime() - (mesh().Sf() & fvc::interpolate(U.oldTime()))
+        phi.oldTime() - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
     );
 
     return tmp<fluxFieldType>
@@ -680,10 +676,8 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
             rho.oldTime()*U.oldTime()
         );
 
-        fluxFieldType phiCorr
-        (
-            mesh().Sf() & (Uf.oldTime() - fvc::interpolate(rhoU0))
-        );
+        fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
+        fluxFieldType phiCorr(phiUf0 - fvc::dotInterpolate(mesh().Sf(), rhoU0));
 
         return tmp<fluxFieldType>
         (
@@ -696,13 +690,7 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
                     mesh().time().timeName(),
                     mesh()
                 ),
-                this->fvcDdtPhiCoeff
-                (
-                    rhoU0,
-                    mesh().Sf() & Uf.oldTime(),
-                    phiCorr
-                )
-               *rDeltaT*phiCorr
+                this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr)*rDeltaT*phiCorr
             )
         );
     }
@@ -749,7 +737,7 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
 
         fluxFieldType phiCorr
         (
-            phi.oldTime() - (mesh().Sf() & fvc::interpolate(rhoU0))
+            phi.oldTime() - fvc::dotInterpolate(mesh().Sf(), rhoU0)
         );
 
         return tmp<fluxFieldType>

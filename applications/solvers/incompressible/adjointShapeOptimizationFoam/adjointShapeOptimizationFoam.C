@@ -128,11 +128,7 @@ int main(int argc, char *argv[])
             volScalarField rAU(1.0/UEqn.A());
             volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
             tUEqn.clear();
-            surfaceScalarField phiHbyA
-            (
-                "phiHbyA",
-                fvc::interpolate(HbyA) & mesh.Sf()
-            );
+            surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
             adjustPhi(phiHbyA, U, p);
 
             // Update the pressure BCs to ensure flux consistency
@@ -175,7 +171,7 @@ int main(int argc, char *argv[])
             //(
             //    fvc::reconstruct
             //    (
-            //        mesh.magSf()*(fvc::snGrad(Ua) & fvc::interpolate(U))
+            //        mesh.magSf()*fvc::dotInterpolate(fvc::snGrad(Ua), U)
             //    )
             //);
 
@@ -204,11 +200,7 @@ int main(int argc, char *argv[])
             volVectorField HbyAa("HbyAa", Ua);
             HbyAa = rAUa*UaEqn.H();
             tUaEqn.clear();
-            surfaceScalarField phiHbyAa
-            (
-                "phiHbyAa",
-                fvc::interpolate(HbyAa) & mesh.Sf()
-            );
+            surfaceScalarField phiHbyAa("phiHbyAa", fvc::flux(HbyAa));
             adjustPhi(phiHbyAa, Ua, pa);
 
             // Non-orthogonal pressure corrector loop

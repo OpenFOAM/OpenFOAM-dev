@@ -3,7 +3,7 @@
     volVectorField HbyA("HbyA", Urel);
     HbyA = rAUrel*UrelEqn.H();
 
-    surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(HbyA) & mesh.Sf());
+    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
     adjustPhi(phiHbyA, Urel, p);
 
     tmp<volScalarField> rAtUrel(rAUrel);

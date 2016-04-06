@@ -50,6 +50,19 @@ namespace Foam
 
 namespace fvc
 {
+    //- Return the face-flux field obtained from the given volVectorField
+    tmp<surfaceScalarField> flux(const volVectorField& vvf);
+
+    //- Return the face-flux field obtained from the given tmp volVectorField
+    tmp<surfaceScalarField> flux(const tmp<volVectorField>& tvvf);
+
+    template<class Type>
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    (
+        const surfaceScalarField&,
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+    );
+
     template<class Type>
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
     (
@@ -120,7 +133,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "fvcFlux.C"
+    #include "fvcFluxTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

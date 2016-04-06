@@ -1227,9 +1227,10 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
             this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime())
            *(
                 (rDtCoef*phi.oldTime() + offCentre_(dphidt0()))
-              - (
-                    mesh().Sf()
-                  & fvc::interpolate(rDtCoef*U.oldTime() + offCentre_(ddt0()))
+              - fvc::dotInterpolate
+                (
+                    mesh().Sf(),
+                    rDtCoef*U.oldTime() + offCentre_(ddt0())
                 )
             )
         )
@@ -1398,9 +1399,10 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
                 this->fvcDdtPhiCoeff(rhoU0, phi.oldTime())
                *(
                     (rDtCoef*phi.oldTime() + offCentre_(dphidt0()))
-                  - (
-                        mesh().Sf()
-                      & fvc::interpolate(rDtCoef*rhoU0 + offCentre_(ddt0()))
+                  - fvc::dotInterpolate
+                    (
+                        mesh().Sf(),
+                        rDtCoef*rhoU0 + offCentre_(ddt0())
                     )
                 )
             )

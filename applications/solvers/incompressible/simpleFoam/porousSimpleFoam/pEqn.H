@@ -10,7 +10,7 @@ else
 volVectorField& HbyA = tHbyA.ref();
 
 tUEqn.clear();
-surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(HbyA) & mesh.Sf());
+surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
 
 MRF.makeRelative(phiHbyA);
 

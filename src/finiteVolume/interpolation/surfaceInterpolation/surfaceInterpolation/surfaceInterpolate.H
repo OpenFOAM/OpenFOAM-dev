@@ -157,6 +157,13 @@ namespace fvc
     );
 
 
+    //- Interpolate field onto faces using 'interpolate(\<name\>)'
+    template<class Type>
+    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    (
+        const GeometricField<Type, fvPatchField, volMesh>& tvf
+    );
+
     //- Interpolate tmp field onto faces using 'interpolate(\<name\>)'
     template<class Type>
     static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
@@ -164,12 +171,6 @@ namespace fvc
         const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
     );
 
-    //- Interpolate field onto faces using 'interpolate(\<name\>)'
-    template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
-    (
-        const GeometricField<Type, fvPatchField, volMesh>& tvf
-    );
 
     //- Interpolate boundary field onto faces (simply a type conversion)
     template<class Type>
@@ -190,6 +191,43 @@ namespace fvc
     {
         return one();
     }
+
+
+    //- Interpolate field onto faces
+    //  and 'dot' with given surfaceVectorField Sf
+    template<class Type>
+    static
+    tmp
+    <
+        GeometricField
+        <
+            typename innerProduct<vector, Type>::type,
+            fvsPatchField,
+            surfaceMesh
+            >
+    > dotInterpolate
+    (
+        const surfaceVectorField& Sf,
+        const GeometricField<Type, fvPatchField, volMesh>& tvf
+    );
+
+    //- Interpolate tmp field onto faces
+    //  and 'dot' with given surfaceVectorField Sf
+    template<class Type>
+    static
+    tmp
+    <
+        GeometricField
+        <
+            typename innerProduct<vector, Type>::type,
+            fvsPatchField,
+            surfaceMesh
+            >
+    > dotInterpolate
+    (
+        const surfaceVectorField& Sf,
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    );
 }
 
 

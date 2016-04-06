@@ -156,7 +156,7 @@ while (pimple.correct())
        *(
             (alphaRhof10 + Vmf)
            *MRF.absolute(phi1.oldTime())/runTime.deltaT()
-          + (fvc::interpolate(U1Eqn.H()) & mesh.Sf())
+          + fvc::flux(U1Eqn.H())
           + Vmf*ddtPhi2
           + Kdf*MRF.absolute(phi2)
           - Ff1()
@@ -174,7 +174,7 @@ while (pimple.correct())
        *(
             (alphaRhof20 + Vmf)
            *MRF.absolute(phi2.oldTime())/runTime.deltaT()
-          + (fvc::interpolate(U2Eqn.H()) & mesh.Sf())
+          + fvc::flux(U2Eqn.H())
           + Vmf*ddtPhi1
           + Kdf*MRF.absolute(phi1)
           - Ff2()

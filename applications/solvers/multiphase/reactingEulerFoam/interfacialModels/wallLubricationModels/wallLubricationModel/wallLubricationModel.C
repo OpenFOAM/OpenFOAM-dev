@@ -25,6 +25,7 @@ License
 
 #include "wallLubricationModel.H"
 #include "phasePair.H"
+#include "fvcFlux.H"
 #include "surfaceInterpolate.H"
 #include "wallFvPatch.H"
 
@@ -91,11 +92,7 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModel::F() const
 
 Foam::tmp<Foam::surfaceScalarField> Foam::wallLubricationModel::Ff() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
-    return
-        fvc::interpolate(pair_.dispersed())
-       *(fvc::interpolate(Fi()) & mesh.Sf());
+    return fvc::interpolate(pair_.dispersed())*fvc::flux(Fi());
 }
 
 

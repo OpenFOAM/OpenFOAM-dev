@@ -140,9 +140,10 @@ void Foam::displacementSBRStressFvMotionSolver::solve()
         (
             Df
            *(
+               fvc::dotInterpolate
                (
-                   cellDisplacement_.mesh().Sf()
-                 & fvc::interpolate(gradCd.T() - gradCd)
+                   cellDisplacement_.mesh().Sf(),
+                   gradCd.T() - gradCd
                )
 
                // Solid-body rotation "lambda" term
@@ -162,9 +163,10 @@ void Foam::displacementSBRStressFvMotionSolver::solve()
         (
             Df
            *(
+               fvc::dotInterpolate
                (
-                   cellDisplacement_.mesh().Sf()
-                 & fvc::interpolate(gradCd + gradCd.T())
+                   cellDisplacement_.mesh().Sf(),
+                   gradCd + gradCd.T()
                )
 
                // Solid-body rotation "lambda" term

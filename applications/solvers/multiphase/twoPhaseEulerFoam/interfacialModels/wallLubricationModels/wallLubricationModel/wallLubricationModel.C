@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "wallLubricationModel.H"
 #include "phasePair.H"
+#include "fvcFlux.H"
 #include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -67,11 +68,7 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModel::F() const
 
 Foam::tmp<Foam::surfaceScalarField> Foam::wallLubricationModel::Ff() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
-    return
-        fvc::interpolate(pair_.dispersed())
-       *(fvc::interpolate(Fi()) & mesh.Sf());
+    return fvc::interpolate(pair_.dispersed())*fvc::flux(Fi());
 }
 
 

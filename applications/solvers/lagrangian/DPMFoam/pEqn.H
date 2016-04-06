@@ -6,7 +6,7 @@
     (
         "phiHbyA",
         (
-           (fvc::interpolate(HbyA) & mesh.Sf())
+           fvc::flux(HbyA)
          + alphacf*rAUcf*fvc::ddtCorr(Uc, phic)
          + phicForces
         )

@@ -97,7 +97,7 @@
 
         phiHbyAs[phasei] =
         (
-            (fvc::interpolate(HbyAs[phasei]) & mesh.Sf())
+            fvc::flux(HbyAs[phasei])
           + rAlphaAUfs[phasei]*fvc::ddtCorr(phase.U(), phase.phi())
         );
         MRF.makeRelative(phiHbyAs[phasei]);

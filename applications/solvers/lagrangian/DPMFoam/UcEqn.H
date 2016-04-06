@@ -14,8 +14,7 @@ surfaceScalarField rAUcf("Dp", fvc::interpolate(rAUc));
 
 surfaceScalarField phicForces
 (
-   (fvc::interpolate(rAUc*cloudVolSUSu/rhoc) & mesh.Sf())
- + rAUcf*(g & mesh.Sf())
+   fvc::flux(rAUc*cloudVolSUSu/rhoc) + rAUcf*(g & mesh.Sf())
 );
 
 if (pimple.momentumPredictor())

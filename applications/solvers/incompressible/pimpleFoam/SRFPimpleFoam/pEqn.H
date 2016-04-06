@@ -5,7 +5,7 @@ HbyA = rAUrel*UrelEqn.H();
 surfaceScalarField phiHbyA
 (
     "phiHbyA",
-    (fvc::interpolate(HbyA) & mesh.Sf())
+    fvc::flux(HbyA)
   + fvc::interpolate(rAUrel)*fvc::ddtCorr(Urel, phi)
 );
 
