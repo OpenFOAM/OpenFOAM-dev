@@ -324,7 +324,9 @@ void Foam::UPstream::allToAll
         (
             MPI_Alltoall
             (
-                sendData.begin(),
+                // NOTE: const_cast is a temporary hack for
+                // backward-compatibility with versions of OpenMPI < 1.7.4
+                const_cast<int*>(sendData.begin()),
                 sizeof(label),
                 MPI_BYTE,
                 recvData.begin(),
