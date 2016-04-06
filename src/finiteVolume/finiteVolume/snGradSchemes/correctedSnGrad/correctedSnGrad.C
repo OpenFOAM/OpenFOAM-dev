@@ -50,9 +50,9 @@ Foam::fv::correctedSnGrad<Type>::fullGradCorrection
 
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf =
-        mesh.nonOrthCorrectionVectors()
-      & linear<typename outerProduct<vector, Type>::type>(mesh).interpolate
+        linear<typename outerProduct<vector, Type>::type>(mesh).dotInterpolate
         (
+            mesh.nonOrthCorrectionVectors(),
             gradScheme<Type>::New
             (
                 mesh,

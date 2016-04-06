@@ -58,7 +58,7 @@ gaussDivScheme<Type>::fvcDiv
     (
         fvc::surfaceIntegrate
         (
-            this->mesh_.Sf() & this->tinterpScheme_().interpolate(vf)
+            this->tinterpScheme_().dotInterpolate(this->mesh_.Sf(), vf)
         )
     );
 
