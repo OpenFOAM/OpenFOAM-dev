@@ -51,32 +51,40 @@ class zero
 {
 public:
 
-    zero()
-    {}
+    typedef zero value_type;
 
-    //- Return 0 for bool
-    inline operator bool() const
-    {
-        return 0;
-    }
+    // Constructors
 
-    //- Return 0 for label
-    inline operator label() const
-    {
-        return 0;
-    }
+        //- Construct null
+        zero()
+        {}
 
-    //- Return 0 for float
-    inline operator float() const
-    {
-        return 0;
-    }
 
-    //- Return 0 for double
-    inline operator double() const
-    {
-        return 0;
-    }
+    // Member operators
+
+        //- Return 0 for bool
+        inline operator bool() const
+        {
+            return 0;
+        }
+
+        //- Return 0 for label
+        inline operator label() const
+        {
+            return 0;
+        }
+
+        //- Return 0 for float
+        inline operator float() const
+        {
+            return 0;
+        }
+
+        //- Return 0 for double
+        inline operator double() const
+        {
+            return 0;
+        }
 };
 
 

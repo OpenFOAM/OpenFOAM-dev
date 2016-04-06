@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,10 +29,15 @@ Description
     unnecessary manipulations for objects which are known to be one at
     compile-time.
 
+SourceFiles
+    oneI.H
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef one_H
 #define one_H
+
+#include "label.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,11 +52,34 @@ class one
 {
 public:
 
+    typedef one value_type;
+
     // Constructors
 
         //- Construct null
         one()
         {}
+
+
+    // Member operators
+
+        //- Return 1 for label
+        inline operator label() const
+        {
+            return 1;
+        }
+
+        //- Return 1 for float
+        inline operator float() const
+        {
+            return 1;
+        }
+
+        //- Return 1 for double
+        inline operator double() const
+        {
+            return 1;
+        }
 };
 
 

@@ -27,9 +27,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::oneField::operator[](const label) const
+inline Foam::one Foam::oneField::operator[](const label) const
 {
-    return scalar(1);
+    return one();
 }
 
 

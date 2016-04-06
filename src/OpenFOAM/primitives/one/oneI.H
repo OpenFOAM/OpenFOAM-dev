@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "one.H"
+#include "scalar.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -31,6 +32,14 @@ namespace Foam
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class arg2>
+class innerProduct<one, arg2>
+{
+public:
+
+    typedef arg2 type;
+};
 
 inline const one& operator*(const one& o, const one&)
 {
@@ -49,6 +58,11 @@ inline const Type& operator*(const one&, const Type& t)
     return t;
 }
 
+template<class Type>
+inline const Type& operator&(const one&, const Type& t)
+{
+    return t;
+}
 
 inline const one& operator/(const one& o, const one&)
 {

@@ -57,6 +57,13 @@ class geometricOneField
 
 public:
 
+    // Public typedefs
+
+        typedef oneField InternalField;
+        typedef oneField PatchFieldType;
+        typedef oneFieldField GeometricBoundaryField;
+        typedef one cmptType;
+
     // Constructors
 
         //- Construct null
@@ -68,13 +75,15 @@ public:
 
         inline const dimensionSet& dimensions() const;
 
-        inline scalar operator[](const label) const;
+        inline one operator[](const label) const;
 
         inline oneField field() const;
 
         inline oneField oldTime() const;
 
-        inline oneFieldField boundaryField() const;
+        inline InternalField internalField() const;
+
+        inline GeometricBoundaryField boundaryField() const;
 };
 
 
