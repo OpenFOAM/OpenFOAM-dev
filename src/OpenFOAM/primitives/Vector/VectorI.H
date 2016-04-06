@@ -137,6 +137,18 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+//- Dummy innerProduct for scalar to allow the construction of vtables for
+//  virtual member functions involving the inner-products of fields
+//  for which a "NotImplemented" specialization for scalar is provided.
+template<class Cmpt>
+class innerProduct<Vector<Cmpt>, scalar>
+{
+public:
+
+    typedef scalar type;
+};
+
+
 template<class Cmpt>
 inline typename innerProduct<Vector<Cmpt>, Vector<Cmpt>>::type
 operator&(const Vector<Cmpt>& v1, const Vector<Cmpt>& v2)
