@@ -44,6 +44,14 @@ namespace RBD
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::masslessBody::clone() const
+{
+    return autoPtr<rigidBody>(new masslessBody(*this));
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::RBD::masslessBody::~masslessBody()

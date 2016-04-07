@@ -81,7 +81,8 @@ int main(int argc, char *argv[])
     */
 
     // Create the pendulum model from dictionary
-    rigidBodyModel pendulum(dictionary(IFstream("pendulum")()));
+    rigidBodyModel pendulum1(dictionary(IFstream("pendulum")()));
+    rigidBodyModel pendulum = pendulum1;
 
     pendulum.write(Info);
 

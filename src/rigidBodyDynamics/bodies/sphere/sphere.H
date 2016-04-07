@@ -77,6 +77,9 @@ public:
             const dictionary& dict
         );
 
+        //- Return clone of this sphere
+        virtual autoPtr<rigidBody> clone() const;
+
 
     //- Destructor
     virtual ~sphere();

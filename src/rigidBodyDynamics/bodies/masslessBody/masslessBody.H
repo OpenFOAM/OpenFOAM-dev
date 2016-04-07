@@ -74,6 +74,9 @@ public:
             const dictionary& dict
         );
 
+        //- Return clone of this masslessBody
+        virtual autoPtr<rigidBody> clone() const;
+
 
     //- Destructor
     virtual ~masslessBody();

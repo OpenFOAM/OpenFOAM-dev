@@ -31,6 +31,14 @@ Foam::RBD::compositeBody::~compositeBody()
 {}
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::compositeBody::clone() const
+{
+    return autoPtr<rigidBody>(new compositeBody(*this));
+}
+
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 const Foam::word& Foam::RBD::compositeBody::type() const

@@ -44,6 +44,14 @@ namespace RBD
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::sphere::clone() const
+{
+    return autoPtr<rigidBody>(new sphere(*this));
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::RBD::sphere::~sphere()

@@ -68,6 +68,9 @@ public:
         //  and the transform relative to the parent
         inline compositeBody(const autoPtr<rigidBody>& bodyPtr);
 
+        //- Return clone of this compositeBody
+        virtual autoPtr<rigidBody> clone() const;
+
 
     //- Destructor
     virtual ~compositeBody();
