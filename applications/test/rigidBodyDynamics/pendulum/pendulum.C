@@ -34,6 +34,7 @@ Description
 #include "masslessBody.H"
 #include "sphere.H"
 #include "joints.H"
+#include "IFstream.H"
 
 using namespace Foam;
 using namespace RBD;
@@ -42,7 +43,8 @@ using namespace RBD;
 
 int main(int argc, char *argv[])
 {
-    bool testMerge = false;
+    /*
+    bool testMerge = true;
 
     // Create a model for the pendulum
     rigidBodyModel pendulum;
@@ -55,7 +57,7 @@ int main(int argc, char *argv[])
         (
             pendulum.bodyID("root"),
             Xt(Zero),
-            joint::New(new joints::Rz(pendulum)),
+            joint::New(new joints::Rz()),
             autoPtr<rigidBody>(new masslessBody("hinge"))
         );
 
@@ -72,10 +74,16 @@ int main(int argc, char *argv[])
         (
             pendulum.bodyID("root"),
             Xt(Zero),
-            joint::New(new joints::Rz(pendulum)),
+            joint::New(new joints::Rz()),
             rigidBody::New("pendulum", 1, vector(0, -1, 0), 1e-3*I)
         );
     }
+    */
+
+    // Create the pendulum model from dictionary
+    rigidBodyModel pendulum(dictionary(IFstream("pendulum")()));
+
+    pendulum.write(Info);
 
     // Create the joint-space state fields
     scalarField q(pendulum.nDoF(), Zero);
@@ -110,7 +118,7 @@ int main(int argc, char *argv[])
 
         qdot += 0.5*deltaT*qddot;
 
-        Info<< "Time << " << t << "s, angle = " << q[0] << "rad" << endl;
+        Info<< "Time " << t << "s, angle = " << q[0] << "rad" << endl;
     }
 
     Info<< "\nEnd\n" << endl;

@@ -72,10 +72,10 @@ public:
     // Constructors
 
         //- Construct for given model and axis
-        Pa(const rigidBodyModel& model, const vector& axis);
+        Pa(const vector& axis);
 
         //- Construct for given model from dictionary
-        Pa(const rigidBodyModel&, const dictionary& dict);
+        Pa(const dictionary& dict);
 
         //- Clone this joint
         virtual autoPtr<joint> clone() const;

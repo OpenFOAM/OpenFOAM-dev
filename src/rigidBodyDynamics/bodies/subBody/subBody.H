@@ -78,7 +78,7 @@ public:
         //  and the transform relative to the parent
         inline subBody
         (
-            autoPtr<rigidBody> bodyPtr,
+            const autoPtr<rigidBody>& bodyPtr,
             const word& parentName,
             const label parentID,
             const spatialTransform& parentXT

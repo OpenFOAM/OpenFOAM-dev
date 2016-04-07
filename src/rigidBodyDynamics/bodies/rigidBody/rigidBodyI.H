@@ -43,8 +43,19 @@ inline Foam::RBD::rigidBody::rigidBody
     const word& name,
     const rigidBodyInertia& rbi
 )
-    :
+:
     rigidBodyInertia(rbi),
+    name_(name)
+{}
+
+
+inline Foam::RBD::rigidBody::rigidBody
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    rigidBodyInertia(dict),
     name_(name)
 {}
 

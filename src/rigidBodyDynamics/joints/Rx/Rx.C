@@ -50,17 +50,17 @@ namespace joints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Rx::Rx(const rigidBodyModel& model)
+Foam::RBD::joints::Rx::Rx()
 :
-    joint(model, 1)
+    joint(1)
 {
     S_[0] = spatialVector(1, 0, 0, 0, 0, 0);
 }
 
 
-Foam::RBD::joints::Rx::Rx(const rigidBodyModel& model, const dictionary& dict)
+Foam::RBD::joints::Rx::Rx(const dictionary& dict)
 :
-    joint(model, 1)
+    joint(1)
 {
     S_[0] = spatialVector(1, 0, 0, 0, 0, 0);
 }

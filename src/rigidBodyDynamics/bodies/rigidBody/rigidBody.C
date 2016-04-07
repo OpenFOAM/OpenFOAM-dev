@@ -25,6 +25,26 @@ License
 
 #include "rigidBody.H"
 #include "subBody.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace RBD
+{
+    defineTypeNameAndDebug(rigidBody, 0);
+    defineRunTimeSelectionTable(rigidBody, dictionary);
+
+    addToRunTimeSelectionTable
+    (
+        rigidBody,
+        rigidBody,
+        dictionary
+    );
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
@@ -37,6 +57,31 @@ Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::rigidBody::New
 )
 {
     return autoPtr<rigidBody>(new rigidBody(name, m, c, Ic));
+}
+
+
+Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::rigidBody::New
+(
+    const word& name,
+    const dictionary& dict
+)
+{
+    const word bodyType(dict.lookup("type"));
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(bodyType);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown rigidBody type "
+            << bodyType << nl << nl
+            << "Valid rigidBody types are : " << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<rigidBody>(cstrIter()(name, dict));
 }
 
 
@@ -72,7 +117,7 @@ void Foam::RBD::rigidBody::write(Ostream& os) const
     os.writeKeyword("centreOfMass")
         << c() << token::END_STATEMENT << nl;
 
-    os.writeKeyword("Inertia")
+    os.writeKeyword("inertia")
         << Ic() << token::END_STATEMENT << nl;
 }
 

@@ -37,4 +37,15 @@ inline Foam::RBD::masslessBody::masslessBody(const word& name)
 {}
 
 
+inline Foam::RBD::masslessBody::masslessBody
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    rigidBody(name, rigidBodyInertia())
+{}
+
+
+
 // ************************************************************************* //

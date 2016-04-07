@@ -25,7 +25,7 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline Foam::RBD::joint::joint(const rigidBodyModel&, const label nDoF)
+inline Foam::RBD::joint::joint(const label nDoF)
 :
     S_(nDoF),
     index_(0),

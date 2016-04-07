@@ -37,6 +37,27 @@ inline Foam::RBD::sphere::sphere
 {}
 
 
+inline Foam::RBD::sphere::sphere
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    rigidBody
+    (
+        name,
+        rigidBodyInertia()
+    ),
+    r_(readScalar(dict.lookup("radius")))
+{
+    const scalar m(readScalar(dict.lookup("mass")));
+    rigidBodyInertia::operator=
+    (
+        rigidBodyInertia(m, Zero, (2.0/5.0)*m*sqr(r_)*I)
+    );
+}
+
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 inline Foam::scalar Foam::RBD::sphere::r() const

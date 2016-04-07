@@ -50,19 +50,15 @@ namespace joints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::null::null(const rigidBodyModel& model)
+Foam::RBD::joints::null::null()
 :
-    joint(model, 0)
+    joint(0)
 {}
 
 
-Foam::RBD::joints::null::null
-(
-    const rigidBodyModel& model,
-    const dictionary& dict
-)
+Foam::RBD::joints::null::null(const dictionary& dict)
 :
-    joint(model, 0)
+    joint(0)
 {}
 
 

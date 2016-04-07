@@ -24,6 +24,25 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "masslessBody.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace RBD
+{
+    defineTypeNameAndDebug(masslessBody, 0);
+
+    addToRunTimeSelectionTable
+    (
+        rigidBody,
+        masslessBody,
+        dictionary
+    );
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 

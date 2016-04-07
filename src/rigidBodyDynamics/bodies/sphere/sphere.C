@@ -24,6 +24,25 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sphere.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace RBD
+{
+    defineTypeNameAndDebug(sphere, 0);
+
+    addToRunTimeSelectionTable
+    (
+        rigidBody,
+        sphere,
+        dictionary
+    );
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 

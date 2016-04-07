@@ -49,6 +49,30 @@ Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joint::New(joint* jointPtr)
 }
 
 
+Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joint::New
+(
+    const dictionary& dict
+)
+{
+    const word bodyType(dict.lookup("type"));
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(bodyType);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown joint type "
+            << bodyType << nl << nl
+            << "Valid joint types are : " << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<joint>(cstrIter()(dict));
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::RBD::joint::~joint()
@@ -57,15 +81,12 @@ Foam::RBD::joint::~joint()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::PtrList<Foam::RBD::joint> Foam::RBD::joint::floating
-(
-    const rigidBodyModel& model
-)
+Foam::PtrList<Foam::RBD::joint> Foam::RBD::joint::floating()
 {
     PtrList<joint> cj(2);
-    cj.set(0, new joints::Pxyz(model));
-    //cj.set(1, new joints::Rs(model));
-    cj.set(1, new joints::Rzyx(model));
+    cj.set(0, new joints::Pxyz());
+    //cj.set(1, new joints::Rs());
+    cj.set(1, new joints::Rzyx());
     return cj;
 }
 

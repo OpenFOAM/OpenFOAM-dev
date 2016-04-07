@@ -61,10 +61,21 @@ class sphere
 
 public:
 
+    //- Runtime type information
+    TypeName("sphere");
+
+
     // Constructors
 
         //- Construct from name, mass and radius
         inline sphere(const word& name, const scalar m, const scalar r);
+
+        //- Construct from dictionary
+        inline sphere
+        (
+            const word& name,
+            const dictionary& dict
+        );
 
 
     //- Destructor

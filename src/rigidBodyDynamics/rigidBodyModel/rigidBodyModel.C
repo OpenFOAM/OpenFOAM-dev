@@ -25,6 +25,7 @@ License
 
 #include "rigidBodyModel.H"
 #include "masslessBody.H"
+#include "compositeBody.H"
 #include "nullJoint.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -42,10 +43,10 @@ namespace RBD
 
 void Foam::RBD::rigidBodyModel::initializeRootBody()
 {
-    bodies_.append(new masslessBody);
+    bodies_.append(new masslessBody("root"));
     lambda_.append(0);
     bodyIDs_.insert("root", 0);
-    joints_.append(new joints::null(*this));
+    joints_.append(new joints::null());
     XT_.append(spatialTransform());
 
     nDoF_ = 0;
@@ -83,6 +84,41 @@ Foam::RBD::rigidBodyModel::rigidBodyModel()
     g_(Zero)
 {
     initializeRootBody();
+}
+
+
+Foam::RBD::rigidBodyModel::rigidBodyModel(const dictionary& dict)
+:
+    g_(Zero)
+{
+    initializeRootBody();
+
+    const dictionary& bodiesDict = dict.subDict("bodies");
+
+    forAllConstIter(IDLList<entry>, bodiesDict, iter)
+    {
+        const dictionary& bodyDict = iter().dict();
+
+        if (bodyDict.found("mergeWith"))
+        {
+            merge
+            (
+                bodyID(bodyDict.lookup("mergeWith")),
+                bodyDict.lookup("transform"),
+                rigidBody::New(iter().keyword(), bodyDict)
+            );
+        }
+        else
+        {
+            join
+            (
+                bodyID(bodyDict.lookup("parent")),
+                bodyDict.lookup("transform"),
+                joint::New(bodyDict.subDict("joint")),
+                rigidBody::New(iter().keyword(), bodyDict)
+            );
+        }
+    }
 }
 
 
@@ -168,6 +204,23 @@ Foam::label Foam::RBD::rigidBodyModel::join
 }
 
 
+void Foam::RBD::rigidBodyModel::makeComposite(const label bodyID)
+{
+    if (!isA<compositeBody>(bodies_[bodyID]))
+    {
+        // Retrieve the un-merged body
+        autoPtr<rigidBody> bodyPtr = bodies_.set(bodyID, NULL);
+
+        // Insert the compositeBody containing the original body
+        bodies_.set
+        (
+            bodyID,
+            new compositeBody(bodyPtr)
+        );
+    }
+}
+
+
 Foam::label Foam::RBD::rigidBodyModel::merge
 (
     const label parentID,
@@ -183,6 +236,9 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     if (merged(parentID))
     {
         const subBody& sBody = mergedBody(parentID);
+
+        makeComposite(sBody.parentID());
+
         sBodyPtr.set
         (
             new subBody
@@ -196,6 +252,8 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     }
     else
     {
+        makeComposite(parentID);
+
         sBodyPtr.set
         (
             new subBody
@@ -235,6 +293,64 @@ Foam::spatialTransform Foam::RBD::rigidBodyModel::X0
     {
         return X0_[bodyId];
     }
+}
+
+
+void Foam::RBD::rigidBodyModel::write(Ostream& os) const
+{
+    os  << indent << "bodies" << nl
+        << indent << token::BEGIN_BLOCK << incrIndent << nl;
+
+    for (label i=1; i<nBodies(); i++)
+    {
+        os  << indent << bodies_[i].name() << nl
+            << indent << token::BEGIN_BLOCK << incrIndent << endl;
+
+        os.writeKeyword("type")
+            << bodies_[i].type() << token::END_STATEMENT << nl;
+
+        os.writeKeyword("parent")
+            << bodies_[lambda_[i]].name() << token::END_STATEMENT << nl;
+
+        bodies_[i].write(os);
+
+        os.writeKeyword("transform")
+            << XT_[i] << token::END_STATEMENT << nl;
+
+        os  << indent << "joint" << nl
+            << indent << token::BEGIN_BLOCK << incrIndent << endl;
+
+        os.writeKeyword("type")
+            << joints_[i].type() << token::END_STATEMENT << nl;
+
+        joints_[i].write(os);
+
+        os  << decrIndent << indent << token::END_BLOCK << endl;
+
+        os  << decrIndent << indent << token::END_BLOCK << endl;
+    }
+
+
+    forAll (mergedBodies_, i)
+    {
+        os  << indent << mergedBodies_[i].name() << nl
+            << indent << token::BEGIN_BLOCK << incrIndent << endl;
+
+        os.writeKeyword("type")
+            << mergedBodies_[i].body().type() << token::END_STATEMENT << nl;
+
+        os.writeKeyword("mergeWith")
+            << mergedBodies_[i].parentName() << token::END_STATEMENT << nl;
+
+        mergedBodies_[i].body().write(os);
+
+        os.writeKeyword("transform")
+            << mergedBodies_[i].parentXT() << token::END_STATEMENT << nl;
+
+        os  << decrIndent << indent << token::END_BLOCK << endl;
+    }
+
+    os  << decrIndent << indent << token::END_BLOCK << nl;
 }
 
 

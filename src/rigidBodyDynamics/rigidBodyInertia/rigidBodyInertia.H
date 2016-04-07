@@ -111,6 +111,9 @@ public:
             const symmTensor& Ic
         );
 
+        //- Construct from dictionary
+        inline rigidBodyInertia(const dictionary& dict);
+
         //- Construct from the components of a spatial tensor
         inline explicit rigidBodyInertia(const spatialTensor& st);
 

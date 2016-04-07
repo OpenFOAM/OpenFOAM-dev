@@ -25,6 +25,7 @@ License
 
 #include "spatialTransform.H"
 #include "transform.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -58,6 +59,14 @@ inline Foam::RBD::rigidBodyInertia::rigidBodyInertia
     m_(m),
     c_(c),
     Ic_(Ic)
+{}
+
+
+inline Foam::RBD::rigidBodyInertia::rigidBodyInertia(const dictionary& dict)
+:
+    m_(readScalar(dict.lookup("mass"))),
+    c_(dict.lookup("centreOfMass")),
+    Ic_(dict.lookup("inertia"))
 {}
 
 

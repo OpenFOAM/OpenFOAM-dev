@@ -23,23 +23,25 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "subBody.H"
+#include "compositeBody.H"
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::RBD::subBody::~subBody()
+Foam::RBD::compositeBody::~compositeBody()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::RBD::subBody::write(Ostream& os) const
+const Foam::word& Foam::RBD::compositeBody::type() const
 {
-    os.writeKeyword("parent")
-        << parentName_ << token::END_STATEMENT << nl;
+    return body_->type();
+}
 
-    os.writeKeyword("transform")
-        << parentXT_ << token::END_STATEMENT << nl;
+
+void Foam::RBD::compositeBody::write(Ostream& os) const
+{
+    body_->write(os);
 }
 
 

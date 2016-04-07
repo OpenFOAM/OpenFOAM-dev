@@ -27,7 +27,7 @@ License
 
 inline Foam::RBD::subBody::subBody
 (
-    autoPtr<rigidBody> bodyPtr,
+    const autoPtr<rigidBody>& bodyPtr,
     const word& parentName,
     const label parentID,
     const spatialTransform& parentXT

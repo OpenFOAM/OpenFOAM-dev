@@ -55,6 +55,10 @@ class masslessBody
 
 public:
 
+    //- Runtime type information
+    TypeName("masslessBody");
+
+
     // Constructors
 
         //- Construct a massless body
@@ -62,6 +66,13 @@ public:
 
         //- Construct a named massless body
         inline masslessBody(const word& name);
+
+        //- Construct from dictionary
+        inline masslessBody
+        (
+            const word& name,
+            const dictionary& dict
+        );
 
 
     //- Destructor

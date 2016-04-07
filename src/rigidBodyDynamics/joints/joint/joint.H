@@ -157,20 +157,16 @@ public:
             autoPtr,
             joint,
             dictionary,
-            (
-                const rigidBodyModel& model,
-                const dictionary& dict
-            ),
-            (model, dict)
+            (const dictionary& dict),
+            (dict)
         );
 
 
     // Constructors
 
-        //- Construct joint for given rigidBodyModel
-        //  setting the size of the motion sub-space
+        //- Construct joint setting the size of the motion sub-space
         //  to the given degrees of freedom of the joint
-        inline joint(const rigidBodyModel&, const label nDoF);
+        inline joint(const label nDoF);
 
         //- Clone this joint (needed by PtrList)
         virtual autoPtr<joint> clone() const = 0;
@@ -185,12 +181,8 @@ public:
         //- Simple selector to return an autoPtr<joint> of the given joint*
         static autoPtr<joint> New(joint* jointPtr);
 
-        //- Select constructed from dictionary
-        static autoPtr<joint> New
-        (
-            const rigidBodyModel& model,
-            const dictionary& dict
-        );
+        //- Select from dictionary
+        static autoPtr<joint> New(const dictionary& dict);
 
 
     // Member Functions
@@ -216,7 +208,7 @@ public:
         inline const List<spatialVector>& S() const;
 
         //- Return a list of joints needed to emulate a floating body
-        static PtrList<joint> floating(const rigidBodyModel& model);
+        static PtrList<joint> floating();
 
         //- Update the rigidBodyModel state for the joint given
         //  the joint state q, w and velocity qDot

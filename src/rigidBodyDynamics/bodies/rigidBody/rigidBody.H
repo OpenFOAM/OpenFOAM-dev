@@ -35,6 +35,8 @@ SourceFiles
 #define RBD_rigidBody_H
 
 #include "rigidBodyInertia.H"
+#include "dictionary.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,6 +64,22 @@ class rigidBody
 
 public:
 
+    //- Runtime type information
+    TypeName("rigidBody");
+
+
+    // Declare run-time constructor selection table
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            rigidBody,
+            dictionary,
+            (const word& name, const dictionary& dict),
+            (name, dict)
+        );
+
+
     // Constructors
 
         //- Construct from mass, centre of mass and moment of inertia tensor
@@ -81,6 +99,13 @@ public:
             const rigidBodyInertia& rbi
         );
 
+        //- Construct from dictionary
+        inline rigidBody
+        (
+            const word& name,
+            const dictionary& dict
+        );
+
         //- Return clone of this rigidBody
         inline autoPtr<rigidBody> clone() const;
 
@@ -94,6 +119,13 @@ public:
             const scalar& m,
             const vector& c,
             const symmTensor& Ic
+        );
+
+        //- Select constructed from name and dictionary
+        static autoPtr<rigidBody> New
+        (
+            const word& name,
+            const dictionary& dict
         );
 
 

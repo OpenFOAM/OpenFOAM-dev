@@ -217,7 +217,7 @@ inline Foam::Ostream& Foam::operator<<
     const spatialTransform& X
 )
 {
-    os << X.E() << token::SPACE << X.r() << endl;
+    os << X.E() << token::SPACE << X.r();
     return os;
 }
 

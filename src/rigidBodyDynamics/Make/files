@@ -1,5 +1,6 @@
 bodies/rigidBody/rigidBody.C
 bodies/masslessBody/masslessBody.C
+bodies/compositeBody/compositeBody.C
 bodies/subBody/subBody.C
 bodies/sphere/sphere.C
 

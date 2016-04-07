@@ -73,10 +73,10 @@ public:
     // Constructors
 
         //- Construct for given model
-        Rs(const rigidBodyModel& model);
+        Rs();
 
         //- Construct for given model from dictionary
-        Rs(const rigidBodyModel&, const dictionary& dict);
+        Rs(const dictionary& dict);
 
         //- Clone this joint
         virtual autoPtr<joint> clone() const;

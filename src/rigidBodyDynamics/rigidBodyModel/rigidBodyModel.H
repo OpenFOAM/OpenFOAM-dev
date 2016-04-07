@@ -66,12 +66,17 @@ namespace RBD
 
 class rigidBodyModel
 {
-    //- Initialize the model with the root-body which is a fixed massless body
-    //  at the origin.
-    void initializeRootBody();
+    // Private member functions
 
-    //- Resize the state fields following the joining of a body
-    void resizeState();
+        //- Initialize the model with the root-body
+        //  which is a fixed massless bodyat the origin.
+        void initializeRootBody();
+
+        //- Resize the state fields following the joining of a body
+        void resizeState();
+
+        //- Convert the body with given ID into a composite-body
+        void makeComposite(const label bodyID);
 
 
 protected:
@@ -182,6 +187,9 @@ public:
 
         //- Null-constructor which adds the single root-body at the origin
         rigidBodyModel();
+
+        //- Construct from dictionary
+        rigidBodyModel(const dictionary& dict);
 
 
     //- Destructor
@@ -301,6 +309,9 @@ public:
             const scalarField& qDot,
             const scalarField& qDdot
         ) const;
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

@@ -22,29 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RBD::joints::Ryxz
+    Foam::compositeBody
 
 Description
-    Spherical joint for rotation about the x/y/z-axes using Euler-angles
-    in the order y, x, z.
-
-    Reference:
-    \verbatim
-        Featherstone, R. (2008).
-        Rigid body dynamics algorithms.
-        Springer.
-        Chapter 4.
-    \endverbatim
+    This specialized rigidBody holds the original body after it has been merged
+    into a parent.
 
 SourceFiles
-    Ryxz.C
+    compositeBodyI.H
+    compositeBody.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RBD_joints_Ryxz_H
-#define RBD_joints_Ryxz_H
+#ifndef RBD_compositeBody_H
+#define RBD_compositeBody_H
 
-#include "joint.H"
+#include "rigidBody.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,58 +45,56 @@ namespace Foam
 {
 namespace RBD
 {
-namespace joints
-{
 
 /*---------------------------------------------------------------------------*\
-                         Class Ryxz Declaration
+                         Class compositeBody Declaration
 \*---------------------------------------------------------------------------*/
 
-class Ryxz
+class compositeBody
 :
-    public joint
+    public rigidBody
 {
+    // Private data
+
+        //- Original body from which this composite-body was constructed
+        autoPtr<rigidBody> body_;
 
 public:
 
-    //- Runtime type information
-    TypeName("Ryxz");
-
-
     // Constructors
 
-        //- Construct for given model
-        Ryxz();
-
-        //- Construct for given model from dictionary
-        Ryxz(const dictionary& dict);
-
-        //- Clone this joint
-        virtual autoPtr<joint> clone() const;
+        //- Construct a merged version of the given rigidBody
+        //  providing the ID of the parent body to which this will be merged
+        //  and the transform relative to the parent
+        inline compositeBody(const autoPtr<rigidBody>& bodyPtr);
 
 
     //- Destructor
-    virtual ~Ryxz();
+    virtual ~compositeBody();
 
 
     // Member Functions
 
-        //- Update the model state for this joint
-        virtual void jcalc
-        (
-            joint::XSvc& J,
-            const scalarField& q,
-            const scalarField& w,
-            const scalarField& qDot
-        ) const;
+        //- Return the type name of the original body
+        virtual const word& type() const;
+
+        //- Return the original body from which this composite-body
+        //  was constructed
+        inline const rigidBody& body() const;
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace joints
 } // End namespace RBD
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "compositeBodyI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

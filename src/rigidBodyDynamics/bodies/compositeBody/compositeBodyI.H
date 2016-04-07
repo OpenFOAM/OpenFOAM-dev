@@ -23,23 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "subBody.H"
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::RBD::subBody::~subBody()
+inline Foam::RBD::compositeBody::compositeBody
+(
+    const autoPtr<rigidBody>& bodyPtr
+)
+:
+    rigidBody(bodyPtr()),
+    body_(bodyPtr)
 {}
 
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::RBD::subBody::write(Ostream& os) const
+inline const Foam::RBD::rigidBody& Foam::RBD::compositeBody::body() const
 {
-    os.writeKeyword("parent")
-        << parentName_ << token::END_STATEMENT << nl;
-
-    os.writeKeyword("transform")
-        << parentXT_ << token::END_STATEMENT << nl;
+    return body_();
 }
 
 
