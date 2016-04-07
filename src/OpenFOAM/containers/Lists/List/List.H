@@ -208,6 +208,11 @@ public:
             //- Return subscript-checked element of UList.
             inline T& newElmt(const label);
 
+
+        //- Disallow implicit shallowCopy
+        void shallowCopy(const UList<T>&) = delete;
+
+
     // Member operators
 
         //- Assignment from UList operator. Takes linear time.

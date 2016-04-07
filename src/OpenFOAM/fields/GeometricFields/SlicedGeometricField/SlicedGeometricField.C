@@ -158,7 +158,7 @@ slicedBoundaryField
                     DimensionedField<Type, GeoMesh>::null()
                 )
             );
-            bf[patchi].shallowCopy(bField[patchi]);
+            bf[patchi].UList<Type>::shallowCopy(bField[patchi]);
         }
     }
 
