@@ -25,12 +25,6 @@ License
 
 #include "subBody.H"
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::RBD::subBody::~subBody()
-{}
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 void Foam::RBD::subBody::write(Ostream& os) const

@@ -107,7 +107,7 @@ public:
         );
 
         //- Return clone of this rigidBody
-        inline autoPtr<rigidBody> clone() const;
+        virtual autoPtr<rigidBody> clone() const;
 
 
     // Selectors

@@ -33,7 +33,6 @@ inline Foam::RBD::subBody::subBody
     const spatialTransform& parentXT
 )
 :
-    rigidBody(bodyPtr()),
     body_(bodyPtr),
     parentName_(parentName),
     parentID_(parentID),
@@ -41,11 +40,23 @@ inline Foam::RBD::subBody::subBody
 {}
 
 
+inline Foam::autoPtr<Foam::RBD::subBody> Foam::RBD::subBody::clone() const
+{
+    return autoPtr<subBody>(new subBody(*this));
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::RBD::rigidBody& Foam::RBD::subBody::body() const
 {
     return body_();
+}
+
+
+inline const Foam::word& Foam::RBD::subBody::name() const
+{
+    return body_->name();
 }
 
 

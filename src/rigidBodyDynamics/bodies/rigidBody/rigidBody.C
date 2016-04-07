@@ -46,6 +46,14 @@ namespace RBD
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::rigidBody::clone() const
+{
+    return autoPtr<rigidBody>(new rigidBody(*this));
+}
+
+
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::rigidBody::New
@@ -104,7 +112,7 @@ void Foam::RBD::rigidBody::merge(const subBody& subBody)
     *this = rigidBody
     (
         name(),
-        *this + transform(subBody.parentXT(), subBody)
+        *this + transform(subBody.parentXT(), subBody.body())
     );
 }
 

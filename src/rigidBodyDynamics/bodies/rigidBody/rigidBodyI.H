@@ -60,12 +60,6 @@ inline Foam::RBD::rigidBody::rigidBody
 {}
 
 
-inline Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::rigidBody::clone() const
-{
-    return autoPtr<rigidBody>(new rigidBody(*this));
-}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::word& Foam::RBD::rigidBody::name() const

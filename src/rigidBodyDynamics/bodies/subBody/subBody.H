@@ -51,8 +51,6 @@ namespace RBD
 \*---------------------------------------------------------------------------*/
 
 class subBody
-:
-    public rigidBody
 {
     // Private data
 
@@ -84,15 +82,17 @@ public:
             const spatialTransform& parentXT
         );
 
-
-    //- Destructor
-    virtual ~subBody();
+        //- Return clone of this subBody
+        inline autoPtr<subBody> clone() const;
 
 
     // Member Functions
 
         //- Return the original body from which this sub-body was constructed
         inline const rigidBody& body() const;
+
+        //- Return the body name
+        inline const word& name() const;
 
         //- Return the parent body name
         inline const word& parentName() const;
@@ -104,7 +104,7 @@ public:
         inline const spatialTransform& parentXT() const;
 
         //- Write
-        virtual void write(Ostream&) const;
+        void write(Ostream&) const;
 };
 
 
