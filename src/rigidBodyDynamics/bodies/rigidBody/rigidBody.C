@@ -119,6 +119,9 @@ void Foam::RBD::rigidBody::merge(const subBody& subBody)
 
 void Foam::RBD::rigidBody::write(Ostream& os) const
 {
+    os.writeKeyword("type")
+        << type() << token::END_STATEMENT << nl;
+
     os.writeKeyword("mass")
         << m() << token::END_STATEMENT << nl;
 

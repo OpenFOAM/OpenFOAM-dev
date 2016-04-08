@@ -48,6 +48,12 @@ namespace RBD
 // Forward declaration of classes
 class subBody;
 
+// Forward declaration of friend functions and operators
+class rigidBody;
+
+inline Ostream& operator<<(Ostream&, const rigidBody&);
+
+
 /*---------------------------------------------------------------------------*\
                          Class rigidBody Declaration
 \*---------------------------------------------------------------------------*/
@@ -146,6 +152,11 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Ostream Operator
+
+        friend Ostream& operator<<(Ostream&, const rigidBody&);
 };
 
 

@@ -67,7 +67,10 @@ bool Foam::RBD::masslessBody::massless() const
 
 
 void Foam::RBD::masslessBody::write(Ostream& os) const
-{}
+{
+    os.writeKeyword("type")
+        << type() << token::END_STATEMENT << nl;
+}
 
 
 // ************************************************************************* //

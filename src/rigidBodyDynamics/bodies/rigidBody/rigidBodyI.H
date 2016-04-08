@@ -68,4 +68,13 @@ inline const Foam::word& Foam::RBD::rigidBody::name() const
 }
 
 
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+inline Foam::Ostream& Foam::RBD::operator<<(Ostream& os, const rigidBody& rb)
+{
+    rb.write(os);
+    return os;
+}
+
+
 // ************************************************************************* //

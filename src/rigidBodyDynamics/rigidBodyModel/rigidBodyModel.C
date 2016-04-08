@@ -344,13 +344,10 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
         os  << indent << bodies_[i].name() << nl
             << indent << token::BEGIN_BLOCK << incrIndent << endl;
 
-        os.writeKeyword("type")
-            << bodies_[i].type() << token::END_STATEMENT << nl;
+        bodies_[i].write(os);
 
         os.writeKeyword("parent")
             << bodies_[lambda_[i]].name() << token::END_STATEMENT << nl;
-
-        bodies_[i].write(os);
 
         os.writeKeyword("transform")
             << XT_[i] << token::END_STATEMENT << nl;
@@ -366,16 +363,13 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
         os  << indent << mergedBodies_[i].name() << nl
             << indent << token::BEGIN_BLOCK << incrIndent << endl;
 
-        os.writeKeyword("type")
-            << mergedBodies_[i].body().type() << token::END_STATEMENT << nl;
-
-        os.writeKeyword("mergeWith")
-            << mergedBodies_[i].parentName() << token::END_STATEMENT << nl;
-
         mergedBodies_[i].body().write(os);
 
         os.writeKeyword("transform")
             << mergedBodies_[i].parentXT() << token::END_STATEMENT << nl;
+
+        os.writeKeyword("mergeWith")
+            << mergedBodies_[i].parentName() << token::END_STATEMENT << nl;
 
         os  << decrIndent << indent << token::END_BLOCK << endl;
     }
