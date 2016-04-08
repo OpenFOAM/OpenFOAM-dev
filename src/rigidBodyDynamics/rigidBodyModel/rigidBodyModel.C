@@ -229,7 +229,7 @@ Foam::label Foam::RBD::rigidBodyModel::join
         );
     }
 
-    // For the final joint in the set add the read body
+    // For the final joint in the set add the real body
     parent = join_
     (
         parent,
@@ -237,6 +237,9 @@ Foam::label Foam::RBD::rigidBodyModel::join
         autoPtr<joint>(cJointPtr.ptr()),
         bodyPtr
     );
+
+    // Set the properties of the last joint in the list to those set
+    // by rigidBodyModel
     cJoint.setLastJoint();
 
     return parent;
@@ -340,8 +343,11 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
     os  << indent << "bodies" << nl
         << indent << token::BEGIN_BLOCK << incrIndent << nl;
 
+    // Write the moving bodies
     for (label i=1; i<nBodies(); i++)
     {
+        // Do not write joint-bodies created automatically to support elements
+        // of composite joints
         if (!isType<jointBody>(bodies_[i]))
         {
             os  << indent << bodies_[i].name() << nl
@@ -361,6 +367,7 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
         }
     }
 
+    // Write the bodies merged into the parent bodies for efficiency
     forAll(mergedBodies_, i)
     {
         os  << indent << mergedBodies_[i].name() << nl
