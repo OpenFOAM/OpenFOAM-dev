@@ -1,4 +1,4 @@
-bodies0
+bodies
 {
     pendulum
     {
@@ -10,12 +10,12 @@ bodies0
         transform       (1 0 0 0 1 0 0 0 1) (0 0 0);
         joint
         {
-            type            Rz;
+            type            floating;
         }
     }
 }
 
-bodies
+bodies0
 {
     hinge
     {

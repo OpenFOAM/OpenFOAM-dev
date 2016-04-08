@@ -26,6 +26,7 @@ License
 #include "rigidBodyModel.H"
 #include "masslessBody.H"
 #include "compositeBody.H"
+#include "jointBody.H"
 #include "nullJoint.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -215,7 +216,7 @@ Foam::label Foam::RBD::rigidBodyModel::join
     label parent = parentID;
     joints::composite& cJoint = cJointPtr();
 
-    // For all but the final joint in the set add a masslessBody with the
+    // For all but the final joint in the set add a jointBody with the
     // joint and transform
     for (label j=0; j<cJoint.size()-1; j++)
     {
@@ -224,7 +225,7 @@ Foam::label Foam::RBD::rigidBodyModel::join
             parent,
             j == 0 ? XT : spatialTransform(),
             cJoint[j].clone(),
-            autoPtr<rigidBody>(new masslessBody)
+            autoPtr<rigidBody>(new jointBody)
         );
     }
 
@@ -341,24 +342,26 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
 
     for (label i=1; i<nBodies(); i++)
     {
-        os  << indent << bodies_[i].name() << nl
-            << indent << token::BEGIN_BLOCK << incrIndent << endl;
+        if (!isType<jointBody>(bodies_[i]))
+        {
+            os  << indent << bodies_[i].name() << nl
+                << indent << token::BEGIN_BLOCK << incrIndent << endl;
 
-        bodies_[i].write(os);
+            bodies_[i].write(os);
 
-        os.writeKeyword("parent")
-            << bodies_[lambda_[i]].name() << token::END_STATEMENT << nl;
+            os.writeKeyword("parent")
+                << bodies_[lambda_[i]].name() << token::END_STATEMENT << nl;
 
-        os.writeKeyword("transform")
-            << XT_[i] << token::END_STATEMENT << nl;
+            os.writeKeyword("transform")
+                << XT_[i] << token::END_STATEMENT << nl;
 
-        os  << indent << "joint" << nl << joints_[i] << endl;
+            os  << indent << "joint" << nl << joints_[i] << endl;
 
-        os  << decrIndent << indent << token::END_BLOCK << endl;
+            os  << decrIndent << indent << token::END_BLOCK << endl;
+        }
     }
 
-
-    forAll (mergedBodies_, i)
+    forAll(mergedBodies_, i)
     {
         os  << indent << mergedBodies_[i].name() << nl
             << indent << token::BEGIN_BLOCK << incrIndent << endl;
