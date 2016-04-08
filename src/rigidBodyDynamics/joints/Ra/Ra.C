@@ -54,7 +54,7 @@ Foam::RBD::joints::Ra::Ra(const vector& axis)
 :
     joint(1)
 {
-    S_[0] = spatialVector(axis, Zero);
+    S_[0] = spatialVector(axis/mag(axis), Zero);
 }
 
 
@@ -62,7 +62,8 @@ Foam::RBD::joints::Ra::Ra(const dictionary& dict)
 :
     joint(1)
 {
-    S_[0] = spatialVector(dict.lookup("axis"), Zero);
+    vector axis(dict.lookup("axis"));
+    S_[0] = spatialVector(axis/mag(axis), Zero);
 }
 
 
@@ -92,6 +93,14 @@ void Foam::RBD::joints::Ra::jcalc
     J.S1 = S_[0];
     J.v = S_[0]*qDot[qIndex_];
     J.c = Zero;
+}
+
+
+void Foam::RBD::joints::Ra::write(Ostream& os) const
+{
+    joint::write(os);
+    os.writeKeyword("axis")
+        << S_[0].w() << token::END_STATEMENT << nl;
 }
 
 

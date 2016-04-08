@@ -107,4 +107,26 @@ inline void Foam::RBD::joint::operator()
 }
 
 
+Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joint::iNew::operator()
+(
+    Istream& is
+) const
+{
+    dictionary dict(is);
+    return New(dict);
+}
+
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+inline Foam::Ostream& Foam::RBD::operator<<(Ostream& os, const joint& j)
+{
+    os  << indent << token::BEGIN_BLOCK << incrIndent << endl;
+    j.write(os);
+    os  << decrIndent << indent << token::END_BLOCK;
+
+    return os;
+}
+
+
 // ************************************************************************* //

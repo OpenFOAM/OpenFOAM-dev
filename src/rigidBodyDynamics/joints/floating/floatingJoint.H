@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RBD::joints::Ra
+    Foam::RBD::joints::floating
 
 Description
-    Revolute joint for rotation about the specified arbitrary axis.
+    Prismatic joint for translation along the specified arbitrary axis.
 
     Reference:
     \verbatim
@@ -36,14 +36,14 @@ Description
     \endverbatim
 
 SourceFiles
-    Ra.C
+    floating.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RBD_joints_Ra_H
-#define RBD_joints_Ra_H
+#ifndef RBD_joints_floating_H
+#define RBD_joints_floating_H
 
-#include "joint.H"
+#include "compositeJoint.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,46 +55,42 @@ namespace joints
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Ra Declaration
+                         Class floating Declaration
 \*---------------------------------------------------------------------------*/
 
-class Ra
+class floating
 :
-    public joint
+    public composite
 {
+    // Private member functions
+
+        //- Return a list of joints needed to emulate a floating body
+        static autoPtr<composite> sixDoF();
+
 
 public:
 
     //- Runtime type information
-    TypeName("Ra");
+    TypeName("floating");
 
 
     // Constructors
 
-        //- Construct for given model and axis
-        Ra(const vector& axis);
+        //- Construct
+        floating();
 
         //- Construct for given model from dictionary
-        Ra(const dictionary& dict);
+        floating(const dictionary& dict);
 
         //- Clone this joint
         virtual autoPtr<joint> clone() const;
 
 
     //- Destructor
-    virtual ~Ra();
+    virtual ~floating();
 
 
     // Member Functions
-
-        //- Update the model state for this joint
-        virtual void jcalc
-        (
-            joint::XSvc& J,
-            const scalarField& q,
-            const scalarField& w,
-            const scalarField& qDot
-        ) const;
 
         //- Write
         virtual void write(Ostream&) const;

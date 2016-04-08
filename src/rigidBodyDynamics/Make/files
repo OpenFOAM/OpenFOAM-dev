@@ -5,7 +5,9 @@ bodies/subBody/subBody.C
 bodies/sphere/sphere.C
 
 joints/joint/joint.C
-joints/nullJoint/nullJoint.C
+joints/null/nullJoint.C
+joints/composite/compositeJoint.C
+joints/floating/floatingJoint.C
 
 joints/Rx/Rx.C
 joints/Ry/Ry.C

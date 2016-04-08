@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RBD::joints::Ra
+    Foam::RBD::joints::composite
 
 Description
-    Revolute joint for rotation about the specified arbitrary axis.
+    Prismatic joint for translation along the specified arbitrary axis.
 
     Reference:
     \verbatim
@@ -36,12 +36,12 @@ Description
     \endverbatim
 
 SourceFiles
-    Ra.C
+    composite.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RBD_joints_Ra_H
-#define RBD_joints_Ra_H
+#ifndef RBD_joints_composite_H
+#define RBD_joints_composite_H
 
 #include "joint.H"
 
@@ -51,41 +51,58 @@ namespace Foam
 {
 namespace RBD
 {
+
+// Forward declaration of classes
+class rigidBodyModel;
+
 namespace joints
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Ra Declaration
+                         Class composite Declaration
 \*---------------------------------------------------------------------------*/
 
-class Ra
+class composite
 :
+    public PtrList<joint>,
     public joint
 {
+    // Private member functions
+
+        //- Set the properties of the last joint following construction
+        //  of the body containing the joint
+        void setLastJoint();
+
 
 public:
 
     //- Runtime type information
-    TypeName("Ra");
+    TypeName("composite");
+
+    //- Allow the rigidBodyModel class to set the last joint state
+    friend class Foam::RBD::rigidBodyModel;
 
 
     // Constructors
 
-        //- Construct for given model and axis
-        Ra(const vector& axis);
+        //- Construct for given PtrList<joint>
+        composite(const PtrList<joint>& joints);
 
         //- Construct for given model from dictionary
-        Ra(const dictionary& dict);
+        composite(const dictionary& dict);
 
         //- Clone this joint
         virtual autoPtr<joint> clone() const;
 
 
     //- Destructor
-    virtual ~Ra();
+    virtual ~composite();
 
 
     // Member Functions
+
+        //- Return the number of additional state variables need by this joint
+        virtual label nw() const;
 
         //- Update the model state for this joint
         virtual void jcalc

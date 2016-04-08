@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Pa.H"
+#include "compositeJoint.H"
 #include "rigidBodyModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -35,12 +35,12 @@ namespace RBD
 {
 namespace joints
 {
-    defineTypeNameAndDebug(Pa, 0);
+    defineTypeNameAndDebug(composite, 0);
 
     addToRunTimeSelectionTable
     (
         joint,
-        Pa,
+        composite,
         dictionary
     );
 }
@@ -48,40 +48,51 @@ namespace joints
 }
 
 
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+void Foam::RBD::joints::composite::setLastJoint()
+{
+    last().joint::operator=(*this);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Pa::Pa(const vector& axis)
+Foam::RBD::joints::composite::composite(const PtrList<joint>& joints)
 :
-    joint(1)
-{
-    S_[0] = spatialVector(Zero, axis/mag(axis));
-}
+    PtrList<joint>(joints),
+    joint(last())
+{}
 
 
-Foam::RBD::joints::Pa::Pa(const dictionary& dict)
+Foam::RBD::joints::composite::composite(const dictionary& dict)
 :
-    joint(1)
-{
-    vector axis(dict.lookup("axis"));
-    S_[0] = spatialVector(Zero, axis/mag(axis));
-}
+    PtrList<joint>(dict.lookup("joints")),
+    joint(last())
+{}
 
 
-Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joints::Pa::clone() const
+Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joints::composite::clone() const
 {
-    return autoPtr<joint>(new Pa(*this));
+    return autoPtr<joint>(new composite(*this));
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Pa::~Pa()
+Foam::RBD::joints::composite::~composite()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::RBD::joints::Pa::jcalc
+Foam::label Foam::RBD::joints::composite::nw() const
+{
+    return last().nw();
+}
+
+
+void Foam::RBD::joints::composite::jcalc
 (
     joint::XSvc& J,
     const scalarField& q,
@@ -89,18 +100,15 @@ void Foam::RBD::joints::Pa::jcalc
     const scalarField& qDot
 ) const
 {
-    J.X = Xt(S_[0].l()*q[qIndex_]);
-    J.S1 = S_[0];
-    J.v = S_[0]*qDot[qIndex_];
-    J.c = Zero;
+    last().jcalc(J, q, w, qDot);
 }
 
 
-void Foam::RBD::joints::Pa::write(Ostream& os) const
+void Foam::RBD::joints::composite::write(Ostream& os) const
 {
     joint::write(os);
-    os.writeKeyword("axis")
-        << S_[0].l() << token::END_STATEMENT << nl;
+    os.writeKeyword("joints");
+    os << static_cast<const PtrList<joint>&>(*this);
 }
 
 

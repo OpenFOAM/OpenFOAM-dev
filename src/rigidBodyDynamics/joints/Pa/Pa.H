@@ -95,6 +95,9 @@ public:
             const scalarField& w,
             const scalarField& qDot
         ) const;
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

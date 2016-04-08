@@ -25,9 +25,6 @@ License
 
 #include "joint.H"
 #include "rigidBodyModel.H"
-#include "Rs.H"
-#include "Rzyx.H"
-#include "Pxyz.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -81,18 +78,10 @@ Foam::RBD::joint::~joint()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::PtrList<Foam::RBD::joint> Foam::RBD::joint::floating()
-{
-    PtrList<joint> cj(2);
-    cj.set(0, new joints::Pxyz());
-    //cj.set(1, new joints::Rs());
-    cj.set(1, new joints::Rzyx());
-    return cj;
-}
-
-
 void Foam::RBD::joint::write(Ostream& os) const
-{}
+{
+    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+}
 
 
 // ************************************************************************* //

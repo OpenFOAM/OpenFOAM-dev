@@ -124,12 +124,12 @@ Foam::RBD::rigidBodyModel::rigidBodyModel(const dictionary& dict)
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::label Foam::RBD::rigidBodyModel::join
+Foam::label Foam::RBD::rigidBodyModel::join_
 (
     const label parentID,
     const spatialTransform& XT,
-    const autoPtr<joint>& jointPtr,
-    const autoPtr<rigidBody>& bodyPtr
+    autoPtr<joint> jointPtr,
+    autoPtr<rigidBody> bodyPtr
 )
 {
     // Append the body
@@ -174,33 +174,71 @@ Foam::label Foam::RBD::rigidBodyModel::join
 (
     const label parentID,
     const spatialTransform& XT,
-    const PtrList<joint>& compositeJoint,
-    const autoPtr<rigidBody>& bodyPtr
+    autoPtr<joint> jointPtr,
+    autoPtr<rigidBody> bodyPtr
+)
+{
+    if (isA<joints::composite>(jointPtr()))
+    {
+        return join
+        (
+            parentID,
+            XT,
+            autoPtr<joints::composite>
+            (
+                dynamic_cast<joints::composite*>(jointPtr.ptr())
+            ),
+            bodyPtr
+        );
+    }
+    else
+    {
+        return join_
+        (
+            parentID,
+            XT,
+            jointPtr,
+            bodyPtr
+        );
+    }
+}
+
+
+Foam::label Foam::RBD::rigidBodyModel::join
+(
+    const label parentID,
+    const spatialTransform& XT,
+    autoPtr<joints::composite> cJointPtr,
+    autoPtr<rigidBody> bodyPtr
 )
 {
     label parent = parentID;
+    joints::composite& cJoint = cJointPtr();
 
     // For all but the final joint in the set add a masslessBody with the
     // joint and transform
-    for (label j=0; j<compositeJoint.size()-1; j++)
+    for (label j=0; j<cJoint.size()-1; j++)
     {
-        parent = join
+        parent = join_
         (
             parent,
             j == 0 ? XT : spatialTransform(),
-            compositeJoint[j].clone(),
+            cJoint[j].clone(),
             autoPtr<rigidBody>(new masslessBody)
         );
     }
 
     // For the final joint in the set add the read body
-    return join
+    parent = join_
     (
         parent,
-        compositeJoint.size() == 1 ? XT : spatialTransform(),
-        compositeJoint[compositeJoint.size()-1].clone(),
+        cJoint.size() == 1 ? XT : spatialTransform(),
+        autoPtr<joint>(cJointPtr.ptr()),
         bodyPtr
     );
+    cJoint.setLastJoint();
+
+    return parent;
 }
 
 
@@ -225,7 +263,7 @@ Foam::label Foam::RBD::rigidBodyModel::merge
 (
     const label parentID,
     const spatialTransform& XT,
-    const autoPtr<rigidBody>& bodyPtr
+    autoPtr<rigidBody> bodyPtr
 )
 {
     autoPtr<subBody> sBodyPtr;
@@ -317,15 +355,7 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
         os.writeKeyword("transform")
             << XT_[i] << token::END_STATEMENT << nl;
 
-        os  << indent << "joint" << nl
-            << indent << token::BEGIN_BLOCK << incrIndent << endl;
-
-        os.writeKeyword("type")
-            << joints_[i].type() << token::END_STATEMENT << nl;
-
-        joints_[i].write(os);
-
-        os  << decrIndent << indent << token::END_BLOCK << endl;
+        os  << indent << "joint" << nl << joints_[i] << endl;
 
         os  << decrIndent << indent << token::END_BLOCK << endl;
     }

@@ -23,9 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Pa.H"
+#include "floatingJoint.H"
 #include "rigidBodyModel.H"
 #include "addToRunTimeSelectionTable.H"
+
+#include "Rs.H"
+#include "Rzyx.H"
+#include "Pxyz.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,12 +39,12 @@ namespace RBD
 {
 namespace joints
 {
-    defineTypeNameAndDebug(Pa, 0);
+    defineTypeNameAndDebug(floating, 0);
 
     addToRunTimeSelectionTable
     (
         joint,
-        Pa,
+        floating,
         dictionary
     );
 }
@@ -48,59 +52,56 @@ namespace joints
 }
 
 
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::RBD::joints::composite>
+Foam::RBD::joints::floating::sixDoF()
+{
+    PtrList<joint> cj(2);
+    cj.set(0, new joints::Pxyz());
+
+    // The quaternion-based spherical joint could be used
+    // but then w must be set appropriately
+    //cj.set(1, new joints::Rs());
+
+    // Alternatively the Euler-angle joint can be used
+    cj.set(1, new joints::Rzyx());
+
+    return autoPtr<composite>(new composite(cj));
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Pa::Pa(const vector& axis)
+Foam::RBD::joints::floating::floating()
 :
-    joint(1)
-{
-    S_[0] = spatialVector(Zero, axis/mag(axis));
-}
+    composite(sixDoF())
+{}
 
 
-Foam::RBD::joints::Pa::Pa(const dictionary& dict)
+Foam::RBD::joints::floating::floating(const dictionary& dict)
 :
-    joint(1)
-{
-    vector axis(dict.lookup("axis"));
-    S_[0] = spatialVector(Zero, axis/mag(axis));
-}
+    composite(sixDoF())
+{}
 
 
-Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joints::Pa::clone() const
+Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joints::floating::clone() const
 {
-    return autoPtr<joint>(new Pa(*this));
+    return autoPtr<joint>(new floating(*this));
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Pa::~Pa()
+Foam::RBD::joints::floating::~floating()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::RBD::joints::Pa::jcalc
-(
-    joint::XSvc& J,
-    const scalarField& q,
-    const scalarField& w,
-    const scalarField& qDot
-) const
-{
-    J.X = Xt(S_[0].l()*q[qIndex_]);
-    J.S1 = S_[0];
-    J.v = S_[0]*qDot[qIndex_];
-    J.c = Zero;
-}
-
-
-void Foam::RBD::joints::Pa::write(Ostream& os) const
+void Foam::RBD::joints::floating::write(Ostream& os) const
 {
     joint::write(os);
-    os.writeKeyword("axis")
-        << S_[0].l() << token::END_STATEMENT << nl;
 }
 
 

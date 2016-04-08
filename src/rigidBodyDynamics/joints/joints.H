@@ -1,6 +1,12 @@
 // Null joint for the root-body
 #include "nullJoint.H"
 
+// Composite joint to handle combination of rotations and translations
+#include "compositeJoint.H"
+
+// 6-DoF joint for floating bodies
+#include "floatingJoint.H"
+
 // Revolute joints
 #include "Rx.H"
 #include "Ry.H"

@@ -52,6 +52,7 @@ SourceFiles
 #include "rigidBody.H"
 #include "subBody.H"
 #include "joint.H"
+#include "compositeJoint.H"
 #include "PtrList.H"
 #include "HashTable.H"
 
@@ -177,6 +178,19 @@ protected:
         mutable DynamicList<vector> u_;
 
 
+    // Protected member functions
+
+        //- Join the given body to the parent with ID parentID via the given
+        //  joint with transform from the parent frame to the joint frame XT.
+        virtual label join_
+        (
+            const label parentID,
+            const spatialTransform& XT,
+            autoPtr<joint> jointPtr,
+            autoPtr<rigidBody> bodyPtr
+        );
+
+
 public:
 
     //- Runtime type information
@@ -237,8 +251,8 @@ public:
         (
             const label parentID,
             const spatialTransform& XT,
-            const autoPtr<joint>& jointPtr,
-            const autoPtr<rigidBody>& bodyPtr
+            autoPtr<joint> jointPtr,
+            autoPtr<rigidBody> bodyPtr
         );
 
         //- Join the given body to the parent with ID parentID via the given
@@ -250,8 +264,8 @@ public:
         (
             const label parentID,
             const spatialTransform& XT,
-            const PtrList<joint>& compositeJoint,
-            const autoPtr<rigidBody>& bodyPtr
+            autoPtr<joints::composite> cJoint,
+            autoPtr<rigidBody> bodyPtr
         );
 
         //- Merge the given body with transform X into the parent with ID
@@ -262,7 +276,7 @@ public:
         (
             const label parentID,
             const spatialTransform& X,
-            const autoPtr<rigidBody>& bodyPtr
+            autoPtr<rigidBody> bodyPtr
         );
 
         //- Return true if the body with given ID has been merged with a parent

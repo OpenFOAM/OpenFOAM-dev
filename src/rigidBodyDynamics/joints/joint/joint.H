@@ -61,6 +61,12 @@ namespace RBD
 // Forward declaration of classes
 class rigidBodyModel;
 
+// Forward declaration of friend functions and operators
+class joint;
+
+inline Ostream& operator<<(Ostream&, const joint&);
+
+
 /*---------------------------------------------------------------------------*\
                          Class joint Declaration
 \*---------------------------------------------------------------------------*/
@@ -171,6 +177,17 @@ public:
         //- Clone this joint (needed by PtrList)
         virtual autoPtr<joint> clone() const = 0;
 
+        class iNew
+        {
+
+        public:
+
+            iNew()
+            {}
+
+            inline autoPtr<joint> operator()(Istream& is) const;
+        };
+
 
     //- Destructor
     virtual ~joint();
@@ -207,9 +224,6 @@ public:
         //- Return the joint motion sub-space
         inline const List<spatialVector>& S() const;
 
-        //- Return a list of joints needed to emulate a floating body
-        static PtrList<joint> floating();
-
         //- Update the rigidBodyModel state for the joint given
         //  the joint state q, w and velocity qDot
         virtual void jcalc
@@ -242,6 +256,11 @@ public:
             scalarField& q,
             scalarField& w
         ) const;
+
+
+    // Ostream Operator
+
+        friend Ostream& operator<<(Ostream&, const joint&);
 };
 
 
