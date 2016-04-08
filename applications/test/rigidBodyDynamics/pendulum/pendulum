@@ -10,7 +10,7 @@ bodies
         transform       (1 0 0 0 1 0 0 0 1) (0 0 0);
         joint
         {
-            type            floating;
+            type            Rz;
         }
     }
 }
