@@ -378,4 +378,13 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
 }
 
 
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::RBD::operator<<(Ostream& os, const rigidBodyModel& rbm)
+{
+    rbm.write(os);
+    return os;
+}
+
+
 // ************************************************************************* //

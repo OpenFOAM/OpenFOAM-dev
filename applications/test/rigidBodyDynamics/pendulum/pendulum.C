@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     rigidBodyModel pendulum1(dictionary(IFstream("pendulum")()));
     rigidBodyModel pendulum = pendulum1;
 
-    pendulum.write(Info);
+    Info<< pendulum << endl;
 
     // Create the joint-space state fields
     scalarField q(pendulum.nDoF(), Zero);

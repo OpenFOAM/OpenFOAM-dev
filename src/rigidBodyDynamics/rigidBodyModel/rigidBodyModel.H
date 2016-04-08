@@ -61,6 +61,12 @@ namespace Foam
 namespace RBD
 {
 
+// Forward declaration of friend functions and operators
+class rigidBodyModel;
+
+Ostream& operator<<(Ostream&, const rigidBodyModel&);
+
+
 /*---------------------------------------------------------------------------*\
                          Class rigidBodyModel Declaration
 \*---------------------------------------------------------------------------*/
@@ -326,6 +332,11 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Ostream Operator
+
+        friend Ostream& operator<<(Ostream&, const rigidBodyModel&);
 };
 
 
