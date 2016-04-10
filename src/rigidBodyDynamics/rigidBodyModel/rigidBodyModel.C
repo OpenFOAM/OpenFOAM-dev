@@ -78,6 +78,41 @@ void Foam::RBD::rigidBodyModel::resizeState()
 }
 
 
+void Foam::RBD::rigidBodyModel::addRestraints
+(
+    const dictionary& dict
+)
+{
+    if (dict.found("restraints"))
+    {
+        const dictionary& restraintDict = dict.subDict("restraints");
+
+        label i = 0;
+
+        restraints_.setSize(restraintDict.size());
+
+        forAllConstIter(IDLList<entry>, restraintDict, iter)
+        {
+            if (iter().isDict())
+            {
+                restraints_.set
+                (
+                    i++,
+                    restraint::New
+                    (
+                        iter().keyword(),
+                        iter().dict(),
+                        *this
+                    )
+                );
+            }
+        }
+
+        restraints_.setSize(i);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * //
 
 Foam::RBD::rigidBodyModel::rigidBodyModel()
@@ -120,6 +155,9 @@ Foam::RBD::rigidBodyModel::rigidBodyModel(const dictionary& dict)
             );
         }
     }
+
+    // Read the restraints and any other re-readable settings.
+    read(dict);
 }
 
 
@@ -144,8 +182,8 @@ Foam::label Foam::RBD::rigidBodyModel::join_
     if (merged(parentID))
     {
         const subBody& sBody = mergedBody(parentID);
-        lambda_.append(sBody.parentID());
-        XT_.append(XT & sBody.parentXT());
+        lambda_.append(sBody.masterID());
+        XT_.append(XT & sBody.masterXT());
     }
     else
     {
@@ -279,16 +317,16 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     {
         const subBody& sBody = mergedBody(parentID);
 
-        makeComposite(sBody.parentID());
+        makeComposite(sBody.masterID());
 
         sBodyPtr.set
         (
             new subBody
             (
                 bodyPtr,
-                bodies_[sBody.parentID()].name(),
-                sBody.parentID(),
-                XT & sBody.parentXT()
+                bodies_[sBody.masterID()].name(),
+                sBody.masterID(),
+                XT & sBody.masterXT()
             )
         );
     }
@@ -312,7 +350,7 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     mergedBodies_.append(sBodyPtr);
 
     // Merge the sub-body with the parent
-    bodies_[sBody.parentID()].merge(sBody);
+    bodies_[sBody.masterID()].merge(sBody);
 
     const label sBodyID = mergedBodyID(mergedBodies_.size() - 1);
     bodyIDs_.insert(sBody.name(), sBodyID);
@@ -329,7 +367,7 @@ Foam::spatialTransform Foam::RBD::rigidBodyModel::X0
     if (merged(bodyId))
     {
         const subBody& mBody = mergedBody(bodyId);
-        return mBody.parentXT() & X0_[mBody.parentID()];
+        return mBody.masterXT() & X0_[mBody.masterID()];
     }
     else
     {
@@ -376,15 +414,45 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
         mergedBodies_[i].body().write(os);
 
         os.writeKeyword("transform")
-            << mergedBodies_[i].parentXT() << token::END_STATEMENT << nl;
+            << mergedBodies_[i].masterXT() << token::END_STATEMENT << nl;
 
         os.writeKeyword("mergeWith")
-            << mergedBodies_[i].parentName() << token::END_STATEMENT << nl;
+            << mergedBodies_[i].masterName() << token::END_STATEMENT << nl;
 
         os  << decrIndent << indent << token::END_BLOCK << endl;
     }
 
     os  << decrIndent << indent << token::END_BLOCK << nl;
+
+
+    if (!restraints_.empty())
+    {
+        os  << indent << "restraints" << nl
+            << indent << token::BEGIN_BLOCK << incrIndent << nl;
+
+        forAll(restraints_, ri)
+        {
+            word restraintType = restraints_[ri].type();
+
+            os  << indent << restraints_[ri].name() << nl
+                << indent << token::BEGIN_BLOCK << incrIndent << endl;
+
+            restraints_[ri].write(os);
+
+            os  << decrIndent << indent << token::END_BLOCK << endl;
+        }
+
+        os  << decrIndent << indent << token::END_BLOCK << nl;
+    }
+}
+
+
+bool Foam::RBD::rigidBodyModel::read(const dictionary& dict)
+{
+    restraints_.clear();
+    addRestraints(dict);
+
+    return true;
 }
 
 

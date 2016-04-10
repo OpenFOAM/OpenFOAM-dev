@@ -89,6 +89,19 @@ inline bool Foam::RBD::rigidBodyModel::merged(label bodyID) const
 }
 
 
+inline Foam::label Foam::RBD::rigidBodyModel::master(label bodyID) const
+{
+    if (bodyID < 0)
+    {
+        return mergedBody(bodyID).masterID();
+    }
+    else
+    {
+        return bodyID;
+    }
+}
+
+
 inline Foam::label
 Foam::RBD::rigidBodyModel::mergedBodyID(const label mergedBodyIndex) const
 {
@@ -120,6 +133,45 @@ Foam::RBD::rigidBodyModel::mergedBody(label mergedBodyID) const
 inline Foam::label Foam::RBD::rigidBodyModel::bodyID(const word& name) const
 {
     return bodyIDs_[name];
+}
+
+
+inline Foam::vector Foam::RBD::rigidBodyModel::masterPoint
+(
+    const label bodyID,
+    const vector& p
+) const
+{
+    if (merged(bodyID))
+    {
+        return
+        (
+            mergedBody(bodyID).masterXT().inv()
+         && spatialVector(Zero, p)
+        ).l();
+    }
+    else
+    {
+        return p;
+    }
+}
+
+
+inline Foam::spatialVector Foam::RBD::rigidBodyModel::v
+(
+    const label bodyID,
+    const vector& p
+) const
+{
+    return
+    (
+        spatialTransform
+        (
+            X0_[master(bodyID)].E().T(),
+            masterPoint(bodyID, p)
+        )
+      & v_[master(bodyID)]
+    );
 }
 
 

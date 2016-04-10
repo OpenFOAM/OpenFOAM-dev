@@ -53,6 +53,7 @@ SourceFiles
 #include "subBody.H"
 #include "joint.H"
 #include "compositeJoint.H"
+#include "rigidBodyRestraint.H"
 #include "PtrList.H"
 #include "HashTable.H"
 
@@ -84,6 +85,9 @@ class rigidBodyModel
 
         //- Convert the body with given ID into a composite-body
         void makeComposite(const label bodyID);
+
+        //- Add restraints to the motion
+        void addRestraints(const dictionary& dict);
 
 
 protected:
@@ -123,6 +127,9 @@ protected:
         //  the 'w' element is additional to the 3-degrees of freedom of the
         //  joint.
         label nw_;
+
+        //- Motion restraints
+        PtrList<restraint> restraints_;
 
 
     // Other protected member data
@@ -288,6 +295,10 @@ public:
         //- Return true if the body with given ID has been merged with a parent
         inline bool merged(label bodyID) const;
 
+        //- Return the ID of the master body for a sub-body otherwise
+        //  return the given body ID
+        inline label master(label bodyID) const;
+
         //- Return the index of the merged body in the mergedBody list
         //  from the given body ID
         inline label mergedBodyIndex(const label mergedBodyID) const;
@@ -304,6 +315,16 @@ public:
 
         //- Return the current transform to the global frame for the given body
         spatialTransform X0(const label bodyId) const;
+
+        // Find the corresponding point in the master body frame
+        vector masterPoint(const label bodyID, const vector& p) const;
+
+        //- Return the velocity of the given point on the given body
+        spatialVector v(const label bodyID, const vector& p) const;
+
+        //- Apply the restraints and accumulate the external forces
+        //  into the fx field
+        void applyRestraints(Field<spatialVector>& fx) const;
 
         //- Calculate the joint acceleration qDdot from the joint state q,
         //  velocity qDot, internal force tau (in the joint frame) and
@@ -332,6 +353,10 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+        //- Read coefficients dictionary and update system parameters,
+        //  restraints but not the current state
+        bool read(const dictionary& dict);
 
 
     // Ostream Operator

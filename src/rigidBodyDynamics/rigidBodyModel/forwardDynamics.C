@@ -27,6 +27,23 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+void Foam::RBD::rigidBodyModel::applyRestraints(Field<spatialVector>& fx) const
+{
+    if (restraints_.empty())
+    {
+        return;
+    }
+
+    forAll(restraints_, ri)
+    {
+        DebugInfo << "Restraint " << restraints_[ri].name();
+
+        // Accumulate the restraint forces
+        fx[restraints_[ri].bodyIndex()] += restraints_[ri].restrain();
+    }
+}
+
+
 void Foam::RBD::rigidBodyModel::forwardDynamics
 (
     const scalarField& q,
