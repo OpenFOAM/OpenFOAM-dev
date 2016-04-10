@@ -112,7 +112,7 @@ void Foam::RBD::rigidBody::merge(const subBody& subBody)
     *this = rigidBody
     (
         name(),
-        *this + transform(subBody.parentXT(), subBody.body())
+        *this + transform(subBody.masterXT(), subBody.body())
     );
 }
 

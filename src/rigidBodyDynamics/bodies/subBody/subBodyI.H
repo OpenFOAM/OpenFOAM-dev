@@ -28,15 +28,15 @@ License
 inline Foam::RBD::subBody::subBody
 (
     const autoPtr<rigidBody>& bodyPtr,
-    const word& parentName,
-    const label parentID,
-    const spatialTransform& parentXT
+    const word& masterName,
+    const label masterID,
+    const spatialTransform& masterXT
 )
 :
     body_(bodyPtr),
-    parentName_(parentName),
-    parentID_(parentID),
-    parentXT_(parentXT)
+    masterName_(masterName),
+    masterID_(masterID),
+    masterXT_(masterXT)
 {}
 
 
@@ -60,21 +60,21 @@ inline const Foam::word& Foam::RBD::subBody::name() const
 }
 
 
-inline const Foam::word& Foam::RBD::subBody::parentName() const
+inline const Foam::word& Foam::RBD::subBody::masterName() const
 {
-    return parentName_;
+    return masterName_;
 }
 
 
-inline Foam::label Foam::RBD::subBody::parentID() const
+inline Foam::label Foam::RBD::subBody::masterID() const
 {
-    return parentID_;
+    return masterID_;
 }
 
 
-inline const Foam::spatialTransform& Foam::RBD::subBody::parentXT() const
+inline const Foam::spatialTransform& Foam::RBD::subBody::masterXT() const
 {
-    return parentXT_;
+    return masterXT_;
 }
 
 

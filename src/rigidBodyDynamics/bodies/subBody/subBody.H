@@ -26,7 +26,7 @@ Class
 
 Description
     This specialized rigidBody holds the original body after it has been merged
-    into a parent.
+    into a master.
 
 SourceFiles
     subBodyI.H
@@ -57,14 +57,14 @@ class subBody
         //- Original body from which this sub-body was constructed
         autoPtr<rigidBody> body_;
 
-        //- Parent body name
-        word parentName_;
+        //- Master body name
+        word masterName_;
 
-        //- Parent body ID
-        label parentID_;
+        //- Master body ID
+        label masterID_;
 
-        //- Transform with respect to parent body
-        spatialTransform parentXT_;
+        //- Transform with respect to master body
+        spatialTransform masterXT_;
 
 
 public:
@@ -72,14 +72,14 @@ public:
     // Constructors
 
         //- Construct a merged version of the given rigidBody
-        //  providing the ID of the parent body to which this will be merged
-        //  and the transform relative to the parent
+        //  providing the ID of the master body to which this will be merged
+        //  and the transform relative to the master
         inline subBody
         (
             const autoPtr<rigidBody>& bodyPtr,
-            const word& parentName,
-            const label parentID,
-            const spatialTransform& parentXT
+            const word& masterName,
+            const label masterID,
+            const spatialTransform& masterXT
         );
 
         //- Return clone of this subBody
@@ -94,14 +94,14 @@ public:
         //- Return the body name
         inline const word& name() const;
 
-        //- Return the parent body name
-        inline const word& parentName() const;
+        //- Return the master body name
+        inline const word& masterName() const;
 
-        //- Return the parent body Id
-        inline label parentID() const;
+        //- Return the master body Id
+        inline label masterID() const;
 
-        //- Return the transform with respect to the parent body
-        inline const spatialTransform& parentXT() const;
+        //- Return the transform with respect to the master body
+        inline const spatialTransform& masterXT() const;
 
         //- Write
         void write(Ostream&) const;
