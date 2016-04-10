@@ -81,16 +81,15 @@ int main(int argc, char *argv[])
     */
 
     // Create the pendulum model from dictionary
-    rigidBodyModel pendulum1(dictionary(IFstream("pendulum")()));
-    rigidBodyModel pendulum = pendulum1;
+    rigidBodyModel pendulum(dictionary(IFstream("pendulum")()));
 
     Info<< pendulum << endl;
 
     // Create the joint-space state fields
     scalarField q(pendulum.nDoF(), Zero);
     scalarField w(pendulum.nw(), Zero);
-    scalarField qdot(pendulum.nDoF(), Zero);
-    scalarField qddot(pendulum.nDoF(), Zero);
+    scalarField qDot(pendulum.nDoF(), Zero);
+    scalarField qDdot(pendulum.nDoF(), Zero);
     scalarField tau(pendulum.nDoF(), Zero);
 
     // Set the angle of the pendulum to 0.3rad
@@ -104,20 +103,20 @@ int main(int argc, char *argv[])
     scalar deltaT = 0.01;
     for (scalar t=0; t<4.1; t+=deltaT)
     {
-        qdot += 0.5*deltaT*qddot;
-        q += deltaT*qdot;
+        qDot += 0.5*deltaT*qDdot;
+        q += deltaT*qDot;
 
         pendulum.forwardDynamics
         (
             q,
             w,
-            qdot,
+            qDot,
             tau,
             Field<spatialVector>(),
-            qddot
+            qDdot
         );
 
-        qdot += 0.5*deltaT*qddot;
+        qDot += 0.5*deltaT*qDdot;
 
         Info<< "Time " << t << "s, angle = " << q[0] << "rad" << endl;
     }

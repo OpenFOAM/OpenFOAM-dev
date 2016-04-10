@@ -1,4 +1,4 @@
-bodies
+bodies0
 {
     pendulum
     {
@@ -15,7 +15,7 @@ bodies
     }
 }
 
-bodies0
+bodies
 {
     hinge
     {
