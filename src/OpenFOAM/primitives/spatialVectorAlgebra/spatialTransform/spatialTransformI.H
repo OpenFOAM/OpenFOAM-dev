@@ -154,6 +154,19 @@ inline Foam::spatialVector Foam::spatialTransform::operator&
 }
 
 
+inline Foam::spatialVector Foam::spatialTransform::operator&&
+(
+    const spatialVector& v
+) const
+{
+    return spatialVector
+    (
+        E_ & v.w(),
+        E_ & (v.l() - r_)
+    );
+}
+
+
 inline Foam::spatialTransform::transpose::operator spatialTensor() const
 {
     return spatialTensor

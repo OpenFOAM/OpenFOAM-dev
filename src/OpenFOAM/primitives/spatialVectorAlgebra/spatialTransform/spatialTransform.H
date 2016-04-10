@@ -178,6 +178,10 @@ public:
         //  X.v = (E . vw, E . (vl - r^vw))
         inline spatialVector operator&(const spatialVector& v) const;
 
+        //- Transform position p
+        //  X:p = (E . pw, E . (vl - r))
+        inline spatialVector operator&&(const spatialVector& v) const;
+
 
     // IOstream Operators
 
