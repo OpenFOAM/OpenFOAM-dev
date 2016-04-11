@@ -89,7 +89,6 @@ class rigidBodyModel
         //- Add restraints to the motion
         void addRestraints(const dictionary& dict);
 
-
 protected:
 
     // Protected data representing the model structure
@@ -220,8 +219,7 @@ public:
 
 
     //- Destructor
-    virtual ~rigidBodyModel()
-    {}
+    virtual ~rigidBodyModel();
 
 
     // Member Functions
@@ -260,6 +258,9 @@ public:
 
         //- Return the inertia of body i
         inline const rigidBodyInertia& I(const label i) const;
+
+        //- Return the spatial velocity of the bodies
+        inline const spatialVector& v(const label i) const;
 
         //- Join the given body to the parent with ID parentID via the given
         //  joint with transform from the parent frame to the joint frame XT.

@@ -32,7 +32,7 @@ inline Foam::point Foam::RBD::restraint::bodyPoint
     const point& p
 ) const
 {
-    return (model_.X0(bodyIndex_).inv() && spatialVector(Zero, p)).l();
+    return (model_.X0(bodyID_).inv() && spatialVector(Zero, p)).l();
 }
 
 
@@ -41,7 +41,7 @@ inline Foam::spatialVector Foam::RBD::restraint::bodyPointVelocity
     const point& p
 ) const
 {
-    return model_.v(bodyIndex_, p);
+    return model_.v(bodyID_, p);
 }
 
 

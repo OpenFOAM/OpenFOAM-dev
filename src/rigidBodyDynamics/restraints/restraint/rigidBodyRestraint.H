@@ -72,8 +72,8 @@ protected:
         //- Name of the restraint
         word name_;
 
-        //- Index of the body the restraint is applied to
-        label bodyIndex_;
+        //- ID of the body the restraint is applied to
+        label bodyID_;
 
         //- Restraint model specific coefficient dictionary
         dictionary coeffs_;
@@ -148,9 +148,9 @@ public:
             return name_;
         }
 
-        label bodyIndex() const
+        label bodyID() const
         {
-            return bodyIndex_;
+            return bodyID_;
         }
 
         //- Return the external force applied to the body by this restraint

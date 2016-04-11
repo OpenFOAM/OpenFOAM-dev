@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "linearSpring.H"
+#include "linearDamper.H"
 #include "rigidBodyModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -35,12 +35,12 @@ namespace RBD
 {
 namespace restraints
 {
-    defineTypeNameAndDebug(linearSpring, 0);
+    defineTypeNameAndDebug(linearDamper, 0);
 
     addToRunTimeSelectionTable
     (
         restraint,
-        linearSpring,
+        linearDamper,
         dictionary
     );
 }
@@ -50,7 +50,7 @@ namespace restraints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::restraints::linearSpring::linearSpring
+Foam::RBD::restraints::linearDamper::linearDamper
 (
     const word& name,
     const dictionary& dict,
@@ -65,86 +65,47 @@ Foam::RBD::restraints::linearSpring::linearSpring
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::RBD::restraints::linearSpring::~linearSpring()
+Foam::RBD::restraints::linearDamper::~linearDamper()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::spatialVector Foam::RBD::restraints::linearSpring::restrain() const
+Foam::spatialVector Foam::RBD::restraints::linearDamper::restrain() const
 {
-    point attachmentPt = bodyPoint(refAttachmentPt_);
-
-    // Current axis of the spring
-    vector r = attachmentPt - anchor_;
-    scalar magR = mag(r);
-    r /= (magR + VSMALL);
-
-    // Velocity of the attached end of the spring
-    vector v = bodyPointVelocity(refAttachmentPt_).l();
-
-    // Force and moment on the master body including optional damping
-    vector force
-    (
-        (-stiffness_*(magR - restLength_) - damping_*(r & v))*r
-    );
-
-    vector moment
-    (
-        (attachmentPt - model_.X0(model_.master(bodyID_)).r()) ^ force
-    );
+    vector force = -coeff_*model_.v(model_.master(bodyID_)).l();
 
     if (model_.debug)
     {
-        Info<< " attachmentPt - anchor " << r*magR
-            << " spring length " << magR
-            << " force " << force
-            << " moment " << moment
-            << endl;
+        Info<< " force " << force << endl;
     }
 
-    return spatialVector(moment, force);
+    return spatialVector(Zero, force);
 }
 
 
-bool Foam::RBD::restraints::linearSpring::read
+bool Foam::RBD::restraints::linearDamper::read
 (
     const dictionary& dict
 )
 {
     restraint::read(dict);
 
-    coeffs_.lookup("anchor") >> anchor_;
-    coeffs_.lookup("refAttachmentPt") >> refAttachmentPt_;
-    coeffs_.lookup("stiffness") >> stiffness_;
-    coeffs_.lookup("damping") >> damping_;
-    coeffs_.lookup("restLength") >> restLength_;
+    coeffs_.lookup("coeff") >> coeff_;
 
     return true;
 }
 
 
-void Foam::RBD::restraints::linearSpring::write
+void Foam::RBD::restraints::linearDamper::write
 (
     Ostream& os
 ) const
 {
     restraint::write(os);
 
-    os.writeKeyword("anchor")
-        << anchor_ << token::END_STATEMENT << nl;
-
-    os.writeKeyword("refAttachmentPt")
-        << refAttachmentPt_ << token::END_STATEMENT << nl;
-
-    os.writeKeyword("stiffness")
-        << stiffness_ << token::END_STATEMENT << nl;
-
-    os.writeKeyword("damping")
-        << damping_ << token::END_STATEMENT << nl;
-
-    os.writeKeyword("restLength")
-        << restLength_ << token::END_STATEMENT << nl;
+    os.writeKeyword("coeff")
+        << coeff_ << token::END_STATEMENT << nl;
 }
 
 

@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RBD::restraints::linearSpring
+    Foam::RBD::restraints::linearDamper
 
 Description
-    Linear spring restraint.
+    Linear damper restraint.  Operates in the local frame of the body.
 
 SourceFiles
-    linearSpring.C
+    linearDamper.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RBD_restraints_linearSpring_H
-#define RBD_restraints_linearSpring_H
+#ifndef RBD_restraints_linearDamper_H
+#define RBD_restraints_linearDamper_H
 
 #include "rigidBodyRestraint.H"
 
@@ -47,42 +47,29 @@ namespace restraints
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class linearSpring Declaration
+                          Class linearDamper Declaration
 \*---------------------------------------------------------------------------*/
 
-class linearSpring
+class linearDamper
 :
     public restraint
 {
     // Private data
 
-        //- Anchor point, where the spring is attached to an immovable
-        //  object
-        point anchor_;
-
-        //- Reference point of attachment to the solid body
-        point refAttachmentPt_;
-
-        //- Spring stiffness coefficient [N/m]
-        scalar stiffness_;
-
         //- Damping coefficient [Ns/m]
-        scalar damping_;
-
-        //- Rest length - length of spring when no forces are applied to it
-        scalar restLength_;
+        scalar coeff_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("linearSpring");
+    TypeName("linearDamper");
 
 
     // Constructors
 
         //- Construct from components
-        linearSpring
+        linearDamper
         (
             const word& name,
             const dictionary& dict,
@@ -94,13 +81,13 @@ public:
         {
             return autoPtr<restraint>
             (
-                new linearSpring(*this)
+                new linearDamper(*this)
             );
         }
 
 
     //- Destructor
-    virtual ~linearSpring();
+    virtual ~linearDamper();
 
 
     // Member Functions

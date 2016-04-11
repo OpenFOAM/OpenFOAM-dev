@@ -40,7 +40,7 @@ void Foam::RBD::rigidBodyModel::applyRestraints(Field<spatialVector>& fx) const
         DebugInfo << "Restraint " << restraints_[ri].name();
 
         // Accumulate the restraint forces
-        fx[restraints_[ri].bodyIndex()] += restraints_[ri].restrain();
+        fx[master(restraints_[ri].bodyID())] += restraints_[ri].restrain();
     }
 }
 

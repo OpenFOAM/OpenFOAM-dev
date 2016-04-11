@@ -162,6 +162,12 @@ Foam::RBD::rigidBodyModel::rigidBodyModel(const dictionary& dict)
 }
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::RBD::rigidBodyModel::~rigidBodyModel()
+{}
+
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::label Foam::RBD::rigidBodyModel::join_

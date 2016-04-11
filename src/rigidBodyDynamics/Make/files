@@ -28,6 +28,7 @@ joints/Pxyz/Pxyz.C
 restraints/restraint/rigidBodyRestraint.C
 restraints/restraint/rigidBodyRestraintNew.C
 restraints/linearSpring/linearSpring.C
+restraints/linearDamper/linearDamper.C
 
 rigidBodyModel/rigidBodyModel.C
 rigidBodyModel/forwardDynamics.C

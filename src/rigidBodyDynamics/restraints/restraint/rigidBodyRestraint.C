@@ -48,7 +48,7 @@ Foam::RBD::restraint::restraint
 )
 :
     name_(name),
-    bodyIndex_(model.bodyID(dict.lookup("body"))),
+    bodyID_(model.bodyID(dict.lookup("body"))),
     coeffs_(dict),
     model_(model)
 {}
@@ -80,7 +80,7 @@ void Foam::RBD::restraint::write(Ostream& os) const
     os.writeKeyword("type")
         << type() << token::END_STATEMENT << nl;
     os.writeKeyword("body")
-        << model_.name(bodyIndex_) << token::END_STATEMENT << nl;
+        << model_.name(bodyID_) << token::END_STATEMENT << nl;
 }
 
 
