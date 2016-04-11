@@ -22,18 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RBD::restraints::linearAxialAngularSpring
+    Foam::RBD::restraints::sphericalAngularDamper
 
 Description
-    Linear axial angular spring restraint.
+    Spherical angular damper restraint.
+    Operates in the local frame of the body.
 
 SourceFiles
-    linearAxialAngularSpring.C
+    sphericalAngularDamper.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef linearAxialAngularSpring_H
-#define linearAxialAngularSpring_H
+#ifndef sphericalAngularDamper_H
+#define sphericalAngularDamper_H
 
 #include "rigidBodyRestraint.H"
 
@@ -47,38 +48,29 @@ namespace restraints
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class linearAxialAngularSpring Declaration
+                   Class sphericalAngularDamper Declaration
 \*---------------------------------------------------------------------------*/
 
-class linearAxialAngularSpring
+class sphericalAngularDamper
 :
     public restraint
 {
     // Private data
 
-        //- Reference orientation where there is no moment
-        tensor refQ_;
-
-        //- Global unit axis around which the motion is sprung
-        vector axis_;
-
-        //- Spring stiffness coefficient [Nm/rad]
-        scalar stiffness_;
-
         //- Damping coefficient [Nms/rad]
-        scalar damping_;
+        scalar coeff_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("linearAxialAngularSpring");
+    TypeName("sphericalAngularDamper");
 
 
     // Constructors
 
         //- Construct from components
-        linearAxialAngularSpring
+        sphericalAngularDamper
         (
             const word& name,
             const dictionary& dict,
@@ -90,13 +82,13 @@ public:
         {
             return autoPtr<restraint>
             (
-                new linearAxialAngularSpring(*this)
+                new sphericalAngularDamper(*this)
             );
         }
 
 
     //- Destructor
-    virtual ~linearAxialAngularSpring();
+    virtual ~sphericalAngularDamper();
 
 
     // Member Functions
@@ -114,7 +106,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace RBD
+} // End namespace restraints
 } // End namespace RBD
 } // End namespace Foam
 

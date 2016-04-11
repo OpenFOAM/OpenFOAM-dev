@@ -30,6 +30,7 @@ restraints/restraint/rigidBodyRestraintNew.C
 restraints/linearSpring/linearSpring.C
 restraints/linearDamper/linearDamper.C
 restraints/linearAxialAngularSpring/linearAxialAngularSpring.C
+restraints/sphericalAngularDamper/sphericalAngularDamper.C
 
 rigidBodyModel/rigidBodyModel.C
 rigidBodyModel/forwardDynamics.C
