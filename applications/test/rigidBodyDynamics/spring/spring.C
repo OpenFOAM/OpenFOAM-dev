@@ -34,6 +34,7 @@ Description
 #include "sphere.H"
 #include "joints.H"
 #include "rigidBodyRestraint.H"
+#include "rigidBodyModelState.H"
 #include "IFstream.H"
 #include "OFstream.H"
 
@@ -50,10 +51,11 @@ int main(int argc, char *argv[])
     Info<< spring << endl;
 
     // Create the joint-space state fields
-    scalarField q(spring.nDoF(), Zero);
-    scalarField w(spring.nw(), Zero);
-    scalarField qDot(spring.nDoF(), Zero);
-    scalarField qDdot(spring.nDoF(), Zero);
+    rigidBodyModelState springState(spring);
+    scalarField& q = springState.q();
+    scalarField& qDot = springState.qDot();
+    scalarField& qDdot = springState.qDdot();
+
     scalarField tau(spring.nDoF(), Zero);
     Field<spatialVector> fx(spring.nBodies(), Zero);
 
@@ -68,13 +70,7 @@ int main(int argc, char *argv[])
         q += deltaT*qDot;
 
         // Update the body-state prior to the evaluation of the restraints
-        spring.forwardDynamicsCorrection
-        (
-            q,
-            w,
-            qDot,
-            qDdot
-        );
+        spring.forwardDynamicsCorrection(springState);
 
         // Accumulate the restraint forces
         fx = Zero;
@@ -82,15 +78,7 @@ int main(int argc, char *argv[])
 
         // Calculate the body acceleration for the given state
         // and restraint forces
-        spring.forwardDynamics
-        (
-            q,
-            w,
-            qDot,
-            tau,
-            fx,
-            qDdot
-        );
+        spring.forwardDynamics(springState, tau, fx);
 
         // Update the velocity
         qDot += 0.5*deltaT*qDdot;

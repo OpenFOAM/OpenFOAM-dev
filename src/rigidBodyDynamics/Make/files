@@ -35,4 +35,7 @@ restraints/sphericalAngularDamper/sphericalAngularDamper.C
 rigidBodyModel/rigidBodyModel.C
 rigidBodyModel/forwardDynamics.C
 
+rigidBodyModelState/rigidBodyModelState.C
+rigidBodyModelState/rigidBodyModelStateIO.C
+
 LIB = $(FOAM_LIBBIN)/librigidBodyDynamics

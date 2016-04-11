@@ -63,9 +63,11 @@ namespace RBD
 
 // Forward declaration of friend functions and operators
 class rigidBodyModel;
-class restraint;
 
 Ostream& operator<<(Ostream&, const rigidBodyModel&);
+
+class rigidBodyModelState;
+class restraint;
 
 
 /*---------------------------------------------------------------------------*\
@@ -336,24 +338,15 @@ public:
         //  algorithm (Section 7.3 and Table 7.1)
         void forwardDynamics
         (
-            const scalarField& q,
-            const scalarField& w,
-            const scalarField& qDot,
+            rigidBodyModelState& state,
             const scalarField& tau,
-            const Field<spatialVector>& fx,
-            scalarField& qDdot
+            const Field<spatialVector>& fx
         ) const;
 
         //- Correct the velocity and acceleration of the bodies in the model
         //  from the given joint state fields following an integration step
         //  of the forwardDynamics
-        void forwardDynamicsCorrection
-        (
-            const scalarField& q,
-            const scalarField& w,
-            const scalarField& qDot,
-            const scalarField& qDdot
-        ) const;
+        void forwardDynamicsCorrection(const rigidBodyModelState& state) const;
 
         //- Write
         virtual void write(Ostream&) const;

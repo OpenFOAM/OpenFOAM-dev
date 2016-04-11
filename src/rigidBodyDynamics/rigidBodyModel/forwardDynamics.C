@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rigidBodyModel.H"
+#include "rigidBodyModelState.H"
 #include "rigidBodyRestraint.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -47,14 +48,16 @@ void Foam::RBD::rigidBodyModel::applyRestraints(Field<spatialVector>& fx) const
 
 void Foam::RBD::rigidBodyModel::forwardDynamics
 (
-    const scalarField& q,
-    const scalarField& w,
-    const scalarField& qDot,
+    rigidBodyModelState& state,
     const scalarField& tau,
-    const Field<spatialVector>& fx,
-    scalarField& qDdot
+    const Field<spatialVector>& fx
 ) const
 {
+    const scalarField& q = state.q();
+    const scalarField& w = state.w();
+    const scalarField& qDot = state.qDot();
+    scalarField& qDdot = state.qDdot();
+
     DebugInFunction
         << "q = " << q << nl
         << "qDot = " << qDot << nl
@@ -199,13 +202,15 @@ void Foam::RBD::rigidBodyModel::forwardDynamics
 
 void Foam::RBD::rigidBodyModel::forwardDynamicsCorrection
 (
-    const scalarField& q,
-    const scalarField& w,
-    const scalarField& qDot,
-    const scalarField& qDdot
+    const rigidBodyModelState& state
 ) const
 {
     DebugInFunction << endl;
+
+    const scalarField& q = state.q();
+    const scalarField& w = state.w();
+    const scalarField& qDot = state.qDot();
+    const scalarField& qDdot = state.qDdot();
 
     // Joint state returned by jcalc
     joint::XSvc J;

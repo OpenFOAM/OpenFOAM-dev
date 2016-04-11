@@ -32,6 +32,7 @@ Description
 
 #include "rigidBodyModel.H"
 #include "masslessBody.H"
+#include "rigidBodyModelState.H"
 #include "sphere.H"
 #include "joints.H"
 #include "IFstream.H"
@@ -86,10 +87,11 @@ int main(int argc, char *argv[])
     Info<< pendulum << endl;
 
     // Create the joint-space state fields
-    scalarField q(pendulum.nDoF(), Zero);
-    scalarField w(pendulum.nw(), Zero);
-    scalarField qDot(pendulum.nDoF(), Zero);
-    scalarField qDdot(pendulum.nDoF(), Zero);
+    rigidBodyModelState pendulumState(pendulum);
+    scalarField& q = pendulumState.q();
+    scalarField& qDot = pendulumState.qDot();
+    scalarField& qDdot = pendulumState.qDdot();
+
     scalarField tau(pendulum.nDoF(), Zero);
 
     // Set the angle of the pendulum to 0.3rad
@@ -106,15 +108,7 @@ int main(int argc, char *argv[])
         qDot += 0.5*deltaT*qDdot;
         q += deltaT*qDot;
 
-        pendulum.forwardDynamics
-        (
-            q,
-            w,
-            qDot,
-            tau,
-            Field<spatialVector>(),
-            qDdot
-        );
+        pendulum.forwardDynamics(pendulumState, tau, Field<spatialVector>());
 
         qDot += 0.5*deltaT*qDdot;
 
