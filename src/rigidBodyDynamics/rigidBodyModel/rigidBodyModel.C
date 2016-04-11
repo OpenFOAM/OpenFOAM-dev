@@ -28,6 +28,7 @@ License
 #include "compositeBody.H"
 #include "jointBody.H"
 #include "nullJoint.H"
+#include "rigidBodyRestraint.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

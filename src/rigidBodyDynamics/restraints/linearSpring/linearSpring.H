@@ -32,11 +32,10 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef linearSpring_H
-#define linearSpring_H
+#ifndef RBD_restraints_linearSpring_H
+#define RBD_restraints_linearSpring_H
 
 #include "rigidBodyRestraint.H"
-#include "point.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

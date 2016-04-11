@@ -33,6 +33,7 @@ Description
 #include "masslessBody.H"
 #include "sphere.H"
 #include "joints.H"
+#include "rigidBodyRestraint.H"
 #include "IFstream.H"
 #include "OFstream.H"
 

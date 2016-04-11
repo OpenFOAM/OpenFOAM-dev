@@ -53,7 +53,6 @@ SourceFiles
 #include "subBody.H"
 #include "joint.H"
 #include "compositeJoint.H"
-#include "rigidBodyRestraint.H"
 #include "PtrList.H"
 #include "HashTable.H"
 
@@ -64,6 +63,7 @@ namespace RBD
 
 // Forward declaration of friend functions and operators
 class rigidBodyModel;
+class restraint;
 
 Ostream& operator<<(Ostream&, const rigidBodyModel&);
 
@@ -254,6 +254,9 @@ public:
         //- Allow the acceleration due to gravity to be set
         //  after model construction
         inline vector& g();
+
+        //- Return the name of body with the given ID
+        inline const word& name(const label bodyID) const;
 
         //- Return the inertia of body i
         inline const rigidBodyInertia& I(const label i) const;

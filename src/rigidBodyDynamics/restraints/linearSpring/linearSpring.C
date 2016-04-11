@@ -78,22 +78,19 @@ Foam::RBD::restraints::linearSpring::~linearSpring()
 
 Foam::spatialVector Foam::RBD::restraints::linearSpring::restrain() const
 {
-    spatialVector attachmentPt
-    (
-        model_.X0(bodyIndex_).inv() && spatialVector(Zero, refAttachmentPt_)
-    );
+    point attachmentPt = bodyPoint(refAttachmentPt_);
 
     // Current axis of the spring
-    vector r = attachmentPt.l() - anchor_;
+    vector r = attachmentPt - anchor_;
     scalar magR = mag(r);
     r /= (magR + VSMALL);
 
-    // Velocity of the end of the spring
-    vector v = model_.v(bodyIndex_, refAttachmentPt_).l();
+    // Velocity of the attached end of the spring
+    vector v = bodyPointVelocity(refAttachmentPt_).l();
 
     // Force and moment including optional damping
     vector force = (-stiffness_*(magR - restLength_) - damping_*(r & v))*r;
-    vector moment = (attachmentPt.l() - model_.X0(bodyIndex_).r()) ^ force;
+    vector moment = (attachmentPt - model_.X0(bodyIndex_).r()) ^ force;
 
     if (model_.debug)
     {

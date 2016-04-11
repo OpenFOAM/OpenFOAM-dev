@@ -39,12 +39,13 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RBD_restraint_H
-#define RBD_restraint_H
+#ifndef RBD_rigidBodyRestraint_H
+#define RBD_rigidBodyRestraint_H
 
 #include "dictionary.H"
 #include "autoPtr.H"
 #include "spatialVector.H"
+#include "point.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -79,6 +80,13 @@ protected:
 
         //- Reference to the model
         const rigidBodyModel& model_;
+
+        //- Transform the given point on the restrained body to the global frame
+        inline point bodyPoint(const point& p) const;
+
+        //- Transform the velocity of the given point on the restrained body
+        //  to the global frame
+        inline spatialVector bodyPointVelocity(const point& p) const;
 
 
 public:
@@ -163,6 +171,10 @@ public:
 
 } // End namespace RBD
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "rigidBodyRestraintI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

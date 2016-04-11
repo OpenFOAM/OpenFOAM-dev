@@ -38,6 +38,13 @@ Foam::RBD::rigidBodyModel::bodies() const
 }
 
 
+inline const Foam::DynamicList<Foam::label>&
+Foam::RBD::rigidBodyModel::lambda() const
+{
+    return lambda_;
+}
+
+
 inline const Foam::PtrList<Foam::RBD::joint>&
 Foam::RBD::rigidBodyModel::joints() const
 {
@@ -69,10 +76,19 @@ inline Foam::vector& Foam::RBD::rigidBodyModel::g()
 }
 
 
-inline const Foam::DynamicList<Foam::label>&
-Foam::RBD::rigidBodyModel::lambda() const
+inline const Foam::word& Foam::RBD::rigidBodyModel::name
+(
+    const label bodyID
+) const
 {
-    return lambda_;
+    if (merged(bodyID))
+    {
+        return mergedBody(bodyID).name();
+    }
+    else
+    {
+        return bodies_[bodyID].name();
+    }
 }
 
 

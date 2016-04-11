@@ -77,7 +77,10 @@ bool Foam::RBD::restraint::read(const dictionary& dict)
 
 void Foam::RBD::restraint::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    os.writeKeyword("type")
+        << type() << token::END_STATEMENT << nl;
+    os.writeKeyword("body")
+        << model_.name(bodyIndex_) << token::END_STATEMENT << nl;
 }
 
 
