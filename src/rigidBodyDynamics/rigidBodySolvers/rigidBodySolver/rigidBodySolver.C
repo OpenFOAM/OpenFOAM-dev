@@ -64,22 +64,22 @@ void Foam::RBD::rigidBodySolver::correctQuaternionJoints()
 
             if (model_.joints()[i].unitQuaternion())
             {
-                // Calculate the change in the normalized quaternion axis
+                // Calculate the change in the unit quaternion
                 vector dv((q().block<vector>(qi) - q0().block<vector>(qi)));
                 scalar magDv = mag(dv);
 
                 if (magDv > SMALL)
                 {
-                    // Calculate the quaternion corresponding to the change
+                    // Calculate the unit quaternion corresponding to the change
                     quaternion dQuat(dv/magDv, cos(magDv), true);
 
-                    // Transform the previous time quaternion
+                    // Transform the previous time unit quaternion
                     quaternion quat
                     (
                         normalize(model_.joints()[i].unitQuaternion(q0())*dQuat)
                     );
 
-                    // Update the joint state
+                    // Update the joint unit quaternion
                     model_.joints()[i].unitQuaternion(quat, q());
                 }
             }
