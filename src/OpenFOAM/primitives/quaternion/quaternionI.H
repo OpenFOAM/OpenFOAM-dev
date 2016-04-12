@@ -78,6 +78,12 @@ inline Foam::quaternion::quaternion(const vector& v)
 {}
 
 
+inline Foam::quaternion Foam::quaternion::unit(const vector& v)
+{
+    return quaternion(sqrt(1 - magSqr(v)), v);
+}
+
+
 inline Foam::quaternion::quaternion
 (
     const rotationSequence rs,
