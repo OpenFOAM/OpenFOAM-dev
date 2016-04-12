@@ -79,17 +79,18 @@ Foam::RBD::rigidBodyMotion::~rigidBodyMotion()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::RBD::rigidBodyMotion::update
+void Foam::RBD::rigidBodyMotion::solve
 (
     scalar deltaT,
-    scalar deltaT0,
     const scalarField& tau,
     const Field<spatialVector>& fx
 )
 {
+    deltaT_ = deltaT;
+
     if (Pstream::master())
     {
-        solver_->solve(deltaT, deltaT0, tau, fx);
+        solver_->solve(tau, fx);
 
         if (report_)
         {

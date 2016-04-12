@@ -62,9 +62,14 @@ protected:
         //- Return the motion state
         inline rigidBodyModelState& state();
 
-        //- Return the motion state
+        //- Return the previous motion state
         inline const rigidBodyModelState& state0() const;
 
+        //- Return the current time-step
+        inline scalar deltaT() const;
+
+        //- Return the previous time-step
+        inline scalar deltaT0() const;
 
         //- Return the current joint position and orientation
         inline scalarField& q();
@@ -138,11 +143,9 @@ public:
 
     // Member Functions
 
-        //- Integrate the rigid-body joint-state one time-step
+        //- Integrate the rigid-body motion for one time-step
         virtual void solve
         (
-            scalar deltaT,
-            scalar deltaT0,
             const scalarField& tau,
             const Field<spatialVector>& fx
         ) = 0;

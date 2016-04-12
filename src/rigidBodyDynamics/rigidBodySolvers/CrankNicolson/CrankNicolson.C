@@ -65,8 +65,6 @@ Foam::RBD::rigidBodySolvers::CrankNicolson::~CrankNicolson()
 
 void Foam::RBD::rigidBodySolvers::CrankNicolson::solve
 (
-    scalar deltaT,
-    scalar deltaT0,
     const scalarField& tau,
     const Field<spatialVector>& fx
 )
@@ -79,10 +77,10 @@ void Foam::RBD::rigidBodySolvers::CrankNicolson::solve
     model_.forwardDynamics(state(), tau, rfx);
 
     // Correct velocity
-    qDot() = qDot0() + aDamp()*deltaT*(aoc_*qDdot() + (1 - aoc_)*qDdot0());
+    qDot() = qDot0() + aDamp()*deltaT()*(aoc_*qDdot() + (1 - aoc_)*qDdot0());
 
     // Correct position
-    q() = q0() + deltaT*(voc_*qDot() + (1 - voc_)*qDot0());
+    q() = q0() + deltaT()*(voc_*qDot() + (1 - voc_)*qDot0());
 
     // Update the body-state
     model_.forwardDynamicsCorrection(state());

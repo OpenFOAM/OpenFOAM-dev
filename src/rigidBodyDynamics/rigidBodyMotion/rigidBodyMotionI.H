@@ -41,7 +41,9 @@ Foam::RBD::rigidBodyMotion::state() const
 inline void Foam::RBD::rigidBodyMotion::newTime()
 {
     motionState0_ = motionState_;
+    deltaT0_ = deltaT_;
 }
+
 
 /*
 inline Foam::point Foam::RBD::rigidBodyMotion::transform

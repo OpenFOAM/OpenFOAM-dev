@@ -101,11 +101,9 @@ public:
 
     // Member Functions
 
-        //- Integrate the rigid-body joint-state one time-step
+        //- Integrate the rigid-body motion for one time-step
         virtual void solve
         (
-            scalar deltaT,
-            scalar deltaT0,
             const scalarField& tau,
             const Field<spatialVector>& fx
         );

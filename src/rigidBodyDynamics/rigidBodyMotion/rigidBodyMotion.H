@@ -79,6 +79,12 @@ class rigidBodyMotion
         //- Motion state data object for previous time-step
         rigidBodyModelState motionState0_;
 
+        //- The current time-step
+        scalar deltaT_;
+
+        //- The previous time-step
+        scalar deltaT0_;
+
         //- Acceleration relaxation coefficient
         scalar aRelax_;
 
@@ -140,11 +146,11 @@ public:
 
         // Update state
 
-            //- Integration of velocities, orientation and position.
-            void update
+            //- Integrate velocities, orientation and position
+            //  for the given time-step
+            void solve
             (
                 scalar deltaT,
-                scalar deltaT0,
                 const scalarField& tau,
                 const Field<spatialVector>& fx
             );

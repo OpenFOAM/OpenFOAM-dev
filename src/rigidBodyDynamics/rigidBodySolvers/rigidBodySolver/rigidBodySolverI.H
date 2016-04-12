@@ -38,6 +38,18 @@ Foam::RBD::rigidBodySolver::state0() const
 }
 
 
+inline Foam::scalar Foam::RBD::rigidBodySolver::deltaT() const
+{
+    return model_.deltaT_;
+}
+
+
+inline Foam::scalar Foam::RBD::rigidBodySolver::deltaT0() const
+{
+    return model_.deltaT0_;
+}
+
+
 inline Foam::scalarField& Foam::RBD::rigidBodySolver::q()
 {
     return state().q();

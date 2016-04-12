@@ -71,13 +71,7 @@ int main(int argc, char *argv[])
 
         for (label i=0; i<nIter; i++)
         {
-            spring.update
-            (
-                deltaT,
-                deltaT,
-                tau,
-                fx
-            );
+            spring.solve(deltaT, tau, fx);
         }
 
         // Write the results for graph generation

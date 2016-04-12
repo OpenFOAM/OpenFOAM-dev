@@ -72,8 +72,6 @@ Foam::RBD::rigidBodySolvers::Newmark::~Newmark()
 
 void Foam::RBD::rigidBodySolvers::Newmark::solve
 (
-    scalar deltaT,
-    scalar deltaT0,
     const scalarField& tau,
     const Field<spatialVector>& fx
 )
@@ -86,12 +84,13 @@ void Foam::RBD::rigidBodySolvers::Newmark::solve
     model_.forwardDynamics(state(), tau, rfx);
 
     // Correct velocity
-    qDot() = qDot0() + aDamp()*deltaT*(gamma_*qDdot() + (1 - gamma_)*qDdot0());
+    qDot() = qDot0()
+      + aDamp()*deltaT()*(gamma_*qDdot() + (1 - gamma_)*qDdot0());
 
     // Correct position
     q() = q0()
-      + deltaT*qDot0()
-      + sqr(deltaT)*beta_*qDdot() + sqr(deltaT)*(0.5 - beta_)*qDdot0();
+      + deltaT()*qDot0()
+      + sqr(deltaT())*beta_*qDdot() + sqr(deltaT())*(0.5 - beta_)*qDdot0();
 
     // Update the body-state
     model_.forwardDynamicsCorrection(state());
