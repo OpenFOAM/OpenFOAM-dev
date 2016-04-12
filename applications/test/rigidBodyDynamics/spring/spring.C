@@ -25,7 +25,7 @@ Application
     spring
 
 Description
-    Simple weight and damped-spirng simulation with 1-DoF.
+    Simple weight and damped-spring simulation with 1-DoF.
 
 \*---------------------------------------------------------------------------*/
 
