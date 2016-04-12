@@ -137,6 +137,9 @@ public:
             //- Return the motion state
             inline const rigidBodyModelState& state() const;
 
+            //- Return the motion state for modification
+            inline rigidBodyModelState& state();
+
 
         // Edit
 

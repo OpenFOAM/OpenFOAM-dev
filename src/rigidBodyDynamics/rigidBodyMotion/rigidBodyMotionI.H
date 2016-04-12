@@ -38,6 +38,13 @@ Foam::RBD::rigidBodyMotion::state() const
 }
 
 
+inline Foam::RBD::rigidBodyModelState&
+Foam::RBD::rigidBodyMotion::state()
+{
+    return motionState_;
+}
+
+
 inline void Foam::RBD::rigidBodyMotion::newTime()
 {
     motionState0_ = motionState_;

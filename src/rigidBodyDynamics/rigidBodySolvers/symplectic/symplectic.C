@@ -73,6 +73,8 @@ void Foam::RBD::rigidBodySolvers::symplectic::solve
     qDot() = qDot0() + aDamp()*0.5*deltaT0()*qDdot();
     q() = q0() + deltaT()*qDot();
 
+    correctQuaternionJoints();
+
     // Update the body-state prior to the evaluation of the restraints
     model_.forwardDynamicsCorrection(state());
 

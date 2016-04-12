@@ -52,4 +52,40 @@ Foam::RBD::rigidBodySolver::~rigidBodySolver()
 {}
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::RBD::rigidBodySolver::correctQuaternionJoints()
+{
+    if (model_.nw())
+    {
+        forAll (model_.joints(), i)
+        {
+            const label qi = model_.joints()[i].qIndex();
+
+            if (model_.joints()[i].nw() == 1)
+            {
+                // Calculate the change in the normalized quaternion axis
+                vector dv((q().block<vector>(qi) - q0().block<vector>(qi)));
+                scalar magDv = mag(dv);
+
+                if (magDv > SMALL)
+                {
+                    // Calculate the quaternion corresponding to the change
+                    quaternion dQuat(dv/magDv, cos(magDv), true);
+
+                    // Transform the previous time quaternion
+                    quaternion quat
+                    (
+                        normalize(model_.joints()[i](q0(), w0())*dQuat)
+                    );
+
+                    // Update the joint state
+                    model_.joints()[i](quat, q(), w());
+                }
+            }
+        }
+    }
+}
+
+
 // ************************************************************************* //

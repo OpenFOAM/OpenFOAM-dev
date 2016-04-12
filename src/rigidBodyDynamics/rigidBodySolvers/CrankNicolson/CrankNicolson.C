@@ -82,6 +82,8 @@ void Foam::RBD::rigidBodySolvers::CrankNicolson::solve
     // Correct position
     q() = q0() + deltaT()*(voc_*qDot() + (1 - voc_)*qDot0());
 
+    correctQuaternionJoints();
+
     // Update the body-state
     model_.forwardDynamicsCorrection(state());
 }
