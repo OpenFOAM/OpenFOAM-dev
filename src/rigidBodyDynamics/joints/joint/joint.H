@@ -236,7 +236,6 @@ public:
         (
             XSvc& J,
             const scalarField& q,
-            const scalarField& w,
             const scalarField& qDot
         ) const = 0;
 
@@ -250,8 +249,7 @@ public:
         //  if it uses a quaternion representation for rotation
         inline quaternion operator()
         (
-            const scalarField& q,
-            const scalarField& w
+            const scalarField& q
         ) const;
 
         //- Set the state quaternion for this joint
@@ -259,8 +257,7 @@ public:
         inline void operator()
         (
             const quaternion& quat,
-            scalarField& q,
-            scalarField& w
+            scalarField& q
         ) const;
 
 

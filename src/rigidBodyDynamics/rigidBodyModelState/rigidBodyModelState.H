@@ -70,9 +70,6 @@ class rigidBodyModelState
         //- Joint position and orientation
         scalarField q_;
 
-        //- Joint quaternion
-        scalarField w_;
-
         //- Joint velocity
         scalarField qDot_;
 
@@ -103,7 +100,6 @@ public:
             inline const scalarField& q() const;
 
             //- Return access to the joint quaternion
-            inline const scalarField& w() const;
 
             //- Return access to the joint velocity
             inline const scalarField& qDot() const;
@@ -118,7 +114,6 @@ public:
             inline scalarField& q();
 
             //- Return access to the joint quaternion
-            inline scalarField& w();
 
             //- Return access to the joint velocity
             inline scalarField& qDot();

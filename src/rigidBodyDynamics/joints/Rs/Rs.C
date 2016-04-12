@@ -94,11 +94,10 @@ void Foam::RBD::joints::Rs::jcalc
 (
     joint::XSvc& J,
     const scalarField& q,
-    const scalarField& w,
     const scalarField& qDot
 ) const
 {
-    J.X.E() = operator()(q, w).R().T();
+    J.X.E() = operator()(q).R().T();
     J.X.r() = Zero;
 
     J.S = Zero;

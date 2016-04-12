@@ -64,8 +64,7 @@ int main(int argc, char *argv[])
     sphericalJoint.joints()[1]
     (
         quaternion(quaternion::ZYX, vector(0.3, 0, 0)),
-        sphericalJoint.state().q(),
-        sphericalJoint.state().w()
+        sphericalJoint.state().q()
     );
 
     // Set the gravitational acceleration
@@ -90,8 +89,7 @@ int main(int argc, char *argv[])
             << t << " "
             << sphericalJoint.joints()[1]
                (
-                   sphericalJoint.state().q(),
-                   sphericalJoint.state().w()
+                   sphericalJoint.state().q()
                ).eulerAngles(quaternion::ZYX).x()
             << endl;
     }

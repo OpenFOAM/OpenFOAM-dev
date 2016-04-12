@@ -71,8 +71,7 @@ inline const Foam::List<Foam::spatialVector>& Foam::RBD::joint::S() const
 
 inline Foam::quaternion Foam::RBD::joint::operator()
 (
-    const scalarField& q,
-    const scalarField& w
+    const scalarField& q
 ) const
 {
     if (nw() != 1)
@@ -82,15 +81,14 @@ inline Foam::quaternion Foam::RBD::joint::operator()
             << abort(FatalError);
     }
 
-    return quaternion(w[wIndex_], q.block<vector>(qIndex_));
+    return quaternion::unit(q.block<vector>(qIndex_));
 }
 
 
 inline void Foam::RBD::joint::operator()
 (
     const quaternion& quat,
-    scalarField& q,
-    scalarField& w
+    scalarField& q
 ) const
 {
     if (nw() != 1)
@@ -100,7 +98,6 @@ inline void Foam::RBD::joint::operator()
             << abort(FatalError);
     }
 
-    w[wIndex_] = quat.w();
     q[qIndex_] = quat.v().x();
     q[qIndex_+1] = quat.v().y();
     q[qIndex_+2] = quat.v().z();

@@ -56,12 +56,6 @@ inline Foam::scalarField& Foam::RBD::rigidBodySolver::q()
 }
 
 
-inline Foam::scalarField& Foam::RBD::rigidBodySolver::w()
-{
-    return state().w();
-}
-
-
 inline Foam::scalarField& Foam::RBD::rigidBodySolver::qDot()
 {
     return state().qDot();
@@ -77,12 +71,6 @@ inline Foam::scalarField& Foam::RBD::rigidBodySolver::qDdot()
 inline const Foam::scalarField& Foam::RBD::rigidBodySolver::q0() const
 {
     return state0().q();
-}
-
-
-inline const Foam::scalarField& Foam::RBD::rigidBodySolver::w0() const
-{
-    return state0().w();
 }
 
 

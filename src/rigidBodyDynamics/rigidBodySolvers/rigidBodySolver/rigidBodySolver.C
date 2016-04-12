@@ -76,11 +76,11 @@ void Foam::RBD::rigidBodySolver::correctQuaternionJoints()
                     // Transform the previous time quaternion
                     quaternion quat
                     (
-                        normalize(model_.joints()[i](q0(), w0())*dQuat)
+                        normalize(model_.joints()[i](q0())*dQuat)
                     );
 
                     // Update the joint state
-                    model_.joints()[i](quat, q(), w());
+                    model_.joints()[i](quat, q());
                 }
             }
         }

@@ -31,7 +31,6 @@ License
 void Foam::RBD::rigidBodyModelState::write(dictionary& dict) const
 {
     dict.add("q", q_);
-    dict.add("w", w_);
     dict.add("qDot", qDot_);
     dict.add("qDdot", qDdot_);
 }
@@ -40,7 +39,6 @@ void Foam::RBD::rigidBodyModelState::write(dictionary& dict) const
 void Foam::RBD::rigidBodyModelState::write(Ostream& os) const
 {
     os.writeKeyword("q") << q_ << token::END_STATEMENT << nl;
-    os.writeKeyword("w") << w_ << token::END_STATEMENT << nl;
     os.writeKeyword("qDot") << qDot_ << token::END_STATEMENT << nl;
     os.writeKeyword("qDdot") << qDdot_ << token::END_STATEMENT << nl;
 }
@@ -55,7 +53,6 @@ Foam::Istream& Foam::RBD::operator>>
 )
 {
     is  >> state.q_
-        >> state.w_
         >> state.qDot_
         >> state.qDdot_;
 
@@ -77,7 +74,6 @@ Foam::Ostream& Foam::RBD::operator<<
 )
 {
     os  << token::SPACE << state.q_
-        << token::SPACE << state.w_
         << token::SPACE << state.qDot_
         << token::SPACE << state.qDdot_;
 

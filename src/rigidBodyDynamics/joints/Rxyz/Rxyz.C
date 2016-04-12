@@ -88,7 +88,6 @@ void Foam::RBD::joints::Rxyz::jcalc
 (
     joint::XSvc& J,
     const scalarField& q,
-    const scalarField& w,
     const scalarField& qDot
 ) const
 {

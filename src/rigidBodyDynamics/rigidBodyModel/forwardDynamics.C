@@ -54,7 +54,6 @@ void Foam::RBD::rigidBodyModel::forwardDynamics
 ) const
 {
     const scalarField& q = state.q();
-    const scalarField& w = state.w();
     const scalarField& qDot = state.qDot();
     scalarField& qDdot = state.qDdot();
 
@@ -71,7 +70,7 @@ void Foam::RBD::rigidBodyModel::forwardDynamics
     for (label i=1; i<nBodies(); i++)
     {
         const joint& jnt = joints()[i];
-        jnt.jcalc(J, q, w, qDot);
+        jnt.jcalc(J, q, qDot);
 
         S_[i] = J.S;
         S1_[i] = J.S1;
@@ -208,7 +207,6 @@ void Foam::RBD::rigidBodyModel::forwardDynamicsCorrection
     DebugInFunction << endl;
 
     const scalarField& q = state.q();
-    const scalarField& w = state.w();
     const scalarField& qDot = state.qDot();
     const scalarField& qDdot = state.qDdot();
 
@@ -223,7 +221,7 @@ void Foam::RBD::rigidBodyModel::forwardDynamicsCorrection
         const joint& jnt = joints()[i];
         const label qi = jnt.qIndex();
 
-        jnt.jcalc(J, q, w, qDot);
+        jnt.jcalc(J, q, qDot);
 
         S_[i] = J.S;
         S1_[i] = J.S1;

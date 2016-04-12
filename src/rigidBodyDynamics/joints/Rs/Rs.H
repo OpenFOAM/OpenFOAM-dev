@@ -97,7 +97,6 @@ public:
         (
             joint::XSvc& J,
             const scalarField& q,
-            const scalarField& w,
             const scalarField& qDot
         ) const;
 };

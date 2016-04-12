@@ -96,11 +96,10 @@ void Foam::RBD::joints::composite::jcalc
 (
     joint::XSvc& J,
     const scalarField& q,
-    const scalarField& w,
     const scalarField& qDot
 ) const
 {
-    last().jcalc(J, q, w, qDot);
+    last().jcalc(J, q, qDot);
 }
 
 

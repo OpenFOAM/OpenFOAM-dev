@@ -75,7 +75,6 @@ protected:
         inline scalarField& q();
 
         //- Return the current joint quaternion
-        inline scalarField& w();
 
         //- Return the current joint velocity
         inline scalarField& qDot();
@@ -88,7 +87,6 @@ protected:
         inline const scalarField& q0() const;
 
         //- Return the current joint quaternion
-        inline const scalarField& w0() const;
 
         //- Return the current joint velocity
         inline const scalarField& qDot0() const;

@@ -31,12 +31,6 @@ inline const Foam::scalarField& Foam::RBD::rigidBodyModelState::q() const
 }
 
 
-inline const Foam::scalarField& Foam::RBD::rigidBodyModelState::w() const
-{
-    return w_;
-}
-
-
 inline const Foam::scalarField& Foam::RBD::rigidBodyModelState::qDot() const
 {
     return qDot_;
@@ -52,12 +46,6 @@ inline const Foam::scalarField& Foam::RBD::rigidBodyModelState::qDdot() const
 inline Foam::scalarField& Foam::RBD::rigidBodyModelState::q()
 {
     return q_;
-}
-
-
-inline Foam::scalarField& Foam::RBD::rigidBodyModelState::w()
-{
-    return w_;
 }
 
 
