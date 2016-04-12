@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     OFstream qFile("qVsTime");
     OFstream qDotFile("qDotVsTime");
 
-    // Integrate the motion of the spring for 4s using a symplectic method
+    // Integrate the motion of the spring for 4s
     scalar deltaT = 0.002;
     for (scalar t=0; t<4; t+=deltaT)
     {
