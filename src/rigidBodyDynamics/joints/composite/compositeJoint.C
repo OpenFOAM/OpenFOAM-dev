@@ -86,12 +86,6 @@ Foam::RBD::joints::composite::~composite()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::label Foam::RBD::joints::composite::nw() const
-{
-    return last().nw();
-}
-
-
 void Foam::RBD::joints::composite::jcalc
 (
     joint::XSvc& J,

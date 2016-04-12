@@ -29,8 +29,7 @@ inline Foam::RBD::joint::joint(const label nDoF)
 :
     S_(nDoF),
     index_(0),
-    qIndex_(0),
-    wIndex_(0)
+    qIndex_(0)
 {}
 
 
@@ -41,9 +40,9 @@ inline Foam::label Foam::RBD::joint::nDoF() const
     return S_.size();
 }
 
-inline Foam::label Foam::RBD::joint::nw() const
+inline bool Foam::RBD::joint::unitQuaternion() const
 {
-    return 0;
+    return false;
 }
 
 inline Foam::label Foam::RBD::joint::index() const
@@ -56,11 +55,6 @@ inline Foam::label Foam::RBD::joint::qIndex() const
     return qIndex_;
 }
 
-inline Foam::label Foam::RBD::joint::wIndex() const
-{
-    return wIndex_;
-}
-
 inline const Foam::List<Foam::spatialVector>& Foam::RBD::joint::S() const
 {
     return S_;
@@ -69,12 +63,12 @@ inline const Foam::List<Foam::spatialVector>& Foam::RBD::joint::S() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline Foam::quaternion Foam::RBD::joint::operator()
+inline Foam::quaternion Foam::RBD::joint::unitQuaternion
 (
     const scalarField& q
 ) const
 {
-    if (nw() != 1)
+    if (!unitQuaternion())
     {
         FatalErrorInFunction
             << "Attempt to get the quaternion for a non-spherical joint"
@@ -85,13 +79,13 @@ inline Foam::quaternion Foam::RBD::joint::operator()
 }
 
 
-inline void Foam::RBD::joint::operator()
+inline void Foam::RBD::joint::unitQuaternion
 (
     const quaternion& quat,
     scalarField& q
 ) const
 {
-    if (nw() != 1)
+    if (!unitQuaternion())
     {
         FatalErrorInFunction
             << "Attempt to set quaternion for a non-spherical joint"

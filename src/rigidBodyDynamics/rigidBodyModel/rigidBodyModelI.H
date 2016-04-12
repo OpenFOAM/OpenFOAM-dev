@@ -58,9 +58,9 @@ inline Foam::label Foam::RBD::rigidBodyModel::nDoF() const
 }
 
 
-inline Foam::label Foam::RBD::rigidBodyModel::nw() const
+inline bool Foam::RBD::rigidBodyModel::unitQuaternions() const
 {
-    return nw_;
+    return unitQuaternions_;
 }
 
 

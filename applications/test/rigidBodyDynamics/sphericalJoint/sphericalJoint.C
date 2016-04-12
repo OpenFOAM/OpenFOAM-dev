@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     Field<spatialVector> fx(sphericalJoint.nBodies(), Zero);
 
     // Set the angle of the pendulum to 0.3rad
-    sphericalJoint.joints()[1]
+    sphericalJoint.joints()[1].unitQuaternion
     (
         quaternion(quaternion::ZYX, vector(0.3, 0, 0)),
         sphericalJoint.state().q()
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
         // using 'gnuplot sphericalJoint.gnuplot'
         omegaFile
             << t << " "
-            << sphericalJoint.joints()[1]
+            << sphericalJoint.joints()[1].unitQuaternion
                (
                    sphericalJoint.state().q()
                ).eulerAngles(quaternion::ZYX).x()

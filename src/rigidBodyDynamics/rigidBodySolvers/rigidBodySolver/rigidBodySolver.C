@@ -56,13 +56,13 @@ Foam::RBD::rigidBodySolver::~rigidBodySolver()
 
 void Foam::RBD::rigidBodySolver::correctQuaternionJoints()
 {
-    if (model_.nw())
+    if (model_.unitQuaternions())
     {
         forAll (model_.joints(), i)
         {
             const label qi = model_.joints()[i].qIndex();
 
-            if (model_.joints()[i].nw() == 1)
+            if (model_.joints()[i].unitQuaternion())
             {
                 // Calculate the change in the normalized quaternion axis
                 vector dv((q().block<vector>(qi) - q0().block<vector>(qi)));
@@ -76,11 +76,11 @@ void Foam::RBD::rigidBodySolver::correctQuaternionJoints()
                     // Transform the previous time quaternion
                     quaternion quat
                     (
-                        normalize(model_.joints()[i](q0())*dQuat)
+                        normalize(model_.joints()[i].unitQuaternion(q0())*dQuat)
                     );
 
                     // Update the joint state
-                    model_.joints()[i](quat, q());
+                    model_.joints()[i].unitQuaternion(quat, q());
                 }
             }
         }

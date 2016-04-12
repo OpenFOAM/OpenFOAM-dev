@@ -84,9 +84,9 @@ Foam::RBD::joints::Rs::~Rs()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::label Foam::RBD::joints::Rs::nw() const
+bool Foam::RBD::joints::Rs::unitQuaternion() const
 {
-    return 1;
+    return true;
 }
 
 
@@ -97,7 +97,7 @@ void Foam::RBD::joints::Rs::jcalc
     const scalarField& qDot
 ) const
 {
-    J.X.E() = operator()(q).R().T();
+    J.X.E() = joint::unitQuaternion(q).R().T();
     J.X.r() = Zero;
 
     J.S = Zero;

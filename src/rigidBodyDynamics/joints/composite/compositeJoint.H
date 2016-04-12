@@ -101,9 +101,6 @@ public:
 
     // Member Functions
 
-        //- Return the number of additional state variables need by this joint
-        virtual label nw() const;
-
         //- Update the model state for this joint
         virtual void jcalc
         (

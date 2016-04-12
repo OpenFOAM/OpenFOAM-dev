@@ -93,9 +93,6 @@ protected:
     //- Index of this joints data in the rigidBodyModel state
     label qIndex_;
 
-    //- Index of this joints quaternion data in the rigidBodyModel state
-    label wIndex_;
-
 
 private:
 
@@ -111,12 +108,6 @@ private:
         label& qIndex()
         {
             return qIndex_;
-        }
-
-        //- Allow the rigidBodyModel to set the wIndex for this joint
-        label& wIndex()
-        {
-            return wIndex_;
         }
 
 
@@ -213,8 +204,8 @@ public:
         //- Return the number of degrees of freedom in this joint
         inline label nDoF() const;
 
-        //- Return the number of additional state variables need by this joint
-        inline virtual label nw() const;
+        //- Return true if this joint describes rotation using a quaternion
+        inline virtual bool unitQuaternion() const;
 
         //- Return the index of this joint in the model
         inline label index() const;
@@ -222,10 +213,6 @@ public:
         //- Return start index for the state variables for this joint
         //  in the rigidBodyModel state fields
         inline label qIndex() const;
-
-        //- Return start index for the additional state variables for this joint
-        //  in the rigidBodyModel w state field
-        inline label wIndex() const;
 
         //- Return the joint motion sub-space
         inline const List<spatialVector>& S() const;
@@ -245,16 +232,16 @@ public:
 
     // Member Operators
 
-        //- Return the state quaternion for this joint
+        //- Return the unit quaternion for this joint
         //  if it uses a quaternion representation for rotation
-        inline quaternion operator()
+        inline quaternion unitQuaternion
         (
             const scalarField& q
         ) const;
 
-        //- Set the state quaternion for this joint
+        //- Set the unit quaternion for this joint
         //  if it uses a quaternion representation for rotation
-        inline void operator()
+        inline void unitQuaternion
         (
             const quaternion& quat,
             scalarField& q

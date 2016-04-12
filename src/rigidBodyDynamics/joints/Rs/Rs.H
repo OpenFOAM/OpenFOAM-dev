@@ -88,9 +88,8 @@ public:
 
     // Member Functions
 
-        //- Return the number of additional state variable for this joint
-        //  For the quaternion this is 1 in addition to the 3 stored in q
-        virtual label nw() const;
+        //- Return true as this joint describes rotation using a quaternion
+        virtual bool unitQuaternion() const;
 
         //- Update the model state for this joint
         virtual void jcalc

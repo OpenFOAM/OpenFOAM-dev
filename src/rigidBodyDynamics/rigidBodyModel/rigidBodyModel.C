@@ -52,7 +52,7 @@ void Foam::RBD::rigidBodyModel::initializeRootBody()
     XT_.append(spatialTransform());
 
     nDoF_ = 0;
-    nw_ = 0;
+    unitQuaternions_ = false;
 
     resizeState();
 }
@@ -204,11 +204,10 @@ Foam::label Foam::RBD::rigidBodyModel::join_
     joint& curJoint = joints_[joints_.size() - 1];
     curJoint.index() = joints_.size() - 1;
     curJoint.qIndex() = prevJoint.qIndex() + prevJoint.nDoF();
-    curJoint.wIndex() = prevJoint.wIndex() + prevJoint.nw();
 
     // Increment the degrees of freedom
     nDoF_ += curJoint.nDoF();
-    nw_ += curJoint.nw();
+    unitQuaternions_ = unitQuaternions_ || curJoint.unitQuaternion();
 
     resizeState();
 

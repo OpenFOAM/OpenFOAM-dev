@@ -123,11 +123,8 @@ protected:
         //  used to set the size of the of joint state fields q, qDot and qDdot.
         label nDoF_;
 
-        //- The number of additional state variable needed to describe the joint
-        //  states.  Typically this is the number of quaternion joints for which
-        //  the 'w' element is additional to the 3-degrees of freedom of the
-        //  joint.
-        label nw_;
+        //- True if any of the joints using quaternions
+        bool unitQuaternions_;
 
         //- Motion restraints
         PtrList<restraint> restraints_;
@@ -242,11 +239,8 @@ public:
         //  used to set the size of the of joint state fields q, qDot and qDdot.
         inline label nDoF() const;
 
-        //- Return the number of additional state variable needed to describe
-        //  the joint states.  Typically this is the number of quaternion
-        //  joints for which the 'w' element is additional to the 3-degrees of
-        //  freedom of the joint.
-        inline label nw() const;
+        //- Return true if any of the joints using quaternions
+        inline bool unitQuaternions() const;
 
         //- Return the acceleration due to gravity
         inline const vector& g() const;
