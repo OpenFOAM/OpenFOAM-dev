@@ -29,7 +29,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "rigidBodyModel.H"
+#include "rigidBodyMotion.H"
 #include "masslessBody.H"
 #include "sphere.H"
 #include "joints.H"
@@ -45,18 +45,19 @@ using namespace RBD;
 
 int main(int argc, char *argv[])
 {
+    dictionary springDict(IFstream("spring")());
+
     // Create the spring model from dictionary
-    rigidBodyModel spring(dictionary(IFstream("spring")()));
+    rigidBodyMotion spring(springDict);
+
+    label nIter(readLabel(springDict.lookup("nIter")));
 
     Info<< spring << endl;
 
-    // Create the joint-space state fields
-    rigidBodyModelState springState(spring);
-    scalarField& q = springState.q();
-    scalarField& qDot = springState.qDot();
-    scalarField& qDdot = springState.qDdot();
-
+    // Create the joint-space force field
     scalarField tau(spring.nDoF(), Zero);
+
+    // Create the external body force field
     Field<spatialVector> fx(spring.nBodies(), Zero);
 
     OFstream qFile("qVsTime");
@@ -66,27 +67,23 @@ int main(int argc, char *argv[])
     scalar deltaT = 0.002;
     for (scalar t=0; t<4; t+=deltaT)
     {
-        qDot += 0.5*deltaT*qDdot;
-        q += deltaT*qDot;
+        spring.newTime();
 
-        // Update the body-state prior to the evaluation of the restraints
-        spring.forwardDynamicsCorrection(springState);
-
-        // Accumulate the restraint forces
-        fx = Zero;
-        spring.applyRestraints(fx);
-
-        // Calculate the body acceleration for the given state
-        // and restraint forces
-        spring.forwardDynamics(springState, tau, fx);
-
-        // Update the velocity
-        qDot += 0.5*deltaT*qDdot;
+        for (label i=0; i<nIter; i++)
+        {
+            spring.update
+            (
+                deltaT,
+                deltaT,
+                tau,
+                fx
+            );
+        }
 
         // Write the results for graph generation
         // using 'gnuplot spring.gnuplot'
-        qFile << t << " " << q[0] << endl;
-        qDotFile << t << " " << qDot[0] << endl;
+        qFile << t << " " << spring.state().q()[0] << endl;
+        qDotFile << t << " " << spring.state().qDot()[0] << endl;
     }
 
     Info<< "\nEnd\n" << endl;

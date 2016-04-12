@@ -38,4 +38,13 @@ rigidBodyModel/forwardDynamics.C
 rigidBodyModelState/rigidBodyModelState.C
 rigidBodyModelState/rigidBodyModelStateIO.C
 
+rigidBodyMotion/rigidBodyMotion.C
+rigidBodyMotion/rigidBodyMotionIO.C
+
+rigidBodySolvers/rigidBodySolver/rigidBodySolver.C
+rigidBodySolvers/rigidBodySolver/newRigidBodySolver.C
+rigidBodySolvers/symplectic/symplectic.C
+rigidBodySolvers/Newmark/Newmark.C
+rigidBodySolvers/CrankNicolson/CrankNicolson.C
+
 LIB = $(FOAM_LIBBIN)/librigidBodyDynamics

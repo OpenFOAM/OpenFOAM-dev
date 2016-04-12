@@ -1,3 +1,11 @@
+solver
+{
+    type Newmark;
+}
+
+// It is necessary to iterate for the Newmark solver
+nIter 2;
+
 bodies
 {
     weight

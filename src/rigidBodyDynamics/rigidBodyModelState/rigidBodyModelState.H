@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::rigidBodyModelState
+    Foam::RBD::rigidBodyModelState
 
 Description
     Holds the motion state of rigid-body model.
