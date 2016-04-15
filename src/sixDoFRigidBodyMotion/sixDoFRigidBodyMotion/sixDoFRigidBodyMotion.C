@@ -352,7 +352,7 @@ Foam::tmp<Foam::pointField> Foam::sixDoFRigidBodyMotion::transform
     septernion s
     (
         centreOfRotation() - initialCentreOfRotation(),
-        quaternion(Q() & initialQ().T())
+        quaternion(Q().T() & initialQ())
     );
 
     tmp<pointField> tpoints(new pointField(initialPoints));
@@ -375,7 +375,7 @@ Foam::tmp<Foam::pointField> Foam::sixDoFRigidBodyMotion::transform
 
                 points[pointi] =
                     initialCentreOfRotation()
-                  + ss.transform
+                  + ss.invTransformPoint
                     (
                         initialPoints[pointi]
                       - initialCentreOfRotation()
