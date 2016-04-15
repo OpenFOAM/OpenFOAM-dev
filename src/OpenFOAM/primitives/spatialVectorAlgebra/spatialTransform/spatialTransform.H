@@ -179,6 +179,10 @@ public:
         inline spatialVector operator&(const spatialVector& v) const;
 
         //- Transform position p
+        //  X:p = E . (pl - r)
+        inline vector transformPoint(const vector& p) const;
+
+        //- Transform position p
         //  X:p = (E . pw, E . (vl - r))
         inline spatialVector operator&&(const spatialVector& v) const;
 

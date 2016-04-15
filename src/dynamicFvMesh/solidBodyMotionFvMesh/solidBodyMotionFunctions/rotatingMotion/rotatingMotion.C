@@ -78,9 +78,9 @@ Foam::solidBodyMotionFunctions::rotatingMotion::transformation() const
     scalar angle = omega_->integrate(0, t);
 
     quaternion R(axis_, angle);
-    septernion TR(septernion(origin_)*R*septernion(-origin_));
+    septernion TR(septernion(-origin_)*R*septernion(origin_));
 
-    InfoInFunction << "Time = " << t << " transformation: " << TR << endl;
+    DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
 }

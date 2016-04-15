@@ -39,10 +39,10 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    quaternion q(vector(1, 0, 0), 0.7853981);
+    quaternion q(vector(1, 2, 3), 0.7853981);
     Info<< "q " << q << endl;
 
-    vector v(0, 1, 0);
+    vector v(0.1, 0.4, 2.1);
     Info<< "v " << v << endl;
 
     Info<< "inv(q)*q " << inv(q)*q << endl;
@@ -50,8 +50,11 @@ int main(int argc, char *argv[])
     Info<< "q*quaternion(0, v)*conjugate(q) "
         << q*quaternion(0, v)*conjugate(q) << endl;
 
+    Info<< "q.R() " << q.R() << endl;
     Info<< "q.transform(v) " << q.transform(v) << endl;
     Info<< "q.R() & v " << (q.R() & v) << endl;
+    Info<< "quaternion(q.R()).transform(v) "
+        << (quaternion(q.R()).transform(v)) << endl;
 
     Info<< "q.invTransform(v) " << q.invTransform(v) << endl;
 
@@ -60,13 +63,16 @@ int main(int argc, char *argv[])
 
     Info<< "inv(tr)*tr " << inv(tr)*tr << endl;
 
-    Info<< "tr.transform(v) " << tr.transform(v) << endl;
+    Info<< "tr.transform(v) " << tr.transformPoint(v) << endl;
 
-    Info<< "(septernion(vector(0, -1, 0))*q*septernion(vector(0, 1, 0)))"
+    vector origin(1, 2, 4);
+
+    Info<< "(septernion(-origin)*q*septernion(origin))"
         << ".transform(v) "
-        <<  (septernion(vector(0, -1, 0))
-           *q
-           *septernion(vector(0, 1, 0))).transform(v)
+        << (septernion(-origin)*q*septernion(origin)).transformPoint(v)
+        <<  " "
+        << septernion(-origin)
+          .transformPoint(q.transform(septernion(origin).transformPoint(v)))
         << endl;
 
     Info<< "Test conversion from and to Euler-angles" << endl;

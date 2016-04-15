@@ -83,9 +83,9 @@ Foam::solidBodyMotionFunctions::axisRotationMotion::transformation() const
 
     scalar magOmega = mag(omega);
     quaternion R(omega/magOmega, magOmega);
-    septernion TR(septernion(origin_)*R*septernion(-origin_));
+    septernion TR(septernion(-origin_)*R*septernion(origin_));
 
-    InfoInFunction << "Time = " << t << " transformation: " << TR << endl;
+    DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
 }

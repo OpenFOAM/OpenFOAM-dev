@@ -128,7 +128,7 @@ inline Foam::spatialTransform::operator spatialTensor() const
 inline void Foam::spatialTransform::operator&=(const spatialTransform& X)
 {
     E_ &= X.E_;
-    r_ = X.r_ + (r_ & X.E_.T());
+    r_ = X.r_ + (r_ & X.E_);
 }
 
 
@@ -164,6 +164,15 @@ inline Foam::spatialVector Foam::spatialTransform::operator&&
         E_ & v.w(),
         E_ & (v.l() - r_)
     );
+}
+
+
+inline Foam::vector Foam::spatialTransform::transformPoint
+(
+    const vector& p
+) const
+{
+    return E_ & (p - r_);
 }
 
 

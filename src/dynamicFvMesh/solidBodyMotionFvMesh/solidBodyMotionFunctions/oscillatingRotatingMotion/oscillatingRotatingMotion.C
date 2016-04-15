@@ -82,9 +82,9 @@ transformation() const
     eulerAngles *= pi/180.0;
 
     quaternion R(quaternion::XYZ, eulerAngles);
-    septernion TR(septernion(origin_)*R*septernion(-origin_));
+    septernion TR(septernion(-origin_)*R*septernion(origin_));
 
-    InfoInFunction << "Time = " << t << " transformation: " << TR << endl;
+    DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
 }

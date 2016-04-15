@@ -91,9 +91,9 @@ Foam::septernion Foam::solidBodyMotionFunctions::SDA::transformation() const
         heaveA_*(sin(wr*time + phh) - sin(phh))
     );
     quaternion R(quaternion::XYZ, vector(rollA*sin(wr*time + phr), 0, 0));
-    septernion TR(septernion(CofG_ + T)*R*septernion(-CofG_));
+    septernion TR(septernion(-CofG_ - T)*R*septernion(CofG_));
 
-    InfoInFunction << "Time = " << time << " transformation: " << TR << endl;
+    DebugInFunction << "Time = " << time << " transformation: " << TR << endl;
 
     return TR;
 }
