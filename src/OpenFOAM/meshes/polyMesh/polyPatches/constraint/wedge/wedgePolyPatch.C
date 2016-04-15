@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,8 +143,8 @@ Foam::wedgePolyPatch::wedgePolyPatch
     centreNormal_(vector::rootMax),
     n_(vector::rootMax),
     cosAngle_(0.0),
-    faceT_(tensor::zero),
-    cellT_(tensor::zero)
+    faceT_(Zero),
+    cellT_(Zero)
 {}
 
 
@@ -162,8 +162,8 @@ Foam::wedgePolyPatch::wedgePolyPatch
     centreNormal_(vector::rootMax),
     n_(vector::rootMax),
     cosAngle_(0.0),
-    faceT_(tensor::zero),
-    cellT_(tensor::zero)
+    faceT_(Zero),
+    cellT_(Zero)
 {}
 
 

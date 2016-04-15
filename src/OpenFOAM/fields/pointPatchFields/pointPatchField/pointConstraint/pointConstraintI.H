@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 
 inline Foam::pointConstraint::pointConstraint()
 :
-    Tuple2<label, vector>(0, vector::zero)
+    Tuple2<label, vector>(0, Zero)
 {}
 
 
@@ -68,7 +68,7 @@ void Foam::pointConstraint::applyConstraint(const vector& cd)
         if (mag(cd & second()) > 1e-3)
         {
             first() = 3;
-            second() = vector::zero;
+            second() = Zero;
         }
     }
 }
@@ -103,13 +103,13 @@ void Foam::pointConstraint::combine(const pointConstraint& pc)
             {
                 // Different directions
                 first() = 3;
-                second() = vector::zero;
+                second() = Zero;
             }
         }
         else
         {
             first() = 3;
-            second() = vector::zero;
+            second() = Zero;
         }
     }
 }
@@ -131,7 +131,7 @@ Foam::tensor Foam::pointConstraint::constraintTransformation() const
     }
     else
     {
-        return tensor::zero;
+        return Zero;
     }
 }
 
@@ -172,7 +172,7 @@ const
     // Knock out remaining vectors
     for (direction dir = n; dir < vecs.size(); dir++)
     {
-        vecs[dir] = vector::zero;
+        vecs[dir] = Zero;
     }
 
     tt = tensor(vecs[0], vecs[1], vecs[2]);

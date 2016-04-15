@@ -505,7 +505,7 @@ Foam::point Foam::face::centre(const pointField& points) const
     }
 
 
-    point centrePoint = point::zero;
+    point centrePoint = Zero;
     for (label pI=0; pI<nPoints; ++pI)
     {
         centrePoint += points[operator[](pI)];
@@ -513,7 +513,7 @@ Foam::point Foam::face::centre(const pointField& points) const
     centrePoint /= nPoints;
 
     scalar sumA = 0;
-    vector sumAc = vector::zero;
+    vector sumAc = Zero;
 
     for (label pI=0; pI<nPoints; ++pI)
     {
@@ -572,14 +572,14 @@ Foam::vector Foam::face::normal(const pointField& p) const
 
     label pI;
 
-    point centrePoint = vector::zero;
+    point centrePoint = Zero;
     for (pI = 0; pI < nPoints; ++pI)
     {
         centrePoint += p[operator[](pI)];
     }
     centrePoint /= nPoints;
 
-    vector n = vector::zero;
+    vector n = Zero;
 
     point nextPoint = centrePoint;
 
@@ -742,7 +742,7 @@ Foam::tensor Foam::face::inertia
 
     const point ctr = centre(p);
 
-    tensor J = tensor::zero;
+    tensor J = Zero;
 
     forAll(*this, i)
     {

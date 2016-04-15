@@ -70,7 +70,7 @@ Type Foam::face::average
 
     label nPoints = size();
 
-    point centrePoint = point::zero;
+    point centrePoint = Zero;
     Type cf = Zero;
 
     for (label pI=0; pI<nPoints; pI++)

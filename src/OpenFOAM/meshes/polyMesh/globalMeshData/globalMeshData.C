@@ -1917,7 +1917,7 @@ Foam::pointField Foam::globalMeshData::sharedPoints() const
             (
                 Pstream::blocking,
                 slave,
-                sharedPoints.size()*sizeof(vector::zero)
+                sharedPoints.size()*sizeof(Zero)
             );
             toSlave << sharedPoints;
         }

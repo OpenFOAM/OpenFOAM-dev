@@ -112,7 +112,7 @@ void Foam::plane::calcPntAndVec
 Foam::plane::plane(const vector& normalVector)
 :
     unitVector_(normalVector),
-    basePoint_(vector::zero)
+    basePoint_(Zero)
 {
     scalar magUnitVector(mag(unitVector_));
 
@@ -168,8 +168,8 @@ Foam::plane::plane
 
 Foam::plane::plane(const dictionary& dict)
 :
-    unitVector_(vector::zero),
-    basePoint_(point::zero)
+    unitVector_(Zero),
+    basePoint_(Zero)
 {
     const word planeType(dict.lookup("planeType"));
 

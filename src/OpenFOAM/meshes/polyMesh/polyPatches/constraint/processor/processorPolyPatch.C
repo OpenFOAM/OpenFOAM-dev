@@ -589,7 +589,7 @@ void Foam::processorPolyPatch::initOrder
             // Get the average of the points of each face. This is needed in
             // case the face centroid calculation is incorrect due to the face
             // having a very high aspect ratio.
-            pointField facePointAverages(pp.size(), point::zero);
+            pointField facePointAverages(pp.size(), Zero);
             forAll(pp, fI)
             {
                 const labelList& facePoints = pp[fI];
@@ -949,7 +949,7 @@ bool Foam::processorPolyPatch::order
             {
                 const pointField& ppPoints = pp.points();
 
-                pointField facePointAverages(pp.size(), point::zero);
+                pointField facePointAverages(pp.size(), Zero);
                 forAll(pp, fI)
                 {
                     const labelList& facePoints = pp[fI];

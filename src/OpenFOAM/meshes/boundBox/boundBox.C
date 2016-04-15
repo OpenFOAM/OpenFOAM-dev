@@ -51,8 +51,8 @@ void Foam::boundBox::calculate(const UList<point>& points, const bool doReduce)
 {
     if (points.empty())
     {
-        min_ = point::zero;
-        max_ = point::zero;
+        min_ = Zero;
+        max_ = Zero;
 
         if (doReduce && Pstream::parRun())
         {
@@ -87,8 +87,8 @@ void Foam::boundBox::calculate(const UList<point>& points, const bool doReduce)
 
 Foam::boundBox::boundBox(const UList<point>& points, const bool doReduce)
 :
-    min_(point::zero),
-    max_(point::zero)
+    min_(Zero),
+    max_(Zero)
 {
     calculate(points, doReduce);
 }
@@ -96,8 +96,8 @@ Foam::boundBox::boundBox(const UList<point>& points, const bool doReduce)
 
 Foam::boundBox::boundBox(const tmp<pointField>& points, const bool doReduce)
 :
-    min_(point::zero),
-    max_(point::zero)
+    min_(Zero),
+    max_(Zero)
 {
     calculate(points(), doReduce);
     points.clear();
@@ -111,8 +111,8 @@ Foam::boundBox::boundBox
     const bool doReduce
 )
 :
-    min_(point::zero),
-    max_(point::zero)
+    min_(Zero),
+    max_(Zero)
 {
     if (points.empty() || indices.empty())
     {

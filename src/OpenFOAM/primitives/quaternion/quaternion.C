@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::quaternion Foam::exp(const quaternion& q)
 
     if (magV == 0)
     {
-        return quaternion(1, vector::zero);
+        return quaternion(1, Zero);
     }
 
     const scalar expW = exp(q.w());

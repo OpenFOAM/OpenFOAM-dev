@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
         const typename FromPatch::FaceType& hitFace =
             fromPatchFaces[proj[pointI].hitObject()];
 
-        point hitPoint = point::zero;
+        point hitPoint = Zero;
 
         if (proj[pointI].hit())
         {

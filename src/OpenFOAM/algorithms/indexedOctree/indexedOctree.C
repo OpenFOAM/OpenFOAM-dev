@@ -1710,7 +1710,7 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
         if ((startBit & endBit) != 0)
         {
             // Both start and end outside domain and in same block.
-            return pointIndexHit(false, vector::zero, -1);
+            return pointIndexHit(false, Zero, -1);
         }
 
 
@@ -1724,7 +1724,7 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
             // Track start to inside domain.
             if (!treeBb.intersects(start, end, trackStart))
             {
-                return pointIndexHit(false, vector::zero, -1);
+                return pointIndexHit(false, Zero, -1);
             }
         }
 
@@ -1733,7 +1733,7 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findLine
             // Track end to inside domain.
             if (!treeBb.intersects(end, trackStart, trackEnd))
             {
-                return pointIndexHit(false, vector::zero, -1);
+                return pointIndexHit(false, Zero, -1);
             }
         }
 
@@ -2350,7 +2350,7 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findNearest
 {
     scalar nearestDistSqr = startDistSqr;
     label nearestShapeI = -1;
-    point nearestPoint = vector::zero;
+    point nearestPoint = Zero;
 
     if (nodes_.size())
     {
@@ -2401,7 +2401,7 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findNearest
 ) const
 {
     label nearestShapeI = -1;
-    point nearestPoint = vector::zero;
+    point nearestPoint = Zero;
 
     if (nodes_.size())
     {

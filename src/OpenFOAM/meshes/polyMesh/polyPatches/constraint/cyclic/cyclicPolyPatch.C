@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -607,9 +607,9 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
     neighbPatchName_(word::null),
     neighbPatchID_(-1),
-    rotationAxis_(vector::zero),
-    rotationCentre_(point::zero),
-    separationVector_(vector::zero),
+    rotationAxis_(Zero),
+    rotationCentre_(Zero),
+    separationVector_(Zero),
     coupledPointsPtr_(NULL),
     coupledEdgesPtr_(NULL)
 {
@@ -659,9 +659,9 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     neighbPatchName_(dict.lookupOrDefault("neighbourPatch", word::null)),
     coupleGroup_(dict),
     neighbPatchID_(-1),
-    rotationAxis_(vector::zero),
-    rotationCentre_(point::zero),
-    separationVector_(vector::zero),
+    rotationAxis_(Zero),
+    rotationCentre_(Zero),
+    separationVector_(Zero),
     coupledPointsPtr_(NULL),
     coupledEdgesPtr_(NULL)
 {

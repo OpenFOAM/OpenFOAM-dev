@@ -254,8 +254,8 @@ void Foam::primitiveMeshTools::cellClosedness
     // Loop through cell faces and sum up the face area vectors for each cell.
     // This should be zero in all vector components
 
-    vectorField sumClosed(mesh.nCells(), vector::zero);
-    vectorField sumMagClosed(mesh.nCells(), vector::zero);
+    vectorField sumClosed(mesh.nCells(), Zero);
+    vectorField sumMagClosed(mesh.nCells(), Zero);
 
     forAll(own, faceI)
     {
@@ -511,7 +511,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
             {
                 avgArea /= nInternalFaces;
 
-                symmTensor areaTensor(symmTensor::zero);
+                symmTensor areaTensor(Zero);
 
                 forAll(curFaces, i)
                 {

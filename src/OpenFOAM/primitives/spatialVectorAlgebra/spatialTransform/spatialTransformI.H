@@ -38,7 +38,7 @@ Foam::tensor Foam::spatialTransform::Erx() const
 inline Foam::spatialTransform::spatialTransform()
 :
     E_(tensor::I),
-    r_(vector::zero)
+    r_(Zero)
 {}
 
 
@@ -119,7 +119,7 @@ inline Foam::spatialTransform::operator spatialTensor() const
 {
     return spatialTensor
     (
-        E_,             tensor::zero,
+        E_,             Zero,
        -Erx(),          E_
     );
 }
@@ -181,7 +181,7 @@ inline Foam::spatialTransform::transpose::operator spatialTensor() const
     return spatialTensor
     (
         X_.E().T(),    -X_.Erx().T(),
-        tensor::zero,   X_.E().T()
+        Zero,           X_.E().T()
     );
 }
 
@@ -206,7 +206,7 @@ inline Foam::spatialTransform::dual::operator spatialTensor() const
     return spatialTensor
     (
         X_.E(),        -X_.Erx(),
-        tensor::zero,   X_.E()
+        Zero,           X_.E()
     );
 }
 
@@ -254,25 +254,25 @@ namespace Foam
 //- Rotational spatial transformation tensor about the x-axis by omega radians
 inline spatialTransform Xrx(const scalar& omega)
 {
-    return spatialTransform(Rx(omega), vector::zero);
+    return spatialTransform(Rx(omega), Zero);
 }
 
 //- Rotational spatial transformation tensor about the x-axis by omega radians
 inline spatialTransform Xry(const scalar& omega)
 {
-    return spatialTransform(Ry(omega), vector::zero);
+    return spatialTransform(Ry(omega), Zero);
 }
 
 //- Rotational spatial transformation tensor about the z-axis by omega radians
 inline spatialTransform Xrz(const scalar& omega)
 {
-    return spatialTransform(Rz(omega), vector::zero);
+    return spatialTransform(Rz(omega), Zero);
 }
 
 //- Rotational spatial transformation tensor about axis a by omega radians
 inline spatialTransform Xr(const vector& a, const scalar omega)
 {
-    return spatialTransform(Ra(a, omega), vector::zero);
+    return spatialTransform(Ra(a, omega), Zero);
 }
 
 //- Translational spatial transformation tensor for translation r
