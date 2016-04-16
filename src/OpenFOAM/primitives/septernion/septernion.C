@@ -61,12 +61,41 @@ Foam::word Foam::name(const septernion& s)
 
 Foam::septernion Foam::slerp
 (
-    const septernion& qa,
-    const septernion& qb,
+    const septernion& sa,
+    const septernion& sb,
     const scalar t
 )
 {
-    return septernion((1 - t)*qa.t() + t*qb.t(), slerp(qa.r(), qb.r(), t));
+    return septernion((1 - t)*sa.t() + t*sb.t(), slerp(sa.r(), sb.r(), t));
+}
+
+
+Foam::septernion Foam::average
+(
+    const UList<septernion>& ss,
+    const UList<scalar> w
+)
+{
+    septernion sa(w[0]*ss[0]);
+
+    for (label i=1; i<ss.size(); i++)
+    {
+        sa.t() += w[i]*ss[i].t();
+
+        // Invert quaternion if it has the opposite sign to the average
+        if ((sa.r() & ss[i].r()) > 0)
+        {
+            sa.r() += w[i]*ss[i].r();
+        }
+        else
+        {
+            sa.r() -= w[i]*ss[i].r();
+        }
+    }
+
+    normalize(sa.r());
+
+    return sa;
 }
 
 

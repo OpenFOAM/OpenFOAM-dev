@@ -97,6 +97,18 @@ int main(int argc, char *argv[])
         }
     }
 
+    List<septernion> ss(3);
+    List<scalar> w(3);
+
+    ss[0] = septernion(vector(0, 0.1, 0), quaternion(0.7, vector(1, 2, 3)));
+    w[0] = 0.1;
+    ss[1] = septernion(vector(0, 0.2, 0), quaternion(-0.6, vector(-2, -1, -3)));
+    w[1] = 0.5;
+    ss[2] = septernion(vector(0, 0.3, 0), quaternion(0.3, vector(3, 2, 1)));
+    w[2] = 0.4;
+
+    Info<< "average(ss, w) " << average(ss, w) << endl;
+
     Info<< "End\n" << endl;
 
     return 0;

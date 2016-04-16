@@ -69,6 +69,31 @@ Foam::quaternion Foam::slerp
 }
 
 
+Foam::quaternion Foam::average
+(
+    const UList<quaternion>& qs,
+    const UList<scalar> w
+)
+{
+    quaternion qa(w[0]*qs[0]);
+
+    for (label i=1; i<qs.size(); i++)
+    {
+        // Invert quaternion if it has the opposite sign to the average
+        if ((qa & qs[i]) > 0)
+        {
+            qa += w[i]*qs[i];
+        }
+        else
+        {
+            qa -= w[i]*qs[i];
+        }
+    }
+
+    return qa;
+}
+
+
 Foam::quaternion Foam::exp(const quaternion& q)
 {
     const scalar magV = mag(q.v());

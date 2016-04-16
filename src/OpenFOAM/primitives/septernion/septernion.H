@@ -168,6 +168,13 @@ septernion slerp
     const scalar t
 );
 
+//- Simple weighted average
+septernion average
+(
+    const UList<septernion>& ss,
+    const UList<scalar> w
+);
+
 //- Data associated with septernion type are contiguous
 template<>
 inline bool contiguous<septernion>() {return true;}

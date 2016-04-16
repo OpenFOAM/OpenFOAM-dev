@@ -259,6 +259,13 @@ quaternion slerp
     const scalar t
 );
 
+//- Simple weighted average with sign change
+quaternion average
+(
+    const UList<quaternion>& qs,
+    const UList<scalar> w
+);
+
 //- Exponent of a quaternion
 quaternion exp(const quaternion& q);
 
