@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ public:
         inline magnet()
         :
             remanence_("Mr", dimensionSet(0, -1, 0, 0, 0, 1, 0), 0),
-            orientation_(vector::zero)
+            orientation_(Zero)
         {}
 
         //- Construct from components
@@ -94,7 +94,7 @@ public:
         inline magnet(Istream& is)
         :
             remanence_("Mr", dimensionSet(0, -1, 0, 0, 0, 1, 0), 0),
-            orientation_(vector::zero)
+            orientation_(Zero)
         {
             is >> *this;
         }

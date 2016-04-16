@@ -240,7 +240,7 @@ Foam::laminar<BasicTurbulenceModel>::R() const
             this->mesh_,
             dimensionedSymmTensor
             (
-                "R", sqr(this->U_.dimensions()), symmTensor::zero
+                "R", sqr(this->U_.dimensions()), Zero
             )
         )
     );

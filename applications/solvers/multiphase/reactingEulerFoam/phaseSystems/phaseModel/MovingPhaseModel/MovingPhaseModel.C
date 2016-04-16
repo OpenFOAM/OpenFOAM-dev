@@ -173,7 +173,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             fluid.mesh()
         ),
         fluid.mesh(),
-        dimensionedVector("0", dimAcceleration, vector::zero)
+        dimensionedVector("0", dimAcceleration, Zero)
     ),
     divU_(NULL),
     turbulence_

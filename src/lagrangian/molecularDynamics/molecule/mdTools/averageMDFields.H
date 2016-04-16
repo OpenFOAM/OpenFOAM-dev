@@ -41,7 +41,7 @@ if (runTime.outputTime())
         Bulk velocity
     \*-----------------------------------------------------------------------*/
 
-    vectorField totalMomentum_sum(mesh.nCells(), vector::zero);
+    vectorField totalMomentum_sum(mesh.nCells(), Zero);
 
     scalarField totalMass_sum(mesh.nCells(), 0.0);
 
@@ -71,7 +71,7 @@ if (runTime.outputTime())
             }
             else
             {
-                singleSpeciesVelocity[sSV] = vector::zero;
+                singleSpeciesVelocity[sSV] = Zero;
             }
         }
     }
@@ -87,7 +87,7 @@ if (runTime.outputTime())
         }
         else
         {
-            itotalVelocity[tV] = vector::zero;
+            itotalVelocity[tV] = Zero;
         }
     }
 

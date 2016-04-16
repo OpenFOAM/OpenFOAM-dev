@@ -77,6 +77,9 @@ public:
         //- Construct null
         inline DiagTensor();
 
+        //- Construct initialized to zero
+        inline DiagTensor(const Foam::zero);
+
         //- Construct given VectorSpace
         template<class Cmpt2>
         inline DiagTensor(const VectorSpace<DiagTensor<Cmpt2>, Cmpt2, 3>&);

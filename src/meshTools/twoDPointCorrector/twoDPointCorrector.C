@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,7 +201,7 @@ Foam::twoDPointCorrector::twoDPointCorrector(const polyMesh& mesh)
     planeNormalPtr_(NULL),
     normalEdgeIndicesPtr_(NULL),
     isWedge_(false),
-    wedgeAxis_(vector::zero),
+    wedgeAxis_(Zero),
     wedgeAngle_(0.0)
 {}
 

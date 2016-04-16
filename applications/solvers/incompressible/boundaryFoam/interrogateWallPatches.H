@@ -3,7 +3,7 @@
 label faceId(-1);
 label patchId(-1);
 label nWallFaces(0);
-vector wallNormal(vector::zero);
+vector wallNormal(Zero);
 
 const fvPatchList& patches = mesh.boundary();
 

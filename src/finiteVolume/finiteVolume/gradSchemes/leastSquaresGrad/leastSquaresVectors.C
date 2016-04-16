@@ -51,7 +51,7 @@ Foam::leastSquaresVectors::leastSquaresVectors(const fvMesh& mesh)
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, vector::zero)
+        dimensionedVector("zero", dimless/dimLength, Zero)
     ),
     nVectors_
     (
@@ -65,7 +65,7 @@ Foam::leastSquaresVectors::leastSquaresVectors(const fvMesh& mesh)
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, vector::zero)
+        dimensionedVector("zero", dimless/dimLength, Zero)
     )
 {
     calcLeastSquaresVectors();
@@ -99,7 +99,7 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
 
 
     // Set up temporary storage for the dd tensor (before inversion)
-    symmTensorField dd(mesh_.nCells(), symmTensor::zero);
+    symmTensorField dd(mesh_.nCells(), Zero);
 
     forAll(owner, facei)
     {

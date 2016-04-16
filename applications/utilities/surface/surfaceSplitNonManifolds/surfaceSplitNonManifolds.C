@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -558,7 +558,7 @@ void calcPointVecs
 
             // Determine vector as average of the vectors in the two faces.
             // If there is only one face available use only one vector.
-            vector midVec(vector::zero);
+            vector midVec(Zero);
 
             if (face0I != -1)
             {

@@ -426,7 +426,7 @@ Foam::shortEdgeFilter2D::filter()
 
     label totalNewPoints = points.size() - nPointsToRemove;
 
-    pointField newPoints(totalNewPoints, vector::zero);
+    pointField newPoints(totalNewPoints, Zero);
     labelList newPointNumbers(points.size(), -1);
     label numberRemoved = 0;
 

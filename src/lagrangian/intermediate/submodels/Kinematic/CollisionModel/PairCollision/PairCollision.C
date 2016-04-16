@@ -47,9 +47,9 @@ void Foam::PairCollision<CloudType>::preInteraction()
     {
         typename CloudType::parcelType& p = iter();
 
-        p.f() = vector::zero;
+        p.f() = Zero;
 
-        p.torque() = vector::zero;
+        p.torque() = Zero;
     }
 }
 

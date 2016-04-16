@@ -286,7 +286,7 @@ Foam::volumeType Foam::treeDataPrimitivePatch<PatchType>::getVolumeType
             // triangle normals)
             const labelList& eFaces = patch_.edgeFaces()[edgeI];
 
-            vector edgeNormal(vector::zero);
+            vector edgeNormal(Zero);
 
             forAll(eFaces, i)
             {

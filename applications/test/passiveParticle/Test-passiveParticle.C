@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
         Pout<< "Starting particles:" << particles.size() << endl;
 
         Pout<< "Adding a particle." << endl;
-        particles.addParticle(new passiveParticle(mesh, vector::zero, -1));
+        particles.addParticle(new passiveParticle(mesh, Zero, -1));
 
         forAllConstIter(passiveParticleCloud, particles, iter)
         {

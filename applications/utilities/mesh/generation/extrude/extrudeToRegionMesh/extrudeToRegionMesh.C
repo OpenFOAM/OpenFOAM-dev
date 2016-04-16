@@ -2296,7 +2296,7 @@ int main(int argc, char *argv[])
     // Calculate region normals by reducing local region normals
     pointField localRegionNormals(localToGlobalRegion.size());
     {
-        pointField localSum(localToGlobalRegion.size(), vector::zero);
+        pointField localSum(localToGlobalRegion.size(), Zero);
 
         forAll(pointLocalRegions, faceI)
         {

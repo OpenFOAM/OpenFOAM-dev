@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,9 +147,9 @@ bool Foam::molecule::move(molecule::trackingData& td, const scalar trackTime)
 
         scalar m = constProps.mass();
 
-        a_ = vector::zero;
+        a_ = Zero;
 
-        tau_ = vector::zero;
+        tau_ = Zero;
 
         forAll(siteForces_, s)
         {
@@ -166,9 +166,9 @@ bool Foam::molecule::move(molecule::trackingData& td, const scalar trackTime)
 
         if (constProps.pointMolecule())
         {
-            tau_ = vector::zero;
+            tau_ = Zero;
 
-            pi_ = vector::zero;
+            pi_ = Zero;
         }
 
         if (constProps.linearMolecule())

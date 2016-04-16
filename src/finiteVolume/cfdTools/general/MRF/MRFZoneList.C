@@ -177,7 +177,7 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
                 U.mesh()
             ),
             U.mesh(),
-            dimensionedVector("0", U.dimensions()/dimTime, vector::zero)
+            dimensionedVector("0", U.dimensions()/dimTime, Zero)
         )
     );
     volVectorField& acceleration = tacceleration.ref();

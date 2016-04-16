@@ -166,7 +166,7 @@ void Foam::extendedEdgeMesh::sortPointsAndEdges
                 );
         }
 
-        vector fC0tofC1(vector::zero);
+        vector fC0tofC1(Zero);
 
         if (eFaces.size() == 2)
         {

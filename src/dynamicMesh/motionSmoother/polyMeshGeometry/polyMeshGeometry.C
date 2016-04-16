@@ -63,9 +63,9 @@ void Foam::polyMeshGeometry::updateFaceCentresAndAreas
         }
         else
         {
-            vector sumN = vector::zero;
+            vector sumN = Zero;
             scalar sumA = 0.0;
-            vector sumAc = vector::zero;
+            vector sumAc = Zero;
 
             point fCentre = p[f[0]];
             for (label pi = 1; pi < nPoints; pi++)
@@ -102,7 +102,7 @@ void Foam::polyMeshGeometry::updateCellCentresAndVols
 )
 {
     // Clear the fields for accumulation
-    UIndirectList<vector>(cellCentres_, changedCells) = vector::zero;
+    UIndirectList<vector>(cellCentres_, changedCells) = Zero;
     UIndirectList<scalar>(cellVolumes_, changedCells) = 0.0;
 
     const labelList& own = mesh_.faceOwner();
@@ -111,7 +111,7 @@ void Foam::polyMeshGeometry::updateCellCentresAndVols
     // first estimate the approximate cell centre as the average of face centres
 
     vectorField cEst(mesh_.nCells());
-    UIndirectList<vector>(cEst, changedCells) = vector::zero;
+    UIndirectList<vector>(cEst, changedCells) = Zero;
     scalarField nCellFaces(mesh_.nCells());
     UIndirectList<scalar>(nCellFaces, changedCells) = 0.0;
 
@@ -1693,7 +1693,7 @@ bool Foam::polyMeshGeometry::checkFaceTwist
 
         if (f.size() > 3)
         {
-            vector nf(vector::zero);
+            vector nf(Zero);
 
             if (mesh.isInternalFace(faceI))
             {
@@ -2118,7 +2118,7 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
     {
         const cell& cFaces = cells[affectedCells[i]];
 
-        tensor areaSum(tensor::zero);
+        tensor areaSum(Zero);
         scalar magAreaSum = 0;
 
         forAll(cFaces, cFaceI)

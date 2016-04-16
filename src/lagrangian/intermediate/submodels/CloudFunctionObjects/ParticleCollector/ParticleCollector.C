@@ -174,7 +174,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
         // set 4 quadrants for single sector cases
         nS = 4;
 
-        vector tangent = vector::zero;
+        vector tangent = Zero;
         scalar magTangent = 0.0;
 
         Random rnd(1234);

@@ -59,7 +59,7 @@ Foam::relativeVelocityModel::relativeVelocityModel
             IOobject::AUTO_WRITE
         ),
         alphac_.mesh(),
-        dimensionedVector("Udm", dimVelocity, vector::zero)
+        dimensionedVector("Udm", dimVelocity, Zero)
     )
 {}
 

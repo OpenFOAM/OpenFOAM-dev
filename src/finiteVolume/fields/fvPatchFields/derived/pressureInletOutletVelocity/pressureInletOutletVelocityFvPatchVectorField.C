@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,9 +41,9 @@ pressureInletOutletVelocityFvPatchVectorField
     directionMixedFvPatchVectorField(p, iF),
     phiName_("phi")
 {
-    refValue() = vector::zero;
-    refGrad() = vector::zero;
-    valueFraction() = symmTensor::zero;
+    refValue() = Zero;
+    refGrad() = Zero;
+    valueFraction() = Zero;
 }
 
 
@@ -88,11 +88,11 @@ pressureInletOutletVelocityFvPatchVectorField
     }
     else
     {
-        refValue() = vector::zero;
+        refValue() = Zero;
     }
 
-    refGrad() = vector::zero;
-    valueFraction() = symmTensor::zero;
+    refGrad() = Zero;
+    valueFraction() = Zero;
 }
 
 

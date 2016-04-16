@@ -122,7 +122,7 @@ bool Foam::StandardWallInteraction<CloudType>::correct
             {
                 keepParticle = false;
                 active = false;
-                U = vector::zero;
+                U = Zero;
                 nEscape_++;
                 massEscape_ += p.mass()*p.nParticle();
                 break;
@@ -131,7 +131,7 @@ bool Foam::StandardWallInteraction<CloudType>::correct
             {
                 keepParticle = true;
                 active = false;
-                U = vector::zero;
+                U = Zero;
                 nStick_++;
                 break;
             }

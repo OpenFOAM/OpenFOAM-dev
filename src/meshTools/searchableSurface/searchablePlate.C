@@ -132,7 +132,7 @@ Foam::pointIndexHit Foam::searchablePlate::findLine
     pointIndexHit info
     (
         true,
-        vector::zero,
+        Zero,
         0
     );
 
@@ -424,7 +424,7 @@ void Foam::searchablePlate::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
     forAll(normal, i)
     {
         normal[i][normalDir_] = 1.0;

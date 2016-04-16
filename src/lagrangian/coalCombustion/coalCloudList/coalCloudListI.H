@@ -43,7 +43,7 @@ Foam::coalCloudList::UTrans() const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedVector("zero", dimMass*dimVelocity, vector::zero)
+            dimensionedVector("zero", dimMass*dimVelocity, Zero)
         )
     );
 

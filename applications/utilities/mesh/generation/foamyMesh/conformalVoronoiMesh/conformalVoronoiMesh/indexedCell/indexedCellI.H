@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,8 +22,6 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-
-//#include "indexedCellChecks.H"
 
 template<class Gt, class Cb>
 Foam::tetCell CGAL::indexedCell<Gt, Cb>::unsortedVertexGlobalIndices
@@ -578,8 +576,8 @@ inline bool CGAL::indexedCell<Gt, Cb>::potentialCoplanarCell() const
 
     if (nMasters == 2 && nSlaves == 2)
     {
-        Foam::vector vp0(Foam::vector::zero);
-        Foam::vector vp1(Foam::vector::zero);
+        Foam::vector vp0(Foam::Zero);
+        Foam::vector vp1(Foam::Zero);
 
         if
         (

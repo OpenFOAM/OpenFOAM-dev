@@ -177,7 +177,7 @@ Foam::tensor Foam::cellShapeControl::cellAlignment(const point& pt) const
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);
 
-    tensor alignment = tensor::zero;
+    tensor alignment = Zero;
 
     if (shapeControlMesh_.dimension() < 3 || shapeControlMesh_.is_infinite(ch))
     {
@@ -249,7 +249,7 @@ void Foam::cellShapeControl::cellSizeAndAlignment
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);
 
-    alignment = tensor::zero;
+    alignment = Zero;
     size = 0;
 
     if (shapeControlMesh_.dimension() < 3 || shapeControlMesh_.is_infinite(ch))

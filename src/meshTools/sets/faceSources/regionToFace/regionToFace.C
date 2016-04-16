@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ void Foam::regionToFace::combine(topoSet& set, const bool add) const
 
     mappedPatchBase::nearInfo ni
     (
-        pointIndexHit(false, vector::zero, -1),
+        pointIndexHit(false, Zero, -1),
         Tuple2<scalar, label>
         (
             sqr(GREAT),

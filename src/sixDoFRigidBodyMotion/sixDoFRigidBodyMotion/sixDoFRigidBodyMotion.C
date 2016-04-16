@@ -46,13 +46,13 @@ void Foam::sixDoFRigidBodyMotion::applyRestraints()
             }
 
             // Restraint position
-            point rP = vector::zero;
+            point rP = Zero;
 
             // Restraint force
-            vector rF = vector::zero;
+            vector rF = Zero;
 
             // Restraint moment
-            vector rM = vector::zero;
+            vector rM = Zero;
 
             // Accumulate the restraints
             restraints_[rI].restrain(*this, rP, rF, rM);
@@ -78,8 +78,8 @@ Foam::sixDoFRigidBodyMotion::sixDoFRigidBodyMotion()
     constraints_(),
     tConstraints_(tensor::I),
     rConstraints_(tensor::I),
-    initialCentreOfMass_(vector::zero),
-    initialCentreOfRotation_(vector::zero),
+    initialCentreOfMass_(Zero),
+    initialCentreOfRotation_(Zero),
     initialQ_(I),
     mass_(VSMALL),
     momentOfInertia_(diagTensor::one*VSMALL),

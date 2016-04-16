@@ -364,7 +364,7 @@ void Foam::surfaceInterpolation::makeNonOrthCorrectionVectors() const
 
         if (!patchCorrVecs.coupled())
         {
-            patchCorrVecs = vector::zero;
+            patchCorrVecs = Zero;
         }
         else
         {

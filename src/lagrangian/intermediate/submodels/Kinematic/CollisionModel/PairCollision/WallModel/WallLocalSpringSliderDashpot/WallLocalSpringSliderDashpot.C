@@ -151,7 +151,7 @@ void Foam::WallLocalSpringSliderDashpot<CloudType>::evaluateWall
 
             fT_PW = -mu*mag(fN_PW)*USlip_PW/mag(USlip_PW);
 
-            tangentialOverlap_PW = vector::zero;
+            tangentialOverlap_PW = Zero;
         }
         else
         {

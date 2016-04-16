@@ -66,7 +66,7 @@ using namespace Foam;
 //    //    (note:without calculating pointNormals
 //    //     to avoid them being stored)
 //
-//    tmp<pointField> textrudeN(new pointField(p.nPoints(), vector::zero));
+//    tmp<pointField> textrudeN(new pointField(p.nPoints(), Zero));
 //    pointField& extrudeN = textrudeN();
 //    {
 //        const faceList& localFaces = p.localFaces();
@@ -123,7 +123,7 @@ using namespace Foam;
 //        globalData.globalPointTransformedSlaves();
 //
 //
-//    pointField coupledPointNormals(map.constructSize(), vector::zero);
+//    pointField coupledPointNormals(map.constructSize(), Zero);
 //
 //    forAll(meshPoints, patchPointI)
 //    {

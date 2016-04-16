@@ -150,7 +150,7 @@ Foam::MPPICParcel<ParcelType>::TrackingData<CloudType>::updateAverages
     volumeAverage_() = 0;
     radiusAverage_() = 0;
     rhoAverage_() = 0;
-    uAverage_() = vector::zero;
+    uAverage_() = Zero;
     uSqrAverage_() = 0;
     frequencyAverage_() = 0;
     massAverage_() = 0;

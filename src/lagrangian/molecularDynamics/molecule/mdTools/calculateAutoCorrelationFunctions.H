@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ if (mesh.time().timeIndex() % vacf.sampleSteps() == 0)
 
 if (mesh.time().timeIndex() % pacf.sampleSteps() == 0)
 {
-    vector p = vector::zero;
+    vector p = Zero;
 
     forAllConstIter(IDLList<molecule>, molecules, mol)
     {
@@ -61,7 +61,7 @@ if (mesh.time().timeIndex() % pacf.sampleSteps() == 0)
 
 if (mesh.time().timeIndex() % hfacf.sampleSteps() == 0)
 {
-    vector s = vector::zero;
+    vector s = Zero;
 
     forAllConstIter(IDLList<molecule>, molecules, mol)
     {

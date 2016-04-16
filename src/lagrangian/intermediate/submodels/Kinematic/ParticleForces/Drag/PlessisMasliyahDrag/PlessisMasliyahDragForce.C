@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ Foam::forceSuSp Foam::PlessisMasliyahDragForce<CloudType>::calcCoupled
 
     return forceSuSp
     (
-        vector::zero,
+        Zero,
         (mass/p.rho())
        *(A*(1.0 - alphac)/alphac + B*Re)*muc/(alphac*sqr(p.d()))
     );

@@ -62,7 +62,7 @@ Foam::SRF::SRFModel::SRFModel
     origin_("origin", dimLength, lookup("origin")),
     axis_(lookup("axis")),
     SRFModelCoeffs_(subDict(type + "Coeffs")),
-    omega_(dimensionedVector("omega", dimless/dimTime, vector::zero))
+    omega_(dimensionedVector("omega", dimless/dimTime, Zero))
 {
     // Normalise the axis
     axis_ /= mag(axis_);

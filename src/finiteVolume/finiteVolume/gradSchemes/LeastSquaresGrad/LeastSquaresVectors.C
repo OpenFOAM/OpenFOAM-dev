@@ -88,7 +88,7 @@ void Foam::fv::LeastSquaresVectors<Stencil>::calcLeastSquaresVectors()
         dd -= dd0;
 
         // Finalize the gradient weighting vectors
-        lsvi[0] = vector::zero;
+        lsvi[0] = Zero;
         for (label j=1; j<lsvi.size(); j++)
         {
             lsvi[j] = dd & lsvi[j];

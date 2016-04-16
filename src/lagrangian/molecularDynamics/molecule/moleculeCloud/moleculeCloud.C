@@ -1016,7 +1016,7 @@ void Foam::moleculeCloud::createMolecule
             << abort(FatalError);
     }
 
-    point specialPosition(vector::zero);
+    point specialPosition(Zero);
 
     label special = 0;
 
@@ -1033,7 +1033,7 @@ void Foam::moleculeCloud::createMolecule
 
     v += bulkVelocity;
 
-    vector pi = vector::zero;
+    vector pi = Zero;
 
     tensor Q = I;
 
@@ -1072,9 +1072,9 @@ void Foam::moleculeCloud::createMolecule
             tetPt,
             Q,
             v,
-            vector::zero,
+            Zero,
             pi,
-            vector::zero,
+            Zero,
             specialPosition,
             constProps(id),
             special,
@@ -1184,11 +1184,11 @@ void Foam::moleculeCloud::calculateForce()
     // Set accumulated quantities to zero
     forAllIter(moleculeCloud, *this, mol)
     {
-        mol().siteForces() = vector::zero;
+        mol().siteForces() = Zero;
 
         mol().potentialEnergy() = 0.0;
 
-        mol().rf() = tensor::zero;
+        mol().rf() = Zero;
     }
 
     calculatePairForce();

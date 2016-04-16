@@ -470,7 +470,7 @@ void Foam::isoSurface::calcCutTypes
 // Caculate centre of surface.
 Foam::point Foam::isoSurface::calcCentre(const triSurface& s)
 {
-    vector sum = vector::zero;
+    vector sum = Zero;
 
     forAll(s, i)
     {
@@ -510,7 +510,7 @@ void Foam::isoSurface::calcSnappedCc
 
             localTriPoints.clear();
             label nOther = 0;
-            point otherPointSum = vector::zero;
+            point otherPointSum = Zero;
 
             // Create points for all intersections close to cell centre
             // (i.e. from pyramid edges)
@@ -696,7 +696,7 @@ void Foam::isoSurface::calcSnappedPoint
 
         localTriPoints.clear();
         label nOther = 0;
-        point otherPointSum = vector::zero;
+        point otherPointSum = Zero;
 
         forAll(pFaces, pFaceI)
         {

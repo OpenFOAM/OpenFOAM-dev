@@ -1097,7 +1097,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
                                     medialAxisPt,   //points[pointI],
                                     magSqr(points[pointI]-medialAxisPt),//0.0,
                                     pointI,         // passive data
-                                    vector::zero    // passive data
+                                    Zero    // passive data
                                 )
                             );
                             pointMedialDist[pointI] = maxInfo.last();
@@ -1153,7 +1153,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
                                     points[pointI],
                                     0.0,
                                     pointI,         // passive data
-                                    vector::zero    // passive data
+                                    Zero    // passive data
                                 )
                             );
                             pointMedialDist[pointI] = maxInfo.last();
@@ -1203,7 +1203,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
                                         points[pointI],
                                         0.0,
                                         pointI,         // passive data
-                                        vector::zero    // passive data
+                                        Zero    // passive data
                                     )
                                 );
                                 pointMedialDist[pointI] = maxInfo.last();
@@ -1584,7 +1584,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
                 points[pointI],
                 0.0,
                 thickness[patchPointI],       // transport layer thickness
-                vector::zero                  // passive vector
+                Zero                  // passive vector
             );
         }
 
@@ -1608,7 +1608,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
     {
         if (!pointWallDist[pointI].valid(dummyTrackData))
         {
-            displacement[pointI] = vector::zero;
+            displacement[pointI] = Zero;
         }
         else
         {

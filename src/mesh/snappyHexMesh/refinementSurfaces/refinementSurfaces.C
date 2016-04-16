@@ -935,7 +935,7 @@ void Foam::refinementSurfaces::findNearestIntersection
     region1.setSize(start.size());
     region1 = -1;
     normal1.setSize(start.size());
-    normal1 = vector::zero;
+    normal1 = Zero;
 
     // Current end of segment to test.
     pointField nearest(end);
@@ -1185,7 +1185,7 @@ void Foam::refinementSurfaces::findNearestRegion
     hitRegion.setSize(hitSurface.size());
     hitRegion = -1;
     hitNormal.setSize(hitSurface.size());
-    hitNormal = vector::zero;
+    hitNormal = Zero;
 
     forAll(surfacesToTest, i)
     {

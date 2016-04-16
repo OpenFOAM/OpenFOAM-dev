@@ -1581,7 +1581,7 @@ void Foam::conformalVoronoiMesh::limitDisplacement
     // Do not allow infinite recursion
     if (callCount > 7)
     {
-        displacement = vector::zero;
+        displacement = Zero;
         return;
     }
 
@@ -1630,7 +1630,7 @@ void Foam::conformalVoronoiMesh::limitDisplacement
             if (magSqr(pt - surfHit.hitPoint()) <= searchDistanceSqr)
             {
                 // Cannot limit displacement, point closer than tolerance
-                displacement = vector::zero;
+                displacement = Zero;
                 return;
             }
         }

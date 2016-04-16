@@ -862,7 +862,7 @@ void Foam::CV2D::newPoints()
             edgei = 0;
 
             // Initialise the displacement for the centre and sum-weights
-            vector2D disp = vector2D::zero;
+            vector2D disp = Zero;
             scalar sumw = 0;
 
             do

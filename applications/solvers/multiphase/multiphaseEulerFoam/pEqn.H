@@ -264,7 +264,7 @@
 
             mSfGradp = pEqnIncomp.flux()/rAUf;
 
-            U = dimensionedVector("U", dimVelocity, vector::zero);
+            U = dimensionedVector("U", dimVelocity, Zero);
 
             phasei = 0;
             forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)

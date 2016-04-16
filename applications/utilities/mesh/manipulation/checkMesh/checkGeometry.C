@@ -285,7 +285,7 @@ namespace Foam
                 label n = 0;
 
                 // Extract for every face the i'th position
-                pointField ptsAtIndex(pts.size(), vector::zero);
+                pointField ptsAtIndex(pts.size(), Zero);
                 forAll(cpp, faceI)
                 {
                     const pointField& facePts = pts[faceI];

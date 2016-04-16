@@ -197,7 +197,7 @@ Foam::pressureTools::pressureTools
     pRef_(0.0),
     calcCoeff_(false),
     pInf_(0.0),
-    UInf_(vector::zero),
+    UInf_(Zero),
     rhoInf_(0.0)
 {
     // Check if the available mesh is an fvMesh, otherwise deactivate

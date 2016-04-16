@@ -118,7 +118,7 @@ Foam::linearUpwindV<Type>::correction
         {
             if (maxCorrs < 0)
             {
-                sfCorr[facei] = vector::zero;
+                sfCorr[facei] = Zero;
             }
             else if (sfCorrs > maxCorrs)
             {
@@ -185,7 +185,7 @@ Foam::linearUpwindV<Type>::correction
                 {
                     if (maxCorrs < 0)
                     {
-                        pSfCorr[facei] = vector::zero;
+                        pSfCorr[facei] = Zero;
                     }
                     else if (pSfCorrs > maxCorrs)
                     {

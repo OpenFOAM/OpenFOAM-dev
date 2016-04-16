@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2011-2013 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2011-2016 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
         point Cf = f.centre(pts);
 
-        tensor J = tensor::zero;
+        tensor J = Zero;
 
         J = f.inertia(pts, Cf, density);
 
@@ -141,8 +141,8 @@ int main(int argc, char *argv[])
         tetFaces[3] = triFace(0, 1, 3);
 
         scalar m = 0.0;
-        vector cM = vector::zero;
-        tensor J = tensor::zero;
+        vector cM = Zero;
+        tensor J = Zero;
 
         momentOfInertia::massPropertiesSolid(pts, tetFaces, density, m, cM, J);
 

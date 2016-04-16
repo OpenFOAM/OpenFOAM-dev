@@ -634,7 +634,7 @@ Foam::tmp<Foam::volVectorField> Foam::multiphaseSystem::Svm
             (
                 "Svm",
                 dimensionSet(1, -2, -2, 0, 0),
-                vector::zero
+                Zero
             )
         )
     );
@@ -677,7 +677,7 @@ Foam::tmp<Foam::volVectorField> Foam::multiphaseSystem::Svm
             )
         )
         {
-            tSvm.ref().boundaryField()[patchi] = vector::zero;
+            tSvm.ref().boundaryField()[patchi] = Zero;
         }
     }
 

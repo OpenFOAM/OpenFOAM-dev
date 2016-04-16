@@ -93,7 +93,7 @@ Foam::pointIndexHit Foam::searchableCylinder::findNearest
 
     if (magV < ROOTVSMALL)
     {
-        v = vector::zero;
+        v = Zero;
     }
     else
     {
@@ -651,7 +651,7 @@ void Foam::searchableCylinder::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
 
     forAll(info, i)
     {

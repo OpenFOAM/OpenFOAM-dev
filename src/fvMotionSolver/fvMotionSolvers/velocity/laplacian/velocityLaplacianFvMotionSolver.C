@@ -69,7 +69,7 @@ Foam::velocityLaplacianFvMotionSolver::velocityLaplacianFvMotionSolver
         (
             "cellMotionU",
             pointMotionU_.dimensions(),
-            vector::zero
+            Zero
         ),
         cellMotionBoundaryTypes<vector>(pointMotionU_.boundaryField())
     ),

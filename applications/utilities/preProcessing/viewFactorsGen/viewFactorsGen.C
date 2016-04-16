@@ -738,7 +738,7 @@ int main(int argc, char *argv[])
     {
         const boundBox& box = mesh.bounds();
         const Vector<label>& dirs = mesh.geometricD();
-        vector emptyDir = vector::zero;
+        vector emptyDir = Zero;
         forAll(dirs, i)
         {
             if (dirs[i] == -1)

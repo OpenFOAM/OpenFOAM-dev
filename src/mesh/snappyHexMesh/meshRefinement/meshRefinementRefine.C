@@ -1528,7 +1528,7 @@ bool Foam::meshRefinement::isGap
     {
         scalar cosAngle = (normal0 & normal1);
 
-        vector avg = vector::zero;
+        vector avg = Zero;
         if (cosAngle < (-1+planarCos))
         {
             // Opposite normals
@@ -1585,7 +1585,7 @@ bool Foam::meshRefinement::isNormalGap
     {
         scalar cosAngle = (normal0 & normal1);
 
-        vector avg = vector::zero;
+        vector avg = Zero;
         if (cosAngle < (-1+planarCos))
         {
             // Opposite normals
@@ -1774,8 +1774,8 @@ Foam::label Foam::meshRefinement::markProximityRefinement
     // minLevel) and cache per cell the max surface level and the local normal
     // on that surface.
     labelList cellMaxLevel(mesh_.nCells(), -1);
-    vectorField cellMaxNormal(mesh_.nCells(), vector::zero);
-    pointField cellMaxLocation(mesh_.nCells(), vector::zero);
+    vectorField cellMaxNormal(mesh_.nCells(), Zero);
+    pointField cellMaxLocation(mesh_.nCells(), Zero);
 
     {
         // Per segment the normals of the surfaces

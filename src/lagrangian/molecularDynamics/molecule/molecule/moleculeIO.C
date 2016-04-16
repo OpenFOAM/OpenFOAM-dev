@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,14 +45,14 @@ Foam::molecule::molecule
 )
 :
     particle(mesh, is, readFields),
-    Q_(tensor::zero),
-    v_(vector::zero),
-    a_(vector::zero),
-    pi_(vector::zero),
-    tau_(vector::zero),
-    specialPosition_(vector::zero),
+    Q_(Zero),
+    v_(Zero),
+    a_(Zero),
+    pi_(Zero),
+    tau_(Zero),
+    specialPosition_(Zero),
     potentialEnergy_(0.0),
-    rf_(tensor::zero),
+    rf_(Zero),
     special_(0),
     id_(0),
     siteForces_(0),

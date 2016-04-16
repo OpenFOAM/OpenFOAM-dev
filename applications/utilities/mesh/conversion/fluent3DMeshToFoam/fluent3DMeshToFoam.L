@@ -1089,9 +1089,9 @@ int main(int argc, char *argv[])
                     mesh.boundaryMesh(),
                     neighbPatchName,
                     cyclicPolyPatch::NOORDERING,
-                    vector::zero,
-                    vector::zero,
-                    vector::zero
+                    Zero,
+                    Zero,
+                    Zero
                 );
             }
             else

@@ -39,7 +39,7 @@ rotatingWallVelocityFvPatchVectorField
 :
     fixedValueFvPatchField<vector>(p, iF),
     origin_(),
-    axis_(vector::zero),
+    axis_(Zero),
     omega_(0)
 {}
 

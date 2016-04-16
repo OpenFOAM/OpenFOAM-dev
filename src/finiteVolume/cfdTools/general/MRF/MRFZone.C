@@ -423,7 +423,7 @@ void Foam::MRFZone::makeRelative(volVectorField& U) const
         forAll(includedFaces_[patchi], i)
         {
             label patchFacei = includedFaces_[patchi][i];
-            U.boundaryField()[patchi][patchFacei] = vector::zero;
+            U.boundaryField()[patchi][patchFacei] = Zero;
         }
     }
 

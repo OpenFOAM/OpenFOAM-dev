@@ -80,7 +80,7 @@
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedVector("zero", dimVelocity, vector::zero)
+        dimensionedVector("zero", dimVelocity, Zero)
     );
 
     #include "createPhi.H"

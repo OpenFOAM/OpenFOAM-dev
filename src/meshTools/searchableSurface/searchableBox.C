@@ -579,7 +579,7 @@ void Foam::searchableBox::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
 
     forAll(info, i)
     {

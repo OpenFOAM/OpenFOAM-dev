@@ -196,7 +196,7 @@ vectorField calcVertexNormals(const triSurface& surf)
 
     Info<< "Calculating vertex normals" << endl;
 
-    vectorField pointNormals(surf.nPoints(), vector::zero);
+    vectorField pointNormals(surf.nPoints(), Zero);
 
     const pointField& points = surf.points();
     const labelListList& pointFaces = surf.pointFaces();
@@ -276,8 +276,8 @@ triSurfacePointScalarField calcCurvature
         const edgeList fEdges = f.edges();
 
         // Calculate the edge vectors and the normal differences
-        vectorField edgeVectors(f.size(), vector::zero);
-        vectorField normalDifferences(f.size(), vector::zero);
+        vectorField edgeVectors(f.size(), Zero);
+        vectorField normalDifferences(f.size(), Zero);
 
         forAll(fEdges, feI)
         {

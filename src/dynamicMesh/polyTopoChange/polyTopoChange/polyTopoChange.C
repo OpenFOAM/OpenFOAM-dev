@@ -3117,7 +3117,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
             }
             else
             {
-                renumberedMeshPoints[newPointI] = vector::zero;
+                renumberedMeshPoints[newPointI] = Zero;
             }
         }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ Foam::forceSuSp Foam::LiftForce<CloudType>::calcCoupled
     const scalar muc
 ) const
 {
-    forceSuSp value(vector::zero, 0.0);
+    forceSuSp value(Zero, 0.0);
 
     vector curlUc =
         curlUcInterp().interpolate(p.position(), p.currentTetIndices());

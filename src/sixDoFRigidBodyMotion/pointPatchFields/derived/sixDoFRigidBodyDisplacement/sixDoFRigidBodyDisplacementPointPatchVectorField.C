@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ sixDoFRigidBodyDisplacementPointPatchVectorField
     rhoInf_(1.0),
     rhoName_("rho"),
     lookupGravity_(-1),
-    g_(vector::zero),
+    g_(Zero),
     curTimeIndex_(-1)
 {}
 
@@ -70,7 +70,7 @@ sixDoFRigidBodyDisplacementPointPatchVectorField
     rhoInf_(1.0),
     rhoName_(dict.lookupOrDefault<word>("rhoName", "rho")),
     lookupGravity_(-1),
-    g_(vector::zero),
+    g_(Zero),
     curTimeIndex_(-1)
 {
     if (rhoName_ == "rhoInf")

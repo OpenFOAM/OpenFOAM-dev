@@ -253,7 +253,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedVector("zero", dimVelocity, vector::zero),
+                dimensionedVector("zero", dimVelocity, Zero),
                 fixedValueFvPatchField<vector>::typeName
             );
             U.internalField() = uAverage.internalField();

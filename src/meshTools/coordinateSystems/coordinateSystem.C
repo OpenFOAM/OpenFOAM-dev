@@ -281,7 +281,7 @@ Foam::tmp<Foam::vectorField> Foam::coordinateSystem::globalToLocal
 void Foam::coordinateSystem::clear()
 {
     note_.clear();
-    origin_ = point::zero;
+    origin_ = Zero;
     R_->clear();
 }
 

@@ -74,7 +74,7 @@ Foam::displacementSBRStressFvMotionSolver::displacementSBRStressFvMotionSolver
         (
             "cellDisplacement",
             pointDisplacement().dimensions(),
-            vector::zero
+            Zero
         ),
         cellMotionBoundaryTypes<vector>(pointDisplacement().boundaryField())
     ),

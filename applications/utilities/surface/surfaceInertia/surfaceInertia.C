@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2011-2015 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2011-2016 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -83,14 +83,14 @@ int main(int argc, char *argv[])
     const fileName surfFileName = args[1];
     const scalar density = args.optionLookupOrDefault("density", 1.0);
 
-    vector refPt = vector::zero;
+    vector refPt = Zero;
     bool calcAroundRefPt = args.optionReadIfPresent("referencePoint", refPt);
 
     triSurface surf(surfFileName);
 
     scalar m = 0.0;
-    vector cM = vector::zero;
-    tensor J = tensor::zero;
+    vector cM = Zero;
+    tensor J = Zero;
 
     if (args.optionFound("shellProperties"))
     {

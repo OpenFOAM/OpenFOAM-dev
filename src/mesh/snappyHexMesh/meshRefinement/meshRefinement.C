@@ -1839,7 +1839,7 @@ Foam::tmp<Foam::pointVectorField> Foam::meshRefinement::makeDisplacementField
                 IOobject::AUTO_WRITE
             ),
             pMesh,
-            dimensionedVector("displacement", dimLength, vector::zero),
+            dimensionedVector("displacement", dimLength, Zero),
             patchFieldTypes
         )
     );

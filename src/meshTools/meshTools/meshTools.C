@@ -171,7 +171,7 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
             }
             else
             {
-                pn[pointI] = vector::zero;
+                pn[pointI] = Zero;
 
                 WarningInFunction
                     << "No visible octant for point:" << pp.meshPoints()[pointI]

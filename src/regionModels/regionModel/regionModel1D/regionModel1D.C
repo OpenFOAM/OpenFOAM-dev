@@ -217,7 +217,7 @@ Foam::tmp<Foam::labelField> Foam::regionModels::regionModel1D::moveMesh
                 oldCf[i + 1] = regionMesh().faceCentres()[faces[i]];
             }
 
-            vector newDelta = vector::zero;
+            vector newDelta = Zero;
             point nbrCf = oldCf[0];
 
             forAll(faces, i)
@@ -229,7 +229,7 @@ Foam::tmp<Foam::labelField> Foam::regionModels::regionModel1D::moveMesh
 
                 newDelta += (deltaV[cellI]/mag(sf))*n;
 
-                vector localDelta = vector::zero;
+                vector localDelta = Zero;
                 forAll(f, pti)
                 {
                     const label pointI = f[pti];

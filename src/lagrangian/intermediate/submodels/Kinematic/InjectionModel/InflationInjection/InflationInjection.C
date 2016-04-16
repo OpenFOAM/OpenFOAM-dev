@@ -266,7 +266,7 @@ Foam::label Foam::InflationInjection<CloudType>::parcelsToInject
                 (
                     vectorPairScalarPair
                     (
-                        Pair<vector>(mesh.cellCentres()[cI], vector::zero),
+                        Pair<vector>(mesh.cellCentres()[cI], Zero),
                         Pair<scalar>(dSeed_, dNew)
                     )
                 );

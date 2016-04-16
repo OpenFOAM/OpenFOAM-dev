@@ -56,7 +56,7 @@ tmp<pointField> avg
 {
     const labelListList& pointEdges = s.pointEdges();
 
-    tmp<pointField> tavg(new pointField(s.nPoints(), vector::zero));
+    tmp<pointField> tavg(new pointField(s.nPoints(), Zero));
     pointField& avg = tavg.ref();
 
     forAll(pointEdges, vertI)

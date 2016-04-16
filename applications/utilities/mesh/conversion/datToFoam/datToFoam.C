@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     // We ignore the first layer of points in i and j the biconic meshes
     label nPointsij = (iPoints - 1)*(jPoints - 1);
 
-    pointField points(nPointsij, vector::zero);
+    pointField points(nPointsij, Zero);
 
     for (direction comp = 0; comp < 2; comp++)
     {
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    pointField pointsWedge(nPointsij*2, vector::zero);
+    pointField pointsWedge(nPointsij*2, Zero);
 
     fileName pointsFile(runTime.constantPath()/"points.tmp");
     OFstream pFile(pointsFile);

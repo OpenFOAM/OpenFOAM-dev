@@ -221,7 +221,7 @@ void Foam::rigidBodyMeshMotion::solve()
         curTimeIndex_ = this->db().time().timeIndex();
     }
 
-    dimensionedVector g("g", dimAcceleration, vector::zero);
+    dimensionedVector g("g", dimAcceleration, Zero);
 
     if (db().foundObject<uniformDimensionedVectorField>("g"))
     {

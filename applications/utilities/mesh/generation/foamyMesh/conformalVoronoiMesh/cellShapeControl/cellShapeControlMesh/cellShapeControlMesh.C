@@ -601,7 +601,7 @@ void Foam::cellShapeControlMesh::distribute
 
 Foam::tensorField Foam::cellShapeControlMesh::dumpAlignments() const
 {
-    tensorField alignmentsTmp(number_of_vertices(), tensor::zero);
+    tensorField alignmentsTmp(number_of_vertices(), Zero);
 
     label count = 0;
     for

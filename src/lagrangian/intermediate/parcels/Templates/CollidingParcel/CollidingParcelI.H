@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,9 +70,9 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
 )
 :
     ParcelType(owner, position, cellI, tetFaceI, tetPtI),
-    f_(vector::zero),
-    angularMomentum_(vector::zero),
-    torque_(vector::zero),
+    f_(Zero),
+    angularMomentum_(Zero),
+    torque_(Zero),
     collisionRecords_()
 {}
 

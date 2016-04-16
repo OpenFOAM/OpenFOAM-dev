@@ -463,7 +463,7 @@ Foam::triSurfaceMesh::edgeTree() const
           + nInternalEdges()
         );
 
-        treeBoundBox bb(vector::zero, vector::zero);
+        treeBoundBox bb(Zero, Zero);
 
         if (bEdges.size())
         {
@@ -678,7 +678,7 @@ void Foam::triSurfaceMesh::getNormal
             else
             {
                 // Set to what?
-                normal[i] = vector::zero;
+                normal[i] = Zero;
             }
         }
     }
@@ -699,7 +699,7 @@ void Foam::triSurfaceMesh::getNormal
             else
             {
                 // Set to what?
-                normal[i] = vector::zero;
+                normal[i] = Zero;
             }
         }
     }

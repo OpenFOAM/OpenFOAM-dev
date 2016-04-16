@@ -1075,25 +1075,25 @@ int main(int argc, char *argv[])
     (
         subsetter.subMesh(),
         map,
-        vector::zero
+        Zero
     );
     initCreatedPatches<volSphericalTensorField>
     (
         subsetter.subMesh(),
         map,
-        sphericalTensor::zero
+        Zero
     );
     initCreatedPatches<volSymmTensorField>
     (
         subsetter.subMesh(),
         map,
-        symmTensor::zero
+        Zero
     );
     initCreatedPatches<volTensorField>
     (
         subsetter.subMesh(),
         map,
-        tensor::zero
+        Zero
     );
 
     initCreatedPatches<surfaceScalarField>
@@ -1106,25 +1106,25 @@ int main(int argc, char *argv[])
     (
         subsetter.subMesh(),
         map,
-        vector::zero
+        Zero
     );
     initCreatedPatches<surfaceSphericalTensorField>
     (
         subsetter.subMesh(),
         map,
-        sphericalTensor::zero
+        Zero
     );
     initCreatedPatches<surfaceSymmTensorField>
     (
         subsetter.subMesh(),
         map,
-        symmTensor::zero
+        Zero
     );
     initCreatedPatches<surfaceTensorField>
     (
         subsetter.subMesh(),
         map,
-        tensor::zero
+        Zero
     );
 
 

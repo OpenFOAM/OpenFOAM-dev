@@ -49,7 +49,7 @@ void Foam::wallDist::constructn() const
                 mesh()
             ),
             mesh(),
-            dimensionedVector("n" & patchTypeName_, dimless, vector::zero),
+            dimensionedVector("n" & patchTypeName_, dimless, Zero),
             patchDistMethod::patchTypes<vector>(mesh(), patchIDs_)
         )
     );

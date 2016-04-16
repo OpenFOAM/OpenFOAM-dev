@@ -225,14 +225,14 @@ bool Foam::snappyLayerDriver::unmarkExtrusion
     {
         extrudeStatus[patchPointI] = NOEXTRUDE;
         patchNLayers[patchPointI] = 0;
-        patchDisp[patchPointI] = vector::zero;
+        patchDisp[patchPointI] = Zero;
         return true;
     }
     else if (extrudeStatus[patchPointI] == EXTRUDEREMOVE)
     {
         extrudeStatus[patchPointI] = NOEXTRUDE;
         patchNLayers[patchPointI] = 0;
-        patchDisp[patchPointI] = vector::zero;
+        patchDisp[patchPointI] = Zero;
         return true;
     }
     else
@@ -868,7 +868,7 @@ Foam::snappyLayerDriver::makeLayerDisplacementField
                 IOobject::AUTO_WRITE
             ),
             pMesh,
-            dimensionedVector("displacement", dimLength, vector::zero),
+            dimensionedVector("displacement", dimLength, Zero),
             patchFieldTypes,
             actualPatchTypes
         )
@@ -955,7 +955,7 @@ void Foam::snappyLayerDriver::growNoExtrusion
     {
         if (extrudeStatus[patchPointI] == NOEXTRUDE)
         {
-            patchDisp[patchPointI] = vector::zero;
+            patchDisp[patchPointI] = Zero;
             patchNLayers[patchPointI] = 0;
         }
     }
@@ -1520,7 +1520,7 @@ void Foam::snappyLayerDriver::getPatchDisplacement
         {
             // Do not use unmarkExtrusion; forcibly set to zero extrusion.
             patchNLayers[patchPointI] = 0;
-            patchDisp[patchPointI] = vector::zero;
+            patchDisp[patchPointI] = Zero;
         }
         else
         {
@@ -1549,7 +1549,7 @@ void Foam::snappyLayerDriver::getPatchDisplacement
     {
         if (extrudeStatus[patchPointI] == EXTRUDEREMOVE)
         {
-            point avg(vector::zero);
+            point avg(Zero);
             label nPoints = 0;
 
             const labelList& pEdges = pp.pointEdges()[patchPointI];
@@ -1786,7 +1786,7 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
         else if (extrudeStatus[patchPointI] == NOEXTRUDE)
         {
             // Make sure displacement is 0. Should already be so but ...
-            patchDisp[patchPointI] = vector::zero;
+            patchDisp[patchPointI] = Zero;
             patchNLayers[patchPointI] = 0;
         }
     }
@@ -3277,7 +3277,7 @@ void Foam::snappyLayerDriver::addLayers
 
         // Calculate displacement for final layer for addPatchLayer.
         // (layer of cells next to the original mesh)
-        vectorField finalDisp(patchNLayers.size(), vector::zero);
+        vectorField finalDisp(patchNLayers.size(), Zero);
 
         forAll(nPatchPointLayers, i)
         {

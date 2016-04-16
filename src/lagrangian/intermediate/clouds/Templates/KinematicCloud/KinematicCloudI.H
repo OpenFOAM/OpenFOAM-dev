@@ -285,7 +285,7 @@ template<class CloudType>
 inline Foam::vector
 Foam::KinematicCloud<CloudType>::linearMomentumOfSystem() const
 {
-    vector linearMomentum(vector::zero);
+    vector linearMomentum(Zero);
 
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {

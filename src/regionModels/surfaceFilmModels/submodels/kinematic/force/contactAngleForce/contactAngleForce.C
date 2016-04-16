@@ -149,7 +149,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
                 IOobject::NO_WRITE
             ),
             owner_.regionMesh(),
-            dimensionedVector("zero", dimForce/dimArea, vector::zero)
+            dimensionedVector("zero", dimForce/dimArea, Zero)
         )
     );
 

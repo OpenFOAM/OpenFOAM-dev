@@ -1208,7 +1208,7 @@ bool Foam::cellCuts::loopAnchorConsistent
 
 
     // Get average position of anchor points.
-    vector avg(vector::zero);
+    vector avg(Zero);
 
     forAll(anchorPoints, ptI)
     {

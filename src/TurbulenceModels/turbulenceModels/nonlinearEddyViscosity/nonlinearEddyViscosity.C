@@ -67,7 +67,7 @@ Foam::nonlinearEddyViscosity<BasicTurbulenceModel>::nonlinearEddyViscosity
         (
             "nonlinearStress",
             sqr(dimVelocity),
-            symmTensor::zero
+            Zero
         )
     )
 {}

@@ -48,7 +48,7 @@ Foam::DSMCParcel<ParcelType>::DSMCParcel
 )
 :
     ParcelType(mesh, is, readFields),
-    U_(vector::zero),
+    U_(Zero),
     Ei_(0.0),
     typeId_(-1)
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ Description
 \*---------------------------------------------------------------------------*/
 
 
-vector singleStepTotalLinearMomentum(vector::zero);
+vector singleStepTotalLinearMomentum(Zero);
 
-vector singleStepTotalAngularMomentum(vector::zero);
+vector singleStepTotalAngularMomentum(Zero);
 
 scalar singleStepMaxVelocityMag = 0.0;
 
@@ -47,7 +47,7 @@ scalar singleStepTotalPE = 0.0;
 
 scalar singleStepTotalrDotf = 0.0;
 
-//vector singleStepCentreOfMass(vector::zero);
+//vector singleStepCentreOfMass(Zero);
 
 label singleStepNMols = molecules.size();
 

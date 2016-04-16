@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ void Foam::regionModels::singleLayerRegion::constructMeshObjects()
                 NO_WRITE
             ),
             regionMesh(),
-            dimensionedVector("zero", dimless, vector::zero),
+            dimensionedVector("zero", dimless, Zero),
             zeroGradientFvPatchField<vector>::typeName
         )
     );

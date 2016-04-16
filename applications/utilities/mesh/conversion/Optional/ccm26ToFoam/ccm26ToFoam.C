@@ -213,7 +213,7 @@ void ReadVertices
 
     // Convert to foamPoints
     foamPoints.setSize(nVertices);
-    foamPoints = vector::zero;
+    foamPoints = Zero;
     foamPointMap.setSize(nVertices);
 
     forAll(foamPointMap, i)

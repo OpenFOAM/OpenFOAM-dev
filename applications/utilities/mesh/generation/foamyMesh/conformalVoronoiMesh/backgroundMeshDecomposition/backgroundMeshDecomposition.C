@@ -533,7 +533,7 @@ bool Foam::backgroundMeshDecomposition::refineCell
 //        pointField samplePoints
 //        (
 //            volRes_*volRes_*volRes_,
-//            vector::zero
+//            Zero
 //        );
 //
 //        // scalar sampleVol = cellBb.volume()/samplePoints.size();
@@ -1238,7 +1238,7 @@ Foam::backgroundMeshDecomposition::intersectsProcessors
         const point& e = ends[sI];
 
         // Dummy point for treeBoundBox::intersects
-        point p(vector::zero);
+        point p(Zero);
 
         label nCandidates = 0;
 

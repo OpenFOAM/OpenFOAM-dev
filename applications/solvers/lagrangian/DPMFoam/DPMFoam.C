@@ -102,14 +102,14 @@ int main(int argc, char *argv[])
             (
                 "0",
                 cloudSU.dimensions()/dimVolume,
-                vector::zero
+                Zero
             ),
             zeroGradientFvPatchVectorField::typeName
         );
 
         cloudVolSUSu.internalField() = -cloudSU.source()/mesh.V();
         cloudVolSUSu.correctBoundaryConditions();
-        cloudSU.source() = vector::zero;
+        cloudSU.source() = Zero;
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())

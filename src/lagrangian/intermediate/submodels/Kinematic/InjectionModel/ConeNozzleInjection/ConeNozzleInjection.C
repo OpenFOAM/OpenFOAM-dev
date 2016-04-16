@@ -152,9 +152,9 @@ Foam::ConeNozzleInjection<CloudType>::ConeNozzleInjection
             owner.rndGen()
         )
     ),
-    tanVec1_(vector::zero),
-    tanVec2_(vector::zero),
-    normal_(vector::zero),
+    tanVec1_(Zero),
+    tanVec2_(Zero),
+    normal_(Zero),
 
     UMag_(0.0),
     Cd_(owner.db().time(), "Cd"),
@@ -179,7 +179,7 @@ Foam::ConeNozzleInjection<CloudType>::ConeNozzleInjection
     direction_ /= mag(direction_);
 
     // Determine direction vectors tangential to direction
-    vector tangent = vector::zero;
+    vector tangent = Zero;
     scalar magTangent = 0.0;
 
     while(magTangent < SMALL)

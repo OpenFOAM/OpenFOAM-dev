@@ -218,7 +218,7 @@ void Foam::faceTriangulation::findDiagonal
 
     label faceVertI = f.fcIndex(startIndex);
 
-    pointHit minInter(false, vector::zero, GREAT, true);
+    pointHit minInter(false, Zero, GREAT, true);
     label minIndex = -1;
     scalar minPosOnEdge = GREAT;
 

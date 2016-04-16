@@ -229,7 +229,7 @@ curvatureSeparation::curvatureSeparation
     deltaByR1Min_(coeffDict_.lookupOrDefault<scalar>("deltaByR1Min", 0.0)),
     definedPatchRadii_(),
     magG_(mag(owner.g().value())),
-    gHat_(vector::zero)
+    gHat_(Zero)
 {
     if (magG_ < ROOTVSMALL)
     {

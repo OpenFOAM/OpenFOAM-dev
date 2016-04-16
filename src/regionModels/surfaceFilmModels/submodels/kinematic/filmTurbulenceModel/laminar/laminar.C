@@ -83,7 +83,7 @@ tmp<volVectorField> laminar::Us() const
                 IOobject::NO_WRITE
             ),
             owner_.regionMesh(),
-            dimensionedVector("zero", dimVelocity, vector::zero),
+            dimensionedVector("zero", dimVelocity, Zero),
             extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
