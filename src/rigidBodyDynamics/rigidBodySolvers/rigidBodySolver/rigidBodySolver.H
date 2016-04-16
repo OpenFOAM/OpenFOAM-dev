@@ -62,15 +62,6 @@ protected:
         //- Return the motion state
         inline rigidBodyModelState& state();
 
-        //- Return the previous motion state
-        inline const rigidBodyModelState& state0() const;
-
-        //- Return the current time-step
-        inline scalar deltaT() const;
-
-        //- Return the previous time-step
-        inline scalar deltaT0() const;
-
         //- Return the current joint position and orientation
         inline scalarField& q();
 
@@ -82,6 +73,12 @@ protected:
         //- Return the current joint acceleration
         inline scalarField& qDdot();
 
+        //- Return the current time-step
+        inline scalar deltaT() const;
+
+
+        //- Return the previous motion state
+        inline const rigidBodyModelState& state0() const;
 
         //- Return the current joint position and orientation
         inline const scalarField& q0() const;
@@ -93,6 +90,9 @@ protected:
 
         //- Return the current joint acceleration
         inline const scalarField& qDdot0() const;
+
+        //- Return the previous time-step
+        inline scalar deltaT0() const;
 
 
         //- Acceleration damping coefficient (for steady-state simulations)

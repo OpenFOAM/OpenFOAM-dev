@@ -79,11 +79,8 @@ class rigidBodyMotion
         //- Motion state data object for previous time-step
         rigidBodyModelState motionState0_;
 
-        //- The current time-step
-        scalar deltaT_;
-
-        //- The previous time-step
-        scalar deltaT0_;
+        //- Initial transform for external forces to the bodies reference frame
+        List<spatialTransform> X00_;
 
         //- Acceleration relaxation coefficient
         scalar aRelax_;
@@ -98,8 +95,16 @@ class rigidBodyMotion
         autoPtr<rigidBodySolver> solver_;
 
 
-        //- Construct as copy
+    // Private Member Functions
+
+        //- Initialize the body-state
+        void initialize();
+
+        //- Disallow copy construct
         rigidBodyMotion(const rigidBodyMotion&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const rigidBodyMotion&);
 
 
 public:
@@ -140,6 +145,10 @@ public:
             //- Return the motion state for modification
             inline rigidBodyModelState& state();
 
+            //- Return the initial transform to the global frame for the
+            //  given body
+            spatialTransform X00(const label bodyId) const;
+
 
         // Edit
 
@@ -164,23 +173,26 @@ public:
 
         // Transformations
 
-            /*
-            //- Transform the given initial state point by the current motion
-            //  state
-            inline point transform(const point& initialPoints) const;
-
-            //- Transform the given initial state pointField by the current
-            //  motion state
-            tmp<pointField> transform(const pointField& initialPoints) const;
-
-            //- Transform the given initial state pointField by the current
-            //  motion state scaled by the given scale
-            tmp<pointField> transform
+            //- Transform the given initial pointField of the specified body
+            //  to correspond to the current motion state scaled using
+            //  'slerp' interpolation
+            tmp<pointField> transformPoints
             (
-                const pointField& initialPoints,
-                const scalarField& scale
+                const label bodyID,
+                const scalarField& weight,
+                const pointField& initialPoints
             ) const;
-            */
+
+            //- Transform the given initial pointField of the specified body
+            //  to correspond to the current motion state scaled using
+            //  'slerp' interpolation
+            tmp<pointField> transformPoints
+            (
+                const labelList& bodyIDs,
+                const List<const scalarField*>& weights,
+                const pointField& initialPoints
+            ) const;
+
 
         //- Write
         void write(Ostream&) const;

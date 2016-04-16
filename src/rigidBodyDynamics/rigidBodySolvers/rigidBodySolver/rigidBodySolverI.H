@@ -31,25 +31,6 @@ inline Foam::RBD::rigidBodyModelState& Foam::RBD::rigidBodySolver::state()
 }
 
 
-inline const Foam::RBD::rigidBodyModelState&
-Foam::RBD::rigidBodySolver::state0() const
-{
-    return model_.motionState0_;
-}
-
-
-inline Foam::scalar Foam::RBD::rigidBodySolver::deltaT() const
-{
-    return model_.deltaT_;
-}
-
-
-inline Foam::scalar Foam::RBD::rigidBodySolver::deltaT0() const
-{
-    return model_.deltaT0_;
-}
-
-
 inline Foam::scalarField& Foam::RBD::rigidBodySolver::q()
 {
     return state().q();
@@ -68,6 +49,18 @@ inline Foam::scalarField& Foam::RBD::rigidBodySolver::qDdot()
 }
 
 
+inline Foam::scalar Foam::RBD::rigidBodySolver::deltaT() const
+{
+    return model_.motionState_.deltaT();
+}
+
+
+inline const Foam::RBD::rigidBodyModelState&
+Foam::RBD::rigidBodySolver::state0() const
+{
+    return model_.motionState0_;
+}
+
 inline const Foam::scalarField& Foam::RBD::rigidBodySolver::q0() const
 {
     return state0().q();
@@ -83,6 +76,12 @@ inline const Foam::scalarField& Foam::RBD::rigidBodySolver::qDot0() const
 inline const Foam::scalarField& Foam::RBD::rigidBodySolver::qDdot0() const
 {
     return state0().qDdot();
+}
+
+
+inline Foam::scalar Foam::RBD::rigidBodySolver::deltaT0() const
+{
+    return model_.motionState0_.deltaT();
 }
 
 

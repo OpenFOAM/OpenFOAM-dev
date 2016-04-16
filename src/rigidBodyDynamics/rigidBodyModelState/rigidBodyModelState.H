@@ -76,6 +76,9 @@ class rigidBodyModelState
         //- Joint acceleration
         scalarField qDdot_;
 
+        //- The time-step used to integrate to this state
+        scalar deltaT_;
+
 
 public:
 
@@ -107,6 +110,9 @@ public:
             //- Return access to the joint acceleration
             inline const scalarField& qDdot() const;
 
+            //- Return access to the time-step
+            inline scalar deltaT() const;
+
 
         // Edit
 
@@ -120,6 +126,9 @@ public:
 
             //- Return access to the joint acceleration
             inline scalarField& qDdot();
+
+            //- Return access to the time-step
+            inline scalar& deltaT();
 
 
         //- Write to dictionary
