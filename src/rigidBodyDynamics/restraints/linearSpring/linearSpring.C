@@ -89,14 +89,12 @@ Foam::spatialVector Foam::RBD::restraints::linearSpring::restrain() const
         (-stiffness_*(magR - restLength_) - damping_*(r & v))*r
     );
 
-    vector moment
-    (
-        (attachmentPt - model_.X0(model_.master(bodyID_)).r()) ^ force
-    );
+    vector moment(attachmentPt ^ force);
 
     if (model_.debug)
     {
-        Info<< " attachmentPt - anchor " << r*magR
+        Info<< " attachmentPt " << attachmentPt
+            << " attachmentPt - anchor " << r*magR
             << " spring length " << magR
             << " force " << force
             << " moment " << moment
