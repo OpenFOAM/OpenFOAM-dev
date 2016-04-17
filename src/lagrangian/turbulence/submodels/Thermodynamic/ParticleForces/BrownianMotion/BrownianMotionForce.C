@@ -187,9 +187,8 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     }
     else
     {
-        const scalar rhoRatio = p.rho()/p.rhoc();
         const scalar s0 =
-            216*muc*sigma*Tc/(sqr(mathematical::pi)*pow5(dp)*(rhoRatio)*cc);
+            216*muc*sigma*Tc/(sqr(mathematical::pi)*pow5(dp)*sqr(p.rho())*cc);
         f = eta*sqrt(mathematical::pi*s0/dt);
     }
 
