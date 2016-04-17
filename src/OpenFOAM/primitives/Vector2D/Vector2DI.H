@@ -90,15 +90,6 @@ inline Cmpt& Foam::Vector2D<Cmpt>::y()
 }
 
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline void Foam::Vector2D<Cmpt>::operator=(const Foam::zero)
-{
-    Vector2D::vsType::operator=(Zero);
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

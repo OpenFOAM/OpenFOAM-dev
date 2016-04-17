@@ -175,13 +175,6 @@ inline void Foam::SymmTensor<Cmpt>::operator=(const SphericalTensor<Cmpt>& st)
 }
 
 
-template<class Cmpt>
-inline void Foam::SymmTensor<Cmpt>::operator=(const Foam::zero)
-{
-    SymmTensor::vsType::operator=(Zero);
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

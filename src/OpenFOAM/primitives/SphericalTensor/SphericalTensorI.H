@@ -88,15 +88,6 @@ Foam::SphericalTensor<Cmpt>::T() const
 }
 
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline void Foam::SphericalTensor<Cmpt>::operator=(const Foam::zero)
-{
-    SphericalTensor::vsType::operator=(Zero);
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

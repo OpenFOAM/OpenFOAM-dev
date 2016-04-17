@@ -93,11 +93,6 @@ public:
 
         //- Construct from Istream
         inline CompactSpatialTensor(Istream&);
-
-
-    // Member Operators
-
-        inline void operator=(const Foam::zero);
 };
 
 

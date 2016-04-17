@@ -133,15 +133,6 @@ inline Foam::SpatialTensor<Cmpt>::SpatialTensor(Istream& is)
 {}
 
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline void Foam::SpatialTensor<Cmpt>::operator=(const Foam::zero)
-{
-    SpatialTensor::msType::operator=(Zero);
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

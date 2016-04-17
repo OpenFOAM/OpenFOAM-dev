@@ -121,15 +121,6 @@ inline const Foam::Vector<Cmpt>& Foam::Vector<Cmpt>::centre
 }
 
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline void Foam::Vector<Cmpt>::operator=(const Foam::zero)
-{
-    Vector::vsType::operator=(Zero);
-}
-
-
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
 namespace Foam

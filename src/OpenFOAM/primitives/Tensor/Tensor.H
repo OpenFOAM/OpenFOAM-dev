@@ -185,6 +185,9 @@ public:
         //- Inner-product with a Tensor
         inline void operator&=(const Tensor<Cmpt>&);
 
+        //- Inherit MatrixSpace assignment operators
+        using Tensor::msType::operator=;
+
         //- Assign to an equivalent vector space
         template<class Cmpt2>
         inline void operator=(const VectorSpace<Tensor<Cmpt2>, Cmpt2, 9>&);
@@ -197,9 +200,6 @@ public:
 
         //- Assign to a triad
         inline void operator=(const Vector<Vector<Cmpt>>&);
-
-        //- Assignment to zero
-        inline void operator=(const Foam::zero);
 };
 
 

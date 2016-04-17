@@ -100,12 +100,6 @@ public:
 
             inline const Cmpt& ii() const;
             inline Cmpt& ii();
-
-
-    // Member Operators
-
-        //- Assignment to zero
-        inline void operator=(const Foam::zero);
 };
 
 

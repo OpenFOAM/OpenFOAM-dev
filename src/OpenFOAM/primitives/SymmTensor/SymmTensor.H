@@ -128,10 +128,10 @@ public:
 
     // Member Operators
 
-        //- Assignment to zero
-        inline void operator=(const Foam::zero);
+        //- Inherit VectorSpace assignment operators
+        using SymmTensor::vsType::operator=;
 
-        //- Construct given SphericalTensor
+        //- Assign to given SphericalTensor
         inline void operator=(const SphericalTensor<Cmpt>&);
 };
 

@@ -109,13 +109,4 @@ inline Cmpt& Foam::RowVector<Cmpt>::z()
 }
 
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline void Foam::RowVector<Cmpt>::operator=(const Foam::zero)
-{
-    RowVector::msType::operator=(Zero);
-}
-
-
 // ************************************************************************* //

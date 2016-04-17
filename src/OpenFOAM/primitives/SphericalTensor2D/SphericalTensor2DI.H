@@ -79,15 +79,6 @@ inline Cmpt& Foam::SphericalTensor2D<Cmpt>::ii()
 }
 
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline void Foam::SphericalTensor2D<Cmpt>::operator=(const Foam::zero)
-{
-    SphericalTensor2D::vsType::operator=(Zero);
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

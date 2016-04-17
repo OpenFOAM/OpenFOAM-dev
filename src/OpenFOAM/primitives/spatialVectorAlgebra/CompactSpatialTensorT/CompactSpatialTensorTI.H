@@ -94,13 +94,4 @@ inline Foam::CompactSpatialTensorT<Cmpt>::CompactSpatialTensorT(Istream& is)
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline void Foam::CompactSpatialTensorT<Cmpt>::operator=(const Foam::zero)
-{
-    CompactSpatialTensorT::msType::operator=(Zero);
-}
-
-
 // ************************************************************************* //

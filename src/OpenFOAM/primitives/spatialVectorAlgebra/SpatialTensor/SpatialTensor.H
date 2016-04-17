@@ -123,11 +123,6 @@ public:
 
         //- Construct from Istream
         inline SpatialTensor(Istream&);
-
-
-    // Member Operators
-
-        inline void operator=(const Foam::zero);
 };
 
 

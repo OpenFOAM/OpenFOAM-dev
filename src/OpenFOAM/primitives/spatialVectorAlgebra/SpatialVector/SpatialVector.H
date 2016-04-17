@@ -151,8 +151,6 @@ public:
 
     // Member Operators
 
-        inline void operator=(const Foam::zero);
-
         //- Return the dual spatial vector
         inline dual operator*() const;
 };

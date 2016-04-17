@@ -145,9 +145,6 @@ public:
 
         //- Copy SphericalTensor2D
         inline void operator=(const SphericalTensor2D<Cmpt>&);
-
-        //- Assignment to zero
-        inline void operator=(const Foam::zero);
 };
 
 

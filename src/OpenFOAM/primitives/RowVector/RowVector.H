@@ -94,11 +94,6 @@ public:
             inline Cmpt& x();
             inline Cmpt& y();
             inline Cmpt& z();
-
-
-    // Member Operators
-
-        inline void operator=(const Foam::zero);
 };
 
 

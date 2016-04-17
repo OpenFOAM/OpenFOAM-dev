@@ -120,8 +120,8 @@ public:
 
     // Member Operators
 
-        //- Assignment to zero
-        inline void operator=(const Foam::zero);
+        //- Inherit VectorSpace assignment operators
+        using SymmTensor2D::vsType::operator=;
 
         //- Construct given SphericalTensor2D
         inline void operator=(const SphericalTensor2D<Cmpt>&);

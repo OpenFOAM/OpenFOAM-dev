@@ -103,12 +103,6 @@ public:
 
             //- Perp dot product (dot product with perpendicular vector)
             inline scalar perp(const Vector2D<Cmpt>& b) const;
-
-
-    // Member Operators
-
-        //- Assignment to zero
-        inline void operator=(const Foam::zero);
 };
 
 

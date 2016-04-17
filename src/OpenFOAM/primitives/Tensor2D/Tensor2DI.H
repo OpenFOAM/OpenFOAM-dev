@@ -170,7 +170,7 @@ inline Foam::Tensor2D<Cmpt> Foam::Tensor2D<Cmpt>::T() const
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
 inline void Foam::Tensor2D<Cmpt>::operator=(const SymmTensor2D<Cmpt>& st)
@@ -185,15 +185,6 @@ inline void Foam::Tensor2D<Cmpt>::operator=(const SphericalTensor2D<Cmpt>& st)
 {
     this->v_[XX] = st.ii(); this->v_[XY] = 0;
     this->v_[YX] = 0; this->v_[YY] = st.ii();
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Cmpt>
-inline void Foam::Tensor2D<Cmpt>::operator=(const Foam::zero)
-{
-    Tensor2D::msType::operator=(Zero);
 }
 
 

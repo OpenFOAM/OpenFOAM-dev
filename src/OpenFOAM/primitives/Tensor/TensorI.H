@@ -400,13 +400,6 @@ inline void Foam::Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt>>& tr)
 }
 
 
-template<class Cmpt>
-inline void Foam::Tensor<Cmpt>::operator=(const Foam::zero)
-{
-    Tensor::msType::operator=(Zero);
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

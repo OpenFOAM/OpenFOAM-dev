@@ -109,12 +109,6 @@ public:
 
         //- Transpose
         inline const SphericalTensor<Cmpt>& T() const;
-
-
-    // Member Operators
-
-        //- Assignment to zero
-        inline void operator=(const Foam::zero);
 };
 
 

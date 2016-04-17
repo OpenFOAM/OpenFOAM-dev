@@ -206,13 +206,6 @@ const Foam::SpatialVector<Cmpt>& Foam::SpatialVector<Cmpt>::dual::v() const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void Foam::SpatialVector<Cmpt>::operator=(const Foam::zero)
-{
-    SpatialVector::vsType::operator=(Zero);
-}
-
-
-template<class Cmpt>
 inline typename Foam::SpatialVector<Cmpt>::dual
 Foam::SpatialVector<Cmpt>::operator*() const
 {

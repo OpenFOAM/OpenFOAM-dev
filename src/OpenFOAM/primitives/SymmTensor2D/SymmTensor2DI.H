@@ -137,13 +137,6 @@ inline void Foam::SymmTensor2D<Cmpt>::operator=
 }
 
 
-template<class Cmpt>
-inline void Foam::SymmTensor2D<Cmpt>::operator=(const Foam::zero)
-{
-    SymmTensor2D::vsType::operator=(Zero);
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
