@@ -1,0 +1,64 @@
+solver
+{
+    type Newmark;
+}
+
+// It is necessary to iterate for the Newmark solver
+nIter 2;
+
+bodies
+{
+    M
+    {
+        type            sphere;
+        parent          root;
+        mass            6e4;
+        radius          0.01;
+        transform       (1 0 0 0 1 0 0 0 1) (0 0 0);
+        joint
+        {
+            type composite;
+
+            joints
+            (
+                {
+                    type            Px;
+                }
+                {
+                    type            Rz;
+                }
+            );
+        }
+    }
+
+    m
+    {
+        type            sphere;
+        parent          M;
+        mass            6e3;
+        radius          0.01;
+        transform       (1 0 0 0 1 0 0 0 1) (0 -5 0);
+        mergeWith       M;
+    }
+}
+
+restraints
+{
+    spring
+    {
+        type            linearSpring;
+        body            M;
+        anchor          (0 0 0);
+        refAttachmentPt (0 0 0);
+        stiffness       1e5;
+        damping         0;
+        restLength      0;
+    }
+}
+
+// Set the gravitational acceleration
+g (0 -9.81 0);
+
+// Set the initial offset of the pendulum to 1.5m
+// and the angle of the pendulum to 30deg
+q (1.5 0.5235987);
