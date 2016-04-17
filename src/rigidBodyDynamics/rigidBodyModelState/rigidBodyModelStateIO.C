@@ -76,7 +76,7 @@ Foam::Ostream& Foam::RBD::operator<<
     const rigidBodyModelState& state
 )
 {
-    os  << token::SPACE << state.q_
+    os  << state.q_
         << token::SPACE << state.qDot_
         << token::SPACE << state.qDdot_
         << token::SPACE << state.deltaT_;

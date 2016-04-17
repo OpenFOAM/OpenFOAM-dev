@@ -221,18 +221,11 @@ void Foam::rigidBodyMeshMotion::solve()
         curTimeIndex_ = this->db().time().timeIndex();
     }
 
-    dimensionedVector g("g", dimAcceleration, Zero);
-
     if (db().foundObject<uniformDimensionedVectorField>("g"))
     {
-        g = db().lookupObject<uniformDimensionedVectorField>("g");
+        model_.g() =
+            db().lookupObject<uniformDimensionedVectorField>("g").value();
     }
-    else if (coeffDict().found("g"))
-    {
-        coeffDict().lookup("g") >> g;
-    }
-
-    model_.g() = g.value();
 
     if (test_)
     {

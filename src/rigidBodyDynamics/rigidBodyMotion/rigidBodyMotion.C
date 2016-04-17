@@ -59,7 +59,7 @@ Foam::RBD::rigidBodyMotion::rigidBodyMotion
 )
 :
     rigidBodyModel(dict),
-    motionState_(*this),
+    motionState_(*this, dict),
     motionState0_(motionState_),
     X00_(X0_.size()),
     aRelax_(dict.lookupOrDefault<scalar>("accelerationRelaxation", 1.0)),
@@ -67,6 +67,11 @@ Foam::RBD::rigidBodyMotion::rigidBodyMotion
     report_(dict.lookupOrDefault<Switch>("report", false)),
     solver_(rigidBodySolver::New(*this, dict.subDict("solver")))
 {
+    if (dict.found("g"))
+    {
+        g() = vector(dict.lookup("g"));
+    }
+
     initialize();
 }
 
@@ -86,6 +91,11 @@ Foam::RBD::rigidBodyMotion::rigidBodyMotion
     report_(dict.lookupOrDefault<Switch>("report", false)),
     solver_(rigidBodySolver::New(*this, dict.subDict("solver")))
 {
+    if (dict.found("g"))
+    {
+        g() = vector(dict.lookup("g"));
+    }
+
     initialize();
 }
 
