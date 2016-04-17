@@ -319,7 +319,7 @@ Foam::scalar Foam::tetrahedron<Point, PointRef>::barycentric
     List<scalar>& bary
 ) const
 {
-    // From:
+    // Reference:
     // http://en.wikipedia.org/wiki/Barycentric_coordinate_system_(mathematics)
 
     vector e0(a_ - d_);

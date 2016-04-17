@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,23 +25,12 @@ Class
     Foam::pairPotentials::azizChen
 
 Description
-    Foam::pairPotentials::azizChen
 
-    From:
+    Reference:
     \verbatim
-        \article{MA_Aziz_Chen,
-        author = {R. A. Aziz and H. H. Chen},
-        collaboration = {},
-        title = {An accurate intermolecular potential for argon},
-        publisher = {AIP},
-        year = {1977},
-        journal = {The Journal of Chemical Physics},
-        volume = {67},
-        number = {12},
-        pages = {5719-5726},
-        url = {http://link.aip.org/link/?JCP/67/5719/1},
-        doi = {10.1063/1.434827}
-        }
+        Aziz, R. A. & Chen, H.H. (1977).
+        An Accurate Intermolecular Potential for Argon.
+        Journal of Chemical Physics, Vol. 67, No. 12, p. 5179.
     \endverbatim
 
 SourceFiles

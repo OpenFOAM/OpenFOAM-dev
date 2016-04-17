@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,33 +25,19 @@ Class
     Foam::pairPotentials::maitlandSmith
 
 Description
-    Foam::pairPotentials::maitlandSmith
 
-    From:
+    Reference:
     \verbatim
-        @ARTICLE{MA_Maitland_Smith,
-        author = {{Maitland}, G.~C. and {Smith}, E.~B.},
-        title = {A simplified representation of
-        intermolecular potential energy},
-        journal = {Chemical Physics Letters},
-        year = 1973,
-        month = oct,
-        volume = 22,
-        pages = {443-446},
-        adsurl = {http://adsabs.harvard.edu/abs/1973CPL....22..443M},
-        adsnote = {Provided by the SAO/NASA Astrophysics Data System}
-        }
+        Maitland, G. C., & Smith, E. B. (1973).
+        A simplified representation of intermolecular potential energy.
+        Chemical Physics Letters, 22(3), 443-446.
     \endverbatim
 
     Parameters for other monoatomics from:
     \verbatim
-        @BOOK{MD_Maitland_Rigby_Smith_Wakeham,
-        AUTHOR =       {Geoffrey C. Maitland and Maurice Rigby and
-        E. Brian Smith and William A. Wakeham},
-        TITLE =        {Intermolecular Forces: Their Origin and Determination},
-        PUBLISHER =    {Oxford University Press},
-        YEAR =         {1981}
-        }
+        Maitland, G. C., Rigby, M., Smith, E., Wakeham, W. (1981).
+        Intermolecular forces: Their origin and determination.
+        Oxford: Clarendon Press.
     \endverbatim
 
 SourceFiles

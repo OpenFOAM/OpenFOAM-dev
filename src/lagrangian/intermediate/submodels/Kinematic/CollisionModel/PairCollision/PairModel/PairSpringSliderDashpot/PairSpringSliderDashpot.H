@@ -140,7 +140,7 @@ public:
         // centres separated by a distance rAB.  Assumes rAB < (rA + rB).
         inline scalar overlapArea(scalar rA, scalar rB, scalar rAB) const
         {
-            // From:
+            // Reference:
             // http://mathworld.wolfram.com/Sphere-SphereIntersection.html
             return
                 mathematical::pi/4.0

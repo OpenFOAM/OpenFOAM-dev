@@ -270,7 +270,7 @@ Foam::scalar Foam::triangle<Point, PointRef>::barycentric
     List<scalar>& bary
 ) const
 {
-    // From:
+    // Reference:
     // Real-time collision detection, Christer Ericson, 2005, p47-48
 
     vector v0 = b_ - a_;
