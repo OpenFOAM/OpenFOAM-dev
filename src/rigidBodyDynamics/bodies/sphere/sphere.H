@@ -59,6 +59,12 @@ class sphere
         scalar r_;
 
 
+    // Private member functions
+
+        // Calculate and return the inertia tensor
+        inline symmTensor I(const scalar m, const scalar r) const;
+
+
 public:
 
     //- Runtime type information
@@ -67,8 +73,14 @@ public:
 
     // Constructors
 
-        //- Construct from name, mass and radius
-        inline sphere(const word& name, const scalar m, const scalar r);
+        //- Construct from name, mass, centre of mass and radius
+        inline sphere
+        (
+            const word& name,
+            const scalar m,
+            const vector& c,
+            const scalar r
+        );
 
         //- Construct from dictionary
         inline sphere

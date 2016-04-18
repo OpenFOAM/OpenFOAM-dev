@@ -23,16 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+inline Foam::symmTensor Foam::RBD::sphere::I
+(
+    const scalar m,
+    const scalar r
+) const
+{
+    return ((2.0/5.0)*m*sqr(r))*Foam::I;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::RBD::sphere::sphere
 (
     const word& name,
     const scalar m,
+    const vector& c,
     const scalar r
 )
 :
-    rigidBody(name, m, Zero, (2.0/5.0)*m*sqr(r)*I),
+    rigidBody(name, m, c, I(m, r)),
     r_(r)
 {}
 
@@ -43,18 +56,12 @@ inline Foam::RBD::sphere::sphere
     const dictionary& dict
 )
 :
-    rigidBody
-    (
-        name,
-        rigidBodyInertia()
-    ),
+    rigidBody(name, rigidBodyInertia()),
     r_(readScalar(dict.lookup("radius")))
 {
     const scalar m(readScalar(dict.lookup("mass")));
-    rigidBodyInertia::operator=
-    (
-        rigidBodyInertia(m, Zero, (2.0/5.0)*m*sqr(r_)*I)
-    );
+    const vector c(dict.lookup("centreOfMass"));
+    rigidBodyInertia::operator=(rigidBodyInertia(m, c, I(m, r_)));
 }
 
 
