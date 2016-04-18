@@ -250,19 +250,16 @@ void Foam::rigidBodyMeshMotion::solve()
             const label bodyID = bodyMeshes_[bi].bodyID_;
 
             dictionary forcesDict;
-
             forcesDict.add("type", forces::typeName);
             forcesDict.add("patches", bodyMeshes_[bi].patches_);
             forcesDict.add("rhoInf", rhoInf_);
             forcesDict.add("rhoName", rhoName_);
-            forcesDict.add("CofR", model_.X0(bodyID).r());
+            forcesDict.add("CofR", vector::zero);
 
             forces f("forces", db(), forcesDict);
-
             f.calcForcesMoment();
 
-            fx[bodyID].l() = f.forceEff();
-            fx[bodyID].w() = f.momentEff();
+            fx[bodyID] = spatialVector(f.momentEff(), f.forceEff());
         }
 
         model_.solve

@@ -158,6 +158,16 @@ public:
 
         // Update state
 
+            //- Calculate and optionally relax the joint acceleration qDdot from
+            //  the joint state q, velocity qDot, internal force tau (in the
+            //  joint frame) and external force fx (in the global frame)
+            void forwardDynamics
+            (
+                rigidBodyModelState& state,
+                const scalarField& tau,
+                const Field<spatialVector>& fx
+            ) const;
+
             //- Integrate velocities, orientation and position
             //  for the given time-step
             void solve

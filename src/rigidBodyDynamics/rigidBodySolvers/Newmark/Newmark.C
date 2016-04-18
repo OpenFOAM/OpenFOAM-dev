@@ -85,12 +85,12 @@ void Foam::RBD::rigidBodySolvers::Newmark::solve
 
     // Correct velocity
     qDot() = qDot0()
-      + aDamp()*deltaT()*(gamma_*qDdot() + (1 - gamma_)*qDdot0());
+      + deltaT()*(gamma_*qDdot() + (1 - gamma_)*qDdot0());
 
     // Correct position
     q() = q0()
       + deltaT()*qDot0()
-      + sqr(deltaT())*beta_*qDdot() + sqr(deltaT())*(0.5 - beta_)*qDdot0();
+      + sqr(deltaT())*(beta_*qDdot() + (0.5 - beta_)*qDdot0());
 
     correctQuaternionJoints();
 

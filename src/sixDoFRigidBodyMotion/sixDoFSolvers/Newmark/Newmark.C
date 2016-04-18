@@ -96,7 +96,7 @@ void Foam::sixDoFSolvers::Newmark::solve
             tConstraints()
           & (
                 deltaT*v0()
-              + sqr(deltaT)*beta_*a() + sqr(deltaT)*(0.5 - beta_)*a0()
+              + aDamp()*sqr(deltaT)*(beta_*a() + (0.5 - beta_)*a0())
             )
         );
 
@@ -105,7 +105,7 @@ void Foam::sixDoFSolvers::Newmark::solve
         rConstraints()
       & (
             deltaT*pi0()
-          + sqr(deltaT)*beta_*tau() + sqr(deltaT)*(0.5 - beta_)*tau0()
+          + aDamp()*sqr(deltaT)*(beta_*tau() + (0.5 - beta_)*tau0())
         );
     Tuple2<tensor, vector> Qpi = rotate(Q0(), piDeltaT, 1);
     Q() = Qpi.first();

@@ -70,7 +70,7 @@ void Foam::RBD::rigidBodySolvers::symplectic::solve
     // First simplectic step:
     //     Half-step for linear and angular velocities
     //     Update position and orientation
-    qDot() = qDot0() + aDamp()*0.5*deltaT0()*qDdot();
+    qDot() = qDot0() + 0.5*deltaT0()*qDdot();
     q() = q0() + deltaT()*qDot();
 
     correctQuaternionJoints();
@@ -88,7 +88,7 @@ void Foam::RBD::rigidBodySolvers::symplectic::solve
 
     // Second simplectic step:
     //     Complete update of linear and angular velocities
-    qDot() += aDamp()*0.5*deltaT()*qDdot();
+    qDot() += 0.5*deltaT()*qDdot();
 }
 
 

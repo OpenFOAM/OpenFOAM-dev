@@ -125,6 +125,19 @@ Foam::spatialTransform Foam::RBD::rigidBodyMotion::X00
 }
 
 
+void Foam::RBD::rigidBodyMotion::forwardDynamics
+(
+    rigidBodyModelState& state,
+    const scalarField& tau,
+    const Field<spatialVector>& fx
+) const
+{
+    scalarField qDdotPrev = state.qDdot();
+    rigidBodyModel::forwardDynamics(state, tau, fx);
+    state.qDdot() = aDamp_*(aRelax_*state.qDdot() + (1 - aRelax_)*qDdotPrev);
+}
+
+
 void Foam::RBD::rigidBodyMotion::solve
 (
     scalar deltaT,

@@ -94,10 +94,6 @@ protected:
         //- Return the previous time-step
         inline scalar deltaT0() const;
 
-
-        //- Acceleration damping coefficient (for steady-state simulations)
-        inline scalar aDamp() const;
-
         //- Correct the quaternion joints based on the current change in q
         void correctQuaternionJoints();
 

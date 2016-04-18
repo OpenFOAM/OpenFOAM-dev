@@ -85,10 +85,4 @@ inline Foam::scalar Foam::RBD::rigidBodySolver::deltaT0() const
 }
 
 
-inline Foam::scalar Foam::RBD::rigidBodySolver::aDamp() const
-{
-    return model_.aDamp_;
-}
-
-
 // ************************************************************************* //
