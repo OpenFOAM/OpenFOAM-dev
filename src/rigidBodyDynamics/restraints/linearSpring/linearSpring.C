@@ -71,7 +71,11 @@ Foam::RBD::restraints::linearSpring::~linearSpring()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::spatialVector Foam::RBD::restraints::linearSpring::restrain() const
+void Foam::RBD::restraints::linearSpring::restrain
+(
+    scalarField& tau,
+    Field<spatialVector>& fx
+) const
 {
     point attachmentPt = bodyPoint(refAttachmentPt_);
 
@@ -101,7 +105,8 @@ Foam::spatialVector Foam::RBD::restraints::linearSpring::restrain() const
             << endl;
     }
 
-    return spatialVector(moment, force);
+    // Accumulate the force for the restrained body
+    fx[bodyIndex_] += spatialVector(moment, force);
 }
 
 

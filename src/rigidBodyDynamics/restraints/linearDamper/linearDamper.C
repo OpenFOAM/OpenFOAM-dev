@@ -71,7 +71,11 @@ Foam::RBD::restraints::linearDamper::~linearDamper()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::spatialVector Foam::RBD::restraints::linearDamper::restrain() const
+void Foam::RBD::restraints::linearDamper::restrain
+(
+    scalarField& tau,
+    Field<spatialVector>& fx
+) const
 {
     vector force = -coeff_*model_.v(model_.master(bodyID_)).l();
 
@@ -80,7 +84,8 @@ Foam::spatialVector Foam::RBD::restraints::linearDamper::restrain() const
         Info<< " force " << force << endl;
     }
 
-    return spatialVector(Zero, force);
+    // Accumulate the force for the restrained body
+    fx[bodyIndex_] += spatialVector(Zero, force);
 }
 
 

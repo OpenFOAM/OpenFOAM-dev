@@ -105,8 +105,13 @@ public:
 
     // Member Functions
 
-        //- Return the external force applied to the body by this restraint
-        virtual spatialVector restrain() const;
+        //- Accumulate the retraint internal joint forces into the tau field and
+        //  external forces into the fx field
+        virtual void restrain
+        (
+            scalarField& tau,
+            Field<spatialVector>& fx
+        ) const;
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& dict);

@@ -50,8 +50,7 @@ namespace restraints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::restraints::sphericalAngularDamper::
-sphericalAngularDamper
+Foam::RBD::restraints::sphericalAngularDamper::sphericalAngularDamper
 (
     const word& name,
     const dictionary& dict,
@@ -66,15 +65,17 @@ sphericalAngularDamper
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::RBD::restraints::sphericalAngularDamper::
-~sphericalAngularDamper()
+Foam::RBD::restraints::sphericalAngularDamper::~sphericalAngularDamper()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::spatialVector
-Foam::RBD::restraints::sphericalAngularDamper::restrain() const
+void Foam::RBD::restraints::sphericalAngularDamper::restrain
+(
+    scalarField& tau,
+    Field<spatialVector>& fx
+) const
 {
     vector moment = -coeff_*model_.v(model_.master(bodyID_)).w();
 
@@ -83,7 +84,8 @@ Foam::RBD::restraints::sphericalAngularDamper::restrain() const
         Info<< " moment " << moment << endl;
     }
 
-    return spatialVector(moment, Zero);
+    // Accumulate the force for the restrained body
+    fx[bodyIndex_] += spatialVector(moment, Zero);
 }
 
 

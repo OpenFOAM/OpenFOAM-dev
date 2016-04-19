@@ -46,6 +46,7 @@ SourceFiles
 #include "autoPtr.H"
 #include "spatialVector.H"
 #include "point.H"
+#include "scalarField.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,6 +75,9 @@ protected:
 
         //- ID of the body the restraint is applied to
         label bodyID_;
+
+        //- Index of the body the force is applied to
+        label bodyIndex_;
 
         //- Restraint model specific coefficient dictionary
         dictionary coeffs_;
@@ -153,8 +157,13 @@ public:
             return bodyID_;
         }
 
-        //- Return the external force applied to the body by this restraint
-        virtual spatialVector restrain() const = 0;
+        //- Accumulate the retraint internal joint forces into the tau field and
+        //  external forces into the fx field
+        virtual void restrain
+        (
+            scalarField& tau,
+            Field<spatialVector>& fx
+        ) const = 0;
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& dict);

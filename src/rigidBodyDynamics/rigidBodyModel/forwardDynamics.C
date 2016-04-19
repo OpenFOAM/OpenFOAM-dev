@@ -29,7 +29,11 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::RBD::rigidBodyModel::applyRestraints(Field<spatialVector>& fx) const
+void Foam::RBD::rigidBodyModel::applyRestraints
+(
+    scalarField& tau,
+    Field<spatialVector>& fx
+) const
 {
     if (restraints_.empty())
     {
@@ -41,7 +45,7 @@ void Foam::RBD::rigidBodyModel::applyRestraints(Field<spatialVector>& fx) const
         DebugInfo << "Restraint " << restraints_[ri].name();
 
         // Accumulate the restraint forces
-        fx[master(restraints_[ri].bodyID())] += restraints_[ri].restrain();
+        restraints_[ri].restrain(tau, fx);
     }
 }
 

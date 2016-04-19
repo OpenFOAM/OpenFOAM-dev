@@ -50,8 +50,7 @@ namespace restraints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::restraints::linearAxialAngularSpring::
-linearAxialAngularSpring
+Foam::RBD::restraints::linearAxialAngularSpring::linearAxialAngularSpring
 (
     const word& name,
     const dictionary& dict,
@@ -66,15 +65,17 @@ linearAxialAngularSpring
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::RBD::restraints::linearAxialAngularSpring::
-~linearAxialAngularSpring()
+Foam::RBD::restraints::linearAxialAngularSpring::~linearAxialAngularSpring()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::spatialVector
-Foam::RBD::restraints::linearAxialAngularSpring::restrain() const
+void Foam::RBD::restraints::linearAxialAngularSpring::restrain
+(
+    scalarField& tau,
+    Field<spatialVector>& fx
+) const
 {
     vector refDir = rotationTensor(vector(1, 0, 0), axis_) & vector(0, 1, 0);
 
@@ -131,7 +132,8 @@ Foam::RBD::restraints::linearAxialAngularSpring::restrain() const
             << endl;
     }
 
-    return spatialVector(moment, Zero);
+    // Accumulate the force for the restrained body
+    fx[bodyIndex_] += spatialVector(moment, Zero);
 }
 
 

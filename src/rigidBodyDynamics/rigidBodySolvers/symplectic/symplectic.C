@@ -79,12 +79,13 @@ void Foam::RBD::rigidBodySolvers::symplectic::solve
     model_.forwardDynamicsCorrection(state());
 
     // Accumulate the restraint forces
+    scalarField rtau(tau);
     Field<spatialVector> rfx(fx);
-    model_.applyRestraints(rfx);
+    model_.applyRestraints(rtau, rfx);
 
     // Calculate the body acceleration for the given state
     // and restraint forces
-    model_.forwardDynamics(state(), tau, rfx);
+    model_.forwardDynamics(state(), rtau, rfx);
 
     // Second simplectic step:
     //     Complete update of linear and angular velocities
