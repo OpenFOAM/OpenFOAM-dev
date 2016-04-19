@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ License
 #include "fvmSup.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
+#include "fvcFlux.H"
 #include "surfaceInterpolate.H"
 #include "fvMatrix.H"
 
@@ -109,7 +110,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
                 ),
-                fvc::interpolate(U) & U.mesh().Sf(),
+                fvc::flux(U),
                 phiTypes
             )
         );
@@ -172,7 +173,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             fluid.mesh()
         ),
         fluid.mesh(),
-        dimensionedVector("0", dimAcceleration, vector::zero)
+        dimensionedVector("0", dimAcceleration, Zero)
     ),
     divU_(NULL),
     turbulence_

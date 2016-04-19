@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,13 +58,13 @@ Foam::KinematicParcel<ParcelType>::KinematicParcel
     nParticle_(0.0),
     d_(0.0),
     dTarget_(0.0),
-    U_(vector::zero),
+    U_(Zero),
     rho_(0.0),
     age_(0.0),
     tTurb_(0.0),
-    UTurb_(vector::zero),
+    UTurb_(Zero),
     rhoc_(0.0),
-    Uc_(vector::zero),
+    Uc_(Zero),
     muc_(0.0)
 {
     if (readFields)

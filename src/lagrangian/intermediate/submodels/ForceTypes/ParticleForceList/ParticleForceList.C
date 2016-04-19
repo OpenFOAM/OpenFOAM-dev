@@ -154,7 +154,7 @@ Foam::forceSuSp Foam::ParticleForceList<CloudType>::calcCoupled
     const scalar muc
 ) const
 {
-    forceSuSp value(vector::zero, 0.0);
+    forceSuSp value(Zero, 0.0);
 
     if (calcCoupled_)
     {
@@ -178,7 +178,7 @@ Foam::forceSuSp Foam::ParticleForceList<CloudType>::calcNonCoupled
     const scalar muc
 ) const
 {
-    forceSuSp value(vector::zero, 0.0);
+    forceSuSp value(Zero, 0.0);
 
     if (calcNonCoupled_)
     {

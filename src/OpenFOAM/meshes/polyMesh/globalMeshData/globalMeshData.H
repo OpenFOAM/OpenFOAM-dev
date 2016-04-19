@@ -625,7 +625,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "globalMeshDataTemplates.C"
+    #include "globalMeshDataTemplates.C"
 #endif
 
 

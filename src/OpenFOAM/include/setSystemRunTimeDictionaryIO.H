@@ -1,33 +1,29 @@
-//
-// setSystemRunTimeDictionaryIO.H
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    fileName dictPath = "";
-    if (args.optionFound("dict"))
+fileName dictPath = "";
+if (args.optionFound("dict"))
+{
+    dictPath = args["dict"];
+    if (isDir(dictPath))
     {
-        dictPath = args["dict"];
-        if (isDir(dictPath))
-        {
-            dictPath = dictPath / dictName;
-        }
+        dictPath = dictPath / dictName;
     }
+}
 
-    IOobject dictIO
+IOobject dictIO
+(
+    dictName,
+    runTime.system(),
+    runTime,
+    IOobject::MUST_READ_IF_MODIFIED,
+    IOobject::NO_WRITE
+);
+
+if (dictPath.size())
+{
+    dictIO = IOobject
     (
-        dictName,
-        runTime.system(),
+        dictPath,
         runTime,
         IOobject::MUST_READ_IF_MODIFIED,
         IOobject::NO_WRITE
     );
-
-    if (dictPath.size())
-    {
-        dictIO = IOobject
-        (
-            dictPath,
-            runTime,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        );
-    }
+}

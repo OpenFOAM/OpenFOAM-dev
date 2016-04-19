@@ -55,7 +55,7 @@ Foam::tmp<Foam::IOField<Type>> Foam::reconstructLagrangianField
             Field<Type>(0)
         )
     );
-    Field<Type>& field = tfield();
+    Field<Type>& field = tfield.ref();
 
     forAll(meshes, i)
     {
@@ -115,7 +115,7 @@ Foam::reconstructLagrangianFieldField
             Field<Field<Type>>(0)
         )
     );
-    Field<Field<Type>>& field = tfield();
+    Field<Field<Type>>& field = tfield.ref();
 
     forAll(meshes, i)
     {

@@ -201,7 +201,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kd
         {
             if (phase1 == &phase)
             {
-                tKd() += K;
+                tKd.ref() += K;
             }
 
             Swap(phase1, phase2);
@@ -317,7 +317,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::F
                     false
                 ),
                 this->mesh_,
-                dimensionedVector("zero", liftModel::dimF, vector::zero)
+                dimensionedVector("zero", liftModel::dimF, Zero)
             )
         );
     }
@@ -533,7 +533,7 @@ Foam::volVectorField& Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::setF
                     false
                 ),
                 this->mesh_,
-                dimensionedVector("zero", liftModel::dimF, vector::zero)
+                dimensionedVector("zero", liftModel::dimF, Zero)
             )
         );
     }

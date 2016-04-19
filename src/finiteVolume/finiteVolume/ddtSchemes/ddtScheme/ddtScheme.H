@@ -64,7 +64,7 @@ namespace fv
 template<class Type>
 class ddtScheme
 :
-    public refCount
+    public tmp<ddtScheme<Type>>::refCount
 {
 
 protected:
@@ -288,7 +288,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtUfCorr                               \
     const surfaceScalarField& Uf                                               \
 )                                                                              \
 {                                                                              \
-    NotImplemented;                               \
+    NotImplemented;                                                            \
     return surfaceScalarField::null();                                         \
 }                                                                              \
                                                                                \
@@ -299,7 +299,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
     const surfaceScalarField& phi                                              \
 )                                                                              \
 {                                                                              \
-    NotImplemented;                              \
+    NotImplemented;                                                            \
     return surfaceScalarField::null();                                         \
 }                                                                              \
                                                                                \
@@ -311,7 +311,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtUfCorr                               \
     const surfaceScalarField& Uf                                               \
 )                                                                              \
 {                                                                              \
-    NotImplemented;                               \
+    NotImplemented;                                                            \
     return surfaceScalarField::null();                                         \
 }                                                                              \
                                                                                \
@@ -323,7 +323,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
     const surfaceScalarField& phi                                              \
 )                                                                              \
 {                                                                              \
-    NotImplemented;                              \
+    NotImplemented;                                                            \
     return surfaceScalarField::null();                                         \
 }                                                                              \
                                                                                \
@@ -334,7 +334,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "ddtScheme.C"
+    #include "ddtScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

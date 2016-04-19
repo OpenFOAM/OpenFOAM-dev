@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ Description
             U       | velocity
         \endvartable
 
-    3. compressible transonic (\gamma <= 1):
+    3. compressible transonic (\f$\gamma <= 1\f$):
         \f[
             p_p = \frac{p_0}{1 + 0.5 \psi |U|^2}
         \f]
@@ -65,7 +65,7 @@ Description
             G       | coefficient given by \f$\frac{\gamma}{1-\gamma}\f$
         \endvartable
 
-    4. compressible supersonic (\gamma > 1):
+    4. compressible supersonic (\f$\gamma > 1\f$):
         \f[
             p_p = \frac{p_0}{(1 + 0.5 \psi G |U|^2)^{\frac{1}{G}}}
         \f]

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define sphericalTensor_H
 
 #include "SphericalTensor.H"
+#include "Identity.H"
 #include "contiguous.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,12 +48,8 @@ namespace Foam
 
 typedef SphericalTensor<scalar> sphericalTensor;
 
-// Identity tensor
-static const sphericalTensor I(1);
-
 static const sphericalTensor oneThirdI(1.0/3.0);
 static const sphericalTensor twoThirdsI(2.0/3.0);
-
 
 //- Specify data associated with sphericalTensor type are contiguous
 template<>

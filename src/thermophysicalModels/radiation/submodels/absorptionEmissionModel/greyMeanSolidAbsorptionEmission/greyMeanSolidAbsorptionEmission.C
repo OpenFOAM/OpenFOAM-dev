@@ -26,7 +26,7 @@ License
 #include "greyMeanSolidAbsorptionEmission.H"
 #include "addToRunTimeSelectionTable.H"
 #include "unitConversion.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -55,10 +55,10 @@ greyMeanSolidAbsorptionEmission::X(const word specie) const
     const volScalarField& p = thermo_.p();
 
     tmp<scalarField> tXj(new scalarField(T.internalField().size(), 0.0));
-    scalarField& Xj = tXj();
+    scalarField& Xj = tXj.ref();
 
     tmp<scalarField> tRhoInv(new scalarField(T.internalField().size(), 0.0));
-    scalarField& rhoInv = tRhoInv();
+    scalarField& rhoInv = tRhoInv.ref();
 
     forAll(mixture_.Y(), specieI)
     {
@@ -158,11 +158,11 @@ calc(const label propertyId) const
             ),
             mesh(),
             dimensionedScalar("a", dimless/dimLength, 0.0),
-            zeroGradientFvPatchVectorField::typeName
+            extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().internalField();
 
     forAllConstIter(HashTable<label>, speciesNames_, iter)
     {
@@ -172,7 +172,7 @@ calc(const label propertyId) const
         }
     }
 
-    ta().correctBoundaryConditions();
+    ta.ref().correctBoundaryConditions();
     return ta;
 }
 

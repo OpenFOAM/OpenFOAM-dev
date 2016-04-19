@@ -6,7 +6,6 @@ cp -rf 0.org 0
 runApplication blockMesh
 
 #runApplication setSet -batch wallFilmRegion.setSet
-#mv log.setSet log.wallFilmRegion.setSet
 runApplication topoSet -dict system/wallFilmRegion.topoSet
 
 runApplication extrudeToRegionMesh -overwrite

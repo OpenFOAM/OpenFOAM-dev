@@ -25,12 +25,19 @@
 #     config.sh/example/compiler
 #
 # Description
-#     Example of fine tuning ThirdParty compiler settings for OpenFOAM
+#     Example of fine tuning compiler versions and settings for OpenFOAM
 #     Sourced from OpenFOAM-<VERSION>/etc/config.sh/settings
 #
 #------------------------------------------------------------------------------
 
-# Modified compiler settings
+# First load the standard versions, if necessary
+foamFile=$($WM_PROJECT_DIR/bin/foamEtcFile -mode o config.sh/compiler \
+               2>/dev/null)
+[ $? -eq 0 ] && _foamSource $foamFile
+unset foamFile
+
+
+# Override compiler settings
 case "$WM_COMPILER" in
 Gcc46 | Gcc46++0x)
     gcc_version=gcc-4.6.0
@@ -44,6 +51,17 @@ Gcc45 | Gcc45++0x)
     mpfr_version=mpfr-2.4.2
     mpc_version=mpc-0.8.1
     ;;
+Gcc48u)
+    # Example of using the system GCC 4.8 in Ubuntu 15.10. Keep in mind you
+    # will also need to create respective directory in "wmake/rules"
+    export WM_CC='gcc-4.8'
+    export WM_CXX='g++-4.8'
+    ;;
+Icc)
+    # Example for ensuring that 3rd software uses the Icc compilers
+    export WM_CC='icc'
+    export WM_CXX='icpc'
+    ;;
 esac
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

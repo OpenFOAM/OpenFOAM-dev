@@ -147,7 +147,7 @@ Foam::scalar Foam::distribution::mean() const
 
 Foam::scalar Foam::distribution::median()
 {
-    // From:
+    // Reference:
     // http://mathworld.wolfram.com/StatisticalMedian.html
     // The statistical median is the value of the distribution variable
     // where the cumulative distribution = 0.5.

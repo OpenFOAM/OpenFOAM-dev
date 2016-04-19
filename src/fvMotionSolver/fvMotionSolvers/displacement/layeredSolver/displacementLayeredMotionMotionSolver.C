@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ void Foam::displacementLayeredMotionMotionSolver::walkStructured
                 points0()[pointI],  // location of data
                 vector::max,        // not valid
                 0.0,
-                vector::zero        // passive data
+                Zero        // passive data
             );
         }
     }
@@ -182,7 +182,7 @@ void Foam::displacementLayeredMotionMotionSolver::walkStructured
                 mesh().edges()[edgeI].centre(points0()),    // location of data
                 vector::max,                                // not valid
                 0.0,
-                vector::zero
+                Zero
             );
         }
     }
@@ -223,7 +223,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
 ) const
 {
     tmp<vectorField> tfld(new vectorField(meshPoints.size()));
-    vectorField& fld = tfld();
+    vectorField& fld = tfld.ref();
 
     const word type(dict.lookup("type"));
 

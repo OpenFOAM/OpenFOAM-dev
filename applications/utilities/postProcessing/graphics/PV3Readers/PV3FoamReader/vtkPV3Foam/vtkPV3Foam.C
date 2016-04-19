@@ -704,7 +704,7 @@ void Foam::vtkPV3Foam::renderPatchNames(vtkRenderer* renderer, const bool show)
             // Create storage for additional zone centres
             forAll(zoneNFaces, zoneI)
             {
-                zoneCentre[patchI].append(vector::zero);
+                zoneCentre[patchI].append(Zero);
             }
 
             // Do averaging per individual zone

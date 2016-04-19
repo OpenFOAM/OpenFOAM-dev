@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,9 +93,9 @@ void Foam::primitiveMesh::makeFaceCentresAndAreas
         }
         else
         {
-            vector sumN = vector::zero;
+            vector sumN = Zero;
             scalar sumA = 0.0;
-            vector sumAc = vector::zero;
+            vector sumAc = Zero;
 
             point fCentre = p[f[0]];
             for (label pi = 1; pi < nPoints; pi++)
@@ -123,7 +123,7 @@ void Foam::primitiveMesh::makeFaceCentresAndAreas
             if (sumA < ROOTVSMALL)
             {
                 fCtrs[facei] = fCentre;
-                fAreas[facei] = vector::zero;
+                fAreas[facei] = Zero;
             }
             else
             {

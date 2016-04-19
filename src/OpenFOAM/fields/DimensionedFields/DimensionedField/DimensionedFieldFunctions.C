@@ -35,7 +35,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh, int r>
+template<class Type, class GeoMesh, direction r>
 tmp<DimensionedField<typename powProduct<Type, r>::type, GeoMesh>>
 pow
 (
@@ -60,13 +60,13 @@ pow
         )
     );
 
-    pow<Type, r, GeoMesh>(tPow().field(), df.field());
+    pow<Type, r, GeoMesh>(tPow.ref().field(), df.field());
 
     return tPow;
 }
 
 
-template<class Type, class GeoMesh, int r>
+template<class Type, class GeoMesh, direction r>
 tmp<DimensionedField<typename powProduct<Type, r>::type, GeoMesh>>
 pow
 (
@@ -86,9 +86,9 @@ pow
             pow(df.dimensions(), r)
         );
 
-    pow<Type, r, GeoMesh>(tPow().field(), df.field());
+    pow<Type, r, GeoMesh>(tPow.ref().field(), df.field());
 
-    reuseTmpDimensionedField<powProductType, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return tPow;
 }
@@ -114,7 +114,7 @@ sqr(const DimensionedField<Type, GeoMesh>& df)
         )
     );
 
-    sqr(tSqr().field(), df.field());
+    sqr(tSqr.ref().field(), df.field());
 
     return tSqr;
 }
@@ -135,9 +135,9 @@ sqr(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
             sqr(df.dimensions())
         );
 
-    sqr(tSqr().field(), df.field());
+    sqr(tSqr.ref().field(), df.field());
 
-    reuseTmpDimensionedField<outerProductType, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return tSqr;
 }
@@ -164,7 +164,7 @@ tmp<DimensionedField<scalar, GeoMesh>> magSqr
         )
     );
 
-    magSqr(tMagSqr().field(), df.field());
+    magSqr(tMagSqr.ref().field(), df.field());
 
     return tMagSqr;
 }
@@ -185,9 +185,9 @@ tmp<DimensionedField<scalar, GeoMesh>> magSqr
             sqr(df.dimensions())
         );
 
-    magSqr(tMagSqr().field(), df.field());
+    magSqr(tMagSqr.ref().field(), df.field());
 
-    reuseTmpDimensionedField<scalar, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return tMagSqr;
 }
@@ -214,7 +214,7 @@ tmp<DimensionedField<scalar, GeoMesh>> mag
         )
     );
 
-    mag(tMag().field(), df.field());
+    mag(tMag.ref().field(), df.field());
 
     return tMag;
 }
@@ -235,9 +235,9 @@ tmp<DimensionedField<scalar, GeoMesh>> mag
             df.dimensions()
         );
 
-    mag(tMag().field(), df.field());
+    mag(tMag.ref().field(), df.field());
 
-    reuseTmpDimensionedField<scalar, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return tMag;
 }
@@ -268,7 +268,7 @@ cmptAv(const DimensionedField<Type, GeoMesh>& df)
         )
     );
 
-    cmptAv(CmptAv().field(), df.field());
+    cmptAv(CmptAv.ref().field(), df.field());
 
     return CmptAv;
 }
@@ -294,9 +294,9 @@ cmptAv(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
             df.dimensions()
         );
 
-    cmptAv(CmptAv().field(), df.field());
+    cmptAv(CmptAv.ref().field(), df.field());
 
-    reuseTmpDimensionedField<cmptType, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return CmptAv;
 }
@@ -390,7 +390,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), df2.field());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -415,9 +415,9 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), df2.field());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
                                                                                \
-    reuseTmpDimensionedField<productType, Type2, GeoMesh>::clear(tdf2);        \
+    tdf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -442,9 +442,9 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), df2.field());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
                                                                                \
-    reuseTmpDimensionedField<productType, Type1, GeoMesh>::clear(tdf1);        \
+    tdf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -472,10 +472,10 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), df2.field());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
                                                                                \
-    reuseTmpTmpDimensionedField                                                \
-        <productType, Type1, Type1, Type2, GeoMesh>::clear(tdf1, tdf2);        \
+    tdf1.clear();                                                              \
+    tdf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -505,12 +505,12 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), dvs.value());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), dvs.value());                \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type, class GeoMesh>         \
+template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
 tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
 operator op                                                                    \
 (                                                                              \
@@ -542,14 +542,14 @@ operator op                                                                    \
             df1.dimensions() op dvs.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), df1.field(), dvs.value());                    \
+    Foam::opFunc(tRes.ref().field(), df1.field(), dvs.value());                \
                                                                                \
-    reuseTmpDimensionedField<productType, Type, GeoMesh>::clear(tdf1);         \
+    tdf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type, class GeoMesh>         \
+template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
 tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
 operator op                                                                    \
 (                                                                              \
@@ -585,12 +585,12 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes().field(), dvs.value(), df1.field());                    \
+    Foam::opFunc(tRes.ref().field(), dvs.value(), df1.field());                \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type, class GeoMesh>         \
+template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
 tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
 operator op                                                                    \
 (                                                                              \
@@ -621,14 +621,14 @@ operator op                                                                    \
             dvs.dimensions() op df1.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes().field(), dvs.value(), df1.field());                    \
+    Foam::opFunc(tRes.ref().field(), dvs.value(), df1.field());                \
                                                                                \
-    reuseTmpDimensionedField<productType, Type, GeoMesh>::clear(tdf1);         \
+    tdf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type, class GeoMesh>         \
+template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
 tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
 operator op                                                                    \
 (                                                                              \

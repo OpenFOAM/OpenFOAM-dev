@@ -202,9 +202,9 @@ void DeardorffDiffStress<BasicTurbulenceModel>::correct()
       + fvOptions(alpha, rho, R)
     );
 
-    REqn().relax();
-    fvOptions.constrain(REqn());
-    REqn().solve();
+    REqn.ref().relax();
+    fvOptions.constrain(REqn.ref());
+    REqn.ref().solve();
     fvOptions.correct(R);
     this->boundNormalStress(R);
 

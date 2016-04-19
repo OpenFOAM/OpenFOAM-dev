@@ -70,7 +70,7 @@ void Foam::meshToMesh0::interpolateField
         const labelList& overlapCells = adr[celli];
         const scalarList& w = weights[celli];
 
-        Type f = pTraits<Type>::zero;
+        Type f = Zero;
         forAll(overlapCells, i)
         {
             label fromCelli = overlapCells[i];

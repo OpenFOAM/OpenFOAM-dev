@@ -58,6 +58,13 @@ Foam::Field<Type>::Field(const label size, const Type& t)
 
 
 template<class Type>
+Foam::Field<Type>::Field(const label size, const zero)
+:
+    List<Type>(size, Zero)
+{}
+
+
+template<class Type>
 Foam::Field<Type>::Field
 (
     const UList<Type>& mapF,
@@ -196,15 +203,15 @@ Foam::Field<Type>::Field
 template<class Type>
 Foam::Field<Type>::Field(const Field<Type>& f)
 :
-    refCount(),
+    tmp<Field<Type>>::refCount(),
     List<Type>(f)
 {}
 
 
 template<class Type>
-Foam::Field<Type>::Field(Field<Type>& f, bool reUse)
+Foam::Field<Type>::Field(Field<Type>& f, bool reuse)
 :
-    List<Type>(f, reUse)
+    List<Type>(f, reuse)
 {}
 
 
@@ -229,14 +236,13 @@ Foam::Field<Type>::Field(const UList<Type>& list)
 {}
 
 
-// Construct as copy of tmp<Field>
 #ifndef NoConstructFromTmp
 template<class Type>
 Foam::Field<Type>::Field(const tmp<Field<Type>>& tf)
 :
     List<Type>(const_cast<Field<Type>&>(tf()), tf.isTmp())
 {
-    const_cast<Field<Type>&>(tf()).resetRefCount();
+    tf.clear();
 }
 #endif
 
@@ -400,7 +406,7 @@ void Foam::Field<Type>::map
         const labelList&  localAddrs   = mapAddressing[i];
         const scalarList& localWeights = mapWeights[i];
 
-        f[i] = pTraits<Type>::zero;
+        f[i] = Zero;
 
         forAll(localAddrs, j)
         {
@@ -527,7 +533,7 @@ void Foam::Field<Type>::rmap
 {
     Field<Type>& f = *this;
 
-    f = pTraits<Type>::zero;
+    f = Zero;
 
     forAll(mapF, i)
     {
@@ -564,7 +570,7 @@ Foam::Field<Type>::component
 ) const
 {
     tmp<Field<cmptType>> Component(new Field<cmptType>(this->size()));
-    ::Foam::component(Component(), *this, d);
+    ::Foam::component(Component.ref(), *this, d);
     return Component;
 }
 
@@ -606,10 +612,23 @@ void Foam::Field<Type>::replace
 
 
 template<class Type>
+template<class VSForm>
+VSForm Foam::Field<Type>::block(const label start) const
+{
+    VSForm vs;
+    for (direction i=0; i<VSForm::nComponents; i++)
+    {
+        vs[i] = this->operator[](start + i);
+    }
+    return vs;
+}
+
+
+template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::Field<Type>::T() const
 {
     tmp<Field<Type>> transpose(new Field<Type>(this->size()));
-    ::Foam::T(transpose(), *this);
+    ::Foam::T(transpose.ref(), *this);
     return transpose;
 }
 
@@ -690,10 +709,7 @@ void Foam::Field<Type>::operator=(const tmp<Field>& rhs)
             << abort(FatalError);
     }
 
-    // This is dodgy stuff, don't try it at home.
-    Field* fieldPtr = rhs.ptr();
-    List<Type>::transfer(*fieldPtr);
-    delete fieldPtr;
+    List<Type>::operator=(rhs());
 }
 
 
@@ -705,7 +721,14 @@ void Foam::Field<Type>::operator=(const Type& t)
 
 
 template<class Type>
-template<class Form, class Cmpt, int nCmpt>
+void Foam::Field<Type>::operator=(const zero)
+{
+    List<Type>::operator=(Zero);
+}
+
+
+template<class Type>
+template<class Form, class Cmpt, Foam::direction nCmpt>
 void Foam::Field<Type>::operator=(const VectorSpace<Form,Cmpt,nCmpt>& vs)
 {
     TFOR_ALL_F_OP_S(Type, *this, =, VSType, vs)

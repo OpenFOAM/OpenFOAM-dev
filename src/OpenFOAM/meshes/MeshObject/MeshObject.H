@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ Description
     MoveableMeshObject, UpdateableMeshObject) and the type of the actual object
     it is created for example:
 
+    \verbatim
     class leastSquaresVectors
     :
         public MeshObject<fvMesh, MoveableMeshObject, leastSquaresVectors>
@@ -43,17 +44,20 @@ Description
         //- Delete the least square vectors when the mesh moves
         virtual bool movePoints();
     };
+    \endverbatim
 
     MeshObject types:
 
-    TopologicalMeshObject: mesh object to be deleted on topology change
-    GeometricMeshObject: mesh object to be deleted on geometry change
-    MoveableMeshObject: mesh object to be updated in movePoints
-    UpdateableMeshObject: mesh object to be updated in updateMesh or movePoints
+    - TopologicalMeshObject: mesh object to be deleted on topology change
+    - GeometricMeshObject: mesh object to be deleted on geometry change
+    - MoveableMeshObject: mesh object to be updated in movePoints
+    - UpdateableMeshObject: mesh object to be updated in updateMesh or
+        movePoints
 
-    Note that movePoints must be provided for MeshObjects of type
-    MoveableMeshObject and both movePoints and updateMesh functions must exist
-    provided for MeshObjects of type UpdateableMeshObject.
+Note
+    movePoints must be provided for MeshObjects of type MoveableMeshObject
+    and both movePoints and updateMesh functions must exist, provided for
+    MeshObjects of type UpdateableMeshObject.
 
 SourceFiles
     MeshObject.C
@@ -278,7 +282,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "MeshObject.C"
+    #include "MeshObject.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

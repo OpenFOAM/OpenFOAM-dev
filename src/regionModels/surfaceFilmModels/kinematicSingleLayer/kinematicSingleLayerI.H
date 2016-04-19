@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,8 +223,7 @@ inline tmp<volScalarField> kinematicSingleLayer::gNorm() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            g_ & nHat(),
-            zeroGradientFvPatchScalarField::typeName
+            g_ & nHat()
         )
     );
 
@@ -246,12 +245,11 @@ inline tmp<volScalarField> kinematicSingleLayer::gNormClipped() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            g_ & nHat(),
-            zeroGradientFvPatchScalarField::typeName
+            g_ & nHat()
         )
     );
 
-    volScalarField& gNormClipped = tgNormClipped();
+    volScalarField& gNormClipped = tgNormClipped.ref();
     gNormClipped.min(0.0);
 
     return tgNormClipped;
@@ -272,8 +270,7 @@ inline tmp<volVectorField> kinematicSingleLayer::gTan() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            g_ - nHat()*gNorm(),
-            zeroGradientFvPatchVectorField::typeName
+            g_ - nHat()*gNorm()
         )
     );
 

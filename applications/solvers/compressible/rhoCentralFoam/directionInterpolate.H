@@ -22,7 +22,7 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
     sf.rename(vf.name() + '_' + dir.name());
 

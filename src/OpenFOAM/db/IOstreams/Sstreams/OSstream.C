@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,7 +249,6 @@ void Foam::OSstream::flush()
 }
 
 
-// Add carriage return and flush stream
 void Foam::OSstream::endl()
 {
     write('\n');
@@ -257,14 +256,12 @@ void Foam::OSstream::endl()
 }
 
 
-// Get flags of output stream
 std::ios_base::fmtflags Foam::OSstream::flags() const
 {
     return os_.flags();
 }
 
 
-// Set flags of output stream
 std::ios_base::fmtflags Foam::OSstream::flags(const ios_base::fmtflags f)
 {
     return os_.flags(f);
@@ -273,26 +270,24 @@ std::ios_base::fmtflags Foam::OSstream::flags(const ios_base::fmtflags f)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
-// Get width of output field
 int Foam::OSstream::width() const
 {
     return os_.width();
 }
 
-// Set width of output field (and return old width)
+
 int Foam::OSstream::width(const int w)
 {
     return os_.width(w);
 }
 
-// Get precision of output field
+
 int Foam::OSstream::precision() const
 {
     return os_.precision();
 }
 
-// Set precision of output field (and return old precision)
+
 int Foam::OSstream::precision(const int p)
 {
     return os_.precision(p);

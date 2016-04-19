@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,21 +64,12 @@ public:
 
     // Member constants
 
-        enum
-        {
-            rank = 2 // Rank of SymmTensor2D is 2
-        };
+        //- Rank of SymmTensor2D is 2
+        static const direction rank = 2;
 
 
     // Static data members
 
-        static const char* const typeName;
-        static const char* componentNames[];
-
-        static const SymmTensor2D zero;
-        static const SymmTensor2D one;
-        static const SymmTensor2D max;
-        static const SymmTensor2D min;
         static const SymmTensor2D I;
 
 
@@ -90,6 +81,9 @@ public:
 
         //- Construct null
         inline SymmTensor2D();
+
+        //- Construct initialized to zero
+        inline SymmTensor2D(const Foam::zero);
 
         //- Construct given VectorSpace
         inline SymmTensor2D(const VectorSpace<SymmTensor2D<Cmpt>, Cmpt, 3>&);
@@ -125,6 +119,9 @@ public:
 
 
     // Member Operators
+
+        //- Inherit VectorSpace assignment operators
+        using SymmTensor2D::vsType::operator=;
 
         //- Construct given SphericalTensor2D
         inline void operator=(const SphericalTensor2D<Cmpt>&);

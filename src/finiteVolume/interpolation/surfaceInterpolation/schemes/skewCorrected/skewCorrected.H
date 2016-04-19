@@ -152,14 +152,14 @@ public:
                     (
                         vf.name(),
                         vf.dimensions(),
-                        pTraits<Type>::zero
+                        Zero
                     )
                 )
             );
 
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
             {
-                tsfCorr().replace
+                tsfCorr.ref().replace
                 (
                     cmpt,
                     scv() & linear

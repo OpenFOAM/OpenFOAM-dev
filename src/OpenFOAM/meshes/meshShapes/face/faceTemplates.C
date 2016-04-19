@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,8 +70,8 @@ Type Foam::face::average
 
     label nPoints = size();
 
-    point centrePoint = point::zero;
-    Type cf = pTraits<Type>::zero;
+    point centrePoint = Zero;
+    Type cf = Zero;
 
     for (label pI=0; pI<nPoints; pI++)
     {
@@ -83,7 +83,7 @@ Type Foam::face::average
     cf /= nPoints;
 
     scalar sumA = 0;
-    Type sumAf = pTraits<Type>::zero;
+    Type sumAf = Zero;
 
     for (label pI=0; pI<nPoints; pI++)
     {

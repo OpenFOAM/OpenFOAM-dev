@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,14 @@ Class
     Foam::fv::option
 
 Description
-    Finite volume options abtract base class.  Provides a base set of controls,
-    e.g.
-
+    Finite volume options abstract base class.  Provides a base set of
+    controls, e.g.:
+    \verbatim
         type            scalarExplicitSource    // source type
         active          on;                     // on/off switch
+    \endverbatim
 
-Note:
+Note
     On evaluation, source/sink options are to be added to the equation R.H.S.
 
 SourceFiles

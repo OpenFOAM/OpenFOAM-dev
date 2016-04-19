@@ -35,7 +35,7 @@ Usage
     \param -ascii \n
     Write Ensight data in ASCII format instead of "C Binary"
 
-    \parm -name \<subdir\>\n
+    \param -name \<subdir\>\n
     define sub-directory name to use for Ensight data (default: "Ensight")
 
     \param -noZero \n

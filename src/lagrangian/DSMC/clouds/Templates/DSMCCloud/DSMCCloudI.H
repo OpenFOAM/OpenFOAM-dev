@@ -276,7 +276,7 @@ inline Foam::scalar Foam::DSMCCloud<ParcelType>::massInSystem() const
 template<class ParcelType>
 inline Foam::vector Foam::DSMCCloud<ParcelType>::linearMomentumOfSystem() const
 {
-    vector linearMomentum(vector::zero);
+    vector linearMomentum(Zero);
 
     forAllConstIter(typename DSMCCloud<ParcelType>, *this, iter)
     {

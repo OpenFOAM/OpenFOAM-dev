@@ -25,28 +25,44 @@ License
 
 #include "SymmTensor.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline Tensor<Cmpt>::Tensor()
+inline Foam::Tensor<Cmpt>::Tensor()
+{}
+
+
+template<class Cmpt>
+inline Foam::Tensor<Cmpt>::Tensor(const Foam::zero)
+:
+    Tensor::msType(Zero)
 {}
 
 
 template<class Cmpt>
 template<class Cmpt2>
-inline Tensor<Cmpt>::Tensor(const VectorSpace<Tensor<Cmpt2>, Cmpt2, 9>& vs)
+inline Foam::Tensor<Cmpt>::Tensor
+(
+    const MatrixSpace<Tensor<Cmpt2>, Cmpt2, 3, 3>& vs
+)
 :
-    VectorSpace<Tensor<Cmpt>, Cmpt, 9>(vs)
+    Tensor::msType(vs)
 {}
 
 
 template<class Cmpt>
-inline Tensor<Cmpt>::Tensor(const SphericalTensor<Cmpt>& st)
+template<class Cmpt2>
+inline Foam::Tensor<Cmpt>::Tensor
+(
+    const VectorSpace<Tensor<Cmpt2>, Cmpt2, 9>& vs
+)
+:
+    Tensor::msType(vs)
+{}
+
+
+template<class Cmpt>
+inline Foam::Tensor<Cmpt>::Tensor(const SphericalTensor<Cmpt>& st)
 {
     this->v_[XX] = st.ii(); this->v_[XY] = 0; this->v_[XZ] = 0;
     this->v_[YX] = 0; this->v_[YY] = st.ii(); this->v_[YZ] = 0;
@@ -55,7 +71,7 @@ inline Tensor<Cmpt>::Tensor(const SphericalTensor<Cmpt>& st)
 
 
 template<class Cmpt>
-inline Tensor<Cmpt>::Tensor(const SymmTensor<Cmpt>& st)
+inline Foam::Tensor<Cmpt>::Tensor(const SymmTensor<Cmpt>& st)
 {
     this->v_[XX] = st.xx(); this->v_[XY] = st.xy(); this->v_[XZ] = st.xz();
     this->v_[YX] = st.xy(); this->v_[YY] = st.yy(); this->v_[YZ] = st.yz();
@@ -64,7 +80,7 @@ inline Tensor<Cmpt>::Tensor(const SymmTensor<Cmpt>& st)
 
 
 template<class Cmpt>
-inline Tensor<Cmpt>::Tensor(const Vector<Vector<Cmpt>>& tr)
+inline Foam::Tensor<Cmpt>::Tensor(const Vector<Vector<Cmpt>>& tr)
 {
     this->v_[XX] = tr.x().x();
     this->v_[XY] = tr.x().y();
@@ -81,7 +97,7 @@ inline Tensor<Cmpt>::Tensor(const Vector<Vector<Cmpt>>& tr)
 
 
 template<class Cmpt>
-inline Tensor<Cmpt>::Tensor
+inline Foam::Tensor<Cmpt>::Tensor
 (
     const Vector<Cmpt>& x,
     const Vector<Cmpt>& y,
@@ -95,7 +111,7 @@ inline Tensor<Cmpt>::Tensor
 
 
 template<class Cmpt>
-inline Tensor<Cmpt>::Tensor
+inline Foam::Tensor<Cmpt>::Tensor
 (
     const Cmpt txx, const Cmpt txy, const Cmpt txz,
     const Cmpt tyx, const Cmpt tyy, const Cmpt tyz,
@@ -109,181 +125,200 @@ inline Tensor<Cmpt>::Tensor
 
 
 template<class Cmpt>
-inline Tensor<Cmpt>::Tensor(Istream& is)
+template
+<
+    template<class, Foam::direction, Foam::direction> class Block2,
+    Foam::direction BRowStart,
+    Foam::direction BColStart
+>
+inline Foam::Tensor<Cmpt>::Tensor
+(
+    const Block2<Tensor<Cmpt>, BRowStart, BColStart>& block
+)
 :
-    VectorSpace<Tensor<Cmpt>, Cmpt, 9>(is)
+    Tensor::msType(block)
+{}
+
+
+template<class Cmpt>
+inline Foam::Tensor<Cmpt>::Tensor(Istream& is)
+:
+    Tensor::msType(is)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline Vector<Cmpt> Tensor<Cmpt>::x() const
+inline const Cmpt& Foam::Tensor<Cmpt>::xx() const
+{
+    return this->v_[XX];
+}
+
+
+template<class Cmpt>
+inline const Cmpt& Foam::Tensor<Cmpt>::xy() const
+{
+    return this->v_[XY];
+}
+
+
+template<class Cmpt>
+inline const Cmpt& Foam::Tensor<Cmpt>::xz() const
+{
+    return this->v_[XZ];
+}
+
+
+template<class Cmpt>
+inline const Cmpt& Foam::Tensor<Cmpt>::yx() const
+{
+    return this->v_[YX];
+}
+
+
+template<class Cmpt>
+inline const Cmpt& Foam::Tensor<Cmpt>::yy() const
+{
+    return this->v_[YY];
+}
+
+
+template<class Cmpt>
+inline const Cmpt& Foam::Tensor<Cmpt>::yz() const
+{
+    return this->v_[YZ];
+}
+
+
+template<class Cmpt>
+inline const Cmpt& Foam::Tensor<Cmpt>::zx() const
+{
+    return this->v_[ZX];
+}
+
+
+template<class Cmpt>
+inline const Cmpt& Foam::Tensor<Cmpt>::zy() const
+{
+    return this->v_[ZY];
+}
+
+
+template<class Cmpt>
+inline const Cmpt& Foam::Tensor<Cmpt>::zz() const
+{
+    return this->v_[ZZ];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::xx()
+{
+    return this->v_[XX];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::xy()
+{
+    return this->v_[XY];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::xz()
+{
+    return this->v_[XZ];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::yx()
+{
+    return this->v_[YX];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::yy()
+{
+    return this->v_[YY];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::yz()
+{
+    return this->v_[YZ];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::zx()
+{
+    return this->v_[ZX];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::zy()
+{
+    return this->v_[ZY];
+}
+
+
+template<class Cmpt>
+inline Cmpt& Foam::Tensor<Cmpt>::zz()
+{
+    return this->v_[ZZ];
+}
+
+
+template<class Cmpt>
+inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::x() const
 {
     return Vector<Cmpt>(this->v_[XX], this->v_[XY], this->v_[XZ]);
 }
 
 
 template<class Cmpt>
-inline Vector<Cmpt> Tensor<Cmpt>::y() const
+inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::y() const
 {
     return Vector<Cmpt>(this->v_[YX], this->v_[YY], this->v_[YZ]);
 }
 
 
 template<class Cmpt>
-inline Vector<Cmpt>  Tensor<Cmpt>::z() const
+inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::z() const
 {
     return Vector<Cmpt>(this->v_[ZX], this->v_[ZY], this->v_[ZZ]);
 }
 
 
 template<class Cmpt>
-inline Vector<Cmpt>  Tensor<Cmpt>::vectorComponent(const direction cmpt) const
+inline Foam::Vector<Cmpt> Foam::Tensor<Cmpt>::vectorComponent
+(
+    const direction cmpt
+) const
 {
     switch (cmpt)
     {
         case 0:
             return x();
-        break;
+            break;
         case 1:
             return y();
-        break;
+            break;
         case 2:
             return z();
-        break;
+            break;
     }
 }
 
 
 template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::xx() const
-{
-    return this->v_[XX];
-}
-
-
-template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::xy() const
-{
-    return this->v_[XY];
-}
-
-
-template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::xz() const
-{
-    return this->v_[XZ];
-}
-
-
-template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::yx() const
-{
-    return this->v_[YX];
-}
-
-
-template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::yy() const
-{
-    return this->v_[YY];
-}
-
-
-template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::yz() const
-{
-    return this->v_[YZ];
-}
-
-
-template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::zx() const
-{
-    return this->v_[ZX];
-}
-
-
-template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::zy() const
-{
-    return this->v_[ZY];
-}
-
-
-template<class Cmpt>
-inline const Cmpt&  Tensor<Cmpt>::zz() const
-{
-    return this->v_[ZZ];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::xx()
-{
-    return this->v_[XX];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::xy()
-{
-    return this->v_[XY];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::xz()
-{
-    return this->v_[XZ];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::yx()
-{
-    return this->v_[YX];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::yy()
-{
-    return this->v_[YY];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::yz()
-{
-    return this->v_[YZ];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::zx()
-{
-    return this->v_[ZX];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::zy()
-{
-    return this->v_[ZY];
-}
-
-
-template<class Cmpt>
-inline Cmpt& Tensor<Cmpt>::zz()
-{
-    return this->v_[ZZ];
-}
-
-
-template<class Cmpt>
-inline Tensor<Cmpt> Tensor<Cmpt>::T() const
+inline Foam::Tensor<Cmpt> Foam::Tensor<Cmpt>::T() const
 {
     return Tensor<Cmpt>
     (
@@ -294,10 +329,44 @@ inline Tensor<Cmpt> Tensor<Cmpt>::T() const
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline void Tensor<Cmpt>::operator=(const SphericalTensor<Cmpt>& st)
+inline void Foam::Tensor<Cmpt>::operator&=(const Tensor<Cmpt>& t)
+{
+    *this =
+    (
+        Tensor<Cmpt>
+        (
+            this->xx()*t.xx() + this->xy()*t.yx() + this->xz()*t.zx(),
+            this->xx()*t.xy() + this->xy()*t.yy() + this->xz()*t.zy(),
+            this->xx()*t.xz() + this->xy()*t.yz() + this->xz()*t.zz(),
+
+            this->yx()*t.xx() + this->yy()*t.yx() + this->yz()*t.zx(),
+            this->yx()*t.xy() + this->yy()*t.yy() + this->yz()*t.zy(),
+            this->yx()*t.xz() + this->yy()*t.yz() + this->yz()*t.zz(),
+
+            this->zx()*t.xx() + this->zy()*t.yx() + this->zz()*t.zx(),
+            this->zx()*t.xy() + this->zy()*t.yy() + this->zz()*t.zy(),
+            this->zx()*t.xz() + this->zy()*t.yz() + this->zz()*t.zz()
+        )
+    );
+}
+
+
+template<class Cmpt>
+template<class Cmpt2>
+inline void Foam::Tensor<Cmpt>::operator=
+(
+    const VectorSpace<Tensor<Cmpt2>, Cmpt2, 9>& vs
+)
+{
+    VectorSpace<Tensor<Cmpt>, Cmpt, 9>::operator=(vs);
+}
+
+
+template<class Cmpt>
+inline void Foam::Tensor<Cmpt>::operator=(const SphericalTensor<Cmpt>& st)
 {
     this->v_[XX] = st.ii(); this->v_[XY] = 0; this->v_[XZ] = 0;
     this->v_[YX] = 0; this->v_[YY] = st.ii(); this->v_[YZ] = 0;
@@ -306,7 +375,7 @@ inline void Tensor<Cmpt>::operator=(const SphericalTensor<Cmpt>& st)
 
 
 template<class Cmpt>
-inline void Tensor<Cmpt>::operator=(const SymmTensor<Cmpt>& st)
+inline void Foam::Tensor<Cmpt>::operator=(const SymmTensor<Cmpt>& st)
 {
     this->v_[XX] = st.xx(); this->v_[XY] = st.xy(); this->v_[XZ] = st.xz();
     this->v_[YX] = st.xy(); this->v_[YY] = st.yy(); this->v_[YZ] = st.yz();
@@ -315,7 +384,7 @@ inline void Tensor<Cmpt>::operator=(const SymmTensor<Cmpt>& st)
 
 
 template<class Cmpt>
-inline void Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt>>& tr)
+inline void Foam::Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt>>& tr)
 {
     this->v_[XX] = tr.x().x();
     this->v_[XY] = tr.x().y();
@@ -330,6 +399,11 @@ inline void Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt>>& tr)
     this->v_[ZZ] = tr.z().z();
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
@@ -561,6 +635,13 @@ template<class Cmpt>
 inline Tensor<Cmpt> inv(const Tensor<Cmpt>& t)
 {
     return inv(t, det(t));
+}
+
+
+template<class Cmpt>
+inline Tensor<Cmpt> Tensor<Cmpt>::inv() const
+{
+    return Foam::inv(*this);
 }
 
 

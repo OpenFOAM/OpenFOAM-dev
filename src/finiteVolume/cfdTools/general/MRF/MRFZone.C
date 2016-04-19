@@ -423,7 +423,7 @@ void Foam::MRFZone::makeRelative(volVectorField& U) const
         forAll(includedFaces_[patchi], i)
         {
             label patchFacei = includedFaces_[patchi][i];
-            U.boundaryField()[patchi][patchFacei] = vector::zero;
+            U.boundaryField()[patchi][patchFacei] = Zero;
         }
     }
 
@@ -450,6 +450,12 @@ void Foam::MRFZone::makeRelative(surfaceScalarField& phi) const
 void Foam::MRFZone::makeRelative(FieldField<fvsPatchField, scalar>& phi) const
 {
     makeRelativeRhoFlux(oneFieldField(), phi);
+}
+
+
+void Foam::MRFZone::makeRelative(Field<scalar>& phi, const label patchi) const
+{
+    makeRelativeRhoFlux(oneField(), phi, patchi);
 }
 
 

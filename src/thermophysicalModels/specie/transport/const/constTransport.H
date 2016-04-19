@@ -216,7 +216,7 @@ public:
 #include "constTransportI.H"
 
 #ifdef NoRepository
-#   include "constTransport.C"
+    #include "constTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

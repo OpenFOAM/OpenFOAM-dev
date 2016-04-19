@@ -163,7 +163,7 @@ void jumpCyclicFvPatchField<scalar>::updateInterfaceMatrix
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "jumpCyclicFvPatchField.C"
+    #include "jumpCyclicFvPatchField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

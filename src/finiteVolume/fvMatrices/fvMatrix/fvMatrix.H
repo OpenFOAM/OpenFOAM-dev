@@ -114,7 +114,7 @@ template<class T> class UIndirectList;
 template<class Type>
 class fvMatrix
 :
-    public refCount,
+    public tmp<fvMatrix<Type>>::refCount,
     public lduMatrix
 {
     // Private data
@@ -1055,7 +1055,7 @@ tmp<fvMatrix<Type>> operator*
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "fvMatrix.C"
+    #include "fvMatrix.C"
 #endif
 
 // Specialisation for scalars

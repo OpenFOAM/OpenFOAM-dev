@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -299,7 +299,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
     const scalarField liquidw(liquid.boundaryField()[patchi]);
 
     // Damp boiling at high void fractions.
-    const scalarField W(min(liquidw/0.2, scalar(0.1)));
+    const scalarField W(min(liquidw/0.2, scalar(1)));
 
     const scalarField A2(W*min(M_PI*sqr(Ddep)*N*Al/4, scalar(1)));
     const scalarField A1(max(1 - A2, scalar(1e-4)));

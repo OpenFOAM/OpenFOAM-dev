@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ Foam::LduMatrix<Type, DType, LUType>::solver::solver
     maxIter_(1000),
     minIter_(0),
     tolerance_(1e-6*pTraits<Type>::one),
-    relTol_(pTraits<Type>::zero)
+    relTol_(Zero)
 {
     readControls();
 }

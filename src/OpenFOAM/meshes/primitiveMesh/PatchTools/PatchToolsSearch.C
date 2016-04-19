@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,6 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Finds area, starting at faceI, delimited by borderEdge.
-// Marks all visited faces (from face-edge-face walk) with currentZone.
 template
 <
     class BoolListType,
@@ -42,9 +40,7 @@ template
     class PointField,
     class PointType
 >
-
-void
-Foam::PatchTools::markZone
+void Foam::PatchTools::markZone
 (
     const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
     const BoolListType& borderEdge,
@@ -112,8 +108,6 @@ Foam::PatchTools::markZone
 }
 
 
-// Finds areas delimited by borderEdge (or 'real' edges).
-// Fills faceZone accordingly
 template
 <
     class BoolListType,
@@ -154,9 +148,6 @@ Foam::PatchTools::markZones
 }
 
 
-
-// Finds areas delimited by borderEdge (or 'real' edges).
-// Fills faceZone accordingly
 template
 <
     class BoolListType,

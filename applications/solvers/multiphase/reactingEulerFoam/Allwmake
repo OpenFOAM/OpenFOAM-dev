@@ -1,13 +1,17 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
 wmakeLnInclude interfacialModels
 wmakeLnInclude interfacialCompositionModels
-wmake libso phaseSystems
-wmake libso interfacialModels
-wmake libso interfacialCompositionModels
-reactingTwoPhaseEulerFoam/Allwmake
-reactingMultiphaseEulerFoam/Allwmake
+wmake $targetType phaseSystems
+wmake $targetType interfacialModels
+wmake $targetType interfacialCompositionModels
+reactingTwoPhaseEulerFoam/Allwmake $*
+reactingMultiphaseEulerFoam/Allwmake $*
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

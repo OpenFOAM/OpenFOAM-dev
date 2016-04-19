@@ -80,8 +80,7 @@
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedVector("zero", dimVelocity, vector::zero),
-        p.boundaryField().types()
+        dimensionedVector("zero", dimVelocity, Zero)
     );
 
     #include "createPhi.H"

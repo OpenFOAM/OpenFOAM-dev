@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ namespace DelaunayMeshTools
 
     //- Write Delaunay points in the range between (and including)
     //  type startPointType and endPointType to an OBJ file
-    template<typename Triangulation>
+    template<class Triangulation>
     void writeOBJ
     (
         const fileName& fName,
@@ -85,7 +85,7 @@ namespace DelaunayMeshTools
     );
 
     //- Write Delaunay points of type pointType to .obj file
-    template<typename Triangulation>
+    template<class Triangulation>
     void writeOBJ
     (
         const fileName& fName,
@@ -94,15 +94,15 @@ namespace DelaunayMeshTools
     );
 
     //- Write the fixed Delaunay points to an OBJ file
-    template<typename Triangulation>
+    template<class Triangulation>
     void writeFixedPoints(const fileName& fName, const Triangulation& t);
 
     //- Write the boundary Delaunay points to an OBJ file
-    template<typename Triangulation>
+    template<class Triangulation>
     void writeBoundaryPoints(const fileName& fName, const Triangulation& t);
 
     //- Write the processor interface to an OBJ file
-    template<typename Triangulation>
+    template<class Triangulation>
     void writeProcessorInterface
     (
         const fileName& fName,
@@ -112,7 +112,7 @@ namespace DelaunayMeshTools
 
     //- Write the internal Delaunay vertices of the tessellation as a
     //  pointField that may be used to restart the meshing process
-    template<typename Triangulation>
+    template<class Triangulation>
     void writeInternalDelaunayVertices
     (
         const fileName& instance,
@@ -121,14 +121,14 @@ namespace DelaunayMeshTools
 
     //- Draws a tet cell to an output stream. The offset is supplied as the tet
     //  number to be drawn.
-    template<typename CellHandle>
+    template<class CellHandle>
     void drawDelaunayCell(Ostream& os, const CellHandle& c, label offset = 0);
 
 
 // Field extraction
 
     //- Extract all points in vertex-index order
-    template<typename Triangulation>
+    template<class Triangulation>
     tmp<pointField> allPoints(const Triangulation& t);
 
 

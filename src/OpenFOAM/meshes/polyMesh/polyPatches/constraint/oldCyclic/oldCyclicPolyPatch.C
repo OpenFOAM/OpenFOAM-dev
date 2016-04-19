@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,11 +104,6 @@ Foam::label Foam::oldCyclicPolyPatch::findMaxArea
 }
 
 
-// Get geometric zones of patch by looking at normals.
-// Method 1: any edge with sharpish angle is edge between two halves.
-//           (this will handle e.g. wedge geometries).
-//           Also two fully disconnected regions will be handled this way.
-// Method 2: sort faces into two halves based on face normal.
 bool Foam::oldCyclicPolyPatch::getGeometricHalves
 (
     const primitivePatch& pp,
@@ -116,6 +111,12 @@ bool Foam::oldCyclicPolyPatch::getGeometricHalves
     labelList& half1ToPatch
 ) const
 {
+    // Get geometric zones of patch by looking at normals.
+    // Method 1: any edge with sharpish angle is edge between two halves.
+    //           (this will handle e.g. wedge geometries).
+    //           Also two fully disconnected regions will be handled this way.
+    // Method 2: sort faces into two halves based on face normal.
+
     // Calculate normals
     const vectorField& faceNormals = pp.faceNormals();
 
@@ -282,9 +283,6 @@ bool Foam::oldCyclicPolyPatch::getGeometricHalves
 }
 
 
-// Given a split of faces into left and right half calculate the centres
-// and anchor points. Transform the left points so they align with the
-// right ones.
 void Foam::oldCyclicPolyPatch::getCentresAndAnchors
 (
     const primitivePatch& pp,
@@ -430,7 +428,6 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
 }
 
 
-// Calculates faceMap and rotation. Returns true if all ok.
 bool Foam::oldCyclicPolyPatch::matchAnchors
 (
     const bool report,
@@ -574,9 +571,9 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
     featureCos_(0.9),
-    rotationAxis_(vector::zero),
-    rotationCentre_(point::zero),
-    separationVector_(vector::zero)
+    rotationAxis_(Zero),
+    rotationCentre_(Zero),
+    separationVector_(Zero)
 {}
 
 
@@ -591,9 +588,9 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
     featureCos_(0.9),
-    rotationAxis_(vector::zero),
-    rotationCentre_(point::zero),
-    separationVector_(vector::zero)
+    rotationAxis_(Zero),
+    rotationCentre_(Zero),
+    separationVector_(Zero)
 {
     if (dict.found("neighbourPatch"))
     {

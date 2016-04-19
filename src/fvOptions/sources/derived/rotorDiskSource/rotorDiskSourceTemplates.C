@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,11 +182,11 @@ void Foam::fv::rotorDiskSource::writeField
                     IOobject::NO_WRITE
                 ),
                 mesh_,
-                dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+                dimensioned<Type>("zero", dimless, Zero)
             )
         );
 
-        Field<Type>& field = tfield().internalField();
+        Field<Type>& field = tfield.ref().internalField();
 
         if (cells_.size() != values.size())
         {

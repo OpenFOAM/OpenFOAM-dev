@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,8 +200,8 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
         Foam::point externalPtD;
         Foam::point externalPtE;
 
-        vector convexEdgePlaneCNormal(vector::zero);
-        vector convexEdgePlaneDNormal(vector::zero);
+        vector convexEdgePlaneCNormal(Zero);
+        vector convexEdgePlaneDNormal(Zero);
 
         const labelList& concaveEdgeNormals = edgeNormals[concaveEdgeI];
         const labelList& convexEdgeANormals = edgeNormals[convexEdgesI[0]];
@@ -632,8 +632,8 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
         Foam::point externalPtD;
         Foam::point externalPtE;
 
-        vector concaveEdgePlaneCNormal(vector::zero);
-        vector concaveEdgePlaneDNormal(vector::zero);
+        vector concaveEdgePlaneCNormal(Zero);
+        vector concaveEdgePlaneDNormal(Zero);
 
         const labelList& convexEdgeNormals = edgeNormals[convexEdgeI];
         const labelList& concaveEdgeANormals = edgeNormals[concaveEdgesI[0]];

@@ -137,16 +137,15 @@ FieldField<Field, Type>::FieldField
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(const FieldField<Field, Type>& f)
 :
-    refCount(),
+    tmp<FieldField<Field, Type>>::refCount(),
     PtrList<Field<Type>>(f)
 {}
 
 
 template<template<class> class Field, class Type>
-FieldField<Field, Type>::FieldField(FieldField<Field, Type>& f, bool reUse)
+FieldField<Field, Type>::FieldField(FieldField<Field, Type>& f, bool reuse)
 :
-    refCount(),
-    PtrList<Field<Type>>(f, reUse)
+    PtrList<Field<Type>>(f, reuse)
 {}
 
 
@@ -157,7 +156,6 @@ FieldField<Field, Type>::FieldField(const PtrList<Field<Type>>& tl)
 {}
 
 
-// Construct as copy of tmp<FieldField>
 #ifndef NoConstructFromTmp
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type>>& tf)
@@ -168,7 +166,7 @@ FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type>>& tf)
         tf.isTmp()
     )
 {
-    const_cast<FieldField<Field, Type>&>(tf()).resetRefCount();
+    tf.clear();
 }
 #endif
 
@@ -233,7 +231,7 @@ FieldField<Field, Type>::component
             NewCalculatedType(*this)
     );
 
-    ::Foam::component(Component(), *this, d);
+    ::Foam::component(Component.ref(), *this, d);
 
     return Component;
 }
@@ -275,7 +273,7 @@ tmp<FieldField<Field, Type>> FieldField<Field, Type>::T() const
         FieldField<Field, Type>::NewCalculatedType(*this)
     );
 
-    ::Foam::T(transpose(), *this);
+    ::Foam::T(transpose.ref(), *this);
     return transpose;
 }
 
@@ -389,6 +387,6 @@ Ostream& operator<<(Ostream& os, const tmp<FieldField<Field, Type>>& tf)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "FieldFieldFunctions.C"
+    #include "FieldFieldFunctions.C"
 
 // ************************************************************************* //

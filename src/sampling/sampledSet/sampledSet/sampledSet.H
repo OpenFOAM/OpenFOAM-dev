@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,12 +92,12 @@ protected:
         //- Returns cell next to boundary face
         label getBoundaryCell(const label) const;
 
-        //- Returns cell using face and containing sample
-        label getCell
-        (
-            const label faceI,
-            const point& sample
-        ) const;
+        //- Returns the neigbour cell or the owner if face in on the boundary
+        label getNeighbourCell(const label) const;
+
+        //- Return the cell in which the point on the sample line
+        //  resides if found otherwise return -1
+        label pointInCell(const point& p, const label samplei) const;
 
         //- Calculates inproduct of face normal and vector sample-face centre
         //  <0 if sample inside.
@@ -125,10 +125,10 @@ protected:
         //  trackFaceI, trackCellI (-1 if no tracking point found)
         bool getTrackingPoint
         (
-            const vector& offset,
             const point& samplePt,
             const point& bPoint,
             const label bFaceI,
+            const scalar smallDist,
 
             point& trackPt,
             label& trackCellI,
@@ -191,13 +191,6 @@ public:
                 return sampledSet::New(name, mesh_, searchEngine_, dict);
             }
         };
-
-
-    // Static data
-
-        //- Tolerance when comparing points. Usually relative to difference
-        //  between start_ and end_
-        static const scalar tol;
 
 
     // Constructors

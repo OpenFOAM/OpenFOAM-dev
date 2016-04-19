@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "fvcMeshPhi.H"
 #include "fvMesh.H"
 #include "ddtScheme.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -38,7 +39,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::meshPhi
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + vf.name() + ')')
-    )().meshPhi(vf);
+    ).ref().meshPhi(vf);
 }
 
 
@@ -52,7 +53,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::meshPhi
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
-    )().meshPhi(vf);
+    ).ref().meshPhi(vf);
 }
 
 
@@ -66,7 +67,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::meshPhi
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
-    )().meshPhi(vf);
+    ).ref().meshPhi(vf);
 }
 
 

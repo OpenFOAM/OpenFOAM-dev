@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,7 +185,7 @@ bool Foam::multiSolidBodyMotionFvMesh::update()
         const labelList& zonePoints = pointIDs_[i];
 
         UIndirectList<point>(transformedPts, zonePoints) =
-            transform
+            transformPoints
             (
                 SBMFs_[i].transformation(),
                 pointField(transformedPts, zonePoints)

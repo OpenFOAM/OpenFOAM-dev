@@ -77,7 +77,7 @@ Foam::valuePointPatchField<Type>::valuePointPatchField
     }
     else if (!valueRequired)
     {
-        Field<Type>::operator=(pTraits<Type>::zero);
+        Field<Type>::operator=(Zero);
     }
     else
     {
@@ -225,7 +225,6 @@ void Foam::valuePointPatchField<Type>::operator=
 }
 
 
-// Force an assignment
 template<class Type>
 void Foam::valuePointPatchField<Type>::operator==
 (

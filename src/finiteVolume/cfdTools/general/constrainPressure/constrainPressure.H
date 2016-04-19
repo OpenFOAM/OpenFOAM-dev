@@ -68,6 +68,13 @@ public:
         {
             return U;
         }
+
+        //- Return the argument unchanged
+        template<class Type>
+        inline const Type& relative(const Type& U, const label patchi) const
+        {
+            return U;
+        }
 };
 
 
@@ -121,7 +128,7 @@ void constrainPressure
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "constrainPressure.C"
+    #include "constrainPressure.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

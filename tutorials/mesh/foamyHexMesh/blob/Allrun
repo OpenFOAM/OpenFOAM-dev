@@ -9,13 +9,13 @@ cp $FOAM_TUTORIALS/resources/geometry/blob.stl.gz constant/triSurface/
 
 runApplication foamyHexMesh
 
-runApplication collapseEdges -latestTime -collapseFaces
-mv log.collapseEdges log.collapseFaces
+runApplication -s collapseFaces \
+    collapseEdges -latestTime -collapseFaces
 
-runApplication collapseEdges -latestTime -collapseFaceSet indirectPatchFaces
-mv log.collapseEdges log.collapseFaceSet
+runApplication -s collapseFaceSet \
+    collapseEdges -latestTime -collapseFaceSet indirectPatchFaces
 
 runApplication checkMesh -latestTime -allGeometry -allTopology
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

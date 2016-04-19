@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,22 +56,14 @@ class Vector2D
 
 public:
 
+    //- Equivalent type of labels used for valid component indexing
+    typedef Vector2D<label> labelType;
+
+
     // Member constants
 
-        enum
-        {
-            rank = 1 // Rank of Vector2D is 1
-        };
-
-
-    // Static data members
-
-        static const char* const typeName;
-        static const char* componentNames[];
-        static const Vector2D zero;
-        static const Vector2D one;
-        static const Vector2D max;
-        static const Vector2D min;
+        //- Rank of Vector2D is 1
+        static const direction rank = 1;
 
 
     //- Component labeling enumeration
@@ -82,6 +74,9 @@ public:
 
         //- Construct null
         inline Vector2D();
+
+        //- Construct initialized to zero
+        inline Vector2D(const Foam::zero);
 
         //- Construct given VectorSpace
         inline Vector2D(const VectorSpace<Vector2D<Cmpt>, Cmpt, 2>&);

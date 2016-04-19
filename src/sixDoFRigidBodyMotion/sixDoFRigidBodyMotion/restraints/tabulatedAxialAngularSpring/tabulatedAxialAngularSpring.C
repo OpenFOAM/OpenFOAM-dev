@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::restrain
     // Damping of along axis angular velocity only
     restraintMoment = moment*axis_ - damping_*(motion.omega() & axis_)*axis_;
 
-    restraintForce = vector::zero;
+    restraintForce = Zero;
 
     // Not needed to be altered as restraintForce is zero, but set to
     // centreOfRotation to be sure of no spurious moment

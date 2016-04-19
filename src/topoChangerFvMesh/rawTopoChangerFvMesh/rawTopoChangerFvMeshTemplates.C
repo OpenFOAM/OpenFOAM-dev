@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ void Foam::rawTopoChangerFvMesh::zeroUnmappedValues
                     false
                 ),
                 *this,
-                dimensioned<Type>("0", fld.dimensions(), pTraits<Type>::zero)
+                dimensioned<Type>("0", fld.dimensions(), Zero)
             )
         );
     }

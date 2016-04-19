@@ -77,7 +77,7 @@ tmp<GeoField> uniformInterpolate
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "uniformInterpolate.C"
+    #include "uniformInterpolate.C"
 #endif
 
 // ************************************************************************* //

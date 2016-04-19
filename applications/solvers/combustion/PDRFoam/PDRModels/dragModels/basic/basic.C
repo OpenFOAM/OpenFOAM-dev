@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "basic.H"
-#include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -109,13 +108,12 @@ Foam::tmp<Foam::volSymmTensorField> Foam::PDRDragModels::basic::Dcu() const
             (
                 "zero",
                 dimMass/dimTime/pow(dimLength, 3),
-                pTraits<symmTensor>::zero
-            ),
-            zeroGradientFvPatchSymmTensorField::typeName
+                Zero
+            )
         )
     );
 
-    volSymmTensorField& DragDcu = tDragDcu();
+    volSymmTensorField& DragDcu = tDragDcu.ref();
 
     if (on_)
     {
@@ -145,12 +143,11 @@ Foam::tmp<Foam::volScalarField> Foam::PDRDragModels::basic::Gk() const
                 IOobject::NO_WRITE
             ),
             U_.mesh(),
-            dimensionedScalar("zero", dimMass/dimLength/pow(dimTime, 3), 0.0),
-            zeroGradientFvPatchVectorField::typeName
+            dimensionedScalar("zero", dimMass/dimLength/pow(dimTime, 3), 0.0)
         )
     );
 
-    volScalarField& Gk = tGk();
+    volScalarField& Gk = tGk.ref();
 
     if (on_)
     {

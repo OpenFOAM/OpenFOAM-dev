@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,12 +171,13 @@ protected:
 
         // Processor agglomeration
 
-            //- Collect and combine processor meshes into allMesh.
-            //  - allMeshComm   : communicator for combined mesh.
-            //  - procAgglomMap : per processor the new agglomerated processor
-            //                    (rank in allMeshComm!). Global information.
-            //  - procIDs       : local information: same for all in
-            //                    agglomerated processor.
+            //- Collect and combine processor meshes into allMesh:
+            //
+            //    - allMeshComm   : communicator for combined mesh.
+            //    - procAgglomMap : per processor the new agglomerated
+            //        processor (rank in allMeshComm!). Global information.
+            //    - procIDs       : local information: same for all in
+            //        agglomerated processor.
             void procAgglomerateLduAddressing
             (
                 const label comm,
@@ -187,8 +188,9 @@ protected:
             );
 
             //- Collect and combine basic restriction addressing:
-            //      nCells_
-            //      restrictAddressing_
+            //
+            //    - nCells_
+            //    - restrictAddressing_
             void procAgglomerateRestrictAddressing
             (
                 const label comm,
@@ -426,10 +428,11 @@ public:
         // with GAMGSolver notation.
 
             //- Given fine to coarse processor map determine:
-            //  - for each coarse processor a master (minimum of the fine
-            //    processors)
-            //  - for each coarse processor the set of fine processors
-            //    (element 0 is the master processor)
+            //
+            //    - for each coarse processor a master (minimum of the fine
+            //        processors)
+            //    - for each coarse processor the set of fine processors
+            //        (element 0 is the master processor)
             static void calculateRegionMaster
             (
                 const label comm,
@@ -494,7 +497,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "GAMGAgglomerationTemplates.C"
+    #include "GAMGAgglomerationTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

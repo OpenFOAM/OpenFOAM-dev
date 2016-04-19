@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -445,7 +445,7 @@ void Foam::InjectionModel<CloudType>::inject(TrackData& td)
                 label tetFaceI = -1;
                 label tetPtI = -1;
 
-                vector pos = vector::zero;
+                vector pos = Zero;
 
                 setPositionAndCell
                 (
@@ -565,7 +565,7 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
         label tetFaceI = -1;
         label tetPtI = -1;
 
-        vector pos = vector::zero;
+        vector pos = Zero;
 
         setPositionAndCell
         (

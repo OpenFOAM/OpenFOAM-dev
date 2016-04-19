@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -384,7 +384,7 @@ bool Foam::geomCellLooper::cut
 
     // Get points on loop and centre of loop
     pointField loopPoints(localLoop.size());
-    point ctr(vector::zero);
+    point ctr(Zero);
 
     forAll(localLoop, i)
     {

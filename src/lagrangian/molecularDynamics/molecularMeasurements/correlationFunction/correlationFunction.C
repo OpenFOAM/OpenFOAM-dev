@@ -68,7 +68,7 @@ void Foam::correlationFunction<Type>::setTimesAndSizes
             Field<Type>
             (
                 tZeroBufferSize,
-                pTraits<Type>::zero
+                Zero
             )
         );
 }
@@ -218,6 +218,6 @@ Foam::scalar Foam::correlationFunction<Type>::integral() const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "correlationFunctionIO.C"
+    #include "correlationFunctionIO.C"
 
 // ************************************************************************* //

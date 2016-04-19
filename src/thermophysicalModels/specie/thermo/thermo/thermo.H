@@ -397,7 +397,7 @@ public:
 #include "thermoI.H"
 
 #ifdef NoRepository
-#   include "thermo.C"
+    #include "thermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

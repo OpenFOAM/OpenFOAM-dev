@@ -9,7 +9,6 @@ application=`getApplication`
 
 runApplication $application
 
-(cd validation && ./Allrun)
+(cd validation && ./Allrun $*)
 
-# ----------------------------------------------------------------- end-of-file
-
+#------------------------------------------------------------------------------

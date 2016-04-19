@@ -47,7 +47,7 @@ template<class Type>
 void T(Field<Type>& res, const UList<Type>& f);
 
 
-template<class Type, int r>
+template<class Type, direction r>
 void pow
 (
     Field<typename powProduct<Type, r>::type>& res,
@@ -55,7 +55,7 @@ void pow
 );
 
 
-template<class Type, int r>
+template<class Type, direction r>
 tmp<Field<typename powProduct<Type, r>::type>>
 pow
 (
@@ -64,7 +64,7 @@ pow
       = pTraits<typename powProduct<Type, r>::type>::zero
 );
 
-template<class Type, int r>
+template<class Type, direction r>
 tmp<Field<typename powProduct<Type, r>::type>>
 pow
 (
@@ -307,7 +307,7 @@ template<class Type1, class Type2>                                             \
 tmp<Field<typename product<Type1, Type2>::type>>                               \
 operator Op(const tmp<Field<Type1>>& tf1, const tmp<Field<Type2>>& tf2);       \
                                                                                \
-template<class Type, class Form, class Cmpt, int nCmpt>                        \
+template<class Type, class Form, class Cmpt, direction nCmpt>                  \
 void OpFunc                                                                    \
 (                                                                              \
     Field<typename product<Type, Form>::type>& res,                            \
@@ -315,15 +315,15 @@ void OpFunc                                                                    \
     const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
 );                                                                             \
                                                                                \
-template<class Type, class Form, class Cmpt, int nCmpt>                        \
+template<class Type, class Form, class Cmpt, direction nCmpt>                  \
 tmp<Field<typename product<Type, Form>::type>>                                 \
 operator Op(const UList<Type>& f1, const VectorSpace<Form,Cmpt,nCmpt>& vs);    \
                                                                                \
-template<class Type, class Form, class Cmpt, int nCmpt>                        \
+template<class Type, class Form, class Cmpt, direction nCmpt>                  \
 tmp<Field<typename product<Type, Form>::type>>                                 \
-operator Op(const tmp<Field<Type>>&tf1,const VectorSpace<Form,Cmpt,nCmpt>&vs);\
+operator Op(const tmp<Field<Type>>&tf1,const VectorSpace<Form,Cmpt,nCmpt>&vs); \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type>                        \
+template<class Form, class Cmpt, direction nCmpt, class Type>                  \
 void OpFunc                                                                    \
 (                                                                              \
     Field<typename product<Form, Type>::type>& res,                            \
@@ -331,11 +331,11 @@ void OpFunc                                                                    \
     const UList<Type>& f1                                                      \
 );                                                                             \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type>                        \
+template<class Form, class Cmpt, direction nCmpt, class Type>                  \
 tmp<Field<typename product<Form, Type>::type>>                                 \
 operator Op(const VectorSpace<Form,Cmpt,nCmpt>& vs, const UList<Type>& f1);    \
                                                                                \
-template<class Form, class Cmpt, int nCmpt, class Type>                        \
+template<class Form, class Cmpt, direction nCmpt, class Type>                  \
 tmp<Field<typename product<Form, Type>::type>>                                 \
 operator Op(const VectorSpace<Form,Cmpt,nCmpt>&vs,const tmp<Field<Type>>&tf1);
 

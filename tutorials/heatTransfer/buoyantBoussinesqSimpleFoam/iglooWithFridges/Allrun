@@ -8,4 +8,4 @@ runApplication blockMesh
 runApplication snappyHexMesh -overwrite
 runApplication `getApplication`
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

@@ -21,4 +21,4 @@ runApplication potentialFoam -pName p_rgh
 # Run the solver
 runApplication `getApplication`
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

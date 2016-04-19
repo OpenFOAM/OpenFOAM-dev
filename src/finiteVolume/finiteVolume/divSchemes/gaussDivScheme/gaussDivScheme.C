@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,11 +58,11 @@ gaussDivScheme<Type>::fvcDiv
     (
         fvc::surfaceIntegrate
         (
-            this->mesh_.Sf() & this->tinterpScheme_().interpolate(vf)
+            this->tinterpScheme_().dotInterpolate(this->mesh_.Sf(), vf)
         )
     );
 
-    tDiv().rename("div(" + vf.name() + ')');
+    tDiv.ref().rename("div(" + vf.name() + ')');
 
     return tDiv;
 }

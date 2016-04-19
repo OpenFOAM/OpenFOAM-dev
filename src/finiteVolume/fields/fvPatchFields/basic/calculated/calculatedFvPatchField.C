@@ -51,19 +51,6 @@ Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 template<class Type>
 Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
-    const calculatedFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict,
@@ -71,6 +58,19 @@ Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 )
 :
     fvPatchField<Type>(p, iF, dict, valueRequired)
+{}
+
+
+template<class Type>
+Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
+(
+    const calculatedFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fvPatchField<Type>(ptf, p, iF, mapper)
 {}
 
 
@@ -154,7 +154,7 @@ Foam::calculatedFvPatchField<Type>::valueInternalCoeffs
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -174,7 +174,7 @@ Foam::calculatedFvPatchField<Type>::valueBoundaryCoeffs
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -191,7 +191,7 @@ Foam::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -208,7 +208,7 @@ Foam::calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }

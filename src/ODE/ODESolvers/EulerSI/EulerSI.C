@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ Foam::scalar Foam::EulerSI::solve
     {
         for (label j=0; j<n_; j++)
         {
-            a_[i][j] = -dfdy_[i][j];
+            a_(i, j) = -dfdy_(i, j);
         }
 
-        a_[i][i] += 1.0/dx;
+        a_(i, i) += 1.0/dx;
     }
 
     LUDecompose(a_, pivotIndices_);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,6 @@ Foam::dynamicTreeDataPoint::shapePoints() const
 }
 
 
-//- Get type (inside,outside,mixed,unknown) of point w.r.t. surface.
-//  Only makes sense for closed surfaces.
 Foam::volumeType Foam::dynamicTreeDataPoint::getVolumeType
 (
     const dynamicIndexedOctree<dynamicTreeDataPoint>& oc,
@@ -67,7 +65,6 @@ Foam::volumeType Foam::dynamicTreeDataPoint::getVolumeType
 }
 
 
-// Check if any point on shape is inside cubeBb.
 bool Foam::dynamicTreeDataPoint::overlaps
 (
     const label index,
@@ -78,7 +75,6 @@ bool Foam::dynamicTreeDataPoint::overlaps
 }
 
 
-// Check if any point on shape is inside sphere.
 bool Foam::dynamicTreeDataPoint::overlaps
 (
     const label index,
@@ -99,8 +95,6 @@ bool Foam::dynamicTreeDataPoint::overlaps
 }
 
 
-// Calculate nearest point to sample. Updates (if any) nearestDistSqr, minIndex,
-// nearestPoint.
 void Foam::dynamicTreeDataPoint::findNearest
 (
     const labelUList& indices,
@@ -129,8 +123,6 @@ void Foam::dynamicTreeDataPoint::findNearest
 }
 
 
-//- Calculates nearest (to line) point in shape.
-//  Returns point and distance (squared)
 void Foam::dynamicTreeDataPoint::findNearest
 (
     const labelUList& indices,

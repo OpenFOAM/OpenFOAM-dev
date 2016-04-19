@@ -66,8 +66,8 @@ void Foam::polyMesh::clearGeom()
     boundary_.clearGeom();
 
     // Reset valid directions (could change with rotation)
-    geometricD_ = Vector<label>::zero;
-    solutionD_ = Vector<label>::zero;
+    geometricD_ = Zero;
+    solutionD_ = Zero;
 
     // Remove the stored tet base points
     tetBasePtIsPtr_.clear();
@@ -134,8 +134,8 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
     globalMeshDataPtr_.clear();
 
     // Reset valid directions
-    geometricD_ = Vector<label>::zero;
-    solutionD_ = Vector<label>::zero;
+    geometricD_ = Zero;
+    solutionD_ = Zero;
 
     // Update zones
     pointZones_.clearAddressing();

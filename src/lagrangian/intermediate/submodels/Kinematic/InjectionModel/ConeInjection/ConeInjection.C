@@ -107,7 +107,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
 
         axis /= mag(axis);
 
-        vector tangent = vector::zero;
+        vector tangent = Zero;
         scalar magTangent = 0.0;
 
         cachedRandom& rnd = this->owner().rndGen();

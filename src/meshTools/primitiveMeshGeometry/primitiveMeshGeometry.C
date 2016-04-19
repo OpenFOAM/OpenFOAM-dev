@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,9 +62,9 @@ void Foam::primitiveMeshGeometry::updateFaceCentresAndAreas
         }
         else
         {
-            vector sumN = vector::zero;
+            vector sumN = Zero;
             scalar sumA = 0.0;
-            vector sumAc = vector::zero;
+            vector sumAc = Zero;
 
             point fCentre = p[f[0]];
             for (label pi = 1; pi < nPoints; pi++)
@@ -101,7 +101,7 @@ void Foam::primitiveMeshGeometry::updateCellCentresAndVols
 )
 {
     // Clear the fields for accumulation
-    UIndirectList<vector>(cellCentres_, changedCells) = vector::zero;
+    UIndirectList<vector>(cellCentres_, changedCells) = Zero;
     UIndirectList<scalar>(cellVolumes_, changedCells) = 0.0;
 
     const labelList& own = mesh_.faceOwner();
@@ -110,7 +110,7 @@ void Foam::primitiveMeshGeometry::updateCellCentresAndVols
     // first estimate the approximate cell centre as the average of face centres
 
     vectorField cEst(mesh_.nCells());
-    UIndirectList<vector>(cEst, changedCells) = vector::zero;
+    UIndirectList<vector>(cEst, changedCells) = Zero;
     scalarField nCellFaces(mesh_.nCells());
     UIndirectList<scalar>(nCellFaces, changedCells) = 0.0;
 
@@ -230,7 +230,6 @@ Foam::primitiveMeshGeometry::primitiveMeshGeometry
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//- Take over properties from mesh
 void Foam::primitiveMeshGeometry::correct()
 {
     faceAreas_ = mesh_.faceAreas();
@@ -240,7 +239,6 @@ void Foam::primitiveMeshGeometry::correct()
 }
 
 
-//- Recalculate on selected faces
 void Foam::primitiveMeshGeometry::correct
 (
     const pointField& p,
@@ -1189,7 +1187,7 @@ bool Foam::primitiveMeshGeometry::checkCellDeterminant
     {
         const cell& cFaces = cells[affectedCells[i]];
 
-        tensor areaSum(tensor::zero);
+        tensor areaSum(Zero);
         scalar magAreaSum = 0;
 
         forAll(cFaces, cFaceI)

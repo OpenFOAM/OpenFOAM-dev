@@ -112,6 +112,28 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::rho
 
 
 template<class Specie>
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::h
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::cp
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::s
 (
     scalar p,

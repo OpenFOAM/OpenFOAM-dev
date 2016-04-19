@@ -17,4 +17,4 @@ wmake $targetType coalCombustion
 
 molecularDynamics/Allwmake $targetType $*
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

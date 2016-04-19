@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,6 +123,7 @@ public:
 
     //- Determine the mapping for a sub-patch.
     //  Only include faces for which bool-list entry is true.
+    //  \param[in]  p patch to be searched on
     //  \param[in]  includeFaces faces to include
     //  \param[out] pointMap mapping new to old localPoints
     //  \param[out] faceMap  mapping new to old faces
@@ -136,7 +137,7 @@ public:
     >
     static void subsetMap
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&,
+        const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
         const BoolListType& includeFaces,
         labelList& pointMap,
         labelList& faceMap
@@ -310,7 +311,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "PatchTools.C"
+    #include "PatchTools.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

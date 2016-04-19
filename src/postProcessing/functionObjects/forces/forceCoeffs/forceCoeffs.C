@@ -128,9 +128,9 @@ Foam::forceCoeffs::forceCoeffs
 )
 :
     forces(name, obr, dict, loadFromFiles, false),
-    liftDir_(vector::zero),
-    dragDir_(vector::zero),
-    pitchAxis_(vector::zero),
+    liftDir_(Zero),
+    dragDir_(Zero),
+    pitchAxis_(Zero),
     magUInf_(0.0),
     lRef_(0.0),
     Aref_(0.0)

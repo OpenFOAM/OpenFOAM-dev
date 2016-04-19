@@ -49,8 +49,7 @@ volScalarField rho
         mesh,
         IOobject::READ_IF_PRESENT
     ),
-    alpha1*rho1 + alpha2*rho2,
-    alpha1.boundaryField().types()
+    alpha1*rho1 + alpha2*rho2
 );
 rho.oldTime();
 

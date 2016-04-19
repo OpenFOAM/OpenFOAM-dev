@@ -98,7 +98,7 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
 
         if (!patchSkewCorrVecs.coupled())
         {
-            patchSkewCorrVecs = vector::zero;
+            patchSkewCorrVecs = Zero;
         }
         else
         {

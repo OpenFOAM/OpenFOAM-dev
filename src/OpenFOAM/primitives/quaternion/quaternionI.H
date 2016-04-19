@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,17 +28,20 @@ License
 inline Foam::quaternion::quaternion()
 {}
 
+
 inline Foam::quaternion::quaternion(const scalar w, const vector& v)
 :
     w_(w),
     v_(v)
 {}
 
+
 inline Foam::quaternion::quaternion(const vector& d, const scalar theta)
 :
     w_(cos(0.5*theta)),
     v_((sin(0.5*theta)/mag(d))*d)
 {}
+
 
 inline Foam::quaternion::quaternion
 (
@@ -60,11 +63,13 @@ inline Foam::quaternion::quaternion
     }
 }
 
+
 inline Foam::quaternion::quaternion(const scalar w)
 :
     w_(w),
-    v_(vector::zero)
+    v_(Zero)
 {}
+
 
 inline Foam::quaternion::quaternion(const vector& v)
 :
@@ -72,17 +77,100 @@ inline Foam::quaternion::quaternion(const vector& v)
     v_(v)
 {}
 
+
+inline Foam::quaternion Foam::quaternion::unit(const vector& v)
+{
+    return quaternion(sqrt(1 - magSqr(v)), v);
+}
+
+
 inline Foam::quaternion::quaternion
 (
-    const scalar angleX,
-    const scalar angleY,
-    const scalar angleZ
+    const rotationSequence rs,
+    const vector& angles
 )
 {
-    operator=(quaternion(vector(1, 0, 0), angleX));
-    operator*=(quaternion(vector(0, 1, 0), angleY));
-    operator*=(quaternion(vector(0, 0, 1), angleZ));
+    switch(rs)
+    {
+        case ZYX:
+            operator=(quaternion(vector(0, 0, 1), angles.x()));
+            operator*=(quaternion(vector(0, 1, 0), angles.y()));
+            operator*=(quaternion(vector(1, 0, 0), angles.z()));
+            break;
+
+        case ZYZ:
+            operator=(quaternion(vector(0, 0, 1), angles.x()));
+            operator*=(quaternion(vector(0, 1, 0), angles.y()));
+            operator*=(quaternion(vector(0, 0, 1), angles.z()));
+            break;
+
+        case ZXY:
+            operator=(quaternion(vector(0, 0, 1), angles.x()));
+            operator*=(quaternion(vector(1, 0, 0), angles.y()));
+            operator*=(quaternion(vector(0, 1, 0), angles.z()));
+            break;
+
+        case ZXZ:
+            operator=(quaternion(vector(0, 0, 1), angles.x()));
+            operator*=(quaternion(vector(1, 0, 0), angles.y()));
+            operator*=(quaternion(vector(0, 0, 1), angles.z()));
+            break;
+
+        case YXZ:
+            operator=(quaternion(vector(0, 1, 0), angles.x()));
+            operator*=(quaternion(vector(1, 0, 0), angles.y()));
+            operator*=(quaternion(vector(0, 0, 1), angles.z()));
+            break;
+
+        case YXY:
+            operator=(quaternion(vector(0, 1, 0), angles.x()));
+            operator*=(quaternion(vector(1, 0, 0), angles.y()));
+            operator*=(quaternion(vector(0, 1, 0), angles.z()));
+            break;
+
+        case YZX:
+            operator=(quaternion(vector(0, 1, 0), angles.x()));
+            operator*=(quaternion(vector(0, 0, 1), angles.y()));
+            operator*=(quaternion(vector(1, 0, 0), angles.z()));
+            break;
+
+        case YZY:
+            operator=(quaternion(vector(0, 1, 0), angles.x()));
+            operator*=(quaternion(vector(0, 0, 1), angles.y()));
+            operator*=(quaternion(vector(0, 1, 0), angles.z()));
+            break;
+
+        case XYZ:
+            operator=(quaternion(vector(1, 0, 0), angles.x()));
+            operator*=(quaternion(vector(0, 1, 0), angles.y()));
+            operator*=(quaternion(vector(0, 0, 1), angles.z()));
+            break;
+
+        case XYX:
+            operator=(quaternion(vector(1, 0, 0), angles.x()));
+            operator*=(quaternion(vector(0, 1, 0), angles.y()));
+            operator*=(quaternion(vector(1, 0, 0), angles.z()));
+            break;
+
+        case XZY:
+            operator=(quaternion(vector(1, 0, 0), angles.x()));
+            operator*=(quaternion(vector(0, 0, 1), angles.y()));
+            operator*=(quaternion(vector(0, 1, 0), angles.z()));
+            break;
+
+        case XZX:
+            operator=(quaternion(vector(1, 0, 0), angles.x()));
+            operator*=(quaternion(vector(0, 0, 1), angles.y()));
+            operator*=(quaternion(vector(1, 0, 0), angles.z()));
+            break;
+
+        default:
+            FatalErrorInFunction
+                << "Unknown rotation sequence " << rs << abort(FatalError);
+            break;
+    }
 }
+
 
 inline Foam::quaternion::quaternion
 (
@@ -234,17 +322,17 @@ inline Foam::quaternion Foam::quaternion::invTransform
 
 inline Foam::tensor Foam::quaternion::R() const
 {
-    scalar w2 = sqr(w());
-    scalar x2 = sqr(v().x());
-    scalar y2 = sqr(v().y());
-    scalar z2 = sqr(v().z());
+    const scalar w2 = sqr(w());
+    const scalar x2 = sqr(v().x());
+    const scalar y2 = sqr(v().y());
+    const scalar z2 = sqr(v().z());
 
-    scalar txy = 2*v().x()*v().y();
-    scalar twz = 2*w()*v().z();
-    scalar txz = 2*v().x()*v().z();
-    scalar twy = 2*w()*v().y();
-    scalar tyz = 2*v().y()*v().z();
-    scalar twx = 2*w()*v().x();
+    const scalar txy = 2*v().x()*v().y();
+    const scalar twz = 2*w()*v().z();
+    const scalar txz = 2*v().x()*v().z();
+    const scalar twy = 2*w()*v().y();
+    const scalar tyz = 2*v().y()*v().z();
+    const scalar twx = 2*w()*v().x();
 
     return tensor
     (
@@ -255,32 +343,181 @@ inline Foam::tensor Foam::quaternion::R() const
 }
 
 
-inline Foam::vector Foam::quaternion::eulerAngles(const quaternion& q) const
+inline Foam::vector Foam::quaternion::twoAxes
+(
+    const scalar t11,
+    const scalar t12,
+    const scalar c2,
+    const scalar t31,
+    const scalar t32
+)
 {
-    vector angles(vector::zero);
+    return vector(atan2(t11, t12), acos(c2), atan2(t31, t32));
+}
 
-    const scalar& w = q.w();
-    const vector& v = q.v();
 
-    angles[0] = Foam::atan2
-    (
-        2*(w*v.x() + v.y()*v.z()),
-        1 - 2*(sqr(v.x()) + sqr(v.y()))
-    );
-    angles[1] = Foam::asin(2*(w*v.y() - v.z()*v.x()));
-    angles[2] = Foam::atan2
-    (
-        2*(w*v.z() + v.x()*v.y()),
-        1 - 2*(sqr(v.y()) + sqr(v.z()))
-    );
+inline Foam::vector Foam::quaternion::threeAxes
+(
+    const scalar t11,
+    const scalar t12,
+    const scalar s2,
+    const scalar t31,
+    const scalar t32
+)
+{
+    return vector(atan2(t11, t12), asin(s2), atan2(t31, t32));
+}
 
-    // Convert to degrees
-//    forAll(angles, aI)
-//    {
-//        angles[aI] = Foam::radToDeg(angles[aI]);
-//    }
 
-    return angles;
+inline Foam::vector Foam::quaternion::eulerAngles
+(
+    const rotationSequence rs
+) const
+{
+    const scalar w2 = sqr(w());
+    const scalar x2 = sqr(v().x());
+    const scalar y2 = sqr(v().y());
+    const scalar z2 = sqr(v().z());
+
+    switch(rs)
+    {
+        case ZYX:
+            return threeAxes
+            (
+                2*(v().x()*v().y() + w()*v().z()),
+                w2 + x2 - y2 - z2,
+                2*(w()*v().y() - v().x()*v().z()),
+                2*(v().y()*v().z() + w()*v().x()),
+                w2 - x2 - y2 + z2
+            );
+            break;
+
+        case ZYZ:
+            return twoAxes
+            (
+                2*(v().y()*v().z() - w()*v().x()),
+                2*(v().x()*v().z() + w()*v().y()),
+                w2 - x2 - y2 + z2,
+                2*(v().y()*v().z() + w()*v().x()),
+                2*(w()*v().y() - v().x()*v().z())
+            );
+            break;
+
+        case ZXY:
+            return threeAxes
+            (
+                2*(w()*v().z() - v().x()*v().y()),
+                w2 - x2 + y2 - z2,
+                2*(v().y()*v().z() + w()*v().x()),
+                2*(w()*v().y() - v().x()*v().z()),
+                w2 - x2 - y2 + z2
+            );
+            break;
+
+        case ZXZ:
+            return twoAxes
+            (
+                2*(v().x()*v().z() + w()*v().y()),
+                2*(w()*v().x() - v().y()*v().z()),
+                w2 - x2 - y2 + z2,
+                2*(v().x()*v().z() - w()*v().y()),
+                2*(v().y()*v().z() + w()*v().x())
+            );
+            break;
+
+        case YXZ:
+            return threeAxes
+            (
+                2*(v().x()*v().z() + w()*v().y()),
+                w2 - x2 - y2 + z2,
+                2*(w()*v().x() - v().y()*v().z()),
+                2*(v().x()*v().y() + w()*v().z()),
+                w2 - x2 + y2 - z2
+            );
+            break;
+
+        case YXY:
+            return twoAxes
+            (
+                2*(v().x()*v().y() - w()*v().z()),
+                2*(v().y()*v().z() + w()*v().x()),
+                w2 - x2 + y2 - z2,
+                2*(v().x()*v().y() + w()*v().z()),
+                2*(w()*v().x() - v().y()*v().z())
+            );
+            break;
+
+        case YZX:
+            return threeAxes
+            (
+                2*(w()*v().y() - v().x()*v().z()),
+                w2 + x2 - y2 - z2,
+                2*(v().x()*v().y() + w()*v().z()),
+                2*(w()*v().x() - v().y()*v().z()),
+                w2 - x2 + y2 - z2
+            );
+            break;
+
+        case YZY:
+            return twoAxes
+            (
+                2*(v().y()*v().z() + w()*v().x()),
+                2*(w()*v().z() - v().x()*v().y()),
+                w2 - x2 + y2 - z2,
+                2*(v().y()*v().z() - w()*v().x()),
+                2*(v().x()*v().y() + w()*v().z())
+            );
+            break;
+
+        case XYZ:
+            return threeAxes
+            (
+                2*(w()*v().x() - v().y()*v().z()),
+                w2 - x2 - y2 + z2,
+                2*(v().x()*v().z() + w()*v().y()),
+                2*(w()*v().z() - v().x()*v().y()),
+                w2 + x2 - y2 - z2
+            );
+            break;
+
+        case XYX:
+            return twoAxes
+            (
+                2*(v().x()*v().y() + w()*v().z()),
+                2*(w()*v().y() - v().x()*v().z()),
+                w2 + x2 - y2 - z2,
+                2*(v().x()*v().y() - w()*v().z()),
+                2*(v().x()*v().z() + w()*v().y())
+            );
+            break;
+
+        case XZY:
+            return threeAxes
+            (
+                2*(v().y()*v().z() + w()*v().x()),
+                w2 - x2 + y2 - z2,
+                2*(w()*v().z() - v().x()*v().y()),
+                2*(v().x()*v().z() + w()*v().y()),
+                w2 + x2 - y2 - z2
+            );
+            break;
+
+        case XZX:
+            return twoAxes
+            (
+                2*(v().x()*v().z() - w()*v().y()),
+                2*(v().x()*v().y() + w()*v().z()),
+                w2 + x2 - y2 - z2,
+                2*(v().x()*v().z() + w()*v().y()),
+                2*(w()*v().z() - v().x()*v().y())
+            );
+            break;
+        default:
+            FatalErrorInFunction
+                << "Unknown rotation sequence " << rs << abort(FatalError);
+            return Zero;
+            break;
+    }
 }
 
 

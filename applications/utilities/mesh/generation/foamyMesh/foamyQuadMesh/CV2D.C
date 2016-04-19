@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -749,212 +749,211 @@ void Foam::CV2D::newPoints()
     boundaryConform();
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Old Method
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Old Method
+    /*
+    for
+    (
+        Triangulation::Finite_vertices_iterator vit = finite_vertices_begin();
+        vit != finite_vertices_end();
+        ++vit
+    )
+    {
+        if (vit->internalPoint())
+        {
+            // Current dual-cell defining vertex ("centre")
+            point2DFromPoint defVert0 = toPoint2D(vit->point());
 
-// for
-// (
-//     Triangulation::Finite_vertices_iterator vit = finite_vertices_begin();
-//     vit != finite_vertices_end();
-//     ++vit
-// )
-// {
-//     if (vit->internalPoint())
-//     {
-//         // Current dual-cell defining vertex ("centre")
-//         point2DFromPoint defVert0 = toPoint2D(vit->point());
+            Triangulation::Edge_circulator ec = incident_edges(vit);
+            Triangulation::Edge_circulator ecStart = ec;
 
-//         Triangulation::Edge_circulator ec = incident_edges(vit);
-//         Triangulation::Edge_circulator ecStart = ec;
+            // Circulate around the edges to find the first which is not
+            // infinite
+            do
+            {
+                if (!is_infinite(ec)) break;
+            } while (++ec != ecStart);
 
-//         // Circulate around the edges to find the first which is not
-//         // infinite
-//         do
-//         {
-//             if (!is_infinite(ec)) break;
-//         } while (++ec != ecStart);
+            // Store the start-end of the first non-infinte edge
+            point2D de0 = toPoint2D(circumcenter(ec->first));
 
-//         // Store the start-end of the first non-infinte edge
-//         point2D de0 = toPoint2D(circumcenter(ec->first));
+            // Keep track of the maximum edge length^2
+            scalar maxEdgeLen2 = 0.0;
 
-//         // Keep track of the maximum edge length^2
-//         scalar maxEdgeLen2 = 0.0;
+            // Keep track of the index of the longest edge
+            label edgecd0i = -1;
 
-//         // Keep track of the index of the longest edge
-//         label edgecd0i = -1;
+            // Edge counter
+            label edgei = 0;
 
-//         // Edge counter
-//         label edgei = 0;
+            do
+            {
+                if (!is_infinite(ec))
+                {
+                    // Get the end of the current edge
+                    point2D de1 = toPoint2D
+                    (
+                        circumcenter(ec->first->neighbor(ec->second))
+                    );
 
-//         do
-//         {
-//             if (!is_infinite(ec))
-//             {
-//                 // Get the end of the current edge
-//                 point2D de1 = toPoint2D
-//                 (
-//                     circumcenter(ec->first->neighbor(ec->second))
-//                 );
+                    // Store the current edge vector
+                    edges[edgei] = de1 - de0;
 
-//                 // Store the current edge vector
-//                 edges[edgei] = de1 - de0;
+                    // Store the edge mid-point in the vertices array
+                    vertices[edgei] = 0.5*(de1 + de0);
 
-//                 // Store the edge mid-point in the vertices array
-//                 vertices[edgei] = 0.5*(de1 + de0);
+                    // Move the current edge end into the edge start for the
+                    // next iteration
+                    de0 = de1;
 
-//                 // Move the current edge end into the edge start for the
-//                 // next iteration
-//                 de0 = de1;
+                    // Keep track of the longest edge
 
-//                 // Keep track of the longest edge
+                    scalar edgeLen2 = magSqr(edges[edgei]);
 
-//                 scalar edgeLen2 = magSqr(edges[edgei]);
+                    if (edgeLen2 > maxEdgeLen2)
+                    {
+                        maxEdgeLen2 = edgeLen2;
+                        edgecd0i = edgei;
+                    }
 
-//                 if (edgeLen2 > maxEdgeLen2)
-//                 {
-//                     maxEdgeLen2 = edgeLen2;
-//                     edgecd0i = edgei;
-//                 }
+                    edgei++;
+                }
+            } while (++ec != ecStart);
 
-//                 edgei++;
-//             }
-//         } while (++ec != ecStart);
+            // Initialise cd0 such that the mesh will align
+            // in in the x-y directions
+            vector2D cd0(1, 0);
 
-//         // Initialise cd0 such that the mesh will align
-//         // in in the x-y directions
-//         vector2D cd0(1, 0);
+            if (meshControls().relaxOrientation())
+            {
+                // Get the longest edge from the array and use as the primary
+                // direction of the coordinate system of the "square" cell
+                cd0 = edges[edgecd0i];
+            }
 
-//         if (meshControls().relaxOrientation())
-//         {
-//             // Get the longest edge from the array and use as the primary
-//             // direction of the coordinate system of the "square" cell
-//             cd0 = edges[edgecd0i];
-//         }
+            if (meshControls().nearWallAlignedDist() > 0)
+            {
+                pointIndexHit pHit = qSurf_.tree().findNearest
+                (
+                    toPoint3D(defVert0),
+                    meshControls().nearWallAlignedDist2()
+                );
 
-//         if (meshControls().nearWallAlignedDist() > 0)
-//         {
-//             pointIndexHit pHit = qSurf_.tree().findNearest
-//             (
-//                 toPoint3D(defVert0),
-//                 meshControls().nearWallAlignedDist2()
-//             );
+                if (pHit.hit())
+                {
+                    cd0 = toPoint2D(faceNormals[pHit.index()]);
+                }
+            }
 
-//             if (pHit.hit())
-//             {
-//                 cd0 = toPoint2D(faceNormals[pHit.index()]);
-//             }
-//         }
+            // Rotate by 45deg needed to create an averaging procedure which
+            // encourages the cells to be square
+            cd0 = vector2D(cd0.x() + cd0.y(), cd0.y() - cd0.x());
 
-//         // Rotate by 45deg needed to create an averaging procedure which
-//         // encourages the cells to be square
-//         cd0 = vector2D(cd0.x() + cd0.y(), cd0.y() - cd0.x());
+            // Normalise the primary coordinate direction
+            cd0 /= mag(cd0);
 
-//         // Normalise the primary coordinate direction
-//         cd0 /= mag(cd0);
-
-//         // Calculate the orthogonal coordinate direction
-//         vector2D cd1(-cd0.y(), cd0.x());
+            // Calculate the orthogonal coordinate direction
+            vector2D cd1(-cd0.y(), cd0.x());
 
 
-//         // Restart the circulator
-//         ec = ecStart;
+            // Restart the circulator
+            ec = ecStart;
 
-//         // ... and the counter
-//         edgei = 0;
+            // ... and the counter
+            edgei = 0;
 
-//         // Initialise the displacement for the centre and sum-weights
-//         vector2D disp = vector2D::zero;
-//         scalar sumw = 0;
+            // Initialise the displacement for the centre and sum-weights
+            vector2D disp = Zero;
+            scalar sumw = 0;
 
-//         do
-//         {
-//             if (!is_infinite(ec))
-//             {
-//                 // Pick up the current edge
-//                 const vector2D& ei = edges[edgei];
+            do
+            {
+                if (!is_infinite(ec))
+                {
+                    // Pick up the current edge
+                    const vector2D& ei = edges[edgei];
 
-//                 // Calculate the centre to edge-centre vector
-//                 vector2D deltai = vertices[edgei] - defVert0;
+                    // Calculate the centre to edge-centre vector
+                    vector2D deltai = vertices[edgei] - defVert0;
 
-//                 // Set the weight for this edge contribution
-//                 scalar w = 1;
+                    // Set the weight for this edge contribution
+                    scalar w = 1;
 
-//                 if (meshControls().squares())
-//                 {
-//                     w = magSqr(deltai.x()*ei.y() - deltai.y()*ei.x());
-//                     // alternative weights
-//                     //w = mag(deltai.x()*ei.y() - deltai.y()*ei.x());
-//                     //w = magSqr(ei)*mag(deltai);
+                    if (meshControls().squares())
+                    {
+                        w = magSqr(deltai.x()*ei.y() - deltai.y()*ei.x());
+                        // alternative weights
+                        //w = mag(deltai.x()*ei.y() - deltai.y()*ei.x());
+                        //w = magSqr(ei)*mag(deltai);
 
-//                     // Use the following for an ~square mesh
-//                     // Find the coordinate contributions for this edge delta
-//                     scalar cd0deltai = cd0 & deltai;
-//                     scalar cd1deltai = cd1 & deltai;
+                        // Use the following for an ~square mesh
+                        // Find the coordinate contributions for this edge delta
+                        scalar cd0deltai = cd0 & deltai;
+                        scalar cd1deltai = cd1 & deltai;
 
-//                     // Create a "square" displacement
-//                     if (mag(cd0deltai) > mag(cd1deltai))
-//                     {
-//                         disp += (w*cd0deltai)*cd0;
-//                     }
-//                     else
-//                     {
-//                         disp += (w*cd1deltai)*cd1;
-//                     }
-//                 }
-//                 else
-//                 {
-//                     // Use this for a hexagon/pentagon mesh
-//                     disp += w*deltai;
-//                 }
+                        // Create a "square" displacement
+                        if (mag(cd0deltai) > mag(cd1deltai))
+                        {
+                            disp += (w*cd0deltai)*cd0;
+                        }
+                        else
+                        {
+                            disp += (w*cd1deltai)*cd1;
+                        }
+                    }
+                    else
+                    {
+                        // Use this for a hexagon/pentagon mesh
+                        disp += w*deltai;
+                    }
 
-//                 // Sum the weights
-//                 sumw += w;
-//             }
-//             else
-//             {
-//                 FatalErrorInFunction
-//                     << "Infinite triangle found in internal mesh"
-//                     << exit(FatalError);
-//             }
+                    // Sum the weights
+                    sumw += w;
+                }
+                else
+                {
+                    FatalErrorInFunction
+                        << "Infinite triangle found in internal mesh"
+                        << exit(FatalError);
+                }
 
-//             edgei++;
+                edgei++;
 
-//         } while (++ec != ecStart);
+            } while (++ec != ecStart);
 
-//         // Calculate the average displacement
-//         disp /= sumw;
-//         totalDisp += disp;
-//         totalDist += mag(disp);
+            // Calculate the average displacement
+            disp /= sumw;
+            totalDisp += disp;
+            totalDist += mag(disp);
 
-//         // Move the point by a fraction of the average displacement
-//         movePoint(vit, defVert0 + relaxation*disp);
-//     }
-// }
+            // Move the point by a fraction of the average displacement
+            movePoint(vit, defVert0 + relaxation*disp);
+        }
+    }
 
-// Info << "\nTotal displacement = " << totalDisp
-//      << " total distance = " << totalDist << endl;
+    Info << "\nTotal displacement = " << totalDisp
+         << " total distance = " << totalDist << endl;
+    */
 }
 
+/*
+void Foam::CV2D::moveInternalPoints(const point2DField& newPoints)
+{
+    label pointI = 0;
 
-//void Foam::CV2D::moveInternalPoints(const point2DField& newPoints)
-//{
-//    label pointI = 0;
-
-//    for
-//    (
-//        Triangulation::Finite_vertices_iterator vit = finite_vertices_begin();
-//        vit != finite_vertices_end();
-//        ++vit
-//    )
-//    {
-//        if (vit->internalPoint())
-//        {
-//            movePoint(vit, newPoints[pointI++]);
-//        }
-//    }
-//}
-
+    for
+    (
+        Triangulation::Finite_vertices_iterator vit = finite_vertices_begin();
+        vit != finite_vertices_end();
+        ++vit
+    )
+    {
+        if (vit->internalPoint())
+        {
+            movePoint(vit, newPoints[pointI++]);
+        }
+    }
+}
+*/
 
 void Foam::CV2D::write() const
 {

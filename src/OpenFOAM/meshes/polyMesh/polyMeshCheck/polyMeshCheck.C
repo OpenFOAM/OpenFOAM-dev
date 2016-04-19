@@ -55,7 +55,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
         fAreas,
         cellCtrs
     );
-    const scalarField& ortho = tortho();
+    const scalarField& ortho = tortho.ref();
 
     // Severe nonorthogonality threshold
     const scalar severeNonorthogonalityThreshold =
@@ -197,7 +197,7 @@ bool Foam::polyMesh::checkFaceSkewness
         fAreas,
         cellCtrs
     );
-    const scalarField& skew = tskew();
+    const scalarField& skew = tskew.ref();
 
     scalar maxSkew = max(skew);
     label nWarnSkew = 0;
@@ -269,12 +269,6 @@ bool Foam::polyMesh::checkFaceSkewness
 }
 
 
-// Check 1D/2Dness of edges. Gets passed the non-empty directions and
-// checks all edges in the mesh whether they:
-// - have no component in a non-empty direction or
-// - are only in a singe non-empty direction.
-// Empty direction info is passed in as a vector of labels (synchronised)
-// which are 1 if the direction is non-empty, 0 if it is.
 bool Foam::polyMesh::checkEdgeAlignment
 (
     const pointField& p,
@@ -283,6 +277,13 @@ bool Foam::polyMesh::checkEdgeAlignment
     labelHashSet* setPtr
 ) const
 {
+    // Check 1D/2Dness of edges. Gets passed the non-empty directions and
+    // checks all edges in the mesh whether they:
+    // - have no component in a non-empty direction or
+    // - are only in a singe non-empty direction.
+    // Empty direction info is passed in as a vector of labels (synchronised)
+    // which are 1 if the direction is non-empty, 0 if it is.
+
     if (debug)
     {
         InfoInFunction << "Checking edge alignment" << endl;
@@ -426,7 +427,7 @@ bool Foam::polyMesh::checkCellDeterminant
         faceAreas,
         syncTools::getInternalOrCoupledFaces(*this)
     );
-    scalarField& cellDeterminant = tcellDeterminant();
+    scalarField& cellDeterminant = tcellDeterminant.ref();
 
 
     label nErrorCells = 0;
@@ -508,7 +509,7 @@ bool Foam::polyMesh::checkFaceWeight
         fAreas,
         cellCtrs
     );
-    scalarField& faceWght = tfaceWght();
+    scalarField& faceWght = tfaceWght.ref();
 
 
     label nErrorFaces = 0;
@@ -595,7 +596,7 @@ bool Foam::polyMesh::checkVolRatio
     }
 
     tmp<scalarField> tvolRatio = polyMeshTools::volRatio(*this, cellVols);
-    scalarField& volRatio = tvolRatio();
+    scalarField& volRatio = tvolRatio.ref();
 
 
     label nErrorFaces = 0;

@@ -38,6 +38,7 @@ SourceFiles
 #define SymmetricSquareMatrix_H
 
 #include "SquareMatrix.H"
+#include "Identity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,25 +65,21 @@ public:
         //- Construct given number of rows/columns.
         inline SymmetricSquareMatrix(const label n);
 
-        //- Construct with given number of rows/columns
-        inline SymmetricSquareMatrix(const label m, const label n);
+        //- Construct given number of rows/columns, initializing to zero
+        inline SymmetricSquareMatrix(const label n, const zero);
+
+        //- Construct given number of rows/columns,
+        inline SymmetricSquareMatrix(const label n, const Identity<Type>);
 
         //- Construct with given number of rows/columns
-        //  and value for all elements.
-        inline SymmetricSquareMatrix(const label m, const label n, const Type&);
+        //  initializing all elements to the given value
+        inline SymmetricSquareMatrix(const label n, const Type&);
 
         //- Construct from Istream.
         inline SymmetricSquareMatrix(Istream&);
 
         //- Clone
         inline autoPtr<SymmetricSquareMatrix<Type>> clone() const;
-
-
-        //- Return subscript-checked row of Matrix.
-        inline Type& operator()(const label r, const label c);
-
-        //- Return subscript-checked row of constant Matrix.
-        inline const Type& operator()(const label r, const label c) const;
 };
 
 
@@ -98,11 +95,11 @@ SymmetricSquareMatrix<Type> inv(const SymmetricSquareMatrix<Type>&);
 
 //- Return the LU decomposed SymmetricSquareMatrix det
 template<class Type>
-scalar detDecomposed(const SymmetricSquareMatrix<Type>&);
+Type detDecomposed(const SymmetricSquareMatrix<Type>&);
 
 //- Return the SymmetricSquareMatrix det
 template<class Type>
-scalar det(const SymmetricSquareMatrix<Type>&);
+Type det(const SymmetricSquareMatrix<Type>&);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -111,12 +108,12 @@ scalar det(const SymmetricSquareMatrix<Type>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "SymmetricSquareMatrixI.H"
+    #include "SymmetricSquareMatrixI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "SymmetricSquareMatrix.C"
+    #include "SymmetricSquareMatrix.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

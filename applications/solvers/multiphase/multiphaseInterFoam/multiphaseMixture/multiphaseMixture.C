@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,6 @@ void Foam::multiphaseMixture::calcAlphas()
         alphas_ += level*iter();
         level += 1.0;
     }
-
-    alphas_.correctBoundaryConditions();
 }
 
 
@@ -108,8 +106,7 @@ Foam::multiphaseMixture::multiphaseMixture
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("alphas", dimless, 0.0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar("alphas", dimless, 0.0)
     ),
 
     nu_
@@ -144,10 +141,11 @@ Foam::multiphaseMixture::rho() const
     PtrDictionary<phase>::const_iterator iter = phases_.begin();
 
     tmp<volScalarField> trho = iter()*iter().rho();
+    volScalarField& rho = trho.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        trho() += iter()*iter().rho();
+        rho += iter()*iter().rho();
     }
 
     return trho;
@@ -160,10 +158,11 @@ Foam::multiphaseMixture::rho(const label patchi) const
     PtrDictionary<phase>::const_iterator iter = phases_.begin();
 
     tmp<scalarField> trho = iter().boundaryField()[patchi]*iter().rho().value();
+    scalarField& rho = trho.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        trho() += iter().boundaryField()[patchi]*iter().rho().value();
+        rho += iter().boundaryField()[patchi]*iter().rho().value();
     }
 
     return trho;
@@ -176,10 +175,11 @@ Foam::multiphaseMixture::mu() const
     PtrDictionary<phase>::const_iterator iter = phases_.begin();
 
     tmp<volScalarField> tmu = iter()*iter().rho()*iter().nu();
+    volScalarField& mu = tmu.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        tmu() += iter()*iter().rho()*iter().nu();
+        mu += iter()*iter().rho()*iter().nu();
     }
 
     return tmu;
@@ -195,10 +195,11 @@ Foam::multiphaseMixture::mu(const label patchi) const
         iter().boundaryField()[patchi]
        *iter().rho().value()
        *iter().nu(patchi);
+    scalarField& mu = tmu.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        tmu() +=
+        mu +=
             iter().boundaryField()[patchi]
            *iter().rho().value()
            *iter().nu(patchi);
@@ -215,10 +216,11 @@ Foam::multiphaseMixture::muf() const
 
     tmp<surfaceScalarField> tmuf =
         fvc::interpolate(iter())*iter().rho()*fvc::interpolate(iter().nu());
+    surfaceScalarField& muf = tmuf.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        tmuf() +=
+        muf +=
             fvc::interpolate(iter())*iter().rho()*fvc::interpolate(iter().nu());
     }
 
@@ -270,7 +272,7 @@ Foam::multiphaseMixture::surfaceTensionForce() const
         )
     );
 
-    surfaceScalarField& stf = tstf();
+    surfaceScalarField& stf = tstf.ref();
 
     forAllConstIter(PtrDictionary<phase>, phases_, iter1)
     {
@@ -521,7 +523,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixture::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(alpha1, alpha2);
 
-    correctContactAngle(alpha1, alpha2, tnHatfv().boundaryField());
+    correctContactAngle(alpha1, alpha2, tnHatfv.ref().boundaryField());
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());
@@ -548,7 +550,7 @@ Foam::multiphaseMixture::nearInterface() const
 
     forAllConstIter(PtrDictionary<phase>, phases_, iter)
     {
-        tnearInt() = max(tnearInt(), pos(iter() - 0.01)*pos(0.99 - iter()));
+        tnearInt.ref() = max(tnearInt(), pos(iter() - 0.01)*pos(0.99 - iter()));
     }
 
     return tnearInt;

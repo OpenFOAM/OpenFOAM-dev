@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,14 @@ inline Foam::septernion::septernion(const vector& t)
 
 inline Foam::septernion::septernion(const quaternion& r)
 :
-    t_(vector::zero),
+    t_(Zero),
     r_(r)
+{}
+
+inline Foam::septernion::septernion(const spatialTransform& st)
+:
+    t_(st.r()),
+    r_(st.E())
 {}
 
 
@@ -73,15 +79,15 @@ inline Foam::quaternion& Foam::septernion::r()
 }
 
 
-inline Foam::vector Foam::septernion::transform(const vector& v) const
+inline Foam::vector Foam::septernion::transformPoint(const vector& v) const
 {
-    return t() + r().transform(v);
+    return r().transform(v - t());
 }
 
 
-inline Foam::vector Foam::septernion::invTransform(const vector& v) const
+inline Foam::vector Foam::septernion::invTransformPoint(const vector& v) const
 {
-    return r().invTransform(v - t());
+    return t() + r().invTransform(v);
 }
 
 
@@ -95,7 +101,7 @@ inline void Foam::septernion::operator=(const septernion& tr)
 
 inline void Foam::septernion::operator*=(const septernion& tr)
 {
-    t_ += r().transform(tr.t());
+    t_ = tr.t() + tr.r().invTransform(t_);
     r_ *= tr.r();
 }
 
@@ -103,6 +109,7 @@ inline void Foam::septernion::operator*=(const septernion& tr)
 inline void Foam::septernion::operator=(const vector& t)
 {
     t_ = t;
+    r_ = quaternion::I;
 }
 
 inline void Foam::septernion::operator+=(const vector& t)
@@ -118,16 +125,19 @@ inline void Foam::septernion::operator-=(const vector& t)
 
 inline void Foam::septernion::operator=(const quaternion& r)
 {
+    t_ = Zero;
     r_ = r;
 }
 
 inline void Foam::septernion::operator*=(const quaternion& r)
 {
+    t_ = r.invTransform(t_);
     r_ *= r;
 }
 
 inline void Foam::septernion::operator/=(const quaternion& r)
 {
+    t_ = r.transform(t_);
     r_ /= r;
 }
 
@@ -149,7 +159,7 @@ inline void Foam::septernion::operator/=(const scalar s)
 
 inline Foam::septernion Foam::inv(const septernion& tr)
 {
-    return septernion(-tr.r().invTransform(tr.t()), conjugate(tr.r()));
+    return septernion(-tr.r().transform(tr.t()), conjugate(tr.r()));
 }
 
 
@@ -213,7 +223,7 @@ inline Foam::septernion Foam::operator*
     const quaternion& r
 )
 {
-    return septernion(tr.t(), tr.r()*r);
+    return septernion(r.invTransform(tr.t()), tr.r()*r);
 }
 
 
@@ -223,7 +233,7 @@ inline Foam::septernion Foam::operator/
     const quaternion& r
 )
 {
-    return septernion(tr.t(), tr.r()/r);
+    return septernion(r.transform(tr.t()), tr.r()/r);
 }
 
 
@@ -235,7 +245,7 @@ inline Foam::septernion Foam::operator*
 {
     return septernion
     (
-        tr1.t() + tr1.r().transform(tr2.t()),
+        tr2.r().invTransform(tr1.t()) + tr2.t(),
         tr1.r().transform(tr2.r())
     );
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,13 @@ class CFCFaceToCellStencil
 {
     // Private Member Functions
 
+        //- Calculates per face the neighbour data (= faces of cell).
+        //  Leaves out the face itself since this is already in stencil.
         void calcFaceBoundaryData(labelListList& neiGlobal) const;
 
+        //- Calculates per cell the neighbour data
+        //  (= cell or boundary in global numbering).
+        //  First element is always cell itself!
         void calcCellStencil(labelListList& globalCellFaces) const;
 
 

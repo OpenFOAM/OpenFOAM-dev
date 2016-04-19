@@ -204,7 +204,7 @@ multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "multivariateScheme.C"
+    #include "multivariateScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

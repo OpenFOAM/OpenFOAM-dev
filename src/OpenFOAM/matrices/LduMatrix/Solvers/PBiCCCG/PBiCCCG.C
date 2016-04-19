@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::PBiCCCG<Type, DType, LUType>::solve
     Field<Type> pA(nCells);
     Type* __restrict__ pAPtr = pA.begin();
 
-    Field<Type> pT(nCells, pTraits<Type>::zero);
+    Field<Type> pT(nCells, Zero);
     Type* __restrict__ pTPtr = pT.begin();
 
     Field<Type> wA(nCells);

@@ -162,7 +162,7 @@ CrankNicolsonDdtScheme<Type>::ddt0_
                     (
                         "0",
                         dims/dimTime,
-                        pTraits<typename GeoField::value_type>::zero
+                        Zero
                     )
                 )
             );
@@ -310,7 +310,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             (
                 "0",
                 dt.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
@@ -330,7 +330,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             )/mesh().V0();
         }
 
-        tdtdt().dimensionedInternalField() =
+        tdtdt.ref().dimensionedInternalField() =
         (
             (rDtCoef*dt)*(mesh().V() - mesh().V0())
           - mesh().V0()*offCentre_(ddt0.dimensionedInternalField())
@@ -773,7 +773,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*mesh().V();
@@ -855,7 +855,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*rho.value()*mesh().V();
@@ -937,7 +937,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*rho.internalField()*mesh().V();
@@ -1028,7 +1028,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*alpha.internalField()*rho.internalField()*mesh().V();
@@ -1227,9 +1227,10 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
             this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime())
            *(
                 (rDtCoef*phi.oldTime() + offCentre_(dphidt0()))
-              - (
-                    mesh().Sf()
-                  & fvc::interpolate(rDtCoef*U.oldTime() + offCentre_(ddt0()))
+              - fvc::dotInterpolate
+                (
+                    mesh().Sf(),
+                    rDtCoef*U.oldTime() + offCentre_(ddt0())
                 )
             )
         )
@@ -1398,9 +1399,10 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
                 this->fvcDdtPhiCoeff(rhoU0, phi.oldTime())
                *(
                     (rDtCoef*phi.oldTime() + offCentre_(dphidt0()))
-                  - (
-                        mesh().Sf()
-                      & fvc::interpolate(rDtCoef*rhoU0 + offCentre_(ddt0()))
+                  - fvc::dotInterpolate
+                    (
+                        mesh().Sf(),
+                        rDtCoef*rhoU0 + offCentre_(ddt0())
                     )
                 )
             )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,18 +72,43 @@ class quaternion
         //- Multiply vector v by quaternion as if v is a pure quaternion
         inline quaternion mulq0v(const vector& v) const;
 
+        //- Conversion of two-axis rotation components into Euler-angles
+        inline static vector twoAxes
+        (
+            const scalar t11,
+            const scalar t12,
+            const scalar c2,
+            const scalar t31,
+            const scalar t32
+        );
+
+        //- Conversion of three-axis rotation components into Euler-angles
+        inline static vector threeAxes
+        (
+            const scalar t11,
+            const scalar t12,
+            const scalar s2,
+            const scalar t31,
+            const scalar t32
+        );
+
 
 public:
 
     //- Component type
     typedef scalar cmptType;
 
+    //- Euler-angle rotation sequence
+    enum rotationSequence
+    {
+        ZYX, ZYZ, ZXY, ZXZ, YXZ, YXY, YZX, YZY, XYZ, XYX, XZY, XZX
+    };
+
+
     // Member constants
 
-        enum
-        {
-            rank = 1 // Rank of quaternion is 1
-        };
+        //- Rank of quaternion is 1
+        static const direction rank = 1;
 
 
     // Static data members
@@ -115,18 +140,22 @@ public:
             const bool normalized
         );
 
-        //- Construct given scalar part, the vector part = vector::zero
+        //- Construct a real from the given scalar part, the vector part = zero
         inline explicit quaternion(const scalar w);
 
-        //- Construct a pure quaternion given the vector part, scalar part = 0
+        //- Construct a pure imaginary quaternion given the vector part,
+        //  the scalar part = 0
         inline explicit quaternion(const vector& v);
+
+        //- Return the unit quaternion (versor) from the given vector
+        //  (w = sqrt(1 - |sqr(v)|))
+        static inline quaternion unit(const vector& v);
 
         //- Construct a quaternion given the three Euler angles
         inline quaternion
         (
-            const scalar angleX,
-            const scalar angleY,
-            const scalar angleZ
+            const rotationSequence rs,
+            const vector& angles
         );
 
         //- Construct a quaternion from a rotation tensor
@@ -149,9 +178,9 @@ public:
                //- The rotation tensor corresponding the quaternion
                inline tensor R() const;
 
-               //- Return a vector of euler angles (rotations in radians about
-               //  the x, y and z axes.
-               inline vector eulerAngles(const quaternion& q) const;
+               //- Return a vector of euler angles corresponding to the
+               //  specified rotation sequence
+               inline vector eulerAngles(const rotationSequence rs) const;
 
                inline quaternion normalized() const;
 
@@ -228,6 +257,13 @@ quaternion slerp
     const quaternion& qa,
     const quaternion& qb,
     const scalar t
+);
+
+//- Simple weighted average with sign change
+quaternion average
+(
+    const UList<quaternion>& qs,
+    const UList<scalar> w
 );
 
 //- Exponent of a quaternion

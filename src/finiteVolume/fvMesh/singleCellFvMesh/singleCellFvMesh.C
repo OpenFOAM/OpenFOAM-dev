@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,16 +29,17 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Conversion is a two step process:
-// - from original (fine) patch faces to agglomerations (aggloms might not
-//   be in correct patch order)
-// - from agglomerations to coarse patch faces
 void Foam::singleCellFvMesh::agglomerateMesh
 (
     const fvMesh& mesh,
     const labelListList& agglom
 )
 {
+    // Conversion is a two step process:
+    // - from original (fine) patch faces to agglomerations (aggloms might not
+    //   be in correct patch order)
+    // - from agglomerations to coarse patch faces
+
     const polyBoundaryMesh& oldPatches = mesh.boundaryMesh();
 
     // Check agglomeration within patch face range and continuous

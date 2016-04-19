@@ -2,15 +2,19 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UFT-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title> OpenFOAM&reg; Programmer's C++ documentation </title>
 <!-- links -->
 <link href="../OpenFOAMdocIcon.png" rel="icon" type="image/png" />
 <link href="search/search.css" rel="stylesheet" type="text/css" />
 <link href="../css/openfoam.css" rel="stylesheet" type="text/css" />
+<script type="text/javaScript" src="search/searchdata.js"></script>
 <script type="text/javaScript" src="search/search.js"></script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() { init_search(); });
+</script>
 
 <!-- meta info -->
 <meta

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,7 +270,7 @@ Foam::scalar Foam::triangle<Point, PointRef>::barycentric
     List<scalar>& bary
 ) const
 {
-    // From:
+    // Reference:
     // Real-time collision detection, Christer Ericson, 2005, p47-48
 
     vector v0 = b_ - a_;
@@ -439,7 +439,7 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::intersection
     const scalar det = edge1 & pVec;
 
     // Initialise to miss
-    pointHit intersection(false, vector::zero, GREAT, false);
+    pointHit intersection(false, Zero, GREAT, false);
 
     if (alg == intersection::VISIBLE)
     {

@@ -24,8 +24,8 @@ runApplication createPatch -overwrite
 runApplication setFields
 
 # Decompose
-\rm log.decomposePar
-runApplication decomposePar -force
+runApplication -s main \
+    decomposePar -force
 
 # Run
 runParallel $application
@@ -34,4 +34,4 @@ runParallel $application
 runApplication reconstructPar -noFunctionObjects
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

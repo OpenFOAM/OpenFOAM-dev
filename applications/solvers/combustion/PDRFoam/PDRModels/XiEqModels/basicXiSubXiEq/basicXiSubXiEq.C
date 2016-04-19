@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "basicXiSubXiEq.H"
-#include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -93,59 +92,43 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::basicSubGrid::XiEq() const
 
     const scalarField Cw = pow(mesh.V(), 2.0/3.0);
 
-    tmp<volScalarField> tN
+    volScalarField N
     (
-        new volScalarField
+        IOobject
         (
-            IOobject
-            (
-                "tN",
-                mesh.time().constant(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "N",
+            mesh.time().constant(),
             mesh,
-            dimensionedScalar("zero", Nv.dimensions(), 0.0),
-            zeroGradientFvPatchVectorField::typeName
-        )
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        mesh,
+        dimensionedScalar("zero", Nv.dimensions(), 0.0)
     );
-
-    volScalarField& N = tN();
-
     N.internalField() = Nv.internalField()*Cw;
 
-    tmp<volSymmTensorField> tns
+    volSymmTensorField ns
     (
-        new volSymmTensorField
+        IOobject
         (
-            IOobject
-            (
-                "tns",
-                U.mesh().time().timeName(),
-                U.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "ns",
+            U.mesh().time().timeName(),
             U.mesh(),
-            dimensionedSymmTensor
-            (
-                "zero",
-                nsv.dimensions(),
-                pTraits<symmTensor>::zero
-            ),
-             zeroGradientFvPatchSymmTensorField::typeName
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        U.mesh(),
+        dimensionedSymmTensor
+        (
+            "zero",
+            nsv.dimensions(),
+            Zero
         )
     );
-
-    volSymmTensorField& ns = tns();
-
     ns.internalField() = nsv.internalField()*Cw;
 
     volScalarField n(max(N - (Uhat & ns & Uhat), scalar(1e-4)));
-
     volScalarField b((Uhat & B_ & Uhat)/sqrt(n));
-
     volScalarField up(sqrt((2.0/3.0)*turbulence_.k()));
 
     volScalarField XiSubEq

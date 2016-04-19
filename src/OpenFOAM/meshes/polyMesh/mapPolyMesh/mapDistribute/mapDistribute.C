@@ -358,9 +358,6 @@ void Foam::mapDistribute::printLayout(Ostream& os) const
 }
 
 
-// Construct per processor compact addressing of the global elements
-// needed. The ones from the local processor are not included since
-// these are always all needed.
 void Foam::mapDistribute::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
@@ -531,12 +528,10 @@ void Foam::mapDistribute::exchangeAddressing
     }
 
     subMap_.setSize(Pstream::nProcs());
-    labelListList sendSizes;
     Pstream::exchange<labelList, label>
     (
         wantedRemoteElements,
         subMap_,
-        sendSizes,
         tag,
         Pstream::worldComm  //TBD
     );
@@ -611,12 +606,10 @@ void Foam::mapDistribute::exchangeAddressing
     }
 
     subMap_.setSize(Pstream::nProcs());
-    labelListList sendSizes;
     Pstream::exchange<labelList, label>
     (
         wantedRemoteElements,
         subMap_,
-        sendSizes,
         tag,
         Pstream::worldComm      //TBD
     );
@@ -636,7 +629,6 @@ void Foam::mapDistribute::exchangeAddressing
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-//- Construct null
 Foam::mapDistribute::mapDistribute()
 :
     constructSize_(0),
@@ -644,7 +636,6 @@ Foam::mapDistribute::mapDistribute()
 {}
 
 
-//- Construct from components
 Foam::mapDistribute::mapDistribute
 (
     const label constructSize,
@@ -659,7 +650,6 @@ Foam::mapDistribute::mapDistribute
 {}
 
 
-//- Construct from components
 Foam::mapDistribute::mapDistribute
 (
     const label constructSize,

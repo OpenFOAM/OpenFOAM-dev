@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Foam::tmp<Foam::vectorField>
 Foam::face::calcEdges(const pointField& points) const
 {
     tmp<vectorField> tedges(new vectorField(size()));
-    vectorField& edges = tedges();
+    vectorField& edges = tedges.ref();
 
     forAll(*this, i)
     {
@@ -505,7 +505,7 @@ Foam::point Foam::face::centre(const pointField& points) const
     }
 
 
-    point centrePoint = point::zero;
+    point centrePoint = Zero;
     for (label pI=0; pI<nPoints; ++pI)
     {
         centrePoint += points[operator[](pI)];
@@ -513,7 +513,7 @@ Foam::point Foam::face::centre(const pointField& points) const
     centrePoint /= nPoints;
 
     scalar sumA = 0;
-    vector sumAc = vector::zero;
+    vector sumAc = Zero;
 
     for (label pI=0; pI<nPoints; ++pI)
     {
@@ -572,14 +572,14 @@ Foam::vector Foam::face::normal(const pointField& p) const
 
     label pI;
 
-    point centrePoint = vector::zero;
+    point centrePoint = Zero;
     for (pI = 0; pI < nPoints; ++pI)
     {
         centrePoint += p[operator[](pI)];
     }
     centrePoint /= nPoints;
 
-    vector n = vector::zero;
+    vector n = Zero;
 
     point nextPoint = centrePoint;
 
@@ -742,7 +742,7 @@ Foam::tensor Foam::face::inertia
 
     const point ctr = centre(p);
 
-    tensor J = tensor::zero;
+    tensor J = Zero;
 
     forAll(*this, i)
     {
@@ -819,7 +819,6 @@ int Foam::face::edgeDirection(const edge& e) const
 }
 
 
-// Number of triangles directly known from number of vertices
 Foam::label Foam::face::nTriangles(const pointField&) const
 {
     return nTriangles();

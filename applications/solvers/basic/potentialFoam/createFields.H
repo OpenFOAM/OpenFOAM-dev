@@ -12,7 +12,7 @@ volVectorField U
     mesh
 );
 
-U = dimensionedVector("0", U.dimensions(), vector::zero);
+U = dimensionedVector("0", U.dimensions(), Zero);
 
 surfaceScalarField phi
 (
@@ -24,13 +24,13 @@ surfaceScalarField phi
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    fvc::interpolate(U) & mesh.Sf()
+    fvc::flux(U)
 );
 
 if (args.optionFound("initialiseUBCs"))
 {
     U.correctBoundaryConditions();
-    phi = fvc::interpolate(U) & mesh.Sf();
+    phi = fvc::flux(U);
 }
 
 

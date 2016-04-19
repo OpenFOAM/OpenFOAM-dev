@@ -24,6 +24,7 @@ boundaryField
     ".*"
     {
         type            calculated;
+        value           $internalField;
     }
 
     frontAndBack

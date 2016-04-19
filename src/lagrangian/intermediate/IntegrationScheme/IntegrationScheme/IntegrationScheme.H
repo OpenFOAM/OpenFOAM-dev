@@ -69,8 +69,8 @@ public:
         //- Constructor
         integrationResult()
         :
-            value_(pTraits<Type>::zero),
-            average_(pTraits<Type>::zero)
+            value_(Zero),
+            average_(Zero)
         {}
 
 
@@ -212,7 +212,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "IntegrationScheme.C"
+    #include "IntegrationScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

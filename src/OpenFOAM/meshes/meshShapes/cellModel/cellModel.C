@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::vector Foam::cellModel::centre
 ) const
 {
     // Estimate centre of cell
-    vector cEst = vector::zero;
+    vector cEst = Zero;
 
     // Sum the points idicated by the label list
     forAll(pointLabels, i)
@@ -50,7 +50,7 @@ Foam::vector Foam::cellModel::centre
     // Calculate the centre by breaking the cell into pyramids and
     // volume-weighted averaging their centres
     scalar sumV = 0.0;
-    vector sumVc = vector::zero;
+    vector sumVc = Zero;
 
     const faceList cellFaces = faces(pointLabels);
 
@@ -92,7 +92,7 @@ Foam::scalar Foam::cellModel::mag
 ) const
 {
     // Estimate centre of cell
-    vector cEst = vector::zero;
+    vector cEst = Zero;
 
     // Sum the points idicated by the label list
     forAll(pointLabels, i)

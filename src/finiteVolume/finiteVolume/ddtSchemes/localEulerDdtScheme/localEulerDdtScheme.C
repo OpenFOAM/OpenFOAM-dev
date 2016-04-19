@@ -74,12 +74,12 @@ localEulerDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 )
             )
         );
 
-        tdtdt().internalField() =
+        tdtdt.ref().internalField() =
             rDeltaT.internalField()*dt.value()
            *(1.0 - mesh().Vsc0()/mesh().Vsc());
 
@@ -97,7 +97,7 @@ localEulerDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 ),
                 calculatedFvPatchField<Type>::typeName
             )
@@ -349,7 +349,7 @@ localEulerDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalarField& rDeltaT = localRDeltaT().internalField();
 
@@ -384,7 +384,7 @@ localEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalarField& rDeltaT = localRDeltaT().internalField();
 
@@ -421,7 +421,7 @@ localEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalarField& rDeltaT = localRDeltaT().internalField();
 
@@ -461,7 +461,7 @@ localEulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalarField& rDeltaT = localRDeltaT().internalField();
 
@@ -496,9 +496,10 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));
 
+    fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
     fluxFieldType phiCorr
     (
-        mesh().Sf() & (Uf.oldTime() - fvc::interpolate(U.oldTime()))
+        phiUf0 - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
     );
 
     return tmp<fluxFieldType>
@@ -511,12 +512,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
                 mesh().time().timeName(),
                 mesh()
             ),
-            this->fvcDdtPhiCoeff
-            (
-                U.oldTime(),
-                (mesh().Sf() & Uf.oldTime()),
-                phiCorr
-            )
+            this->fvcDdtPhiCoeff(U.oldTime(), phiUf0, phiCorr)
            *rDeltaT*phiCorr
         )
     );
@@ -535,7 +531,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
 
     fluxFieldType phiCorr
     (
-        phi.oldTime() - (mesh().Sf() & fvc::interpolate(U.oldTime()))
+        phi.oldTime() - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
     );
 
     return tmp<fluxFieldType>
@@ -577,10 +573,8 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
             rho.oldTime()*U.oldTime()
         );
 
-        fluxFieldType phiCorr
-        (
-            mesh().Sf() & (Uf.oldTime() - fvc::interpolate(rhoU0))
-        );
+        fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
+        fluxFieldType phiCorr(phiUf0 - fvc::dotInterpolate(mesh().Sf(), rhoU0));
 
         return tmp<fluxFieldType>
         (
@@ -593,13 +587,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
                     mesh().time().timeName(),
                     mesh()
                 ),
-                this->fvcDdtPhiCoeff
-                (
-                    rhoU0,
-                    mesh().Sf() & Uf.oldTime(),
-                    phiCorr
-                )
-               *rDeltaT*phiCorr
+                this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr)*rDeltaT*phiCorr
             )
         );
     }
@@ -646,7 +634,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
 
         fluxFieldType phiCorr
         (
-            phi.oldTime() - (mesh().Sf() & fvc::interpolate(rhoU0))
+            phi.oldTime() - fvc::dotInterpolate(mesh().Sf(), rhoU0)
         );
 
         return tmp<fluxFieldType>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,7 +162,9 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::cp
 ) const
 {
     const coeffArray& a = coeffs(T);
-    return RR*((((a[4]*T + a[3])*T + a[2])*T + a[1])*T + a[0]);
+    return
+        RR*((((a[4]*T + a[3])*T + a[2])*T + a[1])*T + a[0])
+      + EquationOfState::cp(p, T);
 }
 
 
@@ -178,7 +180,8 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::ha
     (
         ((((a[4]/5.0*T + a[3]/4.0)*T + a[2]/3.0)*T + a[1]/2.0)*T + a[0])*T
       + a[5]
-    );
+    )
+  + EquationOfState::h(p, T);
 }
 
 

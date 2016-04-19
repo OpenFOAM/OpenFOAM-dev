@@ -105,6 +105,9 @@ public:
         //- Construct with given size and value for all elements.
         List(const label, const T&);
 
+        //- Construct with given size initializing all elements to zero.
+        List(const label, const zero);
+
         //- Copy constructor.
         List(const List<T>&);
 
@@ -112,7 +115,7 @@ public:
         List(const Xfer<List<T>>&);
 
         //- Construct as copy or re-use as specified.
-        List(List<T>&, bool reUse);
+        List(List<T>&, bool reuse);
 
         //- Construct as subset.
         List(const UList<T>&, const labelUList& mapAddressing);
@@ -205,6 +208,11 @@ public:
             //- Return subscript-checked element of UList.
             inline T& newElmt(const label);
 
+
+        //- Disallow implicit shallowCopy
+        void shallowCopy(const UList<T>&) = delete;
+
+
     // Member operators
 
         //- Assignment from UList operator. Takes linear time.
@@ -224,6 +232,9 @@ public:
 
         //- Assignment of all entries to the given value
         inline void operator=(const T&);
+
+        //- Assignment of all entries to zero
+        inline void operator=(const zero);
 
 
     // Istream operator
@@ -251,12 +262,12 @@ List<T> readList(Istream&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "ListI.H"
+    #include "ListI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "List.C"
+    #include "List.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

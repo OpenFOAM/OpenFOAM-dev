@@ -132,7 +132,6 @@ bool Foam::ZoneMesh<ZoneType, MeshType>::read()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Read constructor given IOobject and a MeshType reference
 template<class ZoneType, class MeshType>
 Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
 (
@@ -149,7 +148,6 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
 }
 
 
-// Construct given size. Zones will be set later
 template<class ZoneType, class MeshType>
 Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
 (
@@ -205,7 +203,6 @@ Foam::ZoneMesh<ZoneType, MeshType>::~ZoneMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Map of zones for quick zone lookup
 template<class ZoneType, class MeshType>
 const Foam::Map<Foam::label>&
 Foam::ZoneMesh<ZoneType, MeshType>::zoneMap() const
@@ -219,8 +216,6 @@ Foam::ZoneMesh<ZoneType, MeshType>::zoneMap() const
 }
 
 
-// Given a global object index, return the zone it is in.
-// If object does not belong to any zones, return -1
 template<class ZoneType, class MeshType>
 Foam::label Foam::ZoneMesh<ZoneType, MeshType>::whichZone
 (
@@ -241,7 +236,6 @@ Foam::label Foam::ZoneMesh<ZoneType, MeshType>::whichZone
 }
 
 
-// Return a list of zone names
 template<class ZoneType, class MeshType>
 Foam::wordList Foam::ZoneMesh<ZoneType, MeshType>::types() const
 {
@@ -258,7 +252,6 @@ Foam::wordList Foam::ZoneMesh<ZoneType, MeshType>::types() const
 }
 
 
-// Return a list of zone names
 template<class ZoneType, class MeshType>
 Foam::wordList Foam::ZoneMesh<ZoneType, MeshType>::names() const
 {
@@ -412,7 +405,6 @@ void Foam::ZoneMesh<ZoneType, MeshType>::clear()
 }
 
 
-// Check zone definition
 template<class ZoneType, class MeshType>
 bool Foam::ZoneMesh<ZoneType, MeshType>::checkDefinition
 (
@@ -509,7 +501,6 @@ bool Foam::ZoneMesh<ZoneType, MeshType>::checkParallelSync
 }
 
 
-// Correct zone mesh after moving points
 template<class ZoneType, class MeshType>
 void Foam::ZoneMesh<ZoneType, MeshType>::movePoints(const pointField& p)
 {
@@ -522,13 +513,13 @@ void Foam::ZoneMesh<ZoneType, MeshType>::movePoints(const pointField& p)
 }
 
 
-// writeData member function required by regIOobject
 template<class ZoneType, class MeshType>
 bool Foam::ZoneMesh<ZoneType, MeshType>::writeData(Ostream& os) const
 {
     os  << *this;
     return os.good();
 }
+
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 

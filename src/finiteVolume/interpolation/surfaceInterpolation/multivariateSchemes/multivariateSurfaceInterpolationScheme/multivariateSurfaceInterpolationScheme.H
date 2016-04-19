@@ -50,7 +50,7 @@ namespace Foam
 template<class Type>
 class multivariateSurfaceInterpolationScheme
 :
-    public refCount
+    public tmp<multivariateSurfaceInterpolationScheme<Type>>::refCount
 {
 
 public:
@@ -228,7 +228,7 @@ makeMultivariateSurfaceInterpolationTypeScheme(SS, tensor)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "multivariateSurfaceInterpolationScheme.C"
+    #include "multivariateSurfaceInterpolationScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

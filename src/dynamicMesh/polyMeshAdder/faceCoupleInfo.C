@@ -184,7 +184,7 @@ void Foam::faceCoupleInfo::writePointsFaces() const
                     << " at position " << c[cutFaceI].centre(c.points())
                     << endl;
 
-                equivMasterFaces[cutFaceI] = vector::zero;
+                equivMasterFaces[cutFaceI] = Zero;
             }
         }
 

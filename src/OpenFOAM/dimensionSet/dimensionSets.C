@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,16 +35,16 @@ namespace Foam
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
-//- Since dimensionSystems() can be reread we actually store a copy of
-//  the controlDict subDict (v.s. a reference to the subDict for e.g.
-//  dimensionedConstants)
+// Since dimensionSystems() can be reread we actually store a copy of
+// the controlDict subDict (v.s. a reference to the subDict for e.g.
+// dimensionedConstants)
 dictionary* dimensionSystemsPtr_(NULL);
 HashTable<dimensionedScalar>* unitSetPtr_(NULL);
 dimensionSets* writeUnitSetPtr_(NULL);
 
-//- Helper class to
-//  - register re-reader
-//  - deallocate demand-driven data
+// Helper class to
+//   register re-reader
+//   deallocate demand-driven data
 class addDimensionSetsToDebug
 :
     public ::Foam::simpleRegIOobject
@@ -234,17 +234,17 @@ Foam::dimensionSets::dimensionSets
         valid_ = true;
 
         // Determine conversion from basic units to write units
-        for (label rowI = 0; rowI < conversion_.n(); rowI++)
+        for (label rowI = 0; rowI < conversion_.m(); rowI++)
         {
             scalar* row = conversion_[rowI];
 
-            for (label columnI = 0; columnI < conversion_.m(); columnI++)
+            for (label columnI = 0; columnI < conversion_.n(); columnI++)
             {
                 const dimensionedScalar& dSet = units_[columnI];
                 row[columnI] = dSet.dimensions()[rowI];
             }
         }
-        conversionPivots_.setSize(conversion_.n());
+        conversionPivots_.setSize(conversion_.m());
         LUDecompose(conversion_, conversionPivots_);
     }
 }

@@ -51,7 +51,7 @@ laplacian
     (
         vf.mesh(),
         vf.mesh().laplacianScheme(name)
-    )().fvcLaplacian(vf);
+    ).ref().fvcLaplacian(vf);
 }
 
 
@@ -202,7 +202,7 @@ laplacian
     (
         vf.mesh(),
         vf.mesh().laplacianScheme(name)
-    )().fvcLaplacian(gamma, vf);
+    ).ref().fvcLaplacian(gamma, vf);
 }
 
 
@@ -344,7 +344,7 @@ laplacian
     (
         vf.mesh(),
         vf.mesh().laplacianScheme(name)
-    )().fvcLaplacian(gamma, vf);
+    ).ref().fvcLaplacian(gamma, vf);
 }
 
 

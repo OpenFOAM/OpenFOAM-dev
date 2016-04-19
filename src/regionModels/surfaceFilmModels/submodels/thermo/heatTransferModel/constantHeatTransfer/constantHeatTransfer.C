@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "constantHeatTransfer.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
-#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -96,8 +95,7 @@ tmp<volScalarField> constantHeatTransfer::h() const
                 "c0",
                 dimEnergy/dimTime/sqr(dimLength)/dimTemperature,
                 c0_
-            ),
-            zeroGradientFvPatchScalarField::typeName
+            )
         )
     );
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,8 @@ tmp<pointField> avg
 {
     const labelListList& pointEdges = s.pointEdges();
 
-    tmp<pointField> tavg(new pointField(s.nPoints(), vector::zero));
-    pointField& avg = tavg();
+    tmp<pointField> tavg(new pointField(s.nPoints(), Zero));
+    pointField& avg = tavg.ref();
 
     forAll(pointEdges, vertI)
     {

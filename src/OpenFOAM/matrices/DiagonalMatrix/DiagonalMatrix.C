@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,11 +38,11 @@ template<class Type>
 template<class Form>
 Foam::DiagonalMatrix<Type>::DiagonalMatrix(const Matrix<Form, Type>& a)
 :
-    List<Type>(min(a.n(), a.m()))
+    List<Type>(min(a.m(), a.n()))
 {
     forAll(*this, i)
     {
-        this->operator[](i) = a[i][i];
+        this->operator[](i) = a(i, i);
     }
 }
 

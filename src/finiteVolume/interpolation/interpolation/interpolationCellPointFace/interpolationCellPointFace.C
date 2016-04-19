@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
     scalar phi[4], phiCandidate[4];
     label tetLabelCandidate[2], tetPointLabels[2];
 
-    Type t = pTraits<Type>::zero;
+    Type t = Zero;
 
     // only use face information when the position is on a face
     if (faceI < 0)

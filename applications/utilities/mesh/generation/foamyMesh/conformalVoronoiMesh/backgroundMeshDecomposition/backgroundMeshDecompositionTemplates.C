@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<typename PointType>
+template<class PointType>
 Foam::autoPtr<Foam::mapDistribute>
 Foam::backgroundMeshDecomposition::distributePoints
 (
@@ -45,7 +45,7 @@ Foam::backgroundMeshDecomposition::distributePoints
 }
 
 
-template<typename PointType>
+template<class PointType>
 Foam::labelList Foam::backgroundMeshDecomposition::processorPosition
 (
     const List<PointType>& pts

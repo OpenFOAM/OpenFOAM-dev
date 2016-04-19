@@ -241,7 +241,7 @@ public:
 #include "sutherlandTransportI.H"
 
 #ifdef NoRepository
-#   include "sutherlandTransport.C"
+    #include "sutherlandTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

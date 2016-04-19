@@ -198,7 +198,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::ReynoldsStress<BasicTurbulenceModel>::k() const
 {
     tmp<Foam::volScalarField> tk(0.5*tr(R_));
-    tk().rename("k");
+    tk.ref().rename("k");
     return tk;
 }
 

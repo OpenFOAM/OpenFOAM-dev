@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Foam::PairCollisionRecord<Type>::PairCollisionRecord()
 :
     origProcOfOther_(0),
     origIdOfOther_(-1),
-    data_(pTraits<Type>::zero)
+    data_(Zero)
 {}
 
 

@@ -112,7 +112,7 @@ inline Foam::scalar Foam::hRefConstThermo<EquationOfState>::cp
     const scalar T
 ) const
 {
-    return Cp_;
+    return Cp_ + EquationOfState::cp(p, T);
 }
 
 
@@ -122,7 +122,7 @@ inline Foam::scalar Foam::hRefConstThermo<EquationOfState>::ha
     const scalar p, const scalar T
 ) const
 {
-    return Cp_*(T-Tref_) + Href_ + Hf_;
+    return Cp_*(T-Tref_) + Href_ + Hf_ + EquationOfState::h(p, T);
 }
 
 
@@ -132,7 +132,7 @@ inline Foam::scalar Foam::hRefConstThermo<EquationOfState>::hs
     const scalar p, const scalar T
 ) const
 {
-    return Cp_*(T-Tref_) + Href_ ;
+    return Cp_*(T-Tref_) + Href_ + EquationOfState::h(p, T);
 }
 
 

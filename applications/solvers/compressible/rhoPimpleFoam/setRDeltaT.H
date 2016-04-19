@@ -1,5 +1,5 @@
 {
-    volScalarField& rDeltaT = trDeltaT();
+    volScalarField& rDeltaT = trDeltaT.ref();
 
     const dictionary& pimpleDict = pimple.dict();
 
@@ -38,7 +38,7 @@
         surfaceScalarField phid
         (
             "phid",
-            fvc::interpolate(psi)*(fvc::interpolate(U) & mesh.Sf())
+            fvc::interpolate(psi)*fvc::flux(U)
         );
 
         rDeltaT.dimensionedInternalField() = max

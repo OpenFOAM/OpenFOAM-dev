@@ -34,7 +34,7 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchVectorField(p, iF, vector::zero)
+    fixedValueFvPatchVectorField(p, iF, Zero)
 {}
 
 
@@ -45,7 +45,7 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF, vector::zero)
+    fixedValueFvPatchVectorField(p, iF, Zero)
 {}
 
 
@@ -57,7 +57,7 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchVectorField(p, iF, vector::zero)
+    fixedValueFvPatchVectorField(p, iF, Zero)
 {}
 
 

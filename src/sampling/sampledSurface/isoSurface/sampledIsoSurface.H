@@ -94,7 +94,6 @@ class sampledIsoSurface
             mutable const volScalarField* volFieldPtr_;
 
             //- Cached pointfield
-            mutable autoPtr<pointScalarField> storedPointFieldPtr_;
             mutable const pointScalarField* pointFieldPtr_;
 
             // And on subsetted mesh
@@ -276,7 +275,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "sampledIsoSurfaceTemplates.C"
+    #include "sampledIsoSurfaceTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

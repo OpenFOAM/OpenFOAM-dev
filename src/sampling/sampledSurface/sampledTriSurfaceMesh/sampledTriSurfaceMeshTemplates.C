@@ -36,7 +36,7 @@ Foam::sampledTriSurfaceMesh::sampleField
 {
     // One value per face
     tmp<Field<Type>> tvalues(new Field<Type>(sampleElements_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     if (sampleSource_ == cells || sampleSource_ == insideCells)
     {
@@ -56,7 +56,7 @@ Foam::sampledTriSurfaceMesh::sampleField
 
         // Create flat boundary field
 
-        Field<Type> bVals(nBnd, pTraits<Type>::zero);
+        Field<Type> bVals(nBnd, Zero);
 
         forAll(vField.boundaryField(), patchI)
         {
@@ -67,7 +67,7 @@ Foam::sampledTriSurfaceMesh::sampleField
                 bVals,
                 vField.boundaryField()[patchI].size(),
                 bFaceI
-            ).assign(vField.boundaryField()[patchI]);
+            ) = vField.boundaryField()[patchI];
         }
 
         // Sample in flat boundary field
@@ -92,7 +92,7 @@ Foam::sampledTriSurfaceMesh::interpolateField
 {
     // One value per vertex
     tmp<Field<Type>> tvalues(new Field<Type>(sampleElements_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     if (sampleSource_ == cells || sampleSource_ == insideCells)
     {

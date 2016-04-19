@@ -142,9 +142,8 @@ public:
                     surfaceInterpolationScheme<Type>::interpolate(vf, kSc, -kSc)
                 )
             );
-
             GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr =
-                tsfCorr();
+                tsfCorr.ref();
 
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
             {
@@ -176,7 +175,7 @@ public:
             {
                 if (!sfCorr.boundaryField()[pi].coupled())
                 {
-                    sfCorr.boundaryField()[pi] = pTraits<Type>::zero;
+                    sfCorr.boundaryField()[pi] = Zero;
                 }
             }
 

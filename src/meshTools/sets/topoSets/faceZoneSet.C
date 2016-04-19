@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -331,7 +331,6 @@ label faceZoneSet::maxSize(const polyMesh& mesh) const
 }
 
 
-//- Write using given format, version and compression
 bool faceZoneSet::writeObject
 (
     IOstream::streamFormat s,

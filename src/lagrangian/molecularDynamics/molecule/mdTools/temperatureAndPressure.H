@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ if (runTime.outputTime())
             << "no molecules in system" << endl;
     }
 
-    accumulatedTotalLinearMomentum = vector::zero;
+    accumulatedTotalLinearMomentum = Zero;
 
     accumulatedTotalMass = 0.0;
 

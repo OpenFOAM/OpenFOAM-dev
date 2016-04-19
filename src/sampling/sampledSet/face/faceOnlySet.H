@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,7 @@ class faceOnlySet
         (
             passiveParticleCloud& particleCloud,
             passiveParticle& singleParticle,
+            const scalar smallDist,
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
             DynamicList<label>& samplingFaces,
@@ -95,6 +96,14 @@ public:
 
     //- Runtime type information
     TypeName("face");
+
+
+    // Static data
+
+        //- Tolerance when comparing points relative to difference between
+        //  start_ and end_
+        static const scalar tol;
+
 
     // Constructors
 

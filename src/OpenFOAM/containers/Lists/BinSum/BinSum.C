@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,12 +35,12 @@ Foam::BinSum<IndexType, List, CombineOp>::BinSum
     const IndexType delta
 )
 :
-    List(ceil((max-min)/delta), pTraits<typename List::value_type>::zero),
+    List(ceil((max-min)/delta), Zero),
     min_(min),
     max_(max),
     delta_(delta),
-    lowSum_(pTraits<typename List::value_type>::zero),
-    highSum_(pTraits<typename List::value_type>::zero)
+    lowSum_(Zero),
+    highSum_(Zero)
 {}
 
 
@@ -55,12 +55,12 @@ Foam::BinSum<IndexType, List, CombineOp>::BinSum
     const CombineOp& cop
 )
 :
-    List(ceil((max-min)/delta), pTraits<typename List::value_type>::zero),
+    List(ceil((max-min)/delta), Zero),
     min_(min),
     max_(max),
     delta_(delta),
-    lowSum_(pTraits<typename List::value_type>::zero),
-    highSum_(pTraits<typename List::value_type>::zero)
+    lowSum_(Zero),
+    highSum_(Zero)
 {
     forAll(indexVals, i)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,17 +46,17 @@ void Foam::LUDecompose
     label& sign
 )
 {
-    label n = matrix.n();
-    scalar vv[n];
+    label m = matrix.m();
+    scalar vv[m];
     sign = 1;
 
-    for (label i=0; i<n; i++)
+    for (label i=0; i<m; i++)
     {
         scalar largestCoeff = 0.0;
         scalar temp;
         const scalar* __restrict__ matrixi = matrix[i];
 
-        for (label j=0; j<n; j++)
+        for (label j=0; j<m; j++)
         {
             if ((temp = mag(matrixi[j])) > largestCoeff)
             {
@@ -73,7 +73,7 @@ void Foam::LUDecompose
         vv[i] = 1.0/largestCoeff;
     }
 
-    for (label j=0; j<n; j++)
+    for (label j=0; j<m; j++)
     {
         scalar* __restrict__ matrixj = matrix[j];
 
@@ -84,7 +84,7 @@ void Foam::LUDecompose
             scalar sum = matrixi[j];
             for (label k=0; k<i; k++)
             {
-                sum -= matrixi[k]*matrix[k][j];
+                sum -= matrixi[k]*matrix(k, j);
             }
             matrixi[j] = sum;
         }
@@ -92,14 +92,14 @@ void Foam::LUDecompose
         label iMax = 0;
 
         scalar largestCoeff = 0.0;
-        for (label i=j; i<n; i++)
+        for (label i=j; i<m; i++)
         {
             scalar* __restrict__ matrixi = matrix[i];
             scalar sum = matrixi[j];
 
             for (label k=0; k<j; k++)
             {
-                sum -= matrixi[k]*matrix[k][j];
+                sum -= matrixi[k]*matrix(k, j);
             }
 
             matrixi[j] = sum;
@@ -118,7 +118,7 @@ void Foam::LUDecompose
         {
             scalar* __restrict__ matrixiMax = matrix[iMax];
 
-            for (label k=0; k<n; k++)
+            for (label k=0; k<m; k++)
             {
                 Swap(matrixj[k], matrixiMax[k]);
             }
@@ -132,13 +132,13 @@ void Foam::LUDecompose
             matrixj[j] = SMALL;
         }
 
-        if (j != n-1)
+        if (j != m-1)
         {
             scalar rDiag = 1.0/matrixj[j];
 
-            for (label i=j+1; i<n; i++)
+            for (label i=j+1; i<m; i++)
             {
-                matrix[i][j] *= rDiag;
+                matrix(i, j) *= rDiag;
             }
         }
     }
@@ -148,39 +148,39 @@ void Foam::LUDecompose
 void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
 {
     // Store result in upper triangular part of matrix
-    label size = matrix.n();
+    label size = matrix.m();
 
     // Set upper triangular parts to zero.
-    for (label j = 0; j < size; j++)
+    for (label j=0; j<size; j++)
     {
-        for (label k = j + 1; k < size; k++)
+        for (label k=j + 1; k<size; k++)
         {
-            matrix[j][k] = 0.0;
+            matrix(j, k) = 0.0;
         }
     }
 
-    for (label j = 0; j < size; j++)
+    for (label j=0; j<size; j++)
     {
         scalar d = 0.0;
 
-        for (label k = 0; k < j; k++)
+        for (label k=0; k<j; k++)
         {
             scalar s = 0.0;
 
-            for (label i = 0; i < k; i++)
+            for (label i=0; i<k; i++)
             {
-                s += matrix[i][k]*matrix[i][j];
+                s += matrix(i, k)*matrix(i, j);
             }
 
-            s = (matrix[j][k] - s)/matrix[k][k];
+            s = (matrix(j, k) - s)/matrix(k, k);
 
-            matrix[k][j] = s;
-            matrix[j][k] = s;
+            matrix(k, j) = s;
+            matrix(j, k) = s;
 
             d += sqr(s);
         }
 
-        d = matrix[j][j] - d;
+        d = matrix(j, j) - d;
 
         if (d < 0.0)
         {
@@ -190,7 +190,7 @@ void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
                 << abort(FatalError);
         }
 
-        matrix[j][j] = sqrt(d);
+        matrix(j, j) = sqrt(d);
     }
 }
 
@@ -205,36 +205,36 @@ void Foam::multiply
     const scalarRectangularMatrix& C
 )
 {
-    if (A.m() != B.n())
+    if (A.n() != B.m())
     {
         FatalErrorInFunction
-            << "A and B must have identical inner dimensions but A.m = "
-            << A.m() << " and B.n = " << B.n()
+            << "A and B must have identical inner dimensions but A.n = "
+            << A.n() << " and B.m = " << B.m()
             << abort(FatalError);
     }
 
-    if (B.m() != C.n())
+    if (B.n() != C.m())
     {
         FatalErrorInFunction
-            << "B and C must have identical inner dimensions but B.m = "
-            << B.m() << " and C.n = " << C.n()
+            << "B and C must have identical inner dimensions but B.n = "
+            << B.n() << " and C.m = " << C.m()
             << abort(FatalError);
     }
 
-    ans = scalarRectangularMatrix(A.n(), C.m(), scalar(0));
+    ans = scalarRectangularMatrix(A.m(), C.n(), scalar(0));
 
-    for (label i = 0; i < A.n(); i++)
+    for (label i=0; i<A.m(); i++)
     {
-        for (label g = 0; g < C.m(); g++)
+        for (label g = 0; g < C.n(); g++)
         {
-            for (label l = 0; l < C.n(); l++)
+            for (label l=0; l<C.m(); l++)
             {
                 scalar ab = 0;
-                for (label j = 0; j < A.m(); j++)
+                for (label j=0; j<A.n(); j++)
                 {
-                    ab += A[i][j]*B[j][l];
+                    ab += A(i, j)*B(j, l);
                 }
-                ans[i][g] += C[l][g] * ab;
+                ans(i, g) += C(l, g) * ab;
             }
         }
     }
@@ -249,31 +249,31 @@ void Foam::multiply
     const scalarRectangularMatrix& C
 )
 {
-    if (A.m() != B.size())
+    if (A.n() != B.size())
     {
         FatalErrorInFunction
-            << "A and B must have identical inner dimensions but A.m = "
-            << A.m() << " and B.n = " << B.size()
+            << "A and B must have identical inner dimensions but A.n = "
+            << A.n() << " and B.m = " << B.size()
             << abort(FatalError);
     }
 
-    if (B.size() != C.n())
+    if (B.size() != C.m())
     {
         FatalErrorInFunction
-            << "B and C must have identical inner dimensions but B.m = "
-            << B.size() << " and C.n = " << C.n()
+            << "B and C must have identical inner dimensions but B.n = "
+            << B.size() << " and C.m = " << C.m()
             << abort(FatalError);
     }
 
-    ans = scalarRectangularMatrix(A.n(), C.m(), scalar(0));
+    ans = scalarRectangularMatrix(A.m(), C.n(), scalar(0));
 
-    for (label i = 0; i < A.n(); i++)
+    for (label i=0; i<A.m(); i++)
     {
-        for (label g = 0; g < C.m(); g++)
+        for (label g = 0; g < C.n(); g++)
         {
-            for (label l = 0; l < C.n(); l++)
+            for (label l=0; l<C.m(); l++)
             {
-                ans[i][g] += C[l][g] * A[i][l]*B[l];
+                ans(i, g) += C(l, g) * A(i, l)*B[l];
             }
         }
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ Foam::combustionModels::laminar<Type>::R(volScalarField& Y) const
 {
     tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
 
-    fvScalarMatrix& Su = tSu();
+    fvScalarMatrix& Su = tSu.ref();
 
     if (this->active())
     {
@@ -151,14 +151,13 @@ Foam::combustionModels::laminar<Type>::dQ() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
         )
     );
 
     if (this->active())
     {
-        tdQ() = this->chemistryPtr_->dQ();
+        tdQ.ref() = this->chemistryPtr_->dQ();
     }
 
     return tdQ;
@@ -183,14 +182,13 @@ Foam::combustionModels::laminar<Type>::Sh() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0)
         )
     );
 
     if (this->active())
     {
-        tSh() = this->chemistryPtr_->Sh();
+        tSh.ref() = this->chemistryPtr_->Sh();
     }
 
     return tSh;

@@ -992,8 +992,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::T() const
         )
     );
 
-    Foam::T(result().internalField(), internalField());
-    Foam::T(result().boundaryField(), boundaryField());
+    Foam::T(result.ref().internalField(), internalField());
+    Foam::T(result.ref().boundaryField(), boundaryField());
 
     return result;
 }
@@ -1029,8 +1029,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::component
         )
     );
 
-    Foam::component(Component().internalField(), internalField(), d);
-    Foam::component(Component().boundaryField(), boundaryField(), d);
+    Foam::component(Component.ref().internalField(), internalField(), d);
+    Foam::component(Component.ref().boundaryField(), boundaryField(), d);
 
     return Component;
 }

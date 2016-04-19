@@ -1,8 +1,12 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake libso multiphaseMixtureThermo
+wmake $targetType multiphaseMixtureThermo
 wmake
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

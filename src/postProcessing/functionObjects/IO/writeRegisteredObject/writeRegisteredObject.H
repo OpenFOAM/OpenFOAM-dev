@@ -31,12 +31,13 @@ Description
     This function object allows specification of different writing frequency
     of objects registered to the database. It has similar functionality
     as the main time database through the outputControl setting:
-        timeStep
-        outputTime
-        adjustableTime
-        runTime
-        clockTime
-        cpuTime
+
+    \li \c timeStep
+    \li \c outputTime
+    \li \c adjustableTime
+    \li \c runTime
+    \li \c clockTime
+    \li \c cpuTime
 
     Example of function object specification:
     \verbatim
@@ -58,7 +59,7 @@ Description
         exclusiveWriting    | Takes over object writing | no | yes
     \endtable
 
-    exclusiveWriting disables automatic writing (i.e through database) of the
+    \c exclusiveWriting disables automatic writing (i.e through database) of the
     objects to avoid duplicate writing.
 
 SeeAlso

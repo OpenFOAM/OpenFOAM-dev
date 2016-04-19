@@ -6,4 +6,4 @@ wclean libso twoPhaseMixtureThermo
 wclean
 wclean compressibleInterDyMFoam
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

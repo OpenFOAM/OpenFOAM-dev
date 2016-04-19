@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "gaussGrad.H"
-#include "zeroGradientFvPatchField.H"
+#include "extrapolatedCalculatedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,12 +65,12 @@ Foam::fv::gaussGrad<Type>::gradf
             (
                 "0",
                 ssf.dimensions()/dimLength,
-                pTraits<GradType>::zero
+                Zero
             ),
-            zeroGradientFvPatchField<GradType>::typeName
+            extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -132,7 +132,7 @@ Foam::fv::gaussGrad<Type>::calcGrad
     (
         gradf(tinterpScheme_().interpolate(vsf), name)
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     correctBoundaryConditions(vsf, gGrad);
 

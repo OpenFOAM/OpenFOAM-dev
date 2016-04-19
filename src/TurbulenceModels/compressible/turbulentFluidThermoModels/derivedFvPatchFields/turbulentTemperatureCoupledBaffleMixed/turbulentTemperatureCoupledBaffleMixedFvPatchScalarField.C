@@ -195,17 +195,17 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
 
     if (contactRes_ == 0.0)
     {
-        nbrIntFld() = nbrField.patchInternalField();
-        nbrKDelta() = nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs();
+        nbrIntFld.ref() = nbrField.patchInternalField();
+        nbrKDelta.ref() = nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs();
     }
     else
     {
-        nbrIntFld() = nbrField;
-        nbrKDelta() = contactRes_;
+        nbrIntFld.ref() = nbrField;
+        nbrKDelta.ref() = contactRes_;
     }
 
-    mpp.distribute(nbrIntFld());
-    mpp.distribute(nbrKDelta());
+    mpp.distribute(nbrIntFld.ref());
+    mpp.distribute(nbrKDelta.ref());
 
     tmp<scalarField> myKDelta = kappa(*this)*patch().deltaCoeffs();
 

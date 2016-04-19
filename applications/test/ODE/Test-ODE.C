@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,25 +75,25 @@ public:
         dfdx[2] = (2.0/sqr(x))*y[2];
         dfdx[3] = (3.0/sqr(x))*y[3];
 
-        dfdy[0][0] = 0.0;
-        dfdy[0][1] = -1.0;
-        dfdy[0][2] = 0.0;
-        dfdy[0][3] = 0.0;
+        dfdy(0, 0) = 0.0;
+        dfdy(0, 1) = -1.0;
+        dfdy(0, 2) = 0.0;
+        dfdy(0, 3) = 0.0;
 
-        dfdy[1][0] = 1.0;
-        dfdy[1][1] = -1.0/x;
-        dfdy[1][2] = 0.0;
-        dfdy[1][3] = 0.0;
+        dfdy(1, 0) = 1.0;
+        dfdy(1, 1) = -1.0/x;
+        dfdy(1, 2) = 0.0;
+        dfdy(1, 3) = 0.0;
 
-        dfdy[2][0] = 0.0;
-        dfdy[2][1] = 1.0;
-        dfdy[2][2] = -2.0/x;
-        dfdy[2][3] = 0.0;
+        dfdy(2, 0) = 0.0;
+        dfdy(2, 1) = 1.0;
+        dfdy(2, 2) = -2.0/x;
+        dfdy(2, 3) = 0.0;
 
-        dfdy[3][0] = 0.0;
-        dfdy[3][1] = 0.0;
-        dfdy[3][2] = 1.0;
-        dfdy[3][3] = -3.0/x;
+        dfdy(3, 0) = 0.0;
+        dfdy(3, 1) = 0.0;
+        dfdy(3, 2) = 1.0;
+        dfdy(3, 3) = -3.0/x;
     }
 };
 

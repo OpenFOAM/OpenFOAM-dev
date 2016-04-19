@@ -64,7 +64,7 @@ namespace fv
 template<class Type>
 class convectionScheme
 :
-    public refCount
+    public tmp<convectionScheme<Type>>::refCount
 {
     // Private data
 
@@ -250,7 +250,7 @@ makeMultivariateFvConvectionTypeScheme(SS, tensor)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "convectionScheme.C"
+    #include "convectionScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

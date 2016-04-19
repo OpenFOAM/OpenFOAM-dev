@@ -51,9 +51,9 @@ Foam::UPtrList<T>::UPtrList(const Xfer<UPtrList<T>>& lst)
 
 
 template<class T>
-Foam::UPtrList<T>::UPtrList(UPtrList<T>& a, bool reUse)
+Foam::UPtrList<T>::UPtrList(UPtrList<T>& a, bool reuse)
 :
-    ptrs_(a.ptrs_, reUse)
+    ptrs_(a.ptrs_, reuse)
 {}
 
 

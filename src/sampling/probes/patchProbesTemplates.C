@@ -202,7 +202,7 @@ Foam::patchProbes::sample
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
@@ -253,7 +253,7 @@ Foam::patchProbes::sample
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 

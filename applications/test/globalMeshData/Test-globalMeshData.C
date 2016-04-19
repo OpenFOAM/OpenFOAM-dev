@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,10 +64,8 @@ int main(int argc, char *argv[])
 
         // Create field with my local data
         pointField coords(globalPointSlavesMap.constructSize());
-        SubList<point>(coords, coupledPatch.nPoints()).assign
-        (
-            coupledPatch.localPoints()
-        );
+        SubList<point>(coords, coupledPatch.nPoints()) =
+            coupledPatch.localPoints();
 
         // Exchange data. Apply positional transforms.
         globalPointSlavesMap.distribute
@@ -185,8 +183,7 @@ int main(int argc, char *argv[])
         label nBnd = mesh.nFaces()-mesh.nInternalFaces();
 
         pointField fc(globalPointBoundaryFacesMap.constructSize());
-        SubList<point>(fc, nBnd).assign
-        (
+        SubList<point>(fc, nBnd) =
             primitivePatch
             (
                 SubList<face>
@@ -196,8 +193,7 @@ int main(int argc, char *argv[])
                     mesh.nInternalFaces()
                 ),
                 mesh.points()
-            ).faceCentres()
-        );
+            ).faceCentres();
 
         // Exchange data
         globalPointBoundaryFacesMap.distribute

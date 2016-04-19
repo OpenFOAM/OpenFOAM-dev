@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,42 +25,64 @@ License
 
 #include "sphericalTensor2D.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const sphericalTensor2D::typeName = "sphericalTensor2D";
+const char* const Foam::sphericalTensor2D::vsType::typeName
+(
+    "sphericalTensor2D"
+);
 
 template<>
-const char* sphericalTensor2D::componentNames[] = {"ii"};
+const char* const Foam::sphericalTensor2D::vsType::componentNames[] =
+{
+    "ii"
+};
 
 template<>
-const sphericalTensor2D sphericalTensor2D::zero(0);
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::vsType::vsType::zero
+(
+    sphericalTensor2D::uniform(0)
+);
 
 template<>
-const sphericalTensor2D sphericalTensor2D::one(1);
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::vsType::one
+(
+    sphericalTensor2D::uniform(1)
+);
 
 template<>
-const sphericalTensor2D sphericalTensor2D::max(VGREAT);
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::vsType::max
+(
+    sphericalTensor2D::uniform(VGREAT)
+);
 
 template<>
-const sphericalTensor2D sphericalTensor2D::min(-VGREAT);
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::vsType::min
+(
+    sphericalTensor2D::uniform(-VGREAT)
+);
 
 template<>
-const sphericalTensor2D sphericalTensor2D::I(1);
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::vsType::rootMax
+(
+    sphericalTensor2D::uniform(ROOTVGREAT)
+);
 
 template<>
-const sphericalTensor2D sphericalTensor2D::oneThirdI(1.0/3.0);
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::vsType::rootMin
+(
+    sphericalTensor2D::uniform(-ROOTVGREAT)
+);
 
 template<>
-const sphericalTensor2D sphericalTensor2D::twoThirdsI(2.0/3.0);
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::I(1);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<>
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::oneThirdI(1.0/3.0);
 
-} // End namespace Foam
+template<>
+const Foam::sphericalTensor2D Foam::sphericalTensor2D::twoThirdsI(2.0/3.0);
+
 
 // ************************************************************************* //

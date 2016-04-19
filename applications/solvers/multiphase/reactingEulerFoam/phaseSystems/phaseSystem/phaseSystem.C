@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::calcPhi
 
     for (label phasei=1; phasei<phaseModels.size(); phasei++)
     {
-        tmpPhi() +=
+        tmpPhi.ref() +=
             fvc::interpolate(phaseModels[phasei])*phaseModels[phasei].phi();
     }
 
@@ -197,7 +197,7 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 
     for (label phasei=1; phasei<phaseModels_.size(); phasei++)
     {
-        tmpRho() += phaseModels_[phasei]*phaseModels_[phasei].rho();
+        tmpRho.ref() += phaseModels_[phasei]*phaseModels_[phasei].rho();
     }
 
     return tmpRho;
@@ -213,7 +213,7 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 
     for (label phasei=1; phasei<phaseModels_.size(); phasei++)
     {
-        tmpU() += phaseModels_[phasei]*phaseModels_[phasei].U();
+        tmpU.ref() += phaseModels_[phasei]*phaseModels_[phasei].U();
     }
 
     return tmpU;

@@ -1,16 +1,16 @@
 tmp<volVectorField> tHbyA;
 if (pressureImplicitPorosity)
 {
-    tHbyA = constrainHbyA(trTU()&UEqn().H(), U, p);
+    tHbyA = constrainHbyA(trTU()&UEqn.H(), U, p);
 }
 else
 {
-    tHbyA = constrainHbyA(trAU()*UEqn().H(), U, p);
+    tHbyA = constrainHbyA(trAU()*UEqn.H(), U, p);
 }
-volVectorField& HbyA = tHbyA();
+volVectorField& HbyA = tHbyA.ref();
 
-UEqn.clear();
-surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(HbyA) & mesh.Sf());
+tUEqn.clear();
+surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
 
 MRF.makeRelative(phiHbyA);
 
@@ -29,13 +29,15 @@ while (simple.correctNonOrthogonal())
         tpEqn = (fvm::laplacian(trAU(), p) == fvc::div(phiHbyA));
     }
 
-    tpEqn().setReference(pRefCell, pRefValue);
+    fvScalarMatrix pEqn = tpEqn.ref();
 
-    tpEqn().solve();
+    pEqn.setReference(pRefCell, pRefValue);
+
+    pEqn.solve();
 
     if (simple.finalNonOrthogonalIter())
     {
-        phi = phiHbyA - tpEqn().flux();
+        phi = phiHbyA - pEqn.flux();
     }
 }
 

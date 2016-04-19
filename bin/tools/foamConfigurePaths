@@ -204,11 +204,11 @@ _inlineSed \
     'export WM_MPLIB=SYSTEMOPENMPI' \
     "Replacing WM_MPLIB setting by 'SYSTEMOPENMPI'"
 
-## set foamCompiler=system always
+## set WM_COMPILER_TYPE=system always
 #_inlineSed \
 #    etc/bashrc \
-#    'foamCompiler=.*' \
-#    'foamCompiler=system' \
-#    "Replacing foamCompiler setting by 'system'"
+#    'WM_COMPILER_TYPE=.*' \
+#    'WM_COMPILER_TYPE=system' \
+#    "Replacing WM_COMPILER_TYPE setting by 'system'"
 
 #------------------------------------------------------------------------------

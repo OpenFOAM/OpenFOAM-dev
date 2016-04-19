@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,11 +36,8 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(cellShapeControl, 0);
+    defineTypeNameAndDebug(cellShapeControl, 0);
 }
-
-
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -173,7 +170,6 @@ Foam::scalar Foam::cellShapeControl::cellSize(const point& pt) const
 }
 
 
-//- Return the cell alignment at the given location
 Foam::tensor Foam::cellShapeControl::cellAlignment(const point& pt) const
 {
     scalarList bary;
@@ -181,7 +177,7 @@ Foam::tensor Foam::cellShapeControl::cellAlignment(const point& pt) const
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);
 
-    tensor alignment = tensor::zero;
+    tensor alignment = Zero;
 
     if (shapeControlMesh_.dimension() < 3 || shapeControlMesh_.is_infinite(ch))
     {
@@ -253,7 +249,7 @@ void Foam::cellShapeControl::cellSizeAndAlignment
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);
 
-    alignment = tensor::zero;
+    alignment = Zero;
     size = 0;
 
     if (shapeControlMesh_.dimension() < 3 || shapeControlMesh_.is_infinite(ch))

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,10 +50,10 @@ namespace indexedCellOps
 {
 
 //- Does the Dual vertex form part of a processor patch
-template<typename CellType>
+template<class CellType>
 Foam::label dualVertexMasterProc(const CellType& c);
 
-template<typename CellType>
+template<class CellType>
 Foam::FixedList<Foam::label, 4> processorsAttached(const CellType& c);
 
 } // End namespace indexedCellOps

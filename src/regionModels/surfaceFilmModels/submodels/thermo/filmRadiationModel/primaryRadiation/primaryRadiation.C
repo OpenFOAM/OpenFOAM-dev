@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "primaryRadiation.H"
 #include "volFields.H"
-#include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -104,12 +103,11 @@ tmp<volScalarField> primaryRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             owner().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
         )
     );
 
-    scalarField& Shs = tShs();
+    scalarField& Shs = tShs.ref();
     const scalarField& QinP = QinPrimary_.internalField();
     const scalarField& alpha = owner_.alpha().internalField();
 

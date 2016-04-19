@@ -26,7 +26,7 @@ License
 #include "greyMeanAbsorptionEmission.H"
 #include "addToRunTimeSelectionTable.H"
 #include "unitConversion.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 #include "basicSpecieMixture.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -209,11 +209,11 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
             ),
             mesh(),
             dimensionedScalar("a", dimless/dimLength, 0.0),
-            zeroGradientFvPatchVectorField::typeName
+            extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().internalField();
 
     forAll(a, cellI)
     {
@@ -261,7 +261,7 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
                 );
         }
     }
-    ta().correctBoundaryConditions();
+    ta.ref().correctBoundaryConditions();
     return ta;
 }
 
@@ -300,11 +300,11 @@ Foam::radiation::greyMeanAbsorptionEmission::ECont(const label bandI) const
 
         if (dQ.dimensions() == dimEnergy/dimTime)
         {
-            E().internalField() = EhrrCoeff_*dQ/mesh_.V();
+            E.ref().internalField() = EhrrCoeff_*dQ/mesh_.V();
         }
         else if (dQ.dimensions() == dimEnergy/dimTime/dimVolume)
         {
-            E().internalField() = EhrrCoeff_*dQ;
+            E.ref().internalField() = EhrrCoeff_*dQ;
         }
         else
         {

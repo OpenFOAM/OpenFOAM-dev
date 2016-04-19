@@ -38,11 +38,18 @@ SourceFiles
 #define SquareMatrix_H
 
 #include "Matrix.H"
+#include "Identity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declaration of friend functions and operators
+
+template<class Type>
+class RectangularMatrix;
+
 
 /*---------------------------------------------------------------------------*\
                            Class Matrix Declaration
@@ -64,24 +71,60 @@ public:
         //- Construct given number of rows/columns.
         inline SquareMatrix(const label n);
 
-        //- Construct given number of rows and columns,
-        //  It checks that m == n.
-        inline SquareMatrix(const label m, const label n);
+        //- Construct from a block of another matrix
+        template<class MatrixType>
+        inline SquareMatrix(const ConstMatrixBlock<MatrixType>&);
+
+        //- Construct from a block of another matrix
+        template<class MatrixType>
+        inline SquareMatrix(const MatrixBlock<MatrixType>&);
+
+        //- Construct given number of rows/columns
+        //  initializing all elements to zero
+        inline SquareMatrix(const label n, const zero);
+
+        //- Construct given number of rows and columns (checked to be equal)
+        //  initializing all elements to zero
+        inline SquareMatrix(const label m, const label n, const zero);
+
+        //- Construct given number of rows/columns
+        //  Initializing to the identity matrix
+        inline SquareMatrix(const label n, const Identity<Type>);
 
         //- Construct with given number of rows and rows
-        //  and value for all elements.
-        //  It checks that m == n.
-        inline SquareMatrix(const label m, const label n, const Type&);
+        //  initializing all elements to the given value
+        inline SquareMatrix(const label n, const Type&);
+
+        //- Construct as copy of a RectangularMatrix
+        //  which is checked to be square
+        inline explicit SquareMatrix(const RectangularMatrix<Type>&);
 
         //- Construct from Istream.
         inline SquareMatrix(Istream&);
 
         //- Clone
         inline autoPtr<SquareMatrix<Type>> clone() const;
+
+
+    // Member Functions
+
+        // Edit
+
+            //- Resize the matrix preserving the elements
+            inline void setSize(const label m);
+
+
+    // Member operators
+
+        //- Assignment of all elements to zero
+        void operator=(const zero);
+
+        //- Assignment elements to the
+        void operator=(const Identity<Type>);
 };
 
 
-// Global functions
+// Global functions and operators
 
 //- Return the LU decomposed SquareMatrix det
 template<class Type>
@@ -95,6 +138,14 @@ scalar det(const SquareMatrix<Type>&);
 template<class Type>
 scalar det(SquareMatrix<Type>&);
 
+template<class Type>
+class typeOfInnerProduct<Type, SquareMatrix<Type>, SquareMatrix<Type>>
+{
+public:
+
+    typedef SquareMatrix<Type> type;
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -102,12 +153,12 @@ scalar det(SquareMatrix<Type>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "SquareMatrixI.H"
+#include "SquareMatrixI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "SquareMatrix.C"
+    #include "SquareMatrix.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

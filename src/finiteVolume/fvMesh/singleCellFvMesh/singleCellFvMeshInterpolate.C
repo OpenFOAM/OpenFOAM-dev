@@ -77,7 +77,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
             patchFields
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& resF = tresF();
+    GeometricField<Type, fvPatchField, volMesh>& resF = tresF.ref();
 
 
     // 2. Change the fvPatchFields to the correct type using a mapper

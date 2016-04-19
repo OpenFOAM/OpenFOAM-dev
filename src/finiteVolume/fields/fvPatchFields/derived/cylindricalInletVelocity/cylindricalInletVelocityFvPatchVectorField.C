@@ -40,8 +40,8 @@ cylindricalInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF),
-    centre_(pTraits<vector>::zero),
-    axis_(pTraits<vector>::zero),
+    centre_(Zero),
+    axis_(Zero),
     axialVelocity_(),
     radialVelocity_(),
     rpm_()

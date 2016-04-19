@@ -11,4 +11,3 @@ LIB_LIBS = \
     -llagrangian \
     -lpotential \
     -lmolecularMeasurements
-

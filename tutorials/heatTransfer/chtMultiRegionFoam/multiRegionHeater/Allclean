@@ -19,4 +19,4 @@ rm -rf constant/heater/polyMesh
 rm -rf constant/leftSolid/polyMesh
 rm -rf constant/rightSolid/polyMesh
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

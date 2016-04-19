@@ -25,9 +25,7 @@ runApplication renumberMesh -overwrite
 # - generate face/cell sets and zones
 
 #runApplication setSet -batch createInletOutletSets.setSet
-#mv log.setSet log.createInletOutletSets.setSet
 runApplication topoSet -dict system/createInletOutletSets.topoSetDict
-#mv log.topoSet log.createInletOutletSets.topoSet
 
 
 # - create the inlet/outlet and AMI patches
@@ -35,7 +33,7 @@ runApplication topoSet -dict system/createInletOutletSets.topoSetDict
 runApplication createPatch -overwrite
 
 
-# - test by running moveDynamicMes
+# - test by running moveDynamicMesh
 #runApplication moveDynamicMesh -checkAMI
 
 

@@ -644,17 +644,14 @@ void Foam::meshToMesh::distributeAndMergeCells
     forAll(allPoints, procI)
     {
         const pointField& pts = allPoints[procI];
-        SubList<point>(tgtPoints, pts.size(), pointOffset[procI]).assign(pts);
+        SubList<point>(tgtPoints, pts.size(), pointOffset[procI]) = pts;
     }
 
     // Insert cellIDs
     forAll(allTgtCellIDs, procI)
     {
         const labelList& cellIDs = allTgtCellIDs[procI];
-        SubList<label>(tgtCellIDs, cellIDs.size(), cellOffset[procI]).assign
-        (
-            cellIDs
-        );
+        SubList<label>(tgtCellIDs, cellIDs.size(), cellOffset[procI]) = cellIDs;
     }
 
 
@@ -671,7 +668,7 @@ void Foam::meshToMesh::distributeAndMergeCells
             allNInternalFaces[procI],
             internalFaceOffset[procI]
         );
-        slice.assign(SubList<face>(fcs, allNInternalFaces[procI]));
+        slice = SubList<face>(fcs, allNInternalFaces[procI]);
         forAll(slice, i)
         {
             add(slice[i], pointOffset[procI]);
@@ -683,7 +680,7 @@ void Foam::meshToMesh::distributeAndMergeCells
             allNInternalFaces[procI],
             internalFaceOffset[procI]
         );
-        ownSlice.assign(SubField<label>(faceOs, allNInternalFaces[procI]));
+        ownSlice = SubField<label>(faceOs, allNInternalFaces[procI]);
         add(ownSlice, cellOffset[procI]);
 
         SubField<label> nbrSlice
@@ -692,7 +689,7 @@ void Foam::meshToMesh::distributeAndMergeCells
             allNInternalFaces[procI],
             internalFaceOffset[procI]
         );
-        nbrSlice.assign(SubField<label>(faceNs, allNInternalFaces[procI]));
+        nbrSlice = SubField<label>(faceNs, allNInternalFaces[procI]);
         add(nbrSlice, cellOffset[procI]);
 
         internalFaceOffset[procI] += allNInternalFaces[procI];

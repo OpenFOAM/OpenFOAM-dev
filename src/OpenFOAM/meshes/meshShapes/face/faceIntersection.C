@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,15 +30,6 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Return potential intersection with face with a ray starting
-// at p, direction n (does not need to be normalized)
-// Does face-center decomposition and returns triangle intersection
-// point closest to p.
-
-// In case of miss the point is the nearest point intersection of the
-// face plane and the ray and the distance is the distance between the
-// intersection point and the nearest point on the face
-
 Foam::pointHit Foam::face::ray
 (
     const point& p,
@@ -48,6 +39,15 @@ Foam::pointHit Foam::face::ray
     const intersection::direction dir
 ) const
 {
+    // Return potential intersection with face with a ray starting
+    // at p, direction n (does not need to be normalized)
+    // Does face-center decomposition and returns triangle intersection
+    // point closest to p.
+
+    // In case of miss the point is the nearest point intersection of the
+    // face plane and the ray and the distance is the distance between the
+    // intersection point and the nearest point on the face
+
     // If the face is a triangle, do a direct calculation
     if (size() == 3)
     {

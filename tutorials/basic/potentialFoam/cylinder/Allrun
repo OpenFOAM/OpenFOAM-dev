@@ -11,4 +11,4 @@ runApplication blockMesh
 runApplication $application -withFunctionObjects -writePhi -writep
 runApplication streamFunction
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

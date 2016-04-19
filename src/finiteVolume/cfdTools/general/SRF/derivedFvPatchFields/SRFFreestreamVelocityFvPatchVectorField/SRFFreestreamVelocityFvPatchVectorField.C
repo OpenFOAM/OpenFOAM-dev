@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ SRFFreestreamVelocityFvPatchVectorField
 :
     inletOutletFvPatchVectorField(p, iF),
     relative_(false),
-    UInf_(vector::zero)
+    UInf_(Zero)
 {}
 
 

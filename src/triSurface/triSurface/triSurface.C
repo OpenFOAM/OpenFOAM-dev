@@ -620,10 +620,10 @@ Foam::triSurface::triSurface
     List<labelledTri>& triangles,
     const geometricSurfacePatchList& patches,
     pointField& points,
-    const bool reUse
+    const bool reuse
 )
 :
-    ParentType(triangles, points, reUse),
+    ParentType(triangles, points, reuse),
     patches_(patches),
     sortedEdgeFacesPtr_(NULL),
     edgeOwnerPtr_(NULL)

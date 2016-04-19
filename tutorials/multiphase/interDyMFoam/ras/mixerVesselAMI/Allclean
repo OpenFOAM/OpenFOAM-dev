@@ -10,4 +10,4 @@ cleanCase
 \rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
 \rm -f constant/triSurface/*.eMesh* > /dev/null 2>&1
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

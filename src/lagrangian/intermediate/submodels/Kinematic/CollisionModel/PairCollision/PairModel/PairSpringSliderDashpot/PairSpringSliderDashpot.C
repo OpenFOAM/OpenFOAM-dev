@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -271,8 +271,8 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
 
                 fT_AB = -mu_*mag(fN_AB)*USlip_AB/mag(USlip_AB);
 
-                tangentialOverlap_AB = vector::zero;
-                tangentialOverlap_BA = vector::zero;
+                tangentialOverlap_AB = Zero;
+                tangentialOverlap_BA = Zero;
             }
             else
             {

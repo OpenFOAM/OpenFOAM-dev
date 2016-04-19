@@ -37,7 +37,7 @@ laplacianSchemes
 
 interpolationSchemes
 {
-    default         none;
+    default         linear;
 }
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,25 +53,30 @@ public:
     //- Equivalent type of labels used for valid component indexing
     typedef label labelType;
 
+
     // Member constants
 
-        enum
-        {
-            dim = 3,         //!< Dimensionality of space
-            rank = 0,        //!< Rank of Scalar is 0
-            nComponents = 1  //!< Number of components in Scalar is 1
-        };
+        //- Dimensionality of space
+        static const direction dim = 3;
+
+        //- Rank of Scalar is 0
+        static const direction rank = 0;
+
+        //- Number of components in Scalar is 1
+        static const direction nComponents = 1;
+
 
     // Static data members
 
         static const char* const typeName;
-        static const char* componentNames[];
+        static const char* const componentNames[];
         static const Scalar zero;
         static const Scalar one;
         static const Scalar max;
         static const Scalar min;
         static const Scalar rootMax;
         static const Scalar rootMin;
+
 
     // Constructors
 

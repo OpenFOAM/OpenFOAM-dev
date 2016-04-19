@@ -34,7 +34,7 @@
             (
                 alpha1,
                 alphaPhi,
-                talphaPhiCorr0(),
+                talphaPhiCorr0.ref(),
                 mixture.alphaMax(),
                 0
             );
@@ -73,7 +73,7 @@
             (
                 alpha1,
                 talphaPhiUn(),
-                talphaPhiCorr(),
+                talphaPhiCorr.ref(),
                 mixture.alphaMax(),
                 0
             );

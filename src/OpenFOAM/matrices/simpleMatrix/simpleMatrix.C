@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::simpleMatrix<Type>::simpleMatrix
     const Type& sourceVal
 )
 :
-    scalarSquareMatrix(mSize, mSize, coeffVal),
+    scalarSquareMatrix(mSize, coeffVal),
     source_(mSize, sourceVal)
 {}
 
@@ -106,7 +106,7 @@ void Foam::simpleMatrix<Type>::operator=(const simpleMatrix<Type>& m)
             << abort(FatalError);
     }
 
-    if (n() != m.n())
+    if (m() != m.m())
     {
         FatalErrorInFunction
             << "Different size matrices"

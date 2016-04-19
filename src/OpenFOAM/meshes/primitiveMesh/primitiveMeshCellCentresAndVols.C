@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::primitiveMesh::makeCellCentresAndVols
 ) const
 {
     // Clear the fields for accumulation
-    cellCtrs = vector::zero;
+    cellCtrs = Zero;
     cellVols = 0.0;
 
     const labelList& own = faceOwner();
@@ -87,7 +87,7 @@ void Foam::primitiveMesh::makeCellCentresAndVols
     // first estimate the approximate cell centre as the average of
     // face centres
 
-    vectorField cEst(nCells(), vector::zero);
+    vectorField cEst(nCells(), Zero);
     labelField nCellFaces(nCells(), 0);
 
     forAll(own, facei)

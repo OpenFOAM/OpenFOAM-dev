@@ -6,4 +6,4 @@ wclean libso multiphaseMixture
 wclean
 wclean multiphaseInterDyMFoam
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

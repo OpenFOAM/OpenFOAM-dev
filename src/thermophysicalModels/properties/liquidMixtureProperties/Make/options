@@ -8,4 +8,3 @@ EXE_INC = \
 LIB_LIBS = \
     -lliquidProperties \
     -lthermophysicalFunctions
-

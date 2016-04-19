@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -295,7 +295,7 @@ void Foam::GAMGSolver::Vcycle
             // used
             if (nPreSweeps_)
             {
-                preSmoothedCoarseCorrField.assign(coarseCorrFields[leveli]);
+                preSmoothedCoarseCorrField = coarseCorrFields[leveli];
             }
 
             agglomeration_.prolongField
@@ -533,8 +533,7 @@ void Foam::GAMGSolver::solveCoarsestLevel
 
     if (directSolveCoarsest_)
     {
-        coarsestCorrField = coarsestSource;
-        coarsestLUMatrixPtr_->solve(coarsestCorrField);
+        coarsestLUMatrixPtr_->solve(coarsestCorrField, coarsestSource);
     }
     //else if
     //(

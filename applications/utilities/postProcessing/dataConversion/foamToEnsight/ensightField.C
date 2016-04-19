@@ -53,8 +53,8 @@ volField
         (
             meshSubsetter.interpolate(vf)
         );
-        tfld().checkOut();
-        tfld().rename(vf.name());
+        tfld.ref().checkOut();
+        tfld.ref().rename(vf.name());
         return tfld;
     }
     else
@@ -729,7 +729,7 @@ void ensightField
         (
             volPointInterpolation::New(vf.mesh()).interpolate(vf)
         );
-        pfld().rename(vf.name());
+        pfld.ref().rename(vf.name());
 
         ensightPointField<Type>
         (

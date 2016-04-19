@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "basicThermo.H"
 #include "uniformDimensionedFields.H"
 #include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 #include "geometricOneField.H"
 
@@ -103,7 +104,7 @@ Foam::fv::solidificationMeltingSource::Cp() const
                             dimEnergy/dimMass/dimTemperature,
                             CpRef
                         ),
-                        zeroGradientFvPatchScalarField::typeName
+                        extrapolatedCalculatedFvPatchScalarField::typeName
                     )
                 );
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,23 +24,34 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LUscalarMatrix.H"
+#include "SubField.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
+void Foam::LUscalarMatrix::solve
+(
+    Field<Type>& x,
+    const Field<Type>& source
+) const
 {
+    // If x and source are different initialize x = source
+    if (&x != &source)
+    {
+        x = source;
+    }
+
     if (Pstream::parRun())
     {
-        Field<Type> completeSourceSol(n());
+        Field<Type> X(m());
 
         if (Pstream::master(comm_))
         {
             typename Field<Type>::subField
             (
-                completeSourceSol,
-                sourceSol.size()
-            ).assign(sourceSol);
+                X,
+                x.size()
+            ) = x;
 
             for
             (
@@ -55,7 +66,7 @@ void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
                     slave,
                     reinterpret_cast<char*>
                     (
-                        &(completeSourceSol[procOffsets_[slave]])
+                        &(X[procOffsets_[slave]])
                     ),
                     (procOffsets_[slave+1]-procOffsets_[slave])*sizeof(Type),
                     Pstream::msgType(),
@@ -69,8 +80,8 @@ void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
             (
                 Pstream::scheduled,
                 Pstream::masterNo(),
-                reinterpret_cast<const char*>(sourceSol.begin()),
-                sourceSol.byteSize(),
+                reinterpret_cast<const char*>(x.begin()),
+                x.byteSize(),
                 Pstream::msgType(),
                 comm_
             );
@@ -78,12 +89,12 @@ void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
 
         if (Pstream::master(comm_))
         {
-            LUBacksubstitute(*this, pivotIndices_, completeSourceSol);
+            LUBacksubstitute(*this, pivotIndices_, X);
 
-            sourceSol = typename Field<Type>::subField
+            x = typename Field<Type>::subField
             (
-                completeSourceSol,
-                sourceSol.size()
+                X,
+                x.size()
             );
 
             for
@@ -99,7 +110,7 @@ void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
                     slave,
                     reinterpret_cast<const char*>
                     (
-                        &(completeSourceSol[procOffsets_[slave]])
+                        &(X[procOffsets_[slave]])
                     ),
                     (procOffsets_[slave + 1]-procOffsets_[slave])*sizeof(Type),
                     Pstream::msgType(),
@@ -113,8 +124,8 @@ void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
             (
                 Pstream::scheduled,
                 Pstream::masterNo(),
-                reinterpret_cast<char*>(sourceSol.begin()),
-                sourceSol.byteSize(),
+                reinterpret_cast<char*>(x.begin()),
+                x.byteSize(),
                 Pstream::msgType(),
                 comm_
             );
@@ -122,8 +133,23 @@ void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
     }
     else
     {
-        LUBacksubstitute(*this, pivotIndices_, sourceSol);
+        LUBacksubstitute(*this, pivotIndices_, x);
     }
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::LUscalarMatrix::solve
+(
+    const Field<Type>& source
+) const
+{
+    tmp<Field<Type>> tx(new Field<Type>(m()));
+    Field<Type>& x = tx.ref();
+
+    solve(x, source);
+
+    return tx;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,14 +80,14 @@ void Foam::sixDoFRigidBodyMotionRestraints::sphericalAngularSpring::restrain
     vector& restraintMoment
 ) const
 {
-    restraintMoment = vector::zero;
+    restraintMoment = Zero;
 
     for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
     {
-        vector axis = vector::zero;
+        vector axis = Zero;
         axis[cmpt] = 1;
 
-        vector refDir = vector::zero;
+        vector refDir = Zero;
         refDir[(cmpt + 1) % 3] = 1;
 
         vector newDir = motion.orientation() & refDir;
@@ -101,7 +101,7 @@ void Foam::sixDoFRigidBodyMotionRestraints::sphericalAngularSpring::restrain
 
     restraintMoment += -damping_*motion.omega();
 
-    restraintForce = vector::zero;
+    restraintForce = Zero;
 
     // Not needed to be altered as restraintForce is zero, but set to
     // centreOfRotation to be sure of no spurious moment

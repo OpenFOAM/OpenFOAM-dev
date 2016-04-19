@@ -47,7 +47,7 @@ Foam::SprayParcel<ParcelType>::SprayParcel
 :
     ParcelType(mesh, is, readFields),
     d0_(0.0),
-    position0_(vector::zero),
+    position0_(Zero),
     sigma_(0.0),
     mu_(0.0),
     liquidCore_(0.0),

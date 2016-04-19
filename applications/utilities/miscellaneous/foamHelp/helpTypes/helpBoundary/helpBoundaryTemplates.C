@@ -94,7 +94,7 @@ void Foam::helpTypes::helpBoundary::fixedValueFieldConditions
             false
         ),
         mesh,   
-        dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+        dimensioned<Type>("zero", dimless, Zero)
     );
 
 

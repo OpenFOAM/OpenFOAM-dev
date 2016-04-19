@@ -32,9 +32,11 @@ Description
     further manipulation.
 
     Fields are stored as copies of the original, with the prefix
-    "tubulenceModel:", e.g.
+    "tubulenceModel:", e.g.:
 
-        turbulenceModel:R
+    \verbatim
+    turbulenceModel:R
+    \endverbatim
 
     Example of function object specification:
     \verbatim

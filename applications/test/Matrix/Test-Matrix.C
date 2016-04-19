@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "scalarMatrices.H"
+#include "LUscalarMatrix.H"
+#include "LLTMatrix.H"
+#include "QRMatrix.H"
 #include "vector.H"
+#include "tensor.H"
 #include "IFstream.H"
 
 using namespace Foam;
@@ -36,21 +40,21 @@ int main(int argc, char *argv[])
 {
     SquareMatrix<scalar> hmm(3);
 
-    hmm[0][0] = -3.0;
-    hmm[0][1] = 10.0;
-    hmm[0][2] = -4.0;
-    hmm[1][0] = 2.0;
-    hmm[1][1] = 3.0;
-    hmm[1][2] = 10.0;
-    hmm[2][0] = 2.0;
-    hmm[2][1] = 6.0;
-    hmm[2][2] = 1.0;
+    hmm(0, 0) = -3.0;
+    hmm(0, 1) = 10.0;
+    hmm(0, 2) = -4.0;
+    hmm(1, 0) = 2.0;
+    hmm(1, 1) = 3.0;
+    hmm(1, 2) = 10.0;
+    hmm(2, 0) = 2.0;
+    hmm(2, 1) = 6.0;
+    hmm(2, 2) = 1.0;
 
     //Info<< hmm << endl << hmm - 2.0*(-hmm) << endl;
     Info<< max(hmm) << endl;
     Info<< min(hmm) << endl;
 
-    SquareMatrix<scalar> hmm2(3, 3, 1.0);
+    SquareMatrix<scalar> hmm2(3, I);
 
     hmm = hmm2;
 
@@ -72,7 +76,14 @@ int main(int argc, char *argv[])
     Info<< hmm5 << endl;
 
     {
-        scalarSymmetricSquareMatrix symmMatrix(3, 3, 0);
+        RectangularMatrix<scalar> rm1(5, 6, 3.1);
+        rm1(0, 1) = 4.5;
+        RectangularMatrix<scalar> rm1b(rm1.block(2, 2, 0, 0));
+        Info<< "rm1b = " << rm1b << endl;
+    }
+
+    {
+        scalarSymmetricSquareMatrix symmMatrix(3, Zero);
 
         symmMatrix(0, 0) = 4;
         symmMatrix(1, 0) = 12;
@@ -103,32 +114,61 @@ int main(int argc, char *argv[])
         Info<< "Solution = " << rhs << endl;
     }
 
+
+    scalarSquareMatrix squareMatrix(3, Zero);
+
+    squareMatrix(0, 0) = 4;
+    squareMatrix(0, 1) = 12;
+    squareMatrix(0, 2) = -16;
+    squareMatrix(1, 0) = 12;
+    squareMatrix(1, 1) = 37;
+    squareMatrix(1, 2) = -43;
+    squareMatrix(2, 0) = -16;
+    squareMatrix(2, 1) = -43;
+    squareMatrix(2, 2) = 98;
+
+    Info<< nl << "Square Matrix = " << squareMatrix << endl;
+
+    const scalarField source(3, 1);
+
     {
-        scalarSquareMatrix squareMatrix(3, 3, 0);
+        {
+            scalarSquareMatrix sm(squareMatrix);
+            Info<< "det = " << det(sm) << endl;
+        }
 
-        squareMatrix[0][0] = 4;
-        squareMatrix[0][1] = 12;
-        squareMatrix[0][2] = -16;
-        squareMatrix[1][0] = 12;
-        squareMatrix[1][1] = 37;
-        squareMatrix[1][2] = -43;
-        squareMatrix[2][0] = -16;
-        squareMatrix[2][1] = -43;
-        squareMatrix[2][2] = 98;
-
-        const scalarSquareMatrix squareMatrixCopy = squareMatrix;
-        Info<< nl << "Square Matrix = " << squareMatrix << endl;
-
-        Info<< "det = " << det(squareMatrixCopy) << endl;
-
+        scalarSquareMatrix sm(squareMatrix);
         labelList rhs(3, 0);
         label sign;
-        LUDecompose(squareMatrix, rhs, sign);
+        LUDecompose(sm, rhs, sign);
 
-        Info<< "Decomposition = " << squareMatrix << endl;
+        Info<< "Decomposition = " << sm << endl;
         Info<< "Pivots = " << rhs << endl;
         Info<< "Sign = " << sign << endl;
-        Info<< "det = " << detDecomposed(squareMatrix, sign) << endl;
+        Info<< "det = " << detDecomposed(sm, sign) << endl;
+    }
+
+    {
+        LUscalarMatrix LU(squareMatrix);
+        scalarField x(LU.solve(source));
+        Info<< "LU solve residual " << (squareMatrix*x - source) << endl;
+    }
+
+    {
+        LLTMatrix<scalar> LLT(squareMatrix);
+        scalarField x(LLT.solve(source));
+        Info<< "LLT solve residual " << (squareMatrix*x - source) << endl;
+    }
+
+    {
+        QRMatrix<scalarSquareMatrix> QR(squareMatrix);
+        scalarField x(QR.solve(source));
+
+        Info<< "QR solve residual "
+            << (squareMatrix*x - source) << endl;
+
+        Info<< "QR inverse solve residual "
+            << (x - QR.inv()*source) << endl;
     }
 
     Info<< "\nEnd\n" << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-vector accumulatedTotalLinearMomentum(vector::zero);
+vector accumulatedTotalLinearMomentum(Zero);
 
 scalar accumulatedTotalMass = 0.0;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -943,7 +943,7 @@ Foam::booleanSurface::booleanSurface
     const pointField& pts = combinedSurf.points();
 
     label minFaceI = -1;
-    pointHit minHit(false, vector::zero, GREAT, true);
+    pointHit minHit(false, Zero, GREAT, true);
 
     forAll(combinedSurf, faceI)
     {

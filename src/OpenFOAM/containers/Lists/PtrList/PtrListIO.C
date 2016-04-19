@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,7 +188,8 @@ template<class T>
 Foam::Ostream& Foam::operator<<(Ostream& os, const PtrList<T>& L)
 {
     // Write size and start delimiter
-    os << nl << L.size() << nl << token::BEGIN_LIST;
+    os  << nl << indent << L.size() << nl
+        << indent << token::BEGIN_LIST << incrIndent;
 
     // Write contents
     forAll(L, i)
@@ -197,7 +198,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const PtrList<T>& L)
     }
 
     // Write end delimiter
-    os << nl << token::END_LIST << nl;
+    os << nl << decrIndent << indent << token::END_LIST << nl;
 
     // Check state of IOstream
     os.check("Ostream& operator<<(Ostream&, const PtrList&)");

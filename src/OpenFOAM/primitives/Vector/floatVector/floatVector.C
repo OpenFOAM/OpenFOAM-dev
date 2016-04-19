@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,43 +28,52 @@ Description
 
 #include "floatVector.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const floatVector::typeName = "floatVector";
+const char* const Foam::floatVector::vsType::typeName = "floatVector";
 
 template<>
-const char* floatVector::componentNames[] = {"x", "y", "z"};
+const char* const Foam::floatVector::vsType::componentNames[] =
+{
+    "x", "y", "z"
+};
 
 template<>
-const floatVector floatVector::zero(0, 0, 0);
-
-template<>
-const floatVector floatVector::one(1, 1, 1);
-
-template<>
-const floatVector floatVector::max
+const Foam::floatVector Foam::floatVector::vsType::zero
 (
-    floatScalarVGREAT,
-    floatScalarVGREAT,
-    floatScalarVGREAT
+    floatVector::uniform(0)
 );
 
 template<>
-const floatVector floatVector::min
+const Foam::floatVector Foam::floatVector::vsType::one
 (
-    -floatScalarVGREAT,
-    -floatScalarVGREAT,
-    -floatScalarVGREAT
+    floatVector::uniform(1)
 );
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<>
+const Foam::floatVector Foam::floatVector::vsType::max
+(
+    floatVector::uniform(floatScalarVGREAT)
+);
 
-} // End namespace Foam
+template<>
+const Foam::floatVector Foam::floatVector::vsType::min
+(
+    floatVector::uniform(-floatScalarVGREAT)
+);
+
+template<>
+const Foam::floatVector Foam::floatVector::vsType::rootMax
+(
+    floatVector::uniform(floatScalarROOTVGREAT)
+);
+
+template<>
+const Foam::floatVector Foam::floatVector::vsType::rootMin
+(
+    floatVector::uniform(-floatScalarROOTVGREAT)
+);
+
 
 // ************************************************************************* //

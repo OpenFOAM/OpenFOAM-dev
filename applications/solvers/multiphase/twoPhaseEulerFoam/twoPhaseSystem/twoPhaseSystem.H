@@ -54,7 +54,7 @@ class wallLubricationModel;
 class turbulentDispersionModel;
 
 class blendingMethod;
-template <class modelType> class BlendedInterfacialModel;
+template<class modelType> class BlendedInterfacialModel;
 
 /*---------------------------------------------------------------------------*\
                       Class twoPhaseSystem Declaration

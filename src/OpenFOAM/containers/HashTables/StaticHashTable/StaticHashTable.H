@@ -397,13 +397,13 @@ private:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "StaticHashTableI.H"
+    #include "StaticHashTableI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifndef NoStaticHashTableC
 #ifdef NoRepository
-#   include "StaticHashTable.C"
+    #include "StaticHashTable.C"
 #endif
 #endif
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,7 +166,7 @@ inline Foam::scalar Foam::particle::movingTetLambda
     point b0 = b00 + stepFraction_*(b - b00);
 
     // Normal of plane at start of tracking portion
-    vector n0 = vector::zero;
+    vector n0 = Zero;
 
     {
         tetIndices tetIs(cellI, tetFaceI, tetPtI, mesh_);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 // * * * * * * * * * * * * * Public Member Functions * * * * * * * * * * * * //
 
-template<typename SetType>
+template<class SetType>
 void Foam::polyMeshFilter::updateSets(const mapPolyMesh& map)
 {
     HashTable<const SetType*> sets =
@@ -66,7 +66,7 @@ void Foam::polyMeshFilter::updateSets(const mapPolyMesh& map)
 }
 
 
-template<typename SetType>
+template<class SetType>
 void Foam::polyMeshFilter::copySets
 (
     const polyMesh& oldMesh,

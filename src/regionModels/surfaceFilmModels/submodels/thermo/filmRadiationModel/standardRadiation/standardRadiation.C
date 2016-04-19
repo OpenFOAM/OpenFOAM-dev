@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,12 +120,11 @@ tmp<volScalarField> standardRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             owner().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
         )
     );
 
-    scalarField& Shs = tShs();
+    scalarField& Shs = tShs.ref();
     const scalarField& QinP = QinPrimary_.internalField();
     const scalarField& delta = owner_.delta().internalField();
     const scalarField& alpha = owner_.alpha().internalField();

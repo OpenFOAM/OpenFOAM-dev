@@ -1,5 +1,9 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 #set -x
 
 case "$ParaView_VERSION" in
@@ -14,9 +18,9 @@ case "$ParaView_VERSION" in
         # ensure CMake gets the correct C++ compiler
         [ -n "$WM_CXX" ] && export CXX="$WM_CXX"
 
-        wmake libso vtkPV3Readers
-        PV3blockMeshReader/Allwmake
-        PV3FoamReader/Allwmake
+        wmake $targetType vtkPV3Readers
+        PV3blockMeshReader/Allwmake $*
+        PV3FoamReader/Allwmake $*
     else
         echo "ERROR: ParaView not found in $ParaView_DIR"
     fi
@@ -26,4 +30,4 @@ case "$ParaView_VERSION" in
     ;;
 esac
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

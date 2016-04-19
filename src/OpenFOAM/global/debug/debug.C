@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,9 @@ namespace Foam
 namespace debug
 {
 
-//! \cond ignoreDocumentation - local scope
+//! \cond ignoreDocumentation
+//- Skip documentation : local scope only
+
 dictionary* controlDictPtr_(NULL);
 dictionary* debugSwitchesPtr_(NULL);
 dictionary* infoSwitchesPtr_(NULL);
@@ -55,7 +57,7 @@ simpleObjectRegistry* dimensionSetObjectsPtr_(NULL);
 simpleObjectRegistry* dimensionedConstantObjectsPtr_(NULL);
 
 
-// to ensure controlDictPtr_ is deleted at the end of the run
+// To ensure controlDictPtr_ is deleted at the end of the run
 class deleteControlDictPtr
 {
 public:

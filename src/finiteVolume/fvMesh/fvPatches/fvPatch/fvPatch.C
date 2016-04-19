@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ const Foam::vectorField& Foam::fvPatch::Cf() const
 Foam::tmp<Foam::vectorField> Foam::fvPatch::Cn() const
 {
     tmp<vectorField> tcc(new vectorField(size()));
-    vectorField& cc = tcc();
+    vectorField& cc = tcc.ref();
 
     const labelUList& faceCells = this->faceCells();
 

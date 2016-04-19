@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,9 +82,13 @@ Description
     }
     \endverbatim
 
-Note
-  - Only supply \c h and \c Ta, or \c q in the dictionary (see above)
-  - kappa entries can be: fluidThermo, solidThermo or lookup
+  Note:
+
+    \li Only supply \c h and \c Ta, or \c q in the dictionary (see above)
+    \li \c kappa and \c kappaName are inherited from temperatureCoupledBase.
+
+SeeAlso
+    Foam::temperatureCoupledBase
 
 SourceFiles
     externalWallHeatFluxTemperatureFvPatchScalarField.C

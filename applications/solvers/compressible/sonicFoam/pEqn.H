@@ -8,7 +8,7 @@ surfaceScalarField phid
     "phid",
     fvc::interpolate(psi)
    *(
-        (mesh.Sf() & fvc::interpolate(HbyA))
+        fvc::flux(HbyA)
       + rhorAUf*fvc::ddtCorr(rho, U, phi)/fvc::interpolate(rho)
     )
 );

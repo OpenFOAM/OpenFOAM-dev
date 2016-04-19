@@ -17,8 +17,8 @@ done
 
 for i in bottomAir topAir heater leftSolid rightSolid
 do
-    changeDictionary -region $i > log.changeDictionary.$i 2>&1
+    runApplication -s $i  changeDictionary -region $i
 done
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

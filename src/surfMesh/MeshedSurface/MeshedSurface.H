@@ -485,7 +485,7 @@ inline label MeshedSurface<triFace>::triangulate(List<label>& faceMap)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "MeshedSurface.C"
+    #include "MeshedSurface.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -27,8 +27,12 @@ Class
 Description
     Interpolates pre-specified motion.
 
-    Motion specified as pointVectorFields. E.g.
+    Motion specified as pointVectorFields.
 
+    \heading Patch usage
+
+    Example:
+    \verbatim
     walls
     {
         type                uniformInterpolatedDisplacement;
@@ -36,9 +40,10 @@ Description
         fieldName           wantedDisplacement;
         interpolationScheme linear;
     }
+    \endverbatim
 
-    This will scan the case for 'wantedDisplacement' pointVectorFields
-    and interpolate those in time (using 'linear' interpolation) to
+    This will scan the case for \a wantedDisplacement pointVectorFields
+    and interpolate those in time (using \c linear interpolation) to
     obtain the current displacement.
     The advantage of specifying displacement in this way is that it
     automatically works through decomposePar.

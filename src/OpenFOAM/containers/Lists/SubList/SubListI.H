@@ -34,9 +34,9 @@ inline Foam::SubList<T>::SubList
 :
     UList<T>(list.v_, subSize)
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     list.checkSize(subSize);
-#   endif
+    #endif
 }
 
 
@@ -50,7 +50,7 @@ inline Foam::SubList<T>::SubList
 :
     UList<T>(&(list.v_[startIndex]), subSize)
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
 
     // Artificially allow the start of a zero-sized subList to be
     // one past the end of the original list.
@@ -65,7 +65,7 @@ inline Foam::SubList<T>::SubList
         // behind the last element is allowed
         list.checkSize(startIndex);
     }
-#   endif
+    #endif
 }
 
 
@@ -84,6 +84,20 @@ template<class T>
 inline Foam::SubList<T>::operator const Foam::List<T>&() const
 {
     return *reinterpret_cast<const List<T>* >(this);
+}
+
+
+template<class T>
+inline void Foam::SubList<T>::operator=(const SubList<T>& sl)
+{
+    UList<T>::deepCopy(sl);
+}
+
+
+template<class T>
+inline void Foam::SubList<T>::operator=(const UList<T>& l)
+{
+    UList<T>::deepCopy(l);
 }
 
 

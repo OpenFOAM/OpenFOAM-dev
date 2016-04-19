@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,9 +45,9 @@ inline Foam::autoPtr<T>::autoPtr(const autoPtr<T>& ap)
 
 
 template<class T>
-inline Foam::autoPtr<T>::autoPtr(const autoPtr<T>& ap, const bool reUse)
+inline Foam::autoPtr<T>::autoPtr(const autoPtr<T>& ap, const bool reuse)
 {
-    if (reUse)
+    if (reuse)
     {
         ptr_ = ap.ptr_;
         ap.ptr_ = 0;

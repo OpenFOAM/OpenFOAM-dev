@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,42 +25,57 @@ License
 
 #include "sphericalTensor.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const sphericalTensor::typeName = "sphericalTensor";
+const char* const Foam::sphericalTensor::vsType::typeName = "sphericalTensor";
 
 template<>
-const char* sphericalTensor::componentNames[] = {"ii"};
+const char* const Foam::sphericalTensor::vsType::componentNames[] = {"ii"};
 
 template<>
-const sphericalTensor sphericalTensor::zero(0);
+const Foam::sphericalTensor Foam::sphericalTensor::vsType::zero
+(
+    sphericalTensor::uniform(0)
+);
 
 template<>
-const sphericalTensor sphericalTensor::one(1);
+const Foam::sphericalTensor Foam::sphericalTensor::vsType::one
+(
+    sphericalTensor::uniform(1)
+);
 
 template<>
-const sphericalTensor sphericalTensor::max(VGREAT);
+const Foam::sphericalTensor Foam::sphericalTensor::vsType::max
+(
+    sphericalTensor::uniform(VGREAT)
+);
 
 template<>
-const sphericalTensor sphericalTensor::min(-VGREAT);
+const Foam::sphericalTensor Foam::sphericalTensor::vsType::min
+(
+    sphericalTensor::uniform(-VGREAT)
+);
 
 template<>
-const sphericalTensor sphericalTensor::I(1);
+const Foam::sphericalTensor Foam::sphericalTensor::vsType::rootMax
+(
+    sphericalTensor::uniform(ROOTVGREAT)
+);
 
 template<>
-const sphericalTensor sphericalTensor::oneThirdI(1.0/3.0);
+const Foam::sphericalTensor Foam::sphericalTensor::vsType::rootMin
+(
+    sphericalTensor::uniform(-ROOTVGREAT)
+);
 
 template<>
-const sphericalTensor sphericalTensor::twoThirdsI(2.0/3.0);
+const Foam::sphericalTensor Foam::sphericalTensor::I(1);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<>
+const Foam::sphericalTensor Foam::sphericalTensor::oneThirdI(1.0/3.0);
 
-} // End namespace Foam
+template<>
+const Foam::sphericalTensor Foam::sphericalTensor::twoThirdsI(2.0/3.0);
 
 // ************************************************************************* //

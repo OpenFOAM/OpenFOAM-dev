@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,11 +293,10 @@ const Foam::vectorField::subField Foam::polyPatch::faceAreas() const
 }
 
 
-// Return the patch face neighbour cell centres
 Foam::tmp<Foam::vectorField> Foam::polyPatch::faceCellCentres() const
 {
     tmp<vectorField> tcc(new vectorField(size()));
-    vectorField& cc = tcc();
+    vectorField& cc = tcc.ref();
 
     // get reference to global cell centres
     const vectorField& gcc = boundaryMesh_.mesh().cellCentres();

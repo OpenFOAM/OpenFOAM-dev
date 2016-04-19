@@ -308,4 +308,66 @@ Foam::fvc::interpolate
 }
 
 
+template<class Type>
+Foam::tmp
+<
+    Foam::GeometricField
+    <
+        typename Foam::innerProduct<Foam::vector, Type>::type,
+        Foam::fvsPatchField,
+        Foam::surfaceMesh
+    >
+>
+Foam::fvc::dotInterpolate
+(
+    const surfaceVectorField& Sf,
+    const GeometricField<Type, fvPatchField, volMesh>& vf
+)
+{
+    if (surfaceInterpolation::debug)
+    {
+        InfoInFunction
+            << "interpolating GeometricField<Type, fvPatchField, volMesh> "
+            << vf.name() << " using run-time selected scheme"
+            << endl;
+    }
+
+    return scheme<Type>
+    (
+        vf.mesh(),
+        "dotInterpolate(" + Sf.name() + ',' + vf.name() + ')'
+    )().dotInterpolate(Sf, vf);
+}
+
+
+template<class Type>
+Foam::tmp
+<
+    Foam::GeometricField
+    <
+        typename Foam::innerProduct<Foam::vector, Type>::type,
+        Foam::fvsPatchField,
+        Foam::surfaceMesh
+    >
+>
+Foam::fvc::dotInterpolate
+(
+    const surfaceVectorField& Sf,
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+)
+{
+    tmp
+    <
+        GeometricField
+        <
+            typename Foam::innerProduct<Foam::vector, Type>::type,
+            fvsPatchField,
+            surfaceMesh
+        >
+    > tsf = dotInterpolate(Sf, tvf());
+    tvf.clear();
+    return tsf;
+}
+
+
 // ************************************************************************* //

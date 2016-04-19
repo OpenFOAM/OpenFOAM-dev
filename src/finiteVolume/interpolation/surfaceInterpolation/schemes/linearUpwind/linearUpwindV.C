@@ -57,12 +57,12 @@ Foam::linearUpwindV<Type>::correction
             (
                 vf.name(),
                 vf.dimensions(),
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
     const surfaceScalarField& w = mesh.weights();
@@ -118,7 +118,7 @@ Foam::linearUpwindV<Type>::correction
         {
             if (maxCorrs < 0)
             {
-                sfCorr[facei] = vector::zero;
+                sfCorr[facei] = Zero;
             }
             else if (sfCorrs > maxCorrs)
             {
@@ -185,7 +185,7 @@ Foam::linearUpwindV<Type>::correction
                 {
                     if (maxCorrs < 0)
                     {
-                        pSfCorr[facei] = vector::zero;
+                        pSfCorr[facei] = Zero;
                     }
                     else if (pSfCorrs > maxCorrs)
                     {

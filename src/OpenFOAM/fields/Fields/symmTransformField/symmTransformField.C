@@ -63,7 +63,7 @@ tmp<Field<Type>> transform
 )
 {
     tmp<Field<Type>> tranf(new Field<Type> (tf.size()));
-    transform(tranf(), trf, tf);
+    transform(tranf.ref(), trf, tf);
     return tranf;
 }
 
@@ -75,9 +75,9 @@ tmp<Field<Type>> transform
     const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
-    transform(tranf(), trf, ttf());
-    reuseTmp<Type, Type>::clear(ttf);
+    tmp<Field<Type>> tranf = New(ttf);
+    transform(tranf.ref(), trf, ttf());
+    ttf.clear();
     return tranf;
 }
 
@@ -90,7 +90,7 @@ tmp<Field<Type>> transform
 )
 {
     tmp<Field<Type>> tranf(new Field<Type> (tf.size()));
-    transform(tranf(), ttrf(), tf);
+    transform(tranf.ref(), ttrf(), tf);
     ttrf.clear();
     return tranf;
 }
@@ -103,9 +103,9 @@ tmp<Field<Type>> transform
     const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
-    transform(tranf(), ttrf(), ttf());
-    reuseTmp<Type, Type>::clear(ttf);
+    tmp<Field<Type>> tranf = New(ttf);
+    transform(tranf.ref(), ttrf(), ttf());
+    ttf.clear();
     ttrf.clear();
     return tranf;
 }
@@ -131,7 +131,7 @@ tmp<Field<Type>> transform
 )
 {
     tmp<Field<Type>> tranf(new Field<Type>(tf.size()));
-    transform(tranf(), t, tf);
+    transform(tranf.ref(), t, tf);
     return tranf;
 }
 
@@ -143,9 +143,9 @@ tmp<Field<Type>> transform
     const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
-    transform(tranf(), t, ttf());
-    reuseTmp<Type, Type>::clear(ttf);
+    tmp<Field<Type>> tranf = New(ttf);
+    transform(tranf.ref(), t, ttf());
+    ttf.clear();
     return tranf;
 }
 

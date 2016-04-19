@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -363,7 +363,7 @@ jacobian
     {
         for (label j=0; j<nEqns(); j++)
         {
-            dfdc[i][j] = 0.0;
+            dfdc(i, j) = 0.0;
         }
     }
 
@@ -619,7 +619,6 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
     const label index
 ) const
 {
-
     tmp<volScalarField> tHs
     (
         new volScalarField
@@ -634,12 +633,11 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimMass, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimEnergy/dimMass, 0.0)
         )
     );
 
-    volScalarField::InternalField& gasHs = tHs().internalField();
+    volScalarField::InternalField& gasHs = tHs.ref().internalField();
 
     const GasThermo& mixture = gasThermo_[index];
 
@@ -664,4 +662,6 @@ void Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::solve
 {
     NotImplemented;
 }
+
+
 // ************************************************************************* //

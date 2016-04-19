@@ -41,8 +41,7 @@
                     "rho",
                     dimMass/dimVolume,
                     rhoValue
-                ),
-                zeroGradientFvPatchField<scalar>::typeName
+                )
             )
         );
     }
@@ -97,8 +96,7 @@
                     "Erho",
                     dimMass/dimLength/sqr(dimTime),
                     rhoEValue
-                ),
-                zeroGradientFvPatchField<scalar>::typeName
+                )
             )
         );
     }
@@ -152,8 +150,7 @@
                     "nu",
                     dimless,
                     nuValue
-                ),
-                zeroGradientFvPatchField<scalar>::typeName
+                )
             )
         );
     }

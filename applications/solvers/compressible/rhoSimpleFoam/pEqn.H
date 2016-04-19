@@ -1,8 +1,8 @@
 {
-    volScalarField rAU(1.0/UEqn().A());
+    volScalarField rAU(1.0/UEqn.A());
     surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-    volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
-    UEqn.clear();
+    volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+    tUEqn.clear();
 
     bool closedVolume = false;
 
@@ -12,7 +12,7 @@
         (
             "phid",
             fvc::interpolate(psi)
-           *(fvc::interpolate(HbyA) & mesh.Sf())
+           *fvc::flux(HbyA)
         );
 
         MRF.makeRelative(fvc::interpolate(psi), phid);
@@ -42,12 +42,7 @@
     }
     else
     {
-        surfaceScalarField phiHbyA
-        (
-            "phiHbyA",
-            fvc::interpolate(rho*HbyA) & mesh.Sf()
-        );
-
+        surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
         MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
         closedVolume = adjustPhi(phiHbyA, U, p);

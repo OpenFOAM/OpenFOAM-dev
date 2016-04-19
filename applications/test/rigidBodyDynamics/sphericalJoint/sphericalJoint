@@ -1,0 +1,24 @@
+solver
+{
+    type Newmark;
+}
+
+// It is necessary to iterate for the Newmark solver
+nIter 2;
+
+bodies
+{
+    pendulum
+    {
+        type            rigidBody;
+        mass            1;
+        centreOfMass    (0 -1 0);
+        inertia         (0.001 0 0 0.001 0 0.001);
+        parent          root;
+        transform       (1 0 0 0 1 0 0 0 1) (0 0 0);
+        joint
+        {
+            type            Rs;
+        }
+    }
+}

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "noRadiation.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
-#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -89,8 +88,7 @@ tmp<volScalarField> noRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             owner().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
         )
     );
 }

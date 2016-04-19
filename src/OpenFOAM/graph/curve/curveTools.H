@@ -4,6 +4,8 @@
 #include "scalar.H"
 #include "vector.H"
 #include "curve.H"
+#include "char.H"
+#include "List.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -12,9 +14,6 @@ namespace Foam
 
 #define curveSmall 1.0e-8
 #define curveGreat 1.0e8
-
-#include "char.H"
-#include "List.H"
 
 typedef List<char> charList;
 typedef List<charList> charListList;

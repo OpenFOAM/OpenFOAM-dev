@@ -126,7 +126,7 @@ Foam::tmp<Foam::Field<Type>> Foam::processorLduInterface::receive
 ) const
 {
     tmp<Field<Type>> tf(new Field<Type>(size));
-    receive(commsType, tf());
+    receive(commsType, tf.ref());
     return tf;
 }
 
@@ -268,7 +268,7 @@ Foam::tmp<Foam::Field<Type>> Foam::processorLduInterface::compressedReceive
 ) const
 {
     tmp<Field<Type>> tf(new Field<Type>(size));
-    compressedReceive(commsType, tf());
+    compressedReceive(commsType, tf.ref());
     return tf;
 }
 

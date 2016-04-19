@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,12 +29,12 @@ License
 
 Foam::sixDoFRigidBodyMotionState::sixDoFRigidBodyMotionState()
 :
-    centreOfRotation_(vector::zero),
+    centreOfRotation_(Zero),
     Q_(I),
-    v_(vector::zero),
-    a_(vector::zero),
-    pi_(vector::zero),
-    tau_(vector::zero)
+    v_(Zero),
+    a_(Zero),
+    pi_(Zero),
+    tau_(Zero)
 {}
 
 

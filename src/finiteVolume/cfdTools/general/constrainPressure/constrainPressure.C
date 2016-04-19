@@ -43,48 +43,35 @@ void Foam::constrainPressure
 )
 {
     const fvMesh& mesh = p.mesh();
+
     volScalarField::GeometricBoundaryField& pBf = p.boundaryField();
 
-    bool hasFixedFluxBCs = false;
+    const volVectorField::GeometricBoundaryField& UBf = U.boundaryField();
+    const surfaceScalarField::GeometricBoundaryField& phiHbyABf =
+        phiHbyA.boundaryField();
+    const typename RAUType::GeometricBoundaryField& rhorAUBf =
+        rhorAU.boundaryField();
+    const surfaceVectorField::GeometricBoundaryField& SfBf =
+        mesh.Sf().boundaryField();
+    const surfaceScalarField::GeometricBoundaryField& magSfBf =
+        mesh.magSf().boundaryField();
+
     forAll(pBf, patchi)
     {
         if (isA<fixedFluxPressureFvPatchScalarField>(pBf[patchi]))
         {
-            hasFixedFluxBCs = true;
-            break;
-        }
-    }
-
-    if (hasFixedFluxBCs)
-    {
-        const surfaceScalarField::GeometricBoundaryField& phiHbyABf =
-            phiHbyA.boundaryField();
-        const typename RAUType::GeometricBoundaryField& rhorAUBf =
-            rhorAU.boundaryField();
-        const surfaceScalarField::GeometricBoundaryField& magSfBf =
-            mesh.magSf().boundaryField();
-
-        // Pre-compute tho relative flux for all patches: currently MRFZone does
-        // not support computing the relative flux for individual patches
-        FieldField<fvsPatchField, scalar> phiRelBf
-        (
-            MRF.relative(mesh.Sf().boundaryField() & U.boundaryField())
-        );
-
-        forAll(pBf, patchi)
-        {
-            if (isA<fixedFluxPressureFvPatchScalarField>(pBf[patchi]))
-            {
-                refCast<fixedFluxPressureFvPatchScalarField>(pBf[patchi])
-               .updateCoeffs
+            refCast<fixedFluxPressureFvPatchScalarField>
+            (
+                pBf[patchi]
+            ).updateCoeffs
+            (
                 (
-                    (
-                        phiHbyABf[patchi]
-                      - rho.boundaryField()[patchi]*phiRelBf[patchi]
-                    )
-                   /(magSfBf[patchi]*rhorAUBf[patchi])
-                );
-            }
+                    phiHbyABf[patchi]
+                  - rho.boundaryField()[patchi]
+                   *MRF.relative(SfBf[patchi] & UBf[patchi], patchi)
+                )
+               /(magSfBf[patchi]*rhorAUBf[patchi])
+            );
         }
     }
 }

@@ -146,7 +146,7 @@ void Foam::Function1Types::Polynomial<Type>::convertTimeBase(const Time& t)
 template<class Type>
 Type Foam::Function1Types::Polynomial<Type>::value(const scalar x) const
 {
-    Type y(pTraits<Type>::zero);
+    Type y(Zero);
     forAll(coeffs_, i)
     {
         y += cmptMultiply
@@ -167,7 +167,7 @@ Type Foam::Function1Types::Polynomial<Type>::integrate
     const scalar x2
 ) const
 {
-    Type intx(pTraits<Type>::zero);
+    Type intx(Zero);
 
     if (canIntegrate_)
     {

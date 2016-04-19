@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,9 @@ class CPCCellToCellStencil
             Map<labelList>& neiGlobal
         ) const;
 
+        //- Calculates per cell the neighbour data
+        //  (= cell or boundary in global numbering).
+        //  First element is always cell itself!
         void calcCellStencil(labelListList& globalCellCells) const;
 
 

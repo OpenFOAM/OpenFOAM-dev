@@ -26,6 +26,7 @@ License
 #include "thermoSingleLayer.H"
 #include "fvcDiv.H"
 #include "fvcLaplacian.H"
+#include "fvcFlux.H"
 #include "fvm.H"
 #include "addToRunTimeSelectionTable.H"
 #include "zeroGradientFvPatchFields.H"
@@ -284,7 +285,7 @@ void thermoSingleLayer::solveEnergy()
       - hsSp_
       + q(hs_)
       + radiation_->Shs()
-//      - fvm::SuSp(rhoSp_, hs_)
+   // - fvm::SuSp(rhoSp_, hs_)
       - rhoSp_*hs_
     );
 
@@ -556,7 +557,7 @@ thermoSingleLayer::thermoSingleLayer
                 IOobject::AUTO_WRITE,
                 false
             ),
-            fvc::interpolate(deltaRho_*U_) & regionMesh().Sf()
+            fvc::flux(deltaRho_*U_)
         );
 
         phi_ == phi0;
@@ -724,7 +725,9 @@ void thermoSingleLayer::info()
 
     const scalarField& Tinternal = T_.internalField();
 
-    Info<< indent << "min/max(T)         = " << gMin(Tinternal) << ", "
+    Info<< indent << "min/mean/max(T)    = "
+        << gMin(Tinternal) << ", "
+        << gAverage(Tinternal) << ", "
         << gMax(Tinternal) << nl;
 
     phaseChange_->info(Info);
@@ -751,7 +754,7 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho() const
         )
     );
 
-    scalarField& Srho = tSrho();
+    scalarField& Srho = tSrho.ref();
     const scalarField& V = primaryMesh().V();
     const scalar dt = time_.deltaTValue();
 
@@ -805,7 +808,7 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho
 
     if (vapId == i)
     {
-        scalarField& Srho = tSrho();
+        scalarField& Srho = tSrho.ref();
         const scalarField& V = primaryMesh().V();
         const scalar dt = time().deltaTValue();
 
@@ -855,7 +858,7 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Sh() const
 /*
     phase change energy fed back into the film...
 
-    scalarField& Sh = tSh();
+    scalarField& Sh = tSh.ref();
     const scalarField& V = primaryMesh().V();
     const scalar dt = time_.deltaTValue();
 

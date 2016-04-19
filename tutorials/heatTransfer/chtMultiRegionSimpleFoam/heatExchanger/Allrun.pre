@@ -6,20 +6,18 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 #create meshes
-runApplication blockMesh -region air
-mv log.blockMesh log.blockMesh.air
-runApplication blockMesh -region porous
-mv log.blockMesh log.blockMesh.porous
+runApplication -s air    blockMesh -region air
+runApplication -s porous blockMesh -region porous
 
 # create rotor blades in air region
-runApplication topoSet -region air -dict system/topoSetDict.1
-mv log.topoSet log.topoSet.air.1
+runApplication -s air.1 \
+    topoSet -region air -dict system/topoSetDict.1
 
 runApplication createBaffles -region air -overwrite
 
 # create rotor zone in air region for MRF
-runApplication topoSet -region air -dict system/topoSetDict.2
-mv log.topoSet log.topoSet.air.2
+runApplication -s air.2 \
+    topoSet -region air -dict system/topoSetDict.2
 
 rm -rf constant/air/polyMesh/sets
 

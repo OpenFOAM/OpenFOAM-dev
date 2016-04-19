@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,47 +30,44 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from Istream
-template<class Form, class Cmpt, int nCmpt>
-Foam::VectorSpace<Form, Cmpt, nCmpt>::VectorSpace
+template<class Form, class Cmpt, Foam::direction Ncmpts>
+Foam::VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace
 (
     Istream& is
 )
 {
     // Read beginning of VectorSpace<Cmpt>
-    is.readBegin("VectorSpace<Form, Cmpt, nCmpt>");
+    is.readBegin("VectorSpace<Form, Cmpt, Ncmpts>");
 
-    for (int i=0; i<nCmpt; i++)
+    for (direction i=0; i<Ncmpts; i++)
     {
         is >> v_[i];
     }
 
     // Read end of VectorSpace<Cmpt>
-    is.readEnd("VectorSpace<Form, Cmpt, nCmpt>");
+    is.readEnd("VectorSpace<Form, Cmpt, Ncmpts>");
 
     // Check state of Istream
-    is.check("VectorSpace<Form, Cmpt, nCmpt>::VectorSpace(Istream&)");
+    is.check("VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace(Istream&)");
 }
 
 
-// Return a string representation
-template<class Form, class Cmpt, int nCmpt>
-Foam::word
-Foam::name
+template<class Form, class Cmpt, Foam::direction Ncmpts>
+Foam::word Foam::name
 (
-    const VectorSpace<Form, Cmpt, nCmpt>& vs
+    const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
     std::ostringstream buf;
 
-    buf << '(';
+    buf << '(' << vs.v_[0];
 
-    for (int i=0; i<nCmpt-1; i++)
+    for (direction i=1; i<Ncmpts; i++)
     {
-        buf << vs.v_[i] << ',';
+        buf << ',' << vs.v_[i];
     }
 
-    buf << vs.v_[nCmpt-1] << ')';
+    buf << ')';
 
     return buf.str();
 }
@@ -78,49 +75,49 @@ Foam::name
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, Foam::direction Ncmpts>
 Foam::Istream& Foam::operator>>
 (
     Istream& is,
-    VectorSpace<Form, Cmpt, nCmpt>& vs
+    VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
-    // Read beginning of VectorSpace<Cmpt, nCmpt>
-    is.readBegin("VectorSpace<Form, Cmpt, nCmpt>");
+    // Read beginning of VectorSpace<Cmpt, Ncmpts>
+    is.readBegin("VectorSpace<Form, Cmpt, Ncmpts>");
 
-    for (int i=0; i<nCmpt; i++)
+    for (direction i=0; i<Ncmpts; i++)
     {
         is >> vs.v_[i];
     }
 
-    // Read end of VectorSpace<Cmpt, nCmpt>
-    is.readEnd("VectorSpace<Form, Cmpt, nCmpt>");
+    // Read end of VectorSpace<Cmpt, Ncmpts>
+    is.readEnd("VectorSpace<Form, Cmpt, Ncmpts>");
 
     // Check state of Istream
-    is.check("operator>>(Istream&, VectorSpace<Form, Cmpt, nCmpt>&)");
+    is.check("operator>>(Istream&, VectorSpace<Form, Cmpt, Ncmpts>&)");
 
     return is;
 }
 
 
-template<class Form, class Cmpt, int nCmpt>
+template<class Form, class Cmpt, Foam::direction Ncmpts>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const VectorSpace<Form, Cmpt, nCmpt>& vs
+    const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
-    os << token::BEGIN_LIST;
+    os << token::BEGIN_LIST << vs.v_[0];
 
-    for (int i=0; i<nCmpt-1; i++)
+    for (direction i=1; i<Ncmpts; i++)
     {
-        os << vs.v_[i] << token::SPACE;
+        os << token::SPACE << vs.v_[i];
     }
 
-    os << vs.v_[nCmpt-1] << token::END_LIST;
+    os << token::END_LIST;
 
     // Check state of Ostream
-    os.check("operator<<(Ostream&, const VectorSpace<Form, Cmpt, nCmpt>&)");
+    os.check("operator<<(Ostream&, const VectorSpace<Form, Cmpt, Ncmpts>&)");
 
     return os;
 }

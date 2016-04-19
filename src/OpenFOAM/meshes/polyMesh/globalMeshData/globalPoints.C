@@ -33,14 +33,12 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(globalPoints, 0);
+    defineTypeNameAndDebug(globalPoints, 0);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Total number of points on coupled patches. Is upper limit for number
-// of shared points
 Foam::label Foam::globalPoints::countPatchPoints
 (
     const polyBoundaryMesh& patches
@@ -125,9 +123,6 @@ Foam::labelPairList Foam::globalPoints::addSendTransform
 }
 
 
-// Collect all topological information about a point on a patch.
-// (this information is the patch faces using the point and the relative
-// position of the point in the face)
 void Foam::globalPoints::addToSend
 (
     const polyPatch& pp,
@@ -139,6 +134,10 @@ void Foam::globalPoints::addToSend
     DynamicList<labelPairList>& allInfo
 ) const
 {
+    // Collect all topological information about a point on a patch.  (this
+    // information is the patch faces using the point and the relative position
+    // of the point in the face)
+
     label meshPointI = pp.meshPoints()[patchPointI];
 
     // Add all faces using the point so we are sure we find it on the
@@ -160,8 +159,6 @@ void Foam::globalPoints::addToSend
 }
 
 
-// Add nbrInfo to myInfo. Return true if anything changed.
-// nbrInfo is for a point a list of all the global points using it
 bool Foam::globalPoints::mergeInfo
 (
     const labelPairList& nbrInfo,
@@ -169,6 +166,9 @@ bool Foam::globalPoints::mergeInfo
     labelPairList& myInfo
 ) const
 {
+    // Add nbrInfo to myInfo. Return true if anything changed.  nbrInfo is for a
+    // point a list of all the global points using it
+
     bool anyChanged = false;
 
     // Extend to make space for the nbrInfo (trimmed later)
@@ -267,14 +267,15 @@ Foam::label Foam::globalPoints::localToMeshPoint
 }
 
 
-// Updates database of current information on meshpoints with nbrInfo.
-// Uses mergeInfo above. Returns true if data kept for meshPointI changed.
 bool Foam::globalPoints::mergeInfo
 (
     const labelPairList& nbrInfo,
     const label localPointI
 )
 {
+    // Updates database of current information on meshpoints with nbrInfo.  Uses
+    // mergeInfo above. Returns true if data kept for meshPointI changed.
+
     label infoChanged = false;
 
     // Get the index into the procPoints list.
@@ -315,14 +316,15 @@ bool Foam::globalPoints::mergeInfo
 }
 
 
-// Updates database of current information on meshpoints with nbrInfo.
-// Uses mergeInfo above. Returns true if data kept for meshPointI changed.
 bool Foam::globalPoints::storeInitialInfo
 (
     const labelPairList& nbrInfo,
     const label localPointI
 )
 {
+    // Updates database of current information on meshpoints with nbrInfo.  Uses
+    // mergeInfo above. Returns true if data kept for meshPointI changed.
+
     label infoChanged = false;
 
     // Get the index into the procPoints list.
@@ -387,7 +389,6 @@ void Foam::globalPoints::printProcPoints
 }
 
 
-// Insert my own points into structure and mark as changed.
 void Foam::globalPoints::initOwnPoints
 (
     const Map<label>& meshToPatchPoint,
@@ -475,7 +476,6 @@ void Foam::globalPoints::initOwnPoints
 }
 
 
-// Send all my info on changedPoints_ to my neighbours.
 void Foam::globalPoints::sendPatchPoints
 (
     const bool mergeSeparated,
@@ -563,11 +563,6 @@ void Foam::globalPoints::sendPatchPoints
 }
 
 
-// Receive all my neighbours' information and merge with mine.
-// After finishing will have updated
-// - procPoints_ : all neighbour information merged in.
-// - meshToProcPoint_
-// - changedPoints: all points for which something changed.
 void Foam::globalPoints::receivePatchPoints
 (
     const bool mergeSeparated,
@@ -577,6 +572,12 @@ void Foam::globalPoints::receivePatchPoints
     labelHashSet& changedPoints
 )
 {
+    // Receive all my neighbours' information and merge with mine.
+    // After finishing will have updated
+    // - procPoints_ : all neighbour information merged in.
+    // - meshToProcPoint_
+    // - changedPoints: all points for which something changed.
+
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
     const labelPairList& patchInfo = globalTransforms_.patchTransformSign();
 
@@ -721,14 +722,15 @@ void Foam::globalPoints::receivePatchPoints
 }
 
 
-// Remove entries which are handled by normal face-face communication. I.e.
-// those points where the equivalence list is only me and my (face)neighbour
 void Foam::globalPoints::remove
 (
     const labelList& patchToMeshPoint,
     const Map<label>& directNeighbours
 )
 {
+    // Remove entries which are handled by normal face-face communication. I.e.
+    // those points where the equivalence list is only me and my (face)neighbour
+
     // Save old ones.
     Map<label> oldMeshToProcPoint(meshToProcPoint_.xfer());
     meshToProcPoint_.resize(oldMeshToProcPoint.size());
@@ -1087,7 +1089,6 @@ void Foam::globalPoints::calculateSharedPoints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from mesh
 Foam::globalPoints::globalPoints
 (
     const polyMesh& mesh,
@@ -1116,7 +1117,6 @@ Foam::globalPoints::globalPoints
 }
 
 
-// Construct from mesh and patch of coupled faces
 Foam::globalPoints::globalPoints
 (
     const polyMesh& mesh,

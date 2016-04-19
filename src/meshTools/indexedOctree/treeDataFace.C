@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(treeDataFace, 0);
+    defineTypeNameAndDebug(treeDataFace, 0);
 
-scalar treeDataFace::tolSqr = sqr(1e-6);
+    scalar treeDataFace::tolSqr = sqr(1e-6);
 }
 
 
@@ -178,8 +178,6 @@ Foam::pointField Foam::treeDataFace::shapePoints() const
 }
 
 
-//- Get type (inside,outside,mixed,unknown) of point w.r.t. surface.
-//  Only makes sense for closed surfaces.
 Foam::volumeType Foam::treeDataFace::getVolumeType
 (
     const indexedOctree<treeDataFace>& oc,
@@ -267,7 +265,7 @@ Foam::volumeType Foam::treeDataFace::getVolumeType
             // triangle normals)
             const labelList& pFaces = mesh_.pointFaces()[f[fp]];
 
-            vector pointNormal(vector::zero);
+            vector pointNormal(Zero);
 
             forAll(pFaces, i)
             {
@@ -336,7 +334,7 @@ Foam::volumeType Foam::treeDataFace::getVolumeType
             // triangle normals)
             const labelList& eFaces = mesh_.edgeFaces()[myEdges[myEdgeI]];
 
-            vector edgeNormal(vector::zero);
+            vector edgeNormal(Zero);
 
             forAll(eFaces, i)
             {

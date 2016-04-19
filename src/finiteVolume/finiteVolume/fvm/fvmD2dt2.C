@@ -51,7 +51,7 @@ d2dt2
     (
         vf.mesh(),
         vf.mesh().d2dt2Scheme("d2dt2(" + vf.name() + ')')
-    )().fvmD2dt2(vf);
+    ).ref().fvmD2dt2(vf);
 }
 
 
@@ -67,7 +67,7 @@ d2dt2
     (
         vf.mesh(),
         vf.mesh().d2dt2Scheme("d2dt2(" + rho.name() + ',' + vf.name() + ')')
-    )().fvmD2dt2(rho, vf);
+    ).ref().fvmD2dt2(rho, vf);
 }
 
 
@@ -83,7 +83,7 @@ d2dt2
     (
         vf.mesh(),
         vf.mesh().d2dt2Scheme("d2dt2(" + rho.name() + ',' + vf.name() + ')')
-    )().fvmD2dt2(rho, vf);
+    ).ref().fvmD2dt2(rho, vf);
 }
 
 

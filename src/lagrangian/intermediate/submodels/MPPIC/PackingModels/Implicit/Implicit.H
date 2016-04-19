@@ -58,8 +58,6 @@ class Implicit
 :
     public PackingModel<CloudType>
 {
-private:
-
     //- Private data
 
         //- Volume fraction field
@@ -70,6 +68,9 @@ private:
 
         //- Correction cell-centred velocity
         tmp<volVectorField> uCorrect_;
+
+        //- Flag to indicate whether implicit limiting is applied
+        Switch applyLimiting_;
 
         //- Flag to indicate whether gravity is applied
         Switch applyGravity_;
@@ -130,7 +131,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "Implicit.C"
+    #include "Implicit.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

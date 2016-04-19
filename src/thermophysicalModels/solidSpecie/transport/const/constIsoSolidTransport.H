@@ -167,7 +167,7 @@ public:
 #include "constIsoSolidTransportI.H"
 
 #ifdef NoRepository
-#   include "constIsoSolidTransport.C"
+    #include "constIsoSolidTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

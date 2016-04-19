@@ -95,7 +95,7 @@ surfaceScalarField neg
     dimensionedScalar("neg", dimless, -1.0)
 );
 
-surfaceScalarField phi("phi", mesh.Sf() & fvc::interpolate(rhoU));
+surfaceScalarField phi("phi", fvc::flux(rhoU));
 
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::turbulenceModel> turbulence

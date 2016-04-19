@@ -97,7 +97,7 @@
 
         phiHbyAs[phasei] =
         (
-            (fvc::interpolate(HbyAs[phasei]) & mesh.Sf())
+            fvc::flux(HbyAs[phasei])
           + rAlphaAUfs[phasei]*fvc::ddtCorr(phase.U(), phase.phi())
         );
         MRF.makeRelative(phiHbyAs[phasei]);
@@ -264,7 +264,7 @@
 
             mSfGradp = pEqnIncomp.flux()/rAUf;
 
-            U = dimensionedVector("U", dimVelocity, vector::zero);
+            U = dimensionedVector("U", dimVelocity, Zero);
 
             phasei = 0;
             forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)

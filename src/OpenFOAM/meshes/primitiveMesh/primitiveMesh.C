@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,8 +73,6 @@ Foam::primitiveMesh::primitiveMesh()
 {}
 
 
-// Construct from components
-// WARNING: ASSUMES CORRECT ORDERING OF DATA.
 Foam::primitiveMesh::primitiveMesh
 (
     const label nPoints,
@@ -320,7 +318,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMesh::movePoints
     const faceList& f = faces();
 
     tmp<scalarField> tsweptVols(new scalarField(f.size()));
-    scalarField& sweptVols = tsweptVols();
+    scalarField& sweptVols = tsweptVols.ref();
 
     forAll(f, faceI)
     {

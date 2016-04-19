@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ uniformDensityHydrostaticPressureFvPatchScalarField
     fixedValueFvPatchScalarField(p, iF),
     rho_(0.0),
     pRefValue_(0.0),
-    pRefPoint_(vector::zero)
+    pRefPoint_(Zero)
 {}
 
 

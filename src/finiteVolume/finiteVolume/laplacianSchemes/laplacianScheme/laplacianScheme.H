@@ -65,7 +65,7 @@ namespace fv
 template<class Type, class GType>
 class laplacianScheme
 :
-    public refCount
+    public tmp<laplacianScheme<Type, GType>>::refCount
 {
 
 protected:
@@ -251,7 +251,7 @@ makeFvLaplacianTypeScheme(SS, tensor, tensor)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "laplacianScheme.C"
+    #include "laplacianScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

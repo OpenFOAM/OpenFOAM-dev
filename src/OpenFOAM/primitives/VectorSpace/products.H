@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,12 +41,30 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Cmpt, int rank>
+//- Abstract template class to provide the form resulting from
+//  the inner-product of two forms
+template<class Cmpt, class Form1, class Form2>
+class typeOfInnerProduct
+{};
+
+//- Abstract template class to provide the form resulting from
+//  the outer-product of two forms
+template<class Cmpt, class Form1, class Form2>
+class typeOfOuterProduct
+{};
+
+//- Abstract template class to provide the transpose form of a form
+template<class Cmpt, class Form>
+class typeOfTranspose
+{};
+
+
+template<class Cmpt, direction rank>
 class typeOfRank
 {};
 
 
-template<class Cmpt, int rank>
+template<class Cmpt, direction rank>
 class symmTypeOfRank
 {};
 
@@ -68,7 +86,7 @@ public:
     typedef typename typeOfRank
     <
         typename pTraits<arg1>::cmptType,
-        int(pTraits<arg1>::rank) + int(pTraits<arg2>::rank)
+        direction(pTraits<arg1>::rank) + direction(pTraits<arg2>::rank)
     >::type type;
 };
 
@@ -81,7 +99,7 @@ public:
     typedef typename typeOfRank
     <
         typename pTraits<arg2>::cmptType,
-        int(pTraits<arg1>::rank) + int(pTraits<arg2>::rank) - 1
+        direction(pTraits<arg1>::rank) + direction(pTraits<arg2>::rank) - 1
     >::type type;
 };
 
@@ -93,7 +111,7 @@ public:
     typedef typename typeOfRank
     <
         typename pTraits<arg1>::cmptType,
-        int(pTraits<arg1>::rank) + int(pTraits<arg2>::rank) - 2
+        direction(pTraits<arg1>::rank) + direction(pTraits<arg2>::rank) - 2
     >::type type;
 };
 
@@ -106,7 +124,7 @@ public:
 };
 
 
-template<class arg1, int arg2>
+template<class arg1, direction arg2>
 class powProduct
 {
 public:
@@ -114,7 +132,7 @@ public:
     typedef typename symmTypeOfRank
     <
         typename pTraits<arg1>::cmptType,
-        arg2*int(pTraits<arg1>::rank)
+        arg2*direction(pTraits<arg1>::rank)
     >::type type;
 };
 

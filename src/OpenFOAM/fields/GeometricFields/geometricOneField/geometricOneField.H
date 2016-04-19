@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,13 @@ class geometricOneField
 
 public:
 
+    // Public typedefs
+
+        typedef oneField InternalField;
+        typedef oneField PatchFieldType;
+        typedef oneFieldField GeometricBoundaryField;
+        typedef one cmptType;
+
     // Constructors
 
         //- Construct null
@@ -68,13 +75,15 @@ public:
 
         inline const dimensionSet& dimensions() const;
 
-        inline scalar operator[](const label) const;
+        inline one operator[](const label) const;
 
         inline oneField field() const;
 
         inline oneField oldTime() const;
 
-        inline oneFieldField boundaryField() const;
+        inline InternalField internalField() const;
+
+        inline GeometricBoundaryField boundaryField() const;
 };
 
 
@@ -97,7 +106,7 @@ inline const geometricOneField& operator/
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "geometricOneFieldI.H"
+    #include "geometricOneFieldI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

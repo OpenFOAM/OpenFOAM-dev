@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -260,7 +260,7 @@ void qZeta::correct()
       + E
     );
 
-    zetaEqn().relax();
+    zetaEqn.ref().relax();
     solve(zetaEqn);
     bound(zeta_, zetaMin_);
 
@@ -275,7 +275,7 @@ void qZeta::correct()
         G - fvm::Sp(zeta_/q_, q_)
     );
 
-    qEqn().relax();
+    qEqn.ref().relax();
     solve(qEqn);
     bound(q_, qMin_);
 

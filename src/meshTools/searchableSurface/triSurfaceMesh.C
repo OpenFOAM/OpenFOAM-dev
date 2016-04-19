@@ -382,7 +382,7 @@ void Foam::triSurfaceMesh::clearOut()
 Foam::tmp<Foam::pointField> Foam::triSurfaceMesh::coordinates() const
 {
     tmp<pointField> tPts(new pointField(8));
-    pointField& pt = tPts();
+    pointField& pt = tPts.ref();
 
     // Use copy to calculate face centres so they don't get stored
     pt = PrimitivePatch<triSurface::FaceType, SubList, const pointField&>
@@ -463,7 +463,7 @@ Foam::triSurfaceMesh::edgeTree() const
           + nInternalEdges()
         );
 
-        treeBoundBox bb(vector::zero, vector::zero);
+        treeBoundBox bb(Zero, Zero);
 
         if (bEdges.size())
         {
@@ -678,7 +678,7 @@ void Foam::triSurfaceMesh::getNormal
             else
             {
                 // Set to what?
-                normal[i] = vector::zero;
+                normal[i] = Zero;
             }
         }
     }
@@ -699,7 +699,7 @@ void Foam::triSurfaceMesh::getNormal
             else
             {
                 // Set to what?
-                normal[i] = vector::zero;
+                normal[i] = Zero;
             }
         }
     }

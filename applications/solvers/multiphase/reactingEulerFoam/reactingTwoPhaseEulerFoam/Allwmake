@@ -1,9 +1,13 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake libso twoPhaseSystem
-wmake libso twoPhaseCompressibleTurbulenceModels
+wmake $targetType twoPhaseSystem
+wmake $targetType twoPhaseCompressibleTurbulenceModels
 wmake
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

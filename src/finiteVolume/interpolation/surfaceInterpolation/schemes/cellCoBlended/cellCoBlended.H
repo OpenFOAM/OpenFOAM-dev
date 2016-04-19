@@ -73,7 +73,7 @@ SourceFiles
 #include "surfaceInterpolationScheme.H"
 #include "blendedSchemeBase.H"
 #include "surfaceInterpolate.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 #include "fvcSurfaceIntegrate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -230,7 +230,7 @@ public:
                 ),
                 mesh,
                 dimensionedScalar("Co", dimless, 0),
-                zeroGradientFvPatchScalarField::typeName
+                extrapolatedCalculatedFvPatchScalarField::typeName
             );
 
             scalarField sumPhi

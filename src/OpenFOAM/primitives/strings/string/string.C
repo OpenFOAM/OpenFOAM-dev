@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ const Foam::string Foam::string::null;
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Count and return the number of a given character in the string
 Foam::string::size_type Foam::string::count(const char c) const
 {
     size_type cCount = 0;
@@ -53,7 +52,6 @@ Foam::string::size_type Foam::string::count(const char c) const
 }
 
 
-// Replace first occurence of sub-string oldStr with newStr
 Foam::string& Foam::string::replace
 (
     const string& oldStr,
@@ -72,7 +70,6 @@ Foam::string& Foam::string::replace
 }
 
 
-// Replace all occurences of sub-string oldStr with newStr
 Foam::string& Foam::string::replaceAll
 (
     const string& oldStr,
@@ -102,7 +99,6 @@ Foam::string& Foam::string::expand(const bool allowEmpty)
 }
 
 
-// Remove repeated characters returning true if string changed
 bool Foam::string::removeRepeated(const char character)
 {
     bool changed = false;
@@ -141,7 +137,6 @@ bool Foam::string::removeRepeated(const char character)
 }
 
 
-// Return string with repeated characters removed
 Foam::string Foam::string::removeRepeated(const char character) const
 {
     string str(*this);
@@ -150,7 +145,6 @@ Foam::string Foam::string::removeRepeated(const char character) const
 }
 
 
-// Remove trailing character returning true if string changed
 bool Foam::string::removeTrailing(const char character)
 {
     bool changed = false;
@@ -166,7 +160,6 @@ bool Foam::string::removeTrailing(const char character)
 }
 
 
-// Return string with trailing character removed
 Foam::string Foam::string::removeTrailing(const char character) const
 {
     string str(*this);

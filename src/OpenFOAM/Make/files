@@ -52,6 +52,7 @@ primitives/Tensor/lists/tensorList.C
 primitives/Vector/complexVector/complexVector.C
 #if !defined(WM_SP)
 primitives/Vector/floatVector/floatVector.C
+primitives/Tensor/floatTensor/floatTensor.C
 #endif
 primitives/Vector/labelVector/labelVector.C
 primitives/Vector/vector/vector.C
@@ -105,6 +106,11 @@ $(ranges)/labelRange/labelRange.C
 $(ranges)/labelRange/labelRanges.C
 $(ranges)/scalarRange/scalarRange.C
 $(ranges)/scalarRange/scalarRanges.C
+
+spatialVectorAlgebra = primitives/spatialVectorAlgebra
+$(spatialVectorAlgebra)/SpatialVector/spatialVector/spatialVector.C
+$(spatialVectorAlgebra)/SpatialTensor/spatialTensor/spatialTensor.C
+$(spatialVectorAlgebra)/CompactSpatialTensor/compactSpatialTensor/compactSpatialTensor.C
 
 containers/HashTables/HashTable/HashTableCore.C
 containers/HashTables/StaticHashTable/StaticHashTableCore.C

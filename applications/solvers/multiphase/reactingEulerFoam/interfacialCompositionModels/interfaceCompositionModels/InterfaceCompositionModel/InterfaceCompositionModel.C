@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,7 @@ Foam::InterfaceCompositionModel<Thermo, OtherThermo>::D
         )
     );
 
-    volScalarField& D(tmpD());
+    volScalarField& D(tmpD.ref());
 
     forAll(p, cellI)
     {
@@ -207,7 +207,7 @@ Foam::InterfaceCompositionModel<Thermo, OtherThermo>::L
         )
     );
 
-    volScalarField& L(tmpL());
+    volScalarField& L(tmpL.ref());
 
     forAll(p, cellI)
     {

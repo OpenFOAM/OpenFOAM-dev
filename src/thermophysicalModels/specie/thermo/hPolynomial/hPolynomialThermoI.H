@@ -98,7 +98,7 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::cp
     const scalar p, const scalar T
 ) const
 {
-    return CpCoeffs_.value(T);
+    return CpCoeffs_.value(T) + EquationOfState::cp(p, T);
 }
 
 
@@ -108,7 +108,7 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::ha
     const scalar p, const scalar T
 ) const
 {
-    return hCoeffs_.value(T);
+    return hCoeffs_.value(T) + EquationOfState::h(p, T);
 }
 
 

@@ -29,4 +29,4 @@ runApplication blockMesh
 refineMeshByCellSet 1 2 3
 runApplication $application
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

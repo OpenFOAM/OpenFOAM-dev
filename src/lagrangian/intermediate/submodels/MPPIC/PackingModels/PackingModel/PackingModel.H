@@ -52,7 +52,7 @@ class ParticleStressModel;
 
 class CorrectionLimitingMethod;
 
-template <class Type>
+template<class Type>
 class AveragingMethod;
 
 /*---------------------------------------------------------------------------*\
@@ -174,7 +174,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "PackingModel.C"
+    #include "PackingModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

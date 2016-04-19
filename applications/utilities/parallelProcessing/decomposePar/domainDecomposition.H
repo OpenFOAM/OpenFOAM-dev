@@ -142,7 +142,7 @@ class domainDecomposition
         ) const;
 
         //- Generate sub patch info for processor cyclics
-        template <class BinaryOp>
+        template<class BinaryOp>
         void processInterCyclics
         (
             const polyBoundaryMesh& patches,

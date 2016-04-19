@@ -68,22 +68,8 @@ public:
 
     // Member constants
 
-        enum
-        {
-            rank = 1 // Rank of Vector is 1
-        };
-
-
-    // Static data members
-
-        static const char* const typeName;
-        static const char* componentNames[];
-        static const Vector zero;
-        static const Vector one;
-        static const Vector max;
-        static const Vector min;
-        static const Vector rootMax;
-        static const Vector rootMin;
+        //- Rank of Vector is 1
+        static const direction rank = 1;
 
 
     //- Component labeling enumeration
@@ -94,6 +80,9 @@ public:
 
         //- Construct null
         inline Vector();
+
+        //- Construct initialized to zero
+        inline Vector(const Foam::zero);
 
         //- Construct given VectorSpace of the same rank
         template<class Cmpt2>

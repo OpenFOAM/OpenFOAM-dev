@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,7 @@ void Foam::NoInjection<CloudType>::setProperties
 )
 {
     // set particle velocity
-    parcel.U() = vector::zero;
+    parcel.U() = Zero;
 
     // set particle diameter
     parcel.d() = 0.0;

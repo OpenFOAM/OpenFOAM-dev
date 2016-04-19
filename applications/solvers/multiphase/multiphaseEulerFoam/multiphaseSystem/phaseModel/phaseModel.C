@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
 #include "surfaceInterpolate.H"
+#include "fvcFlux.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -98,7 +99,7 @@ Foam::phaseModel::phaseModel
             mesh
         ),
         mesh,
-        dimensionedVector("0", dimVelocity/dimTime, vector::zero)
+        dimensionedVector("0", dimVelocity/dimTime, Zero)
     ),
     alphaPhi_
     (
@@ -177,7 +178,7 @@ Foam::phaseModel::phaseModel
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
                 ),
-                fvc::interpolate(U_) & mesh.Sf(),
+                fvc::flux(U_),
                 phiTypes
             )
         );

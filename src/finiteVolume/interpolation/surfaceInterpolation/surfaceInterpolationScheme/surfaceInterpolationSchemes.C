@@ -54,9 +54,49 @@ makeBaseSurfaceInterpolationScheme(sphericalTensor)
 makeBaseSurfaceInterpolationScheme(symmTensor)
 makeBaseSurfaceInterpolationScheme(tensor)
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<>
+Foam::tmp
+<
+    Foam::GeometricField
+    <
+        typename Foam::innerProduct<Foam::vector, Foam::scalar>::type,
+        Foam::fvsPatchField,
+        Foam::surfaceMesh
+    >
+>
+Foam::surfaceInterpolationScheme<Foam::scalar>::dotInterpolate
+(
+    const surfaceVectorField& Sf,
+    const GeometricField<scalar, fvPatchField, volMesh>&
+) const
+{
+    NotImplemented;
+
+    return
+        tmp
+        <
+            GeometricField
+            <
+                typename innerProduct<vector, scalar>::type,
+                fvsPatchField,
+                surfaceMesh
+            >
+        >
+        (
+            GeometricField
+            <
+                typename innerProduct<vector, scalar>::type,
+                fvsPatchField,
+                surfaceMesh
+            >::null()
+        );
+}
+
 
 // ************************************************************************* //

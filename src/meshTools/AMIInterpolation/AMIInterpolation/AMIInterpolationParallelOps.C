@@ -246,7 +246,7 @@ distributeAndMergePatches
     // My own data first
     {
         const labelList& faceIDs = allTgtFaceIDs[Pstream::myProcNo()];
-        SubList<label>(tgtFaceIDs, faceIDs.size()).assign(faceIDs);
+        SubList<label>(tgtFaceIDs, faceIDs.size()) = faceIDs;
 
         const faceList& fcs = allFaces[Pstream::myProcNo()];
         forAll(fcs, i)
@@ -274,7 +274,7 @@ distributeAndMergePatches
         if (procI != Pstream::myProcNo())
         {
             const labelList& faceIDs = allTgtFaceIDs[procI];
-            SubList<label>(tgtFaceIDs, faceIDs.size(), nFaces).assign(faceIDs);
+            SubList<label>(tgtFaceIDs, faceIDs.size(), nFaces) = faceIDs;
 
             const faceList& fcs = allFaces[procI];
             forAll(fcs, i)

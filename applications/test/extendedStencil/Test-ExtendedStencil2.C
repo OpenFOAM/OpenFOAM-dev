@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
             const volVectorField& fld = mesh.C();
 
             // 1. Construct cell data in compact addressing
-            List<point> compactFld(map.constructSize(), pTraits<point>::zero);
+            List<point> compactFld(map.constructSize(), Zero);
 
             // Insert my internal values
             forAll(fld, cellI)

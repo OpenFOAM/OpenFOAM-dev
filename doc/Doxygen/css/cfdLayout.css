@@ -11,6 +11,11 @@ body {
     font-size: 62.5%;
 } /*Font-size: 1.0em = 10px when browser default size is 16px*/
 
+/* Using the same as the code/verbatim blocks in doxygen.css */
+code {
+    font-family: "Courier New", Courier, monospace, fixed;
+}
+
 p:after {
     content:".";
     display:block;
@@ -243,7 +248,7 @@ p:after {
     padding-bottom:30px;
     border-left: 3px solid rgb(175,175,175);
     border-right:3px solid rgb(175,175,175);
-    background:transparent url(img/bg_main.gif) top left repeat-y;
+    background:transparent;
 }
 .main img {
     clear:both;

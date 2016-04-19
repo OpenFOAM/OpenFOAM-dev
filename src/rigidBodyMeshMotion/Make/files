@@ -1,0 +1,3 @@
+rigidBodyMeshMotion.C
+
+LIB = $(FOAM_LIBBIN)/librigidBodyMeshMotion

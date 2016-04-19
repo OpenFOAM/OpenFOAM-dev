@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,10 @@ Class
 Description
     Reference counter for various OpenFOAM components.
 
+SeeAlso
+    Foam::tmp
+    Foam::token::compound
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef refCount_H
@@ -49,6 +53,7 @@ class refCount
 
         int count_;
 
+
     // Private Member Functions
 
         //- Dissallow copy
@@ -58,37 +63,31 @@ class refCount
         void operator=(const refCount&);
 
 
-public:
+protected:
 
     // Constructors
 
-        //- Construct null with zero count
+        //- Construct null initializing count to 0
         refCount()
         :
             count_(0)
         {}
 
 
+public:
+
     // Member Functions
 
-        //- Return the reference count
+        //- Return the current reference count
         int count() const
         {
             return count_;
         }
 
-
         //- Return true if the reference count is zero
-        bool okToDelete() const
+        bool unique() const
         {
-            return !count_;
-        }
-
-
-        //- Reset the reference count to zero
-        void resetRefCount()
-        {
-            count_ = 0;
+            return count_ == 0;
         }
 
 

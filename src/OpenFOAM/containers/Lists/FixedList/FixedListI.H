@@ -125,7 +125,6 @@ inline Foam::label Foam::FixedList<T, Size>::rcIndex(const label i) const
 }
 
 
-// Check start is within valid range (0 ... size-1).
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::checkStart(const label start) const
 {
@@ -138,7 +137,6 @@ inline void Foam::FixedList<T, Size>::checkStart(const label start) const
 }
 
 
-// Check size is within valid range (0 ... size).
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::checkSize(const label size) const
 {
@@ -151,8 +149,6 @@ inline void Foam::FixedList<T, Size>::checkSize(const label size) const
 }
 
 
-// Check index i is within valid range (0 ... size-1)
-// The check for zero-sized list is already done in static assert
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::checkIndex(const label i) const
 {
@@ -168,17 +164,17 @@ inline void Foam::FixedList<T, Size>::checkIndex(const label i) const
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::resize(const label s)
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     checkSize(s);
-#   endif
+    #endif
 }
 
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::setSize(const label s)
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     checkSize(s);
-#   endif
+    #endif
 }
 
 template<class T, unsigned Size>
@@ -237,24 +233,22 @@ inline const T& Foam::FixedList<T, Size>::last() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-// element access
 template<class T, unsigned Size>
 inline T& Foam::FixedList<T, Size>::operator[](const label i)
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     checkIndex(i);
-#   endif
+    #endif
     return v_[i];
 }
 
 
-// const element access
 template<class T, unsigned Size>
 inline const T& Foam::FixedList<T, Size>::operator[](const label i) const
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     checkIndex(i);
-#   endif
+    #endif
     return v_[i];
 }
 
@@ -435,12 +429,12 @@ inline unsigned Foam::FixedList<T, Size>::Hash<HashT>::operator()
 {
     if (contiguous<T>())
     {
-        // hash directly
+        // Hash directly
         return Hasher(lst.v_, sizeof(lst.v_), seed);
     }
     else
     {
-        // hash incrementally
+        // Hash incrementally
         unsigned val = seed;
 
         for (unsigned i=0; i<Size; i++)

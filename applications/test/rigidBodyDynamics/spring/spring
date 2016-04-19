@@ -1,0 +1,38 @@
+solver
+{
+    type Newmark;
+}
+
+// It is necessary to iterate for the Newmark solver
+nIter 2;
+
+bodies
+{
+    weight
+    {
+        type            rigidBody;
+        mass            9.6;
+        centreOfMass    (0 0 0);
+        inertia         (0.1052 0 0 0.1052 0 0.1778);
+        parent          root;
+        transform       (1 0 0 0 1 0 0 0 1) (0 0 0);
+        joint
+        {
+            type            Pz;
+        }
+    }
+}
+
+restraints
+{
+    spring
+    {
+        type            linearSpring;
+        body            weight;
+        anchor          (0 0 0.5);
+        refAttachmentPt (0 0 0);
+        stiffness       5000;
+        damping         50;
+        restLength      0.4;
+    }
+}

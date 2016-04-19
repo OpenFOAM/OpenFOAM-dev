@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,9 @@ License
 
 #include <iostream>
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Clear any allocated storage (word or string)
-inline void token::clear()
+inline void Foam::token::clear()
 {
     if (type_ == WORD)
     {
@@ -45,7 +39,7 @@ inline void token::clear()
     }
     else if (type_ == COMPOUND)
     {
-        if (compoundTokenPtr_->okToDelete())
+        if (compoundTokenPtr_->unique())
         {
             delete compoundTokenPtr_;
         }
@@ -61,15 +55,14 @@ inline void token::clear()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct null
-inline token::token()
+inline Foam::token::token()
 :
     type_(UNDEFINED),
     lineNumber_(0)
 {}
 
-// Construct as copy
-inline token::token(const token& t)
+
+inline Foam::token::token(const token& t)
 :
     type_(t.type_),
     lineNumber_(t.lineNumber_)
@@ -115,48 +108,48 @@ inline token::token(const token& t)
     }
 }
 
-// Construct punctuation character token
-inline token::token(punctuationToken p, label lineNumber)
+
+inline Foam::token::token(punctuationToken p, label lineNumber)
 :
     type_(PUNCTUATION),
     punctuationToken_(p),
     lineNumber_(lineNumber)
 {}
 
-// Construct word token
-inline token::token(const word& w, label lineNumber)
+
+inline Foam::token::token(const word& w, label lineNumber)
 :
     type_(WORD),
     wordTokenPtr_(new word(w)),
     lineNumber_(lineNumber)
 {}
 
-// Construct string token
-inline token::token(const string& s, label lineNumber)
+
+inline Foam::token::token(const string& s, label lineNumber)
 :
     type_(STRING),
     stringTokenPtr_(new string(s)),
     lineNumber_(lineNumber)
 {}
 
-// Construct label token
-inline token::token(const label l, label lineNumber)
+
+inline Foam::token::token(const label l, label lineNumber)
 :
     type_(LABEL),
     labelToken_(l),
     lineNumber_(lineNumber)
 {}
 
-// Construct floatScalar token
-inline token::token(const floatScalar s, label lineNumber)
+
+inline Foam::token::token(const floatScalar s, label lineNumber)
 :
     type_(FLOAT_SCALAR),
     floatScalarToken_(s),
     lineNumber_(lineNumber)
 {}
 
-// Construct doubleScalar token
-inline token::token(const doubleScalar s, label lineNumber)
+
+inline Foam::token::token(const doubleScalar s, label lineNumber)
 :
     type_(DOUBLE_SCALAR),
     doubleScalarToken_(s),
@@ -166,8 +159,7 @@ inline token::token(const doubleScalar s, label lineNumber)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-// Delete token clearing the storage used by word or string
-inline token::~token()
+inline Foam::token::~token()
 {
     clear();
 }
@@ -175,37 +167,37 @@ inline token::~token()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline token::tokenType token::type() const
+inline Foam::token::tokenType  Foam::token::type() const
 {
     return type_;
 }
 
-inline token::tokenType& token::type()
+inline Foam::token::tokenType&  Foam::token::type()
 {
     return type_;
 }
 
-inline bool token::good() const
+inline bool Foam::token::good() const
 {
     return (type_ != ERROR && type_ != UNDEFINED);
 }
 
-inline bool token::undefined() const
+inline bool Foam::token::undefined() const
 {
     return (type_ == UNDEFINED);
 }
 
-inline bool token::error() const
+inline bool Foam::token::error() const
 {
     return (type_ == ERROR);
 }
 
-inline bool token::isPunctuation() const
+inline bool Foam::token::isPunctuation() const
 {
     return (type_ == PUNCTUATION);
 }
 
-inline token::punctuationToken token::pToken() const
+inline Foam::token::punctuationToken  Foam::token::pToken() const
 {
     if (type_ == PUNCTUATION)
     {
@@ -218,12 +210,12 @@ inline token::punctuationToken token::pToken() const
     }
 }
 
-inline bool token::isWord() const
+inline bool Foam::token::isWord() const
 {
     return (type_ == WORD);
 }
 
-inline const word& token::wordToken() const
+inline const Foam::word& Foam::token::wordToken() const
 {
     if (type_ == WORD)
     {
@@ -236,17 +228,17 @@ inline const word& token::wordToken() const
     }
 }
 
-inline bool token::isVariable() const
+inline bool Foam::token::isVariable() const
 {
     return (type_ == VARIABLE);
 }
 
-inline bool token::isString() const
+inline bool Foam::token::isString() const
 {
     return (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING);
 }
 
-inline const string& token::stringToken() const
+inline const Foam::string& Foam::token::stringToken() const
 {
     if (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
     {
@@ -259,12 +251,12 @@ inline const string& token::stringToken() const
     }
 }
 
-inline bool token::isLabel() const
+inline bool Foam::token::isLabel() const
 {
     return (type_ == LABEL);
 }
 
-inline label token::labelToken() const
+inline Foam::label Foam::token::labelToken() const
 {
     if (type_ == LABEL)
     {
@@ -277,12 +269,12 @@ inline label token::labelToken() const
     }
 }
 
-inline bool token::isFloatScalar() const
+inline bool Foam::token::isFloatScalar() const
 {
     return (type_ == FLOAT_SCALAR);
 }
 
-inline floatScalar token::floatScalarToken() const
+inline Foam::floatScalar Foam::token::floatScalarToken() const
 {
     if (type_ == FLOAT_SCALAR)
     {
@@ -296,12 +288,12 @@ inline floatScalar token::floatScalarToken() const
 }
 
 
-inline bool token::isDoubleScalar() const
+inline bool Foam::token::isDoubleScalar() const
 {
     return (type_ == DOUBLE_SCALAR);
 }
 
-inline doubleScalar token::doubleScalarToken() const
+inline Foam::doubleScalar Foam::token::doubleScalarToken() const
 {
     if (type_ == DOUBLE_SCALAR)
     {
@@ -315,12 +307,12 @@ inline doubleScalar token::doubleScalarToken() const
 }
 
 
-inline bool token::isScalar() const
+inline bool Foam::token::isScalar() const
 {
     return (type_ == FLOAT_SCALAR || type_ == DOUBLE_SCALAR);
 }
 
-inline scalar token::scalarToken() const
+inline Foam::scalar Foam::token::scalarToken() const
 {
     if (type_ == FLOAT_SCALAR)
     {
@@ -337,12 +329,12 @@ inline scalar token::scalarToken() const
     }
 }
 
-inline bool token::isNumber() const
+inline bool Foam::token::isNumber() const
 {
     return (type_ == LABEL || isScalar());
 }
 
-inline scalar token::number() const
+inline Foam::scalar Foam::token::number() const
 {
     if (type_ == LABEL)
     {
@@ -359,12 +351,12 @@ inline scalar token::number() const
     }
 }
 
-inline bool token::isCompound() const
+inline bool Foam::token::isCompound() const
 {
     return (type_ == COMPOUND);
 }
 
-inline const token::compound& token::compoundToken() const
+inline const Foam::token::compound& Foam::token::compoundToken() const
 {
     if (type_ == COMPOUND)
     {
@@ -378,18 +370,18 @@ inline const token::compound& token::compoundToken() const
 }
 
 
-inline label token::lineNumber() const
+inline Foam::label Foam::token::lineNumber() const
 {
     return lineNumber_;
 }
 
-inline label& token::lineNumber()
+inline Foam::label& Foam::token::lineNumber()
 {
     return lineNumber_;
 }
 
 
-inline void token::setBad()
+inline void Foam::token::setBad()
 {
     clear();
     type_ = ERROR;
@@ -398,7 +390,7 @@ inline void token::setBad()
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline void token::operator=(const token& t)
+inline void Foam::token::operator=(const token& t)
 {
     clear();
     type_ = t.type_;
@@ -446,59 +438,59 @@ inline void token::operator=(const token& t)
     lineNumber_ = t.lineNumber_;
 }
 
-inline void token::operator=(const punctuationToken p)
+inline void Foam::token::operator=(const punctuationToken p)
 {
     clear();
     type_ = PUNCTUATION;
     punctuationToken_ = p;
 }
 
-inline void token::operator=(word* wPtr)
+inline void Foam::token::operator=(word* wPtr)
 {
     clear();
     type_ = WORD;
     wordTokenPtr_ = wPtr;
 }
 
-inline void token::operator=(const word& w)
+inline void Foam::token::operator=(const word& w)
 {
     operator=(new word(w));
 }
 
-inline void token::operator=(string* sPtr)
+inline void Foam::token::operator=(string* sPtr)
 {
     clear();
     type_ = STRING;
     stringTokenPtr_ = sPtr;
 }
 
-inline void token::operator=(const string& s)
+inline void Foam::token::operator=(const string& s)
 {
     operator=(new string(s));
 }
 
-inline void token::operator=(const label l)
+inline void Foam::token::operator=(const label l)
 {
     clear();
     type_ = LABEL;
     labelToken_ = l;
 }
 
-inline void token::operator=(const floatScalar s)
+inline void Foam::token::operator=(const floatScalar s)
 {
     clear();
     type_ = FLOAT_SCALAR;
     floatScalarToken_ = s;
 }
 
-inline void token::operator=(const doubleScalar s)
+inline void Foam::token::operator=(const doubleScalar s)
 {
     clear();
     type_ = DOUBLE_SCALAR;
     doubleScalarToken_ = s;
 }
 
-inline void token::operator=(token::compound* cPtr)
+inline void Foam::token::operator=(Foam::token::compound* cPtr)
 {
     clear();
     type_ = COMPOUND;
@@ -506,7 +498,7 @@ inline void token::operator=(token::compound* cPtr)
 }
 
 
-inline bool token::operator==(const token& t) const
+inline bool Foam::token::operator==(const token& t) const
 {
     if (type_ != t.type_)
     {
@@ -548,17 +540,17 @@ inline bool token::operator==(const token& t) const
     return false;
 }
 
-inline bool token::operator==(const punctuationToken p) const
+inline bool Foam::token::operator==(const punctuationToken p) const
 {
     return (type_ == PUNCTUATION && punctuationToken_ == p);
 }
 
-inline bool token::operator==(const word& w) const
+inline bool Foam::token::operator==(const word& w) const
 {
     return (type_ == WORD && wordToken() == w);
 }
 
-inline bool token::operator==(const string& s) const
+inline bool Foam::token::operator==(const string& s) const
 {
     return
     (
@@ -567,59 +559,55 @@ inline bool token::operator==(const string& s) const
     );
 }
 
-inline bool token::operator==(const label l) const
+inline bool Foam::token::operator==(const label l) const
 {
     return (type_ == LABEL && labelToken_ == l);
 }
 
-inline bool token::operator==(const floatScalar s) const
+inline bool Foam::token::operator==(const floatScalar s) const
 {
     return (type_ == FLOAT_SCALAR && equal(floatScalarToken_, s));
 }
 
-inline bool token::operator==(const doubleScalar s) const
+inline bool Foam::token::operator==(const doubleScalar s) const
 {
     return (type_ == DOUBLE_SCALAR && equal(doubleScalarToken_, s));
 }
 
-inline bool token::operator!=(const token& t) const
+inline bool Foam::token::operator!=(const token& t) const
 {
     return !operator==(t);
 }
 
-inline bool token::operator!=(const punctuationToken p) const
+inline bool Foam::token::operator!=(const punctuationToken p) const
 {
     return !operator==(p);
 }
 
-inline bool token::operator!=(const word& w) const
+inline bool Foam::token::operator!=(const word& w) const
 {
     return !operator==(w);
 }
 
-inline bool token::operator!=(const string& s) const
+inline bool Foam::token::operator!=(const string& s) const
 {
     return !operator==(s);
 }
 
-inline bool token::operator!=(const floatScalar s) const
+inline bool Foam::token::operator!=(const floatScalar s) const
 {
     return !operator==(s);
 }
 
-inline bool token::operator!=(const doubleScalar s) const
+inline bool Foam::token::operator!=(const doubleScalar s) const
 {
     return !operator==(s);
 }
 
-inline bool token::operator!=(const label l) const
+inline bool Foam::token::operator!=(const label l) const
 {
     return !operator==(l);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -179,7 +179,7 @@ Foam::tmp<Foam::triadField> Foam::smoothAlignmentSolver::buildAlignmentField
     (
         new triadField(mesh.vertexCount(), triad::unset)
     );
-    triadField& alignments = tAlignments();
+    triadField& alignments = tAlignments.ref();
 
     for
     (
@@ -211,7 +211,7 @@ Foam::tmp<Foam::pointField> Foam::smoothAlignmentSolver::buildPointField
     (
         new pointField(mesh.vertexCount(), point(GREAT, GREAT, GREAT))
     );
-    pointField& points = tPoints();
+    pointField& points = tPoints.ref();
 
     for
     (

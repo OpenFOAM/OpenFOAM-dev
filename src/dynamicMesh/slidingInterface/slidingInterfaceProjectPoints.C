@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -250,7 +250,7 @@ bool Foam::slidingInterface::projectPoints() const
     if (projectedSlavePointsPtr_) delete projectedSlavePointsPtr_;
 
     projectedSlavePointsPtr_ =
-        new pointField(slavePointFaceHits.size(), vector::zero);
+        new pointField(slavePointFaceHits.size(), Zero);
     pointField& projectedSlavePoints = *projectedSlavePointsPtr_;
 
     // Adjust projection to type of match

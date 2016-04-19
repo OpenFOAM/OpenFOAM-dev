@@ -162,7 +162,7 @@ Foam::vector Foam::PackingModels::Explicit<CloudType>::velocityCorrection
     const vector uRelative = p.U() - uMean;
 
     // correction velocity
-    vector dU = vector::zero;
+    vector dU = Zero;
 
     //// existing forces
     //const scalar Re = p.Re(p.U(), p.d(), p.rhoc(), p.muc());

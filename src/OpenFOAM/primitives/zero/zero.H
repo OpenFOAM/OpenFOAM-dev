@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,8 @@ SourceFiles
 #ifndef zero_H
 #define zero_H
 
+#include "label.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -49,9 +51,46 @@ class zero
 {
 public:
 
-    zero()
-    {}
+    typedef zero value_type;
+
+    // Constructors
+
+        //- Construct null
+        zero()
+        {}
+
+
+    // Member operators
+
+        //- Return 0 for bool
+        inline operator bool() const
+        {
+            return 0;
+        }
+
+        //- Return 0 for label
+        inline operator label() const
+        {
+            return 0;
+        }
+
+        //- Return 0 for float
+        inline operator float() const
+        {
+            return 0;
+        }
+
+        //- Return 0 for double
+        inline operator double() const
+        {
+            return 0;
+        }
 };
+
+
+// Global zero
+static const zero Zero;
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,7 +98,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "zeroI.H"
+#include "zeroI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

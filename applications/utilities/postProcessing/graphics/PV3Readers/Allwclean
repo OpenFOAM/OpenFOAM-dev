@@ -6,4 +6,4 @@ wclean libso vtkPV3Readers
 PV3blockMeshReader/Allwclean
 PV3FoamReader/Allwclean
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

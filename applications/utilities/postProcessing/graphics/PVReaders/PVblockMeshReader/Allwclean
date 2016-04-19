@@ -8,4 +8,4 @@ rm -f $FOAM_LIBBIN/libPVblockMeshReader*  2>/dev/null
 rm -rf PVblockMeshReader/Make
 wclean libso vtkPVblockMesh
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

@@ -12,4 +12,4 @@ runApplication createPatch -overwrite
 # Run
 runApplication `getApplication`
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

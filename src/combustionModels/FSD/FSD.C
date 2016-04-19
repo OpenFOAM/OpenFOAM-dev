@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,7 +161,7 @@ void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& pc = tPc();
+    volScalarField& pc = tPc.ref();
 
     tmp<volScalarField> tomegaFuel
     (
@@ -185,7 +185,7 @@ void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& omegaFuelBar = tomegaFuel();
+    volScalarField& omegaFuelBar = tomegaFuel.ref();
 
     // Calculation of the mixture fraction variance (ftVar)
     const compressible::LESModel& lesModel =
@@ -311,7 +311,7 @@ void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& products = tproducts();
+    volScalarField& products = tproducts.ref();
 
     forAll(productsIndex, j)
     {

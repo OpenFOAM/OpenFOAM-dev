@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,10 +94,10 @@ Foam::scalar Foam::Rosenbrock23::solve
     {
         for (label j=0; j<n_; j++)
         {
-            a_[i][j] = -dfdy_[i][j];
+            a_(i, j) = -dfdy_(i, j);
         }
 
-        a_[i][i] += 1.0/(gamma*dx);
+        a_(i, i) += 1.0/(gamma*dx);
     }
 
     LUDecompose(a_, pivotIndices_);

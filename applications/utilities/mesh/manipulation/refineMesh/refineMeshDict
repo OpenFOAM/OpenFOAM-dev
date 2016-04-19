@@ -22,8 +22,12 @@ set c0;
 //   x,y,z axis. Specify in globalCoeffs section below.
 // - patchLocal : coordinate system different for every cell. Specify in
 //   patchLocalCoeffs section below.
+// - fieldBased : uses the list of field names from the directions list for
+//   selecting the directions to cut. Meant to be used with geometricCut, but
+//   can also be used with useHexTopology.
 coordinateSystem global;
 //coordinateSystem patchLocal;
+//coordinateSystem fieldBased;
 
 // .. and its coefficients. x,y in this case. (normal direction is calculated
 // as tan1^tan2)
@@ -39,13 +43,22 @@ patchLocalCoeffs
     tan1 (1 0 0);
 }
 
-// List of directions to refine
+// List of directions to refine, if global or patchLocal
 directions
 (
     tan1
     tan2
     normal
 );
+
+// List of directions to refine, if "fieldBased". Keep in mind that these
+// fields must be of type "vectorField", not "volVectorField".
+//directions
+//(
+//    radialDirectionFieldName
+//    angularDirectionFieldName
+//    heightDirectionFieldName
+//);
 
 // Whether to use hex topology. This will
 // - if patchLocal: all cells on selected patch should be hex

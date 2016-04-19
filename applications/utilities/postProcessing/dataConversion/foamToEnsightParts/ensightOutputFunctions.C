@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,7 +182,7 @@ void Foam::ensightLagrangianField
 
         if (mag(val) < 1.0e-90)
         {
-            val = pTraits<Type>::zero;
+            val = Zero;
         }
 
         for (direction cmpt=0; cmpt < pTraits<Type>::nComponents; cmpt++)
@@ -206,7 +206,6 @@ void Foam::ensightLagrangianField
 }
 
 
-//- Write generalized field components
 template<class Type>
 void Foam::ensightVolField
 (

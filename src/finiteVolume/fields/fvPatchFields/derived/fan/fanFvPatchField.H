@@ -213,7 +213,7 @@ fanFvPatchField<scalar>::fanFvPatchField
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "fanFvPatchField.C"
+    #include "fanFvPatchField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

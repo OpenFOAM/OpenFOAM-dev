@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ phaseHydrostaticPressureFvPatchScalarField
     phaseName_("alpha"),
     rho_(0.0),
     pRefValue_(0.0),
-    pRefPoint_(vector::zero)
+    pRefPoint_(Zero)
 {
     this->refValue() = 0.0;
     this->refGrad() = 0.0;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(meshDualiser, 0);
+    defineTypeNameAndDebug(meshDualiser, 0);
 }
 
 
@@ -123,8 +123,6 @@ void Foam::meshDualiser::dumpPolyTopoChange
 }
 
 
-//- Given cell and point on mesh finds the corresponding dualCell. Most
-//  points become only one cell but the feature points might be split.
 Foam::label Foam::meshDualiser::findDualCell
 (
     const label cellI,
@@ -146,8 +144,6 @@ Foam::label Foam::meshDualiser::findDualCell
 }
 
 
-// Helper function to generate dualpoints on all boundary edges emanating
-// from (boundary & feature) point
 void Foam::meshDualiser::generateDualBoundaryEdges
 (
     const PackedBoolList& isBoundaryEdge,

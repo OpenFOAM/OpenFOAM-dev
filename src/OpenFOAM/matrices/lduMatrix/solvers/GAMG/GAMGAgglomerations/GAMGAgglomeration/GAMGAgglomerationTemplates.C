@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ void Foam::GAMGAgglomeration::gatherList
         allVals.setSize(procIDs.size());
 
         allVals[0] = myVal;
-        for (label i = 1; i < procIDs.size(); i++)
+        for (label i=1; i<procIDs.size(); i++)
         {
             IPstream fromSlave
             (
@@ -81,7 +81,7 @@ void Foam::GAMGAgglomeration::restrictField
     const labelList& fineToCoarse
 ) const
 {
-    cf = pTraits<Type>::zero;
+    cf = Zero;
 
     forAll(ff, i)
     {
@@ -153,7 +153,7 @@ void Foam::GAMGAgglomeration::restrictFaceField
             << abort(FatalError);
     }
 
-    cf = pTraits<Type>::zero;
+    cf = Zero;
 
     forAll(fineToCoarse, ffacei)
     {

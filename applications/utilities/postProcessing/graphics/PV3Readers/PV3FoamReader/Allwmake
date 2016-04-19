@@ -1,10 +1,14 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
 if [ -d "$ParaView_DIR" -a -r "$ParaView_DIR" ]
 then
-    wmake libso vtkPV3Foam
+    wmake $targetType vtkPV3Foam
     (
         cd PV3FoamReader
         mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
@@ -14,4 +18,4 @@ then
     )
 fi
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

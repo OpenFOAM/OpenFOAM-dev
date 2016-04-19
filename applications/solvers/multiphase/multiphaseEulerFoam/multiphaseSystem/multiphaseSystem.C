@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,6 @@ void Foam::multiphaseSystem::calcAlphas()
         alphas_ += level*iter();
         level += 1.0;
     }
-
-    alphas_.correctBoundaryConditions();
 }
 
 
@@ -374,7 +372,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(phase1, phase2);
 
-    correctContactAngle(phase1, phase2, tnHatfv().boundaryField());
+    correctContactAngle(phase1, phase2, tnHatfv.ref().boundaryField());
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());
@@ -417,8 +415,7 @@ Foam::multiphaseSystem::multiphaseSystem
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("alphas", dimless, 0.0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar("alphas", dimless, 0.0)
     ),
 
     sigmas_(lookup("sigmas")),
@@ -496,10 +493,11 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::rho() const
     PtrDictionary<phaseModel>::const_iterator iter = phases_.begin();
 
     tmp<volScalarField> trho = iter()*iter().rho();
+    volScalarField& rho = trho.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        trho() += iter()*iter().rho();
+        rho += iter()*iter().rho();
     }
 
     return trho;
@@ -512,10 +510,11 @@ Foam::multiphaseSystem::rho(const label patchi) const
     PtrDictionary<phaseModel>::const_iterator iter = phases_.begin();
 
     tmp<scalarField> trho = iter().boundaryField()[patchi]*iter().rho().value();
+    scalarField& rho = trho.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        trho() += iter().boundaryField()[patchi]*iter().rho().value();
+        rho += iter().boundaryField()[patchi]*iter().rho().value();
     }
 
     return trho;
@@ -527,10 +526,11 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::nu() const
     PtrDictionary<phaseModel>::const_iterator iter = phases_.begin();
 
     tmp<volScalarField> tmu = iter()*(iter().rho()*iter().nu());
+    volScalarField& mu = tmu.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        tmu() += iter()*(iter().rho()*iter().nu());
+        mu += iter()*(iter().rho()*iter().nu());
     }
 
     return tmu/rho();
@@ -545,10 +545,11 @@ Foam::multiphaseSystem::nu(const label patchi) const
     tmp<scalarField> tmu =
         iter().boundaryField()[patchi]
        *(iter().rho().value()*iter().nu().value());
+    scalarField& mu = tmu.ref();
 
     for (++iter; iter != phases_.end(); ++iter)
     {
-        tmu() +=
+        mu +=
             iter().boundaryField()[patchi]
            *(iter().rho().value()*iter().nu().value());
     }
@@ -595,7 +596,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::Cvm
 
             if (Cvm != Cvms_.end())
             {
-                tCvm() += Cvm()*phase2.rho()*phase2;
+                tCvm.ref() += Cvm()*phase2.rho()*phase2;
             }
             else
             {
@@ -603,7 +604,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::Cvm
 
                 if (Cvm != Cvms_.end())
                 {
-                    tCvm() += Cvm()*phase.rho()*phase2;
+                    tCvm.ref() += Cvm()*phase.rho()*phase2;
                 }
             }
         }
@@ -633,7 +634,7 @@ Foam::tmp<Foam::volVectorField> Foam::multiphaseSystem::Svm
             (
                 "Svm",
                 dimensionSet(1, -2, -2, 0, 0),
-                vector::zero
+                Zero
             )
         )
     );
@@ -651,7 +652,7 @@ Foam::tmp<Foam::volVectorField> Foam::multiphaseSystem::Svm
 
             if (Cvm != Cvms_.end())
             {
-                tSvm() += Cvm()*phase2.rho()*phase2*phase2.DDtU();
+                tSvm.ref() += Cvm()*phase2.rho()*phase2*phase2.DDtU();
             }
             else
             {
@@ -659,7 +660,7 @@ Foam::tmp<Foam::volVectorField> Foam::multiphaseSystem::Svm
 
                 if (Cvm != Cvms_.end())
                 {
-                    tSvm() += Cvm()*phase.rho()*phase2*phase2.DDtU();
+                    tSvm.ref() += Cvm()*phase.rho()*phase2*phase2.DDtU();
                 }
             }
         }
@@ -676,7 +677,7 @@ Foam::tmp<Foam::volVectorField> Foam::multiphaseSystem::Svm
             )
         )
         {
-            tSvm().boundaryField()[patchi] = vector::zero;
+            tSvm.ref().boundaryField()[patchi] = Zero;
         }
     }
 
@@ -775,7 +776,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::dragCoeff
          || &phase == &dmIter()->phase2()
         )
         {
-            tdragCoeff() += *dcIter();
+            tdragCoeff.ref() += *dcIter();
         }
     }
 
@@ -821,7 +822,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
 
             if (sigma != sigmas_.end())
             {
-                tSurfaceTension() +=
+                tSurfaceTension.ref() +=
                     dimensionedScalar("sigma", dimSigma_, sigma())
                    *fvc::interpolate(K(phase1, phase2))*
                     (
@@ -856,7 +857,7 @@ Foam::multiphaseSystem::nearInterface() const
 
     forAllConstIter(PtrDictionary<phaseModel>, phases_, iter)
     {
-        tnearInt() = max(tnearInt(), pos(iter() - 0.01)*pos(0.99 - iter()));
+        tnearInt.ref() = max(tnearInt(), pos(iter() - 0.01)*pos(0.99 - iter()));
     }
 
     return tnearInt;

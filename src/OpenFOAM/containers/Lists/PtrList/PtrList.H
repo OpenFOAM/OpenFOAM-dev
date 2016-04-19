@@ -161,7 +161,7 @@ public:
         PtrList(const Xfer<PtrList<T>>&);
 
         //- Construct as copy or re-use as specified.
-        PtrList(PtrList<T>&, bool reUse);
+        PtrList(PtrList<T>&, bool reuse);
 
         //- Construct as copy of SLPtrList<T>
         explicit PtrList(const SLPtrList<T>&);
@@ -432,12 +432,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "PtrListI.H"
+    #include "PtrListI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "PtrList.C"
+    #include "PtrList.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

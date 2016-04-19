@@ -30,13 +30,17 @@ Description
 SourceFiles
     tmpI.H
 
+SeeAlso
+    Foam::refCount
+    Foam::autoPtr
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef tmp_H
 #define tmp_H
 
 #include "refCount.H"
-#include <cstddef>
+#include "word.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,17 +56,29 @@ class tmp
 {
     // Private data
 
-        //- Flag for whether object is a temporary or a constant object
-        bool isTmp_;
+        //- Object types
+        enum type
+        {
+            TMP,
+            CONST_REF
+        };
 
-        //- Pointer to temporary object
+        //- Type of object
+        type type_;
+
+        //- Pointer to object
         mutable T* ptr_;
 
-        //- Const reference to constant object
-        const T& ref_;
+
+    // Private member operators
+
+        inline void operator++();
 
 
 public:
+
+    typedef Foam::refCount refCount;
+
 
     // Constructors
 
@@ -79,7 +95,7 @@ public:
         inline tmp(const tmp<T>&, bool allowTransfer);
 
 
-    //- Destructor, delete object when reference count == 0
+    //- Destructor: deletes temporary object when the reference count is 0
     inline ~tmp();
 
 
@@ -98,9 +114,19 @@ public:
             //  ie, it is a reference or a temporary that has been allocated
             inline bool valid() const;
 
+            //- Return the type name of the tmp
+            //  constructed from the type name of T
+            inline word typeName() const;
+
+
         // Edit
 
-            //- Return tmp pointer for reuse
+            //- Return non-const reference or generate a fatal error
+            //  if the object is const.
+            inline T& ref();
+
+            //- Return tmp pointer for reuse.
+            //  Returns a clone if the object is not a temporary
             inline T* ptr() const;
 
             //- If object pointer points to valid object:
@@ -110,8 +136,11 @@ public:
 
     // Member operators
 
-        //- Dereference operator
+        #ifdef NON_CONST_TMP
+        //- Deprecated non-const dereference operator.
+        //  Use ref() where non-const access is required
         inline T& operator()();
+        #endif
 
         //- Const dereference operator
         inline const T& operator()() const;

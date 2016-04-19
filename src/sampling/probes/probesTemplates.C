@@ -34,7 +34,6 @@ License
 namespace Foam
 {
 
-//- Comparison operator for probes class
 template<class T>
 class isNotEqOp
 {
@@ -225,7 +224,7 @@ Foam::probes::sample
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     if (fixedLocations_)
     {
@@ -295,7 +294,7 @@ Foam::probes::sample
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     forAll(*this, probeI)
     {

@@ -1,29 +1,32 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 
+# Any cases that are links to solver test cases and are run when the Allrun
+# scripts of those solvers are run.  This script avoids meshing these cases
+# twice.
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 (
     cd blob || exit
-    ./Allrun
-)
-(
-    cd flange || exit
-    ./Allrun
+    ./Allrun $*
 )
 (
     cd simpleShapes || exit
-    ./Allrun
-)
-(
-    cd mixerVessel || exit
-    ./Allrun
+    ./Allrun $*
 )
 
-exit 0
+if ! isTest $@
+then
+    (
+        cd flange || exit
+        ./Allrun $*
+    )
+    (
+        cd mixerVessel || exit
+        ./Allrun $*
+    )
+fi
 
-# Any cases that are links to solver test cases and are run when the Allrun
-# scripts of those solvers are run.
-
-# This dummy Allrun script avoids meshing these cases twice.
-
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

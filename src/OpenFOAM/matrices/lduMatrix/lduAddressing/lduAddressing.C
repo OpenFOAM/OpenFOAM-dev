@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,6 @@ const Foam::labelUList& Foam::lduAddressing::losortStartAddr() const
 }
 
 
-// Return edge index given owner and neighbour label
 Foam::label Foam::lduAddressing::triIndex(const label a, const label b) const
 {
     label own = min(a, b);
@@ -228,7 +227,7 @@ Foam::label Foam::lduAddressing::triIndex(const label a, const label b) const
 
     const labelUList& neighbour = upperAddr();
 
-    for (label i = startLabel; i < endLabel; i++)
+    for (label i=startLabel; i<endLabel; i++)
     {
         if (neighbour[i] == nbr)
         {

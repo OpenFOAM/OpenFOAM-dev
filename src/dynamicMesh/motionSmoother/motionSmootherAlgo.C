@@ -119,7 +119,7 @@ Foam::tmp<Foam::scalarField> Foam::motionSmootherAlgo::calcEdgeWeights
     const edgeList& edges = mesh_.edges();
 
     tmp<scalarField> twght(new scalarField(edges.size()));
-    scalarField& wght = twght();
+    scalarField& wght = twght.ref();
 
     forAll(edges, edgeI)
     {
@@ -815,7 +815,7 @@ Foam::tmp<Foam::pointField> Foam::motionSmootherAlgo::curPoints() const
     tmp<pointField> tnewPoints(oldPoints_ + totalDisplacement.internalField());
 
     // Correct for 2-D motion
-    modifyMotionPoints(tnewPoints());
+    modifyMotionPoints(tnewPoints.ref());
 
     return tnewPoints;
 }

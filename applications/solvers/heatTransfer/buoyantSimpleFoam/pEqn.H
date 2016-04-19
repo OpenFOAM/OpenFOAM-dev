@@ -2,17 +2,17 @@
     rho = thermo.rho();
     rho.relax();
 
-    volScalarField rAU("rAU", 1.0/UEqn().A());
+    volScalarField rAU("rAU", 1.0/UEqn.A());
     surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-    volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p_rgh));
-    UEqn.clear();
+    volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_rgh));
+    tUEqn.clear();
 
     surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
 
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
-        (fvc::interpolate(rho*HbyA) & mesh.Sf())
+        fvc::flux(rho*HbyA)
     );
 
     MRF.makeRelative(fvc::interpolate(rho), phiHbyA);

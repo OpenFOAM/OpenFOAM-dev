@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,8 +121,7 @@ int main(int argc, char *argv[])
     U.correctBoundaryConditions();
 
     Info<< "Interpolated velocity error = "
-        << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
-          /sum(mesh.magSf())).value()
+        << (sqrt(sum(sqr(fvc::flux(U) - phi)))/sum(mesh.magSf())).value()
         << endl;
 
     // Write U and phi

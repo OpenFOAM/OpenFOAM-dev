@@ -8,14 +8,18 @@ cd ${0%/*} || exit 1    # Run from this directory
 application=`getApplication`
 
 runApplication blockMesh
-runApplication topoSet
-mv log.topoSet log.topoSet.1
+
+runApplication -s 1  topoSet
+
 runApplication subsetMesh -overwrite c0 -patch floatingObject
-runApplication topoSet -dict system/topoSetDict-selectBottom
+
+runApplication -s selectBottom \
+    topoSet -dict system/topoSetDict-selectBottom
+
 runApplication createPatch -overwrite
 
 cp -r 0.org 0 > /dev/null 2>&1
 
 runApplication $application
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

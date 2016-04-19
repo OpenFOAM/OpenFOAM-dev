@@ -203,7 +203,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
         )
     );
 
-    volVectorField& Kappa = tKappa();
+    volVectorField& Kappa = tKappa.ref();
     vectorField& KappaCells = Kappa.internalField();
     const scalarField& TCells = this->T_.internalField();
     const scalarField& pCells = this->p_.internalField();
@@ -253,7 +253,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa
     const scalarField& Tp = this->T_.boundaryField()[patchi];
     tmp<vectorField> tKappa(new vectorField(pp.size()));
 
-    vectorField& Kappap = tKappa();
+    vectorField& Kappap = tKappa.ref();
 
     forAll(Tp, facei)
     {

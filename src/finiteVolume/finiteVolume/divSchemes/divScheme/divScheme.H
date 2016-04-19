@@ -64,7 +64,7 @@ namespace fv
 template<class Type>
 class divScheme
 :
-    public refCount
+    public tmp<divScheme<Type>>::refCount
 {
 
 protected:
@@ -187,7 +187,7 @@ makeFvDivTypeScheme(SS, tensor)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "divScheme.C"
+    #include "divScheme.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

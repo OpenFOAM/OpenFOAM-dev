@@ -57,11 +57,11 @@ tmp<volScalarField> CoEulerDdtScheme<Type>::CorDeltaT() const
             ),
             mesh(),
             dimensionedScalar("CorDeltaT", cofrDeltaT.dimensions(), 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    volScalarField& corDeltaT = tcorDeltaT();
+    volScalarField& corDeltaT = tcorDeltaT.ref();
 
     const labelUList& owner = mesh().owner();
     const labelUList& neighbour = mesh().neighbour();
@@ -178,12 +178,12 @@ CoEulerDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 )
             )
         );
 
-        tdtdt().internalField() =
+        tdtdt.ref().internalField() =
             rDeltaT.internalField()*dt.value()
            *(1.0 - mesh().Vsc0()/mesh().Vsc());
 
@@ -201,7 +201,7 @@ CoEulerDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 ),
                 calculatedFvPatchField<Type>::typeName
             )
@@ -453,7 +453,7 @@ CoEulerDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(CorDeltaT()().internalField());
 
@@ -488,7 +488,7 @@ CoEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(CorDeltaT()().internalField());
 
@@ -525,7 +525,7 @@ CoEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(CorDeltaT()().internalField());
 
@@ -565,7 +565,7 @@ CoEulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT(CorDeltaT()().internalField());
 
@@ -600,9 +600,10 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(CorDeltaT()));
 
+    fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
     fluxFieldType phiCorr
     (
-        mesh().Sf() & (Uf.oldTime() - fvc::interpolate(U.oldTime()))
+        phiUf0 - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
     );
 
     return tmp<fluxFieldType>
@@ -615,12 +616,7 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
                 mesh().time().timeName(),
                 mesh()
             ),
-            this->fvcDdtPhiCoeff
-            (
-                U.oldTime(),
-                (mesh().Sf() & Uf.oldTime()),
-                phiCorr
-            )
+            this->fvcDdtPhiCoeff(U.oldTime(), phiUf0, phiCorr)
            *rDeltaT*phiCorr
         )
     );
@@ -639,7 +635,7 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 
     fluxFieldType phiCorr
     (
-        phi.oldTime() - (mesh().Sf() & fvc::interpolate(U.oldTime()))
+        phi.oldTime() - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
     );
 
     return tmp<fluxFieldType>
@@ -681,10 +677,8 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
             rho.oldTime()*U.oldTime()
         );
 
-        fluxFieldType phiCorr
-        (
-            mesh().Sf() & (Uf.oldTime() - fvc::interpolate(rhoU0))
-        );
+        fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
+        fluxFieldType phiCorr(phiUf0 - fvc::dotInterpolate(mesh().Sf(), rhoU0));
 
         return tmp<fluxFieldType>
         (
@@ -697,13 +691,7 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
                     mesh().time().timeName(),
                     mesh()
                 ),
-                this->fvcDdtPhiCoeff
-                (
-                    rhoU0,
-                    mesh().Sf() & Uf.oldTime(),
-                    phiCorr
-                )
-               *rDeltaT*phiCorr
+                this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr)*rDeltaT*phiCorr
             )
         );
     }
@@ -750,7 +738,7 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 
         fluxFieldType phiCorr
         (
-            phi.oldTime() - (mesh().Sf() & fvc::interpolate(rhoU0))
+            phi.oldTime() - fvc::dotInterpolate(mesh().Sf(), rhoU0)
         );
 
         return tmp<fluxFieldType>

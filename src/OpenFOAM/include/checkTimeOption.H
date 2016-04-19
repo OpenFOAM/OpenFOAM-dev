@@ -1,6 +1,3 @@
-//
-// checkTimeOption.H
-// ~~~~~~~~~~~~~~~~~
 // Check -time and -latestTime options
 
 if (args.optionFound("time"))

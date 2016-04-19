@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
 
         // number of vertices for this zone
         label  nZonePoints = 0;
-        vector location(pTraits<vector>::zero);
+        vector location(Zero);
         // tensor rotation(I);
 
         // Read all info for current zone

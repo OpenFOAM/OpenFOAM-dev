@@ -104,4 +104,7 @@ extrudePatchMesh/extrudePatchMesh.C
 polyMeshFilter/polyMeshFilterSettings.C
 polyMeshFilter/polyMeshFilter.C
 
+pointPatchDist/externalPointEdgePoint.C
+pointPatchDist/pointPatchDist.C
+
 LIB = $(FOAM_LIBBIN)/libdynamicMesh

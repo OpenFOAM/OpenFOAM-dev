@@ -392,7 +392,7 @@ void Foam::DSMCCloud<ParcelType>::resetFields()
     (
         "zero",
         dimensionSet(1, -1, -2, 0, 0),
-        vector::zero
+        Zero
     );
 
     rhoN_ = dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), VSMALL);
@@ -406,7 +406,7 @@ void Foam::DSMCCloud<ParcelType>::resetFields()
     (
         "zero",
         dimensionSet(1, -2, -1, 0, 0),
-        vector::zero
+        Zero
     );
 }
 
@@ -800,7 +800,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         (
             "zero",
             dimensionSet(1, -1, -2, 0, 0),
-            vector::zero
+            Zero
         )
     ),
     rhoN_
@@ -896,7 +896,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         (
             "zero",
             dimensionSet(1, -2, -1, 0, 0),
-            vector::zero
+            Zero
         )
     ),
     constProps_(),
@@ -934,7 +934,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             (
                 "zero",
                 dimensionSet(0, 1, -1, 0, 0),
-                vector::zero
+                Zero
             )
         )
     ),

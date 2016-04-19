@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ Foam::cylindrical::cylindrical
 :
     Rptr_(),
     origin_(point::zero),
-    e3_(vector::zero)
+    e3_(Zero)
 {
     // If origin is specified in the coordinateSystem
     if (dict.parent().found("origin"))
@@ -165,8 +165,8 @@ Foam::cylindrical::cylindrical(const dictionary& dict)
 Foam::cylindrical::cylindrical(const tensorField& R)
 :
     Rptr_(),
-    origin_(vector::zero),
-    e3_(vector::zero)
+    origin_(Zero),
+    e3_(Zero)
 {
     Rptr_() = R;
 }
@@ -222,7 +222,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindrical::transform
 Foam::vector Foam::cylindrical::transform(const vector& v) const
 {
     NotImplemented;
-    return vector::zero;
+    return Zero;
 }
 
 
@@ -248,7 +248,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindrical::invTransform
 Foam::vector Foam::cylindrical::invTransform(const vector& v) const
 {
     NotImplemented;
-    return vector::zero;
+    return Zero;
 }
 
 
@@ -284,7 +284,7 @@ Foam::tensor Foam::cylindrical::transformTensor
 {
     NotImplemented;
 
-    return tensor::zero;
+    return Zero;
 }
 
 
@@ -304,7 +304,7 @@ Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
     const tensorField& R = Rptr_();
     const tensorField Rtr(R.T());
     tmp<tensorField> tt(new tensorField(cellMap.size()));
-    tensorField& t = tt();
+    tensorField& t = tt.ref();
     forAll(cellMap, i)
     {
         const label cellI = cellMap[i];
@@ -328,7 +328,7 @@ Foam::tmp<Foam::symmTensorField> Foam::cylindrical::transformVector
     }
 
     tmp<symmTensorField> tfld(new symmTensorField(Rptr_->size()));
-    symmTensorField& fld = tfld();
+    symmTensorField& fld = tfld.ref();
 
     const tensorField& R = Rptr_();
     forAll(fld, i)
@@ -345,7 +345,7 @@ Foam::symmTensor Foam::cylindrical::transformVector
 ) const
 {
     NotImplemented;
-    return symmTensor::zero;
+    return Zero;
 }
 
 

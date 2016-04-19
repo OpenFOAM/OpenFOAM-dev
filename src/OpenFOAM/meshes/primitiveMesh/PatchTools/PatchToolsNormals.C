@@ -59,7 +59,7 @@ Foam::PatchTools::pointNormals
     // patch points since the master point does not have to be on the
     // patch!
 
-    pointField coupledPointNormals(map.constructSize(), vector::zero);
+    pointField coupledPointNormals(map.constructSize(), Zero);
 
     {
         // Collect local pointFaces (sized on patch points only)
@@ -158,8 +158,8 @@ Foam::PatchTools::pointNormals
     // 1. Start off with local normals (note:without calculating pointNormals
     //    to avoid them being stored)
 
-    tmp<pointField> textrudeN(new pointField(p.nPoints(), vector::zero));
-    pointField& extrudeN = textrudeN();
+    tmp<pointField> textrudeN(new pointField(p.nPoints(), Zero));
+    pointField& extrudeN = textrudeN.ref();
     {
         const faceList& localFaces = p.localFaces();
         const vectorField& faceNormals = p.faceNormals();
@@ -212,8 +212,8 @@ Foam::PatchTools::edgeNormals
 {
     // 1. Start off with local normals
 
-    tmp<pointField> tedgeNormals(new pointField(p.nEdges(), vector::zero));
-    pointField& edgeNormals = tedgeNormals();
+    tmp<pointField> tedgeNormals(new pointField(p.nEdges(), Zero));
+    pointField& edgeNormals = tedgeNormals.ref();
     {
         const labelListList& edgeFaces = p.edgeFaces();
         const vectorField& faceNormals = p.faceNormals();
@@ -239,7 +239,7 @@ Foam::PatchTools::edgeNormals
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     //- Construct with all data in consistent orientation
-    pointField cppEdgeData(map.constructSize(), vector::zero);
+    pointField cppEdgeData(map.constructSize(), Zero);
 
     forAll(patchEdges, i)
     {

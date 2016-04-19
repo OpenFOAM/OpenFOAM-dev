@@ -624,8 +624,6 @@ Foam::scalar Foam::triSurfaceTools::edgeCosAngle
 }
 
 
-//- Calculate minimum (cos of) edge angle using addressing from collapsing
-//  edge to v1 at pt.
 Foam::scalar Foam::triSurfaceTools::collapseMinCosAngle
 (
     const triSurface& surf,
@@ -2120,7 +2118,7 @@ Foam::vector Foam::triSurfaceTools::surfaceNormal
         // Calculate edge normal by averaging face normals
         const labelList& eFaces = surf.edgeFaces()[edgeI];
 
-        vector edgeNormal(vector::zero);
+        vector edgeNormal(Zero);
 
         forAll(eFaces, i)
         {

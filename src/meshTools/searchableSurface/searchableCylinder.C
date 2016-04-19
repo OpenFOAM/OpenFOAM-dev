@@ -30,10 +30,8 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(searchableCylinder, 0);
-addToRunTimeSelectionTable(searchableSurface, searchableCylinder, dict);
-
+    defineTypeNameAndDebug(searchableCylinder, 0);
+    addToRunTimeSelectionTable(searchableSurface, searchableCylinder, dict);
 }
 
 
@@ -67,7 +65,7 @@ void Foam::searchableCylinder::boundingSpheres
 Foam::tmp<Foam::pointField> Foam::searchableCylinder::points() const
 {
     tmp<pointField> tPts(new pointField(2));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     pts[0] = point1_;
     pts[1] = point2_;
@@ -95,7 +93,7 @@ Foam::pointIndexHit Foam::searchableCylinder::findNearest
 
     if (magV < ROOTVSMALL)
     {
-        v = vector::zero;
+        v = Zero;
     }
     else
     {
@@ -653,7 +651,7 @@ void Foam::searchableCylinder::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
 
     forAll(info, i)
     {

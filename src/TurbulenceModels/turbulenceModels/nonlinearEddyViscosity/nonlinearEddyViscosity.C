@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::nonlinearEddyViscosity<BasicTurbulenceModel>::nonlinearEddyViscosity
         (
             "nonlinearStress",
             sqr(dimVelocity),
-            symmTensor::zero
+            Zero
         )
     )
 {}
@@ -83,7 +83,7 @@ Foam::nonlinearEddyViscosity<BasicTurbulenceModel>::R() const
     (
         eddyViscosity<BasicTurbulenceModel>::R()
     );
-    tR() += nonlinearStress_;
+    tR.ref() += nonlinearStress_;
     return tR;
 }
 
@@ -96,7 +96,7 @@ Foam::nonlinearEddyViscosity<BasicTurbulenceModel>::devRhoReff() const
     (
         eddyViscosity<BasicTurbulenceModel>::devRhoReff()
     );
-    tdevRhoReff() += this->rho_*nonlinearStress_;
+    tdevRhoReff.ref() += this->rho_*nonlinearStress_;
     return tdevRhoReff;
 }
 

@@ -39,7 +39,7 @@ Description
 #include <cstring>
 
 #if defined (__GLIBC__)
-#  include <endian.h>
+    #include <endian.h>
 #endif
 
 
@@ -57,29 +57,9 @@ static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */ };
 inline uint32_t Foam::SHA1::swapBytes(uint32_t n)
 {
     #ifdef __BYTE_ORDER
-    # if (__BYTE_ORDER == __BIG_ENDIAN)
-    return n;
-    # else
-    return
-    (
-        ((n) << 24)
-      | (((n) & 0xff00) << 8)
-      | (((n) >> 8) & 0xff00)
-      | ((n) >> 24)
-    );
-    # endif
-
-    #else
-
-    const short x = 0x0100;
-
-    // yields 0x01 for big endian
-    if (*(reinterpret_cast<const char*>(&x)))
-    {
+        #if (__BYTE_ORDER == __BIG_ENDIAN)
         return n;
-    }
-    else
-    {
+        #else
         return
         (
             ((n) << 24)
@@ -87,7 +67,25 @@ inline uint32_t Foam::SHA1::swapBytes(uint32_t n)
           | (((n) >> 8) & 0xff00)
           | ((n) >> 24)
         );
-    }
+        #endif
+    #else
+        const short x = 0x0100;
+
+        // yields 0x01 for big endian
+        if (*(reinterpret_cast<const char*>(&x)))
+        {
+            return n;
+        }
+        else
+        {
+            return
+            (
+                ((n) << 24)
+              | (((n) & 0xff00) << 8)
+              | (((n) >> 8) & 0xff00)
+              | ((n) >> 24)
+            );
+        }
     #endif
 }
 

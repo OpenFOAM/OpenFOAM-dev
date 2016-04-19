@@ -286,7 +286,7 @@ Foam::tmp<Foam::Field<Type>> Foam::LduMatrix<Type, DType, LUType>::residual
 ) const
 {
     tmp<Field<Type>> trA(new Field<Type>(psi.size()));
-    residual(trA(), psi);
+    residual(trA.ref(), psi);
     return trA;
 }
 

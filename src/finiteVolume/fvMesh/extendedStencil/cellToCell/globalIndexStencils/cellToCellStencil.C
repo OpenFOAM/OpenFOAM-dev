@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Merge two list and guarantee global0,global1 are first.
 void Foam::cellToCellStencil::merge
 (
     const label global0,
@@ -131,7 +130,6 @@ void Foam::cellToCellStencil::merge
 }
 
 
-// Merge two list and guarantee globalI is first.
 void Foam::cellToCellStencil::merge
 (
     const label globalI,

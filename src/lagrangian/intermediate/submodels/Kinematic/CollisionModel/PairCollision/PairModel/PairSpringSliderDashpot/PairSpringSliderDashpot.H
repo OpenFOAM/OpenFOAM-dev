@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,7 +140,7 @@ public:
         // centres separated by a distance rAB.  Assumes rAB < (rA + rB).
         inline scalar overlapArea(scalar rA, scalar rB, scalar rAB) const
         {
-            // From:
+            // Reference:
             // http://mathworld.wolfram.com/Sphere-SphereIntersection.html
             return
                 mathematical::pi/4.0
@@ -178,7 +178,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "PairSpringSliderDashpot.C"
+    #include "PairSpringSliderDashpot.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

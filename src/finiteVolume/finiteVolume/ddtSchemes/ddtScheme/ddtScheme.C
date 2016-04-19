@@ -148,7 +148,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
             scalar(1)
         );
 
-    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
 
     forAll(U.boundaryField(), patchi)
     {
@@ -183,7 +183,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
     const fluxFieldType& phi
 )
 {
-    return fvcDdtPhiCoeff(U, phi, phi - (mesh().Sf() & fvc::interpolate(U)));
+    return fvcDdtPhiCoeff(U, phi, phi - fvc::dotInterpolate(mesh().Sf(), U));
 }
 
 

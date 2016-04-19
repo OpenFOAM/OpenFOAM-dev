@@ -116,14 +116,14 @@ Foam::fvPatchField<Type>::fvPatchField
 {
     if (dict.found("value"))
     {
-        fvPatchField<Type>::operator=
+        Field<Type>::operator=
         (
             Field<Type>("value", dict, p.size())
         );
     }
     else if (!valueRequired)
     {
-        fvPatchField<Type>::operator=(pTraits<Type>::zero);
+        Field<Type>::operator=(Zero);
     }
     else
     {
@@ -558,7 +558,6 @@ void Foam::fvPatchField<Type>::operator/=
 }
 
 
-// Force an assignment, overriding fixedValue status
 template<class Type>
 void Foam::fvPatchField<Type>::operator==
 (
@@ -604,6 +603,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const fvPatchField<Type>& ptf)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "fvPatchFieldNew.C"
+    #include "fvPatchFieldNew.C"
 
 // ************************************************************************* //

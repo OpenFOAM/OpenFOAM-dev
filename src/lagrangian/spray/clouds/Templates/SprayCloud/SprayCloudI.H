@@ -138,7 +138,7 @@ inline Foam::scalar Foam::SprayCloud<CloudType>::penetration
                 allMass,
                 globalParcels.localSize(procI),
                 globalParcels.offset(procI)
-            ).assign(procMass[procI]);
+            ) = procMass[procI];
 
             // flatten the distance list
             SubList<scalar>
@@ -146,7 +146,7 @@ inline Foam::scalar Foam::SprayCloud<CloudType>::penetration
                 allDist,
                 globalParcels.localSize(procI),
                 globalParcels.offset(procI)
-            ).assign(procDist[procI]);
+            ) = procDist[procI];
         }
 
         // sort allDist distances into ascending order

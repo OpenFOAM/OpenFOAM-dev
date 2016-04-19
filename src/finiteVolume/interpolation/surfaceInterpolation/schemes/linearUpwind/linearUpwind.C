@@ -51,11 +51,11 @@ Foam::linearUpwind<Type>::correction
                 false
             ),
             mesh,
-            dimensioned<Type>(vf.name(), vf.dimensions(), pTraits<Type>::zero)
+            dimensioned<Type>(vf.name(), vf.dimensions(), Zero)
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
 

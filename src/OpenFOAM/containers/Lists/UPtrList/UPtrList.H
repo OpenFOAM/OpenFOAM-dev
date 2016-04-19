@@ -113,7 +113,7 @@ public:
         UPtrList(const Xfer<UPtrList<T>>&);
 
         //- Construct as copy or re-use as specified.
-        UPtrList(UPtrList<T>&, bool reUse);
+        UPtrList(UPtrList<T>&, bool reuse);
 
 
     // Member functions
@@ -273,12 +273,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "UPtrListI.H"
+#include "UPtrListI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "UPtrList.C"
+    #include "UPtrList.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

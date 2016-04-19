@@ -53,7 +53,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
         this->tsnGradScheme_().deltaCoeffs(vf),                                \
         vf                                                                     \
     );                                                                         \
-    fvMatrix<Type>& fvm = tfvm();                                              \
+    fvMatrix<Type>& fvm = tfvm.ref();                                          \
                                                                                \
     if (this->tsnGradScheme_().corrected())                                    \
     {                                                                          \
@@ -102,7 +102,10 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvcLaplacian         \
         fvc::div(gamma*this->tsnGradScheme_().snGrad(vf)*mesh.magSf())         \
     );                                                                         \
                                                                                \
-    tLaplacian().rename("laplacian(" + gamma.name() + ',' + vf.name() + ')');\
+    tLaplacian.ref().rename                                                    \
+    (                                                                          \
+        "laplacian(" + gamma.name() + ',' + vf.name() + ')'                    \
+    );                                                                         \
                                                                                \
     return tLaplacian;                                                         \
 }

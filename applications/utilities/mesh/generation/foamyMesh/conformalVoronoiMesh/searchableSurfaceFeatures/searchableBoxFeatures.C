@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ Foam::searchableBoxFeatures::features() const
     edgeNormals[11][0] = 3; edgeNormals[11][1] = 0;
 
     tmp<pointField> surfacePointsTmp(surface().points());
-    pointField& surfacePoints = surfacePointsTmp();
+    pointField& surfacePoints = surfacePointsTmp.ref();
 
     forAll(edgeDirections, eI)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,33 +28,49 @@ Description
 
 #include "vector2D.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const vector2D::typeName = "vector2D";
+const char* const Foam::vector2D::vsType::typeName = "vector2D";
 
 template<>
-const char* vector2D::componentNames[] = {"x", "y"};
+const char* const Foam::vector2D::vsType::componentNames[] = {"x", "y"};
 
 template<>
-const vector2D vector2D::zero(0, 0);
+const Foam::vector2D Foam::vector2D::vsType::vsType::zero
+(
+    vector2D::uniform(0)
+);
 
 template<>
-const vector2D vector2D::one(1, 1);
+const Foam::vector2D Foam::vector2D::vsType::one
+(
+    vector2D::uniform(1)
+);
 
 template<>
-const vector2D vector2D::max(VGREAT, VGREAT);
+const Foam::vector2D Foam::vector2D::vsType::max
+(
+    vector2D::uniform(VGREAT)
+);
 
 template<>
-const vector2D vector2D::min(-VGREAT, -VGREAT);
+const Foam::vector2D Foam::vector2D::vsType::min
+(
+    vector2D::uniform(-VGREAT)
+);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<>
+const Foam::vector2D Foam::vector2D::vsType::rootMax
+(
+    vector2D::uniform(ROOTVGREAT)
+);
 
-} // End namespace Foam
+template<>
+const Foam::vector2D Foam::vector2D::vsType::rootMin
+(
+    vector2D::uniform(-ROOTVGREAT)
+);
+
 
 // ************************************************************************* //

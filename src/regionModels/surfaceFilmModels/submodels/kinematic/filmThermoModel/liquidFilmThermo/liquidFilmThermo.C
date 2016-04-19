@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "demandDrivenData.H"
 #include "thermoSingleLayer.H"
 #include "SLGThermo.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -250,11 +251,11 @@ tmp<volScalarField> liquidFilmThermo::rho() const
             ),
             owner().regionMesh(),
             dimensionedScalar("0", dimDensity, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& rho = trho().internalField();
+    scalarField& rho = trho.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -276,7 +277,7 @@ tmp<volScalarField> liquidFilmThermo::rho() const
         }
     }
 
-    trho().correctBoundaryConditions();
+    trho.ref().correctBoundaryConditions();
 
     return trho;
 }
@@ -298,11 +299,11 @@ tmp<volScalarField> liquidFilmThermo::mu() const
             ),
             owner().regionMesh(),
             dimensionedScalar("0", dimPressure*dimTime, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& mu = tmu().internalField();
+    scalarField& mu = tmu.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -324,7 +325,7 @@ tmp<volScalarField> liquidFilmThermo::mu() const
         }
     }
 
-    tmu().correctBoundaryConditions();
+    tmu.ref().correctBoundaryConditions();
 
     return tmu;
 }
@@ -346,11 +347,11 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
             ),
             owner().regionMesh(),
             dimensionedScalar("0", dimMass/sqr(dimTime), 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& sigma = tsigma().internalField();
+    scalarField& sigma = tsigma.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -372,7 +373,7 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
         }
     }
 
-    tsigma().correctBoundaryConditions();
+    tsigma.ref().correctBoundaryConditions();
 
     return tsigma;
 }
@@ -394,11 +395,11 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
             ),
             owner().regionMesh(),
             dimensionedScalar("0", dimEnergy/dimMass/dimTemperature, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& Cp = tCp().internalField();
+    scalarField& Cp = tCp.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -420,7 +421,7 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
         }
     }
 
-    tCp().correctBoundaryConditions();
+    tCp.ref().correctBoundaryConditions();
 
     return tCp;
 }
@@ -442,11 +443,11 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
             ),
             owner().regionMesh(),
             dimensionedScalar("0", dimPower/dimLength/dimTemperature, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& kappa = tkappa().internalField();
+    scalarField& kappa = tkappa.ref().internalField();
 
     if (useReferenceValues_)
     {
@@ -468,7 +469,7 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
         }
     }
 
-    tkappa().correctBoundaryConditions();
+    tkappa.ref().correctBoundaryConditions();
 
     return tkappa;
 }

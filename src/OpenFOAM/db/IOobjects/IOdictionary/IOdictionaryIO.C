@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Parallel aware reading, using non-virtual type information (typeName instead
-// of type()) because of use in constructor.
 void Foam::IOdictionary::readFile(const bool masterOnly)
 {
     if (Pstream::master() || !masterOnly)
@@ -111,8 +109,10 @@ void Foam::IOdictionary::readFile(const bool masterOnly)
             IOdictionary::readData(fromAbove);
         }
 
-        // Send to my downstairs neighbours
-        forAll(myComm.below(), belowI)
+        // Send to my downstairs neighbours. Note reverse order not
+        // necessary here but just for consistency with other uses
+        // (e.g. gatherScatter.C)
+        forAllReverse(myComm.below(), belowI)
         {
             if (debug)
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,72 +29,59 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
+template<>
+const char* const Foam::triad::vsType::typeName = "triad";
 
 template<>
-const char* const triad::Vector<vector>::typeName = "triad";
+const char* const Foam::triad::vsType::componentNames[] = {"x", "y", "z"};
 
 template<>
-const char* triad::Vector<vector>::componentNames[] = {"x", "y", "z"};
-
-const triad triad::zero
+const Foam::Vector<Foam::vector> Foam::triad::vsType::zero
 (
-    vector(0, 0, 0),
-    vector(0, 0, 0),
-    vector(0, 0, 0)
+    triad::uniform(vector::uniform(0))
 );
 
-const triad triad::one
+template<>
+const Foam::Vector<Foam::vector> Foam::triad::vsType::one
 (
-    vector(1, 1, 1),
-    vector(1, 1, 1),
-    vector(1, 1, 1)
+    triad::uniform(vector::uniform(1))
 );
 
-const triad triad::max
+template<>
+const Foam::Vector<Foam::vector> Foam::triad::vsType::max
 (
-    vector(VGREAT, VGREAT, VGREAT),
-    vector(VGREAT, VGREAT, VGREAT),
-    vector(VGREAT, VGREAT, VGREAT)
+    triad::uniform(vector::uniform(VGREAT))
 );
 
-const triad triad::min
+template<>
+const Foam::Vector<Foam::vector> Foam::triad::vsType::min
 (
-    vector(-VGREAT, -VGREAT, -VGREAT),
-    vector(-VGREAT, -VGREAT, -VGREAT),
-    vector(-VGREAT, -VGREAT, -VGREAT)
+    triad::uniform(vector::uniform(-VGREAT))
 );
 
-const triad triad::rootMax
+template<>
+const Foam::Vector<Foam::vector> Foam::triad::vsType::rootMax
 (
-    vector(ROOTVGREAT, ROOTVGREAT, ROOTVGREAT),
-    vector(ROOTVGREAT, ROOTVGREAT, ROOTVGREAT),
-    vector(ROOTVGREAT, ROOTVGREAT, ROOTVGREAT)
+    triad::uniform(vector::uniform(ROOTVGREAT))
 );
 
-const triad triad::rootMin
+template<>
+const Foam::Vector<Foam::vector> Foam::triad::vsType::rootMin
 (
-    vector(-ROOTVGREAT, -ROOTVGREAT, -ROOTVGREAT),
-    vector(-ROOTVGREAT, -ROOTVGREAT, -ROOTVGREAT),
-    vector(-ROOTVGREAT, -ROOTVGREAT, -ROOTVGREAT)
+    triad::uniform(vector::uniform(-ROOTVGREAT))
 );
 
-const triad triad::I
+const Foam::triad Foam::triad::I
 (
     vector(1, 0, 0),
     vector(0, 1, 0),
     vector(0, 0, 1)
 );
 
-const triad triad::unset
+const Foam::triad Foam::triad::unset
 (
-    vector(VGREAT, VGREAT, VGREAT),
-    vector(VGREAT, VGREAT, VGREAT),
-    vector(VGREAT, VGREAT, VGREAT)
+    triad::uniform(vector::uniform(VGREAT))
 );
-
-}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

@@ -27,7 +27,7 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template <class BinaryOp>
+template<class BinaryOp>
 void Foam::domainDecomposition::processInterCyclics
 (
     const polyBoundaryMesh& patches,

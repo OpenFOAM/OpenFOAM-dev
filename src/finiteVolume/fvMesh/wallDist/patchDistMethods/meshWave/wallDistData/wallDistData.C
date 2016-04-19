@@ -30,7 +30,6 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 template<class TransferType>
 Foam::wallDistData<TransferType>::wallDistData
 (
@@ -68,7 +67,6 @@ Foam::wallDistData<TransferType>::~wallDistData()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Correct for mesh geom/topo changes
 template<class TransferType>
 void Foam::wallDistData<TransferType>::correct()
 {

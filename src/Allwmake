@@ -79,6 +79,8 @@ wmake $targetType regionCoupled
 postProcessing/Allwmake $targetType $*
 
 wmake $targetType sixDoFRigidBodyMotion
+wmake $targetType rigidBodyDynamics
+wmake $targetType rigidBodyMeshMotion
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

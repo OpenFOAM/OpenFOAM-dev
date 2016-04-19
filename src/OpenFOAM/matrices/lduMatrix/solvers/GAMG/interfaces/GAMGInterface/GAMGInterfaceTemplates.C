@@ -34,7 +34,7 @@ Foam::tmp<Foam::Field<Type>> Foam::GAMGInterface::interfaceInternalField
 ) const
 {
     tmp<Field<Type>> tresult(new Field<Type>(size()));
-    interfaceInternalField(iF, tresult());
+    interfaceInternalField(iF, tresult.ref());
     return tresult;
 }
 

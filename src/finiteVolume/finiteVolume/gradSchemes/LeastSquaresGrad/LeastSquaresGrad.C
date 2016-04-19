@@ -28,7 +28,7 @@ License
 #include "gaussGrad.H"
 #include "fvMesh.H"
 #include "volMesh.H"
-#include "zeroGradientFvPatchField.H"
+#include "extrapolatedCalculatedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,12 +75,12 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
             (
                 "zero",
                 vtf.dimensions()/dimLength,
-                pTraits<GradType>::zero
+                Zero
             ),
-            zeroGradientFvPatchField<GradType>::typeName
+            extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad.ref();
     Field<GradType>& lsGradIf = lsGrad;
 
     const extendedCentredCellToCellStencil& stencil = lsv.stencil();
@@ -89,7 +89,7 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
 
     // Construct flat version of vtf
     // including all values referred to by the stencil
-    List<Type> flatVtf(stencil.map().constructSize(), pTraits<Type>::zero);
+    List<Type> flatVtf(stencil.map().constructSize(), Zero);
 
     // Insert internal values
     forAll(vtf, celli)

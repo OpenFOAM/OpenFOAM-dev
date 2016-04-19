@@ -20,4 +20,4 @@ mv "log.$application" "log.$application-inflate"
 runApplication $application false
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

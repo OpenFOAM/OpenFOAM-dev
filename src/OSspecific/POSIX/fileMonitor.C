@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,15 +32,15 @@ License
 #include "regIOobject.H"     // for fileModificationSkew symbol
 
 #ifdef FOAM_USE_INOTIFY
-#   include <unistd.h>
-#   include <sys/inotify.h>
-#   include <sys/ioctl.h>
-#   include <errno.h>
-#   define EVENT_SIZE  ( sizeof (struct inotify_event) )
-#   define EVENT_LEN   (EVENT_SIZE + 16)
-#   define EVENT_BUF_LEN     ( 1024 * EVENT_LEN )
+    #include <unistd.h>
+    #include <sys/inotify.h>
+    #include <sys/ioctl.h>
+    #include <errno.h>
+    #define EVENT_SIZE  ( sizeof (struct inotify_event) )
+    #define EVENT_LEN   (EVENT_SIZE + 16)
+    #define EVENT_BUF_LEN     ( 1024 * EVENT_LEN )
 #else
-#   include "OSspecific.H"
+    #include "OSspecific.H"
 #endif
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

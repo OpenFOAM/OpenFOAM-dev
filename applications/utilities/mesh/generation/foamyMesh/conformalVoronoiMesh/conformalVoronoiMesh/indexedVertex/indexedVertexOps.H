@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,11 +50,11 @@ namespace indexedVertexOps
 
 //- Return the target cell size from that stored on a pair of Delaunay vertices,
 //  using a mean function.
-template<typename VertexType>
+template<class VertexType>
 Foam::scalar averageCellSize(const VertexType& vA, const VertexType& vB);
 
 
-template<typename VertexType>
+template<class VertexType>
 inline bool uninitialised(const VertexType& v);
 
 } // End namespace indexedVertexOps

@@ -1,8 +1,11 @@
 #!/bin/sh
-
 cd ${0%/*} || exit 1
+
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake libso DPMTurbulenceModels
+wmake $targetType DPMTurbulenceModels
 wmake
 wmake MPPICFoam

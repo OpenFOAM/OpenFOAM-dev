@@ -182,7 +182,7 @@ void Foam::phaseSystem::generatePairsAndSubModels
     }
 }
 
-template <class modelType>
+template<class modelType>
 const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const
 {
     return
@@ -193,7 +193,7 @@ const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const
 }
 
 
-template <class modelType>
+template<class modelType>
 const modelType& Foam::phaseSystem::lookupSubModel
 (
     const phaseModel& dispersed,

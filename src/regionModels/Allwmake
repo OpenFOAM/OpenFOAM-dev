@@ -14,4 +14,4 @@ wmake $targetType thermalBaffleModels
 wmake $targetType regionCoupling
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

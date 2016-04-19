@@ -43,7 +43,7 @@ void Foam::conformationSurfaces::hasBoundedVolume
     List<volumeType>& referenceVolumeTypes
 ) const
 {
-    vector sum(vector::zero);
+    vector sum(Zero);
     label totalTriangles = 0;
 
     forAll(surfaces_, s)

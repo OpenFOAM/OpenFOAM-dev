@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::LUscalarMatrix
 
 Description
-    Foam::LUscalarMatrix
+    Class to perform the LU decomposition on a symmetric matrix.
 
 SourceFiles
     LUscalarMatrix.C
@@ -67,6 +67,9 @@ class LUscalarMatrix
         //- The pivot indices used in the LU decomposition
         labelList pivotIndices_;
 
+
+    // Private member functions
+
         //- Convert the given lduMatrix into this LUscalarMatrix
         void convert
         (
@@ -90,10 +93,14 @@ public:
     // Declare name of the class and its debug switch
     ClassName("LUscalarMatrix");
 
+
     // Constructors
 
-        //- Construct from scalarSquareMatrix and perform LU decomposition
-        LUscalarMatrix(const scalarSquareMatrix&);
+        //- Construct null
+        LUscalarMatrix();
+
+        //- Construct from and perform LU decomposition of the matrix M
+        LUscalarMatrix(const scalarSquareMatrix& M);
 
         //- Construct from lduMatrix and perform LU decomposition
         LUscalarMatrix
@@ -106,10 +113,19 @@ public:
 
     // Member Functions
 
-        //- Solve the matrix using the LU decomposition with pivoting
-        //  returning the solution in the source
-        template<class T>
-        void solve(Field<T>& source) const;
+        //- Perform the LU decomposition of the matrix M
+        void decompose(const scalarSquareMatrix& M);
+
+        //- Solve the linear system with the given source
+        //  and returning the solution in the Field argument x.
+        //  This function may be called with the same field for x and source.
+        template<class Type>
+        void solve(Field<Type>& x, const Field<Type>& source) const;
+
+        //- Solve the linear system with the given source
+        //  returning the solution
+        template<class Type>
+        tmp<Field<Type>> solve(const Field<Type>& source) const;
 };
 
 
@@ -120,7 +136,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "LUscalarMatrixTemplates.C"
+    #include "LUscalarMatrixTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

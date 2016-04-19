@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,8 +44,8 @@ inletOutletTotalTemperatureFvPatchScalarField
     gamma_(0.0),
     T0_(p.size(), 0.0)
 {
-    this->refValue() = pTraits<scalar>::zero;
-    this->refGrad() = pTraits<scalar>::zero;
+    this->refValue() = Zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 
@@ -83,7 +83,7 @@ inletOutletTotalTemperatureFvPatchScalarField
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
-    this->refValue() = pTraits<scalar>::zero;
+    this->refValue() = Zero;
     if (dict.found("value"))
     {
         fvPatchField<scalar>::operator=
@@ -96,7 +96,7 @@ inletOutletTotalTemperatureFvPatchScalarField
         fvPatchField<scalar>::operator=(T0_);
     }
 
-    this->refGrad() = pTraits<scalar>::zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 

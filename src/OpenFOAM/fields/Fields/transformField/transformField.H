@@ -117,14 +117,14 @@ tmp<vectorField> transform(const quaternion&, const vectorField&);
 tmp<vectorField> transform(const quaternion&, const tmp<vectorField>&);
 
 
-//- Transform given vectorField with the given septernion
-void transform(vectorField&, const septernion&, const vectorField&);
+//- Transform given vectorField of coordinates with the given septernion
+void transformPoints(vectorField&, const septernion&, const vectorField&);
 
-//- Transform given vectorField with the given septernion
-tmp<vectorField> transform(const septernion&, const vectorField&);
+//- Transform given vectorField of coordinates with the given septernion
+tmp<vectorField> transformPoints(const septernion&, const vectorField&);
 
-//- Transform given tmp<vectorField> with the given septernion
-tmp<vectorField> transform(const septernion&, const tmp<vectorField>&);
+//- Transform given tmp<vectorField> of coordinates with the given septernion
+tmp<vectorField> transformPoints(const septernion&, const tmp<vectorField>&);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -134,7 +134,7 @@ tmp<vectorField> transform(const septernion&, const tmp<vectorField>&);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "transformFieldTemplates.C"
+    #include "transformFieldTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

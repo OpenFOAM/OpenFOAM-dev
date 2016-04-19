@@ -77,7 +77,7 @@ class dictionary;
 template<class Type>
 class Field
 :
-    public refCount,
+    public tmp<Field<Type>>::refCount,
     public List<Type>
 {
 
@@ -116,6 +116,9 @@ public:
 
         //- Construct given size and initial value
         Field(const label, const Type&);
+
+        //- Construct given size and initialed to zero
+        Field(const label, const zero);
 
         //- Construct as copy of a UList\<Type\>
         explicit Field(const UList<Type>&);
@@ -205,7 +208,7 @@ public:
         Field(const Field<Type>&);
 
         //- Construct as copy or re-use as specified.
-        Field(Field<Type>&, bool reUse);
+        Field(Field<Type>&, bool reuse);
 
         //- Construct by transferring the Field contents
         Field(const Xfer<Field<Type>>&);
@@ -330,6 +333,9 @@ public:
         //- Replace a component field of the field
         void replace(const direction, const cmptType&);
 
+        template<class VSForm>
+        VSForm block(const label start) const;
+
         //- Return the field transpose (only defined for second rank tensors)
         tmp<Field<Type>> T() const;
 
@@ -344,8 +350,9 @@ public:
         void operator=(const SubField<Type>&);
         void operator=(const tmp<Field<Type>>&);
         void operator=(const Type&);
+        void operator=(const zero);
 
-        template<class Form, class Cmpt, int nCmpt>
+        template<class Form, class Cmpt, direction nCmpt>
         void operator=(const VectorSpace<Form,Cmpt,nCmpt>&);
 
         void operator+=(const UList<Type>&);
@@ -386,7 +393,7 @@ public:
 #include "FieldFunctions.H"
 
 #ifdef NoRepository
-#   include "Field.C"
+    #include "Field.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

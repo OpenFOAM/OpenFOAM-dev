@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Basic.H"
+#include "zeroGradientFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -76,7 +77,7 @@ void Foam::AveragingMethods::Basic<Type>::updateGrad()
             false
         ),
         this->mesh_,
-        dimensioned<Type>("zero", dimless, pTraits<Type>::zero),
+        dimensioned<Type>("zero", dimless, Zero),
         zeroGradientFvPatchField<Type>::typeName
     );
     tempData.internalField() = data_;

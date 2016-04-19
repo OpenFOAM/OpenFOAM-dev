@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::SIBS::SIBS(const ODESystem& ode, const dictionary& dict)
 :
     ODESolver(ode, dict),
     a_(iMaxX_, 0.0),
-    alpha_(kMaxX_, kMaxX_, 0.0),
+    alpha_(kMaxX_, 0.0),
     d_p_(n_, kMaxX_, 0.0),
     x_p_(kMaxX_, 0.0),
     err_(kMaxX_, 0.0),
@@ -60,7 +60,7 @@ Foam::SIBS::SIBS(const ODESystem& ode, const dictionary& dict)
     yErr_(n_, 0.0),
     dydx0_(n_),
     dfdx_(n_, 0.0),
-    dfdy_(n_, n_, 0.0),
+    dfdy_(n_, 0.0),
     first_(1),
     epsOld_(-1.0)
 {}

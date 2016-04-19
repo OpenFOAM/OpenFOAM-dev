@@ -63,7 +63,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
             (
                 "0",
                 vf.dimensions()/dimTime/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
@@ -95,7 +95,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
             (
                 "0",
                 rho.dimensions()*vf.dimensions()/dimTime/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );

@@ -110,8 +110,8 @@ public:
 
         SolverPerformance()
         :
-            initialResidual_(pTraits<Type>::zero),
-            finalResidual_(pTraits<Type>::zero),
+            initialResidual_(Zero),
+            finalResidual_(Zero),
             noIterations_(0),
             converged_(false),
             singular_(false)
@@ -291,7 +291,7 @@ const scalar solverPerformance##Type::vsmall_(VSMALL);                         \
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "SolverPerformance.C"
+    #include "SolverPerformance.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

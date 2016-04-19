@@ -424,14 +424,14 @@ int main(int argc, char *argv[])
             (
                 availablePoints,
                 upp.faceCentres().size()
-            ).assign(upp.faceCentres());
+            ) = upp.faceCentres();
 
             SubList<point>
             (
                 availablePoints,
                 upp.localPoints().size(),
                 upp.faceCentres().size()
-            ).assign(upp.localPoints());
+            ) = upp.localPoints();
 
             point cfo = cf;
             scalar dist = GREAT;
@@ -584,16 +584,16 @@ int main(int argc, char *argv[])
     // I need coarse Sf (Ai), fine Sf (dAi) and fine Cf(r) to calculate Fij
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    pointField compactCoarseCf(map.constructSize(), pTraits<vector>::zero);
-    pointField compactCoarseSf(map.constructSize(), pTraits<vector>::zero);
+    pointField compactCoarseCf(map.constructSize(), Zero);
+    pointField compactCoarseSf(map.constructSize(), Zero);
     List<List<point>> compactFineSf(map.constructSize());
     List<List<point>> compactFineCf(map.constructSize());
 
     DynamicList<label> compactPatchId(map.constructSize());
 
     // Insert my coarse local values
-    SubList<point>(compactCoarseSf, nCoarseFaces).assign(localCoarseSf);
-    SubList<point>(compactCoarseCf, nCoarseFaces).assign(localCoarseCf);
+    SubList<point>(compactCoarseSf, nCoarseFaces) = localCoarseSf;
+    SubList<point>(compactCoarseCf, nCoarseFaces) = localCoarseCf;
 
     // Insert my fine local values
     label compactI = 0;
@@ -676,7 +676,6 @@ int main(int argc, char *argv[])
     scalarSquareMatrix sumViewFactorPatch
     (
         totalPatches,
-        totalPatches,
         0.0
     );
 
@@ -739,7 +738,7 @@ int main(int argc, char *argv[])
     {
         const boundBox& box = mesh.bounds();
         const Vector<label>& dirs = mesh.geometricD();
-        vector emptyDir = vector::zero;
+        vector emptyDir = Zero;
         forAll(dirs, i)
         {
             if (dirs[i] == -1)
@@ -888,7 +887,7 @@ int main(int argc, char *argv[])
 
     if (Pstream::master())
     {
-        scalarSquareMatrix Fmatrix(totalNCoarseFaces, totalNCoarseFaces, 0.0);
+        scalarSquareMatrix Fmatrix(totalNCoarseFaces, 0.0);
 
         labelListList globalFaceFaces(visibleFaceFaces.size());
 

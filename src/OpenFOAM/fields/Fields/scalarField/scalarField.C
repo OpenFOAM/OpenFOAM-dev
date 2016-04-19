@@ -74,15 +74,15 @@ void stabilise(scalarField& res, const UList<scalar>& sf, const scalar s)
 tmp<scalarField> stabilise(const UList<scalar>& sf, const scalar s)
 {
     tmp<scalarField> tRes(new scalarField(sf.size()));
-    stabilise(tRes(), sf, s);
+    stabilise(tRes.ref(), sf, s);
     return tRes;
 }
 
 tmp<scalarField> stabilise(const tmp<scalarField>& tsf, const scalar s)
 {
-    tmp<scalarField> tRes = reuseTmp<scalar, scalar>::New(tsf);
-    stabilise(tRes(), tsf(), s);
-    reuseTmp<scalar, scalar>::clear(tsf);
+    tmp<scalarField> tRes = New(tsf);
+    stabilise(tRes.ref(), tsf(), s);
+    tsf.clear();
     return tRes;
 }
 
@@ -173,15 +173,15 @@ void func(scalarField& res, const int n, const UList<scalar>& sf)              \
 tmp<scalarField> func(const int n, const UList<scalar>& sf)                    \
 {                                                                              \
     tmp<scalarField> tRes(new scalarField(sf.size()));                         \
-    func(tRes(), n, sf);                                                       \
+    func(tRes.ref(), n, sf);                                                   \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
 tmp<scalarField> func(const int n, const tmp<scalarField>& tsf)                \
 {                                                                              \
-    tmp<scalarField> tRes = reuseTmp<scalar, scalar>::New(tsf);                \
-    func(tRes(), n, tsf());                                                    \
-    reuseTmp<scalar, scalar>::clear(tsf);                                      \
+    tmp<scalarField> tRes = New(tsf);                                          \
+    func(tRes.ref(), n, tsf());                                                \
+    tsf.clear();                                                               \
     return tRes;                                                               \
 }
 

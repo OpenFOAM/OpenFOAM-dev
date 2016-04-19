@@ -55,7 +55,7 @@
                     (
                         "zero",
                         tkappaByCp().dimensions(),
-                        symmTensor::zero
+                        Zero
                     ),
                     zeroGradientFvPatchSymmTensorField::typeName
                 )

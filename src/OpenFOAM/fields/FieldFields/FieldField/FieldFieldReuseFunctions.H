@@ -33,6 +33,34 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<template<class> class Field, class TypeR>
+tmp<FieldField<Field, TypeR>> New
+(
+    const tmp<FieldField<Field, TypeR>>& tf1,
+    const bool initRet = false
+)
+{
+    if (tf1.isTmp())
+    {
+        return tf1;
+    }
+    else
+    {
+        tmp<FieldField<Field, TypeR>> rtf
+        (
+            FieldField<Field, TypeR>::NewCalculatedType(tf1())
+        );
+
+        if (initRet)
+        {
+            rtf.ref() = tf1();
+        }
+
+        return rtf;
+    }
+}
+
+
 template<template<class> class Field, class TypeR, class Type1>
 class reuseTmpFieldField
 {
@@ -47,11 +75,6 @@ public:
         (
             FieldField<Field, TypeR>::NewCalculatedType(tf1())
         );
-    }
-
-    static void clear(const tmp<FieldField<Field, Type1>>& tf1)
-    {
-        tf1.clear();
     }
 };
 
@@ -76,14 +99,6 @@ public:
             (
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
-        }
-    }
-
-    static void clear(const tmp<FieldField<Field, TypeR>>& tf1)
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
         }
     }
 };
@@ -112,16 +127,6 @@ public:
             FieldField<Field, TypeR>::NewCalculatedType(tf1())
         );
     }
-
-    static void clear
-    (
-        const tmp<FieldField<Field, Type1>>& tf1,
-        const tmp<FieldField<Field, Type2>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
-    }
 };
 
 
@@ -146,19 +151,6 @@ public:
             (
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
-        }
-    }
-
-    static void clear
-    (
-        const tmp<FieldField<Field, Type1>>& tf1,
-        const tmp<FieldField<Field, TypeR>>& tf2
-    )
-    {
-        tf1.clear();
-        if (tf2.isTmp())
-        {
-            tf2.ptr();
         }
     }
 };
@@ -186,19 +178,6 @@ public:
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
         }
-    }
-
-    static void clear
-    (
-        const tmp<FieldField<Field, TypeR>>& tf1,
-        const tmp<FieldField<Field, Type2>>& tf2
-    )
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-        }
-        tf2.clear();
     }
 };
 
@@ -228,24 +207,6 @@ public:
             (
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
-        }
-    }
-
-    static void clear
-    (
-        const tmp<FieldField<Field, TypeR>>& tf1,
-        const tmp<FieldField<Field, TypeR>>& tf2
-    )
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-            tf2.clear();
-        }
-        else if (tf2.isTmp())
-        {
-            tf1.clear();
-            tf2.ptr();
         }
     }
 };

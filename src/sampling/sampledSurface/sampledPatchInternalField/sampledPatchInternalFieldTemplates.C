@@ -38,7 +38,7 @@ Foam::sampledPatchInternalField::sampleField
 {
     // One value per face
     tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels().size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(patchStart(), i)
     {
@@ -109,7 +109,7 @@ Foam::sampledPatchInternalField::interpolateField
 
         // Now patchVals holds the interpolated data in patch face order.
         // Collect.
-        SubList<Type>(allPatchVals, patchVals.size(), sz).assign(patchVals);
+        SubList<Type>(allPatchVals, patchVals.size(), sz) = patchVals;
         sz += patchVals.size();
     }
 

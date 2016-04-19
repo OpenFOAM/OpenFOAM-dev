@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ void Foam::wallDist::constructn() const
                 mesh()
             ),
             mesh(),
-            dimensionedVector("n" & patchTypeName_, dimless, vector::zero),
+            dimensionedVector("n" & patchTypeName_, dimless, Zero),
             patchDistMethod::patchTypes<vector>(mesh(), patchIDs_)
         )
     );
@@ -59,7 +59,7 @@ void Foam::wallDist::constructn() const
     forAllConstIter(labelHashSet, patchIDs_, iter)
     {
         label patchi = iter.key();
-        n_().boundaryField()[patchi] == patches[patchi].nf();
+        n_.ref().boundaryField()[patchi] == patches[patchi].nf();
     }
 }
 
@@ -176,7 +176,7 @@ const Foam::volVectorField& Foam::wallDist::n() const
 
         nRequired_ = true;
         constructn();
-        pdm_->correct(y_, n_());
+        pdm_->correct(y_, n_.ref());
     }
 
     return n_();
@@ -189,7 +189,7 @@ bool Foam::wallDist::movePoints()
     {
         if (nRequired_)
         {
-            return pdm_->correct(y_, n_());
+            return pdm_->correct(y_, n_.ref());
         }
         else
         {

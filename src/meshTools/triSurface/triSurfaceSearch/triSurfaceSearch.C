@@ -200,7 +200,7 @@ Foam::triSurfaceSearch::tree() const
     if (treePtr_.empty())
     {
         // Calculate bb without constructing local point numbering.
-        treeBoundBox bb(vector::zero, vector::zero);
+        treeBoundBox bb(Zero, Zero);
 
         if (surface().size())
         {

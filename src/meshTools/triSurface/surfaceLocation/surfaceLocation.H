@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,16 +26,21 @@ Class
 
 Description
     Contains information about location on a triSurface:
-    - pointIndexHit:
+
+    \li pointIndexHit:
         - location
         - bool: hit/miss
         - index (of triangle/point/edge)
-    - elementType():
+
+    \li elementType():
         - what index above relates to. In triangle::proxType
-    - triangle():
+
+    \li triangle():
         - last known triangle
 
+
 SourceFiles
+    surfaceLocation.C
 
 \*---------------------------------------------------------------------------*/
 

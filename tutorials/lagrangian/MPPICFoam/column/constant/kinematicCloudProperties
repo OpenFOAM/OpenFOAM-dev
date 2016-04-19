@@ -140,6 +140,7 @@ subModels
     {
         alphaMin 0.0001;
         rhoMin 1.0;
+        applyLimiting true;
         applyGravity true;
         particleStressModel
         {

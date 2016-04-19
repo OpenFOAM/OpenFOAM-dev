@@ -121,9 +121,6 @@ do
     esac
 done
 
-# Get the ParaView major version to select the appropriate readers
-version=`echo $ParaView_VERSION | sed -e 's/^\([0-9][0-9]*\).*$/\1/'`
-
 # Check that reader module has been built
 if [ $requirePV -eq 1 -a ! -f $PV_PLUGIN_PATH/libPVFoamReader_SM.so ]
 then
@@ -132,7 +129,7 @@ then
 FATAL ERROR: ParaView reader module libraries do not exist
 
 Please build the reader module before continuing:
-cd \$FOAM_UTILITIES/postProcessing/graphics/PV${version}Readers
+cd \$FOAM_UTILITIES/postProcessing/graphics/PVReaders
 ./Allwclean
 ./Allwmake
 

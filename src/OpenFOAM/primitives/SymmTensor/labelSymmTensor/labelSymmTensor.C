@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,18 +25,13 @@ License
 
 #include "labelSymmTensor.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const labelSymmTensor::typeName = "labelSymmTensor";
+const char* const Foam::labelSymmTensor::vsType::typeName = "labelSymmTensor";
 
 template<>
-const char* labelSymmTensor::componentNames[] =
+const char* const Foam::labelSymmTensor::vsType::componentNames[] =
 {
     "xx", "xy", "xz",
           "yy", "yz",
@@ -44,24 +39,48 @@ const char* labelSymmTensor::componentNames[] =
 };
 
 template<>
-const labelSymmTensor labelSymmTensor::zero
+const Foam::labelSymmTensor Foam::labelSymmTensor::vsType::vsType::zero
 (
-    0, 0, 0,
-       0, 0,
-          0
+    labelSymmTensor::uniform(0)
 );
 
 template<>
-const labelSymmTensor labelSymmTensor::one
+const Foam::labelSymmTensor Foam::labelSymmTensor::vsType::one
 (
-    1, 1, 1,
-       1, 1,
+    labelSymmTensor::uniform(1)
+);
+
+template<>
+const Foam::labelSymmTensor Foam::labelSymmTensor::vsType::max
+(
+    labelSymmTensor::uniform(labelMax)
+);
+
+template<>
+const Foam::labelSymmTensor Foam::labelSymmTensor::vsType::min
+(
+    labelSymmTensor::uniform(-labelMax)
+);
+
+template<>
+const Foam::labelSymmTensor Foam::labelSymmTensor::vsType::rootMax
+(
+    labelSymmTensor::uniform(sqrt(scalar(labelMax)))
+);
+
+template<>
+const Foam::labelSymmTensor Foam::labelSymmTensor::vsType::rootMin
+(
+    labelSymmTensor::uniform(-sqrt(scalar(labelMax)))
+);
+
+template<>
+const Foam::labelSymmTensor Foam::labelSymmTensor::I
+(
+    1, 0, 0,
+       1, 0,
           1
 );
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Foam::tmp<Foam::vectorField> Foam::layerAdditionRemoval::extrusionDir() const
     const labelList& mp = masterFaceLayer.meshPoints();
 
     tmp<vectorField> textrusionDir(new vectorField(mp.size()));
-    vectorField& extrusionDir = textrusionDir();
+    vectorField& extrusionDir = textrusionDir.ref();
 
     if (setLayerPairing())
     {

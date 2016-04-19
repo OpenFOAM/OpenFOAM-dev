@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
 ) const
 {
     tmp<scalarField> typsf(new scalarField(this->size()));
-    scalarField& ypsf = typsf();
+    scalarField& ypsf = typsf.ref();
 
     forAll(ypsf, faceI)
     {
@@ -197,7 +197,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::calcAlphat
     scalarField yPlusTherm(this->yPlusTherm(P, Prat));
 
     tmp<scalarField> talphatConv(new scalarField(this->size()));
-    scalarField& alphatConv = talphatConv();
+    scalarField& alphatConv = talphatConv.ref();
 
     // Populate boundary values
     forAll(alphatConv, faceI)

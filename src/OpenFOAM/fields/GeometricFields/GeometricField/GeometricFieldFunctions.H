@@ -56,14 +56,26 @@ void T
      const GeometricField<Type, PatchField, GeoMesh>& gf1
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh, int r>
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
 void pow
 (
     GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>& gf,
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh, int r>
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
 tmp
 <
     GeometricField
@@ -75,7 +87,13 @@ pow
     typename powProduct<Type, r>::type
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh, int r>
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
 tmp
 <
     GeometricField
@@ -353,7 +371,7 @@ template                                                                       \
 <                                                                              \
     class Form,                                                                \
     class Cmpt,                                                                \
-    int nCmpt,                                                                 \
+    direction nCmpt,                                                           \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
@@ -385,7 +403,7 @@ template                                                                       \
 <                                                                              \
     class Form,                                                                \
     class Cmpt,                                                                \
-    int nCmpt,                                                                 \
+    direction nCmpt,                                                           \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
@@ -427,7 +445,7 @@ template                                                                       \
 <                                                                              \
     class Form,                                                                \
     class Cmpt,                                                                \
-    int nCmpt,                                                                 \
+    direction nCmpt,                                                           \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
@@ -459,7 +477,7 @@ template                                                                       \
 <                                                                              \
     class Form,                                                                \
     class Cmpt,                                                                \
-    int nCmpt,                                                                 \
+    direction nCmpt,                                                           \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \

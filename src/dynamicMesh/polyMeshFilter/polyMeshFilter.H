@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,10 +89,10 @@ class polyMeshFilter
 
     // Private Member Functions
 
-        template<typename T>
+        template<class T>
         static void updateSets(const mapPolyMesh& map);
 
-        template<typename T>
+        template<class T>
         static void copySets(const polyMesh& oldMesh, const polyMesh& newMesh);
 
         label filterFacesLoop(const label nOriginalBadFaces);
@@ -207,6 +207,14 @@ public:
         //- Construct from fvMesh and a label list of point priorities
         polyMeshFilter(const fvMesh& mesh, const labelList& pointPriority);
 
+        //- Construct from fvMesh and a label list of point priorities
+        polyMeshFilter
+        (
+            const fvMesh& mesh,
+            const labelList& pointPriority,
+            const dictionary& dict
+        );
+
 
     //- Destructor
     ~polyMeshFilter();
@@ -257,7 +265,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "polyMeshFilterTemplates.C"
+    #include "polyMeshFilterTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

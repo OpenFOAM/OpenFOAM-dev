@@ -132,7 +132,7 @@ Foam::pointIndexHit Foam::searchablePlate::findLine
     pointIndexHit info
     (
         true,
-        vector::zero,
+        Zero,
         0
     );
 
@@ -298,7 +298,7 @@ void Foam::searchablePlate::boundingSpheres
 Foam::tmp<Foam::pointField> Foam::searchablePlate::points() const
 {
     tmp<pointField> tPts(new pointField(4));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     pts[0] = origin_;
     pts[2] = origin_ + span_;
@@ -424,7 +424,7 @@ void Foam::searchablePlate::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
     forAll(normal, i)
     {
         normal[i][normalDir_] = 1.0;

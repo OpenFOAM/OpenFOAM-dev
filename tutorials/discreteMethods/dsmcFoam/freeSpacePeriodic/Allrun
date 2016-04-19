@@ -8,4 +8,4 @@ runApplication blockMesh
 runApplication dsmcInitialise
 runApplication `getApplication`
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

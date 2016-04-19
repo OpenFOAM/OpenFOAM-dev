@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "liftModel.H"
 #include "phasePair.H"
 #include "fvcCurl.H"
+#include "fvcFlux.H"
 #include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -78,11 +79,7 @@ Foam::tmp<Foam::volVectorField> Foam::liftModel::F() const
 
 Foam::tmp<Foam::surfaceScalarField> Foam::liftModel::Ff() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
-    return
-        fvc::interpolate(pair_.dispersed())
-       *(fvc::interpolate(Fi()) & mesh.Sf());
+    return fvc::interpolate(pair_.dispersed())*fvc::flux(Fi());
 }
 
 

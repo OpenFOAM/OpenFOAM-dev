@@ -275,8 +275,8 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "AMIMethod.C"
-#   include "AMIMethodNew.C"
+    #include "AMIMethod.C"
+    #include "AMIMethodNew.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

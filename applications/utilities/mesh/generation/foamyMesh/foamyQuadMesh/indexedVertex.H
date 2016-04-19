@@ -105,7 +105,7 @@ public:
     typedef typename Vb::Face_handle        Face_handle;
     typedef typename Vb::Point              Point;
 
-    template<typename TDS2>
+    template<class TDS2>
     struct Rebind_TDS
     {
         typedef typename Vb::template Rebind_TDS<TDS2>::Other    Vb2;

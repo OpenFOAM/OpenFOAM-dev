@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,8 @@ namespace Foam
 {
     defineTypeNameAndDebug(polyLineSet, 0);
     addToRunTimeSelectionTable(sampledSet, polyLineSet, word);
+
+    const scalar polyLineSet::tol = 1e-6;
 }
 
 
@@ -205,10 +207,10 @@ void Foam::polyLineSet::calcSamples
             bool isSample =
                 getTrackingPoint
                 (
-                    sampleCoords_[sampleI+1] - sampleCoords_[sampleI],
                     sampleCoords_[sampleI],
                     bPoint,
                     bFaceI,
+                    smallDist,
 
                     trackPt,
                     trackCellI,

@@ -41,7 +41,7 @@ Foam::AveragingMethods::Moment<Type>::Moment
     dataX_(FieldField<Field, Type>::operator[](1)),
     dataY_(FieldField<Field, Type>::operator[](2)),
     dataZ_(FieldField<Field, Type>::operator[](3)),
-    transform_(mesh.nCells(), symmTensor::zero),
+    transform_(mesh.nCells(), Zero),
     scale_(0.5*pow(mesh.V(), 1.0/3.0))
 {
     scalar a = 1.0/24.0;
@@ -65,7 +65,7 @@ Foam::AveragingMethods::Moment<Type>::Moment
         const List<tetIndices> cellTets =
             polyMeshTetDecomposition::cellTetIndices(mesh, cellI);
 
-        symmTensor A(symmTensor::zero);
+        symmTensor A(Zero);
 
         forAll(cellTets, tetI)
         {

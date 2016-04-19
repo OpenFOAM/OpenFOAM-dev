@@ -31,4 +31,4 @@ surfaceCheck stirrer_baffles.stl
 \mv stirrer_baffles_0.obj stirrer_baffles_plate.obj
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

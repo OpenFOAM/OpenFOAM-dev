@@ -218,7 +218,7 @@ typedef HashSet<label, Hash<label>> labelHashSet;
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "HashSet.C"
+    #include "HashSet.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

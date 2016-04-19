@@ -146,8 +146,6 @@ Foam::pointField Foam::treeDataPrimitivePatch<PatchType>::shapePoints() const
 }
 
 
-//- Get type (inside,outside,mixed,unknown) of point w.r.t. surface.
-//  Only makes sense for closed surfaces.
 template<class PatchType>
 Foam::volumeType Foam::treeDataPrimitivePatch<PatchType>::getVolumeType
 (
@@ -288,7 +286,7 @@ Foam::volumeType Foam::treeDataPrimitivePatch<PatchType>::getVolumeType
             // triangle normals)
             const labelList& eFaces = patch_.edgeFaces()[edgeI];
 
-            vector edgeNormal(vector::zero);
+            vector edgeNormal(Zero);
 
             forAll(eFaces, i)
             {

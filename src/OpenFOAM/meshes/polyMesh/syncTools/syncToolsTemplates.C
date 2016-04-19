@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Combine val with existing value at index
 template<class T, class CombineOp>
 void Foam::syncTools::combine
 (
@@ -58,7 +57,6 @@ void Foam::syncTools::combine
 }
 
 
-// Combine val with existing value at (implicit index) e.
 template<class T, class CombineOp>
 void Foam::syncTools::combine
 (

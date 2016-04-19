@@ -127,7 +127,6 @@ Foam::labelList Foam::polyMesh::facePatchFaceCells
 }
 
 
-//- Set faces_, calculate cells and patchStarts.
 void Foam::polyMesh::setTopology
 (
     const cellShapeList& cellsAsShapes,
@@ -474,8 +473,8 @@ Foam::polyMesh::polyMesh
     ),
     bounds_(points_, syncPar),
     comm_(UPstream::worldComm),
-    geometricD_(Vector<label>::zero),
-    solutionD_(Vector<label>::zero),
+    geometricD_(Zero),
+    solutionD_(Zero),
     tetBasePtIsPtr_(NULL),
     cellTreePtr_(NULL),
     pointZones_
@@ -758,8 +757,8 @@ Foam::polyMesh::polyMesh
     ),
     bounds_(points_, syncPar),
     comm_(UPstream::worldComm),
-    geometricD_(Vector<label>::zero),
-    solutionD_(Vector<label>::zero),
+    geometricD_(Zero),
+    solutionD_(Zero),
     tetBasePtIsPtr_(NULL),
     cellTreePtr_(NULL),
     pointZones_

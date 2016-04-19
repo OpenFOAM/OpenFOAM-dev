@@ -1,5 +1,5 @@
 {
-    volScalarField& rDeltaT = trDeltaT();
+    volScalarField& rDeltaT = trDeltaT.ref();
 
     scalar rDeltaTSmoothingCoeff
     (

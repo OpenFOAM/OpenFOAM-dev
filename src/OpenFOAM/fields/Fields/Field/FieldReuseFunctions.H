@@ -33,6 +33,31 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<class TypeR>
+tmp<Field<TypeR>> New
+(
+    const tmp<Field<TypeR>>& tf1,
+    const bool initRet = false
+)
+{
+    if (tf1.isTmp())
+    {
+        return tf1;
+    }
+    else
+    {
+        tmp<Field<TypeR>> rtf(new Field<TypeR>(tf1().size()));
+
+        if (initRet)
+        {
+            rtf.ref() = tf1();
+        }
+
+        return rtf;
+    }
+}
+
+
 template<class TypeR, class Type1>
 class reuseTmp
 {
@@ -41,11 +66,6 @@ public:
     static tmp<Field<TypeR>> New(const tmp<Field<Type1>>& tf1)
     {
         return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
-    }
-
-    static void clear(const tmp<Field<Type1>>& tf1)
-    {
-        tf1.clear();
     }
 };
 
@@ -66,14 +86,6 @@ public:
             return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
     }
-
-    static void clear(const tmp<Field<TypeR>>& tf1)
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-        }
-    }
 };
 
 
@@ -89,16 +101,6 @@ public:
     )
     {
         return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
-    }
-
-    static void clear
-    (
-        const tmp<Field<Type1>>& tf1,
-        const tmp<Field<Type2>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
     }
 };
 
@@ -123,19 +125,6 @@ public:
             return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
     }
-
-    static void clear
-    (
-        const tmp<Field<Type1>>& tf1,
-        const tmp<Field<TypeR>>& tf2
-    )
-    {
-        tf1.clear();
-        if (tf2.isTmp())
-        {
-            tf2.ptr();
-        }
-    }
 };
 
 
@@ -158,19 +147,6 @@ public:
         {
             return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
-    }
-
-    static void clear
-    (
-        const tmp<Field<TypeR>>& tf1,
-        const tmp<Field<Type2>>& tf2
-    )
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-        }
-        tf2.clear();
     }
 };
 
@@ -197,24 +173,6 @@ public:
         else
         {
             return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
-        }
-    }
-
-    static void clear
-    (
-        const tmp<Field<TypeR>>& tf1,
-        const tmp<Field<TypeR>>& tf2
-    )
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-            tf2.clear();
-        }
-        else if (tf2.isTmp())
-        {
-            tf1.clear();
-            tf2.ptr();
         }
     }
 };

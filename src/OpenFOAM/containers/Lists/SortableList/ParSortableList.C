@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,6 @@ void Foam::ParSortableList<Type>::write
 }
 
 
-// Copy src, starting at destI into dest.
 template<class Type>
 void Foam::ParSortableList<Type>::copyInto
 (
@@ -122,7 +121,6 @@ void Foam::ParSortableList<Type>::checkAndSend
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from List, sorting the elements
 template<class Type>
 Foam::ParSortableList<Type>::ParSortableList(const UList<Type>& values)
 :
@@ -134,7 +132,6 @@ Foam::ParSortableList<Type>::ParSortableList(const UList<Type>& values)
 }
 
 
-// Construct given size. Sort later on.
 template<class Type>
 Foam::ParSortableList<Type>::ParSortableList(const label size)
 :
@@ -146,7 +143,6 @@ Foam::ParSortableList<Type>::ParSortableList(const label size)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Sort
 template<class Type>
 void Foam::ParSortableList<Type>::sort()
 {

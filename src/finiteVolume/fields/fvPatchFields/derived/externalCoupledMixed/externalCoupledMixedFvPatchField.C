@@ -455,8 +455,8 @@ externalCoupledMixedFvPatchField
     initialised_(false),
     coupledPatchIDs_()
 {
-    this->refValue() = pTraits<Type>::zero;
-    this->refGrad() = pTraits<Type>::zero;
+    this->refValue() = Zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 
@@ -534,7 +534,7 @@ externalCoupledMixedFvPatchField
 
     // initialise as a fixed value
     this->refValue() = *this;
-    this->refGrad() = pTraits<Type>::zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 1.0;
 }
 

@@ -142,6 +142,14 @@ public:
             const tmp<FieldField<fvsPatchField, scalar>>& tphi
         ) const;
 
+        //- Return the given absolute patch flux relative within
+        //  the MRF region
+        tmp<Field<scalar>> relative
+        (
+            const tmp<Field<scalar>>& tphi,
+            const label patchi
+        ) const;
+
         //- Make the given absolute mass-flux relative within the MRF region
         void makeRelative
         (

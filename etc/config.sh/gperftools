@@ -38,4 +38,4 @@ GPERFTOOLS_ARCH_PATH=$gperftools_install/$GPERFTOOLS_VERSION
 export PATH=$GPERFTOOLS_ARCH_PATH/bin:$PATH
 export LD_LIBRARY_PATH=$GPERFTOOLS_ARCH_PATH/lib:$LD_LIBRARY_PATH
 
-# -----------------------------------------------------------------------------
+#------------------------------------------------------------------------------

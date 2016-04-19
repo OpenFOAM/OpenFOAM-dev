@@ -1,7 +1,3 @@
-//
-// checkTimeOptions.H
-// ~~~~~~~~~~~~~~~~~~
-
 Foam::label startTime = 0;
 
 // Unless -constant is present, skip startTime if it is "constant"

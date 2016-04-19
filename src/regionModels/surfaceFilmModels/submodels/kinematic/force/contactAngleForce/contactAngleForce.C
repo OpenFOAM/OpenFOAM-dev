@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,11 +149,11 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
                 IOobject::NO_WRITE
             ),
             owner_.regionMesh(),
-            dimensionedVector("zero", dimForce/dimArea, vector::zero)
+            dimensionedVector("zero", dimForce/dimArea, Zero)
         )
     );
 
-    vectorField& force = tForce().internalField();
+    vectorField& force = tForce.ref().internalField();
 
     const labelUList& own = owner_.regionMesh().owner();
     const labelUList& nbr = owner_.regionMesh().neighbour();
@@ -229,7 +229,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
     tmp<fvVectorMatrix>
         tfvm(new fvVectorMatrix(U, dimForce/dimArea*dimVolume));
 
-    tfvm() += tForce;
+    tfvm.ref() += tForce;
 
     return tfvm;
 }

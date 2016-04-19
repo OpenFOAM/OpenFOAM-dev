@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ Foam::displacementSBRStressFvMotionSolver::displacementSBRStressFvMotionSolver
         (
             "cellDisplacement",
             pointDisplacement().dimensions(),
-            vector::zero
+            Zero
         ),
         cellMotionBoundaryTypes<vector>(pointDisplacement().boundaryField())
     ),
@@ -108,7 +108,7 @@ Foam::displacementSBRStressFvMotionSolver::curPoints() const
         points0() + pointDisplacement().internalField()
     );
 
-    twoDCorrectPoints(tcurPoints());
+    twoDCorrectPoints(tcurPoints.ref());
 
     return tcurPoints;
 }
@@ -140,9 +140,10 @@ void Foam::displacementSBRStressFvMotionSolver::solve()
         (
             Df
            *(
+               fvc::dotInterpolate
                (
-                   cellDisplacement_.mesh().Sf()
-                 & fvc::interpolate(gradCd.T() - gradCd)
+                   cellDisplacement_.mesh().Sf(),
+                   gradCd.T() - gradCd
                )
 
                // Solid-body rotation "lambda" term
@@ -162,9 +163,10 @@ void Foam::displacementSBRStressFvMotionSolver::solve()
         (
             Df
            *(
+               fvc::dotInterpolate
                (
-                   cellDisplacement_.mesh().Sf()
-                 & fvc::interpolate(gradCd + gradCd.T())
+                   cellDisplacement_.mesh().Sf(),
+                   gradCd + gradCd.T()
                )
 
                // Solid-body rotation "lambda" term

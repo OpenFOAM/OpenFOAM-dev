@@ -7,4 +7,4 @@ wclean libso interfacialModels
 wclean libso phaseCompressibleTurbulenceModels
 wclean
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

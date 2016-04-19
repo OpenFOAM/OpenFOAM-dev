@@ -321,10 +321,6 @@ void Foam::processorCyclicPolyPatch::initOrder
 }
 
 
-// Return new ordering. Ordering is -faceMap: for every face index
-// the new face -rotation:for every new face the clockwise shift
-// of the original face. Return false if nothing changes (faceMap
-// is identity, rotation is 0)
 bool Foam::processorCyclicPolyPatch::order
 (
     PstreamBuffers& pBufs,

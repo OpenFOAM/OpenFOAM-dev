@@ -49,8 +49,7 @@ slicedBoundaryField
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );
-
-    FieldField<PatchField, Type>& bf = tbf();
+    FieldField<PatchField, Type>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {
@@ -126,8 +125,7 @@ slicedBoundaryField
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );
-
-    FieldField<PatchField, Type>& bf = tbf();
+    FieldField<PatchField, Type>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {
@@ -160,7 +158,7 @@ slicedBoundaryField
                     DimensionedField<Type, GeoMesh>::null()
                 )
             );
-            bf[patchi].UList<Type>::operator=(bField[patchi]);
+            bf[patchi].UList<Type>::shallowCopy(bField[patchi]);
         }
     }
 
@@ -195,7 +193,7 @@ DimensionedInternalField::DimensionedInternalField
     )
 {
     // Set the internalField to the slice of the complete field
-    UList<Type>::operator=
+    UList<Type>::shallowCopy
     (
         typename Field<Type>::subField(iField, GeoMesh::size(mesh))
     );
@@ -229,7 +227,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the slice of the complete field
-    UList<Type>::operator=
+    UList<Type>::shallowCopy
     (
         typename Field<Type>::subField(completeField, GeoMesh::size(mesh))
     );
@@ -273,7 +271,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the slice of the complete field
-    UList<Type>::operator=
+    UList<Type>::shallowCopy
     (
         typename Field<Type>::subField(completeIField, GeoMesh::size(mesh))
     );
@@ -307,7 +305,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the supplied internal field
-    UList<Type>::operator=(gf.internalField());
+    UList<Type>::shallowCopy(gf.internalField());
 
     correctBoundaryConditions();
 }
@@ -336,7 +334,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the supplied internal field
-    UList<Type>::operator=(gf.internalField());
+    UList<Type>::shallowCopy(gf.internalField());
 }
 
 
@@ -354,7 +352,7 @@ Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 {
     // Set the internalField storage pointer to NULL before its destruction
     // to protect the field it a slice of.
-    UList<Type>::operator=(UList<Type>(NULL, 0));
+    UList<Type>::shallowCopy(UList<Type>(NULL, 0));
 }
 
 
@@ -370,7 +368,7 @@ DimensionedInternalField::~DimensionedInternalField()
 {
     // Set the internalField storage pointer to NULL before its destruction
     // to protect the field it a slice of.
-    UList<Type>::operator=(UList<Type>(NULL, 0));
+    UList<Type>::shallowCopy(UList<Type>(NULL, 0));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,8 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
     Umean_(0),
     alphaName_("none")
 {
-    refValue() = vector::zero;
-    refGrad() = vector::zero;
+    refValue() = Zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 
@@ -75,8 +75,8 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
     Umean_(readScalar(dict.lookup("Umean"))),
     alphaName_(dict.lookup("alpha"))
 {
-    refValue() = vector::zero;
-    refGrad() = vector::zero;
+    refValue() = Zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 
     if (dict.found("value"))
@@ -145,7 +145,7 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::updateCoeffs()
     // such that the phase mean is Umean_
     if (Uzgmean >= Umean_)
     {
-        refValue() = vector::zero;
+        refValue() = Zero;
         valueFraction() = 1.0 - Umean_/Uzgmean;
     }
     else

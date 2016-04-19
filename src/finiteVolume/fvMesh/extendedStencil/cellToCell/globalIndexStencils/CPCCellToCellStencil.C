@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Calculates per point the neighbour data (= pointCells)
 void Foam::CPCCellToCellStencil::calcPointBoundaryData
 (
     const boolList& isValidBFace,
@@ -67,8 +66,6 @@ void Foam::CPCCellToCellStencil::calcPointBoundaryData
 }
 
 
-// Calculates per cell the neighbour data (= cell or boundary in global
-// numbering). First element is always cell itself!
 void Foam::CPCCellToCellStencil::calcCellStencil
 (
     labelListList& globalCellCells

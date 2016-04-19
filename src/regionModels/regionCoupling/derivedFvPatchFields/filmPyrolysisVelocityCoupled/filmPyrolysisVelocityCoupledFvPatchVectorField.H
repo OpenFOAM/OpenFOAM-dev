@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,14 +35,14 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-        myPatch
-        {
-            type            filmPyrolysisVelocityCoupled;
-            phi             phi;      // name of flux field (default = phi)
-            rho             rho;      // name of density field (default = rho)
-            deltaWet        1e-4;     // threshold height for 'wet' film
-            value           uniform   (0 0 0); // initial velocity / [m/s]
-        }
+    myPatch
+    {
+        type            filmPyrolysisVelocityCoupled;
+        phi             phi;      // name of flux field (default = phi)
+        rho             rho;      // name of density field (default = rho)
+        deltaWet        1e-4;     // threshold height for 'wet' film
+        value           uniform   (0 0 0); // initial velocity / [m/s]
+    }
     \endverbatim
 
 SourceFiles

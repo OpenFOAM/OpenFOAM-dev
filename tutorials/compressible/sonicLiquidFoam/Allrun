@@ -42,4 +42,4 @@ cloneCase decompressionTank decompressionTankFine
     runApplication `getApplication`
 )
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

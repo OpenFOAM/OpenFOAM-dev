@@ -47,7 +47,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
     const dimensionSet ds = field.dimensions()/dimTime*dimVolume;
 
     tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
-    fvMatrix<Type>& mtx = tmtx();
+    fvMatrix<Type>& mtx = tmtx.ref();
 
     forAll(*this, i)
     {
@@ -103,7 +103,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
     );
 
     tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
-    fvMatrix<Type>& mtx = tmtx();
+    fvMatrix<Type>& mtx = tmtx.ref();
 
     forAll(*this, i)
     {
@@ -162,7 +162,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
     );
 
     tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
-    fvMatrix<Type>& mtx = tmtx();
+    fvMatrix<Type>& mtx = tmtx.ref();
 
     forAll(*this, i)
     {

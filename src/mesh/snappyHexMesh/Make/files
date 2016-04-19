@@ -1,0 +1,31 @@
+snappyHexMeshDriver/snappyLayerDriver.C
+/* snappyHexMeshDriver/snappyLayerDriverShrink.C */
+snappyHexMeshDriver/snappySnapDriver.C
+snappyHexMeshDriver/snappySnapDriverFeature.C
+snappyHexMeshDriver/snappyRefineDriver.C
+
+snappyHexMeshDriver/layerParameters/layerParameters.C
+snappyHexMeshDriver/refinementParameters/refinementParameters.C
+snappyHexMeshDriver/snapParameters/snapParameters.C
+snappyHexMeshDriver/pointData/pointData.C
+
+meshRefinement/meshRefinementBaffles.C
+meshRefinement/meshRefinement.C
+meshRefinement/meshRefinementMerge.C
+meshRefinement/meshRefinementProblemCells.C
+meshRefinement/meshRefinementRefine.C
+meshRefinement/patchFaceOrientation.C
+
+refinementFeatures/refinementFeatures.C
+refinementSurfaces/surfaceZonesInfo.C
+refinementSurfaces/refinementSurfaces.C
+shellSurfaces/shellSurfaces.C
+trackedParticle/trackedParticle.C
+trackedParticle/trackedParticleCloud.C
+
+externalDisplacementMeshMover/displacementMeshMoverMotionSolver.C
+externalDisplacementMeshMover/externalDisplacementMeshMover.C
+externalDisplacementMeshMover/medialAxisMeshMover.C
+externalDisplacementMeshMover/zeroFixedValue/zeroFixedValuePointPatchFields.C
+
+LIB = $(FOAM_LIBBIN)/libsnappyHexMesh

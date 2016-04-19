@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,7 +135,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
     const vectorField& Sf = mesh_.Sf();
     const scalarField& magSf = mesh_.magSf();
 
-    vector n = vector::zero;
+    vector n = Zero;
 
     // Calculate cell addressing for selected cells
     labelList cellAddr(mesh_.nCells(), -1);
@@ -263,9 +263,9 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
 void Foam::fv::rotorDiskSource::createCoordinateSystem()
 {
     // Construct the local rotor co-prdinate system
-    vector origin(vector::zero);
-    vector axis(vector::zero);
-    vector refDir(vector::zero);
+    vector origin(Zero);
+    vector axis(Zero);
+    vector refDir(Zero);
 
     geometryModeType gm =
         geometryModeTypeNames_.read(coeffs_.lookup("geometryMode"));
@@ -289,7 +289,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             origin /= sumV;
 
             // Determine first radial vector
-            vector dx1(vector::zero);
+            vector dx1(Zero);
             scalar magR = -GREAT;
             forAll(cells_, i)
             {
@@ -459,7 +459,7 @@ Foam::tmp<Foam::vectorField> Foam::fv::rotorDiskSource::inflowVelocity
         }
     }
 
-    return tmp<vectorField>(new vectorField(mesh_.nCells(), vector::zero));
+    return tmp<vectorField>(new vectorField(mesh_.nCells(), Zero));
 }
 
 
@@ -479,10 +479,10 @@ Foam::fv::rotorDiskSource::rotorDiskSource
     omega_(0.0),
     nBlades_(0),
     inletFlow_(ifLocal),
-    inletVelocity_(vector::zero),
+    inletVelocity_(Zero),
     tipEffect_(1.0),
     flap_(),
-    x_(cells_.size(), vector::zero),
+    x_(cells_.size(), Zero),
     R_(cells_.size(), I),
     invR_(cells_.size(), I),
     area_(cells_.size(), 0.0),
@@ -524,7 +524,7 @@ void Foam::fv::rotorDiskSource::addSup
         (
             "zero",
             eqn.dimensions()/dimVolume,
-            vector::zero
+            Zero
         )
     );
 
@@ -565,7 +565,7 @@ void Foam::fv::rotorDiskSource::addSup
         (
             "zero",
             eqn.dimensions()/dimVolume,
-            vector::zero
+            Zero
         )
     );
 

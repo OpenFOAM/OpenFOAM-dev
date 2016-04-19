@@ -247,7 +247,7 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar deltaT = mesh().time().deltaTValue();
     scalar deltaT0 = mesh().time().deltaT0Value();
@@ -308,7 +308,7 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar deltaT = mesh().time().deltaTValue();
     scalar deltaT0 = mesh().time().deltaT0Value();
@@ -368,7 +368,7 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar deltaT = mesh().time().deltaTValue();
     scalar deltaT0 = mesh().time().deltaT0Value();

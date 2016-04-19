@@ -23,7 +23,7 @@ volVectorField U
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedVector("U", dimVelocity, vector::zero)
+    dimensionedVector("U", dimVelocity, Zero)
 );
 
 surfaceScalarField phi

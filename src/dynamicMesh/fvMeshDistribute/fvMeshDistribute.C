@@ -566,10 +566,8 @@ void Foam::fvMeshDistribute::getNeighbourData
             }
 
             // Which processor they will end up on
-            SubList<label>(nbrNewNbrProc, pp.size(), offset).assign
-            (
-                UIndirectList<label>(distribution, pp.faceCells())()
-            );
+            SubList<label>(nbrNewNbrProc, pp.size(), offset) =
+                UIndirectList<label>(distribution, pp.faceCells())();
         }
     }
 
@@ -1074,7 +1072,7 @@ void Foam::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zonePoints[nameI].assign(pointZones[myZoneID]);
+                zonePoints[nameI].deepCopy(pointZones[myZoneID]);
             }
         }
     }
@@ -1106,8 +1104,8 @@ void Foam::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zoneFaces[nameI].assign(faceZones[myZoneID]);
-                zoneFaceFlip[nameI].assign(faceZones[myZoneID].flipMap());
+                zoneFaces[nameI].deepCopy(faceZones[myZoneID]);
+                zoneFaceFlip[nameI].deepCopy(faceZones[myZoneID].flipMap());
             }
         }
     }
@@ -1137,7 +1135,7 @@ void Foam::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zoneCells[nameI].assign(cellZones[myZoneID]);
+                zoneCells[nameI].deepCopy(cellZones[myZoneID]);
             }
         }
     }
@@ -2215,11 +2213,11 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     // from nothing so explicitly reset.
     initPatchFields<volScalarField, processorFvPatchField<scalar>>
     (
-        pTraits<scalar>::zero
+        Zero
     );
     initPatchFields<volVectorField, processorFvPatchField<vector>>
     (
-        pTraits<vector>::zero
+        Zero
     );
     initPatchFields
     <
@@ -2227,24 +2225,24 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
         processorFvPatchField<sphericalTensor>
     >
     (
-        pTraits<sphericalTensor>::zero
+        Zero
     );
     initPatchFields<volSymmTensorField, processorFvPatchField<symmTensor>>
     (
-        pTraits<symmTensor>::zero
+        Zero
     );
     initPatchFields<volTensorField, processorFvPatchField<tensor>>
     (
-        pTraits<tensor>::zero
+        Zero
     );
 
     initPatchFields<surfaceScalarField, processorFvsPatchField<scalar>>
     (
-        pTraits<scalar>::zero
+        Zero
     );
     initPatchFields<surfaceVectorField, processorFvsPatchField<vector>>
     (
-        pTraits<vector>::zero
+        Zero
     );
     initPatchFields
     <
@@ -2252,7 +2250,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
         processorFvsPatchField<sphericalTensor>
     >
     (
-        pTraits<sphericalTensor>::zero
+        Zero
     );
     initPatchFields
     <
@@ -2260,11 +2258,11 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
         processorFvsPatchField<symmTensor>
     >
     (
-        pTraits<symmTensor>::zero
+        Zero
     );
     initPatchFields<surfaceTensorField, processorFvsPatchField<tensor>>
     (
-        pTraits<tensor>::zero
+        Zero
     );
 
 

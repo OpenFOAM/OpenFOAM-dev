@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -754,7 +754,6 @@ Foam::word Foam::Time::timeName() const
 }
 
 
-// Search the construction path for times
 Foam::instantList Foam::Time::times() const
 {
     return findTimes(path(), constant());
@@ -795,7 +794,7 @@ Foam::instant Foam::Time::findClosestTime(const scalar t) const
 {
     instantList timeDirs = findTimes(path(), constant());
 
-    // there is only one time (likely "constant") so return it
+    // There is only one time (likely "constant") so return it
     if (timeDirs.size() == 1)
     {
         return timeDirs[0];
@@ -826,16 +825,6 @@ Foam::instant Foam::Time::findClosestTime(const scalar t) const
     return timeDirs[nearestIndex];
 }
 
-
-// This should work too,
-// if we don't worry about checking "constant" explicitly
-//
-// Foam::instant Foam::Time::findClosestTime(const scalar t) const
-// {
-//     instantList timeDirs = findTimes(path(), constant());
-//     label timeIndex = min(findClosestTimeIndex(timeDirs, t), 0, constant());
-//     return timeDirs[timeIndex];
-// }
 
 Foam::label Foam::Time::findClosestTimeIndex
 (

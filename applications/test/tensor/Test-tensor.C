@@ -91,11 +91,11 @@ int main()
         0.9745196104049683, 0.0369445420801640, 0.0846728682518005,
         0.6474838852882385, 0.1617118716239929, 0.2041363865137100
     );
-    Debug(T_rand_real);
+    DebugVar(T_rand_real);
     vector L_rand_real(eigenValues(T_rand_real));
-    Debug(L_rand_real);
+    DebugVar(L_rand_real);
     tensor U_rand_real(eigenVectors(T_rand_real));
-    Debug(U_rand_real);
+    DebugVar(U_rand_real);
 
     Info << endl << endl;
 
@@ -105,11 +105,11 @@ int main()
         0.9126510620117188, 0.7408077120780945, 0.1499115079641342,
         0.0936608463525772, 0.7615650296211243, 0.8953040242195129
     );
-    Debug(T_rand_imag);
+    DebugVar(T_rand_imag);
     vector L_rand_imag(eigenValues(T_rand_imag));
-    Debug(L_rand_imag);
+    DebugVar(L_rand_imag);
     tensor U_rand_imag(eigenVectors(T_rand_imag));
-    Debug(U_rand_imag);
+    DebugVar(U_rand_imag);
 
     Info << endl << endl;
 
@@ -119,11 +119,11 @@ int main()
         1.3076051771640778, 0.0738890841603279, 0.2463847398757935,
         1.3121289014816284, 0.2463847398757935, 0.4082727730274200
     );
-    Debug(T_rand_symm);
+    DebugVar(T_rand_symm);
     vector L_rand_symm(eigenValues(T_rand_symm));
-    Debug(L_rand_symm);
+    DebugVar(L_rand_symm);
     tensor U_rand_symm(eigenVectors(T_rand_symm));
-    Debug(U_rand_symm);
+    DebugVar(U_rand_symm);
 
     Info << endl << endl;
 
@@ -133,11 +133,11 @@ int main()
                             0.0738890841603279, 0.2463847398757935,
                                                 0.4082727730274200
     );
-    Debug(T_rand_Symm);
+    DebugVar(T_rand_Symm);
     vector L_rand_Symm(eigenValues(T_rand_Symm));
-    Debug(L_rand_Symm);
+    DebugVar(L_rand_Symm);
     tensor U_rand_Symm(eigenVectors(T_rand_Symm));
-    Debug(U_rand_Symm);
+    DebugVar(U_rand_Symm);
 
     Info << endl << endl;
 
@@ -147,11 +147,11 @@ int main()
         0, 0.7408077120780945, 0,
         0, 0, 0.8953040242195129
     );
-    Debug(T_rand_diag);
+    DebugVar(T_rand_diag);
     vector L_rand_diag(eigenValues(T_rand_diag));
-    Debug(L_rand_diag);
+    DebugVar(L_rand_diag);
     tensor U_rand_diag(eigenVectors(T_rand_diag));
-    Debug(U_rand_diag);
+    DebugVar(U_rand_diag);
 
     Info << endl << endl;
 
@@ -161,11 +161,11 @@ int main()
         1, 0, 1,
         1, 1, 0
     );
-    Debug(T_repeated);
+    DebugVar(T_repeated);
     vector L_repeated(eigenValues(T_repeated));
-    Debug(L_repeated);
+    DebugVar(L_repeated);
     tensor U_repeated(eigenVectors(T_repeated));
-    Debug(U_repeated);
+    DebugVar(U_repeated);
 
     Info << endl << endl;
 
@@ -175,11 +175,11 @@ int main()
         1, 1, 1,
         1, 1, 1
     );
-    Debug(T_repeated_zero);
+    DebugVar(T_repeated_zero);
     vector L_repeated_zero(eigenValues(T_repeated_zero));
-    Debug(L_repeated_zero);
+    DebugVar(L_repeated_zero);
     tensor U_repeated_zero(eigenVectors(T_repeated_zero));
-    Debug(U_repeated_zero);
+    DebugVar(U_repeated_zero);
 
     Info << endl << endl;
 
@@ -189,11 +189,11 @@ int main()
         0, 2, 0,
         0, 0, 2
     );
-    Debug(T_triple);
+    DebugVar(T_triple);
     vector L_triple(eigenValues(T_triple));
-    Debug(L_triple);
+    DebugVar(L_triple);
     tensor U_triple(eigenVectors(T_triple));
-    Debug(U_triple);
+    DebugVar(U_triple);
     */
 
     return 0;

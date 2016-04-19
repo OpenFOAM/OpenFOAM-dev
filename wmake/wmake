@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -219,6 +219,9 @@ then
         ./Allwmake
         exit $?
     else
+        # Have to keep track of the main exit code for the call to "make"
+        makeExitCode=0
+
         # Find all the sub-directories containing a 'Make' directory
         FOAM_APPS=$(\
                        for d in *; \
@@ -232,13 +235,17 @@ then
             $make ${WM_CONTINUE_ON_ERROR:+-k} \
                   -f $WM_DIR/makefiles/apps \
                   TARGET="$targetType" FOAM_APPS="$FOAM_APPS"
+            makeExitCode=$?
         fi
         # If the current directory contains a 'Make' directory continue
-        # otherwise exit
-        if [ ! -d $MakeDir ]
+        # otherwise exit, or always exit in case of error
+        if [ ! -d $MakeDir -o $makeExitCode -ne 0 ]
         then
-            exit $?
+            exit $makeExitCode
         fi
+
+        # Clean up tracking variable
+        unset makeExitCode
     fi
 fi
 

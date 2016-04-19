@@ -1,8 +1,13 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 
-wmake libso helpTypes
+# Parse arguments for library compilation
+targetType=libso
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
+set -x
+
+wmake $targetType helpTypes
 wmake
 
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

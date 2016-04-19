@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<typename Triangulation>
+template<class Triangulation>
 void Foam::DelaunayMeshTools::writeOBJ
 (
     const fileName& fName,
@@ -77,7 +77,7 @@ void Foam::DelaunayMeshTools::writeOBJ
 }
 
 
-template<typename Triangulation>
+template<class Triangulation>
 void Foam::DelaunayMeshTools::writeOBJ
 (
     const fileName& fName,
@@ -89,7 +89,7 @@ void Foam::DelaunayMeshTools::writeOBJ
 }
 
 
-template<typename Triangulation>
+template<class Triangulation>
 void Foam::DelaunayMeshTools::writeFixedPoints
 (
     const fileName& fName,
@@ -117,7 +117,7 @@ void Foam::DelaunayMeshTools::writeFixedPoints
 }
 
 
-template<typename Triangulation>
+template<class Triangulation>
 void Foam::DelaunayMeshTools::writeBoundaryPoints
 (
     const fileName& fName,
@@ -145,7 +145,7 @@ void Foam::DelaunayMeshTools::writeBoundaryPoints
 }
 
 
-template<typename Triangulation>
+template<class Triangulation>
 void Foam::DelaunayMeshTools::writeProcessorInterface
 (
     const fileName& fName,
@@ -175,7 +175,7 @@ void Foam::DelaunayMeshTools::writeProcessorInterface
 }
 
 
-template<typename Triangulation>
+template<class Triangulation>
 void Foam::DelaunayMeshTools::writeInternalDelaunayVertices
 (
     const fileName& instance,
@@ -224,7 +224,7 @@ void Foam::DelaunayMeshTools::writeInternalDelaunayVertices
 }
 
 
-template<typename CellHandle>
+template<class CellHandle>
 void Foam::DelaunayMeshTools::drawDelaunayCell
 (
     Ostream& os,
@@ -273,14 +273,14 @@ void Foam::DelaunayMeshTools::drawDelaunayCell
 }
 
 
-template<typename Triangulation>
+template<class Triangulation>
 Foam::tmp<Foam::pointField> Foam::DelaunayMeshTools::allPoints
 (
     const Triangulation& t
 )
 {
     tmp<pointField> tpts(new pointField(t.vertexCount(), point::max));
-    pointField& pts = tpts();
+    pointField& pts = tpts.ref();
 
     for
     (

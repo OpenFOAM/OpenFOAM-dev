@@ -25,4 +25,4 @@ runApplication createPatch -overwrite
 # Initialize alpha
 runApplication setFields
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

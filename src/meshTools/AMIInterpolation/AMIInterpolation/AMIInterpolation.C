@@ -1284,7 +1284,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
         new Field<Type>
         (
             srcAddress_.size(),
-            pTraits<Type>::zero
+            Zero
         )
     );
 
@@ -1292,7 +1292,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
     (
         fld,
         multiplyWeightedOp<Type, CombineOp>(cop),
-        tresult(),
+        tresult.ref(),
         defaultValues
     );
 
@@ -1329,7 +1329,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
         new Field<Type>
         (
             tgtAddress_.size(),
-            pTraits<Type>::zero
+            Zero
         )
     );
 
@@ -1337,7 +1337,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
     (
         fld,
         multiplyWeightedOp<Type, CombineOp>(cop),
-        tresult(),
+        tresult.ref(),
         defaultValues
     );
 

@@ -49,7 +49,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Create single cell mesh
 Foam::autoPtr<Foam::lduPrimitiveMesh>
 Foam::procFacesGAMGProcAgglomeration::singleCellMesh
 (
@@ -166,7 +165,7 @@ Foam::procFacesGAMGProcAgglomeration::processorAgglomeration
     );
 
     tmp<labelField> tfineToCoarse(new labelField(0));
-    labelField& fineToCoarse = tfineToCoarse();
+    labelField& fineToCoarse = tfineToCoarse.ref();
 
     if (singleCellMeshPtr.valid())
     {

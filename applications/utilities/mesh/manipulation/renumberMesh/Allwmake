@@ -1,6 +1,10 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 
+# Parse arguments for compilation (at least for error catching)
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
+set -x
+
 export COMPILE_FLAGS=''
 export LINK_FLAGS=''
 
@@ -19,4 +23,4 @@ fi
 
 wmake
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

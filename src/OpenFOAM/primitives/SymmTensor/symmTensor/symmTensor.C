@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,18 +25,13 @@ License
 
 #include "symmTensor.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const symmTensor::typeName = "symmTensor";
+const char* const Foam::symmTensor::vsType::typeName = "symmTensor";
 
 template<>
-const char* symmTensor::componentNames[] =
+const char* const Foam::symmTensor::vsType::componentNames[] =
 {
     "xx", "xy", "xz",
           "yy", "yz",
@@ -44,48 +39,48 @@ const char* symmTensor::componentNames[] =
 };
 
 template<>
-const symmTensor symmTensor::zero
+const Foam::symmTensor Foam::symmTensor::vsType::vsType::zero
 (
-    0, 0, 0,
-       0, 0,
-          0
+    symmTensor::uniform(0)
 );
 
 template<>
-const symmTensor symmTensor::one
+const Foam::symmTensor Foam::symmTensor::vsType::one
 (
-    1, 1, 1,
-       1, 1,
-          1
+    symmTensor::uniform(1)
 );
 
 template<>
-const symmTensor symmTensor::max
+const Foam::symmTensor Foam::symmTensor::vsType::max
 (
-    VGREAT, VGREAT, VGREAT,
-            VGREAT, VGREAT,
-                    VGREAT
+    symmTensor::uniform(VGREAT)
 );
 
 template<>
-const symmTensor symmTensor::min
+const Foam::symmTensor Foam::symmTensor::vsType::min
 (
-    -VGREAT, -VGREAT, -VGREAT,
-             -VGREAT, -VGREAT,
-                      -VGREAT
+    symmTensor::uniform(-VGREAT)
 );
 
 template<>
-const symmTensor symmTensor::I
+const Foam::symmTensor Foam::symmTensor::vsType::rootMax
+(
+    symmTensor::uniform(ROOTVGREAT)
+);
+
+template<>
+const Foam::symmTensor Foam::symmTensor::vsType::rootMin
+(
+    symmTensor::uniform(-ROOTVGREAT)
+);
+
+template<>
+const Foam::symmTensor Foam::symmTensor::I
 (
     1, 0, 0,
        1, 0,
           1
 );
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

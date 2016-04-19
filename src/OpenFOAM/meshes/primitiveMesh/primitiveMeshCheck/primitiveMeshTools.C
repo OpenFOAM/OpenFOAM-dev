@@ -130,7 +130,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceOrthogonality
     const labelList& nei = mesh.faceNeighbour();
 
     tmp<scalarField> tortho(new scalarField(mesh.nInternalFaces()));
-    scalarField& ortho = tortho();
+    scalarField& ortho = tortho.ref();
 
     // Internal faces
     forAll(nei, faceI)
@@ -160,7 +160,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceSkewness
     const labelList& nei = mesh.faceNeighbour();
 
     tmp<scalarField> tskew(new scalarField(mesh.nFaces()));
-    scalarField& skew = tskew();
+    scalarField& skew = tskew.ref();
 
     forAll(nei, faceI)
     {
@@ -254,8 +254,8 @@ void Foam::primitiveMeshTools::cellClosedness
     // Loop through cell faces and sum up the face area vectors for each cell.
     // This should be zero in all vector components
 
-    vectorField sumClosed(mesh.nCells(), vector::zero);
-    vectorField sumMagClosed(mesh.nCells(), vector::zero);
+    vectorField sumClosed(mesh.nCells(), Zero);
+    vectorField sumMagClosed(mesh.nCells(), Zero);
 
     forAll(own, faceI)
     {
@@ -345,7 +345,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
     faceNormals /= mag(faceNormals) + ROOTVSMALL;
 
     tmp<scalarField> tfaceAngles(new scalarField(mesh.nFaces()));
-    scalarField& faceAngles = tfaceAngles();
+    scalarField& faceAngles = tfaceAngles.ref();
 
 
     forAll(fcs, faceI)
@@ -416,7 +416,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
     scalarField magAreas(mag(faceAreas));
 
     tmp<scalarField> tfaceFlatness(new scalarField(mesh.nFaces(), 1.0));
-    scalarField& faceFlatness = tfaceFlatness();
+    scalarField& faceFlatness = tfaceFlatness.ref();
 
 
     forAll(fcs, faceI)
@@ -474,7 +474,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
     }
 
     tmp<scalarField> tcellDeterminant(new scalarField(mesh.nCells()));
-    scalarField& cellDeterminant = tcellDeterminant();
+    scalarField& cellDeterminant = tcellDeterminant.ref();
 
     const cellList& c = mesh.cells();
 
@@ -511,7 +511,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
             {
                 avgArea /= nInternalFaces;
 
-                symmTensor areaTensor(symmTensor::zero);
+                symmTensor areaTensor(Zero);
 
                 forAll(curFaces, i)
                 {

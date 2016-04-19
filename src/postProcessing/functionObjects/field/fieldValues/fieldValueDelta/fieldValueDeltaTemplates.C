@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Type Foam::fieldValues::fieldValueDelta::applyOperation
     const Type& value2
 ) const
 {
-    Type result = pTraits<Type>::zero;
+    Type result = Zero;
 
     switch (operation_)
     {
@@ -89,8 +89,8 @@ void Foam::fieldValues::fieldValueDelta::processFields(bool& found)
     const dictionary& results1 = source1Ptr_->resultDict();
     const dictionary& results2 = source2Ptr_->resultDict();
 
-    Type r1(pTraits<Type>::zero);
-    Type r2(pTraits<Type>::zero);
+    Type r1(Zero);
+    Type r2(Zero);
 
     forAll(fields1, i)
     {

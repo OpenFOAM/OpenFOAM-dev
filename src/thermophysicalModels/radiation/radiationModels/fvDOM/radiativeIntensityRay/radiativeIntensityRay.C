@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,8 +108,8 @@ Foam::radiation::radiativeIntensityRay::radiativeIntensityRay
         mesh_,
         dimensionedScalar("Qem", dimMass/pow3(dimTime), 0.0)
     ),
-    d_(vector::zero),
-    dAve_(vector::zero),
+    d_(Zero),
+    dAve_(Zero),
     theta_(theta),
     phi_(phi),
     omega_(0.0),
@@ -253,11 +253,11 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
             );
         }
 
-        IiEq().relax();
+        IiEq.ref().relax();
 
         const solverPerformance ILambdaSol = solve
         (
-            IiEq(),
+            IiEq.ref(),
             mesh_.solver("Ii")
         );
 

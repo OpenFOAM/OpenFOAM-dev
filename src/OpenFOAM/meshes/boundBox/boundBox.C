@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,8 @@ void Foam::boundBox::calculate(const UList<point>& points, const bool doReduce)
 {
     if (points.empty())
     {
-        min_ = point::zero;
-        max_ = point::zero;
+        min_ = Zero;
+        max_ = Zero;
 
         if (doReduce && Pstream::parRun())
         {
@@ -87,8 +87,8 @@ void Foam::boundBox::calculate(const UList<point>& points, const bool doReduce)
 
 Foam::boundBox::boundBox(const UList<point>& points, const bool doReduce)
 :
-    min_(point::zero),
-    max_(point::zero)
+    min_(Zero),
+    max_(Zero)
 {
     calculate(points, doReduce);
 }
@@ -96,8 +96,8 @@ Foam::boundBox::boundBox(const UList<point>& points, const bool doReduce)
 
 Foam::boundBox::boundBox(const tmp<pointField>& points, const bool doReduce)
 :
-    min_(point::zero),
-    max_(point::zero)
+    min_(Zero),
+    max_(Zero)
 {
     calculate(points(), doReduce);
     points.clear();
@@ -111,8 +111,8 @@ Foam::boundBox::boundBox
     const bool doReduce
 )
 :
-    min_(point::zero),
-    max_(point::zero)
+    min_(Zero),
+    max_(Zero)
 {
     if (points.empty() || indices.empty())
     {
@@ -149,7 +149,7 @@ Foam::boundBox::boundBox
 Foam::tmp<Foam::pointField> Foam::boundBox::points() const
 {
     tmp<pointField> tPts = tmp<pointField>(new pointField(8));
-    pointField& pt = tPts();
+    pointField& pt = tPts.ref();
 
     pt[0] = min_;                                   // min-x, min-y, min-z
     pt[1] = point(max_.x(), min_.y(), min_.z());    // max-x, min-y, min-z

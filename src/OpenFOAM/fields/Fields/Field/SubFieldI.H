@@ -74,7 +74,7 @@ inline Foam::SubField<Type>::SubField
     const SubField<Type>& sfield
 )
 :
-    refCount(),
+    tmp<SubField<Type>>::refCount(),
     SubList<Type>(sfield)
 {}
 
@@ -111,7 +111,28 @@ inline Foam::tmp<Foam::Field<Type>> Foam::SubField<Type>::T() const
 template<class Type>
 inline void Foam::SubField<Type>::operator=(const SubField<Type>& rhs)
 {
-    UList<Type>::operator=(rhs);
+    SubList<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+inline void Foam::SubField<Type>::operator=(const Field<Type>& rhs)
+{
+    SubList<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+template<class Form, Foam::direction Ncmpts>
+inline void Foam::SubField<Type>::operator=
+(
+    const VectorSpace<Form, Type, Ncmpts>& rhs
+)
+{
+    forAll(rhs, i)
+    {
+        this->operator[](i) = rhs[i];
+    }
 }
 
 

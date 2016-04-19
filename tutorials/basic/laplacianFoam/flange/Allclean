@@ -8,4 +8,4 @@ cleanCase
 rm -rf EnSight Ensight Fieldview > /dev/null 2>&1
 rm -f constant/polyMesh/boundary > /dev/null 2>&1
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,7 @@ SourceFiles
 #include "label.H"
 #include "uLabel.H"
 #include "nullObject.H"
+#include "zero.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,6 +80,19 @@ class UList
         T* __restrict__ v_;
 
 
+    // Private Member Functions
+
+        //- Disallow default shallow-copy assignment
+        //
+        //  Assignment of UList<T> may need to be either shallow (copy pointer)
+        //  or deep (copy elements) depending on context or the particular type
+        //  of list derived from UList and it is confusing and prone to error
+        //  for the default assignment to be either.  The solution is to
+        //  disallow default assignment and provide separate 'shallowCopy' and
+        //  'deepCopy' member functions.
+        void operator=(const UList<T>&) = delete;
+
+
 public:
 
     // Related types
@@ -89,10 +103,12 @@ public:
         //- Declare friendship with the SubList class
         friend class SubList<T>;
 
+
     // Static Member Functions
 
         //- Return a null UList
         inline static const UList<T>& null();
+
 
     // Public classes
 
@@ -197,14 +213,17 @@ public:
             inline void checkIndex(const label i) const;
 
 
+        //- Copy the pointer held by the given UList.
+        inline void shallowCopy(const UList<T>&);
+
+        //- Copy elements of the given UList.
+        void deepCopy(const UList<T>&);
+
         //- Write the UList as a dictionary entry.
         void writeEntry(Ostream&) const;
 
         //- Write the UList as a dictionary entry with keyword.
         void writeEntry(const word& keyword, Ostream&) const;
-
-        //- Assign elements to those from UList.
-        void assign(const UList<T>&);
 
 
     // Member operators
@@ -222,6 +241,9 @@ public:
 
         //- Assignment of all entries to the given value
         void operator=(const T&);
+
+        //- Assignment of all entries to zero
+        void operator=(const zero);
 
 
     // STL type definitions
@@ -323,7 +345,7 @@ public:
     // STL member operators
 
         //- Equality operation on ULists of the same type.
-        //  Returns true when the ULists are elementwise equal
+        //  Returns true when the ULists are element-wise equal
         //  (using UList::value_type::operator==).  Takes linear time.
         bool operator==(const UList<T>&) const;
 
@@ -391,7 +413,7 @@ inline void reverse(UList<T>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#   include "UListI.H"
+    #include "UListI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -459,7 +481,7 @@ inline void reverse(UList<T>&);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "UList.C"
+    #include "UList.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

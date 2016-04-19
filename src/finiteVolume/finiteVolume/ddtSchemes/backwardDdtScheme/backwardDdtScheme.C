@@ -106,12 +106,12 @@ backwardDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 )
             )
         );
 
-        tdtdt().internalField() = rDeltaT.value()*dt.value()*
+        tdtdt.ref().internalField() = rDeltaT.value()*dt.value()*
         (
             coefft - (coefft0*mesh().V0() - coefft00*mesh().V00())/mesh().V()
         );
@@ -130,7 +130,7 @@ backwardDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 ),
                 calculatedFvPatchField<Type>::typeName
             )
@@ -467,7 +467,7 @@ backwardDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -518,7 +518,7 @@ backwardDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -569,7 +569,7 @@ backwardDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -624,7 +624,7 @@ backwardDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -748,12 +748,10 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
            *rDeltaT
            *(
                 (coefft0*phi.oldTime() - coefft00*phi.oldTime().oldTime())
-              - (
-                    mesh().Sf()
-                  & fvc::interpolate
-                    (
-                        coefft0*U.oldTime() - coefft00*U.oldTime().oldTime()
-                    )
+              - fvc::dotInterpolate
+                (
+                    mesh().Sf(),
+                    coefft0*U.oldTime() - coefft00*U.oldTime().oldTime()
                 )
             )
         )
@@ -886,9 +884,10 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
                *rDeltaT
                *(
                     (coefft0*phi.oldTime() - coefft00*phi.oldTime().oldTime())
-                  - (
-                        mesh().Sf()
-                      & fvc::interpolate(coefft0*rhoU0 - coefft00*rhoU00)
+                  - fvc::dotInterpolate
+                    (
+                        mesh().Sf(),
+                        coefft0*rhoU0 - coefft00*rhoU00
                     )
                 )
             )

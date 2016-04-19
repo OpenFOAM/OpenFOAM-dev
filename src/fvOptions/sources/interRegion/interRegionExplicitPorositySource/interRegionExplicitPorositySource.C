@@ -154,7 +154,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedVector("zero", U.dimensions(), vector::zero)
+        dimensionedVector("zero", U.dimensions(), Zero)
     );
 
     // Map local velocity onto neighbour region
@@ -175,7 +175,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
     vectorField& Usource = porosityEqn.source();
 
     Udiag.setSize(eqn.diag().size(), 0.0);
-    Usource.setSize(eqn.source().size(), vector::zero);
+    Usource.setSize(eqn.source().size(), Zero);
 
     meshInterp().mapTgtToSrc(nbrEqn.diag(), plusEqOp<scalar>(), Udiag);
     meshInterp().mapTgtToSrc(nbrEqn.source(), plusEqOp<vector>(), Usource);
@@ -208,7 +208,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedVector("zero", U.dimensions(), vector::zero)
+        dimensionedVector("zero", U.dimensions(), Zero)
     );
 
     // Map local velocity onto neighbour region
@@ -276,7 +276,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
     vectorField& Usource = porosityEqn.source();
 
     Udiag.setSize(eqn.diag().size(), 0.0);
-    Usource.setSize(eqn.source().size(), vector::zero);
+    Usource.setSize(eqn.source().size(), Zero);
 
     meshInterp().mapTgtToSrc(nbrEqn.diag(), plusEqOp<scalar>(), Udiag);
     meshInterp().mapTgtToSrc(nbrEqn.source(), plusEqOp<vector>(), Usource);

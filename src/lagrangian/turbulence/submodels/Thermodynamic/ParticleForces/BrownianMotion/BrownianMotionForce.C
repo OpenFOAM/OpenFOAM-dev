@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ void Foam::BrownianMotionForce<CloudType>::cacheFields(const bool store)
             }
             else
             {
-                kPtr_ = tk.operator->();
+                kPtr_ = &tk();
                 ownK_ = false;
             }
         }
@@ -165,7 +165,7 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     const scalar muc
 ) const
 {
-    forceSuSp value(vector::zero, 0.0);
+    forceSuSp value(Zero, 0.0);
 
     const scalar dp = p.d();
     const scalar Tc = p.Tc();
@@ -187,9 +187,8 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     }
     else
     {
-        const scalar rhoRatio = p.rho()/p.rhoc();
         const scalar s0 =
-            216*muc*sigma*Tc/(sqr(mathematical::pi)*pow5(dp)*(rhoRatio)*cc);
+            216*muc*sigma*Tc/(sqr(mathematical::pi)*pow5(dp)*sqr(p.rho())*cc);
         f = eta*sqrt(mathematical::pi*s0/dt);
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,101 +39,83 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Rework faceOnlySet samples.
-// Take two consecutive samples
 void Foam::midPointAndFaceSet::genSamples()
 {
     // Generate midpoints and add to face points
 
-    List<point> newSamplePoints(3*size());
-    labelList newSampleCells(3*size());
-    labelList newSampleFaces(3*size());
-    labelList newSampleSegments(3*size());
-    scalarList newSampleCurveDist(3*size());
+    List<point> mpfSamplePoints(3*size());
+    labelList mpfSampleCells(3*size());
+    labelList mpfSampleFaces(3*size());
+    labelList mpfSampleSegments(3*size());
+    scalarList mpfSampleCurveDist(3*size());
 
-    label newSampleI = 0;
+    label mpfSamplei = 0;
+    label samplei = 0;
 
-    label sampleI = 0;
-
-    while(true && size()>0)
+    while (size() > 0)
     {
-        // sampleI is start of segment
-
-        // Add sampleI
-        newSamplePoints[newSampleI] = operator[](sampleI);
-        newSampleCells[newSampleI] = cells_[sampleI];
-        newSampleFaces[newSampleI] = faces_[sampleI];
-        newSampleSegments[newSampleI] = segments_[sampleI];
-        newSampleCurveDist[newSampleI] = curveDist_[sampleI];
-        newSampleI++;
+        // Add first face
+        mpfSamplePoints[mpfSamplei] = operator[](samplei);
+        mpfSampleCells[mpfSamplei] = cells_[samplei];
+        mpfSampleFaces[mpfSamplei] = faces_[samplei];
+        mpfSampleSegments[mpfSamplei] = segments_[samplei];
+        mpfSampleCurveDist[mpfSamplei] = curveDist_[samplei];
+        mpfSamplei++;
 
         while
         (
-            (sampleI < size() - 1)
-         && (segments_[sampleI] == segments_[sampleI+1])
+            (samplei < size() - 1)
+         && (segments_[samplei] == segments_[samplei+1])
         )
         {
-            // Add mid point
-            const point mid = 0.5*(operator[](sampleI) + operator[](sampleI+1));
+            point midPoint(0.5*(operator[](samplei) + operator[](samplei+1)));
+            label cellm = pointInCell(midPoint, samplei);
 
-            label cell1 = getCell(faces_[sampleI], mid);
-            label cell2 = getCell(faces_[sampleI+1], mid);
-
-            if (cell1 != cell2)
+            if (cellm != -1)
             {
-                FatalErrorInFunction
-                    << "  newSampleI:" << newSampleI
-                    << "  pts[sampleI]:" << operator[](sampleI)
-                    << "  face[sampleI]:" << faces_[sampleI]
-                    << "  pts[sampleI+1]:" << operator[](sampleI+1)
-                    << "  face[sampleI+1]:" << faces_[sampleI+1]
-                    << "  cell1:" << cell1
-                    << "  cell2:" << cell2
-                    << abort(FatalError);
+                mpfSamplePoints[mpfSamplei] = midPoint;
+                mpfSampleCells[mpfSamplei] = cellm;
+                mpfSampleFaces[mpfSamplei] = -1;
+                mpfSampleSegments[mpfSamplei] = segments_[samplei];
+                mpfSampleCurveDist[mpfSamplei] =
+                    mag(mpfSamplePoints[mpfSamplei] - start());
+
+                mpfSamplei++;
             }
 
-            newSamplePoints[newSampleI] = mid;
-            newSampleCells[newSampleI] = cell1;
-            newSampleFaces[newSampleI] = -1;
-            newSampleSegments[newSampleI] = segments_[sampleI];
-            newSampleCurveDist[newSampleI] =
-                mag(newSamplePoints[newSampleI] - start());
+            // Add second face
+            mpfSamplePoints[mpfSamplei] = operator[](samplei+1);
+            mpfSampleCells[mpfSamplei] = cells_[samplei+1];
+            mpfSampleFaces[mpfSamplei] = faces_[samplei+1];
+            mpfSampleSegments[mpfSamplei] = segments_[samplei+1];
+            mpfSampleCurveDist[mpfSamplei] =
+                mag(mpfSamplePoints[mpfSamplei] - start());
 
-            newSampleI++;
+            mpfSamplei++;
 
-            // Add sampleI+1
-            newSamplePoints[newSampleI] = operator[](sampleI+1);
-            newSampleCells[newSampleI] = cells_[sampleI+1];
-            newSampleFaces[newSampleI] = faces_[sampleI+1];
-            newSampleSegments[newSampleI] = segments_[sampleI+1];
-            newSampleCurveDist[newSampleI] =
-                mag(newSamplePoints[newSampleI] - start());
-
-            newSampleI++;
-
-            sampleI++;
+            samplei++;
         }
 
-        if (sampleI == size() - 1)
+        if (samplei == size() - 1)
         {
             break;
         }
-        sampleI++;
+        samplei++;
     }
 
-    newSamplePoints.setSize(newSampleI);
-    newSampleCells.setSize(newSampleI);
-    newSampleFaces.setSize(newSampleI);
-    newSampleSegments.setSize(newSampleI);
-    newSampleCurveDist.setSize(newSampleI);
+    mpfSamplePoints.setSize(mpfSamplei);
+    mpfSampleCells.setSize(mpfSamplei);
+    mpfSampleFaces.setSize(mpfSamplei);
+    mpfSampleSegments.setSize(mpfSamplei);
+    mpfSampleCurveDist.setSize(mpfSamplei);
 
     setSamples
     (
-        newSamplePoints,
-        newSampleCells,
-        newSampleFaces,
-        newSampleSegments,
-        newSampleCurveDist
+        mpfSamplePoints,
+        mpfSampleCells,
+        mpfSampleFaces,
+        mpfSampleSegments,
+        mpfSampleCurveDist
     );
 }
 

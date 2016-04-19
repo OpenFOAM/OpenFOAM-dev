@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ SourceFiles
 
 #include "vector.H"
 #include "quaternion.H"
+#include "spatialTransform.H"
 #include "word.H"
 #include "contiguous.H"
 
@@ -97,6 +98,9 @@ public:
         //- Construct a pure rotation septernion given a rotation quaternion
         inline explicit septernion(const quaternion& r);
 
+        //- Construct a general septernion from the given spatialTransform
+        inline explicit septernion(const spatialTransform& st);
+
         //- Construct from Istream
         septernion(Istream&);
 
@@ -117,11 +121,11 @@ public:
 
            // Transform
 
-               //- Transform the given vector
-               inline vector transform(const vector& v) const;
+               //- Transform the given coordinate point
+               inline vector transformPoint(const vector& v) const;
 
-               //- Inverse Transform the given vector
-               inline vector invTransform(const vector& v) const;
+               //- Inverse Transform the given coordinate point
+               inline vector invTransformPoint(const vector& v) const;
 
 
     // Member operators
@@ -153,7 +157,6 @@ public:
 //- Return the inverse of the given septernion
 inline septernion inv(const septernion& tr);
 
-
 //- Return a string representation of a septernion
 word name(const septernion&);
 
@@ -163,6 +166,13 @@ septernion slerp
     const septernion& qa,
     const septernion& qb,
     const scalar t
+);
+
+//- Simple weighted average
+septernion average
+(
+    const UList<septernion>& ss,
+    const UList<scalar> w
 );
 
 //- Data associated with septernion type are contiguous

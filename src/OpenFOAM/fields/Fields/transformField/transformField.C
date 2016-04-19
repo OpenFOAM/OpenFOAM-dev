@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf(new vectorField(tf.size()));
-    transform(tranf(), q, tf);
+    transform(tranf.ref(), q, tf);
     return tranf;
 }
 
@@ -59,14 +59,14 @@ Foam::tmp<Foam::vectorField> Foam::transform
     const tmp<vectorField>& ttf
 )
 {
-    tmp<vectorField > tranf = reuseTmp<vector, vector>::New(ttf);
-    transform(tranf(), q, ttf());
-    reuseTmp<vector, vector>::clear(ttf);
+    tmp<vectorField > tranf = New(ttf);
+    transform(tranf.ref(), q, ttf());
+    ttf.clear();
     return tranf;
 }
 
 
-void Foam::transform
+void Foam::transformPoints
 (
     vectorField& rtf,
     const septernion& tr,
@@ -75,51 +75,45 @@ void Foam::transform
 {
     vector T = tr.t();
 
-    // Check if any rotation
-    if (mag(tr.r().R() - I) > SMALL)
+    // Check if any translation
+    if (mag(T) > VSMALL)
     {
-        transform(rtf, tr.r(), tf);
-
-        if (mag(T) > VSMALL)
-        {
-            rtf += T;
-        }
+        TFOR_ALL_F_OP_F_OP_S(vector, rtf, =, vector, tf, -, vector, T);
     }
     else
     {
-        if (mag(T) > VSMALL)
-        {
-            TFOR_ALL_F_OP_S_OP_F(vector, rtf, =, vector, T, +, vector, tf);
-        }
-        else
-        {
-            rtf = tf;
-        }
+        rtf = tf;
+    }
+
+    // Check if any rotation
+    if (mag(tr.r().R() - I) > SMALL)
+    {
+        transform(rtf, tr.r(), rtf);
     }
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::transform
+Foam::tmp<Foam::vectorField> Foam::transformPoints
 (
     const septernion& tr,
     const vectorField& tf
 )
 {
     tmp<vectorField > tranf(new vectorField(tf.size()));
-    transform(tranf(), tr, tf);
+    transformPoints(tranf.ref(), tr, tf);
     return tranf;
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::transform
+Foam::tmp<Foam::vectorField> Foam::transformPoints
 (
     const septernion& tr,
     const tmp<vectorField>& ttf
 )
 {
-    tmp<vectorField > tranf = reuseTmp<vector, vector>::New(ttf);
-    transform(tranf(), tr, ttf());
-    reuseTmp<vector, vector>::clear(ttf);
+    tmp<vectorField > tranf = New(ttf);
+    transformPoints(tranf.ref(), tr, ttf());
+    ttf.clear();
     return tranf;
 }
 

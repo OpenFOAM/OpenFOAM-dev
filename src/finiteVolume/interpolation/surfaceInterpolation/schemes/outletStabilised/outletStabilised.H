@@ -44,6 +44,7 @@ SourceFiles
 #include "skewCorrectionVectors.H"
 #include "linear.H"
 #include "gaussGrad.H"
+#include "zeroGradientFvPatchField.H"
 #include "mixedFvPatchField.H"
 #include "directionMixedFvPatchField.H"
 
@@ -132,7 +133,7 @@ public:
         ) const
         {
             tmp<surfaceScalarField> tw = tScheme_().weights(vf);
-            surfaceScalarField& w = tw();
+            surfaceScalarField& w = tw.ref();
 
             const fvMesh& mesh_ = this->mesh();
             const cellList& cells = mesh_.cells();
@@ -192,7 +193,7 @@ public:
                     tScheme_().correction(vf);
 
                 GeometricField<Type, fvsPatchField, surfaceMesh>& corr =
-                    tcorr();
+                    tcorr.ref();
 
                 const fvMesh& mesh_ = this->mesh();
                 const cellList& cells = mesh_.cells();
@@ -221,7 +222,7 @@ public:
                                 if (mesh_.isInternalFace(facei))
                                 {
                                     // Remove correction
-                                    corr[facei] = pTraits<Type>::zero;
+                                    corr[facei] = Zero;
                                 }
                             }
                         }

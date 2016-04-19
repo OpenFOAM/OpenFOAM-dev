@@ -36,7 +36,7 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF),
     profile_(),
-    dir_(pTraits<vector>::zero),
+    dir_(Zero),
     origin_(0)
 {}
 
@@ -51,7 +51,7 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF, fld),
     profile_(),
-    dir_(pTraits<vector>::zero),
+    dir_(Zero),
     origin_(0)
 {}
 

@@ -15,7 +15,7 @@ List<scalarField> allSpeciesM_RU
 List<vectorField> allSpeciesVelocitySum_RU
 (
     molecules.potential().nIds(),
-    vectorField (mesh.nCells(), vector::zero)
+    vectorField (mesh.nCells(), Zero)
 );
 
 List<scalarField> allSpeciesVelocityMagSquaredSum_RU
@@ -171,7 +171,7 @@ forAll(allSpeciesVelocity, v)
         )
     );
     allSpeciesVelocity[v].internalField() =
-        vectorField (mesh.nCells(), vector::zero);
+        vectorField (mesh.nCells(), Zero);
     allSpeciesVelocity[v].correctBoundaryConditions();
 }
 
@@ -191,7 +191,7 @@ Info << "    Creating total velocity field" << endl;
 //     dimVelocity,
 //     "zeroGradient"
 // );
-// totalVelocity.internalField() = vectorField (mesh.nCells(), vector::zero);
+// totalVelocity.internalField() = vectorField (mesh.nCells(), Zero);
 // totalVelocity.correctBoundaryConditions();
 
 
@@ -209,7 +209,7 @@ volVectorField totalVelocity
 
     ),
     mesh,
-    dimensionedVector("zero", dimVelocity, vector::zero)
+    dimensionedVector("zero", dimVelocity, Zero)
 );
 
 /*---------------------------------------------------------------------------*\

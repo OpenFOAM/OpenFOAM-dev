@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,31 +25,59 @@ License
 
 #include "labelSphericalTensor.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const char* const labelSphericalTensor::typeName = "labelSphericalTensor";
+const char* const Foam::labelSphericalTensor::vsType::typeName
+(
+    "labelSphericalTensor"
+);
 
 template<>
-const char* labelSphericalTensor::componentNames[] = {"ii"};
+const char* const Foam::labelSphericalTensor::vsType::componentNames[] =
+{
+    "ii"
+};
 
 template<>
-const labelSphericalTensor labelSphericalTensor::zero(0);
+const Foam::labelSphericalTensor
+Foam::labelSphericalTensor::vsType::vsType::zero
+(
+    labelSphericalTensor::uniform(0)
+);
 
 template<>
-const labelSphericalTensor labelSphericalTensor::one(1);
+const Foam::labelSphericalTensor Foam::labelSphericalTensor::vsType::one
+(
+    labelSphericalTensor::uniform(1)
+);
 
 template<>
-const labelSphericalTensor labelSphericalTensor::I(1);
+const Foam::labelSphericalTensor Foam::labelSphericalTensor::vsType::max
+(
+    labelSphericalTensor::uniform(labelMax)
+);
 
+template<>
+const Foam::labelSphericalTensor Foam::labelSphericalTensor::vsType::min
+(
+    labelSphericalTensor::uniform(-labelMax)
+);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<>
+const Foam::labelSphericalTensor Foam::labelSphericalTensor::vsType::rootMax
+(
+    labelSphericalTensor::uniform(sqrt(scalar(labelMax)))
+);
 
-} // End namespace Foam
+template<>
+const Foam::labelSphericalTensor Foam::labelSphericalTensor::vsType::rootMin
+(
+    labelSphericalTensor::uniform(-sqrt(scalar(labelMax)))
+);
+
+template<>
+const Foam::labelSphericalTensor Foam::labelSphericalTensor::I(1);
+
 
 // ************************************************************************* //

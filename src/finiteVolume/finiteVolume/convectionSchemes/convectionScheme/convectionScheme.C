@@ -46,7 +46,7 @@ namespace fv
 template<class Type>
 convectionScheme<Type>::convectionScheme(const convectionScheme& cs)
 :
-    refCount(),
+    tmp<convectionScheme<Type>>::refCount(),
     mesh_(cs.mesh_)
 {}
 

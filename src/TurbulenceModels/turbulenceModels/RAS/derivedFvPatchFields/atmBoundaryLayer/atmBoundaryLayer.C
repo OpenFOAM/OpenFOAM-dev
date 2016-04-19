@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,8 +34,8 @@ namespace Foam
 
 atmBoundaryLayer::atmBoundaryLayer()
 :
-    flowDir_(pTraits<vector>::zero),
-    zDir_(pTraits<vector>::zero),
+    flowDir_(Zero),
+    zDir_(Zero),
     kappa_(0.41),
     Cmu_(0.09),
     Uref_(0),

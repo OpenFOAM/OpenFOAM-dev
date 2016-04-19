@@ -77,7 +77,7 @@ Foam::solidBodyMotionFunctions::multiMotion::transformation() const
         TR *= SBMFs_[i].transformation();
     }
 
-    InfoInFunction << "Time = " << t << " transformation: " << TR << endl;
+    DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
 }

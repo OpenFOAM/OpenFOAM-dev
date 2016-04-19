@@ -115,7 +115,6 @@ Foam::List<Foam::UPstream::commsStruct> Foam::UPstream::calcLinearComm
 }
 
 
-// Append my children (and my children children etc.) to allReceives.
 void Foam::UPstream::collectReceives
 (
     const label procID,
@@ -123,6 +122,8 @@ void Foam::UPstream::collectReceives
     DynamicList<label>& allReceives
 )
 {
+    // Append my children (and my children children etc.) to allReceives.
+
     const DynamicList<label>& myChildren = receives[procID];
 
     forAll(myChildren, childI)
@@ -133,37 +134,38 @@ void Foam::UPstream::collectReceives
 }
 
 
-// Tree like schedule. For 8 procs:
-// (level 0)
-//      0 receives from 1
-//      2 receives from 3
-//      4 receives from 5
-//      6 receives from 7
-// (level 1)
-//      0 receives from 2
-//      4 receives from 6
-// (level 2)
-//      0 receives from 4
-//
-// The sends/receives for all levels are collected per processor (one send per
-// processor; multiple receives possible) creating a table:
-//
-// So per processor:
-// proc     receives from   sends to
-// ----     -------------   --------
-//  0       1,2,4           -
-//  1       -               0
-//  2       3               0
-//  3       -               2
-//  4       5               0
-//  5       -               4
-//  6       7               4
-//  7       -               6
 Foam::List<Foam::UPstream::commsStruct> Foam::UPstream::calcTreeComm
 (
     label nProcs
 )
 {
+    // Tree like schedule. For 8 procs:
+    // (level 0)
+    //      0 receives from 1
+    //      2 receives from 3
+    //      4 receives from 5
+    //      6 receives from 7
+    // (level 1)
+    //      0 receives from 2
+    //      4 receives from 6
+    // (level 2)
+    //      0 receives from 4
+    //
+    // The sends/receives for all levels are collected per processor
+    //  (one send per processor; multiple receives possible) creating a table:
+    //
+    // So per processor:
+    // proc     receives from   sends to
+    // ----     -------------   --------
+    //  0       1,2,4           -
+    //  1       -               0
+    //  2       3               0
+    //  3       -               2
+    //  4       5               0
+    //  5       -               4
+    //  6       7               4
+    //  7       -               6
+
     label nLevels = 1;
     while ((1 << nLevels) < nProcs)
     {
@@ -378,29 +380,22 @@ Foam::label Foam::UPstream::procNo
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// By default this is not a parallel run
 bool Foam::UPstream::parRun_(false);
 
-// Free communicators
 Foam::LIFOStack<Foam::label> Foam::UPstream::freeComms_;
 
-// My processor number
 Foam::DynamicList<int> Foam::UPstream::myProcNo_(10);
 
-// List of process IDs
 Foam::DynamicList<Foam::List<int>> Foam::UPstream::procIDs_(10);
 
-// Parent communicator
 Foam::DynamicList<Foam::label> Foam::UPstream::parentCommunicator_(10);
 
-// Standard transfer message type
 int Foam::UPstream::msgType_(1);
 
-// Linear communication schedule
+
 Foam::DynamicList<Foam::List<Foam::UPstream::commsStruct>>
 Foam::UPstream::linearCommunication_(10);
 
-// Multi level communication schedule
 Foam::DynamicList<Foam::List<Foam::UPstream::commsStruct>>
 Foam::UPstream::treeCommunication_(10);
 
@@ -415,10 +410,6 @@ Foam::UPstream::communicator serialComm
 );
 
 
-
-// Should compact transfer be used in which floats replace doubles
-// reducing the bandwidth requirement at the expense of some loss
-// in accuracy
 bool Foam::UPstream::floatTransfer
 (
     Foam::debug::optimisationSwitch("floatTransfer", 0)
@@ -430,8 +421,6 @@ registerOptSwitch
     Foam::UPstream::floatTransfer
 );
 
-// Number of processors at which the reduce algorithm changes from linear to
-// tree
 int Foam::UPstream::nProcsSimpleSum
 (
     Foam::debug::optimisationSwitch("nProcsSimpleSum", 16)
@@ -443,7 +432,6 @@ registerOptSwitch
     Foam::UPstream::nProcsSimpleSum
 );
 
-// Default commsType
 Foam::UPstream::commsTypes Foam::UPstream::defaultCommsType
 (
     commsTypeNames.read(Foam::debug::optimisationSwitches().lookup("commsType"))
@@ -483,15 +471,10 @@ namespace Foam
     addcommsTypeToOpt addcommsTypeToOpt_("commsType");
 }
 
-// Default communicator
 Foam::label Foam::UPstream::worldComm(0);
 
-
-// Warn for use of any communicator
 Foam::label Foam::UPstream::warnComm(-1);
 
-
-// Number of polling cycles in processor updates
 int Foam::UPstream::nPollProcInterfaces
 (
     Foam::debug::optimisationSwitch("nPollProcInterfaces", 0)

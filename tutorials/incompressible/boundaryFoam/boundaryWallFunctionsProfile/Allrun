@@ -17,15 +17,11 @@ do
     sed "s/XXX/$e/g" constant/transportProperties.template \
         > constant/transportProperties
 
-    runApplication `getApplication`
-
-    mv log.boundaryFoam log.boundaryFoam_$e
+    runApplication -s $e  `getApplication`
 
     # extract y+, U+
     # note: both must be added to foamLog.db
-    runApplication foamLog log.boundaryFoam_$e
-
-    mv log.foamLog log.foamLog_$e
+    runApplication -s $e  foamLog log.boundaryFoam.$e
 
     if [ -e logs/yPlus_0 ]
     then
@@ -73,4 +69,4 @@ EOF
 
 echo Done
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

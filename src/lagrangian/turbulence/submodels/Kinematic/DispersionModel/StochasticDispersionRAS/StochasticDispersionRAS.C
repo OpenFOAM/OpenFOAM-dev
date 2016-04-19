@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
     else
     {
         tTurb = GREAT;
-        UTurb = vector::zero;
+        UTurb = Zero;
     }
 
     return Uc + UTurb;

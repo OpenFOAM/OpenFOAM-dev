@@ -42,17 +42,26 @@ inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix(const label n)
 template<class Type>
 inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix
 (
-    const label m,
-    const label n
+    const label n,
+    const zero
 )
 :
-    Matrix<SymmetricSquareMatrix<Type>, Type>(m, n)
+    Matrix<SymmetricSquareMatrix<Type>, Type>(n, n, Zero)
+{}
+
+
+template<class Type>
+inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix
+(
+    const label n,
+    const Identity<Type>
+)
+:
+    Matrix<SymmetricSquareMatrix<Type>, Type>(n, n, Zero)
 {
-    if (m != n)
+    for (label i=0; i<n; i++)
     {
-        FatalErrorInFunction
-            << "m != n for constructing a symmetric square matrix"
-            << exit(FatalError);
+        this->operator()(i, i) = pTraits<Type>::one;
     }
 }
 
@@ -60,20 +69,12 @@ inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix
 template<class Type>
 inline Foam::SymmetricSquareMatrix<Type>::SymmetricSquareMatrix
 (
-    const label m,
     const label n,
     const Type& t
 )
 :
-    Matrix<SymmetricSquareMatrix<Type>, Type>(m, n, t)
-{
-    if (m != n)
-    {
-        FatalErrorInFunction
-            << "m != n for constructing a symmetric square matrix"
-            << exit(FatalError);
-    }
-}
+    Matrix<SymmetricSquareMatrix<Type>, Type>(n, n, t)
+{}
 
 
 template<class Type>
@@ -91,42 +92,6 @@ Foam::SymmetricSquareMatrix<Type>::clone() const
     (
         new SymmetricSquareMatrix<Type>(*this)
     );
-}
-
-
-template<class Type>
-inline Type& Foam::SymmetricSquareMatrix<Type>::operator()
-(
-    const label r,
-    const label c
-)
-{
-    if (r > c)
-    {
-        return this->operator[](r)[c];
-    }
-    else
-    {
-        return this->operator[](c)[r];
-    }
-}
-
-
-template<class Type>
-inline const Type& Foam::SymmetricSquareMatrix<Type>::operator()
-(
-    const label r,
-    const label c
-) const
-{
-    if (r > c)
-    {
-        return this->operator[](r)[c];
-    }
-    else
-    {
-        return this->operator[](c)[r];
-    }
 }
 
 

@@ -7,16 +7,10 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 ./Allrun.pre
 
-runApplication decomposePar -region air
-mv log.decomposePar log.decomposePar.air
-
-runApplication decomposePar -region porous
-mv log.decomposePar log.decomposePar.porous
+runApplication -s air    decomposePar -region air
+runApplication -s porous decomposePar -region porous
 
 runParallel $(getApplication)
 
-runApplication reconstructPar -latestTime -region air
-mv log.reconstructPar log.reconstructPar.air
-
-runApplication reconstructPar -latestTime -region porous
-mv log.reconstructPar log.reconstructPar.porous
+runApplication -s air    reconstructPar -latestTime -region air
+runApplication -s porous reconstructPar -latestTime -region porous

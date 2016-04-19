@@ -268,8 +268,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         // Derived info
         bounds_ = boundBox(points_);
-        geometricD_ = Vector<label>::zero;
-        solutionD_ = Vector<label>::zero;
+        geometricD_ = Zero;
+        solutionD_ = Zero;
 
         // Zones
         pointZoneMesh newPointZones
@@ -442,8 +442,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         bounds_ = boundBox(points_);
 
         // Rotation can cause direction vector to change
-        geometricD_ = Vector<label>::zero;
-        solutionD_ = Vector<label>::zero;
+        geometricD_ = Zero;
+        solutionD_ = Zero;
 
         return polyMesh::POINTS_MOVED;
     }

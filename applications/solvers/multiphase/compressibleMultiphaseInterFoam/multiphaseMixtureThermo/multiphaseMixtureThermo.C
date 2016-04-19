@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,6 @@ void Foam::multiphaseMixtureThermo::calcAlphas()
         alphas_ += level*phase();
         level += 1.0;
     }
-
-    alphas_.correctBoundaryConditions();
 }
 
 
@@ -104,8 +102,7 @@ Foam::multiphaseMixtureThermo::multiphaseMixtureThermo
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("alphas", dimless, 0.0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar("alphas", dimless, 0.0)
     ),
 
     sigmas_(lookup("sigmas")),
@@ -193,7 +190,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::he
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        the() += phasei()*phasei().thermo().he(p, T);
+        the.ref() += phasei()*phasei().thermo().he(p, T);
     }
 
     return the;
@@ -216,7 +213,8 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::he
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        the() += scalarField(phasei(), cells)*phasei().thermo().he(p, T, cells);
+        the.ref() +=
+            scalarField(phasei(), cells)*phasei().thermo().he(p, T, cells);
     }
 
     return the;
@@ -239,7 +237,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::he
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        the() +=
+        the.ref() +=
             phasei().boundaryField()[patchi]*phasei().thermo().he(p, T, patchi);
     }
 
@@ -255,7 +253,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::hc() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        thc() += phasei()*phasei().thermo().hc();
+        thc.ref() += phasei()*phasei().thermo().hc();
     }
 
     return thc;
@@ -296,7 +294,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::rho() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        trho() += phasei()*phasei().thermo().rho();
+        trho.ref() += phasei()*phasei().thermo().rho();
     }
 
     return trho;
@@ -317,7 +315,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::rho
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        trho() +=
+        trho.ref() +=
             phasei().boundaryField()[patchi]*phasei().thermo().rho(patchi);
     }
 
@@ -333,7 +331,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::Cp() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tCp() += phasei()*phasei().thermo().Cp();
+        tCp.ref() += phasei()*phasei().thermo().Cp();
     }
 
     return tCp;
@@ -356,7 +354,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::Cp
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tCp() +=
+        tCp.ref() +=
             phasei().boundaryField()[patchi]*phasei().thermo().Cp(p, T, patchi);
     }
 
@@ -372,7 +370,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::Cv() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tCv() += phasei()*phasei().thermo().Cv();
+        tCv.ref() += phasei()*phasei().thermo().Cv();
     }
 
     return tCv;
@@ -395,7 +393,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::Cv
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tCv() +=
+        tCv.ref() +=
             phasei().boundaryField()[patchi]*phasei().thermo().Cv(p, T, patchi);
     }
 
@@ -411,7 +409,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::gamma() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tgamma() += phasei()*phasei().thermo().gamma();
+        tgamma.ref() += phasei()*phasei().thermo().gamma();
     }
 
     return tgamma;
@@ -434,7 +432,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::gamma
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tgamma() +=
+        tgamma.ref() +=
             phasei().boundaryField()[patchi]
            *phasei().thermo().gamma(p, T, patchi);
     }
@@ -451,7 +449,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::Cpv() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tCpv() += phasei()*phasei().thermo().Cpv();
+        tCpv.ref() += phasei()*phasei().thermo().Cpv();
     }
 
     return tCpv;
@@ -474,7 +472,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::Cpv
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tCpv() +=
+        tCpv.ref() +=
             phasei().boundaryField()[patchi]
            *phasei().thermo().Cpv(p, T, patchi);
     }
@@ -491,7 +489,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::CpByCpv() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tCpByCpv() += phasei()*phasei().thermo().CpByCpv();
+        tCpByCpv.ref() += phasei()*phasei().thermo().CpByCpv();
     }
 
     return tCpByCpv;
@@ -514,7 +512,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::CpByCpv
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tCpByCpv() +=
+        tCpByCpv.ref() +=
             phasei().boundaryField()[patchi]
            *phasei().thermo().CpByCpv(p, T, patchi);
     }
@@ -546,7 +544,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::kappa() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tkappa() += phasei()*phasei().thermo().kappa();
+        tkappa.ref() += phasei()*phasei().thermo().kappa();
     }
 
     return tkappa;
@@ -567,7 +565,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::kappa
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tkappa() +=
+        tkappa.ref() +=
             phasei().boundaryField()[patchi]*phasei().thermo().kappa(patchi);
     }
 
@@ -586,7 +584,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::kappaEff
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tkappaEff() += phasei()*phasei().thermo().kappaEff(alphat);
+        tkappaEff.ref() += phasei()*phasei().thermo().kappaEff(alphat);
     }
 
     return tkappaEff;
@@ -609,7 +607,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::kappaEff
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        tkappaEff() +=
+        tkappaEff.ref() +=
             phasei().boundaryField()[patchi]
            *phasei().thermo().kappaEff(alphat, patchi);
     }
@@ -629,7 +627,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::alphaEff
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        talphaEff() += phasei()*phasei().thermo().alphaEff(alphat);
+        talphaEff.ref() += phasei()*phasei().thermo().alphaEff(alphat);
     }
 
     return talphaEff;
@@ -652,7 +650,7 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::alphaEff
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        talphaEff() +=
+        talphaEff.ref() +=
             phasei().boundaryField()[patchi]
            *phasei().thermo().alphaEff(alphat, patchi);
     }
@@ -669,7 +667,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::rCv() const
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        trCv() += phasei()/phasei().thermo().Cv();
+        trCv.ref() += phasei()/phasei().thermo().Cv();
     }
 
     return trCv;
@@ -699,7 +697,7 @@ Foam::multiphaseMixtureThermo::surfaceTensionForce() const
         )
     );
 
-    surfaceScalarField& stf = tstf();
+    surfaceScalarField& stf = tstf.ref();
 
     forAllConstIter(PtrDictionary<phaseModel>, phases_, phase1)
     {
@@ -925,7 +923,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(alpha1, alpha2);
 
-    correctContactAngle(alpha1, alpha2, tnHatfv().boundaryField());
+    correctContactAngle(alpha1, alpha2, tnHatfv.ref().boundaryField());
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());
@@ -952,7 +950,8 @@ Foam::multiphaseMixtureThermo::nearInterface() const
 
     forAllConstIter(PtrDictionary<phaseModel>, phases_, phase)
     {
-        tnearInt() = max(tnearInt(), pos(phase() - 0.01)*pos(0.99 - phase()));
+        tnearInt.ref() =
+            max(tnearInt(), pos(phase() - 0.01)*pos(0.99 - phase()));
     }
 
     return tnearInt;

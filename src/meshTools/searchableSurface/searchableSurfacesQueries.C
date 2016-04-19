@@ -33,7 +33,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(searchableSurfacesQueries, 0);
+    defineTypeNameAndDebug(searchableSurfacesQueries, 0);
 }
 
 
@@ -849,7 +849,6 @@ Foam::boundBox Foam::searchableSurfacesQueries::bounds
 }
 
 
-//- Calculate point which is on a set of surfaces.
 Foam::pointIndexHit Foam::searchableSurfacesQueries::facesIntersection
 (
     const PtrList<searchableSurface>& allSurfaces,
@@ -863,7 +862,7 @@ Foam::pointIndexHit Foam::searchableSurfacesQueries::facesIntersection
     // starting point onto the surfaces and the mid point
     List<point> nearest(surfacesToTest.size()+1);
 
-    point sumNearest = vector::zero;
+    point sumNearest = Zero;
 
     forAll(surfacesToTest, i)
     {

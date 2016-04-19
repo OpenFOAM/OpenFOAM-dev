@@ -229,7 +229,7 @@ Foam::surfMesh::~surfMesh()
 
 void Foam::surfMesh::updatePointsRef()
 {
-    // assign the reference to the points (this is truly ugly)
+    // Assign the reference to the points (this is truly ugly)
     reinterpret_cast<SubField<point>&>
     (
         const_cast<Field<point>&>(MeshReference::points())
@@ -239,8 +239,8 @@ void Foam::surfMesh::updatePointsRef()
 
 void Foam::surfMesh::updateFacesRef()
 {
-    // assign the reference to the faces
-    static_cast<UList<face>&>(*this) = this->storedFaces();
+    // Assign the reference to the faces
+    shallowCopy(this->storedFaces());
 }
 
 

@@ -137,7 +137,7 @@ public:
                 stencil.weightedSum(vf, cfd.coeffs())
             );
 
-            sft().dimensions() /= dimLength;
+            sft.ref().dimensions() /= dimLength;
 
             return sft;
         }

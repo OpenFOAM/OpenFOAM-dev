@@ -81,9 +81,9 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::getFieldValues
                 const faceList& faces = surfacePtr_().faces();
                 tmp<Field<Type>> tavg
                 (
-                    new Field<Type>(faces.size(), pTraits<Type>::zero)
+                    new Field<Type>(faces.size(), Zero)
                 );
-                Field<Type>& avg = tavg();
+                Field<Type>& avg = tavg.ref();
 
                 forAll(faces, faceI)
                 {
@@ -127,7 +127,7 @@ Type Foam::fieldValues::faceSource::processSameTypeValues
     const scalarField& weightField
 ) const
 {
-    Type result = pTraits<Type>::zero;
+    Type result = Zero;
     switch (operation_)
     {
         case opSum:
@@ -148,7 +148,7 @@ Type Foam::fieldValues::faceSource::processSameTypeValues
                 << pTraits<Type>::typeName
                 << exit(FatalError);
 
-            result = pTraits<Type>::zero;
+            result = Zero;
             break;
         }
         case opSumDirectionBalance:
@@ -159,7 +159,7 @@ Type Foam::fieldValues::faceSource::processSameTypeValues
                 << pTraits<Type>::typeName
                 << exit(FatalError);
 
-            result = pTraits<Type>::zero;
+            result = Zero;
             break;
         }
         case opAverage:
@@ -355,7 +355,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::filterField
 ) const
 {
     tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(values, i)
     {
@@ -396,7 +396,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::filterField
 ) const
 {
     tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(values, i)
     {

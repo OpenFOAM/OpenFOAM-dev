@@ -2,7 +2,7 @@
 #
 #+TITLE:                 OpenFOAM C++ style guide
 #+AUTHOR:                  OpenFOAM Foundation
-#+DATE:                       Aug 2011-2015
+#+DATE:                         2011-2016
 #+LINK:                   http://www.OpenFOAM.org
 #+OPTIONS: author:nil ^:{}
 #+STARTUP: hidestars
@@ -22,23 +22,23 @@
     + Stream output
       + =<<= is always four characters after the start of the stream,
         so that the =<<= symbols align, i.e.
-        #+BEGIN_SRC c++
+        #+begin_src c++
         Info<< ...
         os  << ...
-        #+END_SRC
+        #+end_src
         so
-        #+BEGIN_SRC C++
+        #+begin_src C++
         WarningInFunction
             << "Warning message"
-        #+END_SRC
+        #+end_src
         *not*
-        #+BEGIN_SRC C++
+        #+begin_src C++
         WarningInFunction
         << "Warning message"
-        #+END_SRC
+        #+end_src
 
     + Remove unnecessary class section headers, i.e. remove
-#+BEGIN_SRC C++
+#+begin_src C++
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
     // Check
@@ -46,21 +46,21 @@
     // Edit
 
     // Write
-#+END_SRC
+#+end_src
       if they contain nothing, even if planned for 'future use'
 
     + Class titles should be centred
-#+BEGIN_SRC C++
+#+begin_src C++
 /*---------------------------------------------------------------------------*\
                         Class exampleClass Declaration
 \*---------------------------------------------------------------------------*/
-#+END_SRC
+#+end_src
       *not*
-#+BEGIN_SRC C++
+#+begin_src C++
 /*---------------------------------------------------------------------------*\
                 Class exampleClass Declaration
 \*---------------------------------------------------------------------------*/
-#+END_SRC
+#+end_src
 
 *** The /.H/ Header Files
     + Header file spacing
@@ -71,42 +71,42 @@
       + Text on the line starting with =//-= becomes the Doxygen brief
         description;
       + Text on subsequent lines becomes the Doxygen detailed description /e.g./
-        #+BEGIN_SRC C++
+        #+begin_src C++
         //- A function which returns a thing
         //  This is a detailed description of the function
         //  which processes stuff and returns other stuff
         //  depending on things.
         thing function(stuff1, stuff2);
-        #+END_SRC
+        #+end_src
       + List entries start with =-= or =-#= for numbered lists but cannot start
         on the line immediately below the brief description so
-        #+BEGIN_SRC C++
+        #+begin_src C++
         //- Compare triFaces
         //  Returns:
         //  -  0: different
         //  - +1: identical
         //  - -1: same face, but different orientation
         static inline int compare(const triFace&, const triFace&);
-        #+END_SRC
+        #+end_src
         or
-        #+BEGIN_SRC C++
+        #+begin_src C++
         //- Compare triFaces returning 0, +1 or -1
         //
         //  -  0: different
         //  - +1: identical
         //  - -1: same face, but different orientation
         static inline int compare(const triFace&, const triFace&);
-        #+END_SRC
+        #+end_src
         *not*
-        #+BEGIN_SRC C++
+        #+begin_src C++
         //- Compare triFaces returning 0, +1 or -1
         //  -  0: different
         //  - +1: identical
         //  - -1: same face, but different orientation
         static inline int compare(const triFace&, const triFace&);
-        #+END_SRC
+        #+end_src
       + List can be nested for example
-        #+BEGIN_SRC C++
+        #+begin_src C++
         //- Search for \em name
         //  in the following hierarchy:
         //  -# personal settings:
@@ -125,15 +125,15 @@
         //  \return the full path name or fileName() if the name cannot be found
         //  Optionally abort if the file cannot be found
         fileName findEtcFile(const fileName&, bool mandatory=false);
-        #+END_SRC
+        #+end_src
       + For more details see the Doxygen documentation.
     + Destructor
       + When adding a comment to the destructor use =//-= and code as a normal
         function:
-        #+BEGIN_SRC C++
+        #+begin_src C++
         //- Destructor
         ~className();
-        #+END_SRC
+        #+end_src
     + Inline functions
       + Use inline functions where appropriate in a separate /classNameI.H/
         file.  Avoid cluttering the header file with function bodies.
@@ -141,22 +141,22 @@
 *** The /.C/ Sourcs Files
     + Do not open/close namespaces in a /.C/ file
       + Fully scope the function name, i.e.
-        #+BEGIN_SRC C++
+        #+begin_src C++
         Foam::returnType Foam::className::functionName()
-        #+END_SRC
+        #+end_src
         *not*
-        #+BEGIN_SRC C++
+        #+begin_src C++
         namespace Foam
         {
             ...
             returnType className::functionName()
             ...
         }
-        #+END_SRC
+        #+end_src
         *Exception*
         When there are multiple levels of namespace, they may be used in the
         /.C/ file to avoid excessive clutter, i.e.
-        #+BEGIN_SRC C++
+        #+begin_src C++
         namespace Foam
         {
         namespace compressible
@@ -167,7 +167,7 @@
         } // End namespace RASModels
         } // End namespace compressible
         } // End namespace Foam
-        #+END_SRC
+        #+end_src
 
     + Use two empty lines between functions
 
@@ -178,25 +178,25 @@
     + =const=
       + Use everywhere it is applicable.
     + Variable initialisation using
-      #+BEGIN_SRC C++
+      #+begin_src C++
       const className& variableName = otherClass.data();
-      #+END_SRC
+      #+end_src
       *not*
-      #+BEGIN_SRC C++
+      #+begin_src C++
       const className& variableName(otherClass.data());
-      #+END_SRC
+      #+end_src
     + Virtual functions
       + If a class is virtual, make all derived classes virtual.
 
 *** Conditional Statements
-    #+BEGIN_SRC C++
+    #+begin_src C++
     if (condition)
     {
         code;
     }
-    #+END_SRC
+    #+end_src
     OR
-    #+BEGIN_SRC C++
+    #+begin_src C++
     if
     (
        long condition
@@ -204,24 +204,24 @@
     {
         code;
     }
-    #+END_SRC
+    #+end_src
     *not* (no space between =if= and =(= used)
-    #+BEGIN_SRC C++
+    #+begin_src C++
     if(condition)
     {
         code;
     }
-    #+END_SRC
+    #+end_src
 
 *** =for= and =while= Loops
-    #+BEGIN_SRC C++
+    #+begin_src C++
     for (i = 0; i < maxI; i++)
     {
         code;
     }
-    #+END_SRC
+    #+end_src
     OR
-    #+BEGIN_SRC C++
+    #+begin_src C++
     for
     (
         i = 0;
@@ -231,33 +231,33 @@
     {
         code;
     }
-    #+END_SRC
+    #+end_src
     *not* this (no space between =for= and =(= used)
-    #+BEGIN_SRC C++
+    #+begin_src C++
     for(i = 0; i < maxI; i++)
     {
         code;
     }
-    #+END_SRC
+    #+end_src
     Note that when indexing through iterators, it is often slightly more
     efficient to use the pre-increment form. Eg, =++iter= instead of =iter++=
 
 *** =forAll=, =forAllIter=, =forAllConstIter=, /etc./ loops
     Like =for= loops, but
-    #+BEGIN_SRC C++
+    #+begin_src C++
     forAll(
-    #+END_SRC
+    #+end_src
     *not*
-    #+BEGIN_SRC C++
+    #+begin_src C++
     forAll (
-    #+END_SRC
+    #+end_src
     Using the =forAllIter= and =forAllConstIter= macros is generally
     advantageous - less typing, easier to find later.  However, since
     they are macros, they will fail if the iterated object contains
     any commas /e.g./ following will FAIL!:
-    #+BEGIN_SRC C++
+    #+begin_src C++
     forAllIter(HashTable<labelPair, edge, Hash<edge>>, foo, iter)
-    #+END_SRC
+    #+end_src
     These convenience macros are also generally avoided in other
     container classes and OpenFOAM primitive classes.
 
@@ -266,104 +266,104 @@
       + Split initially after the function return type and left align
       + Do not put =const= onto its own line - use a split to keep it with
         the function name and arguments.
-        #+BEGIN_SRC C++
+        #+begin_src C++
         const Foam::longReturnTypeName&
         Foam::longClassName::longFunctionName const
-        #+END_SRC
+        #+end_src
         *not*
-        #+BEGIN_SRC C++
+        #+begin_src C++
         const Foam::longReturnTypeName&
             Foam::longClassName::longFunctionName const
-        #+END_SRC
+        #+end_src
         *nor*
-        #+BEGIN_SRC C++
+        #+begin_src C++
         const Foam::longReturnTypeName& Foam::longClassName::longFunctionName
         const
-        #+END_SRC
+        #+end_src
         *nor*
-        #+BEGIN_SRC C++
+        #+begin_src C++
         const Foam::longReturnTypeName& Foam::longClassName::
         longFunctionName const
-        #+END_SRC
+        #+end_src
       + If it needs to be split again, split at the function name (leaving
         behind the preceding scoping =::=s), and again, left align, i.e.
-        #+BEGIN_SRC C++
+        #+begin_src C++
         const Foam::longReturnTypeName&
         Foam::veryveryveryverylongClassName::
         veryveryveryverylongFunctionName const
-        #+END_SRC
+        #+end_src
 
 ***** Splitting long lines at an "="
      Indent after split
-     #+BEGIN_SRC C++
+     #+begin_src C++
      variableName =
          longClassName.longFunctionName(longArgument);
-     #+END_SRC
+     #+end_src
      OR (where necessary)
-     #+BEGIN_SRC C++
+     #+begin_src C++
      variableName =
          longClassName.longFunctionName
          (
              longArgument1,
              longArgument2
          );
-     #+END_SRC
+     #+end_src
      *not*
-     #+BEGIN_SRC C++
+     #+begin_src C++
      variableName =
      longClassName.longFunctionName(longArgument);
-     #+END_SRC
+     #+end_src
      *nor*
-     #+BEGIN_SRC C++
+     #+begin_src C++
      variableName = longClassName.longFunctionName
      (
          longArgument1,
          longArgument2
      );
-     #+END_SRC
+     #+end_src
 
 *** Maths and Logic
     + Operator spacing
-      #+BEGIN_SRC C++
+      #+begin_src C++
       a + b, a - b
       a*b, a/b
       a & b, a ^ b
       a = b, a != b
       a < b, a > b, a >= b, a <= b
       a || b, a && b
-      #+END_SRC
+      #+end_src
     + Splitting formulae over several lines
 
       Split and indent as per "splitting long lines at an ="
       with the operator on the lower line.  Align operator so that first
       variable, function or bracket on the next line is 4 spaces indented i.e.
-      #+BEGIN_SRC C++
+      #+begin_src C++
       variableName =
           a*(a + b)
          *exp(c/d)
          *(k + t);
-      #+END_SRC
+      #+end_src
       This is sometimes more legible when surrounded by extra parentheses:
 
-      #+BEGIN_SRC C++
+      #+begin_src C++
       variableName =
       (
           a*(a + b)
          *exp(c/d)
          *(k + t)
       );
-      #+END_SRC
+      #+end_src
     + Splitting logical tests over several lines
 
       outdent the operator so that the next variable to test is aligned with
       the four space indentation, i.e.
-      #+BEGIN_SRC C++
+      #+begin_src C++
       if
       (
           a == true
        && b == c
       )
-      #+END_SRC
+      #+end_src
 
 ** Documentation
 *** General
@@ -376,7 +376,7 @@
     + The first paragraph following the 'Description' will be used for the
       brief description, the remaining paragraphs become the detailed
       description.  For example,
-      #+BEGIN_SRC C++
+      #+begin_example C++
       Class
           Foam::myClass
 
@@ -385,38 +385,38 @@
 
           The class is implemented as a set of recommendations that may
           sometimes be useful.
-      #+END_SRC
+      #+end_example
 
     + The class name must be qualified by its namespace, otherwise Doxygen
       will think you are documenting some other class.
     + If you don't have anything to say about the class (at the moment), use
       the namespace-qualified class name for the description. This aids with
       finding these under-documented classes later.
-      #+BEGIN_SRC C++
+      #+begin_example C++
       Class
           Foam::myUnderDocumentedClass
 
       Description
           Foam::myUnderDocumentedClass
-      #+END_SRC
+      #+end_example
     + Use 'Class' and 'Namespace' tags in the header files.
       The Description block then applies to documenting the class.
     + Use 'InClass' and 'InNamespace' in the source files.
       The Description block then applies to documenting the file itself.
-      #+BEGIN_SRC C++
+      #+begin_example C++
       InClass
           Foam::myClass
 
       Description
           Implements the read and writing of files.
-      #+END_SRC
+      #+end_example
 
 *** Doxygen Special Commands
     Doxygen has a large number of special commands with a =\= prefix.
 
     Since the filtering removes the leading spaces within the blocks, the
     Doxygen commmands can be inserted within the block without problems.
-    #+BEGIN_SRC C++
+    #+begin_example C++
     InClass
         Foam::myClass
 
@@ -440,7 +440,7 @@
                 ...  // some operation
             }
         \endcode
-    #+END_SRC
+    #+end_example
 
 *** HTML Special Commands
     Since Doxygen also handles HTML tags to a certain extent, the angle
@@ -457,15 +457,15 @@
     + If the namespaces is used to hold sub-models, the namespace can be
       documented in the same file as the class with the model selector.
       /e.g./,
-      #+BEGIN_SRC C++
+      #+begin_example C++
       documented namespace 'Foam::functionEntries' within the
       class 'Foam::functionEntry'
-      #+END_SRC
+      #+end_example
     + If nothing else helps, find some sensible header.
       /e.g./,
-      #+BEGIN_SRC C++
+      #+begin_example C++
       namespace 'Foam' is documented in the foamVersion.H file
-      #+END_SRC
+      #+end_example
 
 *** Documenting Applications
     Any number of classes might be defined by a particular application, but
@@ -491,6 +491,36 @@
     used as a variable or class method name, it is probably better to use
     '-ize', which is considered the main form by the Oxford University
     Press. /e.g./,
-    #+BEGIN_SRC C++
+    #+begin_src C++
     myClass.initialize()
-    #+END_SRC
+    #+end_src
+*** References
+    References provided in the =Description= section of the class header files
+    should be formatted in the [[http://www.apastyle.org][APA (American
+    Psychological Association)]] style /e.g./ from =kEpsilon.H=
+    #+begin_example
+Description
+    Standard k-epsilon turbulence model for incompressible and compressible
+    flows including rapid distortion theory (RDT) based compression term.
+
+    Reference:
+    \verbatim
+        Standard model:
+            Launder, B. E., & Spalding, D. B. (1972).
+            Lectures in mathematical models of turbulence.
+
+            Launder, B. E., & Spalding, D. B. (1974).
+            The numerical computation of turbulent flows.
+            Computer methods in applied mechanics and engineering,
+            3(2), 269-289.
+
+        For the RDT-based compression term:
+            El Tahry, S. H. (1983).
+            k-epsilon equation for compressible reciprocating engine flows.
+            Journal of Energy, 7(4), 345-353.
+    \endverbatim
+    #+end_example
+    The APA style is a commonly used standard and references are available in
+    this format from many sources including
+    [[http://www.citationmachine.net/apa/cite-a-book][Citation Machine]] and
+    [[http://scholar.google.com][Google Scholar]].

@@ -10,4 +10,4 @@ wclean foamyHexMeshSurfaceSimplify
 wclean foamyHexMeshBackgroundMesh
 wclean cellSizeAndAlignmentGrid
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,21 +26,23 @@ License
 #include "SphericalTensor.H"
 #include "SymmTensor.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline DiagTensor<Cmpt>::DiagTensor()
+inline Foam::DiagTensor<Cmpt>::DiagTensor()
+{}
+
+
+template<class Cmpt>
+inline Foam::DiagTensor<Cmpt>::DiagTensor(const Foam::zero)
+:
+    VectorSpace<DiagTensor<Cmpt>, Cmpt, 3>(Zero)
 {}
 
 
 template<class Cmpt>
 template<class Cmpt2>
-inline DiagTensor<Cmpt>::DiagTensor
+inline Foam::DiagTensor<Cmpt>::DiagTensor
 (
     const VectorSpace<DiagTensor<Cmpt2>, Cmpt2, 3>& vs
 )
@@ -50,7 +52,7 @@ inline DiagTensor<Cmpt>::DiagTensor
 
 
 template<class Cmpt>
-inline DiagTensor<Cmpt>::DiagTensor
+inline Foam::DiagTensor<Cmpt>::DiagTensor
 (
     const Cmpt& vxx,
     const Cmpt& vyy,
@@ -64,7 +66,7 @@ inline DiagTensor<Cmpt>::DiagTensor
 
 
 template<class Cmpt>
-inline DiagTensor<Cmpt>::DiagTensor(Istream& is)
+inline Foam::DiagTensor<Cmpt>::DiagTensor(Istream& is)
 :
     VectorSpace<DiagTensor<Cmpt>, Cmpt, 3>(is)
 {}
@@ -73,42 +75,47 @@ inline DiagTensor<Cmpt>::DiagTensor(Istream& is)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Cmpt>
-inline const Cmpt&  DiagTensor<Cmpt>::xx() const
+inline const Cmpt& Foam::DiagTensor<Cmpt>::xx() const
 {
     return this->v_[XX];
 }
 
 template<class Cmpt>
-inline const Cmpt&  DiagTensor<Cmpt>::yy() const
+inline const Cmpt& Foam::DiagTensor<Cmpt>::yy() const
 {
     return this->v_[YY];
 }
 
 template<class Cmpt>
-inline const Cmpt&  DiagTensor<Cmpt>::zz() const
+inline const Cmpt& Foam::DiagTensor<Cmpt>::zz() const
 {
     return this->v_[ZZ];
 }
 
 
 template<class Cmpt>
-inline Cmpt& DiagTensor<Cmpt>::xx()
+inline Cmpt& Foam::DiagTensor<Cmpt>::xx()
 {
     return this->v_[XX];
 }
 
 template<class Cmpt>
-inline Cmpt& DiagTensor<Cmpt>::yy()
+inline Cmpt& Foam::DiagTensor<Cmpt>::yy()
 {
     return this->v_[YY];
 }
 
 template<class Cmpt>
-inline Cmpt& DiagTensor<Cmpt>::zz()
+inline Cmpt& Foam::DiagTensor<Cmpt>::zz()
 {
     return this->v_[ZZ];
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 

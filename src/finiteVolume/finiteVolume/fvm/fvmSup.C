@@ -47,7 +47,7 @@ Foam::fvm::Su
             dimVol*su.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.source() -= mesh.V()*su.field();
 
@@ -113,7 +113,7 @@ Foam::fvm::Sp
             dimVol*sp.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.diag() += mesh.V()*sp.field();
 
@@ -167,7 +167,7 @@ Foam::fvm::Sp
             dimVol*sp.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.diag() += mesh.V()*sp.value();
 
@@ -205,7 +205,7 @@ Foam::fvm::SuSp
             dimVol*susp.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.diag() += mesh.V()*max(susp.field(), scalar(0));
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
         "Collapse faces that are in the supplied face set"
     );
 
+    #include "addDictOption.H"
     #include "addOverwriteOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
@@ -90,6 +91,13 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
 
     const word oldInstance = mesh.pointsInstance();
+
+    const word dictName("collapseDict");
+    #include "setSystemMeshDictionaryIO.H"
+
+    Info<< "Reading " << dictName << nl << endl;
+
+    IOdictionary collapseDict(dictIO);
 
     const bool overwrite = args.optionFound("overwrite");
 
@@ -155,7 +163,10 @@ int main(int argc, char *argv[])
 
 
         {
-            meshFilterPtr.set(new polyMeshFilter(mesh, pointPriority));
+            meshFilterPtr.set
+            (
+                new polyMeshFilter(mesh, pointPriority, collapseDict)
+            );
             polyMeshFilter& meshFilter = meshFilterPtr();
 
             // newMesh will be empty until it is filtered
@@ -177,7 +188,10 @@ int main(int argc, char *argv[])
 
         if (collapseFaceSet)
         {
-            meshFilterPtr.reset(new polyMeshFilter(mesh, pointPriority));
+            meshFilterPtr.reset
+            (
+                new polyMeshFilter(mesh, pointPriority, collapseDict)
+            );
             polyMeshFilter& meshFilter = meshFilterPtr();
 
             const autoPtr<fvMesh>& newMesh = meshFilter.filteredMesh();
@@ -198,7 +212,10 @@ int main(int argc, char *argv[])
 
         if (collapseFaces)
         {
-            meshFilterPtr.reset(new polyMeshFilter(mesh, pointPriority));
+            meshFilterPtr.reset
+            (
+                new polyMeshFilter(mesh, pointPriority, collapseDict)
+            );
             polyMeshFilter& meshFilter = meshFilterPtr();
 
             const autoPtr<fvMesh>& newMesh = meshFilter.filteredMesh();

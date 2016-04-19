@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,8 +67,8 @@ Foam::DiagonalSolver<Type, DType, LUType>::solve
     (
         typeName,
         this->fieldName_,
-        pTraits<Type>::zero,
-        pTraits<Type>::zero,
+        Zero,
+        Zero,
         0,
         true,
         false

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -319,7 +319,7 @@ Foam::scalar Foam::tetrahedron<Point, PointRef>::barycentric
     List<scalar>& bary
 ) const
 {
-    // From:
+    // Reference:
     // http://en.wikipedia.org/wiki/Barycentric_coordinate_system_(mathematics)
 
     vector e0(a_ - d_);
@@ -470,7 +470,7 @@ bool Foam::tetrahedron<Point, PointRef>::inside(const point& pt) const
     // planeBase[2] = tetBasePt = b_
     // planeBase[3] = tetBasePt = b_
 
-    vector n = vector::zero;
+    vector n = Zero;
 
     {
         // 0, a

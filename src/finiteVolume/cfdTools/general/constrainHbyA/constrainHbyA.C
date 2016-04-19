@@ -40,16 +40,15 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
 
     if (tHbyA.isTmp())
     {
-        volVectorField* HbyAPtr = tHbyA.ptr();
-        HbyAPtr->rename("HbyA");
-        tHbyANew = HbyAPtr;
+        tHbyANew = tHbyA;
+        tHbyANew.ref().rename("HbyA");
     }
     else
     {
         tHbyANew = new volVectorField("HbyA", tHbyA);
     }
 
-    volVectorField& HbyA = tHbyANew();
+    volVectorField& HbyA = tHbyANew.ref();
 
     forAll(U.boundaryField(), patchi)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -698,8 +698,8 @@ void kkLOmega::correct()
         )().dimensionedInternalField()/pow3(y_.dimensionedInternalField())
     );
 
-    omegaEqn().relax();
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
 
     solve(omegaEqn);
     bound(omega_, omegaMin_);
@@ -718,8 +718,8 @@ void kkLOmega::correct()
       - fvm::Sp(Rbp + Rnat + Dl/(kl_ + kMin_), kl_)
     );
 
-    klEqn().relax();
-    klEqn().boundaryManipulate(kl_.boundaryField());
+    klEqn.ref().relax();
+    klEqn.ref().boundaryManipulate(kl_.boundaryField());
 
     solve(klEqn);
     bound(kl_, kMin_);
@@ -739,8 +739,8 @@ void kkLOmega::correct()
       - fvm::Sp(omega_ + Dt/(kt_+ kMin_), kt_)
     );
 
-    ktEqn().relax();
-    ktEqn().boundaryManipulate(kt_.boundaryField());
+    ktEqn.ref().relax();
+    ktEqn.ref().boundaryManipulate(kt_.boundaryField());
 
     solve(ktEqn);
     bound(kt_, kMin_);

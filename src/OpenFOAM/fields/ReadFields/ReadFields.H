@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,8 @@ namespace Foam
 class IOobjectList;
 
 //- Helper routine to read fields
+//  Reads all fields of type. Returns names of fields read. Guarantees all
+//  processors to read fields in same order.
 template<class GeoField, class Mesh>
 wordList ReadFields
 (
@@ -82,7 +84,7 @@ static void ReadFields
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "ReadFields.C"
+    #include "ReadFields.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,11 +72,10 @@ tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
                 ssf.dimensions()/dimArea,
                 scalar(0)
             ),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-
-    scalarField& rf = treconField();
+    scalarField& rf = treconField.ref();
 
     forAll(owner, facei)
     {
@@ -109,7 +108,7 @@ tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
 
     rf /= mesh.V();
 
-    treconField().correctBoundaryConditions();
+    treconField.ref().correctBoundaryConditions();
 
     return treconField;
 }

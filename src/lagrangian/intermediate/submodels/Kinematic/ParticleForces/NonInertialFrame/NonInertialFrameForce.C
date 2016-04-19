@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Foam::NonInertialFrameForce<CloudType>::NonInertialFrameForce
             "linearAcceleration"
         )
     ),
-    W_(vector::zero),
+    W_(Zero),
     omegaName_
     (
         this->coeffs().template lookupOrDefault<word>
@@ -54,7 +54,7 @@ Foam::NonInertialFrameForce<CloudType>::NonInertialFrameForce
             "angularVelocity"
         )
     ),
-    omega_(vector::zero),
+    omega_(Zero),
     omegaDotName_
     (
         this->coeffs().template lookupOrDefault<word>
@@ -63,7 +63,7 @@ Foam::NonInertialFrameForce<CloudType>::NonInertialFrameForce
             "angularAcceleration"
         )
     ),
-    omegaDot_(vector::zero),
+    omegaDot_(Zero),
     centreOfRotationName_
     (
         this->coeffs().template lookupOrDefault<word>
@@ -72,7 +72,7 @@ Foam::NonInertialFrameForce<CloudType>::NonInertialFrameForce
             "centreOfRotation"
         )
     ),
-    centreOfRotation_(vector::zero)
+    centreOfRotation_(Zero)
 {}
 
 
@@ -106,10 +106,10 @@ Foam::NonInertialFrameForce<CloudType>::~NonInertialFrameForce()
 template<class CloudType>
 void Foam::NonInertialFrameForce<CloudType>::cacheFields(const bool store)
 {
-    W_ = vector::zero;
-    omega_ = vector::zero;
-    omegaDot_ = vector::zero;
-    centreOfRotation_ = vector::zero;
+    W_ = Zero;
+    omega_ = Zero;
+    omegaDot_ = Zero;
+    centreOfRotation_ = Zero;
 
     if (store)
     {
@@ -186,7 +186,7 @@ Foam::forceSuSp Foam::NonInertialFrameForce<CloudType>::calcNonCoupled
     const scalar muc
 ) const
 {
-    forceSuSp value(vector::zero, 0.0);
+    forceSuSp value(Zero, 0.0);
 
     const vector r = p.position() - centreOfRotation_;
 

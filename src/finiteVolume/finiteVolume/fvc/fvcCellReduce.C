@@ -27,7 +27,7 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,12 +65,12 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensioned<Type>("0", ssf.dimensions(), pTraits<Type>::zero),
-            zeroGradientFvPatchField<Type>::typeName
+            dimensioned<Type>("0", ssf.dimensions(), Zero),
+            extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
 
-    volFieldType& result = tresult();
+    volFieldType& result = tresult.ref();
 
     const labelUList& own = mesh.owner();
     const labelUList& nbr = mesh.neighbour();
@@ -102,7 +102,8 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
     tmp<GeometricField<Type, fvPatchField, volMesh>>
         tvf(cellReduce(cop, tssf));
 
-   tssf.clear();
+    tssf.clear();
+
     return tvf;
 }
 

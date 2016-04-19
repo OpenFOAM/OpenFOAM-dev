@@ -549,7 +549,7 @@ public:
 #include "extendedEdgeMeshI.H"
 
 #ifdef NoRepository
-#   include "extendedEdgeMeshTemplates.C"
+    #include "extendedEdgeMeshTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -46,9 +46,9 @@ fixedNormalInletOutletVelocityFvPatchVectorField
         fvPatchVectorField::New("fixedValue", p, iF)
     )
 {
-    refValue() = vector::zero;
-    refGrad() = vector::zero;
-    valueFraction() = symmTensor::zero;
+    refValue() = Zero;
+    refGrad() = Zero;
+    valueFraction() = Zero;
 }
 
 
@@ -70,8 +70,8 @@ fixedNormalInletOutletVelocityFvPatchVectorField
 {
     fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
     refValue() = normalVelocity();
-    refGrad() = vector::zero;
-    valueFraction() = symmTensor::zero;
+    refGrad() = Zero;
+    valueFraction() = Zero;
 }
 
 

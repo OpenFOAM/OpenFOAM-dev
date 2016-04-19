@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
-void Foam::UList<T>::assign(const UList<T>& a)
+void Foam::UList<T>::deepCopy(const UList<T>& a)
 {
     if (a.size_ != this->size_)
     {
@@ -72,6 +72,16 @@ void Foam::UList<T>::operator=(const T& t)
     List_ACCESS(T, (*this), vp);
     List_FOR_ALL((*this), i)
         List_ELEM((*this), vp, i) = t;
+    List_END_FOR_ALL
+}
+
+
+template<class T>
+void Foam::UList<T>::operator=(const zero)
+{
+    List_ACCESS(T, (*this), vp);
+    List_FOR_ALL((*this), i)
+        List_ELEM((*this), vp, i) = Zero;
     List_END_FOR_ALL
 }
 

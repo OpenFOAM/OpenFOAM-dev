@@ -196,7 +196,7 @@ vectorField calcVertexNormals(const triSurface& surf)
 
     Info<< "Calculating vertex normals" << endl;
 
-    vectorField pointNormals(surf.nPoints(), vector::zero);
+    vectorField pointNormals(surf.nPoints(), Zero);
 
     const pointField& points = surf.points();
     const labelListList& pointFaces = surf.pointFaces();
@@ -276,8 +276,8 @@ triSurfacePointScalarField calcCurvature
         const edgeList fEdges = f.edges();
 
         // Calculate the edge vectors and the normal differences
-        vectorField edgeVectors(f.size(), vector::zero);
-        vectorField normalDifferences(f.size(), vector::zero);
+        vectorField edgeVectors(f.size(), Zero);
+        vectorField normalDifferences(f.size(), Zero);
 
         forAll(fEdges, feI)
         {
@@ -303,7 +303,7 @@ triSurfacePointScalarField calcCurvature
         faceCoordSys.normalize();
 
         // Construct the matrix to solve
-        scalarSymmetricSquareMatrix T(3, 3, 0);
+        scalarSymmetricSquareMatrix T(3, 0);
         scalarDiagonalMatrix Z(3, 0);
 
         // Least Squares
@@ -312,11 +312,11 @@ triSurfacePointScalarField calcCurvature
             scalar x = edgeVectors[i] & faceCoordSys[0];
             scalar y = edgeVectors[i] & faceCoordSys[1];
 
-            T[0][0] += sqr(x);
-            T[1][0] += x*y;
-            T[1][1] += sqr(x) + sqr(y);
-            T[2][1] += x*y;
-            T[2][2] += sqr(y);
+            T(0, 0) += sqr(x);
+            T(1, 0) += x*y;
+            T(1, 1) += sqr(x) + sqr(y);
+            T(2, 1) += x*y;
+            T(2, 2) += sqr(y);
 
             scalar dndx = normalDifferences[i] & faceCoordSys[0];
             scalar dndy = normalDifferences[i] & faceCoordSys[1];

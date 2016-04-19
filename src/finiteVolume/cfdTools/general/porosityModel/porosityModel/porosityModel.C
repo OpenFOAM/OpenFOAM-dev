@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,11 +154,11 @@ Foam::tmp<Foam::vectorField> Foam::porosityModel::porosityModel::force
 {
     transformModelData();
 
-    tmp<vectorField> tforce(new vectorField(U.size(), vector::zero));
+    tmp<vectorField> tforce(new vectorField(U.size(), Zero));
 
     if (!cellZoneIDs_.empty())
     {
-        this->calcForce(U, rho, mu, tforce());
+        this->calcForce(U, rho, mu, tforce.ref());
     }
 
     return tforce;

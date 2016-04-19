@@ -15,7 +15,7 @@ if (runTime.outputTime())
     allSpeciesVelocitySum_RU = List<vectorField>
     (
         molecules.potential().nIds(),
-        vectorField(mesh.nCells(), vector::zero)
+        vectorField(mesh.nCells(), Zero)
     );
 
     allSpeciesVelocityMagSquaredSum_RU = List<scalarField>

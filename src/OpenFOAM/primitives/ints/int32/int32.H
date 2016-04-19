@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,20 +89,23 @@ public:
     //- Component type
     typedef int32_t cmptType;
 
+
     // Member constants
 
-        enum
-        {
-            dim = 3,         //!< Dimensionality of space
-            rank = 0,        //!< Rank of int32_t is 0
-            nComponents = 1  //!< Number of components in int32_t is 1
-        };
+        //- Dimensionality of space
+        static const direction dim = 3;
+
+        //- Rank of int32_t is 0
+        static const direction rank = 0;
+
+        //- Number of components in int32_t is 1
+        static const direction nComponents = 1;
 
 
     // Static data members
 
         static const char* const typeName;
-        static const char* componentNames[];
+        static const char* const componentNames[];
         static const int32_t zero;
         static const int32_t one;
         static const int32_t min;

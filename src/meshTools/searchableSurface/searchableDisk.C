@@ -58,7 +58,7 @@ Foam::pointIndexHit Foam::searchableDisk::findNearest
 
     if (magV < ROOTVSMALL)
     {
-        v = vector::zero;
+        v = Zero;
     }
     else
     {
@@ -85,7 +85,7 @@ void Foam::searchableDisk::findLine
     pointIndexHit& info
 ) const
 {
-    info = pointIndexHit(false, vector::zero, -1);
+    info = pointIndexHit(false, Zero, -1);
 
     vector v(start - origin_);
 
@@ -103,7 +103,7 @@ void Foam::searchableDisk::findLine
 
     if (magV < ROOTVSMALL)
     {
-        v = vector::zero;
+        v = Zero;
     }
     else
     {

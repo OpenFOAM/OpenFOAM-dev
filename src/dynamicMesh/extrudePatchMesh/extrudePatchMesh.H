@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,8 @@ Description
     Mesh at a patch created on the fly. The following entry should be used
     on the field boundary dictionary:
 
+    Example:
+    \verbatim
         // New Shell mesh data
 
         extrudeModel    linearNormal;
@@ -61,6 +63,7 @@ Description
             name        "side";
             type        empty;
         }
+    \endverbatim
 
 \*---------------------------------------------------------------------------*/
 

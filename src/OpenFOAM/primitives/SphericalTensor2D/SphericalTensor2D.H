@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,20 +58,12 @@ public:
 
     // Member constants
 
-        enum
-        {
-            rank = 2 // Rank of SphericalTensor2D is 2
-        };
+        //- Rank of SphericalTensor2D is 2
+        static const direction rank = 2;
 
 
     // Static data members
 
-        static const char* const typeName;
-        static const char* componentNames[];
-        static const SphericalTensor2D zero;
-        static const SphericalTensor2D one;
-        static const SphericalTensor2D max;
-        static const SphericalTensor2D min;
         static const SphericalTensor2D I;
         static const SphericalTensor2D oneThirdI;
         static const SphericalTensor2D twoThirdsI;
@@ -85,6 +77,9 @@ public:
 
         //- Construct null
         inline SphericalTensor2D();
+
+        //- Construct initialized to zero
+        inline SphericalTensor2D(const Foam::zero);
 
         //- Construct given VectorSpace
         inline SphericalTensor2D

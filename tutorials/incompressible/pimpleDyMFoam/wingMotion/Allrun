@@ -27,4 +27,4 @@ runApplication decomposePar
 runParallel `getApplication`
 runApplication reconstructPar
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

@@ -99,7 +99,7 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::facePoints
 
     // Initialise to face-centre
     tmp<pointField> tfacePoints(new pointField(patch_.size()));
-    pointField& facePoints = tfacePoints();
+    pointField& facePoints = tfacePoints.ref();
 
     forAll(pp, faceI)
     {
@@ -867,7 +867,7 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::readListOrField
 )
 {
     tmp<pointField> tfld(new pointField());
-    pointField& fld = tfld();
+    pointField& fld = tfld.ref();
 
     if (size)
     {
@@ -939,7 +939,7 @@ Foam::mappedPatchBase::mappedPatchBase
     samplePatch_(""),
     coupleGroup_(),
     offsetMode_(UNIFORM),
-    offset_(vector::zero),
+    offset_(Zero),
     offsets_(pp.size(), offset_),
     distance_(0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
@@ -966,7 +966,7 @@ Foam::mappedPatchBase::mappedPatchBase
     samplePatch_(samplePatch),
     coupleGroup_(),
     offsetMode_(NONUNIFORM),
-    offset_(vector::zero),
+    offset_(Zero),
     offsets_(offsets),
     distance_(0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
@@ -1020,7 +1020,7 @@ Foam::mappedPatchBase::mappedPatchBase
     samplePatch_(samplePatch),
     coupleGroup_(),
     offsetMode_(NORMAL),
-    offset_(vector::zero),
+    offset_(Zero),
     offsets_(0),
     distance_(distance),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
@@ -1044,7 +1044,7 @@ Foam::mappedPatchBase::mappedPatchBase
     samplePatch_(dict.lookupOrDefault<word>("samplePatch", "")),
     coupleGroup_(dict),
     offsetMode_(UNIFORM),
-    offset_(vector::zero),
+    offset_(Zero),
     offsets_(0),
     distance_(0.0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
@@ -1126,7 +1126,7 @@ Foam::mappedPatchBase::mappedPatchBase
     samplePatch_(dict.lookupOrDefault<word>("samplePatch", "")),
     coupleGroup_(dict), //dict.lookupOrDefault<word>("coupleGroup", "")),
     offsetMode_(UNIFORM),
-    offset_(vector::zero),
+    offset_(Zero),
     offsets_(0),
     distance_(0.0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
@@ -1267,7 +1267,7 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::samplePoints
 ) const
 {
     tmp<pointField> tfld(new pointField(fc));
-    pointField& fld = tfld();
+    pointField& fld = tfld.ref();
 
     switch (offsetMode_)
     {

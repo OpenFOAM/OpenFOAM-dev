@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "constantRadiation.H"
 #include "volFields.H"
-#include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -117,8 +116,7 @@ tmp<volScalarField> constantRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             owner().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
         )
     );
 
@@ -126,7 +124,7 @@ tmp<volScalarField> constantRadiation::Shs()
 
     if ((time >= timeStart_) && (time <= timeStart_ + duration_))
     {
-        scalarField& Shs = tShs();
+        scalarField& Shs = tShs.ref();
         const scalarField& Qr = QrConst_.internalField();
         const scalarField& alpha = owner_.alpha().internalField();
 

@@ -9,7 +9,7 @@ EXE_INC = \
     -I$(FASTDUALOCTREE_SRC_PATH) \
     -I../conformalVoronoiMesh/lnInclude \
     -I$(LIB_SRC)/edgeMesh/lnInclude \
-    -I$(LIB_SRC)/mesh/autoMesh/lnInclude \
+    -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude

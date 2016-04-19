@@ -329,9 +329,9 @@ void v2f<BasicTurbulenceModel>::correct()
       + fvOptions(alpha, rho, epsilon_)
     );
 
-    epsEqn().relax();
-    fvOptions.constrain(epsEqn());
-    epsEqn().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().relax();
+    fvOptions.constrain(epsEqn.ref());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
     solve(epsEqn);
     fvOptions.correct(epsilon_);
     bound(epsilon_, this->epsilonMin_);
@@ -350,8 +350,8 @@ void v2f<BasicTurbulenceModel>::correct()
       + fvOptions(alpha, rho, k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
     fvOptions.correct(k_);
     bound(k_, this->kMin_);
@@ -366,8 +366,8 @@ void v2f<BasicTurbulenceModel>::correct()
       - 1.0/L2/k_*(v2fAlpha - C2_*G)
     );
 
-    fEqn().relax();
-    fvOptions.constrain(fEqn());
+    fEqn.ref().relax();
+    fvOptions.constrain(fEqn.ref());
     solve(fEqn);
     fvOptions.correct(f_);
     bound(f_, fMin_);
@@ -385,8 +385,8 @@ void v2f<BasicTurbulenceModel>::correct()
       + fvOptions(alpha, rho, v2_)
     );
 
-    v2Eqn().relax();
-    fvOptions.constrain(v2Eqn());
+    v2Eqn.ref().relax();
+    fvOptions.constrain(v2Eqn.ref());
     solve(v2Eqn);
     fvOptions.correct(v2_);
     bound(v2_, v2Min_);

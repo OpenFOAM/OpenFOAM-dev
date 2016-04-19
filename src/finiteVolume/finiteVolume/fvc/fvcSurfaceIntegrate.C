@@ -25,7 +25,7 @@ License
 
 #include "fvcSurfaceIntegrate.H"
 #include "fvMesh.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -102,12 +102,12 @@ surfaceIntegrate
             (
                 "0",
                 ssf.dimensions()/dimVol,
-                pTraits<Type>::zero
+                Zero
             ),
-            zeroGradientFvPatchField<Type>::typeName
+            extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& vf = tvf();
+    GeometricField<Type, fvPatchField, volMesh>& vf = tvf.ref();
 
     surfaceIntegrate(vf.internalField(), ssf);
     vf.correctBoundaryConditions();
@@ -154,11 +154,11 @@ surfaceSum
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensioned<Type>("0", ssf.dimensions(), pTraits<Type>::zero),
-            zeroGradientFvPatchField<Type>::typeName
+            dimensioned<Type>("0", ssf.dimensions(), Zero),
+            extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& vf = tvf();
+    GeometricField<Type, fvPatchField, volMesh>& vf = tvf.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();

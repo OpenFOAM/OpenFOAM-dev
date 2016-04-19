@@ -342,6 +342,10 @@ public:
         //  refer to *this (except for name() and type() etc.)
         virtual void initOrder(PstreamBuffers&, const primitivePatch&) const;
 
+        //- Returns rotation.
+        //    -1 : no match
+        //     0 : match
+        //    >0 : match if rotated clockwise by this amount
         static label matchFace
         (
             const face& localFace,

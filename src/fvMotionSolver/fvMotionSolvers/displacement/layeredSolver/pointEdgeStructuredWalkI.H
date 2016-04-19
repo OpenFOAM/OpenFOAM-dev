@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ inline Foam::pointEdgeStructuredWalk::pointEdgeStructuredWalk()
     point0_(vector::max),
     previousPoint_(vector::max),
     dist_(0),
-    data_(vector::zero)
+    data_(Zero)
 {}
 
 

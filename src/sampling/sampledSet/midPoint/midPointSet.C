@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "midPointSet.H"
 #include "polyMesh.H"
+#include "meshSearch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -47,58 +48,46 @@ void Foam::midPointSet::genSamples()
     labelList midSegments(2*size());
     scalarList midCurveDist(2*size());
 
-    label midI = 0;
+    label mSamplei = 0;
+    label samplei = 0;
 
-    label sampleI = 0;
-
-    while(true && size()>0)
+    while (size() > 0)
     {
-        // calculate midpoint between sampleI and sampleI+1 (if in same segment)
+        // Calculate midpoint between samplei and samplei+1 (if in same segment)
         while
         (
-            (sampleI < size() - 1)
-         && (segments_[sampleI] == segments_[sampleI+1])
+            (samplei < size() - 1)
+         && (segments_[samplei] == segments_[samplei+1])
         )
         {
-            midPoints[midI] =
-                0.5*(operator[](sampleI) + operator[](sampleI+1));
+            point midPoint(0.5*(operator[](samplei) + operator[](samplei+1)));
+            label cellm = pointInCell(midPoint, samplei);
 
-            label cell1 = getCell(faces_[sampleI], midPoints[midI]);
-            label cell2 = getCell(faces_[sampleI+1], midPoints[midI]);
-
-            if (cell1 != cell2)
+            if (cellm != -1)
             {
-                FatalErrorInFunction
-                    << "  midI:" << midI
-                    << "  sampleI:" << sampleI
-                    << "  pts[sampleI]:" << operator[](sampleI)
-                    << "  face[sampleI]:" << faces_[sampleI]
-                    << "  pts[sampleI+1]:" << operator[](sampleI+1)
-                    << "  face[sampleI+1]:" << faces_[sampleI+1]
-                    << "  cell1:" << cell1
-                    << "  cell2:" << cell2
-                    << abort(FatalError);
+                midPoints[mSamplei] = midPoint;
+                midCells[mSamplei] = cellm;
+                midSegments[mSamplei] = segments_[samplei];
+                midCurveDist[mSamplei] = mag(midPoints[mSamplei] - start());
+                mSamplei++;
             }
 
-            midCells[midI] = cell1;
-            midSegments[midI] = segments_[sampleI];
-            midCurveDist[midI] = mag(midPoints[midI] - start());
-
-            midI++;
-            sampleI++;
+            samplei++;
         }
 
-        if (sampleI == size() - 1)
+        if (samplei == size() - 1)
         {
             break;
         }
-        sampleI++;
+
+        samplei++;
     }
 
-    midPoints.setSize(midI);
-    midCells.setSize(midI);
-    midSegments.setSize(midI);
-    midCurveDist.setSize(midI);
+    midPoints.setSize(mSamplei);
+    midCells.setSize(mSamplei);
+    midSegments.setSize(mSamplei);
+    midCurveDist.setSize(mSamplei);
+
     setSamples
     (
         midPoints,

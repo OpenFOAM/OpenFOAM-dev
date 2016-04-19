@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::anisotropicFilter::anisotropicFilter
             mesh
         ),
         mesh,
-        dimensionedVector("zero", dimLength*dimLength, vector::zero),
+        dimensionedVector("zero", dimLength*dimLength, Zero),
         calculatedFvPatchVectorField::typeName
     )
 {
@@ -94,7 +94,7 @@ Foam::anisotropicFilter::anisotropicFilter
             mesh
         ),
         mesh,
-        dimensionedVector("zero", dimLength*dimLength, vector::zero),
+        dimensionedVector("zero", dimLength*dimLength, Zero),
         calculatedFvPatchScalarField::typeName
     )
 {
@@ -190,7 +190,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::anisotropicFilter::operator()
 
     for (direction d=0; d<symmTensor::nComponents; d++)
     {
-        tmpFilteredField().replace
+        tmpFilteredField.ref().replace
         (
             d, anisotropicFilter::operator()(unFilteredField().component(d))
         );
@@ -224,7 +224,7 @@ Foam::tmp<Foam::volTensorField> Foam::anisotropicFilter::operator()
 
     for (direction d=0; d<tensor::nComponents; d++)
     {
-        tmpFilteredField().replace
+        tmpFilteredField.ref().replace
         (
             d, anisotropicFilter::operator()(unFilteredField().component(d))
         );

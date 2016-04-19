@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,14 +29,12 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(patchZones, 0);
+    defineTypeNameAndDebug(patchZones, 0);
 }
 
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-// Gets labels of changed faces and propagates them to the edges. Returns
-// labels of edges changed.
 Foam::labelList Foam::patchZones::faceToEdge
 (
     const labelList& changedFaces,
@@ -71,7 +69,6 @@ Foam::labelList Foam::patchZones::faceToEdge
 }
 
 
-// Reverse of faceToEdge: gets edges and returns faces
 Foam::labelList Foam::patchZones::edgeToFace(const labelList& changedEdges)
 {
     labelList changedFaces(pp_.size(), -1);
@@ -102,7 +99,6 @@ Foam::labelList Foam::patchZones::edgeToFace(const labelList& changedEdges)
 }
 
 
-// Finds area, starting at faceI, delimited by borderEdge
 void Foam::patchZones::markZone(label faceI)
 {
     // List of faces whose faceZone has been set.
@@ -148,7 +144,6 @@ void Foam::patchZones::markZone(label faceI)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::patchZones::patchZones
 (
     const primitivePatch& pp,

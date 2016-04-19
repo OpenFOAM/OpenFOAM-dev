@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,14 +156,6 @@ void Foam::fvPatchMapper::calcAddressing() const
                     }
                 }
 
-                //// Cater for bad mapping
-                //if (nActive == 0)
-                //{
-                //    newAddr[nActive] = 0;
-                //    newWeights[nActive] = 1;
-                //    nActive++;
-                //}
-
                 newAddr.setSize(nActive);
                 newWeights.setSize(nActive);
 
@@ -211,7 +203,6 @@ void Foam::fvPatchMapper::clearOut()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::fvPatchMapper::fvPatchMapper
 (
     const fvPatch& patch,

@@ -60,7 +60,7 @@ void zeroCells
 {
     forAll(cells, i)
     {
-        vf[cells[i]] = pTraits<Type>::zero;
+        vf[cells[i]] = Zero;
     }
 }
 
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
         {
             // Momentum predictor
 
-            tmp<fvVectorMatrix> UEqn
+            tmp<fvVectorMatrix> tUEqn
             (
                 fvm::div(phi, U)
               + turbulence->divDevReff(U)
@@ -115,23 +115,20 @@ int main(int argc, char *argv[])
              ==
                 fvOptions(U)
             );
+            fvVectorMatrix& UEqn = tUEqn.ref();
 
-            UEqn().relax();
+            UEqn.relax();
 
-            fvOptions.constrain(UEqn());
+            fvOptions.constrain(UEqn);
 
-            solve(UEqn() == -fvc::grad(p));
+            solve(UEqn == -fvc::grad(p));
 
             fvOptions.correct(U);
 
-            volScalarField rAU(1.0/UEqn().A());
-            volVectorField HbyA(constrainHbyA(rAU*UEqn().H(), U, p));
-            UEqn.clear();
-            surfaceScalarField phiHbyA
-            (
-                "phiHbyA",
-                fvc::interpolate(HbyA) & mesh.Sf()
-            );
+            volScalarField rAU(1.0/UEqn.A());
+            volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+            tUEqn.clear();
+            surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
             adjustPhi(phiHbyA, U, p);
 
             // Update the pressure BCs to ensure flux consistency
@@ -174,13 +171,13 @@ int main(int argc, char *argv[])
             //(
             //    fvc::reconstruct
             //    (
-            //        mesh.magSf()*(fvc::snGrad(Ua) & fvc::interpolate(U))
+            //        mesh.magSf()*fvc::dotInterpolate(fvc::snGrad(Ua), U)
             //    )
             //);
 
             zeroCells(adjointTransposeConvection, inletCells);
 
-            tmp<fvVectorMatrix> UaEqn
+            tmp<fvVectorMatrix> tUaEqn
             (
                 fvm::div(-phi, Ua)
               - adjointTransposeConvection
@@ -189,24 +186,21 @@ int main(int argc, char *argv[])
              ==
                 fvOptions(Ua)
             );
+            fvVectorMatrix& UaEqn = tUaEqn.ref();
 
-            UaEqn().relax();
+            UaEqn.relax();
 
-            fvOptions.constrain(UaEqn());
+            fvOptions.constrain(UaEqn);
 
-            solve(UaEqn() == -fvc::grad(pa));
+            solve(UaEqn == -fvc::grad(pa));
 
             fvOptions.correct(Ua);
 
-            volScalarField rAUa(1.0/UaEqn().A());
+            volScalarField rAUa(1.0/UaEqn.A());
             volVectorField HbyAa("HbyAa", Ua);
-            HbyAa = rAUa*UaEqn().H();
-            UaEqn.clear();
-            surfaceScalarField phiHbyAa
-            (
-                "phiHbyAa",
-                fvc::interpolate(HbyAa) & mesh.Sf()
-            );
+            HbyAa = rAUa*UaEqn.H();
+            tUaEqn.clear();
+            surfaceScalarField phiHbyAa("phiHbyAa", fvc::flux(HbyAa));
             adjustPhi(phiHbyAa, Ua, pa);
 
             // Non-orthogonal pressure corrector loop

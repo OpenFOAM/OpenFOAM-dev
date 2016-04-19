@@ -129,6 +129,15 @@ class MRFZone
             FieldField<fvsPatchField, scalar>& phi
         ) const;
 
+        //- Make the given absolute mass/vol flux relative within the MRF region
+        template<class RhoFieldType>
+        void makeRelativeRhoFlux
+        (
+            const RhoFieldType& rho,
+            Field<scalar>& phi,
+            const label patchi
+        ) const;
+
         //- Make the given relative mass/vol flux absolute within the MRF region
         template<class RhoFieldType>
         void makeAbsoluteRhoFlux
@@ -226,6 +235,10 @@ public:
             //  within the MRF region
             void makeRelative(FieldField<fvsPatchField, scalar>& phi) const;
 
+            //- Make the given absolute patch flux relative
+            //  within the MRF region
+            void makeRelative(Field<scalar>& phi, const label patchi) const;
+
             //- Make the given absolute mass-flux relative within the MRF region
             void makeRelative
             (
@@ -267,7 +280,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "MRFZoneTemplates.C"
+    #include "MRFZoneTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

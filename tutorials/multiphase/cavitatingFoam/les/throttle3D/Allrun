@@ -37,4 +37,4 @@ runApplication decomposePar
 runParallel $application
 runApplication reconstructPar
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------
