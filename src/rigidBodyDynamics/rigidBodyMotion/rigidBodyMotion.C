@@ -155,28 +155,26 @@ void Foam::RBD::rigidBodyMotion::solve
     if (Pstream::master())
     {
         solver_->solve(tau, fx);
-
-        if (report_)
-        {
-            status();
-        }
     }
 
     Pstream::scatter(motionState_);
+
+    // Update the body-state to correspond to the current joint-state
+    forwardDynamicsCorrection(motionState_);
 }
 
 
-void Foam::RBD::rigidBodyMotion::status() const
+void Foam::RBD::rigidBodyMotion::status(const label bodyID) const
 {
-    /*
-    Info<< "Rigid body motion" << nl
-        << "    Centre of rotation: " << centreOfRotation() << nl
-        << "    Centre of mass: " << centreOfMass() << nl
-        << "    Orientation: " << orientation() << nl
-        << "    Linear velocity: " << v() << nl
-        << "    Angular velocity: " << omega()
+    const spatialTransform CofR(X0(bodyID));
+    const spatialVector vCofR(v(bodyID, Zero));
+
+    Info<< "Rigid-body motion of the " << name(bodyID) << nl
+        << "    Centre of rotation: " << CofR.r() << nl
+        << "    Orientation: " << CofR.E() << nl
+        << "    Linear velocity: " << vCofR.l() << nl
+        << "    Angular velocity: " << vCofR.w()
         << endl;
-    */
 }
 
 

@@ -93,9 +93,6 @@ void Foam::RBD::rigidBodySolvers::Newmark::solve
       + sqr(deltaT())*(beta_*qDdot() + (0.5 - beta_)*qDdot0());
 
     correctQuaternionJoints();
-
-    // Update the body-state
-    model_.forwardDynamicsCorrection(state());
 }
 
 

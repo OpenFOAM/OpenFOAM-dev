@@ -270,6 +270,13 @@ void Foam::rigidBodyMeshMotion::solve()
         );
     }
 
+    if (Pstream::master() && model_.report())
+    {
+        forAll(bodyMeshes_, bi)
+        {
+            model_.status(bodyMeshes_[bi].bodyID_);
+        }
+    }
 
     // Update the displacements
     if (bodyMeshes_.size() == 1)

@@ -177,8 +177,8 @@ public:
                 const Field<spatialVector>& fx
             );
 
-            //- Report the status of the motion
-            void status() const;
+            //- Report the status of the motion of the given body
+            void status(const label bodyID) const;
 
 
         // Transformations
