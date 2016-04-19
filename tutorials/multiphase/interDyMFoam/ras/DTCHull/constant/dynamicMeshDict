@@ -16,56 +16,65 @@ FoamFile
 
 dynamicFvMesh       dynamicMotionSolverFvMesh;
 
-motionSolverLibs    ("libsixDoFRigidBodyMotion.so");
+motionSolverLibs   ("librigidBodyMeshMotion.so");
 
-solver              sixDoFRigidBodyMotion;
+solver             rigidBodyMotion;
 
-sixDoFRigidBodyMotionCoeffs
+rigidBodyMotionCoeffs
 {
-    patches         (hull);
-    innerDistance   0.3;
-    outerDistance   1;
-
-    centreOfMass    (2.929541 0 0.2);
-    mass            412.73;
-    momentOfInertia (40 921 921);
-    rhoInf          1;
     report          on;
-
-    value           uniform (0 0 0);
-
-    accelerationRelaxation 0.4;
 
     solver
     {
         type Newmark;
     }
 
-    constraints
-    {
-        zAxis
-        {
-            sixDoFRigidBodyMotionConstraint line;
-            direction     (0 0 1);
-        }
-        yPlane
-        {
-            sixDoFRigidBodyMotionConstraint axis;
-            axis          (0 1 0);
-        }
-    }
+    accelerationRelaxation 0.4;
 
-    restraints
+    bodies
     {
-        translationDamper
+        hull
         {
-            sixDoFRigidBodyMotionRestraint linearDamper;
-            coeff         8596;
-        }
-        rotationDamper
-        {
-            sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
-            coeff         11586;
+            type            rigidBody;
+            parent          root;
+
+            centreOfMass    (0 0 0);
+            mass            412.73;
+            inertia         (40 0 0 921 0 921);
+            transform       (1 0 0 0 1 0 0 0 1) (2.929541 0 0.2);
+
+            joint
+            {
+                type    composite;
+                joints
+                (
+                    {
+                        type Pz;
+                    }
+                    {
+                        type Ry;
+                    }
+                );
+            }
+
+            restraints
+            {
+                translationDamper
+                {
+                    type    linearDamper;
+                    coeff   8596;
+                }
+
+                rotationDamper
+                {
+                    type    sphericalAngularDamper;
+                    coeff   11586;
+                }
+            }
+
+            patches         (hull);
+            innerDistance   0.3;
+            outerDistance   1;
         }
     }
 }
