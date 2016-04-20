@@ -1,6 +1,6 @@
 #                            -*- mode: org; -*-
 #
-#+TITLE:                 OpenFOAM C++ style guide
+#+TITLE:                 OpenFOAM C++ Style Guide
 #+AUTHOR:                  OpenFOAM Foundation
 #+DATE:                         2011-2016
 #+LINK:                   http://www.OpenFOAM.org
@@ -8,7 +8,7 @@
 #+STARTUP: hidestars
 #+STARTUP: odd
 
-* OpenFOAM C++ style guide
+* Code
 *** General
     + 80 character lines max
     + The normal indentation is 4 spaces per logical level.
@@ -365,7 +365,7 @@
       )
       #+end_src
 
-** Documentation
+* Documentation
 *** General
     + For readability in the comment blocks, certain tags are used that are
       translated by pre-filtering the file before sending it to Doxygen.
