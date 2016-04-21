@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 
     masterMesh.write();
 
-    Info<< "\nEnd\n" << endl;
+    Info<< "End\n" << endl;
 
     return 0;
 }

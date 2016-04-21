@@ -499,7 +499,7 @@ int main(int argc, char *argv[])
     // Write fields
     runTime.write();
 
-    Info<< nl << "end" << endl;
+    Info<< "End\n" << endl;
 
     return 0;
 }

@@ -333,7 +333,7 @@ int main(int argc, char *argv[])
             << exit(FatalError);
     }
 
-    Info<< "\nEnd\n" << endl;
+    Info<< "End\n" << endl;
 
     return 0;
 }

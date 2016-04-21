@@ -370,7 +370,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    Info<< "\nEnd\n" << endl;
+    Info<< "End\n" << endl;
 
     return 0;
 }
