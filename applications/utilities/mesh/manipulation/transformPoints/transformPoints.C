@@ -308,6 +308,8 @@ int main(int argc, char *argv[])
     Info<< "Writing points into directory " << points.path() << nl << endl;
     points.write();
 
+    Info<< "End\n" << endl;
+
     return 0;
 }
 
