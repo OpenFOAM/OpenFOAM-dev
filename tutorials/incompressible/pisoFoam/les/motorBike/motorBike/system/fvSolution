@@ -36,7 +36,7 @@ solvers
         $p;
         tolerance       1e-6;
         relTol          0;
-    };
+    }
 
     Phi
     {

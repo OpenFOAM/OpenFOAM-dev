@@ -10,6 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -31,13 +32,13 @@ solvers
         nCellsInCoarsestLevel 50;
         agglomerator    faceAreaPair;
         mergeLevels     1;
-    };
+    }
 
     pFinal
     {
         $p;
         relTol          0;
-    };
+    }
 
     "(U|k|B|nuTilda)"
     {
@@ -45,7 +46,7 @@ solvers
         smoother        symGaussSeidel;
         tolerance       1e-7;
         relTol          0;
-    };
+    }
 }
 
 PISO
