@@ -404,13 +404,8 @@ inline Cmpt invariantII(const SymmTensor<Cmpt>& st)
 {
     return
     (
-        0.5*sqr(tr(st))
-      - 0.5*
-        (
-           st.xx()*st.xx() + st.xy()*st.xy() + st.xz()*st.xz()
-         + st.xy()*st.xy() + st.yy()*st.yy() + st.yz()*st.yz()
-         + st.xz()*st.xz() + st.yz()*st.yz() + st.zz()*st.zz()
-        )
+        st.xx()*st.yy() + st.yy()*st.zz() + st.xx()*st.zz()
+      - sqr(st.xy()) - sqr(st.yz()) - sqr(st.xz())
     );
 }
 

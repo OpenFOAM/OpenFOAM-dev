@@ -659,13 +659,8 @@ inline Cmpt invariantII(const Tensor<Cmpt>& t)
 {
     return
     (
-        0.5*sqr(tr(t))
-      - 0.5*
-        (
-           t.xx()*t.xx() + t.xy()*t.xy() + t.xz()*t.xz()
-         + t.yx()*t.yx() + t.yy()*t.yy() + t.yz()*t.yz()
-         + t.zx()*t.zx() + t.zy()*t.zy() + t.zz()*t.zz()
-        )
+        t.xx()*t.yy() + t.yy()*t.zz() + t.xx()*t.zz()
+      - t.xy()*t.yx() - t.yz()*t.zy() - t.xz()*t.zx()
     );
 }
 
