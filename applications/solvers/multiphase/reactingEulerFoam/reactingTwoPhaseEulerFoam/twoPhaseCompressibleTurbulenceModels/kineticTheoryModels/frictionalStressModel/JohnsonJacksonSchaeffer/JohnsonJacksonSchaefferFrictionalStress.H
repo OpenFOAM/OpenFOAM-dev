@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::kineticTheoryModels::frictionalStressModel
+    Foam::kineticTheoryModels::frictionalStressModels::JohnsonJacksonSchaeffer
+
+Description
 
 SourceFiles
-    frictionalStressModel.C
+    JohnsonJacksonSchaefferFrictionalStress.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef frictionalStressModel_H
-#define frictionalStressModel_H
+#ifndef JohnsonJacksonSchaeffer_H
+#define JohnsonJacksonSchaeffer_H
 
-#include "dictionary.H"
-#include "volFields.H"
-#include "dimensionedTypes.H"
-#include "runTimeSelectionTables.H"
-#include "phaseModel.H"
+#include "frictionalStressModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,81 +42,68 @@ namespace Foam
 {
 namespace kineticTheoryModels
 {
+namespace frictionalStressModels
+{
 
 /*---------------------------------------------------------------------------*\
-                           Class frictionalStressModel Declaration
+               Class JohnsonJacksonSchaeffer Declaration
 \*---------------------------------------------------------------------------*/
 
-class frictionalStressModel
+class JohnsonJacksonSchaeffer
+:
+    public frictionalStressModel
 {
-    // Private member functions
+    // Private data
 
-        //- Disallow default bitwise copy construct
-        frictionalStressModel(const frictionalStressModel&);
+        dictionary coeffDict_;
 
-        //- Disallow default bitwise assignment
-        void operator=(const frictionalStressModel&);
+        //- Material constant for frictional normal stress
+        dimensionedScalar Fr_;
 
+        //- Material constant for frictional normal stress
+        dimensionedScalar eta_;
 
-protected:
+        //- Material constant for frictional normal stress
+        dimensionedScalar p_;
 
-    // Protected data
+        //- Angle of internal friction
+        dimensionedScalar phi_;
 
-        //- Reference to higher-level dictionary for re-read
-        const dictionary& dict_;
+        //- Lower limit for (alphaMax - alpha1)
+        dimensionedScalar alphaDeltaMin_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("frictionalStressModel");
-
-    // Declare runtime constructor selection table
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        frictionalStressModel,
-        dictionary,
-        (
-            const dictionary& dict
-        ),
-        (dict)
-    );
+    TypeName("JohnsonJacksonSchaeffer");
 
 
     // Constructors
 
         //- Construct from components
-        frictionalStressModel(const dictionary& dict);
-
-
-    // Selectors
-
-        static autoPtr<frictionalStressModel> New
-        (
-            const dictionary& dict
-        );
+        JohnsonJacksonSchaeffer(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~frictionalStressModel();
+    virtual ~JohnsonJacksonSchaeffer();
 
 
-    // Member Functions
+    // Member functions
 
         virtual tmp<volScalarField> frictionalPressure
         (
             const phaseModel& phase,
             const dimensionedScalar& alphaMinFriction,
             const dimensionedScalar& alphaMax
-        ) const = 0;
+        ) const;
 
         virtual tmp<volScalarField> frictionalPressurePrime
         (
             const phaseModel& phase,
             const dimensionedScalar& alphaMinFriction,
             const dimensionedScalar& alphaMax
-        ) const = 0;
+        ) const;
 
         virtual tmp<volScalarField> nu
         (
@@ -127,14 +112,15 @@ public:
             const dimensionedScalar& alphaMax,
             const volScalarField& pf,
             const volSymmTensorField& D
-        ) const = 0;
+        ) const;
 
-        virtual bool read() = 0;
+        virtual bool read();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace frictionalStressModels
 } // End namespace kineticTheoryModels
 } // End namespace Foam
 

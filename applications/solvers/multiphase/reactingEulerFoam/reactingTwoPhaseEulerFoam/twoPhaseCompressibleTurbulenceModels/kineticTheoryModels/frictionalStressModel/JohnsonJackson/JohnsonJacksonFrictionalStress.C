@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,15 +81,16 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
 frictionalPressure
 (
-    const volScalarField& alpha1,
+    const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
     const dimensionedScalar& alphaMax
 ) const
 {
+    const volScalarField& alpha = phase;
 
     return
-        Fr_*pow(max(alpha1 - alphaMinFriction, scalar(0)), eta_)
-       /pow(max(alphaMax - alpha1, alphaDeltaMin_), p_);
+        Fr_*pow(max(alpha - alphaMinFriction, scalar(0)), eta_)
+       /pow(max(alphaMax - alpha, alphaDeltaMin_), p_);
 }
 
 
@@ -97,24 +98,26 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
 frictionalPressurePrime
 (
-    const volScalarField& alpha1,
+    const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
     const dimensionedScalar& alphaMax
 ) const
 {
+    const volScalarField& alpha = phase;
+
     return Fr_*
     (
-        eta_*pow(max(alpha1 - alphaMinFriction, scalar(0)), eta_ - 1.0)
-       *(alphaMax-alpha1)
-      + p_*pow(max(alpha1 - alphaMinFriction, scalar(0)), eta_)
-    )/pow(max(alphaMax - alpha1, alphaDeltaMin_), p_ + 1.0);
+        eta_*pow(max(alpha - alphaMinFriction, scalar(0)), eta_ - 1.0)
+       *(alphaMax-alpha)
+      + p_*pow(max(alpha - alphaMinFriction, scalar(0)), eta_)
+    )/pow(max(alphaMax - alpha, alphaDeltaMin_), p_ + 1.0);
 }
 
 
 Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::nu
 (
-    const volScalarField& alpha1,
+    const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
     const dimensionedScalar& alphaMax,
     const volScalarField& pf,

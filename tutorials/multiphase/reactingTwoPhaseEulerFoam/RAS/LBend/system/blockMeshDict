@@ -1,0 +1,128 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+vertices
+(
+    ( 0.0  0.0  -0.01)
+    ( 0.04 0.0  -0.01)
+    ( 0.04 0.15  -0.01)
+    ( 0.0  0.15  -0.01)
+    ( 0.0  0.0   0.01)
+    ( 0.04 0.0   0.01)
+    ( 0.04 0.15   0.01)
+    ( 0.0  0.15   0.01)
+
+    ( 0.04  0.0  -0.01)
+    ( 0.5 0.0  -0.01)
+    ( 0.5 0.04  -0.01)
+    ( 0.04  0.04  -0.01)
+    ( 0.04  0.0   0.01)
+    ( 0.5 0.0   0.01)
+    ( 0.5 0.04   0.01)
+    ( 0.04  0.04   0.01)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (16 60 1) simpleGrading (1 1 1)
+    hex (8 9 10 11 12 13 14 15) (180 16 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (3 7 6 2)
+        );
+    }
+    wall1
+    {
+        type wall;
+        faces
+        (
+            (0 4 7 3)
+            (1 5 4 0)
+        );
+    }
+    wall_merge
+    {
+        type wall;
+        faces
+        (
+            (2 6 5 1)
+        );
+    }
+    frontAndBack1
+    {
+        type empty;
+        faces
+        (
+            (0 3 2 1)
+            (4 5 6 7)
+        );
+    }
+    wall2
+    {
+        type wall;
+        faces
+        (
+            (11 15 14 10)
+            (9 13 12 8)
+        );
+    }
+    wall_merge2
+    {
+        type wall;
+        faces
+        (
+            (8 12 15 11)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (10 14 13 9)
+        );
+    }
+    frontAndBack2
+    {
+        type empty;
+        faces
+        (
+            (8 11 10 9)
+            (12 13 14 15)
+        );
+    }
+
+);
+
+mergePatchPairs
+(
+    (wall_merge wall_merge2)
+);
+
+// ************************************************************************* //

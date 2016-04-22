@@ -1,0 +1,52 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      Theta.solids;
+}
+// ************************************************************************* //
+
+dimensions          [0 2 -2 0 0 0 0];
+
+internalField       uniform 0;
+
+referenceLevel      1e-4;
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 1e-4;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    "wall.*"
+    {
+        type            JohnsonJacksonParticleTheta;
+        restitutionCoefficient 0.2;
+        specularityCoefficient   0.1;
+        muF             0.25;
+        sigma           2;
+        value           uniform 1e-4;
+    }
+
+    "frontAndBack.*"
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

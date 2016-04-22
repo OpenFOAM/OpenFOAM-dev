@@ -120,6 +120,9 @@ class kineticTheoryModel
             //- Residual phase fraction
             dimensionedScalar residualAlpha_;
 
+            //- Maximum turbulent viscosity
+            dimensionedScalar maxNut_;
+
 
         // Kinetic Theory Model Fields
 
@@ -134,6 +137,9 @@ class kineticTheoryModel
 
             //- The granular "thermal" conductivity
             volScalarField kappa_;
+
+            //- The frictional viscosity
+            volScalarField nuFric_;
 
 
     // Private Member Functions

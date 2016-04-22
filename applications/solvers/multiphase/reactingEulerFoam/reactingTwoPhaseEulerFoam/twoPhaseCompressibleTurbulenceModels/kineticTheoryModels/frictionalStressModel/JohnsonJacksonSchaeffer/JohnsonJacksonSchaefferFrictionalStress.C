@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "SchaefferFrictionalStress.H"
+#include "JohnsonJacksonSchaefferFrictionalStress.H"
 #include "addToRunTimeSelectionTable.H"
+#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,12 +35,12 @@ namespace kineticTheoryModels
 {
 namespace frictionalStressModels
 {
-    defineTypeNameAndDebug(Schaeffer, 0);
+    defineTypeNameAndDebug(JohnsonJacksonSchaeffer, 0);
 
     addToRunTimeSelectionTable
     (
         frictionalStressModel,
-        Schaeffer,
+        JohnsonJacksonSchaeffer,
         dictionary
     );
 }
@@ -49,14 +50,19 @@ namespace frictionalStressModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::Schaeffer
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::JohnsonJacksonSchaeffer
 (
     const dictionary& dict
 )
 :
     frictionalStressModel(dict),
     coeffDict_(dict.subDict(typeName + "Coeffs")),
-    phi_("phi", dimless, coeffDict_)
+    Fr_("Fr", dimensionSet(1, -1, -2, 0, 0), coeffDict_),
+    eta_("eta", dimless, coeffDict_),
+    p_("p", dimless, coeffDict_),
+    phi_("phi", dimless, coeffDict_),
+    alphaDeltaMin_("alphaDeltaMin", dimless, coeffDict_)
 {
     phi_ *= constant::mathematical::pi/180.0;
 }
@@ -64,15 +70,16 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::Schaeffer
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::~Schaeffer()
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::~JohnsonJacksonSchaeffer()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::
-frictionalPressure
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::frictionalPressure
 (
     const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
@@ -82,14 +89,14 @@ frictionalPressure
     const volScalarField& alpha = phase;
 
     return
-        dimensionedScalar("1e24", dimensionSet(1, -1, -2, 0, 0), 1e24)
-       *pow(Foam::max(alpha - alphaMinFriction, scalar(0)), 10.0);
+        Fr_*pow(max(alpha - alphaMinFriction, scalar(0)), eta_)
+       /pow(max(alphaMax - alpha, alphaDeltaMin_), p_);
 }
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::
-frictionalPressurePrime
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::frictionalPressurePrime
 (
     const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
@@ -98,14 +105,18 @@ frictionalPressurePrime
 {
     const volScalarField& alpha = phase;
 
-    return
-        dimensionedScalar("1e25", dimensionSet(1, -1, -2, 0, 0), 1e25)
-       *pow(Foam::max(alpha - alphaMinFriction, scalar(0)), 9.0);
+    return Fr_*
+    (
+        eta_*pow(max(alpha - alphaMinFriction, scalar(0)), eta_ - 1.0)
+       *(alphaMax-alpha)
+      + p_*pow(max(alpha - alphaMinFriction, scalar(0)), eta_)
+    )/pow(max(alphaMax - alpha, alphaDeltaMin_), p_ + 1.0);
 }
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::nu
 (
     const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
@@ -115,6 +126,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
 ) const
 {
     const volScalarField& alpha = phase;
+    const scalar I2Dsmall = 1.0e-15;
 
     tmp<volScalarField> tnu
     (
@@ -122,7 +134,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
         (
             IOobject
             (
-                "Schaeffer:nu",
+                "JohnsonJacksonSchaeffer:nu",
                 phase.mesh().time().timeName(),
                 phase.mesh(),
                 IOobject::NO_READ,
@@ -143,8 +155,17 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
             nuf[celli] =
                 0.5*pf[celli]*sin(phi_.value())
                /(
-                    sqrt((1.0/3.0)*sqr(tr(D[celli])) - invariantII(D[celli]))
-                  + SMALL
+                    sqrt
+                    (
+                        1.0/6.0
+                       *(
+                            sqr(D[celli].xx() - D[celli].yy())
+                          + sqr(D[celli].yy() - D[celli].zz())
+                          + sqr(D[celli].zz() - D[celli].xx())
+                        )
+                      + sqr(D[celli].xy()) + sqr(D[celli].xz()
+                    )
+                  + sqr(D[celli].yz())) + I2Dsmall
                 );
         }
     }
@@ -161,7 +182,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
                     pf.boundaryField()[patchi]*sin(phi_.value())
                    /(
                         mag(U.boundaryField()[patchi].snGrad())
-                      + SMALL
+                      + I2Dsmall
                     )
                 );
         }
@@ -174,12 +195,19 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
 }
 
 
-bool Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::read()
+bool Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::read()
 {
     coeffDict_ <<= dict_.subDict(typeName + "Coeffs");
 
+    Fr_.read(coeffDict_);
+    eta_.read(coeffDict_);
+    p_.read(coeffDict_);
+
     phi_.read(coeffDict_);
     phi_ *= constant::mathematical::pi/180.0;
+
+    alphaDeltaMin_.read(coeffDict_);
 
     return true;
 }

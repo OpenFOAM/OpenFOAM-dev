@@ -190,6 +190,14 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
         )
     );
 
+    const scalarField nuFric
+    (
+        patch().lookupPatchField<volScalarField, scalar>
+        (
+            IOobject::groupName("nuFric", phased.name())
+        )
+    );
+
     word ThetaName(IOobject::groupName("Theta", phased.name()));
 
     const fvPatchScalarField& Theta
@@ -222,7 +230,7 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
        *gs0
        *specularityCoefficient_.value()
        *sqrt(3.0*Theta)
-       /max(6.0*nu*alphaMax.value(), SMALL)
+       /max(6.0*(nu - nuFric)*alphaMax.value(), SMALL)
     );
 
     this->valueFraction() = c/(c + patch().deltaCoeffs());

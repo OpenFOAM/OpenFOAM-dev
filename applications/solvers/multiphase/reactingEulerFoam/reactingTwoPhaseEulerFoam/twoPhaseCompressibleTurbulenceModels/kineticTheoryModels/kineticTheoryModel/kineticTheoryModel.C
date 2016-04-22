@@ -111,6 +111,13 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         coeffDict_
     ),
 
+    maxNut_
+    (
+        "maxNut",
+        dimensionSet(0,2,-1,0,0),
+        coeffDict_.lookupOrDefault<scalar>("maxNut",1000)
+    ),
+
     Theta_
     (
         IOobject
@@ -164,6 +171,20 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         ),
         U.mesh(),
         dimensionedScalar("zero", dimensionSet(1, -1, -1, 0, 0), 0.0)
+    ),
+
+    nuFric_
+    (
+        IOobject
+        (
+            IOobject::groupName("nuFric", phase.name()),
+            U.time().timeName(),
+            U.mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        U.mesh(),
+        dimensionedScalar("zero", dimensionSet(0, 2, -1, 0, 0), 0.0)
     )
 {
     if (type == typeName)
@@ -267,7 +288,7 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
         )
      +  frictionalStressModel_->frictionalPressurePrime
         (
-            alpha_,
+            phase_,
             alphaMinFriction_,
             alphaMax_
         )
@@ -519,24 +540,25 @@ void Foam::RASModels::kineticTheoryModel::correct()
         (
             frictionalStressModel_->frictionalPressure
             (
-                alpha,
+                phase_,
                 alphaMinFriction_,
                 alphaMax_
             )
         );
 
-        // Add frictional shear viscosity, Eq. 3.30, p. 52
-        nut_ += frictionalStressModel_->nu
+        nuFric_ = frictionalStressModel_->nu
         (
-            alpha,
+            phase_,
             alphaMinFriction_,
             alphaMax_,
             pf/rho,
             D
         );
 
-        // Limit viscosity
-        nut_.min(100);
+        // Limit viscosity and add frictional viscosity
+        nut_.min(maxNut_);
+        nuFric_ = min(nuFric_, maxNut_ - nut_);
+        nut_ += nuFric_;
     }
 
     if (debug)
