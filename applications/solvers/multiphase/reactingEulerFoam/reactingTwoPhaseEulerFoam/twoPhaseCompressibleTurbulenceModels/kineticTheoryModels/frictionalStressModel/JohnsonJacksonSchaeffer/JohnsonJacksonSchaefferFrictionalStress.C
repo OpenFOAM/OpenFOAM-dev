@@ -126,7 +126,6 @@ JohnsonJacksonSchaeffer::nu
 ) const
 {
     const volScalarField& alpha = phase;
-    const scalar I2Dsmall = 1.0e-15;
 
     tmp<volScalarField> tnu
     (
@@ -155,17 +154,8 @@ JohnsonJacksonSchaeffer::nu
             nuf[celli] =
                 0.5*pf[celli]*sin(phi_.value())
                /(
-                    sqrt
-                    (
-                        1.0/6.0
-                       *(
-                            sqr(D[celli].xx() - D[celli].yy())
-                          + sqr(D[celli].yy() - D[celli].zz())
-                          + sqr(D[celli].zz() - D[celli].xx())
-                        )
-                      + sqr(D[celli].xy()) + sqr(D[celli].xz()
-                    )
-                  + sqr(D[celli].yz())) + I2Dsmall
+                    sqrt((1.0/3.0)*sqr(tr(D[celli])) - invariantII(D[celli]))
+                  + SMALL
                 );
         }
     }
@@ -182,7 +172,7 @@ JohnsonJacksonSchaeffer::nu
                     pf.boundaryField()[patchi]*sin(phi_.value())
                    /(
                         mag(U.boundaryField()[patchi].snGrad())
-                      + I2Dsmall
+                      + SMALL
                     )
                 );
         }
