@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,11 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(calcType, 0);
-
-defineRunTimeSelectionTable(calcType, dictionary);
+namespace Foam
+{
+    defineTypeNameAndDebug(calcType, 0);
+    defineRunTimeSelectionTable(calcType, dictionary);
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -47,9 +49,7 @@ Foam::calcType::~calcType()
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::calcType::init()
-{
-    // Do nothing
-}
+{}
 
 
 void Foam::calcType::preCalc
@@ -58,9 +58,7 @@ void Foam::calcType::preCalc
     const Time& runTime,
     const fvMesh& mesh
 )
-{
-    // Do nothing
-}
+{}
 
 
 void Foam::calcType::calc
@@ -69,9 +67,7 @@ void Foam::calcType::calc
     const Time& runTime,
     const fvMesh& mesh
 )
-{
-    // Do nothing
-}
+{}
 
 
 void Foam::calcType::postCalc
@@ -80,9 +76,7 @@ void Foam::calcType::postCalc
     const Time& runTime,
     const fvMesh& mesh
 )
-{
-    // Do nothing
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
