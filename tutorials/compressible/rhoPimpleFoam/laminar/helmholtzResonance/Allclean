@@ -1,0 +1,9 @@
+#!/bin/sh
+
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+cleanCase
+
+(cd system && rm -f blockMeshDict.caseBlocks blockMeshDict.caseBoundary)
+
+rm -rf resolved modelled pressure.eps

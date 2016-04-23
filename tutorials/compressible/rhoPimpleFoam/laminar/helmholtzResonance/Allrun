@@ -1,0 +1,47 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Run function links the appropriate mesh files and clones the case
+run()
+{
+    (
+        cd system
+        rm -f blockMeshDict.caseBlocks blockMeshDict.caseBoundary
+        ln -s blockMeshDict.${1}Blocks blockMeshDict.caseBlocks
+        ln -s blockMeshDict.${1}Boundary blockMeshDict.caseBoundary
+    )
+
+    cloneCase . ${1}
+
+    (
+        cd ${1}
+        runApplication blockMesh
+        runApplication decomposePar
+        runParallel $(getApplication)
+    )
+}
+
+# Run with a fully resolved plenum
+run resolved
+
+# Run with the plenum modelled by a boundary condition
+run modelled
+
+# Plot a comparison of the pressure in the neck
+cat << EOF | gnuplot -persist
+
+set terminal postscript eps size 5,4 enhanced color
+
+set xlabel "Time (s)"
+set ylabel "Guage pressure in the neck (Pa)"
+
+set output "pressure.eps"
+
+plot \
+    "resolved/postProcessing/probes/0/p" us 1:(\$4-1e5) t "Resolved Plenum" w l, \
+    "modelled/postProcessing/probes/0/p" us 1:(\$4-1e5) t "Modelled Plenum" w l
+
+EOF

@@ -204,6 +204,7 @@ $(derivedFvPatchFields)/prghPressure/prghPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/prghTotalPressure/prghTotalPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/prghTotalHydrostaticPressure/prghTotalHydrostaticPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/fixedProfile/fixedProfileFvPatchFields.C
+$(derivedFvPatchFields)/plenumPressure/plenumPressureFvPatchScalarField.C
 
 fvsPatchFields = fields/fvsPatchFields
 $(fvsPatchFields)/fvsPatchField/fvsPatchFields.C
