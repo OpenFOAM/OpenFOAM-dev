@@ -81,7 +81,7 @@ wordList thermoSingleLayer::hsBoundaryTypes()
 
 bool thermoSingleLayer::read()
 {
-    // no additional properties to read
+    // No additional properties to read
     return kinematicSingleLayer::read();
 }
 
@@ -259,11 +259,13 @@ tmp<fvScalarMatrix> thermoSingleLayer::q(volScalarField& hs) const
 {
     return
     (
-      - fvm::Sp(htcs_->h()/Cp_, hs)
-      - htcs_->h()*(constant::standard::Tstd - TPrimary_)
+        // Heat-transfer to the primary region
+      - fvm::Sp(alpha_*htcs_->h()/Cp_, hs)
+      + alpha_*htcs_->h()*(hs/Cp_ - T_ + TPrimary_)
 
-      - fvm::Sp(htcw_->h()/Cp_, hs)
-      - htcw_->h()*(constant::standard::Tstd - Tw_)
+        // Heat-transfer to the wall
+      - fvm::Sp(alpha_*htcw_->h()/Cp_, hs)
+      + alpha_*htcw_->h()*(hs/Cp_ - T_ + Tw_)
     );
 }
 
@@ -283,15 +285,14 @@ void thermoSingleLayer::solveEnergy()
       + fvm::div(phi_, hs_)
      ==
       - hsSp_
+      - rhoSp_*hs_
       + q(hs_)
       + radiation_->Shs()
-   // - fvm::SuSp(rhoSp_, hs_)
-      - rhoSp_*hs_
     );
 
     correctThermoFields();
 
-    // evaluate viscosity from user-model
+    // Evaluate viscosity from user-model
     viscosity_->correct(pPrimary_, T_);
 }
 
@@ -449,7 +450,7 @@ thermoSingleLayer::thermoSingleLayer
     (
         IOobject
         (
-            hsSp_.name(), // must have same name as hSp_ to enable mapping
+            hsSp_.name(), // Must have same name as hSp_ to enable mapping
             time().timeName(),
             primaryMesh(),
             IOobject::NO_READ,
@@ -463,7 +464,7 @@ thermoSingleLayer::thermoSingleLayer
     (
         IOobject
         (
-            "T", // same name as T on primary region to enable mapping
+            "T", // Same name as T on primary region to enable mapping
             time().timeName(),
             regionMesh(),
             IOobject::NO_READ,
@@ -562,7 +563,7 @@ thermoSingleLayer::thermoSingleLayer
 
         phi_ == phi0;
 
-        // evaluate viscosity from user-model
+        // Evaluate viscosity from user-model
         viscosity_->correct(pPrimary_, T_);
     }
 }
@@ -611,8 +612,6 @@ void thermoSingleLayer::preEvolveRegion()
     {
         InfoInFunction << endl;
     }
-
-//    correctHsForMappedT();
 
     kinematicSingleLayer::preEvolveRegion();
 
