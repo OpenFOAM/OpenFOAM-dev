@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
         {
             pf[faceI] = Foam::sqrt(allFaceInfo[faceI].distSqr());
         }
-        vsf.boundaryField()[patch.index()] = pf;
+        vsf.boundaryFieldRef()[patch.index()] = pf;
 
         Info<< "Writing patchDist volScalarField to " << runTime.value()
             << endl;
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
             mesh,
             dimensionedScalar("otherPatchDist", dimLength, 0.0)
         );
-        vsf.boundaryField()[patch.index()] = pwd;
+        vsf.boundaryFieldRef()[patch.index()] = pwd;
 
         Info<< "Writing otherPatchDist volScalarField to " << runTime.value()
             << endl;

@@ -428,7 +428,7 @@ void Foam::motionSmootherAlgo::setDisplacementPatchFields
     pointVectorField& displacement
 )
 {
-    typename pointVectorField::GeometricBoundaryField& displacementBf =
+    pointVectorField::GeometricBoundaryField& displacementBf =
         displacement.boundaryFieldRef();
 
     // Adapt the fixedValue bc's (i.e. copy internal point data to
@@ -584,7 +584,7 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
 
     const lduSchedule& patchSchedule = mesh_.globalData().patchSchedule();
 
-    typename pointVectorField::GeometricBoundaryField& displacementBf =
+    pointVectorField::GeometricBoundaryField& displacementBf =
         displacement.boundaryFieldRef();
 
     // 1. evaluate on adaptPatches

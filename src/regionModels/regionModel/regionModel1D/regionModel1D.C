@@ -122,14 +122,17 @@ void Foam::regionModels::regionModel1D::initialise()
 
     surfaceScalarField& nMagSf = nMagSfPtr_();
 
+    surfaceScalarField::GeometricBoundaryField nMagSfBf =
+        nMagSf.boundaryFieldRef();
+
     localPyrolysisFaceI = 0;
+
     forAll(intCoupledPatchIDs_, i)
     {
         const label patchI = intCoupledPatchIDs_[i];
         const polyPatch& ppCoupled = rbm[patchI];
         const vectorField& pNormals = ppCoupled.faceNormals();
-        nMagSf.boundaryField()[patchI] =
-            regionMesh().Sf().boundaryField()[patchI] & pNormals;
+        nMagSfBf[patchI] = regionMesh().Sf().boundaryField()[patchI] & pNormals;
         forAll(pNormals, localFaceI)
         {
             const vector& n = pNormals[localFaceI];

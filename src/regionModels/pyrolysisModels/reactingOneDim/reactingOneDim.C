@@ -103,15 +103,15 @@ void reactingOneDim::updateQr()
     // Retrieve field from coupled region using mapped boundary conditions
     Qr_.correctBoundaryConditions();
 
+    volScalarField::GeometricBoundaryField& QrBf = Qr_.boundaryFieldRef();
+
     forAll(intCoupledPatchIDs_, i)
     {
-        const label patchI = intCoupledPatchIDs_[i];
-
-        scalarField& Qrp = Qr_.boundaryField()[patchI];
+        const label patchi = intCoupledPatchIDs_[i];
 
         // Qr is positive going in the solid
         // If the surface is emitting the radiative flux is set to zero
-        Qrp = max(Qrp, scalar(0.0));
+        QrBf[patchi] = max(QrBf[patchi], scalar(0.0));
     }
 
     const vectorField& cellC = regionMesh().cellCentres();
@@ -122,10 +122,10 @@ void reactingOneDim::updateQr()
     label localPyrolysisFaceI = 0;
     forAll(intCoupledPatchIDs_, i)
     {
-        const label patchI = intCoupledPatchIDs_[i];
+        const label patchi = intCoupledPatchIDs_[i];
 
-        const scalarField& Qrp = Qr_.boundaryField()[patchI];
-        const vectorField& Cf = regionMesh().Cf().boundaryField()[patchI];
+        const scalarField& Qrp = Qr_.boundaryField()[patchi];
+        const vectorField& Cf = regionMesh().Cf().boundaryField()[patchi];
 
         forAll(Qrp, faceI)
         {
@@ -164,12 +164,15 @@ void reactingOneDim::updatePhiGas()
         const DimensionedField<scalar, volMesh>& RRiGas =
             solidChemistry_->RRg(gasI);
 
+        surfaceScalarField::GeometricBoundaryField& phiGasBf =
+            phiGas_.boundaryFieldRef();
+
         label totalFaceId = 0;
         forAll(intCoupledPatchIDs_, i)
         {
-            const label patchI = intCoupledPatchIDs_[i];
+            const label patchi = intCoupledPatchIDs_[i];
 
-            scalarField& phiGasp = phiGas_.boundaryField()[patchI];
+            scalarField& phiGasp = phiGasBf[patchi];
             const scalarField& cellVol = regionMesh().V();
 
             forAll(phiGasp, faceI)
@@ -188,7 +191,7 @@ void reactingOneDim::updatePhiGas()
                 if (debug)
                 {
                     Info<< " Gas : " << gasTable[gasI]
-                        << " on patch : " << patchI
+                        << " on patch : " << patchi
                         << " mass produced at face(local) : "
                         <<  faceI
                         << " is : " << massInt
@@ -362,8 +365,8 @@ void reactingOneDim::calculateMassTransfer()
     totalGasMassFlux_ = 0;
     forAll(intCoupledPatchIDs_, i)
     {
-        const label patchI = intCoupledPatchIDs_[i];
-        totalGasMassFlux_ += gSum(phiGas_.boundaryField()[patchI]);
+        const label patchi = intCoupledPatchIDs_[i];
+        totalGasMassFlux_ += gSum(phiGas_.boundaryField()[patchi]);
     }
 
     if (infoOutput_)
@@ -587,12 +590,12 @@ reactingOneDim::~reactingOneDim()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-scalar reactingOneDim::addMassSources(const label patchI, const label faceI)
+scalar reactingOneDim::addMassSources(const label patchi, const label faceI)
 {
     label index = 0;
     forAll(primaryPatchIDs_, i)
     {
-        if (primaryPatchIDs_[i] == patchI)
+        if (primaryPatchIDs_[i] == patchi)
         {
             index = i;
             break;
