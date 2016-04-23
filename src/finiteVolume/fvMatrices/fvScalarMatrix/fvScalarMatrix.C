@@ -164,7 +164,7 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::solveSegregated
         *this,
         boundaryCoeffs_,
         internalCoeffs_,
-        psi.boundaryField().scalarInterfaces(),
+        psi_.boundaryField().scalarInterfaces(),
         solverControls
     )->solve(psi.internalField(), totalSource);
 

@@ -54,7 +54,7 @@ void Foam::MRFZone::makeRelativeRhoFlux
         phii[facei] -= rho[facei]*(Omega ^ (Cfi[facei] - origin_)) & Sfi[facei];
     }
 
-    makeRelativeRhoFlux(rho.boundaryField(), phi.boundaryField());
+    makeRelativeRhoFlux(rho.boundaryField(), phi.boundaryFieldRef());
 }
 
 
@@ -154,6 +154,9 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
         phii[facei] += rho[facei]*(Omega ^ (Cfi[facei] - origin_)) & Sfi[facei];
     }
 
+    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
+
+
     // Included patches
     forAll(includedFaces_, patchi)
     {
@@ -161,7 +164,7 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
         {
             label patchFacei = includedFaces_[patchi][i];
 
-            phi.boundaryField()[patchi][patchFacei] +=
+            phibf[patchi][patchFacei] +=
                 rho.boundaryField()[patchi][patchFacei]
               * (Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
               & Sf.boundaryField()[patchi][patchFacei];
@@ -175,7 +178,7 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
         {
             label patchFacei = excludedFaces_[patchi][i];
 
-            phi.boundaryField()[patchi][patchFacei] +=
+            phibf[patchi][patchFacei] +=
                 rho.boundaryField()[patchi][patchFacei]
               * (Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
               & Sf.boundaryField()[patchi][patchFacei];

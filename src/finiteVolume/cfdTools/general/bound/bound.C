@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
             lowerBound.value()
         );
 
-        vsf.boundaryField() = max(vsf.boundaryField(), lowerBound.value());
+        vsf.boundaryFieldRef() = max(vsf.boundaryField(), lowerBound.value());
     }
 
     return vsf;

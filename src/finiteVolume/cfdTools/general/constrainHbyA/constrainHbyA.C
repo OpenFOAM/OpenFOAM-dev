@@ -49,6 +49,7 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
     }
 
     volVectorField& HbyA = tHbyANew.ref();
+    volVectorField::GeometricBoundaryField& HbyAbf = HbyA.boundaryFieldRef();
 
     forAll(U.boundaryField(), patchi)
     {
@@ -61,7 +62,7 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
             )
         )
         {
-            HbyA.boundaryField()[patchi] = U.boundaryField()[patchi];
+            HbyAbf[patchi] = U.boundaryField()[patchi];
         }
     }
 

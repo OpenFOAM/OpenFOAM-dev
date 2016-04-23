@@ -418,12 +418,15 @@ void Foam::MRFZone::makeRelative(volVectorField& U) const
     }
 
     // Included patches
+
+    volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
+
     forAll(includedFaces_, patchi)
     {
         forAll(includedFaces_[patchi], i)
         {
             label patchFacei = includedFaces_[patchi][i];
-            U.boundaryField()[patchi][patchFacei] = Zero;
+            Ubf[patchi][patchFacei] = Zero;
         }
     }
 
@@ -433,7 +436,7 @@ void Foam::MRFZone::makeRelative(volVectorField& U) const
         forAll(excludedFaces_[patchi], i)
         {
             label patchFacei = excludedFaces_[patchi][i];
-            U.boundaryField()[patchi][patchFacei] -=
+            Ubf[patchi][patchFacei] -=
                 (Omega
               ^ (C.boundaryField()[patchi][patchFacei] - origin_));
         }
@@ -484,12 +487,14 @@ void Foam::MRFZone::makeAbsolute(volVectorField& U) const
     }
 
     // Included patches
+    volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
+
     forAll(includedFaces_, patchi)
     {
         forAll(includedFaces_[patchi], i)
         {
             label patchFacei = includedFaces_[patchi][i];
-            U.boundaryField()[patchi][patchFacei] =
+            Ubf[patchi][patchFacei] =
                 (Omega ^ (C.boundaryField()[patchi][patchFacei] - origin_));
         }
     }
@@ -500,7 +505,7 @@ void Foam::MRFZone::makeAbsolute(volVectorField& U) const
         forAll(excludedFaces_[patchi], i)
         {
             label patchFacei = excludedFaces_[patchi][i];
-            U.boundaryField()[patchi][patchFacei] +=
+            Ubf[patchi][patchFacei] +=
                 (Omega ^ (C.boundaryField()[patchi][patchFacei] - origin_));
         }
     }
@@ -528,11 +533,13 @@ void Foam::MRFZone::correctBoundaryVelocity(volVectorField& U) const
     const vector Omega = this->Omega();
 
     // Included patches
+    volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
+
     forAll(includedFaces_, patchi)
     {
         const vectorField& patchC = mesh_.Cf().boundaryField()[patchi];
 
-        vectorField pfld(U.boundaryField()[patchi]);
+        vectorField pfld(Ubf[patchi]);
 
         forAll(includedFaces_[patchi], i)
         {
@@ -541,7 +548,7 @@ void Foam::MRFZone::correctBoundaryVelocity(volVectorField& U) const
             pfld[patchFacei] = (Omega ^ (patchC[patchFacei] - origin_));
         }
 
-        U.boundaryField()[patchi] == pfld;
+        Ubf[patchi] == pfld;
     }
 }
 

@@ -366,6 +366,9 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
+        typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
+            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+
         if (evaluate(ddt0))
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
@@ -379,13 +382,13 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 ) - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0bf =
             (
                 rDtCoef0*
                 (
                     vf.oldTime().boundaryField()
                   - vf.oldTime().oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ff(ddt0bf))
             );
         }
 
@@ -406,7 +409,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 rDtCoef.value()*
                 (
                     vf.boundaryField() - vf.oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ff(ddt0bf))
             )
         );
     }
@@ -456,6 +459,9 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
+        typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
+            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+
         if (evaluate(ddt0))
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
@@ -469,13 +475,13 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 ) - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0bf =
             (
                 rDtCoef0*rho.value()*
                 (
                     vf.oldTime().boundaryField()
                   - vf.oldTime().oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ff(ddt0bf))
             );
         }
 
@@ -496,7 +502,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 rDtCoef.value()*rho.value()*
                 (
                     vf.boundaryField() - vf.oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ff(ddt0bf))
             )
         );
     }
@@ -546,6 +552,9 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
+        typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
+            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+
         if (evaluate(ddt0))
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
@@ -561,7 +570,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 ) - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0bf =
             (
                 rDtCoef0*
                 (
@@ -569,7 +578,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                    *vf.oldTime().boundaryField()
                   - rho.oldTime().oldTime().boundaryField()
                    *vf.oldTime().oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ff(ddt0bf))
             );
         }
 
@@ -592,7 +601,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 (
                     rho.boundaryField()*vf.boundaryField()
                   - rho.oldTime().boundaryField()*vf.oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ff(ddt0bf))
             )
         );
     }
@@ -647,6 +656,9 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
+        typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
+            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+
         if (evaluate(ddt0))
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
@@ -667,7 +679,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 ) - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0bf =
             (
                 rDtCoef0*
                 (
@@ -678,7 +690,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                   - alpha.oldTime().oldTime().boundaryField()
                    *rho.oldTime().oldTime().boundaryField()
                    *vf.oldTime().oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ff(ddt0bf))
             );
         }
 
@@ -713,7 +725,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                   - alpha.oldTime().boundaryField()
                    *rho.oldTime().boundaryField()
                    *vf.oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ff(ddt0bf))
             )
         );
     }
@@ -782,6 +794,9 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
 
     if (mesh().moving())
     {
+        typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
+            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+
         if (evaluate(ddt0))
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
@@ -796,14 +811,14 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
               - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0bf =
             (
                 rDtCoef0*
                 (
                     vf.oldTime().boundaryField()
                   - vf.oldTime().oldTime().boundaryField()
                 )
-              - offCentre_(ff(ddt0.boundaryField()))
+              - offCentre_(ff(ddt0bf))
             );
         }
 
@@ -864,6 +879,9 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
 
     if (mesh().moving())
     {
+        typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
+            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+
         if (evaluate(ddt0))
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
@@ -878,14 +896,14 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
               - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0bf =
             (
                 rDtCoef0*rho.value()*
                 (
                     vf.oldTime().boundaryField()
                   - vf.oldTime().oldTime().boundaryField()
                 )
-              - offCentre_(ff(ddt0.boundaryField()))
+              - offCentre_(ff(ddt0bf))
             );
         }
 
@@ -947,6 +965,9 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
 
     if (mesh().moving())
     {
+        typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
+            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+
         if (evaluate(ddt0))
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
@@ -963,7 +984,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
               - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0bf =
             (
                 rDtCoef0*
                 (
@@ -972,7 +993,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
                   - rho.oldTime().oldTime().boundaryField()
                    *vf.oldTime().oldTime().boundaryField()
                 )
-              - offCentre_(ff(ddt0.boundaryField()))
+              - offCentre_(ff(ddt0bf))
             );
         }
 
@@ -1039,6 +1060,9 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
 
     if (mesh().moving())
     {
+        typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
+            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+
         if (evaluate(ddt0))
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
@@ -1060,7 +1084,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
               - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0bf =
             (
                 rDtCoef0*
                 (
@@ -1072,7 +1096,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
                    *rho.oldTime().oldTime().boundaryField()
                    *vf.oldTime().oldTime().boundaryField()
                 )
-              - offCentre_(ff(ddt0.boundaryField()))
+              - offCentre_(ff(ddt0bf))
             );
         }
 

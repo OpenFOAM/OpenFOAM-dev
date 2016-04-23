@@ -128,17 +128,19 @@ public:
             reverseLinearWeights.internalField() =
                 1.0 - cdWeights.internalField();
 
+            surfaceScalarField::GeometricBoundaryField& rlwbf =
+                reverseLinearWeights.boundaryFieldRef();
+
+
             forAll(mesh.boundary(), patchI)
             {
-                if (reverseLinearWeights.boundaryField()[patchI].coupled())
+                if (rlwbf[patchI].coupled())
                 {
-                    reverseLinearWeights.boundaryField()[patchI] =
-                        1.0 - cdWeights.boundaryField()[patchI];
+                    rlwbf[patchI] = 1.0 - cdWeights.boundaryField()[patchI];
                 }
                 else
                 {
-                    reverseLinearWeights.boundaryField()[patchI] =
-                        cdWeights.boundaryField()[patchI];
+                    rlwbf[patchI] = cdWeights.boundaryField()[patchI];
                 }
             }
 

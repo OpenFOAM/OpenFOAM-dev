@@ -44,7 +44,7 @@ void stabilise
 )
 {
     stabilise(result.internalField(), gsf.internalField(), ds.value());
-    stabilise(result.boundaryField(), gsf.boundaryField(), ds.value());
+    stabilise(result.boundaryFieldRef(), gsf.boundaryField(), ds.value());
 }
 
 
@@ -127,7 +127,7 @@ void pow
 )
 {
     pow(Pow.internalField(), gsf1.internalField(), gsf2.internalField());
-    pow(Pow.boundaryField(), gsf1.boundaryField(), gsf2.boundaryField());
+    pow(Pow.boundaryFieldRef(), gsf1.boundaryField(), gsf2.boundaryField());
 }
 
 
@@ -270,7 +270,7 @@ void pow
 )
 {
     pow(tPow.internalField(), gsf.internalField(), ds.value());
-    pow(tPow.boundaryField(), gsf.boundaryField(), ds.value());
+    pow(tPow.boundaryFieldRef(), gsf.boundaryField(), ds.value());
 }
 
 
@@ -359,7 +359,7 @@ void pow
 )
 {
     pow(tPow.internalField(), ds.value(), gsf.internalField());
-    pow(tPow.boundaryField(), ds.value(), gsf.boundaryField());
+    pow(tPow.boundaryFieldRef(), ds.value(), gsf.boundaryField());
 }
 
 
@@ -451,7 +451,7 @@ void atan2
 )
 {
     atan2(Atan2.internalField(), gsf1.internalField(), gsf2.internalField());
-    atan2(Atan2.boundaryField(), gsf1.boundaryField(), gsf2.boundaryField());
+    atan2(Atan2.boundaryFieldRef(), gsf1.boundaryField(), gsf2.boundaryField());
 }
 
 
@@ -578,7 +578,7 @@ void atan2
 )
 {
     atan2(tAtan2.internalField(), gsf.internalField(), ds.value());
-    atan2(tAtan2.boundaryField(), gsf.boundaryField(), ds.value());
+    atan2(tAtan2.boundaryFieldRef(), gsf.boundaryField(), ds.value());
 }
 
 
@@ -667,7 +667,7 @@ void atan2
 )
 {
     atan2(tAtan2.internalField(), ds.value(), gsf.internalField());
-    atan2(tAtan2.boundaryField(), ds.value(), gsf.boundaryField());
+    atan2(tAtan2.boundaryFieldRef(), ds.value(), gsf.boundaryField());
 }
 
 
@@ -800,7 +800,7 @@ void func                                                                      \
 )                                                                              \
 {                                                                              \
     func(gsf.internalField(), n, gsf1.internalField());                        \
-    func(gsf.boundaryField(), n, gsf1.boundaryField());                        \
+    func(gsf.boundaryFieldRef(), n, gsf1.boundaryField());                     \
 }                                                                              \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \

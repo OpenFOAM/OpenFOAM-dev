@@ -42,7 +42,7 @@ void Func                                                                      \
 )                                                                              \
 {                                                                              \
     Foam::Func(res.internalField(), gf1.internalField());                      \
-    Foam::Func(res.boundaryField(), gf1.boundaryField());                      \
+    Foam::Func(res.boundaryFieldRef(), gf1.boundaryField());                   \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -111,7 +111,7 @@ void OpFunc                                                                    \
 )                                                                              \
 {                                                                              \
     Foam::OpFunc(res.internalField(), gf1.internalField());                    \
-    Foam::OpFunc(res.boundaryField(), gf1.boundaryField());                    \
+    Foam::OpFunc(res.boundaryFieldRef(), gf1.boundaryField());                 \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -180,8 +180,13 @@ void Func                                                                      \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
 )                                                                              \
 {                                                                              \
-    Foam::Func(res.internalField(), gf1.internalField(), gf2.internalField());\
-    Foam::Func(res.boundaryField(), gf1.boundaryField(), gf2.boundaryField());\
+    Foam::Func(res.internalField(), gf1.internalField(), gf2.internalField()); \
+    Foam::Func                                                                 \
+    (                                                                          \
+        res.boundaryFieldRef(),                                                \
+        gf1.boundaryField(),                                                   \
+        gf2.boundaryField()                                                    \
+    );\
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -309,7 +314,7 @@ void Func                                                                      \
 )                                                                              \
 {                                                                              \
     Foam::Func(res.internalField(), dt1.value(), gf2.internalField());         \
-    Foam::Func(res.boundaryField(), dt1.value(), gf2.boundaryField());         \
+    Foam::Func(res.boundaryFieldRef(), dt1.value(), gf2.boundaryField());      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -400,7 +405,7 @@ void Func                                                                      \
 )                                                                              \
 {                                                                              \
     Foam::Func(res.internalField(), gf1.internalField(), dt2.value());         \
-    Foam::Func(res.boundaryField(), gf1.boundaryField(), dt2.value());         \
+    Foam::Func(res.boundaryFieldRef(), gf1.boundaryField(), dt2.value());      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -500,7 +505,7 @@ void OpFunc                                                                    \
     Foam::OpFunc                                                               \
         (res.internalField(), gf1.internalField(), gf2.internalField());       \
     Foam::OpFunc                                                               \
-        (res.boundaryField(), gf1.boundaryField(), gf2.boundaryField());       \
+        (res.boundaryFieldRef(), gf1.boundaryField(), gf2.boundaryField());    \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -628,7 +633,7 @@ void OpFunc                                                                    \
 )                                                                              \
 {                                                                              \
     Foam::OpFunc(res.internalField(), dt1.value(), gf2.internalField());       \
-    Foam::OpFunc(res.boundaryField(), dt1.value(), gf2.boundaryField());       \
+    Foam::OpFunc(res.boundaryFieldRef(), dt1.value(), gf2.boundaryField());    \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -719,7 +724,7 @@ void OpFunc                                                                    \
 )                                                                              \
 {                                                                              \
     Foam::OpFunc(res.internalField(), gf1.internalField(), dt2.value());       \
-    Foam::OpFunc(res.boundaryField(), gf1.boundaryField(), dt2.value());       \
+    Foam::OpFunc(res.boundaryFieldRef(), gf1.boundaryField(), dt2.value());    \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \

@@ -104,7 +104,7 @@ Foam::fv::leastSquaresGrad<Type>::calcGrad
         const fvsPatchVectorField& patchOwnLs = ownLs.boundaryField()[patchi];
 
         const labelUList& faceCells =
-            lsGrad.boundaryField()[patchi].patch().faceCells();
+            vsf.boundaryField()[patchi].patch().faceCells();
 
         if (vsf.boundaryField()[patchi].coupled())
         {

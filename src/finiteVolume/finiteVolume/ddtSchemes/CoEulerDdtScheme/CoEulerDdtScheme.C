@@ -75,14 +75,12 @@ tmp<volScalarField> CoEulerDdtScheme<Type>::CorDeltaT() const
             max(corDeltaT[neighbour[faceI]], cofrDeltaT[faceI]);
     }
 
-    volScalarField::GeometricBoundaryField& bcorDeltaT =
-        corDeltaT.boundaryField();
+    const surfaceScalarField::GeometricBoundaryField& cofrDeltaTbf =
+        cofrDeltaT.boundaryField();
 
-    forAll(bcorDeltaT, patchi)
+    forAll(cofrDeltaTbf, patchi)
     {
-        const fvsPatchScalarField& pcofrDeltaT =
-            cofrDeltaT.boundaryField()[patchi];
-
+        const fvsPatchScalarField& pcofrDeltaT = cofrDeltaTbf[patchi];
         const fvPatch& p = pcofrDeltaT.patch();
         const labelUList& faceCells = p.patch().faceCells();
 
@@ -97,8 +95,6 @@ tmp<volScalarField> CoEulerDdtScheme<Type>::CorDeltaT() const
     }
 
     corDeltaT.correctBoundaryConditions();
-
-    //corDeltaT = max(corDeltaT, max(corDeltaT)/100.0);
 
     return tcorDeltaT;
 }

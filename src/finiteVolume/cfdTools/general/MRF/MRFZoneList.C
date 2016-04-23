@@ -393,19 +393,22 @@ void Foam::MRFZoneList::correctBoundaryFlux
     surfaceScalarField& phi
 ) const
 {
-    FieldField<fvsPatchField, scalar> phibf
+    FieldField<fvsPatchField, scalar> Uf
     (
         relative(mesh_.Sf().boundaryField() & U.boundaryField())
     );
+
+
+    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
 
     forAll(mesh_.boundary(), patchi)
     {
         if
         (
-            isA<fixedValueFvsPatchScalarField>(phi.boundaryField()[patchi])
+            isA<fixedValueFvsPatchScalarField>(phibf[patchi])
         )
         {
-            phi.boundaryField()[patchi] == phibf[patchi];
+            phibf[patchi] == Uf[patchi];
         }
     }
 }

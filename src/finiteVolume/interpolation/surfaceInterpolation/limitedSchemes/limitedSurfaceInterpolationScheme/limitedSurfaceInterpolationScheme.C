@@ -159,7 +159,7 @@ Foam::limitedSurfaceInterpolationScheme<Type>::weights
     }
 
     surfaceScalarField::GeometricBoundaryField& bWeights =
-        Weights.boundaryField();
+        Weights.boundaryFieldRef();
 
     forAll(bWeights, patchI)
     {

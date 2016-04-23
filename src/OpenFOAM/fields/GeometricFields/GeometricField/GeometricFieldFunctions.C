@@ -50,7 +50,7 @@ void component
 )
 {
     component(gcf.internalField(), gf.internalField(), d);
-    component(gcf.boundaryField(), gf.boundaryField(), d);
+    component(gcf.boundaryFieldRef(), gf.boundaryField(), d);
 }
 
 
@@ -62,7 +62,7 @@ void T
 )
 {
     T(gf.internalField(), gf1.internalField());
-    T(gf.boundaryField(), gf1.boundaryField());
+    T(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
 
@@ -80,7 +80,7 @@ void pow
 )
 {
     pow(gf.internalField(), gf1.internalField(), r);
-    pow(gf.boundaryField(), gf1.boundaryField(), r);
+    pow(gf.boundaryFieldRef(), gf1.boundaryField(), r);
 }
 
 template
@@ -174,7 +174,7 @@ void sqr
 )
 {
     sqr(gf.internalField(), gf1.internalField());
-    sqr(gf.boundaryField(), gf1.boundaryField());
+    sqr(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -262,7 +262,7 @@ void magSqr
 )
 {
     magSqr(gsf.internalField(), gf.internalField());
-    magSqr(gsf.boundaryField(), gf.boundaryField());
+    magSqr(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -334,7 +334,7 @@ void mag
 )
 {
     mag(gsf.internalField(), gf.internalField());
-    mag(gsf.boundaryField(), gf.boundaryField());
+    mag(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -411,7 +411,7 @@ void cmptAv
 )
 {
     cmptAv(gcf.internalField(), gf.internalField());
-    cmptAv(gcf.boundaryField(), gf.boundaryField());
+    cmptAv(gcf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -600,7 +600,12 @@ void opFunc                                                                    \
 )                                                                              \
 {                                                                              \
     Foam::opFunc(gf.internalField(), gf1.internalField(), gf2.internalField());\
-    Foam::opFunc(gf.boundaryField(), gf1.boundaryField(), gf2.boundaryField());\
+    Foam::opFunc                                                               \
+    (                                                                          \
+        gf.boundaryFieldRef(),                                                 \
+        gf1.boundaryField(),                                                   \
+        gf2.boundaryField()                                                    \
+    );\
 }                                                                              \
                                                                                \
 template                                                                       \
@@ -746,7 +751,7 @@ void opFunc                                                                    \
 )                                                                              \
 {                                                                              \
     Foam::opFunc(gf.internalField(), gf1.internalField(), dvs.value());        \
-    Foam::opFunc(gf.boundaryField(), gf1.boundaryField(), dvs.value());        \
+    Foam::opFunc(gf.boundaryFieldRef(), gf1.boundaryField(), dvs.value());     \
 }                                                                              \
                                                                                \
 template                                                                       \
@@ -859,7 +864,7 @@ void opFunc                                                                    \
 )                                                                              \
 {                                                                              \
     Foam::opFunc(gf.internalField(), dvs.value(), gf1.internalField());        \
-    Foam::opFunc(gf.boundaryField(), dvs.value(), gf1.boundaryField());        \
+    Foam::opFunc(gf.boundaryFieldRef(), dvs.value(), gf1.boundaryField());     \
 }                                                                              \
                                                                                \
 template                                                                       \

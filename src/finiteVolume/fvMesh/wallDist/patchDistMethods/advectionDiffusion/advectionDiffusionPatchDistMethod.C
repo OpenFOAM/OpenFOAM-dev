@@ -110,11 +110,12 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
     );
 
     const fvPatchList& patches = mesh_.boundary();
+    volVectorField::GeometricBoundaryField& nybf = ny.boundaryFieldRef();
 
     forAllConstIter(labelHashSet, patchIDs_, iter)
     {
         label patchi = iter.key();
-        ny.boundaryField()[patchi] == -patches[patchi].nf();
+        nybf[patchi] == -patches[patchi].nf();
     }
 
     int iter = 0;

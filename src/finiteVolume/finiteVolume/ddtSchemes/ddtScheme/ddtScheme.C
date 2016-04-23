@@ -150,6 +150,9 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 
     surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
 
+    surfaceScalarField::GeometricBoundaryField& ccbf =
+        ddtCouplingCoeff.boundaryFieldRef();
+
     forAll(U.boundaryField(), patchi)
     {
         if
@@ -158,7 +161,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
          || isA<cyclicAMIFvPatch>(mesh().boundary()[patchi])
         )
         {
-            ddtCouplingCoeff.boundaryField()[patchi] = 0.0;
+            ccbf[patchi] = 0.0;
         }
     }
 

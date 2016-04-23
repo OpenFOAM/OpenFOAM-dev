@@ -90,7 +90,7 @@ Foam::linearUpwind<Type>::correction
 
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bSfCorr = sfCorr.boundaryField();
+        GeometricBoundaryField& bSfCorr = sfCorr.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {

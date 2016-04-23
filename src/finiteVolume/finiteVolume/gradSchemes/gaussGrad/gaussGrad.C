@@ -150,6 +150,11 @@ void Foam::fv::gaussGrad<Type>::correctBoundaryConditions
     >& gGrad
 )
 {
+    typename GeometricField
+    <
+        typename outerProduct<vector, Type>::type, fvPatchField, volMesh
+    >::GeometricBoundaryField& gGradbf = gGrad.boundaryFieldRef();
+
     forAll(vsf.boundaryField(), patchi)
     {
         if (!vsf.boundaryField()[patchi].coupled())
@@ -160,10 +165,10 @@ void Foam::fv::gaussGrad<Type>::correctBoundaryConditions
               / vsf.mesh().magSf().boundaryField()[patchi]
             );
 
-            gGrad.boundaryField()[patchi] += n *
+            gGradbf[patchi] += n *
             (
                 vsf.boundaryField()[patchi].snGrad()
-              - (n & gGrad.boundaryField()[patchi])
+              - (n & gGradbf[patchi])
             );
         }
      }

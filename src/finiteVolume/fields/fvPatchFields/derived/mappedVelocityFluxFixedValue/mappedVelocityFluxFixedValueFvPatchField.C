@@ -156,10 +156,8 @@ void Foam::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
     const volVectorField& UField =
         nbrMesh.lookupObject<volVectorField>(fieldName);
 
-    surfaceScalarField& phiField = const_cast<surfaceScalarField&>
-    (
-        nbrMesh.lookupObject<surfaceScalarField>(phiName_)
-    );
+    const surfaceScalarField& phiField =
+        nbrMesh.lookupObject<surfaceScalarField>(phiName_);
 
     vectorField newUValues;
     scalarField newPhiValues;
@@ -217,7 +215,10 @@ void Foam::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
     }
 
     operator==(newUValues);
-    phiField.boundaryField()[patch().index()] == newPhiValues;
+    const_cast<surfaceScalarField&>
+    (
+        phiField
+    ).boundaryFieldRef()[patch().index()] == newPhiValues;
 
     // Restore tag
     UPstream::msgType() = oldTag;

@@ -138,9 +138,12 @@ public:
             );
             GeometricField<Type, fvsPatchField, surfaceMesh>& vff = tvff.ref();
 
-            forAll(vff.boundaryField(), patchi)
+            typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+                GeometricBoundaryField& vffbf = vff.boundaryFieldRef();
+
+            forAll(vffbf, patchi)
             {
-                vff.boundaryField()[patchi] = vf.boundaryField()[patchi];
+                vffbf[patchi] = vf.boundaryField()[patchi];
             }
 
             const labelUList& own = mesh.owner();

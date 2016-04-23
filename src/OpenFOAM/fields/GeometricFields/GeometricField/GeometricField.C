@@ -712,7 +712,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::internalField()
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
 Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField&
-Foam::GeometricField<Type, PatchField, GeoMesh>::boundaryField()
+Foam::GeometricField<Type, PatchField, GeoMesh>::boundaryFieldRef()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -993,7 +993,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::T() const
     );
 
     Foam::T(result.ref().internalField(), internalField());
-    Foam::T(result.ref().boundaryField(), boundaryField());
+    Foam::T(result.ref().boundaryFieldRef(), boundaryField());
 
     return result;
 }
@@ -1030,7 +1030,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::component
     );
 
     Foam::component(Component.ref().internalField(), internalField(), d);
-    Foam::component(Component.ref().boundaryField(), boundaryField(), d);
+    Foam::component(Component.ref().boundaryFieldRef(), boundaryField(), d);
 
     return Component;
 }
@@ -1049,7 +1049,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::replace
 )
 {
     internalField().replace(d, gcf.internalField());
-    boundaryField().replace(d, gcf.boundaryField());
+    boundaryFieldRef().replace(d, gcf.boundaryField());
 }
 
 
@@ -1061,7 +1061,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::replace
 )
 {
     internalField().replace(d, ds.value());
-    boundaryField().replace(d, ds.value());
+    boundaryFieldRef().replace(d, ds.value());
 }
 
 
@@ -1072,7 +1072,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::max
 )
 {
     Foam::max(internalField(), internalField(), dt.value());
-    Foam::max(boundaryField(), boundaryField(), dt.value());
+    Foam::max(boundaryFieldRef(), boundaryField(), dt.value());
 }
 
 
@@ -1083,7 +1083,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::min
 )
 {
     Foam::min(internalField(), internalField(), dt.value());
-    Foam::min(boundaryField(), boundaryField(), dt.value());
+    Foam::min(boundaryFieldRef(), boundaryField(), dt.value());
 }
 
 
@@ -1091,7 +1091,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::negate()
 {
     internalField().negate();
-    boundaryField().negate();
+    boundaryFieldRef().negate();
 }
 
 
@@ -1115,7 +1115,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
     // only equate field contents not ID
 
     dimensionedInternalField() = gf.dimensionedInternalField();
-    boundaryField() = gf.boundaryField();
+    boundaryFieldRef() = gf.boundaryField();
 }
 
 
@@ -1146,7 +1146,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
         const_cast<Field<Type>&>(gf.internalField())
     );
 
-    boundaryField() = gf.boundaryField();
+    boundaryFieldRef() = gf.boundaryField();
 
     tgf.clear();
 }
@@ -1159,7 +1159,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
 )
 {
     dimensionedInternalField() = dt;
-    boundaryField() = dt.value();
+    boundaryFieldRef() = dt.value();
 }
 
 
@@ -1176,7 +1176,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator==
     // only equate field contents not ID
 
     dimensionedInternalField() = gf.dimensionedInternalField();
-    boundaryField() == gf.boundaryField();
+    boundaryFieldRef() == gf.boundaryField();
 
     tgf.clear();
 }
@@ -1189,7 +1189,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator==
 )
 {
     dimensionedInternalField() = dt;
-    boundaryField() == dt.value();
+    boundaryFieldRef() == dt.value();
 }
 
 
@@ -1204,7 +1204,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator op              \
     checkField(*this, gf, #op);                                                \
                                                                                \
     dimensionedInternalField() op gf.dimensionedInternalField();               \
-    boundaryField() op gf.boundaryField();                                     \
+    boundaryFieldRef() op gf.boundaryField();                                  \
 }                                                                              \
                                                                                \
 template<class Type, template<class> class PatchField, class GeoMesh>          \
@@ -1224,7 +1224,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator op              \
 )                                                                              \
 {                                                                              \
     dimensionedInternalField() op dt;                                          \
-    boundaryField() op dt.value();                                             \
+    boundaryFieldRef() op dt.value();                                          \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)

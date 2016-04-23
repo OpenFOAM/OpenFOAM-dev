@@ -91,9 +91,12 @@ void Foam::pointConstraints::setPatchFields
     GeometricField<Type, pointPatchField, pointMesh>& pf
 )
 {
-    forAll(pf.boundaryField(), patchI)
+    typename GeometricField<Type, pointPatchField, pointMesh>::
+        GeometricBoundaryField& pfbf = pf.boundaryFieldRef();
+
+    forAll(pfbf, patchI)
     {
-        pointPatchField<Type>& ppf = pf.boundaryField()[patchI];
+        pointPatchField<Type>& ppf = pfbf[patchI];
 
         if (isA<valuePointPatchField<Type>>(ppf))
         {

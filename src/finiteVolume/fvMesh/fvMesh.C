@@ -768,10 +768,12 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 
     const fvPatchList& patches = boundary();
 
+    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
+
     forAll(patches, patchI)
     {
-        phi.boundaryField()[patchI] = patches[patchI].patchSlice(sweptVols);
-        phi.boundaryField()[patchI] *= rDeltaT;
+        phibf[patchI] = patches[patchI].patchSlice(sweptVols);
+        phibf[patchI] *= rDeltaT;
     }
 
     // Update or delete the local geometric properties as early as possible so

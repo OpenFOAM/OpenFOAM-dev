@@ -125,7 +125,7 @@ Foam::fv::fourthGrad<Type>::calcGrad
 
             const scalarField& lambdap = lambda.boundaryField()[patchi];
 
-            const fvPatch& p = fGrad.boundaryField()[patchi].patch();
+            const fvPatch& p = vsf.boundaryField()[patchi].patch();
 
             const labelUList& faceCells = p.faceCells();
 

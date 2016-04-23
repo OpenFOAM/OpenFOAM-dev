@@ -46,7 +46,7 @@ void transform
 )
 {
     transform(rtf.internalField(), trf.internalField(), tf.internalField());
-    transform(rtf.boundaryField(), trf.boundaryField(), tf.boundaryField());
+    transform(rtf.boundaryFieldRef(), trf.boundaryField(), tf.boundaryField());
 }
 
 
@@ -132,7 +132,7 @@ void transform
 )
 {
     transform(rtf.internalField(), t.value(), tf.internalField());
-    transform(rtf.boundaryField(), t.value(), tf.boundaryField());
+    transform(rtf.boundaryFieldRef(), t.value(), tf.boundaryField());
 }
 
 

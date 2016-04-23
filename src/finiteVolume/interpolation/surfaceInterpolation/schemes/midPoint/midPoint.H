@@ -116,14 +116,14 @@ public:
                 )
             );
 
-            surfaceScalarField::GeometricBoundaryField& awbf =
-                taw.ref().boundaryField();
+            surfaceScalarField::GeometricBoundaryField& awBf =
+                taw.ref().boundaryFieldRef();
 
-            forAll(awbf, patchi)
+            forAll(awBf, patchi)
             {
-                if (!awbf[patchi].coupled())
+                if (!awBf[patchi].coupled())
                 {
-                    awbf[patchi] = 1.0;
+                    awBf[patchi] = 1.0;
                 }
             }
 

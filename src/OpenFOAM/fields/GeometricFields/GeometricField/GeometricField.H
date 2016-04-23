@@ -442,7 +442,15 @@ public:
         inline const InternalField& internalField() const;
 
         //- Return reference to GeometricBoundaryField
-        GeometricBoundaryField& boundaryField();
+        GeometricBoundaryField& boundaryFieldRef();
+
+        //- Return reference to GeometricBoundaryField
+        #ifndef BOUNDARY_FIELD_REF
+        GeometricBoundaryField& boundaryField()
+        {
+            return boundaryFieldRef();
+        }
+        #endif
 
         //- Return reference to GeometricBoundaryField for const field
         inline const GeometricBoundaryField& boundaryField() const;

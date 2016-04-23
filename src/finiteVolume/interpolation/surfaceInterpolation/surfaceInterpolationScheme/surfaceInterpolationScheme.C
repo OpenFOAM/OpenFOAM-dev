@@ -190,6 +190,8 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 
 
     // Interpolate across coupled patches using given lambdas and ys
+    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+        GeometricBoundaryField& sfbf = sf.boundaryFieldRef();
 
     forAll(lambdas.boundaryField(), pi)
     {
@@ -198,13 +200,13 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 
         if (vf.boundaryField()[pi].coupled())
         {
-            sf.boundaryField()[pi] =
+            sfbf[pi] =
                 pLambda*vf.boundaryField()[pi].patchInternalField()
               + pY*vf.boundaryField()[pi].patchNeighbourField();
         }
         else
         {
-            sf.boundaryField()[pi] = vf.boundaryField()[pi];
+            sfbf[pi] = vf.boundaryField()[pi];
         }
     }
 
@@ -283,11 +285,14 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 
     // Interpolate across coupled patches using given lambdas
 
+    typename GeometricField<RetType, fvsPatchField, surfaceMesh>::
+        GeometricBoundaryField& sfbf = sf.boundaryFieldRef();
+
     forAll(lambdas.boundaryField(), pi)
     {
         const fvsPatchScalarField& pLambda = lambdas.boundaryField()[pi];
         const typename SFType::PatchFieldType& pSf = Sf.boundaryField()[pi];
-        fvsPatchField<RetType>& psf = sf.boundaryField()[pi];
+        fvsPatchField<RetType>& psf = sfbf[pi];
 
         if (vf.boundaryField()[pi].coupled())
         {

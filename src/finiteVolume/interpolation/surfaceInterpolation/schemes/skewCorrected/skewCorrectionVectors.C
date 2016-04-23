@@ -90,11 +90,12 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
             Cpf - ((Sf[facei] & Cpf)/(Sf[facei] & d))*d;
     }
 
+    typename surfaceVectorField::GeometricBoundaryField& skewCorrVecsBf =
+        skewCorrectionVectors_.boundaryFieldRef();
 
-    forAll(skewCorrectionVectors_.boundaryField(), patchI)
+    forAll(skewCorrVecsBf, patchi)
     {
-        fvsPatchVectorField& patchSkewCorrVecs =
-            skewCorrectionVectors_.boundaryField()[patchI];
+        fvsPatchVectorField& patchSkewCorrVecs = skewCorrVecsBf[patchi];
 
         if (!patchSkewCorrVecs.coupled())
         {
@@ -104,8 +105,8 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
         {
             const fvPatch& p = patchSkewCorrVecs.patch();
             const labelUList& faceCells = p.faceCells();
-            const vectorField& patchFaceCentres = Cf.boundaryField()[patchI];
-            const vectorField& patchSf = Sf.boundaryField()[patchI];
+            const vectorField& patchFaceCentres = Cf.boundaryField()[patchi];
+            const vectorField& patchSf = Sf.boundaryField()[patchi];
             const vectorField patchD(p.delta());
 
             forAll(p, patchFaceI)

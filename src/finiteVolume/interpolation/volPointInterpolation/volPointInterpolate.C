@@ -86,12 +86,15 @@ void Foam::volPointInterpolation::addSeparated
         Pout<< "volPointInterpolation::addSeparated" << endl;
     }
 
-    forAll(pf.boundaryField(), patchI)
+    typename GeometricField<Type, pointPatchField, pointMesh>::
+        GeometricBoundaryField& pfbf = pf.boundaryFieldRef();
+
+    forAll(pfbf, patchI)
     {
-        if (pf.boundaryField()[patchI].coupled())
+        if (pfbf[patchI].coupled())
         {
             refCast<coupledPointPatchField<Type>>
-                (pf.boundaryField()[patchI]).initSwapAddSeparated
+                (pfbf[patchI]).initSwapAddSeparated
                 (
                     Pstream::nonBlocking,
                     pf.internalField()
@@ -102,12 +105,12 @@ void Foam::volPointInterpolation::addSeparated
     // Block for any outstanding requests
     Pstream::waitRequests();
 
-    forAll(pf.boundaryField(), patchI)
+    forAll(pfbf, patchI)
     {
-        if (pf.boundaryField()[patchI].coupled())
+        if (pfbf[patchI].coupled())
         {
             refCast<coupledPointPatchField<Type>>
-                (pf.boundaryField()[patchI]).swapAddSeparated
+                (pfbf[patchI]).swapAddSeparated
                 (
                     Pstream::nonBlocking,
                     pf.internalField()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,23 +37,25 @@ void Foam::correctUphiBCs
 
     if (mesh.changing())
     {
-        forAll(U.boundaryField(), patchi)
+        volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
+        surfaceScalarField::GeometricBoundaryField& phibf =
+            phi.boundaryFieldRef();
+
+        forAll(Ubf, patchi)
         {
-            if (U.boundaryField()[patchi].fixesValue())
+            if (Ubf[patchi].fixesValue())
             {
-                U.boundaryField()[patchi].initEvaluate();
+                Ubf[patchi].initEvaluate();
             }
         }
 
-        forAll(U.boundaryField(), patchi)
+        forAll(Ubf, patchi)
         {
-            if (U.boundaryField()[patchi].fixesValue())
+            if (Ubf[patchi].fixesValue())
             {
-                U.boundaryField()[patchi].evaluate();
+                Ubf[patchi].evaluate();
 
-                phi.boundaryField()[patchi] =
-                    U.boundaryField()[patchi]
-                  & mesh.Sf().boundaryField()[patchi];
+                phibf[patchi] = Ubf[patchi] & mesh.Sf().boundaryField()[patchi];
             }
         }
     }
@@ -71,24 +73,28 @@ void Foam::correctUphiBCs
 
     if (mesh.changing())
     {
-        forAll(U.boundaryField(), patchi)
+        volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
+        surfaceScalarField::GeometricBoundaryField& phibf =
+            phi.boundaryFieldRef();
+
+        forAll(Ubf, patchi)
         {
-            if (U.boundaryField()[patchi].fixesValue())
+            if (Ubf[patchi].fixesValue())
             {
-                U.boundaryField()[patchi].initEvaluate();
+                Ubf[patchi].initEvaluate();
             }
         }
 
-        forAll(U.boundaryField(), patchi)
+        forAll(Ubf, patchi)
         {
-            if (U.boundaryField()[patchi].fixesValue())
+            if (Ubf[patchi].fixesValue())
             {
-                U.boundaryField()[patchi].evaluate();
+                Ubf[patchi].evaluate();
 
-                phi.boundaryField()[patchi] =
+                phibf[patchi] =
                     rho.boundaryField()[patchi]
                    *(
-                        U.boundaryField()[patchi]
+                        Ubf[patchi]
                       & mesh.Sf().boundaryField()[patchi]
                     );
             }

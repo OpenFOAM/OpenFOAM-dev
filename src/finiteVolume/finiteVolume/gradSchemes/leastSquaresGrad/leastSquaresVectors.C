@@ -114,10 +114,10 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
     }
 
 
-    surfaceVectorField::GeometricBoundaryField& blsP =
-        pVectors_.boundaryField();
+    surfaceVectorField::GeometricBoundaryField& pVectorsBf =
+        pVectors_.boundaryFieldRef();
 
-    forAll(blsP, patchi)
+    forAll(pVectorsBf, patchi)
     {
         const fvsPatchScalarField& pw = w.boundaryField()[patchi];
         const fvsPatchScalarField& pMagSf = magSf.boundaryField()[patchi];
@@ -168,9 +168,9 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
         nVectors_[facei] = -w[facei]*magSfByMagSqrd*(invDd[nei] & d);
     }
 
-    forAll(blsP, patchi)
+    forAll(pVectorsBf, patchi)
     {
-        fvsPatchVectorField& patchLsP = blsP[patchi];
+        fvsPatchVectorField& patchLsP = pVectorsBf[patchi];
 
         const fvsPatchScalarField& pw = w.boundaryField()[patchi];
         const fvsPatchScalarField& pMagSf = magSf.boundaryField()[patchi];

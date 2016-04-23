@@ -241,7 +241,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
     addBoundaryDiag(coupledMatrix.diag(), 0);
     addBoundarySource(coupledMatrix.source(), false);
 
-    coupledMatrix.interfaces() = psi.boundaryField().interfaces();
+    coupledMatrix.interfaces() = psi.boundaryFieldRef().interfaces();
     coupledMatrix.interfacesUpper() = boundaryCoeffs().component(0);
     coupledMatrix.interfacesLower() = internalCoeffs().component(0);
 

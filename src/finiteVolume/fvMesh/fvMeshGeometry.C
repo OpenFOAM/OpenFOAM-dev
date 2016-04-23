@@ -410,9 +410,12 @@ Foam::tmp<Foam::surfaceVectorField> Foam::fvMesh::delta() const
         delta[facei] = C[neighbour[facei]] - C[owner[facei]];
     }
 
-    forAll(delta.boundaryField(), patchi)
+    surfaceVectorField::GeometricBoundaryField& deltabf =
+        delta.boundaryFieldRef();
+
+    forAll(deltabf, patchi)
     {
-        delta.boundaryField()[patchi] = boundary()[patchi].delta();
+        deltabf[patchi] = boundary()[patchi].delta();
     }
 
     return tdelta;
