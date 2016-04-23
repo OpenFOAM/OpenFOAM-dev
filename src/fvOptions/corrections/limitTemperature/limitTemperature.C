@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ void Foam::fv::limitTemperature::correct(volScalarField& he)
     // handle boundaries in the case of 'all'
     if (selectionMode_ == smAll)
     {
-        volScalarField::GeometricBoundaryField& bf = he.boundaryField();
+        volScalarField::GeometricBoundaryField& bf = he.boundaryFieldRef();
 
         forAll(bf, patchi)
         {

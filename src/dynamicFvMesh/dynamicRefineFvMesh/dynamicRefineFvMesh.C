@@ -384,11 +384,11 @@ Foam::dynamicRefineFvMesh::refine
             }
 
             // Recalculate new boundary faces.
-            surfaceScalarField::GeometricBoundaryField& bphi =
-                phi.boundaryField();
-            forAll(bphi, patchI)
+            surfaceScalarField::GeometricBoundaryField& phiBf =
+                phi.boundaryFieldRef();
+            forAll(phiBf, patchI)
             {
-                fvsPatchScalarField& patchPhi = bphi[patchI];
+                fvsPatchScalarField& patchPhi = phiBf[patchI];
                 const fvsPatchScalarField& patchPhiU =
                     phiU.boundaryField()[patchI];
 
@@ -430,7 +430,7 @@ Foam::dynamicRefineFvMesh::refine
                     const fvsPatchScalarField& patchPhiU =
                         phiU.boundaryField()[patchI];
 
-                    fvsPatchScalarField& patchPhi = bphi[patchI];
+                    fvsPatchScalarField& patchPhi = phiBf[patchI];
 
                     patchPhi[i] = patchPhiU[i];
                 }
@@ -574,8 +574,8 @@ Foam::dynamicRefineFvMesh::unrefine
             }
 
             surfaceScalarField& phi = *iter();
-            surfaceScalarField::GeometricBoundaryField& bphi =
-                phi.boundaryField();
+            surfaceScalarField::GeometricBoundaryField& phiBf =
+                phi.boundaryFieldRef();
 
             const surfaceScalarField phiU
             (
@@ -610,7 +610,7 @@ Foam::dynamicRefineFvMesh::unrefine
 
                             const fvsPatchScalarField& patchPhiU =
                                 phiU.boundaryField()[patchI];
-                            fvsPatchScalarField& patchPhi = bphi[patchI];
+                            fvsPatchScalarField& patchPhi = phiBf[patchI];
                             patchPhi[i] = patchPhiU[i];
                         }
                     }

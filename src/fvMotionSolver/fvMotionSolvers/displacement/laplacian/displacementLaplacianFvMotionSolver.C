@@ -227,7 +227,7 @@ void Foam::displacementLaplacianFvMotionSolver::solve()
     movePoints(fvMesh_.points());
 
     diffusivity().correct();
-    pointDisplacement_.boundaryField().updateCoeffs();
+    pointDisplacement_.boundaryFieldRef().updateCoeffs();
 
     Foam::solve
     (

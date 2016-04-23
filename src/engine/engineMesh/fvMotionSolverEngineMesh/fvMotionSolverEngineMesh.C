@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,8 @@ void Foam::fvMotionSolverEngineMesh::move()
 
     scalar pistonSpeed = deltaZ/engineDB_.deltaTValue();
 
-    motionSolver_.pointMotionU().boundaryField()[pistonIndex_] == pistonSpeed;
+    motionSolver_.pointMotionU().boundaryFieldRef()[pistonIndex_] ==
+        pistonSpeed;
 
     {
         scalarField linerPoints
@@ -79,7 +80,7 @@ void Foam::fvMotionSolverEngineMesh::move()
             boundary()[linerIndex_].patch().localPoints().component(vector::Z)
         );
 
-        motionSolver_.pointMotionU().boundaryField()[linerIndex_] ==
+        motionSolver_.pointMotionU().boundaryFieldRef()[linerIndex_] ==
             pistonSpeed*pos(deckHeight_.value() - linerPoints)
            *(deckHeight_.value() - linerPoints)
            /(deckHeight_.value() - pistonPlusLayers);

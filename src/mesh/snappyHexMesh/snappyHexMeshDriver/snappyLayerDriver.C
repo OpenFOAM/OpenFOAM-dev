@@ -2657,6 +2657,10 @@ bool Foam::snappyLayerDriver::writeLayerData
                 fixedValueFvPatchScalarField::typeName
             );
             const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+            typename volScalarField::GeometricBoundaryField& fldBf =
+                fld.boundaryFieldRef();
+
             forAll(patchIDs, i)
             {
                 label patchI = patchIDs[i];
@@ -2667,7 +2671,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                 {
                     pfld[i] = cellNLayers[faceCells[i]];
                 }
-                fld.boundaryField()[patchI] == pfld;
+                fldBf[patchI] == pfld;
             }
             Info<< indent << fld.name() << "    : actual number of layers"
                 << endl;
@@ -2690,11 +2694,16 @@ bool Foam::snappyLayerDriver::writeLayerData
                 dimensionedScalar("zero", dimless, 0),
                 fixedValueFvPatchScalarField::typeName
             );
+
             const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+            typename volScalarField::GeometricBoundaryField& fldBf =
+                fld.boundaryFieldRef();
+
             forAll(patchIDs, i)
             {
                 label patchI = patchIDs[i];
-                fld.boundaryField()[patchI] == pbm[patchI].patchSlice
+                fldBf[patchI] == pbm[patchI].patchSlice
                 (
                     faceRealThickness
                 );
@@ -2720,7 +2729,12 @@ bool Foam::snappyLayerDriver::writeLayerData
                 dimensionedScalar("zero", dimless, 0),
                 fixedValueFvPatchScalarField::typeName
             );
+
             const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+            typename volScalarField::GeometricBoundaryField& fldBf =
+                fld.boundaryFieldRef();
+
             forAll(patchIDs, i)
             {
                 label patchI = patchIDs[i];
@@ -2744,7 +2758,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                     }
                 }
 
-                fld.boundaryField()[patchI] == pfld;
+                fldBf[patchI] == pfld;
             }
             Info<< indent << fld.name()
                 << " : overall layer thickness (fraction"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,9 +127,12 @@ void Foam::inverseFaceDistanceDiffusivity::correct()
         faceDiffusivity_[faceI] = 1.0/sqrt(dist);
     }
 
-    forAll(faceDiffusivity_.boundaryField(), patchI)
+    typename surfaceScalarField::GeometricBoundaryField& faceDiffusivityBf =
+        faceDiffusivity_.boundaryFieldRef();
+
+    forAll(faceDiffusivityBf, patchI)
     {
-        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryField()[patchI];
+        fvsPatchScalarField& bfld = faceDiffusivityBf[patchI];
 
         const labelUList& faceCells = bfld.patch().faceCells();
 

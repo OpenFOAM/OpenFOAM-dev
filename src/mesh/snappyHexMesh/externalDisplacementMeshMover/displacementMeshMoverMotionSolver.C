@@ -102,7 +102,7 @@ void Foam::displacementMeshMoverMotionSolver::solve()
     movePoints(mesh().points());
 
     // Update any point motion bcs (e.g. timevarying)
-    pointDisplacement().boundaryField().updateCoeffs();
+    pointDisplacement().boundaryFieldRef().updateCoeffs();
 
     label nAllowableErrors = 0;
     labelList checkFaces(identity(mesh().nFaces()));

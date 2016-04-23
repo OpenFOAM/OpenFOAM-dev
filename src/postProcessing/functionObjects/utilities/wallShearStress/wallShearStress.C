@@ -61,13 +61,13 @@ void Foam::wallShearStress::calcShearStress
 {
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        label patchI = iter.key();
-        const polyPatch& pp = mesh.boundaryMesh()[patchI];
+        label patchi = iter.key();
+        const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
-        vectorField& ssp = shearStress.boundaryField()[patchI];
-        const vectorField& Sfp = mesh.Sf().boundaryField()[patchI];
-        const scalarField& magSfp = mesh.magSf().boundaryField()[patchI];
-        const symmTensorField& Reffp = Reff.boundaryField()[patchI];
+        vectorField& ssp = shearStress.boundaryFieldRef()[patchi];
+        const vectorField& Sfp = mesh.Sf().boundaryField()[patchi];
+        const scalarField& magSfp = mesh.magSf().boundaryField()[patchi];
+        const symmTensorField& Reffp = Reff.boundaryField()[patchi];
 
         ssp = (-Sfp/magSfp) & Reffp;
 
@@ -175,11 +175,11 @@ void Foam::wallShearStress::read(const dictionary& dict)
 
         if (patchSet_.empty())
         {
-            forAll(pbm, patchI)
+            forAll(pbm, patchi)
             {
-                if (isA<wallPolyPatch>(pbm[patchI]))
+                if (isA<wallPolyPatch>(pbm[patchi]))
                 {
-                    patchSet_.insert(patchI);
+                    patchSet_.insert(patchi);
                 }
             }
 
@@ -191,17 +191,17 @@ void Foam::wallShearStress::read(const dictionary& dict)
             labelHashSet filteredPatchSet;
             forAllConstIter(labelHashSet, patchSet_, iter)
             {
-                label patchI = iter.key();
-                if (isA<wallPolyPatch>(pbm[patchI]))
+                label patchi = iter.key();
+                if (isA<wallPolyPatch>(pbm[patchi]))
                 {
-                    filteredPatchSet.insert(patchI);
-                    Info<< "        " << pbm[patchI].name() << endl;
+                    filteredPatchSet.insert(patchi);
+                    Info<< "        " << pbm[patchi].name() << endl;
                 }
                 else
                 {
                     WarningInFunction
                         << "Requested wall shear stress on non-wall boundary "
-                        << "type patch: " << pbm[patchI].name() << endl;
+                        << "type patch: " << pbm[patchi].name() << endl;
                 }
             }
 

@@ -204,7 +204,7 @@ bool Foam::LocalInteraction<CloudType>::correct
                 {
                     label pI = pp.index();
                     label fI = pp.whichFace(p.face());
-                    massEscape().boundaryField()[pI][fI] += dm;
+                    massEscape().boundaryFieldRef()[pI][fI] += dm;
                 }
                 break;
             }
@@ -221,7 +221,7 @@ bool Foam::LocalInteraction<CloudType>::correct
                 {
                     label pI = pp.index();
                     label fI = pp.whichFace(p.face());
-                    massStick().boundaryField()[pI][fI] += dm;
+                    massStick().boundaryFieldRef()[pI][fI] += dm;
                 }
                 break;
             }

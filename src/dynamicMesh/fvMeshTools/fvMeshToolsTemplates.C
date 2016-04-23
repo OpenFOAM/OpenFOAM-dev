@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ void Foam::fvMeshTools::addPatchFields
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
 
         label sz = bfld.size();
         bfld.setSize(sz+1);
@@ -102,7 +102,7 @@ void Foam::fvMeshTools::setPatchFields
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
 
         if (patchFieldDict.found(fld.name()))
         {
@@ -141,7 +141,7 @@ void Foam::fvMeshTools::setPatchFields
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
 
         bfld[patchI] == value;
     }
@@ -160,7 +160,7 @@ void Foam::fvMeshTools::trimPatchFields(fvMesh& mesh, const label nPatches)
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        fld.boundaryField().setSize(nPatches);
+        fld.boundaryFieldRef().setSize(nPatches);
     }
 }
 
@@ -183,7 +183,7 @@ void Foam::fvMeshTools::reorderPatchFields
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
 
         bfld.reorder(oldToNew);
     }

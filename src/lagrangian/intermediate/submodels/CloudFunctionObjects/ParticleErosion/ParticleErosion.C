@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,7 +197,7 @@ void Foam::ParticleErosion<CloudType>::postPatch
         const scalar coeff = p.nParticle()*p.mass()*sqr(magU)/(p_*psi_*K_);
 
         const label patchFaceI = pp.whichFace(p.face());
-        scalar& Q = QPtr_->boundaryField()[patchI][patchFaceI];
+        scalar& Q = QPtr_->boundaryFieldRef()[patchI][patchFaceI];
         if (tan(alpha) < K_/6.0)
         {
             Q += coeff*(sin(2.0*alpha) - 6.0/K_*sqr(sin(alpha)));

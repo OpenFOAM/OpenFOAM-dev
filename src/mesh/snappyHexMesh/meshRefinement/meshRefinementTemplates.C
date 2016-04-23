@@ -199,7 +199,6 @@ void Foam::meshRefinement::collectAndPrint
 }
 
 
-//template<class T, class Mesh>
 template<class GeoField>
 void Foam::meshRefinement::addPatchFields
 (
@@ -215,11 +214,12 @@ void Foam::meshRefinement::addPatchFields
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename GeoField::GeometricBoundaryField& fldBf =
+            fld.boundaryFieldRef();
 
-        label sz = bfld.size();
-        bfld.setSize(sz+1);
-        bfld.set
+        label sz = fldBf.size();
+        fldBf.setSize(sz+1);
+        fldBf.set
         (
             sz,
             GeoField::PatchFieldType::New
@@ -233,7 +233,6 @@ void Foam::meshRefinement::addPatchFields
 }
 
 
-// Reorder patch field
 template<class GeoField>
 void Foam::meshRefinement::reorderPatchFields
 (
@@ -248,10 +247,7 @@ void Foam::meshRefinement::reorderPatchFields
 
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
-        GeoField& fld = *iter();
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryField();
-
-        bfld.reorder(oldToNew);
+        iter()->boundaryFieldRef().reorder(oldToNew);
     }
 }
 

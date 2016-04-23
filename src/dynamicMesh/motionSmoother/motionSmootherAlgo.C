@@ -428,14 +428,17 @@ void Foam::motionSmootherAlgo::setDisplacementPatchFields
     pointVectorField& displacement
 )
 {
+    typename pointVectorField::GeometricBoundaryField& displacementBf =
+        displacement.boundaryFieldRef();
+
     // Adapt the fixedValue bc's (i.e. copy internal point data to
     // boundaryField for all affected patches)
     forAll(patchIDs, i)
     {
-        label patchI = patchIDs[i];
+        label patchi = patchIDs[i];
 
-        displacement.boundaryField()[patchI] ==
-            displacement.boundaryField()[patchI].patchInternalField();
+        displacementBf[patchi] ==
+            displacementBf[patchi].patchInternalField();
     }
 
     // Make consistent with non-adapted bc's by evaluating those now and
@@ -449,18 +452,18 @@ void Foam::motionSmootherAlgo::setDisplacementPatchFields
 
     forAll(patchSchedule, patchEvalI)
     {
-        label patchI = patchSchedule[patchEvalI].patch;
+        label patchi = patchSchedule[patchEvalI].patch;
 
-        if (!adaptPatchSet.found(patchI))
+        if (!adaptPatchSet.found(patchi))
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement.boundaryField()[patchI]
+                displacementBf[patchi]
                     .initEvaluate(Pstream::scheduled);
             }
             else
             {
-                displacement.boundaryField()[patchI]
+                displacementBf[patchi]
                     .evaluate(Pstream::scheduled);
             }
         }
@@ -474,10 +477,10 @@ void Foam::motionSmootherAlgo::setDisplacementPatchFields
     // by multi-corner constraints into account.
     forAll(patchIDs, i)
     {
-        label patchI = patchIDs[i];
+        label patchi = patchIDs[i];
 
-        displacement.boundaryField()[patchI] ==
-            displacement.boundaryField()[patchI].patchInternalField();
+        displacementBf[patchi] ==
+            displacementBf[patchi].patchInternalField();
     }
 }
 
@@ -581,21 +584,24 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
 
     const lduSchedule& patchSchedule = mesh_.globalData().patchSchedule();
 
+    typename pointVectorField::GeometricBoundaryField& displacementBf =
+        displacement.boundaryFieldRef();
+
     // 1. evaluate on adaptPatches
     forAll(patchSchedule, patchEvalI)
     {
-        label patchI = patchSchedule[patchEvalI].patch;
+        label patchi = patchSchedule[patchEvalI].patch;
 
-        if (adaptPatchSet.found(patchI))
+        if (adaptPatchSet.found(patchi))
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement.boundaryField()[patchI]
+                displacementBf[patchi]
                     .initEvaluate(Pstream::blocking);
             }
             else
             {
-                displacement.boundaryField()[patchI]
+                displacementBf[patchi]
                     .evaluate(Pstream::blocking);
             }
         }
@@ -605,18 +611,18 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
     // 2. evaluate on non-AdaptPatches
     forAll(patchSchedule, patchEvalI)
     {
-        label patchI = patchSchedule[patchEvalI].patch;
+        label patchi = patchSchedule[patchEvalI].patch;
 
-        if (!adaptPatchSet.found(patchI))
+        if (!adaptPatchSet.found(patchi))
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement.boundaryField()[patchI]
+                displacementBf[patchi]
                     .initEvaluate(Pstream::blocking);
             }
             else
             {
-                displacement.boundaryField()[patchI]
+                displacementBf[patchi]
                     .evaluate(Pstream::blocking);
             }
         }
@@ -757,9 +763,9 @@ Foam::tmp<Foam::pointField> Foam::motionSmootherAlgo::curPoints() const
     {
         const pointBoundaryMesh& pbm = displacement_.mesh().boundary();
         actualPatchTypes.setSize(pbm.size());
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            actualPatchTypes[patchI] = pbm[patchI].type();
+            actualPatchTypes[patchi] = pbm[patchi].type();
         }
     }
 
@@ -768,17 +774,17 @@ Foam::tmp<Foam::pointField> Foam::motionSmootherAlgo::curPoints() const
         const pointVectorField::GeometricBoundaryField& pfld =
             displacement_.boundaryField();
         actualPatchFieldTypes.setSize(pfld.size());
-        forAll(pfld, patchI)
+        forAll(pfld, patchi)
         {
-            if (isA<fixedValuePointPatchField<vector>>(pfld[patchI]))
+            if (isA<fixedValuePointPatchField<vector>>(pfld[patchi]))
             {
                 // Get rid of funny
-                actualPatchFieldTypes[patchI] =
+                actualPatchFieldTypes[patchi] =
                     fixedValuePointPatchField<vector>::typeName;
             }
             else
             {
-                actualPatchFieldTypes[patchI] = pfld[patchI].type();
+                actualPatchFieldTypes[patchi] = pfld[patchi].type();
             }
         }
     }
@@ -847,14 +853,14 @@ bool Foam::motionSmootherAlgo::scaleMesh
         const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
         Pout<< "Entering scaleMesh : coupled patches:" << endl;
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            if (patches[patchI].coupled())
+            if (patches[patchi].coupled())
             {
                 const coupledPolyPatch& pp =
-                    refCast<const coupledPolyPatch>(patches[patchI]);
+                    refCast<const coupledPolyPatch>(patches[patchi]);
 
-                Pout<< '\t' << patchI << '\t' << pp.name()
+                Pout<< '\t' << patchi << '\t' << pp.name()
                     << " parallel:" << pp.parallel()
                     << " separated:" << pp.separated()
                     << " forwardT:" << pp.forwardT().size()
@@ -1034,20 +1040,20 @@ void Foam::motionSmootherAlgo::updateMesh()
     // Check whether displacement has fixed value b.c. on adaptPatchID
     forAll(adaptPatchIDs_, i)
     {
-        label patchI = adaptPatchIDs_[i];
+        label patchi = adaptPatchIDs_[i];
 
         if
         (
            !isA<fixedValuePointPatchVectorField>
             (
-                displacement_.boundaryField()[patchI]
+                displacement_.boundaryField()[patchi]
             )
         )
         {
             FatalErrorInFunction
-                << "Patch " << patches[patchI].name()
+                << "Patch " << patches[patchi].name()
                 << " has wrong boundary condition "
-                << displacement_.boundaryField()[patchI].type()
+                << displacement_.boundaryField()[patchi].type()
                 << " on field " << displacement_.name() << nl
                 << "Only type allowed is "
                 << fixedValuePointPatchVectorField::typeName
