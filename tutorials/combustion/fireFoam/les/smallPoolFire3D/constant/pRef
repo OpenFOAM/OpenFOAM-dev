@@ -9,38 +9,13 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      p_rgh;
+    class       uniformDimensionedScalarField;
+    location    "constant";
+    object      pRef;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [1 -1 -2 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    "(outlet|sides)"
-    {
-        type            prghTotalHydrostaticPressure;
-        p0              $internalField;
-        gamma           1;
-        value           $internalField;
-    }
-
-    base
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-
-    inlet
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-}
-
+value           101325;
 
 // ************************************************************************* //

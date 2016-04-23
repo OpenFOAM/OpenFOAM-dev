@@ -4,7 +4,7 @@ volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 
-surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
+surfaceScalarField phig("phig", -rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
 
 surfaceScalarField phiHbyA
 (
@@ -25,9 +25,10 @@ while (pimple.correctNonOrthogonal())
 {
     fvScalarMatrix p_rghEqn
     (
-        fvc::ddt(psi, rho)*gh
+        fvm::ddt(psi, p_rgh)
+      + fvc::ddt(psi, rho)*gh
+      + fvc::ddt(psi)*pRef
       + fvc::div(phiHbyA)
-      + fvm::ddt(psi, p_rgh)
       - fvm::laplacian(rhorAUf, p_rgh)
      ==
         parcels.Srho()
@@ -46,7 +47,7 @@ while (pimple.correctNonOrthogonal())
     }
 }
 
-p = p_rgh + rho*gh;
+p = p_rgh + rho*gh + pRef;
 
 #include "rhoEqn.H"
 #include "compressibleContinuityErrs.H"

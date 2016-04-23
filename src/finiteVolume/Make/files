@@ -202,6 +202,7 @@ $(derivedFvPatchFields)/waveSurfacePressure/waveSurfacePressureFvPatchScalarFiel
 $(derivedFvPatchFields)/interstitialInletVelocity/interstitialInletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/prghPressure/prghPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/prghTotalPressure/prghTotalPressureFvPatchScalarField.C
+$(derivedFvPatchFields)/prghTotalHydrostaticPressure/prghTotalHydrostaticPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/fixedProfile/fixedProfileFvPatchFields.C
 
 fvsPatchFields = fields/fvsPatchFields

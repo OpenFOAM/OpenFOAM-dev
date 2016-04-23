@@ -17,7 +17,7 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 101325;
+internalField   uniform 0;
 
 boundaryField
 {
@@ -35,12 +35,7 @@ boundaryField
 
     "(top|sides)"
     {
-        type            totalPressure;
-        U               U;
-        phi             phi;
-        rho             rho;
-        psi             none;
-        gamma           1.4;
+        type            prghTotalHydrostaticPressure;
         p0              $internalField;
         value           $internalField;
     }

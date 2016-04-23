@@ -44,6 +44,11 @@ solvers
         relTol              0;
     };
 
+    ph_rgh
+    {
+        $p_rgh;
+    }
+
 
     "(U|Yi|k|h)"
     {
@@ -92,6 +97,9 @@ PIMPLE
     nOuterCorrectors  1;
     nCorrectors       2;
     nNonOrthogonalCorrectors 0;
+
+    hydrostaticInitialization yes;
+    nHydrostaticCorrectors 5;
 }
 
 relaxationFactors

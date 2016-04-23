@@ -43,7 +43,7 @@ Description
     myPatch
     {
         type            fixedValue;
-        value           uniform 0;  // example for scalar field usage
+        value           uniform 0;  // Example for scalar field usage
     }
     \endverbatim
 

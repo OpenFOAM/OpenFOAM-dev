@@ -54,6 +54,9 @@ volVectorField U
 
 #include "compressibleCreatePhi.H"
 
+#include "createMRF.H"
+
+
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::turbulenceModel> turbulence
 (
@@ -68,6 +71,55 @@ autoPtr<compressible::turbulenceModel> turbulence
 
 // Set the turbulence into the combustion model
 combustion->setTurbulence(turbulence());
+
+
+#include "readGravitationalAcceleration.H"
+#include "readhRef.H"
+#include "gh.H"
+#include "readpRef.H"
+
+volScalarField p_rgh
+(
+    IOobject
+    (
+        "p_rgh",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+mesh.setFluxRequired(p_rgh.name());
+
+#include "phrghEqn.H"
+
+
+multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
+
+forAll(Y, i)
+{
+    fields.add(Y[i]);
+}
+fields.add(thermo.he());
+
+IOdictionary additionalControlsDict
+(
+    IOobject
+    (
+        "additionalControls",
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
+
+Switch solvePrimaryRegion
+(
+    additionalControlsDict.lookup("solvePrimaryRegion")
+);
 
 volScalarField dQ
 (
@@ -99,52 +151,3 @@ volScalarField dpdt
 
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
-
-
-#include "readGravitationalAcceleration.H"
-#include "readhRef.H"
-#include "gh.H"
-
-
-volScalarField p_rgh
-(
-    IOobject
-    (
-        "p_rgh",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
-
-// Force p_rgh to be consistent with p
-p_rgh = p - rho*gh;
-
-mesh.setFluxRequired(p_rgh.name());
-
-multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
-
-forAll(Y, i)
-{
-    fields.add(Y[i]);
-}
-fields.add(thermo.he());
-
-IOdictionary additionalControlsDict
-(
-    IOobject
-    (
-        "additionalControls",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
-
-Switch solvePrimaryRegion
-(
-    additionalControlsDict.lookup("solvePrimaryRegion")
-);
