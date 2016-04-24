@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,14 +50,14 @@ Foam::label Foam::mergePolyMesh::patchIndex(const polyPatch& p)
 
     bool nameFound = false;
 
-    forAll(patchNames_, patchI)
+    forAll(patchNames_, patchi)
     {
-        if (patchNames_[patchI] == pName)
+        if (patchNames_[patchi] == pName)
         {
-            if (word(patchDicts_[patchI]["type"]) == pType)
+            if (word(patchDicts_[patchi]["type"]) == pType)
             {
                 // Found name and types match
-                return patchI;
+                return patchi;
             }
             else
             {
@@ -134,12 +134,12 @@ Foam::mergePolyMesh::mergePolyMesh(const IOobject& io)
     // Insert the original patches into the list
     wordList curPatchNames = boundaryMesh().names();
 
-    forAll(boundaryMesh(), patchI)
+    forAll(boundaryMesh(), patchi)
     {
-        patchNames_.append(boundaryMesh()[patchI].name());
+        patchNames_.append(boundaryMesh()[patchi].name());
 
         OStringStream os;
-        boundaryMesh()[patchI].write(os);
+        boundaryMesh()[patchi].write(os);
         patchDicts_.append(dictionary(IStringStream(os.str())()));
     }
 
@@ -275,9 +275,9 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     // Gather the patch indices
     labelList patchIndices(bm.size());
 
-    forAll(patchIndices, patchI)
+    forAll(patchIndices, patchi)
     {
-        patchIndices[patchI] = patchIndex(bm[patchI]);
+        patchIndices[patchi] = patchIndex(bm[patchi]);
     }
 
     // Temporary: update number of allowable patches. This should be
@@ -400,32 +400,32 @@ void Foam::mergePolyMesh::merge()
         const polyBoundaryMesh& oldPatches = boundaryMesh();
 
         // Note.  Re-using counter in two for loops
-        label patchI = 0;
+        label patchi = 0;
 
-        for (patchI = 0; patchI < oldPatches.size(); patchI++)
+        for (patchi = 0; patchi < oldPatches.size(); patchi++)
         {
-            newPatches[patchI] = oldPatches[patchI].clone(oldPatches).ptr();
+            newPatches[patchi] = oldPatches[patchi].clone(oldPatches).ptr();
         }
 
         Info<< "Adding new patches. " << endl;
 
         label endOfLastPatch =
-            oldPatches[patchI - 1].start() + oldPatches[patchI - 1].size();
+            oldPatches[patchi - 1].start() + oldPatches[patchi - 1].size();
 
-        for (; patchI < patchNames_.size(); patchI++)
+        for (; patchi < patchNames_.size(); patchi++)
         {
             // Add a patch
-            dictionary dict(patchDicts_[patchI]);
+            dictionary dict(patchDicts_[patchi]);
             dict.set("nFaces", 0);
             dict.set("startFace", endOfLastPatch);
 
-            newPatches[patchI] =
+            newPatches[patchi] =
             (
                 polyPatch::New
                 (
-                    patchNames_[patchI],
+                    patchNames_[patchi],
                     dict,
-                    patchI,
+                    patchi,
                     oldPatches
                 ).ptr()
             );

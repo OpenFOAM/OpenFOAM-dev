@@ -780,12 +780,12 @@ int main(int argc, char *argv[])
 
     faceListList boundary(patchCells.size());
 
-    forAll(patchCells, patchI)
+    forAll(patchCells, patchi)
     {
-        labelList& curCells = patchCells[patchI];
-        labelList& curFaces = patchCellFaces[patchI];
+        labelList& curCells = patchCells[patchi];
+        labelList& curFaces = patchCellFaces[patchi];
 
-        faceList& patchFaces = boundary[patchI];
+        faceList& patchFaces = boundary[patchi];
         patchFaces.setSize(curCells.size());
 
         forAll(curCells, faceI)
@@ -831,14 +831,14 @@ int main(int argc, char *argv[])
     );
 
     // Add information to dictionary
-    forAll(patchNames, patchI)
+    forAll(patchNames, patchi)
     {
-        if (!patchDicts.set(patchI))
+        if (!patchDicts.set(patchi))
         {
-            patchDicts.set(patchI, new dictionary());
+            patchDicts.set(patchi, new dictionary());
         }
         // Add but not overwrite
-        patchDicts[patchI].add("type", polyPatch::typeName, false);
+        patchDicts[patchi].add("type", polyPatch::typeName, false);
     }
 
     polyMesh pShapeMesh

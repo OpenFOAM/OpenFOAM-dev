@@ -253,6 +253,9 @@ void Foam::meshToMesh0::interpolate
 {
     interpolateInternalField(toVf, fromVf, ord, cop);
 
+    typename GeometricField<Type, fvPatchField, volMesh>::
+        GeometricBoundaryField& toVfBf = toVf.boundaryFieldRef();
+
     forAll(toMesh_.boundaryMesh(), patchi)
     {
         const fvPatch& toPatch = toMesh_.boundary()[patchi];
@@ -265,7 +268,7 @@ void Foam::meshToMesh0::interpolate
                 {
                     mapField
                     (
-                        toVf.boundaryField()[patchi],
+                        toVfBf[patchi],
                         fromVf,
                         boundaryAddressing_[patchi],
                         cop
@@ -277,7 +280,7 @@ void Foam::meshToMesh0::interpolate
                 {
                     interpolateField
                     (
-                        toVf.boundaryField()[patchi],
+                        toVfBf[patchi],
                         fromVf,
                         boundaryAddressing_[patchi],
                         toPatch.Cf(),
@@ -290,7 +293,7 @@ void Foam::meshToMesh0::interpolate
                 {
                     interpolateField
                     (
-                        toVf.boundaryField()[patchi],
+                        toVfBf[patchi],
                         fromVf,
                         boundaryAddressing_[patchi],
                         toPatch.Cf(),
@@ -310,12 +313,12 @@ void Foam::meshToMesh0::interpolate
                         << exit(FatalError);
             }
 
-            if (isA<mixedFvPatchField<Type>>(toVf.boundaryField()[patchi]))
+            if (isA<mixedFvPatchField<Type>>(toVfBf[patchi]))
             {
                 refCast<mixedFvPatchField<Type>>
                 (
-                    toVf.boundaryField()[patchi]
-                ).refValue() = toVf.boundaryField()[patchi];
+                    toVfBf[patchi]
+                ).refValue() = toVfBf[patchi];
             }
         }
         else if
@@ -324,20 +327,9 @@ void Foam::meshToMesh0::interpolate
          && fromMeshPatches_.found(patchMap_.find(toPatch.name())())
         )
         {
-            /*
-            toVf.boundaryField()[patchi].map
-            (
-                fromVf.boundaryField()
-                [
-                    fromMeshPatches_.find(patchMap_.find(toPatch.name())())()
-                ],
-                boundaryAddressing_[patchi]
-            );
-            */
-
             mapField
             (
-                toVf.boundaryField()[patchi],
+                toVfBf[patchi],
                 fromVf.boundaryField()
                 [
                     fromMeshPatches_.find(patchMap_.find(toPatch.name())())()

@@ -282,7 +282,7 @@ void LaunderSharmaKE<BasicTurbulenceModel>::correct()
 
     epsEqn.ref().relax();
     fvOptions.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
     fvOptions.correct(epsilon_);
     bound(epsilon_, this->epsilonMin_);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,18 +66,18 @@ int main(int argc, char *argv[])
         const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
         faceListList boundaryFaces(pbm.size());
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            boundaryFaces[patchI] = pbm[patchI];
+            boundaryFaces[patchi] = pbm[patchi];
         }
         wordList boundaryPatchNames(pbm.names());
         PtrList<dictionary> boundaryDicts(pbm.size());
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
             OStringStream os;
-            os << pbm[patchI];
+            os << pbm[patchi];
             IStringStream is(os.str());
-            boundaryDicts.set(patchI, new dictionary(is));
+            boundaryDicts.set(patchi, new dictionary(is));
         }
 
         word defaultBoundaryPatchName = "defaultFaces";

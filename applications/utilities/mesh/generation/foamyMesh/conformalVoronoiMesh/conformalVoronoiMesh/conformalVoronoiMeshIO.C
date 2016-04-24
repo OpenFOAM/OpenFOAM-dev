@@ -152,10 +152,10 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 
         dualPatchStarts.setSize(patchDicts.size());
 
-        forAll(dualPatchStarts, patchI)
+        forAll(dualPatchStarts, patchi)
         {
-            dualPatchStarts[patchI] =
-                readLabel(patchDicts[patchI].lookup("startFace"));
+            dualPatchStarts[patchi] =
+                readLabel(patchDicts[patchi].lookup("startFace"));
         }
     }
 
@@ -229,9 +229,9 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //            vertexToDualAddressing[vertI] = cellI+1;
 //        }
 //
-//        forAll(patchToDelaunayVertex, patchI)
+//        forAll(patchToDelaunayVertex, patchi)
 //        {
-//            const labelList& patchVertices = patchToDelaunayVertex[patchI];
+//            const labelList& patchVertices = patchToDelaunayVertex[patchi];
 //
 //            forAll(patchVertices, i)
 //            {
@@ -241,7 +241,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //                {
 //                    FatalErrorInFunction
 //                        << "Delaunay vertex " << vertI
-//                        << " from patch " << patchI
+//                        << " from patch " << patchi
 //                        << " local index " << i
 //                        << " is already mapped to cell "
 //                        << vertexToDualAddressing[vertI]-1
@@ -250,7 +250,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //
 //                // Vertex might be used by multiple faces. Which one to
 //                // use? For now last one wins.
-//                label dualFaceI = dualPatchStarts[patchI]+i;
+//                label dualFaceI = dualPatchStarts[patchi]+i;
 //                vertexToDualAddressing[vertI] = -dualFaceI-1;
 //            }
 //        }
@@ -419,37 +419,37 @@ Foam::autoPtr<Foam::fvMesh> Foam::conformalVoronoiMesh::createDummyMesh
 
     List<polyPatch*> patches(patchDicts.size());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
         if
         (
-            patchDicts.set(patchI)
+            patchDicts.set(patchi)
          && (
-                word(patchDicts[patchI].lookup("type"))
+                word(patchDicts[patchi].lookup("type"))
              == processorPolyPatch::typeName
             )
         )
         {
-            patches[patchI] = new processorPolyPatch
+            patches[patchi] = new processorPolyPatch
             (
                 0,          //patchSizes[p],
                 0,          //patchStarts[p],
-                patchI,
+                patchi,
                 mesh.boundaryMesh(),
-                readLabel(patchDicts[patchI].lookup("myProcNo")),
-                readLabel(patchDicts[patchI].lookup("neighbProcNo")),
+                readLabel(patchDicts[patchi].lookup("myProcNo")),
+                readLabel(patchDicts[patchi].lookup("neighbProcNo")),
                 coupledPolyPatch::COINCIDENTFULLMATCH
             );
         }
         else
         {
-            patches[patchI] = polyPatch::New
+            patches[patchi] = polyPatch::New
             (
-                patchDicts[patchI].lookup("type"),
-                patchNames[patchI],
+                patchDicts[patchi].lookup("type"),
+                patchNames[patchi],
                 0,          //patchSizes[p],
                 0,          //patchStarts[p],
-                patchI,
+                patchi,
                 mesh.boundaryMesh()
             ).ptr();
         }
@@ -473,22 +473,22 @@ void Foam::conformalVoronoiMesh::checkProcessorPatchesMatch
         labelList(Pstream::nProcs(), -1)
     );
 
-    forAll(patchDicts, patchI)
+    forAll(patchDicts, patchi)
     {
         if
         (
-            patchDicts.set(patchI)
+            patchDicts.set(patchi)
          && (
-                word(patchDicts[patchI].lookup("type"))
+                word(patchDicts[patchi].lookup("type"))
              == processorPolyPatch::typeName
             )
         )
         {
             const label procNeighb =
-                readLabel(patchDicts[patchI].lookup("neighbProcNo"));
+                readLabel(patchDicts[patchi].lookup("neighbProcNo"));
 
             procPatchSizes[Pstream::myProcNo()][procNeighb]
-                = readLabel(patchDicts[patchI].lookup("nFaces"));
+                = readLabel(patchDicts[patchi].lookup("nFaces"));
         }
     }
 
@@ -502,15 +502,15 @@ void Foam::conformalVoronoiMesh::checkProcessorPatchesMatch
         {
             const labelList& patchSizes = procPatchSizes[procI];
 
-            forAll(patchSizes, patchI)
+            forAll(patchSizes, patchi)
             {
-                if (patchSizes[patchI] != procPatchSizes[patchI][procI])
+                if (patchSizes[patchi] != procPatchSizes[patchi][procI])
                 {
                     allMatch = false;
 
-                    Info<< indent << "Patches " << procI << " and " << patchI
-                        << " have different sizes: " << patchSizes[patchI]
-                        << " and " << procPatchSizes[patchI][procI] << endl;
+                    Info<< indent << "Patches " << procI << " and " << patchi
+                        << " have different sizes: " << patchSizes[patchi]
+                        << " and " << procPatchSizes[patchi][procI] << endl;
                 }
             }
         }
@@ -621,9 +621,9 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
     const fvMesh& sortMesh = sortMeshPtr();
 
     // Change the transform type on processors to coincident full match.
-//    forAll(sortMesh.boundaryMesh(), patchI)
+//    forAll(sortMesh.boundaryMesh(), patchi)
 //    {
-//        const polyPatch& patch = sortMesh.boundaryMesh()[patchI];
+//        const polyPatch& patch = sortMesh.boundaryMesh()[patchi];
 //
 //        if (isA<processorPolyPatch>(patch))
 //        {
@@ -644,9 +644,9 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
     PstreamBuffers pBufs(Pstream::nonBlocking);
 
     // Send ordering
-    forAll(sortMesh.boundaryMesh(), patchI)
+    forAll(sortMesh.boundaryMesh(), patchi)
     {
-        const polyPatch& pp = sortMesh.boundaryMesh()[patchI];
+        const polyPatch& pp = sortMesh.boundaryMesh()[patchi];
 
         if (isA<processorPolyPatch>(pp))
         {
@@ -658,8 +658,8 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
                     SubList<face>
                     (
                         faces,
-                        readLabel(patchDicts[patchI].lookup("nFaces")),
-                        readLabel(patchDicts[patchI].lookup("startFace"))
+                        readLabel(patchDicts[patchi].lookup("nFaces")),
+                        readLabel(patchDicts[patchi].lookup("startFace"))
                     ),
                     points
                 )
@@ -674,16 +674,16 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
     // Receive and calculate ordering
     bool anyChanged = false;
 
-    forAll(sortMesh.boundaryMesh(), patchI)
+    forAll(sortMesh.boundaryMesh(), patchi)
     {
-        const polyPatch& pp = sortMesh.boundaryMesh()[patchI];
+        const polyPatch& pp = sortMesh.boundaryMesh()[patchi];
 
         if (isA<processorPolyPatch>(pp))
         {
             const label nPatchFaces =
-                readLabel(patchDicts[patchI].lookup("nFaces"));
+                readLabel(patchDicts[patchi].lookup("nFaces"));
             const label patchStartFace =
-                readLabel(patchDicts[patchI].lookup("startFace"));
+                readLabel(patchDicts[patchi].lookup("startFace"));
 
             labelList patchFaceMap(nPatchFaces, label(-1));
             labelList patchFaceRotation(nPatchFaces, label(0));
@@ -1355,9 +1355,9 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::findRemainingProtrusionSet
 
     labelHashSet protrudingBoundaryPoints;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& patch = patches[patchI];
+        const polyPatch& patch = patches[patchi];
 
         forAll(patch.localPoints(), pLPI)
         {

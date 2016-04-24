@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,9 +136,9 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
         List<polyPatch*> patches(patchEntries.size());
         label nPatches = 0;
 
-        forAll(patchEntries, patchI)
+        forAll(patchEntries, patchi)
         {
-            const entry& e = patchEntries[patchI];
+            const entry& e = patchEntries[patchi];
             const word type(e.dict().lookup("type"));
             const word& name = e.keyword();
 
@@ -152,7 +152,7 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
                 patchDict.set("nFaces", 0);
                 patchDict.set("startFace", 0);
 
-                patches[patchI] = polyPatch::New
+                patches[patchi] = polyPatch::New
                 (
                     name,
                     patchDict,
@@ -223,9 +223,9 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
 
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-        forAll(patchEntries, patchI)
+        forAll(patchEntries, patchi)
         {
-            const entry& e = patchEntries[patchI];
+            const entry& e = patchEntries[patchi];
             const word type(e.dict().lookup("type"));
             const word& name = e.keyword();
 
@@ -234,7 +234,7 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
                 break;
             }
 
-            if (patchI >= patches.size())
+            if (patchi >= patches.size())
             {
                 FatalErrorInFunction
                     << "Non-processor patches not synchronised."
@@ -242,26 +242,26 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
                     << "Processor " << Pstream::myProcNo()
                     << " has only " << patches.size()
                     << " patches, master has "
-                    << patchI
+                    << patchi
                     << exit(FatalError);
             }
 
             if
             (
-                type != patches[patchI].type()
-             || name != patches[patchI].name()
+                type != patches[patchi].type()
+             || name != patches[patchi].name()
             )
             {
                 FatalErrorInFunction
                     << "Non-processor patches not synchronised."
                     << endl
-                    << "Master patch " << patchI
+                    << "Master patch " << patchi
                     << " name:" << type
                     << " type:" << type << endl
                     << "Processor " << Pstream::myProcNo()
-                    << " patch " << patchI
-                    << " has name:" << patches[patchI].name()
-                    << " type:" << patches[patchI].type()
+                    << " patch " << patchi
+                    << " has name:" << patches[patchi].name()
+                    << " type:" << patches[patchi].type()
                     << exit(FatalError);
             }
         }

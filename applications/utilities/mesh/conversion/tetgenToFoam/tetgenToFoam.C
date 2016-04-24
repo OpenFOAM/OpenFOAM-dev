@@ -431,27 +431,27 @@ int main(int argc, char *argv[])
 
 
                         // Get Foam patchID and update region->patch table.
-                        label patchI = 0;
+                        label patchi = 0;
 
                         Map<label>::iterator patchFind =
                             regionToPatch.find(region);
 
                         if (patchFind == regionToPatch.end())
                         {
-                            patchI = nPatches;
+                            patchi = nPatches;
 
                             Info<< "Mapping tetgen region " << region
                                 << " to Foam patch "
-                                << patchI << endl;
+                                << patchi << endl;
 
                             regionToPatch.insert(region, nPatches++);
                         }
                         else
                         {
-                            patchI = patchFind();
+                            patchi = patchFind();
                         }
 
-                        boundaryPatch[faceI] = patchI;
+                        boundaryPatch[faceI] = patchi;
 
                         // Skip remaining attributes
                         for (label i = 1; i < nFaceAttr; i++)
@@ -486,9 +486,9 @@ int main(int argc, char *argv[])
         faceListList patchFaces(nPatches);
         wordList patchNames(nPatches);
 
-        forAll(patchNames, patchI)
+        forAll(patchNames, patchi)
         {
-            patchNames[patchI] = word("patch") + name(patchI);
+            patchNames[patchi] = word("patch") + name(patchi);
         }
 
         wordList patchTypes(nPatches, polyPatch::typeName);
@@ -502,19 +502,19 @@ int main(int argc, char *argv[])
 
         forAll(boundaryPatch, faceI)
         {
-            label patchI = boundaryPatch[faceI];
+            label patchi = boundaryPatch[faceI];
 
-            allPatchFaces[patchI].append(boundaryFaces[faceI]);
+            allPatchFaces[patchi].append(boundaryFaces[faceI]);
         }
 
         Info<< "Patch sizes:" << endl;
 
-        forAll(allPatchFaces, patchI)
+        forAll(allPatchFaces, patchi)
         {
-            Info<< "    " << patchNames[patchI] << " : "
-                << allPatchFaces[patchI].size() << endl;
+            Info<< "    " << patchNames[patchi] << " : "
+                << allPatchFaces[patchi].size() << endl;
 
-            patchFaces[patchI].transfer(allPatchFaces[patchI]);
+            patchFaces[patchi].transfer(allPatchFaces[patchi]);
         }
 
         Info<< endl;

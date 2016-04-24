@@ -61,15 +61,15 @@ addToRunTimeSelectionTable(surfaceFilmModel, thermoSingleLayer, mesh);
 wordList thermoSingleLayer::hsBoundaryTypes()
 {
     wordList bTypes(T_.boundaryField().types());
-    forAll(bTypes, patchI)
+    forAll(bTypes, patchi)
     {
         if
         (
-            T_.boundaryField()[patchI].fixesValue()
-         || bTypes[patchI] == mappedFieldFvPatchField<scalar>::typeName
+            T_.boundaryField()[patchi].fixesValue()
+         || bTypes[patchi] == mappedFieldFvPatchField<scalar>::typeName
         )
         {
-            bTypes[patchI] = fixedValueFvPatchField<scalar>::typeName;
+            bTypes[patchi] = fixedValueFvPatchField<scalar>::typeName;
         }
     }
 
@@ -112,12 +112,14 @@ void thermoSingleLayer::correctHsForMappedT()
 {
     T_.correctBoundaryConditions();
 
-    forAll(T_.boundaryField(), patchI)
+    volScalarField::GeometricBoundaryField& hsBf = hs_.boundaryFieldRef();
+
+    forAll(hsBf, patchi)
     {
-        const fvPatchField<scalar>& Tp = T_.boundaryField()[patchI];
+        const fvPatchField<scalar>& Tp = T_.boundaryField()[patchi];
         if (isA<mappedFieldFvPatchField<scalar>>(Tp))
         {
-            hs_.boundaryField()[patchI] == hs(Tp, patchI);
+            hsBf[patchi] == hs(Tp, patchi);
         }
     }
 }
@@ -130,10 +132,10 @@ void thermoSingleLayer::updateSurfaceTemperatures()
     // Push boundary film temperature into wall temperature internal field
     for (label i=0; i<intCoupledPatchIDs_.size(); i++)
     {
-        label patchI = intCoupledPatchIDs_[i];
-        const polyPatch& pp = regionMesh().boundaryMesh()[patchI];
+        label patchi = intCoupledPatchIDs_[i];
+        const polyPatch& pp = regionMesh().boundaryMesh()[patchi];
         UIndirectList<scalar>(Tw_, pp.faceCells()) =
-            T_.boundaryField()[patchI];
+            T_.boundaryField()[patchi];
     }
     Tw_.correctBoundaryConditions();
 
@@ -171,14 +173,17 @@ void thermoSingleLayer::transferPrimaryRegionSourceFields()
 
     kinematicSingleLayer::transferPrimaryRegionSourceFields();
 
+    volScalarField::GeometricBoundaryField& hsSpPrimaryBf =
+        hsSpPrimary_.boundaryFieldRef();
+
     // Convert accummulated source terms into per unit area per unit time
     const scalar deltaT = time_.deltaTValue();
-    forAll(hsSpPrimary_.boundaryField(), patchI)
+    forAll(hsSpPrimaryBf, patchi)
     {
         const scalarField& priMagSf =
-            primaryMesh().magSf().boundaryField()[patchI];
+            primaryMesh().magSf().boundaryField()[patchi];
 
-        hsSpPrimary_.boundaryField()[patchI] /= priMagSf*deltaT;
+        hsSpPrimaryBf[patchi] /= priMagSf*deltaT;
     }
 
     // Retrieve the source fields from the primary region via direct mapped
@@ -579,7 +584,7 @@ thermoSingleLayer::~thermoSingleLayer()
 
 void thermoSingleLayer::addSources
 (
-    const label patchI,
+    const label patchi,
     const label faceI,
     const scalar massSource,
     const vector& momentumSource,
@@ -589,7 +594,7 @@ void thermoSingleLayer::addSources
 {
     kinematicSingleLayer::addSources
     (
-        patchI,
+        patchi,
         faceI,
         massSource,
         momentumSource,
@@ -602,7 +607,7 @@ void thermoSingleLayer::addSources
         Info<< "    energy   = " << energySource << nl << endl;
     }
 
-    hsSpPrimary_.boundaryField()[patchI][faceI] -= energySource;
+    hsSpPrimary_.boundaryFieldRef()[patchi][faceI] -= energySource;
 }
 
 

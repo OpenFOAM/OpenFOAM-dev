@@ -167,18 +167,18 @@ int main(int argc, char *argv[])
 
     forAll(boundaryFaces, faceI)
     {
-        label patchI(readLabel(str));
+        label patchi(readLabel(str));
 
-        if (patchI < 0)
+        if (patchi < 0)
         {
             FatalErrorInFunction
-                << "Invalid boundary region number " << patchI
+                << "Invalid boundary region number " << patchi
                 << " on line " << str.lineNumber()
                 << exit(FatalError);
         }
 
 
-        maxPatch = max(maxPatch, patchI);
+        maxPatch = max(maxPatch, patchi);
 
         triFace tri(readLabel(str)-1, readLabel(str)-1, readLabel(str)-1);
 
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
         boundaryFaces[faceI][0] = tri[0];
         boundaryFaces[faceI][1] = tri[1];
         boundaryFaces[faceI][2] = tri[2];
-        boundaryPatch[faceI] = patchI;
+        boundaryPatch[faceI] = patchi;
 
         vertsToBoundary.insert(tri, faceI);
     }
@@ -254,9 +254,9 @@ int main(int argc, char *argv[])
 
     wordList patchNames(nPatches);
 
-    forAll(patchNames, patchI)
+    forAll(patchNames, patchi)
     {
-        patchNames[patchI] = word("patch") + name(patchI);
+        patchNames[patchi] = word("patch") + name(patchi);
     }
 
     wordList patchTypes(nPatches, polyPatch::typeName);
@@ -270,22 +270,22 @@ int main(int argc, char *argv[])
 
         forAll(boundaryPatch, faceI)
         {
-            label patchI = boundaryPatch[faceI];
+            label patchi = boundaryPatch[faceI];
 
-            allPatchFaces[patchI].append(boundaryFaces[faceI]);
+            allPatchFaces[patchi].append(boundaryFaces[faceI]);
         }
 
         Info<< "Patches:" << nl
             << "\tNeutral Boundary\tPatch name\tSize" << nl
             << "\t----------------\t----------\t----" << endl;
 
-        forAll(allPatchFaces, patchI)
+        forAll(allPatchFaces, patchi)
         {
-            Info<< '\t' << patchI << "\t\t\t"
-                << patchNames[patchI] << "\t\t"
-                << allPatchFaces[patchI].size() << endl;
+            Info<< '\t' << patchi << "\t\t\t"
+                << patchNames[patchi] << "\t\t"
+                << allPatchFaces[patchi].size() << endl;
 
-            patchFaces[patchI].transfer(allPatchFaces[patchI]);
+            patchFaces[patchi].transfer(allPatchFaces[patchi]);
         }
 
         Info<< endl;

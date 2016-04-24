@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,9 @@ labelList procNeighbours(const polyMesh& mesh)
 
     label nNeighbours = 0;
 
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        if (isA<processorPolyPatch>(mesh.boundaryMesh()[patchI]))
+        if (isA<processorPolyPatch>(mesh.boundaryMesh()[patchi]))
         {
             nNeighbours++;
         }
@@ -64,11 +64,11 @@ labelList procNeighbours(const polyMesh& mesh)
 
     nNeighbours = 0;
 
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        if (isA<processorPolyPatch>(mesh.boundaryMesh()[patchI]))
+        if (isA<processorPolyPatch>(mesh.boundaryMesh()[patchi]))
         {
-            const polyPatch& patch = mesh.boundaryMesh()[patchI];
+            const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
             const processorPolyPatch& procPatch =
                 refCast<const processorPolyPatch>(patch);

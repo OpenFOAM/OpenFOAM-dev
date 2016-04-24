@@ -121,8 +121,8 @@ void renamePatches
         const_cast<polyBoundaryMesh&>(mesh.boundaryMesh());
     forAll(patchesToRename, i)
     {
-        label patchI = patchesToRename[i];
-        polyPatch& pp = polyPatches[patchI];
+        label patchi = patchesToRename[i];
+        polyPatch& pp = polyPatches[patchi];
 
         if (isA<coupledPolyPatch>(pp))
         {
@@ -177,11 +177,11 @@ void subsetVolFields
 
         // Hack: set value to 0 for introduced patches (since don't
         //       get initialised.
-        forAll(tSubFld().boundaryField(), patchI)
+        forAll(tSubFld().boundaryField(), patchi)
         {
-            if (addedPatches.found(patchI))
+            if (addedPatches.found(patchi))
             {
-                tSubFld.ref().boundaryField()[patchI] ==
+                tSubFld.ref().boundaryFieldRef()[patchi] ==
                     typename GeoField::value_type(Zero);
             }
         }
@@ -229,11 +229,11 @@ void subsetSurfaceFields
 
         // Hack: set value to 0 for introduced patches (since don't
         //       get initialised.
-        forAll(tSubFld().boundaryField(), patchI)
+        forAll(tSubFld().boundaryField(), patchi)
         {
-            if (addedPatches.found(patchI))
+            if (addedPatches.found(patchi))
             {
-                tSubFld.ref().boundaryField()[patchI] ==
+                tSubFld.ref().boundaryFieldRef()[patchi] ==
                     typename GeoField::value_type(Zero);
             }
         }
@@ -875,16 +875,16 @@ void createAndWriteRegion
     Info<< "Deleting empty patches" << endl;
 
     // Assumes all non-proc boundaries are on all processors!
-    forAll(newPatches, patchI)
+    forAll(newPatches, patchi)
     {
-        const polyPatch& pp = newPatches[patchI];
+        const polyPatch& pp = newPatches[patchi];
 
         if (!isA<processorPolyPatch>(pp))
         {
             if (returnReduce(pp.size(), sumOp<label>()) > 0)
             {
-                oldToNew[patchI] = newI;
-                if (!addedPatches.found(patchI))
+                oldToNew[patchi] = newI;
+                if (!addedPatches.found(patchi))
                 {
                     sharedPatches.append(newI);
                 }
@@ -894,24 +894,24 @@ void createAndWriteRegion
     }
 
     // Same for processor patches (but need no reduction)
-    forAll(newPatches, patchI)
+    forAll(newPatches, patchi)
     {
-        const polyPatch& pp = newPatches[patchI];
+        const polyPatch& pp = newPatches[patchi];
 
         if (isA<processorPolyPatch>(pp) && pp.size())
         {
-            oldToNew[patchI] = newI++;
+            oldToNew[patchi] = newI++;
         }
     }
 
     const label nNewPatches = newI;
 
     // Move all deleteable patches to the end
-    forAll(oldToNew, patchI)
+    forAll(oldToNew, patchi)
     {
-        if (oldToNew[patchI] == -1)
+        if (oldToNew[patchi] == -1)
         {
-            oldToNew[patchI] = newI++;
+            oldToNew[patchi] = newI++;
         }
     }
 

@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2013-2015 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2013-2016 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -165,15 +165,15 @@ int main(int argc, char *argv[])
     List<polyPatch*> patches(poly2DMesh.patchNames().size());
     label countPatches = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (poly2DMesh.patchSizes()[patchI] != 0)
+        if (poly2DMesh.patchSizes()[patchi] != 0)
         {
             patches[countPatches] = new polyPatch
             (
-                poly2DMesh.patchNames()[patchI],
-                poly2DMesh.patchSizes()[patchI],
-                poly2DMesh.patchStarts()[patchI],
+                poly2DMesh.patchNames()[patchi],
+                poly2DMesh.patchSizes()[patchi],
+                poly2DMesh.patchStarts()[patchi],
                 countPatches,
                 pMesh.boundaryMesh(),
                 word::null

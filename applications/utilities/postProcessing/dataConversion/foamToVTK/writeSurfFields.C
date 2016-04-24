@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,11 +89,11 @@ void writeSurfFields
             writeFuns::insert(svf[faceI], fField);
         }
 
-        forAll(svf.boundaryField(), patchI)
+        forAll(svf.boundaryField(), patchi)
         {
-            const fvsPatchVectorField& pf = svf.boundaryField()[patchI];
+            const fvsPatchVectorField& pf = svf.boundaryField()[patchi];
 
-            const fvPatch& pp = mesh.boundary()[patchI];
+            const fvPatch& pp = mesh.boundary()[patchi];
 
             if (isA<emptyFvsPatchVectorField>(pf))
             {

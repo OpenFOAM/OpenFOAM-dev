@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,25 +43,28 @@ void kinematicSingleLayer::constrainFilmField
     const typename Type::cmptType& value
 )
 {
+    typename Type::GeometricBoundaryField& fieldBf = field.boundaryFieldRef();
+
     forAll(intCoupledPatchIDs_, i)
     {
-        label patchI = intCoupledPatchIDs_[i];
-        field.boundaryField()[patchI] = value;
+        label patchi = intCoupledPatchIDs_[i];
+        fieldBf[patchi] = value;
         if (debug)
         {
             Info<< "Constraining " << field.name()
-                << " boundary " << field.boundaryField()[patchI].patch().name()
+                << " boundary " << field.boundaryField()[patchi].patch().name()
                 << " to " << value << endl;
         }
     }
+
     forAll(passivePatchIDs_, i)
     {
-        label patchI = passivePatchIDs_[i];
-        field.boundaryField()[patchI] = value;
+        label patchi = passivePatchIDs_[i];
+        fieldBf[patchi] = value;
         if (debug)
         {
             Info<< "Constraining " << field.name()
-                << " boundary " << field.boundaryField()[patchI].patch().name()
+                << " boundary " << field.boundaryField()[patchi].patch().name()
                 << " to " << value << endl;
         }
     }

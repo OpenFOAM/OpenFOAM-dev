@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,14 +114,19 @@ int main(int argc, char *argv[])
             dimensionedScalar("V", mesh.V().dimensions(), 0.0),
             calculatedFvPatchField<scalar>::typeName
         );
+
         V.dimensionedInternalField() = mesh.V();
-        forAll(V.boundaryField(), patchI)
+
+        volScalarField::GeometricBoundaryField& Vbf = V.boundaryFieldRef();
+
+        forAll(Vbf, patchi)
         {
-            V.boundaryField()[patchI] =
-                V.boundaryField()[patchI].patch().magSf();
+            Vbf[patchi] = Vbf[patchi].patch().magSf();
         }
+
         Info<< "Writing cellVolumes and patch faceAreas to " << V.name()
             << " in " << runTime.timeName() << endl;
+
         V.write();
 
     }

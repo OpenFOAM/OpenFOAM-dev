@@ -193,24 +193,24 @@ scalar getEdgeStats(const primitiveMesh& mesh, const direction excludeCmpt)
 // Adds empty patch if not yet there. Returns patchID.
 label addPatch(polyMesh& mesh, const word& patchName)
 {
-    label patchI = mesh.boundaryMesh().findPatchID(patchName);
+    label patchi = mesh.boundaryMesh().findPatchID(patchName);
 
-    if (patchI == -1)
+    if (patchi == -1)
     {
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
         List<polyPatch*> newPatches(patches.size() + 1);
 
         // Add empty patch as 0th entry (Note: only since subsetMesh wants this)
-        patchI = 0;
+        patchi = 0;
 
-        newPatches[patchI] =
+        newPatches[patchi] =
             new emptyPolyPatch
             (
                 Foam::word(patchName),
                 0,
                 mesh.nInternalFaces(),
-                patchI,
+                patchi,
                 patches,
                 emptyPolyPatch::typeName
             );
@@ -232,15 +232,15 @@ label addPatch(polyMesh& mesh, const word& patchName)
         mesh.removeBoundary();
         mesh.addPatches(newPatches);
 
-        Info<< "Created patch oldInternalFaces at " << patchI << endl;
+        Info<< "Created patch oldInternalFaces at " << patchi << endl;
     }
     else
     {
-        Info<< "Reusing patch oldInternalFaces at " << patchI << endl;
+        Info<< "Reusing patch oldInternalFaces at " << patchi << endl;
     }
 
 
-    return patchI;
+    return patchi;
 }
 
 
@@ -482,7 +482,7 @@ void subsetMesh
 (
     polyMesh& mesh,
     const label writeMesh,
-    const label patchI,                 // patchID for exposed faces
+    const label patchi,                 // patchID for exposed faces
     const labelHashSet& cellsToRemove,
     cellSet& cutCells,
     labelIOList& refLevel
@@ -503,7 +503,7 @@ void subsetMesh
     (
         cellLabels,
         exposedFaces,
-        labelList(exposedFaces.size(), patchI),
+        labelList(exposedFaces.size(), patchi),
         meshMod
     );
 

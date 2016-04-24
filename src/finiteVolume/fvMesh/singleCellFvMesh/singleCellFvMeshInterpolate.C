@@ -84,7 +84,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
     //  constructor (with reference to the now correct internal field)
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bf = resF.boundaryField();
+        GeometricBoundaryField& bf = resF.boundaryFieldRef();
 
     if (agglomerate())
     {

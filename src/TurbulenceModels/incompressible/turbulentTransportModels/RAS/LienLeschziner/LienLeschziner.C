@@ -272,7 +272,7 @@ void LienLeschziner::correct()
     tgradU.clear();
 
     // Update epsilon and G at the wall
-    epsilon_.boundaryField().updateCoeffs();
+    epsilon_.boundaryFieldRef().updateCoeffs();
 
     const volScalarField f2(this->f2());
 
@@ -289,7 +289,7 @@ void LienLeschziner::correct()
     );
 
     epsEqn.ref().relax();
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);
 

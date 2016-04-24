@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,9 +243,9 @@ Foam::channelIndex::channelIndex
 
     forAll(patchNames, i)
     {
-        const label patchI = patches.findPatchID(patchNames[i]);
+        const label patchi = patches.findPatchID(patchNames[i]);
 
-        if (patchI == -1)
+        if (patchi == -1)
         {
             FatalErrorInFunction
                 << "Illegal patch " << patchNames[i]
@@ -253,7 +253,7 @@ Foam::channelIndex::channelIndex
                 << exit(FatalError);
         }
 
-        nFaces += patches[patchI].size();
+        nFaces += patches[patchi].size();
     }
 
     labelList startFaces(nFaces);

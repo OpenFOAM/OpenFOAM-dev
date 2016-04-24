@@ -329,13 +329,16 @@ void Foam::meshToMesh::mapSrcToTgt
 
     const PtrList<AMIPatchToPatchInterpolation>& AMIList = patchAMIs();
 
+    typename GeometricField<Type, fvPatchField, volMesh>::
+        GeometricBoundaryField& resultBf = result.boundaryFieldRef();
+
     forAll(AMIList, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        const fvPatchField<Type>& srcField = field.boundaryField()[srcPatchI];
-        fvPatchField<Type>& tgtField = result.boundaryField()[tgtPatchI];
+        const fvPatchField<Type>& srcField = field.boundaryField()[srcPatchi];
+        fvPatchField<Type>& tgtField = resultBf[tgtPatchi];
 
         // 2.3 does not do distributed mapping yet so only do if
         // running on single processor
@@ -375,8 +378,8 @@ void Foam::meshToMesh::mapSrcToTgt
 
     forAll(cuttingPatches_, i)
     {
-        label patchI = cuttingPatches_[i];
-        fvPatchField<Type>& pf = result.boundaryField()[patchI];
+        label patchi = cuttingPatches_[i];
+        fvPatchField<Type>& pf = resultBf[patchi];
         pf == pf.patchInternalField();
     }
 }
@@ -405,22 +408,22 @@ Foam::meshToMesh::mapSrcToTgt
     // entries, but these values will need to be reset
     forAll(tgtPatchID_, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        if (!tgtPatchFields.set(tgtPatchI))
+        if (!tgtPatchFields.set(tgtPatchi))
         {
             tgtPatchFields.set
             (
-                tgtPatchI,
+                tgtPatchi,
                 fvPatchField<Type>::New
                 (
-                    srcBfld[srcPatchI],
-                    tgtMesh.boundary()[tgtPatchI],
+                    srcBfld[srcPatchi],
+                    tgtMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null(),
                     directFvPatchFieldMapper
                     (
-                        labelList(tgtMesh.boundary()[tgtPatchI].size(), -1)
+                        labelList(tgtMesh.boundary()[tgtPatchi].size(), -1)
                     )
                 )
             );
@@ -428,19 +431,19 @@ Foam::meshToMesh::mapSrcToTgt
     }
 
     // Any unset tgtPatchFields become calculated
-    forAll(tgtPatchFields, tgtPatchI)
+    forAll(tgtPatchFields, tgtPatchi)
     {
-        if (!tgtPatchFields.set(tgtPatchI))
+        if (!tgtPatchFields.set(tgtPatchi))
         {
             // Note: use factory New method instead of direct generation of
             //       calculated so we keep constraints
             tgtPatchFields.set
             (
-                tgtPatchI,
+                tgtPatchi,
                 fvPatchField<Type>::New
                 (
                     calculatedFvPatchField<Type>::typeName,
-                    tgtMesh.boundary()[tgtPatchI],
+                    tgtMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null()
                 )
             );
@@ -520,11 +523,11 @@ void Foam::meshToMesh::mapTgtToSrc
 
     forAll(AMIList, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        fvPatchField<Type>& srcField = result.boundaryField()[srcPatchI];
-        const fvPatchField<Type>& tgtField = field.boundaryField()[tgtPatchI];
+        fvPatchField<Type>& srcField = result.boundaryField()[srcPatchi];
+        const fvPatchField<Type>& tgtField = field.boundaryField()[tgtPatchi];
 
         // 2.3 does not do distributed mapping yet so only do if
         // running on single processor
@@ -564,8 +567,8 @@ void Foam::meshToMesh::mapTgtToSrc
 
     forAll(cuttingPatches_, i)
     {
-        label patchI = cuttingPatches_[i];
-        fvPatchField<Type>& pf = result.boundaryField()[patchI];
+        label patchi = cuttingPatches_[i];
+        fvPatchField<Type>& pf = result.boundaryField()[patchi];
         pf == pf.patchInternalField();
     }
 }
@@ -594,22 +597,22 @@ Foam::meshToMesh::mapTgtToSrc
     // entries, but these values will need to be reset
     forAll(srcPatchID_, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        if (!srcPatchFields.set(tgtPatchI))
+        if (!srcPatchFields.set(tgtPatchi))
         {
             srcPatchFields.set
             (
-                srcPatchI,
+                srcPatchi,
                 fvPatchField<Type>::New
                 (
-                    tgtBfld[srcPatchI],
-                    srcMesh.boundary()[tgtPatchI],
+                    tgtBfld[srcPatchi],
+                    srcMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null(),
                     directFvPatchFieldMapper
                     (
-                        labelList(srcMesh.boundary()[srcPatchI].size(), -1)
+                        labelList(srcMesh.boundary()[srcPatchi].size(), -1)
                     )
                 )
             );
@@ -617,19 +620,19 @@ Foam::meshToMesh::mapTgtToSrc
     }
 
     // Any unset srcPatchFields become calculated
-    forAll(srcPatchFields, srcPatchI)
+    forAll(srcPatchFields, srcPatchi)
     {
-        if (!srcPatchFields.set(srcPatchI))
+        if (!srcPatchFields.set(srcPatchi))
         {
             // Note: use factory New method instead of direct generation of
             //       calculated so we keep constraints
             srcPatchFields.set
             (
-                srcPatchI,
+                srcPatchi,
                 fvPatchField<Type>::New
                 (
                     calculatedFvPatchField<Type>::typeName,
-                    srcMesh.boundary()[srcPatchI],
+                    srcMesh.boundary()[srcPatchi],
                     DimensionedField<Type, volMesh>::null()
                 )
             );

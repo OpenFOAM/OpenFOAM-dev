@@ -129,20 +129,20 @@ int main(int argc, char *argv[])
         {
             // Print each patch separately
 
-            forAll(bm, patchI)
+            forAll(bm, patchi)
             {
-                Info<< bm[patchI].type() << "\t: " << bm[patchI].name() << nl;
-                outputFieldList(vsf, patchI);
-                outputFieldList(vvf, patchI);
-                outputFieldList(vsptf, patchI);
-                outputFieldList(vsytf, patchI);
-                outputFieldList(vtf, patchI);
+                Info<< bm[patchi].type() << "\t: " << bm[patchi].name() << nl;
+                outputFieldList(vsf, patchi);
+                outputFieldList(vvf, patchi);
+                outputFieldList(vsptf, patchi);
+                outputFieldList(vsytf, patchi);
+                outputFieldList(vtf, patchi);
 
-                outputFieldList(psf, patchI);
-                outputFieldList(pvf, patchI);
-                outputFieldList(psptf, patchI);
-                outputFieldList(psytf, patchI);
-                outputFieldList(ptf, patchI);
+                outputFieldList(psf, patchi);
+                outputFieldList(pvf, patchi);
+                outputFieldList(psptf, patchi);
+                outputFieldList(psytf, patchi);
+                outputFieldList(ptf, patchi);
                 Info<< endl;
             }
         }
@@ -155,32 +155,32 @@ int main(int argc, char *argv[])
             DynamicList<HashTable<word>> fieldToTypes(bm.size());
             // Per 'group' the patches
             DynamicList<DynamicList<label>> groupToPatches(bm.size());
-            forAll(bm, patchI)
+            forAll(bm, patchi)
             {
                 HashTable<word> fieldToType;
-                collectFieldList(vsf, patchI, fieldToType);
-                collectFieldList(vvf, patchI, fieldToType);
-                collectFieldList(vsptf, patchI, fieldToType);
-                collectFieldList(vsytf, patchI, fieldToType);
-                collectFieldList(vtf, patchI, fieldToType);
+                collectFieldList(vsf, patchi, fieldToType);
+                collectFieldList(vvf, patchi, fieldToType);
+                collectFieldList(vsptf, patchi, fieldToType);
+                collectFieldList(vsytf, patchi, fieldToType);
+                collectFieldList(vtf, patchi, fieldToType);
 
-                collectFieldList(psf, patchI, fieldToType);
-                collectFieldList(pvf, patchI, fieldToType);
-                collectFieldList(psptf, patchI, fieldToType);
-                collectFieldList(psytf, patchI, fieldToType);
-                collectFieldList(ptf, patchI, fieldToType);
+                collectFieldList(psf, patchi, fieldToType);
+                collectFieldList(pvf, patchi, fieldToType);
+                collectFieldList(psptf, patchi, fieldToType);
+                collectFieldList(psytf, patchi, fieldToType);
+                collectFieldList(ptf, patchi, fieldToType);
 
                 label groupI = findIndex(fieldToTypes, fieldToType);
                 if (groupI == -1)
                 {
                     DynamicList<label> group(1);
-                    group.append(patchI);
+                    group.append(patchi);
                     groupToPatches.append(group);
                     fieldToTypes.append(fieldToType);
                 }
                 else
                 {
-                    groupToPatches[groupI].append(patchI);
+                    groupToPatches[groupI].append(patchi);
                 }
             }
 
@@ -227,20 +227,20 @@ int main(int argc, char *argv[])
                     // No group.
                     forAll(patchIDs, i)
                     {
-                        label patchI = patchIDs[i];
-                        Info<< bm[patchI].type()
-                            << "\t: " << bm[patchI].name() << nl;
-                        outputFieldList(vsf, patchI);
-                        outputFieldList(vvf, patchI);
-                        outputFieldList(vsptf, patchI);
-                        outputFieldList(vsytf, patchI);
-                        outputFieldList(vtf, patchI);
+                        label patchi = patchIDs[i];
+                        Info<< bm[patchi].type()
+                            << "\t: " << bm[patchi].name() << nl;
+                        outputFieldList(vsf, patchi);
+                        outputFieldList(vvf, patchi);
+                        outputFieldList(vsptf, patchi);
+                        outputFieldList(vsytf, patchi);
+                        outputFieldList(vtf, patchi);
 
-                        outputFieldList(psf, patchI);
-                        outputFieldList(pvf, patchI);
-                        outputFieldList(psptf, patchI);
-                        outputFieldList(psytf, patchI);
-                        outputFieldList(ptf, patchI);
+                        outputFieldList(psf, patchi);
+                        outputFieldList(pvf, patchi);
+                        outputFieldList(psptf, patchi);
+                        outputFieldList(psytf, patchi);
+                        outputFieldList(ptf, patchi);
                         Info<< endl;
                     }
                 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,15 +63,15 @@ int main(int argc, char *argv[])
 
     const geometricSurfacePatchList& patches = surf.patches();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const geometricSurfacePatch& pp = patches[patchI];
+        const geometricSurfacePatch& pp = patches[patchi];
 
         word patchName = pp.name();
 
         if (patchName.empty())
         {
-            patchName = "patch" + Foam::name(patchI);
+            patchName = "patch" + Foam::name(patchi);
         }
 
         fileName outFile(surfBase + '_' + patchName + '.' + extension);
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
         {
             const labelledTri& f = surf[faceI];
 
-            if (f.region() == patchI)
+            if (f.region() == patchi)
             {
                 includeMap[faceI] = true;
             }

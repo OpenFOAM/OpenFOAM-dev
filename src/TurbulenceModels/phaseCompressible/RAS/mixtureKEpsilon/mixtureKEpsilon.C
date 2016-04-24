@@ -612,8 +612,8 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
         tgradUl.clear();
 
         // Update k, epsilon and G at the wall
-        kl.boundaryField().updateCoeffs();
-        epsilonl.boundaryField().updateCoeffs();
+        kl.boundaryFieldRef().updateCoeffs();
+        epsilonl.boundaryFieldRef().updateCoeffs();
 
         Gc.ref().checkOut();
     }
@@ -632,8 +632,8 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
         tgradUg.clear();
 
         // Update k, epsilon and G at the wall
-        kg.boundaryField().updateCoeffs();
-        epsilong.boundaryField().updateCoeffs();
+        kg.boundaryFieldRef().updateCoeffs();
+        epsilong.boundaryFieldRef().updateCoeffs();
 
         Gd.ref().checkOut();
     }
@@ -667,7 +667,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correct()
 
     epsEqn.ref().relax();
     fvOptions.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilonm.boundaryField());
+    epsEqn.ref().boundaryManipulate(epsilonm.boundaryFieldRef());
     solve(epsEqn);
     fvOptions.correct(epsilonm);
     bound(epsilonm, this->epsilonMin_);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,31 +157,31 @@ void Foam::fluentFvMesh::writeFluentMesh() const
     label nWrittenFaces = own.size();
 
     // Writing boundary faces
-    forAll(boundary(), patchI)
+    forAll(boundary(), patchi)
     {
-        const faceUList& patchFaces = boundaryMesh()[patchI];
+        const faceUList& patchFaces = boundaryMesh()[patchi];
 
         const labelList& patchFaceCells =
-            boundaryMesh()[patchI].faceCells();
+            boundaryMesh()[patchi].faceCells();
 
         // The face group will be offset by 10 from the patch label
 
         // Write header
         fluentMeshFile
-            << "(13 (" << patchI + 10 << " " << nWrittenFaces + 1
+            << "(13 (" << patchi + 10 << " " << nWrittenFaces + 1
             << " " << nWrittenFaces + patchFaces.size() << " ";
 
         nWrittenFaces += patchFaces.size();
 
         // Write patch type
-        if (isA<wallFvPatch>(boundary()[patchI]))
+        if (isA<wallFvPatch>(boundary()[patchi]))
         {
             fluentMeshFile << 3;
         }
         else if
         (
-            isA<symmetryPlaneFvPatch>(boundary()[patchI])
-         || isA<symmetryFvPatch>(boundary()[patchI])
+            isA<symmetryPlaneFvPatch>(boundary()[patchi])
+         || isA<symmetryFvPatch>(boundary()[patchi])
         )
         {
             fluentMeshFile << 7;
@@ -275,20 +275,20 @@ void Foam::fluentFvMesh::writeFluentMesh() const
     fluentMeshFile << "(39 (2 interior interior-1)())" << std::endl;
 
     // Writing boundary patch types
-    forAll(boundary(), patchI)
+    forAll(boundary(), patchi)
     {
         fluentMeshFile
-            << "(39 (" << patchI + 10 << " ";
+            << "(39 (" << patchi + 10 << " ";
 
         // Write patch type
-        if (isA<wallFvPatch>(boundary()[patchI]))
+        if (isA<wallFvPatch>(boundary()[patchi]))
         {
             fluentMeshFile << "wall ";
         }
         else if
         (
-            isA<symmetryPlaneFvPatch>(boundary()[patchI])
-         || isA<symmetryFvPatch>(boundary()[patchI])
+            isA<symmetryPlaneFvPatch>(boundary()[patchi])
+         || isA<symmetryFvPatch>(boundary()[patchi])
         )
         {
             fluentMeshFile << "symmetry ";
@@ -299,7 +299,7 @@ void Foam::fluentFvMesh::writeFluentMesh() const
         }
 
         fluentMeshFile
-            << boundary()[patchI].name() << ")())" << std::endl;
+            << boundary()[patchi].name() << ")())" << std::endl;
     }
 }
 

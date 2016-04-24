@@ -578,10 +578,10 @@ void Foam::shortEdgeFilter2D::writeInfo(Ostream& os)
         << "    edgeAttachedToBoundaryFactor: " << edgeAttachedToBoundaryFactor_
         << endl;
 
-    forAll(patchNames_, patchI)
+    forAll(patchNames_, patchi)
     {
-        os  << "    Patch " << patchNames_[patchI]
-            << ", size " << patchSizes_[patchI] << endl;
+        os  << "    Patch " << patchNames_[patchi]
+            << ", size " << patchSizes_[patchi] << endl;
     }
 
     os  << "    There are " << mapEdgesRegion_.size()

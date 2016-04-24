@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,17 +147,17 @@ int main(int argc, char *argv[])
             {
                 found = false;
 
-                forAll(patches, patchI)
+                forAll(patches, patchi)
                 {
-                    const primitivePatch& bouFaces = patches[patchI];
+                    const primitivePatch& bouFaces = patches[patchi];
 
-                    if (!isType<emptyPolyPatch>(patches[patchI]))
+                    if (!isType<emptyPolyPatch>(patches[patchi]))
                     {
                         forAll(bouFaces, faceI)
                         {
                             if
                             (
-                                magSqr(phi.boundaryField()[patchI][faceI])
+                                magSqr(phi.boundaryField()[patchi][faceI])
                               < SMALL
                             )
                             {
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
 
                                 if (found)
                                 {
-                                    Info<< "Zero face: patch: " << patchI
+                                    Info<< "Zero face: patch: " << patchi
                                         << "    face: " << faceI << endl;
 
                                     forAll(zeroPoints, pointI)
@@ -471,7 +471,7 @@ int main(int argc, char *argv[])
 
             // Normalise the stream-function by the 2D mesh thickness
             streamFunction /= thickness;
-            streamFunction.boundaryField() = 0.0;
+            streamFunction.boundaryFieldRef() = 0.0;
             streamFunction.write();
         }
         else

@@ -358,11 +358,11 @@ int main(int argc, char *argv[])
             << "Patches" << nl
             << "----------------" << nl;
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& p = patches[patchI];
+            const polyPatch& p = patches[patchi];
 
-            Info<< "  " << "patch " << patchI
+            Info<< "  " << "patch " << patchi
                 << " (start: " << p.start()
                 << " size: " << p.size()
                 << ") name: " << p.name()

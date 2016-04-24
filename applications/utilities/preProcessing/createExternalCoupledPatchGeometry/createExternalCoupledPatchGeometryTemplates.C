@@ -55,9 +55,9 @@ void processField
         const typename fieldType::GeometricBoundaryField& bf =
             vtf.boundaryField();
 
-        forAll(bf, patchI)
+        forAll(bf, patchi)
         {
-            if (isA<externalCoupledMixedFvPatchField<Type>>(bf[patchI]))
+            if (isA<externalCoupledMixedFvPatchField<Type>>(bf[patchi]))
             {
                 Info<< "Generating external coupled geometry for field "
                     << fieldName << endl;
@@ -65,7 +65,7 @@ void processField
                 const externalCoupledMixedFvPatchField<Type>& pf =
                     refCast<const externalCoupledMixedFvPatchField<Type>>
                     (
-                        bf[patchI]
+                        bf[patchi]
                     );
 
                 pf.writeGeometry();

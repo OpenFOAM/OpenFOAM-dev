@@ -135,11 +135,13 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
         Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi, 0.0);
     }
 
-    forAll(Su0.boundaryField(), patchi)
+    volScalarField::GeometricBoundaryField& Su0Bf = Su0.boundaryFieldRef();
+
+    forAll(Su0Bf, patchi)
     {
-        forAll(Su0.boundaryField()[patchi], facei)
+        forAll(Su0Bf[patchi], facei)
         {
-            Su0.boundaryField()[patchi][facei] =
+            Su0Bf[patchi][facei] =
                 Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],
@@ -188,11 +190,13 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
         Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi[celli], egr[celli]);
     }
 
-    forAll(Su0.boundaryField(), patchi)
+    volScalarField::GeometricBoundaryField& Su0Bf = Su0.boundaryFieldRef();
+
+    forAll(Su0Bf, patchi)
     {
-        forAll(Su0.boundaryField()[patchi], facei)
+        forAll(Su0Bf[patchi], facei)
         {
-            Su0.boundaryField()[patchi][facei] =
+            Su0Bf[patchi][facei] =
                 Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],

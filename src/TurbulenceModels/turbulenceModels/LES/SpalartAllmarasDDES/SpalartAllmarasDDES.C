@@ -56,7 +56,7 @@ tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::rd
             scalar(10)
         )
     );
-    tr.ref().boundaryField() == 0.0;
+    tr.ref().boundaryFieldRef() == 0.0;
 
     return tr;
 }

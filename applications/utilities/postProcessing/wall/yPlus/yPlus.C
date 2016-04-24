@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,9 @@ void calcYPlus
     const volScalarField::GeometricBoundaryField nuBf =
         turbulenceModel->nu()().boundaryField();
 
+    volScalarField::GeometricBoundaryField& yPlusBf =
+        yPlus.boundaryFieldRef();
+
     const fvPatchList& patches = mesh.boundary();
 
     forAll(patches, patchi)
@@ -82,7 +85,7 @@ void calcYPlus
                     nutBf[patchi]
                 );
 
-            yPlus.boundaryField()[patchi] = nutPf.yPlus();
+            yPlusBf[patchi] = nutPf.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
 
             Info<< "Patch " << patchi
@@ -93,7 +96,7 @@ void calcYPlus
         }
         else if (isA<wallFvPatch>(patch))
         {
-            yPlus.boundaryField()[patchi] =
+            yPlusBf[patchi] =
                 d[patchi]
                *sqrt
                 (

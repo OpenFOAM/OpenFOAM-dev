@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -241,13 +241,13 @@ void Foam::starMesh::readBoundary()
         defaultFacesType_
     );
 
-    forAll(patchDicts, patchI)
+    forAll(patchDicts, patchi)
     {
-        if (patchDicts.set(patchI))
+        if (patchDicts.set(patchi))
         {
-            const dictionary& dict = patchDicts[patchI];
-            dict.readIfPresent("type", patchTypes_[patchI]);
-            dict.readIfPresent("physicalType", patchPhysicalTypes_[patchI]);
+            const dictionary& dict = patchDicts[patchi];
+            dict.readIfPresent("type", patchTypes_[patchi]);
+            dict.readIfPresent("physicalType", patchPhysicalTypes_[patchi]);
         }
     }
 }

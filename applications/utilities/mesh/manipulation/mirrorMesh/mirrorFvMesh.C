@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,9 +149,9 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     // as internal
     boolListList insertedBouFace(oldPatches.size());
 
-    forAll(oldPatches, patchI)
+    forAll(oldPatches, patchi)
     {
-        const polyPatch& curPatch = oldPatches[patchI];
+        const polyPatch& curPatch = oldPatches[patchi];
 
         if (curPatch.coupled())
         {
@@ -162,7 +162,7 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
                 << " createPatch afterwards." << endl;
         }
 
-        boolList& curInsBouFace = insertedBouFace[patchI];
+        boolList& curInsBouFace = insertedBouFace[patchi];
 
         curInsBouFace.setSize(curPatch.size());
         curInsBouFace = false;
@@ -249,11 +249,11 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     labelList newPatchStarts(boundary().size(), -1);
     label nNewPatches = 0;
 
-    forAll(boundaryMesh(), patchI)
+    forAll(boundaryMesh(), patchi)
     {
-        const label curPatchSize = boundaryMesh()[patchI].size();
-        const label curPatchStart = boundaryMesh()[patchI].start();
-        const boolList& curInserted = insertedBouFace[patchI];
+        const label curPatchSize = boundaryMesh()[patchi].size();
+        const label curPatchStart = boundaryMesh()[patchi].start();
+        const boolList& curInserted = insertedBouFace[patchi];
 
         newPatchStarts[nNewPatches] = nNewFaces;
 
@@ -303,7 +303,7 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
         // If patch exists, grab the name and type of the original patch
         if (nNewFaces > newPatchStarts[nNewPatches])
         {
-            newToOldPatch[nNewPatches] = patchI;
+            newToOldPatch[nNewPatches] = patchi;
 
             newPatchSizes[nNewPatches] =
                 nNewFaces - newPatchStarts[nNewPatches];
@@ -378,14 +378,14 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     // Add the boundary patches
     List<polyPatch*> p(newPatchSizes.size());
 
-    forAll(p, patchI)
+    forAll(p, patchi)
     {
-        p[patchI] = boundaryMesh()[newToOldPatch[patchI]].clone
+        p[patchi] = boundaryMesh()[newToOldPatch[patchi]].clone
         (
             pMesh.boundaryMesh(),
-            patchI,
-            newPatchSizes[patchI],
-            newPatchStarts[patchI]
+            patchi,
+            newPatchSizes[patchi],
+            newPatchStarts[patchi]
         ).ptr();
     }
 

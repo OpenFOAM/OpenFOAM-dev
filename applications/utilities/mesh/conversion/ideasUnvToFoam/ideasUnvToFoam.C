@@ -625,16 +625,16 @@ void readDOFS
 // Returns -1 or group that all of the vertices of f are in,
 label findPatch(const List<labelHashSet>& dofGroups, const face& f)
 {
-    forAll(dofGroups, patchI)
+    forAll(dofGroups, patchi)
     {
-        if (dofGroups[patchI].found(f[0]))
+        if (dofGroups[patchi].found(f[0]))
         {
             bool allInGroup = true;
 
             // Check rest of face
             for (label fp = 1; fp < f.size(); fp++)
             {
-                if (!dofGroups[patchI].found(f[fp]))
+                if (!dofGroups[patchi].found(f[fp]))
                 {
                     allInGroup = false;
                     break;
@@ -643,7 +643,7 @@ label findPatch(const List<labelHashSet>& dofGroups, const face& f)
 
             if (allInGroup)
             {
-                return patchI;
+                return patchi;
             }
         }
     }
@@ -937,22 +937,22 @@ int main(int argc, char *argv[])
             << " DOF sets to detect boundary faces."<< endl;
 
         // Renumber vertex numbers on contraints
-        forAll(dofVertIndices, patchI)
+        forAll(dofVertIndices, patchi)
         {
-            inplaceRenumber(unvToFoam, dofVertIndices[patchI]);
+            inplaceRenumber(unvToFoam, dofVertIndices[patchi]);
         }
 
 
         // Build labelHashSet of points per dofGroup/patch
         List<labelHashSet> dofGroups(dofVertIndices.size());
 
-        forAll(dofVertIndices, patchI)
+        forAll(dofVertIndices, patchi)
         {
-            const labelList& foamVerts = dofVertIndices[patchI];
+            const labelList& foamVerts = dofVertIndices[patchi];
 
             forAll(foamVerts, i)
             {
-                dofGroups[patchI].insert(foamVerts[i]);
+                dofGroups[patchi].insert(foamVerts[i]);
             }
         }
 
@@ -966,11 +966,11 @@ int main(int argc, char *argv[])
 
             forAll(shapeFaces, i)
             {
-                label patchI = findPatch(dofGroups, shapeFaces[i]);
+                label patchi = findPatch(dofGroups, shapeFaces[i]);
 
-                if (patchI != -1)
+                if (patchi != -1)
                 {
-                    dynPatchFaces[patchI].append(shapeFaces[i]);
+                    dynPatchFaces[patchi].append(shapeFaces[i]);
                 }
             }
         }
@@ -978,9 +978,9 @@ int main(int argc, char *argv[])
         // Transfer
         patchFaceVerts.setSize(dynPatchFaces.size());
 
-        forAll(dynPatchFaces, patchI)
+        forAll(dynPatchFaces, patchi)
         {
-            patchFaceVerts[patchI].transfer(dynPatchFaces[patchI]);
+            patchFaceVerts[patchi].transfer(dynPatchFaces[patchi]);
         }
     }
     else
@@ -1005,12 +1005,12 @@ int main(int argc, char *argv[])
             boundaryFaceToIndex.insert(boundaryFaceIndices[i], i);
         }
 
-        forAll(patchFaceVerts, patchI)
+        forAll(patchFaceVerts, patchi)
         {
-            Info << patchI << ": " << patchNames[patchI] << " is " << flush;
+            Info << patchi << ": " << patchNames[patchi] << " is " << flush;
 
-            faceList& patchFaces = patchFaceVerts[patchI];
-            const labelList& faceIndices = patchFaceIndices[patchI];
+            faceList& patchFaces = patchFaceVerts[patchi];
+            const labelList& faceIndices = patchFaceIndices[patchi];
 
             patchFaces.setSize(faceIndices.size());
 
@@ -1037,14 +1037,14 @@ int main(int argc, char *argv[])
 
             if (cnt != patchFaces.size() || duplicateFaces)
             {
-                isAPatch[patchI] = false;
+                isAPatch[patchi] = false;
 
                 if (verbose)
                 {
                     if (cnt != patchFaces.size())
                     {
                         WarningInFunction
-                            << "For patch " << patchI << " there were "
+                            << "For patch " << patchi << " there were "
                             << patchFaces.size()-cnt
                             << " faces not used because they seem"
                             << " to be internal. "
@@ -1055,7 +1055,7 @@ int main(int argc, char *argv[])
                     {
                         WarningInFunction
                             << "Patch "
-                            << patchI << " has faces that are already "
+                            << patchi << " has faces that are already "
                             << " in use on other boundary-patches,"
                             << " Assuming faceZoneset." << endl;
                     }
@@ -1075,13 +1075,13 @@ int main(int argc, char *argv[])
                                 << "The face index " << faceIndices[i]
                                 << " was not found amongst the cells."
                                 << " This kills the theory that "
-                                << patchNames[patchI] << " is a cell zone"
+                                << patchNames[patchi] << " is a cell zone"
                                 << endl
                                 << abort(FatalError);
                         }
                         theCells[i] = cellCorrespondence[faceIndices[i]];
                     }
-                    cellZones.insert(patchNames[patchI], theCells);
+                    cellZones.insert(patchNames[patchi], theCells);
                 }
                 else
                 {
@@ -1091,7 +1091,7 @@ int main(int argc, char *argv[])
                     {
                         theFaces[i] = boundaryFaceToIndex[faceIndices[i]];
                     }
-                    faceZones.insert(patchNames[patchI],theFaces);
+                    faceZones.insert(patchNames[patchi],theFaces);
                 }
             }
             else
@@ -1140,14 +1140,14 @@ int main(int argc, char *argv[])
     DynamicList<word> usedPatchNames;
     DynamicList<faceList> usedPatchFaceVerts;
 
-    forAll(patchNames, patchI)
+    forAll(patchNames, patchi)
     {
-        if (isAPatch[patchI])
+        if (isAPatch[patchi])
         {
-            Info<< "    " << patchNames[patchI] << '\t'
-                << patchFaceVerts[patchI].size() << nl;
-            usedPatchNames.append(patchNames[patchI]);
-            usedPatchFaceVerts.append(patchFaceVerts[patchI]);
+            Info<< "    " << patchNames[patchi] << '\t'
+                << patchFaceVerts[patchi].size() << nl;
+            usedPatchNames.append(patchNames[patchi]);
+            usedPatchFaceVerts.append(patchFaceVerts[patchi]);
         }
     }
     usedPatchNames.shrink();

@@ -319,7 +319,7 @@ Foam::label Foam::meshDualiser::addBoundaryFace
     const label masterFaceI,
 
     const label dualCellI,
-    const label patchI,
+    const label patchi,
     const DynamicList<label>& verts,
     polyTopoChange& meshMod
 ) const
@@ -349,7 +349,7 @@ Foam::label Foam::meshDualiser::addBoundaryFace
         masterEdgeI,    // masterEdgeID
         masterFaceI,    // masterFaceID
         false,          // flipFaceFlux
-        patchI,         // patchID
+        patchi,         // patchID
         zoneID,         // zoneID
         zoneFlip        // zoneFlip
     );
@@ -640,7 +640,7 @@ void Foam::meshDualiser::createFaceFromInternalFace
 // (pointFaces()). Gets starting face and marks off visited faces in donePFaces.
 void Foam::meshDualiser::createFacesAroundBoundaryPoint
 (
-    const label patchI,
+    const label patchi,
     const label patchPointI,
     const label startFaceI,
     polyTopoChange& meshMod,
@@ -648,7 +648,7 @@ void Foam::meshDualiser::createFacesAroundBoundaryPoint
 ) const
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
-    const polyPatch& pp = patches[patchI];
+    const polyPatch& pp = patches[patchi];
     const labelList& pFaces = pp.pointFaces()[patchPointI];
     const labelList& own = mesh_.faceOwner();
 
@@ -713,7 +713,7 @@ void Foam::meshDualiser::createFacesAroundBoundaryPoint
             if (faceI < pp.start() || faceI >= pp.start()+pp.size())
             {
                 FatalErrorInFunction
-                    << "Walked from face on patch:" << patchI
+                    << "Walked from face on patch:" << patchi
                     << " to face:" << faceI
                     << " fc:" << mesh_.faceCentres()[faceI]
                     << " on patch:" << patches.whichPatch(faceI)
@@ -746,7 +746,7 @@ void Foam::meshDualiser::createFacesAroundBoundaryPoint
             -1,         // masterEdgeI
             faceI,      // masterFaceI
             dualCellI,
-            patchI,
+            patchi,
             verts,
             meshMod
         );
@@ -800,7 +800,7 @@ void Foam::meshDualiser::createFacesAroundBoundaryPoint
                     -1,     // masterEdgeI
                     faceI,  // masterFaceI
                     findDualCell(own[faceI], pointI),
-                    patchI,
+                    patchi,
                     verts.shrink(),
                     meshMod
                 );
@@ -845,7 +845,7 @@ void Foam::meshDualiser::createFacesAroundBoundaryPoint
                 -1,             // masterEdgeI
                 startFaceI,     // masterFaceI
                 findDualCell(own[faceI], pointI),
-                patchI,
+                patchi,
                 verts.shrink(),
                 meshMod
             );
@@ -1390,9 +1390,9 @@ void Foam::meshDualiser::setRefinement
     // These need to be closed.
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         const labelListList& pointFaces = pp.pointFaces();
 
@@ -1411,14 +1411,14 @@ void Foam::meshDualiser::setRefinement
 
                     //Pout<< "Walking around point:" << pointI
                     //    << " coord:" << mesh_.points()[pointI]
-                    //    << " on patch:" << patchI
+                    //    << " on patch:" << patchi
                     //    << " startFace:" << startFaceI
                     //    << " at:" << mesh_.faceCentres()[startFaceI]
                     //    << endl;
 
                     createFacesAroundBoundaryPoint
                     (
-                        patchI,
+                        patchi,
                         patchPointI,
                         startFaceI,
                         meshMod,

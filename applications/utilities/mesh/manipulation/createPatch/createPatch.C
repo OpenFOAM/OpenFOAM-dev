@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,9 +107,9 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
     label nOldPatches = returnReduce(patches.size(), sumOp<label>());
 
     // Copy old patches.
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         // Note: reduce possible since non-proc patches guaranteed in same order
         if (!isA<processorPolyPatch>(pp))
@@ -143,14 +143,14 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
             {
                 Info<< "Removing zero-sized patch " << pp.name()
                     << " type " << pp.type()
-                    << " at position " << patchI << endl;
+                    << " at position " << patchi << endl;
             }
         }
     }
     // Copy non-empty processor patches
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (isA<processorPolyPatch>(pp))
         {
@@ -170,7 +170,7 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
             else
             {
                 Info<< "Removing empty processor patch " << pp.name()
-                    << " at position " << patchI << endl;
+                    << " at position " << patchi << endl;
             }
         }
     }
@@ -199,16 +199,16 @@ void dumpCyclicMatch(const fileName& prefix, const polyMesh& mesh)
 {
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
         if
         (
-            isA<cyclicPolyPatch>(patches[patchI])
-         && refCast<const cyclicPolyPatch>(patches[patchI]).owner()
+            isA<cyclicPolyPatch>(patches[patchi])
+         && refCast<const cyclicPolyPatch>(patches[patchi]).owner()
         )
         {
             const cyclicPolyPatch& cycPatch =
-                refCast<const cyclicPolyPatch>(patches[patchI]);
+                refCast<const cyclicPolyPatch>(patches[patchi]);
 
             // Dump patches
             {
@@ -319,9 +319,9 @@ void syncPoints
     {
         // Send
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if
             (
@@ -356,9 +356,9 @@ void syncPoints
 
         // Receive and set.
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if
             (
@@ -407,9 +407,9 @@ void syncPoints
     }
 
     // Do the cyclics.
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if
         (
@@ -558,9 +558,9 @@ int main(int argc, char *argv[])
         label startFaceI = mesh.nInternalFaces();
 
         // Copy old patches.
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (!isA<processorPolyPatch>(pp))
             {
@@ -569,7 +569,7 @@ int main(int argc, char *argv[])
                     pp.clone
                     (
                         patches,
-                        patchI,
+                        patchi,
                         pp.size(),
                         startFaceI
                     ).ptr()
@@ -619,9 +619,9 @@ int main(int argc, char *argv[])
         }
 
         // Copy old patches.
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (isA<processorPolyPatch>(pp))
             {
@@ -630,7 +630,7 @@ int main(int argc, char *argv[])
                     pp.clone
                     (
                         patches,
-                        patchI,
+                        patchi,
                         pp.size(),
                         startFaceI
                     ).ptr()
@@ -771,9 +771,9 @@ int main(int argc, char *argv[])
         // For cyclic patches:
         // - for separated ones use user specified offset vector
 
-        forAll(mesh.boundaryMesh(), patchI)
+        forAll(mesh.boundaryMesh(), patchi)
         {
-            const polyPatch& pp = mesh.boundaryMesh()[patchI];
+            const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
             if (pp.size() && isA<coupledPolyPatch>(pp))
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,12 +128,15 @@ void Foam::distanceSurface::createGeometry()
         }
     }
 
+    volScalarField::GeometricBoundaryField& cellDistanceBf =
+        cellDistance.boundaryFieldRef();
+
     // Patch fields
     {
-        forAll(fvm.C().boundaryField(), patchI)
+        forAll(fvm.C().boundaryField(), patchi)
         {
-            const pointField& cc = fvm.C().boundaryField()[patchI];
-            fvPatchScalarField& fld = cellDistance.boundaryField()[patchI];
+            const pointField& cc = fvm.C().boundaryField()[patchi];
+            fvPatchScalarField& fld = cellDistanceBf[patchi];
 
             List<pointIndexHit> nearest;
             surfPtr_().findNearest

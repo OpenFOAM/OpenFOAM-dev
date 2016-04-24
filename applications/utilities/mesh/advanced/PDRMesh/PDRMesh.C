@@ -126,7 +126,7 @@ void subsetVolFields
 (
     const fvMeshSubset& subsetter,
     const IOobjectList& objectsList,
-    const label patchI,
+    const label patchi,
     const Type& exposedValue,
     const word GeomVolType,
     PtrList<GeometricField<Type, fvPatchField, volMesh>>& subFields
@@ -152,15 +152,15 @@ void subsetVolFields
 
             subFields.set(i, subsetter.interpolate(volField));
 
-            // Explicitly set exposed faces (in patchI) to exposedValue.
-            if (patchI >= 0)
+            // Explicitly set exposed faces (in patchi) to exposedValue.
+            if (patchi >= 0)
             {
                 fvPatchField<Type>& fld =
-                    subFields[i++].boundaryField()[patchI];
+                    subFields[i++].boundaryFieldRef()[patchi];
 
                 label newStart = fld.patch().patch().start();
 
-                label oldPatchI = subsetter.patchMap()[patchI];
+                label oldPatchI = subsetter.patchMap()[patchi];
 
                 if (oldPatchI == -1)
                 {
@@ -198,7 +198,7 @@ void subsetSurfaceFields
 (
     const fvMeshSubset& subsetter,
     const IOobjectList& objectsList,
-    const label patchI,
+    const label patchi,
     const Type& exposedValue,
     const word GeomSurfType,
     PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& subFields
@@ -225,15 +225,15 @@ void subsetSurfaceFields
             subFields.set(i, subsetter.interpolate(volField));
 
 
-            // Explicitly set exposed faces (in patchI) to exposedValue.
-            if (patchI >= 0)
+            // Explicitly set exposed faces (in patchi) to exposedValue.
+            if (patchi >= 0)
             {
                 fvsPatchField<Type>& fld =
-                    subFields[i++].boundaryField()[patchI];
+                    subFields[i++].boundaryFieldRef()[patchi];
 
                 label newStart = fld.patch().patch().start();
 
-                label oldPatchI = subsetter.patchMap()[patchI];
+                label oldPatchI = subsetter.patchMap()[patchi];
 
                 if (oldPatchI == -1)
                 {
@@ -291,16 +291,19 @@ void initCreatedPatches
     {
         GeoField& field = const_cast<GeoField&>(*fieldIter());
 
-        forAll(field.boundaryField(), patchi)
+        typename GeoField::GeometricBoundaryField& fieldBf =
+            field.boundaryFieldRef();
+
+        forAll(fieldBf, patchi)
         {
             if (map.oldPatchSizes()[patchi] == 0)
             {
                 // Not mapped.
-                field.boundaryField()[patchi] = initValue;
+                fieldBf[patchi] = initValue;
 
-                if (field.boundaryField()[patchi].fixesValue())
+                if (fieldBf[patchi].fixesValue())
                 {
-                    field.boundaryField()[patchi] == initValue;
+                    fieldBf[patchi] == initValue;
                 }
             }
         }
@@ -526,9 +529,9 @@ void createBaffles
 // Wrapper around find patch. Also makes sure same patch in parallel.
 label findPatch(const polyBoundaryMesh& patches, const word& patchName)
 {
-    label patchI = patches.findPatchID(patchName);
+    label patchi = patches.findPatchID(patchName);
 
-    if (patchI == -1)
+    if (patchi == -1)
     {
         FatalErrorInFunction
             << "Illegal patch " << patchName
@@ -538,20 +541,20 @@ label findPatch(const polyBoundaryMesh& patches, const word& patchName)
 
     // Check same patch for all procs
     {
-        label newPatch = patchI;
+        label newPatch = patchi;
         reduce(newPatch, minOp<label>());
 
-        if (newPatch != patchI)
+        if (newPatch != patchi)
         {
             FatalErrorInFunction
                 << "Patch " << patchName
                 << " should have the same patch index on all processors." << nl
-                << "On my processor it has index " << patchI
+                << "On my processor it has index " << patchi
                 << " ; on some other processor it has index " << newPatch
                 << exit(FatalError);
         }
     }
-    return patchI;
+    return patchi;
 }
 
 
@@ -641,7 +644,7 @@ int main(int argc, char *argv[])
     {
         faceSet fSet(mesh, setsAndPatches[setI][0]);
 
-        label patchI = findPatch
+        label patchi = findPatch
         (
             mesh.boundaryMesh(),
             setsAndPatches[setI][1]
@@ -658,7 +661,7 @@ int main(int argc, char *argv[])
                     << " but also in patch " << wantedPatch[iter.key()]
                     << exit(FatalError);
             }
-            wantedPatch[iter.key()] = patchI;
+            wantedPatch[iter.key()] = patchi;
         }
     }
 
@@ -683,7 +686,7 @@ int main(int argc, char *argv[])
         );
 
         faceSet fSet(mesh, coupledAndPatches[setI][0]);
-        label patchI = findPatch(patches, coupledAndPatches[setI][1]);
+        label patchi = findPatch(patches, coupledAndPatches[setI][1]);
 
         forAllConstIter(faceSet, fSet, iter)
         {
@@ -696,7 +699,7 @@ int main(int argc, char *argv[])
                     << " but also in patch " << coupledWantedPatch[iter.key()]
                     << exit(FatalError);
             }
-                coupledWantedPatch[iter.key()] = patchI;
+                coupledWantedPatch[iter.key()] = patchi;
                 cyclicWantedPatch_half0[iter.key()] = cyclicId;
                 cyclicWantedPatch_half1[iter.key()] = cyclicSlaveId;
         }

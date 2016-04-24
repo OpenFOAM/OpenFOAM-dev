@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,9 +183,9 @@ int main(int argc, char *argv[])
     newPatchI = 0;
 
     // Copy old patches
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
         newPatchPtrList[newPatchI] =
             patch.clone
@@ -200,9 +200,9 @@ int main(int argc, char *argv[])
     }
 
     // Add new ones with empty size.
-    for (label patchI = newPatchI; patchI < patches.size(); patchI++)
+    for (label patchi = newPatchI; patchi < patches.size(); patchi++)
     {
-        const boundaryPatch& bp = patches[patchI];
+        const boundaryPatch& bp = patches[patchi];
 
         newPatchPtrList[newPatchI] = polyPatch::New
         (

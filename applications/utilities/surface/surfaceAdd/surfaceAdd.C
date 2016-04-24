@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -220,13 +220,13 @@ int main(int argc, char *argv[])
             // Overwrite
             newPatches.setSize(max(nRegions1, nRegions2));
 
-            forAll(surface1.patches(), patchI)
+            forAll(surface1.patches(), patchi)
             {
-                newPatches[patchI] = surface1.patches()[patchI];
+                newPatches[patchi] = surface1.patches()[patchi];
             }
-            forAll(surface2.patches(), patchI)
+            forAll(surface2.patches(), patchi)
             {
-                newPatches[patchI] = surface2.patches()[patchI];
+                newPatches[patchi] = surface2.patches()[patchi];
             }
         }
         else
@@ -246,22 +246,22 @@ int main(int argc, char *argv[])
 
             label newPatchI = 0;
 
-            forAll(surface1.patches(), patchI)
+            forAll(surface1.patches(), patchi)
             {
-                newPatches[newPatchI++] = surface1.patches()[patchI];
+                newPatches[newPatchI++] = surface1.patches()[patchi];
             }
 
-            forAll(surface2.patches(), patchI)
+            forAll(surface2.patches(), patchi)
             {
-                newPatches[newPatchI++] = surface2.patches()[patchI];
+                newPatches[newPatchI++] = surface2.patches()[patchi];
             }
         }
 
 
         Info<< "New patches:" << nl;
-        forAll(newPatches, patchI)
+        forAll(newPatches, patchi)
         {
-            Info<< "    " << patchI << '\t' << newPatches[patchI].name() << nl;
+            Info<< "    " << patchi << '\t' << newPatches[patchi].name() << nl;
         }
         Info<< endl;
 

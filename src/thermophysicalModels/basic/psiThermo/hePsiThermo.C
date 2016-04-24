@@ -56,16 +56,32 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
         alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
     }
 
+    volScalarField::GeometricBoundaryField& pBf =
+        this->p_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& TBf =
+        this->T_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& psiBf =
+        this->psi_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& heBf =
+        this->he().boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& muBf =
+        this->mu_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& alphaBf =
+        this->alpha_.boundaryFieldRef();
+
     forAll(this->T_.boundaryField(), patchi)
     {
-        fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
-        fvPatchScalarField& pT = this->T_.boundaryField()[patchi];
-        fvPatchScalarField& ppsi = this->psi_.boundaryField()[patchi];
-
-        fvPatchScalarField& ph = this->he_.boundaryField()[patchi];
-
-        fvPatchScalarField& pmu = this->mu_.boundaryField()[patchi];
-        fvPatchScalarField& palpha = this->alpha_.boundaryField()[patchi];
+        fvPatchScalarField& pp = pBf[patchi];
+        fvPatchScalarField& pT = TBf[patchi];
+        fvPatchScalarField& ppsi = psiBf[patchi];
+        fvPatchScalarField& phe = heBf[patchi];
+        fvPatchScalarField& pmu = muBf[patchi];
+        fvPatchScalarField& palpha = alphaBf[patchi];
 
         if (pT.fixesValue())
         {
@@ -74,7 +90,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 const typename MixtureType::thermoType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
 
-                ph[facei] = mixture_.HE(pp[facei], pT[facei]);
+                phe[facei] = mixture_.HE(pp[facei], pT[facei]);
 
                 ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
                 pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
@@ -88,7 +104,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 const typename MixtureType::thermoType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
 
-                pT[facei] = mixture_.THE(ph[facei], pp[facei], pT[facei]);
+                pT[facei] = mixture_.THE(phe[facei], pp[facei], pT[facei]);
 
                 ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
                 pmu[facei] = mixture_.mu(pp[facei], pT[facei]);

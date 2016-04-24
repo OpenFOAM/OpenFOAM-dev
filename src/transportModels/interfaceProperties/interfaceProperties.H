@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ class interfaceProperties
         void correctContactAngle
         (
             surfaceVectorField::GeometricBoundaryField& nHat,
-            surfaceVectorField::GeometricBoundaryField& gradAlphaf
+            const surfaceVectorField::GeometricBoundaryField& gradAlphaf
         ) const;
 
         //- Re-calculate the interface curvature

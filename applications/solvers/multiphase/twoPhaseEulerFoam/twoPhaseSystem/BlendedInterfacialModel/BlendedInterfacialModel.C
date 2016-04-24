@@ -36,18 +36,17 @@ void Foam::BlendedInterfacialModel<modelType>::correctFixedFluxBCs
     GeometricField& field
 ) const
 {
-    forAll(pair_.phase1().phi().boundaryField(), patchI)
+    forAll(pair_.phase1().phi().boundaryField(), patchi)
     {
         if
         (
             isA<fixedValueFvsPatchScalarField>
             (
-                pair_.phase1().phi().boundaryField()[patchI]
+                pair_.phase1().phi().boundaryField()[patchi]
             )
         )
         {
-            field.boundaryField()[patchI]
-              = Zero;
+            field.boundaryField()[patchi] = Zero;
         }
     }
 }

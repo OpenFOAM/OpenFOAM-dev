@@ -505,28 +505,28 @@ void readCells
 
             Map<label>::iterator regFnd = physToPatch.find(regPhys);
 
-            label patchI = -1;
+            label patchi = -1;
             if (regFnd == physToPatch.end())
             {
                 // New region. Allocate patch for it.
-                patchI = patchFaces.size();
+                patchi = patchFaces.size();
 
-                patchFaces.setSize(patchI + 1);
-                patchToPhys.setSize(patchI + 1);
+                patchFaces.setSize(patchi + 1);
+                patchToPhys.setSize(patchi + 1);
 
                 Info<< "Mapping region " << regPhys << " to Foam patch "
-                    << patchI << endl;
-                physToPatch.insert(regPhys, patchI);
-                patchToPhys[patchI] = regPhys;
+                    << patchi << endl;
+                physToPatch.insert(regPhys, patchi);
+                patchToPhys[patchi] = regPhys;
             }
             else
             {
                 // Existing patch for region
-                patchI = regFnd();
+                patchi = regFnd();
             }
 
             // Add triangle to correct patchFaces.
-            patchFaces[patchI].append(triPoints);
+            patchFaces[patchi].append(triPoints);
         }
         else if (elmType == MSHQUAD)
         {
@@ -538,28 +538,28 @@ void readCells
 
             Map<label>::iterator regFnd = physToPatch.find(regPhys);
 
-            label patchI = -1;
+            label patchi = -1;
             if (regFnd == physToPatch.end())
             {
                 // New region. Allocate patch for it.
-                patchI = patchFaces.size();
+                patchi = patchFaces.size();
 
-                patchFaces.setSize(patchI + 1);
-                patchToPhys.setSize(patchI + 1);
+                patchFaces.setSize(patchi + 1);
+                patchToPhys.setSize(patchi + 1);
 
                 Info<< "Mapping region " << regPhys << " to Foam patch "
-                    << patchI << endl;
-                physToPatch.insert(regPhys, patchI);
-                patchToPhys[patchI] = regPhys;
+                    << patchi << endl;
+                physToPatch.insert(regPhys, patchi);
+                patchToPhys[patchi] = regPhys;
             }
             else
             {
                 // Existing patch for region
-                patchI = regFnd();
+                patchi = regFnd();
             }
 
             // Add quad to correct patchFaces.
-            patchFaces[patchI].append(quadPoints);
+            patchFaces[patchi].append(quadPoints);
         }
         else if (elmType == MSHTET)
         {
@@ -707,9 +707,9 @@ void readCells
 
     cells.setSize(cellI);
 
-    forAll(patchFaces, patchI)
+    forAll(patchFaces, patchi)
     {
-        patchFaces[patchI].shrink();
+        patchFaces[patchi].shrink();
     }
 
 
@@ -880,22 +880,22 @@ int main(int argc, char *argv[])
 
     wordList boundaryPatchNames(boundaryFaces.size());
 
-    forAll(boundaryPatchNames, patchI)
+    forAll(boundaryPatchNames, patchi)
     {
-        label physReg = patchToPhys[patchI];
+        label physReg = patchToPhys[patchi];
 
         Map<word>::const_iterator iter = physicalNames.find(physReg);
 
         if (iter != physicalNames.end())
         {
-            boundaryPatchNames[patchI] = iter();
+            boundaryPatchNames[patchi] = iter();
         }
         else
         {
-            boundaryPatchNames[patchI] = word("patch") + name(patchI);
+            boundaryPatchNames[patchi] = word("patch") + name(patchi);
         }
-        Info<< "Patch " << patchI << " gets name "
-            << boundaryPatchNames[patchI] << endl;
+        Info<< "Patch " << patchi << " gets name "
+            << boundaryPatchNames[patchi] << endl;
     }
     Info<< endl;
 
@@ -938,11 +938,11 @@ int main(int argc, char *argv[])
 
 
     // Go through all the patchFaces and find corresponding face in pp.
-    forAll(patchFaces, patchI)
+    forAll(patchFaces, patchi)
     {
-        const DynamicList<face>& pFaces = patchFaces[patchI];
+        const DynamicList<face>& pFaces = patchFaces[patchi];
 
-        Info<< "Finding faces of patch " << patchI << endl;
+        Info<< "Finding faces of patch " << patchi << endl;
 
         forAll(pFaces, i)
         {
@@ -955,7 +955,7 @@ int main(int argc, char *argv[])
             {
                 label meshFaceI = pp.start() + patchFaceI;
 
-                repatcher.changePatchID(meshFaceI, patchI);
+                repatcher.changePatchID(meshFaceI, patchi);
             }
             else
             {
@@ -965,7 +965,7 @@ int main(int argc, char *argv[])
 
                 if (meshFaceI != -1)
                 {
-                    zoneFaces[patchI].append(meshFaceI);
+                    zoneFaces[patchi].append(meshFaceI);
                 }
                 else
                 {
@@ -1104,11 +1104,11 @@ int main(int argc, char *argv[])
     {
         List<polyPatch*> newPatchPtrList((mesh.boundaryMesh().size() - 1));
         label newPatchI = 0;
-        forAll(mesh.boundaryMesh(), patchI)
+        forAll(mesh.boundaryMesh(), patchi)
         {
-            if (patchI != defaultPatchID)
+            if (patchi != defaultPatchID)
             {
-                const polyPatch& patch = mesh.boundaryMesh()[patchI];
+                const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
                 newPatchPtrList[newPatchI] = patch.clone
                 (

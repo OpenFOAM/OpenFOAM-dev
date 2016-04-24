@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ template<class GeoField>
 void Foam::outputFieldList
 (
     const PtrList<GeoField>& fieldList,
-    const label patchI
+    const label patchi
 )
 {
     forAll(fieldList, fieldI)
@@ -63,7 +63,7 @@ void Foam::outputFieldList
             Info<< "    " << pTraits<typename GeoField::value_type>::typeName
                 << tab << tab
                 << fieldList[fieldI].name() << tab << tab
-                << fieldList[fieldI].boundaryField()[patchI].type() << nl;
+                << fieldList[fieldI].boundaryField()[patchi].type() << nl;
         }
     }
 }
@@ -73,7 +73,7 @@ template<class GeoField>
 void Foam::collectFieldList
 (
     const PtrList<GeoField>& fieldList,
-    const label patchI,
+    const label patchi,
     HashTable<word>& fieldToType
 )
 {
@@ -84,7 +84,7 @@ void Foam::collectFieldList
             fieldToType.insert
             (
                 fieldList[fieldI].name(),
-                fieldList[fieldI].boundaryField()[patchI].type()
+                fieldList[fieldI].boundaryField()[patchi].type()
             );
         }
     }

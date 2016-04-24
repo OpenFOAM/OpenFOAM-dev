@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,8 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
     );
 
     const fvPatchList& patches = mesh.boundary();
+    volScalarField::GeometricBoundaryField& ystarBf = ystar.boundaryFieldRef();
+
     forAll(patches, patchi)
     {
         if (isA<wallFvPatch>(patches[patchi]))
@@ -72,7 +74,7 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
             const scalarField& nuw = nu.boundaryField()[patchi];
             const scalarField& nuSgsw = nuSgs().boundaryField()[patchi];
 
-            ystar.boundaryField()[patchi] =
+            ystarBf[patchi] =
                 nuw/sqrt((nuw + nuSgsw)*mag(Uw.snGrad()) + VSMALL);
         }
     }

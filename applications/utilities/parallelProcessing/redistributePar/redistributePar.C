@@ -379,16 +379,16 @@ void compareFields
                 << abort(FatalError);
         }
     }
-    forAll(a.boundaryField(), patchI)
+    forAll(a.boundaryField(), patchi)
     {
         // We have real mesh cellcentre and
         // mapped original cell centre.
 
         const fvPatchVectorField& aBoundary =
-            a.boundaryField()[patchI];
+            a.boundaryField()[patchi];
 
         const fvPatchVectorField& bBoundary =
-            b.boundaryField()[patchI];
+            b.boundaryField()[patchi];
 
         if (!bBoundary.coupled())
         {
@@ -399,7 +399,7 @@ void compareFields
                     WarningInFunction
                         << "Did not map volVectorField correctly:"
                         << endl
-                        << "patch:" << patchI << " patchFace:" << i
+                        << "patch:" << patchi << " patchFace:" << i
                         << " cc:" << endl
                         << "    real    :" << aBoundary[i] << endl
                         << "    mapped  :" << bBoundary[i] << endl
@@ -576,9 +576,9 @@ int main(int argc, char *argv[])
 
         label nonProcI = -1;
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            if (isA<processorPolyPatch>(patches[patchI]))
+            if (isA<processorPolyPatch>(patches[patchi]))
             {
                 break;
             }

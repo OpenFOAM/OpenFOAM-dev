@@ -644,10 +644,10 @@ int main(int argc, char *argv[])
                 surfaces
             );
             // Patch fields
-            forAll(fvm.C().boundaryField(), patchI)
+            forAll(fvm.C().boundaryField(), patchi)
             {
-                const pointField& cc = fvm.C().boundaryField()[patchI];
-                fvPatchScalarField& fld = cellDistance.boundaryField()[patchI];
+                const pointField& cc = fvm.C().boundaryField()[patchi];
+                fvPatchScalarField& fld = cellDistance.boundaryField()[patchi];
                 scalarField patchDistSqr
                 (
                     fld.patch().patchInternalField(distSqr)

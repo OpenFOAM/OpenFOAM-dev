@@ -110,12 +110,12 @@ void ReadAndMapFields
                 label bFaceI = faceI - mesh.nInternalFaces();
                 if (bFaceI >= 0)
                 {
-                    label patchI = mesh.boundaryMesh().patchID()[bFaceI];
-                    label localFaceI = mesh.boundaryMesh()[patchI].whichFace
+                    label patchi = mesh.boundaryMesh().patchID()[bFaceI];
+                    label localFaceI = mesh.boundaryMesh()[patchi].whichFace
                     (
                         faceI
                     );
-                    fld[pointI] = readField.boundaryField()[patchI][localFaceI];
+                    fld[pointI] = readField.boundaryField()[patchi][localFaceI];
                 }
                 //else
                 //{

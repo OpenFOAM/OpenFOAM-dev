@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,11 +70,11 @@ int main(int argc, char *argv[])
     const pointBoundaryMesh& pbm = pMesh.boundary();
 
     Info<< "pointMesh boundary" << nl;
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        Info<< "patch=" << pbm[patchI].name()
-            << ", type=" << pbm[patchI].type()
-            << ", coupled=" << pbm[patchI].coupled()
+        Info<< "patch=" << pbm[patchi].name()
+            << ", type=" << pbm[patchi].type()
+            << ", coupled=" << pbm[patchi].coupled()
             << endl;
     }
 
@@ -83,10 +83,10 @@ int main(int argc, char *argv[])
 
     pointScalarField pp(pInterp.interpolate(p));
     Info<< pp.name() << " boundary" << endl;
-    forAll(pp.boundaryField(), patchI)
+    forAll(pp.boundaryField(), patchi)
     {
-        Info<< pbm[patchI].name() << " coupled="
-            << pp.boundaryField()[patchI].coupled()<< endl;
+        Info<< pbm[patchi].name() << " coupled="
+            << pp.boundaryField()[patchi].coupled()<< endl;
     }
 
     pp.write();

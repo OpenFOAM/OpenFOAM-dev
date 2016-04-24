@@ -947,9 +947,9 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::findOffsetPatchFaces
         mesh.nCells()/1000
     );
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& patch = patches[patchI];
+        const polyPatch& patch = patches[patchi];
 
         const faceList& localFaces = patch.localFaces();
         const pointField& localPoints = patch.localPoints();
@@ -1079,11 +1079,11 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::checkPolyMeshQuality
 
         const polyBoundaryMesh& patches = pMesh.boundaryMesh();
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            if (patches[patchI].coupled())
+            if (patches[patchi].coupled())
             {
-                const labelUList& owners = patches[patchI].faceCells();
+                const labelUList& owners = patches[patchi].faceCells();
 
                 forAll(owners, i)
                 {
@@ -1535,16 +1535,16 @@ Foam::label Foam::conformalVoronoiMesh::createPatchInfo
 
     const PtrList<dictionary>& patchInfo = geometryToConformTo_.patchInfo();
 
-    forAll(patchNames, patchI)
+    forAll(patchNames, patchi)
     {
-        if (patchInfo.set(patchI))
+        if (patchInfo.set(patchi))
         {
-            patchDicts.set(patchI, new dictionary(patchInfo[patchI]));
+            patchDicts.set(patchi, new dictionary(patchInfo[patchi]));
         }
         else
         {
-            patchDicts.set(patchI, new dictionary());
-            patchDicts[patchI].set
+            patchDicts.set(patchi, new dictionary());
+            patchDicts[patchi].set
             (
                 "type",
                 wallPolyPatch::typeName
@@ -1734,14 +1734,14 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
     const label nPatches = patchNames.size();
 
     labelList procNeighbours(nPatches, label(-1));
-    forAll(procNeighbours, patchI)
+    forAll(procNeighbours, patchi)
     {
-        if (patchDicts[patchI].found("neighbProcNo"))
+        if (patchDicts[patchi].found("neighbProcNo"))
         {
-            procNeighbours[patchI] =
+            procNeighbours[patchi] =
             (
-                patchDicts[patchI].found("neighbProcNo")
-              ? readLabel(patchDicts[patchI].lookup("neighbProcNo"))
+                patchDicts[patchi].found("neighbProcNo")
+              ? readLabel(patchDicts[patchi].lookup("neighbProcNo"))
               : -1
             );
         }
@@ -2347,9 +2347,9 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
 
     // Return     patchPointPairSlaves.setSize(nPatches);
     patchPointPairSlaves.setSize(nPatches);
-    forAll(patchPPSlaves, patchI)
+    forAll(patchPPSlaves, patchi)
     {
-        patchPointPairSlaves[patchI].transfer(patchPPSlaves[patchI]);
+        patchPointPairSlaves[patchi].transfer(patchPPSlaves[patchi]);
     }
 
     if (foamyHexMeshControls().objOutput())
@@ -2458,13 +2458,13 @@ void Foam::conformalVoronoiMesh::sortProcPatches
         return;
     }
 
-    forAll(patchSortingIndices, patchI)
+    forAll(patchSortingIndices, patchi)
     {
-        faceList& faces = patchFaces[patchI];
-        labelList& owner = patchOwners[patchI];
-        DynamicList<label>& slaves = patchPointPairSlaves[patchI];
+        faceList& faces = patchFaces[patchi];
+        labelList& owner = patchOwners[patchi];
+        DynamicList<label>& slaves = patchPointPairSlaves[patchi];
         DynamicList<Pair<labelPair>>& sortingIndices
-            = patchSortingIndices[patchI];
+            = patchSortingIndices[patchi];
 
         if (!sortingIndices.empty())
         {
@@ -2477,7 +2477,7 @@ void Foam::conformalVoronoiMesh::sortProcPatches
             {
                 FatalErrorInFunction
                     << "patch size and size of sorting indices is inconsistent "
-                    << " for patch " << patchI << nl
+                    << " for patch " << patchi << nl
                     << " faces.size() " << faces.size() << nl
                     << " owner.size() " << owner.size() << nl
                     << " slaves.size() " << slaves.size() << nl

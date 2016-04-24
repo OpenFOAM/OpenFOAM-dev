@@ -45,9 +45,9 @@ void Foam::patchWriter::write
 
         forAll(patchIDs_, j)
         {
-            label patchI = patchIDs_[j];
+            label patchi = patchIDs_[j];
 
-            const fvPatchField<Type>& pfld = fld.boundaryField()[patchI];
+            const fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
             if (nearCellValue_)
             {
@@ -81,9 +81,9 @@ void Foam::patchWriter::write
 
         forAll(patchIDs_, j)
         {
-            label patchI = patchIDs_[j];
+            label patchi = patchIDs_[j];
 
-            const pointPatchField<Type>& pfld = fld.boundaryField()[patchI];
+            const pointPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
             writeFuns::insert(pfld.patchInternalField()(), fField);
         }
@@ -110,9 +110,9 @@ void Foam::patchWriter::write
 
         forAll(patchIDs_, j)
         {
-            label patchI = patchIDs_[j];
+            label patchi = patchIDs_[j];
 
-            const fvPatchField<Type>& pfld = fld.boundaryField()[patchI];
+            const fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
             if (nearCellValue_)
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ const Foam::scalar Foam::interfaceProperties::convertToRad =
 void Foam::interfaceProperties::correctContactAngle
 (
     surfaceVectorField::GeometricBoundaryField& nHatb,
-    surfaceVectorField::GeometricBoundaryField& gradAlphaf
+    const surfaceVectorField::GeometricBoundaryField& gradAlphaf
 ) const
 {
     const fvMesh& mesh = alpha1_.mesh();
@@ -128,7 +128,7 @@ void Foam::interfaceProperties::calculateK()
     //     (gradAlphaf + deltaN_*vector(0, 0, 1)
     //    *sign(gradAlphaf.component(vector::Z)))/(mag(gradAlphaf) + deltaN_)
     // );
-    correctContactAngle(nHatfv.boundaryField(), gradAlphaf.boundaryField());
+    correctContactAngle(nHatfv.boundaryFieldRef(), gradAlphaf.boundaryField());
 
     // Face unit interface normal flux
     nHatf_ = nHatfv & Sf;

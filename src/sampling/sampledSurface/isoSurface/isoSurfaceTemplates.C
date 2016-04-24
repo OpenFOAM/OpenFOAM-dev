@@ -76,26 +76,29 @@ Foam::isoSurface::adaptPatchFields
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(patches, patchI)
+    typename FieldType::GeometricBoundaryField& sliceFldBf =
+        sliceFld.boundaryFieldRef();
+
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if
         (
             isA<emptyPolyPatch>(pp)
-         && pp.size() != sliceFld.boundaryField()[patchI].size()
+         && pp.size() != sliceFldBf[patchi].size()
         )
         {
             // Clear old value. Cannot resize it since is a slice.
-            sliceFld.boundaryField().set(patchI, NULL);
+            sliceFldBf.set(patchi, NULL);
 
             // Set new value we can change
-            sliceFld.boundaryField().set
+            sliceFldBf.set
             (
-                patchI,
+                patchi,
                 new calculatedFvPatchField<Type>
                 (
-                    mesh.boundary()[patchI],
+                    mesh.boundary()[patchi],
                     sliceFld
                 )
             );
@@ -103,9 +106,9 @@ Foam::isoSurface::adaptPatchFields
             // Note: cannot use patchInternalField since uses emptyFvPatch::size
             // Do our own internalField instead.
             const labelUList& faceCells =
-                mesh.boundary()[patchI].patch().faceCells();
+                mesh.boundary()[patchi].patch().faceCells();
 
-            Field<Type>& pfld = sliceFld.boundaryField()[patchI];
+            Field<Type>& pfld = sliceFldBf[patchi];
             pfld.setSize(faceCells.size());
             forAll(faceCells, i)
             {
@@ -120,10 +123,10 @@ Foam::isoSurface::adaptPatchFields
         {
             fvPatchField<Type>& pfld = const_cast<fvPatchField<Type>&>
             (
-                sliceFld.boundaryField()[patchI]
+                sliceFldBf[patchi]
             );
 
-            const scalarField& w = mesh.weights().boundaryField()[patchI];
+            const scalarField& w = mesh.weights().boundaryField()[patchi];
 
             tmp<Field<Type>> f =
                 w*pfld.patchInternalField()
@@ -595,9 +598,9 @@ void Foam::isoSurface::generateTriPoints
     // Determine neighbouring snap status
     boolList neiSnapped(mesh_.nFaces()-mesh_.nInternalFaces(), false);
     List<Type> neiSnappedPoint(neiSnapped.size(), Type(Zero));
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -621,9 +624,9 @@ void Foam::isoSurface::generateTriPoints
 
 
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (isA<processorPolyPatch>(pp))
         {
@@ -653,8 +656,8 @@ void Foam::isoSurface::generateTriPoints
                             snappedPoint,
                             faceI,
 
-                            cVals.boundaryField()[patchI][i],
-                            cCoords.boundaryField()[patchI][i],
+                            cVals.boundaryField()[patchi][i],
+                            cCoords.boundaryField()[patchi][i],
                             neiSnapped[faceI-mesh_.nInternalFaces()],
                             neiSnappedPoint[faceI-mesh_.nInternalFaces()],
 
@@ -677,8 +680,8 @@ void Foam::isoSurface::generateTriPoints
                             snappedPoint,
                             faceI,
 
-                            cVals.boundaryField()[patchI][i],
-                            cCoords.boundaryField()[patchI][i],
+                            cVals.boundaryField()[patchi][i],
+                            cCoords.boundaryField()[patchi][i],
                             false,
                             Type(Zero),
 
@@ -710,8 +713,8 @@ void Foam::isoSurface::generateTriPoints
                         snappedPoint,
                         faceI,
 
-                        cVals.boundaryField()[patchI][i],
-                        cCoords.boundaryField()[patchI][i],
+                        cVals.boundaryField()[patchi][i],
+                        cCoords.boundaryField()[patchi][i],
                         false,  // fc not snapped
                         Type(Zero),
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,32 +134,35 @@ void Foam::sampledCuttingPlane::createGeometry()
         }
     }
 
+    volScalarField::GeometricBoundaryField& cellDistanceBf =
+        cellDistance.boundaryFieldRef();
+
     // Patch fields
     {
-        forAll(cellDistance.boundaryField(), patchI)
+        forAll(cellDistanceBf, patchi)
         {
             if
             (
                 isA<emptyFvPatchScalarField>
                 (
-                    cellDistance.boundaryField()[patchI]
+                    cellDistanceBf[patchi]
                 )
             )
             {
-                cellDistance.boundaryField().set
+                cellDistanceBf.set
                 (
-                    patchI,
+                    patchi,
                     new calculatedFvPatchScalarField
                     (
-                        fvm.boundary()[patchI],
+                        fvm.boundary()[patchi],
                         cellDistance
                     )
                 );
 
-                const polyPatch& pp = fvm.boundary()[patchI].patch();
+                const polyPatch& pp = fvm.boundary()[patchi].patch();
                 pointField::subField cc = pp.patchSlice(fvm.faceCentres());
 
-                fvPatchScalarField& fld = cellDistance.boundaryField()[patchI];
+                fvPatchScalarField& fld = cellDistanceBf[patchi];
                 fld.setSize(pp.size());
                 forAll(fld, i)
                 {
@@ -168,8 +171,8 @@ void Foam::sampledCuttingPlane::createGeometry()
             }
             else
             {
-                const pointField& cc = fvm.C().boundaryField()[patchI];
-                fvPatchScalarField& fld = cellDistance.boundaryField()[patchI];
+                const pointField& cc = fvm.C().boundaryField()[patchi];
+                fvPatchScalarField& fld = cellDistanceBf[patchi];
 
                 forAll(fld, i)
                 {

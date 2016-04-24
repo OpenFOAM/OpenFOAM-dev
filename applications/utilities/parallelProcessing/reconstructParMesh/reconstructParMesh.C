@@ -117,9 +117,9 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
           - masterMesh.nInternalFaces()
         );
 
-        forAll(masterPatches, patchI)
+        forAll(masterPatches, patchi)
         {
-            const polyPatch& pp = masterPatches[patchI];
+            const polyPatch& pp = masterPatches[patchi];
 
             if
             (
@@ -151,9 +151,9 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
           - meshToAdd.nInternalFaces()
         );
 
-        forAll(addPatches, patchI)
+        forAll(addPatches, patchi)
         {
-            const polyPatch& pp = addPatches[patchI];
+            const polyPatch& pp = addPatches[patchi];
 
             if (isA<processorPolyPatch>(pp))
             {

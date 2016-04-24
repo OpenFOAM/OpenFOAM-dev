@@ -164,29 +164,29 @@ label addPatch
     DynamicList<polyPatch*>& newPatches
 )
 {
-    label patchI = findPatchID(newPatches, patchName);
+    label patchi = findPatchID(newPatches, patchName);
 
-    if (patchI != -1)
+    if (patchi != -1)
     {
-        if (isA<PatchType>(*newPatches[patchI]))
+        if (isA<PatchType>(*newPatches[patchi]))
         {
             // Already there
-            return patchI;
+            return patchi;
         }
         else
         {
             FatalErrorInFunction
                 << "Already have patch " << patchName
-                << " but of type " << newPatches[patchI]->type()
+                << " but of type " << newPatches[patchi]->type()
                 << exit(FatalError);
         }
     }
 
 
-    patchI = newPatches.size();
+    patchi = newPatches.size();
 
     label startFaceI = 0;
-    if (patchI > 0)
+    if (patchi > 0)
     {
         const polyPatch& pp = *newPatches.last();
         startFaceI = pp.start()+pp.size();
@@ -201,12 +201,12 @@ label addPatch
             patchName,
             0,                          // size
             startFaceI,                 // nFaces
-            patchI,
+            patchi,
             patches
         ).ptr()
     );
 
-    return patchI;
+    return patchi;
 }
 
 
@@ -219,29 +219,29 @@ label addPatch
     DynamicList<polyPatch*>& newPatches
 )
 {
-    label patchI = findPatchID(newPatches, patchName);
+    label patchi = findPatchID(newPatches, patchName);
 
-    if (patchI != -1)
+    if (patchi != -1)
     {
-        if (isA<PatchType>(*newPatches[patchI]))
+        if (isA<PatchType>(*newPatches[patchi]))
         {
             // Already there
-            return patchI;
+            return patchi;
         }
         else
         {
             FatalErrorInFunction
                 << "Already have patch " << patchName
-                << " but of type " << newPatches[patchI]->type()
+                << " but of type " << newPatches[patchi]->type()
                 << exit(FatalError);
         }
     }
 
 
-    patchI = newPatches.size();
+    patchi = newPatches.size();
 
     label startFaceI = 0;
-    if (patchI > 0)
+    if (patchi > 0)
     {
         const polyPatch& pp = *newPatches.last();
         startFaceI = pp.start()+pp.size();
@@ -258,12 +258,12 @@ label addPatch
         (
             patchName,
             patchDict,
-            patchI,
+            patchi,
             patches
         ).ptr()
     );
 
-    return patchI;
+    return patchi;
 }
 
 
@@ -287,60 +287,60 @@ void deleteEmptyPatches(fvMesh& mesh)
     // Add all the non-empty, non-processor patches
     forAll(masterNames, masterI)
     {
-        label patchI = patches.findPatchID(masterNames[masterI]);
+        label patchi = patches.findPatchID(masterNames[masterI]);
 
-        if (patchI != -1)
+        if (patchi != -1)
         {
-            if (isA<processorPolyPatch>(patches[patchI]))
+            if (isA<processorPolyPatch>(patches[patchi]))
             {
                 // Similar named processor patch? Not 'possible'.
-                if (patches[patchI].size() == 0)
+                if (patches[patchi].size() == 0)
                 {
-                    Pout<< "Deleting processor patch " << patchI
-                        << " name:" << patches[patchI].name()
+                    Pout<< "Deleting processor patch " << patchi
+                        << " name:" << patches[patchi].name()
                         << endl;
-                    oldToNew[patchI] = --notUsedI;
+                    oldToNew[patchi] = --notUsedI;
                 }
                 else
                 {
-                    oldToNew[patchI] = usedI++;
+                    oldToNew[patchi] = usedI++;
                 }
             }
             else
             {
                 // Common patch.
-                if (returnReduce(patches[patchI].size(), sumOp<label>()) == 0)
+                if (returnReduce(patches[patchi].size(), sumOp<label>()) == 0)
                 {
-                    Pout<< "Deleting patch " << patchI
-                        << " name:" << patches[patchI].name()
+                    Pout<< "Deleting patch " << patchi
+                        << " name:" << patches[patchi].name()
                         << endl;
-                    oldToNew[patchI] = --notUsedI;
+                    oldToNew[patchi] = --notUsedI;
                 }
                 else
                 {
-                    oldToNew[patchI] = usedI++;
+                    oldToNew[patchi] = usedI++;
                 }
             }
         }
     }
 
     // Add remaining patches at the end
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (oldToNew[patchI] == -1)
+        if (oldToNew[patchi] == -1)
         {
             // Unique to this processor. Note: could check that these are
             // only processor patches.
-            if (patches[patchI].size() == 0)
+            if (patches[patchi].size() == 0)
             {
-                Pout<< "Deleting processor patch " << patchI
-                    << " name:" << patches[patchI].name()
+                Pout<< "Deleting processor patch " << patchi
+                    << " name:" << patches[patchi].name()
                     << endl;
-                oldToNew[patchI] = --notUsedI;
+                oldToNew[patchi] = --notUsedI;
             }
             else
             {
-                oldToNew[patchI] = usedI++;
+                oldToNew[patchi] = usedI++;
             }
         }
     }
@@ -533,12 +533,12 @@ label findUncoveredPatchFace
     forAll(eFaces, i)
     {
         label faceI = eFaces[i];
-        label patchI = pbm.whichPatch(faceI);
+        label patchi = pbm.whichPatch(faceI);
 
         if
         (
-            patchI != -1
-        && !pbm[patchI].coupled()
+            patchi != -1
+        && !pbm[patchi].coupled()
         && !extrudeFaceSet.found(faceI)
         )
         {
@@ -569,12 +569,12 @@ label findUncoveredCyclicPatchFace
     forAll(eFaces, i)
     {
         label faceI = eFaces[i];
-        label patchI = pbm.whichPatch(faceI);
+        label patchi = pbm.whichPatch(faceI);
 
         if
         (
-            patchI != -1
-        &&  isA<cyclicPolyPatch>(pbm[patchI])
+            patchi != -1
+        &&  isA<cyclicPolyPatch>(pbm[patchi])
         && !extrudeFaceSet.found(faceI)
         )
         {
@@ -1181,20 +1181,20 @@ void setCouplingInfo
 
     forAll(zoneToPatch, zoneI)
     {
-        label patchI = zoneToPatch[zoneI];
+        label patchi = zoneToPatch[zoneI];
 
-        if (patchI != -1)
+        if (patchi != -1)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (isA<mappedWallPolyPatch>(pp))
             {
-                newPatches[patchI] = new mappedWallPolyPatch
+                newPatches[patchi] = new mappedWallPolyPatch
                 (
                     pp.name(),
                     pp.size(),
                     pp.start(),
-                    patchI,
+                    patchi,
                     sampleRegion,                           // sampleRegion
                     mode,                                   // sampleMode
                     pp.name(),                              // samplePatch
@@ -1205,11 +1205,11 @@ void setCouplingInfo
         }
     }
 
-    forAll(newPatches, patchI)
+    forAll(newPatches, patchi)
     {
-        if (!newPatches[patchI])
+        if (!newPatches[patchi])
         {
-            newPatches[patchI] = patches[patchI].clone(patches).ptr();
+            newPatches[patchi] = patches[patchi].clone(patches).ptr();
         }
     }
 
@@ -1956,14 +1956,14 @@ int main(int argc, char *argv[])
     DynamicList<polyPatch*> regionPatches(patches.size());
     // Copy all non-local patches since these are used on boundary edges of
     // the extrusion
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (!isA<processorPolyPatch>(patches[patchI]))
+        if (!isA<processorPolyPatch>(patches[patchi]))
         {
             label newPatchI = regionPatches.size();
             regionPatches.append
             (
-                patches[patchI].clone
+                patches[patchi].clone
                 (
                     patches,
                     newPatchI,
@@ -2008,9 +2008,9 @@ int main(int argc, char *argv[])
 
         // Clone existing patches
         DynamicList<polyPatch*> newPatches(patches.size());
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            newPatches.append(patches[patchI].clone(patches).ptr());
+            newPatches.append(patches[patchi].clone(patches).ptr());
         }
 
         // Add new patches
@@ -2126,10 +2126,10 @@ int main(int argc, char *argv[])
 //    // Add all the newPatches to the mesh and fields
 //    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //    {
-//        forAll(newPatches, patchI)
+//        forAll(newPatches, patchi)
 //        {
-//            Pout<< "Adding patch " << patchI
-//                << " name:" << newPatches[patchI]->name()
+//            Pout<< "Adding patch " << patchi
+//                << " name:" << newPatches[patchi]->name()
 //                << endl;
 //        }
 //        //label nOldPatches = mesh.boundary().size();
@@ -2139,12 +2139,12 @@ int main(int argc, char *argv[])
 //        //// Add calculated fvPatchFields for the added patches
 //        //for
 //        //(
-//        //    label patchI = nOldPatches;
-//        //    patchI < mesh.boundary().size();
-//        //    patchI++
+//        //    label patchi = nOldPatches;
+//        //    patchi < mesh.boundary().size();
+//        //    patchi++
 //        //)
 //        //{
-//        //    Pout<< "ADDing calculated to patch " << patchI
+//        //    Pout<< "ADDing calculated to patch " << patchi
 //        //        << endl;
 //        //    addCalculatedPatchFields(mesh);
 //        //}
@@ -2408,10 +2408,10 @@ int main(int argc, char *argv[])
     );
 
     // Add the new patches
-    forAll(regionPatches, patchI)
+    forAll(regionPatches, patchi)
     {
-        polyPatch* ppPtr = regionPatches[patchI];
-        regionPatches[patchI] = ppPtr->clone(regionMesh.boundaryMesh()).ptr();
+        polyPatch* ppPtr = regionPatches[patchi];
+        regionPatches[patchi] = ppPtr->clone(regionMesh.boundaryMesh()).ptr();
         delete ppPtr;
     }
     regionMesh.clearOut();
@@ -2474,20 +2474,20 @@ int main(int argc, char *argv[])
     List<pointField> topOffsets(zoneNames.size());
     List<pointField> bottomOffsets(zoneNames.size());
 
-    forAll(regionMesh.boundaryMesh(), patchI)
+    forAll(regionMesh.boundaryMesh(), patchi)
     {
-        const polyPatch& pp = regionMesh.boundaryMesh()[patchI];
+        const polyPatch& pp = regionMesh.boundaryMesh()[patchi];
 
         if (isA<mappedWallPolyPatch>(pp))
         {
-            if (findIndex(interRegionTopPatch, patchI) != -1)
+            if (findIndex(interRegionTopPatch, patchi) != -1)
             {
-                label zoneI = findIndex(interRegionTopPatch, patchI);
+                label zoneI = findIndex(interRegionTopPatch, patchi);
                 topOffsets[zoneI] = calcOffset(extrudePatch, extruder, pp);
             }
-            else if (findIndex(interRegionBottomPatch, patchI) != -1)
+            else if (findIndex(interRegionBottomPatch, patchi) != -1)
             {
-                label zoneI = findIndex(interRegionBottomPatch, patchI);
+                label zoneI = findIndex(interRegionBottomPatch, patchi);
                 bottomOffsets[zoneI] = calcOffset(extrudePatch, extruder, pp);
             }
         }

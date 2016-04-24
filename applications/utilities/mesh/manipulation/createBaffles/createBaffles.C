@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -290,9 +290,9 @@ void createFaces
         // For warning once per patch.
         labelHashSet patchWarned;
 
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            const polyPatch& pp = pbm[patchI];
+            const polyPatch& pp = pbm[patchi];
 
             label newPatchI = newMasterPatches[i];
 
@@ -311,7 +311,7 @@ void createFaces
 
                     if (zoneFaceI != -1)
                     {
-                        if (patchWarned.insert(patchI))
+                        if (patchWarned.insert(patchi))
                         {
                             WarningInFunction
                                 << "Found boundary face (in patch "
@@ -699,14 +699,14 @@ int main(int argc, char *argv[])
             forAllConstIter(dictionary, patchSources, iter)
             {
                 const word patchName(iter().dict()["name"]);
-                label patchI = pbm.findPatchID(patchName);
+                label patchi = pbm.findPatchID(patchName);
                 if (master)
                 {
-                    newMasterPatches.append(patchI);
+                    newMasterPatches.append(patchi);
                 }
                 else
                 {
-                    newSlavePatches.append(patchI);
+                    newSlavePatches.append(patchi);
                 }
                 master = !master;
             }
@@ -761,9 +761,9 @@ int main(int argc, char *argv[])
 
         forAllConstIter(HashSet<word>, bafflePatches, iter)
         {
-            label patchI = mesh.boundaryMesh().findPatchID(iter.key());
+            label patchi = mesh.boundaryMesh().findPatchID(iter.key());
 
-            const fvPatchMapper& pm = mapper.boundaryMap()[patchI];
+            const fvPatchMapper& pm = mapper.boundaryMap()[patchi];
 
             if (pm.sizeBeforeMapping() == 0)
             {
@@ -775,7 +775,7 @@ int main(int argc, char *argv[])
                         << "You might have to edit these fields." << endl;
                 }
 
-                fvMeshTools::zeroPatchFields(mesh, patchI);
+                fvMeshTools::zeroPatchFields(mesh, patchi);
             }
         }
     }
@@ -796,7 +796,7 @@ int main(int argc, char *argv[])
                 forAllConstIter(dictionary, patchSources, iter)
                 {
                     const word patchName(iter().dict()["name"]);
-                    label patchI = pbm.findPatchID(patchName);
+                    label patchi = pbm.findPatchID(patchName);
 
                     if (iter().dict().found("patchFields"))
                     {
@@ -809,7 +809,7 @@ int main(int argc, char *argv[])
                         fvMeshTools::setPatchFields
                         (
                             mesh,
-                            patchI,
+                            patchi,
                             patchFieldsDict
                         );
                     }
@@ -863,20 +863,20 @@ int main(int argc, char *argv[])
                         const word masterPatchName(groupName + "_master");
                         const word slavePatchName(groupName + "_slave");
 
-                        label patchIMaster = pbm.findPatchID(masterPatchName);
-                        label patchISlave = pbm.findPatchID(slavePatchName);
+                        label patchiMaster = pbm.findPatchID(masterPatchName);
+                        label patchiSlave = pbm.findPatchID(slavePatchName);
 
                         fvMeshTools::setPatchFields
                         (
                             mesh,
-                            patchIMaster,
+                            patchiMaster,
                             patchFieldsDict
                         );
 
                         fvMeshTools::setPatchFields
                         (
                             mesh,
-                            patchISlave,
+                            patchiSlave,
                             patchFieldsDict
                         );
                     }

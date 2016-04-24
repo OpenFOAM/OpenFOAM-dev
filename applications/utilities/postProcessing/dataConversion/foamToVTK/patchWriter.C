@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,13 +123,13 @@ void Foam::patchWriter::writePatchIDs()
 
     forAll(patchIDs_, i)
     {
-        label patchI = patchIDs_[i];
+        label patchi = patchIDs_[i];
 
-        const polyPatch& pp = mesh.boundaryMesh()[patchI];
+        const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
         if (!isA<emptyPolyPatch>(pp))
         {
-            writeFuns::insert(scalarField(pp.size(), patchI), fField);
+            writeFuns::insert(scalarField(pp.size(), patchi), fField);
         }
     }
     writeFuns::write(os_, binary_, fField);

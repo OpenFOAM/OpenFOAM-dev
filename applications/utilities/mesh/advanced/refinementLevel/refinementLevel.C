@@ -221,9 +221,9 @@ int main(int argc, char *argv[])
 
     List<polyPatch*> p(patches.size());
 
-    forAll(p, patchI)
+    forAll(p, patchi)
     {
-        p[patchI] = patches[patchI].clone(fMesh.boundaryMesh()).ptr();
+        p[patchi] = patches[patchi].clone(fMesh.boundaryMesh()).ptr();
     }
 
     fMesh.addFvPatches(p);
@@ -294,15 +294,17 @@ int main(int argc, char *argv[])
         }
     }
 
+    volScalarField::GeometricBoundaryField& postRefLevelBf =
+        postRefLevel.boundaryFieldRef();
 
     // For volScalarField: set boundary values to same as cell.
     // Note: could also put
     // zeroGradient b.c. on postRefLevel and do evaluate.
-    forAll(postRefLevel.boundaryField(), patchI)
+    forAll(postRefLevel.boundaryField(), patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
-        fvPatchScalarField& bField = postRefLevel.boundaryField()[patchI];
+        fvPatchScalarField& bField = postRefLevelBf[patchi];
 
         Info<< "Setting field for patch "<< endl;
 

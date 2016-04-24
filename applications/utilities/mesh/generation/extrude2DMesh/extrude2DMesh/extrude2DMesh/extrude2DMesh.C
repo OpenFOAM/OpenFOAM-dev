@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,11 +117,11 @@ void Foam::extrude2DMesh::addFrontBackPatches()
     // Add patch.
     List<polyPatch*> newPatches(patches.size() + 2);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
-        newPatches[patchI] =
+        newPatches[patchi] =
             pp.clone
             (
                 patches,
@@ -323,15 +323,15 @@ void Foam::extrude2DMesh::setRefinement
         }
     }
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
         for (label layer=0; layer < nLayers; layer++)
         {
             label currentLayerOffset = layer*mesh_.nPoints();
             label nextLayerOffset = currentLayerOffset + mesh_.nPoints();
 
-            label startFaceI = patches[patchI].start();
-            label endFaceI = startFaceI + patches[patchI].size();
+            label startFaceI = patches[patchi].start();
+            label endFaceI = startFaceI + patches[patchi].size();
 
             for (label faceI = startFaceI; faceI < endFaceI; faceI++)
             {
@@ -361,7 +361,7 @@ void Foam::extrude2DMesh::setRefinement
                     -1,                                      // masterEdgeID
                     nFaces++,                                // masterFaceID
                     false,                                   // flipFaceFlux
-                    patchI,                                  // patchID
+                    patchi,                                  // patchID
                     zoneID,                                  // zoneID
                     zoneFlip                                 // zoneFlip
                 );

@@ -229,11 +229,11 @@ void changeFrontBackPatches
 
     DynamicList<polyPatch*> newPatches(patches.size());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp(patches[patchI]);
+        const polyPatch& pp(patches[patchi]);
 
-        if (patchI == frontPatchI || patchI == backPatchI)
+        if (patchi == frontPatchI || patchi == backPatchI)
         {
             newPatches.append
             (
@@ -397,10 +397,10 @@ int main(int argc, char *argv[])
             {
                 label meshFaceI = meshFaces[i];
 
-                label patchI = patches.whichPatch(meshFaceI);
+                label patchi = patches.whichPatch(meshFaceI);
                 label own = mesh.faceOwner()[meshFaceI];
                 label nei = -1;
-                if (patchI == -1)
+                if (patchi == -1)
                 {
                     nei = mesh.faceNeighbour()[meshFaceI];
                 }
@@ -420,7 +420,7 @@ int main(int argc, char *argv[])
                     own,                            // owner
                     nei,                            // neighbour
                     true,                           // face flip
-                    patchI,                         // patch for face
+                    patchi,                         // patch for face
                     zoneI,                          // zone for face
                     zoneFlip                        // face flip in zone
                 );
@@ -521,11 +521,11 @@ int main(int argc, char *argv[])
         if (nAdded > 0)
         {
             DynamicList<polyPatch*> newPatches(nPatches);
-            forAll(mesh.boundaryMesh(), patchI)
+            forAll(mesh.boundaryMesh(), patchi)
             {
                 newPatches.append
                 (
-                    mesh.boundaryMesh()[patchI].clone
+                    mesh.boundaryMesh()[patchi].clone
                     (
                         mesh.boundaryMesh()
                     ).ptr()
@@ -533,14 +533,14 @@ int main(int argc, char *argv[])
             }
             for
             (
-                label patchI = mesh.boundaryMesh().size();
-                patchI < nPatches;
-                patchI++
+                label patchi = mesh.boundaryMesh().size();
+                patchi < nPatches;
+                patchi++
             )
             {
-                label nbrProcI = patchToNbrProc[patchI];
+                label nbrProcI = patchToNbrProc[patchi];
 
-                Pout<< "Adding patch " << patchI
+                Pout<< "Adding patch " << patchi
                     << " between " << Pstream::myProcNo()
                     << " and " << nbrProcI
                     << endl;
@@ -551,7 +551,7 @@ int main(int argc, char *argv[])
                     (
                         0,                  // size
                         mesh.nFaces(),      // start
-                        patchI,             // index
+                        patchi,             // index
                         mesh.boundaryMesh(),// polyBoundaryMesh
                         Pstream::myProcNo(),// myProcNo
                         nbrProcI            // neighbProcNo

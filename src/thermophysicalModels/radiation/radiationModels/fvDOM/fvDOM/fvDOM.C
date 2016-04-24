@@ -527,9 +527,9 @@ void Foam::radiation::fvDOM::updateG()
     {
         IRay_[rayI].addIntensity();
         G_ += IRay_[rayI].I()*IRay_[rayI].omega();
-        Qr_.boundaryField() += IRay_[rayI].Qr().boundaryField();
-        Qem_.boundaryField() += IRay_[rayI].Qem().boundaryField();
-        Qin_.boundaryField() += IRay_[rayI].Qin().boundaryField();
+        Qr_.boundaryFieldRef() += IRay_[rayI].Qr().boundaryField();
+        Qem_.boundaryFieldRef() += IRay_[rayI].Qem().boundaryField();
+        Qin_.boundaryFieldRef() += IRay_[rayI].Qin().boundaryField();
     }
 }
 

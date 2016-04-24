@@ -156,9 +156,9 @@ int main(int argc, char *argv[])
             }
             // Insert my boundary values
             label nCompact = fld.size();
-            forAll(fld.boundaryField(), patchI)
+            forAll(fld.boundaryField(), patchi)
             {
-                const fvPatchField<vector>& pfld = fld.boundaryField()[patchI];
+                const fvPatchField<vector>& pfld = fld.boundaryField()[patchi];
 
                 forAll(pfld, i)
                 {

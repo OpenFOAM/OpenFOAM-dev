@@ -407,6 +407,8 @@ void Foam::radiation::viewFactor::calculate()
     DynamicList<scalar> localCoarseEave(nLocalCoarseFaces_);
     DynamicList<scalar> localCoarseHoave(nLocalCoarseFaces_);
 
+    volScalarField::GeometricBoundaryField& QrBf = Qr_.boundaryFieldRef();
+
     forAll(selectedPatches_, i)
     {
         label patchID = selectedPatches_[i];
@@ -414,7 +416,7 @@ void Foam::radiation::viewFactor::calculate()
         const scalarField& Tp = T_.boundaryField()[patchID];
         const scalarField& sf = mesh_.magSf().boundaryField()[patchID];
 
-        fvPatchScalarField& QrPatch = Qr_.boundaryField()[patchID];
+        fvPatchScalarField& QrPatch = QrBf[patchID];
 
         greyDiffusiveViewFactorFixedValueFvPatchScalarField& Qrp =
             refCast
@@ -616,7 +618,6 @@ void Foam::radiation::viewFactor::calculate()
     Pstream::listCombineScatter(q);
     Pstream::listCombineGather(q, maxEqOp<scalar>());
 
-
     label globCoarseId = 0;
     forAll(selectedPatches_, i)
     {
@@ -624,7 +625,7 @@ void Foam::radiation::viewFactor::calculate()
         const polyPatch& pp = mesh_.boundaryMesh()[patchID];
         if (pp.size() > 0)
         {
-            scalarField& Qrp = Qr_.boundaryField()[patchID];
+            scalarField& Qrp = QrBf[patchID];
             const scalarField& sf = mesh_.magSf().boundaryField()[patchID];
             const labelList& agglom = finalAgglom_[patchID];
             label nAgglom = max(agglom)+1;
@@ -655,9 +656,9 @@ void Foam::radiation::viewFactor::calculate()
 
     if (debug)
     {
-        forAll(Qr_.boundaryField(), patchID)
+        forAll(QrBf, patchID)
         {
-            const scalarField& Qrp = Qr_.boundaryField()[patchID];
+            const scalarField& Qrp = QrBf[patchID];
             const scalarField& magSf = mesh_.magSf().boundaryField()[patchID];
             scalar heatFlux = gSum(Qrp*magSf);
 

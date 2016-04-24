@@ -931,38 +931,38 @@ int main(int argc, char *argv[])
 
     label meshFaceI = foamPatchStarts[0];
 
-    forAll(newPatches, patchI)
+    forAll(newPatches, patchi)
     {
-        const word& patchName = foamPatchNames[patchI];
-        const word& patchType = foamPatchTypes[patchI];
+        const word& patchName = foamPatchNames[patchi];
+        const word& patchType = foamPatchTypes[patchi];
 
         Pout<< "Patch:" << patchName << " start at:" << meshFaceI
-            << " size:" << foamPatchSizes[patchI]
-            << " end at:" << meshFaceI+foamPatchSizes[patchI]
+            << " size:" << foamPatchSizes[patchi]
+            << " end at:" << meshFaceI+foamPatchSizes[patchi]
             << endl;
 
         if (patchType == "wall")
         {
-            newPatches[patchI] =
+            newPatches[patchi] =
                 new wallPolyPatch
                 (
                     patchName,
-                    foamPatchSizes[patchI],
+                    foamPatchSizes[patchi],
                     meshFaceI,
-                    patchI,
+                    patchi,
                     mesh.boundaryMesh(),
                     patchType
                 );
         }
         else if (patchType == "symmetryplane")
         {
-            newPatches[patchI] =
+            newPatches[patchi] =
                 new symmetryPolyPatch
                 (
                     patchName,
-                    foamPatchSizes[patchI],
+                    foamPatchSizes[patchi],
                     meshFaceI,
-                    patchI,
+                    patchi,
                     mesh.boundaryMesh(),
                     patchType
                 );
@@ -970,13 +970,13 @@ int main(int argc, char *argv[])
         else if (patchType == "empty")
         {
             // Note: not ccm name, introduced by us above.
-            newPatches[patchI] =
+            newPatches[patchi] =
                 new emptyPolyPatch
                 (
                     patchName,
-                    foamPatchSizes[patchI],
+                    foamPatchSizes[patchi],
                     meshFaceI,
-                    patchI,
+                    patchi,
                     mesh.boundaryMesh(),
                     patchType
                 );
@@ -985,19 +985,19 @@ int main(int argc, char *argv[])
         {
             // All other ccm types become straight polyPatch:
             // 'inlet', 'outlet', ...
-            newPatches[patchI] =
+            newPatches[patchi] =
                 new polyPatch
                 (
                     patchName,
-                    foamPatchSizes[patchI],
+                    foamPatchSizes[patchi],
                     meshFaceI,
-                    patchI,
+                    patchi,
                     mesh.boundaryMesh(),
                     word::null
                 );
         }
 
-        meshFaceI += foamPatchSizes[patchI];
+        meshFaceI += foamPatchSizes[patchi];
     }
 
     if (meshFaceI != foamOwner.size())

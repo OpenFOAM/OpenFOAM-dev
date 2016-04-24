@@ -80,8 +80,8 @@ triSurface triangulate
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
-        const label patchI = iter.key();
-        const polyPatch& patch = bMesh[patchI];
+        const label patchi = iter.key();
+        const polyPatch& patch = bMesh[patchi];
         const pointField& points = patch.points();
 
         label nTriTotal = 0;
@@ -107,8 +107,8 @@ triSurface triangulate
                 triSurfaceToAgglom[localTriFaceI++] = globalNumbering.toGlobal
                 (
                     Pstream::myProcNo(),
-                    finalAgglom[patchI][patchFaceI]
-                  + coarsePatches[patchI].start()
+                    finalAgglom[patchi][patchFaceI]
+                  + coarsePatches[patchi].start()
                 );
             }
         }
@@ -137,10 +137,10 @@ triSurface triangulate
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
-        const label patchI = iter.key();
-        const polyPatch& patch = bMesh[patchI];
+        const label patchi = iter.key();
+        const polyPatch& patch = bMesh[patchi];
 
-        surface.patches()[newPatchI].index() = patchI;
+        surface.patches()[newPatchI].index() = patchi;
         surface.patches()[newPatchI].name() = patch.name();
         surface.patches()[newPatchI].geometricType() = patch.type();
 
@@ -341,16 +341,16 @@ int main(int argc, char *argv[])
     const volScalarField::GeometricBoundaryField& Qrb = Qr.boundaryField();
 
     label count = 0;
-    forAll(Qrb, patchI)
+    forAll(Qrb, patchi)
     {
-        const polyPatch& pp = patches[patchI];
-        const fvPatchScalarField& QrpI = Qrb[patchI];
+        const polyPatch& pp = patches[patchi];
+        const fvPatchScalarField& QrpI = Qrb[patchi];
 
         if ((isA<fixedValueFvPatchScalarField>(QrpI)) && (pp.size() > 0))
         {
             viewFactorsPatches[count] = QrpI.patch().index();
-            nCoarseFaces += coarsePatches[patchI].size();
-            nFineFaces += patches[patchI].size();
+            nCoarseFaces += coarsePatches[patchi].size();
+            nFineFaces += patches[patchi].size();
             count ++;
         }
     }
@@ -803,12 +803,12 @@ int main(int argc, char *argv[])
     {
         forAll(viewFactorsPatches, i)
         {
-            label patchI =  viewFactorsPatches[i];
+            label patchi =  viewFactorsPatches[i];
             forAll(viewFactorsPatches, i)
             {
                 label patchJ =  viewFactorsPatches[i];
-                Info << "F" << patchI << patchJ << ": "
-                     << sumViewFactorPatch[patchI][patchJ]/patchArea[patchI]
+                Info << "F" << patchi << patchJ << ": "
+                     << sumViewFactorPatch[patchi][patchJ]/patchArea[patchi]
                      << endl;
             }
         }
@@ -831,6 +831,9 @@ int main(int argc, char *argv[])
             dimensionedScalar("viewFactorField", dimless, 0)
         );
 
+        volScalarField::GeometricBoundaryField& viewFactorFieldBf =
+            viewFactorField.boundaryFieldRef();
+
         label compactI = 0;
         forAll(viewFactorsPatches, i)
         {
@@ -849,7 +852,7 @@ int main(int argc, char *argv[])
                 forAll(fineFaces, fineId)
                 {
                     const label faceID = fineFaces[fineId];
-                    viewFactorField.boundaryField()[patchID][faceID] = Fij;
+                    viewFactorFieldBf[patchID][faceID] = Fij;
                 }
                 compactI++;
             }

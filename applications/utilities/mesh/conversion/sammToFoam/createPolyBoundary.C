@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,11 +41,11 @@ void Foam::sammMesh::createPolyBoundary()
 
     const labelListList& PointCells = pointCells();
 
-    forAll(boundary_, patchI)
+    forAll(boundary_, patchi)
     {
-        const faceList& curShapePatch = boundary_[patchI];
+        const faceList& curShapePatch = boundary_[patchi];
 
-        polyBoundaryPatchStartIndices_[patchI] = nCreatedFaces;
+        polyBoundaryPatchStartIndices_[patchi] = nCreatedFaces;
 
         forAll(curShapePatch, faceI)
         {
@@ -120,21 +120,21 @@ Foam::List<Foam::polyPatch* > Foam::sammMesh::polyBoundaryPatches
 {
     List<polyPatch* > p(boundary_.size());
 
-    forAll(boundary_, patchI)
+    forAll(boundary_, patchi)
     {
-        const faceList& curShapePatch = boundary_[patchI];
+        const faceList& curShapePatch = boundary_[patchi];
 
-        p[patchI] = polyPatch::New
+        p[patchi] = polyPatch::New
         (
-            patchTypes_[patchI],
-            patchNames_[patchI],
+            patchTypes_[patchi],
+            patchNames_[patchi],
             curShapePatch.size(),
-            polyBoundaryPatchStartIndices_[patchI],
-            patchI,
+            polyBoundaryPatchStartIndices_[patchi],
+            patchi,
             pMesh.boundaryMesh()
         ).ptr();
 
-        p[patchI]->physicalType() = patchPhysicalTypes_[patchI];
+        p[patchi]->physicalType() = patchPhysicalTypes_[patchi];
     }
 
     return p;

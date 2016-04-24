@@ -24,9 +24,9 @@ dict.add
 dict.add("mergeDistance", SMALL);
 
 labelHashSet includePatches;
-forAll(patches, patchI)
+forAll(patches, patchi)
 {
-    const polyPatch& pp = patches[patchI];
+    const polyPatch& pp = patches[patchi];
     if
     (
         !pp.coupled()
@@ -34,7 +34,7 @@ forAll(patches, patchI)
      && !isA<emptyPolyPatch>(pp)
     )
     {
-        includePatches.insert(patchI);
+        includePatches.insert(patchi);
     }
 }
 

@@ -208,14 +208,14 @@ int main(int argc, char *argv[])
         Info<< "Constructing patches." << endl;
         List<polyPatch*> patches(poly2DMesh.patchNames().size());
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            patches[patchI] = new polyPatch
+            patches[patchi] = new polyPatch
             (
-                poly2DMesh.patchNames()[patchI],
-                poly2DMesh.patchSizes()[patchI],
-                poly2DMesh.patchStarts()[patchI],
-                patchI,
+                poly2DMesh.patchNames()[patchi],
+                poly2DMesh.patchSizes()[patchi],
+                poly2DMesh.patchStarts()[patchi],
+                patchi,
                 mesh().boundaryMesh(),
                 polyPatch::typeName
             );

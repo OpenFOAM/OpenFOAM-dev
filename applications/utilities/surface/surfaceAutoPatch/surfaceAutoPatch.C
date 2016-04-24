@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,10 +106,10 @@ int main(int argc, char *argv[])
     // Create some patches
     surf.patches().setSize(nRegions);
 
-    forAll(surf.patches(), patchI)
+    forAll(surf.patches(), patchi)
     {
-        surf.patches()[patchI].name() = "patch" + Foam::name(patchI);
-        surf.patches()[patchI].geometricType() = "empty";
+        surf.patches()[patchi].name() = "patch" + Foam::name(patchi);
+        surf.patches()[patchi].geometricType() = "empty";
     }
 
 

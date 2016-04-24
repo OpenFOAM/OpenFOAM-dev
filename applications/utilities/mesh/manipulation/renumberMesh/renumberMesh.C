@@ -446,12 +446,12 @@ autoPtr<mapPolyMesh> reorderMesh
     labelList oldPatchNMeshPoints(patches.size());
     labelListList patchPointMap(patches.size());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        patchSizes[patchI] = patches[patchI].size();
-        patchStarts[patchI] = patches[patchI].start();
-        oldPatchNMeshPoints[patchI] = patches[patchI].nPoints();
-        patchPointMap[patchI] = identity(patches[patchI].nPoints());
+        patchSizes[patchi] = patches[patchi].size();
+        patchStarts[patchi] = patches[patchi].start();
+        oldPatchNMeshPoints[patchi] = patches[patchi].nPoints();
+        patchPointMap[patchi] = identity(patches[patchi].nPoints());
     }
 
     mesh.resetPrimitives
@@ -955,11 +955,11 @@ int main(int argc, char *argv[])
 
             // Collect all boundary cells on coupled patches
             label nBndCells = 0;
-            forAll(pbm, patchI)
+            forAll(pbm, patchi)
             {
-                if (pbm[patchI].coupled())
+                if (pbm[patchi].coupled())
                 {
-                    nBndCells += pbm[patchI].size();
+                    nBndCells += pbm[patchi].size();
                 }
             }
 
@@ -968,11 +968,11 @@ int main(int argc, char *argv[])
             labelList bndCells(nBndCells);
             labelList bndCellMap(nBndCells);
             nBndCells = 0;
-            forAll(pbm, patchI)
+            forAll(pbm, patchi)
             {
-                if (pbm[patchI].coupled())
+                if (pbm[patchi].coupled())
                 {
-                    const labelUList& faceCells = pbm[patchI].faceCells();
+                    const labelUList& faceCells = pbm[patchi].faceCells();
                     forAll(faceCells, i)
                     {
                         label cellI = faceCells[i];

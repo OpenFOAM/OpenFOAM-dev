@@ -82,9 +82,12 @@ void Foam::wallDistData<TransferType>::correct()
     // Collect pointers to data on patches
     UPtrList<Field<Type>> patchData(mesh.boundaryMesh().size());
 
-    forAll(field_.boundaryField(), patchI)
+    typename GeometricField<Type, fvPatchField, volMesh>::
+        GeometricBoundaryField& fieldBf = field_.boundaryFieldRef();
+
+    forAll(fieldBf, patchi)
     {
-        patchData.set(patchI, &field_.boundaryField()[patchI]);
+        patchData.set(patchi, &fieldBf[patchi]);
     }
 
     // Do mesh wave
@@ -101,18 +104,19 @@ void Foam::wallDistData<TransferType>::correct()
 
     field_.transfer(wave.cellData());
 
+    typename GeometricField<Type, fvPatchField, volMesh>::
+        GeometricBoundaryField& bf = boundaryFieldRef();
+
     // Transfer values on patches into boundaryField of *this and field_
-    forAll(boundaryField(), patchI)
+    forAll(bf, patchi)
     {
-        scalarField& waveFld = wave.patchDistance()[patchI];
+        scalarField& waveFld = wave.patchDistance()[patchi];
 
-        if (!isA<emptyFvPatchScalarField>(boundaryField()[patchI]))
+        if (!isA<emptyFvPatchScalarField>(boundaryField()[patchi]))
         {
-            boundaryField()[patchI].transfer(waveFld);
-
-            Field<Type>& wavePatchData = wave.patchData()[patchI];
-
-            field_.boundaryField()[patchI].transfer(wavePatchData);
+            bf[patchi].transfer(waveFld);
+            Field<Type>& wavePatchData = wave.patchData()[patchi];
+            fieldBf[patchi].transfer(wavePatchData);
         }
     }
 

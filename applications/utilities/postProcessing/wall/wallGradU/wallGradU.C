@@ -88,16 +88,18 @@ int main(int argc, char *argv[])
                 )
             );
 
+            volVectorField::GeometricBoundaryField& wallGradUBf =
+                wallGradU.boundaryFieldRef();
+
             const fvPatchList& patches = mesh.boundary();
 
-            forAll(wallGradU.boundaryField(), patchi)
+            forAll(wallGradUBf, patchi)
             {
                 const fvPatch& currPatch = patches[patchi];
 
                 if (isA<wallFvPatch>(currPatch))
                 {
-                    wallGradU.boundaryField()[patchi] =
-                        -U.boundaryField()[patchi].snGrad();
+                    wallGradUBf[patchi] = -U.boundaryField()[patchi].snGrad();
                 }
             }
 

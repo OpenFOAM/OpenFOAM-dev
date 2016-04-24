@@ -116,16 +116,28 @@ void kinematicSingleLayer::transferPrimaryRegionSourceFields()
         InfoInFunction << endl;
     }
 
+    volScalarField::GeometricBoundaryField& rhoSpPrimaryBf =
+        rhoSpPrimary_.boundaryFieldRef();
+
+    volVectorField::GeometricBoundaryField& USpPrimaryBf =
+        USpPrimary_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& pSpPrimaryBf =
+        pSpPrimary_.boundaryFieldRef();
+
     // Convert accummulated source terms into per unit area per unit time
     const scalar deltaT = time_.deltaTValue();
-    forAll(rhoSpPrimary_.boundaryField(), patchI)
+    forAll(rhoSpPrimary_.boundaryField(), patchi)
     {
-        const scalarField& priMagSf =
-            primaryMesh().magSf().boundaryField()[patchI];
+        scalarField rpriMagSfdeltaT
+        (
+            (1.0/deltaT)
+           /primaryMesh().magSf().boundaryField()[patchi]
+        );
 
-        rhoSpPrimary_.boundaryField()[patchI] /= priMagSf*deltaT;
-        USpPrimary_.boundaryField()[patchI] /= priMagSf*deltaT;
-        pSpPrimary_.boundaryField()[patchI] /= priMagSf*deltaT;
+        rhoSpPrimaryBf[patchi] *= rpriMagSfdeltaT;
+        USpPrimaryBf[patchi] *= rpriMagSfdeltaT;
+        pSpPrimaryBf[patchi] *= rpriMagSfdeltaT;
     }
 
     // Retrieve the source fields from the primary region via direct mapped
@@ -270,10 +282,10 @@ void kinematicSingleLayer::updateSurfaceVelocities()
     // Push boundary film velocity values into internal field
     for (label i=0; i<intCoupledPatchIDs_.size(); i++)
     {
-        label patchI = intCoupledPatchIDs_[i];
-        const polyPatch& pp = regionMesh().boundaryMesh()[patchI];
+        label patchi = intCoupledPatchIDs_[i];
+        const polyPatch& pp = regionMesh().boundaryMesh()[patchi];
         UIndirectList<vector>(Uw_, pp.faceCells()) =
-            U_.boundaryField()[patchI];
+            U_.boundaryField()[patchi];
     }
     Uw_ -= nHat()*(Uw_ & nHat());
     Uw_.correctBoundaryConditions();
@@ -825,7 +837,7 @@ kinematicSingleLayer::~kinematicSingleLayer()
 
 void kinematicSingleLayer::addSources
 (
-    const label patchI,
+    const label patchi,
     const label faceI,
     const scalar massSource,
     const vector& momentumSource,
@@ -842,9 +854,9 @@ void kinematicSingleLayer::addSources
             << "    pressure = " << pressureSource << endl;
     }
 
-    rhoSpPrimary_.boundaryField()[patchI][faceI] -= massSource;
-    USpPrimary_.boundaryField()[patchI][faceI] -= momentumSource;
-    pSpPrimary_.boundaryField()[patchI][faceI] -= pressureSource;
+    rhoSpPrimary_.boundaryFieldRef()[patchi][faceI] -= massSource;
+    USpPrimary_.boundaryFieldRef()[patchi][faceI] -= momentumSource;
+    pSpPrimary_.boundaryFieldRef()[patchi][faceI] -= pressureSource;
 
     addedMassTotal_ += massSource;
 }
@@ -866,7 +878,7 @@ void kinematicSingleLayer::preEvolveRegion()
     transferPrimaryRegionSourceFields();
 
     // Reset transfer fields
-//    availableMass_ = mass();
+    //availableMass_ = mass();
     availableMass_ = netMass();
     cloudMassTrans_ == dimensionedScalar("zero", dimMass, 0.0);
     cloudDiameterTrans_ == dimensionedScalar("zero", dimLength, 0.0);

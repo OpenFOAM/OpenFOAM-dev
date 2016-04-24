@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,11 +152,11 @@ void Foam::patchToPoly2DMesh::addPatchFacesToFaces()
     label offset = patch_.nInternalEdges();
     face f(2);
 
-    forAll(patchNames_, patchI)
+    forAll(patchNames_, patchi)
     {
         forAllConstIter(EdgeMap<label>, mapEdgesRegion_, eIter)
         {
-            if (eIter() == patchI)
+            if (eIter() == patchi)
             {
                 f[0] = meshPoints[eIter.key().start()];
                 f[1] = meshPoints[eIter.key().end()];
@@ -333,10 +333,10 @@ void Foam::patchToPoly2DMesh::createMesh()
     createPolyMeshComponents();
 
     label startFace = patch_.nInternalEdges();
-    forAll(patchNames_, patchI)
+    forAll(patchNames_, patchi)
     {
-        patchStarts_[patchI] = startFace;
-        startFace += patchSizes_[patchI];
+        patchStarts_[patchi] = startFace;
+        startFace += patchSizes_[patchi];
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,9 +104,12 @@ int main(int argc, char *argv[])
             dimensionedScalar("wallHeatFlux", heatFlux.dimensions(), 0.0)
         );
 
-        forAll(wallHeatFlux.boundaryField(), patchi)
+        volScalarField::GeometricBoundaryField& wallHeatFluxBf =
+            wallHeatFlux.boundaryFieldRef();
+
+        forAll(wallHeatFluxBf, patchi)
         {
-            wallHeatFlux.boundaryField()[patchi] = patchHeatFlux[patchi];
+            wallHeatFluxBf[patchi] = patchHeatFlux[patchi];
         }
 
         wallHeatFlux.write();
@@ -132,9 +135,12 @@ int main(int argc, char *argv[])
                 )
             );
 
-            forAll(totalWallHeatFlux.boundaryField(), patchi)
+            volScalarField::GeometricBoundaryField& totalWallHeatFluxBf =
+                totalWallHeatFlux.boundaryFieldRef();
+
+            forAll(totalWallHeatFluxBf, patchi)
             {
-                totalWallHeatFlux.boundaryField()[patchi] =
+                totalWallHeatFluxBf[patchi] =
                     patchHeatFlux[patchi] - patchRadHeatFlux[patchi];
             }
 

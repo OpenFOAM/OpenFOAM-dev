@@ -677,7 +677,7 @@ void kkLOmega::correct()
     );
 
 
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     // Turbulence specific dissipation rate equation
     tmp<fvScalarMatrix> omegaEqn
@@ -699,7 +699,7 @@ void kkLOmega::correct()
     );
 
     omegaEqn.ref().relax();
-    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
 
     solve(omegaEqn);
     bound(omega_, omegaMin_);
@@ -719,7 +719,7 @@ void kkLOmega::correct()
     );
 
     klEqn.ref().relax();
-    klEqn.ref().boundaryManipulate(kl_.boundaryField());
+    klEqn.ref().boundaryManipulate(kl_.boundaryFieldRef());
 
     solve(klEqn);
     bound(kl_, kMin_);
@@ -740,7 +740,7 @@ void kkLOmega::correct()
     );
 
     ktEqn.ref().relax();
-    ktEqn.ref().boundaryManipulate(kt_.boundaryField());
+    ktEqn.ref().boundaryManipulate(kt_.boundaryFieldRef());
 
     solve(ktEqn);
     bound(kt_, kMin_);

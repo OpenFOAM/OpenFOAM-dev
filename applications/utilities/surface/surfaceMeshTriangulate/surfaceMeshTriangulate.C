@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,13 +129,13 @@ int main(int argc, char *argv[])
     }
     else
     {
-        forAll(bMesh, patchI)
+        forAll(bMesh, patchi)
         {
-            const polyPatch& patch = bMesh[patchI];
+            const polyPatch& patch = bMesh[patchi];
 
             if (includeProcPatches || !isA<processorPolyPatch>(patch))
             {
-                includePatches.insert(patchI);
+                includePatches.insert(patchi);
             }
         }
     }
@@ -230,10 +230,10 @@ int main(int argc, char *argv[])
         labelList faceZoneToCompactZone(bMesh.size(), -1);
         forAllConstIter(HashTable<label>, compactZoneID, iter)
         {
-            label patchI = bMesh.findPatchID(iter.key());
-            if (patchI != -1)
+            label patchi = bMesh.findPatchID(iter.key());
+            if (patchi != -1)
             {
-                patchToCompactZone[patchI] = iter();
+                patchToCompactZone[patchi] = iter();
             }
             else
             {

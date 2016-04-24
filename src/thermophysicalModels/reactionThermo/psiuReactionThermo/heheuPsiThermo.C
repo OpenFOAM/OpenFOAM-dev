@@ -67,18 +67,40 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         );
     }
 
+    volScalarField::GeometricBoundaryField& pBf =
+        this->p_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& TBf =
+        this->T_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& TuBf =
+        this->Tu_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& psiBf =
+        this->psi_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& heBf =
+        this->he().boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& heuBf =
+        this->heu().boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& muBf =
+        this->mu_.boundaryFieldRef();
+
+    volScalarField::GeometricBoundaryField& alphaBf =
+        this->alpha_.boundaryFieldRef();
+
     forAll(this->T_.boundaryField(), patchi)
     {
-        fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
-        fvPatchScalarField& pT = this->T_.boundaryField()[patchi];
-        fvPatchScalarField& pTu = this->Tu_.boundaryField()[patchi];
-        fvPatchScalarField& ppsi = this->psi_.boundaryField()[patchi];
-
-        fvPatchScalarField& ph = this->he_.boundaryField()[patchi];
-        fvPatchScalarField& pheu = this->heu_.boundaryField()[patchi];
-
-        fvPatchScalarField& pmu_ = this->mu_.boundaryField()[patchi];
-        fvPatchScalarField& palpha_ = this->alpha_.boundaryField()[patchi];
+        fvPatchScalarField& pp = pBf[patchi];
+        fvPatchScalarField& pT = TBf[patchi];
+        fvPatchScalarField& pTu = TuBf[patchi];
+        fvPatchScalarField& ppsi = psiBf[patchi];
+        fvPatchScalarField& phe = heBf[patchi];
+        fvPatchScalarField& pheu = heuBf[patchi];
+        fvPatchScalarField& pmu = muBf[patchi];
+        fvPatchScalarField& palpha = alphaBf[patchi];
 
         if (pT.fixesValue())
         {
@@ -87,11 +109,11 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 const typename MixtureType::thermoType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
 
-                ph[facei] = mixture_.HE(pp[facei], pT[facei]);
+                phe[facei] = mixture_.HE(pp[facei], pT[facei]);
 
                 ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
-                pmu_[facei] = mixture_.mu(pp[facei], pT[facei]);
-                palpha_[facei] = mixture_.alphah(pp[facei], pT[facei]);
+                pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
+                palpha[facei] = mixture_.alphah(pp[facei], pT[facei]);
             }
         }
         else
@@ -101,11 +123,11 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 const typename MixtureType::thermoType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
 
-                pT[facei] = mixture_.THE(ph[facei], pp[facei], pT[facei]);
+                pT[facei] = mixture_.THE(phe[facei], pp[facei], pT[facei]);
 
                 ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
-                pmu_[facei] = mixture_.mu(pp[facei], pT[facei]);
-                palpha_[facei] = mixture_.alphah(pp[facei], pT[facei]);
+                pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
+                palpha[facei] = mixture_.alphah(pp[facei], pT[facei]);
 
                 pTu[facei] =
                     this->patchFaceReactants(patchi, facei)
@@ -167,9 +189,11 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
         );
     }
 
-    forAll(this->heu_.boundaryField(), patchi)
+    volScalarField::GeometricBoundaryField& heuBf = heu_.boundaryFieldRef();
+
+    forAll(heuBf, patchi)
     {
-        fvPatchScalarField& pheu = this->heu_.boundaryField()[patchi];
+        fvPatchScalarField& pheu = heuBf[patchi];
         const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
         const fvPatchScalarField& pTu = this->Tu_.boundaryField()[patchi];
 
@@ -299,9 +323,11 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
         );
     }
 
-    forAll(Tb_.boundaryField(), patchi)
+    volScalarField::GeometricBoundaryField& TbBf = Tb_.boundaryFieldRef();
+
+    forAll(TbBf, patchi)
     {
-        fvPatchScalarField& pTb = Tb_.boundaryField()[patchi];
+        fvPatchScalarField& pTb = TbBf[patchi];
 
         const fvPatchScalarField& ph = this->he_.boundaryField()[patchi];
         const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
@@ -352,9 +378,11 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
             this->cellReactants(celli).psi(pCells[celli], TuCells[celli]);
     }
 
-    forAll(psiu.boundaryField(), patchi)
+    volScalarField::GeometricBoundaryField& psiuBf = psiu.boundaryFieldRef();
+
+    forAll(psiuBf, patchi)
     {
-        fvPatchScalarField& ppsiu = psiu.boundaryField()[patchi];
+        fvPatchScalarField& ppsiu = psiuBf[patchi];
 
         const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
         const fvPatchScalarField& pTu = this->Tu_.boundaryField()[patchi];
@@ -405,9 +433,11 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
             this->cellReactants(celli).psi(pCells[celli], TbCells[celli]);
     }
 
-    forAll(psib.boundaryField(), patchi)
+    volScalarField::GeometricBoundaryField& psibBf = psib.boundaryFieldRef();
+
+    forAll(psibBf, patchi)
     {
-        fvPatchScalarField& ppsib = psib.boundaryField()[patchi];
+        fvPatchScalarField& ppsib = psibBf[patchi];
 
         const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
         const fvPatchScalarField& pTb = Tb_.boundaryField()[patchi];
@@ -460,9 +490,11 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
         );
     }
 
-    forAll(muu_.boundaryField(), patchi)
+    volScalarField::GeometricBoundaryField& muuBf = muu_.boundaryFieldRef();
+
+    forAll(muuBf, patchi)
     {
-        fvPatchScalarField& pMuu = muu_.boundaryField()[patchi];
+        fvPatchScalarField& pMuu = muuBf[patchi];
         const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
         const fvPatchScalarField& pTu = this->Tu_.boundaryField()[patchi];
 
@@ -517,9 +549,11 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
         );
     }
 
-    forAll(mub_.boundaryField(), patchi)
+    volScalarField::GeometricBoundaryField& mubBf = mub_.boundaryFieldRef();
+
+    forAll(mubBf, patchi)
     {
-        fvPatchScalarField& pMub = mub_.boundaryField()[patchi];
+        fvPatchScalarField& pMub = mubBf[patchi];
         const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
         const fvPatchScalarField& pTb = Tb_.boundaryField()[patchi];
 

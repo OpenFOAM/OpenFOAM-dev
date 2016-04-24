@@ -102,12 +102,12 @@ int main(int argc, char *argv[])
         forAll(faceLabels, faceI)
         {
             const label meshFaceI = faceLabels[faceI];
-            const label patchI = bm.whichPatch(meshFaceI);
+            const label patchi = bm.whichPatch(meshFaceI);
 
             if
             (
-                patchI != -1
-             && bm[patchI].coupled()
+                patchi != -1
+             && bm[patchi].coupled()
              && !isMasterFace[meshFaceI]
             )
             {
@@ -312,12 +312,12 @@ int main(int argc, char *argv[])
         forAll(faceLabels, i)
         {
             const label meshFaceI = faceLabels[i];
-            const label patchI = bm.whichPatch(meshFaceI);
+            const label patchi = bm.whichPatch(meshFaceI);
 
             if
             (
-                patchI != -1
-             && bm[patchI].coupled()
+                patchi != -1
+             && bm[patchi].coupled()
              && !isMasterFace[meshFaceI]
             )
             {
